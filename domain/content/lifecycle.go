@@ -57,6 +57,7 @@ type BodyHolder struct {
 
 type LifecycleRepository interface {
 	ManagementRepository
+	QualifyPolicyCleanupNotRequired(context.Context, runtime.Tx, CleanupResponsibility) error
 	LockSecondaryCopy(context.Context, runtime.Tx, v.ContentRef, string) (*SecondaryCopy, error)
 	SaveSecondaryCopy(context.Context, runtime.Tx, SecondaryCopy) error
 	SecondaryCopies(context.Context, runtime.Tx, v.ContentRef, string, int) ([]SecondaryCopy, string, error)

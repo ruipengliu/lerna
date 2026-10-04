@@ -292,3 +292,49 @@ active cleanup，两准确key独立字节及public body正常。真实World.Reop
 不是新red。不把精确目标Seam当任意root扫描删除器。完整多attempt/未知旧
 归属及停止legacy writer升级仍待独立tracer，不用目前单attempt声明全页。
 均明确release LOCAL/no pending native；原两个CloseUNKNOWN根继续保留。
+
+publish-wins只核原Command的published/fullRef历史；该case没有capture/replay
+Encode原receipt，不宣称字节级receipt相等。orphan-wins另有实际Encode比较。
+
+## 当前save恢复后消费旧policy责任：首业务red
+
+`TestContentRestoredSaveBasisMakesOriginalCleanupNotRequiredWithoutSealing`真实
+normal publish/Get之后，Manager.InstallPolicy撤save，Manager.Step执行原
+传播并保存pending责任。正文此时仍可读。后续恢复当前save，AuthorizeUse
+正常，再actual World.Reopen，进入trusted ConsumePolicyCleanup stub。
+line62 ErrUnavailable是业务red；消费后的not_required/无seal/无工作/独立
+正文及再次重开断言尚未执行，不当绿色或全部policy消费者资格。
+
+`/tmp/lerna-04-ticket05-execution/policy-cleanup-restored-first-red.log`
+actual0.246s，PID/PGID2802811/start11679653/nativeexit1/groupAbsent=true，
+无timeout。原caller20s/test30s/wrapper120s；source env/gofmt failclosed。
+session40608真实结束，明确release LOCAL/no pending。绿色待Astra窄复核，
+本次没有改变普通SaveResponsibility保pending语义或实现qualified writer。
+
+随后全文采用root批准的
+`/tmp/lerna-04-ticket-05-policy-cleanup-qualification-decision.md`，最小新增
+`LifecycleRepository.QualifyPolicyCleanupNotRequired`。独立候选Observe Tx
+结束后，新owner Tx先取得整页目标/祖先的全部当前saving basis及Version
+锁，才依次责任FOR UPDATE/完整expected比较/实际SQL CAS。最后fresh DB
+clock重核管理授权及本次全部policy/cap界限，失败rollback本页。成功之后
+沿独立Manager.Observe重新读取当前历史；不写change/Job/cursor。
+
+原Record.Subject包含完整delegation且Purpose准确匹配，当前save许可及全
+祖先save当前资格是核对依据；历史change的ValidUntil/RetainUntil不代替
+今天权限，也不复用跨Tx授权观察。单调cap/BodySeal/BodyGone仍禁止取消。
+普通SaveResponsibility不改，qualified writer只更新已存在准确原pending
+行的BodyCleanup=not_required/Residual=current_save_basis_restored；原actions/
+reason/deadline/holders/attempt/publication/history原样。Record.CleanupPending
+不粗清，not_required不是erased。未知因果/coverage/sealed/expiredcap及仍
+无当前save的情况保留pending；本首分支尚不自动Seal。
+
+| 绿色日志 | 实际结果 |
+| --- | --- |
+| `policy-cleanup-restored-first-green.log` | actual0.366s，PID/PGID2810470/start11712612/nativeexit0/groupAbsent=true。 |
+| `policy-cleanup-restored-race.log` | actual1.745s，PID/PGID2810947/start11714058/nativeexit0/groupAbsent=true；0001/0002 frozen SHA准确。 |
+
+两个原caller20s/test30s/wrapper120s，无timeout；session39471/35799已真实
+完成，明确release LOCAL/no pending。实际not_required/原历史及deadline/
+无seal/无bodycleanup工作/独立原alpha字节/public Get/第二World重开保持
+均执行通过。当前窗口、祖先拒绝、cap过期、责任CAS竞争、授权跨等待、
+genuine policy→seal以及ObjectHolder独立必要修正均待后续单tracer。

@@ -15,6 +15,17 @@ Lifecycle.Step独立确认才能置对应holder erased。
 已经sealed/过期cap不会取消或重新计时。普通query和所有CleanupPending
 不隐式触发Seal；read/process/disclose-only变化不授权删除正文。
 
+`Lifecycle.ConsumePolicyCleanup(ctx, subject, changeKey, cursor)`当前只消费
+已确认临时save撤销后当前原保存basis完全恢复的有限责任页。候选Observe
+短Tx先结束，新Tx整页policy/Version与全部祖先save资格完成后，再锁责任
+完整CAS，最后fresh时间门；输出重新Observe。原保存basis是Record.Subject
+完整delegation/Purpose，历史change窗口不充当前授权。原cap过期/已seal/
+unknown等保持pending；原维护deadline过期也不续旧Job或改原deadline。
+独立QualifyPolicyCleanupNotRequired只改已存在原责任的not_required/residual，
+保留Actions/Reason/Deadline/holders/attempt/publication，不粗清Record pending。
+normal及race/实际两次重开已通过；自动genuine policy封闭与拒绝竞争窗口
+尚未完成，不能将此入口存在视为所有policy cleanup已实现。
+
 Record.BodySeal是所有正文路径的同一个门。原Command当前reader获准时
 固定receipt照旧，sealed版本的新association不能创建publish或复制责任。
 Service.Step只处理原publish/policy_propagation，不消费body_cleanup。
