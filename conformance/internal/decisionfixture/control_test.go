@@ -4,12 +4,20 @@ package decisionfixture_test
 
 import (
 	"context"
+	"errors"
 	decision "github.com/ruipengliu/lerna/components/decision_engine"
 	fixture "github.com/ruipengliu/lerna/conformance/internal/decisionfixture"
 	v "github.com/ruipengliu/lerna/contract/v1_1"
 	"testing"
 	"time"
 )
+
+type controlScopeFailure struct{ cause error }
+
+func (e *controlScopeFailure) Error() string {
+	return "control-only scope execution authorization did not return ErrForbidden"
+}
+func (e *controlScopeFailure) Unwrap() error { return e.cause }
 
 func TestDurableControlWithoutSnapshotSurvivesSourceReopen(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
@@ -40,7 +48,7 @@ func TestDurableControlWithoutSnapshotSurvivesSourceReopen(t *testing.T) {
 	if floor != nil {
 		t.Fatal("control without an input invented a Snapshot floor")
 	}
-	if _, err = world.Source().Authorize(ctx, scene.Subject, ref, "decide", &scene.Request.Payload); err == nil {
-		t.Fatal("control scope granted execution access")
+	if _, err = world.Source().Authorize(ctx, scene.Subject, ref, "decide", &scene.Request.Payload); !errors.Is(err, decision.ErrForbidden) {
+		t.Fatal(&controlScopeFailure{cause: err})
 	}
 }
