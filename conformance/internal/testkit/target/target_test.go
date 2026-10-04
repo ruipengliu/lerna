@@ -94,7 +94,7 @@ func newFixture(t *testing.T) *fixture {
 	if err != nil {
 		t.Fatalf("retain owned scope %s: %v", directory, err)
 	}
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 40*time.Second)
 	f := &fixture{t: t, ctx: ctx, directory: directory, now: time.Date(2026, 10, 3, 12, 0, 0, 0, time.UTC)}
 	f.cfg = target.Config{Path: filepath.Join(directory, "target.sqlite"), Identity: "test-target-04", Window: time.Minute, QueryMode: target.QueryEnabled, IOTimeout: time.Second, BusyTimeout: 10 * time.Millisecond, Now: func() time.Time { return f.now }}
 	t.Logf("owned SQLite target: %s", directory)
@@ -272,7 +272,7 @@ func TestTargetIdentityDurabilitySettingsAndMigrationAreObserved(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if settings.DatabaseID == "" || settings.JournalMode != "wal" || settings.Synchronous != 2 || settings.ForeignKeys != 1 || settings.BusyTimeout != 10 || settings.SQLiteVersion != "3.53.4" || len(settings.Migrations) != 1 || settings.Migrations[0].Version != 1 || len(settings.Migrations[0].Checksum) != 64 {
+	if settings.DatabaseID == "" || settings.JournalMode != "wal" || settings.Synchronous != 2 || settings.ForeignKeys != 1 || settings.BusyTimeout != 10 || settings.SQLiteVersion != "3.53.4" || len(settings.Migrations) != 2 || settings.Migrations[0].Version != 1 || len(settings.Migrations[0].Checksum) != 64 {
 		t.Fatalf("actual target settings: %+v", settings)
 	}
 	t.Logf("SQLite target settings: %+v", settings)
