@@ -150,12 +150,16 @@ func startTargetChild(t *testing.T, f *fixture, scenario, event, gate string, ge
 }
 
 func finishTargetChild(t *testing.T, f *fixture, child *process.Child, scenario, event string, generation int) target.Event {
+	return finishTargetChildOutcome(t, f, child, scenario, event, generation, "")
+}
+
+func finishTargetChildOutcome(t *testing.T, f *fixture, child *process.Child, scenario, event string, generation int, expectedError string) target.Event {
 	t.Helper()
 	var reply targetProcessFrame
 	if err := child.Reply(f.ctx, &reply); err != nil {
 		t.Fatal(err)
 	}
-	if reply.Stage != "target_reply" || reply.Scenario != scenario || reply.Event != event || reply.Generation != generation || reply.Result == nil || reply.Error != "" {
+	if reply.Stage != "target_reply" || reply.Scenario != scenario || reply.Event != event || reply.Generation != generation || reply.Result == nil || reply.Error != expectedError {
 		t.Fatal("normal target reply mismatch")
 	}
 	confirmed, err := child.Wait(f.ctx)
@@ -167,6 +171,82 @@ func finishTargetChild(t *testing.T, f *fixture, child *process.Child, scenario,
 		t.Fatal("normal target physical cleanup:", err)
 	}
 	return *reply.Result
+}
+
+func TestTargetIsolatedSameSeedReplaysFiniteNormalAndLossEvents(t *testing.T) {
+	steps := []target.Step{
+		{ID: "normal-original", Kind: target.WriteNormally, Input: target.Request{Key: "normal-key", Resource: "fake-seed-document", Data: []byte{0, 1}}},
+		{ID: "loss-original", Kind: target.DropResponse, Input: target.Request{Key: "lost-key", Resource: "fake-seed-document", Data: []byte{255, 10}}},
+	}
+	var originalState target.PlanState
+	var originalID string
+	for index, scenario := range []string{"seed-original", "seed-isolated"} {
+		f := newFixture(t)
+		writer := f.open()
+		plan := target.Plan{ID: scenario, Seed: 73, Deadline: f.now.Add(3 * time.Minute), Steps: steps}
+		if _, err := writer.InstallPlan(f.ctx, plan); err != nil {
+			t.Fatal(err)
+		}
+		if err := writer.Close(); err != nil {
+			t.Fatal(err)
+		}
+		f.writer = nil
+		observer, err := f.observer()
+		if err != nil {
+			t.Fatal(err)
+		}
+		for position := range steps {
+			state, err := observer.Plan(f.ctx, scenario)
+			if err != nil || state.Cursor != position || state.Plan.Seed != 73 {
+				t.Fatal("original finite scenario cursor unavailable", err)
+			}
+			step := state.Plan.Steps[state.Cursor]
+			child := startTargetChild(t, f, scenario, step.ID, "", position+1)
+			expectedError := ""
+			if step.Kind == target.DropResponse {
+				expectedError = "response_lost"
+			}
+			event := finishTargetChildOutcome(t, f, child, scenario, step.ID, position+1, expectedError)
+			if event.Step != position || event.ID != steps[position].ID || event.Kind != steps[position].Kind {
+				t.Fatal("new coordinator changed original event identity/order")
+			}
+			if position == 0 && (event.Phase != "committed" || event.Outcome != "applied") || position == 1 && (event.Phase != "committed_response_lost" || event.Outcome != "response_lost") {
+				t.Fatal("wrong normal or explicitly planned response loss outcome", event)
+			}
+		}
+		writer = f.open()
+		for position, step := range steps {
+			query, err := writer.Query(f.ctx, step.Input.Key)
+			if err != nil || query.Value.Version != int64(position+1) || string(query.Value.Data) != string(step.Input.Data) {
+				t.Fatal("ordinary original processing fact changed during finite replay", err)
+			}
+			fact, err := observer.Observe(f.ctx, step.Input.Key)
+			if err != nil || fact.Pending || len(fact.Receives) != 1 || fact.Value.Version != int64(position+1) {
+				t.Fatal("isolated scenario did not actually receive/apply each original once", err)
+			}
+		}
+		value, err := writer.Read(f.ctx, steps[1].Input.Resource)
+		if err != nil || value.Version != 2 || string(value.Data) != string([]byte{255, 10}) {
+			t.Fatal("independent finite scenario current value mismatch", err)
+		}
+		state, err := observer.Plan(f.ctx, scenario)
+		if err != nil || state.Cursor != 2 || len(state.Events) != 2 || !reflect.DeepEqual(state.Plan, plan) {
+			t.Fatal("isolated scenario lost fixed plan/cursor/event history", err)
+		}
+		settings, err := writer.Settings(f.ctx)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if index == 0 {
+			originalState, originalID = state, settings.DatabaseID
+		} else {
+			// Logical replay compares exact saved steps, events and cursor. It does
+			// not reset the first scenario or equate independent physical identity.
+			if settings.DatabaseID == originalID || state.Plan.ID == originalState.Plan.ID || state.Plan.Seed != originalState.Plan.Seed || !reflect.DeepEqual(state.Plan.Steps, originalState.Plan.Steps) || !reflect.DeepEqual(state.Events, originalState.Events) || state.Cursor != originalState.Cursor {
+				t.Fatal("sameSeed replay aliased original identity or changed finite definition")
+			}
+		}
+	}
 }
 
 func TestTargetNormalChildCommitsOriginalPlanAndFact(t *testing.T) {

@@ -24,3 +24,11 @@
 
 2026-10-04，root正式claim本票。直接前置01已resolved并merge5307702（最终源696ac49、交付d806a92）；05已resolved并merge077f616。准确push c9de1ba的CI37174778053全部success，见[CI记录](../ci-verification.md)。按用户已授权的全部实现任务及已采用技术决定，在新的独立worktree/branch实施；原01工作树保留，不能修改归档或用候选pin冒充前置。验收seams已在整片授权固定为公开Component／真实fixture Source与target普通接口及独立observer，物理生命周期仅使用明确标注的机械driver观察。所有build/DB/全套测试须先获root独占槽；本票仅关闭自己的AC，不承担whole03或后续依赖。
 本票实际接法见[正式采用记录](../process-lifecycle-handoff.md)与[ticket01 API](../ticket-01-api-handoff.md)。
+
+2026-10-04，独立06分支已逐条完成实际生命周期及进程边界 vertical，仍 claimed、六AC尚未关闭。机械 nativeClose/并发有限等待、Observer首次结果、构造 partial holder、file/parent FD 首次结果、Start handle发布窗口及Stop-before-Start门禁均有实际可运行 red→green；这些不持有物理DB scope，也不声称原生SQLite/PG/file故障。共享有限 Child/Inherited 已由真实02 demo与真实06目标/Decision两个消费者调用，旧SQLite正常回执、领取完成及阻塞管道截止回归 normal3.556/race8.675均exit0；提取期间缺失函数及多余import的编译错误保留为作者失败历史，不称behavioralred。
+
+目标真实COMMIT前已有normal0.088/race3.174；提交后／回复前真实red0.066→normal0.101/race4.204，固定代码43b4b1684ee00c9f415a73cf19b0784f7c6fc498。SIGKILL由实际WaitStatus和独立reply EOF确认，重开普通Query/Read及Observer区分已知回滚无处理事实与已提交回复未知，新代协调者重读同scenario/event/cursor后保持原bytes/version/window/receive/DatabaseID。后批作者漏传外部scope registry：六个实际路径均在Mkdir后、开库前本地write+fsync并逐一absent，外部账本仍原七条，未伪称十三条登记。
+
+双owner Decision正常子进程 control normal0.688/race4.684；Source Publish成功后／Decision Finish前真实red1.159→normal2.025/race6.401，代码a29b54c95533f4bae7eda28f2e279fe2a382e5a8；实际SaveDecision completed+原callback Complete成功后／CoreCOMMIT前 red1.029→normal1.959/race6.206，代码e0701e8a413a7b1818ac894331fba2039109add1；nativeStore.Within实际返回nil后／reply前 red1.107→normal1.152/race5.552，代码90933274e5a054c3eb42fc7b3c84153ce62c970e。独立公开Get及授权Publisher读取保留原Proposal/ref/body、固定receipt与故障前公开usage（含原下界/MeasurementsComplete），不假称跨owner原子提交。PG18.6、sync on/read committed、实际迁移版本校验和已记录，40个确切已ack/fsync PG scope独立IN-set查询均absent。所有批次结束均实际Wait／poll session退出后释放root独占槽。待补目标pending/late进程恢复、隔离同seed定义、自身剩余生命周期控制、最终root合流／受影响回归及实际双轴评审；不承诺whole03关闭。
+
+2026-10-04，pending/late 真实正常与SIGKILL恢复 normal0.139/race4.201（232973e），pre-native drain 可重试正常0.025/race1.036，实际FD三调用路径正常0.082/race1.133（2306e69）。两个独立scenario／DB同Seed73、明确保存正常与DropResponse两steps重演 normal0.102/race5.182，各代实际zeroWait；原完成event／cursor不重做。计划响应丢失未称SIGKILL。外部target账本23确切路径、旧local-only六路径分别absent；本批无PG。六AC实现／事实出口／历史失败／清理界限见[实际映射](../ticket-06-api-handoff.md)。仍claimed，待最终受影响回归／基础检查和真实双轴评审；不纳入尚未resolved的02／03或wholeclose。
