@@ -21,9 +21,11 @@ try {
     ['build', '-o', executable, './conformance/component/valuerunner_v1_1'],
     { stdio: 'inherit', timeout: 60000 },
   );
-  const fixtures = JSON.parse(
+  let fixtures = JSON.parse(
     readFileSync('conformance/fixtures/1.1.0/fixtures.json', 'utf8'),
   );
+  if (process.argv.includes('--usage-only'))
+    fixtures = fixtures.filter((fixture) => fixture.name.startsWith('usage '));
   if (process.argv.includes('--reverse')) fixtures.reverse();
   const go = startRunner(executable, ['--batch'], {
     signal: controller.signal,

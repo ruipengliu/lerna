@@ -289,6 +289,8 @@ export type DecisionUsage = {
   rule_steps: Revision;
   model_requests: '0';
   cost: Amount;
+  rule_starts: Revision;
+  measurements_complete: boolean;
 };
 export type DecisionDecidePayload = {
   decision_id: ID;
@@ -535,7 +537,7 @@ export const declaredMethods = Object.freeze(
       input_schema: 'DecisionDecideRequest',
       output_schema: 'CommandReceipt',
       input_schema_digest:
-        'sha256:061ab394b11f5dee8c05694a28bab82f0b27ea9b4dacd797f4af5be310c6ee1c',
+        'sha256:b2ac1e52e121f4b62b57e4bf8676fc685cb68a8cccfd4955c71c6a9a45ff6b30',
       output_schema_digest:
         'sha256:08d6c13b3f335c50f51fe594181781b41cc55252afde33b5755881880ece0f31',
     },
@@ -548,7 +550,7 @@ export const declaredMethods = Object.freeze(
       input_schema_digest:
         'sha256:1b6e9e016c071b7319b55668d1defc841d247d2900b7bb180195422fc1ab1b1d',
       output_schema_digest:
-        'sha256:5e0fac2b0cdb2c98d85d2c18d89e64814e73fa47106d9ec1594e389e95ce9435',
+        'sha256:db82313273efa302dddb0ec02f5d071c7a8dde47efd6c14a10c0683f25f75972',
     },
     {
       contract_version: '1.1.0',
@@ -601,7 +603,7 @@ export const inputSchemas = Object.freeze(
         output: 'CommandReceipt',
         advertised: false,
         inputDigest:
-          'sha256:061ab394b11f5dee8c05694a28bab82f0b27ea9b4dacd797f4af5be310c6ee1c',
+          'sha256:b2ac1e52e121f4b62b57e4bf8676fc685cb68a8cccfd4955c71c6a9a45ff6b30',
         outputDigest:
           'sha256:08d6c13b3f335c50f51fe594181781b41cc55252afde33b5755881880ece0f31',
       },
@@ -615,7 +617,7 @@ export const inputSchemas = Object.freeze(
         inputDigest:
           'sha256:1b6e9e016c071b7319b55668d1defc841d247d2900b7bb180195422fc1ab1b1d',
         outputDigest:
-          'sha256:5e0fac2b0cdb2c98d85d2c18d89e64814e73fa47106d9ec1594e389e95ce9435',
+          'sha256:db82313273efa302dddb0ec02f5d071c7a8dde47efd6c14a10c0683f25f75972',
       },
       {
         version: '1.1.0',
@@ -1753,17 +1755,23 @@ export const schema = deepFreeze({
           pattern:
             '^(0|[1-9][0-9]{0,5}|10[0-3][0-9]{4}|104[0-7][0-9]{3}|1048[0-4][0-9]{2}|10485[0-6][0-9]|104857[0-6])$',
           type: 'string',
+          description:
+            'Maximum total bytes for one fixed rule input: Snapshot, fixture lock, manifest and actually processed materials; not cumulative retransmission traffic.',
         },
         max_output_bytes: {
           $ref: '#/$defs/Revision',
           pattern:
             '^(0|[1-9][0-9]{0,5}|10[0-3][0-9]{4}|104[0-7][0-9]{3}|1048[0-4][0-9]{2}|10485[0-6][0-9]|104857[0-6])$',
           type: 'string',
+          description:
+            'Maximum complete candidate artifact plus Proposal bytes; not cumulative publication retransmission traffic.',
         },
         max_rule_steps: {
           $ref: '#/$defs/Revision',
           pattern: '^(0|[1-9][0-9]{0,2}|10[01][0-9]|102[0-4])$',
           type: 'string',
+          description:
+            'Fixed cumulative durable rule start allowance; uncertain earlier execution does not restore consumed starts.',
         },
         max_actions: {
           $ref: '#/$defs/Revision',
@@ -1804,16 +1812,24 @@ export const schema = deepFreeze({
       properties: {
         input_bytes: {
           $ref: '#/$defs/Revision',
+          description:
+            'Cumulative durably confirmed physical input bytes; may be a lower bound when measurements_complete is false.',
         },
         output_bytes: {
           $ref: '#/$defs/Revision',
+          description:
+            'Cumulative durably confirmed generated output bytes; may be a lower bound when measurements_complete is false.',
         },
         rule_steps: {
           $ref: '#/$defs/Revision',
+          description:
+            'Cumulative durably confirmed physical rule steps; not durable start allowance consumption. May be a lower bound when measurements_complete is false.',
         },
         model_requests: {
           $ref: '#/$defs/Revision',
           const: '0',
+          description:
+            'Exact physical model request count, always zero in the rule fixture.',
         },
         cost: {
           $ref: '#/$defs/Amount',
@@ -1833,6 +1849,18 @@ export const schema = deepFreeze({
               additionalProperties: false,
             },
           ],
+          description:
+            'Exact cumulative fixture durable-rule-start charges under the fixed fixture policy; not CPU or real model/provider charges.',
+        },
+        rule_starts: {
+          $ref: '#/$defs/Revision',
+          description:
+            'Exact cumulative durable rule starts charged by the fixed fixture policy; does not prove physical computation occurred.',
+        },
+        measurements_complete: {
+          type: 'boolean',
+          description:
+            'Whether cumulative input_bytes, output_bytes and rule_steps cover all physical observations; false means these confirmed counts may be lower bounds. Does not weaken exact rule_starts, fixture cost or zero model_requests.',
         },
       },
       required: [
@@ -1841,6 +1869,8 @@ export const schema = deepFreeze({
         'rule_steps',
         'model_requests',
         'cost',
+        'rule_starts',
+        'measurements_complete',
       ],
       additionalProperties: false,
     },

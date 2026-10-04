@@ -15,6 +15,25 @@ states can represent an authenticated cancellation before a decide arrived,
 without inventing an input or Snapshot. Proposal uses a mandatory closed advance
 union; requirement deltas may accompany one advance, and `none` requires a delta.
 
+`DecisionUsage.rule_starts` records exact cumulative durable rule start events.
+The fixed fixture policy charges each durable start; `cost` is that exact fixture
+charge, even when the process dies before physical computation is confirmed. It
+is not CPU or provider billing. `model_requests` remains exactly zero.
+
+`rule_steps`, `input_bytes`, and `output_bytes` record cumulative physical
+observations that have been durably confirmed. `measurements_complete: false`
+means these three counts may be lower bounds, including after a later successful
+completion. It does not make the start count, fixture cost, or model request count
+uncertain. Both precision fields are required, including an explicit false value;
+earlier 1.1 development bodies missing them are rejected. Updating durable old records
+requires an explicit owner migration rather than a permissive codec fallback.
+
+The fixed `max_rule_steps` limit controls durable start allowance. The input size
+limit covers one complete fixed input (Snapshot, fixture lock, manifest and actual
+materials); the output size limit covers its artifact plus Proposal. Public
+cumulative byte observations may include confirmed repeated processing. Those
+size limits do not silently become cumulative network traffic limits.
+
 `DecisionInputDigest(request, trustedSubject)` binds the fixed input using the
 `lerna-decision-input-1` prefix. `CommandDigest` retains the original
 `lerna-command-digest-1` algorithm and full authenticated command binding.
