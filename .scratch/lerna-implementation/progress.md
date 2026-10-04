@@ -8,8 +8,8 @@
 
 - 切片 01：**completed**。原任务 01–06 与后置架构任务 07 均 resolved；正确性修复、独立架构优化和 CI portability 已合入。受测实现提交 `23bac17ba0909c7a4d49d846eb08bc63391b99f0` 的真实远端 CI success，全部退出证据见[spec](../lerna-01-command-contracts/spec.md#切片退出证据2026-10-03)。
 - 切片 02：**completed**。10票68项AC resolved；最终源码f56d930、整合5548744。本地完整顺序count1集成50.431s/race93.834s，独立两轴全部原发现关闭/新增0，fixture架构收益复核闭合；准确CI37162569420 success，完整退出及旧未知schema/CID限制见[证据](../lerna-02-durable-work/exit-evidence.md)。
-- 切片 03：**in-progress**。六票42AC已发布；04独立SQLite目标与05耐久故障计划各6AC已resolved，分别整合f11135b与077f616；01规则Decision继续实施，02/03等待01，06等待01实际退出。新1.1与组件行为尚未整体验收，当前公开完整支持仍为1.0 command.get。
-- 切片 04–22：**not-started**。04–10仅TMP准备，真实前置整片退出后再复核、发布和实施。
+- 切片 03：**in-progress**。六票42AC中01/04/05的21AC已resolved；规则Decision首票受测源696ac49、交付d806a92，经merger整合5307702，完整tree与worker相同。02候选、03取消/限额与06进程恢复的真实直接前置已满足，待独立工作树实施。新1.1 Decision profile仍未完整广告；整片审查、架构、最终CI与退出待全部六票完成。
+- 切片 04–22：**not-started**。04–15仅TMP条件准备，真实前置整片退出后再复核、发布和实施。
 
 ## 切片 01 过程检查点（历史记录）
 
@@ -140,3 +140,11 @@ PG 首票检查点 `e5f26b87fb8914dc16bb6837abff6607a50cddb1` 的真实远端 [C
 目前03只完成04/05的12项AC，不提前关闭整片42AC；01继续验证规则启动计量、prepared恢复与真实旧writer迁移，02/03尚未开始，06仍等待01完成。本票未做SIGKILL、原生Commit未知、断电或供应商验证。新push CI尚待按准确head核验；既有04检查点CI不能替代新05代码验证。
 
 05整合检查点682961aecf79d2c2fe08b526e11af225aabfecdf的准确远端[CI37166918488](https://github.com/ruipengliu/lerna/actions/runs/37166918488)已实际success，两个job所有step成功。基础检查包含新target/fault-plan套件1.168s与旧158共同夹具正反序及实际双向往返；既有真实双库恢复count1 normal22.733s/race49.646s、固定psql18.6工具生命周期race2.371s及27来源hash全部OK。该远端race范围仍为旧recovery，新05 target race为本地3.615s；未合入的Decision/0002计量迁移不在此CI。whole03仍in-progress。
+
+## 切片03原Decision规则票完成
+
+01九项AC已resolved；最终源696ac49846105a16f33e5de86dc621a3858651b2、文档交付d806a92eb443b8e0c989cde4e4d7c20c7d61f49c，经merger合入530770274a457356fafe5a2e06832b7ee33f1f2e，双parent和完整tree等于worker已核验。严格1.1 Go/TS、原双身份accepted+Decision+FKJob短Tx、真实独立Source/Publisher、durable Start与完整prepared/原键发布读回/Finish，以及真实旧writer升级通过；[证据](../lerna-03-deterministic-harness/ticket-01-exit-evidence.md)和[实际端口](../lerna-03-deterministic-harness/ticket-01-api-handoff.md)给后票准确接法。
+
+产品机制f96的完整新PG normal25.137/8.208s、race42.337/11.485s，原PG/SQLite恢复normal27.357s/race60.405s均count1/timeout120顺序通过；b43窄历史pipe修复后的真实五状态旧writer升级5.760/9.080s、696测试登记修复后真实pipe0.010/1.058s通过，前41cb makecheck覆盖未变81新+158旧共同字节及JS/生成。两个独立最终轴各0open/0new，46commits/187paths；1074成功ack中的818PG/256FS全部absent，exact空overlayroot rmdir0，所有sessions已退出。历史失败与未知旧scope/CID限制保留，不猜删，也不冒称native driver故障。
+
+本检查点新push/准确远端CI尚待核验，旧05 CI不能替代新Decision。01/04/05合计21/42AC完成不等于whole03；候选全族、取消/资源完整矩阵、SIGKILL仍分别归02/03/06，所有六票完成后root再完成支持清单、架构及整片退出。

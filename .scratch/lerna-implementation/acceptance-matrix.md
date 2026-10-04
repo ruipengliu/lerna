@@ -132,3 +132,11 @@ F01/F02仅完成本票的原回执/原责任/同键冲突与重开范围；SIGKI
 - **G2整体及G3仍未完成。** 03/07/09/13/17的目标、外部责任/生产耐久与15真实第二业务实现待验；1.0 codec不是三个系统互操作。
 
 本fix285PG/265目录absence仅指准确登记项，原架构轮321/319另列；10两未知PG名、旧04未知schema和07unknownCREATE/CID不猜删。SIGKILL/postcommit-port fault不冒称断电/nativeSQLite Commit异常或跨区耐久。此前章节为历史检查点，状态以本节及progress当前记录为准。
+
+## 切片03规则首票检查点（整片尚未退出）
+
+2026-10-04，01/04/05合计21/42AC已resolved；01准确源696ac49、交付d806a92、整合5307702。完整tree、实际新PG/旧双库normal/race、原键与prepared恢复、真实旧writer升级和两个独立轴0遗留见[首票证据](../lerna-03-deterministic-harness/ticket-01-exit-evidence.md)。原1.0合同不扩，新1.1 Decision profile未完整广告，新检查点远端CI尚待核验。
+
+- **原身份与确定性规则：首票范围通过。** 当前鉴权后固定accepted、双摘要去重/冲突、原bytes/refs/用量与Proposal恢复、独立来源及发布读回成立；不裁决Task终态。
+- **G2及03验收尚未整体关闭。** 全部候选/依赖反例、取消/限额、真实SIGKILL分别仍由02/03/06完成；目标普通事实/plan迟到不冒称Executor Effect或供应商保证。
+- **生命周期证据有分层限制。** sql.OpenDB无物理scope的机械故障与实际正常数据库恢复分列；818PG/256FS登记项全absent不代表旧未知范围全清。断电、生产AZ、真实provider和15第二业务实现均未由此证明。

@@ -15,7 +15,9 @@ Read the [API handoff](ticket-01-api-handoff.md), [Standards review](ticket-01-s
 | f96f859 | `go test -tags=integration -count=1 -timeout=120s ./conformance/recovery/...` | actual original PG/SQLite exit0;27.357s |
 | f96f859 | same recovery scope/flags with `-race` | exit0;60.405s |
 | b43ceba88eafba323abb7ee5eb95302e88e8c971 | `go test -p=1 [-race] -tags=integration -count=1 -timeout=120s ./conformance/internal/decisionfixture -run '^TestFrozenLegacyWriterUpgrade$'` | actual five-state oldwriter/upgrade normal5.760/race9.080s, both0 |
-| 696ac49846105a16f33e5de86dc621a3858651b2 | three real prestart-pipe tests `-run '^TestUpgrade(Pipe\|Unstarted\|Prestart)'`, normal/race, count1/120s |0.010/1.058s, both0; tagged packagevet0/diffcheck0 |
+| 696ac49846105a16f33e5de86dc621a3858651b2 | three real prestart-pipe tests with the selection below, normal/race, count1/120s |0.010/1.058s, both0; tagged packagevet0/diffcheck0 |
+
+The three pipe tests use `-run '^TestUpgrade(Pipe|Unstarted|Prestart)'`.
 
 All checks ran sequentially in root's exclusive slot, with original finite deadlines and count1. No skip, missing dependency bypass, memory SQLite, increased timeout or competing database suite. After41cb only relevant Go lifecycle/fixture paths changed: tagged all-package vet/build, mechanical normal/race, final base-race and both actual new/old databases coveredf96. b43 is only historical fixture/prestart helper;696 is test registration only, each actual affected path reverified. Root explicitly avoided repeating unrelated JS/generated checks or unrelated wide DB suites; earlier results retain their accurate pins.
 

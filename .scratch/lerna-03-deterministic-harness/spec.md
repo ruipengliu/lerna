@@ -59,6 +59,8 @@ Depends on: [01](../lerna-01-command-contracts/spec.md)、[02](../lerna-02-durab
 
 2026-10-04，04独立目标与05耐久故障计划各6AC已resolved，准确整合f11135b与077f616；05受测a0198ed的19项normal/race、真实历史SQLite writer升级及两轴复核已通过。其故障阶段只是本地目标事实，不代表06进程SIGKILL或外部供应商证据；全片仍in-progress，01与后续规则、取消/限额及恢复票尚未全部退出。详见[04](issues/04-durable-test-target.md)、[05](issues/05-durable-fault-plans.md)。
 
+2026-10-04，01原Decision规则票九AC已resolved并整合530770274a457356fafe5a2e06832b7ee33f1f2e，tree与交付d806a92相同；准确受测源696ac49，分层检查pin及完整公开行为/旧writer升级/有限资源证据见[首票退出](ticket-01-exit-evidence.md)、[API交接](ticket-01-api-handoff.md)。两个独立轴0遗留；818PG/256FS确证登记范围全absent，原未知范围保留。当前21/42AC，02/03/06真实依赖已满足；本检查点的新push CI、后票特殊语义和整片支持清单/架构/最终退出尚未完成，旧CI不能替代新规则源码。
+
 A 阶段在 01–03 完成后退出：共同身份、两种数据库耐久工作与确定性故障设施均可运行，不开放真实副作用。
 
 依赖项表示实现先决条件；`ready-for-agent` 表示规格已明确，不表示依赖已完成或能力已开放。全部验收通过并附准确版本、环境、命令、结果和限制后，才可将本切片记为完成。共同执行与证据规则见[切片索引](../lerna-implementation/README.md)。
