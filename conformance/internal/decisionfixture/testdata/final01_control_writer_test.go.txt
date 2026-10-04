@@ -6,6 +6,7 @@ import (
 	"bufio"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -14,6 +15,7 @@ import (
 
 	decision "github.com/ruipengliu/lerna/components/decision_engine"
 	v "github.com/ruipengliu/lerna/contract/v1_1"
+	"github.com/ruipengliu/lerna/runtime"
 )
 
 type final01Migration struct {
@@ -89,15 +91,15 @@ func TestFrozenFinal01ControlWriter(t *testing.T) {
 		if name == "publication_running" || name == "prepared_waiting" {
 			claim, err := service.Claim(ctx)
 			if err != nil || claim == nil {
-				t.Fatal("old publication claim missing")
+				t.Fatal("old publication claim missing:", err)
 			}
 			if name == "publication_running" {
 				publisher.until = claim.Claim.LeaseUntil.Add(5 * time.Millisecond)
 			}
 			err = service.RunClaim(ctx, claim.Claim)
 			if name == "publication_running" {
-				if err == nil {
-					t.Fatal("expired old Finish unexpectedly committed")
+				if !errors.Is(err, runtime.ErrClaim) {
+					t.Fatal("old publication Finish did not lose its original lease qualification:", err)
 				}
 				if len(publisher.refs) != 2 {
 					t.Fatal("old publication window missing actual source outputs")
