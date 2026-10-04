@@ -260,3 +260,43 @@ func TestDurableDecisionCrossTenantAndOwnerAuthorization(t *testing.T) {
 		t.Fatalf("authorized normal path failed: %v", err)
 	}
 }
+
+func TestDurableDecisionOriginalReplaySurvivesAcceptanceCutoff(t *testing.T) {
+	ctx := decisionContext(t)
+	world := fixture.NewWorld(t, ctx)
+	scene := world.Scenario()
+	service := world.Service()
+	cutoff := time.Now().UTC().Add(500 * time.Millisecond).Truncate(time.Microsecond)
+	scene.Request.AcceptBefore = v.Time(cutoff.Format("2006-01-02T15:04:05.000000Z"))
+	raw := encode11(t, scene.Request)
+	first, err := service.Decide(ctx, raw, &scene.Subject)
+	requireAccepted(t, first, err)
+	if err = (runtime.WallTimer{}).Wait(ctx, time.Until(cutoff)+time.Millisecond); err != nil {
+		t.Fatal(err)
+	}
+	repeated, err := service.Decide(ctx, raw, &scene.Subject)
+	requireAccepted(t, repeated, err)
+	before := encode11(t, first)
+	after := encode11(t, repeated)
+	if string(before) != string(after) {
+		t.Fatal("cutoff changed original fixed receipt")
+	}
+	fresh := scene.Request
+	fresh.CommandID = "late-new-command"
+	outcome, err := service.Decide(ctx, encode11(t, fresh), &scene.Subject)
+	if err != nil {
+		t.Fatal(err)
+	}
+	received, ok := outcome.AsReceived()
+	if !ok {
+		t.Fatal("late rejection not received")
+	}
+	rejected, ok := received.Receipt.AsRejected()
+	if !ok || rejected.Reason != "expired" {
+		t.Fatal("late new command not fixed expired")
+	}
+	step, err := service.Step(ctx)
+	if err != nil || step.Processed != 1 {
+		t.Fatalf("acceptance cutoff incorrectly stopped execution: %v", err)
+	}
+}
