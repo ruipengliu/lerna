@@ -1,0 +1,500 @@
+{
+  "format": "lerna-final01-production-closure-1",
+  "source_commit": "696ac49846105a16f33e5de86dc621a3858651b2",
+  "source_packages": [
+    "github.com/ruipengliu/lerna/contract/gen/go",
+    "github.com/ruipengliu/lerna/contract",
+    "github.com/ruipengliu/lerna/runtime",
+    "github.com/ruipengliu/lerna/runtime/workpool",
+    "github.com/ruipengliu/lerna/adapters/postgres/internal/pgstore",
+    "github.com/ruipengliu/lerna/internal/durableworkdemo",
+    "github.com/ruipengliu/lerna/adapters/postgres",
+    "github.com/ruipengliu/lerna/contract/gen/go/v1_1",
+    "github.com/ruipengliu/lerna/contract/v1_1",
+    "github.com/ruipengliu/lerna/components/decision_engine",
+    "github.com/ruipengliu/lerna/adapters/postgres/decision_engine",
+    "github.com/ruipengliu/lerna/conformance/internal/decisionfixture"
+  ],
+  "files": [
+    {
+      "artifact": "adapters/postgres/commands.go.txt",
+      "destination": "adapters/postgres/commands.go",
+      "sha256": "1aa6421a705adb00d91a67e098f1af41cd26c54e7cb2edea0c95dd77306cb948",
+      "bytes": 4222,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "adapters/postgres/decision_engine/migrations/0001_decisions.sql.txt",
+      "destination": "adapters/postgres/decision_engine/migrations/0001_decisions.sql",
+      "sha256": "d442f99c7a77b82b4977c992ba85ad46d8aa52ed1757235fe02bc0d9239b5f53",
+      "bytes": 3331,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "adapters/postgres/decision_engine/migrations/0002_rule_start_accounting.sql.txt",
+      "destination": "adapters/postgres/decision_engine/migrations/0002_rule_start_accounting.sql",
+      "sha256": "ce6641e0683c05dab1585748a9ae6ba93d09d4171b34903983835f138489c95c",
+      "bytes": 1368,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "adapters/postgres/decision_engine/store.go.txt",
+      "destination": "adapters/postgres/decision_engine/store.go",
+      "sha256": "288ed613539492364d7a66a1f2f813fe66257ad11188e6d704d26560e87e2a10",
+      "bytes": 9856,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "adapters/postgres/decision_engine/work.go.txt",
+      "destination": "adapters/postgres/decision_engine/work.go",
+      "sha256": "0169b043101fa8fd3edffc83ca19f1d75a513ec71440f60c86f97bd11c39ba83",
+      "bytes": 7769,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "adapters/postgres/demo.go.txt",
+      "destination": "adapters/postgres/demo.go",
+      "sha256": "c9f28c385a311765313737b89168cf5456bb835e74953048e47a3736c1a880aa",
+      "bytes": 3845,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "adapters/postgres/internal/pgstore/core.go.txt",
+      "destination": "adapters/postgres/internal/pgstore/core.go",
+      "sha256": "6a7a494bcb33bb03e0b3844b33829f2bd4a3954326a3f05d4737e5ba75c19499",
+      "bytes": 6886,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "adapters/postgres/internal/pgstore/jobs.go.txt",
+      "destination": "adapters/postgres/internal/pgstore/jobs.go",
+      "sha256": "feb70b9613269f6b88e87e8cfdd4cd255228edb50e3f6ecd8c93c321efed91e8",
+      "bytes": 9739,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "adapters/postgres/internal/pgstore/pool.go.txt",
+      "destination": "adapters/postgres/internal/pgstore/pool.go",
+      "sha256": "ca3e395b06d2cda0d995f325b27663782e5c06359d3dde7495ff1574531099f1",
+      "bytes": 15154,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "adapters/postgres/migrate.go.txt",
+      "destination": "adapters/postgres/migrate.go",
+      "sha256": "a88140012c2cec4ffb2fb00827557db5d2a691e5f63bb0756f2264c006751232",
+      "bytes": 3704,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "adapters/postgres/migrations/host/0001_admission.sql.txt",
+      "destination": "adapters/postgres/migrations/host/0001_admission.sql",
+      "sha256": "f8d04d373b039a425b4f6d0a7b7dd4410971c00faf91cdba3f68a9204579127e",
+      "bytes": 1158,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "adapters/postgres/migrations/host/0002_claims.sql.txt",
+      "destination": "adapters/postgres/migrations/host/0002_claims.sql",
+      "sha256": "cdb7dea9f55ee8ac9201a943cecf8096108b48bc208409e1372bbf17295b2297",
+      "bytes": 1840,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "adapters/postgres/migrations/host/0003_retention.sql.txt",
+      "destination": "adapters/postgres/migrations/host/0003_retention.sql",
+      "sha256": "ec7e5d35deb0c19a1fccc5cd965fba8367b02ab3df3b46d97da8782a0b5f7249",
+      "bytes": 214,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "adapters/postgres/migrations/host/0004_waits.sql.txt",
+      "destination": "adapters/postgres/migrations/host/0004_waits.sql",
+      "sha256": "5cdc0cb11fa3aec15a496c8f19419a83929299db513d98d954f8b0281a7428d5",
+      "bytes": 1215,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "adapters/postgres/migrations/host/0005_pools.sql.txt",
+      "destination": "adapters/postgres/migrations/host/0005_pools.sql",
+      "sha256": "5f9356a7b4f58e908069e6038e599de0fd4d31c8f4f025124672eed8e72319e1",
+      "bytes": 1152,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "adapters/postgres/pool.go.txt",
+      "destination": "adapters/postgres/pool.go",
+      "sha256": "4b88ee97ec80a7b7f51c0c45a1199192106ff0d84b0421fa926404cd705a5609",
+      "bytes": 8135,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "adapters/postgres/retention.go.txt",
+      "destination": "adapters/postgres/retention.go",
+      "sha256": "46b67e150b1fe4ee3442a2a58f771065526a56f7744f995c12b88022a4e06225",
+      "bytes": 2839,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "adapters/postgres/schedule.go.txt",
+      "destination": "adapters/postgres/schedule.go",
+      "sha256": "1be8cebaae81c7c12614f3bfc3263c9f96922b47276dec65f34a6da9e5fa5766",
+      "bytes": 9011,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "adapters/postgres/store.go.txt",
+      "destination": "adapters/postgres/store.go",
+      "sha256": "1be157b5ab0938e04915eebdbcaa4d957f904db88c14d594a2efd155e420c3f0",
+      "bytes": 1840,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "adapters/postgres/work.go.txt",
+      "destination": "adapters/postgres/work.go",
+      "sha256": "028c38fa8f8fea6a6d8dd133b6a5a3a7e9ee64c63e8acee78c171356cf45f8c8",
+      "bytes": 2287,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "components/decision_engine/ports.go.txt",
+      "destination": "components/decision_engine/ports.go",
+      "sha256": "e38e88592a20580a8f1fcff104bf536486ca3c70c257ddfddef0c694946f7447",
+      "bytes": 7865,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "components/decision_engine/query.go.txt",
+      "destination": "components/decision_engine/query.go",
+      "sha256": "780e8c58c7ebb7a929997f5f0ec097d788ac04b67dd8339387afaafe733fd8d1",
+      "bytes": 2708,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "components/decision_engine/service.go.txt",
+      "destination": "components/decision_engine/service.go",
+      "sha256": "811cb8422ef16a862f398621f71d1c6882bdbd821f28ef093df5f48141bbe216",
+      "bytes": 15133,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "components/decision_engine/worker.go.txt",
+      "destination": "components/decision_engine/worker.go",
+      "sha256": "f0875ca23c36ae9845246095c4f910c2233b9d3f0230e979c9593a9bb16db36f",
+      "bytes": 30260,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "conformance/internal/decisionfixture/migrations/0001_fixture.sql.txt",
+      "destination": "conformance/internal/decisionfixture/migrations/0001_fixture.sql",
+      "sha256": "4aaf85dac7110ffcb4d07fe04dff5f38fbe55cd6d1e49eded4781a8a06bd709b",
+      "bytes": 754,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "conformance/internal/decisionfixture/publisher.go.txt",
+      "destination": "conformance/internal/decisionfixture/publisher.go",
+      "sha256": "c3daa8da26a7c9bb01358e3b15c0bd9a6a2183f6f24da953091eb4f3ad0cdb42",
+      "bytes": 5188,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "conformance/internal/decisionfixture/source.go.txt",
+      "destination": "conformance/internal/decisionfixture/source.go",
+      "sha256": "5c05cd9922858c6a08764aaacb66afb5cb579ce98fd5589d6f3ab7c91f69143b",
+      "bytes": 19720,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "conformance/internal/decisionfixture/store.go.txt",
+      "destination": "conformance/internal/decisionfixture/store.go",
+      "sha256": "35b6586d7fe47954282a763d5b1500b5764bfb66dc2edceaa8c8056a03a62f2b",
+      "bytes": 6588,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "conformance/internal/decisionfixture/world.go.txt",
+      "destination": "conformance/internal/decisionfixture/world.go",
+      "sha256": "9bd2a48276df94c861abf167381aa8c87e169e93b782e8da36ecf3fc435c09f6",
+      "bytes": 7190,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "conformance/internal/decisionfixture/world_source.go.txt",
+      "destination": "conformance/internal/decisionfixture/world_source.go",
+      "sha256": "6cf10540ee263b84d33fb18b0ac84736e1b494accb659d77fd3308f4ee9c9f76",
+      "bytes": 8406,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "contract/codec.go.txt",
+      "destination": "contract/codec.go",
+      "sha256": "59ac83d1dc0340362777dff96da2ba4f968de738aec7584d19030cf5bd00fa86",
+      "bytes": 5505,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "contract/commands.go.txt",
+      "destination": "contract/commands.go",
+      "sha256": "933469c3665bd3525643f2f0a3313f686da03a8941fb453a76b72d0fde6919a7",
+      "bytes": 2067,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "contract/digest.go.txt",
+      "destination": "contract/digest.go",
+      "sha256": "a8db4eb43c1573f745069b1985d76895ce23a9315d5d6b32e28895c4568ccf59",
+      "bytes": 3597,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "contract/gen/go/v1_1/values.go.txt",
+      "destination": "contract/gen/go/v1_1/values.go",
+      "sha256": "151f648974c43f3fdfb58b383697afb9f626e64215ccb21e215907b0cf8c9019",
+      "bytes": 73974,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "contract/gen/go/values.go.txt",
+      "destination": "contract/gen/go/values.go",
+      "sha256": "e5e34d5e52a71ad126a40bbfada9aabb92572f79b2d925b09f6959a0546605be",
+      "bytes": 29758,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "contract/json.go.txt",
+      "destination": "contract/json.go",
+      "sha256": "db7ef82bcde147126dc4b116c94896823687fc83f16abc10da3ee70f83cf262f",
+      "bytes": 3651,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "contract/negotiation.go.txt",
+      "destination": "contract/negotiation.go",
+      "sha256": "679c406e705a541cebc1d9a2bbeb35cb0bd629a75b47eb7caa42768102d0e5a8",
+      "bytes": 1194,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "contract/query.go.txt",
+      "destination": "contract/query.go",
+      "sha256": "5b9bf77e09fea8ed49e296b441b9e94ea2642fe4930bde925a203a3d1294d7c3",
+      "bytes": 3430,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "contract/readfacts.go.txt",
+      "destination": "contract/readfacts.go",
+      "sha256": "c2267bfab9413a8b0983da29a931a8b9e723cf845d6ec782413ef632d9f8b003",
+      "bytes": 1960,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "contract/receipts.go.txt",
+      "destination": "contract/receipts.go",
+      "sha256": "da354c4ebb35146d6059b6915ae355b347d6ffe5a0da733953d6f53543c8a93a",
+      "bytes": 4113,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "contract/v1_1/codec.go.txt",
+      "destination": "contract/v1_1/codec.go",
+      "sha256": "53ba6cf9a5bb9d70d77632cc154be07ef5e5171c0832fc50488fbdd210981167",
+      "bytes": 5578,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "contract/v1_1/commands.go.txt",
+      "destination": "contract/v1_1/commands.go",
+      "sha256": "d7627a261550db17a54253d15d7659f410fc8d799d296381fbcea1bb9bebf1eb",
+      "bytes": 2188,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "contract/v1_1/decision.go.txt",
+      "destination": "contract/v1_1/decision.go",
+      "sha256": "637739f8e1491e5cc3bb70531f2b4d292a6d2caa59d8622d2da22198732e9be4",
+      "bytes": 7671,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "contract/v1_1/digest.go.txt",
+      "destination": "contract/v1_1/digest.go",
+      "sha256": "b4a140c64f9927329f24154bee8d738f600003024be9a589ae43e9848df00a33",
+      "bytes": 3593,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "contract/v1_1/json.go.txt",
+      "destination": "contract/v1_1/json.go",
+      "sha256": "9c6c14729d3ea6c9ea464ef1a234aa3eea106f1c0478e8b1b9a2ee78ffb8f06a",
+      "bytes": 3647,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "contract/v1_1/negotiation.go.txt",
+      "destination": "contract/v1_1/negotiation.go",
+      "sha256": "b28d6eb4fb1b1963766bd2c746661071fd51d682f87d6cfd3ea6b622d684d5ad",
+      "bytes": 1368,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "contract/v1_1/query.go.txt",
+      "destination": "contract/v1_1/query.go",
+      "sha256": "5168b38e54045a4b980ca912b29455b47181d07eec663f0cf6b96f466d073e94",
+      "bytes": 3426,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "contract/v1_1/readfacts.go.txt",
+      "destination": "contract/v1_1/readfacts.go",
+      "sha256": "e4f0c2eb76dd62c514e55846fe9750b38ca94bb11b945378769c7f874054372d",
+      "bytes": 1956,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "contract/v1_1/receipts.go.txt",
+      "destination": "contract/v1_1/receipts.go",
+      "sha256": "40d7f2a77f5f643b454f60480526087c60a5f15f0cf6e128b7f638b69b1a677e",
+      "bytes": 4180,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "contract/v1_1/values.go.txt",
+      "destination": "contract/v1_1/values.go",
+      "sha256": "8df5d20c1287015d23af12bc249697bfe15a7789752f20250f9fbfb9b27087c5",
+      "bytes": 9748,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "contract/values.go.txt",
+      "destination": "contract/values.go",
+      "sha256": "3ff7bde3b0564e49e779145bdea42571560982451a1e9fcdb87c0043445dfc1c",
+      "bytes": 4835,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "go.mod.txt",
+      "destination": "go.mod",
+      "sha256": "ae25405c4fd98f5962178ff4241c52022a5bff182903337beead57204d39a04a",
+      "bytes": 444,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "go.sum.txt",
+      "destination": "go.sum",
+      "sha256": "67de0a2b012283127841c03932d678a06b9b278ae8b277db6f8cc9f7f3d99b37",
+      "bytes": 2850,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "internal/durableworkdemo/maintenance.go.txt",
+      "destination": "internal/durableworkdemo/maintenance.go",
+      "sha256": "3d0d13089ac8cf76372a28155f0896757ec8990d034dacefa94956d87ad97800",
+      "bytes": 4190,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "internal/durableworkdemo/permissions.go.txt",
+      "destination": "internal/durableworkdemo/permissions.go",
+      "sha256": "0afb3caf2706668ba08fa006ec41ee973a379312d079d86d5ce5e59be8bad72d",
+      "bytes": 1821,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "internal/durableworkdemo/pool.go.txt",
+      "destination": "internal/durableworkdemo/pool.go",
+      "sha256": "9fe6056767bb2deba551ad88c5a85e16e8b2fa72b5945f22f02fd805d3d37ab6",
+      "bytes": 4143,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "internal/durableworkdemo/pool_worker.go.txt",
+      "destination": "internal/durableworkdemo/pool_worker.go",
+      "sha256": "0f28cd85fdb8b1137d2fcfb0014fc2eac5442e31b4af687eb793d4d64da47684",
+      "bytes": 5930,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "internal/durableworkdemo/record.go.txt",
+      "destination": "internal/durableworkdemo/record.go",
+      "sha256": "7c20e97356187b7d55a84bb67c49efb460c92cfdb2a12f9ca442f42d3afd8fbe",
+      "bytes": 1819,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "internal/durableworkdemo/retention.go.txt",
+      "destination": "internal/durableworkdemo/retention.go",
+      "sha256": "b72ff000f06cc2868fa60161d629605d1792407b03a3c461cdbab0faa30ac7db",
+      "bytes": 4085,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "internal/durableworkdemo/schedule.go.txt",
+      "destination": "internal/durableworkdemo/schedule.go",
+      "sha256": "60f9041dcd29a65b894fdbc05caf6ee0120bd602d0013d89e76c2363971336cc",
+      "bytes": 6867,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "internal/durableworkdemo/service.go.txt",
+      "destination": "internal/durableworkdemo/service.go",
+      "sha256": "d1263d975983aae36c347a6baa676d216f6ea9028c259fea7997bea8106914e3",
+      "bytes": 7026,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "internal/durableworkdemo/step.go.txt",
+      "destination": "internal/durableworkdemo/step.go",
+      "sha256": "a6eaa4ea16c6d249a6dcc40f7e6532ad2615a3786a3d7dd10a947581b0439228",
+      "bytes": 9992,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "internal/durableworkdemo/work.go.txt",
+      "destination": "internal/durableworkdemo/work.go",
+      "sha256": "be698e802ecc709642436a28ae9871787a673cc0b88149f8e8f75f4681d677b5",
+      "bytes": 8452,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "internal/durableworkdemo/worker_permissions.go.txt",
+      "destination": "internal/durableworkdemo/worker_permissions.go",
+      "sha256": "e69d6687867d3c5dc2869fff0f936983eeb97ca91751e3961c21c8218fb98e5f",
+      "bytes": 942,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "runtime/admission.go.txt",
+      "destination": "runtime/admission.go",
+      "sha256": "9f6136f51196814bdaacd2065b038371d1a1827e9d4c0e0d496cf80c161bad21",
+      "bytes": 4419,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "runtime/schedule.go.txt",
+      "destination": "runtime/schedule.go",
+      "sha256": "d1d72e6cd41bafeb792cca905cf107ef7be5571b54656b32027bce58045a836f",
+      "bytes": 1213,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "runtime/work.go.txt",
+      "destination": "runtime/work.go",
+      "sha256": "4c46f07ed1b9dc289e1e146565834f10b2626fa4618ec503474bef7867529ef1",
+      "bytes": 1088,
+      "role": "archived_production"
+    },
+    {
+      "artifact": "runtime/workpool/pool.go.txt",
+      "destination": "runtime/workpool/pool.go",
+      "sha256": "3a656de3f9148528c9234245e551c1fc066f7714e1e06ce7f4dafa773f9cf930",
+      "bytes": 5540,
+      "role": "archived_production"
+    }
+  ],
+  "production_file_count": 68,
+  "production_bytes": 447637,
+  "file_count": 68,
+  "payload_bytes": 447637
+}
