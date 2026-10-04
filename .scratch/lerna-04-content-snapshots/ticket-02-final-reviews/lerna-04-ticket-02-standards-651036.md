@@ -1,0 +1,15 @@
+# Standards — fixed6510364 delivery
+
+BASE `f05b2f1068958ba6b63e6c1dc58d6cd1684446cc` → HEAD `6510364763f60c7efdf8ff10dde590f3fd607cb8`: actual **12 commits/352 paths**,73478+/218−. All912 existing5c024 tree entries, including54 reviewed source paths and231 Go objects, match by mode/type/blob. The298 additions are hidden documentation/evidence only. Reviewed all seven authored objects; all65 review and226 execution originals match both declared SHA256 and actual original-file bytes. Historical raw snapshots/logs receive mechanical provenance qualification rather than semantic rereading of64k lines; other-axis findings were not read. Complete objects/commits/provenance: `/tmp/lerna-04-ticket-02-standards-651036-scope.json`.
+
+**Hard: 0; worst none.** Original processing-deadline and all five SQL Close-location findings remain CLOSED. No new documented-standard breach.
+
+`ticket-02-api-handoff.md` accurately documents private action sets, same-Tx complete observations, current source policy-before-metadata ordering, original deadlines, fixed receipts and callback-only rollback classification. Public profiles remain unadvertised; frozen1.0/1.1,0001 and all21 archive objects are unchanged, with hashes rechecked. All117 extended protected-base blobs match their declared base/current objects. No new runtime behavior is inferred from inert `.go.txt` captures.
+
+`ticket-02-evidence.md` distinguishes historical failures, mechanical faults and actual native controls, source/binary identity, per-case timing sums versus package/wall time, cached checks and earlier audit cutoffs. README/provenance mappings and14 authored links are valid; all40 new JSON artifacts parse, and eight captured-source manifests match their snapshot hashes. Local `.gitattributes` preserves raw whitespace only inside the archive. These follow AGENTS.md:105/122/145/147/149 and ADR0006/0007's original identity, responsibility and evidence limits.
+
+**Possible smells: 1; worst P3.** Retained optional **Duplicated Code**, `adapters/postgres/content/management.go:71,299,395,439`: four typed readers repeat “`if len(…) == limit { next = last; break }`”, scan/decode/cursor/joined-close shape. Fowler suggests minimal shared consumption; KEEP is judgement, not hard or an acceptance gate. Exact historical copies are provenance, not new default implementations.
+
+All12 assessed/carried: Mysterious Name, Duplicated Code, Feature Envy, Data Clumps, Primitive Obsession, Repeated Switches, Shotgun Surgery, Divergent Change, Speculative Generality, Message Chains, Middle Man, Refused Bequest. Repo closed cases, consumer ports/decorators and frozen provenance override heuristics; tool-enforced format/vet/types/whitespace excluded.
+
+Read-only; no reviewer native execution. Captured logs verify170 top-level cases exactly once per normal/race mode, ten successful groups, fixture/Decision/base-race/check/module exits. Audit normalization matches raw JSON and separate completed native metadata; five schemas/eight roots and old Z/per-Close unknowns remain retained. Seven AC unchecked; whole04 and accurate-head CI incomplete. No acceptance/merge/push.

@@ -175,3 +175,8 @@ Source成功关闭后的真正读取失败不是native Close或COMMIT故障；�
 ## 切片04首票检查点（整片未退出）
 
 2026-10-04，首票8AC已resolved，真实有限准确Content从PG accepted到独立对象published/回读、版本冲突/完整声明、当前主体/用途/read-disclose、查询不修补、真实重开及旧reader桥接通过。[证据](../lerna-04-content-snapshots/ticket-01-exit-evidence.md)绑定14ead受测/1a7交付/eba合并。F22杀进程、F12完整上下文、完整来源闭包和跨holder清理仍留后票，未关闭04整片或G5整体；新准确CI待核。
+
+
+## 切片04来源政策票接受并整合
+
+2026-10-04，票02七AC resolved，交付651036/产品4c621/工具5c024，正式merge6f88740双parents及完整tree等于worker；[逐AC证据](../lerna-04-content-snapshots/ticket-02-exit-evidence.md)保留所有实际测试/审查与unknown范围。完整170 normal/race每模式一次，fixture/Decision/base race/locked check/module verify通过；最终双轴0hard/1可选P3 KEEP、Spec a0b0c0、架构0necessary。5 schemas/8 roots、旧Z与空selector per-Close unknown保留，未cleanup。当前15/41，whole04 in-progress、完整1.2广告OFF；03/05直接前置已满足。新准确push CI待核，旧首票7c CI不替代新源。

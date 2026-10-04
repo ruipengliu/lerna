@@ -1,0 +1,72 @@
+{
+  "delivery": "6510364763f60c7efdf8ff10dde590f3fd607cb8",
+  "merge": "6f88740a737d8b4ef184495661de59f797bda38a",
+  "items": [
+    {
+      "original": "/tmp/lerna-04-ticket-02-architecture-651036.md",
+      "path": "lerna-04-ticket-02-architecture-651036.md",
+      "sha256": "d87b444089a97af015c335ad25ed7a8ad42579c9b04e2a3e365e4c22f91908c8",
+      "bytes": 6810
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-code-review-651036.md",
+      "path": "lerna-04-ticket-02-code-review-651036.md",
+      "sha256": "1f55f98b384841c8f70359d6bf74b9a5fad5fd8b94541a14e6dcdfab0564a651",
+      "bytes": 6069
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-spec-651036-scope.json",
+      "path": "lerna-04-ticket-02-spec-651036-scope.json",
+      "sha256": "576ad0af11c275f472340db192c1e9ae9d8ff05a89d336ce1920a32e86d39e53",
+      "bytes": 147405
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-spec-651036.md",
+      "path": "lerna-04-ticket-02-spec-651036.md",
+      "sha256": "b6f4922eca898552859640633f1426a460fb4312ddfd55ad767080cd8c381a91",
+      "bytes": 2619
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-standards-651036-artifact-qualification.json",
+      "path": "lerna-04-ticket-02-standards-651036-artifact-qualification.json",
+      "sha256": "d5cb8791fec8cd62e3003797718cff41f780f5cd93b63a6282648e0da2e55983",
+      "bytes": 318596
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-standards-651036-commits.txt",
+      "path": "lerna-04-ticket-02-standards-651036-commits.txt",
+      "sha256": "a0c855cdbcf52a8a625c0c448f3d604fb43aa722ee5f771f01aa825c341c3e58",
+      "bytes": 984
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-standards-651036-paths.txt",
+      "path": "lerna-04-ticket-02-standards-651036-paths.txt",
+      "sha256": "4d14781677ddf4ff9c6ee1ce187166cc76218740ceb70201b0105d2e0bfa15a0",
+      "bytes": 33492
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-standards-651036-scope.json",
+      "path": "lerna-04-ticket-02-standards-651036-scope.json",
+      "sha256": "71fa78449ab2ba34e868b9cc8269f5ec13b7827248cea69755169c9898c50954",
+      "bytes": 1172170
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-standards-651036.md",
+      "path": "lerna-04-ticket-02-standards-651036.md",
+      "sha256": "ba51bba2d6d7b0f323d9795080f781e5f42a4c2bc086cb85047210e937169eef",
+      "bytes": 3152
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-merge-report.md",
+      "path": "lerna-04-ticket-02-merge-report.md",
+      "sha256": "aeeabc73eb37dc61daa97b67e5a985cf8f5539a0b0ece2217261dd28fe06815e",
+      "bytes": 67422
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-root-acceptance.md",
+      "path": "lerna-04-ticket-02-root-acceptance.md",
+      "sha256": "22229870505b5720c713f5f0f51c7ace013ec907399f04af2e312fc34b3f2f78",
+      "bytes": 2458
+    }
+  ]
+}

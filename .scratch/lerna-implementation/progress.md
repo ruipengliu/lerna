@@ -220,3 +220,8 @@ root全文读取[Astra六票复核](../lerna-04-content-snapshots/published-tick
 2026-10-04，首票准确7c0bce5 CI37207013464已success，root读取两个job全部steps和完整日志：35Node/44TS/158+89+101两序双向、Recovery normal23.346/race52.987、动态133 Component正常52.653及race60组61.550＋73组24.421、Source13.205/16.724、Contentfixture0.053/1.178、Local0.048/1.065，54条旧manifest实际OK。见[CI](../lerna-04-content-snapshots/ci-verification.md)。02正在独立worktree实施，新代码不在7cCI内；whole04继续8/41。
 
 2026-10-04，04票02继续claimed。隐藏祖先撤销场景已实际business red→green（Component0.363/0.563s，native1/0且group absent）；管理入口初始red是API缺失编译失败，不冒称业务red。两处旧预期调整及准确fullRef责任分类已由授权Astra high裁决、root采用[决定](../lerna-04-content-snapshots/ticket-02-oracle-decisions.md)，实现与完整验证仍待。唯一LOCAL执行owner仍02；root未并发构建/测试/DB，whole04保持8/41。
+
+
+## 切片04来源政策票接受并整合
+
+2026-10-04，票02七AC resolved，交付651036/产品4c621/工具5c024，正式merge6f88740双parents及完整tree等于worker；[逐AC证据](../lerna-04-content-snapshots/ticket-02-exit-evidence.md)保留所有实际测试/审查与unknown范围。完整170 normal/race每模式一次，fixture/Decision/base race/locked check/module verify通过；最终双轴0hard/1可选P3 KEEP、Spec a0b0c0、架构0necessary。5 schemas/8 roots、旧Z与空selector per-Close unknown保留，未cleanup。当前15/41，whole04 in-progress、完整1.2广告OFF；03/05直接前置已满足。新准确push CI待核，旧首票7c CI不替代新源。

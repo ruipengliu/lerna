@@ -4,15 +4,15 @@
 
 **Blocked by:** 01 — 原内容版本的耐久发布与准确读取
 
-**Status:** claimed
+**Status:** resolved
 
-- [ ] 独立裁决read/process/save/sync/disclose及准确subject/resource/purpose/当前policy revision/期限，缺许可fail closed，read不推出其他许可。
-- [ ] 真实派生Content继承全部已登记有限来源闭包，最多64、不截断、不重复；same tenant/owner首版范围明确，跨owner准确unsupported、跨tenant拒绝。
-- [ ] 用途取全部来源交集、保留截止取最严原期限与请求较早截止；无合法交集拒绝，不因重启/再派生刷新期限。
-- [ ] 发布最终Content Tx重新核当前所有来源及政策；先撤权不再发布，先发布后新读取/处理被封，撤权本身不冒称擦除。
-- [ ] 先封新使用并同Tx保存传播/holder清理责任，重开可查；物理删除由05完成，不提前report erased。
-- [ ] 无权主体不泄露存在性/元数据/字节；真实允许主体与合法派生正常对照可完成，外部put来源只属声明，不推断完整真实生成史。
-- [ ] 通过真实Content/受信政策公开行为和native持久重开检验，不依私表/内部计数；fixture不是06的Grant/Use/生产授权。
+- [x] 独立裁决read/process/save/sync/disclose及准确subject/resource/purpose/当前policy revision/期限，缺许可fail closed，read不推出其他许可。
+- [x] 真实派生Content继承全部已登记有限来源闭包，最多64、不截断、不重复；same tenant/owner首版范围明确，跨owner准确unsupported、跨tenant拒绝。
+- [x] 用途取全部来源交集、保留截止取最严原期限与请求较早截止；无合法交集拒绝，不因重启/再派生刷新期限。
+- [x] 发布最终Content Tx重新核当前所有来源及政策；先撤权不再发布，先发布后新读取/处理被封，撤权本身不冒称擦除。
+- [x] 先封新使用并同Tx保存传播/holder清理责任，重开可查；物理删除由05完成，不提前report erased。
+- [x] 无权主体不泄露存在性/元数据/字节；真实允许主体与合法派生正常对照可完成，外部put来源只属声明，不推断完整真实生成史。
+- [x] 通过真实Content/受信政策公开行为和native持久重开检验，不依私表/内部计数；fixture不是06的Grant/Use/生产授权。
 
 ## Comments
 
@@ -21,3 +21,11 @@
 2026-10-04，01已接受并正式合入eba/推送7c0bce5，准确API对象已复核相等；root采用[当前实施交接](../ticket-02-handoff.md)并claimed本票。唯一LOCAL构建/测试/数据库槽从01实际释放后授予02；7AC未勾选，物理删除/holder和whole04退出不在此伪报。
 
 2026-10-04，root采用[旧oracle与准确政策责任裁决](../ticket-02-oracle-decisions.md)：传播Job不等于重开出版；过期旧cap放宽/重开仍不复活，新正常出口用全新准确版本链。兼容错误完整Ref对实际源五动作无效，原保存主体/用途的责任pending；其他主体/用途不得触发不当全局收紧/删除。待sole fixer落实与独立验证，不作完成证据。
+
+## Answer
+
+2026-10-04，root接受七AC并正式合入6f88740；准确交付651036/产品4c621/工具5c024及[逐AC退出证据](../ticket-02-exit-evidence.md)说明真实normal/race/完整check、三原archive、两轴与架构资格。15/41子AC，whole04仍in-progress，完整1.2广告OFF；旧未知Close资源保留，物理清理由05负责。
+
+## Comments
+
+2026-10-04，最终接受记录追加于此；早期claimed与pending叙述保留历史cutoff。Owner无pending native并已明确释放LOCAL槽。新push准确CI待核；03和05的唯一直接前置02现已resolved。
