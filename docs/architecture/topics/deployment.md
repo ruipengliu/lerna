@@ -6,6 +6,7 @@
 | 2026-10-04 | 按 `CLAUDE.md` 写作要求和[文档规范](../conventions.md)修订用语：约束统一为"必须／不得""建议／不建议"，不再使用"应"；"执行端"统一为"执行端点"，发布回滚统一为"回滚"，授权统一用"撤销"。设计内容不变。 |
 | 2026-10-04 | 按[架构评审处理记录](../../review/archive/round-1/README.md)修订：定义端侧账本连续性的判据，新增账本启动状态、以云端开始回执作见证、备份与迁移隔离和能力边界（RV7）；故障矩阵按持久档位区分（RV4、[ADR 0001](../../adr/0001-durability-profiles.md)）；关闭待定事项"执行端点连续性的判据"。 |
 | 2026-10-04 | 按[第二轮评审处理记录](../../review/archive/round-2/disposition.md)修订：4.4 增加开放云端生产档的前置条件和接管故障验收（R2-07）。 |
+| 2026-10-05 | 可读性：2.2 增加端云部署与事实归属图；4.2 增加重连顺序与账本连续性流程图。规则不变。 |
 
 - 状态：草稿
 - 负责满足：C5、A3、A4、G3、G4、G11、G12；协同 C2、C4、C6–C8
@@ -84,6 +85,34 @@
 **手机上不承诺常驻进程。**Apple 的后台任务由系统调度，iOS/iPadOS 26 的持续处理任务要求用户主动触发并显示进度，资源紧张时仍可能被终止（[WWDC 2025](https://developer.apple.com/videos/play/wwdc2025/227/)）。Apple 的后台推送不保证送达（[后台推送](https://developer.apple.com/documentation/usernotifications/pushing-background-updates-to-your-app)）；Android 的 Doze 会暂停网络、推迟作业（[Doze](https://developer.android.com/training/monitoring-device-state/doze-standby)），AndroidX 的 `Worker` 被抢占后重跑会创建新实例（[Worker 源码](https://android.googlesource.com/platform/frameworks/support/+/cbf5ea2a1e5a7e5999144c2cb7f170802046e1c9/work/work-runtime/src/main/java/androidx/work/Worker.kt)）。所以手机部署围绕**有限的运行机会**恢复：推送只提示"去查询"，系统作业只唤醒本机账本，作业重跑不得直接重发有副作用的调用。
 
 端侧的存储配置见[数据与存储](data-and-storage.md#54-持久档位)。端侧专有内容、索引、派生记忆和结果分别检查同步权限；云端裁决需要的证据如果不允许同步，就等待允许的核验方式，**"设备在线"不得当作完成证据**。
+
+下图是默认部署：任务由云端持有，本机动作的效果由本机账本负责。实线是部署内的关联和传输，虚线是跨端的责任交接（R7）。
+
+```mermaid
+flowchart TB
+    subgraph Cloud["云端默认部署"]
+        Access["接入进程<br/>网关、连接恢复、传输限流"]
+        Judge["裁决进程<br/>任务编排、会话、授权、预算<br/>对应的持久工作"]
+        Exec["云端执行宿主<br/>动作账本、出口闸门<br/>执行适配器宿主"]
+        Reason["推理工作进程<br/>推理及受控调用"]
+        Content["内容进程<br/>内容治理、存储访问<br/>记忆策略宿主"]
+        Task["云端持有任务<br/>负责方从创建到关闭不变"]
+        Judge --- Task
+        Reason -->|提交提议| Judge
+        Judge -->|动作意图按 R7 交接| Exec
+        Access ---|路由命令与回执| Judge
+    end
+    subgraph Device["端侧部署"]
+        Client["恢复客户端"]
+        Local["本机动作账本<br/>出口闸门、本机适配器<br/>本机效果由本机账本负责"]
+        LocalContent["使用本机内容时<br/>部署内容治理"]
+        Extra["电脑可增加<br/>本地推理、记忆策略"]
+        Client --- Local
+    end
+    Access <-->|传输命令与回执| Client
+    Judge -.->|指定端点的动作意图按 R7 交接| Local
+    Local -.->|观察与用量持久交接| Judge
+```
 
 ### 2.3 部署相关的字段
 
@@ -167,6 +196,32 @@
 | 新安装 | 新的安装实例不得复用原 `ledger_domain_id` 发送；没有连续性证明就冻结原责任，不改派 |
 
 **能力边界。**离线期间、没有云端见证时，无法发现同一设备上的快照回退。普通文件、随机 UUID、时间戳和同盘的第二张表都不构成见证。本设计不承诺这种情形下的回滚检测；需要离线独立裁决的部署，必须另有不随快照回退的见证，否则不开放。验收报告必须写明哪些恢复情形不在声明范围内，不得用一个"连续性检查通过"的布尔值掩盖。
+
+下图把重连的先后顺序和连续性判据串在一起。"允许恢复"只表示账本的启动检查通过，之后仍要依次核对控制、接纳回报和收敛，才恢复推进。
+
+```mermaid
+flowchart TB
+    Before["断网前<br/>每个已接纳动作独立记录"] --> Offline["断网中<br/>保存观察、用量、待传回报<br/>云端持有任务时不产生新准入"]
+    Offline --> Gate{"已有动作的新出口<br/>当前前提可由本机权威记录证明？"}
+    Gate -->|是且原准入仍有效| Run["可推进已有动作"]
+    Gate -->|否| Wait["等待依赖恢复"]
+    Run --> Reconnect["重连鉴权<br/>验证身份与版本<br/>进入受限同步模式"]
+    Wait --> Reconnect
+    Reconnect --> Check["启动状态先为待验证<br/>用账本外见证核对连续性<br/>对比云端开始回执、凭据消费与本地记录"]
+    Check -->|连续性通过| Ready["账本允许恢复"]
+    Check -->|云端有而本地没有| Rollback["恢复隔离<br/>相关尝试视为未知<br/>停止该范围新发送并核对"]
+    Check -->|导入备份或迁移数据| Isolate["恢复隔离<br/>记录仅用于核对"]
+    Check -->|新安装无连续性证明| Freeze["冻结原责任<br/>不得复用原账本域发送或改派"]
+    Ready --> Control["优先核对授权、任务控制<br/>条件与内容撤回<br/>相关步骤保持冻结"]
+    Rollback --> Control
+    Isolate --> Control
+    Freeze --> Control
+    Control --> Reports["按当前允许的用途接纳<br/>证据、费用、清理回执"]
+    Reports --> Converge["查询原交接、补齐序号缺口<br/>未知效果继续核对"]
+    Converge --> Prereq{"恢复推进所需前提<br/>重新可证明？"}
+    Prereq -->|是| Next["任务编排决定下一步"]
+    Prereq -->|否| Hold["保持相关冻结与等待"]
+```
 
 ### 4.3 两种离线方案
 
