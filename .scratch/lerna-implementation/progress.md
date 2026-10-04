@@ -8,8 +8,8 @@
 
 - 切片 01：**completed**。原任务 01–06 与后置架构任务 07 均 resolved；正确性修复、独立架构优化和 CI portability 已合入。受测实现提交 `23bac17ba0909c7a4d49d846eb08bc63391b99f0` 的真实远端 CI success，全部退出证据见[spec](../lerna-01-command-contracts/spec.md#切片退出证据2026-10-03)。
 - 切片 02：**completed**。10票68项AC resolved；最终源码f56d930、整合5548744。本地完整顺序count1集成50.431s/race93.834s，独立两轴全部原发现关闭/新增0，fixture架构收益复核闭合；准确CI37162569420 success，完整退出及旧未知schema/CID限制见[证据](../lerna-02-durable-work/exit-evidence.md)。
-- 切片 03：**in-progress**。六票42AC已发布；04独立SQLite目标6AC已resolved并整合f11135b，05故障计划已claimed，01规则Decision继续实施。新1.1与组件行为尚未整体验收，当前公开完整支持仍为1.0 command.get。
-- 切片 04–22：**not-started**。04/05/06仅TMP准备，真实前置整片退出后再复核、发布和实施。
+- 切片 03：**in-progress**。六票42AC已发布；04独立SQLite目标与05耐久故障计划各6AC已resolved，分别整合f11135b与077f616；01规则Decision继续实施，02/03等待01，06等待01实际退出。新1.1与组件行为尚未整体验收，当前公开完整支持仍为1.0 command.get。
+- 切片 04–22：**not-started**。04–10仅TMP准备，真实前置整片退出后再复核、发布和实施。
 
 ## 切片 01 过程检查点（历史记录）
 
@@ -130,3 +130,13 @@ PG 首票检查点 `e5f26b87fb8914dc16bb6837abff6607a50cddb1` 的真实远端 [C
 04受测cac8e92／clean tip792ee85经merger整合f11135b，6AC resolved。新owner真实SQLite3.53.4/WAL/FULL/FK及0001迁移、普通write/read/query与独立Observer、原键冲突/不续期/准确到期/无query边界通过；final normal0.356s/race1.483s各10项、makecheck/module verify及旧27hash全部通过。Standards两P2及清理followups经原reviewer复核关闭，Spec/Architecture无发现；101个精确登记scope全部absent。证据见[04](../lerna-03-deterministic-harness/issues/04-durable-test-target.md)。不声称供应商、nativeCommit未知、SIGKILL或断电验证，准确新远端CI仍待核验。
 
 05直接前置已满足并claimed，从最新integration新工作树实施耐久fault plan/迟到原效果/seed与cursor；01继续完成自身9AC，02/03等待01，06等待01+05。整个03尚未完成，不提前广告完整decision_engine profile。
+
+04整合检查点270ae4ae8abe2c5245328da2e5c4cdfe514ecf40的准确远端[CI37164714040](https://github.com/ruipengliu/lerna/actions/runs/37164714040)已实际success，两个job所有step通过。基础检查包含新target测试0.087s和旧158共同夹具双向/正反序；既有真实双库恢复count1 normal24.421s/race51.850s、psql18.6工具生命周期race1.550s及27源hash通过。远端race范围为既有recovery，不能当作新target race证据（新target本地race1.483s见04）；未合入的Decision与05fault plan均不在此CI范围。此前“新远端CI待核验”为历史检查点。
+
+## 切片03耐久故障计划完成
+
+05准确受测a0198ed、clean tip e3c3426经独立merger整合为077f61647d484e938402ff14bcaa7d3564abb196，合并tree与worker相同；6AC resolved。私有InstallPlan/RunEvent保存明确步骤、原身份、seed与cursor，ReceiveOnly/ApplyReceived保留迟到责任；实际Rollback与提交后丢响应分别用独立目标事实核验。新增0002实际由冻结04历史writer写出的同一SQLite文件升级，原0001及三项源hash保持。最终19项count1 normal2.264s/race3.615s、bootstrap/check/module verify及旧27hash全部通过；两项Standards P2已复核关闭，Spec/Architecture新增0。120个精确登记scope全部absent，所有sessions结束。准确版本、边界和逐项证据见[05](../lerna-03-deterministic-harness/issues/05-durable-fault-plans.md)。
+
+目前03只完成04/05的12项AC，不提前关闭整片42AC；01继续验证规则启动计量、prepared恢复与真实旧writer迁移，02/03尚未开始，06仍等待01完成。本票未做SIGKILL、原生Commit未知、断电或供应商验证。新push CI尚待按准确head核验；既有04检查点CI不能替代新05代码验证。
+
+05整合检查点682961aecf79d2c2fe08b526e11af225aabfecdf的准确远端[CI37166918488](https://github.com/ruipengliu/lerna/actions/runs/37166918488)已实际success，两个job所有step成功。基础检查包含新target/fault-plan套件1.168s与旧158共同夹具正反序及实际双向往返；既有真实双库恢复count1 normal22.733s/race49.646s、固定psql18.6工具生命周期race2.371s及27来源hash全部OK。该远端race范围仍为旧recovery，新05 target race为本地3.615s；未合入的Decision/0002计量迁移不在此CI。whole03仍in-progress。
