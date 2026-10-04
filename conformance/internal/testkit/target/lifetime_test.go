@@ -2,6 +2,7 @@ package target
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"testing"
 	"time"
@@ -96,5 +97,24 @@ func TestTargetConcurrentCloseWaitIsBoundedBeforeNativeResult(t *testing.T) {
 	}
 	if !returned || !errors.Is(secondErr, context.DeadlineExceeded) {
 		t.Fatalf("concurrent Close bypassed its finite gate wait: returned=%t cause=%v", returned, secondErr)
+	}
+}
+
+func TestTargetOpenFailureRetainsAcquiredCleanupHolder(t *testing.T) {
+	startup, cleanup := errors.New("mechanical open failure"), errors.New("mechanical acquired release unknown")
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	cfg := Config{Path: "/mechanical-no-physical-file", Identity: "mechanical", Window: time.Minute, QueryMode: QueryEnabled, IOTimeout: time.Second, BusyTimeout: time.Millisecond, Now: time.Now}
+	holder, err := openTarget(ctx, cfg,
+		func(context.Context, string) (func() error, error) { return func() error { return cleanup }, nil },
+		func(string, string) (*sql.DB, error) { return nil, startup })
+	if holder == nil || !errors.Is(err, startup) || !errors.Is(err, cleanup) {
+		t.Fatalf("acquired cleanup responsibility lost: holder=%t startup=%t cleanup=%t", holder != nil, errors.Is(err, startup), errors.Is(err, cleanup))
+	}
+	if err = holder.Close(); !errors.Is(err, cleanup) {
+		t.Fatal("cleanup holder erased original release uncertainty", err)
+	}
+	if _, err = holder.Read(ctx, "fake-resource"); err == nil {
+		t.Fatal("cleanup-only holder served business")
 	}
 }

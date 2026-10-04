@@ -98,28 +98,39 @@ var planMigration string
 // Open returns a cleanup handle with an error if initialization cannot confirm
 // Close. Callers must retain that handle and physical scope until Close succeeds.
 func Open(ctx context.Context, cfg Config) (*Target, error) {
+	return openTarget(ctx, cfg, acquireWriter, sql.Open)
+}
+
+// Only mechanical lifetime tests substitute these two physical acquisition
+// boundaries. Ordinary callers always use the fixed SQLite implementation.
+func openTarget(ctx context.Context, cfg Config, acquire func(context.Context, string) (func() error, error), openDB func(string, string) (*sql.DB, error)) (*Target, error) {
 	if ctx == nil || !filepath.IsAbs(cfg.Path) || cfg.Path == ":memory:" || len(cfg.Identity) == 0 || len(cfg.Identity) > 128 || cfg.Window <= 0 || cfg.Window > 24*time.Hour || (cfg.QueryMode != QueryEnabled && cfg.QueryMode != QueryDisabled) || cfg.IOTimeout <= 0 || cfg.IOTimeout > 30*time.Second || cfg.BusyTimeout < time.Millisecond || cfg.BusyTimeout > cfg.IOTimeout || cfg.Now == nil {
 		return nil, errors.New("invalid finite test target configuration")
 	}
 	bounded, cancel := context.WithTimeout(ctx, cfg.IOTimeout)
 	defer cancel()
-	release, err := acquireWriter(bounded, cfg.Path)
-	if err != nil {
-		return nil, err
+	release, err := acquire(bounded, cfg.Path)
+	t := &Target{cfg: cfg, gate: make(chan struct{}, 1), release: release}
+	fail := func(cause error) (*Target, error) {
+		closeErr := t.Close()
+		if closeErr != nil {
+			return t, lifetimeCause("target startup cleanup unknown", errors.Join(cause, closeErr))
+		}
+		return nil, lifetimeCause("target startup failed", cause)
 	}
-	db, err := sql.Open("sqlite3", dsn(cfg.Path, url.Values{"_journal_mode": {"WAL"}, "_synchronous": {"FULL"}, "_foreign_keys": {"on"}, "_busy_timeout": {fmt.Sprint(cfg.BusyTimeout.Milliseconds())}, "_txlock": {"immediate"}}))
 	if err != nil {
-		return nil, errors.Join(err, release())
+		// A failed acquire with a cleanup closure did not grant writer permission.
+		return fail(err)
+	}
+	db, err := openDB("sqlite3", dsn(cfg.Path, url.Values{"_journal_mode": {"WAL"}, "_synchronous": {"FULL"}, "_foreign_keys": {"on"}, "_busy_timeout": {fmt.Sprint(cfg.BusyTimeout.Milliseconds())}, "_txlock": {"immediate"}}))
+	t.db = db
+	if err != nil {
+		return fail(err)
 	}
 	db.SetMaxOpenConns(1)
 	db.SetMaxIdleConns(1)
-	t := &Target{db: db, cfg: cfg, gate: make(chan struct{}, 1), release: release}
 	if err = t.initialize(bounded); err != nil {
-		closeErr := t.Close()
-		if closeErr != nil {
-			return t, errors.Join(err, closeErr)
-		}
-		return nil, err
+		return fail(err)
 	}
 	return t, nil
 }
