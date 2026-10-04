@@ -46,9 +46,9 @@ after both independent publications read back exactly. The accepted receipt
 never changes with progress.
 
 `fixture-rule/3` adds five finite Proposal branches and a source-evidence variant. Its artifact digest binds the
-exact version string and its config digest binds the exact case string; each
-case uses a separate immutable Snapshot, lock, manifest and single-binding
-fixture scope. An undefined case fails as `proposal_invalid` after admission,
+exact version string and its config digest binds the exact case string. Each
+case uses a separate immutable Snapshot, lock and manifest in its own Source
+and Decision scopes. An undefined case fails as `proposal_invalid` after admission,
 without falling back to `/2` or changing an old case's meaning.
 
 | Fixed case | Proposal |
@@ -91,6 +91,9 @@ binding argument and answer schema refs without clipping the processed sources.
 The same closed public Proposal decoder precedes current revision, source,
 capability/binding and purpose checks. Arguments, conditions, question, schema
 and previews are read through the real Source with the remaining input budget.
+Semantic refusals remain `proposal_invalid`, input budget exhaustion remains
+`input_over_limit`, and actual Source read failures retain their cause at the
+worker dependency boundary as `snapshot_unavailable`, with measured usage.
 The fixture answer schema accepts only a string type, `maxLength` from 1 through
 256 and optional `minLength` from 0 through that maximum. It rejects duplicate
 or unknown keys and never resolves a URL or `$ref`.
