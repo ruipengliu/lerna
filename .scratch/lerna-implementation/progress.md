@@ -201,3 +201,10 @@ merger正式合入cad6905ed64bde26883ef226455ebe1e221e97c2，parents949c392＋5b
 ## 切片03完整退出
 
 2026-10-04，准确47ebce1 CI37194868564两job/全部steps/实际日志success，104动态分组/Recovery/Source范围已核，[完整退出](../lerna-03-deterministic-harness/exit-evidence.md)保存各证据。414PG/122SQLite/32Target/3archive/6groups全absent；197确切缓存/3空目录清理、自身overlayabsent、10worktrees正常移除/分支保留；旧3540/失名PG/CID保留。历史pending和失败不改写，03正式completed，04按最终API复核再发布。
+
+
+## 切片04正式实施
+
+2026-10-04，准确03退出5fbb1a0后采用最终API映射，f706fe4发布六票41AC；图为01→02→03→04及02→05→06，只有01claimed。首票在独立Content工作树/分支实施，实际PG公开put的首条业务red为“正确有限字节应被耐久接纳”却返回unavailable，native exit1且确切schema清理完成；尚未得到green或本票退出。
+
+root全文读取[Astra六票复核](../lerna-04-content-snapshots/published-ticket-review.md)并采用[1.2形状决定](../lerna-04-content-snapshots/contract-shape-decision.md)。Content自己的短Tx/字节介质/准确版本与固定回执边界明确；保留期到不冒称gone，完整1.2 profile仍不广告。当前只有首票持有本地构建/测试/数据库槽，其他审阅只读；历史未知资源保持保护。05–22继续等待其真实整片依赖。

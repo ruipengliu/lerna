@@ -97,3 +97,10 @@ AC4的强行为证据是独立Component接收边界：可容纳输入实际送�
 04需要真实PG+实际对象字节及重开/杀进程测试，缺配置/服务硬失败。用新单独scope且登记清理归属；不读取环境密钥文件、不触碰已有smoke bucket/volume。本文只读过环境README及无凭据的S3rver代码，没有连接/写入服务，也没有运行04。
 
 未验证的包括生产S3、断电/跨区耐久、远端来源原子许可、真实Task并发、生产Grant/预算、真实模型token计量与调用。它们不能由本片本机真实存储结果替代。
+
+
+## 首票1.2机器合同正式定形
+
+2026-10-04，root全文读取并采用[Astra具体形状决定](contract-shape-decision.md)。基线f706fe4；1.2只有content.put/get及其command.get，完整profile仍不广告。accepted使用准确ContentTarget及ContentRef，删除含混revision，固定首次有效retain_until；原请求保留截止、首次有效截止及当前收紧状态分别保存。trace_context、strict base64与解码上限、来源版本去重、原ref/range响应绑定及旧reader不能无损表达时unavailable均明确。到期未确认删除不得gone；原有限出版期限不随重开刷新。
+
+[正式六票只读复核](published-ticket-review.md)确认41AC、真实依赖及完整上下文接法，无必要修正或首票whole-close隐藏前置。两份记录是决定与票据复核，均未运行测试或数据库，不是04实现验收。首票实现者在独立工作树继续；后票完整来源、清理、holder及SIGKILL按原边交付。
