@@ -20,12 +20,15 @@ var ErrPublicationConflict = errors.New("fixture publication identity conflict")
 // Permission is a current, trusted fixture authorization observation. It is
 // checked against database time after locks; it is not a production Grant.
 type Permission struct {
-	Subject       v.SubjectBinding
-	DecisionOwner v.OwnerRef
-	TaskRef       v.TaskObjectRef
-	ComponentRef  v.ComponentRef
-	UseRefs       []v.UseRef
-	ValidUntil    time.Time
+	Subject         v.SubjectBinding
+	DecisionOwner   v.OwnerRef
+	TaskRef         v.TaskObjectRef
+	ComponentRef    v.ComponentRef
+	UseRefs         []v.UseRef
+	ValidUntil      time.Time
+	ChargeBasis     string
+	RuleStartCharge v.Amount
+	RuleVersion     string
 }
 type Authority interface {
 	Authorize(context.Context, v.SubjectBinding, v.DecisionRef, string, *v.DecisionDecidePayload) (Permission, error)
@@ -53,11 +56,13 @@ type Snapshot struct {
 	Rule               string              `json:"rule"`
 }
 type FixtureLock struct {
-	Raw          []byte
-	ManifestRef  v.ContentRef
-	ManifestRaw  []byte
-	ComponentRef v.ComponentRef
-	RuleVersion  string
+	Raw             []byte
+	ManifestRef     v.ContentRef
+	ManifestRaw     []byte
+	ComponentRef    v.ComponentRef
+	RuleVersion     string
+	ChargeBasis     string
+	RuleStartCharge v.Amount
 }
 type Source interface {
 	ReadSnapshot(context.Context, v.SnapshotRef, Permission, int64) (Snapshot, error)
