@@ -8,8 +8,8 @@
 
 - 切片 01：**completed**。原任务 01–06 与后置架构任务 07 均 resolved；正确性修复、独立架构优化和 CI portability 已合入。受测实现提交 `23bac17ba0909c7a4d49d846eb08bc63391b99f0` 的真实远端 CI success，全部退出证据见[spec](../lerna-01-command-contracts/spec.md#切片退出证据2026-10-03)。
 - 切片 02：**completed**。10票68项AC resolved；最终源码f56d930、整合5548744。本地完整顺序count1集成50.431s/race93.834s，独立两轴全部原发现关闭/新增0，fixture架构收益复核闭合；准确CI37162569420 success，完整退出及旧未知schema/CID限制见[证据](../lerna-02-durable-work/exit-evidence.md)。
-- 切片 03：**in-progress**。六票42AC中01/04/05的21AC已resolved；规则Decision首票受测源696ac49、交付d806a92，经merger整合5307702，完整tree与worker相同。02候选、03取消/限额与06进程恢复的真实直接前置已满足，待独立工作树实施。新1.1 Decision profile仍未完整广告；整片审查、架构、最终CI与退出待全部六票完成。
-- 切片 04–22：**not-started**。04–15仅TMP条件准备，真实前置整片退出后再复核、发布和实施。
+- 切片 03：**in-progress**。六票42AC中01/04/05/06的27AC已resolved；规则首票整合5307702，进程恢复整合58f8f0f，完整tree均与对应worker相同。02候选与03取消/限额仍在各自独立工作树实施和验证。新1.1 Decision profile仍未完整广告；整片审查、架构、最终CI与退出待全部六票完成。
+- 切片 04–22：**not-started**。04–22仅在`/tmp`准备条件决定和票据草案；真实前置整片退出后再按最终API复核、发布和实施，草案不代表实现或验收证据。
 
 ## 切片 01 过程检查点（历史记录）
 
@@ -154,3 +154,12 @@ PG 首票检查点 `e5f26b87fb8914dc16bb6837abff6607a50cddb1` 的真实远端 [C
 准确c9de1ba的[CI37174778053](../lerna-03-deterministic-harness/ci-verification.md)已success：新真实PG Component normal21.061s/race33.892s、Source与真实旧writer升级7.243s/9.385s、原双库recovery23.166s/50.347s及81新/158旧共同双向字节全部通过。前述CI待核验记录为历史。
 
 02/03/06直接依赖已全部resolved，root已正式claimed三个独立票，采用实际首票API及规则兼容、控制、生命周期决定；分别在新worktree/branch按TDD实施。当前已完成仍为01/04/05的21/42AC，不广告完整profile，不关闭whole03。构建与数据库槽独占；新票特殊恢复归自身，全部42AC后root负责整片审查、架构、支持清单、最终CI与安全工作树清理。
+
+
+## 切片03进程恢复票正式整合
+
+06六AC已resolved；实际代码a5005ab、独立退出文档6904b2d，经merger正式合入58f8f0f855d4e0bce1bc7dda9be4e000ad0d2385。两个父提交准确、完整tree等于worker、双方clean。真实Source发布后／Decision完成事务提交前后、target COMMIT前后、pending迟到与同seed隔离重演均有正常／SIGKILL边界证据，见[最终交接](../lerna-03-deterministic-harness/ticket-06-api-handoff.md#最终检查与本票退出)。
+
+审查原前代holder丢失及同gate正常对照问题经原implementer修正；Standards复核0hard／0smell，Spec a0／b0／c0，固定15commits／24paths。修后makecheck和完整base-race实际exit0，模块校验及当前六manifest共27＋71＋3逐项通过。184外部target目录、44recovery目录、118PG与另列六local-only目录全absent；工具cache首次非空guard失败保留，准确工具退出／登记后仅清理自己的已检查cache与空overlay。旧未知PG／CID／其他票未确认构建责任不动，不声称全环境zero或断电／生产耐久。
+
+当前27/42AC完成，02／03仍claimed并独立实现，整片03未退出。全部工作树保留至whole03，完整profile仍未广告。新push的准确CI待核验；04–22只有条件草案，后续仍按真实整片依赖继续。
