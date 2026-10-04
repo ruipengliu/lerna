@@ -559,7 +559,7 @@ export const declaredMethods = Object.freeze(
       input_schema_digest:
         'sha256:1b6e9e016c071b7319b55668d1defc841d247d2900b7bb180195422fc1ab1b1d',
       output_schema_digest:
-        'sha256:08e3acf68d2ea073c8a0771c0584d8e75e5c6f2e51de4797ad84aed85ba3ac63',
+        'sha256:c086cd3aa01c5e468bf68296e7f80a0e0b88db6076895df925267acfb21bb55b',
     },
     {
       contract_version: '1.1.0',
@@ -626,7 +626,7 @@ export const inputSchemas = Object.freeze(
         inputDigest:
           'sha256:1b6e9e016c071b7319b55668d1defc841d247d2900b7bb180195422fc1ab1b1d',
         outputDigest:
-          'sha256:08e3acf68d2ea073c8a0771c0584d8e75e5c6f2e51de4797ad84aed85ba3ac63',
+          'sha256:c086cd3aa01c5e468bf68296e7f80a0e0b88db6076895df925267acfb21bb55b',
       },
       {
         version: '1.1.0',
@@ -2694,6 +2694,75 @@ export const schema = deepFreeze({
         'usage',
       ],
       additionalProperties: false,
+      allOf: [
+        {
+          if: {
+            required: ['input'],
+            properties: {
+              input: {},
+            },
+          },
+          then: {},
+          else: {
+            properties: {
+              usage: {
+                type: 'object',
+                properties: {
+                  input_bytes: {
+                    type: 'string',
+                    const: '0',
+                  },
+                  output_bytes: {
+                    type: 'string',
+                    const: '0',
+                  },
+                  rule_steps: {
+                    type: 'string',
+                    const: '0',
+                  },
+                  model_requests: {
+                    type: 'string',
+                    const: '0',
+                  },
+                  cost: {
+                    type: 'object',
+                    properties: {
+                      unit: {
+                        type: 'string',
+                        pattern: '^[A-Za-z0-9][A-Za-z0-9._:-]{0,63}$',
+                      },
+                      integer_value: {
+                        type: 'string',
+                        const: '0',
+                      },
+                    },
+                    required: ['unit', 'integer_value'],
+                    additionalProperties: false,
+                  },
+                  rule_starts: {
+                    type: 'string',
+                    const: '0',
+                  },
+                  measurements_complete: {
+                    type: 'boolean',
+                    const: true,
+                  },
+                },
+                required: [
+                  'input_bytes',
+                  'output_bytes',
+                  'rule_steps',
+                  'model_requests',
+                  'cost',
+                  'rule_starts',
+                  'measurements_complete',
+                ],
+                additionalProperties: false,
+              },
+            },
+          },
+        },
+      ],
     },
     Decision: {
       oneOf: [

@@ -1936,7 +1936,76 @@
         "reason",
         "usage"
       ],
-      "additionalProperties": false
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "required": ["input"],
+            "properties": {
+              "input": {}
+            }
+          },
+          "then": {},
+          "else": {
+            "properties": {
+              "usage": {
+                "type": "object",
+                "properties": {
+                  "input_bytes": {
+                    "type": "string",
+                    "const": "0"
+                  },
+                  "output_bytes": {
+                    "type": "string",
+                    "const": "0"
+                  },
+                  "rule_steps": {
+                    "type": "string",
+                    "const": "0"
+                  },
+                  "model_requests": {
+                    "type": "string",
+                    "const": "0"
+                  },
+                  "cost": {
+                    "type": "object",
+                    "properties": {
+                      "unit": {
+                        "type": "string",
+                        "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,63}$"
+                      },
+                      "integer_value": {
+                        "type": "string",
+                        "const": "0"
+                      }
+                    },
+                    "required": ["unit", "integer_value"],
+                    "additionalProperties": false
+                  },
+                  "rule_starts": {
+                    "type": "string",
+                    "const": "0"
+                  },
+                  "measurements_complete": {
+                    "type": "boolean",
+                    "const": true
+                  }
+                },
+                "required": [
+                  "input_bytes",
+                  "output_bytes",
+                  "rule_steps",
+                  "model_requests",
+                  "cost",
+                  "rule_starts",
+                  "measurements_complete"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        }
+      ]
     },
     "Decision": {
       "oneOf": [

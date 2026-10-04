@@ -184,6 +184,21 @@ export function decisionSemantics(name: string, value: unknown): boolean {
         canonical(v.task_ref) !== canonical(object(v.input).task_ref)
       )
         return false;
+      if (v.status === 'cancelled' && v.input === undefined) {
+        const usage = object(v.usage);
+        if (
+          ![
+            'input_bytes',
+            'output_bytes',
+            'rule_steps',
+            'rule_starts',
+            'model_requests',
+          ].every((name) => usage[name] === '0') ||
+          object(usage.cost).integer_value !== '0' ||
+          usage.measurements_complete !== true
+        )
+          return false;
+      }
       if (v.status === 'completed')
         return (
           unique(v.artifact_refs) &&
