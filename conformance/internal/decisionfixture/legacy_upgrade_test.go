@@ -71,6 +71,104 @@ type upgradeReady struct {
 }
 
 // The old producer is frozen production code, not a simulation of old tables.
+// buildFrozenWriter records this exact successful Start's PID/PGID before
+// waiting. Direct Wait and the bounded process-group observation must both
+// confirm exit before this owner permits cleanup or starts a producer.
+func buildFrozenWriter(t *testing.T, dir string) *upgradeOutput {
+	t.Helper()
+	ctx, cancel := context.WithTimeout(context.Background(), 40*time.Second)
+	defer cancel()
+	command := exec.CommandContext(ctx, "go", "test", "-c", "-o", filepath.Join(dir, "legacy.test"), "./conformance/internal/decisionfixture")
+	command.Dir = dir
+	setUpgradeProcessBounds(command)
+	diagnostics := &upgradeOutput{}
+	command.Stdout = diagnostics
+	command.Stderr = diagnostics
+	exited, confirmed, succeeded := false, false, false
+	groupKnown := false
+	var waited chan error
+	t.Cleanup(func() {
+		if succeeded {
+			return
+		}
+		if command.Process != nil && !confirmed {
+			cancel()
+			if err := syscall.Kill(-command.Process.Pid, syscall.SIGKILL); err != nil && !errors.Is(err, syscall.ESRCH) {
+				t.Error(upgradeCause("frozen build group kill", err))
+			}
+			if !exited && waited != nil {
+				select {
+				case <-waited:
+					exited = true
+				case <-time.After(3 * time.Second):
+				}
+			}
+			if exited && groupKnown {
+				groupErr := confirmUpgradeGroupExit(command.Process.Pid)
+				confirmed = groupErr == nil
+				if groupErr != nil {
+					t.Error(upgradeCause("failed frozen build group exit confirmation", groupErr))
+				}
+			}
+		}
+		if command.Process == nil {
+			confirmed = true
+		}
+		if !confirmed {
+			t.Error("frozen build exit unconfirmed; retain exact directory:", dir)
+			return
+		}
+		if err := os.RemoveAll(dir); err != nil {
+			t.Error(upgradeCause("confirmed failed build exact directory cleanup", err))
+		}
+	})
+	if err := command.Start(); err != nil {
+		t.Fatal(upgradeCause("frozen writer build start", err))
+	}
+	// Query before Wait can reap a fast exited child. Setpgid was passed to the
+	// real kernel by Start; this query records its actual group, never a guess.
+	pgid, groupErr := syscall.Getpgid(command.Process.Pid)
+	waited = make(chan error, 1)
+	go func() { waited <- command.Wait() }()
+	if groupErr != nil || pgid != command.Process.Pid {
+		t.Fatal(upgradeCause("frozen build process group observation", errors.Join(groupErr, errors.New("frozen build group identity not confirmed"))))
+	}
+	groupKnown = true
+	registry := os.Getenv("LERNA_TEST_OWNED_SCOPE_REGISTRY")
+	ledger, err := os.OpenFile(registry, os.O_APPEND|os.O_WRONLY, 0600)
+	if err != nil {
+		t.Fatal(upgradeCause("frozen build process registration open", err))
+	}
+	_, writeErr := fmt.Fprintf(ledger, "process_group %d %d %s\n", command.Process.Pid, pgid, dir)
+	if err = errors.Join(writeErr, ledger.Sync(), ledger.Close()); err != nil {
+		t.Fatal(upgradeCause("frozen build process registration", err))
+	}
+	var waitErr error
+	select {
+	case waitErr = <-waited:
+		exited = true
+	case <-ctx.Done():
+		cancel()
+		select {
+		case waitErr = <-waited:
+			exited = true
+		case <-time.After(3 * time.Second):
+			t.Fatal("frozen build direct exit unconfirmed; retain exact directory:", dir)
+		}
+	}
+	groupErr = confirmUpgradeGroupExit(pgid)
+	confirmed = exited && groupErr == nil
+	if !confirmed {
+		t.Fatal(upgradeCause("frozen build group exit confirmation", groupErr))
+	}
+	if waitErr != nil {
+		t.Logf("bounded frozen writer build diagnostics: %s", diagnostics.safeText(os.Getenv("LERNA_TEST_POSTGRES_DSN")))
+		t.Fatal(upgradeCause("frozen writer build", waitErr))
+	}
+	succeeded = true
+	return diagnostics
+}
+
 type frozenWriterSession struct {
 	Frame         []byte
 	Registry      string
@@ -93,19 +191,7 @@ func startFrozenWriter(t *testing.T, dir, producer string) *frozenWriterSession 
 	session := &frozenWriterSession{CurrentClosed: true}
 	registry := filepath.Join(dir, "created-scopes.registry")
 	session.Registry = registry
-	buildCtx, buildCancel := context.WithTimeout(context.Background(), 40*time.Second)
-	build := exec.CommandContext(buildCtx, "go", "test", "-c", "-o", filepath.Join(dir, "legacy.test"), "./conformance/internal/decisionfixture")
-	build.Dir = dir
-	setUpgradeProcessBounds(build)
-	var diagnostics upgradeOutput
-	build.Stdout = &diagnostics
-	build.Stderr = &diagnostics
-	if err := build.Run(); err != nil {
-		buildCancel()
-		t.Logf("bounded frozen writer build diagnostics: %s", diagnostics.safeText(os.Getenv("LERNA_TEST_POSTGRES_DSN")))
-		t.Fatal(upgradeCause("frozen writer build", err))
-	}
-	buildCancel()
+	diagnostics := buildFrozenWriter(t, dir)
 	childCtx, childCancel := context.WithTimeout(context.Background(), 65*time.Second)
 	child := exec.CommandContext(childCtx, filepath.Join(dir, "legacy.test"), "-test.run=^"+producer+"$", "-test.timeout=60s")
 	child.Dir = dir
@@ -138,7 +224,7 @@ func startFrozenWriter(t *testing.T, dir, producer string) *frozenWriterSession 
 		childCancel()
 		t.Fatal(upgradeCause("writer pipe allocation", err))
 	}
-	child.Stderr = &diagnostics
+	child.Stderr = diagnostics
 	if err = child.Start(); err != nil {
 		childCancel()
 		t.Fatal(upgradeCause("writer start", err))
@@ -720,10 +806,10 @@ func restoreFinal01Writer(t *testing.T, driver []byte) string {
 func restoreFrozenProduction(t *testing.T, final01 bool, driver []byte) string {
 	t.Helper()
 	archive, format, commit := "legacy-970fd90", "lerna-legacy-decision-closure-1", "970fd90260b5c4936cdb5c2b7a8589623126a5c2"
-	fileCount, productionBytes, payloadBytes := 69, 422534, 430396
+	fileCount, productionCount, productionBytes, payloadBytes := 69, 68, 422534, 430396
 	if final01 {
 		archive, format, commit = "legacy-final01", "lerna-final01-production-closure-1", "696ac49846105a16f33e5de86dc621a3858651b2"
-		fileCount, productionBytes, payloadBytes = 68, 447637, 447637
+		fileCount, productionCount, productionBytes, payloadBytes = 69, 69, 448760, 448760
 	}
 	root := filepath.Join("testdata", archive)
 	sums, err := os.ReadFile(filepath.Join(root, "SHA256SUMS"))
@@ -751,7 +837,7 @@ func restoreFrozenProduction(t *testing.T, final01 bool, driver []byte) string {
 		t.Fatal("frozen provenance missing", upgradeCause("provenance read", err))
 	}
 	var provenance frozenProvenance
-	if err = json.Unmarshal(body, &provenance); err != nil || provenance.Format != format || provenance.SourceCommit != commit || len(provenance.Files) != fileCount || provenance.ProductionFileCount != 68 || provenance.ProductionBytes != productionBytes || provenance.PayloadBytes != payloadBytes {
+	if err = json.Unmarshal(body, &provenance); err != nil || provenance.Format != format || provenance.SourceCommit != commit || len(provenance.Files) != fileCount || provenance.ProductionFileCount != productionCount || provenance.ProductionBytes != productionBytes || provenance.PayloadBytes != payloadBytes {
 		t.Fatal("frozen historical provenance mismatch", upgradeCause("provenance decode", err))
 	}
 	registry := os.Getenv("LERNA_TEST_OWNED_SCOPE_REGISTRY")
@@ -827,7 +913,7 @@ func restoreFrozenProduction(t *testing.T, final01 bool, driver []byte) string {
 			t.Fatal(err)
 		}
 	}
-	if total != provenance.PayloadBytes || production != 68 || actualProductionBytes != productionBytes {
+	if total != provenance.PayloadBytes || production != productionCount || actualProductionBytes != productionBytes {
 		t.Fatal("historical closure accounting mismatch")
 	}
 	if final01 {

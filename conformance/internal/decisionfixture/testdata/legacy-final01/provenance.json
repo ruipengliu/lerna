@@ -423,6 +423,13 @@
       "role": "archived_production"
     },
     {
+      "artifact": "internal/durableworkdemo/record.schema.json.txt",
+      "destination": "internal/durableworkdemo/record.schema.json",
+      "sha256": "44de4165931646d8c687aab23620b1999a3692829d704f985d2fe945062cfea3",
+      "bytes": 1123,
+      "role": "archived_production"
+    },
+    {
       "artifact": "internal/durableworkdemo/retention.go.txt",
       "destination": "internal/durableworkdemo/retention.go",
       "sha256": "b72ff000f06cc2868fa60161d629605d1792407b03a3c461cdbab0faa30ac7db",
@@ -493,8 +500,8 @@
       "role": "archived_production"
     }
   ],
-  "production_file_count": 68,
-  "production_bytes": 447637,
-  "file_count": 68,
-  "payload_bytes": 447637
+  "production_file_count": 69,
+  "production_bytes": 448760,
+  "file_count": 72,
+  "payload_bytes": 448760
 }
