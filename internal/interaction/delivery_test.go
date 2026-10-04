@@ -153,6 +153,10 @@ func newApplication(t *testing.T) *applicationFixture {
 	}
 	scope := runtime.Scope{TenantID: api.NewID("tenant"), OwnerID: api.NewID("owner"), DatabaseID: store.ID()}
 	a := runtime.Auth{TenantID: scope.TenantID, SubjectID: api.NewID("subject"), CredentialGeneration: 1, Roles: []string{"content_admin", "memory_admin"}}
+	current := a
+	// 正式回复测试稍后声明 interaction_reply；其权限由夹具的真实当前凭据预先明确授予。
+	current.Roles = append(append([]string(nil), a.Roles...), "interaction_reply")
+	installCurrentSubject(t, store, scope, current)
 	objects, e := objectstore.OpenLocal(t.TempDir(), memory.MaxContentBytes)
 	if e != nil {
 		t.Fatal(e)
@@ -176,7 +180,9 @@ func newApplication(t *testing.T) *applicationFixture {
 	schema := api.Object(map[string]any{"path": api.Schema{"type": "string", "minLength": 1, "maxLength": 200}}, "path")
 	schemaDigest, _ := api.Digest(schema)
 	schemaRef := api.ComponentRef{ComponentID: api.NewID("schema"), Version: "1", Digest: schemaDigest}
-	goalSchema := brain.GoalSchema()
+	// 本夹具明确使用受限 Renderer 支持的封闭 answer/report 表单，
+	// 不包含需要引用选择与普通 Memory 解析的 preference 扩展。
+	goalSchema := brain.LegacyGoalSchema()
 	goalDigest, _ := api.Digest(goalSchema)
 	goalSchemaRef := api.ComponentRef{ComponentID: api.NewID("schema"), Version: "1", Digest: goalDigest}
 	ts, e := task.New(task.Config{Policies: []task.TaskPolicy{{PolicyRef: policy, ContinuationLimit: 100, RepairLimit: 3, NoProgressLimit: 5, ContextRoundLimit: 3, SafeAttemptLimit: 2, MaxRequirements: 100, MaxDelegations: 128, MaxDepth: 4, CostMode: "strict", BudgetLimits: []api.Amount{{Unit: "USD", Value: "100"}}, MaxEvidenceStalenessSeconds: 300, MaxDurationSeconds: 3600}}, Participants: []string{"task", "content", "memory", "interaction"}, AnswerSchemas: []task.AnswerSchemaDefinition{{Ref: schemaRef, Schema: schema}, {Ref: goalSchemaRef, Schema: goalSchema}}}, task.Ports{ClosureProof: proof, ControlProof: proof, Content: taskPublicationBridge{m, a, cp}})
@@ -206,8 +212,8 @@ func newApplication(t *testing.T) *applicationFixture {
 	if _, e = rand.Read(cursorKey); e != nil {
 		t.Fatal(e)
 	}
-	appConfig := interaction.Config{DiscoveryOwnerID: scope.OwnerID, Participants: []string{"interaction", "content", "memory", "task"}, CursorKey: cursorKey, EventBindings: []interaction.EventBinding{{BindingRef: binding, Events: []interaction.EventRule{{Name: "archive", Schema: api.Raw(api.Object(map[string]any{"reason": api.Schema{"type": "string", "minLength": 1, "maxLength": 200}}, "reason")), OwnerID: scope.OwnerID, Method: "session.archive", TargetID: sessionID, AcceptForSeconds: 60, ExpectedRevision: &one, RequiresRendered: true}}}}}
-	appPorts := interaction.Ports{Content: content, Delivery: delivery, Closure: closureBridge{ts, store, proof}, Requests: requestBridge{ts}, Calendar: calendar, ScheduleGate: scheduleGateBridge{policy, policy}}
+	appConfig := interaction.Config{DiscoveryOwnerID: scope.OwnerID, Participants: []string{"interaction", "content", "memory", "task", "platform"}, CursorKey: cursorKey, EventBindings: []interaction.EventBinding{{BindingRef: binding, Events: []interaction.EventRule{{Name: "archive", Schema: api.Raw(api.Object(map[string]any{"reason": api.Schema{"type": "string", "minLength": 1, "maxLength": 200}}, "reason")), OwnerID: scope.OwnerID, Method: "session.archive", TargetID: sessionID, AcceptForSeconds: 60, ExpectedRevision: &one, RequiresRendered: true}}}}}
+	appPorts := interaction.Ports{SubjectGate: currentSubjectGate{}, Content: content, Delivery: delivery, Closure: closureBridge{ts, store, proof}, Requests: requestBridge{ts}, Calendar: calendar, ScheduleGate: scheduleGateBridge{policy, policy}}
 	s, e := interaction.New(appConfig, appPorts)
 	if e != nil {
 		t.Fatal(e)

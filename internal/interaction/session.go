@@ -145,10 +145,13 @@ func (s *Service) ReadSession(ctx context.Context, store runtime.Store, scope ru
 			}
 			view.Branches = append(view.Branches, branch.Branch)
 		}
-		return nil
+		return s.checkDisclosureTx(ctx, tx, auth)
 	})
 	if status == runtime.CommitUnknown {
-		return view, runtime.ErrCommitUnknown
+		return SessionView{}, runtime.ErrCommitUnknown
+	}
+	if err != nil {
+		return SessionView{}, err
 	}
 	return view, err
 }

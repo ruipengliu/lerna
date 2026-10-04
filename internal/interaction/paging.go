@@ -170,10 +170,13 @@ func ownedPage[T any](ctx context.Context, s *Service, store runtime.Store, scop
 			roles, _ := api.Digest(a.Roles)
 			page.NextCursor = s.encodeCursor(pageCursor{TenantID: scope.TenantID, OwnerID: scope.OwnerID, DatabaseID: scope.DatabaseID, SubjectID: a.SubjectID, CredentialGeneration: a.CredentialGeneration, RolesDigest: roles, Kind: kind, Parent: parent, Revision: revision, Last: rows[len(rows)-1].ID, ExpiresAt: api.Time(expiry)})
 		}
-		return nil
+		return s.checkDisclosureTx(ctx, tx, a)
 	})
 	if status == runtime.CommitUnknown {
-		return page, runtime.ErrCommitUnknown
+		return api.Page[T]{}, runtime.ErrCommitUnknown
+	}
+	if err != nil {
+		return api.Page[T]{}, err
 	}
 	return page, err
 }
@@ -313,10 +316,13 @@ func (s *Service) History(ctx context.Context, store runtime.Store, scope runtim
 			out.Messages[i], out.Messages[j] = out.Messages[j], out.Messages[i]
 		}
 		out.Complete = true
-		return nil
+		return s.checkDisclosureTx(ctx, tx, a)
 	})
 	if status == runtime.CommitUnknown {
-		return out, runtime.ErrCommitUnknown
+		return HistoryView{}, runtime.ErrCommitUnknown
+	}
+	if err != nil {
+		return HistoryView{}, err
 	}
 	return out, err
 }

@@ -56,14 +56,16 @@ func (s *Service) ApplicationEventTx(ctx context.Context, tx runtime.Tx, a runti
 	return ApplicationEventOutput{EventRef: tx.Scope().Ref(id, 1), State: "queued", QueryMethod: "application_event.read"}, nil
 }
 func (s *Service) ReadApplicationEvent(ctx context.Context, store runtime.Store, scope runtime.Scope, a runtime.Auth, id string) (ApplicationEvent, error) {
-	var r applicationEventRecord
-	if _, err := store.Read(ctx, scope, applicationEvents, id, 0, &r); err != nil {
-		return ApplicationEvent{}, err
-	}
-	if err := access(a, scope, r.Auth.SubjectID); err != nil {
-		return ApplicationEvent{}, api.E("forbidden", "application_event_redacted")
-	}
-	return r.ApplicationEvent, nil
+	return currentDisclosure(ctx, s, store, scope, a, func(tx runtime.Tx) (ApplicationEvent, error) {
+		var r applicationEventRecord
+		if _, err := tx.Get(ctx, applicationEvents, id, &r); err != nil {
+			return ApplicationEvent{}, err
+		}
+		if err := access(a, scope, r.Auth.SubjectID); err != nil {
+			return ApplicationEvent{}, api.E("forbidden", "application_event_redacted")
+		}
+		return r.ApplicationEvent, nil
+	})
 }
 func saveApplicationEvent(ctx context.Context, tx runtime.Tx, r *applicationEventRecord) error {
 	old := r.Revision

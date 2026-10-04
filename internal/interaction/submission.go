@@ -295,14 +295,16 @@ func submissionOutput(scope runtime.Scope, r submissionRecord) SubmissionOutput 
 	return SubmissionOutput{SubmissionRef: scope.Ref(r.Submission.SubmissionID, r.Submission.Revision), State: r.Submission.State, WithdrawalRequested: r.Submission.WithdrawalRequested, QueryMethod: "submission.read"}
 }
 func (s *Service) ReadSubmission(ctx context.Context, store runtime.Store, scope runtime.Scope, a runtime.Auth, id string) (SubmissionView, error) {
-	var r submissionRecord
-	if _, err := store.Read(ctx, scope, submissions, id, 0, &r); err != nil {
-		return SubmissionView{}, err
-	}
-	if err := access(a, scope, r.Auth.SubjectID); err != nil {
-		return SubmissionView{}, api.E("forbidden", "submission_redacted")
-	}
-	return r.SubmissionView, nil
+	return currentDisclosure(ctx, s, store, scope, a, func(tx runtime.Tx) (SubmissionView, error) {
+		var r submissionRecord
+		if _, err := tx.Get(ctx, submissions, id, &r); err != nil {
+			return SubmissionView{}, err
+		}
+		if err := access(a, scope, r.Auth.SubjectID); err != nil {
+			return SubmissionView{}, api.E("forbidden", "submission_redacted")
+		}
+		return r.SubmissionView, nil
+	})
 }
 func saveSubmission(ctx context.Context, tx runtime.Tx, r *submissionRecord) error {
 	old := r.Submission.Revision

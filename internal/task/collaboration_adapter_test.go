@@ -52,7 +52,7 @@ func TestLocalCollaborationRestoresOriginalActualSessionCommand(t *testing.T) {
 		t.Fatal(err)
 	}
 	registry := runtime.NewRegistry()
-	is, err := interaction.New(interaction.Config{}, interaction.Ports{})
+	is, err := interaction.New(interaction.Config{Participants: []string{"interaction", "content", "platform"}}, interaction.Ports{SubjectGate: identityBoundary{}})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -132,7 +132,7 @@ func TestLocalCollaborationTransferWaitsForOriginalTaskSteerConsumption(t *testi
 		t.Fatal(err)
 	}
 	registry := runtime.NewRegistry()
-	is, err := interaction.New(interaction.Config{}, interaction.Ports{})
+	is, err := interaction.New(interaction.Config{Participants: []string{"interaction", "content", "platform"}}, interaction.Ports{SubjectGate: identityBoundary{}})
 	if err != nil {
 		t.Fatal(err)
 	}

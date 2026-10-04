@@ -65,7 +65,14 @@ type ScheduleGate interface {
 type Calendar interface {
 	Load(string, string) (*time.Location, error)
 }
+
+// SubjectGate 在原读取事务中核当前凭据与角色，不读取正文或出站。
+// 缺少当前负责方时拒绝披露，不能以静态 Auth 代替当前授权。
+type SubjectGate interface {
+	CheckSubjectTx(context.Context, runtime.Tx, runtime.Auth) error
+}
 type Ports struct {
+	SubjectGate  SubjectGate
 	Content      ContentPort
 	Delivery     DeliveryPort
 	Closure      ClosurePort

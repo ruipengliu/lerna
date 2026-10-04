@@ -366,10 +366,13 @@ func (s *Service) ReadSurface(ctx context.Context, store runtime.Store, scope ru
 			return api.E("revision_conflict", "surface_changed")
 		}
 		out = r.Surface
-		return nil
+		return s.checkDisclosureTx(ctx, tx, a)
 	})
 	if status == runtime.CommitUnknown {
 		return Surface{}, runtime.ErrCommitUnknown
+	}
+	if err != nil {
+		return Surface{}, err
 	}
 	return out, err
 }
@@ -612,7 +615,10 @@ func (s *Service) ReadPresentation(ctx context.Context, store runtime.Store, sco
 	status, err := store.Within(ctx, scope, s.config.Participants, func(tx runtime.Tx) error {
 		var e error
 		view, e = s.renderGate(ctx, tx, a, id, in.Generation, in.IntentRevision)
-		return e
+		if e != nil {
+			return e
+		}
+		return s.checkDisclosureTx(ctx, tx, a)
 	})
 	if status == runtime.CommitUnknown {
 		return RenderView{}, runtime.ErrCommitUnknown
@@ -651,7 +657,7 @@ func (s *Service) ReadPresentation(ctx context.Context, store runtime.Store, sco
 		if !api.Equal(current.RequiredRefs, view.RequiredRefs) || !api.Equal(current.Surface, view.Surface) {
 			return api.E("invalid_state", "render_surface_changed")
 		}
-		return nil
+		return s.checkDisclosureTx(ctx, tx, a)
 	})
 	if status == runtime.CommitUnknown {
 		return RenderView{}, runtime.ErrCommitUnknown

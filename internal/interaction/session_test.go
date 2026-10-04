@@ -42,7 +42,8 @@ func TestSessionBranchChangesFutureContextWithoutCreatingTask(t *testing.T) {
 	now := time.Now().UTC().Truncate(time.Millisecond)
 	clock := sessionClockStore{Store: store, QueryBindingStore: store, now: now}
 	auth := runtime.Auth{TenantID: scope.TenantID, SubjectID: api.NewID("subject"), CredentialGeneration: 1}
-	s, err := interaction.New(interaction.Config{DiscoveryOwnerID: scope.OwnerID}, interaction.Ports{})
+	installCurrentSubject(t, store, scope, auth)
+	s, err := interaction.New(interaction.Config{DiscoveryOwnerID: scope.OwnerID, Participants: []string{"interaction", "content", "platform"}}, interaction.Ports{SubjectGate: currentSubjectGate{}})
 	if err != nil {
 		t.Fatal(err)
 	}

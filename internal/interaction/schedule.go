@@ -302,24 +302,28 @@ func (s *Service) ControlScheduleTx(ctx context.Context, tx runtime.Tx, a runtim
 	return scheduleOutput(tx.Scope(), r), nil
 }
 func (s *Service) ReadSchedule(ctx context.Context, store runtime.Store, scope runtime.Scope, a runtime.Auth, id string) (Schedule, error) {
-	var r scheduleRecord
-	if _, err := store.Read(ctx, scope, schedules, id, 0, &r); err != nil {
-		return Schedule{}, err
-	}
-	if err := access(a, scope, r.Auth.SubjectID); err != nil {
-		return Schedule{}, err
-	}
-	return r.Schedule, nil
+	return currentDisclosure(ctx, s, store, scope, a, func(tx runtime.Tx) (Schedule, error) {
+		var r scheduleRecord
+		if _, err := tx.Get(ctx, schedules, id, &r); err != nil {
+			return Schedule{}, err
+		}
+		if err := access(a, scope, r.Auth.SubjectID); err != nil {
+			return Schedule{}, err
+		}
+		return r.Schedule, nil
+	})
 }
 func (s *Service) ReadOccurrence(ctx context.Context, store runtime.Store, scope runtime.Scope, a runtime.Auth, id string) (Occurrence, error) {
-	var r occurrenceRecord
-	if _, err := store.Read(ctx, scope, occurrences, id, 0, &r); err != nil {
-		return Occurrence{}, err
-	}
-	if err := access(a, scope, r.Auth.SubjectID); err != nil {
-		return Occurrence{}, api.E("forbidden", "occurrence_redacted")
-	}
-	return r.Occurrence, nil
+	return currentDisclosure(ctx, s, store, scope, a, func(tx runtime.Tx) (Occurrence, error) {
+		var r occurrenceRecord
+		if _, err := tx.Get(ctx, occurrences, id, &r); err != nil {
+			return Occurrence{}, err
+		}
+		if err := access(a, scope, r.Auth.SubjectID); err != nil {
+			return Occurrence{}, api.E("forbidden", "occurrence_redacted")
+		}
+		return r.Occurrence, nil
+	})
 }
 func (s *Service) workTx(ctx context.Context, store runtime.Store, scope runtime.Scope, work runtime.Work, fn func(runtime.Tx) (runtime.Disposition, error)) error {
 	status, err := store.Within(ctx, scope, s.config.Participants, func(tx runtime.Tx) error {
