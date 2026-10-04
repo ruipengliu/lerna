@@ -20,16 +20,18 @@ import (
 )
 
 type World struct {
-	t              *testing.T
-	Config         pg.Config
-	Directory      string
-	device, inode  uint64
-	admin, current *pgcontent.Store
-	Objects        *local.Store
-	owns           bool
-	closing        bool
-	setupClosers   []func() error
-	setupCloseErr  error
+	t                     *testing.T
+	Config                pg.Config
+	Directory             string
+	device, inode         uint64
+	admin, current        *pgcontent.Store
+	Objects               *local.Store
+	owns                  bool
+	closing               bool
+	setupClosers          []func() error
+	setupCloseErr         error
+	retainedInvocation    bool
+	infrastructureClosers []func() error
 }
 
 func New(t *testing.T, ctx context.Context) *World {
@@ -148,6 +150,14 @@ func (w *World) Reopen(ctx context.Context) {
 }
 func (w *World) Cleanup() error {
 	w.closing = true
+	if w.retainedInvocation {
+		return errors.New("retain exact scope: public invocation exit unconfirmed")
+	}
+	for _, closeInfrastructure := range w.infrastructureClosers {
+		if err := closeInfrastructure(); err != nil {
+			return err
+		}
+	}
 	if w.current != nil {
 		if err := w.current.Close(); err != nil {
 			return err
@@ -212,3 +222,6 @@ func (w *World) ownSetupFile(file *os.File) func() error {
 	w.setupClosers = append(w.setupClosers, closeFile)
 	return closeFile
 }
+
+// RetainInvocation seals destructive cleanup when a finite wait cannot prove exit.
+func (w *World) RetainInvocation() { w.retainedInvocation = true }

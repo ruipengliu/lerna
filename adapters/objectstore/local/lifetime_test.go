@@ -214,7 +214,6 @@ func TestCloseDrainTimeoutRetainsActiveInvocationUntilRealReturn(t *testing.T) {
 	cancelWait()
 	if !errors.Is(err, context.DeadlineExceeded) {
 		unblock()
-		<-done
 		t.Fatal("gate wait ignored finite read context", err)
 	}
 	drain, cancelDrain := context.WithTimeout(ctx, 20*time.Millisecond)
@@ -222,7 +221,6 @@ func TestCloseDrainTimeoutRetainsActiveInvocationUntilRealReturn(t *testing.T) {
 	cancelDrain()
 	if !errors.Is(err, ErrCloseTimeout) {
 		unblock()
-		<-done
 		t.Fatal("active invocation was treated as native closed", err)
 	}
 	select {

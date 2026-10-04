@@ -174,7 +174,7 @@ func (s *Store) CheckCapacity(ctx context.Context, token runtime.Tx, limits d.Li
 		return false, err
 	}
 	var count, total int64
-	err = tx.QueryRowContext(ctx, `SELECT count(*),COALESCE(sum(octet_length(staging)),0) FROM `+s.core.Table("content_versions")+` WHERE tenant_id=$1 AND owner_id=$2 AND publication='preparing'`, token.Owner().TenantID, token.Owner().OwnerID).Scan(&count, &total)
+	err = tx.QueryRowContext(ctx, `SELECT count(*) FILTER(WHERE publication='preparing'),COALESCE(sum(octet_length(staging)),0) FROM `+s.core.Table("content_versions")+` WHERE tenant_id=$1 AND owner_id=$2`, token.Owner().TenantID, token.Owner().OwnerID).Scan(&count, &total)
 	return err == nil && count < int64(limits.MaxPreparingVersions) && length <= limits.MaxStagingBytes-total, err
 }
 func (s *Store) Trigger(ctx context.Context, token runtime.Tx, ref contract.ObjectRef, phase string, revision int64, now time.Time) (runtime.Job, error) {

@@ -26,7 +26,7 @@ func contentService(t *testing.T, w *fixture.World) *content.Service {
 	}
 	return s
 }
-func grantContent(t *testing.T, ctx context.Context, w *fixture.World, ref v.ContentRef) {
+func installContentPolicy(t *testing.T, ctx context.Context, w *fixture.World, ref v.ContentRef) {
 	t.Helper()
 	until := time.Now().UTC().Add(time.Hour)
 	if err := w.Store().InstallFixturePolicy(ctx, content.FixturePolicy{Ref: ref, Subject: contentPrincipal, Purpose: "verification", Revision: 1, ValidUntil: until, RetainUntil: until, Read: true, Process: true, Save: true, Disclose: true}, 0); err != nil {
@@ -63,7 +63,7 @@ func TestContentCorrectBytesDurablyAccepted(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 	defer cancel()
 	world := fixture.New(t, ctx)
-	grantContent(t, ctx, world, alphaRef)
+	installContentPolicy(t, ctx, world, alphaRef)
 	service := contentService(t, world)
 	request := contentPut(t, alphaRef, "put-alpha", "YWxwaGEK")
 	raw, err := v.Encode(request)
@@ -153,7 +153,7 @@ func TestContentCurrentSavePolicyStopsObjectWrite(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 	defer cancel()
 	w := fixture.New(t, ctx)
-	grantContent(t, ctx, w, alphaRef)
+	installContentPolicy(t, ctx, w, alphaRef)
 	service := contentService(t, w)
 	request := contentPut(t, alphaRef, "save-before-revoke", "YWxwaGEK")
 	raw, err := v.Encode(request)

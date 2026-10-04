@@ -55,3 +55,39 @@ calling valueOf on strict parser null-prototype objects; that failed the legal
 64-source normal case. Version-local canonical JSON equality now supplies exact
 uniqueItems semantics for the finite no-number contract subset. Old schemas and
 fixtures remain unchanged. Reverse order and broad locked checks are pending.
+
+Root's a5 followup required A1/A2/B1. Two independent runnable public reds
+confirmed the source findings: after a mechanical temporary object failure,
+post-I/O policy tightening was discarded by Defer; and a scheduler delay after
+actual Claim commit permitted new native bytes after original lease expiration.
+Both now pass with their normal real-adapter controls. Current retention and
+revision are saved in the same transaction before Defer; actual I/O deadline is
+bounded by original Claim.LeaseUntil and already-expired contexts never enter
+Objects. The two local error branches now let finite owned cleanup join the
+actual invocation instead of blocking on a bare receive. The lifetime test passed.
+
+Actual PG policy FOR SHARE waiting was observed through pg_blocking_pids for
+our exact owned blocker. Publication waiting across policy expiry writes no
+bytes. A separate admission wait produced a runnable red: accept_before used a
+pre-wait database clock. Admission now samples trusted time again after its
+locks/capacity checks. These tests, retry tests, and normal controls passed with
+native exit 0 and confirmed absent native group.
+
+Public exact identity/trace replay/version separation, empty/max-version content,
+binary octets, EOF zero range and overflow refusal passed. Independent shared
+Command digest and version-identity goldens passed in Go. Real missing/damaged
+published objects remain unavailable through repeated full-validation range
+queries, keep historical published progress and never repair independent files.
+Legacy 1.0/1.1 readers use current durable reader policy and their unchanged closed
+codecs: new accepted and unrepresentable new rejection reasons remain unavailable;
+representable original expired rejection and not_found roundtrip losslessly. An
+initial test wrongly expected old codecs to represent the new integrity reason;
+that expectation was corrected, and is not claimed as a business red.
+
+A finite staging test produced a real red because failed versions' retained bytes
+were excluded from total capacity. Total staging now counts every retained body;
+only the preparing count uses publication=preparing. Bounded normal admission,
+preparing refusal and failed retained-staging refusal pass. The combined Content,
+digest and local lifetime run completed native exit 0, group absent. No whole-ticket
+acceptance, full inherited policy closure, cleanup completion or SIGKILL evidence
+is claimed here.

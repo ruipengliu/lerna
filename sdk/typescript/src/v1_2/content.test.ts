@@ -33,3 +33,15 @@ test('version1.2 declares only Content and Command and does not advertise a part
   ]);
   assert.deepEqual(supportedMethods, []);
 });
+
+test('independent canonical digest golden preserves trace and binds purpose', async () => {
+  const { commandDigest } = await import('./digest.ts');
+  const golden = JSON.parse(readFileSync(new URL('../../../../conformance/fixtures/1.2.0/digests.json', import.meta.url), 'utf8')) as {command: Record<string, unknown>;subject: unknown;digest: string};
+  const digest = await commandDigest(JSON.stringify(golden.command), JSON.stringify(golden.subject));
+  assert.equal(digest, golden.digest);
+  golden.command.trace_context = {trace_id: 'different-connection'};
+  assert.equal(await commandDigest(JSON.stringify(golden.command), JSON.stringify(golden.subject)), digest);
+  const request = decodePut(JSON.stringify(golden.command));
+  request.payload.purpose = 'different-purpose';
+  assert.notEqual(await commandDigest(JSON.stringify(request), JSON.stringify(golden.subject)), digest);
+});

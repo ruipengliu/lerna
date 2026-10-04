@@ -132,6 +132,10 @@ func (s *Service) Put(ctx context.Context, raw []byte, subject *v.SubjectBinding
 			fixed = rejected(ref, reason)
 			return s.config.Store.SaveCommand(ctx, tx, ref, CommandRecord{Digest: digest, Subject: principal, Ref: request.Payload.ContentRef, Purpose: string(request.Payload.Purpose), Receipt: fixed})
 		}
+		now, err = s.config.Store.Now(ctx, tx)
+		if err != nil {
+			return err
+		}
 		if !now.Before(cutoff(request.AcceptBefore)) {
 			return reject("expired")
 		}
@@ -161,6 +165,17 @@ func (s *Service) Put(ctx context.Context, raw []byte, subject *v.SubjectBinding
 		record, err := s.config.Store.LockVersion(ctx, tx, request.Payload.ContentRef)
 		if err != nil {
 			return err
+		}
+		policyBefore := policy.ValidUntil
+		now, err = s.config.Store.Now(ctx, tx)
+		if err != nil {
+			return err
+		}
+		if !now.Before(cutoff(request.AcceptBefore)) {
+			return reject("expired")
+		}
+		if !now.Before(policyBefore) {
+			return reject("forbidden")
 		}
 		effective := earlier(cutoff(request.Payload.RetainUntil), policy.RetainUntil)
 		if !effective.After(now) {
@@ -193,6 +208,7 @@ func (s *Service) Put(ctx context.Context, raw []byte, subject *v.SubjectBinding
 				if sourcePolicy == nil {
 					return reject("forbidden")
 				}
+				policyBefore = earlier(policyBefore, sourcePolicy.ValidUntil)
 				effective = earlier(effective, sourcePolicy.RetainUntil)
 			}
 			sourceRecord, err := s.config.Store.LockVersion(ctx, tx, source)
@@ -213,6 +229,16 @@ func (s *Service) Put(ctx context.Context, raw []byte, subject *v.SubjectBinding
 		}
 		if !available {
 			return reject("input_over_limit")
+		}
+		now, err = s.config.Store.Now(ctx, tx)
+		if err != nil {
+			return err
+		}
+		if !now.Before(cutoff(request.AcceptBefore)) || !now.Before(effective) {
+			return reject("expired")
+		}
+		if !now.Before(policyBefore) {
+			return reject("forbidden")
 		}
 		id, key, err := VersionIdentity(request.Payload.ContentRef)
 		if err != nil {
@@ -258,6 +284,7 @@ func (s *Service) Get(ctx context.Context, raw []byte, subject *v.SubjectBinding
 	}
 	var result v.ContentGetResponse
 	var record *Record
+	var readBefore time.Time
 	err = s.config.Store.Within(ctx, owner(s.config.Owner), func(ctx context.Context, tx runtime.Tx) error {
 		now, err := s.config.Store.Now(ctx, tx)
 		if err != nil {
@@ -267,6 +294,7 @@ func (s *Service) Get(ctx context.Context, raw []byte, subject *v.SubjectBinding
 			result = denied("expired")
 			return nil
 		}
+		readBefore = time.Time{}
 		for _, action := range []string{"read", "disclose"} {
 			policy, err := s.config.Store.CheckPolicy(ctx, tx, principal, ref, string(request.Payload.Purpose), action, now)
 			if err != nil {
@@ -275,6 +303,12 @@ func (s *Service) Get(ctx context.Context, raw []byte, subject *v.SubjectBinding
 			if policy == nil {
 				result = denied("forbidden")
 				return nil
+			}
+			bound := earlier(policy.ValidUntil, policy.RetainUntil)
+			if readBefore.IsZero() {
+				readBefore = bound
+			} else {
+				readBefore = earlier(readBefore, bound)
 			}
 		}
 		record, err = s.config.Store.LockVersion(ctx, tx, ref)
@@ -290,7 +324,12 @@ func (s *Service) Get(ctx context.Context, raw []byte, subject *v.SubjectBinding
 			record = nil
 			return nil
 		}
-		if !now.Before(cutoff(record.CurrentRetainUntil)) {
+		now, err = s.config.Store.Now(ctx, tx)
+		if err != nil {
+			return err
+		}
+		readBefore = earlier(readBefore, cutoff(record.CurrentRetainUntil))
+		if !now.Before(readBefore) {
 			result = denied("expired")
 			record = nil
 			return nil
@@ -313,7 +352,12 @@ func (s *Service) Get(ctx context.Context, raw []byte, subject *v.SubjectBinding
 		return result, nil
 	}
 	length, _ := strconv.ParseInt(string(ref.ByteLength), 10, 64)
-	bytes, err := s.config.Objects.Read(ctx, record.ObjectKey, ref.Hash, length)
+	bounded, cancel := context.WithDeadline(ctx, readBefore)
+	defer cancel()
+	bytes, err := s.config.Objects.Read(bounded, record.ObjectKey, ref.Hash, length)
+	if err == nil {
+		err = bounded.Err()
+	}
 	if err != nil {
 		reason := "dependency_unavailable"
 		if errors.Is(err, ErrObjectIntegrity) {
@@ -476,12 +520,15 @@ func (s *Service) Step(ctx context.Context) (bool, error) {
 	if err != nil || selected == nil {
 		return false, err
 	}
-	ioDeadline := earlier(cutoff(selected.IODeadline), time.Now().Add(s.config.Limits.WorkTimeout))
+	ioDeadline := earlier(earlier(cutoff(selected.IODeadline), claim.LeaseUntil), time.Now().Add(s.config.Limits.WorkTimeout))
 	bounded, cancel := context.WithDeadline(ctx, ioDeadline)
 	var ioErr error
 	length, _ := strconv.ParseInt(string(selected.Ref.ByteLength), 10, 64)
 	if selected.Publication == "preparing" {
-		ioErr = s.config.Objects.Put(bounded, selected.ObjectKey, selected.AttemptKey, selected.Ref.Hash, length, selected.Bytes)
+		ioErr = bounded.Err()
+		if ioErr == nil {
+			ioErr = s.config.Objects.Put(bounded, selected.ObjectKey, selected.AttemptKey, selected.Ref.Hash, length, selected.Bytes)
+		}
 	}
 	cancel()
 	err = s.config.Store.Within(ctx, owner(s.config.Owner), func(ctx context.Context, tx runtime.Tx) error {
@@ -522,6 +569,11 @@ func (s *Service) Step(ctx context.Context) (bool, error) {
 			failure = "dependency_unavailable"
 		}
 		if failure == "" && ioErr != nil {
+			// Policy tightening observed after I/O remains durable across retries.
+			record.Revision++
+			if err = s.config.Store.SaveVersion(ctx, tx, *record); err != nil {
+				return err
+			}
 			due := earlier(now.Add(100*time.Millisecond), cutoff(record.PublishDeadline))
 			return s.config.Store.DeferClaim(ctx, tx, *claim, now, due)
 		}

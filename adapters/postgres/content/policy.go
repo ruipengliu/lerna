@@ -151,6 +151,10 @@ func (s *Store) CheckCommandReader(ctx context.Context, token runtime.Tx, subjec
 	if errors.Is(err, sql.ErrNoRows) {
 		return false, nil
 	}
+	if err != nil {
+		return false, err
+	}
+	now, err = s.core.Now(ctx, token)
 	return err == nil && string(data) == string(stored) && now.Before(until), err
 }
 
