@@ -43,17 +43,23 @@ type BodySeal struct {
 }
 
 type BodyHolder struct {
-	AttemptCursor string          `json:"attempt_cursor,omitempty"`
-	Kind          string          `json:"kind"`
-	Identity      ErasureIdentity `json:"identity"`
-	Deadline      time.Time       `json:"deadline"`
-	State         string          `json:"state"`
-	Responsible   string          `json:"responsible"`
-	Reason        string          `json:"reason,omitempty"`
+	CopyID         string          `json:"copy_id,omitempty"`
+	EffectDeadline time.Time       `json:"effect_deadline,omitempty"`
+	AttemptKeys    []string        `json:"attempt_keys,omitempty"`
+	AttemptCursor  string          `json:"attempt_cursor,omitempty"`
+	Kind           string          `json:"kind"`
+	Identity       ErasureIdentity `json:"identity"`
+	Deadline       time.Time       `json:"deadline"`
+	State          string          `json:"state"`
+	Responsible    string          `json:"responsible"`
+	Reason         string          `json:"reason,omitempty"`
 }
 
 type LifecycleRepository interface {
 	ManagementRepository
+	LockSecondaryCopy(context.Context, runtime.Tx, v.ContentRef, string) (*SecondaryCopy, error)
+	SaveSecondaryCopy(context.Context, runtime.Tx, SecondaryCopy) error
+	SecondaryCopies(context.Context, runtime.Tx, v.ContentRef, string, int) ([]SecondaryCopy, string, error)
 	SaveBodyHolder(context.Context, runtime.Tx, BodyHolder) error
 	BodyHolders(context.Context, runtime.Tx, v.ContentRef, string, int) ([]BodyHolder, string, error)
 	AllBodyHoldersErased(context.Context, runtime.Tx, v.ContentRef, string, string) (bool, error)
@@ -72,6 +78,8 @@ type BodyCleanupObservation struct {
 }
 
 type LifecycleConfig struct {
+	SecondaryHolderID string
+	SecondaryObjects  ErasingObjects
 	ManagementConfig
 	PrimaryHolderID string
 	Objects         ErasingObjects
@@ -94,6 +102,9 @@ func NewLifecycle(config LifecycleConfig) (*Lifecycle, error) {
 	}
 	store, ok := config.Store.(LifecycleRepository)
 	if !ok || len(config.PrimaryHolderID) > 128 || config.PrimaryHolderID == "postgres-staging" || len(config.Worker) > 128 {
+		return nil, ErrUnavailable
+	}
+	if len(config.SecondaryHolderID) > 128 || config.SecondaryHolderID == config.PrimaryHolderID || config.SecondaryHolderID == "postgres-staging" || config.SecondaryObjects != nil && config.SecondaryHolderID == "" {
 		return nil, ErrUnavailable
 	}
 	return &Lifecycle{config: config, manager: manager, store: store}, nil
@@ -155,6 +166,29 @@ func (l *Lifecycle) Seal(ctx context.Context, subject *v.SubjectBinding, request
 				identity.Binding = record.PrimaryHolderBinding
 			}
 			if err = l.store.SaveBodyHolder(ctx, tx, BodyHolder{Kind: holder.kind, Identity: identity, Deadline: request.Deadline, State: "pending", Responsible: holder.id, Reason: "holder_unconfirmed"}); err != nil {
+				return err
+			}
+		}
+		cursor := ""
+		for {
+			copies, next, err := l.store.SecondaryCopies(ctx, tx, record.Ref, cursor, l.config.PageSize)
+			if err != nil {
+				return err
+			}
+			for _, copy := range copies {
+				if copy.Observation.Ref != record.Ref || copy.ObjectKey != record.ObjectKey || copy.Purpose != record.Purpose || !sameSavingSubject(copy.Subject, record.Subject) {
+					return runtime.ErrScope
+				}
+				identity := ErasureIdentity{Ref: record.Ref, ObjectKey: record.ObjectKey, HolderID: copy.Observation.HolderID, SealID: request.SealID, Binding: copy.Observation.Binding}
+				if err = l.store.SaveBodyHolder(ctx, tx, BodyHolder{Kind: "secondary", Identity: identity, Deadline: request.Deadline, State: "pending", Responsible: copy.Observation.HolderID, Reason: "holder_unconfirmed", CopyID: copy.ID, EffectDeadline: copy.Observation.Deadline, AttemptKeys: []string{copy.AttemptKey}}); err != nil {
+					return err
+				}
+			}
+			if next == "" {
+				break
+			}
+			cursor = next
+			if err = l.manager.current(ctx, tx); err != nil {
 				return err
 			}
 		}
@@ -340,6 +374,11 @@ func (l *Lifecycle) Step(ctx context.Context, subject *v.SubjectBinding) (bool, 
 				if err != nil {
 					return err
 				}
+			} else if holder.Kind == "secondary" {
+				if holder.Identity.HolderID != l.config.SecondaryHolderID {
+					return ErrHolderBinding
+				}
+				attempts = append([]string{}, holder.AttemptKeys...)
 			} else {
 				return runtime.ErrScope
 			}
@@ -372,11 +411,20 @@ func (l *Lifecycle) Step(ctx context.Context, subject *v.SubjectBinding) (bool, 
 		staging, effectErr = l.store.ObserveStaging(bounded, selected.Ref)
 		observed = ErasureObservation{Identity: holder.Identity, Fenced: true, Erased: effectErr == nil && staging.Ref == selected.Ref && !staging.Present}
 	} else {
-		observed, effectErr = l.config.Objects.FenceAndErase(bounded, holder.Identity, attempts)
-		if effectErr == nil {
-			// A separately acquired holder observation, not the erase return
-			// itself, qualifies the final physical absence ACK.
-			observed, effectErr = l.config.Objects.ObserveErasure(bounded, holder.Identity, "", l.config.PageSize)
+		objects := l.config.Objects
+		if holder.Kind == "secondary" {
+			objects = l.config.SecondaryObjects
+		}
+		if objects == nil {
+			effectErr = ErrUnavailable
+		} else if holder.Identity.Binding == "" || holder.Identity.Binding != objects.Binding() {
+			effectErr = ErrHolderBinding
+		} else {
+			observed, effectErr = objects.FenceAndErase(bounded, holder.Identity, attempts)
+			if effectErr == nil {
+				// A separately acquired holder observation qualifies exact absence.
+				observed, effectErr = objects.ObserveErasure(bounded, holder.Identity, "", l.config.PageSize)
+			}
 		}
 	}
 	if effectErr == nil {

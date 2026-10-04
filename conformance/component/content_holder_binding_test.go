@@ -116,6 +116,7 @@ func TestContentFirstSealCannotAdoptAnEmptyConfiguredRoot(t *testing.T) {
 			break
 		}
 	}
+	w.Reopen(ctx)
 	observed, err := bodyLifecycle(t, w).Observe(ctx, &contentPrincipal, alphaRef, "")
 	if err != nil || !observed.CleanupComplete || observed.Seal.ID != request.SealID || !observed.Seal.Deadline.Equal(request.Deadline) {
 		t.Fatalf("original first-seal recovery: %+v %v", observed, err)

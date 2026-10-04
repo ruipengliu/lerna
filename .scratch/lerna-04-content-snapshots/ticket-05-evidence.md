@@ -139,7 +139,43 @@ Binding相等不证明Close或物理删除。旧未binding记录保持未知，�
 `TestContentFirstSealCannotAdoptAnEmptyConfiguredRoot`是上述必要绑定修复的
 独立正常/拒绝控制，未退产品代码或伪造新red。原真实publish/read后，
 第一次Seal配置空独立root即ErrHolderBinding；原body仍正常read，正确
-原root随后才首次创建Seal、实际清理并重开核同deadline与准确key缺失。
+原root随后才首次创建Seal、实际清理，新建Lifecycle核同deadline与准确key
+缺失。该.339原路径没有真实Store.Reopen，先前重开表述已纠正；后续增加
+实际w.Reopen再独立运行qualification，原日志保留。
 `holder-binding-first-seal-qualification.log` actual0.339s，PID/PGID2715309/
 start11305713/exit0/groupAbsent=true/无timeout。已明确release LOCAL，
 无pending native。此新增测试在第四产品pin上直接green，没有新产品修改。
+
+真实Reopen补充运行 `holder-binding-first-seal-real-reopen.log` actual0.342s，
+PID/PGID2722400/start11335939/exit0/groupAbsent=true/无timeout；原.339
+无Reopen路径仍保持上述限定。新测试确实调用w.Reopen后再观察原seal/deadline。
+
+## 第五vertical：真实第二holder复制、离线及原责任恢复
+
+`TestContentIndependentSecondaryOfflineRetainsOriginalCleanupResponsibility`
+正常PG接纳/publish/public Get后通过受信CopyToSecondary，copy首stub
+unavailable使line42真实业务red。首red只运行到Copy，不证明后续场景。
+
+| 原日志 | 实际结果 |
+| --- | --- |
+| `secondary-offline-first-red.log` | actual0.291s；PID/PGID2722861/start11337339/exit1/groupAbsent=true。 |
+| `secondary-offline-first-green.log` | actual normal0.518s；PID/PGID2732956/start11380622/exit0/groupAbsent=true。 |
+| `secondary-offline-race-controls.log` | sameexact+已有actualerase控制actual race3.883s；PID/PGID2733578/start11382920/exit0/groupAbsent=true；0001/2正确真实hash等原冻结值。 |
+
+每个native都有原wrapper实际completion且无timeout，已明确release LOCAL/
+no pending。copy登记在原版本锁内、Tx外实际primaryRead/secondaryPut之前，
+原copyID/fullRef/subject/purpose/binding/attempt/finite effectdeadline固定。
+目标及全部来源当前read/save/sync在两个短Tx核对，seal阻止新注册和迟到
+复制资格确认；seal消费包括未confirmed复制的全部已登记责任。
+
+test独立读两root准确key的alpha字节，确认不同inode，之后真实Close第二
+对象holder并使用无活动secondary port配置。staging/primary独立erased后
+只允许明确metadata gone，全holder仍pending；跨两页观察保持secondary原
+binding/responsible/清理deadline/原effectdeadline与attempt责任。离线副本
+独立字节仍存在；secondary与Content World真实Reopen后推进同原seal预算，
+准确副本消失且全部ACK。不把nil offlineport当native删除失败实验；真实
+删除失败、ACKloss、copy/Seal并发当前门拒绝另待独立tracer。
+
+五个partial vertical不等于七AC接受；还缺跨进程迟到安装两序、精确孤儿
+publish竞争、policy cleanup消费、legacy停止writer真实回填、全部attempt/
+传播页及metadata拒绝/祖先路径。没有清理其他owner资源或push。

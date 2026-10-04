@@ -1,6 +1,6 @@
 # 04票05进行中的内部API（未交付）
 
-仅当前前四vertical产品边界；整票七AC未完成，1.2合同冻结且不增加delete方法。
+仅当前前五vertical产品边界；整票七AC未完成，1.2合同冻结且不增加delete方法。
 
 `Lifecycle.Seal`目前是有限受信管理配置授权的原完整保存主体自愿封闭：
 准确ref、原purpose、固定SealID、原有限Deadline。同Tx保存单调seal、两
@@ -43,9 +43,24 @@ attempt同时携带原binding。publish startup/final、实际Put/Get Read核同
 介质。Seal只消费原版本的已登记binding，不能从当前空root认领历史正文。
 primary holder保存同一原binding；原cleanup claim前和adapter的实际
 Fence/Observe前分别核对。wrong-after-seal独立root拒绝且原root同deadline
-恢复已实际通过；first-Seal错root独立正常/拒绝对照亦actual0.339s通过。
+恢复已实际通过；first-Seal错root独立正常/拒绝对照actual0.339s
+原路径没有Store.Reopen；增加真实w.Reopen后的独立qualification0.342s通过。
 
 未binding legacy保持未知、不会自动用当前config修复；受信回填必须另有
 准确原ref/key/原介质责任与独立原字节对照，真实停止旧writer后才升级。
-目前未实施该回填资格；两root副本、跨进程晚写、孤儿竞争与全部拒绝/恢复
-仍无完成声明，四个partial vertical不代表整票七AC。
+目前未实施该回填资格；跨进程晚写、孤儿竞争与全部拒绝/恢复仍无完成
+声明，五个partial vertical不代表整票七AC。
+
+`Lifecycle.CopyToSecondary`仅受信内部有限原CopyRequest。配置固定一真实
+secondary holder，复制前同原Content version锁固定copy ID、完整保存主体/
+用途、实际不同root binding、原attempt及effectdeadline。目标/全部祖先
+当前read/save/sync必须适用。Tx外primaryRead→secondaryPut→独立Read，
+新Tx重新核当前全部资格后才Confirmed。既有copy事实不可换root/ID/预算；
+sealed版本不能新注册或复活复制，pending复制仍入seal清理集合。
+
+Seal从原已登记复制事实分页建secondary清理责任，不能凭当前配置发明旧
+holder。BodyHolder保留CopyID、原effectdeadline与准确AttemptKeys，清理
+Deadline仍为同原seal截止。离线（真实原holder.Close且无活动port）保留
+responsible/residual与原deadline，staging+primary ACK可gone但全global
+不complete。真实两World重开原责任恢复已通过normal及race；实际删除
+失败/ACKloss/迟到copy竞争仍待各自资格控制。

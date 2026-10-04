@@ -8,6 +8,7 @@ import (
 	v "github.com/ruipengliu/lerna/contract/v1_2"
 	d "github.com/ruipengliu/lerna/domain/content"
 	"github.com/ruipengliu/lerna/runtime"
+	"reflect"
 	"strconv"
 	"strings"
 	"time"
@@ -71,7 +72,7 @@ func (s *Store) SaveBodyHolder(ctx context.Context, token runtime.Tx, holder d.B
 		if err = json.Unmarshal(previousBody, &previous); err != nil {
 			return err
 		}
-		if previous.Identity != holder.Identity || previous.Kind != holder.Kind || previous.Responsible != holder.Responsible || !previous.Deadline.Equal(holder.Deadline) {
+		if previous.Identity != holder.Identity || previous.Kind != holder.Kind || previous.Responsible != holder.Responsible || previous.CopyID != holder.CopyID || !previous.EffectDeadline.Equal(holder.EffectDeadline) || !reflect.DeepEqual(previous.AttemptKeys, holder.AttemptKeys) || !previous.Deadline.Equal(holder.Deadline) {
 			return runtime.ErrScope
 		}
 		if previous.State == "erased" && holder.State != "erased" {
