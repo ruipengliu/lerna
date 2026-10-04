@@ -290,3 +290,69 @@ func TestDurableProposalInputRequestIsClarificationWithReadableSchema(t *testing
 		t.Fatal("schema outside MaterialRefs omitted from actually processed sources")
 	}
 }
+
+func TestDurableProposalDeltaWithCandidatePreservesBothSuggestions(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+	defer cancel()
+	world := fixture.NewWorld(t, ctx)
+	scene, snapshot := proposalScenario(t, ctx, world, "fixture-rule/3", "delta_candidate_result")
+	service := proposalService(t, world, scene)
+	raw, err := v.Encode(scene.Request)
+	if err != nil {
+		t.Fatal(err)
+	}
+	outcome, err := service.Decide(ctx, raw, &scene.Subject)
+	if err != nil {
+		t.Fatal(err)
+	}
+	received, ok := outcome.AsReceived()
+	if !ok {
+		t.Fatal("delta/candidate not received")
+	}
+	if _, ok := received.Receipt.AsAccepted(); !ok {
+		t.Fatal("delta/candidate not accepted")
+	}
+	if _, err := service.Step(ctx); err != nil {
+		t.Fatal(err)
+	}
+	world.Reopen(ctx)
+	service = proposalService(t, world, scene)
+	view, err := service.Get(ctx, scene.GetJSON, &scene.Subject)
+	if err != nil {
+		t.Fatal(err)
+	}
+	found, ok := view.AsFound()
+	if !ok {
+		t.Fatal("delta/candidate unavailable")
+	}
+	completed, ok := found.Decision.AsCompleted()
+	if !ok {
+		t.Fatal("legal delta plus candidate did not complete")
+	}
+	candidate, ok := completed.Proposal.Advance.AsCandidateResult()
+	if !ok || len(candidate.ArtifactRefs) != 1 || len(completed.Proposal.RequirementDelta) != 1 || len(completed.ArtifactRefs) != 1 || completed.ArtifactRefs[0] != candidate.ArtifactRefs[0] {
+		t.Fatal("legal candidate/delta lost one suggestion or its real artifact")
+	}
+	if len(candidate.Evidence) != 1 || candidate.Evidence[0].RequirementRef != snapshot.RequirementRefs[0] || len(candidate.Evidence[0].EvidenceRefs) != 1 || candidate.Evidence[0].EvidenceRefs[0] != candidate.ArtifactRefs[0] {
+		t.Fatal("candidate evidence does not bind the current condition and actual artifact")
+	}
+	permission, err := world.Source().Authorize(ctx, scene.Subject, scene.DecisionRef, "get", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	body, err := world.Source().ReadPublished(ctx, candidate.ArtifactRefs[0], permission)
+	if err != nil || string(body) != "fixture result: alpha\n" {
+		t.Fatal("candidate artifact is not independently readable after reopen", err)
+	}
+	proposalBody, err := world.Source().ReadPublished(ctx, completed.ProposalRef, permission)
+	if err != nil {
+		t.Fatal(err)
+	}
+	proposal, err := v.Decode[v.Proposal](proposalBody)
+	if err != nil || len(proposal.RequirementDelta) != 1 || proposal.GoalRevision != "1" || proposal.ControlRevision != "1" {
+		t.Fatal("published delta was adopted as Task authority or lost", err)
+	}
+	if completed.Usage.RuleStarts != "1" || completed.Usage.RuleSteps != "1" || completed.Usage.Cost.IntegerValue != "1" {
+		t.Fatal("one actual fixture evaluation/fee was not preserved")
+	}
+}

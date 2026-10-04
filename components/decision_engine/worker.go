@@ -568,7 +568,7 @@ func (s *Service) calculate(ctx context.Context, work Work) completion {
 		return failedCompletion("deadline_elapsed", inputBytes, 0, 0)
 	}
 	if work.Permission.RuleVersion == "fixture-rule/3" {
-		return s.calculateProposalV3(ctx, work, snapshot, processed, inputBytes)
+		return s.calculateProposalV3(ctx, work, snapshot, processed, first, inputBytes)
 	}
 	if snapshot.Rule != "candidate_result" {
 		return failedCompletion("proposal_invalid", inputBytes, 0, 1)

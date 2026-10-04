@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"reflect"
+	"slices"
 	"strconv"
 
 	v "github.com/ruipengliu/lerna/contract/v1_1"
@@ -45,6 +46,20 @@ func (p PreparedV2) Validate(record Record) error {
 	encoded, err := v.Encode(p.Proposal)
 	if err != nil || !bytes.Equal(encoded, p.ProposalBytes) || p.Proposal.DecisionRef != record.Ref || p.Proposal.SnapshotRef != record.Input.SnapshotRef || !reflect.DeepEqual(p.Sources, p.Proposal.ProcessedSourceRefs) || !withinLimit(output, record.Input.Limits.MaxOutputBytes) {
 		return ErrUnavailable
+	}
+	refs := []v.ContentRef{}
+	if candidate, ok := p.Proposal.Advance.AsCandidateResult(); ok {
+		refs = candidate.ArtifactRefs
+	} else if cannot, ok := p.Proposal.Advance.AsCannotContinue(); ok && cannot.ArtifactRefs != nil {
+		refs = *cannot.ArtifactRefs
+	}
+	if len(refs) != len(p.Artifacts) {
+		return ErrUnavailable
+	}
+	for _, artifact := range p.Artifacts {
+		if !slices.Contains(refs, artifact.Ref) {
+			return ErrUnavailable
+		}
 	}
 	return nil
 }

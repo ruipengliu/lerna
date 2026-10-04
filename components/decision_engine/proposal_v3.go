@@ -15,9 +15,10 @@ import (
 
 // A rule/3 case is one bounded fixture evaluation. It proposes changes only;
 // the current Task revisions and original durable-start fee are preserved.
-func (s *Service) calculateProposalV3(ctx context.Context, work Work, snapshot Snapshot, processed []v.ContentRef, inputBytes int) completion {
-	if (snapshot.Rule != "delta_only" && snapshot.Rule != "actions_four" && snapshot.Rule != "input_request") || len(snapshot.MaterialRefs) < 2 {
-		return failedCompletion("proposal_invalid", inputBytes, 0, 1)
+func (s *Service) calculateProposalV3(ctx context.Context, work Work, snapshot Snapshot, processed []v.ContentRef, first []byte, inputBytes int) completion {
+	artifactOutput := 0
+	if (snapshot.Rule != "delta_only" && snapshot.Rule != "actions_four" && snapshot.Rule != "input_request" && snapshot.Rule != "delta_candidate_result") || len(snapshot.MaterialRefs) < 2 {
+		return failedCompletion("proposal_invalid", inputBytes, artifactOutput, 1)
 	}
 	replacement := snapshot.RequirementRefs[0]
 	proposal := v.Proposal{
@@ -29,7 +30,7 @@ func (s *Service) calculateProposalV3(ctx context.Context, work Work, snapshot S
 	}
 	if snapshot.Rule == "actions_four" {
 		if len(snapshot.CapabilityBindings) != 4 {
-			return failedCompletion("proposal_invalid", inputBytes, 0, 1)
+			return failedCompletion("proposal_invalid", inputBytes, artifactOutput, 1)
 		}
 		proposal.RequirementDelta = []v.RequirementDelta{}
 		actions := make([]v.ProposalAction, 0, 4)
@@ -40,59 +41,78 @@ func (s *Service) calculateProposalV3(ctx context.Context, work Work, snapshot S
 	}
 	if snapshot.Rule == "input_request" {
 		if len(snapshot.MaterialRefs) < 3 || len(snapshot.AnswerSchemaRefs) != 1 {
-			return failedCompletion("proposal_invalid", inputBytes, 0, 1)
+			return failedCompletion("proposal_invalid", inputBytes, artifactOutput, 1)
 		}
 		proposal.RequirementDelta = []v.RequirementDelta{}
 		proposal.Advance = v.NewProposalAdvanceInputRequest(v.ProposalAdvanceInputRequest{QuestionRef: snapshot.MaterialRefs[2], AnswerSchemaRef: snapshot.AnswerSchemaRefs[0], Purpose: "clarification", PreviewRefs: []v.ContentRef{snapshot.MaterialRefs[0]}})
+	}
+	artifacts := []PreparedArtifact{}
+	if snapshot.Rule == "delta_candidate_result" {
+		body := append([]byte("fixture result: "), first...)
+		key := publicationPrefix(work.Record) + "/artifact/0"
+		ref, err := s.config.Publisher.PlanPublication(ctx, key, body, processed, work.Permission)
+		if err != nil {
+			return completion{inputBytes: inputBytes, outputBytes: len(body), ruleSteps: 1, err: err}
+		}
+		artifacts = append(artifacts, PreparedArtifact{Key: key, Ref: ref, Bytes: body})
+		artifactOutput = len(body)
+		evidence := make([]v.ProposalEvidence, 0, len(snapshot.RequirementRefs))
+		for _, requirement := range snapshot.RequirementRefs {
+			evidence = append(evidence, v.ProposalEvidence{RequirementRef: requirement, EvidenceRefs: []v.ContentRef{ref}})
+		}
+		proposal.Advance = v.NewProposalAdvanceCandidateResult(v.ProposalAdvanceCandidateResult{ArtifactRefs: []v.ContentRef{ref}, Evidence: evidence, Limitations: []string{}})
 	}
 	// Raw decoding is the same closed public codec used by callers. Source and
 	// purpose inclusion follows here, rather than in a codec with database access.
 	raw, err := json.Marshal(proposal)
 	if err != nil {
-		return failedCompletion("proposal_invalid", inputBytes, 0, 1)
+		return failedCompletion("proposal_invalid", inputBytes, artifactOutput, 1)
 	}
 	decoded, err := v.Decode[v.Proposal](raw)
 	if err != nil {
-		return failedCompletion("proposal_invalid", inputBytes, len(raw), 1)
+		return failedCompletion("proposal_invalid", inputBytes, artifactOutput+len(raw), 1)
 	}
-	if err = s.validateProposalV3(ctx, work, snapshot, processed, decoded, &inputBytes); err != nil {
+	if err = s.validateProposalV3(ctx, work, snapshot, processed, decoded, artifacts, &inputBytes); err != nil {
 		reason := v.DecisionFailure("proposal_invalid")
 		if errors.Is(err, ErrInputLimit) {
 			reason = "input_over_limit"
 		}
-		return failedCompletion(reason, inputBytes, len(raw), 1)
+		return failedCompletion(reason, inputBytes, artifactOutput+len(raw), 1)
 	}
 	raw, err = v.Encode(decoded)
 	if err != nil {
-		return failedCompletion("output_over_limit", inputBytes, len(raw), 1)
+		return failedCompletion("output_over_limit", inputBytes, artifactOutput+len(raw), 1)
 	}
-	if !withinLimit(len(raw), work.Record.Input.Limits.MaxOutputBytes) {
-		return failedCompletion("output_over_limit", inputBytes, len(raw), 1)
+	if !withinLimit(artifactOutput+len(raw), work.Record.Input.Limits.MaxOutputBytes) {
+		return failedCompletion("output_over_limit", inputBytes, artifactOutput+len(raw), 1)
 	}
 	key := publicationPrefix(work.Record) + "/proposal"
 	ref, err := s.config.Publisher.PlanPublication(ctx, key, raw, processed, work.Permission)
 	if err != nil {
-		return completion{inputBytes: inputBytes, outputBytes: len(raw), ruleSteps: 1, err: err}
+		return completion{inputBytes: inputBytes, outputBytes: artifactOutput + len(raw), ruleSteps: 1, err: err}
 	}
-	prepared := PreparedV2{StartSequence: work.Record.StartSequence, InputDigest: work.Record.InputDigest, Artifacts: []PreparedArtifact{}, ProposalKey: key, ProposalRef: ref, Proposal: decoded, ProposalBytes: raw, Sources: processed}
+	prepared := PreparedV2{StartSequence: work.Record.StartSequence, InputDigest: work.Record.InputDigest, Artifacts: artifacts, ProposalKey: key, ProposalRef: ref, Proposal: decoded, ProposalBytes: raw, Sources: processed}
 	prepared.Digest, err = preparedV2Digest(prepared)
 	if err != nil {
-		return failedCompletion("proposal_invalid", inputBytes, len(raw), 1)
+		return failedCompletion("proposal_invalid", inputBytes, artifactOutput+len(raw), 1)
 	}
 	preview := work.Record
 	preview.Status, preview.Proposal, preview.ProposalRef = "completed", &decoded, &ref
-	preview.ArtifactRefs = []v.ContentRef{}
+	preview.ArtifactRefs = make([]v.ContentRef, 0, len(artifacts))
+	for _, artifact := range artifacts {
+		preview.ArtifactRefs = append(preview.ArtifactRefs, artifact.Ref)
+	}
 	public, err := preview.Public()
 	if err != nil {
-		return failedCompletion("proposal_invalid", inputBytes, len(raw), 1)
+		return failedCompletion("proposal_invalid", inputBytes, artifactOutput+len(raw), 1)
 	}
 	if _, err = v.Encode(public); err != nil {
-		return failedCompletion("output_over_limit", inputBytes, len(raw), 1)
+		return failedCompletion("output_over_limit", inputBytes, artifactOutput+len(raw), 1)
 	}
-	return completion{preparedV2: &prepared, inputBytes: inputBytes, outputBytes: len(raw), ruleSteps: 1}
+	return completion{preparedV2: &prepared, inputBytes: inputBytes, outputBytes: artifactOutput + len(raw), ruleSteps: 1}
 }
 
-func (s *Service) validateProposalV3(ctx context.Context, work Work, snapshot Snapshot, processed []v.ContentRef, proposal v.Proposal, inputBytes *int) error {
+func (s *Service) validateProposalV3(ctx context.Context, work Work, snapshot Snapshot, processed []v.ContentRef, proposal v.Proposal, artifacts []PreparedArtifact, inputBytes *int) error {
 	if proposal.DecisionRef != work.Record.Ref || proposal.SnapshotRef != snapshot.Ref || proposal.GoalRevision != snapshot.GoalRevision || proposal.ControlRevision != snapshot.ControlRevision || !reflect.DeepEqual(proposal.ProcessedSourceRefs, processed) {
 		return ErrForbidden
 	}
@@ -155,6 +175,37 @@ func (s *Service) validateProposalV3(ctx context.Context, work Work, snapshot Sn
 			}
 			if hash(body) != action.ArgumentsRef.Hash || strconv.Itoa(len(body)) != string(action.ArgumentsRef.ByteLength) {
 				return ErrForbidden
+			}
+		}
+	} else if candidate, ok := proposal.Advance.AsCandidateResult(); ok {
+		known := make([]v.ContentRef, 0, len(artifacts))
+		for _, artifact := range artifacts {
+			known = append(known, artifact.Ref)
+		}
+		for _, ref := range candidate.ArtifactRefs {
+			if !slices.Contains(known, ref) {
+				return ErrForbidden
+			}
+		}
+		for _, evidence := range candidate.Evidence {
+			if !slices.Contains(snapshot.RequirementRefs, evidence.RequirementRef) {
+				return ErrForbidden
+			}
+			for _, ref := range evidence.EvidenceRefs {
+				if slices.Contains(known, ref) {
+					continue
+				}
+				if !slices.Contains(proposalMaterialRefs(snapshot), ref) {
+					return ErrForbidden
+				}
+				body, err := s.config.Source.ReadMaterial(ctx, ref, "rule.evidence", work.Permission, cap-int64(*inputBytes))
+				*inputBytes += len(body)
+				if err != nil {
+					return err
+				}
+				if hash(body) != ref.Hash || strconv.Itoa(len(body)) != string(ref.ByteLength) {
+					return ErrForbidden
+				}
 			}
 		}
 	} else if request, ok := proposal.Advance.AsInputRequest(); ok {
