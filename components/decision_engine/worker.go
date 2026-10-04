@@ -361,10 +361,13 @@ func (s *Service) Start(ctx context.Context, claim runtime.Claim) (*Work, error)
 		if record.OriginalPermission == nil || !reflect.DeepEqual(*record.OriginalPermission, permission) {
 			return ErrForbidden
 		}
-		if record.Prepared == nil && record.StartedEpoch == claim.Epoch {
+		if err := record.preparedShape(); err != nil {
+			return err
+		}
+		if !record.hasPrepared() && record.StartedEpoch == claim.Epoch {
 			return runtime.ErrClaim
 		}
-		compute := record.Prepared == nil
+		compute := !record.hasPrepared()
 		if compute {
 			reason := v.DecisionFailure("")
 			starts, parseErr := strconv.ParseUint(string(record.Usage.RuleStarts), 10, 64)
@@ -385,7 +388,7 @@ func (s *Service) Start(ctx context.Context, claim runtime.Claim) (*Work, error)
 				return ErrUnavailable
 			}
 			cost.Add(cost, charge)
-			if permission.ChargeBasis != "durable_rule_start" || permission.RuleVersion != "fixture-rule/2" {
+			if permission.ChargeBasis != "durable_rule_start" || !supportedRuleVersion(permission.RuleVersion) {
 				reason = "billing_basis_unsupported"
 			} else if starts >= limit {
 				reason = "rule_limit_exceeded"
@@ -457,6 +460,7 @@ func (p Prepared) Validate(record Record) error {
 
 type completion struct {
 	prepared                           *Prepared
+	preparedV2                         *PreparedV2
 	inputBytes, outputBytes, ruleSteps int
 	failure                            *v.DecisionFailure
 	err                                error
@@ -555,6 +559,9 @@ func (s *Service) calculate(ctx context.Context, work Work) completion {
 	}
 	if ctx.Err() != nil {
 		return failedCompletion("deadline_elapsed", inputBytes, 0, 0)
+	}
+	if work.Permission.RuleVersion == "fixture-rule/3" {
+		return s.calculateProposalV3(ctx, work, snapshot, processed, inputBytes)
 	}
 	if snapshot.Rule != "candidate_result" {
 		return failedCompletion("proposal_invalid", inputBytes, 0, 1)
@@ -663,16 +670,23 @@ func (s *Service) lockedWork(ctx context.Context, tx runtime.Tx, work Work) (*Re
 	return record, now, nil
 }
 func (s *Service) savePrepared(ctx context.Context, work Work, done completion) (Work, error) {
-	if done.prepared == nil {
-		return work, ErrUnavailable
+	preview := work.Record
+	preview.Prepared, preview.PreparedV2 = done.prepared, done.preparedV2
+	proposed, err := preview.preparedOutput()
+	if err != nil {
+		return work, err
 	}
-	err := s.config.Store.Within(ctx, oldOwner(decisionOwner(work.Record.Ref)), func(ctx context.Context, tx runtime.Tx) error {
+	err = s.config.Store.Within(ctx, oldOwner(decisionOwner(work.Record.Ref)), func(ctx context.Context, tx runtime.Tx) error {
 		record, _, err := s.lockedWork(ctx, tx, work)
 		if err != nil {
 			return err
 		}
-		if record.Prepared != nil {
-			if record.Prepared.Digest != done.prepared.Digest {
+		if record.hasPrepared() {
+			existing, err := record.preparedOutput()
+			if err != nil {
+				return err
+			}
+			if existing.digest != proposed.digest {
 				return ErrPublicationConflict
 			}
 			work.Record = *record
@@ -681,13 +695,13 @@ func (s *Service) savePrepared(ctx context.Context, work Work, done completion) 
 		if !record.MeasurementPending {
 			return runtime.ErrClaim
 		}
-		if err = done.prepared.Validate(*record); err != nil {
+		record.Prepared, record.PreparedV2 = done.prepared, done.preparedV2
+		if _, err = record.preparedOutput(); err != nil {
 			return err
 		}
 		if err = confirmObservation(record, done); err != nil {
 			return err
 		}
-		record.Prepared = done.prepared
 		record.Revision++
 		if err = s.config.Store.SaveDecision(ctx, tx, *record); err != nil {
 			return err
@@ -702,7 +716,11 @@ func (s *Service) savePrepared(ctx context.Context, work Work, done completion) 
 			if e != nil {
 				return e
 			}
-			if record == nil || record.Prepared == nil || record.Prepared.Digest != done.prepared.Digest || record.StartedEpoch != work.Claim.Epoch || terminal(record.Status) {
+			if record == nil || record.StartedEpoch != work.Claim.Epoch || terminal(record.Status) {
+				return runtime.ErrCommitUnknown
+			}
+			actual, e := record.preparedOutput()
+			if e != nil || actual.digest != proposed.digest {
 				return runtime.ErrCommitUnknown
 			}
 			work.Record = *record
@@ -712,11 +730,8 @@ func (s *Service) savePrepared(ctx context.Context, work Work, done completion) 
 	return work, err
 }
 func (s *Service) publishPrepared(ctx context.Context, work Work) error {
-	prepared := work.Record.Prepared
-	if prepared == nil {
-		return ErrUnavailable
-	}
-	if err := prepared.Validate(work.Record); err != nil {
+	prepared, err := work.Record.preparedOutput()
+	if err != nil {
 		return err
 	}
 	bounded, cancel, err := s.ioContext(ctx, work)
@@ -724,15 +739,11 @@ func (s *Service) publishPrepared(ctx context.Context, work Work) error {
 		return err
 	}
 	defer cancel()
-	for _, publication := range []struct {
-		key  string
-		body []byte
-		ref  v.ContentRef
-	}{{prepared.ArtifactKey, prepared.ArtifactBytes, prepared.ArtifactRef}, {prepared.ProposalKey, prepared.ProposalBytes, prepared.ProposalRef}} {
+	for _, publication := range prepared.publications {
 		if err = bounded.Err(); err != nil {
 			return err
 		}
-		actual, err := s.config.Publisher.Publish(bounded, publication.key, publication.body, prepared.Sources, work.Permission)
+		actual, err := s.config.Publisher.Publish(bounded, publication.key, publication.body, prepared.sources, work.Permission)
 		if err != nil {
 			return err
 		}
@@ -758,7 +769,7 @@ func (s *Service) finish(ctx context.Context, work Work, done completion) error 
 		if err != nil {
 			return err
 		}
-		if record.Prepared == nil {
+		if !record.hasPrepared() {
 			if err = confirmObservation(record, done); err != nil {
 				return err
 			}
@@ -768,13 +779,18 @@ func (s *Service) finish(ctx context.Context, work Work, done completion) error 
 			record.Status = "failed"
 			record.Failure = done.failure
 		} else {
-			if record.Prepared == nil || work.Record.Prepared == nil || record.Prepared.Digest != work.Record.Prepared.Digest {
+			prepared, err := record.preparedOutput()
+			if err != nil {
+				return err
+			}
+			prior, err := work.Record.preparedOutput()
+			if err != nil || prepared.digest != prior.digest {
 				return runtime.ErrClaim
 			}
 			record.Status = "completed"
-			record.Proposal = &record.Prepared.Proposal
-			record.ProposalRef = &record.Prepared.ProposalRef
-			record.ArtifactRefs = []v.ContentRef{record.Prepared.ArtifactRef}
+			record.Proposal = &prepared.proposal
+			record.ProposalRef = &prepared.proposalRef
+			record.ArtifactRefs = prepared.artifactRefs
 		}
 		if err = s.config.Store.SaveDecision(ctx, tx, *record); err != nil {
 			return err
