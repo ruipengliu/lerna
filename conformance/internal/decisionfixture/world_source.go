@@ -35,6 +35,7 @@ type SourceWorld struct {
 	scenario      Scenario
 	owns          bool
 	closing       bool
+	workerExits   []<-chan struct{}
 }
 
 func NewSourceWorld(t *testing.T, ctx context.Context) *SourceWorld {
@@ -126,6 +127,9 @@ func (w *SourceWorld) Reopen(ctx context.Context) {
 	if w.closing {
 		w.t.Fatal("fixture is closing")
 	}
+	if err := waitWorkerExits(ctx, w.workerExits); err != nil {
+		w.t.Fatal(err)
+	}
 	if err := w.source.Close(); err != nil {
 		w.t.Fatal(err)
 	}
@@ -142,6 +146,9 @@ func (w *SourceWorld) Cleanup() error {
 	w.closing = true
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
+	if err := waitWorkerExits(ctx, w.workerExits); err != nil {
+		return err
+	}
 	if w.source != nil {
 		if err := w.source.Close(); err != nil {
 			return err

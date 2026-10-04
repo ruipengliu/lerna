@@ -14,13 +14,23 @@ import (
 )
 
 func (s *Store) Publish(ctx context.Context, publicationKey string, body []byte, sources []v.ContentRef, p decision.Permission) (v.ContentRef, error) {
-	return s.publication(ctx, publicationKey, body, sources, p, true)
+	return s.publication(ctx, publicationKey, body, sources, p, true, nil)
 }
 
 // PlanPublication returns this publisher's exact eventual reference. It saves
 // neither readable content nor a publication receipt and confers no later right.
 func (s *Store) PlanPublication(ctx context.Context, publicationKey string, body []byte, sources []v.ContentRef, p decision.Permission) (v.ContentRef, error) {
-	return s.publication(ctx, publicationKey, body, sources, p, false)
+	return s.publication(ctx, publicationKey, body, sources, p, false, nil)
+}
+
+// PublicationExists observes the exact original publication tuple under current
+// publish authorization. A successful false result distinguishes an absent
+// receipt from ReadPublished's deliberate refusal to expose unauthorized refs.
+// It writes neither content nor a receipt.
+func (s *Store) PublicationExists(ctx context.Context, publicationKey string, body []byte, sources []v.ContentRef, p decision.Permission) (bool, error) {
+	var exists bool
+	_, err := s.publication(ctx, publicationKey, body, sources, p, false, &exists)
+	return exists, err
 }
 func (s *Store) publicationRef(permissionID, publicationKey string, body []byte) v.ContentRef {
 	identity := strings.TrimPrefix(digest([]byte(permissionID+"/"+publicationKey)), "sha256:")
@@ -30,7 +40,7 @@ func (s *Store) publicationRef(permissionID, publicationKey string, body []byte)
 	}
 	return s.Ref(v.ID("publication-"+identity[:40]), media, body)
 }
-func (s *Store) publication(ctx context.Context, publicationKey string, body []byte, sources []v.ContentRef, p decision.Permission, publish bool) (v.ContentRef, error) {
+func (s *Store) publication(ctx context.Context, publicationKey string, body []byte, sources []v.ContentRef, p decision.Permission, publish bool, observed *bool) (v.ContentRef, error) {
 	var out v.ContentRef
 	if publicationKey == "" || len(publicationKey) > 1024 || len(body) > v.MaxBodyBytes || len(sources) > 64 {
 		return out, errors.New("fixture publication finite bound exceeded")
@@ -87,7 +97,13 @@ func (s *Store) publication(ctx context.Context, publicationKey string, body []b
 			if !bytes.Equal(stored, body) {
 				return decision.ErrPublicationConflict
 			}
-			return checkContent(out, stored)
+			if err = checkContent(out, stored); err != nil {
+				return err
+			}
+			if observed != nil {
+				*observed = true
+			}
+			return nil
 		}
 		if !errors.Is(err, sql.ErrNoRows) {
 			return err

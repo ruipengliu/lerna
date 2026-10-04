@@ -22,6 +22,29 @@ type World struct {
 	admin, store  *decisionpg.Store
 	peers         []*decisionpg.Store
 	decisionOwned bool
+	workerExits   []<-chan struct{}
+}
+
+// BorrowWorkerExit registers an actual Component goroutine before it starts.
+// Its caller owns cancellation and must close done only after that worker exits.
+// Both concrete owners retain their scopes if the bounded join is unconfirmed.
+func (w *World) BorrowWorkerExit(done <-chan struct{}) error {
+	if done == nil || w.closing || len(w.workerExits) >= 16 {
+		return errors.New("fixture worker registration refused")
+	}
+	w.workerExits = append(w.workerExits, done)
+	w.SourceWorld.workerExits = append(w.SourceWorld.workerExits, done)
+	return nil
+}
+func waitWorkerExits(ctx context.Context, exits []<-chan struct{}) error {
+	for _, done := range exits {
+		select {
+		case <-done:
+		case <-ctx.Done():
+			return errors.Join(errors.New("fixture worker exit unconfirmed; retain exact scopes"), ctx.Err())
+		}
+	}
+	return nil
 }
 
 func NewWorld(t *testing.T, ctx context.Context) *World {
@@ -109,6 +132,9 @@ func (w *World) Reopen(ctx context.Context) {
 	if w.closing {
 		w.t.Fatal("fixture is closing")
 	}
+	if err := waitWorkerExits(ctx, w.workerExits); err != nil {
+		w.t.Fatal(err)
+	}
 	if err := w.store.Close(); err != nil {
 		w.t.Fatal(err)
 	}
@@ -134,6 +160,9 @@ func (w *World) Cleanup() error {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
+	if err := waitWorkerExits(ctx, w.workerExits); err != nil {
+		return err
+	}
 	for len(w.peers) > 0 {
 		if err := w.peers[0].Close(); err != nil {
 			return err
@@ -214,7 +243,7 @@ func (w *World) AdditionalScenario(ctx context.Context, ownerID, id v.ID, deadli
 }
 func (w *World) ServiceFor(owner v.OwnerRef, worker string, lease time.Duration) *decision.Service {
 	w.t.Helper()
-	service, err := decision.New(decision.Config{Owner: owner, Store: w.store, Authority: w.source, Source: w.source, Publisher: w.source, Component: w.scenario.Request.Payload.ComponentRef, Worker: worker, Lease: lease, PoolControl: true})
+	service, err := decision.New(decision.Config{Owner: owner, Store: w.store, Authority: w.source, ControlAuthority: w.source, Source: w.source, Publisher: w.source, Component: w.scenario.Request.Payload.ComponentRef, Worker: worker, Lease: lease, PoolControl: true})
 	if err != nil {
 		w.t.Fatal(err)
 	}
