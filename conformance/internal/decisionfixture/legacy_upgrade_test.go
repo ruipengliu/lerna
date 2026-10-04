@@ -244,7 +244,7 @@ func TestFrozenLegacyWriterUpgrade(t *testing.T) {
 	var ready upgradeReady
 	decoder := json.NewDecoder(bytes.NewReader(frame))
 	decoder.DisallowUnknownFields()
-	if err = decoder.Decode(&ready); err != nil {
+	if err := decoder.Decode(&ready); err != nil {
 		t.Fatal(upgradeCause("ready frame decode", err))
 	}
 	if ready.Protocol != "lerna-legacy-decision-970fd90-1" || len(ready.Cases) != 5 {
