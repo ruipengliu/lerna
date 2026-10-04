@@ -4,7 +4,7 @@
 
 **Blocked by:** 01 — 原内容版本的耐久发布与准确读取
 
-**Status:** ready-for-agent
+**Status:** claimed
 
 - [ ] 独立裁决read/process/save/sync/disclose及准确subject/resource/purpose/当前policy revision/期限，缺许可fail closed，read不推出其他许可。
 - [ ] 真实派生Content继承全部已登记有限来源闭包，最多64、不截断、不重复；same tenant/owner首版范围明确，跨owner准确unsupported、跨tenant拒绝。
@@ -17,3 +17,5 @@
 ## Comments
 
 2026-10-04，按用户授权与最终API复核发布；前置03完整退出5fbb1a0，采用decisions/final-api-handoff的具体映射。本票独立垂直出口，不将全片广告/审查/CI作为隐藏关闭依赖。
+
+2026-10-04，01已接受并正式合入eba/推送7c0bce5，准确API对象已复核相等；root采用[当前实施交接](../ticket-02-handoff.md)并claimed本票。唯一LOCAL构建/测试/数据库槽从01实际释放后授予02；7AC未勾选，物理删除/holder和whole04退出不在此伪报。

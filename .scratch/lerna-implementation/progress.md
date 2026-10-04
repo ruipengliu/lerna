@@ -214,3 +214,5 @@ root全文读取[Astra六票复核](../lerna-04-content-snapshots/published-tick
 2026-10-04，01八AC均resolved，交付1a7、受测14ead及两行普通注释4ace资格，合并eba167d双parents/完整tree等于worker。真实PG+本地对象、当前完整授权双门禁、准确身份及固定回执、有限范围、真实重开和旧reader正常/拒绝通过；[首票证据](../lerna-04-content-snapshots/ticket-01-exit-evidence.md)保留各原pin及失败。最终两轴Standards0hard/1可选KEEP P3、Spec a0b0c0，必要架构F1关闭；受测完整check35工具/44TS/三版158+89+101两序双向及Get race22.361 native0。353组/289schema/65PID/518scope无live/residual；worker释放LOCAL槽，overlay/日志/cache/WT保留到整片清理，旧未知不动。
 
 当前8/41不等于04整片退出；完整来源闭包、Snapshot、holder/物理清理和SIGKILL仍待。新准确push CI待核；下一frontier02，05–22仍依真实整片退出。
+
+2026-10-04，首票检查点7c0bce5已真实push（nativeexit0），新CI待准确head核验。01独立8AC接受/mergetree已核，不把推送当CI成功。02已按实际ports/SQL相等采用交接并claimed；新worker独立worktree，持有唯一LOCAL执行槽。当前仍8/41，03–06未开始，04整片未退出。
