@@ -1,0 +1,26 @@
+{
+  "current_auditor_group": 2103477,
+  "exact_residual_roots": [],
+  "live_exact_schemas": [],
+  "live_groups_excluding_actual_auditor": [],
+  "live_policy_holders": [],
+  "registered_groups": 279,
+  "registered_object_contract_generator_roots": 407,
+  "registered_policy_holders": 58,
+  "registered_schemas": 230,
+  "native_exit": {
+    "status": 0,
+    "group_absent": true,
+    "actual_auditor_group": 2103477
+  },
+  "source_commit": "46d6ca26e4c2a4e9cf6db95e890b641f6bf2aa97",
+  "integration_commit": "64c6872c8ed56ddd66dd51c98dc430046fc9f47d",
+  "owned_overlay_ack": {
+    "path": "/workspace/lerna-content-01-d15e5e390c46262d",
+    "device": 27,
+    "inode": 431292,
+    "filesystem": "overlay",
+    "owner": "content-snapshots-ticket-01"
+  },
+  "provenance": "Fresh exact ledger audit after affected race and full locked check; leading raw JSON parsed, empty arrays normalized, actual wrapper exit recorded separately."
+}

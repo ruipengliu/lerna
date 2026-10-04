@@ -1,15 +1,11 @@
 // Exercise the public two-version generator without changing the frozen source.
-import {
-  mkdtempSync,
-  readFileSync,
-  writeFileSync,
-  mkdirSync,
-  rmSync,
-} from 'node:fs';
+import { mkdtempSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { boundedBuild } from './bounded-build.mjs';
+import { ownConformanceScope } from './conformance-ownership.mjs';
 import assert from 'node:assert/strict';
+
 const generator = resolve('scripts/generate.mjs');
 const original = JSON.parse(
   readFileSync('contract/schema/1.1.0/values.json', 'utf8'),
@@ -19,14 +15,16 @@ const inventory = JSON.parse(
 );
 async function generate(mutate = () => {}) {
   const dir = mkdtempSync(join(tmpdir(), 'lerna-generator-v1_1-'));
+  const scope = ownConformanceScope(dir, 'generator');
   let exitConfirmed = true;
+  let startedPID;
   let failure;
   try {
     writeFileSync(
       join(dir, '.prettierrc.json'),
       readFileSync('.prettierrc.json'),
     );
-    for (const version of ['1.0.0', '1.1.0']) {
+    for (const version of ['1.0.0', '1.1.0', '1.2.0']) {
       mkdirSync(join(dir, 'contract/schema', version), { recursive: true });
       for (const name of ['values.json', 'methods.json'])
         writeFileSync(
@@ -45,22 +43,30 @@ async function generate(mutate = () => {}) {
       join(dir, 'contract/schema/1.1.0/methods.json'),
       JSON.stringify(methods),
     );
+    exitConfirmed = false;
     const result = await boundedBuild(process.execPath, [generator], {
       cwd: dir,
+      onStart: (pid) => {
+        startedPID = pid;
+        scope.start(pid, 'compiler');
+      },
       encoding: 'utf8',
       timeout: 30000,
     });
+    scope.exited(startedPID, 'compiler', result.exitConfirmed);
     exitConfirmed = result.exitConfirmed;
-    if (result.cleanupErrors.length)
+    const nativeCauses = [
+      result.error,
+      ...result.cleanupErrors,
+      ...(!result.exitConfirmed
+        ? [Error(`generator original native exit unknown: ${dir}`)]
+        : []),
+    ].filter(Boolean);
+    if (nativeCauses.length)
       throw new AggregateError(
-        result.cleanupErrors,
-        `generator cleanup failed; retained scope ${dir}`,
+        nativeCauses,
+        'generator native execution failed',
       );
-    assert.ok(
-      exitConfirmed,
-      `generator descendants unconfirmed; retained scope ${dir}`,
-    );
-    assert.ifError(result.error);
     if (result.status !== 0) return { error: result.stderr };
     for (const path of [
       'contract/gen/go/values.go',
@@ -89,16 +95,7 @@ async function generate(mutate = () => {}) {
     failure = error;
     throw error;
   } finally {
-    if (exitConfirmed) {
-      try {
-        rmSync(dir, { recursive: true, force: true });
-      } catch (error) {
-        throw new AggregateError(
-          [failure, error].filter(Boolean),
-          `generator and scope cleanup failed: ${dir}`,
-        );
-      }
-    }
+    scope.finish(failure);
   }
 }
 const baseline = await generate();

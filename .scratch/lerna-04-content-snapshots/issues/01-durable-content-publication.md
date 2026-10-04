@@ -18,3 +18,24 @@
 ## Comments
 
 2026-10-04，按用户授权与最终API复核发布；前置03完整退出5fbb1a0，采用decisions/final-api-handoff的具体映射。本票独立垂直出口，不将全片广告/审查/CI作为隐藏关闭依赖。
+
+## Answer
+
+真实首次垂直链及全部8项的实现和执行证据已形成，仍待root独立两轴接受后勾选。
+隔离1.2 Go/TS/共同黄金、Content domain、consumer-owned PG短Tx staging+固定receipt+
+Job、Linux真实Sync/noclobber/dirSync/独立回读、真实重开及公开Content/Command正常和
+拒绝对照已交付。当前read/disclose双门禁、已登记DIRECT来源、同声明新关联和原Command
+锁后reader复核均按已采用决定实现；完整inherited closure等后票义务未伪称完成。
+
+源码修复固定于`46d6ca2`；实际API见[../ticket-01-api-handoff.md](../ticket-01-api-handoff.md)，
+执行与初始失败分类见[../ticket-01-evidence.md](../ticket-01-evidence.md)，
+准确资源退出见[../ticket-01-resource-audit.json](../ticket-01-resource-audit.json)。
+独立初审原pin及findings被保留，最终root接受和exact delivery pin随后追加。
+
+后续固定72候选的两轴/Astra复核发现target完整policy绑定P2，已以公开真实red→green及
+新门禁顺序补充反例修复。新受测源码`14ead831b8834892da5ff13a9b883494247f327f`，
+之后`4aceecefb45125597d45db75aa757fe1aab96eb9`仅改两行旧顺序注释，执行代码/测试
+数据等价，未为注释重跑native。当前完整locked check、Get影响race及fresh资源审计已真实
+通过；新机器记录见[../ticket-01-resource-audit-target-policy.json](../ticket-01-resource-audit-target-policy.json)。
+原72 findings、初始不充分after-mismatch建议和对应实际green历史均保留，新candidate仍待
+root最终独立source/doc qualification接受，当前不勾8项或写resolved。

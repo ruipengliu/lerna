@@ -1,10 +1,19 @@
-import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { mkdtempSync, readFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { execFileSync } from 'node:child_process';
+import { requireBuild } from './bounded-build.mjs';
 import { startRunner } from './contract-runner.mjs';
+import { ownConformanceScope } from './conformance-ownership.mjs';
 import assert from 'node:assert/strict';
 const dir = mkdtempSync(join(tmpdir(), 'lerna-contract-'));
+
+// Exact test-resource ownership; native closes remain the existing runner/build APIs.
+const scope = ownConformanceScope(dir, 'contract');
+function ownRunner(runner) {
+  allRunners.push(runner);
+  scope.start(runner.pid, 'producer');
+}
+
 const controller = new AbortController();
 const interrupt = () => {
   process.exitCode = 130;
@@ -12,11 +21,30 @@ const interrupt = () => {
 };
 process.once('SIGINT', interrupt);
 process.once('SIGTERM', interrupt);
-let runners = [],
+let allRunners = [],
+  runners = [],
   failure;
+const overallDeadline = setTimeout(() => controller.abort(), 50000);
+async function runBuild(command, args, options) {
+  let startedPID;
+  try {
+    await requireBuild(command, args, {
+      ...options,
+      signal: controller.signal,
+      onStart: (pid) => {
+        startedPID = pid;
+        scope.start(pid, 'compiler');
+      },
+    });
+    scope.exited(startedPID, 'compiler', true);
+  } catch (error) {
+    scope.exited(startedPID, 'compiler', error.exitConfirmed === true);
+    throw error;
+  }
+}
 try {
   const executable = join(dir, 'go-values');
-  execFileSync(
+  await runBuild(
     'go',
     ['build', '-o', executable, './conformance/component/valuerunner'],
     { stdio: 'inherit', timeout: 60000 },
@@ -29,12 +57,14 @@ try {
     signal: controller.signal,
   });
   runners.push(go);
+  ownRunner(go);
   const ts = startRunner(
     process.execPath,
     ['sdk/typescript/src/valuerunner.ts', '--batch'],
     { signal: controller.signal },
   );
   runners.push(ts);
+  ownRunner(ts);
   const run = (lang, name, wire, context) =>
     (lang === 'go' ? go : ts).run(
       name,
@@ -90,16 +120,16 @@ try {
   await Promise.all(runners.map((runner) => runner.close()));
   runners = [];
   // Shared independent goldens test the public digest in each implementation.
-  execFileSync('go', ['test', './conformance/component', '-run', 'Digest'], {
+  await runBuild('go', ['test', './conformance/component', '-run', 'Digest'], {
     stdio: 'inherit',
     timeout: 60000,
   });
-  execFileSync('node', ['--test', 'sdk/typescript/src/digests.test.ts'], {
+  await runBuild('node', ['--test', 'sdk/typescript/src/digests.test.ts'], {
     stdio: 'inherit',
     timeout: 60000,
   });
   // The same authenticated query scenarios run through each public entry point.
-  execFileSync(
+  await runBuild(
     'go',
     ['test', './conformance/component', '-run', 'AuthenticatedQuery'],
     {
@@ -107,20 +137,20 @@ try {
       timeout: 60000,
     },
   );
-  execFileSync('node', ['--test', 'sdk/typescript/src/query.test.ts'], {
+  await runBuild('node', ['--test', 'sdk/typescript/src/query.test.ts'], {
     stdio: 'inherit',
     timeout: 60000,
   });
-  execFileSync(
+  await runBuild(
     'go',
     ['test', './conformance/component', '-run', 'Negotiation'],
     { stdio: 'inherit', timeout: 60000 },
   );
-  execFileSync('node', ['--test', 'sdk/typescript/src/negotiation.test.ts'], {
+  await runBuild('node', ['--test', 'sdk/typescript/src/negotiation.test.ts'], {
     stdio: 'inherit',
     timeout: 60000,
   });
-  execFileSync(
+  await runBuild(
     process.execPath,
     [
       'scripts/test-contract-1_1.mjs',
@@ -133,20 +163,17 @@ try {
   );
 } catch (error) {
   failure = error;
-  throw error;
 } finally {
-  try {
-    const results = await Promise.allSettled(
-      runners.map((runner) => runner.close()),
-    );
-    const errors = results
-      .filter((result) => result.status === 'rejected')
-      .map((result) => result.reason);
-    if (!failure && errors.length)
-      throw new AggregateError(errors, 'runner cleanup failed');
-  } finally {
-    process.removeListener('SIGINT', interrupt);
-    process.removeListener('SIGTERM', interrupt);
-    rmSync(dir, { recursive: true, force: true });
-  }
+  const results = await Promise.allSettled(
+    allRunners.map((runner) => runner.close()),
+  );
+  clearTimeout(overallDeadline);
+  process.removeListener('SIGINT', interrupt);
+  process.removeListener('SIGTERM', interrupt);
+  const errors = results
+    .filter((result) => result.status === 'rejected')
+    .map((result) => result.reason);
+  for (const runner of allRunners)
+    scope.exited(runner.pid, 'producer', runner.exitConfirmed);
+  scope.finish(failure, errors);
 }

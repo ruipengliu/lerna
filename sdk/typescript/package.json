@@ -5,11 +5,12 @@
   "type": "module",
   "exports": {
     ".": "./dist/index.js",
-    "./v1_1": "./dist/v1_1/index.js"
+    "./v1_1": "./dist/v1_1/index.js",
+    "./v1_2": "./dist/v1_2/index.js"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "test": "node --experimental-strip-types --test src/*.test.ts src/v1_1/*.test.ts",
+    "test": "node --experimental-strip-types --test src/*.test.ts src/v1_1/*.test.ts src/v1_2/*.test.ts",
     "build": "tsc"
   },
   "dependencies": {

@@ -9,7 +9,7 @@ bootstrap:
 generate:
 	pnpm generate
 fmt:
-	gofmt -w contract conformance runtime host internal adapters components cmd
+	gofmt -w contract conformance runtime host internal adapters components domain cmd
 	pnpm exec prettier --write $(FORMATTED)
 lint:
 	node scripts/check-go-format.mjs
@@ -17,7 +17,7 @@ lint:
 	go vet ./...
 	pnpm lint
 test:
-	node --test scripts/contract-runner.test.mjs scripts/bounded-build.test.mjs scripts/component-integration-race.test.mjs
+	node --test scripts/conformance-ownership.test.mjs scripts/contract-runner.test.mjs scripts/bounded-build.test.mjs scripts/component-integration-race.test.mjs
 	node scripts/test-generator.mjs
 	go test ./...
 	pnpm test
@@ -35,14 +35,16 @@ check-integration-prerequisites:
 	cd conformance/fixtures/durable-work/sqlite-v2 && sha256sum -c SHA256SUMS
 test-integration: check-integration-prerequisites
 	go test -count=1 -tags=integration -timeout=120s ./conformance/recovery/...
-	go test -p=1 -count=1 -tags=integration -timeout=120s ./conformance/component ./conformance/internal/decisionfixture
+	go test -p=1 -count=1 -tags=integration -timeout=120s ./conformance/component ./conformance/internal/decisionfixture ./conformance/internal/contentfixture ./adapters/objectstore/local
 test-integration-race: check-integration-prerequisites
 	go test -p=1 -count=1 -race -tags=integration -timeout=120s ./conformance/recovery/...
 	bash scripts/test-component-integration-race.sh
-	go test -p=1 -count=1 -race -tags=integration -timeout=120s ./conformance/internal/decisionfixture
+	go test -p=1 -count=1 -race -tags=integration -timeout=120s ./conformance/internal/decisionfixture ./conformance/internal/contentfixture ./adapters/objectstore/local
 test-contract:
 	node scripts/test-contract.mjs
 	node scripts/test-contract.mjs --reverse
+	node scripts/test-contract-1_2.mjs
+	node scripts/test-contract-1_2.mjs --reverse
 build:
 	go build ./...
 	pnpm build

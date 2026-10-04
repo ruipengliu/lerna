@@ -1,22 +1,20 @@
 // Public generation command must fail closed rather than publish ambiguous contracts.
-import {
-  mkdtempSync,
-  readFileSync,
-  writeFileSync,
-  mkdirSync,
-  rmSync,
-} from 'node:fs';
+import { mkdtempSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
-import { spawnSync } from 'node:child_process';
+import { boundedBuild } from './bounded-build.mjs';
+import { ownConformanceScope } from './conformance-ownership.mjs';
 import assert from 'node:assert/strict';
+
 function copyNewVersion(dir) {
-  mkdirSync(join(dir, 'contract/schema/1.1.0'), { recursive: true });
-  for (const name of ['values.json', 'methods.json'])
-    writeFileSync(
-      join(dir, 'contract/schema/1.1.0', name),
-      readFileSync(`contract/schema/1.1.0/${name}`),
-    );
+  for (const version of ['1.1.0', '1.2.0']) {
+    mkdirSync(join(dir, 'contract/schema', version), { recursive: true });
+    for (const name of ['values.json', 'methods.json'])
+      writeFileSync(
+        join(dir, 'contract/schema', version, name),
+        readFileSync(`contract/schema/${version}/${name}`),
+      );
+  }
 }
 const generator = resolve('scripts/generate.mjs');
 const original = JSON.parse(
@@ -136,6 +134,10 @@ const probes = [
 ];
 for (const [name, mutate, expected] of probes) {
   const dir = mkdtempSync(join(tmpdir(), 'lerna-generator-'));
+  const scope = ownConformanceScope(dir, 'generator');
+  let exitConfirmed = true;
+  let startedPID;
+  let failure;
   try {
     const schema = structuredClone(original);
     const changedInventory = JSON.parse(inventory);
@@ -150,24 +152,49 @@ for (const [name, mutate, expected] of probes) {
       JSON.stringify(changedInventory),
     );
     copyNewVersion(dir);
-    const result = spawnSync('node', [generator], {
+    exitConfirmed = false;
+    const result = await boundedBuild(process.execPath, [generator], {
       cwd: dir,
+      onStart: (pid) => {
+        startedPID = pid;
+        scope.start(pid, 'compiler');
+      },
       encoding: 'utf8',
       timeout: 10000,
     });
-    assert.ifError(result.error);
+    scope.exited(startedPID, 'compiler', result.exitConfirmed);
+    exitConfirmed = result.exitConfirmed;
+    const nativeCauses = [
+      result.error,
+      ...result.cleanupErrors,
+      ...(!result.exitConfirmed
+        ? [Error(`generator original native exit unknown: ${dir}`)]
+        : []),
+    ].filter(Boolean);
+    if (nativeCauses.length)
+      throw new AggregateError(
+        nativeCauses,
+        'generator native execution failed',
+      );
     assert.notEqual(result.status, 0, name);
     assert.match(result.stderr, expected, name);
+  } catch (error) {
+    failure = error;
+    throw error;
   } finally {
-    rmSync(dir, { recursive: true, force: true });
+    scope.finish(failure);
   }
 }
 console.log(`${probes.length} generation refusal probes passed.`);
 
 // Exercise the real public generation command on valid changed source. These
 // observations guard complete input/output and common-definition fingerprints.
-const digestPair = (changed, methods = JSON.parse(inventory)) => {
+const digestPair = async (changed, methods = JSON.parse(inventory)) => {
   const dir = mkdtempSync(join(tmpdir(), 'lerna-schema-change-'));
+  const scope = ownConformanceScope(dir, 'generator');
+  let exitConfirmed = true;
+  let startedPID;
+  let failure;
   try {
     mkdirSync(join(dir, 'contract/schema/1.0.0'), { recursive: true });
     writeFileSync(
@@ -179,12 +206,30 @@ const digestPair = (changed, methods = JSON.parse(inventory)) => {
       JSON.stringify(methods),
     );
     copyNewVersion(dir);
-    const result = spawnSync('node', [generator], {
+    exitConfirmed = false;
+    const result = await boundedBuild(process.execPath, [generator], {
       cwd: dir,
+      onStart: (pid) => {
+        startedPID = pid;
+        scope.start(pid, 'compiler');
+      },
       encoding: 'utf8',
       timeout: 30000,
     });
-    assert.ifError(result.error);
+    scope.exited(startedPID, 'compiler', result.exitConfirmed);
+    exitConfirmed = result.exitConfirmed;
+    const nativeCauses = [
+      result.error,
+      ...result.cleanupErrors,
+      ...(!result.exitConfirmed
+        ? [Error(`generator original native exit unknown: ${dir}`)]
+        : []),
+    ].filter(Boolean);
+    if (nativeCauses.length)
+      throw new AggregateError(
+        nativeCauses,
+        'generator native execution failed',
+      );
     assert.equal(result.status, 0, result.stderr);
     const output = readFileSync(join(dir, 'contract/gen/go/values.go'), 'utf8');
     const input = /InputSchemaDigest: "(sha256:[0-9a-f]{64})"/.exec(output);
@@ -192,11 +237,14 @@ const digestPair = (changed, methods = JSON.parse(inventory)) => {
     assert.ok(input);
     assert.ok(response);
     return [input[1], response[1]];
+  } catch (error) {
+    failure = error;
+    throw error;
   } finally {
-    rmSync(dir, { recursive: true, force: true });
+    scope.finish(failure);
   }
 };
-const baseline = digestPair(original);
+const baseline = await digestPair(original);
 const goldens = JSON.parse(
   readFileSync('conformance/fixtures/1.0.0/schema-digests.json', 'utf8'),
 );
@@ -215,7 +263,7 @@ const reorder = (value) =>
         )
       : value;
 assert.deepEqual(
-  digestPair(reorder(original)),
+  await digestPair(reorder(original)),
   baseline,
   'JSON object ordering and formatting are not contract changes',
 );
@@ -261,7 +309,7 @@ for (const [name, mutate, affected] of [
 ]) {
   const changed = structuredClone(original);
   mutate(changed);
-  const got = digestPair(changed);
+  const got = await digestPair(changed);
   for (let direction = 0; direction < 2; direction++)
     assert.equal(
       got[direction] !== baseline[direction],
@@ -271,9 +319,41 @@ for (const [name, mutate, affected] of [
 }
 console.log('8 schema generation golden/change scenarios passed.');
 
-const newer = spawnSync(process.execPath, ['scripts/test-generator-v1_1.mjs'], {
-  stdio: 'inherit',
-  timeout: 60000,
-});
-assert.ifError(newer.error);
-assert.equal(newer.status, 0, 'isolated 1.1 generator checks');
+const nestedDir = mkdtempSync(join(tmpdir(), 'lerna-generator-entry-'));
+const nestedScope = ownConformanceScope(nestedDir, 'generator');
+let nestedExitConfirmed = false;
+let nestedPID, nestedFailure;
+try {
+  const newer = await boundedBuild(
+    process.execPath,
+    ['scripts/test-generator-v1_1.mjs'],
+    {
+      stdio: 'inherit',
+      timeout: 60000,
+      onStart: (pid) => {
+        nestedPID = pid;
+        nestedScope.start(pid, 'compiler');
+      },
+    },
+  );
+  nestedScope.exited(nestedPID, 'compiler', newer.exitConfirmed);
+  nestedExitConfirmed = newer.exitConfirmed;
+  const nativeCauses = [
+    newer.error,
+    ...newer.cleanupErrors,
+    ...(!newer.exitConfirmed
+      ? [Error(`nested original native exit unknown: ${nestedDir}`)]
+      : []),
+  ].filter(Boolean);
+  if (nativeCauses.length)
+    throw new AggregateError(
+      nativeCauses,
+      'nested generator native execution failed',
+    );
+  assert.equal(newer.status, 0, 'isolated 1.1 generator checks');
+} catch (error) {
+  nestedFailure = error;
+  throw error;
+} finally {
+  nestedScope.finish(nestedFailure);
+}

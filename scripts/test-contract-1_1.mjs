@@ -1,10 +1,19 @@
-import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { mkdtempSync, readFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { requireBuild } from './bounded-build.mjs';
 import { startRunner } from './contract-runner.mjs';
+import { ownConformanceScope } from './conformance-ownership.mjs';
 import assert from 'node:assert/strict';
 const dir = mkdtempSync(join(tmpdir(), 'lerna-contract-'));
+
+// Exact test-resource ownership; native closes remain the existing runner/build APIs.
+const scope = ownConformanceScope(dir, 'contract');
+function ownRunner(runner) {
+  allRunners.push(runner);
+  scope.start(runner.pid, 'producer');
+}
+
 const controller = new AbortController();
 const interrupt = () => {
   process.exitCode = 130;
@@ -15,17 +24,23 @@ process.once('SIGTERM', interrupt);
 // The invoking contract entry has a 60s bound; cancel and confirm holders
 // inside that bound instead of letting its parent kill an active build.
 const overallDeadline = setTimeout(() => controller.abort(), 50000);
-let runners = [],
+let allRunners = [],
+  runners = [],
   failure;
-let buildsConfirmed = true;
 async function runBuild(command, args, options) {
+  let startedPID;
   try {
     await requireBuild(command, args, {
       ...options,
       signal: controller.signal,
+      onStart: (pid) => {
+        startedPID = pid;
+        scope.start(pid, 'compiler');
+      },
     });
+    scope.exited(startedPID, 'compiler', true);
   } catch (error) {
-    buildsConfirmed &&= error.exitConfirmed === true;
+    scope.exited(startedPID, 'compiler', error.exitConfirmed === true);
     throw error;
   }
 }
@@ -46,12 +61,14 @@ try {
     signal: controller.signal,
   });
   runners.push(go);
+  ownRunner(go);
   const ts = startRunner(
     process.execPath,
     ['sdk/typescript/src/v1_1/valuerunner.ts', '--batch'],
     { signal: controller.signal },
   );
   runners.push(ts);
+  ownRunner(ts);
   const run = (lang, name, wire, context) =>
     (lang === 'go' ? go : ts).run(
       name,
@@ -145,29 +162,15 @@ try {
   failure = error;
 } finally {
   const results = await Promise.allSettled(
-    runners.map((runner) => runner.close()),
+    allRunners.map((runner) => runner.close()),
   );
-  const errors = [
-    failure,
-    ...results
-      .filter((result) => result.status === 'rejected')
-      .map((result) => result.reason),
-  ].filter(Boolean);
   clearTimeout(overallDeadline);
   process.removeListener('SIGINT', interrupt);
   process.removeListener('SIGTERM', interrupt);
-  if (buildsConfirmed && runners.every((runner) => runner.exitConfirmed)) {
-    try {
-      rmSync(dir, { recursive: true, force: true });
-    } catch (error) {
-      errors.push(error);
-    }
-  } else {
-    errors.push(Error(`process exit unconfirmed; retained exact scope ${dir}`));
-  }
-  if (errors.length)
-    throw new AggregateError(
-      [...new Set(errors)],
-      'contract conformance and cleanup failed',
-    );
+  const errors = results
+    .filter((result) => result.status === 'rejected')
+    .map((result) => result.reason);
+  for (const runner of allRunners)
+    scope.exited(runner.pid, 'producer', runner.exitConfirmed);
+  scope.finish(failure, errors);
 }

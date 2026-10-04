@@ -1,0 +1,1699 @@
+{
+  "base": "64c6872c8ed56ddd66dd51c98dc430046fc9f47d",
+  "initial": "92d27992f37f0a425621bc75c6d5b4a073fa06a6",
+  "tested_source": "46d6ca26e4c2a4e9cf6db95e890b641f6bf2aa97",
+  "delivery": "72da5ee820a69695553ff208e10a8ba31804d0b8",
+  "diff_range": "64c6872c8ed56ddd66dd51c98dc430046fc9f47d...72da5ee820a69695553ff208e10a8ba31804d0b8",
+  "commits": [
+    "f4ea089de3a350de59d50170e6b93e3fc8c99180 feat(content): publish exact bounded bytes through durable PG and local objects",
+    "a5d025750f7bbc0632c3fcf7d2eb17822344b78d fix(content): enforce current publication gate and retain native holder closure facts",
+    "bde5aaa827532552885bfe3faabb35dbbf2326e6 Preserve Content policy and original publication deadlines across waits and retries",
+    "92d27992f37f0a425621bc75c6d5b4a073fa06a6 Verify bounded Content publication and own actual contract test resources",
+    "46d6ca26e4c2a4e9cf6db95e890b641f6bf2aa97 Enforce current Content read and association gates and retain conformance ownership failures",
+    "72da5ee820a69695553ff208e10a8ba31804d0b8 Record fixed Content gates, complete native checks and exact resource audit for ticket review"
+  ],
+  "source_commits": [
+    "f4ea089de3a350de59d50170e6b93e3fc8c99180 feat(content): publish exact bounded bytes through durable PG and local objects",
+    "a5d025750f7bbc0632c3fcf7d2eb17822344b78d fix(content): enforce current publication gate and retain native holder closure facts",
+    "bde5aaa827532552885bfe3faabb35dbbf2326e6 Preserve Content policy and original publication deadlines across waits and retries",
+    "92d27992f37f0a425621bc75c6d5b4a073fa06a6 Verify bounded Content publication and own actual contract test resources",
+    "46d6ca26e4c2a4e9cf6db95e890b641f6bf2aa97 Enforce current Content read and association gates and retain conformance ownership failures"
+  ],
+  "changed_paths": [
+    {
+      "path": ".scratch/lerna-04-content-snapshots/issues/01-durable-content-publication.md",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "89b281767746a6b3a8e2095d481c1f8408811297"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/ticket-01-api-handoff.md",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "0deba6d5e9efa9ea9305b26bef98c7af3ed1fb96"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/ticket-01-evidence.md",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "e0407e39ccce22f412191838c7efa8829ed7f621"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/ticket-01-read-gate-adoption.md",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "2fdd90ea4e3ee9cb5ad9161b191b73eb175b718a"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/ticket-01-resource-audit.json",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "548f991ed53907cd417f7dd0e3418a8e763d0690"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/ticket-01-spec-initial.md",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "d4dc253ff3815b041f05d6c1d374711ebcbceaa1"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/ticket-01-standards-initial-scope.json",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "e3983609bb5ac43ee7a8c4fbf9cb6d101855b405"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/ticket-01-standards-initial.md",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "a297255cdbf5394ef8e3dac8a21076d77a1f0f4a"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/ticket-01-tool-ownership-adoption.md",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "a10a7a631703334a1c54269097bed16058ae3055"
+    },
+    {
+      "path": "Makefile",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "23505cde05dd4c2a3d7aaba2fac03ef5b1f95155"
+    },
+    {
+      "path": "adapters/objectstore/local/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "4b610573d90d99181ac14e33bad25a89ce455863"
+    },
+    {
+      "path": "adapters/objectstore/local/lifetime_test.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "94db95394ff5e749aab68582aebc807e16bf0b10"
+    },
+    {
+      "path": "adapters/objectstore/local/store_linux.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "1275d698b57a31fd4e13bf8c93648979c6539ee9"
+    },
+    {
+      "path": "adapters/postgres/content/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "c2af09c7ccfd42557d376e8c2063a49213bf8f99"
+    },
+    {
+      "path": "adapters/postgres/content/facts.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "cfd0b2ab3cacf3a229c76f44987b8e4bb2248c17"
+    },
+    {
+      "path": "adapters/postgres/content/migrate.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "f9f7d3d6e694d3fbb30958e040a1e98f1c9edbeb"
+    },
+    {
+      "path": "adapters/postgres/content/migrations/0001_content.sql",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "9f14fd8caa76419618d568e80ecefa43281f7aec"
+    },
+    {
+      "path": "adapters/postgres/content/policy.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "0f042009652d1970309385b25a48ae1ae28ca447"
+    },
+    {
+      "path": "adapters/postgres/content/store.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "f458b1ee30d4f390fc1509b70b076c5d529d23cd"
+    },
+    {
+      "path": "conformance/component/content_association_test.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "8c4b4589c5c89b7edeb56981d92c9ba56a9490e6"
+    },
+    {
+      "path": "conformance/component/content_bounds_test.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "e35b98f7c63f813491506153be1e457bd97e7469"
+    },
+    {
+      "path": "conformance/component/content_clock_test.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "1bc96ca9bec55c935efb392a1088b0a97c5caf7a"
+    },
+    {
+      "path": "conformance/component/content_direct_read_test.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "683b1a2383bd631af1fa735c865bae0ccbad4fbc"
+    },
+    {
+      "path": "conformance/component/content_faults_test.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "af7019278fca7b9dc15509f6970935ee895f3c4c"
+    },
+    {
+      "path": "conformance/component/content_identity_test.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "b7ca16ba8cf2bf1c66a4f272a638fa11dcdbff5d"
+    },
+    {
+      "path": "conformance/component/content_policy_test.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "66d6b0a219041533d2e7f6451001d68fb37a3890"
+    },
+    {
+      "path": "conformance/component/content_publication_test.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "4a42e32b42edab8afb4384a7c871c626a5a101e2"
+    },
+    {
+      "path": "conformance/component/content_read_clock_test.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "7597ad2a0d823a8d0da641a70a379e1b782a0d01"
+    },
+    {
+      "path": "conformance/component/content_read_gate_test.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "4708e2dfd8c72745efbcf4cc90a5af1aa48b1b75"
+    },
+    {
+      "path": "conformance/component/content_retry_test.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "6825434881a6bc7d33b3fe04baf918432443e5e9"
+    },
+    {
+      "path": "conformance/component/valuerunner_v1_2/batch.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "8a47f1d1a59db98732860391d555f350a2390fd2"
+    },
+    {
+      "path": "conformance/component/valuerunner_v1_2/main.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "499d7207393fbdec34db67a06038f12efdb62534"
+    },
+    {
+      "path": "conformance/component/valuerunner_v1_2/types.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "0833fbb4ecb04254eb23af0d494adb5d3c438510"
+    },
+    {
+      "path": "conformance/fixtures/1.2.0/digests.json",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "dc72de0081d223bb851d75a43a5c6231855226ae"
+    },
+    {
+      "path": "conformance/fixtures/1.2.0/fixtures.json",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "4c4853e3a5b8e4574df39f5dc6b1d5ba06a5a0c4"
+    },
+    {
+      "path": "conformance/fixtures/1.2.0/put-alpha.json",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "e2cd344ef68916e29c59c6b70067525e6ce4945a"
+    },
+    {
+      "path": "conformance/internal/contentfixture/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "386ec0bb613bd1aa0dc366ff26d1aff2db0ad832"
+    },
+    {
+      "path": "conformance/internal/contentfixture/migration_test.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "cbd624527c5d9956cb96a44e7d82796e351ad860"
+    },
+    {
+      "path": "conformance/internal/contentfixture/object_fault.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "14cee2fcae64c9e4c23cb1e988e7c8529d8e66c2"
+    },
+    {
+      "path": "conformance/internal/contentfixture/policy_lock.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "dd90aa6cf32bd6a95edae07b227a2886975226c4"
+    },
+    {
+      "path": "conformance/internal/contentfixture/setup_lifetime_test.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "ad487b3ecfd367d2917675d2d44cc0348829dac8"
+    },
+    {
+      "path": "conformance/internal/contentfixture/world.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "373b35d6a6c6ec74ee493892440dde7a503cb91d"
+    },
+    {
+      "path": "contract/gen/go/v1_2/values.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "5266a817cf2d664d46be59acd143fb5dc26c944e"
+    },
+    {
+      "path": "contract/schema/1.2.0/methods.json",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "ae9081b5ca9f612c6c733d4c4ab479f635ecec57"
+    },
+    {
+      "path": "contract/schema/1.2.0/values.json",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "cf07da4c149555b5da8526520b7ba82796fa94b5"
+    },
+    {
+      "path": "contract/v1_2/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "87640827eab96c6fba65a490fd5dd41930e0ffd2"
+    },
+    {
+      "path": "contract/v1_2/codec.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "27f7d103ce375887e077738e8bd53d85d6036aa6"
+    },
+    {
+      "path": "contract/v1_2/commands.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "8ac6e728ad8a482c5fecd8be6c192d30b06f26d2"
+    },
+    {
+      "path": "contract/v1_2/content.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "f26c5bd9779e2cc6178cdf5d15d7622a6850f1b3"
+    },
+    {
+      "path": "contract/v1_2/content_response_test.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "22c44f78b620e8000d6489c510c16a65330e1c6b"
+    },
+    {
+      "path": "contract/v1_2/content_test.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "db13525d10e32b35896086c4c28eb64342cc272c"
+    },
+    {
+      "path": "contract/v1_2/digest.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "00343578bda1280f7f92db0495f8f9a4261b098b"
+    },
+    {
+      "path": "contract/v1_2/digest_test.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "1683b3ec055134fc4990b5bb1534ce7cbb12ac52"
+    },
+    {
+      "path": "contract/v1_2/json.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "a769d52eab3c40866c723a0fead5ee90f92d2bcf"
+    },
+    {
+      "path": "contract/v1_2/query.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "f627f0e48ccf8a7539218e5d8d8fe72a871f3019"
+    },
+    {
+      "path": "contract/v1_2/readfacts.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "6f5872ddf7ca0fcbada5a7a2b2675c5761b1ce0e"
+    },
+    {
+      "path": "contract/v1_2/receipts.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "c52757e98ef423ef7291b7eb101b5141dcd8f3e9"
+    },
+    {
+      "path": "contract/v1_2/values.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "aa341320ed1746ec1f9e555bc22e93838490b381"
+    },
+    {
+      "path": "domain/content/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "d61d24c01c10da9e0b6811b5804a7b26065316aa"
+    },
+    {
+      "path": "domain/content/identity.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "10d10dd95a598aa03175b77cf81683fa0156f2f6"
+    },
+    {
+      "path": "domain/content/identity_test.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "dd608f8d8f38f6c8acb44b8c7d60ff1243ba175f"
+    },
+    {
+      "path": "domain/content/legacy.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "2b0ce0f7956745f36a9f358bfeb0f59800c0608b"
+    },
+    {
+      "path": "domain/content/ports.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "77ee047197b87d245355d550eeabfdc937237844"
+    },
+    {
+      "path": "domain/content/service.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "de14896ac372b1bdac8bf5c3174ae4887de0ebc2"
+    },
+    {
+      "path": "scripts/bounded-build.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "d1a8c4d70e37ba85b54f6010f9ff3e539ade2fb4"
+    },
+    {
+      "path": "scripts/conformance-ownership.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "a64557bc1b2f5d5c46071eb9bb9aa77b39887587"
+    },
+    {
+      "path": "scripts/conformance-ownership.test.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "f1f5971d62fb64cdee63e53a0b1e5ccf7de45362"
+    },
+    {
+      "path": "scripts/generate.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "6b18fa733810d2911fba086c99d6126d1bf401a5"
+    },
+    {
+      "path": "scripts/test-contract-1_1.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "9e29fc14a4433605094705cd4ce17f06d2a3fb3a"
+    },
+    {
+      "path": "scripts/test-contract-1_2.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "0066e10de2f4185d9ff498959d47b480dfc873fb"
+    },
+    {
+      "path": "scripts/test-contract.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "5faea28a2d1d797bc7c42d01e2db70d2283b4471"
+    },
+    {
+      "path": "scripts/test-generator-v1_1.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "6749c045a500d077889c9f295dbe102335fcd688"
+    },
+    {
+      "path": "scripts/test-generator.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "14c4425a565bdf34e1418752a3629eddfcea5a8c"
+    },
+    {
+      "path": "sdk/typescript/package.json",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "84fd1d573d9219a124a6d15816449ceb50907ad0"
+    },
+    {
+      "path": "sdk/typescript/src/v1_2/codec.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "0e54c6a60ac05f62b06ee824df8261f011b18d91"
+    },
+    {
+      "path": "sdk/typescript/src/v1_2/commands.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "f91b4f9c1cab905687ff461e1df3d4def9decdf4"
+    },
+    {
+      "path": "sdk/typescript/src/v1_2/content.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "90ebaf67b37bc3a895253467b937c4c8440d14eb"
+    },
+    {
+      "path": "sdk/typescript/src/v1_2/content.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "f26d5b19a843dad26a9013e5bc50659accf2d589"
+    },
+    {
+      "path": "sdk/typescript/src/v1_2/digest.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "8e17233ce75557c57753580faf62844534df8476"
+    },
+    {
+      "path": "sdk/typescript/src/v1_2/errors.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "1793509f73f6be3fd3cac88711d1ca5705ce43aa"
+    },
+    {
+      "path": "sdk/typescript/src/v1_2/generated/values.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "e36c1a31d7b6ed32203e3c527b678dc7631dcd56"
+    },
+    {
+      "path": "sdk/typescript/src/v1_2/index.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "c4d09a8524fa5e4521a7b2c79800b02f98bd1edc"
+    },
+    {
+      "path": "sdk/typescript/src/v1_2/json.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "ff5d2827a6ecd7e1cc0dbda9d83d7bf7e1961782"
+    },
+    {
+      "path": "sdk/typescript/src/v1_2/query.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "390327e6dfd92badceaa848af7d1bedde9c00e6c"
+    },
+    {
+      "path": "sdk/typescript/src/v1_2/readfacts.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "99dc339446907782096b425635a067e388b8d4e9"
+    },
+    {
+      "path": "sdk/typescript/src/v1_2/receipts.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "00215f4a6b8e4c18cab5f1012c575d9f6740cf1c"
+    },
+    {
+      "path": "sdk/typescript/src/v1_2/response-semantics.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "b1af14e091cc47023f4d527f122370730a7f2db2"
+    },
+    {
+      "path": "sdk/typescript/src/v1_2/valuerunner.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "bb7d5dc81ebe367c3131963206aa90a087418eff"
+    }
+  ],
+  "source_increment_full_read": [
+    {
+      "path": "Makefile",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "23505cde05dd4c2a3d7aaba2fac03ef5b1f95155"
+    },
+    {
+      "path": "adapters/objectstore/local/lifetime_test.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "94db95394ff5e749aab68582aebc807e16bf0b10"
+    },
+    {
+      "path": "adapters/objectstore/local/store_linux.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "1275d698b57a31fd4e13bf8c93648979c6539ee9"
+    },
+    {
+      "path": "adapters/postgres/content/policy.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "0f042009652d1970309385b25a48ae1ae28ca447"
+    },
+    {
+      "path": "conformance/component/content_association_test.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "8c4b4589c5c89b7edeb56981d92c9ba56a9490e6"
+    },
+    {
+      "path": "conformance/component/content_direct_read_test.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "683b1a2383bd631af1fa735c865bae0ccbad4fbc"
+    },
+    {
+      "path": "conformance/component/content_policy_test.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "66d6b0a219041533d2e7f6451001d68fb37a3890"
+    },
+    {
+      "path": "conformance/component/content_read_clock_test.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "7597ad2a0d823a8d0da641a70a379e1b782a0d01"
+    },
+    {
+      "path": "conformance/component/content_read_gate_test.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "4708e2dfd8c72745efbcf4cc90a5af1aa48b1b75"
+    },
+    {
+      "path": "conformance/internal/contentfixture/migration_test.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "cbd624527c5d9956cb96a44e7d82796e351ad860"
+    },
+    {
+      "path": "conformance/internal/contentfixture/object_fault.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "14cee2fcae64c9e4c23cb1e988e7c8529d8e66c2"
+    },
+    {
+      "path": "conformance/internal/contentfixture/policy_lock.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "dd90aa6cf32bd6a95edae07b227a2886975226c4"
+    },
+    {
+      "path": "conformance/internal/contentfixture/setup_lifetime_test.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "ad487b3ecfd367d2917675d2d44cc0348829dac8"
+    },
+    {
+      "path": "conformance/internal/contentfixture/world.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "373b35d6a6c6ec74ee493892440dde7a503cb91d"
+    },
+    {
+      "path": "domain/content/service.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "de14896ac372b1bdac8bf5c3174ae4887de0ebc2"
+    },
+    {
+      "path": "scripts/conformance-ownership.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "a64557bc1b2f5d5c46071eb9bb9aa77b39887587"
+    },
+    {
+      "path": "scripts/conformance-ownership.test.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "f1f5971d62fb64cdee63e53a0b1e5ccf7de45362"
+    },
+    {
+      "path": "scripts/test-contract-1_1.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "9e29fc14a4433605094705cd4ce17f06d2a3fb3a"
+    },
+    {
+      "path": "scripts/test-contract-1_2.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "0066e10de2f4185d9ff498959d47b480dfc873fb"
+    },
+    {
+      "path": "scripts/test-contract.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "5faea28a2d1d797bc7c42d01e2db70d2283b4471"
+    },
+    {
+      "path": "scripts/test-generator-v1_1.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "6749c045a500d077889c9f295dbe102335fcd688"
+    },
+    {
+      "path": "scripts/test-generator.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "14c4425a565bdf34e1418752a3629eddfcea5a8c"
+    }
+  ],
+  "delivery_document_increment": [
+    {
+      "path": ".scratch/lerna-04-content-snapshots/issues/01-durable-content-publication.md",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "89b281767746a6b3a8e2095d481c1f8408811297",
+      "coverage": "complete fixed documentation or exact original own-axis scope equality"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/ticket-01-api-handoff.md",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "0deba6d5e9efa9ea9305b26bef98c7af3ed1fb96",
+      "coverage": "complete fixed documentation or exact original own-axis scope equality"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/ticket-01-evidence.md",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "e0407e39ccce22f412191838c7efa8829ed7f621",
+      "coverage": "complete fixed documentation or exact original own-axis scope equality"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/ticket-01-read-gate-adoption.md",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "2fdd90ea4e3ee9cb5ad9161b191b73eb175b718a",
+      "coverage": "complete fixed documentation or exact original own-axis scope equality"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/ticket-01-resource-audit.json",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "548f991ed53907cd417f7dd0e3418a8e763d0690",
+      "coverage": "complete fixed documentation or exact original own-axis scope equality"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/ticket-01-spec-initial.md",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "d4dc253ff3815b041f05d6c1d374711ebcbceaa1",
+      "coverage": "provenance/structure/links only; finding body isolated"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/ticket-01-standards-initial-scope.json",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "e3983609bb5ac43ee7a8c4fbf9cb6d101855b405",
+      "coverage": "complete fixed documentation or exact original own-axis scope equality"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/ticket-01-standards-initial.md",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "a297255cdbf5394ef8e3dac8a21076d77a1f0f4a",
+      "coverage": "complete fixed documentation or exact original own-axis scope equality"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/ticket-01-tool-ownership-adoption.md",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "a10a7a631703334a1c54269097bed16058ae3055",
+      "coverage": "complete fixed documentation or exact original own-axis scope equality"
+    },
+    {
+      "path": "conformance/internal/contentfixture/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "386ec0bb613bd1aa0dc366ff26d1aff2db0ad832",
+      "coverage": "complete fixed documentation or exact original own-axis scope equality"
+    }
+  ],
+  "initial_carried_equal_mode_type_blob": [
+    {
+      "path": "adapters/objectstore/local/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "4b610573d90d99181ac14e33bad25a89ce455863"
+    },
+    {
+      "path": "adapters/postgres/content/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "c2af09c7ccfd42557d376e8c2063a49213bf8f99"
+    },
+    {
+      "path": "adapters/postgres/content/facts.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "cfd0b2ab3cacf3a229c76f44987b8e4bb2248c17"
+    },
+    {
+      "path": "adapters/postgres/content/migrate.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "f9f7d3d6e694d3fbb30958e040a1e98f1c9edbeb"
+    },
+    {
+      "path": "adapters/postgres/content/migrations/0001_content.sql",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "9f14fd8caa76419618d568e80ecefa43281f7aec"
+    },
+    {
+      "path": "adapters/postgres/content/store.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "f458b1ee30d4f390fc1509b70b076c5d529d23cd"
+    },
+    {
+      "path": "conformance/component/content_bounds_test.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "e35b98f7c63f813491506153be1e457bd97e7469"
+    },
+    {
+      "path": "conformance/component/content_clock_test.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "1bc96ca9bec55c935efb392a1088b0a97c5caf7a"
+    },
+    {
+      "path": "conformance/component/content_faults_test.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "af7019278fca7b9dc15509f6970935ee895f3c4c"
+    },
+    {
+      "path": "conformance/component/content_identity_test.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "b7ca16ba8cf2bf1c66a4f272a638fa11dcdbff5d"
+    },
+    {
+      "path": "conformance/component/content_publication_test.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "4a42e32b42edab8afb4384a7c871c626a5a101e2"
+    },
+    {
+      "path": "conformance/component/content_retry_test.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "6825434881a6bc7d33b3fe04baf918432443e5e9"
+    },
+    {
+      "path": "conformance/component/valuerunner_v1_2/batch.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "8a47f1d1a59db98732860391d555f350a2390fd2"
+    },
+    {
+      "path": "conformance/component/valuerunner_v1_2/main.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "499d7207393fbdec34db67a06038f12efdb62534"
+    },
+    {
+      "path": "conformance/component/valuerunner_v1_2/types.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "0833fbb4ecb04254eb23af0d494adb5d3c438510"
+    },
+    {
+      "path": "conformance/fixtures/1.2.0/digests.json",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "dc72de0081d223bb851d75a43a5c6231855226ae"
+    },
+    {
+      "path": "conformance/fixtures/1.2.0/fixtures.json",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "4c4853e3a5b8e4574df39f5dc6b1d5ba06a5a0c4"
+    },
+    {
+      "path": "conformance/fixtures/1.2.0/put-alpha.json",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "e2cd344ef68916e29c59c6b70067525e6ce4945a"
+    },
+    {
+      "path": "contract/gen/go/v1_2/values.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "5266a817cf2d664d46be59acd143fb5dc26c944e"
+    },
+    {
+      "path": "contract/schema/1.2.0/methods.json",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "ae9081b5ca9f612c6c733d4c4ab479f635ecec57"
+    },
+    {
+      "path": "contract/schema/1.2.0/values.json",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "cf07da4c149555b5da8526520b7ba82796fa94b5"
+    },
+    {
+      "path": "contract/v1_2/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "87640827eab96c6fba65a490fd5dd41930e0ffd2"
+    },
+    {
+      "path": "contract/v1_2/codec.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "27f7d103ce375887e077738e8bd53d85d6036aa6"
+    },
+    {
+      "path": "contract/v1_2/commands.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "8ac6e728ad8a482c5fecd8be6c192d30b06f26d2"
+    },
+    {
+      "path": "contract/v1_2/content.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "f26c5bd9779e2cc6178cdf5d15d7622a6850f1b3"
+    },
+    {
+      "path": "contract/v1_2/content_response_test.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "22c44f78b620e8000d6489c510c16a65330e1c6b"
+    },
+    {
+      "path": "contract/v1_2/content_test.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "db13525d10e32b35896086c4c28eb64342cc272c"
+    },
+    {
+      "path": "contract/v1_2/digest.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "00343578bda1280f7f92db0495f8f9a4261b098b"
+    },
+    {
+      "path": "contract/v1_2/digest_test.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "1683b3ec055134fc4990b5bb1534ce7cbb12ac52"
+    },
+    {
+      "path": "contract/v1_2/json.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "a769d52eab3c40866c723a0fead5ee90f92d2bcf"
+    },
+    {
+      "path": "contract/v1_2/query.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "f627f0e48ccf8a7539218e5d8d8fe72a871f3019"
+    },
+    {
+      "path": "contract/v1_2/readfacts.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "6f5872ddf7ca0fcbada5a7a2b2675c5761b1ce0e"
+    },
+    {
+      "path": "contract/v1_2/receipts.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "c52757e98ef423ef7291b7eb101b5141dcd8f3e9"
+    },
+    {
+      "path": "contract/v1_2/values.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "aa341320ed1746ec1f9e555bc22e93838490b381"
+    },
+    {
+      "path": "domain/content/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "d61d24c01c10da9e0b6811b5804a7b26065316aa"
+    },
+    {
+      "path": "domain/content/identity.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "10d10dd95a598aa03175b77cf81683fa0156f2f6"
+    },
+    {
+      "path": "domain/content/identity_test.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "dd608f8d8f38f6c8acb44b8c7d60ff1243ba175f"
+    },
+    {
+      "path": "domain/content/legacy.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "2b0ce0f7956745f36a9f358bfeb0f59800c0608b"
+    },
+    {
+      "path": "domain/content/ports.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "77ee047197b87d245355d550eeabfdc937237844"
+    },
+    {
+      "path": "scripts/bounded-build.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "d1a8c4d70e37ba85b54f6010f9ff3e539ade2fb4"
+    },
+    {
+      "path": "scripts/generate.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "6b18fa733810d2911fba086c99d6126d1bf401a5"
+    },
+    {
+      "path": "sdk/typescript/package.json",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "84fd1d573d9219a124a6d15816449ceb50907ad0"
+    },
+    {
+      "path": "sdk/typescript/src/v1_2/codec.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "0e54c6a60ac05f62b06ee824df8261f011b18d91"
+    },
+    {
+      "path": "sdk/typescript/src/v1_2/commands.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "f91b4f9c1cab905687ff461e1df3d4def9decdf4"
+    },
+    {
+      "path": "sdk/typescript/src/v1_2/content.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "90ebaf67b37bc3a895253467b937c4c8440d14eb"
+    },
+    {
+      "path": "sdk/typescript/src/v1_2/content.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "f26d5b19a843dad26a9013e5bc50659accf2d589"
+    },
+    {
+      "path": "sdk/typescript/src/v1_2/digest.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "8e17233ce75557c57753580faf62844534df8476"
+    },
+    {
+      "path": "sdk/typescript/src/v1_2/errors.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "1793509f73f6be3fd3cac88711d1ca5705ce43aa"
+    },
+    {
+      "path": "sdk/typescript/src/v1_2/generated/values.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "e36c1a31d7b6ed32203e3c527b678dc7631dcd56"
+    },
+    {
+      "path": "sdk/typescript/src/v1_2/index.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "c4d09a8524fa5e4521a7b2c79800b02f98bd1edc"
+    },
+    {
+      "path": "sdk/typescript/src/v1_2/json.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "ff5d2827a6ecd7e1cc0dbda9d83d7bf7e1961782"
+    },
+    {
+      "path": "sdk/typescript/src/v1_2/query.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "390327e6dfd92badceaa848af7d1bedde9c00e6c"
+    },
+    {
+      "path": "sdk/typescript/src/v1_2/readfacts.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "99dc339446907782096b425635a067e388b8d4e9"
+    },
+    {
+      "path": "sdk/typescript/src/v1_2/receipts.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "00215f4a6b8e4c18cab5f1012c575d9f6740cf1c"
+    },
+    {
+      "path": "sdk/typescript/src/v1_2/response-semantics.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "b1af14e091cc47023f4d527f122370730a7f2db2"
+    },
+    {
+      "path": "sdk/typescript/src/v1_2/valuerunner.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "bb7d5dc81ebe367c3131963206aa90a087418eff"
+    }
+  ],
+  "initial_qualification": "Actual complete original own-axis report/scope read; original 4 commits / 74 paths; generated schema source equality + all101 losslessly represented fixtures; all5 initialhard and1smell closure independently checked in current fixed source.",
+  "protected79_same_mode_type_blob": [
+    {
+      "path": "conformance/fixtures/1.0.0/commands.json",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "649b88634ec7f0aa59324f5371e0ba26ea0f8e7e"
+    },
+    {
+      "path": "conformance/fixtures/1.0.0/digests.json",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "13e883060de541a47138e54dab6dc5a9bf98c4f6"
+    },
+    {
+      "path": "conformance/fixtures/1.0.0/negotiations.json",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "8ef3a558dc314cc768011983b7cb1e9ac67eb26c"
+    },
+    {
+      "path": "conformance/fixtures/1.0.0/queries.json",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "09a090eac1d86b8c44ee2de4d3433f1b44147c14"
+    },
+    {
+      "path": "conformance/fixtures/1.0.0/responses.json",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "42f6836d0766154711de4f449418952265657b59"
+    },
+    {
+      "path": "conformance/fixtures/1.0.0/schema-digests.json",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "041ad8865556f16c0e1a916d1854745db2bb0875"
+    },
+    {
+      "path": "conformance/fixtures/1.0.0/values.json",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "bf28b18d1c9f627b0faf020960d6ffc181020355"
+    },
+    {
+      "path": "conformance/fixtures/1.1.0/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "56f366d0da8a205569fd2650730f6f4ec5938118"
+    },
+    {
+      "path": "conformance/fixtures/1.1.0/digest-input.json",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "4ca5ba8ea5a8f76f9852f8d4711da31f98f21791"
+    },
+    {
+      "path": "conformance/fixtures/1.1.0/fixtures.json",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "bc9d05c6f5571df0dd32b7e9f53a5f4463d1d0c8"
+    },
+    {
+      "path": "conformance/fixtures/1.1.0/queries.json",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "68dfa70a32a070ae4f2fe62f3334036d9d293bef"
+    },
+    {
+      "path": "conformance/fixtures/1.1.0/schema-digests.json",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "a44aaf604113c47b77ae55f6f41767618d321349"
+    },
+    {
+      "path": "conformance/fixtures/1.1.0/valid/decide.json",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "d059b2ec7799a15307820b05ea234705c2295b08"
+    },
+    {
+      "path": "contract/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "945664a86f1dcfef0ea4fb63755e35f864d04f0c"
+    },
+    {
+      "path": "contract/codec.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "70b38914a080e104274a3b13adbd0aea5421f7f1"
+    },
+    {
+      "path": "contract/commands.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "acc20a9f8f7dcbfe39b2a35d1a62233496ca36af"
+    },
+    {
+      "path": "contract/digest.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "76298716fc17d56f801b7836ed85662e08e2d1ea"
+    },
+    {
+      "path": "contract/gen/go/v1_1/values.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "1f017286e431e70b8cb7b0f2b883d906dc8a7536"
+    },
+    {
+      "path": "contract/gen/go/values.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "178959d94f46c4e37368cbba1332650f911e84a4"
+    },
+    {
+      "path": "contract/json.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "d5076c4e4bc8185d80ee5f40b6b33d4aad19d841"
+    },
+    {
+      "path": "contract/negotiation.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "503694d269ec50df692b4f991f5b98ed9ff3173c"
+    },
+    {
+      "path": "contract/query.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "e98113f775f0a083c76da3e4319b77419deedab5"
+    },
+    {
+      "path": "contract/readfacts.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "90a9a997543735d6b2257407fe2d42bd59507afc"
+    },
+    {
+      "path": "contract/receipts.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "cf36b83c451fdf938be1d630845260c4c9e2ab6f"
+    },
+    {
+      "path": "contract/schema/1.0.0/methods.json",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "9cb0312cdcd62af8636bca0c262b84f2142c888e"
+    },
+    {
+      "path": "contract/schema/1.0.0/values.json",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "a087d4d0a86c90c5f670890d68b247d6cc9441e9"
+    },
+    {
+      "path": "contract/schema/1.1.0/methods.json",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "04a6d81ddf301b719f6c40849140c95630bb54d4"
+    },
+    {
+      "path": "contract/schema/1.1.0/values.json",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "854222f9ada3979515db5c6ad8369800d66d2b27"
+    },
+    {
+      "path": "contract/v1_1/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "71c3b9cb601baf54440fc184e37eda67766dfd9c"
+    },
+    {
+      "path": "contract/v1_1/codec.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "b63fa369e5c7bbd545b4eb95e92f9710dbb6365d"
+    },
+    {
+      "path": "contract/v1_1/commands.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "1b7e2007f93efbbecc3d52cdcf46283b843a57a1"
+    },
+    {
+      "path": "contract/v1_1/decision.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "fb9c074fe9ef76c83c45702cef072398224d4e11"
+    },
+    {
+      "path": "contract/v1_1/digest.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "00ffa51e7f0051ebfab78fc983f5a8f9a6d9e1f3"
+    },
+    {
+      "path": "contract/v1_1/json.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "0f95ccd3ede44baf7340b5ca1e5dd4b3c7f029ed"
+    },
+    {
+      "path": "contract/v1_1/negotiation.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "2f6f7fd5e0a7220c4b99fe841875396f9038b32b"
+    },
+    {
+      "path": "contract/v1_1/query.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "e129deaef20857092e11785a10c5d009a3299dff"
+    },
+    {
+      "path": "contract/v1_1/readfacts.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "101571dcbbe912b644c4a444dad2154004c294d3"
+    },
+    {
+      "path": "contract/v1_1/receipts.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "dd678c27126fbe2cb94d73c9b65f302887841f7d"
+    },
+    {
+      "path": "contract/v1_1/values.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "e28adb7d45e3cdb6ca131cee570d4d8d693d572b"
+    },
+    {
+      "path": "contract/values.go",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "670ef3bfa9afb476c43eb62ba1d9627e46304835"
+    },
+    {
+      "path": "sdk/typescript/src/codec-boundary.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "777a8166743876f7c1f9aeaed8b6cc3410cb23ce"
+    },
+    {
+      "path": "sdk/typescript/src/codec.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "d22d020793741e7f4cff8c339a672f2a96ed8c4f"
+    },
+    {
+      "path": "sdk/typescript/src/commands.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "e35ac61ede74a899226a95ef00c1bdc2d94e4fe2"
+    },
+    {
+      "path": "sdk/typescript/src/commands.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "4aa7c78da895101ba70cc582047f93e880cc71aa"
+    },
+    {
+      "path": "sdk/typescript/src/digest.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "cf91166cfe824867bf24ee1243ebec887309dbdf"
+    },
+    {
+      "path": "sdk/typescript/src/digests.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "8983dd71c8af143ff13e560bf8bb02796659c015"
+    },
+    {
+      "path": "sdk/typescript/src/errors.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "1793509f73f6be3fd3cac88711d1ca5705ce43aa"
+    },
+    {
+      "path": "sdk/typescript/src/generated/values.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "c4b2c7dd85dd9f1ef7b100e628928293e477bf58"
+    },
+    {
+      "path": "sdk/typescript/src/index.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "a413e67d5e6df257c57de40e59892f014049ff5a"
+    },
+    {
+      "path": "sdk/typescript/src/json.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "f9a761c740fd1eb0e7d438598c03ca7597c9d25a"
+    },
+    {
+      "path": "sdk/typescript/src/negotiation.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "6cff69bc42bf987788e90ebb73ea935693a2f3c5"
+    },
+    {
+      "path": "sdk/typescript/src/negotiation.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "33945c29b01c0197824a0c25263df4f7b97f01f5"
+    },
+    {
+      "path": "sdk/typescript/src/query.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "b202304a11582c4ce1212156f59cac696bf4040a"
+    },
+    {
+      "path": "sdk/typescript/src/query.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "390327e6dfd92badceaa848af7d1bedde9c00e6c"
+    },
+    {
+      "path": "sdk/typescript/src/readfacts.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "b26cda676368855792e7b97b85d2b0dca637cc32"
+    },
+    {
+      "path": "sdk/typescript/src/readfacts.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "99dc339446907782096b425635a067e388b8d4e9"
+    },
+    {
+      "path": "sdk/typescript/src/receipts.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "b74f09982f84d7ffe59fd101983ecc6d6bee1b00"
+    },
+    {
+      "path": "sdk/typescript/src/receipts.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "00215f4a6b8e4c18cab5f1012c575d9f6740cf1c"
+    },
+    {
+      "path": "sdk/typescript/src/response-semantics.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "eaa75fccbb7cba4bfc388fc1f200d33cea80e402"
+    },
+    {
+      "path": "sdk/typescript/src/schema-integrity.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "790fa5ba9e8b7c0ff0c266c4b7e18ec3f84d319b"
+    },
+    {
+      "path": "sdk/typescript/src/v1_1/codec.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "abc41a2c048e3f383f4197d45c8073ef02ad7702"
+    },
+    {
+      "path": "sdk/typescript/src/v1_1/commands.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "f91b4f9c1cab905687ff461e1df3d4def9decdf4"
+    },
+    {
+      "path": "sdk/typescript/src/v1_1/decision.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "8c0849fc1848d5aca182fddaef513610c4012388"
+    },
+    {
+      "path": "sdk/typescript/src/v1_1/decision.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "f75db4008cfa151a047eb469548f89b8ce7c269e"
+    },
+    {
+      "path": "sdk/typescript/src/v1_1/digest.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "8e17233ce75557c57753580faf62844534df8476"
+    },
+    {
+      "path": "sdk/typescript/src/v1_1/errors.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "1793509f73f6be3fd3cac88711d1ca5705ce43aa"
+    },
+    {
+      "path": "sdk/typescript/src/v1_1/generated/values.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "c3f82f850ab9f2388f7f30813cece39e960afc42"
+    },
+    {
+      "path": "sdk/typescript/src/v1_1/index.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "dd1d569fb2b4620dbf5603eaca1c47aa355179cd"
+    },
+    {
+      "path": "sdk/typescript/src/v1_1/json.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "ff5d2827a6ecd7e1cc0dbda9d83d7bf7e1961782"
+    },
+    {
+      "path": "sdk/typescript/src/v1_1/negotiation.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "de2f36e51a29819b761d012bb4c5e29fe0b81404"
+    },
+    {
+      "path": "sdk/typescript/src/v1_1/negotiation.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "33945c29b01c0197824a0c25263df4f7b97f01f5"
+    },
+    {
+      "path": "sdk/typescript/src/v1_1/query.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "20a3c9fa98ca3d6fd95c4e80bd04c8d9d75f4c52"
+    },
+    {
+      "path": "sdk/typescript/src/v1_1/query.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "390327e6dfd92badceaa848af7d1bedde9c00e6c"
+    },
+    {
+      "path": "sdk/typescript/src/v1_1/readfacts.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "99dc339446907782096b425635a067e388b8d4e9"
+    },
+    {
+      "path": "sdk/typescript/src/v1_1/receipts.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "00215f4a6b8e4c18cab5f1012c575d9f6740cf1c"
+    },
+    {
+      "path": "sdk/typescript/src/v1_1/response-semantics.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "237a692201be3c44c0d887a6688e2c162446f4cd"
+    },
+    {
+      "path": "sdk/typescript/src/v1_1/valuerunner.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "8c29fc076fcb5874b0d5cfee3c41fa65abbd60d0"
+    },
+    {
+      "path": "sdk/typescript/src/valuerunner.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "e61724a2d6675be6d5e9442328d5c5f06cd84c2e"
+    },
+    {
+      "path": "sdk/typescript/src/values.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "028dd65ca251cfad6349cde5e7110547ffda4ffb"
+    }
+  ],
+  "unchanged_source_tree_entries": 851,
+  "document_links_verified": [
+    {
+      "path": ".scratch/lerna-04-content-snapshots/issues/01-durable-content-publication.md",
+      "target": "../ticket-01-api-handoff.md",
+      "resolved": ".scratch/lerna-04-content-snapshots/ticket-01-api-handoff.md"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/issues/01-durable-content-publication.md",
+      "target": "../ticket-01-evidence.md",
+      "resolved": ".scratch/lerna-04-content-snapshots/ticket-01-evidence.md"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/issues/01-durable-content-publication.md",
+      "target": "../ticket-01-resource-audit.json",
+      "resolved": ".scratch/lerna-04-content-snapshots/ticket-01-resource-audit.json"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/ticket-01-api-handoff.md",
+      "target": "contract-shape-decision.md",
+      "resolved": ".scratch/lerna-04-content-snapshots/contract-shape-decision.md"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/ticket-01-api-handoff.md",
+      "target": "ticket-01-evidence.md",
+      "resolved": ".scratch/lerna-04-content-snapshots/ticket-01-evidence.md"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/ticket-01-evidence.md",
+      "target": "ticket-01-resource-audit.json",
+      "resolved": ".scratch/lerna-04-content-snapshots/ticket-01-resource-audit.json"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/ticket-01-read-gate-adoption.md",
+      "target": "ticket-01-spec-initial.md",
+      "resolved": ".scratch/lerna-04-content-snapshots/ticket-01-spec-initial.md"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/ticket-01-read-gate-adoption.md",
+      "target": "ticket-01-standards-initial.md",
+      "resolved": ".scratch/lerna-04-content-snapshots/ticket-01-standards-initial.md"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/ticket-01-standards-initial.md",
+      "target": "ticket-01-standards-initial-scope.json",
+      "resolved": ".scratch/lerna-04-content-snapshots/ticket-01-standards-initial-scope.json"
+    }
+  ],
+  "fowler12_considered": [
+    "Mysterious Name",
+    "Duplicated Code",
+    "Feature Envy",
+    "Data Clumps",
+    "Primitive Obsession",
+    "Repeated Switches",
+    "Shotgun Surgery",
+    "Divergent Change",
+    "Speculative Generality",
+    "Message Chains",
+    "Middle Man",
+    "Refused Bequest"
+  ],
+  "standards_same_original_objects": [
+    {
+      "path": "AGENTS.md",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "1860c96f250663e46ee69d81f8c17539a74a22ad"
+    },
+    {
+      "path": "CONTEXT.md",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "d3d3ae0ebef7410f40e76f80ba3049bebf5ab1ac"
+    },
+    {
+      "path": "docs/agents/issue-tracker.md",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "0209a19af92c9c485cf3acc3d9e253171517ea17"
+    },
+    {
+      "path": "docs/agents/triage-labels.md",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "b716855d485f3865f9dfde2a82141721f065b2e7"
+    },
+    {
+      "path": "docs/agents/domain.md",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "35249041162b1eed5b873d97fc430fb3e4adb18f"
+    },
+    {
+      "path": ".agents/skills/code-review/SKILL.md",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "e28d7acbf7b3bb4d7817b7eb5d9c105af03f6ec4"
+    },
+    {
+      "path": "adapters/objectstore/local/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "4b610573d90d99181ac14e33bad25a89ce455863"
+    },
+    {
+      "path": "docs/adr/0006-authorization-budget-at-action-boundaries.md",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "77d90c078faec789d028f6f7ffeade66ca444089"
+    },
+    {
+      "path": "docs/adr/0007-versioned-content-memory-snapshots.md",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "b40a72034fe71cc31aed957c29450c56402487b4"
+    }
+  ],
+  "no_native_execution": true,
+  "AC_acceptance": "all8 unchecked until independent root acceptance",
+  "current_findings": {
+    "hard": 1,
+    "hard_worst": "P2",
+    "possible_smell": 1,
+    "smell_worst": "P3"
+  }
+}
