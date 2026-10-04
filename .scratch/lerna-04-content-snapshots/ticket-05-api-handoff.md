@@ -43,7 +43,7 @@ attempt同时携带原binding。publish startup/final、实际Put/Get Read核同
 介质。Seal只消费原版本的已登记binding，不能从当前空root认领历史正文。
 primary holder保存同一原binding；原cleanup claim前和adapter的实际
 Fence/Observe前分别核对。wrong-after-seal独立root拒绝且原root同deadline
-恢复已实际通过；first-Seal错root独立对照尚待后续。
+恢复已实际通过；first-Seal错root独立正常/拒绝对照亦actual0.339s通过。
 
 未binding legacy保持未知、不会自动用当前config修复；受信回填必须另有
 准确原ref/key/原介质责任与独立原字节对照，真实停止旧writer后才升级。

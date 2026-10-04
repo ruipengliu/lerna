@@ -133,3 +133,13 @@ Binding相等不证明Close或物理删除。旧未binding记录保持未知，�
 确认删除。前三vertical已在新binding source上作相关race控制，并覆盖本地
 原holder reopen/CloseDrain。first-Seal已错root的独立正常/拒绝对照另待后续。
 未实施受信legacy回填、真实停止旧writer升级、secondary、进程竞争或全七AC。
+
+### 首次Seal错误root独立source qualification
+
+`TestContentFirstSealCannotAdoptAnEmptyConfiguredRoot`是上述必要绑定修复的
+独立正常/拒绝控制，未退产品代码或伪造新red。原真实publish/read后，
+第一次Seal配置空独立root即ErrHolderBinding；原body仍正常read，正确
+原root随后才首次创建Seal、实际清理并重开核同deadline与准确key缺失。
+`holder-binding-first-seal-qualification.log` actual0.339s，PID/PGID2715309/
+start11305713/exit0/groupAbsent=true/无timeout。已明确release LOCAL，
+无pending native。此新增测试在第四产品pin上直接green，没有新产品修改。
