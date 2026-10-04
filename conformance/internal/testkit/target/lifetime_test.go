@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"strings"
 	"testing"
 	"time"
 
@@ -116,5 +117,75 @@ func TestTargetOpenFailureRetainsAcquiredCleanupHolder(t *testing.T) {
 	}
 	if _, err = holder.Read(ctx, "fake-resource"); err == nil {
 		t.Fatal("cleanup-only holder served business")
+	}
+}
+
+func TestTargetCloseDrainTimeoutRemainsRetryable(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	nativeClosed := make(chan struct{})
+	db := sqlclosetest.Open(sqlclosetest.Fault{CloseDone: nativeClosed})
+	if err := db.PingContext(ctx); err != nil {
+		t.Fatal(err)
+	}
+	holder := &Target{db: db, cfg: Config{IOTimeout: 20 * time.Millisecond}, gate: make(chan struct{}, 1), release: func() error {
+		select {
+		case <-nativeClosed:
+			return nil
+		default:
+			return errors.New("writer release preceded actual native Close")
+		}
+	}}
+	entered, release, joined := make(chan struct{}), make(chan struct{}), make(chan error, 1)
+	go func() {
+		_, leave, err := holder.enter(ctx)
+		if err != nil {
+			joined <- err
+			return
+		}
+		close(entered)
+		// Mechanical lifetime callback, deliberately held beyond operation ctx.
+		// The finite test supervisor owns its release and joins it; this is not
+		// a SQLite query or a promise that native operations respect cancellation.
+		select {
+		case <-release:
+		case <-ctx.Done():
+		}
+		leave()
+		joined <- nil
+	}()
+	select {
+	case <-entered:
+	case <-ctx.Done():
+		close(release)
+		<-joined
+		t.Fatal("physical owner operation did not enter")
+	}
+	firstErr := holder.Close()
+	select {
+	case <-nativeClosed:
+		t.Error("Close reached native driver before active owner exit")
+	default:
+	}
+	close(release)
+	if err := <-joined; err != nil {
+		t.Fatal("physical owner callback did not join", err)
+	}
+	if !errors.Is(firstErr, context.DeadlineExceeded) {
+		t.Fatal("active owner drain did not time out finitely", firstErr)
+	}
+	if _, err := holder.Write(ctx, Request{Key: "fake-key", Resource: "fake-resource", Data: []byte{1}}); err == nil || !strings.Contains(err.Error(), "closed") {
+		t.Fatal("closing target admitted another operation after drain timeout", err)
+	}
+	if err := holder.Close(); err != nil {
+		t.Fatal("pre-native timeout was incorrectly made permanent", err)
+	}
+	select {
+	case <-nativeClosed:
+	default:
+		t.Fatal("retry did not actually close native connection")
+	}
+	if err := holder.Close(); err != nil {
+		t.Fatal("confirmed repeated Close failed", err)
 	}
 }
