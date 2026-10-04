@@ -168,3 +168,35 @@ duration and rejected it with `ErrWorkBounds`. No failed component recovery was
 observed in those cases. The test now waits only while that actual NextWake is
 still in the future; the original deadline, allowance and business oracle are
 unchanged. A new normal/race run is required before claiming this correction.
+
+Checkpoint at `25287d5`: full `TestDurableProposal` normal 12.438 s and race
+28.333 s passed. Both actual old-writer consumers passed normal 11.356 s and
+race 15.655 s. `make check GOFLAGS='-mod=readonly -p=1'` and fresh base-race
+`go test -race -p=1 -count=1 -timeout=120s ./...` passed. The base-race target
+was 16.905 s and Component 11.702 s. Full real PG Component/Source packages
+passed normal 38.554/13.715 s and race 74.493/19.398 s. The separate complete
+`conformance/recovery/...` package passed normal 38.009 s and race 80.735 s,
+including the original two databases and previously integrated 06 process
+stories. The Component/Source package selection itself does not execute those
+06 SIGKILL stories. All commands were strictly serial with actual exit 0 before
+the next started; direct Go invocations used count1, p1 and timeout120.
+All seven actual frozen manifests passed: 27 old durable-work entries, 71 old
+970 entries, 71 FINAL01 entries and three target entries; modules verified.
+Current lockfile, generated code, published SQL and archive bytes are unchanged.
+
+Checkpoint exact audit passed with 1580 unique PG schemas, 64 target directories,
+244 recovery SQLite directories, 11 archive directories and 19 acknowledged
+process groups absent. Duplicate transfer acknowledgments are not counted as
+unique scopes. The owned overlay root remains registered with only Node's
+compile cache; other unknown historical scopes are untouched. Every test,
+build, database holder and child session exited before releasing the slot.
+
+A separately adopted shared-helper correction is still pending: compiler Wait
+causes must remain distinguishable, and the old-970 restored added-driver must
+require the actual ErrClaim qualification rather than accepting any RunClaim
+error. This will narrow the old business oracle without changing frozen
+production/archive bytes. The successful old-pin upgrades do not retrospectively
+prove that specific error type. The new committed helper requires its own real
+normal/race consumer results and review before ticket closure. This ticket's
+FINAL01 proposal driver instead deliberately requires context.Canceled, and is
+not reinterpreted as an expired-claim case.
