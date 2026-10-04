@@ -27,7 +27,21 @@ func acquireWriter(ctx context.Context, path string) (func() error, error) {
 	if err != nil {
 		return nil, err
 	}
-	fail := func(err error) (func() error, error) { return nil, errors.Join(err, file.Close()) }
+	closeFile := firstFileClose(file.Close)
+	var closeParent func() error
+	release := func() error {
+		var parentErr error
+		if closeParent != nil {
+			parentErr = closeParent()
+		}
+		return errors.Join(lifetimeCause("writer file close unknown", closeFile()), lifetimeCause("writer parent directory close unknown", parentErr))
+	}
+	fail := func(err error) (func() error, error) {
+		if closeErr := release(); closeErr != nil {
+			return release, errors.Join(lifetimeCause("writer acquisition failed", err), closeErr)
+		}
+		return nil, lifetimeCause("writer acquisition failed", err)
+	}
 	info, err := file.Stat()
 	if err != nil {
 		return fail(err)
@@ -55,8 +69,9 @@ func acquireWriter(ctx context.Context, path string) (func() error, error) {
 	if err != nil {
 		return fail(err)
 	}
-	if err = errors.Join(file.Sync(), parent.Sync(), parent.Close()); err != nil {
+	closeParent = firstFileClose(parent.Close)
+	if err = errors.Join(file.Sync(), parent.Sync(), closeParent()); err != nil {
 		return fail(err)
 	}
-	return file.Close, nil
+	return release, nil
 }
