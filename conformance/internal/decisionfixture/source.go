@@ -528,7 +528,7 @@ func billingBasis(version, basis string, charge v.Amount, p decision.Permission)
 	if version == "fixture-rule/1" && basis == "" && charge == (v.Amount{}) && p.ChargeBasis == "" && p.RuleStartCharge == (v.Amount{}) && p.RuleVersion == "" {
 		return nil
 	}
-	if version != "fixture-rule/2" || basis != "durable_rule_start" || charge != (v.Amount{Unit: "fixture", IntegerValue: "1"}) || p.RuleVersion != version || p.ChargeBasis != basis || p.RuleStartCharge != charge {
+	if (version != "fixture-rule/2" && version != "fixture-rule/3") || basis != "durable_rule_start" || charge != (v.Amount{Unit: "fixture", IntegerValue: "1"}) || p.RuleVersion != version || p.ChargeBasis != basis || p.RuleStartCharge != charge {
 		return errors.New("fixture exact rule start billing basis mismatch")
 	}
 	return nil

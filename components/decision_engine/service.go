@@ -26,6 +26,10 @@ type Config struct {
 }
 type Service struct{ config Config }
 
+func supportedRuleVersion(version string) bool {
+	return version == "fixture-rule/2" || version == "fixture-rule/3"
+}
+
 func New(cfg Config) (*Service, error) {
 	if _, err := v.Encode(cfg.Owner); err != nil {
 		return nil, err
@@ -212,7 +216,7 @@ func (s *Service) Decide(ctx context.Context, data []byte, trusted *v.SubjectBin
 		// original Command above retains its immutable receipt.
 		if !now.Before(cutoff) {
 			receipt = rejected(command, "expired")
-		} else if request.Payload.ComponentRef != s.config.Component || permission.ChargeBasis != "durable_rule_start" || permission.RuleVersion != "fixture-rule/2" {
+		} else if request.Payload.ComponentRef != s.config.Component || permission.ChargeBasis != "durable_rule_start" || !supportedRuleVersion(permission.RuleVersion) {
 			receipt = rejected(command, "unsupported")
 		}
 		if _, refused := receipt.AsRejected(); refused {
@@ -242,7 +246,7 @@ func (s *Service) Decide(ctx context.Context, data []byte, trusted *v.SubjectBin
 		}
 		if !now.Before(cutoff) {
 			receipt = rejected(command, "expired")
-		} else if permission.ChargeBasis != "durable_rule_start" || permission.RuleVersion != "fixture-rule/2" {
+		} else if permission.ChargeBasis != "durable_rule_start" || !supportedRuleVersion(permission.RuleVersion) {
 			receipt = rejected(command, "unsupported")
 		} else if original != nil {
 			if original.InputDigest != inputDigest {

@@ -87,6 +87,25 @@ type Prepared struct {
 	Sources       []v.ContentRef `json:"sources"`
 	Digest        string         `json:"digest"`
 }
+
+// PreparedV2 is a separate handoff for rule/3. Prepared's original JSON and
+// digest remain byte-for-byte compatible with rule/2 writers.
+type PreparedArtifact struct {
+	Key   string       `json:"key"`
+	Ref   v.ContentRef `json:"ref"`
+	Bytes []byte       `json:"bytes"`
+}
+type PreparedV2 struct {
+	StartSequence int64              `json:"start_sequence"`
+	InputDigest   string             `json:"input_digest"`
+	Artifacts     []PreparedArtifact `json:"artifacts"`
+	ProposalKey   string             `json:"proposal_key"`
+	ProposalRef   v.ContentRef       `json:"proposal_ref"`
+	Proposal      v.Proposal         `json:"proposal"`
+	ProposalBytes []byte             `json:"proposal_bytes"`
+	Sources       []v.ContentRef     `json:"sources"`
+	Digest        string             `json:"digest"`
+}
 type Record struct {
 	Ref                    v.DecisionRef            `json:"decision_ref"`
 	Input                  *v.DecisionDecidePayload `json:"input,omitempty"`
@@ -107,6 +126,7 @@ type Record struct {
 	MeasurementPending     bool                     `json:"measurement_pending"`
 	MeasurementUnknown     bool                     `json:"measurement_unknown"`
 	Prepared               *Prepared                `json:"prepared,omitempty"`
+	PreparedV2             *PreparedV2              `json:"prepared_v2,omitempty"`
 	OriginalPermission     *Permission              `json:"original_permission,omitempty"`
 	PublicationAttempts    int                      `json:"publication_attempts"`
 	WakeAt                 v.Time                   `json:"wake_at,omitempty"`

@@ -147,3 +147,17 @@ F01/F02仅完成本票的原回执/原责任/同键冲突与重开范围；SIGKI
 2026-10-04，06六AC resolved，源a5005ab、交付6904b2d、整合58f8f0f；01／04／05／06合计27/42AC。实际Source发布成功后的原键恢复、Decision真实事务COMMIT前后和独立target COMMIT前后的进程SIGKILL均与正常对照分开核验。pending迟到责任、原scenario／event／cursor以及另一个隔离scenario同seed有限重演有独立target普通Query／Read与Observer事实；不是Executor Effect、供应商查询或断电证据。
 
 原两轴发现已关闭，修后check／base-race／模块／27＋71＋3冻结校验均通过；完整证据与历史边界见[06最终交接](../lerna-03-deterministic-harness/ticket-06-api-handoff.md#最终检查与本票退出)。184外部target FS、44recovery FS、118PG均absent，六local-only另列；旧未知范围保留。02候选特殊恢复、03取消／资源及整个profile／架构／最终CI仍待实际验收，不关闭G2、G3或whole03。
+
+
+## 切片03有界候选票检查点（整片尚未退出）
+
+2026-10-04，02七AC resolved，本交付树累计34/42AC。产品3d60b6a、完整新PG／原两库回归25287d5、
+严格旧driver资格与自身两套真实producer升级正常13.311／race15.403及两轴固定复核8f94f26。
+全部五种候选、四独立行动、当前条件／完整processed／真正Source用途消费和原限额有正常与拒绝；
+五分支实际lost-reply恢复保原bytes／refs／usage／fee。83新＋158原fixture真实跨语言双向两序通过，
+Prepared v1和原published SQL／archives不改；无新wire、DDL或完整profile广告。
+
+逐AC、源码pin、命令及限制见[02退出](../lerna-03-deterministic-harness/ticket-02-exit-evidence.md)。
+Source成功关闭后的真正读取失败不是native Close或COMMIT故障；旧driver的strict ErrClaim与有限lease／publication
+观察合用，不把sentinel泛化为所有过期。1628独立PG／64targetFS／244recoveryFS／15archive／27确认组及owned root
+准确范围absent，七个toolcache晚inventory另列。两轴无遗留不代替root实际整片架构、远端CI或G2／G3验收。

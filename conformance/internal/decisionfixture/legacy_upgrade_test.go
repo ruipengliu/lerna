@@ -71,28 +71,145 @@ type upgradeReady struct {
 }
 
 // The old producer is frozen production code, not a simulation of old tables.
-func TestFrozenLegacyWriterUpgrade(t *testing.T) {
+// buildFrozenWriter records this exact successful Start's PID/PGID before
+// waiting. Direct Wait and the bounded process-group observation must both
+// confirm exit before this owner permits cleanup or starts a producer.
+func buildFrozenWriter(t *testing.T, dir string) *upgradeOutput {
+	t.Helper()
+	ctx, cancel := context.WithTimeout(context.Background(), 40*time.Second)
+	defer cancel()
+	command := exec.CommandContext(ctx, "go", "test", "-c", "-o", filepath.Join(dir, "legacy.test"), "./conformance/internal/decisionfixture")
+	command.Dir = dir
+	setUpgradeProcessBounds(command)
+	// A compiler timeout cancels only the actual child holder. Once Wait has
+	// reaped it, a numeric PID cannot authorize a signal to a putative old group.
+	command.Cancel = func() error {
+		if command.Process == nil {
+			return os.ErrProcessDone
+		}
+		return command.Process.Kill()
+	}
+	diagnostics := &upgradeOutput{}
+	command.Stdout = diagnostics
+	command.Stderr = diagnostics
+	exited, confirmed, succeeded := false, false, false
+	groupKnown := false
+	var registrationErr error
+	var waited chan error
+	t.Cleanup(func() {
+		if succeeded {
+			return
+		}
+		if command.Process != nil && !confirmed {
+			if !exited {
+				cancel()
+				if err := command.Process.Kill(); err != nil && !errors.Is(err, os.ErrProcessDone) {
+					t.Error(upgradeCause("frozen build holder kill", err))
+				}
+			}
+			if !exited && waited != nil {
+				select {
+				case waitErr := <-waited:
+					exited = true
+					if waitErr != nil {
+						t.Logf("bounded frozen writer cleanup diagnostics: %s", diagnostics.safeText(os.Getenv("LERNA_TEST_POSTGRES_DSN")))
+						t.Error(upgradeCause("failed frozen build Wait", waitErr))
+					}
+				case <-time.After(3 * time.Second):
+				}
+			}
+			if exited && groupKnown {
+				groupErr := confirmUpgradeGroupExit(command.Process.Pid)
+				confirmed = groupErr == nil
+				if groupErr != nil {
+					t.Error(upgradeCause("failed frozen build group exit confirmation", groupErr))
+				}
+			}
+		}
+		if command.Process == nil {
+			confirmed = true
+		}
+		if !confirmed || registrationErr != nil {
+			t.Error("frozen build exit or acknowledgement unconfirmed; retain exact directory:", dir, upgradeCause("frozen build process registration", registrationErr))
+			return
+		}
+		if err := os.RemoveAll(dir); err != nil {
+			t.Error(upgradeCause("confirmed failed build exact directory cleanup", err))
+		}
+	})
+	if err := command.Start(); err != nil {
+		t.Fatal(upgradeCause("frozen writer build start", err))
+	}
+	// Query before Wait can reap a fast exited child. Setpgid was passed to the
+	// real kernel by Start; this query records its actual group, never a guess.
+	pgid, groupErr := syscall.Getpgid(command.Process.Pid)
+	groupKnown = groupErr == nil && pgid == command.Process.Pid
+	if groupKnown {
+		registrationErr = registerUpgradeProcessGroup(command.Process.Pid, pgid, dir)
+	}
+	// Record the observed group before Wait can reap it. Cleanup already owns
+	// this holder, including observation/registration failure paths.
+	waited = make(chan error, 1)
+	go func() { waited <- command.Wait() }()
+	if !groupKnown {
+		t.Fatal(upgradeCause("frozen build process group observation", errors.Join(groupErr, errors.New("frozen build group identity not confirmed"))))
+	}
+	if registrationErr != nil {
+		t.Fatal(upgradeCause("frozen build process registration", registrationErr))
+	}
+	var waitErr error
+	select {
+	case waitErr = <-waited:
+		exited = true
+	case <-ctx.Done():
+		cancel()
+		select {
+		case waitErr = <-waited:
+			exited = true
+		case <-time.After(3 * time.Second):
+			t.Fatal("frozen build direct exit unconfirmed; retain exact directory:", dir)
+		}
+	}
+	groupErr = confirmUpgradeGroupExit(pgid)
+	confirmed = exited && groupErr == nil
+	if waitErr != nil {
+		t.Logf("bounded frozen writer build diagnostics: %s", diagnostics.safeText(os.Getenv("LERNA_TEST_POSTGRES_DSN")))
+	}
+	if !confirmed {
+		t.Fatal(upgradeCause("frozen build group exit confirmation", errors.Join(waitErr, groupErr)))
+	}
+	if waitErr != nil {
+		t.Fatal(upgradeCause("frozen writer build", waitErr))
+	}
+	succeeded = true
+	return diagnostics
+}
+
+type frozenWriterSession struct {
+	Frame         []byte
+	Registry      string
+	CurrentClosed bool
+}
+
+// startFrozenWriter owns only finite build, pipes, process group and exact
+// acknowledged cleanup. Each consumer decodes its own business protocol and
+// must register new writer closure before reporting any open/migration error.
+func startFrozenWriter(t *testing.T, dir, producer string) *frozenWriterSession {
 	t.Helper()
 	if os.Getenv("LERNA_TEST_POSTGRES_DSN") == "" || os.Getenv("LERNA_TEST_OWNED_SCOPE_REGISTRY") == "" {
 		t.Fatal("upgrade requires configured PostgreSQL and exact owned-scope registry")
 	}
-	dir := restoreFrozenWriter(t)
-	registry := filepath.Join(dir, "created-scopes.registry")
-	buildCtx, buildCancel := context.WithTimeout(context.Background(), 40*time.Second)
-	build := exec.CommandContext(buildCtx, "go", "test", "-c", "-o", filepath.Join(dir, "legacy.test"), "./conformance/internal/decisionfixture")
-	build.Dir = dir
-	setUpgradeProcessBounds(build)
-	var diagnostics upgradeOutput
-	build.Stdout = &diagnostics
-	build.Stderr = &diagnostics
-	if err := build.Run(); err != nil {
-		buildCancel()
-		t.Logf("bounded frozen writer build diagnostics: %s", diagnostics.safeText(os.Getenv("LERNA_TEST_POSTGRES_DSN")))
-		t.Fatal(upgradeCause("frozen writer build", err))
+	switch producer {
+	case "TestFrozenLegacyWriter", "TestFrozenFinal01ControlWriter", "TestFrozenFinal01ProposalWriter":
+	default:
+		t.Fatal("unsupported finite frozen producer")
 	}
-	buildCancel()
+	session := &frozenWriterSession{CurrentClosed: true}
+	registry := filepath.Join(dir, "created-scopes.registry")
+	session.Registry = registry
+	diagnostics := buildFrozenWriter(t, dir)
 	childCtx, childCancel := context.WithTimeout(context.Background(), 65*time.Second)
-	child := exec.CommandContext(childCtx, filepath.Join(dir, "legacy.test"), "-test.run=^TestFrozenLegacyWriter$", "-test.timeout=60s")
+	child := exec.CommandContext(childCtx, filepath.Join(dir, "legacy.test"), "-test.run=^"+producer+"$", "-test.timeout=60s")
 	child.Dir = dir
 	setUpgradeProcessBounds(child)
 	child.Env = append(os.Environ(), "LERNA_TEST_OWNED_SCOPE_REGISTRY="+registry)
@@ -123,12 +240,21 @@ func TestFrozenLegacyWriterUpgrade(t *testing.T) {
 		childCancel()
 		t.Fatal(upgradeCause("writer pipe allocation", err))
 	}
-	child.Stderr = &diagnostics
+	child.Stderr = diagnostics
 	if err = child.Start(); err != nil {
 		childCancel()
 		t.Fatal(upgradeCause("writer start", err))
 	}
 	started = true
+	// Observe and acknowledge this actual Start before launching Wait or
+	// consuming the ready frame. Errors are reported only after its cleanup
+	// owns the holder, pipes, scanner and bounded Wait.
+	pgid, observationErr := syscall.Getpgid(child.Process.Pid)
+	groupKnown := observationErr == nil && pgid == child.Process.Pid
+	var registrationErr error
+	if groupKnown {
+		registrationErr = registerUpgradeProcessGroup(child.Process.Pid, pgid, dir)
+	}
 	readyCh := make(chan []byte, 1)
 	scanDone := make(chan struct{})
 	go func() {
@@ -146,10 +272,9 @@ func TestFrozenLegacyWriterUpgrade(t *testing.T) {
 	}()
 	waited := make(chan error, 1)
 	go func() { waited <- child.Wait() }()
-	currentClosed := true
 	// Registered before opening new writers: subsequent cleanup closes them first.
 	t.Cleanup(func() {
-		if !currentClosed {
+		if !session.CurrentClosed {
 			childCancel()
 			select {
 			case waitErr := <-waited:
@@ -176,8 +301,10 @@ func TestFrozenLegacyWriterUpgrade(t *testing.T) {
 		case waitErr = <-waited:
 			confirmed = true
 		case <-time.After(8 * time.Second):
-			if err := syscall.Kill(-child.Process.Pid, syscall.SIGKILL); err != nil && !errors.Is(err, syscall.ESRCH) {
-				t.Error(err)
+			// Kill acts on the unreaped native holder. A numeric PID/PGID never
+			// authorizes signalling a group, even after a successful observation.
+			if err := child.Process.Kill(); err != nil && !errors.Is(err, os.ErrProcessDone) {
+				t.Error(upgradeCause("historical holder kill", err))
 			}
 			select {
 			case waitErr = <-waited:
@@ -189,14 +316,19 @@ func TestFrozenLegacyWriterUpgrade(t *testing.T) {
 		if err := stdout.Close(); err != nil && !errors.Is(err, os.ErrClosed) {
 			t.Error(err)
 		}
+		scannerClosed := false
 		select {
 		case <-scanDone:
+			scannerClosed = true
 		case <-time.After(time.Second):
 			t.Error("historical stdout reader did not drain")
 		}
-		groupErr := confirmUpgradeGroupExit(child.Process.Pid)
-		if !confirmed || groupErr != nil {
-			t.Errorf("historical process/group exit unconfirmed; retain exact directory %s and registered scopes: %v", dir, groupErr)
+		groupErr := errors.New("historical process group identity not confirmed")
+		if groupKnown {
+			groupErr = confirmUpgradeGroupExit(pgid)
+		}
+		if !confirmed || !scannerClosed || groupErr != nil || registrationErr != nil {
+			t.Errorf("historical process/group exit unconfirmed; retain exact directory %s and registered scopes: %v", dir, errors.Join(groupErr, registrationErr))
 			return
 		}
 		if releaseErr != nil || stdinErr != nil || waitErr != nil {
@@ -210,6 +342,12 @@ func TestFrozenLegacyWriterUpgrade(t *testing.T) {
 			t.Error(err)
 		}
 	})
+	if !groupKnown {
+		t.Fatal(upgradeCause("historical process group observation", errors.Join(observationErr, errors.New("historical process group identity not confirmed"))))
+	}
+	if registrationErr != nil {
+		t.Fatal(upgradeCause("historical process registration", registrationErr))
+	}
 	var frame []byte
 	select {
 	case frame = <-readyCh:
@@ -219,10 +357,18 @@ func TestFrozenLegacyWriterUpgrade(t *testing.T) {
 	if len(frame) == 0 || len(frame) > 128*1024 {
 		t.Fatal("historical bounded ready frame missing")
 	}
+	session.Frame = frame
+	return session
+}
+
+func TestFrozenLegacyWriterUpgrade(t *testing.T) {
+	t.Helper()
+	session := startFrozenWriter(t, restoreFrozenWriter(t), "TestFrozenLegacyWriter")
+	frame, registry := session.Frame, session.Registry
 	var ready upgradeReady
 	decoder := json.NewDecoder(bytes.NewReader(frame))
 	decoder.DisallowUnknownFields()
-	if err = decoder.Decode(&ready); err != nil {
+	if err := decoder.Decode(&ready); err != nil {
 		t.Fatal(upgradeCause("ready frame decode", err))
 	}
 	if ready.Protocol != "lerna-legacy-decision-970fd90-1" || len(ready.Cases) != 5 {
@@ -256,7 +402,7 @@ func TestFrozenLegacyWriterUpgrade(t *testing.T) {
 			t.Fatal("untrusted historical case identity/drain")
 		}
 		seen[old.Name] = true
-		verifyUpgradeCase(t, ctx, old, &currentClosed)
+		verifyUpgradeCase(t, ctx, old, &session.CurrentClosed)
 	}
 	fresh := NewWorld(t, ctx)
 	scene := fresh.Scenario()
@@ -615,12 +761,22 @@ func setUpgradeProcessBounds(cmd *exec.Cmd) {
 	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
 	cmd.WaitDelay = time.Second
 	cmd.Cancel = func() error {
-		err := syscall.Kill(-cmd.Process.Pid, syscall.SIGKILL)
-		if errors.Is(err, syscall.ESRCH) {
+		if cmd.Process == nil {
 			return os.ErrProcessDone
 		}
-		return err
+		return cmd.Process.Kill()
 	}
+}
+
+// Both concrete historical consumers register only a successfully observed
+// group belonging to their own Start. This ledger grants no signal authority.
+func registerUpgradeProcessGroup(pid, pgid int, dir string) error {
+	ledger, err := os.OpenFile(os.Getenv("LERNA_TEST_OWNED_SCOPE_REGISTRY"), os.O_APPEND|os.O_WRONLY, 0600)
+	if err != nil {
+		return upgradeCause("process registration open", err)
+	}
+	_, writeErr := fmt.Fprintf(ledger, "process_group %d %d %s\n", pid, pgid, dir)
+	return errors.Join(writeErr, ledger.Sync(), ledger.Close())
 }
 
 func confirmUpgradeGroupExit(pid int) error {
@@ -679,8 +835,31 @@ func (w *upgradeOutput) safeText(dsn string) string {
 }
 
 func restoreFrozenWriter(t *testing.T) string {
+	return restoreFrozenProduction(t, false, nil)
+}
+
+// restoreFinal01Writer restores only the byte-exact final01 production closure.
+// Each consuming ticket supplies its own bounded original public-API driver;
+// that driver is never made part of the immutable archived production source.
+func restoreFinal01Writer(t *testing.T, driver []byte) string {
 	t.Helper()
-	root := filepath.Join("testdata", "legacy-970fd90")
+	if len(driver) == 0 || len(driver) > 32*1024 {
+		t.Fatal("final01 driver exceeds finite bound")
+	}
+	return restoreFrozenProduction(t, true, driver)
+}
+
+// Exactly two historical archives are supported. This mechanical restore has
+// no business state or arbitrary source/version registration.
+func restoreFrozenProduction(t *testing.T, final01 bool, driver []byte) string {
+	t.Helper()
+	archive, format, commit := "legacy-970fd90", "lerna-legacy-decision-closure-1", "970fd90260b5c4936cdb5c2b7a8589623126a5c2"
+	fileCount, productionCount, productionBytes, payloadBytes := 69, 68, 422534, 430396
+	if final01 {
+		archive, format, commit = "legacy-final01", "lerna-final01-production-closure-1", "696ac49846105a16f33e5de86dc621a3858651b2"
+		fileCount, productionCount, productionBytes, payloadBytes = 69, 69, 448760, 448760
+	}
+	root := filepath.Join("testdata", archive)
 	sums, err := os.ReadFile(filepath.Join(root, "SHA256SUMS"))
 	if err != nil || len(sums) > 16*1024 {
 		t.Fatal("frozen checksum list unavailable", upgradeCause("checksum read", err))
@@ -706,7 +885,7 @@ func restoreFrozenWriter(t *testing.T) string {
 		t.Fatal("frozen provenance missing", upgradeCause("provenance read", err))
 	}
 	var provenance frozenProvenance
-	if err = json.Unmarshal(body, &provenance); err != nil || provenance.Format != "lerna-legacy-decision-closure-1" || provenance.SourceCommit != "970fd90260b5c4936cdb5c2b7a8589623126a5c2" || len(provenance.Files) != 69 || provenance.ProductionFileCount != 68 || provenance.ProductionBytes != 422534 || provenance.PayloadBytes != 430396 {
+	if err = json.Unmarshal(body, &provenance); err != nil || provenance.Format != format || provenance.SourceCommit != commit || len(provenance.Files) != fileCount || provenance.ProductionFileCount != productionCount || provenance.ProductionBytes != productionBytes || provenance.PayloadBytes != payloadBytes {
 		t.Fatal("frozen historical provenance mismatch", upgradeCause("provenance decode", err))
 	}
 	registry := os.Getenv("LERNA_TEST_OWNED_SCOPE_REGISTRY")
@@ -746,7 +925,7 @@ func restoreFrozenWriter(t *testing.T) string {
 	}
 	total := 0
 	production := 0
-	productionBytes := 0
+	actualProductionBytes := 0
 	for _, entry := range provenance.Files {
 		if !safeUpgradePath(entry.Artifact) || !safeUpgradePath(entry.Destination) || !checked[entry.Artifact] || entry.Artifact != entry.Destination+".txt" {
 			t.Fatal("unsafe historical restore path")
@@ -766,9 +945,9 @@ func restoreFrozenWriter(t *testing.T) string {
 		switch entry.Role {
 		case "archived_production":
 			production++
-			productionBytes += len(content)
+			actualProductionBytes += len(content)
 		case "added_driver":
-			if entry.Destination != "conformance/internal/decisionfixture/legacy_writer_test.go" {
+			if final01 || entry.Destination != "conformance/internal/decisionfixture/legacy_writer_test.go" {
 				t.Fatal("unexpected historical driver")
 			}
 		default:
@@ -782,12 +961,72 @@ func restoreFrozenWriter(t *testing.T) string {
 			t.Fatal(err)
 		}
 	}
-	if total != provenance.PayloadBytes || production != 68 || productionBytes != 422534 {
+	if total != provenance.PayloadBytes || production != productionCount || actualProductionBytes != productionBytes {
 		t.Fatal("historical closure accounting mismatch")
+	}
+	if final01 {
+		destination := filepath.Join(dir, "conformance", "internal", "decisionfixture", "final01_writer_test.go")
+		if err := os.WriteFile(destination, driver, 0600); err != nil {
+			t.Fatal("final01 consumer driver write:", err)
+		}
+	} else {
+		// All frozen payload/provenance hashes have been validated above. Only
+		// this scope's added supervision driver receives the release guard;
+		// archived production and the immutable driver artifact stay intact.
+		destination := filepath.Join(dir, "conformance", "internal", "decisionfixture", "legacy_writer_test.go")
+		original, err := readUpgradeBounded(destination, 32*1024)
+		if err != nil {
+			t.Fatal(upgradeCause("historical added-driver read", err))
+		}
+		guarded, err := guard970AddedDriverQualificationAndRelease(original)
+		if err != nil {
+			t.Fatal(upgradeCause("historical added-driver qualification/release guard", err))
+		}
+		if err = os.WriteFile(destination, guarded, 0600); err != nil {
+			t.Fatal(upgradeCause("historical guarded driver write", err))
+		}
 	}
 	success = true
 	return dir
 }
+
+// The original 970 closure labels this file added_driver, not production.
+// Its verified sha256 is immutable. This finite restoration-only conversion
+// tightens the added driver's Claim cause/qualification oracle and two
+// post-READY refusal exits. Original production, requests, normal fact creation
+// and READY protocol stay unchanged; the driver error oracle is strengthened.
+func guard970AddedDriverQualificationAndRelease(original []byte) ([]byte, error) {
+	const originalHash = "266f74ee54198afde427b64dc0468bde8a123ec11a03ddef58c33594c38d42bc"
+	sum := sha256.Sum256(original)
+	if hex.EncodeToString(sum[:]) != originalHash {
+		return nil, errors.New("historical added-driver source hash mismatch")
+	}
+	before := []string{
+		"\t\"encoding/json\"\n",
+		"\tv \"github.com/ruipengliu/lerna/contract/v1_1\"\n",
+		"\t\t\tif err != nil || claim == nil {\n\t\t\t\tt.Fatal(\"old publication claim missing\")\n\t\t\t}",
+		"\t\t\tif err = service.RunClaim(ctx, claim.Claim); err == nil {\n\t\t\t\tt.Fatal(\"expired old Finish unexpectedly committed\")\n\t\t\t}",
+		"\tcase err := <-released:\n\t\tif err != nil {\n\t\t\tt.Fatal(err)\n\t\t}",
+		"\t\tt.Fatal(\"legacy parent release deadline\")",
+	}
+	after := []string{
+		"\t\"encoding/json\"\n\t\"errors\"\n",
+		"\tv \"github.com/ruipengliu/lerna/contract/v1_1\"\n\t\"github.com/ruipengliu/lerna/runtime\"\n",
+		"\t\t\tif err != nil {\n\t\t\t\tt.Fatal(\"old publication claim failed:\", err)\n\t\t\t}\n\t\t\tif claim == nil {\n\t\t\t\tt.Fatal(\"old publication claim missing\")\n\t\t\t}",
+		"\t\t\terr = service.RunClaim(ctx, claim.Claim)\n\t\t\tqualified := errors.Is(err, runtime.ErrClaim)\n\t\t\tfor cause, depth := err, 0; qualified && cause != nil; depth++ {\n\t\t\t\tif depth == 32 {\n\t\t\t\t\tqualified = false\n\t\t\t\t\tbreak\n\t\t\t\t}\n\t\t\t\tif joined, ok := cause.(interface{ Unwrap() []error }); ok {\n\t\t\t\t\tcauses := joined.Unwrap()\n\t\t\t\t\tif len(causes) != 1 {\n\t\t\t\t\t\tqualified = false\n\t\t\t\t\t\tbreak\n\t\t\t\t\t}\n\t\t\t\t\tcause = causes[0]\n\t\t\t\t} else {\n\t\t\t\t\tcause = errors.Unwrap(cause)\n\t\t\t\t}\n\t\t\t}\n\t\t\tif !qualified {\n\t\t\t\tt.Fatal(\"old publication Finish qualification failed or included other causes:\", err)\n\t\t\t}",
+		"\tcase err := <-released:\n\t\tif err != nil {\n\t\t\tfmt.Fprintln(os.Stderr, \"historical RELEASE unconfirmed; retain acknowledged scopes\")\n\t\t\tos.Exit(2)\n\t\t}",
+		"\t\tfmt.Fprintln(os.Stderr, \"historical RELEASE deadline; retain acknowledged scopes\")\n\t\tos.Exit(2)",
+	}
+	guarded := string(original)
+	for index, source := range before {
+		if strings.Count(guarded, source) != 1 {
+			return nil, errors.New("historical added-driver qualification/release source mismatch")
+		}
+		guarded = strings.Replace(guarded, source, after[index], 1)
+	}
+	return []byte(guarded), nil
+}
+
 func safeUpgradePath(path string) bool {
 	return path != "" && !filepath.IsAbs(path) && filepath.Clean(path) == path && path != ".." && !strings.HasPrefix(path, "../")
 }
@@ -851,7 +1090,7 @@ func cleanupUpgradeScopes(registry string) (result error) {
 	names := map[string]bool{}
 	for _, line := range strings.Split(strings.TrimSpace(string(body)), "\n") {
 		fields := strings.Fields(line)
-		if len(fields) != 2 || fields[0] != "postgres" || !testIdentifier.MatchString(fields[1]) || len(names) >= 10 {
+		if len(fields) != 2 || fields[0] != "postgres" || !testIdentifier.MatchString(fields[1]) || len(names) >= 12 {
 			return errors.New("invalid exact old CREATE registry")
 		}
 		names[fields[1]] = true
