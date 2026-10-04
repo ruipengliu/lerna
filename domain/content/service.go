@@ -335,7 +335,8 @@ func (s *Service) Get(ctx context.Context, raw []byte, subject *v.SubjectBinding
 			result = denied("expired")
 			return nil
 		}
-		for _, action := range []string{"read", "disclose"} {
+		var targetPolicyRefs [2]v.ContentRef
+		for index, action := range []string{"read", "disclose"} {
 			policy, err := s.config.Store.CheckPolicy(ctx, tx, principal, ref, string(request.Payload.Purpose), action, now)
 			if err != nil {
 				return err
@@ -344,6 +345,7 @@ func (s *Service) Get(ctx context.Context, raw []byte, subject *v.SubjectBinding
 				result = denied("forbidden")
 				return nil
 			}
+			targetPolicyRefs[index] = policy.Ref
 			bound := earlier(policy.ValidUntil, policy.RetainUntil)
 			if readBefore.IsZero() {
 				readBefore = bound
@@ -369,6 +371,19 @@ func (s *Service) Get(ctx context.Context, raw []byte, subject *v.SubjectBinding
 			result = denied("expired")
 			record = nil
 			return nil
+		}
+		// Authorize the actual declaration before revealing existence or a
+		// request mismatch. Without a record, authorize the requested full ref.
+		authorizedRef := ref
+		if record != nil {
+			authorizedRef = record.Ref
+		}
+		for _, policyRef := range targetPolicyRefs {
+			if policyRef != authorizedRef {
+				result = denied("forbidden")
+				record = nil
+				return nil
+			}
 		}
 		if record == nil {
 			result = v.NewContentGetResponseNotFound(v.ContentGetResponseNotFound{ContentRef: ref})
