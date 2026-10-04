@@ -159,3 +159,10 @@ typed完整责任与primarygone/globalpending分开，两个World重开同原预
 正确forbidden，但其原独立body不被别保存主体误删/not_required保持，
 独立V2仍normal。原watermark/cleanup deadlines/copyID/binding/effectDeadline
 不刷新；此资格不替all publication attempts页或legacy升级。
+
+原全部 publicationattempt 页已实际资格：三次真实原Put参数、前两次成功
+后机械replyloss、原defer后第三次normal；PageSize2 primary公开cursor跨页
+且重开继续，独立setup-owned未登记 `.999.tmp` 保原inode/bytes/residual，
+产品不猜删；setup原owner确切移除后同原责任恢复allACK，V2/原receipt保持。
+这不是PGcommit_unknown或未知旧scope回收，legacy binding/可复现producer
+及真实跨锁/CAS拒绝仍独立未完成。

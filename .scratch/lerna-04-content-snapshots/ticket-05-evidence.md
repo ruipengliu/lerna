@@ -608,3 +608,36 @@ holder清理/allACK以及全部原A政策责任erased、原Deadline保持；独�
 无timeout。session8008/82350 actual完成并明确release LOCAL/no pending。
 此为真实policy责任页/holder页，不把它当all publication attempts页、
 跨锁时钟/CAS竞争或legacy升级已执行证据；后续必要独立义务继续。
+
+### 原全部 publication attempts 有限页及独立 unknown 效果（partial）
+
+`TestContentEveryOriginalAttemptPagePreservesUnknownSameKeyResidual` 从原同一
+Command 实际执行三次 native Objects.Put，逐次捕获真实 key/attempt/hash/
+length/body 参数；前两次实际成功且独立 final alpha 存在后机械丢返回 ACK，
+原已确认 Defer100ms 后观察120ms继续，不称 native Put 故障或 PG commit_unknown。
+三次原 attempt 参数各异，最后正常published/read，独立 Version2 beta正常。
+
+PageSize2 Seal 后 primary 首页公开 AttemptCursor 精确等于第二个原实际
+attempt，仍 pending/attempt_page_pending，不因正文已删而全ACK；实际
+World.Reopen 后最后登记页继续。另由新setup owner预先登记、真实打开并
+独立 Stat inode、Write/Sync/Close/fsync 的同key `.999.tmp` 未登记为产品
+publicationattempt；产品保留其原inode/独立bytes并显示 residual/
+holder_unconfirmed/原responsible/deadline。独立 Objects.ObserveErasure
+见 durable fence、准确 unknown residual、非erased；全部三个原登记attempt
+及final原key确实缺失，V2仍正常。仅该setup owner明确核原inode后移除自己
+效果、Sync，再原Defer恢复/真实重开，原Seal/fullRef/deadline allACK，V2和
+原Command byte-level receipt不变。未知名称未被猜测采用或产品擦除。
+
+| `/tmp/lerna-04-ticket05-execution/` 日志 | 实际结果 |
+| --- | --- |
+| `cleanup-attempt-pages-first-run.log` | exactnormal0.857s，PID/PGID3003670/start12548088/nativeexit0/groupAbsent=true；直接现协议qualification，无虚构新red。 |
+| `cleanup-attempt-pages-race.log` | 同exactrace2.305s，PID/PGID3004128/start12549542/nativeexit0/groupAbsent=true；原0001/0002两SHA准确。 |
+
+normal原ownscope `lerna_test_df028acffd3f6d6cedbdef79` / objects1605225831
+(dev33/inode349105)，unknown inode349113；race原ownscope
+`lerna_test_9d0e3f12d1c8d57994134d11` / objects570150497(dev33/inode349433)，
+unknown inode349441。责任、inode和owner移除均实际fsynced ledger记录。
+原caller20/Go30/wrapper120/原5sPublicationIO固定，无timeout，sessions92425/
+73523实际完成并明确RELEASE/no pending。测试运行时另有尚未执行 legacy
+binder 的WIP接线；本partial只固定本两资格源码及此准确边界，不把legacy
+CAS、旧producer重建入口或全部七AC当已green。原legacy firstred另行归档。
