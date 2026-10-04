@@ -163,7 +163,7 @@ root FULL read并采用授权Astra的窄决定
   prepared恢复只发布/读回/Finish，不重算或再收费。可恢复发布失败使用既有闭合
   waiting/dependency_unavailable，100ms后重试，最多8次且受原deadline限制。
 - 不默改旧fixture-rule/1的fee-at-finish绑定，也不构造双计费执行器。
-  owner0002在旧writer已退出/排空后分类升级：旧accepted无执行证据保零新starts/
+  owner0002在旧writer已退出/排空后只分类升级，业务关闭由正常owner维护短Tx执行：旧accepted无执行证据保零新starts/
   费用，固定failed/billing_basis_unsupported；旧running/waiting保留已记录用量
   下界并failed/usage_unavailable、不造start1/fee1。旧终态状态、Proposal和
   发布identity保留，不推断过去只启动一次。原input/accepted/manifest绑定不改。

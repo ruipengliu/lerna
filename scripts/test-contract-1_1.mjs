@@ -1,7 +1,7 @@
 import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { execFileSync } from 'node:child_process';
+import { requireBuild } from './bounded-build.mjs';
 import { startRunner } from './contract-runner.mjs';
 import assert from 'node:assert/strict';
 const dir = mkdtempSync(join(tmpdir(), 'lerna-contract-'));
@@ -12,11 +12,26 @@ const interrupt = () => {
 };
 process.once('SIGINT', interrupt);
 process.once('SIGTERM', interrupt);
+// The invoking contract entry has a 60s bound; cancel and confirm holders
+// inside that bound instead of letting its parent kill an active build.
+const overallDeadline = setTimeout(() => controller.abort(), 50000);
 let runners = [],
   failure;
+let buildsConfirmed = true;
+async function runBuild(command, args, options) {
+  try {
+    await requireBuild(command, args, {
+      ...options,
+      signal: controller.signal,
+    });
+  } catch (error) {
+    buildsConfirmed &&= error.exitConfirmed === true;
+    throw error;
+  }
+}
 try {
   const executable = join(dir, 'go-values');
-  execFileSync(
+  await runBuild(
     'go',
     ['build', '-o', executable, './conformance/component/valuerunner_v1_1'],
     { stdio: 'inherit', timeout: 60000 },
@@ -101,7 +116,7 @@ try {
   }
   await Promise.all(runners.map((runner) => runner.close()));
   runners = [];
-  execFileSync(
+  await runBuild(
     'go',
     [
       'test',
@@ -111,7 +126,7 @@ try {
     ],
     { stdio: 'inherit', timeout: 60000 },
   );
-  execFileSync(
+  await runBuild(
     process.execPath,
     [
       '--test',
@@ -125,20 +140,31 @@ try {
   );
 } catch (error) {
   failure = error;
-  throw error;
 } finally {
-  try {
-    const results = await Promise.allSettled(
-      runners.map((runner) => runner.close()),
-    );
-    const errors = results
+  const results = await Promise.allSettled(
+    runners.map((runner) => runner.close()),
+  );
+  const errors = [
+    failure,
+    ...results
       .filter((result) => result.status === 'rejected')
-      .map((result) => result.reason);
-    if (!failure && errors.length)
-      throw new AggregateError(errors, 'runner cleanup failed');
-  } finally {
-    process.removeListener('SIGINT', interrupt);
-    process.removeListener('SIGTERM', interrupt);
-    rmSync(dir, { recursive: true, force: true });
+      .map((result) => result.reason),
+  ].filter(Boolean);
+  clearTimeout(overallDeadline);
+  process.removeListener('SIGINT', interrupt);
+  process.removeListener('SIGTERM', interrupt);
+  if (buildsConfirmed && runners.every((runner) => runner.exitConfirmed)) {
+    try {
+      rmSync(dir, { recursive: true, force: true });
+    } catch (error) {
+      errors.push(error);
+    }
+  } else {
+    errors.push(Error(`process exit unconfirmed; retained exact scope ${dir}`));
   }
+  if (errors.length)
+    throw new AggregateError(
+      [...new Set(errors)],
+      'contract conformance and cleanup failed',
+    );
 }

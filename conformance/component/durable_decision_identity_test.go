@@ -9,7 +9,6 @@ import (
 	"testing"
 	"time"
 
-	decisionpg "github.com/ruipengliu/lerna/adapters/postgres/decision_engine"
 	decision "github.com/ruipengliu/lerna/components/decision_engine"
 	fixture "github.com/ruipengliu/lerna/conformance/internal/decisionfixture"
 	"github.com/ruipengliu/lerna/contract"
@@ -202,11 +201,10 @@ func TestDurableDecisionRollbackAndTokenIsolation(t *testing.T) {
 	if _, err = world.Store().ReadDecision(ctx, expired, scene.DecisionRef); !errors.Is(err, runtime.ErrScope) {
 		t.Fatalf("expired token accepted: %v", err)
 	}
-	peer, err := decisionpg.Open(ctx, world.Config())
+	peer, err := world.OpenPeer(ctx)
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer peer.Close()
 	err = world.Store().Within(ctx, owner, func(ctx context.Context, tx runtime.Tx) error {
 		_, err := peer.ReadDecision(ctx, tx, scene.DecisionRef)
 		if !errors.Is(err, runtime.ErrScope) {

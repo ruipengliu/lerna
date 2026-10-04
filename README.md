@@ -20,6 +20,8 @@ make test-race       # Go 公开边界的竞态检查
 
 SQLite 适配器使用锁定的 go-sqlite3 v1.14.52、CGO 和驱动自带 SQLite 3.53.4；需要 C 编译器，当前写 Host 排除仅支持已实测 Linux amd64 本地文件，详见 [SQLite说明](adapters/sqlite/README.md)。
 
+构建生命周期验收目前要求 Linux 和 `python3` 标准库：独立 watchdog 用 Linux subreaper 真实回收继承输出管道的构建子进程，验证截止处理与进程组退出。Python 不参与产品实现或合同编码。
+
 工作区使用根目录一个 Go module 和 pnpm 工作区；基础 make check 不需要外部凭据、数据库或个人环境脚本。Make 固定 `GOTOOLCHAIN=local` 和只读模块解析；`bootstrap` 会对工具版本不符或锁文件缺失报错，不自动升级系统。
 
 `make test-contract` 在临时目录构建 Go 运行器，驱动真实 Go 编码 → TypeScript 解码／编码及反向路径，并比较共同夹具的准确值。CI 运行同一 `make bootstrap` 和 `make check`。`make test-integration` 必跑真实 PG 与文件 SQLite 同版接纳、回滚、重开、两库修订工作和存储专属故障；必须显式设置专用测试库的 LERNA_TEST_POSTGRES_DSN，缺配置／服务硬失败。配置、隔离与清理见 [PG适配器说明](adapters/postgres/README.md)。CI另有锁定PG18.6服务的两库集成／race任务，真实集成使用 -count=1 禁用测试结果缓存，准确远端状态记录在实现进度。完整旧v1恢复还必须安装psql；本地已实测17.11恢复18.6 dump，CI使用与服务相同固定镜像的18.6客户端并验证其取消生命周期。配置与未知创建资源限制见PG说明。切片02已完整退出，历史未知测试资源与进程故障证据限制仍保留；网络能力留给后续切片。

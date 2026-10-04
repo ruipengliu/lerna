@@ -5,7 +5,6 @@ package component_test
 import (
 	"context"
 	"errors"
-	decisionpg "github.com/ruipengliu/lerna/adapters/postgres/decision_engine"
 	decision "github.com/ruipengliu/lerna/components/decision_engine"
 	"testing"
 	"time"
@@ -150,11 +149,10 @@ func TestDurableDecisionLastQueueSlotAcrossStoreInstances(t *testing.T) {
 	if err := service.InstallPool(ctx, cfg, 1); err != nil {
 		t.Fatal(err)
 	}
-	peer, err := decisionpg.Open(ctx, world.Config())
+	peer, err := world.OpenPeer(ctx)
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer peer.Close()
 	peerService, err := decision.New(decision.Config{Owner: v.OwnerRef{TenantID: scene.DecisionRef.TenantID, OwnerID: scene.DecisionRef.OwnerID}, Store: peer, Authority: world.Source(), Source: world.Source(), Publisher: world.Source(), Component: scene.Request.Payload.ComponentRef, Worker: "peer-worker", Lease: 2 * time.Second, PoolControl: true})
 	if err != nil {
 		t.Fatal(err)

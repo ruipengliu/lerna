@@ -8,7 +8,7 @@ import {
 } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
-import { spawnSync } from 'node:child_process';
+import { boundedBuild } from './bounded-build.mjs';
 import assert from 'node:assert/strict';
 const generator = resolve('scripts/generate.mjs');
 const original = JSON.parse(
@@ -17,8 +17,10 @@ const original = JSON.parse(
 const inventory = JSON.parse(
   readFileSync('contract/schema/1.1.0/methods.json', 'utf8'),
 );
-function generate(mutate = () => {}) {
+async function generate(mutate = () => {}) {
   const dir = mkdtempSync(join(tmpdir(), 'lerna-generator-v1_1-'));
+  let exitConfirmed = true;
+  let failure;
   try {
     writeFileSync(
       join(dir, '.prettierrc.json'),
@@ -43,11 +45,21 @@ function generate(mutate = () => {}) {
       join(dir, 'contract/schema/1.1.0/methods.json'),
       JSON.stringify(methods),
     );
-    const result = spawnSync(process.execPath, [generator], {
+    const result = await boundedBuild(process.execPath, [generator], {
       cwd: dir,
       encoding: 'utf8',
       timeout: 30000,
     });
+    exitConfirmed = result.exitConfirmed;
+    if (result.cleanupErrors.length)
+      throw new AggregateError(
+        result.cleanupErrors,
+        `generator cleanup failed; retained scope ${dir}`,
+      );
+    assert.ok(
+      exitConfirmed,
+      `generator descendants unconfirmed; retained scope ${dir}`,
+    );
     assert.ifError(result.error);
     if (result.status !== 0) return { error: result.stderr };
     for (const path of [
@@ -73,11 +85,23 @@ function generate(mutate = () => {}) {
       ].map((m) => m[1]),
       output,
     };
+  } catch (error) {
+    failure = error;
+    throw error;
   } finally {
-    rmSync(dir, { recursive: true, force: true });
+    if (exitConfirmed) {
+      try {
+        rmSync(dir, { recursive: true, force: true });
+      } catch (error) {
+        throw new AggregateError(
+          [failure, error].filter(Boolean),
+          `generator and scope cleanup failed: ${dir}`,
+        );
+      }
+    }
   }
 }
-const baseline = generate();
+const baseline = await generate();
 assert.equal(baseline.error, undefined);
 const goldens = JSON.parse(
   readFileSync('conformance/fixtures/1.1.0/schema-digests.json', 'utf8'),
@@ -118,7 +142,7 @@ for (const [name, mutate, expected] of [
     /unresolved method schema/,
   ],
 ]) {
-  const changed = generate(mutate);
+  const changed = await generate(mutate);
   assert.match(changed.error, expected, name);
 }
 for (const [name, mutate, changedIndexes] of [
@@ -143,7 +167,7 @@ for (const [name, mutate, changedIndexes] of [
     [2, 5],
   ],
 ]) {
-  const changed = generate(mutate);
+  const changed = await generate(mutate);
   assert.equal(changed.error, undefined, name);
   for (let i = 0; i < 8; i++)
     assert.equal(
@@ -152,7 +176,7 @@ for (const [name, mutate, changedIndexes] of [
       `${name} root ${i}`,
     );
 }
-const complete = generate((_s, m) =>
+const complete = await generate((_s, m) =>
   m.methods
     .filter((x) => x.input_schema.startsWith('Decision'))
     .forEach((x) => (x.advertised = true)),

@@ -20,6 +20,7 @@ type World struct {
 	*SourceWorld
 	decisionCfg   postgres.Config
 	admin, store  *decisionpg.Store
+	peers         []*decisionpg.Store
 	decisionOwned bool
 }
 
@@ -78,6 +79,19 @@ func NewWorld(t *testing.T, ctx context.Context) *World {
 }
 func (w *World) Store() *decisionpg.Store { return w.store }
 func (w *World) Config() postgres.Config  { return w.decisionCfg }
+
+// OpenPeer retains every successful additional writer until confirmed Close.
+// Cleanup will not drop the owned schema while a peer's exit is unconfirmed.
+func (w *World) OpenPeer(ctx context.Context) (*decisionpg.Store, error) {
+	if w.closing {
+		return nil, errors.New("fixture is closing")
+	}
+	peer, err := decisionpg.Open(ctx, w.decisionCfg)
+	if peer != nil {
+		w.peers = append(w.peers, peer)
+	}
+	return peer, err
+}
 func (w *World) Service() *decision.Service {
 	w.t.Helper()
 	service, err := w.buildService()
@@ -120,6 +134,12 @@ func (w *World) Cleanup() error {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
+	for len(w.peers) > 0 {
+		if err := w.peers[0].Close(); err != nil {
+			return err
+		}
+		w.peers = w.peers[1:]
+	}
 	if w.store != nil {
 		if err := w.store.Close(); err != nil {
 			return err

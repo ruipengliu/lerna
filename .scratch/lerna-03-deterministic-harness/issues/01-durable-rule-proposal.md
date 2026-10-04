@@ -24,3 +24,9 @@
 ## Comments
 
 2026-10-03，root依据授权Astra批准的粒度/真实edges及最终df2dbe5前置退出发布；本票验收尚未实现。已claimed，交独立工作树实施。
+
+2026-10-04，实施检查点：完整规则 tracer 已真实 PG 接纳、重开两个 owner、领取原 Job、Start、读取原来源、固定键发布/独立读回、Finish、get 与原 accepted command.get。首 red 为471dfe0缺组件；来源严格 Revision red0.192s→green0.966s。后续 durable-start/完整 prepared/累计未知窗口按已采用 decisions §10 实施，原 fixture-rule/1 不改含义；0002只分类，当前 owner 的 Maintenance 正常事务关闭旧 active 工作。冻结970fd90的68原源码+1原创 driver 共430396字节，正常验收从已提交准确来源构建，不依历史 Git 对象。
+
+root 两轴预审的五项 P2 已统一修复：原输入及完整 delegated Subject 对 Authority 隔离且返回 Permission 深拷贝，所有实际 Authorize 入口共用此规则；当前鉴权后原 Command 键先返回固定事实，配置变更仅影响新请求；0002分类保持原业务时间/状态，正常 Maintenance 关闭；peer与失败 Open 的未确认 Close 保留 handle；新版合同/生成器有界异步构建、组终止/退出确认、所有原失败及 Close 错误聚合、未确认范围保留。身份/配置真实 red0.782s→green1.101s；delegated 初测试重用 immutable fixture identity 导致 conflict0.419s，修正新准确 Decision 后 green0.882s；全部输入修改用途（含 worker Start）最新 green1.173s。升级测试新 command.get Target 尚指向旧 Command，真实 red8.811s/诊断9.806s，修正准确 Target 后 green11.201s、清理组确认最新 green10.558s（accepted、Start前计算 running、completed、真实 cost-limit failed、两次真实发布后未 Finish running）。
+
+构建管道风险进一步从 spawnSync 改成 async spawn：截止立即杀已知进程组，输出/Close/组 absence 有界确认。真实继承 stdout/stderr descendant 由独立 Linux subreaper/watchdog 回收；4专项及原16 runner 测试 green4.957s，新版 generator拒绝/摘要及81共享 typed 双向往返 green。相关 PG Component focused green6.618s；prepared interrupted-window red2.308s 原因是测试将尚未发布引用错误期望为 unavailable，而真实 reader 正确拒绝无 publication permission，校正后 green7.202s。全部 session 已退出。以上为检查点；最终准确 pin 的 make check、race、新旧真实数据库顺序回归、精确资源核对及两个独立最终复核尚待完成，9AC仍未勾选或 resolved，不宣称后票/整片完成。

@@ -126,17 +126,39 @@ func TestFrozenLegacyWriterUpgrade(t *testing.T) {
 	}()
 	waited := make(chan error, 1)
 	go func() { waited <- child.Wait() }()
+	currentClosed := true
 	// Registered before opening new writers: subsequent cleanup closes them first.
 	t.Cleanup(func() {
+		if !currentClosed {
+			childCancel()
+			select {
+			case waitErr := <-waited:
+				if waitErr != nil {
+					t.Error("historical admin cancellation:", waitErr)
+				}
+			case <-time.After(3 * time.Second):
+				t.Error("historical admin exit unconfirmed")
+			}
+			if err := stdin.Close(); err != nil && !errors.Is(err, os.ErrClosed) {
+				t.Error(err)
+			}
+			if err := stdout.Close(); err != nil && !errors.Is(err, os.ErrClosed) {
+				t.Error(err)
+			}
+			t.Errorf("new writer closure unconfirmed; retain exact historical directory %s and registered scopes", dir)
+			return
+		}
 		_, releaseErr := io.WriteString(stdin, "RELEASE\n")
-		_ = stdin.Close()
+		stdinErr := stdin.Close()
 		var waitErr error
 		confirmed := false
 		select {
 		case waitErr = <-waited:
 			confirmed = true
 		case <-time.After(8 * time.Second):
-			_ = syscall.Kill(-child.Process.Pid, syscall.SIGKILL)
+			if err := syscall.Kill(-child.Process.Pid, syscall.SIGKILL); err != nil && !errors.Is(err, syscall.ESRCH) {
+				t.Error(err)
+			}
 			select {
 			case waitErr = <-waited:
 				confirmed = true
@@ -144,18 +166,21 @@ func TestFrozenLegacyWriterUpgrade(t *testing.T) {
 			}
 		}
 		childCancel()
-		_ = stdout.Close()
+		if err := stdout.Close(); err != nil && !errors.Is(err, os.ErrClosed) {
+			t.Error(err)
+		}
 		select {
 		case <-scanDone:
 		case <-time.After(time.Second):
 			t.Error("historical stdout reader did not drain")
 		}
-		if !confirmed {
-			t.Error("historical process exit unconfirmed; retain exact directory and registered scopes")
+		groupErr := confirmUpgradeGroupExit(child.Process.Pid)
+		if !confirmed || groupErr != nil {
+			t.Errorf("historical process/group exit unconfirmed; retain exact directory %s and registered scopes: %v", dir, groupErr)
 			return
 		}
-		if releaseErr != nil || waitErr != nil {
-			t.Error("historical producer did not complete normal release; exact registered scopes retained in root ledger")
+		if releaseErr != nil || stdinErr != nil || waitErr != nil {
+			t.Error("historical producer did not complete normal release:", errors.Join(releaseErr, stdinErr, waitErr))
 		}
 		if err := cleanupUpgradeScopes(registry); err != nil {
 			t.Error("exact historical scope cleanup failed; retain owned directory")
@@ -211,7 +236,7 @@ func TestFrozenLegacyWriterUpgrade(t *testing.T) {
 			t.Fatal("untrusted historical case identity/drain")
 		}
 		seen[old.Name] = true
-		verifyUpgradeCase(t, ctx, old)
+		verifyUpgradeCase(t, ctx, old, &currentClosed)
 	}
 	fresh := NewWorld(t, ctx)
 	scene := fresh.Scenario()
@@ -249,30 +274,33 @@ func TestFrozenLegacyWriterUpgrade(t *testing.T) {
 	}
 }
 
-func verifyUpgradeCase(t *testing.T, ctx context.Context, old upgradeCase) {
+func verifyUpgradeCase(t *testing.T, ctx context.Context, old upgradeCase, currentClosed *bool) {
 	t.Helper()
 	cfg := postgres.Config{DSN: os.Getenv("LERNA_TEST_POSTGRES_DSN"), Schema: old.DecisionSchema, MaxOpenConnections: 4, TransactionTimeout: 3 * time.Second, StatementTimeout: 2 * time.Second, LockTimeout: time.Second}
 	store, err := decisionpg.Open(ctx, cfg)
+	if store != nil {
+		t.Cleanup(func() {
+			if err := store.Close(); err != nil {
+				*currentClosed = false
+				t.Error(err)
+			}
+		})
+	}
 	if err != nil {
 		t.Fatal("new decision writer open failed")
 	}
-	t.Cleanup(func() {
-		if err := store.Close(); err != nil {
-			t.Error(err)
-		}
-	})
 	if err = store.Migrate(ctx); err != nil {
-		t.Fatal(err)
+		t.Fatalf("legacy %s: %v", old.Name, err)
 	}
 	versions, err := store.MigrationVersions(ctx)
 	if err != nil {
-		t.Fatal(err)
+		t.Fatalf("legacy %s: %v", old.Name, err)
 	}
 	if len(old.Migrations) != 1 || len(versions) != 2 || versions[0].Version != old.Migrations[0].Version || versions[0].Checksum != old.Migrations[0].Checksum || versions[1].Version != 2 {
 		t.Fatal("upgrade replaced original checksum or lacks owner0002")
 	}
 	if err = store.Migrate(ctx); err != nil {
-		t.Fatal(err)
+		t.Fatalf("legacy %s: %v", old.Name, err)
 	}
 	again, err := store.MigrationVersions(ctx)
 	if err != nil || !reflect.DeepEqual(versions, again) {
@@ -280,31 +308,34 @@ func verifyUpgradeCase(t *testing.T, ctx context.Context, old upgradeCase) {
 	}
 	cfg.Schema = old.SourceSchema
 	source, err := Open(ctx, cfg, old.SourceOwner)
+	if source != nil {
+		t.Cleanup(func() {
+			if err := source.Close(); err != nil {
+				*currentClosed = false
+				t.Error(err)
+			}
+		})
+	}
 	if err != nil {
 		t.Fatal("new fixture reader open failed")
 	}
-	t.Cleanup(func() {
-		if err := source.Close(); err != nil {
-			t.Error(err)
-		}
-	})
 	subject, err := v.Decode[v.SubjectBinding](old.Subject)
 	if err != nil {
-		t.Fatal(err)
+		t.Fatalf("legacy %s: %v", old.Name, err)
 	}
 	request, err := v.Decode[v.DecisionDecideRequest](old.Request)
 	if err != nil {
-		t.Fatal(err)
+		t.Fatalf("legacy %s: %v", old.Name, err)
 	}
 	service, err := decision.New(decision.Config{Owner: v.OwnerRef{TenantID: request.Target.TenantID, OwnerID: request.Target.OwnerID}, Store: store, Authority: source, Source: source, Publisher: source, Component: request.Payload.ComponentRef, Worker: "upgrade-worker", Lease: 5 * time.Second, PoolControl: true})
 	if err != nil {
-		t.Fatal(err)
+		t.Fatalf("legacy %s: %v", old.Name, err)
 	}
 	// DDL classifies measurements only. Business closure belongs to the real
 	// current owner's Maintain transaction and trusted database clock.
 	migrated, err := service.Get(ctx, old.GetRequest, &subject)
 	if err != nil {
-		t.Fatal(err)
+		t.Fatalf("legacy %s: %v", old.Name, err)
 	}
 	migratedFound, ok := migrated.AsFound()
 	if !ok {
@@ -312,7 +343,7 @@ func verifyUpgradeCase(t *testing.T, ctx context.Context, old upgradeCase) {
 	}
 	migratedBytes, err := v.Encode(migratedFound.Decision)
 	if err != nil {
-		t.Fatal(err)
+		t.Fatalf("legacy %s: %v", old.Name, err)
 	}
 	var beforeDDL, afterDDL map[string]json.RawMessage
 	_ = json.Unmarshal(old.DecisionBefore, &beforeDDL)
@@ -323,11 +354,11 @@ func verifyUpgradeCase(t *testing.T, ctx context.Context, old upgradeCase) {
 		}
 	}
 	if _, err = service.Maintain(ctx); err != nil {
-		t.Fatal(err)
+		t.Fatalf("legacy %s: %v", old.Name, err)
 	}
 	view, err := service.Get(ctx, old.GetRequest, &subject)
 	if err != nil {
-		t.Fatal(err)
+		t.Fatalf("legacy %s: %v", old.Name, err)
 	}
 	found, ok := view.AsFound()
 	if !ok {
@@ -335,7 +366,7 @@ func verifyUpgradeCase(t *testing.T, ctx context.Context, old upgradeCase) {
 	}
 	current, err := v.Encode(found.Decision)
 	if err != nil {
-		t.Fatal(err)
+		t.Fatalf("legacy %s: %v", old.Name, err)
 	}
 	var prior, next map[string]json.RawMessage
 	_ = json.Unmarshal(old.DecisionBefore, &prior)
@@ -363,7 +394,7 @@ func verifyUpgradeCase(t *testing.T, ctx context.Context, old upgradeCase) {
 		}
 		permit, err := source.Authorize(ctx, subject, request.Target, "get", nil)
 		if err != nil {
-			t.Fatal(err)
+			t.Fatalf("legacy %s: %v", old.Name, err)
 		}
 		if len(completed.ArtifactRefs) != 1 {
 			t.Fatal("legacy artifact identity missing")
@@ -395,7 +426,7 @@ func verifyUpgradeCase(t *testing.T, ctx context.Context, old upgradeCase) {
 		}
 		permit, err := source.Authorize(ctx, subject, request.Target, "get", nil)
 		if err != nil {
-			t.Fatal(err)
+			t.Fatalf("legacy %s: %v", old.Name, err)
 		}
 		for i, ref := range old.PublishedRefs {
 			actual, err := source.ReadPublished(ctx, ref, permit)
@@ -406,7 +437,7 @@ func verifyUpgradeCase(t *testing.T, ctx context.Context, old upgradeCase) {
 	}
 	command, err := service.GetCommand(ctx, old.CommandGetRequest, &subject)
 	if err != nil {
-		t.Fatal(err)
+		t.Fatalf("legacy %s: %v", old.Name, err)
 	}
 	fixed, ok := command.AsFound()
 	if !ok {
@@ -418,7 +449,7 @@ func verifyUpgradeCase(t *testing.T, ctx context.Context, old upgradeCase) {
 	}
 	replay, err := service.Decide(ctx, old.Request, &subject)
 	if err != nil {
-		t.Fatal(err)
+		t.Fatalf("legacy %s: %v", old.Name, err)
 	}
 	receipt, ok := replay.AsReceived()
 	if !ok {
@@ -431,24 +462,24 @@ func verifyUpgradeCase(t *testing.T, ctx context.Context, old upgradeCase) {
 	// Seed only a fixture permission for a new identity; no business record or job.
 	permit, err := source.Authorize(ctx, subject, request.Target, "get", nil)
 	if err != nil {
-		t.Fatal(err)
+		t.Fatalf("legacy %s: %v", old.Name, err)
 	}
 	snapshot, err := source.ReadSnapshot(ctx, request.Payload.SnapshotRef, permit, v.MaxBodyBytes)
 	if err != nil {
-		t.Fatal(err)
+		t.Fatalf("legacy %s: %v", old.Name, err)
 	}
 	materials := make([]Material, 0, len(snapshot.MaterialRefs))
 	for _, ref := range snapshot.MaterialRefs {
 		body, err := source.ReadMaterial(ctx, ref, "rule.input", permit, v.MaxBodyBytes)
 		if err != nil {
-			t.Fatal(err)
+			t.Fatalf("legacy %s: %v", old.Name, err)
 		}
 		materials = append(materials, Material{Ref: ref, Bytes: body})
 	}
 	newRef := request.Target
 	newRef.ID = v.ID("upgrade-new-decision-" + old.Name)
 	if _, err = source.Seed(ctx, Bundle{DecisionRef: newRef, Permission: permit, Snapshot: snapshot, Materials: materials, Purposes: []string{"decide", "get", "command.get", "start", "material", "rule.input", "fixture.lock", "publish", "proposal.publish", "artifact.publish"}, RuleVersion: "fixture-rule/1"}); err != nil {
-		t.Fatal(err)
+		t.Fatalf("legacy %s: %v", old.Name, err)
 	}
 	request.Target = newRef
 	request.Payload.DecisionID = newRef.ID
@@ -456,11 +487,11 @@ func verifyUpgradeCase(t *testing.T, ctx context.Context, old upgradeCase) {
 	request.CommandID = v.ID("upgrade-new-" + old.Name)
 	raw, err := v.Encode(request)
 	if err != nil {
-		t.Fatal(err)
+		t.Fatalf("legacy %s: %v", old.Name, err)
 	}
 	rejected, err := service.Decide(ctx, raw, &subject)
 	if err != nil {
-		t.Fatal(err)
+		t.Fatalf("legacy %s: %v", old.Name, err)
 	}
 	durable, ok := rejected.AsReceived()
 	if !ok {
@@ -472,7 +503,7 @@ func verifyUpgradeCase(t *testing.T, ctx context.Context, old upgradeCase) {
 	}
 	repeated, err := service.Decide(ctx, raw, &subject)
 	if err != nil {
-		t.Fatal(err)
+		t.Fatalf("legacy %s: %v", old.Name, err)
 	}
 	fixedRejected, ok := repeated.AsReceived()
 	if !ok {
@@ -485,16 +516,17 @@ func verifyUpgradeCase(t *testing.T, ctx context.Context, old upgradeCase) {
 	}
 	query, err := v.Decode[v.CommandGetRequest](old.CommandGetRequest)
 	if err != nil {
-		t.Fatal(err)
+		t.Fatalf("legacy %s: %v", old.Name, err)
 	}
 	query.Payload.CommandRef.CommandID = request.CommandID
+	query.Target.ID = request.CommandID
 	queryRaw, err := v.Encode(query)
 	if err != nil {
-		t.Fatal(err)
+		t.Fatalf("legacy %s: %v", old.Name, err)
 	}
 	queried, err := service.GetCommand(ctx, queryRaw, &subject)
 	if err != nil {
-		t.Fatal(err)
+		t.Fatalf("legacy %s: %v", old.Name, err)
 	}
 	queriedFixed, ok := queried.AsFound()
 	if !ok {
@@ -506,7 +538,7 @@ func verifyUpgradeCase(t *testing.T, ctx context.Context, old upgradeCase) {
 	}
 	originalReplay, err := service.Decide(ctx, old.Request, &subject)
 	if err != nil {
-		t.Fatal(err)
+		t.Fatalf("legacy %s: %v", old.Name, err)
 	}
 	originalFixed, ok := originalReplay.AsReceived()
 	if !ok {
@@ -519,17 +551,17 @@ func verifyUpgradeCase(t *testing.T, ctx context.Context, old upgradeCase) {
 	var get v.DecisionGetRequest
 	get, err = v.Decode[v.DecisionGetRequest](old.GetRequest)
 	if err != nil {
-		t.Fatal(err)
+		t.Fatalf("legacy %s: %v", old.Name, err)
 	}
 	get.Target = newRef
 	get.Payload.DecisionRef = newRef
 	getRaw, err := v.Encode(get)
 	if err != nil {
-		t.Fatal(err)
+		t.Fatalf("legacy %s: %v", old.Name, err)
 	}
 	absent, err := service.Get(ctx, getRaw, &subject)
 	if err != nil {
-		t.Fatal(err)
+		t.Fatalf("legacy %s: %v", old.Name, err)
 	}
 	if _, ok := absent.AsResultUnavailable(); !ok {
 		t.Fatal("unsupported old binding created a business Decision")
@@ -556,6 +588,23 @@ func setUpgradeProcessBounds(cmd *exec.Cmd) {
 			return os.ErrProcessDone
 		}
 		return err
+	}
+}
+
+func confirmUpgradeGroupExit(pid int) error {
+	until := time.Now().Add(time.Second)
+	for {
+		err := syscall.Kill(-pid, 0)
+		if errors.Is(err, syscall.ESRCH) {
+			return nil
+		}
+		if err != nil {
+			return err
+		}
+		if !time.Now().Before(until) {
+			return errors.New("historical process group still exists")
+		}
+		time.Sleep(10 * time.Millisecond)
 	}
 }
 
@@ -637,7 +686,9 @@ func restoreFrozenWriter(t *testing.T) string {
 	success := false
 	defer func() {
 		if !success {
-			_ = os.RemoveAll(dir)
+			if err := os.RemoveAll(dir); err != nil {
+				t.Error("exact historical restore cleanup:", err)
+			}
 		}
 	}()
 	total := 0
@@ -699,7 +750,7 @@ func readUpgradeBounded(path string, max int64) ([]byte, error) {
 	}
 	return io.ReadAll(io.LimitReader(file, max+1))
 }
-func cleanupUpgradeScopes(registry string) error {
+func cleanupUpgradeScopes(registry string) (result error) {
 	body, err := readUpgradeBounded(registry, 4096)
 	if os.IsNotExist(err) {
 		return nil
@@ -724,7 +775,7 @@ func cleanupUpgradeScopes(registry string) error {
 	if err != nil {
 		return errors.New("exact cleanup open failed")
 	}
-	defer db.Close()
+	defer func() { result = errors.Join(result, db.Close()) }()
 	db.SetMaxOpenConns(1)
 	for name := range names {
 		tx, err := db.BeginTx(ctx, nil)

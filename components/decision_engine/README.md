@@ -54,7 +54,7 @@ original Decision deadline and Permission expiry. No cross-owner atomic commit
 is claimed. Process-kill coverage is delivered separately by ticket06.
 
 The old fixture-rule/1 fee-at-finish binding is readable but retired for new
-execution. The owner migration closes old active work without inventing durable
+execution. The owner migration classifies old observations; normal maintenance closes active work without inventing durable
 starts or fees; existing terminal Proposal facts and original receipts survive.
 See the [adapter upgrade policy](../../adapters/postgres/decision_engine/README.md).
 

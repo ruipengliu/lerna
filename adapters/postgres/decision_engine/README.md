@@ -9,7 +9,7 @@ is required. Old demo PG/SQLite migrations and behavior remain separate.
 `Migrate` applies the numbered embedded files in one finite transaction under
 the owner migration lock. Each applied version retains its SHA-256 checksum;
 rerun verifies every checksum and does not rewrite a published migration.
-Migration0001 defines the initial owner schema. Migration0002 adds no fabricated
+Migration0001 defines the initial owner schema. Migration0002 only classifies compatibility metadata and adds no fabricated
 past execution time or billing event. Stop and drain the old writer generation
 before running it; mixed old/new writers are unsupported because an old writer
 could overwrite new accounting observations.
@@ -20,8 +20,9 @@ and cost remain lower bounds rather than invented totals. An old accepted row
 without execution closes as `billing_basis_unsupported` with exact zero new
 starts/fees. An old running/waiting row closes as `usage_unavailable` with its
 recorded usage unchanged. Their original accepted receipt, input, component and
-manifest binding remain fixed. Their existing Job is closed in the same owner
-transaction. Old terminal status, Proposal and publication identities remain
+manifest binding remain fixed. After classification, normal bounded owner maintenance closes their existing Job
+in the same transaction as the asynchronous failure. Migration leaves business
+status and revision unchanged until that normal transition. Old terminal status, Proposal and publication identities remain
 unchanged. New calls using the old binding receive fixed `unsupported` before
 creating new work; replay still returns its original accepted receipt.
 

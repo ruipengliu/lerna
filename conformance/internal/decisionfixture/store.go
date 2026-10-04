@@ -56,7 +56,10 @@ func Open(ctx context.Context, cfg postgres.Config, owner v.OwnerRef) (*Store, e
 	db.SetMaxOpenConns(connections)
 	db.SetMaxIdleConns(connections)
 	if err = db.PingContext(bounded); err != nil {
-		_ = db.Close()
+		if closeErr := db.Close(); closeErr != nil {
+			// A caller must retain this handle until closure is confirmed.
+			return &Store{db: db, cfg: cfg, owner: owner}, errors.Join(&connectionError{err}, closeErr)
+		}
 		return nil, &connectionError{err}
 	}
 	return &Store{db: db, cfg: cfg, owner: owner}, nil
