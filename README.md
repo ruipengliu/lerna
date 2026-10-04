@@ -16,6 +16,7 @@ make generate        # 由 JSON Schema 重建已提交公共类型
 make fmt             # 格式化 Go / TypeScript / 配置与机器契约
 make check           # lint、生成一致性、测试、真实双向合同往返及构建
 make test-race       # Go 公开边界的竞态检查
+make test-integration-race # 专用测试库：Recovery、动态 Component 分组、Source 串行竞态检查
 ```
 
 SQLite 适配器使用锁定的 go-sqlite3 v1.14.52、CGO 和驱动自带 SQLite 3.53.4；需要 C 编译器，当前写 Host 排除仅支持已实测 Linux amd64 本地文件，详见 [SQLite说明](adapters/sqlite/README.md)。

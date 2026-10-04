@@ -55,8 +55,12 @@ or successful publication.
 `contract/schema/1.1.0/methods.json` is the sole inventory. Every method has a
 complete reachable input and output Schema digest in `DeclaredMethods`.
 `SupportedMethods` and negotiation include only `advertised: true` entries.
-Currently `command.get` is advertised; the developing Decision profile remains
-unavailable for negotiation until its full implementation is accepted.
+The local inventory advertises `command.get` under profile `command` and
+`decision_engine.decide`, `decision_engine.get`, `decision_engine.cancel` under
+profile `decision_engine`, all at version `1.1.0`. Negotiation requires the exact
+profile, method and both digests; it neither authenticates a caller nor executes
+a request. This availability covers the accepted local fixture implementation,
+not a production provider or network service.
 
 Run `pnpm generate`, `pnpm check:generated`, `node scripts/test-generator.mjs`,
 and `node scripts/test-contract.mjs` from the repository root. The last command

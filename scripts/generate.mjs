@@ -371,7 +371,7 @@ func (value *CommandPayload) UnmarshalJSON(data []byte) error { var raw json.Raw
     (_, index) => methods[index].advertised ?? true,
   );
   if (configuration.version === '1.1.0') {
-    go += `// DeclaredMethods includes typed development methods, without advertising availability.\nfunc DeclaredMethods() []MethodSupport { return []MethodSupport{\n`;
+    go += `// DeclaredMethods returns the typed inventory; availability is declared separately.\nfunc DeclaredMethods() []MethodSupport { return []MethodSupport{\n`;
     for (const m of declaredSupport)
       go += `{${Object.entries(m)
         .map(([key, value]) => title(key) + ':' + JSON.stringify(value))

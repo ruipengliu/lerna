@@ -587,6 +587,39 @@ export const supportedMethods = Object.freeze(
       output_schema_digest:
         'sha256:acce8f9a36a278baf933a60835eca7006a313785f3d96fc458403a46cb2108b5',
     },
+    {
+      contract_version: '1.1.0',
+      profile: 'decision_engine',
+      method: 'decision_engine.decide',
+      input_schema: 'DecisionDecideRequest',
+      output_schema: 'CommandReceipt',
+      input_schema_digest:
+        'sha256:b2ac1e52e121f4b62b57e4bf8676fc685cb68a8cccfd4955c71c6a9a45ff6b30',
+      output_schema_digest:
+        'sha256:08d6c13b3f335c50f51fe594181781b41cc55252afde33b5755881880ece0f31',
+    },
+    {
+      contract_version: '1.1.0',
+      profile: 'decision_engine',
+      method: 'decision_engine.get',
+      input_schema: 'DecisionGetRequest',
+      output_schema: 'DecisionGetResponse',
+      input_schema_digest:
+        'sha256:1b6e9e016c071b7319b55668d1defc841d247d2900b7bb180195422fc1ab1b1d',
+      output_schema_digest:
+        'sha256:c086cd3aa01c5e468bf68296e7f80a0e0b88db6076895df925267acfb21bb55b',
+    },
+    {
+      contract_version: '1.1.0',
+      profile: 'decision_engine',
+      method: 'decision_engine.cancel',
+      input_schema: 'DecisionCancelRequest',
+      output_schema: 'CommandReceipt',
+      input_schema_digest:
+        'sha256:c714d0677522b69dc6d3a2f6ca4a5f1afbb451cb992237c7f52a8a357675fe64',
+      output_schema_digest:
+        'sha256:08d6c13b3f335c50f51fe594181781b41cc55252afde33b5755881880ece0f31',
+    },
   ].map((method) => Object.freeze(method)),
 ) as ReadonlyArray<Readonly<MethodSupport>>;
 export const inputSchemas = Object.freeze(
@@ -610,7 +643,7 @@ export const inputSchemas = Object.freeze(
         method: 'decision_engine.decide',
         schema: 'DecisionDecideRequest',
         output: 'CommandReceipt',
-        advertised: false,
+        advertised: true,
         inputDigest:
           'sha256:b2ac1e52e121f4b62b57e4bf8676fc685cb68a8cccfd4955c71c6a9a45ff6b30',
         outputDigest:
@@ -622,7 +655,7 @@ export const inputSchemas = Object.freeze(
         method: 'decision_engine.get',
         schema: 'DecisionGetRequest',
         output: 'DecisionGetResponse',
-        advertised: false,
+        advertised: true,
         inputDigest:
           'sha256:1b6e9e016c071b7319b55668d1defc841d247d2900b7bb180195422fc1ab1b1d',
         outputDigest:
@@ -634,7 +667,7 @@ export const inputSchemas = Object.freeze(
         method: 'decision_engine.cancel',
         schema: 'DecisionCancelRequest',
         output: 'CommandReceipt',
-        advertised: false,
+        advertised: true,
         inputDigest:
           'sha256:c714d0677522b69dc6d3a2f6ca4a5f1afbb451cb992237c7f52a8a357675fe64',
         outputDigest:

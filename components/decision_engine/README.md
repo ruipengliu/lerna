@@ -6,8 +6,10 @@ consumer-owned ports. It owns no Task, Content, Grant or provider fact.
 
 `New` requires explicit finite storage, authorization, source, publisher, owner,
 component, worker and lease configuration. `Decide`, `Cancel`, `Get` and `GetCommand`
-consume strict 1.1.0 bytes and a trusted SubjectBinding. The incomplete
-`decision_engine` profile remains unadvertised. The original 1.0.0 codec and
+consume strict 1.1.0 bytes and a trusted SubjectBinding. The local 1.1.0 inventory
+advertises all three `decision_engine` methods and `command.get` under its own
+`command` profile. Compatibility negotiation does not confer execution permission.
+The original 1.0.0 codec and
 methods remain frozen; `LegacyReader` exposes only losslessly representable
 Command facts and returns its existing unavailable result otherwise.
 
@@ -147,5 +149,9 @@ See the [adapter upgrade policy](../../adapters/postgres/decision_engine/README.
 Real PG conformance is in `conformance/component/durable_decision_*` and the
 independent source owner in `conformance/internal/decisionfixture`. Run
 `make test-integration` with a dedicated DSN and absolute ownership registry.
+`make test-integration-race` runs Recovery, the discovered Component groups and
+Source serially, retaining the 120-second per-package deadline. All current
+`TestDurable*` cases form one group; every other Test, Example and Fuzz seed
+forms the second, so newly registered cases are included automatically.
 These fixtures establish the rule component boundary, not production quality,
 real installation, Task orchestration or provider billing.

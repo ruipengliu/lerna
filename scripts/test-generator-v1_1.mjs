@@ -137,7 +137,7 @@ for (const [name, mutate, expected] of [
     /duplicate method registration/,
   ],
   [
-    'missing unadvertised output',
+    'missing registered output',
     (_s, m) => (m.methods[1].output_schema = 'Missing'),
     /unresolved method schema/,
   ],

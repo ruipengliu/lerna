@@ -2,7 +2,6 @@ package component_test
 
 import (
 	"encoding/json"
-	"errors"
 	old "github.com/ruipengliu/lerna/contract"
 	contract "github.com/ruipengliu/lerna/contract/v1_1"
 	"os"
@@ -72,8 +71,8 @@ func TestDecisionDigestAndIsolatedInventory(t *testing.T) {
 	if err != nil || different == decision {
 		t.Fatalf("principal missing from input identity: %v", err)
 	}
-	if len(contract.SupportedMethods()) != 1 || len(contract.DeclaredMethods()) != 4 {
-		t.Fatal("unfinished profile was advertised or lost typed schemas")
+	if len(contract.DeclaredMethods()) != 4 {
+		t.Fatal("lost declared schemas")
 	}
 	var goldens []struct {
 		Schema string `json:"schema"`
@@ -90,16 +89,6 @@ func TestDecisionDigestAndIsolatedInventory(t *testing.T) {
 		if string(m.InputSchemaDigest) != goldens[2*i].Digest || string(m.OutputSchemaDigest) != goldens[2*i+1].Digest {
 			t.Fatal("reachable schema digest differs from independent golden")
 		}
-	}
-	request := contract.NegotiationRequest{ContractVersion: "1.1.0", Profile: "decision_engine", Method: "decision_engine.decide", InputSchemaDigest: contract.DeclaredMethods()[1].InputSchemaDigest, OutputSchemaDigest: contract.DeclaredMethods()[1].OutputSchemaDigest}
-	encoded, err := contract.Encode(request)
-	if err != nil {
-		t.Fatal(err)
-	}
-	_, err = contract.Negotiate(encoded)
-	var refusal *contract.ContractError
-	if !errors.As(err, &refusal) || refusal.Code != "unsupported" {
-		t.Fatalf("developing profile negotiated: %v", err)
 	}
 	// Same-named definitions are intentionally distinct in their schema caches.
 	if _, err = old.Decode[old.ErrorCode]([]byte(`"decision_mismatch"`)); err == nil {
