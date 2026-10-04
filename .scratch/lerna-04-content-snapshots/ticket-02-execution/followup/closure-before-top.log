@@ -1,0 +1,35 @@
+File: component-race.test
+Build ID: 3bbd40437e4d29645afa42d049946271f0f19e5e
+Type: cpu
+Time: 2026-10-04 16:29:55 UTC
+Duration: 60.03s, Total samples = 46.69s (77.77%)
+Showing nodes accounting for 30.97s, 66.33% of 46.69s total
+Dropped 655 nodes (cum <= 0.23s)
+Showing top 25 nodes out of 202
+      flat  flat%   sum%        cum   cum%
+     7.74s 16.58% 16.58%      7.74s 16.58%  __tsan_read
+     5.56s 11.91% 28.49%      5.56s 11.91%  racecall
+     2.87s  6.15% 34.63%      2.87s  6.15%  internal/runtime/syscall/linux.Syscall6
+     2.44s  5.23% 39.86%      2.44s  5.23%  runtime.futex
+     1.76s  3.77% 43.63%      1.76s  3.77%  __tsan_write
+     1.73s  3.71% 47.33%      1.73s  3.71%  __tsan::MemoryAccessRangeT
+     1.21s  2.59% 49.93%      1.21s  2.59%  racecalladdr
+     0.89s  1.91% 51.83%      0.89s  1.91%  runtime.raceread
+     0.82s  1.76% 53.59%      1.37s  2.93%  runtime.checkptrBase
+     0.68s  1.46% 55.04%      0.68s  1.46%  runtime.write1
+     0.57s  1.22% 56.26%      0.57s  1.22%  __tsan::MetaMap::GetSync
+     0.55s  1.18% 57.44%      0.55s  1.18%  runtime.findObject
+     0.44s  0.94% 58.39%      0.44s  0.94%  __tsan_func_enter
+     0.40s  0.86% 59.24%      0.40s  0.86%  __tsan::ShadowSet
+     0.39s  0.84% 60.08%      0.39s  0.84%  __tsan::VectorClock::ReleaseAcquire
+     0.35s  0.75% 60.83%      0.35s  0.75%  runtime.memclrNoHeapPointers
+     0.34s  0.73% 61.55%      0.34s  0.73%  __tsan::VectorClock::Acquire
+     0.32s  0.69% 62.24%      0.81s  1.73%  encoding/json/jsontext.(*decoderState).ReadToken
+     0.32s  0.69% 62.93%      0.40s  0.86%  regexp/syntax.(*Inst).MatchRunePos
+     0.30s  0.64% 63.57%      1.06s  2.27%  regexp.(*Regexp).doOnePass
+     0.30s  0.64% 64.21%      1.70s  3.64%  runtime.checkptrAlignment
+     0.29s  0.62% 64.83%      0.89s  1.91%  runtime.mallocgcSmallScanNoHeader
+     0.25s  0.54% 65.37%      0.25s  0.54%  __tsan_read_pc
+     0.24s  0.51% 65.88%      2.60s  5.57%  github.com/santhosh-tekuri/jsonschema/v6.(*validator).validate
+     0.21s  0.45% 66.33%      0.55s  1.18%  encoding/json/jsontext.(*decoderState).consumeObject
+NATIVE_EXIT status=0 group_absent=True

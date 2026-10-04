@@ -1,0 +1,129 @@
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/lerna-content-02-fix-57ea60c628f8/materialized-runtime-manifest.json'
+=== RUN   TestPublicErrorsAreClosedAndClassifiable
+--- PASS: TestPublicErrorsAreClosedAndClassifiable (0.03s)
+=== RUN   TestEnvelopeAcceptsDefinedFutureMethodWithoutOfferingExecution
+--- PASS: TestEnvelopeAcceptsDefinedFutureMethodWithoutOfferingExecution (0.02s)
+=== RUN   TestCommandGetRetainsOriginalIdentitySeparateFromQuery
+--- PASS: TestCommandGetRetainsOriginalIdentitySeparateFromQuery (0.02s)
+=== RUN   TestCommandGetRequiresExactTargetAndRejectsWriteRevision
+--- PASS: TestCommandGetRequiresExactTargetAndRejectsWriteRevision (0.01s)
+=== RUN   TestProgrammableEnvelopeCannotSmuggleJSONNumbers
+--- PASS: TestProgrammableEnvelopeCannotSmuggleJSONNumbers (0.00s)
+=== RUN   TestUnknownVersionAndMethodCannotDowngrade
+--- PASS: TestUnknownVersionAndMethodCannotDowngrade (0.00s)
+=== RUN   TestSharedCommandFixtures
+    commands_test.go:100: open ../fixtures/1.0.0/commands.json: no such file or directory
+--- FAIL: TestSharedCommandFixtures (0.00s)
+=== RUN   TestProgrammaticPayloadAlsoEnforcesContainerDepth
+--- PASS: TestProgrammaticPayloadAlsoEnforcesContainerDepth (0.00s)
+=== RUN   TestPublicErrorProjectionCannotDiscloseLocalCause
+--- PASS: TestPublicErrorProjectionCannotDiscloseLocalCause (0.00s)
+=== RUN   TestProgrammaticPayloadRejectsValuesOutsideJSON
+--- PASS: TestProgrammaticPayloadRejectsValuesOutsideJSON (0.00s)
+=== RUN   TestContentNewAssociationRequiresCurrentDirectSourceAdmission
+=== RUN   TestContentNewAssociationRequiresCurrentDirectSourceAdmission/process
+=== RUN   TestContentNewAssociationRequiresCurrentDirectSourceAdmission/save
+--- PASS: TestContentNewAssociationRequiresCurrentDirectSourceAdmission (1.71s)
+    --- PASS: TestContentNewAssociationRequiresCurrentDirectSourceAdmission/process (1.02s)
+    --- PASS: TestContentNewAssociationRequiresCurrentDirectSourceAdmission/save (0.69s)
+=== RUN   TestContentAssociationCannotExtendObservedRetention
+--- PASS: TestContentAssociationCannotExtendObservedRetention (1.21s)
+=== RUN   TestContentReplayRechecksReaderAfterCommandLock
+--- PASS: TestContentReplayRechecksReaderAfterCommandLock (0.69s)
+=== RUN   TestContentAssociationKeepsPreparingCapacityAndFailedHistory
+--- PASS: TestContentAssociationKeepsPreparingCapacityAndFailedHistory (0.85s)
+=== RUN   TestContentDecodedByteBoundHasRealNormalPublication
+--- PASS: TestContentDecodedByteBoundHasRealNormalPublication (6.02s)
+=== RUN   TestContentLockWaitCannotReuseExpiredAdmissionClock
+--- PASS: TestContentLockWaitCannotReuseExpiredAdmissionClock (0.79s)
+=== RUN   TestContentPublicationWaitCannotReuseExpiredPolicyClock
+--- PASS: TestContentPublicationWaitCannotReuseExpiredPolicyClock (0.95s)
+=== RUN   TestContentHiddenAncestorControlsCurrentDerivedUse
+--- PASS: TestContentHiddenAncestorControlsCurrentDerivedUse (0.75s)
+=== RUN   TestContentFullClosureIncludesIntermediateVersionsAndExact64Bound
+    content_closure_test.go:122: closure timing i=65 stage=put current=244.268ms install=1.462160126s put=28.396061843s step=19.643983391s
+    content_closure_test.go:126: closure port put/Now calls=4746 logical_actions=0 elapsed=2.35884594s
+    content_closure_test.go:126: closure port put/CheckPolicy calls=2210 logical_actions=6498 elapsed=2.180797497s
+    content_closure_test.go:126: closure port put/LockVersion calls=2275 logical_actions=0 elapsed=3.814015274s
+    content_closure_test.go:126: closure port put/ScheduleRetention calls=65 logical_actions=0 elapsed=15.458422781s
+    content_closure_test.go:126: closure port step/Now calls=8710 logical_actions=0 elapsed=4.59047048s
+    content_closure_test.go:126: closure port step/CheckPolicy calls=4290 logical_actions=12610 elapsed=4.278097583s
+    content_closure_test.go:126: closure port step/LockVersion calls=4225 logical_actions=0 elapsed=7.254999894s
+    content_closure_test.go:126: closure port step/ScheduleRetention calls=0 logical_actions=0 elapsed=0s
+    content_closure_test.go:126: closure port get/Now calls=264 logical_actions=0 elapsed=132.85596ms
+    content_closure_test.go:126: closure port get/CheckPolicy calls=132 logical_actions=260 elapsed=127.937379ms
+    content_closure_test.go:126: closure port get/LockVersion calls=130 logical_actions=0 elapsed=206.765107ms
+    content_closure_test.go:126: closure port get/ScheduleRetention calls=0 logical_actions=0 elapsed=0s
+--- PASS: TestContentFullClosureIncludesIntermediateVersionsAndExact64Bound (50.22s)
+=== RUN   TestContentClosureDeduplicatesSharedAncestorAndRejectsForeignOwners
+--- PASS: TestContentClosureDeduplicatesSharedAncestorAndRejectsForeignOwners (0.91s)
+=== RUN   TestContentHiddenAncestorPurposeIntersectionAndOriginalCapSurviveFurtherDerivation
+--- PASS: TestContentHiddenAncestorPurposeIntersectionAndOriginalCapSurviveFurtherDerivation (1.03s)
+=== RUN   TestContentPublicationFinalTransactionChecksHiddenAncestorAfterRealObjectWrite
+=== RUN   TestContentPublicationFinalTransactionChecksHiddenAncestorAfterRealObjectWrite/permitted
+=== RUN   TestContentPublicationFinalTransactionChecksHiddenAncestorAfterRealObjectWrite/ancestor-process-revoked
+--- PASS: TestContentPublicationFinalTransactionChecksHiddenAncestorAfterRealObjectWrite (1.42s)
+    --- PASS: TestContentPublicationFinalTransactionChecksHiddenAncestorAfterRealObjectWrite/permitted (0.61s)
+    --- PASS: TestContentPublicationFinalTransactionChecksHiddenAncestorAfterRealObjectWrite/ancestor-process-revoked (0.81s)
+=== RUN   TestContentDirectReadPermissionsAreCurrentAndSeparate
+=== RUN   TestContentDirectReadPermissionsAreCurrentAndSeparate/read
+=== RUN   TestContentDirectReadPermissionsAreCurrentAndSeparate/disclose
+=== RUN   TestContentDirectReadPermissionsAreCurrentAndSeparate/during-read
+=== RUN   TestContentDirectReadPermissionsAreCurrentAndSeparate/during-disclose
+=== RUN   TestContentDirectReadPermissionsAreCurrentAndSeparate/expired
+=== RUN   TestContentDirectReadPermissionsAreCurrentAndSeparate/process-save-control
+--- PASS: TestContentDirectReadPermissionsAreCurrentAndSeparate (4.86s)
+    --- PASS: TestContentDirectReadPermissionsAreCurrentAndSeparate/read (0.75s)
+    --- PASS: TestContentDirectReadPermissionsAreCurrentAndSeparate/disclose (0.67s)
+    --- PASS: TestContentDirectReadPermissionsAreCurrentAndSeparate/during-read (0.84s)
+    --- PASS: TestContentDirectReadPermissionsAreCurrentAndSeparate/during-disclose (0.75s)
+    --- PASS: TestContentDirectReadPermissionsAreCurrentAndSeparate/expired (1.26s)
+    --- PASS: TestContentDirectReadPermissionsAreCurrentAndSeparate/process-save-control (0.59s)
+=== RUN   TestContentDeclaredBytesAndVersionCannotChange
+--- PASS: TestContentDeclaredBytesAndVersionCannotChange (0.36s)
+=== RUN   TestContentPublishedDamageAndMissingNeverRepairOnQuery
+=== RUN   TestContentPublishedDamageAndMissingNeverRepairOnQuery/damage
+=== RUN   TestContentPublishedDamageAndMissingNeverRepairOnQuery/missing
+--- PASS: TestContentPublishedDamageAndMissingNeverRepairOnQuery (1.04s)
+    --- PASS: TestContentPublishedDamageAndMissingNeverRepairOnQuery/damage (0.55s)
+    --- PASS: TestContentPublishedDamageAndMissingNeverRepairOnQuery/missing (0.49s)
+=== RUN   TestContentOldReadersPreserveLosslessFactsAndUnavailable
+--- PASS: TestContentOldReadersPreserveLosslessFactsAndUnavailable (1.24s)
+=== RUN   TestContentFailedStagingStillConsumesExplicitByteLimit
+--- PASS: TestContentFailedStagingStillConsumesExplicitByteLimit (0.44s)
+=== RUN   TestContentNoClobberExistingBytesMustMatchBeforePublication
+=== RUN   TestContentNoClobberExistingBytesMustMatchBeforePublication/alpha
+=== RUN   TestContentNoClobberExistingBytesMustMatchBeforePublication/wrong
+--- PASS: TestContentNoClobberExistingBytesMustMatchBeforePublication (0.49s)
+    --- PASS: TestContentNoClobberExistingBytesMustMatchBeforePublication/alpha (0.25s)
+    --- PASS: TestContentNoClobberExistingBytesMustMatchBeforePublication/wrong (0.23s)
+=== RUN   TestContentCommandReplayAndExactVersionIdentities
+--- PASS: TestContentCommandReplayAndExactVersionIdentities (0.39s)
+=== RUN   TestContentEmptyBytesBinaryAndFiniteRanges
+--- PASS: TestContentEmptyBytesBinaryAndFiniteRanges (0.49s)
+=== RUN   TestContentLaterAdmissionInheritsOriginalAncestorExpiry
+--- PASS: TestContentLaterAdmissionInheritsOriginalAncestorExpiry (2.26s)
+=== RUN   TestContentNaturalSourceAndTargetChecksCurrentRenewalWithoutErasingRevoke
+=== RUN   TestContentNaturalSourceAndTargetChecksCurrentRenewalWithoutErasingRevoke/historical-revoke=false
+=== RUN   TestContentNaturalSourceAndTargetChecksCurrentRenewalWithoutErasingRevoke/historical-revoke=true
+--- PASS: TestContentNaturalSourceAndTargetChecksCurrentRenewalWithoutErasingRevoke (4.64s)
+    --- PASS: TestContentNaturalSourceAndTargetChecksCurrentRenewalWithoutErasingRevoke/historical-revoke=false (2.28s)
+    --- PASS: TestContentNaturalSourceAndTargetChecksCurrentRenewalWithoutErasingRevoke/historical-revoke=true (2.36s)
+=== RUN   TestContentRenewalResidualDoesNotPretendFutureMaintenanceCoverage
+--- PASS: TestContentRenewalResidualDoesNotPretendFutureMaintenanceCoverage (2.21s)
+=== RUN   TestContentSameSubjectIDAliasRetainsOriginalFullSavingBinding
+--- PASS: TestContentSameSubjectIDAliasRetainsOriginalFullSavingBinding (2.30s)
+=== RUN   TestContentMultipleAncestorsKeepIndependentEarlierAdmissionDue
+--- PASS: TestContentMultipleAncestorsKeepIndependentEarlierAdmissionDue (2.30s)
+=== RUN   TestContentLegacyBackfillRestoresOriginalExpiryAndFailedHolderResponsibilities
+--- PASS: TestContentLegacyBackfillRestoresOriginalExpiryAndFailedHolderResponsibilities (0.60s)
+=== RUN   TestContentLegacyPolicyPagesDoNotTruncateAt64OrResetOnReopen
+--- PASS: TestContentLegacyPolicyPagesDoNotTruncateAt64OrResetOnReopen (1.19s)
+=== RUN   TestContentActualExpiredOldWriterArchiveRetainsAncestorResponsibilities
+--- PASS: TestContentActualExpiredOldWriterArchiveRetainsAncestorResponsibilities (1.10s)
+=== RUN   TestContentTrustedManagementSealsUseAndReopensResponsibility
+--- PASS: TestContentTrustedManagementSealsUseAndReopensResponsibility (0.33s)
+=== RUN   TestContentPolicyPropagationAllDescendantPagesRecoverFrozenWatermark
+NATIVE_EXIT status=-15 group_absent=True

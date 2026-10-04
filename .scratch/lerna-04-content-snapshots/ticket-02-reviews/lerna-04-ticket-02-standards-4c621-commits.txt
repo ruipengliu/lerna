@@ -1,0 +1,10 @@
+4c6219f perf(content): sample policy clock after materialized row lock
+6a9aa65 fix(content): preserve admission bounds and combine current source actions
+75202ee test(content): cover natural handoff through both worker consumers
+3f44032 fix(content): hand off original natural checks and retain all SQL close causes
+8d64ad1 fix(content): preserve propagation deadlines and admission expiry obligations
+57ea60c Preserve exact native Content archives and normalize restore EOF
+d3fb9c7 Merge commit '70f69e524592491a5ad37754cf0793ee131acec6' into codex/content-snapshots-ticket-02
+482dc1d Implement current Content source closure and durable policy propagation
+70f69e5 docs(content): adopt current-policy oracle and responsibility decisions
+f54d697 docs: record verified Content checkpoint CI and full finite integration scope

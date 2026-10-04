@@ -1,0 +1,182 @@
+ACTUAL_GROUP normal content_b 33
+=== RUN   TestContentAssociationCannotExtendObservedRetention
+--- PASS: TestContentAssociationCannotExtendObservedRetention (1.12s)
+=== RUN   TestContentAssociationKeepsPreparingCapacityAndFailedHistory
+--- PASS: TestContentAssociationKeepsPreparingCapacityAndFailedHistory (0.66s)
+=== RUN   TestContentLockWaitCannotReuseExpiredAdmissionClock
+--- PASS: TestContentLockWaitCannotReuseExpiredAdmissionClock (0.61s)
+=== RUN   TestContentHiddenAncestorControlsCurrentDerivedUse
+--- PASS: TestContentHiddenAncestorControlsCurrentDerivedUse (0.38s)
+=== RUN   TestContentHiddenAncestorPurposeIntersectionAndOriginalCapSurviveFurtherDerivation
+--- PASS: TestContentHiddenAncestorPurposeIntersectionAndOriginalCapSurviveFurtherDerivation (0.45s)
+=== RUN   TestContentDirectReadPermissionsAreCurrentAndSeparate
+=== RUN   TestContentDirectReadPermissionsAreCurrentAndSeparate/read
+=== RUN   TestContentDirectReadPermissionsAreCurrentAndSeparate/disclose
+=== RUN   TestContentDirectReadPermissionsAreCurrentAndSeparate/during-read
+=== RUN   TestContentDirectReadPermissionsAreCurrentAndSeparate/during-disclose
+=== RUN   TestContentDirectReadPermissionsAreCurrentAndSeparate/expired
+=== RUN   TestContentDirectReadPermissionsAreCurrentAndSeparate/process-save-control
+--- PASS: TestContentDirectReadPermissionsAreCurrentAndSeparate (2.07s)
+    --- PASS: TestContentDirectReadPermissionsAreCurrentAndSeparate/read (0.31s)
+    --- PASS: TestContentDirectReadPermissionsAreCurrentAndSeparate/disclose (0.29s)
+    --- PASS: TestContentDirectReadPermissionsAreCurrentAndSeparate/during-read (0.35s)
+    --- PASS: TestContentDirectReadPermissionsAreCurrentAndSeparate/during-disclose (0.29s)
+    --- PASS: TestContentDirectReadPermissionsAreCurrentAndSeparate/expired (0.55s)
+    --- PASS: TestContentDirectReadPermissionsAreCurrentAndSeparate/process-save-control (0.28s)
+=== RUN   TestContentPublishedDamageAndMissingNeverRepairOnQuery
+=== RUN   TestContentPublishedDamageAndMissingNeverRepairOnQuery/damage
+=== RUN   TestContentPublishedDamageAndMissingNeverRepairOnQuery/missing
+--- PASS: TestContentPublishedDamageAndMissingNeverRepairOnQuery (0.44s)
+    --- PASS: TestContentPublishedDamageAndMissingNeverRepairOnQuery/damage (0.23s)
+    --- PASS: TestContentPublishedDamageAndMissingNeverRepairOnQuery/missing (0.21s)
+=== RUN   TestContentFailedStagingStillConsumesExplicitByteLimit
+--- PASS: TestContentFailedStagingStillConsumesExplicitByteLimit (0.15s)
+=== RUN   TestContentCommandReplayAndExactVersionIdentities
+--- PASS: TestContentCommandReplayAndExactVersionIdentities (0.24s)
+=== RUN   TestContentLaterAdmissionInheritsOriginalAncestorExpiry
+--- PASS: TestContentLaterAdmissionInheritsOriginalAncestorExpiry (2.18s)
+=== RUN   TestContentRenewalResidualDoesNotPretendFutureMaintenanceCoverage
+--- PASS: TestContentRenewalResidualDoesNotPretendFutureMaintenanceCoverage (2.20s)
+=== RUN   TestContentMultipleAncestorsKeepIndependentEarlierAdmissionDue
+--- PASS: TestContentMultipleAncestorsKeepIndependentEarlierAdmissionDue (2.13s)
+=== RUN   TestContentLegacyPolicyPagesDoNotTruncateAt64OrResetOnReopen
+--- PASS: TestContentLegacyPolicyPagesDoNotTruncateAt64OrResetOnReopen (0.69s)
+=== RUN   TestContentTrustedManagementSealsUseAndReopensResponsibility
+--- PASS: TestContentTrustedManagementSealsUseAndReopensResponsibility (0.20s)
+=== RUN   TestContentFiveActionsAreIndependentCurrentQualification
+=== RUN   TestContentFiveActionsAreIndependentCurrentQualification/read
+=== RUN   TestContentFiveActionsAreIndependentCurrentQualification/process
+=== RUN   TestContentFiveActionsAreIndependentCurrentQualification/save
+=== RUN   TestContentFiveActionsAreIndependentCurrentQualification/sync
+=== RUN   TestContentFiveActionsAreIndependentCurrentQualification/disclose
+--- PASS: TestContentFiveActionsAreIndependentCurrentQualification (0.98s)
+    --- PASS: TestContentFiveActionsAreIndependentCurrentQualification/read (0.20s)
+    --- PASS: TestContentFiveActionsAreIndependentCurrentQualification/process (0.18s)
+    --- PASS: TestContentFiveActionsAreIndependentCurrentQualification/save (0.23s)
+    --- PASS: TestContentFiveActionsAreIndependentCurrentQualification/sync (0.18s)
+    --- PASS: TestContentFiveActionsAreIndependentCurrentQualification/disclose (0.18s)
+=== RUN   TestContentPolicyAndCleanupResponsibilityRollbackTogether
+--- PASS: TestContentPolicyAndCleanupResponsibilityRollbackTogether (0.15s)
+=== RUN   TestContentAcceptedRequestCapHasOriginalExpiryMaintenance
+--- PASS: TestContentAcceptedRequestCapHasOriginalExpiryMaintenance (2.14s)
+=== RUN   TestContentExpiredMaintenanceBudgetRetainsKnownHolderWithoutClaimingComplete
+--- PASS: TestContentExpiredMaintenanceBudgetRetainsKnownHolderWithoutClaimingComplete (2.14s)
+=== RUN   TestContentClosureActionIntersectionKeepsIndependentFlags
+=== RUN   TestContentClosureActionIntersectionKeepsIndependentFlags/none
+=== RUN   TestContentClosureActionIntersectionKeepsIndependentFlags/read
+=== RUN   TestContentClosureActionIntersectionKeepsIndependentFlags/process
+=== RUN   TestContentClosureActionIntersectionKeepsIndependentFlags/save
+=== RUN   TestContentClosureActionIntersectionKeepsIndependentFlags/disclose
+=== RUN   TestContentClosureActionIntersectionKeepsIndependentFlags/sync
+--- PASS: TestContentClosureActionIntersectionKeepsIndependentFlags (2.66s)
+    --- PASS: TestContentClosureActionIntersectionKeepsIndependentFlags/none (0.33s)
+    --- PASS: TestContentClosureActionIntersectionKeepsIndependentFlags/read (0.34s)
+    --- PASS: TestContentClosureActionIntersectionKeepsIndependentFlags/process (0.40s)
+    --- PASS: TestContentClosureActionIntersectionKeepsIndependentFlags/save (0.32s)
+    --- PASS: TestContentClosureActionIntersectionKeepsIndependentFlags/disclose (0.63s)
+    --- PASS: TestContentClosureActionIntersectionKeepsIndependentFlags/sync (0.63s)
+=== RUN   TestContentClosurePolicyIntersectionUsesClockAfterRealPolicyLock
+=== RUN   TestContentClosurePolicyIntersectionUsesClockAfterRealPolicyLock/late=false
+=== RUN   TestContentClosurePolicyIntersectionUsesClockAfterRealPolicyLock/late=true
+--- PASS: TestContentClosurePolicyIntersectionUsesClockAfterRealPolicyLock (1.00s)
+    --- PASS: TestContentClosurePolicyIntersectionUsesClockAfterRealPolicyLock/late=false (0.22s)
+    --- PASS: TestContentClosurePolicyIntersectionUsesClockAfterRealPolicyLock/late=true (0.78s)
+=== RUN   TestContentExplicitPolicyAndTrustedPrincipalFailClosed
+--- PASS: TestContentExplicitPolicyAndTrustedPrincipalFailClosed (0.19s)
+=== RUN   TestContentPostScheduleAdmissionRollsBackLateVersion
+=== RUN   TestContentPostScheduleAdmissionRollsBackLateVersion/accept_before/late=false
+=== RUN   TestContentPostScheduleAdmissionRollsBackLateVersion/accept_before/late=true
+=== RUN   TestContentPostScheduleAdmissionRollsBackLateVersion/target_policy/late=false
+=== RUN   TestContentPostScheduleAdmissionRollsBackLateVersion/target_policy/late=true
+=== RUN   TestContentPostScheduleAdmissionRollsBackLateVersion/ancestor_policy/late=false
+=== RUN   TestContentPostScheduleAdmissionRollsBackLateVersion/ancestor_policy/late=true
+=== RUN   TestContentPostScheduleAdmissionRollsBackLateVersion/retention/late=false
+=== RUN   TestContentPostScheduleAdmissionRollsBackLateVersion/retention/late=true
+--- PASS: TestContentPostScheduleAdmissionRollsBackLateVersion (4.48s)
+    --- PASS: TestContentPostScheduleAdmissionRollsBackLateVersion/accept_before/late=false (0.12s)
+    --- PASS: TestContentPostScheduleAdmissionRollsBackLateVersion/accept_before/late=true (0.94s)
+    --- PASS: TestContentPostScheduleAdmissionRollsBackLateVersion/target_policy/late=false (0.14s)
+    --- PASS: TestContentPostScheduleAdmissionRollsBackLateVersion/target_policy/late=true (0.93s)
+    --- PASS: TestContentPostScheduleAdmissionRollsBackLateVersion/ancestor_policy/late=false (0.25s)
+    --- PASS: TestContentPostScheduleAdmissionRollsBackLateVersion/ancestor_policy/late=true (1.00s)
+    --- PASS: TestContentPostScheduleAdmissionRollsBackLateVersion/retention/late=false (0.17s)
+    --- PASS: TestContentPostScheduleAdmissionRollsBackLateVersion/retention/late=true (0.93s)
+=== RUN   TestContentPostScheduleAliasPreservesOriginalCapOnRollback
+=== RUN   TestContentPostScheduleAliasPreservesOriginalCapOnRollback/late=false
+=== RUN   TestContentPostScheduleAliasPreservesOriginalCapOnRollback/late=true
+--- PASS: TestContentPostScheduleAliasPreservesOriginalCapOnRollback (3.41s)
+    --- PASS: TestContentPostScheduleAliasPreservesOriginalCapOnRollback/late=false (1.68s)
+    --- PASS: TestContentPostScheduleAliasPreservesOriginalCapOnRollback/late=true (1.73s)
+=== RUN   TestContentCommitUnknownKeepsAcceptedAndLateRejectedTruth
+=== RUN   TestContentCommitUnknownKeepsAcceptedAndLateRejectedTruth/late_rejection=false
+=== RUN   TestContentCommitUnknownKeepsAcceptedAndLateRejectedTruth/late_rejection=true
+--- PASS: TestContentCommitUnknownKeepsAcceptedAndLateRejectedTruth (0.84s)
+    --- PASS: TestContentCommitUnknownKeepsAcceptedAndLateRejectedTruth/late_rejection=false (0.22s)
+    --- PASS: TestContentCommitUnknownKeepsAcceptedAndLateRejectedTruth/late_rejection=true (0.62s)
+=== RUN   TestContentProcessingDeadlineAfterNativeDescendantLock
+=== RUN   TestContentProcessingDeadlineAfterNativeDescendantLock/manager/blocked=false
+=== RUN   TestContentProcessingDeadlineAfterNativeDescendantLock/manager/blocked=true
+=== RUN   TestContentProcessingDeadlineAfterNativeDescendantLock/service/blocked=false
+=== RUN   TestContentProcessingDeadlineAfterNativeDescendantLock/service/blocked=true
+--- PASS: TestContentProcessingDeadlineAfterNativeDescendantLock (2.78s)
+    --- PASS: TestContentProcessingDeadlineAfterNativeDescendantLock/manager/blocked=false (0.39s)
+    --- PASS: TestContentProcessingDeadlineAfterNativeDescendantLock/manager/blocked=true (1.00s)
+    --- PASS: TestContentProcessingDeadlineAfterNativeDescendantLock/service/blocked=false (0.39s)
+    --- PASS: TestContentProcessingDeadlineAfterNativeDescendantLock/service/blocked=true (0.99s)
+=== RUN   TestContentHistoricalTighteningClassifiesNewCapAtCurrentTime
+=== RUN   TestContentHistoricalTighteningClassifiesNewCapAtCurrentTime/late=false
+=== RUN   TestContentHistoricalTighteningClassifiesNewCapAtCurrentTime/late=true
+--- PASS: TestContentHistoricalTighteningClassifiesNewCapAtCurrentTime (1.30s)
+    --- PASS: TestContentHistoricalTighteningClassifiesNewCapAtCurrentTime/late=false (0.47s)
+    --- PASS: TestContentHistoricalTighteningClassifiesNewCapAtCurrentTime/late=true (0.83s)
+=== RUN   TestContentCorrectBytesDurablyAccepted
+--- PASS: TestContentCorrectBytesDurablyAccepted (0.22s)
+=== RUN   TestContentReadPolicyWaitRespectsAdmissionForEveryObservation
+=== RUN   TestContentReadPolicyWaitRespectsAdmissionForEveryObservation/not_found
+=== RUN   TestContentReadPolicyWaitRespectsAdmissionForEveryObservation/preparing
+=== RUN   TestContentReadPolicyWaitRespectsAdmissionForEveryObservation/failed
+=== RUN   TestContentReadPolicyWaitRespectsAdmissionForEveryObservation/published
+=== RUN   TestContentReadPolicyWaitRespectsAdmissionForEveryObservation/mismatched
+--- PASS: TestContentReadPolicyWaitRespectsAdmissionForEveryObservation (3.12s)
+    --- PASS: TestContentReadPolicyWaitRespectsAdmissionForEveryObservation/not_found (0.58s)
+    --- PASS: TestContentReadPolicyWaitRespectsAdmissionForEveryObservation/preparing (0.64s)
+    --- PASS: TestContentReadPolicyWaitRespectsAdmissionForEveryObservation/failed (0.63s)
+    --- PASS: TestContentReadPolicyWaitRespectsAdmissionForEveryObservation/published (0.65s)
+    --- PASS: TestContentReadPolicyWaitRespectsAdmissionForEveryObservation/mismatched (0.61s)
+=== RUN   TestContentCommandWaitRechecksReaderAndAdmission
+=== RUN   TestContentCommandWaitRechecksReaderAndAdmission/reader-envelope
+=== RUN   TestContentCommandWaitRechecksReaderAndAdmission/version-envelope
+=== RUN   TestContentCommandWaitRechecksReaderAndAdmission/version-reader-expiry
+=== RUN   TestContentCommandWaitRechecksReaderAndAdmission/reader-absent
+--- PASS: TestContentCommandWaitRechecksReaderAndAdmission (2.49s)
+    --- PASS: TestContentCommandWaitRechecksReaderAndAdmission/reader-envelope (0.60s)
+    --- PASS: TestContentCommandWaitRechecksReaderAndAdmission/version-envelope (0.61s)
+    --- PASS: TestContentCommandWaitRechecksReaderAndAdmission/version-reader-expiry (0.61s)
+    --- PASS: TestContentCommandWaitRechecksReaderAndAdmission/reader-absent (0.67s)
+=== RUN   TestContentReturnedBytesRequireCurrentReadAndDisclose
+=== RUN   TestContentReturnedBytesRequireCurrentReadAndDisclose/read
+=== RUN   TestContentReturnedBytesRequireCurrentReadAndDisclose/disclose
+--- PASS: TestContentReturnedBytesRequireCurrentReadAndDisclose (0.50s)
+    --- PASS: TestContentReturnedBytesRequireCurrentReadAndDisclose/read (0.21s)
+    --- PASS: TestContentReturnedBytesRequireCurrentReadAndDisclose/disclose (0.29s)
+=== RUN   TestContentTemporaryFailureKeepsNarrowedRetentionAfterReopen
+--- PASS: TestContentTemporaryFailureKeepsNarrowedRetentionAfterReopen (1.11s)
+=== RUN   TestContentTargetReadPoliciesBindExactPublishedDeclaration
+=== RUN   TestContentTargetReadPoliciesBindExactPublishedDeclaration/hash/before-read
+=== RUN   TestContentTargetReadPoliciesBindExactPublishedDeclaration/hash/after-native-read
+=== RUN   TestContentTargetReadPoliciesBindExactPublishedDeclaration/media/before-read
+=== RUN   TestContentTargetReadPoliciesBindExactPublishedDeclaration/media/after-native-read
+=== RUN   TestContentTargetReadPoliciesBindExactPublishedDeclaration/length/before-read
+=== RUN   TestContentTargetReadPoliciesBindExactPublishedDeclaration/length/after-native-read
+--- PASS: TestContentTargetReadPoliciesBindExactPublishedDeclaration (1.08s)
+    --- PASS: TestContentTargetReadPoliciesBindExactPublishedDeclaration/hash/before-read (0.23s)
+    --- PASS: TestContentTargetReadPoliciesBindExactPublishedDeclaration/hash/after-native-read (0.19s)
+    --- PASS: TestContentTargetReadPoliciesBindExactPublishedDeclaration/media/before-read (0.18s)
+    --- PASS: TestContentTargetReadPoliciesBindExactPublishedDeclaration/media/after-native-read (0.15s)
+    --- PASS: TestContentTargetReadPoliciesBindExactPublishedDeclaration/length/before-read (0.17s)
+    --- PASS: TestContentTargetReadPoliciesBindExactPublishedDeclaration/length/after-native-read (0.16s)
+=== RUN   TestContentReferenceRetainsExactVersionAndLength
+--- PASS: TestContentReferenceRetainsExactVersionAndLength (0.01s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/component	44.140s
+NATIVE_EXIT status=0 group_absent=True

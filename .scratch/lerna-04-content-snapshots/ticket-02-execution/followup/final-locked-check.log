@@ -1,0 +1,269 @@
+node scripts/check-go-format.mjs
+pnpm exec prettier --check scripts/*.mjs sdk/typescript/src/**/*.ts sdk/typescript/src/*.ts sdk/typescript/*.json contract/schema/**/*.json internal/**/*.json conformance/fixtures/**/*.json package.json pnpm-workspace.yaml .prettierrc.json .github/workflows/*.yaml
+Checking formatting...
+All matched files use Prettier code style!
+go vet ./...
+pnpm lint
+$ pnpm --filter @lerna/contract typecheck
+$ tsc --noEmit
+pnpm check:generated
+$ node scripts/generate.mjs --check
+make test test-contract build
+make[1]: Entering directory '/tmp/lerna-worktrees/content-snapshots-02'
+node --test scripts/conformance-ownership.test.mjs scripts/contract-runner.test.mjs scripts/bounded-build.test.mjs scripts/component-integration-race.test.mjs
+✔ a successful finite build confirms its owned process group exited (71.67208ms)
+✔ a timed command preserves failure while confirming finite child termination (114.282477ms)
+✔ nonzero tool failure remains an aggregate cause and deadline is mandatory (56.761534ms)
+✔ deadline kills a descendant that holds inherited pipes before waiting for close (1145.066735ms)
+✔ native Go discovery failure preserves its exit status (89.86958ms)
+✔ positive partition includes future tests, Unicode, Examples and Fuzz seeds (268.835435ms)
+✔ absent durable group never becomes an empty selector that runs all tests (114.903468ms)
+✔ duplicate, empty and ambiguous inventories fail closed (193.258186ms)
+✔ a native race-group failure remains a failure (122.042797ms)
+✔ normal entry uses the same complete positive partition without race (284.334179ms)
+✔ Content partitions remain finite and include every discovered case once (137.494958ms)
+✔ normal exact scope and native exit clean up; primary failure survives confirmed cleanup (127.648533ms)
+✔ primary plus native Close diagnostic remain inspectable and ACK unknown is sticky (62.677254ms)
+✔ failed write ACK cannot be washed away by a real later child exit (22.368377ms)
+✔ failed fsync ACK cannot be washed away by a real later child exit (18.783714ms)
+✔ failed parentSync ACK cannot be washed away by a real later child exit (24.309814ms)
+✔ one missing original exit observation is not replaced by a different confirmed entity (98.716601ms)
+✔ changed exact identity prevents deletion and preserves primary (60.447673ms)
+✔ initialization failure identifies and retains original scope and both action/Close causes (4.097139ms)
+✔ physical deletion plus failed external removed ACK reports deletion truth and original failure (54.756374ms)
+✔ physical removal failure aggregates original operation and keeps exact scope (60.560033ms)
+✔ one runner continues after a classified refusal and repeats exact bytes (57.633949ms)
+✔ actual typed Go and TS runners retain exact values after a public refusal (1870.615617ms)
+✔ infrastructure timeout fails finitely and cannot pass as a negative fixture (205.857698ms)
+✔ infrastructure crash fails finitely and cannot pass as a negative fixture (38.701818ms)
+✔ infrastructure wrong id fails finitely and cannot pass as a negative fixture (55.787996ms)
+✔ infrastructure illegal frame fails finitely and cannot pass as a negative fixture (38.578149ms)
+✔ infrastructure BOM stdout fails finitely and cannot pass as a negative fixture (39.98826ms)
+✔ infrastructure wrong shape fails finitely and cannot pass as a negative fixture (37.529809ms)
+✔ infrastructure polluted stdout fails finitely and cannot pass as a negative fixture (36.473767ms)
+✔ infrastructure bad base64 fails finitely and cannot pass as a negative fixture (40.718146ms)
+✔ infrastructure oversized stdout fails finitely and cannot pass as a negative fixture (596.146578ms)
+✔ infrastructure oversized stderr fails finitely and cannot pass as a negative fixture (41.191839ms)
+✔ cancellation observes the rejection and reaps the child (4.914064ms)
+✔ only one request is in flight and assertion failure still closes the process (45.237657ms)
+✔ stdin shutdown has a finite fallback for an uncooperative child (541.001588ms)
+✔ oversized input is an infrastructure failure without sending a truncated wire (13.815453ms)
+ℹ tests 37
+ℹ suites 0
+ℹ pass 37
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4354.078655
+node scripts/test-generator.mjs
+13 generation refusal probes passed.
+8 schema generation golden/change scenarios passed.
+1.1.0: 6 generation refusals, 4 reachable digest changes, independent goldens, explicit advertisement and frozen 1.0 outputs passed.
+go test ./...
+?   	github.com/ruipengliu/lerna/adapters/objectstore/local	[no test files]
+?   	github.com/ruipengliu/lerna/adapters/postgres	[no test files]
+ok  	github.com/ruipengliu/lerna/adapters/postgres/content	0.039s
+?   	github.com/ruipengliu/lerna/adapters/postgres/decision_engine	[no test files]
+ok  	github.com/ruipengliu/lerna/adapters/postgres/internal/pgstore	0.071s
+ok  	github.com/ruipengliu/lerna/adapters/sqlite	0.071s
+?   	github.com/ruipengliu/lerna/cmd/durable-work-fixture	[no test files]
+?   	github.com/ruipengliu/lerna/cmd/sqlite-durable-work-fixture	[no test files]
+?   	github.com/ruipengliu/lerna/components/decision_engine	[no test files]
+ok  	github.com/ruipengliu/lerna/conformance/component	2.645s
+?   	github.com/ruipengliu/lerna/conformance/component/valuerunner	[no test files]
+?   	github.com/ruipengliu/lerna/conformance/component/valuerunner_v1_1	[no test files]
+?   	github.com/ruipengliu/lerna/conformance/component/valuerunner_v1_2	[no test files]
+?   	github.com/ruipengliu/lerna/conformance/internal/contentfixture	[no test files]
+ok  	github.com/ruipengliu/lerna/conformance/internal/decisionfixture	0.097s
+ok  	github.com/ruipengliu/lerna/conformance/internal/testkit/process	0.059s
+ok  	github.com/ruipengliu/lerna/conformance/internal/testkit/target	2.084s
+?   	github.com/ruipengliu/lerna/contract	[no test files]
+?   	github.com/ruipengliu/lerna/contract/gen/go	[no test files]
+?   	github.com/ruipengliu/lerna/contract/gen/go/v1_1	[no test files]
+?   	github.com/ruipengliu/lerna/contract/gen/go/v1_2	[no test files]
+?   	github.com/ruipengliu/lerna/contract/v1_1	[no test files]
+ok  	github.com/ruipengliu/lerna/contract/v1_2	0.175s
+ok  	github.com/ruipengliu/lerna/domain/content	0.031s
+?   	github.com/ruipengliu/lerna/host/durablework	[no test files]
+ok  	github.com/ruipengliu/lerna/internal/durableworkdemo	0.072s
+?   	github.com/ruipengliu/lerna/internal/sqlclosetest	[no test files]
+?   	github.com/ruipengliu/lerna/runtime	[no test files]
+ok  	github.com/ruipengliu/lerna/runtime/workpool	0.007s
+pnpm test
+$ pnpm --filter @lerna/contract test
+$ node --experimental-strip-types --test src/*.test.ts src/v1_1/*.test.ts src/v1_2/*.test.ts
+✔ compact body at 1 MiB retains Unicode through Go and TS in both directions (1729.908717ms)
+✔ public command errors use a closed code instead of string matching (6.14126ms)
+✔ common envelope retains a future method without offering execution (13.575475ms)
+✔ common envelope rejects undeclared fields before interpreting a payload (0.579608ms)
+✔ SDK checks original identity and method-specific read preconditions (14.263297ms)
+✔ programmable payloads cannot be silently repaired by JSON.stringify (0.655774ms)
+✔ public error projection excludes local cause and Error metadata (1.030598ms)
+✔ SDK accepts and classifies the common command conformance corpus (79.407142ms)
+✔ machine tokens and UTC strings cannot include a trailing line terminator (2.135546ms)
+✔ Application digest matches the independently hashed UTF-8 literal (138.264269ms)
+✔ digest fixture success never registers its future method for execution (1.421487ms)
+✔ negotiation advertises only the exact completed command.get contract (12.568443ms)
+✔ negotiation consumes the same exact-version refusal fixtures (14.319872ms)
+✔ negotiation then trusted query preserves fixed receipt and current progress (78.75848ms)
+✔ embedded input and output schemas independently match published digest goldens (15.522642ms)
+✔ designed business methods never enter the authenticated query path (2.489046ms)
+✔ authenticated query has opaque denials paired with allowed controls (94.83779ms)
+✔ authenticated query snapshots mutable wire and host binding across callbacks (4.745701ms)
+✔ authenticated command.get consumes common isolation fixtures (30.673823ms)
+✔ fixed owner permits process replacement and remains read-only after default changes (3.213178ms)
+✔ read cutoff gates start, cancellation and finite resource bounds cover every provider (3.790556ms)
+✔ host read timer bounds an uncooperative asynchronous provider and observes late rejection (2.672972ms)
+✔ fact seam keeps receipt fixed across current task outcomes and remains read-only (63.792364ms)
+✔ fact seam separates absence, retention, faults and untrusted bindings (5.334204ms)
+✔ returned observation cannot mutate facts retained by an injected reader (0.733213ms)
+✔ reader cannot rewrite the original reference by mutating its input (0.687691ms)
+✔ shared closed responses and exact bindings (73.477134ms)
+✔ bound result encoding and decoding reject another original command (2.621262ms)
+✔ published schema cannot broaden the contract before its first validation (25.389055ms)
+✔ fixed input has independent command and decision digest goldens (42.816516ms)
+✔ complete declared digests and schemas remain isolated (2.063599ms)
+✔ cancelled before Input has exact zero observations from shared bytes (64.362503ms)
+✔ all four completed methods negotiate their exact profile and both goldens (27.553582ms)
+✔ completed negotiation refuses inexact version, profile, either digest and absent methods (8.795686ms)
+✔ 1.1 authenticated command.get reads exact new receipts and rejects common isolation failures (82.902405ms)
+✔ canonical body bound keeps exact input_over_limit classification (65.43454ms)
+✔ version1.2 declares only Content and Command and does not advertise a partial profile (1.420744ms)
+✔ independent canonical digest golden preserves trace and binds purpose (19.573506ms)
+✔ response binds original full ref and exact same-size range (23.263037ms)
+✔ SDK retains an exact revision beyond JS safe integer range (2.892772ms)
+✔ raw boundary preserves valid Unicode, rejects duplicate names and invalid UTF-8 (1.167062ms)
+✔ SDK passes common schema acceptance and exact-value fixtures (59.448815ms)
+✔ SDK encoding rejects isolated surrogate rather than replacing it (0.307844ms)
+✔ raw wire accepts exact bounds and rejects byte and nesting overflow (25.58275ms)
+ℹ tests 44
+ℹ suites 0
+ℹ pass 44
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2371.970396
+node scripts/test-contract.mjs
+ok  	github.com/ruipengliu/lerna/conformance/component	0.147s
+✔ Application digest matches the independently hashed UTF-8 literal (110.117535ms)
+✔ digest fixture success never registers its future method for execution (0.822641ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 382.228952
+ok  	github.com/ruipengliu/lerna/conformance/component	0.184s
+✔ authenticated query has opaque denials paired with allowed controls (49.229407ms)
+✔ authenticated query snapshots mutable wire and host binding across callbacks (1.525085ms)
+✔ authenticated command.get consumes common isolation fixtures (25.804273ms)
+✔ fixed owner permits process replacement and remains read-only after default changes (2.829456ms)
+✔ read cutoff gates start, cancellation and finite resource bounds cover every provider (4.409098ms)
+✔ host read timer bounds an uncooperative asynchronous provider and observes late rejection (1.990547ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 467.083373
+ok  	github.com/ruipengliu/lerna/conformance/component	0.061s
+✔ negotiation advertises only the exact completed command.get contract (5.304012ms)
+✔ negotiation consumes the same exact-version refusal fixtures (13.666956ms)
+✔ negotiation then trusted query preserves fixed receipt and current progress (52.160584ms)
+✔ embedded input and output schemas independently match published digest goldens (3.978391ms)
+✔ designed business methods never enter the authenticated query path (1.700671ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 331.390934
+ok  	github.com/ruipengliu/lerna/conformance/component	0.104s
+✔ fixed input has independent command and decision digest goldens (46.145877ms)
+✔ complete declared digests and schemas remain isolated (2.883376ms)
+✔ cancelled before Input has exact zero observations from shared bytes (75.085346ms)
+✔ 1.1 authenticated command.get reads exact new receipts and rejects common isolation failures (84.190643ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 413.65142
+89 shared fixtures (forward order) passed; all positive values completed real Go→TS and TS→Go roundtrips.
+158 shared fixtures (forward order) passed; all positive values completed real Go→TS and TS→Go roundtrips.
+node scripts/test-contract.mjs --reverse
+ok  	github.com/ruipengliu/lerna/conformance/component	(cached)
+✔ Application digest matches the independently hashed UTF-8 literal (88.820599ms)
+✔ digest fixture success never registers its future method for execution (0.664486ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 323.188415
+ok  	github.com/ruipengliu/lerna/conformance/component	(cached)
+✔ authenticated query has opaque denials paired with allowed controls (60.485167ms)
+✔ authenticated query snapshots mutable wire and host binding across callbacks (1.708645ms)
+✔ authenticated command.get consumes common isolation fixtures (20.462671ms)
+✔ fixed owner permits process replacement and remains read-only after default changes (5.130185ms)
+✔ read cutoff gates start, cancellation and finite resource bounds cover every provider (9.697419ms)
+✔ host read timer bounds an uncooperative asynchronous provider and observes late rejection (4.111529ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 356.067287
+ok  	github.com/ruipengliu/lerna/conformance/component	(cached)
+✔ negotiation advertises only the exact completed command.get contract (5.271126ms)
+✔ negotiation consumes the same exact-version refusal fixtures (10.506556ms)
+✔ negotiation then trusted query preserves fixed receipt and current progress (43.073221ms)
+✔ embedded input and output schemas independently match published digest goldens (2.891255ms)
+✔ designed business methods never enter the authenticated query path (1.08998ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 277.935736
+ok  	github.com/ruipengliu/lerna/conformance/component	0.095s
+✔ fixed input has independent command and decision digest goldens (55.159399ms)
+✔ complete declared digests and schemas remain isolated (3.50358ms)
+✔ cancelled before Input has exact zero observations from shared bytes (66.971755ms)
+✔ 1.1 authenticated command.get reads exact new receipts and rejects common isolation failures (84.468276ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 502.898627
+89 shared fixtures (reverse order) passed; all positive values completed real Go→TS and TS→Go roundtrips.
+158 shared fixtures (reverse order) passed; all positive values completed real Go→TS and TS→Go roundtrips.
+node scripts/test-contract-1_2.mjs
+101 exact 1.2 shared fixtures forward: real Go↔TS canonical roundtrips
+node scripts/test-contract-1_2.mjs --reverse
+101 exact 1.2 shared fixtures reverse: real Go↔TS canonical roundtrips
+go build ./...
+pnpm build
+$ pnpm --filter @lerna/contract build
+$ tsc
+make[1]: Leaving directory '/tmp/lerna-worktrees/content-snapshots-02'
+NATIVE_EXIT status=0 group_absent=True

@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lerna Content 02 · 4c621 source supplement</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script type="module">import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';mermaid.initialize({startOnLoad:true,theme:'neutral',securityLevel:'strict'});</script>
+<style>
+body{margin:0;background:#f7f6f2;color:#203039;font-family:system-ui,sans-serif}main{max-width:960px;margin:auto;padding:42px 24px}header{border-bottom:2px solid #304d4a;padding-bottom:24px}h1{font-size:34px;line-height:1.2}h2{font-size:23px}p,li{line-height:1.7}.mono,pre{font-family:ui-monospace,monospace;font-size:12px;overflow-wrap:anywhere}.card{background:white;border:1px solid #d3dcda;border-radius:12px;padding:24px;margin:24px 0}.badge{display:inline-block;background:#dceddf;color:#18583a;padding:5px 10px;border-radius:16px;font-size:12px}.keep{background:#f8eacc;color:#735510}.pair{display:grid;grid-template-columns:1fr 1fr;gap:20px}.lane{padding:16px;background:#f1f4f1;border-radius:8px}.box{border:1px solid #98aaa6;padding:14px;background:white;margin:10px 0;border-radius:5px}.deep{border:3px solid #306257;background:#ecf6ee}.arrow{text-align:center}.pending{border-left:4px solid #ad7f2f;padding:12px 16px;background:#fff0d5}.small{font-size:13px;color:#576b70}a{color:#236052}.mermaid{white-space:pre-wrap;padding:15px;background:#f1f4f1}table{border-collapse:collapse;width:100%;font-size:14px}td,th{text-align:left;border-bottom:1px solid #dae0dc;padding:10px;vertical-align:top}@media(max-width:650px){.pair{grid-template-columns:1fr}h1{font-size:28px}}
+</style></head><body class="bg-stone-50 text-slate-900"><main>
+<header><div class="small">Lerna · 04票02 · Architecture supplement · 2026-10-04 18:09 UTC</div>
+<h1>锁后时钟留在 PG adapter 内</h1>
+<p><strong>0项新增必要重构。</strong> 三项实现差量；原完整64/65＋Get race54.75s通过，最终七AC与全套退出仍待完成。</p>
+<div class="mono">SOURCE 4c6219fb420cdd63ea67f6db4c0106779ea9ccfa<br>PRIOR 6a9aa658c912be5c8fed022ceda2511212d19a70<br>BASE f05b2f1068958ba6b63e6c1dc58d6cd1684446cc</div>
+<p class="small">实线框＝module；粗绿框＝deep implementation。全部静态文字和方框无需CDN；没有图形执行模拟。</p></header>
+
+<article class="card"><span class="badge">Strong · source closed</span><h2>一处锁行 / 时间 implementation</h2>
+<p class="mono">adapters/postgres/content/policy.go:44–54</p>
+<div class="pair"><div class="lane"><h3>Before · 6a9</h3><div class="box">SELECT body … FOR SHARE</div><div class="arrow">↓ 第二往返</div><div class="box">SELECT clock_timestamp()</div><div class="arrow">↓</div><div class="box">同主体 / 用途 / 动作交集</div></div>
+<div class="lane"><h3>After · 4c621</h3><div class="box deep">MATERIALIZED CTE取得锁定行</div><div class="arrow">↓ 行依赖</div><div class="box deep">外层clock_timestamp · 同结果Scan</div><div class="arrow">↓</div><div class="box">原完整政策核验与域最终门</div></div></div>
+<p><strong>Problem：</strong>同一政策检查内存在第二次可信时间往返。</p>
+<p><strong>Solution：</strong>保留锁后资格时刻，在当前PG adapter内部合并结果；domain interface不变。</p>
+<ul><li>locality：PG锁定知识一处。</li><li>leverage：所有实际政策消费者复用。</li><li>depth：调用方不必知道CTE。</li></ul>
+<p class="small">Deletion test：新时钟框架只会分散行依赖；删除现seam会推PG知识进domain。未改原期限、flags、fullRef、F1或管理锁。</p></article>
+
+<article class="card"><span class="badge keep">Worth exploring · KEEP</span><h2>直接 interface 观察，不让后续时钟掩盖错误</h2>
+<p class="mono">content_policy_actions_test.go:285 · contentfixture/policy_lock.go:153</p>
+<div class="pair"><div class="lane"><h3>此前覆盖</h3><div class="box">public Put等待政策锁</div><div class="arrow">↓</div><div class="box">domain后续clock可拒绝早采样</div></div><div class="lane"><h3>本次补充</h3><div class="box deep">真实锁等待 → 直接CheckPolicy结果</div><div class="arrow">↓</div><div class="box">截止前准确policy；截止后nil</div><div class="box">EXPLAIN计划补充，条件参数不输出</div></div></div>
+<p><strong>Solution：</strong>实际消费interface同时承载测试；原public用例继续保留。</p>
+<ul><li>interface is the test surface。</li><li>机械计划不作私表业务oracle。</li><li>World原有sticky Close与scope负责收尾。</li></ul>
+<p class="small">EXPLAIN无ANALYZE，不读取政策正文。扫描/Rows.Err/Close聚合；未声称注入nativeClose故障。当前两个SQL文本准确一致，不为此新增query-builder module。</p>
+<details><summary>Mermaid增强图及可读原文</summary><pre class="mermaid">flowchart LR
+  A[实际政策行锁] --> B[LockRows取得行]
+  B --> C[MATERIALIZED CTE]
+  C --> D[外层 volatile clock]
+  D --> E[同一次 Scan body now]
+  E --> F[原政策交集与域最终门]</pre></details></article>
+
+<section class="card"><h2>准确承接与执行资格</h2><table><tbody>
+<tr><th>固定差量</th><td>3 paths，129增7删；全部100644 blob。完整base范围10 commits / 54 paths / 8548增218删。</td></tr>
+<tr><th>承接</th><td>base范围51项与全tree909项mode/type/blob不变；domain、0001/0002、原三组archive精确承接6a9。</td></tr>
+<tr><th>root核定证据</th><td>focused7.218s成功；早钟机械fault1.069s失败；PG18计划外层clock/子LockRows；完整原60秒race54.75s成功，native0/group absent。</td></tr>
+<tr><th>证据界限</th><td>本代理未运行。fault输入为失败后捕获，不写成编译前冻结；不补全未提供binary SHA。</td></tr>
+<tr><th>历史</th><td>6a9完整race60.08s失败仍保留；旧8d64 F1及3f44/752修复历史不倒写。</td></tr>
+</tbody></table>
+<div class="pending"><strong>仍pending：</strong>最终全normal/race/check/audit/CI、delivery与七AC接受；whole04未退出。170项inventory不等于全部通过。未来tool-only五组CI不属于4c621。</div></section>
+
+<section class="card deep"><h2>Top recommendation</h2><p>接受这一处adapter实现的源码架构资格，保持现module/interface；继续原最终验证，不新增框架或ADR。</p><p><a href="/tmp/lerna-04-ticket-02-architecture-4c621.md">本次完整补记</a> · <a href="/tmp/architecture-review-20261004T175605Z-content02-6a9.html">6a9原架构图与历史</a></p></section>
+<footer class="small">只读固定源码；Tailwind/Mermaid CDN仅增强。实际xdg-open exit3，无可用打开方式；headless未浏览/CDN未验证，未下载依赖或安装浏览器。inline CSS及静态方框可离线阅读。</footer>
+</main></body></html>

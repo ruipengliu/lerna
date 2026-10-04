@@ -1,0 +1,4 @@
+ok  	github.com/ruipengliu/lerna/conformance/component	2.667s
+ok  	github.com/ruipengliu/lerna/conformance/internal/contentfixture	0.028s
+ok  	github.com/ruipengliu/lerna/adapters/objectstore/local	0.065s
+NATIVE_EXIT status=0 group_absent=True

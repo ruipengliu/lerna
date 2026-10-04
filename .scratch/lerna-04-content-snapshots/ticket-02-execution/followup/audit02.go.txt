@@ -1,0 +1,48 @@
+package main
+
+import (
+ "bufio"
+ "context"
+ "database/sql"
+ "encoding/json"
+ "fmt"
+ "os"
+ "path/filepath"
+ "sort"
+ "strconv"
+ "strings"
+ "syscall"
+ "time"
+ _ "github.com/jackc/pgx/v5/stdlib"
+)
+func must(err error){if err!=nil{panic("exact owned resource audit failed; credentials withheld")}}
+func main(){
+ ctx,cancel:=context.WithTimeout(context.Background(),10*time.Second);defer cancel()
+ roots:=[]string{"/workspace/lerna-content-02-f05b2f1068958","/workspace/lerna-content-02-fix-57ea60c628f8"}
+ unqualified:=map[string]bool{};pids:=map[int]bool{};groups:=map[int]bool{};schemas:=map[string]bool{};holders:=map[int]bool{};scopes:=map[string][2]uint64{}
+ for _,root:=range roots{
+  var ack struct{Device uint64 `json:"device"`;Inode uint64 `json:"inode"`};raw,err:=os.ReadFile(filepath.Join(root,"root-ack.json"));must(err);must(json.Unmarshal(raw,&ack));info,err:=os.Lstat(root);must(err);stat:=info.Sys().(*syscall.Stat_t);if uint64(stat.Dev)!=ack.Device||stat.Ino!=ack.Inode{panic("owned overlay ACK identity changed")}
+  f,err:=os.Open(filepath.Join(root,"owned-scopes.log"));must(err);scan:=bufio.NewScanner(f)
+  for scan.Scan(){parts:=strings.Fields(scan.Text());if len(parts)==0{continue};switch parts[0]{
+  case "process_group":if len(parts)>=3{group,err:=strconv.Atoi(parts[2]);must(err);groups[group]=true;pid,err:=strconv.Atoi(parts[1]);must(err);pids[pid]=true}
+  case "producer":if len(parts)>=3{pid,err:=strconv.Atoi(parts[1]);must(err);pids[pid]=true;group,err:=strconv.Atoi(parts[2]);must(err);groups[group]=true}
+  case "directory","sqlite-target":if len(parts)==2{unqualified[parts[1]]=true}
+  case "postgres":if len(parts)==2{schemas[parts[1]]=true}
+  case "pg_policy_holder":if len(parts)==3{pid,err:=strconv.Atoi(parts[2]);must(err);holders[pid]=true}
+  case "objects","contract","generator","local":if len(parts)==4{dev,err:=strconv.ParseUint(parts[2],10,64);must(err);ino,err:=strconv.ParseUint(parts[3],10,64);must(err);scopes[parts[1]]=[2]uint64{dev,ino}}
+  }};must(scan.Err());must(f.Close())
+ }
+ liveGroups:=[]int{};for group:=range groups{if group==syscall.Getpgrp(){continue};err:=syscall.Kill(-group,0);if err==nil||err==syscall.EPERM{liveGroups=append(liveGroups,group)}else if err!=syscall.ESRCH{must(err)}};sort.Ints(liveGroups)
+ members:=map[int][]map[string]any{};processes,err:=os.ReadDir("/proc");must(err);for _,p:=range processes{pid,err:=strconv.Atoi(p.Name());if err!=nil{continue};raw,err:=os.ReadFile("/proc/"+p.Name()+"/stat");if os.IsNotExist(err)||os.IsPermission(err){continue};must(err);text:=string(raw);fields:=strings.Fields(text[strings.LastIndex(text,")")+2:]);group,err:=strconv.Atoi(fields[2]);must(err);for _,live:=range liveGroups{if live==group{members[group]=append(members[group],map[string]any{"pid":pid,"state":fields[0],"parent":fields[1],"start_time":fields[19]})}}}
+ livePIDs:=[]int{};for pid:=range pids{raw,err:=os.ReadFile(fmt.Sprintf("/proc/%d/stat",pid));if os.IsNotExist(err){continue};must(err);fields:=strings.Fields(string(raw)[strings.LastIndex(string(raw),")")+2:]);group,err:=strconv.Atoi(fields[2]);must(err);if group!=syscall.Getpgrp(){livePIDs=append(livePIDs,pid)}};sort.Ints(livePIDs)
+ remainingUnqualified:=[]string{};for path:=range unqualified{_,err:=os.Lstat(path);if os.IsNotExist(err){continue};must(err);remainingUnqualified=append(remainingUnqualified,path)};sort.Strings(remainingUnqualified)
+ db,err:=sql.Open("pgx",os.Getenv("LERNA_TEST_POSTGRES_DSN"));must(err);db.SetMaxOpenConns(1);must(db.PingContext(ctx))
+ liveSchemas:=[]string{};for schema:=range schemas{var exists bool;must(db.QueryRowContext(ctx,"SELECT EXISTS(SELECT 1 FROM pg_namespace WHERE nspname=$1)",schema).Scan(&exists));if exists{liveSchemas=append(liveSchemas,schema)}};sort.Strings(liveSchemas)
+ liveHolders:=[]int{};for pid:=range holders{var exists bool;must(db.QueryRowContext(ctx,"SELECT EXISTS(SELECT 1 FROM pg_stat_activity WHERE pid=$1)",pid).Scan(&exists));if exists{liveHolders=append(liveHolders,pid)}};sort.Ints(liveHolders);must(db.Close())
+ residual:=[]map[string]any{};paths:=[]string{};for path:=range scopes{paths=append(paths,path)};sort.Strings(paths);for _,path:=range paths{id:=scopes[path];info,err:=os.Lstat(path);if os.IsNotExist(err){continue};must(err);st:=info.Sys().(*syscall.Stat_t);if uint64(st.Dev)!=id[0]||st.Ino!=id[1]{panic("exact registered scope identity differs")};residual=append(residual,map[string]any{"path":path,"device":st.Dev,"inode":st.Ino})}
+ expected:=map[string]string{"lerna_test_4aee55540d91e5d8db9131fb":"preserved old writer archive; original ignored per-Close results unknown","lerna_test_a230998266aca1270c72b73e":"preserved actual old writer 65-policy archive","lerna_test_de87bd29399603c7d0ae9691":"preserved actual expired old writer archive","lerna_test_6b8f60ee6b09466c308df88e":"original timeout/Z/per-Close unknown quarantine","lerna_test_17ff3c0062f18527717babc9":"empty-selector precise-owner SIGTERM/per-Close unknown quarantine"}
+ unexpectedSchemas:=[]string{};for _,schema:=range liveSchemas{if _,ok:=expected[schema];!ok{unexpectedSchemas=append(unexpectedSchemas,schema)}}
+ unexpectedGroups:=[]int{};for _,group:=range liveGroups{known:=group==2278478&&len(members[group])==1;for _,member:=range members[group]{known=known&&member["pid"]==2279009&&member["state"]=="Z"&&member["parent"]=="1"&&member["start_time"]=="9458475"};if !known{unexpectedGroups=append(unexpectedGroups,group)}}
+ result:=map[string]any{"overlay_roots":roots,"registered_native_and_producer_pids":len(pids),"live_native_and_producer_pids_excluding_actual_auditor":livePIDs,"legacy_exact_paths_without_identity_ack":len(unqualified),"existing_legacy_paths_without_identity_ack":remainingUnqualified,"registered_groups":len(groups),"live_groups_excluding_actual_auditor":liveGroups,"actual_live_group_members":members,"registered_schemas":len(schemas),"live_exact_schemas":liveSchemas,"expected_retained_schema_qualifications":expected,"unexpected_live_schemas":unexpectedSchemas,"unexpected_live_groups":unexpectedGroups,"registered_policy_holders":len(holders),"live_policy_holders":liveHolders,"registered_object_contract_generator_roots":len(scopes),"exact_residual_roots":residual,"current_auditor_group":syscall.Getpgrp(),"qualification":"read-only exact-ledger audit; retained archives/caches/diagnostics/quarantines are not cleanup; no per-Close ACK inferred from native exit or Z"}
+ data,err:=json.MarshalIndent(result,"","  ");must(err);fmt.Println(string(data));if len(unexpectedGroups)+len(unexpectedSchemas)+len(liveHolders)+len(livePIDs)+len(remainingUnqualified)>0{os.Exit(1)}
+}

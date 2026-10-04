@@ -1,0 +1,35 @@
+✔ native Go discovery failure preserves its exit status (100.832619ms)
+✔ positive partition includes future tests, Unicode, Examples and Fuzz seeds (282.573719ms)
+✔ absent durable group never becomes an empty selector that runs all tests (124.372133ms)
+✔ duplicate, empty and ambiguous inventories fail closed (179.115823ms)
+✔ a native race-group failure remains a failure (104.841263ms)
+✔ normal entry uses the same complete positive partition without race (248.502106ms)
+✖ Content partitions remain finite and include every discovered case once (117.397333ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 6
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1247.835609
+
+✖ failing tests:
+
+test at scripts/component-integration-race.test.mjs:179:1
+✖ Content partitions remain finite and include every discovered case once (117.397333ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  1 !== 2
+  
+      at TestContext.<anonymous> (file:///tmp/lerna-worktrees/content-snapshots-02/scripts/component-integration-race.test.mjs:183:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 2,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+NATIVE_EXIT status=1 group_absent=True

@@ -1,0 +1,483 @@
+{
+  "axis": "Spec",
+  "base": "f05b2f1068958ba6b63e6c1dc58d6cd1684446cc",
+  "prior_head": "57ea60c628f82140f5700503107d3e2fe4a86dec",
+  "head": "8d64ad1ed8eee35d07ee3fc990dd2696729ef9c8",
+  "merge_base": "f05b2f1068958ba6b63e6c1dc58d6cd1684446cc",
+  "commits": [
+    "8d64ad1ed8eee35d07ee3fc990dd2696729ef9c8 fix(content): preserve propagation deadlines and admission expiry obligations",
+    "57ea60c628f82140f5700503107d3e2fe4a86dec Preserve exact native Content archives and normalize restore EOF",
+    "d3fb9c7e56293f9be30da13c012c0863c0da6aa1 Merge commit '70f69e524592491a5ad37754cf0793ee131acec6' into codex/content-snapshots-ticket-02",
+    "482dc1def90c9ccafe3be850ec28e0f4e81f71c2 Implement current Content source closure and durable policy propagation",
+    "70f69e524592491a5ad37754cf0793ee131acec6 docs(content): adopt current-policy oracle and responsibility decisions",
+    "f54d697b50d63490a2ed573b8dd91c18d3178110 docs: record verified Content checkpoint CI and full finite integration scope"
+  ],
+  "path_count": 42,
+  "full_stat": "42 files changed, 5887 insertions(+), 62 deletions(-)",
+  "delta_stat": "7 files changed, 1445 insertions(+), 71 deletions(-)",
+  "paths": [
+    {
+      "path": ".gitattributes",
+      "tree_entry": "100644 blob 580a3fc4afc14d39cb8e2a797017a8bc970933ef\t.gitattributes",
+      "review": "qualified exact-object carry"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/ci-verification.md",
+      "tree_entry": "100644 blob 0ff82eff7d7398fb0bb4575473f0d42a98a90f0f\t.scratch/lerna-04-content-snapshots/ci-verification.md",
+      "review": "qualified exact-object carry"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/issues/02-current-source-policies.md",
+      "tree_entry": "100644 blob 5a87fa60b272cb6a4a8cc30992a59dec8a4f022b\t.scratch/lerna-04-content-snapshots/issues/02-current-source-policies.md",
+      "review": "qualified exact-object carry"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/ticket-01-exit-evidence.md",
+      "tree_entry": "100644 blob e295032e6dedc4c6d9eebd44b6b552a282cefe41\t.scratch/lerna-04-content-snapshots/ticket-01-exit-evidence.md",
+      "review": "qualified exact-object carry"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/ticket-02-oracle-decisions.md",
+      "tree_entry": "100644 blob f00e774605be856ea1d135a1db18b2266e44c7a8\t.scratch/lerna-04-content-snapshots/ticket-02-oracle-decisions.md",
+      "review": "qualified exact-object carry"
+    },
+    {
+      "path": ".scratch/lerna-implementation/progress.md",
+      "tree_entry": "100644 blob f792702f05528219ce9ef4c2a7f7fc765464b555\t.scratch/lerna-implementation/progress.md",
+      "review": "qualified exact-object carry"
+    },
+    {
+      "path": "adapters/postgres/content/facts.go",
+      "tree_entry": "100644 blob 9e9dd22ec1ae18347a37cb315e9ba5b4909eb7c4\tadapters/postgres/content/facts.go",
+      "review": "qualified exact-object carry"
+    },
+    {
+      "path": "adapters/postgres/content/management.go",
+      "tree_entry": "100644 blob 7dd7a1c8c803a308b5f7afccb28ee353ceb50944\tadapters/postgres/content/management.go",
+      "review": "full fresh delta and new test/source read"
+    },
+    {
+      "path": "adapters/postgres/content/management_rows_test.go",
+      "tree_entry": "100644 blob 0ca62a75e52c88101a9e3bc991e0c9e6e83690b3\tadapters/postgres/content/management_rows_test.go",
+      "review": "full fresh delta and new test/source read"
+    },
+    {
+      "path": "adapters/postgres/content/migrate.go",
+      "tree_entry": "100644 blob e12754f772a1587c86008d628273e8d48b6cd04b\tadapters/postgres/content/migrate.go",
+      "review": "qualified exact-object carry"
+    },
+    {
+      "path": "adapters/postgres/content/migrations/0002_source_policies.sql",
+      "tree_entry": "100644 blob 02a082a5a0edfa57d0e8d2a2680b0af5ad9a5a41\tadapters/postgres/content/migrations/0002_source_policies.sql",
+      "review": "qualified exact-object carry"
+    },
+    {
+      "path": "adapters/postgres/content/policy.go",
+      "tree_entry": "100644 blob 9b8752f1f78e42202287c618740e769d1ee2fe28\tadapters/postgres/content/policy.go",
+      "review": "qualified exact-object carry"
+    },
+    {
+      "path": "conformance/component/content_association_test.go",
+      "tree_entry": "100644 blob ce45b9331b17a1142e8e0847056b802d0186f28e\tconformance/component/content_association_test.go",
+      "review": "qualified exact-object carry"
+    },
+    {
+      "path": "conformance/component/content_closure_test.go",
+      "tree_entry": "100644 blob 9c310565fc92023afcbb5cf9b612a988c6e273eb\tconformance/component/content_closure_test.go",
+      "review": "qualified exact-object carry"
+    },
+    {
+      "path": "conformance/component/content_direct_read_test.go",
+      "tree_entry": "100644 blob 35460c48c30a76585eb1f282fcc8da13a5975c58\tconformance/component/content_direct_read_test.go",
+      "review": "qualified exact-object carry"
+    },
+    {
+      "path": "conformance/component/content_inherited_expiry_test.go",
+      "tree_entry": "100644 blob d2802a3c9e6ee9df9fe685fe11874b210d959272\tconformance/component/content_inherited_expiry_test.go",
+      "review": "full fresh delta and new test/source read"
+    },
+    {
+      "path": "conformance/component/content_legacy_test.go",
+      "tree_entry": "100644 blob e92bef112f567d96cbc7bad2a3522cf18f1ad49d\tconformance/component/content_legacy_test.go",
+      "review": "full fresh delta and new test/source read"
+    },
+    {
+      "path": "conformance/component/content_management_test.go",
+      "tree_entry": "100644 blob acda6b07df81e26729f64e0fd1609c3edbe19774\tconformance/component/content_management_test.go",
+      "review": "qualified exact-object carry"
+    },
+    {
+      "path": "conformance/component/content_processing_deadline_test.go",
+      "tree_entry": "100644 blob 560b6999a848cd91e44296a4dda9e4260b713097\tconformance/component/content_processing_deadline_test.go",
+      "review": "full fresh delta and new test/source read"
+    },
+    {
+      "path": "conformance/internal/contentfixture/legacy.go",
+      "tree_entry": "100644 blob 74eb7e9de71910040569dd94a64e7827f09e56cf\tconformance/internal/contentfixture/legacy.go",
+      "review": "qualified exact-object carry"
+    },
+    {
+      "path": "conformance/internal/contentfixture/migration_test.go",
+      "tree_entry": "100644 blob 1791ce393db68ec70dacaf38713edb9e8f702c29\tconformance/internal/contentfixture/migration_test.go",
+      "review": "qualified exact-object carry"
+    },
+    {
+      "path": "conformance/internal/contentfixture/policy_lock.go",
+      "tree_entry": "100644 blob 75197823b793f2fe2ac3b8685d08a5fc9c635e15\tconformance/internal/contentfixture/policy_lock.go",
+      "review": "qualified exact-object carry"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/README.md",
+      "tree_entry": "100644 blob 7e24c596de836d3cb6daaddf66108719dcf49c6e\tconformance/internal/contentfixture/testdata/README.md",
+      "review": "qualified exact-object carry"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/76f0298c5432c6b1e28ae5a2c2cc4e8624fd32cffa6112173de32a68c90652c4",
+      "tree_entry": "100644 blob 4a58007052a65fbc2fc3f910f2855f45a4058e74\tconformance/internal/contentfixture/testdata/legacy-many-policies/76f0298c5432c6b1e28ae5a2c2cc4e8624fd32cffa6112173de32a68c90652c4",
+      "review": "qualified exact-object carry"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/SHA256SUMS",
+      "tree_entry": "100644 blob f9380af712926c7fe266e5e2e906ffeac9719379\tconformance/internal/contentfixture/testdata/legacy-many-policies/SHA256SUMS",
+      "review": "qualified exact-object carry"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/da1384e8c6e31d165b9f0442b2d2f1f57a875a20156041bfedfcc4ce779654dc",
+      "tree_entry": "100644 blob 4a58007052a65fbc2fc3f910f2855f45a4058e74\tconformance/internal/contentfixture/testdata/legacy-many-policies/da1384e8c6e31d165b9f0442b2d2f1f57a875a20156041bfedfcc4ce779654dc",
+      "review": "qualified exact-object carry"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/observation.json",
+      "tree_entry": "100644 blob 3acae85bca5e1660eda18a89e984862c84f45f64\tconformance/internal/contentfixture/testdata/legacy-many-policies/observation.json",
+      "review": "qualified exact-object carry"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/original-pg18-dump.sql",
+      "tree_entry": "100644 blob fb80a1b0332078e5f97a0966fdebfba571e649a5\tconformance/internal/contentfixture/testdata/legacy-many-policies/original-pg18-dump.sql",
+      "review": "qualified exact-object carry"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/producer.go.txt",
+      "tree_entry": "100644 blob 7cc3438a191d9a17a11e4eb3b910c9af4ed9f3e9\tconformance/internal/contentfixture/testdata/legacy-many-policies/producer.go.txt",
+      "review": "qualified exact-object carry"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/restore.sql",
+      "tree_entry": "100644 blob 0c0431fd59927f5896b812ceac411fbee8eb2c0e\tconformance/internal/contentfixture/testdata/legacy-many-policies/restore.sql",
+      "review": "qualified exact-object carry"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/76f0298c5432c6b1e28ae5a2c2cc4e8624fd32cffa6112173de32a68c90652c4",
+      "tree_entry": "100644 blob 4a58007052a65fbc2fc3f910f2855f45a4058e74\tconformance/internal/contentfixture/testdata/legacy-v1/76f0298c5432c6b1e28ae5a2c2cc4e8624fd32cffa6112173de32a68c90652c4",
+      "review": "qualified exact-object carry"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/SHA256SUMS",
+      "tree_entry": "100644 blob 141cdf1f4494009c9d9ff026e40dd15e3036d307\tconformance/internal/contentfixture/testdata/legacy-v1/SHA256SUMS",
+      "review": "qualified exact-object carry"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/da1384e8c6e31d165b9f0442b2d2f1f57a875a20156041bfedfcc4ce779654dc",
+      "tree_entry": "100644 blob 4a58007052a65fbc2fc3f910f2855f45a4058e74\tconformance/internal/contentfixture/testdata/legacy-v1/da1384e8c6e31d165b9f0442b2d2f1f57a875a20156041bfedfcc4ce779654dc",
+      "review": "qualified exact-object carry"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/observation.json",
+      "tree_entry": "100644 blob 3acae85bca5e1660eda18a89e984862c84f45f64\tconformance/internal/contentfixture/testdata/legacy-v1/observation.json",
+      "review": "qualified exact-object carry"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/original-pg18-dump.sql",
+      "tree_entry": "100644 blob db3a215fa72a2578721074367fff42cc9bb3bd32\tconformance/internal/contentfixture/testdata/legacy-v1/original-pg18-dump.sql",
+      "review": "qualified exact-object carry"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/producer.go.txt",
+      "tree_entry": "100644 blob fed889074954ea57c20e3cb8dfbb79fbdfefa5a0\tconformance/internal/contentfixture/testdata/legacy-v1/producer.go.txt",
+      "review": "qualified exact-object carry"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/restore.sql",
+      "tree_entry": "100644 blob 7fe3fbb5ab51a0d8d52d1534869c105c50aa2235\tconformance/internal/contentfixture/testdata/legacy-v1/restore.sql",
+      "review": "qualified exact-object carry"
+    },
+    {
+      "path": "conformance/internal/contentfixture/world.go",
+      "tree_entry": "100644 blob c7f0d553dc2a6f76b17c2867a713a0c909b3955e\tconformance/internal/contentfixture/world.go",
+      "review": "qualified exact-object carry"
+    },
+    {
+      "path": "domain/content/closure.go",
+      "tree_entry": "100644 blob e4f9961915bb9cc2026cf90e6c1d5049a2f4189d\tdomain/content/closure.go",
+      "review": "qualified exact-object carry"
+    },
+    {
+      "path": "domain/content/management.go",
+      "tree_entry": "100644 blob 1d67f00a4dc53c73bfd7910b8934f004d4d0dc0b\tdomain/content/management.go",
+      "review": "full fresh delta and new test/source read"
+    },
+    {
+      "path": "domain/content/ports.go",
+      "tree_entry": "100644 blob 8bc6f124241afc5f0a75f3ef252fc46fa61e128a\tdomain/content/ports.go",
+      "review": "qualified exact-object carry"
+    },
+    {
+      "path": "domain/content/service.go",
+      "tree_entry": "100644 blob 1808b6e2bac28ff7613fd4b9075f154a574eb47f\tdomain/content/service.go",
+      "review": "full fresh delta and new test/source read"
+    }
+  ],
+  "carry_count": 35,
+  "carry": [
+    {
+      "path": ".gitattributes",
+      "tree_entry": "100644 blob 580a3fc4afc14d39cb8e2a797017a8bc970933ef\t.gitattributes",
+      "prior_report": "/tmp/lerna-04-ticket-02-spec-57ea.md"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/ci-verification.md",
+      "tree_entry": "100644 blob 0ff82eff7d7398fb0bb4575473f0d42a98a90f0f\t.scratch/lerna-04-content-snapshots/ci-verification.md",
+      "prior_report": "/tmp/lerna-04-ticket-02-spec-57ea.md"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/issues/02-current-source-policies.md",
+      "tree_entry": "100644 blob 5a87fa60b272cb6a4a8cc30992a59dec8a4f022b\t.scratch/lerna-04-content-snapshots/issues/02-current-source-policies.md",
+      "prior_report": "/tmp/lerna-04-ticket-02-spec-57ea.md"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/ticket-01-exit-evidence.md",
+      "tree_entry": "100644 blob e295032e6dedc4c6d9eebd44b6b552a282cefe41\t.scratch/lerna-04-content-snapshots/ticket-01-exit-evidence.md",
+      "prior_report": "/tmp/lerna-04-ticket-02-spec-57ea.md"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/ticket-02-oracle-decisions.md",
+      "tree_entry": "100644 blob f00e774605be856ea1d135a1db18b2266e44c7a8\t.scratch/lerna-04-content-snapshots/ticket-02-oracle-decisions.md",
+      "prior_report": "/tmp/lerna-04-ticket-02-spec-57ea.md"
+    },
+    {
+      "path": ".scratch/lerna-implementation/progress.md",
+      "tree_entry": "100644 blob f792702f05528219ce9ef4c2a7f7fc765464b555\t.scratch/lerna-implementation/progress.md",
+      "prior_report": "/tmp/lerna-04-ticket-02-spec-57ea.md"
+    },
+    {
+      "path": "adapters/postgres/content/facts.go",
+      "tree_entry": "100644 blob 9e9dd22ec1ae18347a37cb315e9ba5b4909eb7c4\tadapters/postgres/content/facts.go",
+      "prior_report": "/tmp/lerna-04-ticket-02-spec-57ea.md"
+    },
+    {
+      "path": "adapters/postgres/content/migrate.go",
+      "tree_entry": "100644 blob e12754f772a1587c86008d628273e8d48b6cd04b\tadapters/postgres/content/migrate.go",
+      "prior_report": "/tmp/lerna-04-ticket-02-spec-57ea.md"
+    },
+    {
+      "path": "adapters/postgres/content/migrations/0002_source_policies.sql",
+      "tree_entry": "100644 blob 02a082a5a0edfa57d0e8d2a2680b0af5ad9a5a41\tadapters/postgres/content/migrations/0002_source_policies.sql",
+      "prior_report": "/tmp/lerna-04-ticket-02-spec-57ea.md"
+    },
+    {
+      "path": "adapters/postgres/content/policy.go",
+      "tree_entry": "100644 blob 9b8752f1f78e42202287c618740e769d1ee2fe28\tadapters/postgres/content/policy.go",
+      "prior_report": "/tmp/lerna-04-ticket-02-spec-57ea.md"
+    },
+    {
+      "path": "conformance/component/content_association_test.go",
+      "tree_entry": "100644 blob ce45b9331b17a1142e8e0847056b802d0186f28e\tconformance/component/content_association_test.go",
+      "prior_report": "/tmp/lerna-04-ticket-02-spec-57ea.md"
+    },
+    {
+      "path": "conformance/component/content_closure_test.go",
+      "tree_entry": "100644 blob 9c310565fc92023afcbb5cf9b612a988c6e273eb\tconformance/component/content_closure_test.go",
+      "prior_report": "/tmp/lerna-04-ticket-02-spec-57ea.md"
+    },
+    {
+      "path": "conformance/component/content_direct_read_test.go",
+      "tree_entry": "100644 blob 35460c48c30a76585eb1f282fcc8da13a5975c58\tconformance/component/content_direct_read_test.go",
+      "prior_report": "/tmp/lerna-04-ticket-02-spec-57ea.md"
+    },
+    {
+      "path": "conformance/component/content_management_test.go",
+      "tree_entry": "100644 blob acda6b07df81e26729f64e0fd1609c3edbe19774\tconformance/component/content_management_test.go",
+      "prior_report": "/tmp/lerna-04-ticket-02-spec-57ea.md"
+    },
+    {
+      "path": "conformance/internal/contentfixture/legacy.go",
+      "tree_entry": "100644 blob 74eb7e9de71910040569dd94a64e7827f09e56cf\tconformance/internal/contentfixture/legacy.go",
+      "prior_report": "/tmp/lerna-04-ticket-02-spec-57ea.md"
+    },
+    {
+      "path": "conformance/internal/contentfixture/migration_test.go",
+      "tree_entry": "100644 blob 1791ce393db68ec70dacaf38713edb9e8f702c29\tconformance/internal/contentfixture/migration_test.go",
+      "prior_report": "/tmp/lerna-04-ticket-02-spec-57ea.md"
+    },
+    {
+      "path": "conformance/internal/contentfixture/policy_lock.go",
+      "tree_entry": "100644 blob 75197823b793f2fe2ac3b8685d08a5fc9c635e15\tconformance/internal/contentfixture/policy_lock.go",
+      "prior_report": "/tmp/lerna-04-ticket-02-spec-57ea.md"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/README.md",
+      "tree_entry": "100644 blob 7e24c596de836d3cb6daaddf66108719dcf49c6e\tconformance/internal/contentfixture/testdata/README.md",
+      "prior_report": "/tmp/lerna-04-ticket-02-spec-57ea.md"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/76f0298c5432c6b1e28ae5a2c2cc4e8624fd32cffa6112173de32a68c90652c4",
+      "tree_entry": "100644 blob 4a58007052a65fbc2fc3f910f2855f45a4058e74\tconformance/internal/contentfixture/testdata/legacy-many-policies/76f0298c5432c6b1e28ae5a2c2cc4e8624fd32cffa6112173de32a68c90652c4",
+      "prior_report": "/tmp/lerna-04-ticket-02-spec-57ea.md"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/SHA256SUMS",
+      "tree_entry": "100644 blob f9380af712926c7fe266e5e2e906ffeac9719379\tconformance/internal/contentfixture/testdata/legacy-many-policies/SHA256SUMS",
+      "prior_report": "/tmp/lerna-04-ticket-02-spec-57ea.md"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/da1384e8c6e31d165b9f0442b2d2f1f57a875a20156041bfedfcc4ce779654dc",
+      "tree_entry": "100644 blob 4a58007052a65fbc2fc3f910f2855f45a4058e74\tconformance/internal/contentfixture/testdata/legacy-many-policies/da1384e8c6e31d165b9f0442b2d2f1f57a875a20156041bfedfcc4ce779654dc",
+      "prior_report": "/tmp/lerna-04-ticket-02-spec-57ea.md"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/observation.json",
+      "tree_entry": "100644 blob 3acae85bca5e1660eda18a89e984862c84f45f64\tconformance/internal/contentfixture/testdata/legacy-many-policies/observation.json",
+      "prior_report": "/tmp/lerna-04-ticket-02-spec-57ea.md"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/original-pg18-dump.sql",
+      "tree_entry": "100644 blob fb80a1b0332078e5f97a0966fdebfba571e649a5\tconformance/internal/contentfixture/testdata/legacy-many-policies/original-pg18-dump.sql",
+      "prior_report": "/tmp/lerna-04-ticket-02-spec-57ea.md"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/producer.go.txt",
+      "tree_entry": "100644 blob 7cc3438a191d9a17a11e4eb3b910c9af4ed9f3e9\tconformance/internal/contentfixture/testdata/legacy-many-policies/producer.go.txt",
+      "prior_report": "/tmp/lerna-04-ticket-02-spec-57ea.md"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/restore.sql",
+      "tree_entry": "100644 blob 0c0431fd59927f5896b812ceac411fbee8eb2c0e\tconformance/internal/contentfixture/testdata/legacy-many-policies/restore.sql",
+      "prior_report": "/tmp/lerna-04-ticket-02-spec-57ea.md"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/76f0298c5432c6b1e28ae5a2c2cc4e8624fd32cffa6112173de32a68c90652c4",
+      "tree_entry": "100644 blob 4a58007052a65fbc2fc3f910f2855f45a4058e74\tconformance/internal/contentfixture/testdata/legacy-v1/76f0298c5432c6b1e28ae5a2c2cc4e8624fd32cffa6112173de32a68c90652c4",
+      "prior_report": "/tmp/lerna-04-ticket-02-spec-57ea.md"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/SHA256SUMS",
+      "tree_entry": "100644 blob 141cdf1f4494009c9d9ff026e40dd15e3036d307\tconformance/internal/contentfixture/testdata/legacy-v1/SHA256SUMS",
+      "prior_report": "/tmp/lerna-04-ticket-02-spec-57ea.md"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/da1384e8c6e31d165b9f0442b2d2f1f57a875a20156041bfedfcc4ce779654dc",
+      "tree_entry": "100644 blob 4a58007052a65fbc2fc3f910f2855f45a4058e74\tconformance/internal/contentfixture/testdata/legacy-v1/da1384e8c6e31d165b9f0442b2d2f1f57a875a20156041bfedfcc4ce779654dc",
+      "prior_report": "/tmp/lerna-04-ticket-02-spec-57ea.md"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/observation.json",
+      "tree_entry": "100644 blob 3acae85bca5e1660eda18a89e984862c84f45f64\tconformance/internal/contentfixture/testdata/legacy-v1/observation.json",
+      "prior_report": "/tmp/lerna-04-ticket-02-spec-57ea.md"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/original-pg18-dump.sql",
+      "tree_entry": "100644 blob db3a215fa72a2578721074367fff42cc9bb3bd32\tconformance/internal/contentfixture/testdata/legacy-v1/original-pg18-dump.sql",
+      "prior_report": "/tmp/lerna-04-ticket-02-spec-57ea.md"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/producer.go.txt",
+      "tree_entry": "100644 blob fed889074954ea57c20e3cb8dfbb79fbdfefa5a0\tconformance/internal/contentfixture/testdata/legacy-v1/producer.go.txt",
+      "prior_report": "/tmp/lerna-04-ticket-02-spec-57ea.md"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/restore.sql",
+      "tree_entry": "100644 blob 7fe3fbb5ab51a0d8d52d1534869c105c50aa2235\tconformance/internal/contentfixture/testdata/legacy-v1/restore.sql",
+      "prior_report": "/tmp/lerna-04-ticket-02-spec-57ea.md"
+    },
+    {
+      "path": "conformance/internal/contentfixture/world.go",
+      "tree_entry": "100644 blob c7f0d553dc2a6f76b17c2867a713a0c909b3955e\tconformance/internal/contentfixture/world.go",
+      "prior_report": "/tmp/lerna-04-ticket-02-spec-57ea.md"
+    },
+    {
+      "path": "domain/content/closure.go",
+      "tree_entry": "100644 blob e4f9961915bb9cc2026cf90e6c1d5049a2f4189d\tdomain/content/closure.go",
+      "prior_report": "/tmp/lerna-04-ticket-02-spec-57ea.md"
+    },
+    {
+      "path": "domain/content/ports.go",
+      "tree_entry": "100644 blob 8bc6f124241afc5f0a75f3ef252fc46fa61e128a\tdomain/content/ports.go",
+      "prior_report": "/tmp/lerna-04-ticket-02-spec-57ea.md"
+    }
+  ],
+  "origin": [
+    {
+      "path": ".scratch/lerna-04-content-snapshots/spec.md",
+      "tree_entry": "100644 blob fa9f86bf3d8167a4514c6813f79ca532a33eda43\t.scratch/lerna-04-content-snapshots/spec.md",
+      "qualification": "unchanged from fully read originating scope; spec/issues/oracle also reread at current fixed pin"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/issues/02-current-source-policies.md",
+      "tree_entry": "100644 blob 5a87fa60b272cb6a4a8cc30992a59dec8a4f022b\t.scratch/lerna-04-content-snapshots/issues/02-current-source-policies.md",
+      "qualification": "unchanged from fully read originating scope; spec/issues/oracle also reread at current fixed pin"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/ticket-02-handoff.md",
+      "tree_entry": "100644 blob dc280a744bb2d4b68c9ed2da7299ef4fd034cae9\t.scratch/lerna-04-content-snapshots/ticket-02-handoff.md",
+      "qualification": "unchanged from fully read originating scope; spec/issues/oracle also reread at current fixed pin"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/ticket-02-oracle-decisions.md",
+      "tree_entry": "100644 blob f00e774605be856ea1d135a1db18b2266e44c7a8\t.scratch/lerna-04-content-snapshots/ticket-02-oracle-decisions.md",
+      "qualification": "unchanged from fully read originating scope; spec/issues/oracle also reread at current fixed pin"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/decisions.md",
+      "tree_entry": "100644 blob 7fd3021e1c2e9cf6648e7d92c20da5286cb72030\t.scratch/lerna-04-content-snapshots/decisions.md",
+      "qualification": "unchanged from fully read originating scope; spec/issues/oracle also reread at current fixed pin"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/final-api-handoff.md",
+      "tree_entry": "100644 blob 5ad2ecb81a2ec449394f97b503937a65f158ad21\t.scratch/lerna-04-content-snapshots/final-api-handoff.md",
+      "qualification": "unchanged from fully read originating scope; spec/issues/oracle also reread at current fixed pin"
+    },
+    {
+      "path": "AGENTS.md",
+      "tree_entry": "100644 blob 1860c96f250663e46ee69d81f8c17539a74a22ad\tAGENTS.md",
+      "qualification": "unchanged from fully read originating scope; spec/issues/oracle also reread at current fixed pin"
+    },
+    {
+      "path": "CONTEXT.md",
+      "tree_entry": "100644 blob d3d3ae0ebef7410f40e76f80ba3049bebf5ab1ac\tCONTEXT.md",
+      "qualification": "unchanged from fully read originating scope; spec/issues/oracle also reread at current fixed pin"
+    },
+    {
+      "path": "docs/adr/0006-authorization-budget-at-action-boundaries.md",
+      "tree_entry": "100644 blob 77d90c078faec789d028f6f7ffeade66ca444089\tdocs/adr/0006-authorization-budget-at-action-boundaries.md",
+      "qualification": "unchanged from fully read originating scope; spec/issues/oracle also reread at current fixed pin"
+    },
+    {
+      "path": "docs/adr/0007-versioned-content-memory-snapshots.md",
+      "tree_entry": "100644 blob b40a72034fe71cc31aed957c29450c56402487b4\tdocs/adr/0007-versioned-content-memory-snapshots.md",
+      "qualification": "unchanged from fully read originating scope; spec/issues/oracle also reread at current fixed pin"
+    }
+  ],
+  "adopted_clarifications": [
+    "/tmp/lerna-04-ticket-02-inherited-expiry-decision.md",
+    "/tmp/lerna-04-ticket-02-renewal-classification-decision.md"
+  ],
+  "all_seven_AC": {
+    "1": "independent five actions, exact bindings and fresh policy gates; prior full source and unchanged action tests carried",
+    "2": "full finite closure, middle/shared dedup and owner/tenant refusal; exact closure code/tests carried",
+    "3": "original monotonic caps, purpose qualification, all ancestor inherited expiry obligations; service and manager delta read",
+    "4": "same-Tx final publication qualification; unchanged facts/policy and prior race tests carried",
+    "5": "same-Tx propagation and holder responsibility, original deadline and renewal classification; new full manager/adapter/tests read; one late-initial-phase natural expiry finding",
+    "6": "auth-before-existence/bytes, allowed normal cases and source declaration boundary; prior exact-object tests carried",
+    "7": "public native PG/object/reopen test structure reviewed; no reviewer execution; legacy archives preserved and 2099 dates not expired-upgrade proof"
+  },
+  "prior_findings": "both own 57ea P2 closed in fixed new source; one newly found delayed initial natural-expiry classification gap",
+  "archive_carry": {
+    "legacy_v1_rows": 14,
+    "legacy_many_policies_rows": 79,
+    "both_restore_all_literal_rows_equal": true,
+    "both_restore_DDL_mechanically_equal": true,
+    "both_6_file_SHA256SUMS_equal": true,
+    "four_original_object_bodies_equal_alpha": true
+  },
+  "limits": "Read-only fixed git objects. No tests/build/DB/native/env/cleanup/install/repo edits/other-axis reports. New race/check/audit and old-expired0001 archive fixture pending per parent; no execution acceptance claim."
+}

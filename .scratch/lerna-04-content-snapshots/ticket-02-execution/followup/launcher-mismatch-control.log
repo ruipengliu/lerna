@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/workspace/lerna-content-02-fix-57ea60c628f8/run-component-group.py", line 16, in <module>
+    assert selector==expected and [name for name in names if re.fullmatch(selector,name)]==selected
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+NATIVE_EXIT status=1 group_absent=True

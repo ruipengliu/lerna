@@ -1,0 +1,16 @@
+=== RUN   TestContentClosureRecordWaitRechecksPolicyBeforeMetadata
+=== RUN   TestContentClosureRecordWaitRechecksPolicyBeforeMetadata/missing=false/late=false
+=== RUN   TestContentClosureRecordWaitRechecksPolicyBeforeMetadata/missing=false/late=true
+    content_policy_actions_test.go:109: record lock exposed metadata after current source authority expired {{rejected {{content-tenant content-owner} metadata-command} source_unavailable 0x3dd2b23ef0d0}} want forbidden
+=== RUN   TestContentClosureRecordWaitRechecksPolicyBeforeMetadata/missing=true/late=false
+=== RUN   TestContentClosureRecordWaitRechecksPolicyBeforeMetadata/missing=true/late=true
+    content_policy_actions_test.go:109: record lock exposed metadata after current source authority expired {{rejected {{content-tenant content-owner} metadata-command} source_unavailable 0x3dd2b232f040}} want forbidden
+--- FAIL: TestContentClosureRecordWaitRechecksPolicyBeforeMetadata (2.16s)
+    --- PASS: TestContentClosureRecordWaitRechecksPolicyBeforeMetadata/missing=false/late=false (0.40s)
+    --- FAIL: TestContentClosureRecordWaitRechecksPolicyBeforeMetadata/missing=false/late=true (0.79s)
+    --- PASS: TestContentClosureRecordWaitRechecksPolicyBeforeMetadata/missing=true/late=false (0.19s)
+    --- FAIL: TestContentClosureRecordWaitRechecksPolicyBeforeMetadata/missing=true/late=true (0.79s)
+FAIL
+FAIL	github.com/ruipengliu/lerna/conformance/component	2.172s
+FAIL
+NATIVE_EXIT status=1 group_absent=True

@@ -1,0 +1,7 @@
+{
+  "source": "4c6219fb420cdd63ea67f6db4c0106779ea9ccfa",
+  "binary": "/workspace/lerna-content-02-fix-57ea60c628f8/component-race-materialized.test",
+  "sha256": "bd5df06af72bdbaa546af0d20db1748ab23dbe9ac6f06158bc4e4bc126d00b54",
+  "size": 27447014,
+  "qualification": "tracked source fixed clean; untracked Markdown reports only; compiler native0/groupAbsent"
+}

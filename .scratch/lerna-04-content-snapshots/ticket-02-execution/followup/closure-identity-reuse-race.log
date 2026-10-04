@@ -1,0 +1,18 @@
+=== RUN   TestContentFullClosureIncludesIntermediateVersionsAndExact64Bound
+    content_closure_test.go:147: 63 timeout: context deadline exceeded
+    content_closure_test.go:115: closure timing i=63 stage=step current=263.398444ms install=1.275435616s put=30.755638821s step=27.566749204s
+    content_closure_test.go:119: closure port put/Now calls=4480 elapsed=2.047442125s
+    content_closure_test.go:119: closure port put/CheckPolicy calls=6112 elapsed=7.630546845s
+    content_closure_test.go:119: closure port put/LockVersion calls=2144 elapsed=3.367733896s
+    content_closure_test.go:119: closure port put/ScheduleRetention calls=64 elapsed=13.492268055s
+    content_closure_test.go:119: closure port step/Now calls=8262 elapsed=3.755216477s
+    content_closure_test.go:119: closure port step/CheckPolicy calls=11951 elapsed=14.739817777s
+    content_closure_test.go:119: closure port step/LockVersion calls=4004 elapsed=6.33861173s
+    content_closure_test.go:119: closure port step/ScheduleRetention calls=0 elapsed=0s
+    content_closure_test.go:119: closure port get/Now calls=0 elapsed=0s
+    content_closure_test.go:119: closure port get/CheckPolicy calls=0 elapsed=0s
+    content_closure_test.go:119: closure port get/LockVersion calls=0 elapsed=0s
+    content_closure_test.go:119: closure port get/ScheduleRetention calls=0 elapsed=0s
+--- FAIL: TestContentFullClosureIncludesIntermediateVersionsAndExact64Bound (60.09s)
+FAIL
+NATIVE_EXIT status=1 group_absent=True

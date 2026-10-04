@@ -1,0 +1,6 @@
+--- FAIL: TestContentPolicyPropagationAllDescendantPagesRecoverFrozenWatermark (3.94s)
+    content_management_test.go:125: first page work request exceeds supported bounds
+FAIL
+FAIL	github.com/ruipengliu/lerna/conformance/component	43.485s
+FAIL
+NATIVE_EXIT status=1 group_absent=True

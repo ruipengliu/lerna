@@ -1,0 +1,7 @@
+{
+  "original_group": 2530735,
+  "killpg_probe": "ESRCH",
+  "actual_group_members": [],
+  "no_runnable": true,
+  "qualification": "native wrapper actual exit241/directWait -15/groupAbsentTrue; no native Store/Object Close ACK invented; retained last scopes"
+}

@@ -1,0 +1,6 @@
+--- FAIL: TestContentLegacyPolicyPagesDoNotTruncateAt64OrResetOnReopen (0.21s)
+    content_legacy_test.go:42: propagation ran before complete legacy index/policy watermark true <nil>
+FAIL
+FAIL	github.com/ruipengliu/lerna/conformance/component	0.223s
+FAIL
+NATIVE_EXIT status=1 group_absent=True

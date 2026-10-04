@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/workspace/lerna-content-02-fix-57ea60c628f8/run-component-group.py", line 14, in <module>
+    selector=g['selector'];assert selector and selector.startswith('^(') and selector.endswith(')$')
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+NATIVE_EXIT status=1 group_absent=True

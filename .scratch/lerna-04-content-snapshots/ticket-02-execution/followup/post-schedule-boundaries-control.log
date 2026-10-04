@@ -1,0 +1,25 @@
+=== RUN   TestContentLateAdmissionRespectsCompetingOriginalCommand
+=== RUN   TestContentLateAdmissionRespectsCompetingOriginalCommand/different_digest=false
+=== RUN   TestContentLateAdmissionRespectsCompetingOriginalCommand/different_digest=true
+--- PASS: TestContentLateAdmissionRespectsCompetingOriginalCommand (1.35s)
+    --- PASS: TestContentLateAdmissionRespectsCompetingOriginalCommand/different_digest=false (0.73s)
+    --- PASS: TestContentLateAdmissionRespectsCompetingOriginalCommand/different_digest=true (0.62s)
+=== RUN   TestContentCommitUnknownKeepsAcceptedAndLateRejectedTruth
+=== RUN   TestContentCommitUnknownKeepsAcceptedAndLateRejectedTruth/late_rejection=false
+=== RUN   TestContentCommitUnknownKeepsAcceptedAndLateRejectedTruth/late_rejection=true
+--- PASS: TestContentCommitUnknownKeepsAcceptedAndLateRejectedTruth (0.79s)
+    --- PASS: TestContentCommitUnknownKeepsAcceptedAndLateRejectedTruth/late_rejection=false (0.17s)
+    --- PASS: TestContentCommitUnknownKeepsAcceptedAndLateRejectedTruth/late_rejection=true (0.62s)
+=== RUN   TestContentAdmissionReaderExpiryCannotDiscloseAfterWait
+=== RUN   TestContentAdmissionReaderExpiryCannotDiscloseAfterWait/original_key/late=false
+=== RUN   TestContentAdmissionReaderExpiryCannotDiscloseAfterWait/original_key/late=true
+=== RUN   TestContentAdmissionReaderExpiryCannotDiscloseAfterWait/second_save/late=false
+=== RUN   TestContentAdmissionReaderExpiryCannotDiscloseAfterWait/second_save/late=true
+--- PASS: TestContentAdmissionReaderExpiryCannotDiscloseAfterWait (2.67s)
+    --- PASS: TestContentAdmissionReaderExpiryCannotDiscloseAfterWait/original_key/late=false (0.22s)
+    --- PASS: TestContentAdmissionReaderExpiryCannotDiscloseAfterWait/original_key/late=true (1.04s)
+    --- PASS: TestContentAdmissionReaderExpiryCannotDiscloseAfterWait/second_save/late=false (0.38s)
+    --- PASS: TestContentAdmissionReaderExpiryCannotDiscloseAfterWait/second_save/late=true (1.02s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/component	4.818s
+NATIVE_EXIT status=0 group_absent=True

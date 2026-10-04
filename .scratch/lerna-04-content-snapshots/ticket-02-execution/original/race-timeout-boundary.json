@@ -1,0 +1,30 @@
+{
+  "parent_pid": 2278478,
+  "parent_wait_status": -9,
+  "wrapper_tool_exit": 125,
+  "group_absent": false,
+  "group_members": [
+    {
+      "pid": 2279009,
+      "name": "component.test",
+      "state": "Z",
+      "ppid": 1,
+      "uid": 1000,
+      "fdsize": 0,
+      "threads": 1,
+      "fd_directory_read_errno": 13,
+      "fd_directory_read_name": "EACCES"
+    }
+  ],
+  "native_child_wait_confirmed": false,
+  "individual_native_close_causes_confirmed": false,
+  "live_non_z_group_members": [],
+  "last_recorded_schema": "lerna_test_6b8f60ee6b09466c308df88e",
+  "last_recorded_objects": {
+    "path": "/workspace/lerna-content-02-f05b2f1068958/lerna-content-objects-4130439993",
+    "device": 27,
+    "inode": 431524
+  },
+  "classification": "finite outer native timeout; retained unknown, neither test green nor business red",
+  "cleanup_performed": false
+}

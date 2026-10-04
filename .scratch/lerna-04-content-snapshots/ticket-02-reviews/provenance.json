@@ -1,0 +1,330 @@
+{
+  "base": "f05b2f1068958ba6b63e6c1dc58d6cd1684446cc",
+  "reports": [
+    {
+      "original": "/tmp/lerna-04-ticket-02-standards-57ea.md",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-standards-57ea.md",
+      "sha256": "61f2530586344d667125762050e04f689fc1e77e5f134d4c06fc60a5cf9ba280"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-standards-57ea-scope.json",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-standards-57ea-scope.json",
+      "sha256": "be824d19007c05f4b772b711cbf5a9137de88caafe7add7caa62f7a02ce48236"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-spec-57ea.md",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-spec-57ea.md",
+      "sha256": "04e13f47d82584dbbe2fa1637f1fdb7423902c2690896b1a3c1324604427f08c"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-spec-57ea-scope.json",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-spec-57ea-scope.json",
+      "sha256": "e4c497ab839fb1e320817c4c87024b88b0199ca79b11f88a4335b8de6102ed83"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-architecture-57ea.md",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-architecture-57ea.md",
+      "sha256": "f0107987b70b9126e8db2af32c1e9dcccc2c539a821cdf93e8a4191fa889645f"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-code-review-57ea.md",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-code-review-57ea.md",
+      "sha256": "758e83e0146d62e53715f6167ef8df8bef17c9660546e3419d7ef86c786f0c67"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-standards-8d64.md",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-standards-8d64.md",
+      "sha256": "183b8b8a1eac936a43b32a7bdca43ca96e5a266c73b149a0ec9bf8a2a2ee1b30"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-standards-8d64-scope.json",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-standards-8d64-scope.json",
+      "sha256": "ee2de3d706358af7245acdb2942b869e9633d9eee3875a922d549bc073a3502e"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-spec-8d64.md",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-spec-8d64.md",
+      "sha256": "316b5d62940e2d35006d99b66500ee6ad1c708248bd63eb6572285c62bd5f82e"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-spec-8d64-scope.json",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-spec-8d64-scope.json",
+      "sha256": "f1e204f897aa4cc32ebada8f37037c654c59b857e530ca9417addaf8eb5b71de"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-architecture-8d64.md",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-architecture-8d64.md",
+      "sha256": "a05c9b9c21a9957060022c4dc23d77866b4550f77c42ade7329b8357743110aa"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-code-review-8d64.md",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-code-review-8d64.md",
+      "sha256": "fbc77f32da0fb9f52e178d100f18446b22b4cb3d12d9a83ee0c5a409a7d6a201"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-standards-3f44.md",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-standards-3f44.md",
+      "sha256": "f6f4f39ed81bb4ad079ecc9ea7e92d07fbd376a668eadf841be9803efb681a66"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-standards-3f44-scope.json",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-standards-3f44-scope.json",
+      "sha256": "d4babb9803da6c26033e33e880a301c03dc6576b731ba01c5c2422612e176cd3"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-spec-3f44.md",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-spec-3f44.md",
+      "sha256": "f4aef2e094c093a8bd2148d068de8246742b6ca497d415eecbd32cf5404e3a24"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-spec-3f44-scope.json",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-spec-3f44-scope.json",
+      "sha256": "ecaab7d5db4d0c0523256bb66b761d66d24997ac66c63cdfcd91943fd5dcda34"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-architecture-3f44.md",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-architecture-3f44.md",
+      "sha256": "ed42280287f8823f129d3e080292cc7977bc3208d59e1dbd4bd8a2217aabad01"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-code-review-3f44.md",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-code-review-3f44.md",
+      "sha256": "ec4909321c1693833a70da6a1d039113d0eba9d95adf3ccb20d2901b6f1706f1"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-standards-752.md",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-standards-752.md",
+      "sha256": "a55f6dd338a660d4640e3ce0083a4f68c2f49d33f5ee18d7e9004997171389e7"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-standards-752-scope.json",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-standards-752-scope.json",
+      "sha256": "e1cd3bcaca4c280d0cd60088ce25969fe4717d5b6baee1b37ce40089fe798678"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-spec-752.md",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-spec-752.md",
+      "sha256": "46e735329a8515533714f31bbc34e0e121a246f3aaa0392db2704bf5f62c70bb"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-spec-752-scope.json",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-spec-752-scope.json",
+      "sha256": "04a331746afa4608c2e9694867daed75f12067b9cc7b3a4aed64dc5a62f077e8"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-architecture-752.md",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-architecture-752.md",
+      "sha256": "26deff22e0eeb314cb72dff4a1fd921ef1a08fd890cbb2d08ec063ed8814a57b"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-code-review-752.md",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-code-review-752.md",
+      "sha256": "5b568ff68c102af284e27788de9bd98b143fd5308496649afe76477d38c9242c"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-spec-3f44-archive-proof.json",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-spec-3f44-archive-proof.json",
+      "sha256": "080b6ecba6fd0bbf01e6845810c0d544ac946c277c2ad727494999a88101ae3e"
+    },
+    {
+      "original": "/tmp/architecture-review-20261004T151634Z-content02-57ea.html",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/architecture-review-20261004T151634Z-content02-57ea.html",
+      "sha256": "ef54a6137e085d450cd07dfa1be6d0abc8b69540f8e6a0255a6c7c5823288735"
+    },
+    {
+      "original": "/tmp/architecture-review-20261004T160350Z-content02-8d64.html",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/architecture-review-20261004T160350Z-content02-8d64.html",
+      "sha256": "77b7fdacf42799307eaeebae2a1ffac5f4ff73a7e453b00dc7aa7f4ad89a7ad5"
+    },
+    {
+      "original": "/tmp/architecture-review-20261004T161543Z-content02-3f44.html",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/architecture-review-20261004T161543Z-content02-3f44.html",
+      "sha256": "f78e1749f3518a6e1ed24df350f77a65213f380aa11fe5de7dab55b71413930a"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-native-race-boundary-decision.md",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-native-race-boundary-decision.md",
+      "sha256": "467a2358dbb9ed86d0eafadde8c2867d5aa2b15abce13d6b95c365feb5b043d1"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-inherited-expiry-decision.md",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-inherited-expiry-decision.md",
+      "sha256": "ce45795530060c525d38225e72e02226472cce077a6674e3bbd8f17ad020ac19"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-renewal-classification-decision.md",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-renewal-classification-decision.md",
+      "sha256": "491be58b1b6e15141e17a212fe4731fb1ed7b9d7a828b4b3b7ade279d7eb09d9"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-race-closure-decision.md",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-race-closure-decision.md",
+      "sha256": "1ae7bb7f88e8f6533de1a8f0e6a4198220f16908539605229ae4e3c07bce62e9"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-post-schedule-admission-decision.md",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-post-schedule-admission-decision.md",
+      "sha256": "d3eab9c7827c2b99f3b3443a3d5cbe848a7f5ec5e1c5b47c31a3475ffc93ca2e"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-retention-observation-decision.md",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-retention-observation-decision.md",
+      "sha256": "6b678f0de72ac90148cc93b09678f6230913d3a7984446df5ba12dd37679c313"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-identity-reuse-decision.md",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-identity-reuse-decision.md",
+      "sha256": "fb5c1927fe095ceec61a9333dc958ba1ccd24e8821f398d247bda0556f2256f8"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-next-closure-perf-decision.md",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-next-closure-perf-decision.md",
+      "sha256": "60e2feb1c9638c0c5a30180f367f09d7ecb763784d2d3b3b04a893f00c983e82"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-after-policy-group-perf-decision.md",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-after-policy-group-perf-decision.md",
+      "sha256": "d2a96dede681bdac284dc8106563014c07b2eee5e12876e142c9cf9a49e62886"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-architecture-4c621.md",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-architecture-4c621.md",
+      "sha256": "7653b9249f10d3d02234a2f31417a4cecb963e368cf5783735dfc882dd9a06ab"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-architecture-5c024.md",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-architecture-5c024.md",
+      "sha256": "f3d5f7304fc30d03915057ba9f93b858ed567f78f5ed01e7654045b85956b87b"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-architecture-6a9.md",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-architecture-6a9.md",
+      "sha256": "ec957b0fd052ef1ad50c79b4ab5a18dc83c81ad8fe7c0485085917167e96bb69"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-code-review-4c621.md",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-code-review-4c621.md",
+      "sha256": "b72afc0f1345c455094675c2043eaaf50731e3385f2b163c544e8b92e6076405"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-code-review-5c024.md",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-code-review-5c024.md",
+      "sha256": "57e1955617e122bb99f6081344a0675f34e83417ff5c57c561d6271f97291c60"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-code-review-6a9.md",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-code-review-6a9.md",
+      "sha256": "a28c7d594f1fe41e659961a4b5645bf77d4fe9790c3045bd9c6016c94c48a6aa"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-root-final-race-qualification.json",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-root-final-race-qualification.json",
+      "sha256": "8b294f83887f13bc426d1cbbeb18b718a7f50cd6ffb8cbe80f886e0f8d18a407"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-spec-4c621-scope.json",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-spec-4c621-scope.json",
+      "sha256": "1952660a4826916a1a85565cdbe947c6a6eda902e15a3464b8a2ef32df0fd648"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-spec-4c621.md",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-spec-4c621.md",
+      "sha256": "e772f18107b2b894c9d3e87c349e87c5e6a46759b03bc5203492f233afb8237e"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-spec-5c024-scope.json",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-spec-5c024-scope.json",
+      "sha256": "f26d1376e65382ee386726bf97c273712354804e278fc6545a0cf94aac892137"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-spec-5c024.md",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-spec-5c024.md",
+      "sha256": "55e11b99dbfbf63e030b6fc95b4b2ca77fd2e246b47df3fed3e1cdf1a98f6140"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-spec-6a9-scope.json",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-spec-6a9-scope.json",
+      "sha256": "1bc9bfd550848676ba4850bc4627927246cb75036461a6df64e9029f53f7727e"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-spec-6a9.md",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-spec-6a9.md",
+      "sha256": "91c4682fd2f5b39f988d21570e69d65334795c43758723d79cbea0ff6842489d"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-standards-4c621-commits.txt",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-standards-4c621-commits.txt",
+      "sha256": "ed5bf65af1b7bdf8c6fadf8d97c32b3b83675484e363af0e943e776586bac975"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-standards-4c621-paths.txt",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-standards-4c621-paths.txt",
+      "sha256": "7bd09dfbaa010d49d363c96cd3e867df4c31738bd8538ddd656d802345e1da48"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-standards-4c621-scope.json",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-standards-4c621-scope.json",
+      "sha256": "4a510c63eef4b36ab5df2e56893fe2939be4c5031cbcf030bfefb0c4151ef6d4"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-standards-4c621.md",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-standards-4c621.md",
+      "sha256": "223b5740da47ec809e579fddd37f981c2ed926539b1db716fff067f825996b64"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-standards-5c024-commits.txt",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-standards-5c024-commits.txt",
+      "sha256": "e7182f7063ba577c3de5123ab821093f855f83b626af431d3c83c7aaefe96c79"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-standards-5c024-paths.txt",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-standards-5c024-paths.txt",
+      "sha256": "7bd09dfbaa010d49d363c96cd3e867df4c31738bd8538ddd656d802345e1da48"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-standards-5c024-scope.json",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-standards-5c024-scope.json",
+      "sha256": "6d2940d6acc2ec8d23c849f589d094564092263f9b6c3b4ae76bf9b15af08b42"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-standards-5c024.md",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-standards-5c024.md",
+      "sha256": "e6f79af16a6592b03573146c7c2dda608edfa533e4801acb49fa2d492d92e25c"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-standards-6a9-commits.txt",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-standards-6a9-commits.txt",
+      "sha256": "8701881d1fed1ecbec58b495ecd780ce4ee626c3aea48efe5da84db3d3f6012e"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-standards-6a9-paths.txt",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-standards-6a9-paths.txt",
+      "sha256": "7bd09dfbaa010d49d363c96cd3e867df4c31738bd8538ddd656d802345e1da48"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-standards-6a9-scope.json",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-standards-6a9-scope.json",
+      "sha256": "d112b1dc68a80d19a12cd1519ba1a6abff027b6bb24487dc31d8a25cefd963f8"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-standards-6a9.md",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-standards-6a9.md",
+      "sha256": "dd88c71f7d89b76bae82c0ec908b268059271d3da62454dfeed0fd4b7bd949a0"
+    },
+    {
+      "original": "/tmp/architecture-review-20261004T175605Z-content02-6a9.html",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/architecture-review-20261004T175605Z-content02-6a9.html",
+      "sha256": "04d2bbaa3f4f77f54774b3e13aa462cbc813cd20056b6082f891e52654ae3145"
+    },
+    {
+      "original": "/tmp/architecture-review-20261004T180904Z-content02-4c621.html",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/architecture-review-20261004T180904Z-content02-4c621.html",
+      "sha256": "080aec26d2769e817ffae715b18e551c9a1e41a437454478c4c89e4adf863737"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-02-root-final-component-qualification.json",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-reviews/lerna-04-ticket-02-root-final-component-qualification.json",
+      "sha256": "f8968e8f092e65fc6ed93ac4eaf84cc7fec49c73d26e6068811157c7de46d659"
+    }
+  ]
+}

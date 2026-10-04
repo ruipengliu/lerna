@@ -1,0 +1,37 @@
+File: component-race.test
+Build ID: 3bbd40437e4d29645afa42d049946271f0f19e5e
+Type: cpu
+Time: 2026-10-04 16:29:55 UTC
+Duration: 60.03s, Total samples = 46.69s (77.77%)
+Active filters:
+   focus=github.com/ruipengliu/lerna/(domain/content|adapters/postgres/content)
+Showing nodes accounting for 0.24s, 0.51% of 46.69s total
+Dropped 433 nodes (cum <= 0.23s)
+Showing top 25 nodes out of 243
+      flat  flat%   sum%        cum   cum%
+         0     0%     0%     19.57s 41.91%  github.com/ruipengliu/lerna/conformance/component_test.TestContentFullClosureIncludesIntermediateVersionsAndExact64Bound
+         0     0%     0%     19.55s 41.87%  testing.tRunner
+         0     0%     0%     19.42s 41.59%  github.com/ruipengliu/lerna/adapters/postgres/internal/pgstore.(*Core).Within
+         0     0%     0%     19.37s 41.49%  github.com/ruipengliu/lerna/adapters/postgres/content.(*Store).Within
+         0     0%     0%     10.73s 22.98%  github.com/ruipengliu/lerna/domain/content.(*Service).registeredClosure
+         0     0%     0%      9.86s 21.12%  github.com/ruipengliu/lerna/domain/content.(*Service).Step
+         0     0%     0%      9.70s 20.78%  github.com/ruipengliu/lerna/domain/content.(*Service).publicationPolicy
+         0     0%     0%      9.45s 20.24%  github.com/ruipengliu/lerna/domain/content.(*Service).Put
+         0     0%     0%      9.43s 20.20%  github.com/ruipengliu/lerna/conformance/component_test.putContentRequest
+         0     0%     0%      9.40s 20.13%  github.com/ruipengliu/lerna/domain/content.(*Service).Put.func1
+     0.01s 0.021% 0.021%      7.97s 17.07%  github.com/ruipengliu/lerna/domain/content.(*Service).registeredClosure.func1
+     0.01s 0.021% 0.043%      7.54s 16.15%  github.com/ruipengliu/lerna/adapters/postgres/content.(*Store).CheckPolicy
+     0.03s 0.064%  0.11%      5.81s 12.44%  github.com/ruipengliu/lerna/domain/content.VersionIdentity
+     0.02s 0.043%  0.15%      5.76s 12.34%  database/sql.withLock
+         0     0%  0.15%      5.46s 11.69%  github.com/ruipengliu/lerna/contract/v1_2.Encode[go.shape.struct { Owner github.com/ruipengliu/lerna/contract/gen/go/v1_2.OwnerRef "json:\"owner\""; ContentID github.com/ruipengliu/lerna/contract/gen/go/v1_2.ID "json:\"content_id\""; Version string "json:\"version\""; Hash string "json:\"hash\""; MediaType string "json:\"media_type\""; ByteLength github.com/ruipengliu/lerna/contract/gen/go/v1_2.Revision "json:\"byte_length\"" }]
+         0     0%  0.15%      5.44s 11.65%  database/sql.(*Tx).QueryContext
+     0.03s 0.064%  0.21%      5.40s 11.57%  database/sql.(*DB).queryDC
+         0     0%  0.21%      5.02s 10.75%  github.com/ruipengliu/lerna/domain/content.(*Service).Step.func2
+         0     0%  0.21%      4.81s 10.30%  github.com/ruipengliu/lerna/domain/content.(*Service).Step.func1
+     0.02s 0.043%  0.26%      4.77s 10.22%  github.com/ruipengliu/lerna/adapters/postgres/content.(*Store).LockVersion
+     0.03s 0.064%  0.32%      4.56s  9.77%  github.com/jackc/pgx/v5/pgconn.(*PgConn).ExecStatement
+     0.01s 0.021%  0.34%      4.31s  9.23%  database/sql.(*DB).queryDC.func1
+     0.03s 0.064%  0.41%      4.27s  9.15%  database/sql.ctxDriverQuery
+     0.03s 0.064%  0.47%      4.24s  9.08%  github.com/jackc/pgx/v5/stdlib.(*Conn).QueryContext
+     0.02s 0.043%  0.51%      4.17s  8.93%  github.com/jackc/pgx/v5/pgconn.(*PgConn).execExtendedSuffix
+NATIVE_EXIT status=0 group_absent=True

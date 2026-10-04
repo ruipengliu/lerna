@@ -1,0 +1,9 @@
+=== RUN   TestContentClosurePolicyIntersectionUsesClockAfterRealPolicyLock
+=== RUN   TestContentClosurePolicyIntersectionUsesClockAfterRealPolicyLock/late=false
+=== RUN   TestContentClosurePolicyIntersectionUsesClockAfterRealPolicyLock/late=true
+--- PASS: TestContentClosurePolicyIntersectionUsesClockAfterRealPolicyLock (1.26s)
+    --- PASS: TestContentClosurePolicyIntersectionUsesClockAfterRealPolicyLock/late=false (0.42s)
+    --- PASS: TestContentClosurePolicyIntersectionUsesClockAfterRealPolicyLock/late=true (0.83s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/component	1.284s
+NATIVE_EXIT status=0 group_absent=True

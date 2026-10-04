@@ -1,0 +1,19 @@
+=== RUN   TestContentPolicyPortClockFollowsLockedRow
+=== RUN   TestContentPolicyPortClockFollowsLockedRow/late=false
+    content_policy_actions_test.go:348: mechanical PG execution plan (conditions omitted):
+        CTE Scan on locked_policy
+          Output: locked_policy.body, clock_timestamp()
+          CTE locked_policy
+            ->  LockRows
+                  Output: content_fixture_policies.body, content_fixture_policies.ctid
+                  ->  Index Scan using content_fixture_policies_pkey on lerna_test_c5cdc67330abb0aabca1471d.content_fixture_policies
+                        Output: content_fixture_policies.body, content_fixture_policies.ctid
+=== RUN   TestContentPolicyPortClockFollowsLockedRow/late=true
+    content_policy_actions_test.go:335: port reused trusted time sampled before real row lock
+--- FAIL: TestContentPolicyPortClockFollowsLockedRow (1.05s)
+    --- PASS: TestContentPolicyPortClockFollowsLockedRow/late=false (0.27s)
+    --- FAIL: TestContentPolicyPortClockFollowsLockedRow/late=true (0.79s)
+FAIL
+FAIL	github.com/ruipengliu/lerna/conformance/component	1.069s
+FAIL
+NATIVE_EXIT status=1 group_absent=True

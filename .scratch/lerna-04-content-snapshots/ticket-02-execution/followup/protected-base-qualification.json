@@ -1,0 +1,476 @@
+{
+  "base": "f05b2f1068958ba6b63e6c1dc58d6cd1684446cc",
+  "source": "5c02440800d87eba2af461c210e4333ff45c1633",
+  "count": 117,
+  "objects": [
+    {
+      "path": "adapters/postgres/content/migrations/0001_content.sql",
+      "git_blob": "9f14fd8caa76419618d568e80ecefa43281f7aec"
+    },
+    {
+      "path": "adapters/postgres/decision_engine/migrations/0001_decisions.sql",
+      "git_blob": "67577456392ba15d60a0dae1fce295e7e5e8a756"
+    },
+    {
+      "path": "adapters/postgres/decision_engine/migrations/0002_rule_start_accounting.sql",
+      "git_blob": "25fcb9c488c784dbf7141408b0e6bbb736e0abdb"
+    },
+    {
+      "path": "adapters/postgres/decision_engine/migrations/0003_decision_stops.sql",
+      "git_blob": "a54dca285bbac0039d0e7dd7f0065f9c00fb1714"
+    },
+    {
+      "path": "adapters/postgres/migrations/host/0001_admission.sql",
+      "git_blob": "94bbf3ee3faabc120bcebf37f092d7463e6ce014"
+    },
+    {
+      "path": "adapters/postgres/migrations/host/0002_claims.sql",
+      "git_blob": "6fcc7f37590e9dcf6b08a11ad24c4ba8ad54842e"
+    },
+    {
+      "path": "adapters/postgres/migrations/host/0003_retention.sql",
+      "git_blob": "84d81de766413e1618c76b87339f533b4abfd8d3"
+    },
+    {
+      "path": "adapters/postgres/migrations/host/0004_waits.sql",
+      "git_blob": "6f9554d75b3be09ca9a19693ec2005ea527b89eb"
+    },
+    {
+      "path": "adapters/postgres/migrations/host/0005_pools.sql",
+      "git_blob": "f4650c09fb76817622d45e8ab7bc86291ad6f081"
+    },
+    {
+      "path": "adapters/sqlite/migrations/host/0001_admission.sql",
+      "git_blob": "3adfd5c494dfcaf33b6377d5f2ebcff530ef70e8"
+    },
+    {
+      "path": "adapters/sqlite/migrations/host/0002_claims.sql",
+      "git_blob": "9108b0eefb9ae0d2b88687d91f16e91c39b14889"
+    },
+    {
+      "path": "adapters/sqlite/migrations/host/0003_retention.sql",
+      "git_blob": "190b09ff301f9c4ea7087a85054e7a718cbbe721"
+    },
+    {
+      "path": "adapters/sqlite/migrations/host/0004_waits.sql",
+      "git_blob": "c3de9137caefa704addca5b929ac59f0b662634c"
+    },
+    {
+      "path": "adapters/sqlite/migrations/host/0005_pools.sql",
+      "git_blob": "17cad16eb508e8d008569b6baba6678eb16341a2"
+    },
+    {
+      "path": "conformance/fixtures/1.0.0/commands.json",
+      "git_blob": "649b88634ec7f0aa59324f5371e0ba26ea0f8e7e"
+    },
+    {
+      "path": "conformance/fixtures/1.0.0/digests.json",
+      "git_blob": "13e883060de541a47138e54dab6dc5a9bf98c4f6"
+    },
+    {
+      "path": "conformance/fixtures/1.0.0/negotiations.json",
+      "git_blob": "8ef3a558dc314cc768011983b7cb1e9ac67eb26c"
+    },
+    {
+      "path": "conformance/fixtures/1.0.0/queries.json",
+      "git_blob": "09a090eac1d86b8c44ee2de4d3433f1b44147c14"
+    },
+    {
+      "path": "conformance/fixtures/1.0.0/responses.json",
+      "git_blob": "42f6836d0766154711de4f449418952265657b59"
+    },
+    {
+      "path": "conformance/fixtures/1.0.0/schema-digests.json",
+      "git_blob": "041ad8865556f16c0e1a916d1854745db2bb0875"
+    },
+    {
+      "path": "conformance/fixtures/1.0.0/values.json",
+      "git_blob": "bf28b18d1c9f627b0faf020960d6ffc181020355"
+    },
+    {
+      "path": "conformance/fixtures/1.1.0/README.md",
+      "git_blob": "56f366d0da8a205569fd2650730f6f4ec5938118"
+    },
+    {
+      "path": "conformance/fixtures/1.1.0/digest-input.json",
+      "git_blob": "4ca5ba8ea5a8f76f9852f8d4711da31f98f21791"
+    },
+    {
+      "path": "conformance/fixtures/1.1.0/fixtures.json",
+      "git_blob": "bc9d05c6f5571df0dd32b7e9f53a5f4463d1d0c8"
+    },
+    {
+      "path": "conformance/fixtures/1.1.0/queries.json",
+      "git_blob": "68dfa70a32a070ae4f2fe62f3334036d9d293bef"
+    },
+    {
+      "path": "conformance/fixtures/1.1.0/schema-digests.json",
+      "git_blob": "a44aaf604113c47b77ae55f6f41767618d321349"
+    },
+    {
+      "path": "conformance/fixtures/1.1.0/valid/decide.json",
+      "git_blob": "d059b2ec7799a15307820b05ea234705c2295b08"
+    },
+    {
+      "path": "conformance/fixtures/1.2.0/digests.json",
+      "git_blob": "dc72de0081d223bb851d75a43a5c6231855226ae"
+    },
+    {
+      "path": "conformance/fixtures/1.2.0/fixtures.json",
+      "git_blob": "4c4853e3a5b8e4574df39f5dc6b1d5ba06a5a0c4"
+    },
+    {
+      "path": "conformance/fixtures/1.2.0/put-alpha.json",
+      "git_blob": "e2cd344ef68916e29c59c6b70067525e6ce4945a"
+    },
+    {
+      "path": "conformance/fixtures/deterministic-target/v1/0001_target.sql",
+      "git_blob": "9ba7fbcfe912344307aa3175cb232525dae104fa"
+    },
+    {
+      "path": "conformance/fixtures/deterministic-target/v1/README.md",
+      "git_blob": "339458f357ddb649df51fd0ac51b454d870ee5ab"
+    },
+    {
+      "path": "conformance/fixtures/deterministic-target/v1/SHA256SUMS",
+      "git_blob": "61ea7f4f3661b7cc9688af27399cc3d5d17cc0e9"
+    },
+    {
+      "path": "conformance/fixtures/deterministic-target/v1/target.go.txt",
+      "git_blob": "6aa6b6f2192c9a9048c846cfc1e3b1b8d9e14253"
+    },
+    {
+      "path": "conformance/fixtures/deterministic-target/v1/writer_linux.go.txt",
+      "git_blob": "52698a1ccd00202735e47648a371cf062d35a0db"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/pg-v1/0001_admission.sql",
+      "git_blob": "94bbf3ee3faabc120bcebf37f092d7463e6ce014"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/pg-v1/README.md",
+      "git_blob": "c33b4321425aab250d3b661e6b0569d8f68ba956"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/pg-v1/SHA256SUMS",
+      "git_blob": "677d1c51867b1b865fe0fe0b56c9cffc078107c4"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/pg-v1/commands.json",
+      "git_blob": "61e78662c54d3b95c318d3863298ed3b7a44bada"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/pg-v1/database.sql",
+      "git_blob": "0d808828d4b581cb3a1acb8af785624ef31b85bf"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/pg-v1/provenance.md",
+      "git_blob": "ae9f5bc261f7dab13aa6a7bd62e2102d62230ef6"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/pg-v1/writer-observation.json",
+      "git_blob": "c0ab1882fecbfca2f7ef04e09fc66149515b7236"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/pg-v1/writer-revision.txt",
+      "git_blob": "d1b368b5a2ee1f2d29be05264f29e8a72da8a201"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/pg-v2/0001_admission.sql",
+      "git_blob": "94bbf3ee3faabc120bcebf37f092d7463e6ce014"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/pg-v2/0002_claims.sql",
+      "git_blob": "6fcc7f37590e9dcf6b08a11ad24c4ba8ad54842e"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/pg-v2/README.md",
+      "git_blob": "6664872f9a21cbe455c42db5170767cd5f6c1d1e"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/pg-v2/SHA256SUMS",
+      "git_blob": "2de77fc5584fb2a05cbacfe0fd8bb59f06991df2"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/pg-v2/database.sql",
+      "git_blob": "27555d1f1b7225efac167c8df2f2f2e961e5887e"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/pg-v2/migrations.json",
+      "git_blob": "2d1d28f4a6fcc2fbb6a042b9fcd7bc27cf3f6a7e"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/pg-v2/writer-observation.json",
+      "git_blob": "cf5568c743c165de2143f15598bdd1b22d06e083"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/pg-v2/writer-revision.txt",
+      "git_blob": "ddfd972d36d6dbbe626760e88142fbda3c4f06ee"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/pg-v2/writer-schema.txt",
+      "git_blob": "bc3bc458769abf9fe95a645b46e0d9c21df07b72"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/sqlite-v1/0001_admission.sql",
+      "git_blob": "3adfd5c494dfcaf33b6377d5f2ebcff530ef70e8"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/sqlite-v1/README.md",
+      "git_blob": "431e82e23199001af7b4c65847726e5e76f03d1b"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/sqlite-v1/SHA256SUMS",
+      "git_blob": "0203ce7b4b8f8cef73ad90e6d24e8d5a6f635b68"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/sqlite-v1/commands.json",
+      "git_blob": "61e78662c54d3b95c318d3863298ed3b7a44bada"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/sqlite-v1/database.sqlite",
+      "git_blob": "4f4d52dd44d03b4e00f1f694ed5cc38326763780"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/sqlite-v1/provenance.md",
+      "git_blob": "d4314b24d109801b96d2dd6a10f5a8e7075d7c3f"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/sqlite-v1/writer-observation.json",
+      "git_blob": "a62fbbc6b394142749bf8388ac4eb9536e11dc7c"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/sqlite-v1/writer-revision.txt",
+      "git_blob": "6315ca649c2cbace277652c3463e3fadd31a971d"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/sqlite-v2/0001_admission.sql",
+      "git_blob": "3adfd5c494dfcaf33b6377d5f2ebcff530ef70e8"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/sqlite-v2/0002_claims.sql",
+      "git_blob": "9108b0eefb9ae0d2b88687d91f16e91c39b14889"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/sqlite-v2/README.md",
+      "git_blob": "c5eae1cd27875a6e60f2e385b7193bcb982d95e4"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/sqlite-v2/SHA256SUMS",
+      "git_blob": "134312d0c728d4bf2638372f00b71cf59b79a337"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/sqlite-v2/database.sqlite",
+      "git_blob": "609bc84800c21b6859036bf29b1637d219f4e6f5"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/sqlite-v2/migrations.json",
+      "git_blob": "86cdbf82316a9b471c5294605d328aca5b591ba2"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/sqlite-v2/writer-observation.json",
+      "git_blob": "782b67102b27dda89d1fcd283734f126d35cffa7"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/sqlite-v2/writer-revision.txt",
+      "git_blob": "ddfd972d36d6dbbe626760e88142fbda3c4f06ee"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/v2-writer.go.txt",
+      "git_blob": "95eccc19e821b75dd6a4343548e84a2216ac90c0"
+    },
+    {
+      "path": "conformance/internal/decisionfixture/migrations/0001_fixture.sql",
+      "git_blob": "ef64669f1c14705a34b0590bc25989dbe23f3133"
+    },
+    {
+      "path": "conformance/internal/decisionfixture/migrations/0002_control_access.sql",
+      "git_blob": "c41d8ec550d8976e2387046a6eeb878609c4d7ca"
+    },
+    {
+      "path": "conformance/internal/testkit/target/migrations/0001_target.sql",
+      "git_blob": "9ba7fbcfe912344307aa3175cb232525dae104fa"
+    },
+    {
+      "path": "conformance/internal/testkit/target/migrations/0002_plans.sql",
+      "git_blob": "3b8d36fe5fa4487a5f9030f664b2eef748d3eb9b"
+    },
+    {
+      "path": "contract/README.md",
+      "git_blob": "945664a86f1dcfef0ea4fb63755e35f864d04f0c"
+    },
+    {
+      "path": "contract/codec.go",
+      "git_blob": "70b38914a080e104274a3b13adbd0aea5421f7f1"
+    },
+    {
+      "path": "contract/commands.go",
+      "git_blob": "acc20a9f8f7dcbfe39b2a35d1a62233496ca36af"
+    },
+    {
+      "path": "contract/digest.go",
+      "git_blob": "76298716fc17d56f801b7836ed85662e08e2d1ea"
+    },
+    {
+      "path": "contract/gen/go/v1_1/values.go",
+      "git_blob": "1f017286e431e70b8cb7b0f2b883d906dc8a7536"
+    },
+    {
+      "path": "contract/gen/go/v1_2/values.go",
+      "git_blob": "5266a817cf2d664d46be59acd143fb5dc26c944e"
+    },
+    {
+      "path": "contract/gen/go/values.go",
+      "git_blob": "178959d94f46c4e37368cbba1332650f911e84a4"
+    },
+    {
+      "path": "contract/json.go",
+      "git_blob": "d5076c4e4bc8185d80ee5f40b6b33d4aad19d841"
+    },
+    {
+      "path": "contract/negotiation.go",
+      "git_blob": "503694d269ec50df692b4f991f5b98ed9ff3173c"
+    },
+    {
+      "path": "contract/query.go",
+      "git_blob": "e98113f775f0a083c76da3e4319b77419deedab5"
+    },
+    {
+      "path": "contract/readfacts.go",
+      "git_blob": "90a9a997543735d6b2257407fe2d42bd59507afc"
+    },
+    {
+      "path": "contract/receipts.go",
+      "git_blob": "cf36b83c451fdf938be1d630845260c4c9e2ab6f"
+    },
+    {
+      "path": "contract/schema/1.0.0/methods.json",
+      "git_blob": "9cb0312cdcd62af8636bca0c262b84f2142c888e"
+    },
+    {
+      "path": "contract/schema/1.0.0/values.json",
+      "git_blob": "a087d4d0a86c90c5f670890d68b247d6cc9441e9"
+    },
+    {
+      "path": "contract/schema/1.1.0/methods.json",
+      "git_blob": "04a6d81ddf301b719f6c40849140c95630bb54d4"
+    },
+    {
+      "path": "contract/schema/1.1.0/values.json",
+      "git_blob": "854222f9ada3979515db5c6ad8369800d66d2b27"
+    },
+    {
+      "path": "contract/schema/1.2.0/methods.json",
+      "git_blob": "ae9081b5ca9f612c6c733d4c4ab479f635ecec57"
+    },
+    {
+      "path": "contract/schema/1.2.0/values.json",
+      "git_blob": "cf07da4c149555b5da8526520b7ba82796fa94b5"
+    },
+    {
+      "path": "contract/v1_1/README.md",
+      "git_blob": "71c3b9cb601baf54440fc184e37eda67766dfd9c"
+    },
+    {
+      "path": "contract/v1_1/codec.go",
+      "git_blob": "b63fa369e5c7bbd545b4eb95e92f9710dbb6365d"
+    },
+    {
+      "path": "contract/v1_1/commands.go",
+      "git_blob": "1b7e2007f93efbbecc3d52cdcf46283b843a57a1"
+    },
+    {
+      "path": "contract/v1_1/decision.go",
+      "git_blob": "fb9c074fe9ef76c83c45702cef072398224d4e11"
+    },
+    {
+      "path": "contract/v1_1/digest.go",
+      "git_blob": "00ffa51e7f0051ebfab78fc983f5a8f9a6d9e1f3"
+    },
+    {
+      "path": "contract/v1_1/json.go",
+      "git_blob": "0f95ccd3ede44baf7340b5ca1e5dd4b3c7f029ed"
+    },
+    {
+      "path": "contract/v1_1/negotiation.go",
+      "git_blob": "2f6f7fd5e0a7220c4b99fe841875396f9038b32b"
+    },
+    {
+      "path": "contract/v1_1/query.go",
+      "git_blob": "e129deaef20857092e11785a10c5d009a3299dff"
+    },
+    {
+      "path": "contract/v1_1/readfacts.go",
+      "git_blob": "101571dcbbe912b644c4a444dad2154004c294d3"
+    },
+    {
+      "path": "contract/v1_1/receipts.go",
+      "git_blob": "dd678c27126fbe2cb94d73c9b65f302887841f7d"
+    },
+    {
+      "path": "contract/v1_1/values.go",
+      "git_blob": "e28adb7d45e3cdb6ca131cee570d4d8d693d572b"
+    },
+    {
+      "path": "contract/v1_2/README.md",
+      "git_blob": "87640827eab96c6fba65a490fd5dd41930e0ffd2"
+    },
+    {
+      "path": "contract/v1_2/codec.go",
+      "git_blob": "27f7d103ce375887e077738e8bd53d85d6036aa6"
+    },
+    {
+      "path": "contract/v1_2/commands.go",
+      "git_blob": "8ac6e728ad8a482c5fecd8be6c192d30b06f26d2"
+    },
+    {
+      "path": "contract/v1_2/content.go",
+      "git_blob": "f26c5bd9779e2cc6178cdf5d15d7622a6850f1b3"
+    },
+    {
+      "path": "contract/v1_2/content_response_test.go",
+      "git_blob": "22c44f78b620e8000d6489c510c16a65330e1c6b"
+    },
+    {
+      "path": "contract/v1_2/content_test.go",
+      "git_blob": "db13525d10e32b35896086c4c28eb64342cc272c"
+    },
+    {
+      "path": "contract/v1_2/digest.go",
+      "git_blob": "00343578bda1280f7f92db0495f8f9a4261b098b"
+    },
+    {
+      "path": "contract/v1_2/digest_test.go",
+      "git_blob": "1683b3ec055134fc4990b5bb1534ce7cbb12ac52"
+    },
+    {
+      "path": "contract/v1_2/json.go",
+      "git_blob": "a769d52eab3c40866c723a0fead5ee90f92d2bcf"
+    },
+    {
+      "path": "contract/v1_2/query.go",
+      "git_blob": "f627f0e48ccf8a7539218e5d8d8fe72a871f3019"
+    },
+    {
+      "path": "contract/v1_2/readfacts.go",
+      "git_blob": "6f5872ddf7ca0fcbada5a7a2b2675c5761b1ce0e"
+    },
+    {
+      "path": "contract/v1_2/receipts.go",
+      "git_blob": "c52757e98ef423ef7291b7eb101b5141dcd8f3e9"
+    },
+    {
+      "path": "contract/v1_2/values.go",
+      "git_blob": "aa341320ed1746ec1f9e555bc22e93838490b381"
+    },
+    {
+      "path": "contract/values.go",
+      "git_blob": "670ef3bfa9afb476c43eb62ba1d9627e46304835"
+    },
+    {
+      "path": "sdk/typescript/src/generated/values.ts",
+      "git_blob": "c4b2c7dd85dd9f1ef7b100e628928293e477bf58"
+    }
+  ],
+  "qualification": "actual working-file bytes equal exact existing base blobs; no test/native or physical-cleanup claim"
+}

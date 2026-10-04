@@ -1,0 +1,35 @@
+=== RUN   TestContentFullClosureIncludesIntermediateVersionsAndExact64Bound
+    content_closure_test.go:155: 62 timeout: context deadline exceeded
+    content_closure_test.go:123: closure timing i=62 stage=step current=520.773324ms install=2.00969463s put=33.454526053s step=23.720165525s
+    content_closure_test.go:127: closure port put/Now calls=4347 logical_actions=0 elapsed=2.796499212s
+    content_closure_test.go:127: closure port put/CheckPolicy calls=2016 logical_actions=5922 elapsed=3.299056552s
+    content_closure_test.go:127: closure port put/LockVersion calls=2079 logical_actions=0 elapsed=3.992538728s
+    content_closure_test.go:127: closure port put/ScheduleRetention calls=63 logical_actions=0 elapsed=17.657029258s
+    content_closure_test.go:127: closure port step/Now calls=8141 logical_actions=0 elapsed=5.431802001s
+    content_closure_test.go:127: closure port step/CheckPolicy calls=4008 logical_actions=11772 elapsed=6.921782147s
+    content_closure_test.go:127: closure port step/LockVersion calls=3945 logical_actions=0 elapsed=7.994557139s
+    content_closure_test.go:127: closure port step/ScheduleRetention calls=0 logical_actions=0 elapsed=0s
+    content_closure_test.go:127: closure port get/Now calls=0 logical_actions=0 elapsed=0s
+    content_closure_test.go:127: closure port get/CheckPolicy calls=0 logical_actions=0 elapsed=0s
+    content_closure_test.go:127: closure port get/LockVersion calls=0 logical_actions=0 elapsed=0s
+    content_closure_test.go:127: closure port get/ScheduleRetention calls=0 logical_actions=0 elapsed=0s
+TEMP_PHASE CheckPolicy/DBNow calls=6024 total=3.400770144s max=9.281975ms
+TEMP_PHASE CheckPolicy/decode+flags calls=6024 total=1.348799946s max=5.843638ms
+TEMP_PHASE CheckPolicy/rowScan calls=6024 total=4.043128276s max=16.552169ms
+TEMP_PHASE CheckPolicy/subjectKey calls=6024 total=1.301450029s max=5.370173ms
+TEMP_PHASE LockPolicy/advisoryExec calls=2016 total=1.15634544s max=12.487268ms
+TEMP_PHASE LockPolicy/rowScan calls=2016 total=1.267185102s max=19.059875ms
+TEMP_PHASE LockPolicy/subjectKey calls=2016 total=456.906153ms max=5.820896ms
+TEMP_PHASE LockVersion/advisoryExec calls=6150 total=3.326630715s max=8.932516ms
+TEMP_PHASE LockVersion/decode+validation calls=6024 total=2.236384221s max=10.544879ms
+TEMP_PHASE LockVersion/identity calls=6150 total=2.420045785s max=10.954936ms
+TEMP_PHASE LockVersion/rowScan calls=6150 total=3.997705654s max=10.411561ms
+TEMP_PHASE NextPolicyDue/total calls=2016 total=2.088065309s max=11.590806ms
+TEMP_PHASE ReadChange/basis calls=2079 total=2.075254179s max=12.913216ms
+TEMP_PHASE ReadChange/target calls=1953 total=1.248776599s max=7.037192ms
+TEMP_PHASE SaveChange/total calls=2079 total=2.804350181s max=19.811369ms
+TEMP_PHASE Store.Now/DBNow calls=14756 total=9.444452905s max=27.670792ms
+TEMP_PHASE Trigger/total-including-children calls=2079 total=4.280605624s max=24.458789ms
+--- FAIL: TestContentFullClosureIncludesIntermediateVersionsAndExact64Bound (60.03s)
+FAIL
+NATIVE_EXIT status=1 group_absent=True

@@ -1,0 +1,9 @@
+{
+  "actual_tool_completed": true,
+  "tool_exit": 0,
+  "native_exit": 0,
+  "group_absent": true,
+  "auditor_group": 2600026,
+  "raw": "final-resource-audit.raw",
+  "qualification": "post-module actual completed exec; pre-module audit preserved; unknowns retained; no per-Close ACK inferred"
+}

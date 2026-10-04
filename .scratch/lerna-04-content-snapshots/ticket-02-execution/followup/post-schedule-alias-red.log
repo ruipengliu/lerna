@@ -1,0 +1,11 @@
+=== RUN   TestContentPostScheduleAliasPreservesOriginalCapOnRollback
+=== RUN   TestContentPostScheduleAliasPreservesOriginalCapOnRollback/late=false
+=== RUN   TestContentPostScheduleAliasPreservesOriginalCapOnRollback/late=true
+    content_post_schedule_test.go:245: expected fixed expired rejection
+--- FAIL: TestContentPostScheduleAliasPreservesOriginalCapOnRollback (2.38s)
+    --- PASS: TestContentPostScheduleAliasPreservesOriginalCapOnRollback/late=false (1.77s)
+    --- FAIL: TestContentPostScheduleAliasPreservesOriginalCapOnRollback/late=true (0.61s)
+FAIL
+FAIL	github.com/ruipengliu/lerna/conformance/component	2.396s
+FAIL
+NATIVE_EXIT status=1 group_absent=True

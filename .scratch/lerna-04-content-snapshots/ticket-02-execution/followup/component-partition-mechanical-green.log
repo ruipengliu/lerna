@@ -1,0 +1,15 @@
+✔ native Go discovery failure preserves its exit status (76.71714ms)
+✔ positive partition includes future tests, Unicode, Examples and Fuzz seeds (271.528945ms)
+✔ absent durable group never becomes an empty selector that runs all tests (127.343682ms)
+✔ duplicate, empty and ambiguous inventories fail closed (296.593582ms)
+✔ a native race-group failure remains a failure (119.275793ms)
+✔ normal entry uses the same complete positive partition without race (316.507253ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1313.374331
+NATIVE_EXIT status=0 group_absent=True

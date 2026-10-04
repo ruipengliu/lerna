@@ -1,0 +1,2 @@
+exact_owned_legacy_schema_exists true
+NATIVE_EXIT status=0 group_absent=True

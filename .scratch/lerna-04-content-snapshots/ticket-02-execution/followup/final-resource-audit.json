@@ -1,0 +1,88 @@
+{
+  "actual_live_group_members": {
+    "2278478": [
+      {
+        "parent": "1",
+        "pid": 2279009,
+        "start_time": "9458475",
+        "state": "Z"
+      }
+    ]
+  },
+  "current_auditor_group": 2600026,
+  "exact_residual_roots": [
+    {
+      "device": 27,
+      "inode": 431381,
+      "path": "/workspace/lerna-content-02-f05b2f1068958/legacy-many-objects"
+    },
+    {
+      "device": 27,
+      "inode": 431537,
+      "path": "/workspace/lerna-content-02-f05b2f1068958/legacy-objects"
+    },
+    {
+      "device": 27,
+      "inode": 431524,
+      "path": "/workspace/lerna-content-02-f05b2f1068958/lerna-content-objects-4130439993"
+    },
+    {
+      "device": 27,
+      "inode": 559653,
+      "path": "/workspace/lerna-content-02-fix-57ea60c628f8/legacy-expired-objects"
+    },
+    {
+      "device": 27,
+      "inode": 559805,
+      "path": "/workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-298625017"
+    },
+    {
+      "device": 27,
+      "inode": 559785,
+      "path": "/workspace/lerna-content-02-fix-57ea60c628f8/phase-diagnostic-overlay"
+    },
+    {
+      "device": 27,
+      "inode": 560923,
+      "path": "/workspace/lerna-content-02-fix-57ea60c628f8/policy-actions-compile-input"
+    },
+    {
+      "device": 27,
+      "inode": 560438,
+      "path": "/workspace/lerna-content-02-fix-57ea60c628f8/policy-early-clock-fault-input"
+    }
+  ],
+  "existing_legacy_paths_without_identity_ack": [],
+  "expected_retained_schema_qualifications": {
+    "lerna_test_17ff3c0062f18527717babc9": "empty-selector precise-owner SIGTERM/per-Close unknown quarantine",
+    "lerna_test_4aee55540d91e5d8db9131fb": "preserved old writer archive; original ignored per-Close results unknown",
+    "lerna_test_6b8f60ee6b09466c308df88e": "original timeout/Z/per-Close unknown quarantine",
+    "lerna_test_a230998266aca1270c72b73e": "preserved actual old writer 65-policy archive",
+    "lerna_test_de87bd29399603c7d0ae9691": "preserved actual expired old writer archive"
+  },
+  "legacy_exact_paths_without_identity_ack": 70,
+  "live_exact_schemas": [
+    "lerna_test_17ff3c0062f18527717babc9",
+    "lerna_test_4aee55540d91e5d8db9131fb",
+    "lerna_test_6b8f60ee6b09466c308df88e",
+    "lerna_test_a230998266aca1270c72b73e",
+    "lerna_test_de87bd29399603c7d0ae9691"
+  ],
+  "live_groups_excluding_actual_auditor": [
+    2278478
+  ],
+  "live_native_and_producer_pids_excluding_actual_auditor": [],
+  "live_policy_holders": [],
+  "overlay_roots": [
+    "/workspace/lerna-content-02-f05b2f1068958",
+    "/workspace/lerna-content-02-fix-57ea60c628f8"
+  ],
+  "qualification": "read-only exact-ledger audit; retained archives/caches/diagnostics/quarantines are not cleanup; no per-Close ACK inferred from native exit or Z",
+  "registered_groups": 281,
+  "registered_native_and_producer_pids": 293,
+  "registered_object_contract_generator_roots": 972,
+  "registered_policy_holders": 161,
+  "registered_schemas": 1401,
+  "unexpected_live_groups": [],
+  "unexpected_live_schemas": []
+}

@@ -1,0 +1,71 @@
+=== RUN   TestContentClosureRecordWaitRechecksPolicyBeforeMetadata
+=== RUN   TestContentClosureRecordWaitRechecksPolicyBeforeMetadata/missing=false/late=false
+=== RUN   TestContentClosureRecordWaitRechecksPolicyBeforeMetadata/missing=false/late=true
+=== RUN   TestContentClosureRecordWaitRechecksPolicyBeforeMetadata/missing=true/late=false
+=== RUN   TestContentClosureRecordWaitRechecksPolicyBeforeMetadata/missing=true/late=true
+--- PASS: TestContentClosureRecordWaitRechecksPolicyBeforeMetadata (2.21s)
+    --- PASS: TestContentClosureRecordWaitRechecksPolicyBeforeMetadata/missing=false/late=false (0.31s)
+    --- PASS: TestContentClosureRecordWaitRechecksPolicyBeforeMetadata/missing=false/late=true (0.88s)
+    --- PASS: TestContentClosureRecordWaitRechecksPolicyBeforeMetadata/missing=true/late=false (0.19s)
+    --- PASS: TestContentClosureRecordWaitRechecksPolicyBeforeMetadata/missing=true/late=true (0.83s)
+=== RUN   TestContentClosureActionIntersectionKeepsIndependentFlags
+=== RUN   TestContentClosureActionIntersectionKeepsIndependentFlags/none
+=== RUN   TestContentClosureActionIntersectionKeepsIndependentFlags/read
+=== RUN   TestContentClosureActionIntersectionKeepsIndependentFlags/process
+=== RUN   TestContentClosureActionIntersectionKeepsIndependentFlags/save
+=== RUN   TestContentClosureActionIntersectionKeepsIndependentFlags/disclose
+=== RUN   TestContentClosureActionIntersectionKeepsIndependentFlags/sync
+--- PASS: TestContentClosureActionIntersectionKeepsIndependentFlags (2.75s)
+    --- PASS: TestContentClosureActionIntersectionKeepsIndependentFlags/none (0.40s)
+    --- PASS: TestContentClosureActionIntersectionKeepsIndependentFlags/read (0.38s)
+    --- PASS: TestContentClosureActionIntersectionKeepsIndependentFlags/process (0.52s)
+    --- PASS: TestContentClosureActionIntersectionKeepsIndependentFlags/save (0.44s)
+    --- PASS: TestContentClosureActionIntersectionKeepsIndependentFlags/disclose (0.51s)
+    --- PASS: TestContentClosureActionIntersectionKeepsIndependentFlags/sync (0.50s)
+=== RUN   TestContentPolicyActionVectorsFailClosed
+=== RUN   TestContentPolicyActionVectorsFailClosed/[read_process_save]
+=== RUN   TestContentPolicyActionVectorsFailClosed/[read_disclose]
+=== RUN   TestContentPolicyActionVectorsFailClosed/[]
+=== RUN   TestContentPolicyActionVectorsFailClosed/[]#01
+=== RUN   TestContentPolicyActionVectorsFailClosed/[read_read]
+=== RUN   TestContentPolicyActionVectorsFailClosed/[unknown]
+=== RUN   TestContentPolicyActionVectorsFailClosed/[read_process_save_sync_disclose_read]
+--- PASS: TestContentPolicyActionVectorsFailClosed (0.15s)
+    --- PASS: TestContentPolicyActionVectorsFailClosed/[read_process_save] (0.01s)
+    --- PASS: TestContentPolicyActionVectorsFailClosed/[read_disclose] (0.00s)
+    --- PASS: TestContentPolicyActionVectorsFailClosed/[] (0.00s)
+    --- PASS: TestContentPolicyActionVectorsFailClosed/[]#01 (0.00s)
+    --- PASS: TestContentPolicyActionVectorsFailClosed/[read_read] (0.00s)
+    --- PASS: TestContentPolicyActionVectorsFailClosed/[unknown] (0.01s)
+    --- PASS: TestContentPolicyActionVectorsFailClosed/[read_process_save_sync_disclose_read] (0.00s)
+=== RUN   TestContentClosurePolicyIntersectionUsesClockAfterRealPolicyLock
+=== RUN   TestContentClosurePolicyIntersectionUsesClockAfterRealPolicyLock/late=false
+=== RUN   TestContentClosurePolicyIntersectionUsesClockAfterRealPolicyLock/late=true
+--- PASS: TestContentClosurePolicyIntersectionUsesClockAfterRealPolicyLock (1.20s)
+    --- PASS: TestContentClosurePolicyIntersectionUsesClockAfterRealPolicyLock/late=false (0.36s)
+    --- PASS: TestContentClosurePolicyIntersectionUsesClockAfterRealPolicyLock/late=true (0.84s)
+=== RUN   TestContentPolicyPortClockFollowsLockedRow
+=== RUN   TestContentPolicyPortClockFollowsLockedRow/late=false
+    content_policy_actions_test.go:348: mechanical PG execution plan (conditions omitted):
+        CTE Scan on locked_policy
+          Output: locked_policy.body, clock_timestamp()
+          CTE locked_policy
+            ->  LockRows
+                  Output: content_fixture_policies.body, content_fixture_policies.ctid
+                  ->  Index Scan using content_fixture_policies_pkey on lerna_test_c95131cdc7c41959009d11c5.content_fixture_policies
+                        Output: content_fixture_policies.body, content_fixture_policies.ctid
+=== RUN   TestContentPolicyPortClockFollowsLockedRow/late=true
+    content_policy_actions_test.go:348: mechanical PG execution plan (conditions omitted):
+        CTE Scan on locked_policy
+          Output: locked_policy.body, clock_timestamp()
+          CTE locked_policy
+            ->  LockRows
+                  Output: content_fixture_policies.body, content_fixture_policies.ctid
+                  ->  Index Scan using content_fixture_policies_pkey on lerna_test_8d11fe97c17fcd0b3ddaaf45.content_fixture_policies
+                        Output: content_fixture_policies.body, content_fixture_policies.ctid
+--- PASS: TestContentPolicyPortClockFollowsLockedRow (0.89s)
+    --- PASS: TestContentPolicyPortClockFollowsLockedRow/late=false (0.16s)
+    --- PASS: TestContentPolicyPortClockFollowsLockedRow/late=true (0.73s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/component	7.218s
+NATIVE_EXIT status=0 group_absent=True

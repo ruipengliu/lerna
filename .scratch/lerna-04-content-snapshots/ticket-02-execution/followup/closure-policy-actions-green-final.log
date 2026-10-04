@@ -1,0 +1,43 @@
+=== RUN   TestContentClosureRecordWaitRechecksPolicyBeforeMetadata
+=== RUN   TestContentClosureRecordWaitRechecksPolicyBeforeMetadata/missing=false/late=false
+=== RUN   TestContentClosureRecordWaitRechecksPolicyBeforeMetadata/missing=false/late=true
+=== RUN   TestContentClosureRecordWaitRechecksPolicyBeforeMetadata/missing=true/late=false
+=== RUN   TestContentClosureRecordWaitRechecksPolicyBeforeMetadata/missing=true/late=true
+--- PASS: TestContentClosureRecordWaitRechecksPolicyBeforeMetadata (2.65s)
+    --- PASS: TestContentClosureRecordWaitRechecksPolicyBeforeMetadata/missing=false/late=false (0.44s)
+    --- PASS: TestContentClosureRecordWaitRechecksPolicyBeforeMetadata/missing=false/late=true (0.93s)
+    --- PASS: TestContentClosureRecordWaitRechecksPolicyBeforeMetadata/missing=true/late=false (0.40s)
+    --- PASS: TestContentClosureRecordWaitRechecksPolicyBeforeMetadata/missing=true/late=true (0.88s)
+=== RUN   TestContentClosureActionIntersectionKeepsIndependentFlags
+=== RUN   TestContentClosureActionIntersectionKeepsIndependentFlags/none
+=== RUN   TestContentClosureActionIntersectionKeepsIndependentFlags/read
+=== RUN   TestContentClosureActionIntersectionKeepsIndependentFlags/process
+=== RUN   TestContentClosureActionIntersectionKeepsIndependentFlags/save
+=== RUN   TestContentClosureActionIntersectionKeepsIndependentFlags/disclose
+=== RUN   TestContentClosureActionIntersectionKeepsIndependentFlags/sync
+--- PASS: TestContentClosureActionIntersectionKeepsIndependentFlags (3.13s)
+    --- PASS: TestContentClosureActionIntersectionKeepsIndependentFlags/none (0.47s)
+    --- PASS: TestContentClosureActionIntersectionKeepsIndependentFlags/read (0.43s)
+    --- PASS: TestContentClosureActionIntersectionKeepsIndependentFlags/process (0.65s)
+    --- PASS: TestContentClosureActionIntersectionKeepsIndependentFlags/save (0.38s)
+    --- PASS: TestContentClosureActionIntersectionKeepsIndependentFlags/disclose (0.64s)
+    --- PASS: TestContentClosureActionIntersectionKeepsIndependentFlags/sync (0.55s)
+=== RUN   TestContentPolicyActionVectorsFailClosed
+=== RUN   TestContentPolicyActionVectorsFailClosed/[read_process_save]
+=== RUN   TestContentPolicyActionVectorsFailClosed/[read_disclose]
+=== RUN   TestContentPolicyActionVectorsFailClosed/[]
+=== RUN   TestContentPolicyActionVectorsFailClosed/[]#01
+=== RUN   TestContentPolicyActionVectorsFailClosed/[read_read]
+=== RUN   TestContentPolicyActionVectorsFailClosed/[unknown]
+=== RUN   TestContentPolicyActionVectorsFailClosed/[read_process_save_sync_disclose_read]
+--- PASS: TestContentPolicyActionVectorsFailClosed (0.15s)
+    --- PASS: TestContentPolicyActionVectorsFailClosed/[read_process_save] (0.00s)
+    --- PASS: TestContentPolicyActionVectorsFailClosed/[read_disclose] (0.00s)
+    --- PASS: TestContentPolicyActionVectorsFailClosed/[] (0.01s)
+    --- PASS: TestContentPolicyActionVectorsFailClosed/[]#01 (0.01s)
+    --- PASS: TestContentPolicyActionVectorsFailClosed/[read_read] (0.00s)
+    --- PASS: TestContentPolicyActionVectorsFailClosed/[unknown] (0.00s)
+    --- PASS: TestContentPolicyActionVectorsFailClosed/[read_process_save_sync_disclose_read] (0.00s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/component	5.974s
+NATIVE_EXIT status=0 group_absent=True

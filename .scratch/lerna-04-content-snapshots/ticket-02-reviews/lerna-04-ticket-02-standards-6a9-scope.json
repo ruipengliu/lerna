@@ -1,0 +1,3857 @@
+{
+  "axis": "Standards only",
+  "base": "f05b2f1068958ba6b63e6c1dc58d6cd1684446cc",
+  "head": "6a9aa658c912be5c8fed022ceda2511212d19a70",
+  "prior_head": "75202ee0077b5bf12b432b5017ad97a1dfcab681",
+  "merge_base": "f05b2f1068958ba6b63e6c1dc58d6cd1684446cc",
+  "diff_command": "git diff f05b2f1068958ba6b63e6c1dc58d6cd1684446cc...6a9aa658c912be5c8fed022ceda2511212d19a70",
+  "commit_count": 9,
+  "path_count": 54,
+  "text_added": 8419,
+  "text_deleted": 211,
+  "commits": [
+    {
+      "commit": "f54d697b50d63490a2ed573b8dd91c18d3178110",
+      "parents": [
+        "f05b2f1068958ba6b63e6c1dc58d6cd1684446cc"
+      ],
+      "subject": "docs: record verified Content checkpoint CI and full finite integration scope"
+    },
+    {
+      "commit": "70f69e524592491a5ad37754cf0793ee131acec6",
+      "parents": [
+        "f54d697b50d63490a2ed573b8dd91c18d3178110"
+      ],
+      "subject": "docs(content): adopt current-policy oracle and responsibility decisions"
+    },
+    {
+      "commit": "482dc1def90c9ccafe3be850ec28e0f4e81f71c2",
+      "parents": [
+        "f05b2f1068958ba6b63e6c1dc58d6cd1684446cc"
+      ],
+      "subject": "Implement current Content source closure and durable policy propagation"
+    },
+    {
+      "commit": "d3fb9c7e56293f9be30da13c012c0863c0da6aa1",
+      "parents": [
+        "482dc1def90c9ccafe3be850ec28e0f4e81f71c2",
+        "70f69e524592491a5ad37754cf0793ee131acec6"
+      ],
+      "subject": "Merge commit '70f69e524592491a5ad37754cf0793ee131acec6' into codex/content-snapshots-ticket-02"
+    },
+    {
+      "commit": "57ea60c628f82140f5700503107d3e2fe4a86dec",
+      "parents": [
+        "d3fb9c7e56293f9be30da13c012c0863c0da6aa1"
+      ],
+      "subject": "Preserve exact native Content archives and normalize restore EOF"
+    },
+    {
+      "commit": "8d64ad1ed8eee35d07ee3fc990dd2696729ef9c8",
+      "parents": [
+        "57ea60c628f82140f5700503107d3e2fe4a86dec"
+      ],
+      "subject": "fix(content): preserve propagation deadlines and admission expiry obligations"
+    },
+    {
+      "commit": "3f44032ffaaf9cd51fc253399412252767f0f737",
+      "parents": [
+        "8d64ad1ed8eee35d07ee3fc990dd2696729ef9c8"
+      ],
+      "subject": "fix(content): hand off original natural checks and retain all SQL close causes"
+    },
+    {
+      "commit": "75202ee0077b5bf12b432b5017ad97a1dfcab681",
+      "parents": [
+        "3f44032ffaaf9cd51fc253399412252767f0f737"
+      ],
+      "subject": "test(content): cover natural handoff through both worker consumers"
+    },
+    {
+      "commit": "6a9aa658c912be5c8fed022ceda2511212d19a70",
+      "parents": [
+        "75202ee0077b5bf12b432b5017ad97a1dfcab681"
+      ],
+      "subject": "fix(content): preserve admission bounds and combine current source actions"
+    }
+  ],
+  "prior_report": "/tmp/lerna-04-ticket-02-standards-752.md",
+  "prior_scope": "/tmp/lerna-04-ticket-02-standards-752-scope.json",
+  "qualification": {
+    "fresh_delta_paths": 13,
+    "carried_changed_range_paths": 41,
+    "all_carried_mode_type_blob_equal": true,
+    "other_whole_tree_entries": 899,
+    "other_whole_tree_entries_all_equal": true,
+    "protected_count": 73,
+    "protected_all_equal": true,
+    "archive_object_count": 21,
+    "archive_all_equal": true,
+    "standards_all_equal_prior": true
+  },
+  "paths": [
+    {
+      "path": ".gitattributes",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "f46bc4f2ddbc04629aee3d25570dd412b4fbb425"
+      },
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "61a70d47da26cf8ccd7433f5c878adb3d21933fd"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "61a70d47da26cf8ccd7433f5c878adb3d21933fd"
+      },
+      "review": "full prior range qualified carry by mode/type/blob",
+      "equal_prior": true
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/ci-verification.md",
+      "base": null,
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "0ff82eff7d7398fb0bb4575473f0d42a98a90f0f"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "0ff82eff7d7398fb0bb4575473f0d42a98a90f0f"
+      },
+      "review": "full prior range qualified carry by mode/type/blob",
+      "equal_prior": true
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/issues/02-current-source-policies.md",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "5fb73a9c24fbcfe44786a087987e8c07050d6c85"
+      },
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "5a87fa60b272cb6a4a8cc30992a59dec8a4f022b"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "5a87fa60b272cb6a4a8cc30992a59dec8a4f022b"
+      },
+      "review": "full prior range qualified carry by mode/type/blob",
+      "equal_prior": true
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/ticket-01-exit-evidence.md",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "5fc776b0156e0eeaf2f283a2c8c80670d03220a8"
+      },
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "e295032e6dedc4c6d9eebd44b6b552a282cefe41"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "e295032e6dedc4c6d9eebd44b6b552a282cefe41"
+      },
+      "review": "full prior range qualified carry by mode/type/blob",
+      "equal_prior": true
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/ticket-02-oracle-decisions.md",
+      "base": null,
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "f00e774605be856ea1d135a1db18b2266e44c7a8"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "f00e774605be856ea1d135a1db18b2266e44c7a8"
+      },
+      "review": "full prior range qualified carry by mode/type/blob",
+      "equal_prior": true
+    },
+    {
+      "path": ".scratch/lerna-implementation/progress.md",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "27ff2ac04b7e8f1c655821aedbccf1c5f6a47d28"
+      },
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "f792702f05528219ce9ef4c2a7f7fc765464b555"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "f792702f05528219ce9ef4c2a7f7fc765464b555"
+      },
+      "review": "full prior range qualified carry by mode/type/blob",
+      "equal_prior": true
+    },
+    {
+      "path": "Makefile",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "23505cde05dd4c2a3d7aaba2fac03ef5b1f95155"
+      },
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "23505cde05dd4c2a3d7aaba2fac03ef5b1f95155"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "12610df8beeb5c6efe4d8cd0df234297a9e924e4"
+      },
+      "review": "complete fixed file and all delta hunks read",
+      "equal_prior": false
+    },
+    {
+      "path": "adapters/postgres/content/facts.go",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "cfd0b2ab3cacf3a229c76f44987b8e4bb2248c17"
+      },
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "9e9dd22ec1ae18347a37cb315e9ba5b4909eb7c4"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "d0eba95a81b13c06575111aa9e5442ccc8ccf492"
+      },
+      "review": "complete fixed file and all delta hunks read",
+      "equal_prior": false
+    },
+    {
+      "path": "adapters/postgres/content/management.go",
+      "base": null,
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "185165840a9bde50f0234e99150a6a50fb00c40c"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "085a4207fa94a92f36e86913be7f72cf5370adfd"
+      },
+      "review": "complete fixed file and all delta hunks read",
+      "equal_prior": false
+    },
+    {
+      "path": "adapters/postgres/content/management_rows_test.go",
+      "base": null,
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "0d3b5d44f3f0d6ad495a41a103d4a7de1629cd92"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "0d3b5d44f3f0d6ad495a41a103d4a7de1629cd92"
+      },
+      "review": "full prior range qualified carry by mode/type/blob",
+      "equal_prior": true
+    },
+    {
+      "path": "adapters/postgres/content/migrate.go",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "f9f7d3d6e694d3fbb30958e040a1e98f1c9edbeb"
+      },
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "e12754f772a1587c86008d628273e8d48b6cd04b"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "e12754f772a1587c86008d628273e8d48b6cd04b"
+      },
+      "review": "full prior range qualified carry by mode/type/blob",
+      "equal_prior": true
+    },
+    {
+      "path": "adapters/postgres/content/migrations/0002_source_policies.sql",
+      "base": null,
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "02a082a5a0edfa57d0e8d2a2680b0af5ad9a5a41"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "02a082a5a0edfa57d0e8d2a2680b0af5ad9a5a41"
+      },
+      "review": "full prior range qualified carry by mode/type/blob",
+      "equal_prior": true
+    },
+    {
+      "path": "adapters/postgres/content/policy.go",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "0f042009652d1970309385b25a48ae1ae28ca447"
+      },
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "9b8752f1f78e42202287c618740e769d1ee2fe28"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "eeb5a5777d41477783cfd5d786dfd739fbd91856"
+      },
+      "review": "complete fixed file and all delta hunks read",
+      "equal_prior": false
+    },
+    {
+      "path": "conformance/component/content_association_test.go",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "8c4b4589c5c89b7edeb56981d92c9ba56a9490e6"
+      },
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "ce45b9331b17a1142e8e0847056b802d0186f28e"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "ce45b9331b17a1142e8e0847056b802d0186f28e"
+      },
+      "review": "full prior range qualified carry by mode/type/blob",
+      "equal_prior": true
+    },
+    {
+      "path": "conformance/component/content_closure_test.go",
+      "base": null,
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "9c310565fc92023afcbb5cf9b612a988c6e273eb"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "bdbe606348847be8dd3238b9eaa115a56e2fb231"
+      },
+      "review": "complete fixed file and all delta hunks read",
+      "equal_prior": false
+    },
+    {
+      "path": "conformance/component/content_direct_read_test.go",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "683b1a2383bd631af1fa735c865bae0ccbad4fbc"
+      },
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "35460c48c30a76585eb1f282fcc8da13a5975c58"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "35460c48c30a76585eb1f282fcc8da13a5975c58"
+      },
+      "review": "full prior range qualified carry by mode/type/blob",
+      "equal_prior": true
+    },
+    {
+      "path": "conformance/component/content_inherited_expiry_test.go",
+      "base": null,
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "d2802a3c9e6ee9df9fe685fe11874b210d959272"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "d2802a3c9e6ee9df9fe685fe11874b210d959272"
+      },
+      "review": "full prior range qualified carry by mode/type/blob",
+      "equal_prior": true
+    },
+    {
+      "path": "conformance/component/content_legacy_test.go",
+      "base": null,
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "2f2089c418055e781a3710d1dd9d89da9a7d58a6"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "2f2089c418055e781a3710d1dd9d89da9a7d58a6"
+      },
+      "review": "full prior range qualified carry by mode/type/blob",
+      "equal_prior": true
+    },
+    {
+      "path": "conformance/component/content_management_test.go",
+      "base": null,
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "acda6b07df81e26729f64e0fd1609c3edbe19774"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "acda6b07df81e26729f64e0fd1609c3edbe19774"
+      },
+      "review": "full prior range qualified carry by mode/type/blob",
+      "equal_prior": true
+    },
+    {
+      "path": "conformance/component/content_policy_actions_test.go",
+      "base": null,
+      "prior": null,
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "eec69d92537c3e053644fbd587838425b94636ef"
+      },
+      "review": "complete fixed file and all delta hunks read",
+      "equal_prior": false
+    },
+    {
+      "path": "conformance/component/content_post_schedule_test.go",
+      "base": null,
+      "prior": null,
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "49bb76200416b7355f0d774552b21c4de0139084"
+      },
+      "review": "complete fixed file and all delta hunks read",
+      "equal_prior": false
+    },
+    {
+      "path": "conformance/component/content_processing_deadline_test.go",
+      "base": null,
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "5cf994ae4aec2ef7ed91f87a77453f2ea345c2cc"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "5cf994ae4aec2ef7ed91f87a77453f2ea345c2cc"
+      },
+      "review": "full prior range qualified carry by mode/type/blob",
+      "equal_prior": true
+    },
+    {
+      "path": "conformance/internal/contentfixture/legacy.go",
+      "base": null,
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "06438b6fda8cff8f38a657fafbc83fe44e7f7cae"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "06438b6fda8cff8f38a657fafbc83fe44e7f7cae"
+      },
+      "review": "full prior range qualified carry by mode/type/blob",
+      "equal_prior": true
+    },
+    {
+      "path": "conformance/internal/contentfixture/migration_test.go",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "cbd624527c5d9956cb96a44e7d82796e351ad860"
+      },
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "1791ce393db68ec70dacaf38713edb9e8f702c29"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "1791ce393db68ec70dacaf38713edb9e8f702c29"
+      },
+      "review": "full prior range qualified carry by mode/type/blob",
+      "equal_prior": true
+    },
+    {
+      "path": "conformance/internal/contentfixture/policy_lock.go",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "dd90aa6cf32bd6a95edae07b227a2886975226c4"
+      },
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "75197823b793f2fe2ac3b8685d08a5fc9c635e15"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "75197823b793f2fe2ac3b8685d08a5fc9c635e15"
+      },
+      "review": "full prior range qualified carry by mode/type/blob",
+      "equal_prior": true
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/README.md",
+      "base": null,
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "e8df491fa6760db9241c0d99626cf271cac8b812"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "e8df491fa6760db9241c0d99626cf271cac8b812"
+      },
+      "review": "full prior range qualified carry by mode/type/blob",
+      "equal_prior": true
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/76f0298c5432c6b1e28ae5a2c2cc4e8624fd32cffa6112173de32a68c90652c4",
+      "base": null,
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "4a58007052a65fbc2fc3f910f2855f45a4058e74"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "4a58007052a65fbc2fc3f910f2855f45a4058e74"
+      },
+      "review": "full prior range qualified carry by mode/type/blob",
+      "equal_prior": true
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/SHA256SUMS",
+      "base": null,
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "d2545d360368671e6ec56046039e281914b1e537"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "d2545d360368671e6ec56046039e281914b1e537"
+      },
+      "review": "full prior range qualified carry by mode/type/blob",
+      "equal_prior": true
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/da1384e8c6e31d165b9f0442b2d2f1f57a875a20156041bfedfcc4ce779654dc",
+      "base": null,
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "4a58007052a65fbc2fc3f910f2855f45a4058e74"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "4a58007052a65fbc2fc3f910f2855f45a4058e74"
+      },
+      "review": "full prior range qualified carry by mode/type/blob",
+      "equal_prior": true
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/observation.json",
+      "base": null,
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "b7ce2095534dea1607e76a89f728e3acde1fbf9b"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "b7ce2095534dea1607e76a89f728e3acde1fbf9b"
+      },
+      "review": "full prior range qualified carry by mode/type/blob",
+      "equal_prior": true
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/original-pg18-dump.sql",
+      "base": null,
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "020d384621925b7c04d66df8033cd724633a3b3e"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "020d384621925b7c04d66df8033cd724633a3b3e"
+      },
+      "review": "full prior range qualified carry by mode/type/blob",
+      "equal_prior": true
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/producer.go.txt",
+      "base": null,
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "c1a827b11b104ccf362ed591c718d28ded3b6ec3"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "c1a827b11b104ccf362ed591c718d28ded3b6ec3"
+      },
+      "review": "full prior range qualified carry by mode/type/blob",
+      "equal_prior": true
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/restore.sql",
+      "base": null,
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "38d6e2767a557ed4e1db93b68ae2b66eebc94558"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "38d6e2767a557ed4e1db93b68ae2b66eebc94558"
+      },
+      "review": "full prior range qualified carry by mode/type/blob",
+      "equal_prior": true
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/76f0298c5432c6b1e28ae5a2c2cc4e8624fd32cffa6112173de32a68c90652c4",
+      "base": null,
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "4a58007052a65fbc2fc3f910f2855f45a4058e74"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "4a58007052a65fbc2fc3f910f2855f45a4058e74"
+      },
+      "review": "full prior range qualified carry by mode/type/blob",
+      "equal_prior": true
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/SHA256SUMS",
+      "base": null,
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "f9380af712926c7fe266e5e2e906ffeac9719379"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "f9380af712926c7fe266e5e2e906ffeac9719379"
+      },
+      "review": "full prior range qualified carry by mode/type/blob",
+      "equal_prior": true
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/da1384e8c6e31d165b9f0442b2d2f1f57a875a20156041bfedfcc4ce779654dc",
+      "base": null,
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "4a58007052a65fbc2fc3f910f2855f45a4058e74"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "4a58007052a65fbc2fc3f910f2855f45a4058e74"
+      },
+      "review": "full prior range qualified carry by mode/type/blob",
+      "equal_prior": true
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/observation.json",
+      "base": null,
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "3acae85bca5e1660eda18a89e984862c84f45f64"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "3acae85bca5e1660eda18a89e984862c84f45f64"
+      },
+      "review": "full prior range qualified carry by mode/type/blob",
+      "equal_prior": true
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/original-pg18-dump.sql",
+      "base": null,
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "fb80a1b0332078e5f97a0966fdebfba571e649a5"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "fb80a1b0332078e5f97a0966fdebfba571e649a5"
+      },
+      "review": "full prior range qualified carry by mode/type/blob",
+      "equal_prior": true
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/producer.go.txt",
+      "base": null,
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "7cc3438a191d9a17a11e4eb3b910c9af4ed9f3e9"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "7cc3438a191d9a17a11e4eb3b910c9af4ed9f3e9"
+      },
+      "review": "full prior range qualified carry by mode/type/blob",
+      "equal_prior": true
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/restore.sql",
+      "base": null,
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "0c0431fd59927f5896b812ceac411fbee8eb2c0e"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "0c0431fd59927f5896b812ceac411fbee8eb2c0e"
+      },
+      "review": "full prior range qualified carry by mode/type/blob",
+      "equal_prior": true
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/76f0298c5432c6b1e28ae5a2c2cc4e8624fd32cffa6112173de32a68c90652c4",
+      "base": null,
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "4a58007052a65fbc2fc3f910f2855f45a4058e74"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "4a58007052a65fbc2fc3f910f2855f45a4058e74"
+      },
+      "review": "full prior range qualified carry by mode/type/blob",
+      "equal_prior": true
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/SHA256SUMS",
+      "base": null,
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "141cdf1f4494009c9d9ff026e40dd15e3036d307"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "141cdf1f4494009c9d9ff026e40dd15e3036d307"
+      },
+      "review": "full prior range qualified carry by mode/type/blob",
+      "equal_prior": true
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/da1384e8c6e31d165b9f0442b2d2f1f57a875a20156041bfedfcc4ce779654dc",
+      "base": null,
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "4a58007052a65fbc2fc3f910f2855f45a4058e74"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "4a58007052a65fbc2fc3f910f2855f45a4058e74"
+      },
+      "review": "full prior range qualified carry by mode/type/blob",
+      "equal_prior": true
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/observation.json",
+      "base": null,
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "3acae85bca5e1660eda18a89e984862c84f45f64"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "3acae85bca5e1660eda18a89e984862c84f45f64"
+      },
+      "review": "full prior range qualified carry by mode/type/blob",
+      "equal_prior": true
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/original-pg18-dump.sql",
+      "base": null,
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "db3a215fa72a2578721074367fff42cc9bb3bd32"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "db3a215fa72a2578721074367fff42cc9bb3bd32"
+      },
+      "review": "full prior range qualified carry by mode/type/blob",
+      "equal_prior": true
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/producer.go.txt",
+      "base": null,
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "fed889074954ea57c20e3cb8dfbb79fbdfefa5a0"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "fed889074954ea57c20e3cb8dfbb79fbdfefa5a0"
+      },
+      "review": "full prior range qualified carry by mode/type/blob",
+      "equal_prior": true
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/restore.sql",
+      "base": null,
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "7fe3fbb5ab51a0d8d52d1534869c105c50aa2235"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "7fe3fbb5ab51a0d8d52d1534869c105c50aa2235"
+      },
+      "review": "full prior range qualified carry by mode/type/blob",
+      "equal_prior": true
+    },
+    {
+      "path": "conformance/internal/contentfixture/world.go",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "373b35d6a6c6ec74ee493892440dde7a503cb91d"
+      },
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "c7f0d553dc2a6f76b17c2867a713a0c909b3955e"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "c7f0d553dc2a6f76b17c2867a713a0c909b3955e"
+      },
+      "review": "full prior range qualified carry by mode/type/blob",
+      "equal_prior": true
+    },
+    {
+      "path": "domain/content/closure.go",
+      "base": null,
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "e4f9961915bb9cc2026cf90e6c1d5049a2f4189d"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "f78c51e10d52eea2c7e7a7537622fe27d84a4735"
+      },
+      "review": "complete fixed file and all delta hunks read",
+      "equal_prior": false
+    },
+    {
+      "path": "domain/content/management.go",
+      "base": null,
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "bea1dc9703538ff7f825d819775eb5ca8ac212a6"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "3e07b466d896748497b8933a86f16075d9c47e42"
+      },
+      "review": "complete fixed file and all delta hunks read",
+      "equal_prior": false
+    },
+    {
+      "path": "domain/content/ports.go",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "77ee047197b87d245355d550eeabfdc937237844"
+      },
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "8bc6f124241afc5f0a75f3ef252fc46fa61e128a"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "2ca2ffa51ad61adfed1642aeae0de36c22af15e7"
+      },
+      "review": "complete fixed file and all delta hunks read",
+      "equal_prior": false
+    },
+    {
+      "path": "domain/content/service.go",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "7bafcbb5648b0794ad49ec8cd67671f0366b202e"
+      },
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "1808b6e2bac28ff7613fd4b9075f154a574eb47f"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "68789baacde422ed80b5b8a9615c751a0d032f5d"
+      },
+      "review": "complete fixed file and all delta hunks read",
+      "equal_prior": false
+    },
+    {
+      "path": "scripts/component-integration-race.test.mjs",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "fdbc911d4e2f8a2fb2048ba87b42e4cb197348e3"
+      },
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "fdbc911d4e2f8a2fb2048ba87b42e4cb197348e3"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "bf6111940dabe6ac6a9d97a9993f62eb63581933"
+      },
+      "review": "complete fixed file and all delta hunks read",
+      "equal_prior": false
+    },
+    {
+      "path": "scripts/test-component-integration-race.sh",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "cee1fcd80f8b1b73cecdb2d706b96e01df5e518d"
+      },
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "cee1fcd80f8b1b73cecdb2d706b96e01df5e518d"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "450f14e8ad16c34ced79c42781860e6f6f013dea"
+      },
+      "review": "complete fixed file and all delta hunks read",
+      "equal_prior": false
+    }
+  ],
+  "delta_paths": [
+    "Makefile",
+    "adapters/postgres/content/facts.go",
+    "adapters/postgres/content/management.go",
+    "adapters/postgres/content/policy.go",
+    "conformance/component/content_closure_test.go",
+    "conformance/component/content_policy_actions_test.go",
+    "conformance/component/content_post_schedule_test.go",
+    "domain/content/closure.go",
+    "domain/content/management.go",
+    "domain/content/ports.go",
+    "domain/content/service.go",
+    "scripts/component-integration-race.test.mjs",
+    "scripts/test-component-integration-race.sh"
+  ],
+  "carried_paths": [
+    ".gitattributes",
+    ".scratch/lerna-04-content-snapshots/ci-verification.md",
+    ".scratch/lerna-04-content-snapshots/issues/02-current-source-policies.md",
+    ".scratch/lerna-04-content-snapshots/ticket-01-exit-evidence.md",
+    ".scratch/lerna-04-content-snapshots/ticket-02-oracle-decisions.md",
+    ".scratch/lerna-implementation/progress.md",
+    "adapters/postgres/content/management_rows_test.go",
+    "adapters/postgres/content/migrate.go",
+    "adapters/postgres/content/migrations/0002_source_policies.sql",
+    "conformance/component/content_association_test.go",
+    "conformance/component/content_direct_read_test.go",
+    "conformance/component/content_inherited_expiry_test.go",
+    "conformance/component/content_legacy_test.go",
+    "conformance/component/content_management_test.go",
+    "conformance/component/content_processing_deadline_test.go",
+    "conformance/internal/contentfixture/legacy.go",
+    "conformance/internal/contentfixture/migration_test.go",
+    "conformance/internal/contentfixture/policy_lock.go",
+    "conformance/internal/contentfixture/testdata/README.md",
+    "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/76f0298c5432c6b1e28ae5a2c2cc4e8624fd32cffa6112173de32a68c90652c4",
+    "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/SHA256SUMS",
+    "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/da1384e8c6e31d165b9f0442b2d2f1f57a875a20156041bfedfcc4ce779654dc",
+    "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/observation.json",
+    "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/original-pg18-dump.sql",
+    "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/producer.go.txt",
+    "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/restore.sql",
+    "conformance/internal/contentfixture/testdata/legacy-many-policies/76f0298c5432c6b1e28ae5a2c2cc4e8624fd32cffa6112173de32a68c90652c4",
+    "conformance/internal/contentfixture/testdata/legacy-many-policies/SHA256SUMS",
+    "conformance/internal/contentfixture/testdata/legacy-many-policies/da1384e8c6e31d165b9f0442b2d2f1f57a875a20156041bfedfcc4ce779654dc",
+    "conformance/internal/contentfixture/testdata/legacy-many-policies/observation.json",
+    "conformance/internal/contentfixture/testdata/legacy-many-policies/original-pg18-dump.sql",
+    "conformance/internal/contentfixture/testdata/legacy-many-policies/producer.go.txt",
+    "conformance/internal/contentfixture/testdata/legacy-many-policies/restore.sql",
+    "conformance/internal/contentfixture/testdata/legacy-v1/76f0298c5432c6b1e28ae5a2c2cc4e8624fd32cffa6112173de32a68c90652c4",
+    "conformance/internal/contentfixture/testdata/legacy-v1/SHA256SUMS",
+    "conformance/internal/contentfixture/testdata/legacy-v1/da1384e8c6e31d165b9f0442b2d2f1f57a875a20156041bfedfcc4ce779654dc",
+    "conformance/internal/contentfixture/testdata/legacy-v1/observation.json",
+    "conformance/internal/contentfixture/testdata/legacy-v1/original-pg18-dump.sql",
+    "conformance/internal/contentfixture/testdata/legacy-v1/producer.go.txt",
+    "conformance/internal/contentfixture/testdata/legacy-v1/restore.sql",
+    "conformance/internal/contentfixture/world.go"
+  ],
+  "whole_tree_delta_objects": [
+    {
+      "path": "Makefile",
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "23505cde05dd4c2a3d7aaba2fac03ef5b1f95155"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "12610df8beeb5c6efe4d8cd0df234297a9e924e4"
+      }
+    },
+    {
+      "path": "adapters/postgres/content/facts.go",
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "9e9dd22ec1ae18347a37cb315e9ba5b4909eb7c4"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "d0eba95a81b13c06575111aa9e5442ccc8ccf492"
+      }
+    },
+    {
+      "path": "adapters/postgres/content/management.go",
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "185165840a9bde50f0234e99150a6a50fb00c40c"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "085a4207fa94a92f36e86913be7f72cf5370adfd"
+      }
+    },
+    {
+      "path": "adapters/postgres/content/policy.go",
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "9b8752f1f78e42202287c618740e769d1ee2fe28"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "eeb5a5777d41477783cfd5d786dfd739fbd91856"
+      }
+    },
+    {
+      "path": "conformance/component/content_closure_test.go",
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "9c310565fc92023afcbb5cf9b612a988c6e273eb"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "bdbe606348847be8dd3238b9eaa115a56e2fb231"
+      }
+    },
+    {
+      "path": "conformance/component/content_policy_actions_test.go",
+      "prior": null,
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "eec69d92537c3e053644fbd587838425b94636ef"
+      }
+    },
+    {
+      "path": "conformance/component/content_post_schedule_test.go",
+      "prior": null,
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "49bb76200416b7355f0d774552b21c4de0139084"
+      }
+    },
+    {
+      "path": "domain/content/closure.go",
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "e4f9961915bb9cc2026cf90e6c1d5049a2f4189d"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "f78c51e10d52eea2c7e7a7537622fe27d84a4735"
+      }
+    },
+    {
+      "path": "domain/content/management.go",
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "bea1dc9703538ff7f825d819775eb5ca8ac212a6"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "3e07b466d896748497b8933a86f16075d9c47e42"
+      }
+    },
+    {
+      "path": "domain/content/ports.go",
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "8bc6f124241afc5f0a75f3ef252fc46fa61e128a"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "2ca2ffa51ad61adfed1642aeae0de36c22af15e7"
+      }
+    },
+    {
+      "path": "domain/content/service.go",
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "1808b6e2bac28ff7613fd4b9075f154a574eb47f"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "68789baacde422ed80b5b8a9615c751a0d032f5d"
+      }
+    },
+    {
+      "path": "scripts/component-integration-race.test.mjs",
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "fdbc911d4e2f8a2fb2048ba87b42e4cb197348e3"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "bf6111940dabe6ac6a9d97a9993f62eb63581933"
+      }
+    },
+    {
+      "path": "scripts/test-component-integration-race.sh",
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "cee1fcd80f8b1b73cecdb2d706b96e01df5e518d"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "450f14e8ad16c34ced79c42781860e6f6f013dea"
+      }
+    }
+  ],
+  "product_objects": [
+    {
+      "path": "adapters/postgres/content/README.md",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "c2af09c7ccfd42557d376e8c2063a49213bf8f99"
+      },
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "c2af09c7ccfd42557d376e8c2063a49213bf8f99"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "c2af09c7ccfd42557d376e8c2063a49213bf8f99"
+      },
+      "equal_prior": true
+    },
+    {
+      "path": "adapters/postgres/content/facts.go",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "cfd0b2ab3cacf3a229c76f44987b8e4bb2248c17"
+      },
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "9e9dd22ec1ae18347a37cb315e9ba5b4909eb7c4"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "d0eba95a81b13c06575111aa9e5442ccc8ccf492"
+      },
+      "equal_prior": false
+    },
+    {
+      "path": "adapters/postgres/content/management.go",
+      "base": null,
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "185165840a9bde50f0234e99150a6a50fb00c40c"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "085a4207fa94a92f36e86913be7f72cf5370adfd"
+      },
+      "equal_prior": false
+    },
+    {
+      "path": "adapters/postgres/content/migrate.go",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "f9f7d3d6e694d3fbb30958e040a1e98f1c9edbeb"
+      },
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "e12754f772a1587c86008d628273e8d48b6cd04b"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "e12754f772a1587c86008d628273e8d48b6cd04b"
+      },
+      "equal_prior": true
+    },
+    {
+      "path": "adapters/postgres/content/migrations/0001_content.sql",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "9f14fd8caa76419618d568e80ecefa43281f7aec"
+      },
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "9f14fd8caa76419618d568e80ecefa43281f7aec"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "9f14fd8caa76419618d568e80ecefa43281f7aec"
+      },
+      "equal_prior": true
+    },
+    {
+      "path": "adapters/postgres/content/migrations/0002_source_policies.sql",
+      "base": null,
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "02a082a5a0edfa57d0e8d2a2680b0af5ad9a5a41"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "02a082a5a0edfa57d0e8d2a2680b0af5ad9a5a41"
+      },
+      "equal_prior": true
+    },
+    {
+      "path": "adapters/postgres/content/policy.go",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "0f042009652d1970309385b25a48ae1ae28ca447"
+      },
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "9b8752f1f78e42202287c618740e769d1ee2fe28"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "eeb5a5777d41477783cfd5d786dfd739fbd91856"
+      },
+      "equal_prior": false
+    },
+    {
+      "path": "adapters/postgres/content/store.go",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "f458b1ee30d4f390fc1509b70b076c5d529d23cd"
+      },
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "f458b1ee30d4f390fc1509b70b076c5d529d23cd"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "f458b1ee30d4f390fc1509b70b076c5d529d23cd"
+      },
+      "equal_prior": true
+    },
+    {
+      "path": "domain/content/README.md",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "d61d24c01c10da9e0b6811b5804a7b26065316aa"
+      },
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "d61d24c01c10da9e0b6811b5804a7b26065316aa"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "d61d24c01c10da9e0b6811b5804a7b26065316aa"
+      },
+      "equal_prior": true
+    },
+    {
+      "path": "domain/content/closure.go",
+      "base": null,
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "e4f9961915bb9cc2026cf90e6c1d5049a2f4189d"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "f78c51e10d52eea2c7e7a7537622fe27d84a4735"
+      },
+      "equal_prior": false
+    },
+    {
+      "path": "domain/content/identity.go",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "10d10dd95a598aa03175b77cf81683fa0156f2f6"
+      },
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "10d10dd95a598aa03175b77cf81683fa0156f2f6"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "10d10dd95a598aa03175b77cf81683fa0156f2f6"
+      },
+      "equal_prior": true
+    },
+    {
+      "path": "domain/content/legacy.go",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "2b0ce0f7956745f36a9f358bfeb0f59800c0608b"
+      },
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "2b0ce0f7956745f36a9f358bfeb0f59800c0608b"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "2b0ce0f7956745f36a9f358bfeb0f59800c0608b"
+      },
+      "equal_prior": true
+    },
+    {
+      "path": "domain/content/management.go",
+      "base": null,
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "bea1dc9703538ff7f825d819775eb5ca8ac212a6"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "3e07b466d896748497b8933a86f16075d9c47e42"
+      },
+      "equal_prior": false
+    },
+    {
+      "path": "domain/content/ports.go",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "77ee047197b87d245355d550eeabfdc937237844"
+      },
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "8bc6f124241afc5f0a75f3ef252fc46fa61e128a"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "2ca2ffa51ad61adfed1642aeae0de36c22af15e7"
+      },
+      "equal_prior": false
+    },
+    {
+      "path": "domain/content/service.go",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "7bafcbb5648b0794ad49ec8cd67671f0366b202e"
+      },
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "1808b6e2bac28ff7613fd4b9075f154a574eb47f"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "68789baacde422ed80b5b8a9615c751a0d032f5d"
+      },
+      "equal_prior": false
+    }
+  ],
+  "archive_objects": [
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/76f0298c5432c6b1e28ae5a2c2cc4e8624fd32cffa6112173de32a68c90652c4",
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "4a58007052a65fbc2fc3f910f2855f45a4058e74"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "4a58007052a65fbc2fc3f910f2855f45a4058e74"
+      },
+      "equal_prior": true
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/SHA256SUMS",
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "d2545d360368671e6ec56046039e281914b1e537"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "d2545d360368671e6ec56046039e281914b1e537"
+      },
+      "equal_prior": true
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/da1384e8c6e31d165b9f0442b2d2f1f57a875a20156041bfedfcc4ce779654dc",
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "4a58007052a65fbc2fc3f910f2855f45a4058e74"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "4a58007052a65fbc2fc3f910f2855f45a4058e74"
+      },
+      "equal_prior": true
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/observation.json",
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "b7ce2095534dea1607e76a89f728e3acde1fbf9b"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "b7ce2095534dea1607e76a89f728e3acde1fbf9b"
+      },
+      "equal_prior": true
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/original-pg18-dump.sql",
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "020d384621925b7c04d66df8033cd724633a3b3e"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "020d384621925b7c04d66df8033cd724633a3b3e"
+      },
+      "equal_prior": true
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/producer.go.txt",
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "c1a827b11b104ccf362ed591c718d28ded3b6ec3"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "c1a827b11b104ccf362ed591c718d28ded3b6ec3"
+      },
+      "equal_prior": true
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/restore.sql",
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "38d6e2767a557ed4e1db93b68ae2b66eebc94558"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "38d6e2767a557ed4e1db93b68ae2b66eebc94558"
+      },
+      "equal_prior": true
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/76f0298c5432c6b1e28ae5a2c2cc4e8624fd32cffa6112173de32a68c90652c4",
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "4a58007052a65fbc2fc3f910f2855f45a4058e74"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "4a58007052a65fbc2fc3f910f2855f45a4058e74"
+      },
+      "equal_prior": true
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/SHA256SUMS",
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "f9380af712926c7fe266e5e2e906ffeac9719379"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "f9380af712926c7fe266e5e2e906ffeac9719379"
+      },
+      "equal_prior": true
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/da1384e8c6e31d165b9f0442b2d2f1f57a875a20156041bfedfcc4ce779654dc",
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "4a58007052a65fbc2fc3f910f2855f45a4058e74"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "4a58007052a65fbc2fc3f910f2855f45a4058e74"
+      },
+      "equal_prior": true
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/observation.json",
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "3acae85bca5e1660eda18a89e984862c84f45f64"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "3acae85bca5e1660eda18a89e984862c84f45f64"
+      },
+      "equal_prior": true
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/original-pg18-dump.sql",
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "fb80a1b0332078e5f97a0966fdebfba571e649a5"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "fb80a1b0332078e5f97a0966fdebfba571e649a5"
+      },
+      "equal_prior": true
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/producer.go.txt",
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "7cc3438a191d9a17a11e4eb3b910c9af4ed9f3e9"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "7cc3438a191d9a17a11e4eb3b910c9af4ed9f3e9"
+      },
+      "equal_prior": true
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/restore.sql",
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "0c0431fd59927f5896b812ceac411fbee8eb2c0e"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "0c0431fd59927f5896b812ceac411fbee8eb2c0e"
+      },
+      "equal_prior": true
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/76f0298c5432c6b1e28ae5a2c2cc4e8624fd32cffa6112173de32a68c90652c4",
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "4a58007052a65fbc2fc3f910f2855f45a4058e74"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "4a58007052a65fbc2fc3f910f2855f45a4058e74"
+      },
+      "equal_prior": true
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/SHA256SUMS",
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "141cdf1f4494009c9d9ff026e40dd15e3036d307"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "141cdf1f4494009c9d9ff026e40dd15e3036d307"
+      },
+      "equal_prior": true
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/da1384e8c6e31d165b9f0442b2d2f1f57a875a20156041bfedfcc4ce779654dc",
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "4a58007052a65fbc2fc3f910f2855f45a4058e74"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "4a58007052a65fbc2fc3f910f2855f45a4058e74"
+      },
+      "equal_prior": true
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/observation.json",
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "3acae85bca5e1660eda18a89e984862c84f45f64"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "3acae85bca5e1660eda18a89e984862c84f45f64"
+      },
+      "equal_prior": true
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/original-pg18-dump.sql",
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "db3a215fa72a2578721074367fff42cc9bb3bd32"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "db3a215fa72a2578721074367fff42cc9bb3bd32"
+      },
+      "equal_prior": true
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/producer.go.txt",
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "fed889074954ea57c20e3cb8dfbb79fbdfefa5a0"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "fed889074954ea57c20e3cb8dfbb79fbdfefa5a0"
+      },
+      "equal_prior": true
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/restore.sql",
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "7fe3fbb5ab51a0d8d52d1534869c105c50aa2235"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "7fe3fbb5ab51a0d8d52d1534869c105c50aa2235"
+      },
+      "equal_prior": true
+    }
+  ],
+  "frozen_existing_qualification": {
+    "count": 73,
+    "all_equal": true,
+    "objects": [
+      {
+        "path": "adapters/postgres/content/migrations/0001_content.sql",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "9f14fd8caa76419618d568e80ecefa43281f7aec"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "9f14fd8caa76419618d568e80ecefa43281f7aec"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "9f14fd8caa76419618d568e80ecefa43281f7aec"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "adapters/postgres/decision_engine/migrations/0001_decisions.sql",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "67577456392ba15d60a0dae1fce295e7e5e8a756"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "67577456392ba15d60a0dae1fce295e7e5e8a756"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "67577456392ba15d60a0dae1fce295e7e5e8a756"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/1.0.0/commands.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "649b88634ec7f0aa59324f5371e0ba26ea0f8e7e"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "649b88634ec7f0aa59324f5371e0ba26ea0f8e7e"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "649b88634ec7f0aa59324f5371e0ba26ea0f8e7e"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/1.0.0/digests.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "13e883060de541a47138e54dab6dc5a9bf98c4f6"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "13e883060de541a47138e54dab6dc5a9bf98c4f6"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "13e883060de541a47138e54dab6dc5a9bf98c4f6"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/1.0.0/negotiations.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "8ef3a558dc314cc768011983b7cb1e9ac67eb26c"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "8ef3a558dc314cc768011983b7cb1e9ac67eb26c"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "8ef3a558dc314cc768011983b7cb1e9ac67eb26c"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/1.0.0/queries.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "09a090eac1d86b8c44ee2de4d3433f1b44147c14"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "09a090eac1d86b8c44ee2de4d3433f1b44147c14"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "09a090eac1d86b8c44ee2de4d3433f1b44147c14"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/1.0.0/responses.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "42f6836d0766154711de4f449418952265657b59"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "42f6836d0766154711de4f449418952265657b59"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "42f6836d0766154711de4f449418952265657b59"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/1.0.0/schema-digests.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "041ad8865556f16c0e1a916d1854745db2bb0875"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "041ad8865556f16c0e1a916d1854745db2bb0875"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "041ad8865556f16c0e1a916d1854745db2bb0875"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/1.0.0/values.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "bf28b18d1c9f627b0faf020960d6ffc181020355"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "bf28b18d1c9f627b0faf020960d6ffc181020355"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "bf28b18d1c9f627b0faf020960d6ffc181020355"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/1.1.0/README.md",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "56f366d0da8a205569fd2650730f6f4ec5938118"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "56f366d0da8a205569fd2650730f6f4ec5938118"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "56f366d0da8a205569fd2650730f6f4ec5938118"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/1.1.0/digest-input.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "4ca5ba8ea5a8f76f9852f8d4711da31f98f21791"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "4ca5ba8ea5a8f76f9852f8d4711da31f98f21791"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "4ca5ba8ea5a8f76f9852f8d4711da31f98f21791"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/1.1.0/fixtures.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "bc9d05c6f5571df0dd32b7e9f53a5f4463d1d0c8"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "bc9d05c6f5571df0dd32b7e9f53a5f4463d1d0c8"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "bc9d05c6f5571df0dd32b7e9f53a5f4463d1d0c8"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/1.1.0/queries.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "68dfa70a32a070ae4f2fe62f3334036d9d293bef"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "68dfa70a32a070ae4f2fe62f3334036d9d293bef"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "68dfa70a32a070ae4f2fe62f3334036d9d293bef"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/1.1.0/schema-digests.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "a44aaf604113c47b77ae55f6f41767618d321349"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "a44aaf604113c47b77ae55f6f41767618d321349"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "a44aaf604113c47b77ae55f6f41767618d321349"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/1.1.0/valid/decide.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "d059b2ec7799a15307820b05ea234705c2295b08"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "d059b2ec7799a15307820b05ea234705c2295b08"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "d059b2ec7799a15307820b05ea234705c2295b08"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/1.2.0/digests.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "dc72de0081d223bb851d75a43a5c6231855226ae"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "dc72de0081d223bb851d75a43a5c6231855226ae"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "dc72de0081d223bb851d75a43a5c6231855226ae"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/1.2.0/fixtures.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "4c4853e3a5b8e4574df39f5dc6b1d5ba06a5a0c4"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "4c4853e3a5b8e4574df39f5dc6b1d5ba06a5a0c4"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "4c4853e3a5b8e4574df39f5dc6b1d5ba06a5a0c4"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/1.2.0/put-alpha.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "e2cd344ef68916e29c59c6b70067525e6ce4945a"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "e2cd344ef68916e29c59c6b70067525e6ce4945a"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "e2cd344ef68916e29c59c6b70067525e6ce4945a"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/deterministic-target/v1/0001_target.sql",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "9ba7fbcfe912344307aa3175cb232525dae104fa"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "9ba7fbcfe912344307aa3175cb232525dae104fa"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "9ba7fbcfe912344307aa3175cb232525dae104fa"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/deterministic-target/v1/README.md",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "339458f357ddb649df51fd0ac51b454d870ee5ab"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "339458f357ddb649df51fd0ac51b454d870ee5ab"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "339458f357ddb649df51fd0ac51b454d870ee5ab"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/deterministic-target/v1/SHA256SUMS",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "61ea7f4f3661b7cc9688af27399cc3d5d17cc0e9"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "61ea7f4f3661b7cc9688af27399cc3d5d17cc0e9"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "61ea7f4f3661b7cc9688af27399cc3d5d17cc0e9"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/deterministic-target/v1/target.go.txt",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "6aa6b6f2192c9a9048c846cfc1e3b1b8d9e14253"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "6aa6b6f2192c9a9048c846cfc1e3b1b8d9e14253"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "6aa6b6f2192c9a9048c846cfc1e3b1b8d9e14253"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/deterministic-target/v1/writer_linux.go.txt",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "52698a1ccd00202735e47648a371cf062d35a0db"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "52698a1ccd00202735e47648a371cf062d35a0db"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "52698a1ccd00202735e47648a371cf062d35a0db"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/pg-v1/0001_admission.sql",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "94bbf3ee3faabc120bcebf37f092d7463e6ce014"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "94bbf3ee3faabc120bcebf37f092d7463e6ce014"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "94bbf3ee3faabc120bcebf37f092d7463e6ce014"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/pg-v1/README.md",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "c33b4321425aab250d3b661e6b0569d8f68ba956"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "c33b4321425aab250d3b661e6b0569d8f68ba956"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "c33b4321425aab250d3b661e6b0569d8f68ba956"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/pg-v1/SHA256SUMS",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "677d1c51867b1b865fe0fe0b56c9cffc078107c4"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "677d1c51867b1b865fe0fe0b56c9cffc078107c4"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "677d1c51867b1b865fe0fe0b56c9cffc078107c4"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/pg-v1/commands.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "61e78662c54d3b95c318d3863298ed3b7a44bada"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "61e78662c54d3b95c318d3863298ed3b7a44bada"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "61e78662c54d3b95c318d3863298ed3b7a44bada"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/pg-v1/database.sql",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "0d808828d4b581cb3a1acb8af785624ef31b85bf"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "0d808828d4b581cb3a1acb8af785624ef31b85bf"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "0d808828d4b581cb3a1acb8af785624ef31b85bf"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/pg-v1/provenance.md",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "ae9f5bc261f7dab13aa6a7bd62e2102d62230ef6"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "ae9f5bc261f7dab13aa6a7bd62e2102d62230ef6"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "ae9f5bc261f7dab13aa6a7bd62e2102d62230ef6"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/pg-v1/writer-observation.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "c0ab1882fecbfca2f7ef04e09fc66149515b7236"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "c0ab1882fecbfca2f7ef04e09fc66149515b7236"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "c0ab1882fecbfca2f7ef04e09fc66149515b7236"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/pg-v1/writer-revision.txt",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "d1b368b5a2ee1f2d29be05264f29e8a72da8a201"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "d1b368b5a2ee1f2d29be05264f29e8a72da8a201"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "d1b368b5a2ee1f2d29be05264f29e8a72da8a201"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/pg-v2/0001_admission.sql",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "94bbf3ee3faabc120bcebf37f092d7463e6ce014"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "94bbf3ee3faabc120bcebf37f092d7463e6ce014"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "94bbf3ee3faabc120bcebf37f092d7463e6ce014"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/pg-v2/0002_claims.sql",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "6fcc7f37590e9dcf6b08a11ad24c4ba8ad54842e"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "6fcc7f37590e9dcf6b08a11ad24c4ba8ad54842e"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "6fcc7f37590e9dcf6b08a11ad24c4ba8ad54842e"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/pg-v2/README.md",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "6664872f9a21cbe455c42db5170767cd5f6c1d1e"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "6664872f9a21cbe455c42db5170767cd5f6c1d1e"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "6664872f9a21cbe455c42db5170767cd5f6c1d1e"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/pg-v2/SHA256SUMS",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "2de77fc5584fb2a05cbacfe0fd8bb59f06991df2"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "2de77fc5584fb2a05cbacfe0fd8bb59f06991df2"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "2de77fc5584fb2a05cbacfe0fd8bb59f06991df2"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/pg-v2/database.sql",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "27555d1f1b7225efac167c8df2f2f2e961e5887e"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "27555d1f1b7225efac167c8df2f2f2e961e5887e"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "27555d1f1b7225efac167c8df2f2f2e961e5887e"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/pg-v2/migrations.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "2d1d28f4a6fcc2fbb6a042b9fcd7bc27cf3f6a7e"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "2d1d28f4a6fcc2fbb6a042b9fcd7bc27cf3f6a7e"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "2d1d28f4a6fcc2fbb6a042b9fcd7bc27cf3f6a7e"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/pg-v2/writer-observation.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "cf5568c743c165de2143f15598bdd1b22d06e083"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "cf5568c743c165de2143f15598bdd1b22d06e083"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "cf5568c743c165de2143f15598bdd1b22d06e083"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/pg-v2/writer-revision.txt",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "ddfd972d36d6dbbe626760e88142fbda3c4f06ee"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "ddfd972d36d6dbbe626760e88142fbda3c4f06ee"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "ddfd972d36d6dbbe626760e88142fbda3c4f06ee"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/pg-v2/writer-schema.txt",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "bc3bc458769abf9fe95a645b46e0d9c21df07b72"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "bc3bc458769abf9fe95a645b46e0d9c21df07b72"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "bc3bc458769abf9fe95a645b46e0d9c21df07b72"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/sqlite-v1/0001_admission.sql",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "3adfd5c494dfcaf33b6377d5f2ebcff530ef70e8"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "3adfd5c494dfcaf33b6377d5f2ebcff530ef70e8"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "3adfd5c494dfcaf33b6377d5f2ebcff530ef70e8"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/sqlite-v1/README.md",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "431e82e23199001af7b4c65847726e5e76f03d1b"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "431e82e23199001af7b4c65847726e5e76f03d1b"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "431e82e23199001af7b4c65847726e5e76f03d1b"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/sqlite-v1/SHA256SUMS",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "0203ce7b4b8f8cef73ad90e6d24e8d5a6f635b68"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "0203ce7b4b8f8cef73ad90e6d24e8d5a6f635b68"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "0203ce7b4b8f8cef73ad90e6d24e8d5a6f635b68"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/sqlite-v1/commands.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "61e78662c54d3b95c318d3863298ed3b7a44bada"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "61e78662c54d3b95c318d3863298ed3b7a44bada"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "61e78662c54d3b95c318d3863298ed3b7a44bada"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/sqlite-v1/database.sqlite",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "4f4d52dd44d03b4e00f1f694ed5cc38326763780"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "4f4d52dd44d03b4e00f1f694ed5cc38326763780"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "4f4d52dd44d03b4e00f1f694ed5cc38326763780"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/sqlite-v1/provenance.md",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "d4314b24d109801b96d2dd6a10f5a8e7075d7c3f"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "d4314b24d109801b96d2dd6a10f5a8e7075d7c3f"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "d4314b24d109801b96d2dd6a10f5a8e7075d7c3f"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/sqlite-v1/writer-observation.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "a62fbbc6b394142749bf8388ac4eb9536e11dc7c"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "a62fbbc6b394142749bf8388ac4eb9536e11dc7c"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "a62fbbc6b394142749bf8388ac4eb9536e11dc7c"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/sqlite-v1/writer-revision.txt",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "6315ca649c2cbace277652c3463e3fadd31a971d"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "6315ca649c2cbace277652c3463e3fadd31a971d"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "6315ca649c2cbace277652c3463e3fadd31a971d"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/sqlite-v2/0001_admission.sql",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "3adfd5c494dfcaf33b6377d5f2ebcff530ef70e8"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "3adfd5c494dfcaf33b6377d5f2ebcff530ef70e8"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "3adfd5c494dfcaf33b6377d5f2ebcff530ef70e8"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/sqlite-v2/0002_claims.sql",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "9108b0eefb9ae0d2b88687d91f16e91c39b14889"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "9108b0eefb9ae0d2b88687d91f16e91c39b14889"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "9108b0eefb9ae0d2b88687d91f16e91c39b14889"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/sqlite-v2/README.md",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "c5eae1cd27875a6e60f2e385b7193bcb982d95e4"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "c5eae1cd27875a6e60f2e385b7193bcb982d95e4"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "c5eae1cd27875a6e60f2e385b7193bcb982d95e4"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/sqlite-v2/SHA256SUMS",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "134312d0c728d4bf2638372f00b71cf59b79a337"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "134312d0c728d4bf2638372f00b71cf59b79a337"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "134312d0c728d4bf2638372f00b71cf59b79a337"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/sqlite-v2/database.sqlite",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "609bc84800c21b6859036bf29b1637d219f4e6f5"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "609bc84800c21b6859036bf29b1637d219f4e6f5"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "609bc84800c21b6859036bf29b1637d219f4e6f5"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/sqlite-v2/migrations.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "86cdbf82316a9b471c5294605d328aca5b591ba2"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "86cdbf82316a9b471c5294605d328aca5b591ba2"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "86cdbf82316a9b471c5294605d328aca5b591ba2"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/sqlite-v2/writer-observation.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "782b67102b27dda89d1fcd283734f126d35cffa7"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "782b67102b27dda89d1fcd283734f126d35cffa7"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "782b67102b27dda89d1fcd283734f126d35cffa7"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/sqlite-v2/writer-revision.txt",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "ddfd972d36d6dbbe626760e88142fbda3c4f06ee"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "ddfd972d36d6dbbe626760e88142fbda3c4f06ee"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "ddfd972d36d6dbbe626760e88142fbda3c4f06ee"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/v2-writer.go.txt",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "95eccc19e821b75dd6a4343548e84a2216ac90c0"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "95eccc19e821b75dd6a4343548e84a2216ac90c0"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "95eccc19e821b75dd6a4343548e84a2216ac90c0"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/internal/decisionfixture/migrations/0001_fixture.sql",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "ef64669f1c14705a34b0590bc25989dbe23f3133"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "ef64669f1c14705a34b0590bc25989dbe23f3133"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "ef64669f1c14705a34b0590bc25989dbe23f3133"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/internal/decisionfixture/testdata/legacy-970fd90/adapters/postgres/decision_engine/migrations/0001_decisions.sql.txt",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "67577456392ba15d60a0dae1fce295e7e5e8a756"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "67577456392ba15d60a0dae1fce295e7e5e8a756"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "67577456392ba15d60a0dae1fce295e7e5e8a756"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/internal/decisionfixture/testdata/legacy-970fd90/conformance/internal/decisionfixture/migrations/0001_fixture.sql.txt",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "ef64669f1c14705a34b0590bc25989dbe23f3133"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "ef64669f1c14705a34b0590bc25989dbe23f3133"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "ef64669f1c14705a34b0590bc25989dbe23f3133"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/internal/decisionfixture/testdata/legacy-final01/adapters/postgres/decision_engine/migrations/0001_decisions.sql.txt",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "67577456392ba15d60a0dae1fce295e7e5e8a756"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "67577456392ba15d60a0dae1fce295e7e5e8a756"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "67577456392ba15d60a0dae1fce295e7e5e8a756"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/internal/decisionfixture/testdata/legacy-final01/conformance/internal/decisionfixture/migrations/0001_fixture.sql.txt",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "ef64669f1c14705a34b0590bc25989dbe23f3133"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "ef64669f1c14705a34b0590bc25989dbe23f3133"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "ef64669f1c14705a34b0590bc25989dbe23f3133"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "conformance/internal/testkit/target/migrations/0001_target.sql",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "9ba7fbcfe912344307aa3175cb232525dae104fa"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "9ba7fbcfe912344307aa3175cb232525dae104fa"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "9ba7fbcfe912344307aa3175cb232525dae104fa"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "contract/gen/go/v1_1/values.go",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "1f017286e431e70b8cb7b0f2b883d906dc8a7536"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "1f017286e431e70b8cb7b0f2b883d906dc8a7536"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "1f017286e431e70b8cb7b0f2b883d906dc8a7536"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "contract/gen/go/v1_2/values.go",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "5266a817cf2d664d46be59acd143fb5dc26c944e"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "5266a817cf2d664d46be59acd143fb5dc26c944e"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "5266a817cf2d664d46be59acd143fb5dc26c944e"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "contract/gen/go/values.go",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "178959d94f46c4e37368cbba1332650f911e84a4"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "178959d94f46c4e37368cbba1332650f911e84a4"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "178959d94f46c4e37368cbba1332650f911e84a4"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "contract/schema/1.0.0/methods.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "9cb0312cdcd62af8636bca0c262b84f2142c888e"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "9cb0312cdcd62af8636bca0c262b84f2142c888e"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "9cb0312cdcd62af8636bca0c262b84f2142c888e"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "contract/schema/1.0.0/values.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "a087d4d0a86c90c5f670890d68b247d6cc9441e9"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "a087d4d0a86c90c5f670890d68b247d6cc9441e9"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "a087d4d0a86c90c5f670890d68b247d6cc9441e9"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "contract/schema/1.1.0/methods.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "04a6d81ddf301b719f6c40849140c95630bb54d4"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "04a6d81ddf301b719f6c40849140c95630bb54d4"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "04a6d81ddf301b719f6c40849140c95630bb54d4"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "contract/schema/1.1.0/values.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "854222f9ada3979515db5c6ad8369800d66d2b27"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "854222f9ada3979515db5c6ad8369800d66d2b27"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "854222f9ada3979515db5c6ad8369800d66d2b27"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "contract/schema/1.2.0/methods.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "ae9081b5ca9f612c6c733d4c4ab479f635ecec57"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "ae9081b5ca9f612c6c733d4c4ab479f635ecec57"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "ae9081b5ca9f612c6c733d4c4ab479f635ecec57"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "contract/schema/1.2.0/values.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "cf07da4c149555b5da8526520b7ba82796fa94b5"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "cf07da4c149555b5da8526520b7ba82796fa94b5"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "cf07da4c149555b5da8526520b7ba82796fa94b5"
+        },
+        "all_mode_type_blob_equal": true
+      },
+      {
+        "path": "sdk/typescript/src/generated/values.ts",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "c4b2c7dd85dd9f1ef7b100e628928293e477bf58"
+        },
+        "prior": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "c4b2c7dd85dd9f1ef7b100e628928293e477bf58"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "c4b2c7dd85dd9f1ef7b100e628928293e477bf58"
+        },
+        "all_mode_type_blob_equal": true
+      }
+    ]
+  },
+  "standards_sources": [
+    {
+      "path": "AGENTS.md",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "1860c96f250663e46ee69d81f8c17539a74a22ad"
+      },
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "1860c96f250663e46ee69d81f8c17539a74a22ad"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "1860c96f250663e46ee69d81f8c17539a74a22ad"
+      },
+      "equal_prior": true,
+      "review": "full prior Standards source qualified carry"
+    },
+    {
+      "path": "CONTEXT.md",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "d3d3ae0ebef7410f40e76f80ba3049bebf5ab1ac"
+      },
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "d3d3ae0ebef7410f40e76f80ba3049bebf5ab1ac"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "d3d3ae0ebef7410f40e76f80ba3049bebf5ab1ac"
+      },
+      "equal_prior": true,
+      "review": "full prior Standards source qualified carry"
+    },
+    {
+      "path": "docs/agents/domain.md",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "35249041162b1eed5b873d97fc430fb3e4adb18f"
+      },
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "35249041162b1eed5b873d97fc430fb3e4adb18f"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "35249041162b1eed5b873d97fc430fb3e4adb18f"
+      },
+      "equal_prior": true,
+      "review": "full prior Standards source qualified carry"
+    },
+    {
+      "path": "docs/agents/issue-tracker.md",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "0209a19af92c9c485cf3acc3d9e253171517ea17"
+      },
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "0209a19af92c9c485cf3acc3d9e253171517ea17"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "0209a19af92c9c485cf3acc3d9e253171517ea17"
+      },
+      "equal_prior": true,
+      "review": "full prior Standards source qualified carry"
+    },
+    {
+      "path": "docs/agents/triage-labels.md",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "b716855d485f3865f9dfde2a82141721f065b2e7"
+      },
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "b716855d485f3865f9dfde2a82141721f065b2e7"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "b716855d485f3865f9dfde2a82141721f065b2e7"
+      },
+      "equal_prior": true,
+      "review": "full prior Standards source qualified carry"
+    },
+    {
+      "path": ".agents/skills/code-review/SKILL.md",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "e28d7acbf7b3bb4d7817b7eb5d9c105af03f6ec4"
+      },
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "e28d7acbf7b3bb4d7817b7eb5d9c105af03f6ec4"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "e28d7acbf7b3bb4d7817b7eb5d9c105af03f6ec4"
+      },
+      "equal_prior": true,
+      "review": "full prior Standards source qualified carry"
+    },
+    {
+      "path": "docs/adr/README.md",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "a1e67bde600589486c35af759d2b57c3fc53fe8a"
+      },
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "a1e67bde600589486c35af759d2b57c3fc53fe8a"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "a1e67bde600589486c35af759d2b57c3fc53fe8a"
+      },
+      "equal_prior": true,
+      "review": "full prior Standards source qualified carry"
+    },
+    {
+      "path": "docs/adr/0004-transactional-durable-work.md",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "497860fb9aba9df9232d8595741804d9b1a55cbc"
+      },
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "497860fb9aba9df9232d8595741804d9b1a55cbc"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "497860fb9aba9df9232d8595741804d9b1a55cbc"
+      },
+      "equal_prior": true,
+      "review": "full prior Standards source qualified carry"
+    },
+    {
+      "path": "docs/adr/0005-explicit-effect-uncertainty.md",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "a57ea259a1febcd2506a7484e70599cc2c05b317"
+      },
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "a57ea259a1febcd2506a7484e70599cc2c05b317"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "a57ea259a1febcd2506a7484e70599cc2c05b317"
+      },
+      "equal_prior": true,
+      "review": "full prior Standards source qualified carry"
+    },
+    {
+      "path": "docs/adr/0006-authorization-budget-at-action-boundaries.md",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "77d90c078faec789d028f6f7ffeade66ca444089"
+      },
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "77d90c078faec789d028f6f7ffeade66ca444089"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "77d90c078faec789d028f6f7ffeade66ca444089"
+      },
+      "equal_prior": true,
+      "review": "full prior Standards source qualified carry"
+    },
+    {
+      "path": "docs/adr/0007-versioned-content-memory-snapshots.md",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "b40a72034fe71cc31aed957c29450c56402487b4"
+      },
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "b40a72034fe71cc31aed957c29450c56402487b4"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "b40a72034fe71cc31aed957c29450c56402487b4"
+      },
+      "equal_prior": true,
+      "review": "full prior Standards source qualified carry"
+    },
+    {
+      "path": "docs/adr/0009-versioned-activation-and-recovery.md",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "b6e33755bae9d7b63ac1e3d8eb9b0eea3ac20b96"
+      },
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "b6e33755bae9d7b63ac1e3d8eb9b0eea3ac20b96"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "b6e33755bae9d7b63ac1e3d8eb9b0eea3ac20b96"
+      },
+      "equal_prior": true,
+      "review": "full prior Standards source qualified carry"
+    },
+    {
+      "path": ".agents/skills/codebase-design/SKILL.md",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "3f63c8146dd2604b419c929e9876b90c30d410e9"
+      },
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "3f63c8146dd2604b419c929e9876b90c30d410e9"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "3f63c8146dd2604b419c929e9876b90c30d410e9"
+      },
+      "equal_prior": true,
+      "review": "fixed full read; governance current Content section and authorization contexts read"
+    },
+    {
+      "path": "docs/architecture/README.md",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "09d72101c8acacfdd27e758ab378f88ead18c2fd"
+      },
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "09d72101c8acacfdd27e758ab378f88ead18c2fd"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "09d72101c8acacfdd27e758ab378f88ead18c2fd"
+      },
+      "equal_prior": true,
+      "review": "fixed full read; governance current Content section and authorization contexts read"
+    },
+    {
+      "path": "docs/architecture/runtime.md",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "108c317212722e5a9ffc9516064efd8c0e41278f"
+      },
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "108c317212722e5a9ffc9516064efd8c0e41278f"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "108c317212722e5a9ffc9516064efd8c0e41278f"
+      },
+      "equal_prior": true,
+      "review": "fixed full read; governance current Content section and authorization contexts read"
+    },
+    {
+      "path": "docs/architecture/data-model.md",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "7019626a39de4e3764d4076bc42f68d571030b37"
+      },
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "7019626a39de4e3764d4076bc42f68d571030b37"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "7019626a39de4e3764d4076bc42f68d571030b37"
+      },
+      "equal_prior": true,
+      "review": "fixed full read; governance current Content section and authorization contexts read"
+    },
+    {
+      "path": "docs/architecture/governance.md",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "7c0449bbc7bd907cf7cf9542c5d00e402c5c3c1a"
+      },
+      "prior": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "7c0449bbc7bd907cf7cf9542c5d00e402c5c3c1a"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "7c0449bbc7bd907cf7cf9542c5d00e402c5c3c1a"
+      },
+      "equal_prior": true,
+      "review": "fixed full read; governance current Content section and authorization contexts read"
+    }
+  ],
+  "new_archives": [
+    {
+      "archive": "legacy-v1",
+      "declared_product_provenance": "1a7d910238eb74cddc712d92b0ba4014a72ff507",
+      "original_schema": "lerna_test_4aee55540d91e5d8db9131fb",
+      "hashes": [
+        {
+          "path": "conformance/internal/contentfixture/testdata/legacy-v1/76f0298c5432c6b1e28ae5a2c2cc4e8624fd32cffa6112173de32a68c90652c4",
+          "expected_sha256": "b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",
+          "actual_sha256": "b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",
+          "equal": true,
+          "bytes": 6,
+          "actual_sha256_6a9": "b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060"
+        },
+        {
+          "path": "conformance/internal/contentfixture/testdata/legacy-v1/da1384e8c6e31d165b9f0442b2d2f1f57a875a20156041bfedfcc4ce779654dc",
+          "expected_sha256": "b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",
+          "actual_sha256": "b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",
+          "equal": true,
+          "bytes": 6,
+          "actual_sha256_6a9": "b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060"
+        },
+        {
+          "path": "conformance/internal/contentfixture/testdata/legacy-v1/observation.json",
+          "expected_sha256": "68bc86f8352de8e25b04f13425f15d662dac9e5a7b23ff2c04f606bbdda1c692",
+          "actual_sha256": "68bc86f8352de8e25b04f13425f15d662dac9e5a7b23ff2c04f606bbdda1c692",
+          "equal": true,
+          "bytes": 6097,
+          "actual_sha256_6a9": "68bc86f8352de8e25b04f13425f15d662dac9e5a7b23ff2c04f606bbdda1c692"
+        },
+        {
+          "path": "conformance/internal/contentfixture/testdata/legacy-v1/original-pg18-dump.sql",
+          "expected_sha256": "9c7b297e46305efffddc04e13021060ba1dce1e64ccdf2e12cdad8a6e3bc7c4f",
+          "actual_sha256": "9c7b297e46305efffddc04e13021060ba1dce1e64ccdf2e12cdad8a6e3bc7c4f",
+          "equal": true,
+          "bytes": 35216,
+          "actual_sha256_6a9": "9c7b297e46305efffddc04e13021060ba1dce1e64ccdf2e12cdad8a6e3bc7c4f"
+        },
+        {
+          "path": "conformance/internal/contentfixture/testdata/legacy-v1/producer.go.txt",
+          "expected_sha256": "10eae3352f0c5b9df2cd0136b7dcfc625777bff5b2c99505714e3ddcc6cfcc3c",
+          "actual_sha256": "10eae3352f0c5b9df2cd0136b7dcfc625777bff5b2c99505714e3ddcc6cfcc3c",
+          "equal": true,
+          "bytes": 3837,
+          "actual_sha256_6a9": "10eae3352f0c5b9df2cd0136b7dcfc625777bff5b2c99505714e3ddcc6cfcc3c"
+        },
+        {
+          "path": "conformance/internal/contentfixture/testdata/legacy-v1/restore.sql",
+          "expected_sha256": "73646bcd175570c614c11163a55ed09b21a35c957aacd1cadcbd523bd6a30ac5",
+          "actual_sha256": "73646bcd175570c614c11163a55ed09b21a35c957aacd1cadcbd523bd6a30ac5",
+          "equal": true,
+          "bytes": 35128,
+          "actual_sha256_6a9": "73646bcd175570c614c11163a55ed09b21a35c957aacd1cadcbd523bd6a30ac5"
+        }
+      ],
+      "all_SHA256_equal": true,
+      "full_restore_translation_equal_ignoring_surrounding_whitespace": true,
+      "raw_structure_sha256": "ae4fc9b61f14cef79e0b4d1ad2ceb9a7f16911817f11056106506cc896a353c9",
+      "row_counts": {
+        "legacy_content.command_receipts": 3,
+        "legacy_content.content_fixture_command_readers": 1,
+        "legacy_content.content_fixture_policies": 3,
+        "legacy_content.content_schema_migrations": 1,
+        "legacy_content.content_versions": 3,
+        "legacy_content.jobs": 3
+      },
+      "raw_dump_unchanged_482_to_pin": true,
+      "producer_unchanged_482_to_pin": true,
+      "qualification": "Static full-byte/structure/row translation; not a native restore or independent Close acknowledgement.",
+      "carry_from": "752/3f44 complete static raw-to-restore/row/hash/provenance qualification; exact current archive objects reverified"
+    },
+    {
+      "archive": "legacy-many-policies",
+      "declared_product_provenance": "1a7d910238eb74cddc712d92b0ba4014a72ff507",
+      "original_schema": "lerna_test_a230998266aca1270c72b73e",
+      "hashes": [
+        {
+          "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/76f0298c5432c6b1e28ae5a2c2cc4e8624fd32cffa6112173de32a68c90652c4",
+          "expected_sha256": "b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",
+          "actual_sha256": "b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",
+          "equal": true,
+          "bytes": 6,
+          "actual_sha256_6a9": "b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060"
+        },
+        {
+          "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/da1384e8c6e31d165b9f0442b2d2f1f57a875a20156041bfedfcc4ce779654dc",
+          "expected_sha256": "b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",
+          "actual_sha256": "b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",
+          "equal": true,
+          "bytes": 6,
+          "actual_sha256_6a9": "b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060"
+        },
+        {
+          "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/observation.json",
+          "expected_sha256": "68bc86f8352de8e25b04f13425f15d662dac9e5a7b23ff2c04f606bbdda1c692",
+          "actual_sha256": "68bc86f8352de8e25b04f13425f15d662dac9e5a7b23ff2c04f606bbdda1c692",
+          "equal": true,
+          "bytes": 6097,
+          "actual_sha256_6a9": "68bc86f8352de8e25b04f13425f15d662dac9e5a7b23ff2c04f606bbdda1c692"
+        },
+        {
+          "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/original-pg18-dump.sql",
+          "expected_sha256": "57181b9e3761ff172bcc9a2ff6498a9ef06a6de3d425e3da784d5e510314573d",
+          "actual_sha256": "57181b9e3761ff172bcc9a2ff6498a9ef06a6de3d425e3da784d5e510314573d",
+          "equal": true,
+          "bytes": 112761,
+          "actual_sha256_6a9": "57181b9e3761ff172bcc9a2ff6498a9ef06a6de3d425e3da784d5e510314573d"
+        },
+        {
+          "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/producer.go.txt",
+          "expected_sha256": "bf5a001a41891ea1c7affb5baed54282adc725a0df2caa3d0e96a1ae9f46d5c6",
+          "actual_sha256": "bf5a001a41891ea1c7affb5baed54282adc725a0df2caa3d0e96a1ae9f46d5c6",
+          "equal": true,
+          "bytes": 4511,
+          "actual_sha256_6a9": "bf5a001a41891ea1c7affb5baed54282adc725a0df2caa3d0e96a1ae9f46d5c6"
+        },
+        {
+          "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/restore.sql",
+          "expected_sha256": "424c8402da2b2204b8d4fe03200e45d4e19995a35b24e1203709c7663f137fdc",
+          "actual_sha256": "424c8402da2b2204b8d4fe03200e45d4e19995a35b24e1203709c7663f137fdc",
+          "equal": true,
+          "bytes": 123853,
+          "actual_sha256_6a9": "424c8402da2b2204b8d4fe03200e45d4e19995a35b24e1203709c7663f137fdc"
+        }
+      ],
+      "all_SHA256_equal": true,
+      "full_restore_translation_equal_ignoring_surrounding_whitespace": true,
+      "raw_structure_sha256": "ae4fc9b61f14cef79e0b4d1ad2ceb9a7f16911817f11056106506cc896a353c9",
+      "row_counts": {
+        "legacy_content.command_receipts": 3,
+        "legacy_content.content_fixture_command_readers": 1,
+        "legacy_content.content_fixture_policies": 68,
+        "legacy_content.content_schema_migrations": 1,
+        "legacy_content.content_versions": 3,
+        "legacy_content.jobs": 3
+      },
+      "raw_dump_unchanged_482_to_pin": true,
+      "producer_unchanged_482_to_pin": true,
+      "qualification": "Static full-byte/structure/row translation; not a native restore or independent Close acknowledgement.",
+      "carry_from": "752/3f44 complete static raw-to-restore/row/hash/provenance qualification; exact current archive objects reverified"
+    },
+    {
+      "archive": "legacy-expired-ancestor",
+      "declared_product_provenance": "1a7d910238eb74cddc712d92b0ba4014a72ff507",
+      "original_schema": "lerna_test_de87bd29399603c7d0ae9691",
+      "hashes": [
+        {
+          "path": "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/76f0298c5432c6b1e28ae5a2c2cc4e8624fd32cffa6112173de32a68c90652c4",
+          "head": {
+            "mode": "100644",
+            "type": "blob",
+            "blob": "4a58007052a65fbc2fc3f910f2855f45a4058e74"
+          },
+          "bytes": 6,
+          "expected_sha256": "b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",
+          "actual_sha256": "b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",
+          "equal": true,
+          "actual_sha256_6a9": "b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060"
+        },
+        {
+          "path": "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/da1384e8c6e31d165b9f0442b2d2f1f57a875a20156041bfedfcc4ce779654dc",
+          "head": {
+            "mode": "100644",
+            "type": "blob",
+            "blob": "4a58007052a65fbc2fc3f910f2855f45a4058e74"
+          },
+          "bytes": 6,
+          "expected_sha256": "b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",
+          "actual_sha256": "b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",
+          "equal": true,
+          "actual_sha256_6a9": "b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060"
+        },
+        {
+          "path": "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/observation.json",
+          "head": {
+            "mode": "100644",
+            "type": "blob",
+            "blob": "b7ce2095534dea1607e76a89f728e3acde1fbf9b"
+          },
+          "bytes": 6150,
+          "expected_sha256": "955131dec7737a4e750d9eca211ac8e0e9314a8761cba8c56f26e2a5ef0eb98e",
+          "actual_sha256": "955131dec7737a4e750d9eca211ac8e0e9314a8761cba8c56f26e2a5ef0eb98e",
+          "equal": true,
+          "actual_sha256_6a9": "955131dec7737a4e750d9eca211ac8e0e9314a8761cba8c56f26e2a5ef0eb98e"
+        },
+        {
+          "path": "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/original-pg18-dump.sql",
+          "head": {
+            "mode": "100644",
+            "type": "blob",
+            "blob": "020d384621925b7c04d66df8033cd724633a3b3e"
+          },
+          "bytes": 112782,
+          "expected_sha256": "f0be7063ce24ab1f491e316ec4028df82e5f630e545a9f443d708b2d96d8d829",
+          "actual_sha256": "f0be7063ce24ab1f491e316ec4028df82e5f630e545a9f443d708b2d96d8d829",
+          "equal": true,
+          "actual_sha256_6a9": "f0be7063ce24ab1f491e316ec4028df82e5f630e545a9f443d708b2d96d8d829"
+        },
+        {
+          "path": "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/producer.go.txt",
+          "head": {
+            "mode": "100644",
+            "type": "blob",
+            "blob": "c1a827b11b104ccf362ed591c718d28ded3b6ec3"
+          },
+          "bytes": 4775,
+          "expected_sha256": "3a87ea809c56834c8a108cd81a97c34edbc3220075a5174cc8fce8b09819d485",
+          "actual_sha256": "3a87ea809c56834c8a108cd81a97c34edbc3220075a5174cc8fce8b09819d485",
+          "equal": true,
+          "actual_sha256_6a9": "3a87ea809c56834c8a108cd81a97c34edbc3220075a5174cc8fce8b09819d485"
+        },
+        {
+          "path": "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/restore.sql",
+          "head": {
+            "mode": "100644",
+            "type": "blob",
+            "blob": "38d6e2767a557ed4e1db93b68ae2b66eebc94558"
+          },
+          "bytes": 124739,
+          "expected_sha256": "f75694928842fe650c7598698c663b7a821ab5ec7369474645013044196f2ba1",
+          "actual_sha256": "f75694928842fe650c7598698c663b7a821ab5ec7369474645013044196f2ba1",
+          "equal": true,
+          "actual_sha256_6a9": "f75694928842fe650c7598698c663b7a821ab5ec7369474645013044196f2ba1"
+        }
+      ],
+      "all_SHA256_equal": true,
+      "full_E_string_restore_translation_equal_ignoring_surrounding_whitespace": true,
+      "raw_structure_sha256": "ae4fc9b61f14cef79e0b4d1ad2ceb9a7f16911817f11056106506cc896a353c9",
+      "structure_equal_previous_archives": true,
+      "row_counts": {
+        "legacy_content.command_receipts": 3,
+        "legacy_content.content_fixture_command_readers": 1,
+        "legacy_content.content_fixture_policies": 68,
+        "legacy_content.content_schema_migrations": 1,
+        "legacy_content.content_versions": 3,
+        "legacy_content.jobs": 3
+      },
+      "total_rows": 79,
+      "SourceValidUntil": "2026-10-04T16:00:30.057895Z",
+      "source_policy_exact_cutoff_equal_observation": true,
+      "all_other_observation_fields_equal_original_legacy_v1": true,
+      "all_receipts_equal_observation": true,
+      "qualification": "Complete fixed bytes/decoded facts and mechanical COPY escaping→E-string INSERT equivalence; not reviewer native restore/producer execution. Archived producer aggregates Store/Object and observation Sync/Close causes; original-v1 Close limitations remain.",
+      "carry_from": "752/3f44 complete static raw-to-restore/row/hash/provenance qualification; exact current archive objects reverified"
+    }
+  ],
+  "adopted_requirement_decisions": [
+    {
+      "path": "/tmp/lerna-04-ticket-02-race-closure-decision.md",
+      "bytes": 9765,
+      "sha256": "1ae7bb7f88e8f6533de1a8f0e6a4198220f16908539605229ae4e3c07bce62e9",
+      "read": "complete",
+      "classification": "parent adopted requirement decision; not another review axis"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket-02-post-schedule-admission-decision.md",
+      "bytes": 8936,
+      "sha256": "d3eab9c7827c2b99f3b3443a3d5cbe848a7f5ec5e1c5b47c31a3475ffc93ca2e",
+      "read": "complete",
+      "classification": "parent adopted requirement decision; not another review axis"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket-02-retention-observation-decision.md",
+      "bytes": 8453,
+      "sha256": "6b678f0de72ac90148cc93b09678f6230913d3a7984446df5ba12dd37679c313",
+      "read": "complete",
+      "classification": "parent adopted requirement decision; not another review axis"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket-02-identity-reuse-decision.md",
+      "bytes": 5021,
+      "sha256": "fb5c1927fe095ceec61a9333dc958ba1ccd24e8821f398d247bda0556f2256f8",
+      "read": "complete",
+      "classification": "parent adopted requirement decision; not another review axis"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket-02-next-closure-perf-decision.md",
+      "bytes": 12105,
+      "sha256": "60e2feb1c9638c0c5a30180f367f09d7ecb763784d2d3b3b04a893f00c983e82",
+      "read": "complete",
+      "classification": "parent adopted requirement decision; not another review axis"
+    }
+  ],
+  "Fowler12": {
+    "Mysterious Name": "No separate finding; current policy, source closure, watermark, Claim and holder vocabulary identifies purpose.",
+    "Duplicated Code": "OPEN possible P3: four new/live typed SQL page readers repeat limit+1, scan/decode/cursor and joined-close shape. Typed functions do not centralize the shape. Optional judgement, not a hard gate.",
+    "Feature Envy": "No separate finding; domain owns classification; adapter owns SQL/data mapping.",
+    "Data Clumps": "No separate finding: same-Tx complete records/refs/current bounds bundled in private closureObservation; mandatory Tx ports remain explicit.",
+    "Primitive Obsession": "No separate finding; closed action/state strings reflect bounded contract phases; refs and subjects are named contract types.",
+    "Repeated Switches": "Repository closed finite action/phase cases override polymorphism heuristic.",
+    "Shotgun Surgery": "No separate finding; feature changes cross domain/adapters/tests by documented responsibility.",
+    "Divergent Change": "No separate finding; manager file covers related current-policy management, legacy maintenance and propagation.",
+    "Speculative Generality": "No separate finding: complete locked observation, vector action gate, at-most-second-transaction marker, timing and shell mode have current consumers and adopted decisions.",
+    "Message Chains": "No separate finding; explicit injected config/Store navigation follows owner boundary.",
+    "Middle Man": "Repository consumer ports and decorator-retention requirement justify ScheduleRetention/AdvancePolicyJob forwarding.",
+    "Refused Bequest": "No separate finding; test wrappers embed ports and override actual fault/barrier consumers."
+  },
+  "original_findings": {
+    "original_processing_deadline_P2": "CLOSED and unchanged fix: clocks after locks and final all-visited original deadlines; cursor/residual retained.",
+    "original_three_pagination_Close_P2": "CLOSED and unchanged fix.",
+    "followup_unindexed_pending_Close_P2": "CLOSED: readUnindexedVersionsRows/readPendingChangesRows named results join Close and primary/iteration errors.",
+    "possible_Duplicated_Code_P3": "OPEN judgement: four typed page reader loops remain duplicated; no hard standard requires extraction."
+  },
+  "current_findings": {
+    "hard_count": 0,
+    "hard_worst": null,
+    "possible_smell_count": 1,
+    "smell_worst": "P3"
+  },
+  "scope_limits": [
+    "Immutable Git objects only; no native/build/test/DB/env/credentials/cleanup or repository mutation.",
+    "No Spec/Astra findings read; only own prior reports and adopted requirement decisions.",
+    "All current 54 range paths covered by full prior qualification plus all 13 complete fixed changed paths.",
+    "Root supplied full64 normal31.931 green and race60.08 failed; final performance/check/inventory/audit/source delivery/CI pending; no acceptance.",
+    "Untracked delivery/review MD files and future candidate changes excluded."
+  ]
+}

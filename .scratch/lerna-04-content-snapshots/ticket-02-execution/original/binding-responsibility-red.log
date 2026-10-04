@@ -1,0 +1,11 @@
+--- FAIL: TestContentMalformedPolicyBindingRegistersActualSourceResponsibility (1.14s)
+    --- FAIL: TestContentMalformedPolicyBindingRegistersActualSourceResponsibility/writer (0.44s)
+        content_management_test.go:358: malformed policy did not invalidate all five actions {pc-a8a6bbe48d81ec209b008fb76c148376f5b9e70a52b3e259000551b06050df92 {{content-tenant content-owner} direct-target 1 sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060 text/plain 6} {content-tenant verified-subject []} verification [] 2026-10-04 14:28:56.147011 +0000 UTC not_required false true 65e8ee006e32944edbc7f2819c969a3cf35ffcad8b474543b3ea8972ffffc26e.1.tmp published use_review}
+    --- FAIL: TestContentMalformedPolicyBindingRegistersActualSourceResponsibility/other-subject (0.37s)
+        content_management_test.go:358: malformed policy did not invalidate all five actions {pc-d4a68829836bf4778aa64773006031a0b75524be0ab4ef0f1055a533c1a234ef {{content-tenant content-owner} direct-target 1 sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060 text/plain 6} {content-tenant other-reader []} verification [] 2026-10-04 14:28:56.519805 +0000 UTC not_required false true 65e8ee006e32944edbc7f2819c969a3cf35ffcad8b474543b3ea8972ffffc26e.1.tmp published use_review}
+    --- FAIL: TestContentMalformedPolicyBindingRegistersActualSourceResponsibility/other-purpose (0.33s)
+        content_management_test.go:358: malformed policy did not invalidate all five actions {pc-a50391d6383e08477f435e016896801e8d1ea725ccfa0712fedbc025de92bb0c {{content-tenant content-owner} direct-target 1 sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060 text/plain 6} {content-tenant verified-subject []} another-purpose [] 2026-10-04 14:28:56.856549 +0000 UTC not_required false true 65e8ee006e32944edbc7f2819c969a3cf35ffcad8b474543b3ea8972ffffc26e.1.tmp published use_review}
+FAIL
+FAIL	github.com/ruipengliu/lerna/conformance/component	1.152s
+FAIL
+NATIVE_EXIT status=1 group_absent=True

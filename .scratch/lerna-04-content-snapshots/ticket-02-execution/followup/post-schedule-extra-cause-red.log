@@ -1,0 +1,7 @@
+=== RUN   TestContentLateAdmissionExtraCauseCannotFixRejection
+    content_post_schedule_test.go:188: unclassified abort cause was washed into a fixed receipt <nil>
+--- FAIL: TestContentLateAdmissionExtraCauseCannotFixRejection (0.67s)
+FAIL
+FAIL	github.com/ruipengliu/lerna/conformance/component	0.689s
+FAIL
+NATIVE_EXIT status=1 group_absent=True
