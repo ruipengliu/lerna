@@ -5,7 +5,14 @@ WITH legacy AS (
  SELECT tenant_id,owner_id,decision_id,convert_from(body,'UTF8')::jsonb AS fact
  FROM decisions WHERE NOT (convert_from(body,'UTF8')::jsonb->'usage' ? 'rule_starts')
 ), upgraded AS (
- SELECT *,COALESCE((fact->>'started_epoch')::bigint,0)>0 AS started,
+ SELECT *,(
+  COALESCE((fact->>'started_epoch')::bigint,0)>0
+  OR status IN('running','waiting','completed')
+  OR COALESCE((fact->'usage'->>'rule_steps')::numeric,0)<>0
+  OR COALESCE((fact->'usage'->>'input_bytes')::numeric,0)<>0
+  OR COALESCE((fact->'usage'->>'output_bytes')::numeric,0)<>0
+  OR COALESCE((fact->'usage'->'cost'->>'integer_value')::numeric,0)<>0
+ ) AS started,
  status IN('accepted','running','waiting') AS active
  FROM legacy JOIN decisions USING(tenant_id,owner_id,decision_id)
 )

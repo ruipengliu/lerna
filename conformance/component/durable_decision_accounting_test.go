@@ -5,6 +5,7 @@ package component_test
 import (
 	"context"
 	"errors"
+	"sync"
 	"testing"
 	"time"
 
@@ -200,6 +201,63 @@ func TestDurableDecisionStartIsOnePermissionAndUnknownWorkConsumesOriginalLimit(
 	}
 	if failed.Usage != running.Usage {
 		t.Fatal("unknown prior invocation was recomputed or charged again")
+	}
+}
+
+func TestDurableDecisionConcurrentStartAndCumulativeUnknownUsage(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+	defer cancel()
+	w := fixture.NewWorld(t, ctx)
+	scene := w.Scenario()
+	scene.Request.Payload.Limits.MaxRuleSteps = "2"
+	scene.Request.Payload.Limits.MaxCost.IntegerValue = "2"
+	s := accountingService(t, w, w.Source(), "initial", 300*time.Millisecond)
+	acceptAccounting(t, ctx, s, scene)
+	claimed, err := s.Claim(ctx)
+	if err != nil || claimed == nil {
+		t.Fatal("claim", err)
+	}
+	gate := make(chan struct{})
+	results := make(chan error, 2)
+	var workers sync.WaitGroup
+	for range 2 {
+		workers.Go(func() { <-gate; _, err := s.Start(ctx, claimed.Claim); results <- err })
+	}
+	close(gate)
+	workers.Wait()
+	close(results)
+	allowed, denied := 0, 0
+	for err := range results {
+		if err == nil {
+			allowed++
+		} else if errors.Is(err, runtime.ErrClaim) {
+			denied++
+		} else {
+			t.Fatal(err)
+		}
+	}
+	if allowed != 1 || denied != 1 {
+		t.Fatalf("concurrent durable permissions: allowed=%d denied=%d", allowed, denied)
+	}
+	w.Reopen(ctx)
+	s = accountingService(t, w, w.Source(), "replacement", time.Second)
+	if err = (runtime.WallTimer{}).Wait(ctx, time.Until(claimed.Claim.LeaseUntil)+time.Millisecond); err != nil {
+		t.Fatal(err)
+	}
+	if step, err := s.Step(ctx); err != nil || step.Processed != 1 {
+		t.Fatal("replacement", err)
+	}
+	view, err := s.Get(ctx, scene.GetJSON, &scene.Subject)
+	if err != nil {
+		t.Fatal(err)
+	}
+	found, _ := view.AsFound()
+	completed, ok := found.Decision.AsCompleted()
+	if !ok {
+		t.Fatal("normal replacement did not complete within original two-start limit")
+	}
+	if completed.Usage.RuleStarts != "2" || completed.Usage.Cost.IntegerValue != "2" || completed.Usage.RuleSteps != "1" || completed.Usage.MeasurementsComplete || completed.Usage.InputBytes == "0" || completed.Usage.OutputBytes == "0" {
+		t.Fatalf("unknown prior invocation was erased %+v", completed.Usage)
 	}
 }
 
