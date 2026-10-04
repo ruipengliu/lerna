@@ -11,6 +11,7 @@
 | 2026-10-04 | 索引登记 ADR 0001、0002（来自[架构评审处理记录](../review/archive/round-1/README.md)）。 |
 | 2026-10-04 | 索引登记 ADR 0003（来自[第二轮评审处理记录](../review/archive/round-2/disposition.md)）。 |
 | 2026-10-05 | 首段的状态概括改为"以索引为准"。 |
+| 2026-10-05 | 索引登记新的流程文档"模型调用"。 |
 
 本目录存放 Lerna 的现行架构设计：一个面向个人用户、以可靠性契约为核心的 Agent Harness。目前只有设计，尚未实现；各文档的状态以第 2 节索引为准。
 
@@ -60,6 +61,7 @@
 | [网关与 SDK](platform/gateway/README.md) | 3 设计 | 草稿 |
 | [扩展管理](platform/extensions/README.md) | 3 设计 | 草稿 |
 | [评测与进化](platform/eval/README.md) | 3 设计 | 草稿 |
+| [流程：模型调用](flows/model-call.md) | 3 设计 | 草稿 |
 | [数据与存储](topics/data-and-storage.md) | 3 设计 | 草稿 |
 | [端云部署与故障域](topics/deployment.md) | 3 设计 | 草稿 |
 | [安全与威胁模型](topics/security.md) | 3 设计 | 草稿 |
