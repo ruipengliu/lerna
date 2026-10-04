@@ -124,7 +124,7 @@ func newFixture(t *testing.T) *fixture {
 }
 func (f *fixture) open() *target.Target {
 	f.t.Helper()
-	writer, err := target.Open(f.ctx, f.cfg)
+	writer, err := f.trackedOpen(f.cfg)
 	f.writer = writer
 	if err != nil {
 		f.t.Fatal(err)
@@ -276,7 +276,7 @@ func TestTargetIdentityDurabilitySettingsAndMigrationAreObserved(t *testing.T) {
 		t.Fatalf("actual target settings: %+v", settings)
 	}
 	t.Logf("SQLite target settings: %+v", settings)
-	if _, err = target.Open(f.ctx, f.cfg); !errors.Is(err, target.ErrWriterActive) {
+	if _, err = f.trackedOpen(f.cfg); !errors.Is(err, target.ErrWriterActive) {
 		t.Fatalf("second writer must be excluded: %v", err)
 	}
 	if err = writer.Close(); err != nil {
@@ -285,19 +285,19 @@ func TestTargetIdentityDurabilitySettingsAndMigrationAreObserved(t *testing.T) {
 	f.writer = nil
 	changed := f.cfg
 	changed.Identity = "another-target"
-	if wrong, err := target.Open(f.ctx, changed); err == nil {
+	if wrong, err := f.trackedOpen(changed); err == nil {
 		wrong.Close()
 		t.Fatal("reopen changed identity")
 	}
 	changed = f.cfg
 	changed.Window = 2 * time.Minute
-	if wrong, err := target.Open(f.ctx, changed); err == nil {
+	if wrong, err := f.trackedOpen(changed); err == nil {
 		wrong.Close()
 		t.Fatal("reopen changed guarantee window")
 	}
 	changed = f.cfg
 	changed.QueryMode = target.QueryDisabled
-	if wrong, err := target.Open(f.ctx, changed); err == nil {
+	if wrong, err := f.trackedOpen(changed); err == nil {
 		wrong.Close()
 		t.Fatal("reopen changed query guarantee")
 	}
@@ -311,7 +311,7 @@ func TestTargetIdentityDurabilitySettingsAndMigrationAreObserved(t *testing.T) {
 	if err != nil || other.DatabaseID == settings.DatabaseID {
 		t.Fatalf("isolated files need independent DB identities: %+v %v", other, err)
 	}
-	observer, err := target.OpenObserver(f.ctx, target.ObserverConfig{Path: f.cfg.Path, Identity: "another-target", IOTimeout: time.Second})
+	observer, err := f.trackedObserver(target.ObserverConfig{Path: f.cfg.Path, Identity: "another-target", IOTimeout: time.Second})
 	if err == nil {
 		observer.Close()
 		t.Fatal("observer ignored durable identity")
@@ -387,7 +387,7 @@ func TestRejectsForeignDatabaseAndUnboundedConfiguration(t *testing.T) {
 	if err = foreign.Close(); err != nil {
 		t.Fatal(err)
 	}
-	if wrong, err := target.Open(f.ctx, f.cfg); err == nil {
+	if wrong, err := f.trackedOpen(f.cfg); err == nil {
 		wrong.Close()
 		t.Fatal("target adopted unrelated owner database")
 	}
@@ -402,7 +402,7 @@ func TestRejectsForeignDatabaseAndUnboundedConfiguration(t *testing.T) {
 	} {
 		cfg := second.cfg
 		change(&cfg)
-		if wrong, err := target.Open(second.ctx, cfg); err == nil {
+		if wrong, err := second.trackedOpen(cfg); err == nil {
 			wrong.Close()
 			t.Fatal("invalid config accepted")
 		}
@@ -437,11 +437,21 @@ func TestOriginalKeyBindsResourceAsWellAsExactBytes(t *testing.T) {
 }
 
 func (f *fixture) observer() (*target.Observer, error) {
-	o, err := target.OpenObserver(f.ctx, target.ObserverConfig{Path: f.cfg.Path, Identity: f.cfg.Identity, IOTimeout: time.Second})
+	return f.trackedObserver(target.ObserverConfig{Path: f.cfg.Path, Identity: f.cfg.Identity, IOTimeout: time.Second})
+}
+func (f *fixture) trackedObserver(cfg target.ObserverConfig) (*target.Observer, error) {
+	o, err := target.OpenObserver(f.ctx, cfg)
 	if o != nil {
 		f.closers = append(f.closers, o.Close)
 	}
 	return o, err
+}
+func (f *fixture) trackedOpen(cfg target.Config) (*target.Target, error) {
+	writer, err := target.Open(f.ctx, cfg)
+	if writer != nil {
+		f.closers = append(f.closers, writer.Close)
+	}
+	return writer, err
 }
 
 func TestConcurrentOriginalKeyReceivesOnlyCommitOneVersion(t *testing.T) {
