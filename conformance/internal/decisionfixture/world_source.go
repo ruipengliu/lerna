@@ -13,6 +13,7 @@ import (
 
 	"github.com/ruipengliu/lerna/adapters/postgres"
 	decision "github.com/ruipengliu/lerna/components/decision_engine"
+	process "github.com/ruipengliu/lerna/conformance/internal/testkit/process"
 	v "github.com/ruipengliu/lerna/contract/v1_1"
 )
 
@@ -35,6 +36,7 @@ type SourceWorld struct {
 	scenario      Scenario
 	owns          bool
 	closing       bool
+	children      []*process.Child
 }
 
 func NewSourceWorld(t *testing.T, ctx context.Context) *SourceWorld {
@@ -126,6 +128,9 @@ func (w *SourceWorld) Reopen(ctx context.Context) {
 	if w.closing {
 		w.t.Fatal("fixture is closing")
 	}
+	if err := joinChildren(ctx, w.children); err != nil {
+		w.t.Fatal(err)
+	}
 	if err := w.source.Close(); err != nil {
 		w.t.Fatal(err)
 	}
@@ -142,25 +147,29 @@ func (w *SourceWorld) Cleanup() error {
 	w.closing = true
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
+	joined, childErr := stopChildren(w.children)
+	if !joined {
+		return childErr
+	}
 	if w.source != nil {
 		if err := w.source.Close(); err != nil {
-			return err
+			return errors.Join(childErr, err)
 		}
 		w.source = nil
 	}
 	if w.owns {
 		if err := w.admin.DropTestSchema(ctx); err != nil {
-			return err
+			return errors.Join(childErr, err)
 		}
 		w.owns = false
 	}
 	if w.admin != nil {
 		if err := w.admin.Close(); err != nil {
-			return err
+			return errors.Join(childErr, err)
 		}
 		w.admin = nil
 	}
-	return nil
+	return childErr
 }
 func seedScenario(ctx context.Context, source *Store) (Scenario, error) {
 	var scene Scenario
