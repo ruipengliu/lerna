@@ -12,6 +12,7 @@ import (
 	"github.com/ruipengliu/lerna/runtime/workpool"
 )
 
+var ErrInputLimit = errors.New("decision input exceeds remaining byte limit")
 var ErrUnavailable = errors.New("decision dependency unavailable")
 var ErrForbidden = errors.New("decision authorization denied")
 var ErrPublicationConflict = errors.New("fixture publication identity conflict")
@@ -59,11 +60,12 @@ type FixtureLock struct {
 	RuleVersion  string
 }
 type Source interface {
-	ReadSnapshot(context.Context, v.SnapshotRef, Permission) (Snapshot, error)
-	ReadMaterial(context.Context, v.ContentRef, string, Permission) ([]byte, error)
-	ReadFixtureLock(context.Context, v.InstallLockRef, Permission) (FixtureLock, error)
+	ReadSnapshot(context.Context, v.SnapshotRef, Permission, int64) (Snapshot, error)
+	ReadMaterial(context.Context, v.ContentRef, string, Permission, int64) ([]byte, error)
+	ReadFixtureLock(context.Context, v.InstallLockRef, Permission, int64) (FixtureLock, error)
 }
 type Publisher interface {
+	PlanPublication(context.Context, string, []byte, []v.ContentRef, Permission) (v.ContentRef, error)
 	Publish(context.Context, string, []byte, []v.ContentRef, Permission) (v.ContentRef, error)
 	ReadPublished(context.Context, v.ContentRef, Permission) ([]byte, error)
 }
