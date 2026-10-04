@@ -8,9 +8,11 @@ import (
 	"crypto/sha256"
 	"database/sql"
 	_ "embed"
+	"encoding/binary"
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"math"
 	"net/url"
 	"path/filepath"
 	"sync"
@@ -61,7 +63,6 @@ type Receive struct {
 	Digest, Outcome string
 }
 type Fact struct {
-	Pending    bool
 	DatabaseID string
 	Identity   string
 	Receipt
@@ -86,9 +87,6 @@ type Observer struct {
 
 //go:embed migrations/0001_target.sql
 var migration string
-
-//go:embed migrations/0002_plans.sql
-var planMigration string
 
 // Open returns a cleanup handle with an error if initialization cannot confirm
 // Close. Callers must retain that handle and physical scope until Close succeeds.
@@ -139,33 +137,24 @@ func (t *Target) initialize(ctx context.Context) error {
 		return err
 	}
 	const targetApplicationID = 0x4c545447
-
-	if (applicationID == 0 && (tableCount != 0 || userVersion != 0)) || (applicationID != 0 && (applicationID != targetApplicationID || userVersion < 1 || userVersion > 2)) {
+	if (applicationID == 0 && (tableCount != 0 || userVersion != 0)) || (applicationID != 0 && (applicationID != targetApplicationID || userVersion != 1)) {
 		return errors.New("foreign or unsupported target database")
 	}
-	for _, m := range []struct {
-		version int
-		sql     string
-	}{{1, migration}, {2, planMigration}} {
-		sum := sha256.Sum256([]byte(m.sql))
-		checksum := hex.EncodeToString(sum[:])
-		if userVersion < m.version {
-			if _, err = tx.ExecContext(ctx, m.sql); err != nil {
-				return err
-			}
-			if _, err = tx.ExecContext(ctx, "INSERT INTO target_migrations(version,checksum) VALUES(?,?)", m.version, checksum); err != nil {
-				return err
-			}
-		}
-		var stored string
-		if err = tx.QueryRowContext(ctx, "SELECT checksum FROM target_migrations WHERE version=?", m.version).Scan(&stored); err != nil {
-			return err
-		}
-		if stored != checksum {
-			return errors.New("test target migration checksum mismatch")
-		}
+	if _, err = tx.ExecContext(ctx, migration); err != nil {
+		return err
 	}
-
+	sum := sha256.Sum256([]byte(migration))
+	checksum := hex.EncodeToString(sum[:])
+	if _, err = tx.ExecContext(ctx, `INSERT OR IGNORE INTO target_migrations(version,checksum) VALUES(1,?)`, checksum); err != nil {
+		return err
+	}
+	var stored string
+	if err = tx.QueryRowContext(ctx, `SELECT checksum FROM target_migrations WHERE version=1`).Scan(&stored); err != nil {
+		return err
+	}
+	if stored != checksum {
+		return errors.New("test target migration checksum mismatch")
+	}
 	var nonce [16]byte
 	if _, err = rand.Read(nonce[:]); err != nil {
 		return err
@@ -181,7 +170,7 @@ func (t *Target) initialize(ctx context.Context) error {
 	if identity != t.cfg.Identity || window != int64(t.cfg.Window) || mode != string(t.cfg.QueryMode) {
 		return errors.New("test target durable identity/configuration mismatch")
 	}
-	if _, err = tx.ExecContext(ctx, "PRAGMA application_id=1280595015; PRAGMA user_version=2"); err != nil {
+	if _, err = tx.ExecContext(ctx, "PRAGMA application_id=1280595015; PRAGMA user_version=1"); err != nil {
 		return err
 	}
 	return tx.Commit()
@@ -230,34 +219,81 @@ func (t *Target) Close() error {
 	t.closed = true
 	return nil
 }
-
 func (t *Target) Write(ctx context.Context, r Request) (Receipt, error) {
-	if err := validateRequest(r); err != nil {
-		return Receipt{}, err
+	var out Receipt
+	if r.Key == "" || len(r.Key) > 128 || r.Resource == "" || len(r.Resource) > 128 || len(r.Data) > 1024*1024 {
+		return out, errors.New("invalid bounded test write")
 	}
 	ctx, leave, err := t.enter(ctx)
 	if err != nil {
-		return Receipt{}, err
+		return out, err
 	}
 	defer leave()
 	tx, err := t.db.BeginTx(ctx, nil)
 	if err != nil {
-		return Receipt{}, err
+		return out, err
 	}
 	defer tx.Rollback()
-	out, cause := t.writeTx(ctx, tx, r, false)
-	if cause != nil && !writeRejection(cause) {
-		return Receipt{}, cause
+	now := t.cfg.Now().UTC()
+	deadline := now.Add(t.cfg.Window)
+	if now.Before(time.Unix(0, math.MinInt64)) || deadline.After(time.Unix(0, math.MaxInt64)) {
+		return Receipt{}, errors.New("test clock window cannot be represented as durable nanoseconds")
+	}
+	var length [4]byte
+	binary.BigEndian.PutUint32(length[:], uint32(len(r.Resource)))
+	meaning := append(append(append([]byte{}, length[:]...), []byte(r.Resource)...), r.Data...)
+	sum := sha256.Sum256(meaning)
+	digest := hex.EncodeToString(sum[:])
+	original, lookupErr := committed(ctx, tx, r.Key)
+	if lookupErr == nil {
+		outcome := "replayed"
+		var rejection error
+		if !now.Before(original.Deadline) {
+			outcome = "guarantee_expired"
+			rejection = ErrGuaranteeExpired
+		} else if original.Digest != digest {
+			outcome = "conflict"
+			rejection = ErrConflict
+		}
+		if _, err = tx.ExecContext(ctx, `INSERT INTO target_receives(original_key,at_ns,digest,outcome) VALUES(?,?,?,?)`, r.Key, now.UnixNano(), digest, outcome); err != nil {
+			return Receipt{}, err
+		}
+		if err = tx.Commit(); err != nil {
+			return Receipt{}, fmt.Errorf("test target commit outcome unknown: %w", err)
+		}
+		if rejection != nil {
+			return Receipt{}, rejection
+		}
+		return original, nil
+	}
+	if !errors.Is(lookupErr, sql.ErrNoRows) {
+		return Receipt{}, lookupErr
+	}
+	out = Receipt{Key: r.Key, Digest: digest, Start: now, Deadline: deadline, Value: Value{Resource: r.Resource, Version: 1, Data: append([]byte{}, r.Data...)}}
+	var previous int64
+	err = tx.QueryRowContext(ctx, `SELECT version FROM target_values WHERE resource=?`, r.Resource).Scan(&previous)
+	if err == nil {
+		out.Value.Version = previous + 1
+	} else if !errors.Is(err, sql.ErrNoRows) {
+		return Receipt{}, err
+	}
+	if _, err = tx.ExecContext(ctx, `INSERT INTO target_requests(original_key,resource,digest,start_ns,deadline_ns) VALUES(?,?,?,?,?)`, r.Key, r.Resource, digest, now.UnixNano(), out.Deadline.UnixNano()); err != nil {
+		return Receipt{}, err
+	}
+	if _, err = tx.ExecContext(ctx, `INSERT INTO target_commits(original_key,version,data) VALUES(?,?,?)`, r.Key, out.Value.Version, out.Value.Data); err != nil {
+		return Receipt{}, err
+	}
+	if _, err = tx.ExecContext(ctx, `INSERT INTO target_values(resource,version,data) VALUES(?,?,?) ON CONFLICT(resource) DO UPDATE SET version=excluded.version,data=excluded.data`, r.Resource, out.Value.Version, out.Value.Data); err != nil {
+		return Receipt{}, err
+	}
+	if _, err = tx.ExecContext(ctx, `INSERT INTO target_receives(original_key,at_ns,digest,outcome) VALUES(?,?,?,'applied')`, r.Key, now.UnixNano(), digest); err != nil {
+		return Receipt{}, err
 	}
 	if err = tx.Commit(); err != nil {
 		return Receipt{}, fmt.Errorf("test target commit outcome unknown: %w", err)
 	}
-	if cause != nil {
-		return Receipt{}, cause
-	}
 	return out, nil
 }
-
 func (t *Target) Read(ctx context.Context, resource string) (Value, error) {
 	ctx, leave, err := t.enter(ctx)
 	if err != nil {
@@ -317,15 +353,13 @@ func (o *Observer) Observe(ctx context.Context, key string) (Fact, error) {
 	}
 	defer tx.Rollback()
 	fact := Fact{Identity: o.cfg.Identity}
-
-	fact.Receipt, err = received(ctx, tx, key)
+	fact.Receipt, err = committed(ctx, tx, key)
 	if errors.Is(err, sql.ErrNoRows) {
 		return Fact{}, ErrNotFound
 	}
 	if err != nil {
 		return Fact{}, err
 	}
-	fact.Pending = fact.Value.Version == 0
 	if err = tx.QueryRowContext(ctx, "SELECT database_id FROM target_identity WHERE singleton=1").Scan(&fact.DatabaseID); err != nil {
 		return Fact{}, err
 	}
