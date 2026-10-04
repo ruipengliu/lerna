@@ -44,7 +44,10 @@ func newRuleProcessService(store decision.Store, source *fixture.Store, publishe
 }
 
 type completionMarkerKey struct{}
-type completionMarker struct{ stage *ruleProcessFrame }
+type completionMarker struct {
+	stage     *ruleProcessFrame
+	completed bool
+}
 
 // This wrapper observes the actual consumer transaction callback. It does not
 // replace Commit or manufacture a completed record: the real callback must
@@ -65,6 +68,9 @@ func (s *heldRuleStore) Within(ctx context.Context, owner contract.OwnerRef, fn 
 		if marker.stage == nil || s.cfg.Gate != "completed_staged_before_commit" {
 			return nil
 		}
+		if !marker.completed {
+			return errors.New("actual original Job completion missing before COMMIT hold")
+		}
 		return s.hold(txctx, *marker.stage)
 	})
 	if err != nil {
@@ -75,6 +81,18 @@ func (s *heldRuleStore) Within(ctx context.Context, owner contract.OwnerRef, fn 
 		// is now cancelled; the original finite child context owns this reply hold.
 		return s.hold(ctx, *marker.stage)
 	}
+	return nil
+}
+
+func (s *heldRuleStore) Complete(ctx context.Context, tx runtime.Tx, claim runtime.Claim, now time.Time) error {
+	if err := s.Store.Complete(ctx, tx, claim, now); err != nil {
+		return err
+	}
+	marker, ok := ctx.Value(completionMarkerKey{}).(*completionMarker)
+	if !ok || marker.stage == nil {
+		return errors.New("original completed record missing before actual Job completion")
+	}
+	marker.completed = true
 	return nil
 }
 
@@ -193,7 +211,7 @@ func TestDecisionRuleProcess(t *testing.T) {
 		t.Fatal(err)
 	}
 	var publisher decision.Publisher = source
-	if cfg.Gate == "published_before_finish" {
+	if cfg.Gate == "published_before_finish" || cfg.Gate == "completed_staged_before_commit" {
 		publisher = &heldRulePublisher{Publisher: source, cfg: cfg, pipes: pipes}
 	}
 	var consumerStore decision.Store = store
@@ -277,18 +295,22 @@ func TestDecisionSIGKILLBeforeCompletionCommitRestoresOriginalProposal(t *testin
 				t.Fatal("original Decision rejected")
 			}
 			child, claimed := startRuleChild(t, w, ctx, "completed_staged_before_commit", 1)
-			var stage ruleProcessFrame
-			if err = child.Event(ctx, &stage); err != nil {
-				t.Fatal("actual completed SQL/pre-COMMIT gate missing:", err)
+			var published ruleProcessFrame
+			if err = child.Event(ctx, &published); err != nil {
+				t.Fatal("actual independent publication/pre-Finish gate missing:", err)
 			}
-			if stage.Stage != "completed_staged_before_commit" || stage.Scenario != "original-rule-decision" || stage.Generation != 1 || stage.ProposalRef == nil || stage.ArtifactRef == nil {
-				t.Fatal("wrong original staged completion identity")
+			if published.Stage != "published_before_finish" || published.Scenario != "original-rule-decision" || published.Generation != 1 || published.ProposalRef == nil || published.ArtifactRef == nil {
+				t.Fatal("wrong original publication identity")
 			}
-			proposalBytes, err := w.ReadArtifact(ctx, *stage.ProposalRef)
+			proposalBytes, err := w.ReadArtifact(ctx, *published.ProposalRef)
 			if err != nil {
 				t.Fatal("independent original Proposal publication absent", err)
 			}
-			artifact, err := w.ReadArtifact(ctx, *stage.ArtifactRef)
+			publishedProposal, err := v.Decode[v.Proposal](proposalBytes)
+			if err != nil || publishedProposal.DecisionRef != scene.DecisionRef || publishedProposal.SnapshotRef != scene.Request.Payload.SnapshotRef {
+				t.Fatal("independent original Proposal binding changed:", err)
+			}
+			artifact, err := w.ReadArtifact(ctx, *published.ArtifactRef)
 			if err != nil || string(artifact) != "fixture result: alpha\n" {
 				t.Fatal("independent original artifact absent", err)
 			}
@@ -298,11 +320,35 @@ func TestDecisionSIGKILLBeforeCompletionCommitRestoresOriginalProposal(t *testin
 			}
 			found, ok := view.AsFound()
 			if !ok {
-				t.Fatal("original staged Decision absent")
+				t.Fatal("original public Decision absent before Finish")
 			}
 			running, ok := found.Decision.AsRunning()
-			if !ok {
-				t.Fatal("staged completed became visible before held actual COMMIT")
+			if !ok || running.Usage.RuleStarts != "1" || running.Usage.RuleSteps != "1" || running.Usage.Cost.IntegerValue != "1" || !running.Usage.MeasurementsComplete {
+				t.Fatal("original confirmed public running usage missing before Finish")
+			}
+			confirmedUsage := running.Usage
+			if err = child.Send(ctx, ruleProcessFrame{Stage: "release", Scenario: published.Scenario, Generation: 1}); err != nil {
+				t.Fatal(err)
+			}
+			var stage ruleProcessFrame
+			if err = child.Event(ctx, &stage); err != nil {
+				t.Fatal("actual completed SQL/pre-COMMIT gate missing:", err)
+			}
+			if stage.Stage != "completed_staged_before_commit" || stage.Scenario != published.Scenario || stage.Generation != 1 || stage.ProposalRef == nil || stage.ArtifactRef == nil || *stage.ProposalRef != *published.ProposalRef || *stage.ArtifactRef != *published.ArtifactRef {
+				t.Fatal("actual staged completion changed original publication identity")
+			}
+			// Get retains its consistent Decision/Stop lock. While the actual
+			// completed transaction holds it, this bounded public observation is
+			// unavailable; it is not evidence for the eventual Commit outcome.
+			getCtx, getCancel := context.WithTimeout(ctx, 2*time.Second)
+			view, err = service.Get(getCtx, scene.GetJSON, &scene.Subject)
+			getCancel()
+			if err != nil {
+				t.Fatal("held completion public query failed:", err)
+			}
+			unavailable, ok := view.AsUnavailable()
+			if !ok || unavailable.DecisionRef != scene.DecisionRef || unavailable.Reason != "dependency_unavailable" {
+				t.Fatal("held completion query did not report the exact unavailable observation")
 			}
 			if kill {
 				killRuleChild(t, ctx, child)
@@ -323,8 +369,17 @@ func TestDecisionSIGKILLBeforeCompletionCommitRestoresOriginalProposal(t *testin
 				if !ok {
 					t.Fatal("original Decision absent after pre-COMMIT SIGKILL")
 				}
-				if _, ok = found.Decision.AsRunning(); !ok {
+				restored, ok := found.Decision.AsRunning()
+				if !ok || restored.Usage != confirmedUsage {
 					t.Fatal("uncommitted completed survived actual process kill")
+				}
+				proposalAfter, readErr := w.ReadArtifact(ctx, *published.ProposalRef)
+				if readErr != nil || !sameRuleJSON(proposalBytes, proposalAfter) {
+					t.Fatal("independent original Proposal changed before recovery:", readErr)
+				}
+				artifactAfter, readErr := w.ReadArtifact(ctx, *published.ArtifactRef)
+				if readErr != nil || string(artifactAfter) != string(artifact) {
+					t.Fatal("independent original artifact changed before recovery:", readErr)
 				}
 				if delay := time.Until(claimed.LeaseUntil.Add(time.Millisecond)); delay > 0 {
 					if err = (runtime.WallTimer{}).Wait(ctx, delay); err != nil {
@@ -345,7 +400,7 @@ func TestDecisionSIGKILLBeforeCompletionCommitRestoresOriginalProposal(t *testin
 				t.Fatal("original completed Decision absent")
 			}
 			completed, ok := found.Decision.AsCompleted()
-			if !ok || completed.ProposalRef != *stage.ProposalRef || completed.Proposal.DecisionRef != scene.DecisionRef || completed.Usage != running.Usage || completed.Usage.RuleStarts != "1" || completed.Usage.Cost.IntegerValue != "1" {
+			if !ok || completed.ProposalRef != *stage.ProposalRef || completed.Proposal.DecisionRef != scene.DecisionRef || completed.Proposal.SnapshotRef != scene.Request.Payload.SnapshotRef || completed.Usage != confirmedUsage || completed.Usage.RuleStarts != "1" || completed.Usage.RuleSteps != "1" || completed.Usage.Cost.IntegerValue != "1" || !completed.Usage.MeasurementsComplete {
 				t.Fatal("pre-COMMIT recovery changed original Proposal or confirmed usage")
 			}
 			candidate, ok := completed.Proposal.Advance.AsCandidateResult()
@@ -355,6 +410,10 @@ func TestDecisionSIGKILLBeforeCompletionCommitRestoresOriginalProposal(t *testin
 			proposalAfter, err := w.ReadArtifact(ctx, completed.ProposalRef)
 			if err != nil || !sameRuleJSON(proposalBytes, proposalAfter) {
 				t.Fatal("original published Proposal changed", err)
+			}
+			artifactAfter, err := w.ReadArtifact(ctx, *stage.ArtifactRef)
+			if err != nil || string(artifactAfter) != string(artifact) {
+				t.Fatal("original published artifact changed", err)
 			}
 			query, err := service.GetCommand(ctx, scene.CommandGetJSON, &scene.Subject)
 			if err != nil {
@@ -371,6 +430,10 @@ func TestDecisionSIGKILLBeforeCompletionCommitRestoresOriginalProposal(t *testin
 			b, err := v.Encode(fixed.Receipt)
 			if err != nil || !sameRuleJSON(a, b) {
 				t.Fatal("pre-COMMIT recovery changed fixed receipt", err)
+			}
+			step, stepErr := service.Step(ctx)
+			if stepErr != nil || step.Processed != 0 {
+				t.Fatal("completed original Decision retained runnable work:", stepErr)
 			}
 		})
 	}
