@@ -5,7 +5,9 @@ import (
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
+	"encoding/json"
 	"math/big"
+	"reflect"
 	"strconv"
 	"time"
 
@@ -394,6 +396,19 @@ func (s *Service) calculate(ctx context.Context, work Work) completion {
 	}
 	if lock.ComponentRef != input.ComponentRef || len(snapshot.MaterialRefs) > 63 {
 		return failedCompletion("input_over_limit", usage)
+	}
+	var manifest struct {
+		Kind        string   `json:"kind"`
+		Snapshot    Snapshot `json:"snapshot"`
+		RuleVersion string   `json:"rule_version"`
+	}
+	if err = json.Unmarshal(lock.ManifestRaw, &manifest); err != nil {
+		return failedCompletion("snapshot_unavailable", usage)
+	}
+	observedSnapshot := snapshot
+	observedSnapshot.Raw = nil
+	if !reflect.DeepEqual(observedSnapshot, manifest.Snapshot) || hash([]byte(snapshot.Rule)) != string(input.ComponentRef.ConfigDigest) {
+		return failedCompletion("snapshot_unavailable", usage)
 	}
 	processed := append([]v.ContentRef{lock.ManifestRef}, snapshot.MaterialRefs...)
 	inputBytes := len(snapshot.Raw) + len(lock.Raw) + len(lock.ManifestRaw)

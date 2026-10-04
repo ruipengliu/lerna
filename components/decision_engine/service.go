@@ -92,7 +92,9 @@ func (s *Service) authorize(ctx context.Context, trusted *v.SubjectBinding, ref 
 	if err != nil {
 		return Permission{}, err
 	}
-	if permission.Subject.TenantID != principal.TenantID || permission.Subject.SubjectID != principal.SubjectID || permission.DecisionOwner != s.config.Owner {
+	left, _ := v.Encode(permission.Subject)
+	right, _ := v.Encode(principal)
+	if string(left) != string(right) || permission.DecisionOwner != s.config.Owner {
 		return Permission{}, ErrForbidden
 	}
 	return permission, nil
@@ -177,6 +179,9 @@ func (s *Service) Decide(ctx context.Context, data []byte, trusted *v.SubjectBin
 		}
 		now, err = s.config.Store.Now(ctx, tx)
 		if err != nil {
+			return err
+		}
+		if err = permissionCurrent(permission, now); err != nil {
 			return err
 		}
 		if !now.Before(cutoff) {
@@ -326,4 +331,39 @@ func (s *Service) InstallPool(ctx context.Context, cfg workpool.Config, expected
 		}
 		return s.config.Store.InstallPool(ctx, tx, cfg, expected, now)
 	})
+}
+
+func (s *Service) ObservePool(ctx context.Context) (workpool.Observation, error) {
+	result := workpool.Observation{Active: map[string]int64{}, Queued: map[string]int64{}}
+	if !s.config.PoolControl {
+		return result, ErrForbidden
+	}
+	if err := finite(ctx); err != nil {
+		return result, err
+	}
+	err := s.config.Store.Within(ctx, oldOwner(s.config.Owner), func(ctx context.Context, tx runtime.Tx) error {
+		state, err := s.config.Store.LockPool(ctx, tx)
+		if err != nil {
+			return err
+		}
+		result.State = state
+		result.Scope, err = s.config.Store.PoolScope(ctx, tx)
+		if err != nil {
+			return err
+		}
+		now, err := s.config.Store.Now(ctx, tx)
+		if err != nil {
+			return err
+		}
+		for _, limit := range state.Config.Limits {
+			active, _, queued, err := s.config.Store.PoolCounts(ctx, tx, state, limit.Lane, contract.ID(s.config.Owner.TenantID), now)
+			if err != nil {
+				return err
+			}
+			result.Active[limit.Lane] = active
+			result.Queued[limit.Lane] = queued
+		}
+		return nil
+	})
+	return result, err
 }

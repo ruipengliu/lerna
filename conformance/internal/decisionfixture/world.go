@@ -146,3 +146,45 @@ func (w *World) Cleanup() error {
 	}
 	return errors.Join(errs...)
 }
+
+// AdditionalScenario grants another exact fixture Decision while preserving the
+// original immutable materials and component lock. It creates no real Task.
+func (w *World) AdditionalScenario(ctx context.Context, ownerID, id v.ID, deadline time.Time) Scenario {
+	w.t.Helper()
+	scene := w.Scenario()
+	permission, err := w.source.Authorize(ctx, scene.Subject, scene.DecisionRef, "start", &scene.Request.Payload)
+	if err != nil {
+		w.t.Fatal(err)
+	}
+	snapshot, err := w.source.ReadSnapshot(ctx, scene.Request.Payload.SnapshotRef, permission)
+	if err != nil {
+		w.t.Fatal(err)
+	}
+	material, err := w.source.ReadMaterial(ctx, scene.MaterialRef, "rule.input", permission)
+	if err != nil {
+		w.t.Fatal(err)
+	}
+	scene.DecisionRef.OwnerID = ownerID
+	scene.DecisionRef.ID = id
+	permission.DecisionOwner.OwnerID = ownerID
+	if _, err = w.source.Seed(ctx, Bundle{DecisionRef: scene.DecisionRef, Permission: permission, Snapshot: snapshot, Materials: []Material{{Ref: scene.MaterialRef, Bytes: material}}, Purposes: []string{"decide", "get", "command.get", "start", "material", "rule.input", "fixture.lock", "publish", "proposal.publish", "artifact.publish"}, RuleVersion: "fixture-rule/1"}); err != nil {
+		w.t.Fatal(err)
+	}
+	scene.Request.CommandID = v.ID("command-" + string(id))
+	scene.Request.Target = scene.DecisionRef
+	scene.Request.Payload.DecisionID = id
+	scene.Request.Payload.Deadline = v.Time(deadline.UTC().Truncate(time.Microsecond).Format("2006-01-02T15:04:05.000000Z"))
+	scene.GetJSON, err = v.Encode(v.DecisionGetRequest{ContractVersion: v.Version, Profile: "decision_engine", CommandID: "read-fixture-decision", Target: scene.DecisionRef, Method: "decision_engine.get", AcceptBefore: scene.Request.AcceptBefore, Payload: v.DecisionGetPayload{DecisionRef: scene.DecisionRef}})
+	if err != nil {
+		w.t.Fatal(err)
+	}
+	return scene
+}
+func (w *World) ServiceFor(owner v.OwnerRef, worker string, lease time.Duration) *decision.Service {
+	w.t.Helper()
+	service, err := decision.New(decision.Config{Owner: owner, Store: w.store, Authority: w.source, Source: w.source, Publisher: w.source, Component: w.scenario.Request.Payload.ComponentRef, Worker: worker, Lease: lease, PoolControl: true})
+	if err != nil {
+		w.t.Fatal(err)
+	}
+	return service
+}
