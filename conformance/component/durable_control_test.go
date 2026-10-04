@@ -220,11 +220,30 @@ func TestDurableCancelBeforeFinishPreservesPublishedUnadoptedBytes(t *testing.T)
 }
 
 func runPublicationControlCase(t *testing.T, afterProposal bool) {
+	runPublicationControlScenario(t, afterProposal, "")
+}
+
+func TestDurableControlPreparedV2StopsNextPublicationAfterArtifactReadback(t *testing.T) {
+	runPublicationControlScenario(t, false, "delta_candidate_result")
+}
+
+func TestDurableControlPreparedV2StopsFinishAfterProposalReadback(t *testing.T) {
+	for _, rule := range []string{"delta_candidate_result", "delta_only", "actions_four"} {
+		t.Run(rule, func(t *testing.T) {
+			runPublicationControlScenario(t, true, rule)
+		})
+	}
+}
+
+func runPublicationControlScenario(t *testing.T, afterProposal bool, proposalCase string) {
 	t.Helper()
 	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 	defer cancel()
 	w := fixture.NewWorld(t, ctx)
 	scene := w.Scenario()
+	if proposalCase != "" {
+		scene, _ = proposalScenario(t, ctx, w, "fixture-rule/3", proposalCase)
+	}
 	gate := &publicationControlGate{Publisher: w.Source(), afterProposal: afterProposal, reached: make(chan struct{}), resume: make(chan struct{})}
 	s, err := decision.New(decision.Config{Owner: v.OwnerRef{TenantID: scene.DecisionRef.TenantID, OwnerID: scene.DecisionRef.OwnerID}, Store: w.Store(), Authority: w.Source(), ControlAuthority: w.Source(), Source: w.Source(), Publisher: gate, Component: scene.Request.Payload.ComponentRef, Worker: "cancel-publication", Lease: 5 * time.Second, PoolControl: true})
 	if err != nil {
@@ -288,9 +307,16 @@ func runPublicationControlCase(t *testing.T, afterProposal bool) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	artifact, err := w.Source().ReadPublished(ctx, gate.artifact, permission)
-	if err != nil || string(artifact) != "fixture result: alpha\n" {
-		t.Fatal("independent original artifact lost", err)
+	noArtifact := proposalCase == "delta_only" || proposalCase == "actions_four"
+	if noArtifact {
+		if gate.artifact != (v.ContentRef{}) {
+			t.Fatal("no-artifact branch invented a publication")
+		}
+	} else {
+		artifact, err := w.Source().ReadPublished(ctx, gate.artifact, permission)
+		if err != nil || string(artifact) != "fixture result: alpha\n" {
+			t.Fatal("independent original artifact lost", err)
+		}
 	}
 	exists, err := w.Source().PublicationExists(ctx, gate.proposalKey, gate.proposalBody, gate.proposalSources, permission)
 	if err != nil || exists != afterProposal {
@@ -300,6 +326,20 @@ func runPublicationControlCase(t *testing.T, afterProposal bool) {
 	if afterProposal {
 		if err != nil || string(proposalBytes) != string(gate.proposalBody) {
 			t.Fatal("cancel erased independently published unadopted Proposal bytes", err)
+		}
+		proposal, decodeErr := v.Decode[v.Proposal](proposalBytes)
+		if decodeErr != nil || proposal.DecisionRef != scene.DecisionRef || proposal.SnapshotRef != scene.Request.Payload.SnapshotRef {
+			t.Fatal("independent original Proposal lost its binding:", decodeErr)
+		}
+		if proposalCase == "delta_only" {
+			if _, ok := proposal.Advance.AsNone(); !ok {
+				t.Fatal("delta-only publication changed its actual no-artifact branch")
+			}
+		} else if proposalCase == "actions_four" {
+			actions, ok := proposal.Advance.AsActions()
+			if !ok || len(actions.Actions) != 4 {
+				t.Fatal("four-action publication changed its actual no-artifact branch")
+			}
 		}
 	} else if !errors.Is(err, decision.ErrForbidden) {
 		t.Fatal("cancel started a new Proposal publication after the public readback gate", err)
@@ -335,7 +375,22 @@ func runPublicationControlCase(t *testing.T, afterProposal bool) {
 	if string(before) != string(after) {
 		t.Fatal("cancel rewrote original accepted receipt")
 	}
+	closedBefore, err := v.Encode(found.Decision)
+	if err != nil {
+		t.Fatal(err)
+	}
 	w.Reopen(ctx)
+	restored := controlView(t, ctx, w.Service(), scene)
+	closedAfter, err := v.Encode(restored.Decision)
+	if err != nil || string(closedAfter) != string(closedBefore) || restored.CurrentControl == nil || restored.CurrentControl.ControlBasis != control.Payload.ControlBasis {
+		t.Fatal("reopen changed frozen cancellation facts or adopted control:", err)
+	}
+	if afterProposal {
+		proposalAfter, err := w.Source().ReadPublished(ctx, gate.proposal, permission)
+		if err != nil || string(proposalAfter) != string(proposalBytes) {
+			t.Fatal("reopen changed independent unadopted Proposal bytes:", err)
+		}
+	}
 	claim, err := w.Service().Claim(ctx)
 	if err != nil || claim != nil {
 		t.Fatal("reopened cancelled Job was claimable", err)

@@ -257,6 +257,8 @@ func (s *Service) Decide(ctx context.Context, data []byte, trusted *v.SubjectBin
 				receipt = rejected(command, "decision_mismatch")
 			} else if original.Status == "cancelled" {
 				receipt = rejected(command, "decision_cancelled")
+			} else if request.Payload.ComponentRef != s.config.Component || permission.ChargeBasis != "durable_rule_start" || !supportedRuleVersion(permission.RuleVersion) {
+				receipt = rejected(command, "unsupported")
 			} else {
 				receipt = accepted(command, request.Target)
 			}
