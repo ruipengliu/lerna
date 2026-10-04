@@ -115,3 +115,10 @@ the earlier bound; all initial blocking reads end in fresh trusted admission tim
 AcceptBefore admits the read rather than imposing an I/O completion cutoff.
 GetCommand rechecks reader/time after blocking facts, preserving history semantics.
 These gates do not implement the later inherited closure or physical cleanup.
+
+Both target read/disclose policies bind to the complete actual ContentRef before
+revealing existence, publication state, declaration mismatch or body. If no record
+exists, both bind to the full requested ContentRef before not_found. Correct policy
+for actual A plus incorrect request B still yields integrity; a policy for another
+same-identity declaration yields forbidden rather than integrity/not_found. The
+same authorized observation runs at initial admission and final body disclosure.

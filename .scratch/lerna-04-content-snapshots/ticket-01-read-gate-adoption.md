@@ -58,3 +58,29 @@ The original independent intermediate findings remain immutable in
 [ticket-01-spec-initial.md](ticket-01-spec-initial.md) and
 [ticket-01-standards-initial.md](ticket-01-standards-initial.md). Their findings and
 Astra decisions are requirements/source review, not executed fault evidence.
+
+## Final candidate F1 clarification
+
+Root's final architecture and both independent axes found target policy full-ref
+binding missing at tested46/delivery72. That candidate remains historically
+unaccepted. The first narrow correction bound policies only after the caller
+mismatch branch; its six correct-ref body tests passed but root/Astra then corrected
+the authorization ordering. That first advice was incomplete, not a new protocol.
+
+The adopted [ticket-01-target-policy-ordering.md](ticket-01-target-policy-ordering.md)
+requires both current read/disclose policy refs to match actual record.Ref before
+any record existence/state or declaration-mismatch observation. When record is
+absent they must both match the requested complete ref before not_found. The gate
+still samples trusted time after all initial blocking reads. Correct policy A,
+request B, actual A retains integrity; wrong policy B, request C/A, actual A is
+forbidden; correct policy A/request A/absent is not_found, wrong policy B/request A/
+absent is forbidden. Both initial and final observe share this ordering. Other
+retention/source/current clock gates remain as adopted. No schema/SQL/interface,
+recursive closure or additional native tooling extraction follows from this fix.
+
+Fixed72 independent reports are archived as `ticket-01-*-review-72.md` with their
+original fixed-source qualification and remaining P2. Their earlier implementation
+suggestion is qualified by the explicit ordering clarification above. They are not
+reports on the new source or evidence that the new candidate is accepted. The
+Standards optional four-place native-result aggregation judgement is retained per
+root's KEEP decision, without altering tested tooling or adding unrelated tests.

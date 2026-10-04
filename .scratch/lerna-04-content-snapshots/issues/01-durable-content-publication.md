@@ -31,3 +31,11 @@ Job、Linux真实Sync/noclobber/dirSync/独立回读、真实重开及公开Cont
 执行与初始失败分类见[../ticket-01-evidence.md](../ticket-01-evidence.md)，
 准确资源退出见[../ticket-01-resource-audit.json](../ticket-01-resource-audit.json)。
 独立初审原pin及findings被保留，最终root接受和exact delivery pin随后追加。
+
+后续固定72候选的两轴/Astra复核发现target完整policy绑定P2，已以公开真实red→green及
+新门禁顺序补充反例修复。新受测源码`14ead831b8834892da5ff13a9b883494247f327f`，
+之后`4aceecefb45125597d45db75aa757fe1aab96eb9`仅改两行旧顺序注释，执行代码/测试
+数据等价，未为注释重跑native。当前完整locked check、Get影响race及fresh资源审计已真实
+通过；新机器记录见[../ticket-01-resource-audit-target-policy.json](../ticket-01-resource-audit-target-policy.json)。
+原72 findings、初始不充分after-mismatch建议和对应实际green历史均保留，新candidate仍待
+root最终独立source/doc qualification接受，当前不勾8项或写resolved。

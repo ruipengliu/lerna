@@ -1,0 +1,28 @@
+{
+  "current_auditor_group": 2147781,
+  "exact_residual_roots": [],
+  "live_exact_schemas": [],
+  "live_groups_excluding_actual_auditor": [],
+  "live_policy_holders": [],
+  "registered_groups": 353,
+  "registered_object_contract_generator_roots": 518,
+  "registered_policy_holders": 65,
+  "registered_schemas": 289,
+  "native_exit": {
+    "status": 0,
+    "group_absent": true,
+    "actual_auditor_group": 2147781
+  },
+  "source_commit": "4aceecefb45125597d45db75aa757fe1aab96eb9",
+  "tested_executable_commit": "14ead831b8834892da5ff13a9b883494247f327f",
+  "source_qualification": "The sole difference from tested executable source is two plain-English test comments; exact diff preserved in Git. No executable/test data changed and no comment-only native rerun is claimed.",
+  "integration_commit": "64c6872c8ed56ddd66dd51c98dc430046fc9f47d",
+  "owned_overlay_ack": {
+    "path": "/workspace/lerna-content-01-d15e5e390c46262d",
+    "device": 27,
+    "inode": 431292,
+    "filesystem": "overlay",
+    "owner": "content-snapshots-ticket-01"
+  },
+  "provenance": "Fresh exact ledger audit after target authorization ordering red/green, affected Get race and full locked check. Leading raw JSON parsed, empty arrays normalized, actual wrapper exit separately recorded."
+}

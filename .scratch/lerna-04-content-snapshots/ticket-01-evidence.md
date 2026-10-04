@@ -255,3 +255,69 @@ Ticket status remains claimed and its8 boxes remain unchecked pending root's
 actual independent final Spec/Standards acceptance. Source and executed proof are
 ready for that review; this record does not claim full slice04 advertisement,
 root merge/push/CI, later closure/cleanup/fence/holder/SIGKILL, or power-loss/S3 proof.
+
+## Final-candidate target policy finding and ordering correction
+
+Root's fixed46/delivery72 architecture review and both independent axes found one
+necessary P2: target read/disclose policy refs were not bound to the exact stored
+declaration. Candidate72 is preserved as historical and was not accepted. The
+fixed reports retain their pins and remaining finding; optional native-result
+aggregation duplication remains KEEP, without any tooling delta.
+
+Public hash/media/length wrong trusted policy, each before read and during a finite
+pause after actual native whole Read, yielded runnable red54796: Component0.960s,
+actual exit1/group absent. Minimal full-ref binding after caller mismatch yielded
+green55134:1.122s, actual exit0/group absent. Those six cases included normal exact
+policy, correctly authorized incorrect request integrity, unchanged independent
+original bytes, fixed receipt/history and restored policy normal read. Exact logs
+are owned-root `target-policy-red.log` and `target-policy-green.log`.
+
+Root/Astra then corrected the suggested order: authorization must precede existence
+and mismatch observations, using actual Record.Ref if present and request.Ref if
+absent. Supplementary public red16987 produced integrity for policy B/request C or
+B/actual A and not_found for policy B/request A/no record. Component0.526s, actual
+exit1/group absent. Moving the same shared authorization ahead of these observations
+produced combined green44631:1.372s, actual exit0/group absent. Correct policy A/
+request B/actual A remains integrity; exact authorized absence remains not_found.
+Logs are `target-policy-order-red.log` and `target-policy-order-green.log`. The
+initial six-case green is not mislabeled as the completed authorization fix.
+
+The corrected authorization-first source was fixed as
+`14ead831b8834892da5ff13a9b883494247f327f`, exactly two source paths changed from72:
+shared observe and public target-policy tests. No tooling/contract/SQL/source-policy
+closure delta was introduced. Fifteen affected public Get groups (including both
+new target suites, deadlines/direct sources, reopen, incorrect declaration,
+empty/binary/ranges, real256KiB and damaged/missing byte normals) completed affected
+race47356: Component22.361s, actual native0/group absent. Log is
+`target-policy-race.log`; no unrelated broad PG/race suite was repeated.
+
+The new source's complete locked check46700 then completed actual native0/group
+absent, including original35 Node tools,44 TS, both generators and158/89/101
+fixtures in both Go↔TS orders plus format/vet/generated checks and final Go/TS
+build. Log is `target-policy-check.log`. Some unchanged Go units were cached and
+are not relabeled as fresh noncached runs. New integration tests and affected race
+above used explicit count1/p1/timeout120 and real PG/local objects.
+
+Independent fixed14 source review then identified two stale plain-English test
+comments describing the superseded order. Comment-only follow-up
+`4aceecefb45125597d45db75aa757fe1aab96eb9` changes exactly those two comment lines;
+no directive, executable code or test data changed. Exact Git diff was checked,
+so tested executable qualification carries from14. Literal test-file blob equality
+is not claimed; no additional native test was run for this comment-only correction.
+Root separately reviews the required documentation accuracy.
+
+Fresh audit after check native completion observed353 original registered groups,
+289 exact schemas,65 original blocker PIDs and518 exact object/contract/generator
+roots. All live/residual arrays were empty. Actual auditor2147781 then exited0 and
+its group was absent; native DB/registry Close succeeded. Current valid standalone
+machine record is
+[ticket-01-resource-audit-target-policy.json](ticket-01-resource-audit-target-policy.json),
+with actual source4ace/tested-executable14 qualification. The older audit record
+remains historical, unchanged. Root ACK remains dev27/inode431292. No original02/03
+unknown scope was guessed, deleted or reclassified. Latest integration64c6872 was
+again actually clean and already an ancestor of the own source branch.
+
+This supersedes72 as the delivery review candidate only. All8 remain claimed and
+unchecked until root accepts independent fixed source and final documentation;
+no full slice04 advertisement, push/root merge/CI or later ticket completion is
+claimed by these results.
