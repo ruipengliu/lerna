@@ -3,6 +3,7 @@
 | 日期 | 修订说明 |
 | --- | --- |
 | 2026-10-04 | 初版："观察 → 动作 → 再观察"的单动作循环、节点优先的观察、设备控制代次与接管、模拟设备验收、Android 后端与分发约束。 |
+| 2026-10-04 | 按 `CLAUDE.md` 写作要求和[文档规范](../conventions.md)修订用语：约束统一为"必须／不得""建议／不建议"，不再使用"应"；"执行端"统一为"执行端点"，发布回滚统一为"回滚"，授权统一用"撤销"。设计内容不变。 |
 
 - 状态：草稿
 - 负责满足：C4、C5、C7、C8 中的 GUI 部分；V2
@@ -30,7 +31,7 @@ GUI 适配器用于没有合适 API 的应用，以及作为兜底的执行路�
 | 动作效果的裁决 | 动作账本 |
 | 任务条件的核验 | 任务编排 |
 
-需要用 API 或文件来核对效果时，由核心安排对应的动作，GUI 适配器不直接调用其他适配器（R4）。观察本身也经过出口闸门：**观察不能静默改变设备**，例如打开网络、启动应用、允许权限或执行导航。AndroidWorld 的 `get_a11y_tree()` 就会尝试关闭飞行模式相关的限制、启用网络（[android_world_controller.py](https://github.com/google-research/android_world/blob/2655e27cd090f97fbf2ccaecf759057bec0a8460/android_world/env/android_world_controller.py)），说明一个叫"观察"的函数也可能夹带对设备的修改。
+需要用 API 或文件来核对效果时，由核心安排对应的动作，GUI 适配器不直接调用其他适配器（R4）。观察本身也经过出口闸门：**观察不得静默改变设备**，例如打开网络、启动应用、允许权限或执行导航。AndroidWorld 的 `get_a11y_tree()` 就会尝试关闭飞行模式相关的限制、启用网络（[android_world_controller.py](https://github.com/google-research/android_world/blob/2655e27cd090f97fbf2ccaecf759057bec0a8460/android_world/env/android_world_controller.py)），说明一个叫"观察"的函数也可能夹带对设备的修改。
 
 ## 2 对象与状态
 
@@ -57,10 +58,10 @@ GUI 适配器用于没有合适 API 的应用，以及作为兜底的执行路�
 | --- | --- | --- | --- |
 | 观察 | 设备、窗口范围、读取用途和凭据 → 节点树和按需的截图 | 拿到声明范围内的内容；每次都是一个新时刻 | 安全窗口、采集不完整、设备不可用、权限失效 |
 | 执行 | 原尝试、观察、控制代次、定位和输入 → 平台回报和后观察 | 拿到派发反馈和证据 | 观察已过期、目标有歧义、设备忙、权限失效、派发结果不明 |
-| 查询 | 原尝试、业务标识、读取凭据 → 原回报和当前证据 | 补充核对材料；**不重复点击**，需要导航时另行准入 | 没有查询能力、证据不足、需要导航 |
+| 查询 | 原尝试、业务标识、读取凭据 → 原回报和当前证据 | 补充核对材料；**不重复点击**，需要导航时必须另行准入 | 没有查询能力、证据不足、需要导航 |
 | 接管和交还事件 | 用户事件、设备、命令标识 → 核心控制回执 | 核心已保存，并落实本机的控制边界 | 控制冲突、保存失败、端点未确认 |
 
-Android 并不认识 Lerna 的尝试标识，所以对 GUI 动作来说，平台层面没有幂等可言：去重完全依赖核心，未知的点击不能重放。
+Android 并不认识 Lerna 的尝试标识，所以对 GUI 动作来说，平台层面没有幂等可言：去重完全依赖核心，未知的点击不得重放。
 
 ## 4 关键流程
 
@@ -76,7 +77,7 @@ Android 并不认识 Lerna 的尝试标识，所以对 GUI 动作来说，平台
 
 平台层面的几个"完成"都不是业务完成：Android 无障碍节点可能是虚拟节点，节点 `refresh()` 失败表示原节点已经离开了视图树，手势的派发和完成回调是分开发生的（[AccessibilityNodeInfo](https://android.googlesource.com/platform/frameworks/base/+/refs/tags/android-15.0.0_r1/core/java/android/view/accessibility/AccessibilityNodeInfo.java)、[AccessibilityService](https://android.googlesource.com/platform/frameworks/base/+/refs/tags/android-15.0.0_r1/core/java/android/accessibilityservice/AccessibilityService.java)）；UI Automator 的 `waitForStable()` 只表示界面树暂时没变化，不保证后台任务已空闲（[UI Automator 指南](https://developer.android.com/training/testing/other-components/ui-automator)），界面稳定之后网络提交可能仍在进行。所以"界面稳定"只能作为观察条件。
 
-**禁止隐藏的动作。**UI Automator 的固定版本中，`setText` 在平台动作失败后可能只写一条警告；节点刷新可能运行 watcher；部分滚动方法包含重复动作（[UiObject2.java](https://android.googlesource.com/platform/frameworks/support/+/ec9022d156846f24e22bec3e475d4206d6f321ea/test/uiautomator/uiautomator/src/main/java/androidx/test/uiautomator/UiObject2.java)）。GUI 适配器只使用可以审计的单动作路径，禁止可写的 watcher 和隐式的动作重试。
+**不得有隐藏的动作。**UI Automator 的固定版本中，`setText` 在平台动作失败后可能只写一条警告；节点刷新可能运行 watcher；部分滚动方法包含重复动作（[UiObject2.java](https://android.googlesource.com/platform/frameworks/support/+/ec9022d156846f24e22bec3e475d4206d6f321ea/test/uiautomator/uiautomator/src/main/java/androidx/test/uiautomator/UiObject2.java)）。GUI 适配器只使用可以审计的单动作路径，不得使用可写的 watcher 和隐式的动作重试。
 
 ### 4.2 接管与交还
 
@@ -98,10 +99,10 @@ Android 并不认识 Lerna 的尝试标识，所以对 GUI 动作来说，平台
 | --- | --- | --- |
 | 回执丢失 | 端侧动作账本 | 查询原尝试和观察证据；没有回报不能证明未派发 |
 | 进程崩溃 | 原端点的动作账本、持久工作 | 派发窗口保持未知；恢复观察和核对，**不重放点击** |
-| 重复请求 | 持久工作、出口闸门 | 同身份去重；禁止可写 watcher 和自动的动作重试 |
+| 重复请求 | 持久工作、出口闸门 | 同身份去重；不得使用可写 watcher 和自动的动作重试 |
 | 并发冲突 | 核心的设备控制、出口闸门 | 串行的控制代次；检测到窗口变化或用户干预时暂停；不保证任意应用都没有竞态 |
 | 依赖不可用 | 端侧动作账本 | 服务关闭、设备离线、截图不可用时等待；不静默修改设备设置 |
-| 迟到的结果 | 动作账本、预算 | 绑定原尝试和设备启动代次，追加证据；不能让已取消的任务恢复推进 |
+| 迟到的结果 | 动作账本、预算 | 绑定原尝试和设备启动代次，追加证据；不得让已取消的任务恢复推进 |
 | 用户接管 | 会话、任务编排、端侧核心 | 持久的控制事件，封闭旧资格；已派发的行为继续核对 |
 | 模拟设备从快照恢复 | 端侧核心、评测环境 | 更新设备启动代次，旧凭据失效；原账本的未知责任保留 |
 
@@ -114,10 +115,10 @@ Android 并不认识 Lerna 的尝试标识，所以对 GUI 动作来说，平台
 | G3 | 尝试和接管控制先持久 | 接管回执和观察回报丢失 |
 | G4 | 每次输入都绑定条件、授权、预算和控制代次 | 在派发边界插入接管或撤销 |
 | G5 | 观察和设备操作全部经过出口；关闭隐藏的动作 | 观察打开网络、watcher 允许权限，都被拒绝 |
-| G6 | 动作的选择和核验都回到核心 | GUI 上显示"已完成"不能裁决任务 |
+| G6 | 动作的选择和核验都回到核心 | GUI 上显示"已完成"不得裁决任务 |
 | G7 | 限定应用、窗口、输入类别和资源 | 提议进入范围外的应用或权限设置 |
 | G8 | 节点树、截图、OCR 的保存和同步分别授权 | 端侧专有的观察不上传 |
-| G9 | 截图、节点树、OCR、摘要和缓存登记派生关系 | 删除后不能复用旧的定位材料 |
+| G9 | 截图、节点树、OCR、摘要和缓存登记派生关系 | 删除后不得复用旧的定位材料 |
 | G11 | 原设备负责；失联时不换设备重做 | 设备离线后任务等待 |
 | G12 | 用户、设备绑定、控制和观察隔离 | 两个用户竞争同一设备，只有合法的持有方能派发 |
 
@@ -132,9 +133,9 @@ Android 并不认识 Lerna 的尝试标识，所以对 GUI 动作来说，平台
 
 Android 后端的候选：AccessibilityService 便于在端侧运行，但受能力和分发前提约束；UI Automator 适合测试或受控设备，依赖控制通道；截图加坐标输入能覆盖自绘界面，但定位和遮挡风险高。M3 默认先在受控的模拟设备上用 UI Automator，端侧的 AccessibilityService 另行验证适用范围。
 
-**分发环境约束**：当前 Google Play 的政策限制通过 Accessibility API 自主发起、规划和执行动作；确定性的人为脚本和经过验证的残障辅助工具有不同的适用条件（[Google Play 无障碍政策](https://support.google.com/googleplay/android-developer/answer/10964491?hl=en)）。所以不能默认把通用的自主 GUI 产品放进这个分发渠道；支持范围要分别声明为模拟设备、受控设备和真实的个人设备。
+**分发环境约束**：当前 Google Play 的政策限制通过 Accessibility API 自主发起、规划和执行动作；确定性的人为脚本和经过验证的残障辅助工具有不同的适用条件（[Google Play 无障碍政策](https://support.google.com/googleplay/android-developer/answer/10964491?hl=en)）。所以不得默认把通用的自主 GUI 产品放进这个分发渠道；支持范围必须分别声明为模拟设备、受控设备和真实的个人设备。
 
-设备控制事实的归属，正式采纳时应写成 ADR。
+设备控制事实的归属，正式采纳前必须写成 ADR。
 
 ## 8 待定事项
 
@@ -158,7 +159,7 @@ M1 不运行 GUI 后端；共同的执行接口要能表达观察证据、不幂
 | 观察打开网络、watcher 允许权限、自动滚动 | 未准入的行为被拒绝 |
 | 用户做了相似的操作后交还 | 没有证据时不归因给旧尝试；重新提议 |
 | 节点树和截图采集期间变化；模拟设备从快照恢复 | 不虚构快照；旧的启动代次失效 |
-| 界面或节点元数据中注入指令 | 内容不能改变授权、条件或执行范围 |
+| 界面或节点元数据中注入指令 | 内容不得改变授权、条件或执行范围 |
 
 效果失败至少区分感知、推理、应用知识、定位和环境问题；另外统计重复输入、假完成、接管竞态和证据泄露等契约失败。
 
