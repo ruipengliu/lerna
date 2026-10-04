@@ -66,3 +66,11 @@ responsible/residual与原deadline，staging+primary ACK可gone但全global
 ENOTEMPTY，实际原copy inode/字节保留，原责任不ACK；恢复同own准确文件，
 两个World真实重开同原预算擦除。原Binding/CopyID/effectDeadline跨页独立
 断言亦补真实运行。ACKloss/迟到copy竞争仍待各自资格控制。
+
+实际Linux跨进程两序已分别qualification：temp真实Sync返回后SIGSTOP，
+另一进程Erase有限等待flock；CONT之后actualPut/Close，再擦除。反序实际
+Fence完成后SIGSTOP，另一latePut进程拒绝；原eraser SIGKILL后独立重开
+确认closed-body Truth。所有child原deadline/prestart duty/PIDPGIDstart ACK
+和effectgate持久登记，positive Store.Close与kernel completion分列。
+被杀root holder的logicalClose未知仍保准确scope，不cleanup；新holder
+独立Truth不替原Close。旧非协议writer仍需真实停止升级，未claim该升级。

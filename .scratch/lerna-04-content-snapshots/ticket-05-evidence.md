@@ -213,7 +213,8 @@ prestart责任在Start前fsync登记；实际Setsid PID/PGID/starttime ACK再次
 fsync后才释放pipe effectgate。child真实temp.Sync返回之后、Close/Link
 之前SIGSTOP。父通过独立temp alpha字节及20ms有限Erase deadline拒绝
 观察实际跨进程flock；SIGCONT后child真正Put/Store.Close返回nil并写明确
-CloseACK文件，父实际断言它再Wait/groupAbsent。kernel ACK不推逻辑Close。
+CloseACK文件；父先actualWait/groupAbsent，再独立断言explicit CloseACK。
+kernel ACK不推逻辑Close。
 
 `crossprocess-put-first-qualification.log` actual0.050s、outerPID/PGID2752480/
 start11464036/exit0/groupAbsent=true/无timeout；ownroot3768632004 dev33/
@@ -226,3 +227,32 @@ outer go test timeout10s、原wrapper120s。所有pipes均真实Close，Wait有�
 该case是已有协议直接green，机械停点只控制真实Sync后的位置，不注入FS
 结果。反序墓碑先完成/迟到Put以及SIGKILL旧holder未知scope尚待独立case；
 不能用本单顺序或原receipt门宣称全部跨进程AC。明确release LOCAL/no pending。
+
+### 跨进程反序独立qualification：耐久墓碑先于迟到Put
+
+`TestCrossProcessClosedKeyRejectsLatePutAfterHolderDeath`先正常Put/独立alpha/
+正向Close。eraser child真实FenceAndErase返回之后、Store.Close之前SIGSTOP；
+另一个late child真实Put必须ErrBodySealed，并实际Store.Close确认。再以原
+进程身份SIGKILL eraser，实际Wait验证SIGKILL与groupAbsent；completion的
+ledger/Sync/Close/absence错误单独completionErr必须为nil，不把expected
+ExitError匹配吞掉额外错误。父独立Open Observe确认原fence和body/late temp
+缺失并Close自己holder。这不补原eraser的未知logical Close。
+
+`crossprocess-seal-first-kill-qualification.log` actual0.081s，两exact（反序+
+前一正常顺序相关control）通过；outerPID/PGID2765340/start11519327/exit0/
+groupAbsent=true/无timeout。原5s caller deadline传给所有child，child测试6s、
+outerGo10s及wrapper120s保持。ledger明确分列prestart duty、actualStart ACK、
+positive logicalClose、kernel completion和old logicalClose未知，各mode身份准确。
+
+| 原root与child | 实际责任 |
+| --- | --- |
+| firstcontrol root3844484877 dev33/inode326489；putchild2765408/start11519375 | actual Store.Close ACK与kernel0/groupAbsent，父Close/观察后确认此ownscope。 |
+| reverse root4116685529 dev33/inode326495；eraser2765413/start11519378 | actual Fence完成但Store.Close前SIGKILL；kernel exit-1/groupAbsent，logical Close UNKNOWN，cleanup_allowed=false。该准确root永久保留。 |
+| reverse latechild2765420/start11519380 | original key迟到Put拒绝；自己的actual Store.Close ACK及kernel0/groupAbsent；不代表原eraser Close。 |
+
+第一.050日志仍是旧单顺序资格，不伪称当时已有新增永久logicalClose ledger
+事件。本.081才具有该新增事件。原CloseACK仍是子执行actual nil返回后的
+事实，父先Wait再独立断言，kernel ACK不替逻辑Close。已有协议directgreen，
+没有造新red；两次序本机Linux事实不证明不守协议旧writer被防住。
+明确release LOCAL/no pending native。原初failedroot3977538271逻辑Close未知
+亦继续保留，后续绿色及此process Truth不能洗白它。
