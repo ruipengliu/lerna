@@ -679,8 +679,31 @@ func (w *upgradeOutput) safeText(dsn string) string {
 }
 
 func restoreFrozenWriter(t *testing.T) string {
+	return restoreFrozenProduction(t, false, nil)
+}
+
+// restoreFinal01Writer restores only the byte-exact final01 production closure.
+// Each consuming ticket supplies its own bounded original public-API driver;
+// that driver is never made part of the immutable archived production source.
+func restoreFinal01Writer(t *testing.T, driver []byte) string {
 	t.Helper()
-	root := filepath.Join("testdata", "legacy-970fd90")
+	if len(driver) == 0 || len(driver) > 32*1024 {
+		t.Fatal("final01 driver exceeds finite bound")
+	}
+	return restoreFrozenProduction(t, true, driver)
+}
+
+// Exactly two historical archives are supported. This mechanical restore has
+// no business state or arbitrary source/version registration.
+func restoreFrozenProduction(t *testing.T, final01 bool, driver []byte) string {
+	t.Helper()
+	archive, format, commit := "legacy-970fd90", "lerna-legacy-decision-closure-1", "970fd90260b5c4936cdb5c2b7a8589623126a5c2"
+	fileCount, productionBytes, payloadBytes := 69, 422534, 430396
+	if final01 {
+		archive, format, commit = "legacy-final01", "lerna-final01-production-closure-1", "696ac49846105a16f33e5de86dc621a3858651b2"
+		fileCount, productionBytes, payloadBytes = 68, 447637, 447637
+	}
+	root := filepath.Join("testdata", archive)
 	sums, err := os.ReadFile(filepath.Join(root, "SHA256SUMS"))
 	if err != nil || len(sums) > 16*1024 {
 		t.Fatal("frozen checksum list unavailable", upgradeCause("checksum read", err))
@@ -706,7 +729,7 @@ func restoreFrozenWriter(t *testing.T) string {
 		t.Fatal("frozen provenance missing", upgradeCause("provenance read", err))
 	}
 	var provenance frozenProvenance
-	if err = json.Unmarshal(body, &provenance); err != nil || provenance.Format != "lerna-legacy-decision-closure-1" || provenance.SourceCommit != "970fd90260b5c4936cdb5c2b7a8589623126a5c2" || len(provenance.Files) != 69 || provenance.ProductionFileCount != 68 || provenance.ProductionBytes != 422534 || provenance.PayloadBytes != 430396 {
+	if err = json.Unmarshal(body, &provenance); err != nil || provenance.Format != format || provenance.SourceCommit != commit || len(provenance.Files) != fileCount || provenance.ProductionFileCount != 68 || provenance.ProductionBytes != productionBytes || provenance.PayloadBytes != payloadBytes {
 		t.Fatal("frozen historical provenance mismatch", upgradeCause("provenance decode", err))
 	}
 	registry := os.Getenv("LERNA_TEST_OWNED_SCOPE_REGISTRY")
@@ -746,7 +769,7 @@ func restoreFrozenWriter(t *testing.T) string {
 	}
 	total := 0
 	production := 0
-	productionBytes := 0
+	actualProductionBytes := 0
 	for _, entry := range provenance.Files {
 		if !safeUpgradePath(entry.Artifact) || !safeUpgradePath(entry.Destination) || !checked[entry.Artifact] || entry.Artifact != entry.Destination+".txt" {
 			t.Fatal("unsafe historical restore path")
@@ -766,9 +789,9 @@ func restoreFrozenWriter(t *testing.T) string {
 		switch entry.Role {
 		case "archived_production":
 			production++
-			productionBytes += len(content)
+			actualProductionBytes += len(content)
 		case "added_driver":
-			if entry.Destination != "conformance/internal/decisionfixture/legacy_writer_test.go" {
+			if final01 || entry.Destination != "conformance/internal/decisionfixture/legacy_writer_test.go" {
 				t.Fatal("unexpected historical driver")
 			}
 		default:
@@ -782,8 +805,14 @@ func restoreFrozenWriter(t *testing.T) string {
 			t.Fatal(err)
 		}
 	}
-	if total != provenance.PayloadBytes || production != 68 || productionBytes != 422534 {
+	if total != provenance.PayloadBytes || production != 68 || actualProductionBytes != productionBytes {
 		t.Fatal("historical closure accounting mismatch")
+	}
+	if final01 {
+		destination := filepath.Join(dir, "conformance", "internal", "decisionfixture", "final01_writer_test.go")
+		if err := os.WriteFile(destination, driver, 0600); err != nil {
+			t.Fatal("final01 consumer driver write:", err)
+		}
 	}
 	success = true
 	return dir
