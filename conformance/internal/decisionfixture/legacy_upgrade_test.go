@@ -138,20 +138,20 @@ func buildFrozenWriter(t *testing.T, dir string) *upgradeOutput {
 	// Query before Wait can reap a fast exited child. Setpgid was passed to the
 	// real kernel by Start; this query records its actual group, never a guess.
 	pgid, groupErr := syscall.Getpgid(command.Process.Pid)
+	groupKnown = groupErr == nil && pgid == command.Process.Pid
+	var registrationErr error
+	if groupKnown {
+		registrationErr = registerUpgradeProcessGroup(command.Process.Pid, pgid, dir)
+	}
+	// Record the observed group before Wait can reap it. Cleanup already owns
+	// this holder, including observation/registration failure paths.
 	waited = make(chan error, 1)
 	go func() { waited <- command.Wait() }()
-	if groupErr != nil || pgid != command.Process.Pid {
+	if !groupKnown {
 		t.Fatal(upgradeCause("frozen build process group observation", errors.Join(groupErr, errors.New("frozen build group identity not confirmed"))))
 	}
-	groupKnown = true
-	registry := os.Getenv("LERNA_TEST_OWNED_SCOPE_REGISTRY")
-	ledger, err := os.OpenFile(registry, os.O_APPEND|os.O_WRONLY, 0600)
-	if err != nil {
-		t.Fatal(upgradeCause("frozen build process registration open", err))
-	}
-	_, writeErr := fmt.Fprintf(ledger, "process_group %d %d %s\n", command.Process.Pid, pgid, dir)
-	if err = errors.Join(writeErr, ledger.Sync(), ledger.Close()); err != nil {
-		t.Fatal(upgradeCause("frozen build process registration", err))
+	if registrationErr != nil {
+		t.Fatal(upgradeCause("frozen build process registration", registrationErr))
 	}
 	var waitErr error
 	select {
@@ -240,6 +240,15 @@ func startFrozenWriter(t *testing.T, dir, producer string) *frozenWriterSession 
 		t.Fatal(upgradeCause("writer start", err))
 	}
 	started = true
+	// Observe and acknowledge this actual Start before launching Wait or
+	// consuming the ready frame. Errors are reported only after its cleanup
+	// owns the holder, pipes, scanner and bounded Wait.
+	pgid, observationErr := syscall.Getpgid(child.Process.Pid)
+	groupKnown := observationErr == nil && pgid == child.Process.Pid
+	var registrationErr error
+	if groupKnown {
+		registrationErr = registerUpgradeProcessGroup(child.Process.Pid, pgid, dir)
+	}
 	readyCh := make(chan []byte, 1)
 	scanDone := make(chan struct{})
 	go func() {
@@ -286,8 +295,10 @@ func startFrozenWriter(t *testing.T, dir, producer string) *frozenWriterSession 
 		case waitErr = <-waited:
 			confirmed = true
 		case <-time.After(8 * time.Second):
-			if err := syscall.Kill(-child.Process.Pid, syscall.SIGKILL); err != nil && !errors.Is(err, syscall.ESRCH) {
-				t.Error(err)
+			// Kill acts on the unreaped native holder. A numeric PID/PGID never
+			// authorizes signalling a group, even after a successful observation.
+			if err := child.Process.Kill(); err != nil && !errors.Is(err, os.ErrProcessDone) {
+				t.Error(upgradeCause("historical holder kill", err))
 			}
 			select {
 			case waitErr = <-waited:
@@ -299,14 +310,19 @@ func startFrozenWriter(t *testing.T, dir, producer string) *frozenWriterSession 
 		if err := stdout.Close(); err != nil && !errors.Is(err, os.ErrClosed) {
 			t.Error(err)
 		}
+		scannerClosed := false
 		select {
 		case <-scanDone:
+			scannerClosed = true
 		case <-time.After(time.Second):
 			t.Error("historical stdout reader did not drain")
 		}
-		groupErr := confirmUpgradeGroupExit(child.Process.Pid)
-		if !confirmed || groupErr != nil {
-			t.Errorf("historical process/group exit unconfirmed; retain exact directory %s and registered scopes: %v", dir, groupErr)
+		groupErr := errors.New("historical process group identity not confirmed")
+		if groupKnown {
+			groupErr = confirmUpgradeGroupExit(pgid)
+		}
+		if !confirmed || !scannerClosed || groupErr != nil || registrationErr != nil {
+			t.Errorf("historical process/group exit unconfirmed; retain exact directory %s and registered scopes: %v", dir, errors.Join(groupErr, registrationErr))
 			return
 		}
 		if releaseErr != nil || stdinErr != nil || waitErr != nil {
@@ -320,6 +336,12 @@ func startFrozenWriter(t *testing.T, dir, producer string) *frozenWriterSession 
 			t.Error(err)
 		}
 	})
+	if !groupKnown {
+		t.Fatal(upgradeCause("historical process group observation", errors.Join(observationErr, errors.New("historical process group identity not confirmed"))))
+	}
+	if registrationErr != nil {
+		t.Fatal(upgradeCause("historical process registration", registrationErr))
+	}
 	var frame []byte
 	select {
 	case frame = <-readyCh:
@@ -733,12 +755,22 @@ func setUpgradeProcessBounds(cmd *exec.Cmd) {
 	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
 	cmd.WaitDelay = time.Second
 	cmd.Cancel = func() error {
-		err := syscall.Kill(-cmd.Process.Pid, syscall.SIGKILL)
-		if errors.Is(err, syscall.ESRCH) {
+		if cmd.Process == nil {
 			return os.ErrProcessDone
 		}
-		return err
+		return cmd.Process.Kill()
 	}
+}
+
+// Both concrete historical consumers register only a successfully observed
+// group belonging to their own Start. This ledger grants no signal authority.
+func registerUpgradeProcessGroup(pid, pgid int, dir string) error {
+	ledger, err := os.OpenFile(os.Getenv("LERNA_TEST_OWNED_SCOPE_REGISTRY"), os.O_APPEND|os.O_WRONLY, 0600)
+	if err != nil {
+		return upgradeCause("process registration open", err)
+	}
+	_, writeErr := fmt.Fprintf(ledger, "process_group %d %d %s\n", pid, pgid, dir)
+	return errors.Join(writeErr, ledger.Sync(), ledger.Close())
 }
 
 func confirmUpgradeGroupExit(pid int) error {
