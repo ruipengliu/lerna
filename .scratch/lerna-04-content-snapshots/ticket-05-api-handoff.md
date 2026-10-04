@@ -1,0 +1,27 @@
+# 04票05进行中的内部API（未交付）
+
+仅当前两vertical产品边界；整票七AC未完成，1.2合同冻结且不增加delete方法。
+
+`Lifecycle.Seal`目前是有限受信管理配置授权的原完整保存主体自愿封闭：
+准确ref、原purpose、固定SealID、原有限Deadline。同Tx保存单调seal、两
+holder责任和原Job。重传必须完全匹配原seal/deadline，观察不创Job。
+`Lifecycle.Observe`只读有限holder页，CleanupComplete来自全部原holder
+状态，不由首个空页推断。当前holder未取得物理ACK，仍pending。
+
+这与消费旧policy cleanup责任不同。旧change启动实际封闭之前，必须按
+02原完整保存主体/用途在同Tx重新检查当前准确basis与单调cap；短暂save
+撤销已恢复且cap有效、尚未sealed时可记录not_required并保持历史原因。
+已经sealed/过期cap不会取消或重新计时。普通query和所有CleanupPending
+不隐式触发Seal；read/process/disclose-only变化不授权删除正文。
+
+Record.BodySeal是所有正文路径的同一个门。原Command当前reader获准时
+固定receipt照旧，sealed版本的新association不能创建publish或复制责任。
+Service.Step只处理原publish/policy_propagation，不消费body_cleanup；该
+cleanupphase的真实消费者将在下一vertical实现，不能凭phase存在称完成。
+
+`ErasingObjects`承担Tx外实际对象效果；固定ErasureIdentity绑定完整ref、
+原ObjectKey、具体HolderID及SealID。FenceAndErase仅删准确finalkey及
+显式登记attempt；ObserveErasure独立受锁重开正文事实并分页报告未知残留。
+flock inode永久保留，sealed/pending marker不含正文；nativebodyClose未知
+保留lockFD和holder责任。当前本机Linux协议不防未升级的旧二进制writer；
+必须真实停旧writer后升级，再允许新协议writer。

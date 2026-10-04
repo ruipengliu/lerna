@@ -216,6 +216,9 @@ func (s *Service) Put(ctx context.Context, raw []byte, subject *v.SubjectBinding
 		if policy.Ref != request.Payload.ContentRef {
 			return reject("forbidden")
 		}
+		if record != nil && record.BodySeal != nil {
+			return reject("forbidden")
+		}
 		sources, err := s.registeredClosure(ctx, tx, request.Payload.ContentRef, request.Payload.Sources, principal, string(request.Payload.Purpose), []string{"read", "process", "save"})
 		if err != nil {
 			if code, ok := qualificationCode(err); ok {
@@ -265,7 +268,7 @@ func (s *Service) Put(ctx context.Context, raw []byte, subject *v.SubjectBinding
 			reason := v.ErrorCode("")
 			if !now.Before(cutoff(request.AcceptBefore)) || !now.Before(effective) {
 				reason = "expired"
-			} else if !now.Before(policyBefore) {
+			} else if !now.Before(policyBefore) || current.BodySeal != nil {
 				reason = "forbidden"
 			}
 			if reason == "" {
@@ -485,6 +488,11 @@ func (s *Service) Get(ctx context.Context, raw []byte, subject *v.SubjectBinding
 			record = nil
 			return nil
 		}
+		if record.BodySeal != nil {
+			result = denied("forbidden")
+			record = nil
+			return nil
+		}
 		now, err = s.config.Store.Now(ctx, tx)
 		if err != nil {
 			return err
@@ -697,8 +705,13 @@ func (s *Service) Step(ctx context.Context) (bool, error) {
 			if err != nil {
 				return err
 			}
-			if record == nil || record.ValidateIdentity() != nil || record.ObjectID != string(job.Object.ID) || job.Object.Kind != "content" || (job.Phase != "publish" && job.Phase != "policy_propagation") {
+			if record == nil || record.ValidateIdentity() != nil || record.ObjectID != string(job.Object.ID) || job.Object.Kind != "content" || (job.Phase != "publish" && job.Phase != "policy_propagation" && job.Phase != "body_cleanup") {
 				return runtime.ErrScope
+			}
+			if job.Phase == "body_cleanup" {
+				// Lifecycle owns the physical holder work. This consumer neither
+				// claims nor completes its original cleanup responsibility.
+				continue
 			}
 			if job.Phase == "policy_propagation" {
 				worked, err := s.config.Store.AdvancePolicyJob(ctx, tx, job, *record, s.config.Worker, s.config.Limits.Lease, s.config.PublishBudget)
@@ -745,6 +758,9 @@ func (s *Service) Step(ctx context.Context) (bool, error) {
 			record.AttemptKey = fmt.Sprintf("%s.%d.tmp", record.ObjectKey, claim.Epoch)
 			record.Revision++
 			if err = s.config.Store.SaveVersion(ctx, tx, *record); err != nil {
+				return err
+			}
+			if err = s.config.Store.SavePublicationAttempt(ctx, tx, *record); err != nil {
 				return err
 			}
 			selected = record
@@ -840,6 +856,9 @@ func (s *Service) publicationPolicy(ctx context.Context, tx runtime.Tx, record R
 		return current, ioBefore, "", err
 	}
 	if policy == nil || policy.Ref != record.Ref {
+		return current, ioBefore, "forbidden", nil
+	}
+	if record.BodySeal != nil {
 		return current, ioBefore, "forbidden", nil
 	}
 	current = earlier(current, policy.RetainUntil)

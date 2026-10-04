@@ -38,3 +38,38 @@ sticky Close不能提前释放它。
 本轮已明确release LOCAL，无pending native。后续每次native重新等root授槽。
 以上本机Linux真实文件/Sync/reopen及机械drain测试不证明掉电、法证擦除、
 外部旧writer遵守新协议或生产多机保证。
+
+## 第二vertical：原保存主体自愿封闭与重开
+
+`TestContentTrustedSealSurvivesReopenAndPreservesOriginalReceipt`先正常真实PG
+接纳/对象发布/public Get，再由受信原完整保存主体对准确原ref/用途进行
+显式自愿Seal。首red为合法Seal scaffold返回unavailable，未改normal前态。
+
+| 原日志 | 实际结果 |
+| --- | --- |
+| `body-seal-first-red.log` | PID/PGID2655388，start11050506；合法Seal在line37业务失败，exit1、groupAbsent=true、无timeout。 |
+| `body-seal-first-green.log` | PID/PGID2664908，start11091867；exact正常测试通过，exit0、groupAbsent=true、无timeout。 |
+| `body-seal-first-race.log` | PID/PGID2665345，start11093335；exact同测试race通过，exit0、groupAbsent=true、无timeout。 |
+
+green新增Content0003（仍为本票未发布迁移），保持0001/0002实际SHA为
+`00363b79dafb6eb1f373be9ef08e915fe23cc3db0fa55345e8ae6c051ce0c1ed`/
+`99519565ff1146d7cfc468413b449538c6ba71335e86edc8fd447a3bbff922a8`。
+同Content owner短Tx保存不可逆BodySeal、staging/primary holder责任及
+原body_cleanup Job。全部真实publication attempt在Tx外Put前同Tx登记。
+SaveVersion SQL不能清空或替换既有seal；原published史和Commandreceipt不改。
+
+Seal后Put的新Command关联和最终准入、Get两个current门、动作closure、
+AuthorizeUse及publication startup/final policy都消费同一BodySeal。
+重开观察原seal/deadline/holder；新association与body Get拒绝；原Command
+固定receipt及published progress保持。seal单独不擦除：独立key仍有原正文，
+所有holder仍pending、CleanupComplete=false。Service.Step跳过body_cleanup，
+没有claim或complete它；后续真实Lifecycle.Step才是此phase消费者。
+
+该vertical不是旧policy事件自动强删。save-only pending尚未seal时原合法
+read/disclose保持；后续policy责任入口必须在封闭前同Tx重核原完整保存
+subject/purpose/current exact source basis和单调cap。短暂布尔撤销已恢复且
+cap尚有效的未sealed版本可not_required并保留历史责任/reason；已sealed或
+过期cap不可复活。不增加第六个正文action。
+
+该轮所有native已实际completion，并明确release LOCAL。没有完整migration
+旧writer、policy封闭、physicalerase、metadata-only或七AC接受的声明。

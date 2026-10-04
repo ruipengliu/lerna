@@ -59,6 +59,7 @@ type Record struct {
 	StagingHolder          bool             `json:"staging_holder"`
 	ObjectHolder           bool             `json:"object_holder"`
 	CleanupPending         bool             `json:"cleanup_pending"`
+	BodySeal               *BodySeal        `json:"body_seal,omitempty"`
 	Bytes                  []byte           `json:"-"`
 }
 type CommandRecord struct {
@@ -77,6 +78,7 @@ type Repository interface {
 	LockVersion(context.Context, runtime.Tx, v.ContentRef) (*Record, error)
 	LockObject(context.Context, runtime.Tx, string) (*Record, error)
 	SaveVersion(context.Context, runtime.Tx, Record) error
+	SavePublicationAttempt(context.Context, runtime.Tx, Record) error
 	SaveSources(context.Context, runtime.Tx, v.ContentRef, []v.ContentRef) error
 	// Sources must be the complete, deterministic, already locked records from
 	// this same Tx's successful closure observation. Empty is complete; nil is

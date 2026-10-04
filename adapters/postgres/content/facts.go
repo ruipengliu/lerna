@@ -94,10 +94,10 @@ func (s *Store) LockVersion(ctx context.Context, token runtime.Tx, ref v.Content
 	if _, err = tx.ExecContext(ctx, `SELECT pg_advisory_xact_lock(2,hashtext($1))`, string(key)); err != nil {
 		return nil, err
 	}
-	var body, staging []byte
+	var body, staging, seal []byte
 	var objectID, keyStored, tuple, publication string
 	var revision int64
-	err = tx.QueryRowContext(ctx, `SELECT body,staging,object_id,object_key,tuple_digest,publication,revision FROM `+s.core.Table("content_versions")+` WHERE tenant_id=$1 AND owner_id=$2 AND content_id=$3 AND version=$4 FOR UPDATE`, ref.Owner.TenantID, ref.Owner.OwnerID, ref.ContentID, ref.Version).Scan(&body, &staging, &objectID, &keyStored, &tuple, &publication, &revision)
+	err = tx.QueryRowContext(ctx, `SELECT body,staging,object_id,object_key,tuple_digest,publication,revision,body_seal FROM `+s.core.Table("content_versions")+` WHERE tenant_id=$1 AND owner_id=$2 AND content_id=$3 AND version=$4 FOR UPDATE`, ref.Owner.TenantID, ref.Owner.OwnerID, ref.ContentID, ref.Version).Scan(&body, &staging, &objectID, &keyStored, &tuple, &publication, &revision, &seal)
 	if errors.Is(err, sql.ErrNoRows) {
 		return nil, nil
 	}
@@ -117,6 +117,19 @@ func (s *Store) LockVersion(ctx context.Context, token runtime.Tx, ref v.Content
 		}
 	}
 	record.Bytes = staging
+	if record.BodySeal == nil {
+		if seal != nil {
+			return nil, runtime.ErrScope
+		}
+	} else {
+		expected, err := json.Marshal(record.BodySeal)
+		if err != nil {
+			return nil, err
+		}
+		if string(expected) != string(seal) || record.BodySeal.Ref != record.Ref {
+			return nil, runtime.ErrScope
+		}
+	}
 	return &record, nil
 }
 func (s *Store) LockObject(ctx context.Context, token runtime.Tx, id string) (*d.Record, error) {
@@ -156,7 +169,17 @@ func (s *Store) SaveVersion(ctx context.Context, token runtime.Tx, record d.Reco
 	if err != nil {
 		return err
 	}
-	result, err := tx.ExecContext(ctx, `INSERT INTO `+s.core.Table("content_versions")+`(tenant_id,owner_id,content_id,version,object_id,object_key,tuple_digest,publication,revision,body,staging)VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)ON CONFLICT(tenant_id,owner_id,content_id,version)DO UPDATE SET publication=excluded.publication,revision=excluded.revision,body=excluded.body,staging=excluded.staging WHERE content_versions.tuple_digest=excluded.tuple_digest AND content_versions.object_id=excluded.object_id AND content_versions.revision<excluded.revision`, record.Ref.Owner.TenantID, record.Ref.Owner.OwnerID, record.Ref.ContentID, record.Ref.Version, record.ObjectID, record.ObjectKey, record.TupleDigest, record.Publication, record.Revision, body, record.Bytes)
+	var seal []byte
+	if record.BodySeal != nil {
+		if record.BodySeal.Ref != record.Ref || record.BodySeal.ID == "" || record.BodySeal.Purpose != record.Purpose || !record.BodySeal.Deadline.After(record.BodySeal.StartedAt) {
+			return runtime.ErrScope
+		}
+		seal, err = json.Marshal(record.BodySeal)
+		if err != nil {
+			return err
+		}
+	}
+	result, err := tx.ExecContext(ctx, `INSERT INTO `+s.core.Table("content_versions")+`(tenant_id,owner_id,content_id,version,object_id,object_key,tuple_digest,publication,revision,body,staging,body_seal)VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)ON CONFLICT(tenant_id,owner_id,content_id,version)DO UPDATE SET publication=excluded.publication,revision=excluded.revision,body=excluded.body,staging=excluded.staging,body_seal=excluded.body_seal WHERE content_versions.tuple_digest=excluded.tuple_digest AND content_versions.object_id=excluded.object_id AND content_versions.revision<excluded.revision AND (content_versions.body_seal IS NULL OR content_versions.body_seal=excluded.body_seal)`, record.Ref.Owner.TenantID, record.Ref.Owner.OwnerID, record.Ref.ContentID, record.Ref.Version, record.ObjectID, record.ObjectKey, record.TupleDigest, record.Publication, record.Revision, body, record.Bytes, seal)
 	if err != nil {
 		return err
 	}
