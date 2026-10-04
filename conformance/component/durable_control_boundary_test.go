@@ -184,7 +184,14 @@ func TestDurableControlProofBindsPrincipalIssuerAndOriginalIdentity(t *testing.T
 			}
 			_, err = w.Service().Cancel(ctx, raw, &principal)
 			var failure *v.ContractError
-			if !errors.As(err, &failure) || (failure.Code != "forbidden" && failure.Code != "dependency_unavailable") {
+			// Changing a proof hash/length changes its exact stored identity. The
+			// real Source reports missing immutable content as unavailable; every
+			// other case reads the issued body and rejects its mismatched binding.
+			expected := v.ErrorCode("forbidden")
+			if name == "proof_hash" || name == "proof_length" {
+				expected = "dependency_unavailable"
+			}
+			if !errors.As(err, &failure) || failure.Code != expected {
 				t.Fatal("altered proof authorized a new stop", err)
 			}
 			get, err := v.DecodeGet(scene.GetJSON)
