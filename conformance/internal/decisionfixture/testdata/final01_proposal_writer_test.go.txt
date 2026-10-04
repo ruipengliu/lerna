@@ -1,0 +1,252 @@
+package decisionfixture
+
+import (
+	"bufio"
+	"context"
+	"encoding/json"
+	"errors"
+	"fmt"
+	"os"
+	"strings"
+	"testing"
+	"time"
+
+	decision "github.com/ruipengliu/lerna/components/decision_engine"
+	v "github.com/ruipengliu/lerna/contract/v1_1"
+)
+
+type final01ProposalOutput struct {
+	Key       string         `json:"key"`
+	Ref       v.ContentRef   `json:"ref"`
+	Body      string         `json:"body"`
+	Sources   []v.ContentRef `json:"sources"`
+	Published bool           `json:"published"`
+}
+
+type final01ProposalCase struct {
+	Name              string                  `json:"name"`
+	SourceSchema      string                  `json:"source_schema"`
+	DecisionSchema    string                  `json:"decision_schema"`
+	SourceOwner       v.OwnerRef              `json:"source_owner"`
+	Request           json.RawMessage         `json:"request"`
+	Subject           json.RawMessage         `json:"subject"`
+	GetRequest        json.RawMessage         `json:"get_request"`
+	CommandGetRequest json.RawMessage         `json:"command_get_request"`
+	Receipt           json.RawMessage         `json:"receipt"`
+	DecisionBefore    json.RawMessage         `json:"decision_before"`
+	LeaseUntil        time.Time               `json:"lease_until"`
+	Outputs           []final01ProposalOutput `json:"outputs"`
+	WritersDrained    bool                    `json:"writers_drained"`
+}
+
+type final01ProposalReady struct {
+	Protocol string                `json:"protocol"`
+	Cases    []final01ProposalCase `json:"cases"`
+}
+
+// The driver changes no frozen production file and never writes a business
+// record or prepared object. States come from the original public Component
+// and real Source. Schema descriptors and Close are mechanical lifecycle data.
+type final01ProposalPublisher struct {
+	decision.Publisher
+	outputs []final01ProposalOutput
+	mode    string
+	cancel  context.CancelFunc
+}
+
+func (p *final01ProposalPublisher) PlanPublication(ctx context.Context, key string, body []byte, sources []v.ContentRef, permission decision.Permission) (v.ContentRef, error) {
+	ref, err := p.Publisher.PlanPublication(ctx, key, body, sources, permission)
+	if err == nil {
+		p.outputs = append(p.outputs, final01ProposalOutput{Key: key, Ref: ref, Body: string(body), Sources: append([]v.ContentRef{}, sources...)})
+	}
+	return ref, err
+}
+
+func (p *final01ProposalPublisher) Publish(ctx context.Context, key string, body []byte, sources []v.ContentRef, permission decision.Permission) (v.ContentRef, error) {
+	if p.mode == "prepared_waiting" {
+		return v.ContentRef{}, errors.New("finite independent publisher unavailable before commit")
+	}
+	ref, err := p.Publisher.Publish(ctx, key, body, sources, permission)
+	if err == nil && p.mode == "publication_running" && strings.HasSuffix(key, "/artifact") {
+		p.cancel()
+	}
+	return ref, err
+}
+
+func TestFrozenFinal01ProposalWriter(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), 45*time.Second)
+	defer cancel()
+	ready := final01ProposalReady{Protocol: "lerna-final01-proposal-upgrade-1", Cases: []final01ProposalCase{}}
+	for _, name := range []string{"accepted", "running", "prepared_waiting", "publication_running", "completed", "failed"} {
+		world := NewWorld(t, ctx)
+		scene := world.Scenario()
+		scene.Request.Payload.Limits.MaxRuleSteps = "1"
+		scene.Request.Payload.Limits.MaxCost.IntegerValue = "1"
+		if name == "running" {
+			scene.Request.Payload.Limits.MaxRuleSteps = "2"
+			scene.Request.Payload.Limits.MaxCost.IntegerValue = "2"
+		}
+		if name == "failed" {
+			scene.Request.Payload.Limits.MaxRuleSteps = "0"
+		}
+		interrupted, interrupt := context.WithCancel(ctx)
+		publisher := &final01ProposalPublisher{Publisher: world.Source(), mode: name, cancel: interrupt}
+		service, err := decision.New(decision.Config{Owner: v.OwnerRef{TenantID: scene.DecisionRef.TenantID, OwnerID: scene.DecisionRef.OwnerID}, Store: world.Store(), Authority: world.Source(), Source: world.Source(), Publisher: publisher, Component: scene.Request.Payload.ComponentRef, Worker: "original-final01-proposal-writer", Lease: time.Second, PoolControl: true})
+		if err != nil {
+			interrupt()
+			t.Fatal(err)
+		}
+		request, err := v.Encode(scene.Request)
+		if err != nil {
+			interrupt()
+			t.Fatal(err)
+		}
+		outcome, err := service.Decide(ctx, request, &scene.Subject)
+		if err != nil {
+			interrupt()
+			t.Fatal(err)
+		}
+		received, ok := outcome.AsReceived()
+		if !ok {
+			interrupt()
+			t.Fatal("original producer did not receive its command")
+		}
+		if _, ok := received.Receipt.AsAccepted(); !ok {
+			interrupt()
+			t.Fatal("original producer did not accept its input")
+		}
+		old := final01ProposalCase{Name: name, SourceSchema: world.SourceWorld.cfg.Schema, DecisionSchema: world.Config().Schema, SourceOwner: world.SourceWorld.owner, Request: request, GetRequest: scene.GetJSON, CommandGetRequest: scene.CommandGetJSON, Outputs: []final01ProposalOutput{}}
+		old.Subject, err = v.Encode(scene.Subject)
+		if err != nil {
+			interrupt()
+			t.Fatal(err)
+		}
+		old.Receipt, err = v.Encode(received.Receipt)
+		if err != nil {
+			interrupt()
+			t.Fatal(err)
+		}
+		switch name {
+		case "running", "publication_running":
+			claim, err := service.Claim(ctx)
+			if err != nil || claim == nil {
+				interrupt()
+				t.Fatal("original claim missing", err)
+			}
+			old.LeaseUntil = claim.Claim.LeaseUntil
+			if name == "running" {
+				started, err := service.Start(ctx, claim.Claim)
+				if err != nil || started == nil || !started.Compute {
+					interrupt()
+					t.Fatal("original durable start missing", err)
+				}
+			} else if err := service.RunClaim(interrupted, claim.Claim); !errors.Is(err, context.Canceled) {
+				interrupt()
+				t.Fatal("original publication boundary did not interrupt", err)
+			}
+		case "prepared_waiting", "completed", "failed":
+			if _, err := service.Step(ctx); err != nil {
+				interrupt()
+				t.Fatal("original finite worker", err)
+			}
+		}
+		interrupt()
+		view, err := service.Get(ctx, scene.GetJSON, &scene.Subject)
+		if err != nil {
+			t.Fatal(err)
+		}
+		found, ok := view.AsFound()
+		if !ok {
+			t.Fatal("original produced Decision missing")
+		}
+		old.DecisionBefore, err = v.Encode(found.Decision)
+		if err != nil {
+			t.Fatal(err)
+		}
+		switch name {
+		case "accepted":
+			if _, ok := found.Decision.AsAccepted(); !ok {
+				t.Fatal("original accepted state missing")
+			}
+		case "running", "publication_running":
+			if _, ok := found.Decision.AsRunning(); !ok {
+				t.Fatal("original running state missing")
+			}
+		case "prepared_waiting":
+			if _, ok := found.Decision.AsWaiting(); !ok {
+				t.Fatal("original saved handoff did not wait")
+			}
+		case "completed":
+			if _, ok := found.Decision.AsCompleted(); !ok {
+				t.Fatal("original completion missing")
+			}
+		case "failed":
+			if failed, ok := found.Decision.AsFailed(); !ok || failed.Failure != "rule_limit_exceeded" {
+				t.Fatal("original bounded failure missing")
+			}
+		}
+		permission, err := world.Source().Authorize(ctx, scene.Subject, scene.DecisionRef, "get", nil)
+		if err != nil {
+			t.Fatal(err)
+		}
+		for _, output := range publisher.outputs {
+			body, err := world.Source().ReadPublished(ctx, output.Ref, permission)
+			if err == nil {
+				if string(body) != output.Body {
+					t.Fatal("original independent body changed")
+				}
+				output.Published = true
+			} else if !errors.Is(err, decision.ErrForbidden) {
+				t.Fatal("original publication readback", err)
+			}
+			old.Outputs = append(old.Outputs, output)
+		}
+		// No old worker loop or callback remains. Retain only exact-scope admins
+		// until the new consumer explicitly closes all holders and releases us.
+		if err := world.Store().Close(); err != nil {
+			t.Fatal("original Decision writer closure", err)
+		}
+		world.store = nil
+		if err := world.Source().Close(); err != nil {
+			t.Fatal("original Source writer closure", err)
+		}
+		world.SourceWorld.source = nil
+		old.WritersDrained = true
+		ready.Cases = append(ready.Cases, old)
+	}
+	frame, err := json.Marshal(ready)
+	if err != nil || len(frame) > 128*1024 {
+		t.Fatal("finite original ready frame", err)
+	}
+	fmt.Println("LERNA_LEGACY_READY " + string(frame))
+	line := make(chan string, 1)
+	scanDone := make(chan struct{})
+	t.Cleanup(func() {
+		if err := os.Stdin.Close(); err != nil {
+			t.Error("original release pipe closure", err)
+		}
+		select {
+		case <-scanDone:
+		case <-time.After(time.Second):
+			t.Error("original release scanner exit unconfirmed")
+		}
+	})
+	go func() {
+		defer close(scanDone)
+		scanner := bufio.NewScanner(os.Stdin)
+		scanner.Buffer(make([]byte, 128), 1024)
+		if scanner.Scan() {
+			line <- scanner.Text()
+		} else {
+			line <- ""
+		}
+	}()
+	select {
+	case request := <-line:
+		if request != "RELEASE" {
+			t.Fatal("original administrator release missing")
+		}
+	case <-ctx.Done():
+		t.Fatal("original administrator release deadline")
+	}
+}

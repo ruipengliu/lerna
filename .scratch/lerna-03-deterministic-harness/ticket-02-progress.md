@@ -57,11 +57,10 @@ those exact 1123 original bytes and derived metadata; `10e335e` fixes the
 mechanical compiler cancellation to use its actual process holder.
 Independent source checks confirm all 69 production files (448760 bytes) equal
 `696ac49846105a16f33e5de86dc621a3858651b2` byte-for-byte and all 71 hash entries
-match. These are source checks, **not** actual old-writer upgrade results. Mechanical
-restore/supervision helpers are present; this ticket's own archive driver build,
-independent old-producer states and upgrade oracles are still pending. A separate
-03 driver has compiled the repaired source and reached its own business oracles;
-that does not establish this ticket's prepared-format compatibility.
+match. Those checks alone were **not** old-writer upgrade results. Mechanical
+restore/supervision is shared; this ticket's independent producer and business
+oracle now establish the actual compatibility described below. The separate 03
+business oracle is not used as this ticket's prepared-format evidence.
 
 A second bounded selection passed normal 4.279 s and race 12.535 s, with both
 actual sessions exiting 0 before the next operation. It contains ten original
@@ -77,6 +76,36 @@ public Producer/Source and recovery results, not prepared-row fabrication.
 The latest exact audit found all 256 successful PG schema acknowledgements
 absent and no live test session, child or DB holder.
 
-Remaining work includes final01 public-writer compatibility, Go/TS raw
-conformance, root integration and independent review. The independent archive
-driver is being prepared; it has not yet been compiled or run.
+`TestFinal01PublicPreparedProposalUpgrade` actually compiled the frozen 69-file
+FINAL01 source with this ticket's independent 8793-byte driver. The original
+public Component and Source generated six states: accepted, durably started
+running, prepared waiting before publication, running after actual artifact
+publication, completed and failed. The producer read its own real publication
+facts and successfully closed both writer holders before reporting ready. New
+owners opened the original scopes, migrated through the published ledgers and
+used the original `/2` Component/permissions and public inputs. The two original
+prepared states completed without another evaluation/start/fee; actual public
+Plan/readback verified the original key, reference, bytes and source sequence.
+The started-but-unmeasured state conservatively retained its original start and
+charged the second bounded start; its unknown measurement gap remains false
+precision. Terminals retain their original facts, while public command query
+and Decide replay retain the original accepted receipt. A second new-owner
+reopen preserves every terminal and leaves no runnable job.
+
+The first normal run passed 5.058 s. Static lifecycle inspection then made the
+new holder counter and close-failure marker shared across all cases, so a later
+case cannot overwrite an earlier unknown closure. The final normal passed
+4.730 s and race passed 8.143 s, each actual session/child exiting 0 before the
+next run. The race invocation instruments the current consumer and supervisor;
+the frozen producer is built by its original normal `go test -c`, not claimed
+as a race-instrumented old binary. Successful original CREATE acknowledgments
+are handed off and fsynced before use. The independent final audit found all
+292 exact PG schemas absent, all three acknowledged temporary archive
+directories absent and all three acknowledged compiler process groups absent.
+The owned overlay root remains registered and retained; no live test session,
+old producer, current holder or unjoined scanner remains from these runs.
+
+Remaining work includes validating the extra three prepared-recovery branches,
+the two appended shared raw Proposal codec fixtures, root integration,
+independent review and any adopted shared mechanical supervision correction.
+These completed focused results do not yet close the seven acceptance checks.
