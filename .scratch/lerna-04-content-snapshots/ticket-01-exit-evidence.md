@@ -17,3 +17,5 @@
 最新[有效资源审计](ticket-01-resource-audit-target-policy.json)353登记组、289确切schema、65原blockerPID、518对象/合同/生成目录全无live/residual；审计组2147781实际退出0并absent。原overlay ACK dev27/inode431292、日志/cache和clean worker工作树保留至整片安全清理；旧02/03未知scope未触碰，不声称全环境清零。原worker已明确释放唯一LOCAL构建/测试/数据库槽。
 
 1.2完整profile仍不广告。完整来源闭包/传播、Snapshot、物理清理/holder、SIGKILL依原后票交付；不声称生产Grant、真实模型、断电/S3或跨owner原子保证。本检查点新push CI尚待按准确head核验，旧64文档CI不能证明新Content源码；首票独立出口不等待整片关闭。
+
+2026-10-04，前述“准确新CI待核”为历史；root已按准确7c0bce5核run37207013464 completed success，两job全部steps及真实日志通过，详细[CI记录](ci-verification.md)。不据此关闭02或04整片。
