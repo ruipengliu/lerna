@@ -14,6 +14,9 @@ import (
 //go:embed migrations/0001_content.sql
 var migration string
 
+//go:embed migrations/0002_source_policies.sql
+var sourceMigration string
+
 type MigrationVersion struct {
 	Version  int64
 	Checksum string
@@ -38,22 +41,29 @@ func (s *Store) Migrate(ctx context.Context) error {
 		if _, err = tx.ExecContext(ctx, `CREATE TABLE IF NOT EXISTS content_schema_migrations(version bigint PRIMARY KEY,checksum text NOT NULL)`); err != nil {
 			return err
 		}
-		var checksum string
-		err = tx.QueryRowContext(ctx, `SELECT checksum FROM content_schema_migrations WHERE version=1`).Scan(&checksum)
-		if err == nil {
-			if checksum != MigrationChecksum() {
-				return errors.New("Content migration checksum mismatch")
+		for i, text := range []string{migration, sourceMigration} {
+			version := i + 1
+			sum := sha256.Sum256([]byte(text))
+			wanted := "sha256:" + hex.EncodeToString(sum[:])
+			var checksum string
+			err = tx.QueryRowContext(ctx, `SELECT checksum FROM content_schema_migrations WHERE version=$1`, version).Scan(&checksum)
+			if err == nil {
+				if checksum != wanted {
+					return errors.New("Content migration checksum mismatch")
+				}
+				continue
 			}
-			return nil
+			if !errors.Is(err, sql.ErrNoRows) {
+				return err
+			}
+			if _, err = tx.ExecContext(ctx, text); err != nil {
+				return err
+			}
+			if _, err = tx.ExecContext(ctx, `INSERT INTO content_schema_migrations(version,checksum)VALUES($1,$2)`, version, wanted); err != nil {
+				return err
+			}
 		}
-		if !errors.Is(err, sql.ErrNoRows) {
-			return err
-		}
-		if _, err = tx.ExecContext(ctx, migration); err != nil {
-			return err
-		}
-		_, err = tx.ExecContext(ctx, `INSERT INTO content_schema_migrations(version,checksum)VALUES(1,$1)`, MigrationChecksum())
-		return err
+		return nil
 	})
 }
 func (s *Store) MigrationVersions(ctx context.Context) ([]MigrationVersion, error) {

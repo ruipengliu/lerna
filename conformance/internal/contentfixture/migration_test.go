@@ -20,7 +20,7 @@ func TestContentMigrationEmptyRepeatAndChecksum(t *testing.T) {
 		t.Fatal("repeat migration", err)
 	}
 	versions, err := w.Store().MigrationVersions(ctx)
-	if err != nil || len(versions) != 1 || versions[0].Version != 1 || versions[0].Checksum != expected {
+	if err != nil || len(versions) != 2 || versions[0].Version != 1 || versions[0].Checksum != expected {
 		t.Fatal("empty/repeat migration lost fixed checksum", err)
 	}
 	// Infrastructure corruption seam: no business table is an oracle.
@@ -56,7 +56,7 @@ func TestContentMigrationEmptyRepeatAndChecksum(t *testing.T) {
 		t.Fatal("normal checksum reopen refused", err)
 	}
 	versions, err = w.Store().MigrationVersions(ctx)
-	if err != nil || len(versions) != 1 || versions[0].Checksum != expected {
+	if err != nil || len(versions) != 2 || versions[0].Checksum != expected {
 		t.Fatal(errors.Join(err, errors.New("restored checksum not durable")))
 	}
 }

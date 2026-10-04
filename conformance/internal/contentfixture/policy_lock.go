@@ -107,3 +107,40 @@ func (w *World) holdReadRow(ctx context.Context, lockQuery string, args ...any) 
 	}
 	return release, waitBlocked
 }
+
+// FailResponsibilityWrites installs a test-only native PostgreSQL constraint.
+// It injects a real transactional write refusal, never reads business state.
+func (w *World) FailResponsibilityWrites(ctx context.Context) func() error {
+	w.t.Helper()
+	db, err := sql.Open("pgx", w.Config.DSN)
+	if err != nil {
+		w.t.Fatal(err)
+	}
+	db.SetMaxOpenConns(1)
+	var once sync.Once
+	var closeErr error
+	release := func() error {
+		once.Do(func() {
+			bounded, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+			defer cancel()
+			_, err := db.ExecContext(bounded, `ALTER TABLE "`+w.Config.Schema+`".content_cleanup_responsibilities DROP CONSTRAINT test_refuse_responsibility`)
+			closeErr = errors.Join(err, db.Close())
+		})
+		return closeErr
+	}
+	w.infrastructureClosers = append(w.infrastructureClosers, release)
+	if err = db.PingContext(ctx); err != nil {
+		w.t.Fatal(err)
+	}
+	var pid int
+	if err = db.QueryRowContext(ctx, `SELECT pg_backend_pid()`).Scan(&pid); err != nil {
+		w.t.Fatal(err)
+	}
+	if err = w.register(fmt.Sprintf("pg_policy_holder %s %d", w.Config.Schema, pid)); err != nil {
+		w.t.Fatal(err)
+	}
+	if _, err = db.ExecContext(ctx, `ALTER TABLE "`+w.Config.Schema+`".content_cleanup_responsibilities ADD CONSTRAINT test_refuse_responsibility CHECK(false) NOT VALID`); err != nil {
+		w.t.Fatal(err)
+	}
+	return release
+}

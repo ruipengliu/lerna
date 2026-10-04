@@ -1,0 +1,31 @@
+package main
+import("context";"os";"time";"encoding/json";"fmt";"errors";pg "github.com/ruipengliu/lerna/adapters/postgres";store "github.com/ruipengliu/lerna/adapters/postgres/content";objects "github.com/ruipengliu/lerna/adapters/objectstore/local";v "github.com/ruipengliu/lerna/contract/v1_2";d "github.com/ruipengliu/lerna/domain/content")
+func main(){if err:=run();err!=nil{fmt.Fprintln(os.Stderr,"old Content writer failed:",err);os.Exit(1)}}
+func run()(err error){
+ ctx,cancel:=context.WithTimeout(context.Background(),20*time.Second);defer cancel()
+ owner:=v.OwnerRef{TenantID:"content-tenant",OwnerID:"content-owner"};subject:=v.SubjectBinding{TenantID:owner.TenantID,SubjectID:"verified-subject",DelegationChain:[]v.DelegatedSubject{}}
+ root:=os.Getenv("CONTENT_OLD_OBJECT_ROOT");schema:=os.Getenv("CONTENT_OLD_SCHEMA")
+ s,err:=store.Open(ctx,pg.Config{DSN:os.Getenv("LERNA_TEST_POSTGRES_DSN"),Schema:schema,MaxOpenConnections:1,TransactionTimeout:3*time.Second,StatementTimeout:2*time.Second,LockTimeout:time.Second});if err!=nil{return err};defer func(){err=errors.Join(err,s.Close())}()
+ if err=s.CreateSchema(ctx);err!=nil{return err};
+ ledger,err:=os.OpenFile(os.Getenv("LERNA_TEST_OWNED_SCOPE_REGISTRY"),os.O_APPEND|os.O_WRONLY,0600);if err!=nil{return err};_,err=fmt.Fprintln(ledger,"postgres "+schema);if err=errors.Join(err,ledger.Sync(),ledger.Close());err!=nil{return err};
+if err=s.Migrate(ctx);err!=nil{return err}
+ obj,err:=objects.Open(root);if err!=nil{return err};defer func(){err=errors.Join(err,obj.Close())}()
+ service,err:=d.New(d.Config{Owner:owner,Store:s,Objects:obj,Limits:d.Limits{MaxPreparingVersions:16,MaxStagingBytes:1048576,Lease:time.Minute,WorkTimeout:5*time.Second},PublishBudget:time.Minute,MaxPublicationAttempts:3,Worker:"old-v1"});if err!=nil{return err}
+ until:=time.Date(2099,1,1,0,0,0,0,time.UTC);wire:=v.Time("2099-01-01T00:00:00.000000Z")
+ if err=s.InstallFixtureCommandReader(ctx,owner,subject,until);err!=nil{return err}
+ type observation struct{Requests []v.ContentPutRequest;Receipts []v.CommandReceipt;States []string};out:=observation{}
+ var previous v.ContentRef
+ for i,id:=range []v.ID{"old-source","old-middle","old-failed"}{
+ ref:=v.ContentRef{Owner:owner,ContentID:id,Version:"1",Hash:"sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",MediaType:"text/plain",ByteLength:"6"}
+ p:=d.FixturePolicy{Ref:ref,Subject:subject,Purpose:"verification",Revision:1,ValidUntil:until,RetainUntil:until,Read:true,Process:true,Save:true,Disclose:true}
+ if err=s.InstallFixturePolicy(ctx,p,0);err!=nil{return err}
+ req:=v.ContentPutRequest{ContractVersion:v.Version,Profile:"content",CommandID:v.ID("cmd-"+id),Target:v.ContentTarget{TenantID:owner.TenantID,OwnerID:owner.OwnerID,Kind:"content",ID:id},Method:"content.put",AcceptBefore:wire,Payload:v.ContentPutPayload{ContentRef:ref,Sources:[]v.ContentRef{},Purpose:"verification",BytesBase64:"YWxwaGEK",RetainUntil:wire}}
+ if i>0{req.Payload.Sources=[]v.ContentRef{previous}}
+ raw,err:=v.Encode(req);if err!=nil{return err};result,err:=service.Put(ctx,raw,&subject);if err!=nil{return err};receipt,ok:=result.AsReceived();if !ok{return fmt.Errorf("no fixed receipt")};out.Requests=append(out.Requests,req);out.Receipts=append(out.Receipts,receipt.Receipt)
+ if i==2{p.Revision=2;p.Save=false;if err=s.InstallFixturePolicy(ctx,p,1);err!=nil{return err}}
+ if _,err=service.Step(ctx);err!=nil{return err};view,err:=service.Get(ctx,mustEncode(v.ContentGetRequest{ContractVersion:v.Version,Profile:"content",CommandID:"observe",Target:req.Target,Method:"content.get",AcceptBefore:wire,Payload:v.ContentGetPayload{ContentRef:ref,Purpose:"verification"}}),&subject);if err!=nil{return err};if _,ok:=view.AsPublished();ok{out.States=append(out.States,"published")}else if _,ok:=view.AsFailed();ok{out.States=append(out.States,"failed")}else{return fmt.Errorf("unexpected original publication")};previous=ref
+ }
+ for i:=0;i<65;i++{guest:=subject;guest.SubjectID=v.ID(fmt.Sprintf("legacy-guest-%02d",i));p:=d.FixturePolicy{Ref:out.Requests[0].Payload.ContentRef,Subject:guest,Purpose:"verification",Revision:1,ValidUntil:until,RetainUntil:until,Read:true,Process:true,Save:true,Sync:true,Disclose:true};if err=s.InstallFixturePolicy(ctx,p,0);err!=nil{return err}}
+ data,err:=json.MarshalIndent(out,"","  ");if err!=nil{return err};return os.WriteFile(os.Getenv("CONTENT_OLD_OBSERVATION"),data,0600)
+}
+func mustEncode[T v.Value](value T)[]byte{b,err:=v.Encode(value);if err!=nil{panic(err)};return b}

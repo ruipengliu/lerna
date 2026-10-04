@@ -178,6 +178,15 @@ func (s *Store) CheckCapacity(ctx context.Context, token runtime.Tx, limits d.Li
 	return err == nil && count < int64(limits.MaxPreparingVersions) && length <= limits.MaxStagingBytes-total, err
 }
 func (s *Store) Trigger(ctx context.Context, token runtime.Tx, ref contract.ObjectRef, phase string, revision int64, now time.Time) (runtime.Job, error) {
+	if phase == "policy_propagation" {
+		due, err := s.NextPolicyDue(ctx, token, string(ref.ID))
+		if err != nil {
+			return runtime.Job{}, err
+		}
+		if !due.IsZero() && due.Before(now) {
+			now = due
+		}
+	}
 	return s.core.Trigger(ctx, token, ref, phase, revision, now)
 }
 func (s *Store) Scan(ctx context.Context, token runtime.Tx, now time.Time, limit int) ([]runtime.Job, error) {

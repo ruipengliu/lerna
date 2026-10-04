@@ -1,0 +1,15 @@
+# Actual Content 0001 writer archives
+
+Both archives were produced on 2026-10-04 by importing the product packages of stopped writer `1a7d910238eb74cddc712d92b0ba4014a72ff507`. PostgreSQL 18.6 `pg_dump` ran in the existing PostgreSQL container against the dedicated test database, with credentials supplied only through child environment. `producer.go.txt` preserves the exact independent inputs and generator source; it is evidence, not a generated runtime dependency.
+
+`legacy-v1` is the original owner02 writer output: two published objects (`alpha\n`) and one failed publication retaining staging, with direct source links and all three fixed receipts. Original exact schema `lerna_test_4aee55540d91e5d8db9131fb` and object root `/workspace/lerna-content-02-f05b2f1068958/legacy-objects` remain preserved. The original producer used deferred closes without checking returned errors: native exit/group absence proves process exit, and does not retrospectively supply individual Close acknowledgements. That limitation remains explicit.
+
+`legacy-many-policies` is a second independently registered 0001 namespace, `lerna_test_a230998266aca1270c72b73e`, produced with the same product source plus 65 valid guest policies for the original source. This producer aggregates the actual Store/Object close errors. It tests that one version's policies need multiple finite pages and that reopening cannot mark an incomplete upgrade ready.
+
+Both original policies and receipts use their genuine absolute `2099-01-01T00:00:00.000000Z` cutoff. Restoration does not refresh any deadline, record, receipt, identity, tuple digest, or object key. Original admission/publication deadlines remain historical even when past. The tests observe retained publication history and current policy independently.
+
+`original-pg18-dump.sql` is the exact native archive. `restore.sql` is its mechanical database/sql-compatible form: COPY rows become equivalent INSERT literals, the exact namespace becomes `legacy_content`, and session SET, psql restrict, and CREATE SCHEMA lines are omitted. Test setup creates and acknowledges its own exact namespace before restoring it, then applies the additive current 0002 migration. Bytea payloads and row values are unchanged. The two stored files are exact independently read original object bytes, never reconstructed from a public response.
+
+The original namespace was also upgraded directly, without restoration, using final 0002 SQL checksum `sha256:99519565ff1146d7cfc468413b449538c6ba71335e86edc8fd447a3bbff922a8`: one page, actual Store close/reopen, remaining pages, three unchanged receipts, two original bodies, failed staging pending, and all original absolute expiry registrations. Archive-based tests are repeatable recovery evidence and are distinguished from that original-scope upgrade.
+
+The preserved initial dump refusals came from a host shim hardcoding another database. They remain failed execution history; they do not qualify as successful archive creation. The successful exact-container dumps have separate native exit/group-absence records. See ticket02 execution evidence for actual commands and results.

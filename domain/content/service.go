@@ -8,6 +8,7 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"sort"
 	"strconv"
 	"time"
 
@@ -207,9 +208,14 @@ func (s *Service) Put(ctx context.Context, raw []byte, subject *v.SubjectBinding
 		if policy.Ref != request.Payload.ContentRef {
 			return reject("forbidden")
 		}
-		// Direct sources are real published inputs in this owner's bounded scope.
-		// The later source-policy ticket adds full inherited closure and revocation.
-		for _, source := range request.Payload.Sources {
+		sources, err := s.registeredClosure(ctx, tx, request.Payload.ContentRef, request.Payload.Sources, principal, string(request.Payload.Purpose), []string{"read", "process", "save"})
+		if err != nil {
+			if code, ok := qualificationCode(err); ok {
+				return reject(code)
+			}
+			return err
+		}
+		for _, source := range sources {
 			if source.Owner.TenantID != s.config.Owner.TenantID {
 				return reject("forbidden")
 			}
@@ -292,6 +298,13 @@ func (s *Service) Put(ctx context.Context, raw []byte, subject *v.SubjectBinding
 		if err = s.config.Store.SaveVersion(ctx, tx, *record); err != nil {
 			return err
 		}
+		if err = s.config.Store.SaveSources(ctx, tx, record.Ref, sources); err != nil {
+			return err
+		}
+		if err = s.config.Store.ScheduleRetention(ctx, tx, policy, *record, s.config.PublishBudget); err != nil {
+			return err
+		}
+
 		if _, err = s.config.Store.Trigger(ctx, tx, contract.ObjectRef{TenantID: contract.ID(s.config.Owner.TenantID), OwnerID: contract.ID(s.config.Owner.OwnerID), Kind: "content", ID: contract.ID(id)}, "publish", 1, now); err != nil {
 			return err
 		}
@@ -407,7 +420,16 @@ func (s *Service) Get(ctx context.Context, raw []byte, subject *v.SubjectBinding
 		if len(record.Sources) > 64 {
 			return ErrUnavailable
 		}
-		for _, source := range record.Sources {
+		sources, err := s.registeredClosure(ctx, tx, record.Ref, record.Sources, principal, string(request.Payload.Purpose), []string{"read", "disclose"})
+		if err != nil {
+			if code, ok := qualificationCode(err); ok {
+				result = denied(code)
+				record = nil
+				return nil
+			}
+			return err
+		}
+		for _, source := range sources {
 			if source.Owner != s.config.Owner {
 				return ErrUnavailable
 			}
@@ -607,6 +629,7 @@ func (s *Service) Step(ctx context.Context) (bool, error) {
 	if !finite(ctx) {
 		return false, ErrUnavailable
 	}
+	maintenance := false
 	var selected *Record
 	var claim *runtime.Claim
 	err := s.config.Store.Within(ctx, owner(s.config.Owner), func(ctx context.Context, tx runtime.Tx) error {
@@ -618,13 +641,26 @@ func (s *Service) Step(ctx context.Context) (bool, error) {
 		if err != nil {
 			return err
 		}
+		// Publication gets a bounded first pass, preserving the existing Step seam.
+		sort.SliceStable(jobs, func(i, j int) bool { return jobs[i].Phase == "publish" && jobs[j].Phase != "publish" })
 		for _, job := range jobs {
 			record, err := s.config.Store.LockObject(ctx, tx, string(job.Object.ID))
 			if err != nil {
 				return err
 			}
-			if record == nil || record.ValidateIdentity() != nil || record.ObjectID != string(job.Object.ID) || job.Object.Kind != "content" || job.Phase != "publish" {
+			if record == nil || record.ValidateIdentity() != nil || record.ObjectID != string(job.Object.ID) || job.Object.Kind != "content" || (job.Phase != "publish" && job.Phase != "policy_propagation") {
 				return runtime.ErrScope
+			}
+			if job.Phase == "policy_propagation" {
+				worked, err := s.config.Store.AdvancePolicyJob(ctx, tx, job, *record, s.config.Worker, s.config.Limits.Lease, s.config.PublishBudget)
+				if worked {
+					maintenance = true
+					return err
+				}
+				if err != nil {
+					return err
+				}
+				continue
 			}
 			current, ioBefore, failure, err := s.publicationPolicy(ctx, tx, *record, now)
 			if err != nil {
@@ -668,7 +704,7 @@ func (s *Service) Step(ctx context.Context) (bool, error) {
 		return nil
 	})
 	if err != nil || selected == nil {
-		return false, err
+		return maintenance, err
 	}
 	ioDeadline := earlier(earlier(cutoff(selected.IODeadline), claim.LeaseUntil), time.Now().Add(s.config.Limits.WorkTimeout))
 	bounded, cancel := context.WithDeadline(ctx, ioDeadline)
@@ -759,7 +795,14 @@ func (s *Service) publicationPolicy(ctx context.Context, tx runtime.Tx, record R
 	}
 	current = earlier(current, policy.RetainUntil)
 	ioBefore = earlier(ioBefore, policy.ValidUntil)
-	for _, source := range record.Sources {
+	sources, err := s.registeredClosure(ctx, tx, record.Ref, record.Sources, record.Subject, record.Purpose, []string{"read", "process", "save"})
+	if err != nil {
+		if code, ok := qualificationCode(err); ok {
+			return current, ioBefore, code, nil
+		}
+		return current, ioBefore, "", err
+	}
+	for _, source := range sources {
 		for _, action := range []string{"read", "process", "save"} {
 			p, err := s.config.Store.CheckPolicy(ctx, tx, record.Subject, source, record.Purpose, action, now)
 			if err != nil {

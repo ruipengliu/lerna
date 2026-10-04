@@ -77,6 +77,9 @@ type Repository interface {
 	LockVersion(context.Context, runtime.Tx, v.ContentRef) (*Record, error)
 	LockObject(context.Context, runtime.Tx, string) (*Record, error)
 	SaveVersion(context.Context, runtime.Tx, Record) error
+	SaveSources(context.Context, runtime.Tx, v.ContentRef, []v.ContentRef) error
+	ScheduleRetention(context.Context, runtime.Tx, *FixturePolicy, Record, time.Duration) error
+	AdvancePolicyJob(context.Context, runtime.Tx, runtime.Job, Record, string, time.Duration, time.Duration) (bool, error)
 	CheckPolicy(context.Context, runtime.Tx, v.SubjectBinding, v.ContentRef, string, string, time.Time) (*FixturePolicy, error)
 	CheckCommandReader(context.Context, runtime.Tx, v.SubjectBinding, time.Time) (bool, error)
 	CheckCapacity(context.Context, runtime.Tx, Limits, int64) (bool, error)

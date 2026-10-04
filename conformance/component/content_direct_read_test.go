@@ -7,6 +7,8 @@ import (
 	fixture "github.com/ruipengliu/lerna/conformance/internal/contentfixture"
 	v "github.com/ruipengliu/lerna/contract/v1_2"
 	"github.com/ruipengliu/lerna/domain/content"
+	"os"
+	"path/filepath"
 	"sync"
 	"testing"
 	"time"
@@ -52,6 +54,7 @@ func TestContentDirectReadPermissionsAreCurrentAndSeparate(t *testing.T) {
 			defer cancel()
 			w := fixture.New(t, ctx)
 			service, request, source := publishedDirectContent(t, ctx, w)
+			original := putContentRequest(t, ctx, service, request)
 			wide := time.Now().Add(time.Hour)
 			policy := content.FixturePolicy{Ref: source, Subject: contentPrincipal, Purpose: "verification", Revision: 2, ValidUntil: wide, RetainUntil: wide, Read: true, Disclose: true, Process: true, Save: true}
 			switch action {
@@ -120,12 +123,86 @@ func TestContentDirectReadPermissionsAreCurrentAndSeparate(t *testing.T) {
 			if !ok || denied.Reason != reason {
 				t.Fatalf("direct source %s did not prevent body: %+v", action, view)
 			}
+			expiredPolicy := policy
 			policy.Revision = 3
 			policy.Read = true
 			policy.Disclose = true
 			policy.RetainUntil = wide
 			if err = w.Store().InstallFixturePolicy(ctx, policy, 2); err != nil {
 				t.Fatal(err)
+			}
+			if action == "expired" {
+				w.Reopen(ctx)
+				service = contentService(t, w)
+				for _, ref := range []v.ContentRef{source, request.Payload.ContentRef} {
+					view, err := service.Get(ctx, contentGetWire(t, ref, nil), &contentPrincipal)
+					denied, ok := view.AsRejected()
+					if err != nil || !ok || denied.Reason != "expired" {
+						t.Fatal("widening revived expired accepted cap", err, view)
+					}
+				}
+				before, _ := v.Encode(original)
+				after, _ := v.Encode(putContentRequest(t, ctx, service, request))
+				if string(before) != string(after) {
+					t.Fatal("expired old chain replaced fixed receipt")
+				}
+				command, err := service.GetCommand(ctx, contentCommandGetWire(t, request.CommandID), &contentPrincipal)
+				found, ok := command.AsFound()
+				progress, hasProgress := found.Progress.AsContent()
+				if err != nil || !ok || !hasProgress || progress.Publication != "published" {
+					t.Fatal("expired original publication history erased", err, command)
+				}
+				manager := trustedContentManager(t, w, 2)
+				for i := 0; i < 4; i++ {
+					if _, err := manager.Step(ctx, &contentPrincipal); err != nil {
+						t.Fatal(err)
+					}
+				}
+				observation, err := manager.ObservePolicyChange(ctx, &contentPrincipal, expiredPolicy)
+				if err != nil || len(observation.Responsibilities) != 2 || observation.Change.State == "pending" {
+					t.Fatal("original expired source responsibility incomplete", err, observation)
+				}
+				for _, responsibility := range observation.Responsibilities {
+					if responsibility.BodyCleanup != "pending" || !responsibility.ObjectHolder || responsibility.Residual != "holder_unconfirmed" {
+						t.Fatal("expired holder falsely erased", responsibility)
+					}
+				}
+				entries, err := os.ReadDir(w.Directory)
+				if err != nil || len(entries) != 3 {
+					t.Fatal("expired policy removed original object", err)
+				}
+				for _, entry := range entries {
+					body, err := os.ReadFile(filepath.Join(w.Directory, entry.Name()))
+					if err != nil || string(body) != "alpha\n" {
+						t.Fatal("original independent bytes changed", err)
+					}
+				}
+				// Independently held input is submitted as new versions; expired
+				// bytes are never read to manufacture a replacement source.
+				freshSource := source
+				freshSource.Version = "2"
+				installContentPolicy(t, ctx, w, freshSource)
+				fresh := contentPut(t, freshSource, "fresh-source", "YWxwaGEK")
+				if _, ok := putContentRequest(t, ctx, service, fresh).AsAccepted(); !ok {
+					t.Fatal("fresh source refused")
+				}
+				if _, err := service.Step(ctx); err != nil {
+					t.Fatal(err)
+				}
+				assertContentBody(t, ctx, service, freshSource, nil, "alpha\n")
+				freshTarget := request.Payload.ContentRef
+				freshTarget.Version = "2"
+				installContentPolicy(t, ctx, w, freshTarget)
+				fresh = contentPut(t, freshTarget, "fresh-derived", "YWxwaGEK")
+				fresh.Payload.Sources = []v.ContentRef{alphaRef, freshSource}
+				if _, ok := putContentRequest(t, ctx, service, fresh).AsAccepted(); !ok {
+					t.Fatal("fresh derivation refused")
+				}
+				if _, err := service.Step(ctx); err != nil {
+					t.Fatal(err)
+				}
+				assertContentBody(t, ctx, service, freshTarget, nil, "alpha\n")
+				return
 			}
 			assertContentBody(t, ctx, contentService(t, w), request.Payload.ContentRef, nil, "alpha\n")
 		})
