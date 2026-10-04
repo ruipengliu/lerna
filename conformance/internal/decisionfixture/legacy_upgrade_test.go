@@ -109,8 +109,12 @@ func buildFrozenWriter(t *testing.T, dir string) *upgradeOutput {
 			}
 			if !exited && waited != nil {
 				select {
-				case <-waited:
+				case waitErr := <-waited:
 					exited = true
+					if waitErr != nil {
+						t.Logf("bounded frozen writer cleanup diagnostics: %s", diagnostics.safeText(os.Getenv("LERNA_TEST_POSTGRES_DSN")))
+						t.Error(upgradeCause("failed frozen build Wait", waitErr))
+					}
 				case <-time.After(3 * time.Second):
 				}
 			}
@@ -168,11 +172,13 @@ func buildFrozenWriter(t *testing.T, dir string) *upgradeOutput {
 	}
 	groupErr = confirmUpgradeGroupExit(pgid)
 	confirmed = exited && groupErr == nil
-	if !confirmed {
-		t.Fatal(upgradeCause("frozen build group exit confirmation", groupErr))
-	}
 	if waitErr != nil {
 		t.Logf("bounded frozen writer build diagnostics: %s", diagnostics.safeText(os.Getenv("LERNA_TEST_POSTGRES_DSN")))
+	}
+	if !confirmed {
+		t.Fatal(upgradeCause("frozen build group exit confirmation", errors.Join(waitErr, groupErr)))
+	}
+	if waitErr != nil {
 		t.Fatal(upgradeCause("frozen writer build", waitErr))
 	}
 	succeeded = true
