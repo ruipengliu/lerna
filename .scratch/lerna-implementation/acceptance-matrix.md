@@ -161,3 +161,8 @@ Prepared v1和原published SQL／archives不改；无新wire、DDL或完整profi
 Source成功关闭后的真正读取失败不是native Close或COMMIT故障；旧driver的strict ErrClaim与有限lease／publication
 观察合用，不把sentinel泛化为所有过期。1628独立PG／64targetFS／244recoveryFS／15archive／27确认组及owned root
 准确范围absent，七个toolcache晚inventory另列。两轴无遗留不代替root实际整片架构、远端CI或G2／G3验收。
+
+
+## 切片03取消与限额正式整合（整片尚未退出）
+
+2026-10-04，六票42/42子AC resolved，03受测882e97b／交付8385b9b／整合4b94cb6。真实受信控制、nilInput关闭、两种并发提交顺序、原资源与期限、每项双prepared发布门禁、全部来源及旧writer重开均有[八AC退出证据](../lerna-03-deterministic-harness/ticket-03-exit-evidence.md)。完整真实PG正常、Source race、102项互斥Component有限race及原双库／native恢复正常37.201／race87.979通过。原Component整包120.073超时及旧未知目录仍保留，不扩大成native故障或全环境清理证明。完整profile／分组CI／整片审查与架构／最终CI尚待完成；G2整体、G3及生产指标不因此关闭。

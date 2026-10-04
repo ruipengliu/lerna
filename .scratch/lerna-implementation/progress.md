@@ -8,7 +8,7 @@
 
 - 切片 01：**completed**。原任务 01–06 与后置架构任务 07 均 resolved；正确性修复、独立架构优化和 CI portability 已合入。受测实现提交 `23bac17ba0909c7a4d49d846eb08bc63391b99f0` 的真实远端 CI success，全部退出证据见[spec](../lerna-01-command-contracts/spec.md#切片退出证据2026-10-03)。
 - 切片 02：**completed**。10票68项AC resolved；最终源码f56d930、整合5548744。本地完整顺序count1集成50.431s/race93.834s，独立两轴全部原发现关闭/新增0，fixture架构收益复核闭合；准确CI37162569420 success，完整退出及旧未知schema/CID限制见[证据](../lerna-02-durable-work/exit-evidence.md)。
-- 切片 03：**in-progress**。01/02/04/05/06 五票的 34/42 项 AC 已 resolved；规则首票整合5307702、进程恢复整合58f8f0f、有界候选整合cad6905，完整 tree 均与各自 worker 相同。取消/限额票在独立工作树验证，尚未正式整合；新1.1 Decision profile仍未完整广告，整片审查、架构、最终CI与退出待全部六票完成。
+- 切片 03：**in-progress**。全部六票、42/42 项 AC 已 resolved并正式整合；取消/限额源882e97b、交付8385b9b、整合4b94cb6，完整 tree 与 worker相同。完整check、基础race、真实PG／原双库恢复及102项Component有限分组race通过，整包120秒超时保留为历史失败。新1.1完整profile、分组CI入口、整片两轴／架构／最终CI与退出仍待完成。
 - 切片 04–22：**not-started**。04–22仅在`/tmp`准备条件决定和票据草案；真实前置整片退出后再按最终API复核、发布和实施，草案不代表实现或验收证据。
 
 ## 切片 01 过程检查点（历史记录）
@@ -179,3 +179,12 @@ merger正式合入cad6905ed64bde26883ef226455ebe1e221e97c2，parents949c392＋5b
 候选本检查点push的新CI仍待核验，不能用949替代新代码。取消工作树的新真实并发、
 两个实际旧writer升级及两阶段进程恢复结果尚属于该工作树，最终双prepared合流、
 完整profile、整片两轴／架构／CI由root在实际组合后确认。04–22仍仅条件准备。
+
+
+## 切片03取消与限额票正式整合
+
+03八AC resolved，受测源882e97b596ac2baa034881766041944b0da2e05e、纯文档交付8385b9b1aed0832b7ef9cfd75312eff6f84ae4ec，正式merge4b94cb65da2a7118e68f4cef7563793b8c97430f的parents为5bc＋8385，完整tree16f27d8与worker相同。原终态／回执与单调Stop分离，真实两种并发提交顺序、nilInput先到取消、原资源／期限及双prepared每次发布门禁完整通过；见[八AC证据](../lerna-03-deterministic-harness/ticket-03-exit-evidence.md)。
+
+882标准check／fresh基础race／模块与七manifest172项0；真实Component／Source正常60.881／29.966，Source race28.434。Component整包race120.073超时仍是失败，真实102项互斥完整60／42分组race110.803／11.781通过，时限不变；原PG／SQLite及当前native Decision恢复正常37.201／race87.979通过。两轴0遗留，1545PG／244SQLite／64target登记范围absent，原3540254111未知目录／overlay保留。全部工具会话已退出。
+
+前检查点5bc的[准确CI37189797348](../lerna-03-deterministic-harness/ci-verification.md#02准确5bc检查点的真实ci)已真实success，只证明当时83夹具／旧两迁移等范围；不替代882取消／Source0002／Decision0003／89夹具组合。当前42/42子AC不等于whole03退出。先完成准确完整profile及新的有限CI入口，再由root执行整片审查／架构／push／最终CI；04–22继续依真实whole依赖，不因子AC完成而提前启动。

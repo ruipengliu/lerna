@@ -62,3 +62,12 @@ Source及原writer7.785s/10.387s；27项历史hash逐项OK。数据库count1、�
 
 该CI仅覆盖949已整合的01／04／05／06，不覆盖后来候选票cad6905或未合入取消票。
 候选本检查点的新push CI待核验；完整03profile、架构和最终退出仍未由此关闭。
+
+
+## 02准确5bc检查点的真实CI
+
+Root已读取准确head5bcdea8669adb49c341342e5b05deadffa0b8661的[run37189797348](https://github.com/ruipengliu/lerna/actions/runs/37189797348)、contracts111399418119／durable-admission111399418197的全部step及实际日志，均completed/success。locked bootstrap、模块校验、格式／vet、生成一致性、typecheck、JS20／TS37及build通过；83新／158旧夹具正反序实际Go→TS／TS→Go字节往返。远端target正常1.395，无独立target race；不变pure检查含cache。
+
+实际psql18.6、工具race1.508；原PG／SQLite及06真实进程恢复正常25.852／race61.665；Component29.248／53.541；Source及970／两个FINAL01严格旧writer消费者10.519／14.128；原27 SHA逐项OK。DB命令count1／timeout120，新增PG包p1顺序执行。
+
+这是02正式整合后的34/42子AC检查点；尚无后来03控制／Source0002／Decision0003／双prepared Stop合流／89夹具／完整profile。Source正常错误测试不等于native Wait或进程组故障注入；不宣称生产、断电或provider保证。本记录在下一产品整合后保存，不另以文档检查点重复触发旧CI；882及whole03准确最终CI待后续。

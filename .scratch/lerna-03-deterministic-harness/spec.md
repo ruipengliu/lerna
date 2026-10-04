@@ -75,3 +75,6 @@ A 阶段在 01–03 完成后退出：共同身份、两种数据库耐久工作
 [七AC退出证据](ticket-02-exit-evidence.md)与[API](ticket-02-api-handoff.md)保存实际命令、
 资源、失败及资格边界。当前本交付树01／02／04／05／06合计34/42AC；03取消／资源、
 实际最终合并树架构、完整profile广告与远端CI仍由root后续验收，Implementation继续in-progress。
+
+
+2026-10-04，取消／限额票03八AC已resolved，受测882e97b、纯文档交付8385b9b，正式整合4b94cb6完整tree与worker相同。[逐AC证据](ticket-03-exit-evidence.md)保存两种真实并发顺序、nilInput关闭、资源／期限、双prepared Stop门禁、旧writer升级及全部本地检查；[分组证据](ticket-03-component-race-partition.md)保留Component整包120.073超时及随后完整102项有限分组race0。全部六票42/42子AC已关闭，Implementation仍in-progress：完整profile／分组CI入口／整片两轴与架构／最终push CI尚未退出。旧5bc CI已真实success，准确范围见[CI记录](ci-verification.md#02准确5bc检查点的真实ci)。
