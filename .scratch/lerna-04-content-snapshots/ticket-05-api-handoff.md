@@ -124,3 +124,15 @@ preparing/failed原记录进入原seal/holder/attempt责任，绝不遍历其他
 亦实际通过，无新seal或active cleanup；更早crossprocess物理fence仍独立
 负责迟到介质效果，不用PG前态/Claim代替。当前单attempt资格不证明完整
 旧attempt回填或未知归属，剩余全部AC继续实施。
+
+真实擦除返回ACK丢失已有独立normal/race资格：委托原native效果成功后
+机械丢首条返回，独立缺失/fence不直接补PG责任ACK；原holder residual、
+policy pending与原seal/deadline保持。实际Step已提交原100ms DeferClaim，
+真实World.Reopen后同原责任重试独立观察，才ALLACK/policy erased/gone。
+该资格是reply loss，不是PG commit_unknown。公开测试核准确原identity/
+deadline与最终恢复，不声明直接观测私有Claim epoch。
+
+MetadataPolicy接受合法纳秒ValidUntil；CheckMetadataPolicy仅以截到微秒的
+值核PG列编码一致性，当前许可到期仍严格核原JSON纳秒deadline。原纳秒
+输入已真实normal/race验证；中间fixture truncate的日志保留且不称原输入
+资格。派生正文metadata全祖先/完整scope/真实到期仍待下个独立tracer。

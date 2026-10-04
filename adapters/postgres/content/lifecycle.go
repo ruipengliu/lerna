@@ -304,7 +304,9 @@ func (s *Store) CheckMetadataPolicy(ctx context.Context, token runtime.Tx, subje
 	if err = json.Unmarshal(body, &policy); err != nil {
 		return nil, err
 	}
-	if policy.Revision != revision || !policy.ValidUntil.Equal(until) {
+	// PostgreSQL represents timestamptz at microsecond precision. Keep the
+	// original JSON deadline for the current expiry check below.
+	if policy.Revision != revision || !policy.ValidUntil.Truncate(time.Microsecond).Equal(until) {
 		return nil, runtime.ErrScope
 	}
 	actual, _, err := subjectKey(policy.Subject)

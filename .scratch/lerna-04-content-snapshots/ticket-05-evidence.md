@@ -468,3 +468,38 @@ holder历史true/原attempt/publication/reason/deadline、五动作union与原
 watermark/due/ExpiryDeadline不刷新，以及再次World.Reopen均实际通过。
 不同change不继承/完整tuple拒绝/ordinary不得造ACK等边界目前为source
 guard，尚不作为分别执行证据；ACKloss/metadata/legacy等剩余AC继续。
+
+## 实际擦除返回ACK丢失与同原延后责任恢复（独立vertical）
+
+`TestContentLostActualErasureReplyRetainsOriginalDutyAndRecoversAfterConfirmedDefer`
+先normal publish/read，再真实save撤回生成原policy seal。机械wrapper仅在
+真实原Objects.FenceAndErase成功后丢一条返回ACK，不伪造native failure，
+也不是PostgreSQL commit_unknown。原准确文件已独立缺失且受锁独立Observe
+确认fenced/erased，但原primary责任residual/holder_unconfirmed、global未ACK、
+原policy责任pending、metadata仍forbidden。Step已真实提交原DeferClaim
+100ms并释放原lease；actualWorld.Reopen后仅等120ms，以同原seal/ref/holder/
+deadline重试独立确认，才完成ALLACK和原policy责任erased、授权metadata gone。
+
+首run真实碰到另一个合法端口缺陷：受信MetadataPolicy允许纳秒ValidUntil，
+但CheckMetadataPolicy拿原JSON纳秒与PG timestamptz微秒列直接等值比较，
+使Get unavailable。这是metadata精度失败，不是erasure业务red，也不是gone
+泄漏。中间fixture truncate只是暂时输入回避，不能当原纳秒输入source资格。
+最后复原原wide=time.Now().Add(time.Hour)，最小产品修复仅将列编码一致性
+比较截到微秒，仍使用原JSON纳秒deadline严格now.Before；LockMetadataPolicy
+只读原body/CAS且无列比较，未改。未拓宽原授权窗或擦除deadline。
+
+| 日志（均位于 `/tmp/lerna-04-ticket05-execution/`） | 实际结果 |
+| --- | --- |
+| `erasure-reply-loss-first-run.log` | actual0.286s/case0.27s，PID/PGID2884700/start12033681/nativeexit1/groupAbsent=true；实际erase/replyloss/pending已通过，metadata精度失败。 |
+| `erasure-reply-loss-precision-repair.log` | 暂时truncate fixture输入actual0.472s，PID/PGID2886112/start12039709/nativeexit0/groupAbsent=true；非原纳秒source资格。 |
+| `erasure-reply-loss-race-controls.log` | 暂时truncate输入actual3.361s，PID/PGID2886527/start12041086/nativeexit0/groupAbsent=true；replyloss/currentpolicy/lateFinish及regex实际选中的已有secondary native ENOTEMPTY，两个frozen SHA正确；未选中IndependentSecondaryOffline。 |
+| `erasure-reply-loss-offline-selector-repair.log` | 独立exact已有secondary offline race actual1.853s，PID/PGID2887421/start12044636/nativeexit0/groupAbsent=true。 |
+| `erasure-reply-loss-original-ns-repair.log` | 产品微秒列编码修复、原纳秒输入exact actual0.437s，PID/PGID2891521/start12062530/nativeexit0/groupAbsent=true。 |
+| `erasure-reply-loss-original-ns-race.log` | 同原纳秒exact race actual1.793s，PID/PGID2892078/start12064588/nativeexit0/groupAbsent=true；两个frozen迁移SHA准确。 |
+
+原caller20/test30/wrapper120、原policyJob/seal/责任截止保持，无timeout，
+上述session均actual结束并两次明确release LOCAL/no pending。当前公开
+观察核同原完整ErasureIdentity/seal/deadline、原policy pending→erased；
+原Claim释放与due机制由实际Step提交后恢复及source核对共同资格，不声称
+测试读取了私有Claim epoch/Lease字段。此case不覆盖PG commit_unknown、
+原执行scope过期后重建预算、未确认Defer或其他holder晚callback。
