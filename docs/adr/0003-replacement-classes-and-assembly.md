@@ -2,7 +2,7 @@
 
 | 日期 | 修订说明 |
 | --- | --- |
-| 2026-10-04 | 初版，来自[第二轮评审处理记录](../review/disposition.md) R2-08。 |
+| 2026-10-04 | 初版，来自[第二轮评审处理记录](../review/archive/round-2/disposition.md) R2-08。 |
 
 - 状态：已采纳
 - 影响：[分层与模块 P1、R6、第 4 节、第 11 节](../architecture/layers.md#2-划分原则)、[核心契约](../architecture/core/contracts/README.md)

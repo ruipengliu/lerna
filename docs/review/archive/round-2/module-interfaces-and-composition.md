@@ -4,7 +4,7 @@
 
 ---
 
-定位：[分层 §2](../architecture/layers.md)第 20 行用“实现写错是否破坏不变量”判断是否属于核心；§7 的 R6 与 §11 第 232 行规定 core、defaults、adapters 只依赖 contracts。与此同时，[任务编排](../architecture/core/tasks/README.md)第 17 行要求通过模块接口共享事务上下文，[存储](../architecture/topics/data-and-storage.md)要求 PostgreSQL 和 SQLite 分别实现正式的提交与恢复语义。现有目录没有明确这些基础设施实现、内部事务接口与装配代码的位置。
+定位：[分层 §2](../../../architecture/layers.md)第 20 行用“实现写错是否破坏不变量”判断是否属于核心；§7 的 R6 与 §11 第 232 行规定 core、defaults、adapters 只依赖 contracts。与此同时，[任务编排](../../../architecture/core/tasks/README.md)第 17 行要求通过模块接口共享事务上下文，[存储](../../../architecture/topics/data-and-storage.md)要求 PostgreSQL 和 SQLite 分别实现正式的提交与恢复语义。现有目录没有明确这些基础设施实现、内部事务接口与装配代码的位置。
 
 “写错会破坏不变量”能提醒哪些实现必须受信，却不能单独决定哪些实现可替换。存储适配实现出错可以丢失责任，但 PostgreSQL 与 SQLite 仍需要不同实现；受审查的出口基本操作也可能因平台不同而替换。反过来，第三方执行适配器可替换，也不意味着其能力声明和回报天然可信。第三方替换权、受审查实现的替换能力、事实裁决权是三个不同问题。
 

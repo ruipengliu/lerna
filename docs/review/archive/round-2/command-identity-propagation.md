@@ -5,7 +5,7 @@
 
 ---
 
-定位：[核心契约 §3.1](../architecture/core/contracts/README.md)第 188 行规定 `CommandIdentity = (user_id, issuer_id, target_domain_id, command_id)`；第 411 行还要求不同 issuer 的同名命令互不覆盖。但[数据与存储 §2.2](../architecture/topics/data-and-storage.md)第 76 行仍写“同域同用户同标识只有一个决定”；[会话 §2.1](../architecture/core/sessions/README.md)第 57 行要求 `command_id` 在用户范围唯一；[交互接口 §2.1、§3.1](../architecture/ports/interaction/README.md)的事件、回执和查询仍自行列命令标识，查询没有完整的 issuer 与目标域绑定。
+定位：[核心契约 §3.1](../../../architecture/core/contracts/README.md)第 188 行规定 `CommandIdentity = (user_id, issuer_id, target_domain_id, command_id)`；第 411 行还要求不同 issuer 的同名命令互不覆盖。但[数据与存储 §2.2](../../../architecture/topics/data-and-storage.md)第 76 行仍写“同域同用户同标识只有一个决定”；[会话 §2.1](../../../architecture/core/sessions/README.md)第 57 行要求 `command_id` 在用户范围唯一；[交互接口 §2.1、§3.1](../../../architecture/ports/interaction/README.md)的事件、回执和查询仍自行列命令标识，查询没有完整的 issuer 与目标域绑定。
 
 同一用户的手机 issuer A 和电脑 issuer B 向同一域提交 `command_id=42`。按核心契约它们是两条合法独立命令；按存储表的约束，第二条会冲突，或者错误返回第一条回执。UUID 降低偶发碰撞概率，不能消除协议语义冲突，更不能成为省略命名空间的理由。
 

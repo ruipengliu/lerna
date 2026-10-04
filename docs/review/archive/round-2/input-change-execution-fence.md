@@ -5,7 +5,7 @@
 
 ---
 
-定位：[会话 §2.5](../architecture/core/sessions/README.md)第 116 行规定，修改或有效答案被接纳时递增 `input_version`；§4.1 第 6 步则把解释输入、修改条件放到后续处理。[任务编排 §4.5](../architecture/core/tasks/README.md)在**条件变更**时递增控制代次并登记封闭。[出口闸门 §2、§4.1](../architecture/core/egress/README.md)的凭据绑定和 P4 检查列出条件版本、控制版本，但没有明确的输入版本相等检查；[授权 §2.4](../architecture/core/grants/README.md)的出口请求绑定也缺少该项。准入记录本身已经保存了输入版本，所以不需要另建一套意图记录。
+定位：[会话 §2.5](../../../architecture/core/sessions/README.md)第 116 行规定，修改或有效答案被接纳时递增 `input_version`；§4.1 第 6 步则把解释输入、修改条件放到后续处理。[任务编排 §4.5](../../../architecture/core/tasks/README.md)在**条件变更**时递增控制代次并登记封闭。[出口闸门 §2、§4.1](../../../architecture/core/egress/README.md)的凭据绑定和 P4 检查列出条件版本、控制版本，但没有明确的输入版本相等检查；[授权 §2.4](../../../architecture/core/grants/README.md)的出口请求绑定也缺少该项。准入记录本身已经保存了输入版本，所以不需要另建一套意图记录。
 
 反例：发消息给 A 的动作已准入但还没到 P4。用户提交一条类别明确为“修改任务”的输入：“收件人改成 B”，会话与任务已原子接纳，输入版本递增。模型尚未解释这条输入，条件版本和控制代次仍旧。按出口文档列出的检查，旧动作可能仍然向 A 发出。事后再修改条件无法撤回这次发送。
 

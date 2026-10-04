@@ -9,7 +9,7 @@
 - 读者：架构评审者；要修改模块文档的作者
 - 读完之后：知道第二轮每条意见是否采纳、为什么、改成什么样、改哪篇文档、在哪个阶段完成
 
-[第二轮评审总览](README.md)和同目录下的各篇评审意见（下称"原意见"）保持原样，本文是对它们的处理决定。第一轮的处理记录见 [archive/round-1](archive/round-1/README.md)。调整后的整体结构见[整体方案](../architecture/overview.md)。
+[第二轮评审总览](README.md)和同目录下的各篇评审意见（下称"原意见"）保持原样，本文是对它们的处理决定。第一轮的处理记录见 [archive/round-1](../round-1/README.md)。调整后的整体结构见[整体方案](../../../architecture/overview.md)。
 
 ## 1 结论
 
@@ -53,7 +53,7 @@ R2-05 是"模型输入先固定再准入"，R2-06 是"只准入参数已确定�
 
 ### R2-01 核验轮次被替代时释放冻结
 
-**核对结果。**[任务编排 4.5](../architecture/core/tasks/README.md#45-条件变更暂停与取消) 的条件变更事务不终结进行中的核验轮次；4.7 的"目标未达成后继续"要求版本与本轮一致。轮次进行中用户修改任务，旧轮次既不能通过，也走不进继续分支，冻结没有人释放。
+**核对结果。**[任务编排 4.5](../../../architecture/core/tasks/README.md#45-条件变更暂停与取消) 的条件变更事务不终结进行中的核验轮次；4.7 的"目标未达成后继续"要求版本与本轮一致。轮次进行中用户修改任务，旧轮次既不能通过，也走不进继续分支，冻结没有人释放。
 
 **决定：采纳。**
 
@@ -71,7 +71,7 @@ R2-05 是"模型输入先固定再准入"，R2-06 是"只准入参数已确定�
 
 ### R2-02 任务修改一经接纳，旧动作不能再开始
 
-**核对结果。**[会话 2.5](../architecture/core/sessions/README.md) 规定任务修改被接纳时递增输入版本，旧提议因此不能准入。但已经准入、尚未到 P4 的动作，P4 只检查条件版本和控制代次，不检查输入版本。用户把收件人从 A 改成 B，模型还没来得及把这条修改解释成新条件，发给 A 的旧动作仍可能发出。
+**核对结果。**[会话 2.5](../../../architecture/core/sessions/README.md) 规定任务修改被接纳时递增输入版本，旧提议因此不能准入。但已经准入、尚未到 P4 的动作，P4 只检查条件版本和控制代次，不检查输入版本。用户把收件人从 A 改成 B，模型还没来得及把这条修改解释成新条件，发给 A 的旧动作仍可能发出。
 
 **决定：采纳。**原意见给了两条路：P4 增加输入版本比较，或者接纳修改时同时递增控制代次。本文选**递增控制代次**：P4 已经检查控制代次，不需要给凭据和出口检查再加一个字段，规则只有一条。
 
@@ -87,7 +87,7 @@ R2-05 是"模型输入先固定再准入"，R2-06 是"只准入参数已确定�
 
 ### R2-03 命令身份贯穿存储、会话和交互
 
-**核对结果。**[数据与存储 2.2](../architecture/topics/data-and-storage.md#22-关键记录) 的命令回执约束仍是"同域同用户同标识"；[会话 2.1](../architecture/core/sessions/README.md) 要求 `command_id` 在用户范围唯一；[交互接口](../architecture/ports/interaction/README.md)的事件、回执和查询自行列出命令标识，回执状态用"待决定、已应用"。这是第一轮 RV1 漏改的地方。
+**核对结果。**[数据与存储 2.2](../../../architecture/topics/data-and-storage.md#22-关键记录) 的命令回执约束仍是"同域同用户同标识"；[会话 2.1](../../../architecture/core/sessions/README.md) 要求 `command_id` 在用户范围唯一；[交互接口](../../../architecture/ports/interaction/README.md)的事件、回执和查询自行列出命令标识，回执状态用"待决定、已应用"。这是第一轮 RV1 漏改的地方。
 
 **决定：采纳。**这是完成已有决定，不需要新的 ADR。
 
@@ -101,7 +101,7 @@ R2-05 是"模型输入先固定再准入"，R2-06 是"只准入参数已确定�
 
 ### R2-04 确认的消费目标区分授权签发与动作准入
 
-**核对结果。**[授权 4.1](../architecture/core/grants/README.md#41-确认与授权成立) 区分授权确认和动作确认；[会话 2.2](../architecture/core/sessions/README.md) 却只有 `consumed_by_admission`，并规定消费只能发生在准入事务里。用户在设置页批准一份持续授权时，没有准入记录可填。
+**核对结果。**[授权 4.1](../../../architecture/core/grants/README.md#41-确认与授权成立) 区分授权确认和动作确认；[会话 2.2](../../../architecture/core/sessions/README.md) 却只有 `consumed_by_admission`，并规定消费只能发生在准入事务里。用户在设置页批准一份持续授权时，没有准入记录可填。
 
 **决定：采纳。**
 
@@ -116,7 +116,7 @@ R2-05 是"模型输入先固定再准入"，R2-06 是"只准入参数已确定�
 
 ### R2-05 模型输入先固定，再准入
 
-**核对结果。**[任务编排 3.2、4.1](../architecture/core/tasks/README.md#41-创建任务与请求推理) 说"请求提议"成功时模型调用已准入；[推理接口 3](../architecture/ports/reasoner/README.md) 的 `Propose` 接收"已准入的模型句柄"；同篇 4.1 的流程却是先组装模型视图、执行 R4 检索，再准入模型。推理检索到新材料后，实际输入与准入时的依据不一致。
+**核对结果。**[任务编排 3.2、4.1](../../../architecture/core/tasks/README.md#41-创建任务与请求推理) 说"请求提议"成功时模型调用已准入；[推理接口 3](../../../architecture/ports/reasoner/README.md) 的 `Propose` 接收"已准入的模型句柄"；同篇 4.1 的流程却是先组装模型视图、执行 R4 检索，再准入模型。推理检索到新材料后，实际输入与准入时的依据不一致。
 
 **决定：采纳"先固定实际输入，再准入"，但不拆分 `Propose`。**原意见推荐 M1 拆成 `PrepareModelInput` 和解析回报两个步骤。本文改为保留单个 `Propose`，只重新定义它的句柄。理由：一次提议可能需要多次模型调用（先检索、再生成），拆成两步只适合"一次提议一次调用"；而重新定义句柄可以覆盖多次调用，接口变化也最小。
 
@@ -133,7 +133,7 @@ R2-05 是"模型输入先固定再准入"，R2-06 是"只准入参数已确定�
 
 ### R2-06 有限计划只准入参数已确定的前缀
 
-**核对结果。**[任务编排](../architecture/core/tasks/README.md)要求有限计划的参数已固定；[推理接口 2.4](../architecture/ports/reasoner/README.md) 却允许 `arguments` 引用前序输出字段。表达式固定不等于参数值固定，确认摘要和请求摘要无法覆盖尚未知道的值。
+**核对结果。**[任务编排](../../../architecture/core/tasks/README.md)要求有限计划的参数已固定；[推理接口 2.4](../../../architecture/ports/reasoner/README.md) 却允许 `arguments` 引用前序输出字段。表达式固定不等于参数值固定，确认摘要和请求摘要无法覆盖尚未知道的值。
 
 **决定：采纳具体前缀方案。**原意见提出的"动态绑定契约"需要新的权限表达，目前没有需求，不采纳。M1 的计划上限本来就是 1 步，这项调整对 M1 实现几乎没有成本，主要是把接口定义改对。
 
@@ -148,7 +148,7 @@ R2-05 是"模型输入先固定再准入"，R2-06 是"只准入参数已确定�
 
 ### R2-07 云端安全接管：开放云端生产档前的前置条件
 
-**核对结果。**[部署 4.4](../architecture/topics/deployment.md#44-云端进程和可用区故障) 已经要求安全提升和隔离旧主，但没有选定高可用实现，没有写同步成员变更、提升资格和旧主隔离的具体协议。
+**核对结果。**[部署 4.4](../../../architecture/topics/deployment.md#44-云端进程和可用区故障) 已经要求安全提升和隔离旧主，但没有选定高可用实现，没有写同步成员变更、提升资格和旧主隔离的具体协议。
 
 **决定：采纳为前置条件，现在不选型。**M1 到 M5 只用本地档，现在选定 Patroni 或托管服务没有意义，版本还会变化。但必须把条件写进文档，防止以后有人只打开"同步复制"开关就宣称满足云端生产档。
 
@@ -164,7 +164,7 @@ R2-05 是"模型输入先固定再准入"，R2-06 是"只准入参数已确定�
 
 ### R2-08 模块接口与装配：部分采纳
 
-**核对结果。**[分层与模块 P1](../architecture/layers.md#2-划分原则) 用"写错会不会破坏不变量"判断是否属于核心，这能识别哪些实现必须受信，却不能决定哪些可以替换：PostgreSQL 和 SQLite 的存储实现写错都会丢失责任，但它们必须可以替换。R6 规定 `core` 只依赖 `contracts`，没有给出存储、时钟等基础设施实现和装配代码的位置。
+**核对结果。**[分层与模块 P1](../../../architecture/layers.md#2-划分原则) 用"写错会不会破坏不变量"判断是否属于核心，这能识别哪些实现必须受信，却不能决定哪些可以替换：PostgreSQL 和 SQLite 的存储实现写错都会丢失责任，但它们必须可以替换。R6 规定 `core` 只依赖 `contracts`，没有给出存储、时钟等基础设施实现和装配代码的位置。
 
 **决定：部分采纳。**
 
@@ -188,11 +188,11 @@ R2-05 是"模型输入先固定再准入"，R2-06 是"只准入参数已确定�
 - 裁决域只创建一个事务上下文，绑定同一用户、同一物理数据库事务和所声明的持久档位。任务、会话、授权、预算和内容控制元数据通过各自的内部接口加入它；远程接口不接受本地事务句柄。
 - R6 修订：`core` 依赖 `contracts` 和本模块声明的内部接口；基础设施实现内部接口；只有装配入口知道具体实现，装配入口不写业务规则。构建检查拒绝领域代码导入数据库驱动、插件导入内部存储接口、平台直接写任务的私有记录。
 
-**落点：**分层与模块 P1、R6、第 11 节（改动已采纳文档，负责人已确认，见 [ADR 0003](../adr/0003-replacement-classes-and-assembly.md)）；核心契约第 1 节的职责划分。
+**落点：**分层与模块 P1、R6、第 11 节（改动已采纳文档，负责人已确认，见 [ADR 0003](../../../adr/0003-replacement-classes-and-assembly.md)）；核心契约第 1 节的职责划分。
 
 ### R2-09 记忆的当前语义状态由内容模块内的记忆记录维护
 
-**核对结果。**[记忆接口](../architecture/ports/memory/README.md)和[默认实现](../architecture/ports/memory/default.md)要求用户纠正"由核心原子维护"，但[内容治理](../architecture/core/content/README.md)明确不判断真假，它的接口只管内容版本、使用和清理。"这条记忆当前采纳哪一版"没有明确的写入方。
+**核对结果。**[记忆接口](../../../architecture/ports/memory/README.md)和[默认实现](../../../architecture/ports/memory/default.md)要求用户纠正"由核心原子维护"，但[内容治理](../../../architecture/core/content/README.md)明确不判断真假，它的接口只管内容版本、使用和清理。"这条记忆当前采纳哪一版"没有明确的写入方。
 
 **决定：采纳。**
 
@@ -235,14 +235,14 @@ R2-05 是"模型输入先固定再准入"，R2-06 是"只准入参数已确定�
 
 | 顺序 | 文档 | 涉及 |
 | --- | --- | --- |
-| 1 ★ | [分层与模块](../architecture/layers.md)：P1、R6、事实归属表、8.1 时序、第 11 节；新增 ADR 0003 | R2-05、R2-08、R2-09 |
-| 2 | [项目目标](../architecture/project-goals.md)：M3、M4、M6 退出标准补充引用（不改目标和不变量） | R2-07、R2-10 |
-| 3 | [核心契约](../architecture/core/contracts/README.md) | R2-01、R2-02、R2-04、R2-08、R2-10 |
-| 4 | [会话](../architecture/core/sessions/README.md)、[任务编排](../architecture/core/tasks/README.md)、[授权](../architecture/core/grants/README.md)、[出口闸门](../architecture/core/egress/README.md) | R2-01、R2-02、R2-03、R2-04、R2-05、R2-06 |
-| 5 | [内容治理](../architecture/core/content/README.md)、[数据与存储](../architecture/topics/data-and-storage.md)、[部署](../architecture/topics/deployment.md) | R2-03、R2-07、R2-09 |
-| 6 | [推理接口](../architecture/ports/reasoner/README.md)、[记忆接口](../architecture/ports/memory/README.md)、[默认记忆](../architecture/ports/memory/default.md)、[交互接口](../architecture/ports/interaction/README.md)、[扩展管理](../architecture/platform/extensions/README.md) | R2-03、R2-04、R2-05、R2-06、R2-09、R2-10 |
+| 1 ★ | [分层与模块](../../../architecture/layers.md)：P1、R6、事实归属表、8.1 时序、第 11 节；新增 ADR 0003 | R2-05、R2-08、R2-09 |
+| 2 | [项目目标](../../../architecture/project-goals.md)：M3、M4、M6 退出标准补充引用（不改目标和不变量） | R2-07、R2-10 |
+| 3 | [核心契约](../../../architecture/core/contracts/README.md) | R2-01、R2-02、R2-04、R2-08、R2-10 |
+| 4 | [会话](../../../architecture/core/sessions/README.md)、[任务编排](../../../architecture/core/tasks/README.md)、[授权](../../../architecture/core/grants/README.md)、[出口闸门](../../../architecture/core/egress/README.md) | R2-01、R2-02、R2-03、R2-04、R2-05、R2-06 |
+| 5 | [内容治理](../../../architecture/core/content/README.md)、[数据与存储](../../../architecture/topics/data-and-storage.md)、[部署](../../../architecture/topics/deployment.md) | R2-03、R2-07、R2-09 |
+| 6 | [推理接口](../../../architecture/ports/reasoner/README.md)、[记忆接口](../../../architecture/ports/memory/README.md)、[默认记忆](../../../architecture/ports/memory/default.md)、[交互接口](../../../architecture/ports/interaction/README.md)、[扩展管理](../../../architecture/platform/extensions/README.md) | R2-03、R2-04、R2-05、R2-06、R2-09、R2-10 |
 
-上表改动已于 2026-10-04 全部完成；另按 R2-05 修改了[出口闸门](../architecture/core/egress/README.md)的模型出口说明。现在以各模块文档为准，本文只保留处理理由。
+上表改动已于 2026-10-04 全部完成；另按 R2-05 修改了[出口闸门](../../../architecture/core/egress/README.md)的模型出口说明。现在以各模块文档为准，本文只保留处理理由。
 
 ## 5 未验证事项
 

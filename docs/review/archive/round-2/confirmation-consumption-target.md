@@ -5,7 +5,7 @@
 
 ---
 
-定位：[授权 §4.1](../architecture/core/grants/README.md)第 234 行明确区分：授权确认在授权成立时消费，动作确认在准入时消费，同一确认不得两处消费。与此同时，[会话 §2.2](../architecture/core/sessions/README.md)第 79 行只有 `consumed_by_admission` 和动作集合，并规定消费只能发生在准入事务；§2.4 和 §4.2 延续这一限制。[交互接口 §2.2](../architecture/ports/interaction/README.md)第 70 行同样把所有消费限定为准入事务。
+定位：[授权 §4.1](../../../architecture/core/grants/README.md)第 234 行明确区分：授权确认在授权成立时消费，动作确认在准入时消费，同一确认不得两处消费。与此同时，[会话 §2.2](../../../architecture/core/sessions/README.md)第 79 行只有 `consumed_by_admission` 和动作集合，并规定消费只能发生在准入事务；§2.4 和 §4.2 延续这一限制。[交互接口 §2.2](../../../architecture/ports/interaction/README.md)第 70 行同样把所有消费限定为准入事务。
 
 用户在设置页批准“未来一周允许读取这个目录”。这份根授权可以先于任何任务动作成立。照会话字段实现，没有准入记录可以填写：伪造一条动作准入会混淆责任；不记消费则留下可以再次签发授权的已批准确认；让授权模块自己写另一份消费又违反唯一写入责任。问题在确认事实的表达，不在用户是否已经授权。
 

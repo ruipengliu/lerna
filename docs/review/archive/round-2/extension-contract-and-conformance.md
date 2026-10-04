@@ -4,7 +4,7 @@
 
 ---
 
-已有规则必须保留。[分层 §5—§7](../architecture/layers.md)限定四类扩展接口和依赖方向；[扩展管理 §4.1、§4.3](../architecture/platform/extensions/README.md)规定安装、隔离、就绪、核心接纳、灰度与回滚；[核心契约 §7.5、§7.6](../architecture/core/contracts/README.md)规定单一权威结构定义、必需语义、编号保留和历史 Schema；[持久工作 §2.1、§2.2](../architecture/core/durable/README.md)已经要求保留原指纹比较规则与旧工作解释能力。因此不能把缺口说成“没有版本”“没有恢复”或“没有兼容测试要求”。
+已有规则必须保留。[分层 §5—§7](../../../architecture/layers.md)限定四类扩展接口和依赖方向；[扩展管理 §4.1、§4.3](../../../architecture/platform/extensions/README.md)规定安装、隔离、就绪、核心接纳、灰度与回滚；[核心契约 §7.5、§7.6](../../../architecture/core/contracts/README.md)规定单一权威结构定义、必需语义、编号保留和历史 Schema；[持久工作 §2.1、§2.2](../../../architecture/core/durable/README.md)已经要求保留原指纹比较规则与旧工作解释能力。因此不能把缺口说成“没有版本”“没有恢复”或“没有兼容测试要求”。
 
 尚未固定的是把这些规则连起来的可执行资料：扩展类别与准入清单、方法与特性的注册结构、能力依赖、协商结果怎样绑定到具体请求、兼容矩阵，以及哪些测试结果允许对外声明支持。现行架构中的 Protobuf 仍是待绑定验证的首选，混合版本窗口仍是待验证项；研究目录的 Schema 与原型不能直接充当当前契约的发布产物。
 
