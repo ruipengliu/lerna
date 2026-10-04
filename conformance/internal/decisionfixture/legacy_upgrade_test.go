@@ -998,7 +998,7 @@ func cleanupUpgradeScopes(registry string) (result error) {
 	names := map[string]bool{}
 	for _, line := range strings.Split(strings.TrimSpace(string(body)), "\n") {
 		fields := strings.Fields(line)
-		if len(fields) != 2 || fields[0] != "postgres" || !testIdentifier.MatchString(fields[1]) || len(names) >= 10 {
+		if len(fields) != 2 || fields[0] != "postgres" || !testIdentifier.MatchString(fields[1]) || len(names) >= 12 {
 			return errors.New("invalid exact old CREATE registry")
 		}
 		names[fields[1]] = true
