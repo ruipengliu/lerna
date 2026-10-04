@@ -1,6 +1,7 @@
 package decision_engine
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"errors"
@@ -17,7 +18,7 @@ import (
 // the current Task revisions and original durable-start fee are preserved.
 func (s *Service) calculateProposalV3(ctx context.Context, work Work, snapshot Snapshot, processed []v.ContentRef, first []byte, inputBytes int) completion {
 	artifactOutput := 0
-	if (snapshot.Rule != "delta_only" && snapshot.Rule != "actions_four" && snapshot.Rule != "input_request" && snapshot.Rule != "delta_candidate_result" && snapshot.Rule != "cannot_continue") || len(snapshot.MaterialRefs) < 2 {
+	if (snapshot.Rule != "delta_only" && snapshot.Rule != "actions_four" && snapshot.Rule != "input_request" && snapshot.Rule != "delta_candidate_result" && snapshot.Rule != "cannot_continue" && snapshot.Rule != "invalid_actions_depends_on") || len(snapshot.MaterialRefs) < 2 {
 		return failedCompletion("proposal_invalid", inputBytes, artifactOutput, 1)
 	}
 	replacement := snapshot.RequirementRefs[0]
@@ -28,7 +29,7 @@ func (s *Service) calculateProposalV3(ctx context.Context, work Work, snapshot S
 		RequirementDelta:    []v.RequirementDelta{{LocalKey: "condition-replacement", StatementRef: snapshot.MaterialRefs[0], RuleRef: snapshot.MaterialRefs[1], SourceRefs: slices.Clone(processed), Kind: "output", Required: true, ReplacesRef: &replacement}},
 		Advance:             v.NewProposalAdvanceNone(v.ProposalAdvanceNone{}),
 	}
-	if snapshot.Rule == "actions_four" {
+	if snapshot.Rule == "actions_four" || snapshot.Rule == "invalid_actions_depends_on" {
 		if len(snapshot.CapabilityBindings) != 4 {
 			return failedCompletion("proposal_invalid", inputBytes, artifactOutput, 1)
 		}
@@ -71,6 +72,11 @@ func (s *Service) calculateProposalV3(ctx context.Context, work Work, snapshot S
 	raw, err := json.Marshal(proposal)
 	if err != nil {
 		return failedCompletion("proposal_invalid", inputBytes, artifactOutput, 1)
+	}
+	if snapshot.Rule == "invalid_actions_depends_on" {
+		// The immutable case deliberately emits a dependent action. This raw
+		// field goes through the caller's closed decoder, never a canned failure.
+		raw = bytes.Replace(raw, []byte(`"local_key":"action-2"`), []byte(`"local_key":"action-2","depends_on":["action-1"]`), 1)
 	}
 	decoded, err := v.Decode[v.Proposal](raw)
 	if err != nil {

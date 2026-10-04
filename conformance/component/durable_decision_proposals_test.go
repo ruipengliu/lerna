@@ -6,6 +6,7 @@ import (
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
+	"reflect"
 	"strconv"
 	"testing"
 	"time"
@@ -49,7 +50,7 @@ func proposalScenario(t *testing.T, ctx context.Context, world *fixture.World, v
 	snapshot.MaterialRefs = append(snapshot.MaterialRefs, ruleRef)
 	materials := []fixture.Material{{Ref: scene.MaterialRef, Bytes: material}, {Ref: ruleRef, Bytes: ruleBytes}}
 	purposes := []string{"decide", "get", "command.get", "start", "material", "rule.input", "fixture.lock", "publish", "proposal.publish", "artifact.publish", "rule.condition"}
-	if rule == "actions_four" {
+	if rule == "actions_four" || rule == "invalid_actions_depends_on" {
 		for i := 1; i <= 4; i++ {
 			id := v.ID("slot-" + strconv.Itoa(i))
 			body := []byte(`{"target":"` + string(id) + `","operation":"read"}`)
@@ -410,5 +411,61 @@ func TestDurableProposalCannotContinueCompletesWithoutTaskVerdict(t *testing.T) 
 	proposal, err := v.Decode[v.Proposal](body)
 	if err != nil || proposal.GoalRevision != "1" || proposal.ControlRevision != "1" || len(proposal.ProcessedSourceRefs) != 3 {
 		t.Fatal("cannot_continue adopted Task authority or omitted its complete sources", err)
+	}
+}
+
+func TestDurableProposalFixedDependsOnOutputFailsThroughPublicCodec(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+	defer cancel()
+	world := fixture.NewWorld(t, ctx)
+	scene, _ := proposalScenario(t, ctx, world, "fixture-rule/3", "invalid_actions_depends_on")
+	service := proposalService(t, world, scene)
+	receipt := acceptAccounting(t, ctx, service, scene)
+	if step, err := service.Step(ctx); err != nil || step.Processed != 1 {
+		t.Fatal("fixed erroneous output did not finish its original job", err)
+	}
+	world.Reopen(ctx)
+	service = proposalService(t, world, scene)
+	view, err := service.Get(ctx, scene.GetJSON, &scene.Subject)
+	if err != nil {
+		t.Fatal(err)
+	}
+	found, ok := view.AsFound()
+	if !ok {
+		t.Fatal("fixed erroneous Decision unavailable after reopen")
+	}
+	failed, ok := found.Decision.AsFailed()
+	if !ok || failed.Failure != "proposal_invalid" {
+		t.Fatal("depends_on entered a consumable completed Proposal")
+	}
+	outputBytes, err := strconv.ParseInt(string(failed.Usage.OutputBytes), 10, 64)
+	if err != nil || outputBytes <= 0 {
+		t.Fatal("fixed erroneous output was never generated for the public decoder", err)
+	}
+	if failed.Usage.RuleStarts != "1" || failed.Usage.RuleSteps != "1" || failed.Usage.Cost.IntegerValue != "1" || !failed.Usage.MeasurementsComplete || failed.Input.ComponentRef != scene.Request.Payload.ComponentRef {
+		t.Fatal("failure erased its fixed binding, actual evaluation or original fee")
+	}
+	command, err := service.GetCommand(ctx, scene.CommandGetJSON, &scene.Subject)
+	if err != nil {
+		t.Fatal(err)
+	}
+	fixed, ok := command.AsFound()
+	if !ok || !reflect.DeepEqual(fixed.Receipt, receipt) {
+		t.Fatal("erroneous proposal replaced the accepted receipt")
+	}
+	raw, err := v.Encode(scene.Request)
+	if err != nil {
+		t.Fatal(err)
+	}
+	replay, err := service.Decide(ctx, raw, &scene.Subject)
+	if err != nil {
+		t.Fatal(err)
+	}
+	received, ok := replay.AsReceived()
+	if !ok || !reflect.DeepEqual(received.Receipt, receipt) {
+		t.Fatal("replay refreshed admission for fixed erroneous output")
+	}
+	if step, err := service.Step(ctx); err != nil || step.Processed != 0 {
+		t.Fatal("terminal erroneous proposal retained an unbounded repair job", err)
 	}
 }
