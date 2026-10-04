@@ -4,7 +4,7 @@
 
 ---
 
-定位：[核心契约第 3.1 节](../architecture/core/contracts/README.md#31-命令回执查询通知与错误)第 187 行把幂等范围定义为 `(user_id, issuer_id, target_domain_id, command_id)`；[持久工作第 2.1 节](../architecture/core/durable/README.md#21-命令回执)明确把调用者命名空间映射到 issuer_id；[网关与 SDK 第 2 节](../architecture/platform/gateway/README.md#2-对象与状态)第 54 行却使用 `用户 + 接纳责任域 + command_id`。该文的查询接口也没有明确携带原 issuer_id。
+定位：[核心契约第 3.1 节](../../../architecture/core/contracts/README.md#31-命令回执查询通知与错误)第 187 行把幂等范围定义为 `(user_id, issuer_id, target_domain_id, command_id)`；[持久工作第 2.1 节](../../../architecture/core/durable/README.md#21-命令回执)明确把调用者命名空间映射到 issuer_id；[网关与 SDK 第 2 节](../../../architecture/platform/gateway/README.md#2-对象与状态)第 54 行却使用 `用户 + 接纳责任域 + command_id`。该文的查询接口也没有明确携带原 issuer_id。
 
 ---
 

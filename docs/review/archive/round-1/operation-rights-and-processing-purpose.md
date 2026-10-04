@@ -4,7 +4,7 @@
 
 ---
 
-事实依据是两组定义没有对齐。[核心契约](../architecture/core/contracts/README.md)第 95 行把 Grant 的 `purposes[]` 分为读取、保存、同步、行动；[授权模块](../architecture/core/grants/README.md)第 68–73 行把许可子句的用途限定为同样的四值。与之相对，[运行记录](../architecture/core/trace/README.md)第 222 行明确要求诊断授权不能充当评测或生成改进授权；[评测与进化](../architecture/platform/eval/README.md)第 114 行及第 253 行要求读取、保存、生成、评分、同步分别检查。
+事实依据是两组定义没有对齐。[核心契约](../../../architecture/core/contracts/README.md)第 95 行把 Grant 的 `purposes[]` 分为读取、保存、同步、行动；[授权模块](../../../architecture/core/grants/README.md)第 68–73 行把许可子句的用途限定为同样的四值。与之相对，[运行记录](../../../architecture/core/trace/README.md)第 222 行明确要求诊断授权不能充当评测或生成改进授权；[评测与进化](../../../architecture/platform/eval/README.md)第 114 行及第 253 行要求读取、保存、生成、评分、同步分别检查。
 
 前一组回答“能对数据执行什么操作”，后一组还要回答“为什么处理这份数据”。动作枚举、任务范围和主体可以实现部分限制，不能据此认定系统一定越权；但文档没有定义如何把后一组目的映射到前一组字段，也没有规定该限制怎样进入派生继承和委派包含判断。不同实现可能分别使用任务名称、自定义 action 或自然语言用途，替换后会失去相同的授权语义。这是设计层的表达缺口，尚无实现可供漏洞验证。
 
@@ -30,6 +30,6 @@
 
 ---
 
-修改落点是[核心契约](../architecture/core/contracts/README.md)的 Grant 与凭据、[授权](../architecture/core/grants/README.md)的许可子句及包含规则、[内容治理](../architecture/core/content/README.md)的用途上限和派生交集，以及[运行记录](../architecture/core/trace/README.md)的导出接口。不要只修复评测平台，否则同样的内容经记忆、摘要或普通文件复制后仍会丢失限制。
+修改落点是[核心契约](../../../architecture/core/contracts/README.md)的 Grant 与凭据、[授权](../../../architecture/core/grants/README.md)的许可子句及包含规则、[内容治理](../../../architecture/core/content/README.md)的用途上限和派生交集，以及[运行记录](../../../architecture/core/trace/README.md)的导出接口。不要只修复评测平台，否则同样的内容经记忆、摘要或普通文件复制后仍会丢失限制。
 
 验收构造同一资源、同一主体、同一任务、同一目的地的两次读取，只切换处理目的：诊断获准时能成功，评测与生成改进必须失败。再验证诊断摘要、缓存命中、委派、混合来源、跨端同步都保持限制；目的未知或版本不支持时拒绝；插件篡改目的不能通过可信绑定。用户后来明确追加评测许可时，只对相应来源和目的重新授权，不扩大其他旧许可，也不复活已删除内容。这样可以检验目的约束本身，避免测试只是碰巧被不同的任务标识挡住。

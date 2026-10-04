@@ -2,7 +2,7 @@
 
 | 日期 | 修订说明 |
 | --- | --- |
-| 2026-10-04 | 初版，来自[架构评审处理记录](../review/README.md) RV9。 |
+| 2026-10-04 | 初版，来自[架构评审处理记录](../review/archive/round-1/README.md) RV9。 |
 
 - 状态：已采纳
 - 影响：[项目目标 G8 与术语](../architecture/project-goals.md#3-核心术语)、[核心契约](../architecture/core/contracts/README.md)、[授权](../architecture/core/grants/README.md)、[内容治理](../architecture/core/content/README.md)、[运行记录](../architecture/core/trace/README.md)

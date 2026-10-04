@@ -2,7 +2,7 @@
 
 | 日期 | 修订说明 |
 | --- | --- |
-| 2026-10-04 | 初版，来自[架构评审处理记录](../review/README.md) RV4、RV5。 |
+| 2026-10-04 | 初版，来自[架构评审处理记录](../review/archive/round-1/README.md) RV4、RV5。 |
 
 - 状态：已采纳
 - 影响：[项目目标 G3](../architecture/project-goals.md#4-不变量)、[数据与存储 5.4](../architecture/topics/data-and-storage.md#54-持久档位)、[持久工作](../architecture/core/durable/README.md)、[部署](../architecture/topics/deployment.md)、[文件适配器](../architecture/adapters/file.md)

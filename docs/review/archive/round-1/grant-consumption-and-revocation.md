@@ -4,7 +4,7 @@
 
 ---
 
-定位：[授权第 2.3 节](../architecture/core/grants/README.md#23-授权使用记录)第 133 行允许已经绑定的动作继续检查撤销和期限；[第 2.5 节](../architecture/core/grants/README.md#25-状态)第 164–167 行却只有 ACTIVE→CONSUMED、ACTIVE→REVOKED、ACTIVE/REVOKED→EXPIRED。[核心契约第 2.5 节](../architecture/core/contracts/README.md#25-状态模型)也把三者写成 ACTIVE 的互斥后继。该授权仍可能对应未发送的动作，却无法在给出的状态转换中表达“次数已经用尽，而且现在已撤销”。
+定位：[授权第 2.3 节](../../../architecture/core/grants/README.md#23-授权使用记录)第 133 行允许已经绑定的动作继续检查撤销和期限；[第 2.5 节](../../../architecture/core/grants/README.md#25-状态)第 164–167 行却只有 ACTIVE→CONSUMED、ACTIVE→REVOKED、ACTIVE/REVOKED→EXPIRED。[核心契约第 2.5 节](../../../architecture/core/contracts/README.md#25-状态模型)也把三者写成 ACTIVE 的互斥后继。该授权仍可能对应未发送的动作，却无法在给出的状态转换中表达“次数已经用尽，而且现在已撤销”。
 
 ---
 

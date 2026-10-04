@@ -5,7 +5,7 @@
 
 ---
 
-具体定位：[持久工作 6](../architecture/core/durable/README.md#6-不变量落实)在“持久性的范围”中指定端侧 SQLite WAL 和 `synchronous=FULL`；[数据与存储 5.4](../architecture/topics/data-and-storage.md#54-持久级别)把本地同步提交的覆盖范围写为进程崩溃、重启和掉电；[文件适配器 4.1](../architecture/adapters/file.md#41-普通文件的发布)以同步临时文件、替换、同步目录实现持久发布。[文件适配器 8](../architecture/adapters/file.md#8-待定事项)已经要求验证文件系统和设备实际履行同步承诺，因此不能说文档忽略了存储故障；缺口是数据库和文件两条路径还没有共同的平台准入表，也没有明确指出 macOS 下的两个 `FULL` 含义不同。
+具体定位：[持久工作 6](../../../architecture/core/durable/README.md#6-不变量落实)在“持久性的范围”中指定端侧 SQLite WAL 和 `synchronous=FULL`；[数据与存储 5.4](../../../architecture/topics/data-and-storage.md#54-持久级别)把本地同步提交的覆盖范围写为进程崩溃、重启和掉电；[文件适配器 4.1](../../../architecture/adapters/file.md#41-普通文件的发布)以同步临时文件、替换、同步目录实现持久发布。[文件适配器 8](../../../architecture/adapters/file.md#8-待定事项)已经要求验证文件系统和设备实际履行同步承诺，因此不能说文档忽略了存储故障；缺口是数据库和文件两条路径还没有共同的平台准入表，也没有明确指出 macOS 下的两个 `FULL` 含义不同。
 
 SQLite 官方区分了两个控制量：`PRAGMA synchronous` 决定何时调用 VFS 的 `xSync`；`SQLITE_SYNC_NORMAL` 与 `SQLITE_SYNC_FULL` 决定同步方式，在默认实现中后者才涉及 macOS 的 full sync。`PRAGMA fullfsync` 是另一个设置，默认关闭。参见 [SQLite 同步标志](https://sqlite.org/c3ref/c_sync_dataonly.html)、[fullfsync 配置](https://sqlite.org/pragma.html#pragma_fullfsync)。所以“已经设置 synchronous=FULL”不是“已经启用 F_FULLFSYNC”的证据。
 

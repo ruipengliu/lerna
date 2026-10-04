@@ -4,7 +4,7 @@
 
 ---
 
-定位：[持久工作第 2.1 节](../architecture/core/durable/README.md#21-命令回执)第 57 行只允许“不存在→已接受/已拒绝”，原决定永不改变；第 4.1 节要求业务决定、回执与业务修改同事务。[网关与 SDK 第 4.1 节](../architecture/platform/gateway/README.md#41-用户命令的持久交接)第 92–97 行允许 P2 先记录命令和待办、返回接纳回执，P4 随后才做业务决定。[核心契约第 3.1 节](../architecture/core/contracts/README.md#31-命令回执查询通知与错误)的回执只定义 ACCEPTED/REJECTED，没有区分这两个阶段的类型。
+定位：[持久工作第 2.1 节](../../../architecture/core/durable/README.md#21-命令回执)第 57 行只允许“不存在→已接受/已拒绝”，原决定永不改变；第 4.1 节要求业务决定、回执与业务修改同事务。[网关与 SDK 第 4.1 节](../../../architecture/platform/gateway/README.md#41-用户命令的持久交接)第 92–97 行允许 P2 先记录命令和待办、返回接纳回执，P4 随后才做业务决定。[核心契约第 3.1 节](../../../architecture/core/contracts/README.md#31-命令回执查询通知与错误)的回执只定义 ACCEPTED/REJECTED，没有区分这两个阶段的类型。
 
 ---
 
