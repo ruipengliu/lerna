@@ -5,6 +5,7 @@ import (
 	"errors"
 	"io"
 	"os"
+	"reflect"
 	"testing"
 	"time"
 
@@ -276,5 +277,67 @@ func killTargetChild(t *testing.T, f *fixture, child *process.Child) {
 	confirmed, err := child.Stop(ctx)
 	if !confirmed || err != nil {
 		t.Fatal("killed target physical closure unconfirmed:", err)
+	}
+}
+
+func TestTargetSIGKILLAfterCommitRetainsOriginalFactAndReplayCursor(t *testing.T) {
+	for _, kill := range []bool{false, true} {
+		name := "normal_release"
+		if kill {
+			name = "SIGKILL_response_unknown"
+		}
+		t.Run(name, func(t *testing.T) {
+			f := newFixture(t)
+			writer := f.open()
+			input := target.Request{Key: "original-process-key", Resource: "fake-process-document", Data: []byte{0, 255, 10}}
+			if _, err := writer.InstallPlan(f.ctx, target.Plan{ID: "process-after", Seed: 73, Deadline: f.now.Add(3 * time.Minute), Steps: []target.Step{{ID: "write-1", Kind: target.WriteNormally, Input: input}}}); err != nil {
+				t.Fatal(err)
+			}
+			if err := writer.Close(); err != nil {
+				t.Fatal(err)
+			}
+			f.writer = nil
+			child := startTargetChild(t, f, "process-after", "write-1", "committed_before_reply", 1)
+			var gate targetProcessFrame
+			if err := child.Event(f.ctx, &gate); err != nil {
+				t.Fatal("actual target post-COMMIT checkpoint missing:", err)
+			}
+			if gate.Stage != "committed_before_reply" || gate.Scenario != "process-after" || gate.Event != "write-1" || gate.Generation != 1 {
+				t.Fatal("wrong target post-COMMIT identity")
+			}
+			if kill {
+				killTargetChild(t, f, child)
+			} else {
+				if err := child.Send(f.ctx, targetProcessFrame{Scenario: "process-after", Event: "write-1", Generation: 1, Stage: "release"}); err != nil {
+					t.Fatal(err)
+				}
+				finishTargetChild(t, f, child, "process-after", "write-1", 1)
+			}
+			writer = f.open()
+			original := assertProcessTargetFact(t, f, writer, input, "process-after", 1)
+			observer, err := f.observer()
+			if err != nil {
+				t.Fatal(err)
+			}
+			persisted, err := observer.Plan(f.ctx, "process-after")
+			if err != nil || len(persisted.Events) != 1 {
+				t.Fatal("saved original event absent", err)
+			}
+			if err = writer.Close(); err != nil {
+				t.Fatal(err)
+			}
+			f.writer = nil
+			// Fresh coordinator opens the same scenario, querying its actual cursor.
+			replay := startTargetChild(t, f, persisted.Plan.ID, persisted.Events[0].ID, "", 2)
+			fixed := finishTargetChild(t, f, replay, "process-after", "write-1", 2)
+			if fixed != persisted.Events[0] {
+				t.Fatal("completed original event changed after coordinator restart")
+			}
+			writer = f.open()
+			after := assertProcessTargetFact(t, f, writer, input, "process-after", 1)
+			if !reflect.DeepEqual(original, after) {
+				t.Fatal("completed replay changed original value/window/receives/database identity")
+			}
+		})
 	}
 }
