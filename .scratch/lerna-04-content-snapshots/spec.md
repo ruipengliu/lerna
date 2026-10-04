@@ -2,7 +2,7 @@
 
 Status: ready-for-agent
 Phase: B
-Implementation: not-started
+Implementation: in-progress
 Depends on: [01](../lerna-01-command-contracts/spec.md)、[02](../lerna-02-durable-work/spec.md)、[03](../lerna-03-deterministic-harness/spec.md)
 
 ## Problem Statement
@@ -62,3 +62,6 @@ Depends on: [01](../lerna-01-command-contracts/spec.md)、[02](../lerna-02-durab
 依赖项表示实现先决条件；`ready-for-agent` 表示规格已明确，不表示依赖已完成或能力已开放。全部验收通过并附准确版本、环境、命令、结果和限制后，才可将本切片记为完成。共同执行与证据规则见[切片索引](../lerna-implementation/README.md)。
 
 依据：[capabilities](../../docs/architecture/capabilities.md#上下文构造与按需读取)、[data-model](../../docs/architecture/data-model.md#事务与数据库装配)、[governance](../../docs/architecture/governance.md#内容来源与数据生命周期)、[contracts](../../docs/architecture/contracts.md#能力模块方法)、[ADR-0007](../../docs/adr/0007-versioned-content-memory-snapshots.md)、[ADR-0006](../../docs/adr/0006-authorization-budget-at-action-boundaries.md)。
+
+
+2026-10-04，前置01–03完整退出，03准确受CI验证47ebce1/run37194868564 success、退出5fbb1a0。root实际核对1aa条件API全部产品/合同/工具/测试对象与最终exit相同，采用[决定](decisions.md)、[具体接法](final-api-handoff.md)、[六票及依赖](ticket-review.md)。1.2仅新增Content合同；完整canonical必要上下文Content作为第一材料接现有1.1规则，完整来源/真实读回和输出预留同时验证。六票8+7+7+6+7+6共41AC，01已claimed，其他按真实依赖启动；当前仅计划/发布，无04实现或验收证据。

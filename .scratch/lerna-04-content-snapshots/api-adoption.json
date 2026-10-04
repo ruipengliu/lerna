@@ -1,0 +1,22 @@
+{
+  "conditional_source": "1aa21fcf47352c4460877bb51fc04dc302cdbae9",
+  "actual_whole03_exit": "5fbb1a020658093266b4346370571370435f9630",
+  "all_actual_product_tool_schema_test_objects_equal": true,
+  "changed_metadata_paths": [
+    ".scratch/lerna-03-deterministic-harness/architecture-review.md",
+    ".scratch/lerna-03-deterministic-harness/ci-verification.md",
+    ".scratch/lerna-03-deterministic-harness/code-review.md",
+    ".scratch/lerna-03-deterministic-harness/exit-evidence.md",
+    ".scratch/lerna-03-deterministic-harness/spec.md",
+    ".scratch/lerna-03-deterministic-harness/whole-owned-cleanup.json",
+    ".scratch/lerna-03-deterministic-harness/whole-standards-initial-review.md",
+    ".scratch/lerna-03-deterministic-harness/worktree-cleanup.json",
+    ".scratch/lerna-implementation/README.md",
+    ".scratch/lerna-implementation/acceptance-matrix.md",
+    ".scratch/lerna-implementation/progress.md",
+    "CONTEXT.md"
+  ],
+  "verified_ci_source": "47ebce1237a34e7b535423c31b7a7d59e39e0caf",
+  "ci_run_success": 37194868564,
+  "formal_adoption": "All actual 04 API/contract/worker/Source/Publisher objects unchanged from Astra readonly conditional1aa; adopt concrete Content-backed mandatory-context mapping after true03 exit."
+}
