@@ -24,3 +24,34 @@ not described as a business red.
 
 The root's formal contract shape is tracked at `contract-shape-decision.md` on
 integration `64c6872`. It is the adopted requirement source, not test evidence.
+
+Current save gate: real public accepted → durable fixture Save=false → Step
+initially failed the independent OS assertion because bytes were written. After
+adding a pre-I/O current gate and retaining the post-I/O gate, this test and the
+normal full tracer both pass. Direct-source read/process/save, current retention,
+publish deadline and admitted retry ceiling are now checked at the actual stage.
+Database time is re-sampled after policy row-lock waits. No cleanup, holder, or
+full propagated-source claim is made for later tickets.
+
+Exact decoded body classification: Go and TypeScript each produced a runnable
+red (`schema_invalid` for canonical 262145 decoded bytes). Both now return
+`input_over_limit`, with normal alpha as control. TS initially had two missing
+exports; those were link failures and are not described as business reds.
+
+Local lifetime A/B scan: the partial Open mechanical test first failed because
+startup/close causes and an unknown holder were discarded. The local module now
+retains nonnil partial holders and every child FD close result; first close unknown
+is sticky. Tagged mechanical tests also cover child-read Close unknown with actual
+real Close observed separately, an ordinary missing-object error that still closes
+normally, and a held invocation whose gate/drain waits time out but whose native
+closure is not claimed until actual return. These are injected diagnostics/sync
+points, not actual native Close failures. The world retains setup directory/parent
+close causes and exact identity before destructive cleanup. All observed normal
+runs closed and cleaned exact registered roots.
+
+101 independent shared 1.2 wire fixtures passed real Go↔TS canonical roundtrips
+in forward order. The first pass uncovered AJV's default uniqueItems comparator
+calling valueOf on strict parser null-prototype objects; that failed the legal
+64-source normal case. Version-local canonical JSON equality now supplies exact
+uniqueItems semantics for the finite no-number contract subset. Old schemas and
+fixtures remain unchanged. Reverse order and broad locked checks are pending.

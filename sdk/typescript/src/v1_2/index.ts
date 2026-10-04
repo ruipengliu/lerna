@@ -1,13 +1,6 @@
 export * from './generated/values.ts';
-export {
-  version,
-  validate,
-  decode,
-  encode,
-  parseJSON,
-  maxBodyBytes,
-  maxDepth,
-} from './codec.ts';
+export { version, validate, decode, encode } from './codec.ts';
+export { parseJSON, maxBodyBytes, maxDepth } from './json.ts';
 export { ContractError, parseCommand, decodeCommand } from './commands.ts';
 export { commandDigest, commandDigestAlgorithm } from './digest.ts';
 export {

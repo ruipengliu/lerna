@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"sync"
 	"syscall"
 	"testing"
 	"time"
@@ -27,6 +28,8 @@ type World struct {
 	Objects        *local.Store
 	owns           bool
 	closing        bool
+	setupClosers   []func() error
+	setupCloseErr  error
 }
 
 func New(t *testing.T, ctx context.Context) *World {
@@ -74,12 +77,13 @@ func New(t *testing.T, ctx context.Context) *World {
 	if err != nil {
 		t.Fatal(err)
 	}
+	closeDirectory := w.ownSetupFile(directory)
 	parent, err := os.Open(filepath.Dir(w.Directory))
 	if err != nil {
-		_ = directory.Close()
-		t.Fatal(err)
+		t.Fatal(errors.Join(err, closeDirectory()))
 	}
-	if err = errors.Join(directory.Sync(), parent.Sync(), directory.Close(), parent.Close()); err != nil {
+	closeParent := w.ownSetupFile(parent)
+	if err = errors.Join(directory.Sync(), parent.Sync(), closeDirectory(), closeParent()); err != nil {
 		t.Fatal(err)
 	}
 	if err = register(fmt.Sprintf("objects %s %d %d", w.Directory, w.device, w.inode)); err != nil {
@@ -156,6 +160,12 @@ func (w *World) Cleanup() error {
 		}
 		w.Objects = nil
 	}
+	for _, closeFile := range w.setupClosers {
+		_ = closeFile()
+	}
+	if w.setupCloseErr != nil {
+		return w.setupCloseErr
+	}
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	if w.owns {
@@ -185,4 +195,20 @@ func (w *World) Cleanup() error {
 		w.Directory = ""
 	}
 	return nil
+}
+
+func (w *World) ownSetupFile(file *os.File) func() error {
+	var once sync.Once
+	var firstErr error
+	closeFile := func() error {
+		once.Do(func() {
+			firstErr = file.Close()
+			if firstErr != nil {
+				w.setupCloseErr = errors.Join(w.setupCloseErr, firstErr)
+			}
+		})
+		return firstErr
+	}
+	w.setupClosers = append(w.setupClosers, closeFile)
+	return closeFile
 }

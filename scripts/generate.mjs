@@ -420,7 +420,10 @@ ${
     ? `if name == "DecideInput" { value, err := contract.DecodeDecide(data); if err != nil { return nil, err }; return contract.Encode(value) }
  if name == "GetInput" { value, err := contract.DecodeGet(data); if err != nil { return nil, err }; return contract.Encode(value) }
  if name == "CancelInput" { value, err := contract.DecodeCancel(data); if err != nil { return nil, err }; return contract.Encode(value) }\n`
-    : ''
+    : configuration.version === '1.2.0'
+      ? `if name == "PutInput" { value, err := contract.DecodePut(data); if err != nil { return nil, err }; return contract.Encode(value) }
+ if name == "GetInput" { value, err := contract.DecodeGet(data); if err != nil { return nil, err }; return contract.Encode(value) }\n`
+      : ''
 } switch name {
 ${Object.keys(schema.$defs)
   .map(

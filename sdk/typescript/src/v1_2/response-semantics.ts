@@ -40,3 +40,6 @@ export function responseSemantics(name: string, value: unknown): boolean {
   }
   return true;
 }
+export function sameCommandRef(left: unknown, right: unknown): boolean {
+  return equal(left, right);
+}

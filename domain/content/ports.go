@@ -37,27 +37,29 @@ type Limits struct {
 }
 
 type Record struct {
-	Ref                  v.ContentRef     `json:"content_ref"`
-	Sources              []v.ContentRef   `json:"sources"`
-	Purpose              string           `json:"purpose"`
-	Subject              v.SubjectBinding `json:"subject"`
-	TupleDigest          string           `json:"tuple_digest"`
-	ObjectID             string           `json:"object_id"`
-	ObjectKey            string           `json:"object_key"`
-	RequestedRetainUntil v.Time           `json:"requested_retain_until"`
-	EffectiveRetainUntil v.Time           `json:"effective_retain_until"`
-	CurrentRetainUntil   v.Time           `json:"current_retain_until"`
-	AdmittedAt           v.Time           `json:"admitted_at"`
-	PublishDeadline      v.Time           `json:"publish_deadline"`
-	Publication          string           `json:"publication"`
-	Failure              v.ErrorCode      `json:"failure,omitempty"`
-	Revision             int64            `json:"revision"`
-	Attempts             int              `json:"attempts"`
-	AttemptKey           string           `json:"attempt_key,omitempty"`
-	StagingHolder        bool             `json:"staging_holder"`
-	ObjectHolder         bool             `json:"object_holder"`
-	CleanupPending       bool             `json:"cleanup_pending"`
-	Bytes                []byte           `json:"-"`
+	Ref                    v.ContentRef     `json:"content_ref"`
+	Sources                []v.ContentRef   `json:"sources"`
+	Purpose                string           `json:"purpose"`
+	Subject                v.SubjectBinding `json:"subject"`
+	TupleDigest            string           `json:"tuple_digest"`
+	ObjectID               string           `json:"object_id"`
+	ObjectKey              string           `json:"object_key"`
+	RequestedRetainUntil   v.Time           `json:"requested_retain_until"`
+	EffectiveRetainUntil   v.Time           `json:"effective_retain_until"`
+	CurrentRetainUntil     v.Time           `json:"current_retain_until"`
+	AdmittedAt             v.Time           `json:"admitted_at"`
+	PublishDeadline        v.Time           `json:"publish_deadline"`
+	IODeadline             v.Time           `json:"io_deadline,omitempty"`
+	Publication            string           `json:"publication"`
+	Failure                v.ErrorCode      `json:"failure,omitempty"`
+	Revision               int64            `json:"revision"`
+	Attempts               int              `json:"attempts"`
+	MaxPublicationAttempts int              `json:"max_publication_attempts"`
+	AttemptKey             string           `json:"attempt_key,omitempty"`
+	StagingHolder          bool             `json:"staging_holder"`
+	ObjectHolder           bool             `json:"object_holder"`
+	CleanupPending         bool             `json:"cleanup_pending"`
+	Bytes                  []byte           `json:"-"`
 }
 type CommandRecord struct {
 	Digest  string           `json:"digest"`

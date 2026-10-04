@@ -144,3 +144,23 @@ export function encodeContentResponse(
   decodeContentResponse(wire, request);
   return wire;
 }
+
+// This classification runs only after the complete closed schema validated.
+export function contentInputBounds(name: string, value: unknown): void {
+  if (value === null || typeof value !== 'object') return;
+  const o = object(value);
+  let payload = o;
+  if (name === 'ContentPutRequest') {
+    payload = object(o.payload);
+    const r = object(payload.content_ref),
+      owner = object(r.owner),
+      target = object(o.target);
+    if (
+      target.tenant_id !== owner.tenant_id ||
+      target.owner_id !== owner.owner_id ||
+      target.id !== r.content_id
+    )
+      return;
+  } else if (name !== 'ContentPutPayload') return;
+  decodeBytes(String(payload.bytes_base64));
+}

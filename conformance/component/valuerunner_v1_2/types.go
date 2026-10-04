@@ -14,6 +14,20 @@ func run(name string, data []byte) ([]byte, error) {
 		}
 		return contract.Encode(value)
 	}
+	if name == "PutInput" {
+		value, err := contract.DecodePut(data)
+		if err != nil {
+			return nil, err
+		}
+		return contract.Encode(value)
+	}
+	if name == "GetInput" {
+		value, err := contract.DecodeGet(data)
+		if err != nil {
+			return nil, err
+		}
+		return contract.Encode(value)
+	}
 	switch name {
 	case "ID":
 		return roundtrip[contract.ID](data)

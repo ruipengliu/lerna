@@ -148,3 +148,63 @@ func TestContentCorrectBytesDurablyAccepted(t *testing.T) {
 		t.Fatal("real objects and PG did not survive reopen")
 	}
 }
+
+func TestContentCurrentSavePolicyStopsObjectWrite(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+	defer cancel()
+	w := fixture.New(t, ctx)
+	grantContent(t, ctx, w, alphaRef)
+	service := contentService(t, w)
+	request := contentPut(t, alphaRef, "save-before-revoke", "YWxwaGEK")
+	raw, err := v.Encode(request)
+	if err != nil {
+		t.Fatal(err)
+	}
+	out, err := service.Put(ctx, raw, &contentPrincipal)
+	if err != nil {
+		t.Fatal(err)
+	}
+	received, ok := out.AsReceived()
+	if !ok {
+		t.Fatal("normal prepared content absent")
+	}
+	if _, ok = received.Receipt.AsAccepted(); !ok {
+		t.Fatal("normal save policy did not accept")
+	}
+	until := time.Now().UTC().Add(time.Hour)
+	if err = w.Store().InstallFixturePolicy(ctx, content.FixturePolicy{Ref: alphaRef, Subject: contentPrincipal, Purpose: "verification", Revision: 2, ValidUntil: until, RetainUntil: until, Read: true, Process: true, Save: false, Disclose: true}, 1); err != nil {
+		t.Fatal(err)
+	}
+	processed, err := service.Step(ctx)
+	if err != nil || !processed {
+		t.Fatalf("original responsibility not closed: %v %v", processed, err)
+	}
+	result, err := service.Get(ctx, contentGetWire(t, alphaRef, nil), &contentPrincipal)
+	if err != nil {
+		t.Fatal(err)
+	}
+	failed, ok := result.AsFailed()
+	if !ok || failed.Reason != "forbidden" {
+		t.Fatal("current denied save reported usable publication")
+	}
+	entries, err := os.ReadDir(w.Directory)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(entries) != 0 {
+		t.Fatal("current save denial still wrote real object bytes")
+	}
+	original, err := service.GetCommand(ctx, contentCommandGetWire(t, request.CommandID), &contentPrincipal)
+	if err != nil {
+		t.Fatal(err)
+	}
+	found, ok := original.AsFound()
+	if !ok {
+		t.Fatal("denial removed accepted receipt")
+	}
+	prior, _ := v.Encode(received.Receipt)
+	fixed, _ := v.Encode(found.Receipt)
+	if string(prior) != string(fixed) {
+		t.Fatal("current policy rewrote fixed accepted")
+	}
+}

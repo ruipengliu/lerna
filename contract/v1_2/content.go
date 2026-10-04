@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"reflect"
 	"strconv"
@@ -102,6 +103,10 @@ func decodeContent[T Value](data []byte, method string) (T, error) {
 	}
 	result, err := Decode[T](data)
 	if err != nil {
+		var classified *ContractError
+		if errors.As(err, &classified) {
+			return zero, err
+		}
 		return zero, refusal("schema_invalid", err)
 	}
 	return result, nil

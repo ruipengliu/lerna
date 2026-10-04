@@ -1,0 +1,27 @@
+{
+  "contract_version": "1.2.0",
+  "profile": "content",
+  "command_id": "put-alpha",
+  "target": {
+    "tenant_id": "content-tenant",
+    "owner_id": "content-owner",
+    "kind": "content",
+    "id": "alpha"
+  },
+  "method": "content.put",
+  "accept_before": "2026-10-05T00:00:00.000000Z",
+  "payload": {
+    "content_ref": {
+      "owner": { "tenant_id": "content-tenant", "owner_id": "content-owner" },
+      "content_id": "alpha",
+      "version": "1",
+      "hash": "sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",
+      "media_type": "text/plain",
+      "byte_length": "6"
+    },
+    "sources": [],
+    "purpose": "verification",
+    "bytes_base64": "YWxwaGEK",
+    "retain_until": "2026-10-05T00:00:00.000000Z"
+  }
+}

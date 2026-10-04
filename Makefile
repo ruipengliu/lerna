@@ -9,7 +9,7 @@ bootstrap:
 generate:
 	pnpm generate
 fmt:
-	gofmt -w contract conformance runtime host internal adapters components cmd
+	gofmt -w contract conformance runtime host internal adapters components domain cmd
 	pnpm exec prettier --write $(FORMATTED)
 lint:
 	node scripts/check-go-format.mjs

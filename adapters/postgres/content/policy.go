@@ -81,6 +81,12 @@ func (s *Store) CheckPolicy(ctx context.Context, token runtime.Tx, subject v.Sub
 	if err != nil {
 		return nil, err
 	}
+	// A row-lock wait can outlive an earlier observation. Re-sample trusted
+	// database time only after this exact policy has been locked.
+	now, err = s.core.Now(ctx, token)
+	if err != nil {
+		return nil, err
+	}
 	var policy contentdomain.FixturePolicy
 	if err = json.Unmarshal(body, &policy); err != nil {
 		return nil, err

@@ -1,4 +1,4 @@
-import { contentSemantics } from './content.ts';
+import { contentSemantics, contentInputBounds } from './content.ts';
 import { canonical } from './digest.ts';
 import { ContractError } from './errors.ts';
 import { responseSemantics } from './response-semantics.ts';
@@ -54,6 +54,17 @@ ajv.addFormat('utc-microseconds', {
     );
   },
 });
+// AJV's default uniqueItems comparator calls valueOf on objects. The strict
+// parser intentionally produces null-prototype objects. Exact canonical
+// equality is JSON deep equality for this contract's finite no-number subset.
+ajv.removeKeyword('uniqueItems');
+ajv.addKeyword({
+  keyword: 'uniqueItems',
+  type: 'array',
+  schemaType: 'boolean',
+  compile: (required: boolean) => (values: unknown[]) =>
+    !required || new Set(values.map(canonical)).size === values.length,
+});
 ajv.addSchema(schema);
 
 // Validate original JSON values before serialization can omit or coerce them.
@@ -106,6 +117,9 @@ export function decode<K extends keyof Values>(
   wire: string | Uint8Array,
 ): Values[K] {
   const value: unknown = parseJSON(wire);
+  const validator = ajv.getSchema(`${schema.$id}#/$defs/${name}`);
+  if (isWireValue(value) && validator?.(value) === true)
+    contentInputBounds(name, value);
   if (!validate(name, value)) throw schemaError(name);
   return value;
 }

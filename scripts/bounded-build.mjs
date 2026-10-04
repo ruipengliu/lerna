@@ -2,7 +2,7 @@
 // kills the group while inherited pipes are still open, then confirms exit.
 import { spawn } from 'node:child_process';
 export async function boundedBuild(command, args, options) {
-  const { timeout, signal, encoding, ...spawnOptions } = options ?? {};
+  const { timeout, signal, encoding, onStart, ...spawnOptions } = options ?? {};
   if (!Number.isInteger(timeout) || timeout < 1 || timeout > 60000)
     throw RangeError('build deadline must be 1..60000 ms');
   const child = spawn(command, args, { ...spawnOptions, detached: true });
@@ -71,6 +71,13 @@ export async function boundedBuild(command, args, options) {
     error.code = 'ABORT_ERR';
     stop(error);
   };
+  if (onStart) {
+    try {
+      onStart(child.pid);
+    } catch (error) {
+      stop(error);
+    }
+  }
   signal?.addEventListener('abort', abort, { once: true });
   if (signal?.aborted) abort();
   const deadline = setTimeout(expired, timeout);

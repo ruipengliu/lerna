@@ -219,7 +219,7 @@ func (s *Service) Put(ctx context.Context, raw []byte, subject *v.SubjectBinding
 			return err
 		}
 		deadline := earlier(effective, now.Add(s.config.PublishBudget))
-		record = &Record{Ref: request.Payload.ContentRef, Sources: append([]v.ContentRef{}, request.Payload.Sources...), Purpose: string(request.Payload.Purpose), Subject: principal, TupleDigest: tuple, ObjectID: id, ObjectKey: key, RequestedRetainUntil: request.Payload.RetainUntil, EffectiveRetainUntil: wireTime(effective), CurrentRetainUntil: wireTime(effective), AdmittedAt: wireTime(now), PublishDeadline: wireTime(deadline), Publication: "preparing", Revision: 1, StagingHolder: true, Bytes: bytes}
+		record = &Record{Ref: request.Payload.ContentRef, Sources: append([]v.ContentRef{}, request.Payload.Sources...), Purpose: string(request.Payload.Purpose), Subject: principal, TupleDigest: tuple, ObjectID: id, ObjectKey: key, RequestedRetainUntil: request.Payload.RetainUntil, EffectiveRetainUntil: wireTime(effective), CurrentRetainUntil: wireTime(effective), AdmittedAt: wireTime(now), PublishDeadline: wireTime(deadline), Publication: "preparing", Revision: 1, StagingHolder: true, Bytes: bytes, MaxPublicationAttempts: s.config.MaxPublicationAttempts}
 		if bytes == nil {
 			record.Bytes = []byte{}
 		}
@@ -432,10 +432,20 @@ func (s *Service) Step(ctx context.Context) (bool, error) {
 			if record == nil || record.ValidateIdentity() != nil || record.ObjectID != string(job.Object.ID) || job.Object.Kind != "content" || job.Phase != "publish" {
 				return runtime.ErrScope
 			}
-			deadline := cutoff(record.PublishDeadline)
-			until := earlier(now.Add(s.config.Limits.Lease), deadline)
-			if !until.After(now) {
-				until = now.Add(time.Second)
+			current, ioBefore, failure, err := s.publicationPolicy(ctx, tx, *record, now)
+			if err != nil {
+				return err
+			}
+			now, err = s.config.Store.Now(ctx, tx)
+			if err != nil {
+				return err
+			}
+			if record.Attempts >= record.MaxPublicationAttempts && failure == "" {
+				failure = "dependency_unavailable"
+			}
+			until := earlier(now.Add(s.config.Limits.Lease), ioBefore)
+			if failure != "" {
+				until = now.Add(s.config.Limits.Lease)
 			}
 			claim, err = s.config.Store.Claim(ctx, tx, job, s.config.Worker, now, until)
 			if err != nil {
@@ -444,7 +454,15 @@ func (s *Service) Step(ctx context.Context) (bool, error) {
 			if claim == nil {
 				continue
 			}
-			record.Attempts++
+			record.CurrentRetainUntil = wireTime(current)
+			record.IODeadline = wireTime(ioBefore)
+			if failure != "" {
+				record.Publication = "failed"
+				record.Failure = failure
+				record.CleanupPending = true
+			} else {
+				record.Attempts++
+			}
 			record.AttemptKey = fmt.Sprintf("%s.%d.tmp", record.ObjectKey, claim.Epoch)
 			record.Revision++
 			if err = s.config.Store.SaveVersion(ctx, tx, *record); err != nil {
@@ -458,7 +476,7 @@ func (s *Service) Step(ctx context.Context) (bool, error) {
 	if err != nil || selected == nil {
 		return false, err
 	}
-	ioDeadline := earlier(cutoff(selected.PublishDeadline), time.Now().Add(s.config.Limits.WorkTimeout))
+	ioDeadline := earlier(cutoff(selected.IODeadline), time.Now().Add(s.config.Limits.WorkTimeout))
 	bounded, cancel := context.WithDeadline(ctx, ioDeadline)
 	var ioErr error
 	length, _ := strconv.ParseInt(string(selected.Ref.ByteLength), 10, 64)
@@ -484,18 +502,23 @@ func (s *Service) Step(ctx context.Context) (bool, error) {
 		if record.Publication != "preparing" {
 			return s.config.Store.Complete(ctx, tx, *claim, now)
 		}
-		policy, err := s.config.Store.CheckPolicy(ctx, tx, record.Subject, record.Ref, record.Purpose, "save", now)
+		current, ioBefore, failure, err := s.publicationPolicy(ctx, tx, *record, now)
 		if err != nil {
 			return err
 		}
-		failure := v.ErrorCode("")
-		if !now.Before(cutoff(record.PublishDeadline)) {
-			failure = "expired"
-		} else if policy == nil {
-			failure = "forbidden"
+		record.CurrentRetainUntil = wireTime(current)
+		record.IODeadline = wireTime(ioBefore)
+		now, err = s.config.Store.Now(ctx, tx)
+		if err != nil {
+			return err
+		}
+		if err = s.config.Store.ValidateClaim(ctx, tx, *claim, now); err != nil {
+			return err
+		}
+		if failure != "" {
 		} else if errors.Is(ioErr, ErrObjectIntegrity) {
 			failure = "integrity"
-		} else if ioErr != nil && record.Attempts >= s.config.MaxPublicationAttempts {
+		} else if ioErr != nil && record.Attempts >= record.MaxPublicationAttempts {
 			failure = "dependency_unavailable"
 		}
 		if failure == "" && ioErr != nil {
@@ -520,4 +543,48 @@ func (s *Service) Step(ctx context.Context) (bool, error) {
 		return s.config.Store.Complete(ctx, tx, *claim, now)
 	})
 	return true, err
+}
+
+func (s *Service) publicationPolicy(ctx context.Context, tx runtime.Tx, record Record, now time.Time) (time.Time, time.Time, v.ErrorCode, error) {
+	current := cutoff(record.CurrentRetainUntil)
+	ioBefore := earlier(current, cutoff(record.PublishDeadline))
+	policy, err := s.config.Store.CheckPolicy(ctx, tx, record.Subject, record.Ref, record.Purpose, "save", now)
+	if err != nil {
+		return current, ioBefore, "", err
+	}
+	if policy == nil || policy.Ref != record.Ref {
+		return current, ioBefore, "forbidden", nil
+	}
+	current = earlier(current, policy.RetainUntil)
+	ioBefore = earlier(ioBefore, policy.ValidUntil)
+	for _, source := range record.Sources {
+		for _, action := range []string{"read", "process", "save"} {
+			p, err := s.config.Store.CheckPolicy(ctx, tx, record.Subject, source, record.Purpose, action, now)
+			if err != nil {
+				return current, ioBefore, "", err
+			}
+			if p == nil || p.Ref != source {
+				return current, ioBefore, "forbidden", nil
+			}
+			current = earlier(current, p.RetainUntil)
+			ioBefore = earlier(ioBefore, p.ValidUntil)
+		}
+		sourceRecord, err := s.config.Store.LockVersion(ctx, tx, source)
+		if err != nil {
+			return current, ioBefore, "", err
+		}
+		if sourceRecord == nil || sourceRecord.Ref != source || sourceRecord.Publication != "published" {
+			return current, ioBefore, "source_unavailable", nil
+		}
+		current = earlier(current, cutoff(sourceRecord.CurrentRetainUntil))
+	}
+	now, err = s.config.Store.Now(ctx, tx)
+	if err != nil {
+		return current, ioBefore, "", err
+	}
+	ioBefore = earlier(ioBefore, current)
+	if !now.Before(current) || !now.Before(cutoff(record.PublishDeadline)) || !now.Before(ioBefore) {
+		return current, ioBefore, "expired", nil
+	}
+	return current, ioBefore, "", nil
 }
