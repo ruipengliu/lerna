@@ -1,3 +1,8 @@
 # Preserve the exact pg_dump export bytes, including its final empty line.
 conformance/fixtures/durable-work/pg-v1/database.sql -text whitespace=-blank-at-eof
 conformance/fixtures/durable-work/pg-v2/database.sql -text whitespace=-blank-at-eof
+
+# Preserve exact Content 0001 native archives, including original final empty line.
+conformance/internal/contentfixture/testdata/legacy-v1/original-pg18-dump.sql -text whitespace=-blank-at-eof
+conformance/internal/contentfixture/testdata/legacy-many-policies/original-pg18-dump.sql -text whitespace=-blank-at-eof
+conformance/internal/contentfixture/testdata/legacy-expired-ancestor/original-pg18-dump.sql -text whitespace=-blank-at-eof

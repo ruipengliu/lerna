@@ -1,0 +1,18 @@
+=== RUN   TestContentFullClosureIncludesIntermediateVersionsAndExact64Bound
+    content_closure_test.go:122: closure timing i=65 stage=put current=93.218022ms install=1.210624802s put=18.600291416s step=11.657536997s
+    content_closure_test.go:126: closure port put/Now calls=4746 logical_actions=0 elapsed=1.781592268s
+    content_closure_test.go:126: closure port put/CheckPolicy calls=2210 logical_actions=6498 elapsed=1.915685507s
+    content_closure_test.go:126: closure port put/LockVersion calls=2275 logical_actions=0 elapsed=2.067946672s
+    content_closure_test.go:126: closure port put/ScheduleRetention calls=65 logical_actions=0 elapsed=10.283150113s
+    content_closure_test.go:126: closure port step/Now calls=8710 logical_actions=0 elapsed=3.009156737s
+    content_closure_test.go:126: closure port step/CheckPolicy calls=4290 logical_actions=12610 elapsed=3.373427906s
+    content_closure_test.go:126: closure port step/LockVersion calls=4225 logical_actions=0 elapsed=3.582413988s
+    content_closure_test.go:126: closure port step/ScheduleRetention calls=0 logical_actions=0 elapsed=0s
+    content_closure_test.go:126: closure port get/Now calls=264 logical_actions=0 elapsed=75.063175ms
+    content_closure_test.go:126: closure port get/CheckPolicy calls=132 logical_actions=260 elapsed=74.635771ms
+    content_closure_test.go:126: closure port get/LockVersion calls=130 logical_actions=0 elapsed=98.663248ms
+    content_closure_test.go:126: closure port get/ScheduleRetention calls=0 logical_actions=0 elapsed=0s
+--- PASS: TestContentFullClosureIncludesIntermediateVersionsAndExact64Bound (31.92s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/component	31.931s
+NATIVE_EXIT status=0 group_absent=True

@@ -1,0 +1,6 @@
+--- FAIL: TestContentExpiredMaintenanceBudgetRetainsKnownHolderWithoutClaimingComplete (2.20s)
+    content_management_test.go:451: deadline expiry lost known holder responsibility {{pc-c0b0e9052edd3d68d306fe5f84ebd12e61a0cf420d9007ddb2c6a185225c3be4 {{{content-tenant content-owner} alpha 1 sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060 text/plain 6} {content-tenant verified-subject []} verification 1 2026-10-04 15:54:22.832903097 +0000 UTC 2026-10-04 15:54:22.832903097 +0000 UTC true true true false true} <nil> 1  2026-10-04 14:54:24.884331 +0000 UTC 2026-10-04 14:54:24.879331 +0000 UTC 2026-10-04 14:54:24.879331 +0000 UTC 2026-10-04 14:54:24.884331 +0000 UTC residual 1 original_deadline_expired} [] }
+FAIL
+FAIL	github.com/ruipengliu/lerna/conformance/component	2.212s
+FAIL
+NATIVE_EXIT status=1 group_absent=True

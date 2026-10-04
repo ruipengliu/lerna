@@ -1,0 +1,10 @@
+{
+  "base": "6a9aa658c912be5c8fed022ceda2511212d19a70",
+  "qualification": "temporary diagnostic overlay only; current tracked source unchanged; no SQL parameters or body logged",
+  "paths": {
+    "adapters/postgres/content/policy.go": "95161fc521068f72e18296be53713b0bf02c9cf5f2aa9d85c0533b493a40710d",
+    "adapters/postgres/content/facts.go": "ff60cc9cf5750a30963bf47cd25151f1c8ae90346980fc86ad295caf2a18ba63",
+    "adapters/postgres/content/management.go": "31913f9b9acee1c6fe79d771369a635ef1a29e4ebe505708ddb9dc94f1944538",
+    "conformance/component/content_closure_test.go": "ce985e83b0b6f6d9b9f58a9a26a84fa98daac7abf9a1c9a441f3b5924e582d90"
+  }
+}

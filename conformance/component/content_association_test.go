@@ -9,6 +9,7 @@ import (
 	v "github.com/ruipengliu/lerna/contract/v1_2"
 	"github.com/ruipengliu/lerna/domain/content"
 	"os"
+	"path/filepath"
 	"testing"
 	"time"
 )
@@ -33,7 +34,9 @@ func TestContentNewAssociationRequiresCurrentDirectSourceAdmission(t *testing.T)
 			} else {
 				policy.Save = false
 			}
-			if err := w.Store().InstallFixturePolicy(ctx, policy, 1); err != nil {
+			manager := trustedContentManager(t, w, 2)
+			change, err := manager.InstallPolicy(ctx, &contentPrincipal, policy, 1)
+			if err != nil {
 				t.Fatal(err)
 			}
 			alias := request
@@ -45,12 +48,30 @@ func TestContentNewAssociationRequiresCurrentDirectSourceAdmission(t *testing.T)
 				t.Fatal("current put denial replaced original receipt")
 			}
 			assertContentBody(t, ctx, service, request.Payload.ContentRef, nil, "alpha\n")
-			if processed, err := service.Step(ctx); err != nil || processed {
-				t.Fatal("association reopened publication", err)
+			for i := 0; i < 3; i++ {
+				if _, err := service.Step(ctx); err != nil {
+					t.Fatal("policy work failed", err)
+				}
+			}
+			observation, err := manager.ObserveChange(ctx, &contentPrincipal, change.Key, "", 64)
+			if err != nil || len(observation.Responsibilities) != 2 || observation.Change.State == "pending" {
+				t.Fatal("original policy propagation not observed", err, observation)
+			}
+			command, err := service.GetCommand(ctx, contentCommandGetWire(t, request.CommandID), &contentPrincipal)
+			found, ok := command.AsFound()
+			progress, contentProgress := found.Progress.AsContent()
+			if err != nil || !ok || !contentProgress || progress.Publication != "published" {
+				t.Fatal("association replaced original publication history", err, command)
 			}
 			entries, err := os.ReadDir(w.Directory)
 			if err != nil || len(entries) != 3 {
 				t.Fatal("association wrote extra native object", err)
+			}
+			for _, entry := range entries {
+				body, err := os.ReadFile(filepath.Join(w.Directory, entry.Name()))
+				if err != nil || string(body) != "alpha\n" {
+					t.Fatal("original independent object changed", err)
+				}
 			}
 		})
 	}

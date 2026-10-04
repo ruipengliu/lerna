@@ -35,7 +35,8 @@ check-integration-prerequisites:
 	cd conformance/fixtures/durable-work/sqlite-v2 && sha256sum -c SHA256SUMS
 test-integration: check-integration-prerequisites
 	go test -count=1 -tags=integration -timeout=120s ./conformance/recovery/...
-	go test -p=1 -count=1 -tags=integration -timeout=120s ./conformance/component ./conformance/internal/decisionfixture ./conformance/internal/contentfixture ./adapters/objectstore/local
+	bash scripts/test-component-integration-race.sh --normal
+	go test -p=1 -count=1 -tags=integration -timeout=120s ./conformance/internal/decisionfixture ./conformance/internal/contentfixture ./adapters/objectstore/local
 test-integration-race: check-integration-prerequisites
 	go test -p=1 -count=1 -race -tags=integration -timeout=120s ./conformance/recovery/...
 	bash scripts/test-component-integration-race.sh

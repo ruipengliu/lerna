@@ -1,0 +1,3 @@
+ok  	github.com/ruipengliu/lerna/conformance/component	18.402s
+ok  	github.com/ruipengliu/lerna/adapters/postgres/content	0.018s
+NATIVE_EXIT status=0 group_absent=True

@@ -1,0 +1,6 @@
+--- FAIL: TestContentLaterAdmissionInheritsOriginalAncestorExpiry (2.15s)
+    content_inherited_expiry_test.go:35: post-watermark descendant has no original ancestor maintenance obligation ERROR: operator does not exist: bytea -> unknown (SQLSTATE 42883) [] 
+FAIL
+FAIL	github.com/ruipengliu/lerna/conformance/component	2.164s
+FAIL
+NATIVE_EXIT status=1 group_absent=True

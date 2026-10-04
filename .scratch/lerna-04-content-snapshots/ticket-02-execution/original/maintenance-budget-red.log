@@ -1,0 +1,6 @@
+--- FAIL: TestContentExpiredMaintenanceBudgetRetainsKnownHolderWithoutClaimingComplete (2.20s)
+    content_management_test.go:450: expired original budget hidden/refreshed <nil> {{pc-c0b0e9052edd3d68d306fe5f84ebd12e61a0cf420d9007ddb2c6a185225c3be4 {{{content-tenant content-owner} alpha 1 sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060 text/plain 6} {content-tenant verified-subject []} verification 1 2026-10-04 15:52:50.351264627 +0000 UTC 2026-10-04 15:52:50.351264627 +0000 UTC true true true false true} <nil> 1  2026-10-04 14:53:52.3971 +0000 UTC 2026-10-04 14:52:52.3971 +0000 UTC 2026-10-04 14:52:52.3971 +0000 UTC 2026-10-04 14:53:52.3971 +0000 UTC complete 1 } [{pc-c0b0e9052edd3d68d306fe5f84ebd12e61a0cf420d9007ddb2c6a185225c3be4 {{content-tenant content-owner} alpha 1 sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060 text/plain 6} {content-tenant verified-subject []} verification [read process save sync disclose] 2026-10-04 14:53:52.3971 +0000 UTC pending false true da73fc3f262e288d3fbf5bf06db2ebcfbb031f2a5cacbc4e8be74a516714a028.1.tmp published holder_unconfirmed accepted_retention_expired}] }
+FAIL
+FAIL	github.com/ruipengliu/lerna/conformance/component	2.215s
+FAIL
+NATIVE_EXIT status=1 group_absent=True

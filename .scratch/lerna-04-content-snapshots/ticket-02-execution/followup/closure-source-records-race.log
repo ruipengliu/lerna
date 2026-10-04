@@ -1,0 +1,6 @@
+=== RUN   TestContentFullClosureIncludesIntermediateVersionsAndExact64Bound
+    content_closure_test.go:83: context deadline exceeded
+    content_closure_test.go:70: closure timing i=62 stage=put current=343.858034ms install=1.217455656s put=29.225705212s step=29.080277379s
+--- FAIL: TestContentFullClosureIncludesIntermediateVersionsAndExact64Bound (60.03s)
+FAIL
+NATIVE_EXIT status=1 group_absent=True

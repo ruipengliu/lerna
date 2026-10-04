@@ -1,0 +1,10 @@
+{
+  "base": "75202ee0077b5bf12b432b5017ad97a1dfcab681",
+  "paths": {
+    "domain/content/closure.go": "3080333aaf36c5f83fb8f533e83d64ab5900767b873ea4d7b9db105b542f3134",
+    "domain/content/service.go": "5987974c1c15ed1def2de664b9f6faa7e4436f7717de2abc34eb6c2c45936145",
+    "domain/content/management.go": "09c8786e5587aa3e8c1f4efb5a70b1dc6ec65ec5d3dcf5c16afc1878ffdd7b82",
+    "conformance/component/content_closure_test.go": "4d12d8da2a242ac81af3c91d7ccdc0d45d9531a1e1428e9d67586e947081031b"
+  },
+  "qualification": "reconstructed measured input from exact recorded nil-only diff"
+}

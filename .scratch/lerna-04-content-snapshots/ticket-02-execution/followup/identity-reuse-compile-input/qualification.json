@@ -1,0 +1,15 @@
+{
+  "base": "75202ee0077b5bf12b432b5017ad97a1dfcab681",
+  "qualification": "actual source bytes captured before compiler; other Go sources unchanged",
+  "paths": {
+    "adapters/postgres/content/facts.go": "8d53cb773a4711ff9866f5974b399de96eec137d82a92b97886c0825802cb069",
+    "adapters/postgres/content/management.go": "515210a582c48d2e7a8ac34b35b628ce211414c5cfe2b0a27a9afb491e34629a",
+    "adapters/postgres/content/policy.go": "e72b25a38667a25f14a6b17e2be0d6b10b690b85546d6518c11a6d60edaba12b",
+    "conformance/component/content_closure_test.go": "756840592bce9fe5ca1d8edae0976905d1e022fa0189fe4a537db1b24d0b7e17",
+    "conformance/component/content_post_schedule_test.go": "54b096a6ebf9c16acd7de96d48a0816fcbfcd9c71d95fa6e486530aec64804c0",
+    "domain/content/closure.go": "4c4b0cf5ee0bf20389ae033fb76ff7305860cd5d3d803475024c636f9f50e9f6",
+    "domain/content/management.go": "ffec01c66703998b0a467526eb0f446dd539497630ccbac0a2e969d39e3f295d",
+    "domain/content/ports.go": "4208d1060d5c41f46367a0472e9e759fd39c98af1a8b39863a3831c363d14aa1",
+    "domain/content/service.go": "f5b9062adcc52f2fb2bab36219bce771c32dc2b31c9cc807f5b980862b55e06f"
+  }
+}

@@ -1,0 +1,5 @@
+# github.com/ruipengliu/lerna/domain/content
+domain/content/management.go:621:3: syntax error: non-declaration statement outside function body
+FAIL	github.com/ruipengliu/lerna/conformance/component [build failed]
+FAIL
+NATIVE_EXIT status=1 group_absent=True

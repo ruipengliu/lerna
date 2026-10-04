@@ -1,0 +1,24 @@
+node scripts/bootstrap.mjs
+all modules verified
+Scope: all 2 workspace projects
+[WARN] The store at /home/agent/.local/share/pnpm/store/v11 is not used because packages cannot be hard linked from it into this project. Using the store at /tmp/.pnpm-store/v11 instead. Set storeDir to choose the store.
+✓ Lockfile passes supply-chain policies (verified 23h ago)
+Lockfile is up to date, resolution step is skipped
+Packages are copied from the content-addressable store to the virtual store.
+  Content-addressable store is at: /tmp/.pnpm-store/v11
+  Virtual store is at:             node_modules/.pnpm
+Packages: +10
+++++++++++
+Progress: resolved 10, reused 10, downloaded 0, added 10, done
+
+devDependencies:
++ @types/node 24.10.1
++ prettier 3.6.2
++ typescript 7.0.2
+
+Update available! 12.8.1 → 12.9.1.
+Changelog: https://pnpm.io/v/12.9.1
+To update, run: curl -fsSL https://get.pnpm.io/install.sh | sh -
+Done in 290ms using pnpm v12.8.1
+Locked toolchains and dependencies verified.
+NATIVE_EXIT status=0 group_absent=True

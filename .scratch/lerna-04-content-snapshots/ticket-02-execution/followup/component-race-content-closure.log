@@ -1,0 +1,5 @@
+=== RUN   TestContentFullClosureIncludesIntermediateVersionsAndExact64Bound
+    content_closure_test.go:71: timeout: context deadline exceeded
+--- FAIL: TestContentFullClosureIncludesIntermediateVersionsAndExact64Bound (60.03s)
+FAIL
+NATIVE_EXIT status=1 group_absent=True

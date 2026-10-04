@@ -1,0 +1,9 @@
+--- FAIL: TestContentProcessingDeadlineAfterNativeDescendantLock (2.37s)
+    --- FAIL: TestContentProcessingDeadlineAfterNativeDescendantLock/manager/blocked=true (0.82s)
+        content_processing_deadline_test.go:48: native lock crossed original deadline but qualified page progress {pc-9ca03afdf7a35f7492420cbaa136c5c4c5973270486b2bba9a46b641c9d51008 {{{content-tenant content-owner} alpha 1 sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060 text/plain 6} {content-tenant verified-subject []} verification 2 2026-10-04 16:26:25.694923094 +0000 UTC 2026-10-04 16:26:25.694923094 +0000 UTC true true false false true} 0x24f2e1848500 3  2026-10-04 16:26:26.194923094 +0000 UTC 2026-10-04 16:26:25.694923094 +0000 UTC 2026-10-04 16:26:25.694923094 +0000 UTC 2026-10-04 16:26:26.194923094 +0000 UTC scheduled 2 }
+    --- FAIL: TestContentProcessingDeadlineAfterNativeDescendantLock/service/blocked=true (0.84s)
+        content_processing_deadline_test.go:48: native lock crossed original deadline but qualified page progress {pc-9ca03afdf7a35f7492420cbaa136c5c4c5973270486b2bba9a46b641c9d51008 {{{content-tenant content-owner} alpha 1 sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060 text/plain 6} {content-tenant verified-subject []} verification 2 2026-10-04 16:26:26.836935631 +0000 UTC 2026-10-04 16:26:26.836935631 +0000 UTC true true false false true} 0x24f2e192a800 3  2026-10-04 16:26:27.336935631 +0000 UTC 2026-10-04 16:26:26.836935631 +0000 UTC 2026-10-04 16:26:26.836935631 +0000 UTC 2026-10-04 16:26:27.336935631 +0000 UTC scheduled 2 }
+FAIL
+FAIL	github.com/ruipengliu/lerna/conformance/component	2.385s
+FAIL
+NATIVE_EXIT status=1 group_absent=True

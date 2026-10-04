@@ -1,0 +1,29 @@
+--- FAIL: TestManagementPageRowsPreserveCloseAndPrimaryCauses (0.01s)
+    --- FAIL: TestManagementPageRowsPreserveCloseAndPrimaryCauses/policies/early-close (0.00s)
+        management_rows_test.go:51: early page close cause lost 1 first <nil>
+    --- FAIL: TestManagementPageRowsPreserveCloseAndPrimaryCauses/policies/decode-close (0.00s)
+        management_rows_test.go:52: decode primary or close cause lost unexpected end of JSON input
+    --- FAIL: TestManagementPageRowsPreserveCloseAndPrimaryCauses/policies/scan-close (0.00s)
+        management_rows_test.go:53: scan primary or close cause lost sql: Scan error on column index 1, name "cursor": converting NULL to string is unsupported
+    --- FAIL: TestManagementPageRowsPreserveCloseAndPrimaryCauses/policies/iteration (0.00s)
+        management_rows_test.go:54: iteration cause lost <nil>
+    --- FAIL: TestManagementPageRowsPreserveCloseAndPrimaryCauses/descendants/early-close (0.00s)
+        management_rows_test.go:51: early page close cause lost 1 first <nil>
+    --- FAIL: TestManagementPageRowsPreserveCloseAndPrimaryCauses/descendants/decode-close (0.00s)
+        management_rows_test.go:52: decode primary or close cause lost unexpected end of JSON input
+    --- FAIL: TestManagementPageRowsPreserveCloseAndPrimaryCauses/descendants/scan-close (0.00s)
+        management_rows_test.go:53: scan primary or close cause lost sql: Scan error on column index 1, name "cursor": converting NULL to string is unsupported
+    --- FAIL: TestManagementPageRowsPreserveCloseAndPrimaryCauses/descendants/iteration (0.00s)
+        management_rows_test.go:54: iteration cause lost <nil>
+    --- FAIL: TestManagementPageRowsPreserveCloseAndPrimaryCauses/responsibilities/early-close (0.00s)
+        management_rows_test.go:51: early page close cause lost 1 first <nil>
+    --- FAIL: TestManagementPageRowsPreserveCloseAndPrimaryCauses/responsibilities/decode-close (0.00s)
+        management_rows_test.go:52: decode primary or close cause lost unexpected end of JSON input
+    --- FAIL: TestManagementPageRowsPreserveCloseAndPrimaryCauses/responsibilities/scan-close (0.00s)
+        management_rows_test.go:53: scan primary or close cause lost sql: Scan error on column index 1, name "cursor": converting NULL to string is unsupported
+    --- FAIL: TestManagementPageRowsPreserveCloseAndPrimaryCauses/responsibilities/iteration (0.00s)
+        management_rows_test.go:54: iteration cause lost <nil>
+FAIL
+FAIL	github.com/ruipengliu/lerna/adapters/postgres/content	0.018s
+FAIL
+NATIVE_EXIT status=1 group_absent=True

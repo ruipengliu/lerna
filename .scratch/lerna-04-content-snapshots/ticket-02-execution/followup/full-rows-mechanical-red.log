@@ -1,0 +1,13 @@
+--- FAIL: TestManagementFullRowsPreserveEarlyFailureCloseCause (0.00s)
+    --- FAIL: TestManagementFullRowsPreserveEarlyFailureCloseCause/unindexed/decode-close (0.00s)
+        management_rows_test.go:157: decode primary/Close cause lost unexpected end of JSON input
+    --- FAIL: TestManagementFullRowsPreserveEarlyFailureCloseCause/unindexed/scan-close (0.00s)
+        management_rows_test.go:158: Scan primary/Close cause lost sql: Scan error on column index 0, name "body": unsupported Scan, storing driver.Value type struct {} into type *[]uint8
+    --- FAIL: TestManagementFullRowsPreserveEarlyFailureCloseCause/pending/decode-close (0.00s)
+        management_rows_test.go:157: decode primary/Close cause lost unexpected end of JSON input
+    --- FAIL: TestManagementFullRowsPreserveEarlyFailureCloseCause/pending/scan-close (0.00s)
+        management_rows_test.go:158: Scan primary/Close cause lost sql: Scan error on column index 0, name "body": unsupported Scan, storing driver.Value type struct {} into type *[]uint8
+FAIL
+FAIL	github.com/ruipengliu/lerna/adapters/postgres/content	0.026s
+FAIL
+NATIVE_EXIT status=1 group_absent=True

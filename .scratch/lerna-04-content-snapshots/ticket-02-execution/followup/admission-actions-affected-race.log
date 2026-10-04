@@ -1,0 +1,97 @@
+=== RUN   TestContentClosureRecordWaitRechecksPolicyBeforeMetadata
+=== RUN   TestContentClosureRecordWaitRechecksPolicyBeforeMetadata/missing=false/late=false
+=== RUN   TestContentClosureRecordWaitRechecksPolicyBeforeMetadata/missing=false/late=true
+=== RUN   TestContentClosureRecordWaitRechecksPolicyBeforeMetadata/missing=true/late=false
+=== RUN   TestContentClosureRecordWaitRechecksPolicyBeforeMetadata/missing=true/late=true
+--- PASS: TestContentClosureRecordWaitRechecksPolicyBeforeMetadata (3.17s)
+    --- PASS: TestContentClosureRecordWaitRechecksPolicyBeforeMetadata/missing=false/late=false (0.81s)
+    --- PASS: TestContentClosureRecordWaitRechecksPolicyBeforeMetadata/missing=false/late=true (0.96s)
+    --- PASS: TestContentClosureRecordWaitRechecksPolicyBeforeMetadata/missing=true/late=false (0.46s)
+    --- PASS: TestContentClosureRecordWaitRechecksPolicyBeforeMetadata/missing=true/late=true (0.95s)
+=== RUN   TestContentClosureActionIntersectionKeepsIndependentFlags
+=== RUN   TestContentClosureActionIntersectionKeepsIndependentFlags/none
+=== RUN   TestContentClosureActionIntersectionKeepsIndependentFlags/read
+=== RUN   TestContentClosureActionIntersectionKeepsIndependentFlags/process
+=== RUN   TestContentClosureActionIntersectionKeepsIndependentFlags/save
+=== RUN   TestContentClosureActionIntersectionKeepsIndependentFlags/disclose
+=== RUN   TestContentClosureActionIntersectionKeepsIndependentFlags/sync
+--- PASS: TestContentClosureActionIntersectionKeepsIndependentFlags (7.70s)
+    --- PASS: TestContentClosureActionIntersectionKeepsIndependentFlags/none (1.06s)
+    --- PASS: TestContentClosureActionIntersectionKeepsIndependentFlags/read (0.86s)
+    --- PASS: TestContentClosureActionIntersectionKeepsIndependentFlags/process (1.82s)
+    --- PASS: TestContentClosureActionIntersectionKeepsIndependentFlags/save (1.23s)
+    --- PASS: TestContentClosureActionIntersectionKeepsIndependentFlags/disclose (1.49s)
+    --- PASS: TestContentClosureActionIntersectionKeepsIndependentFlags/sync (1.22s)
+=== RUN   TestContentPolicyActionVectorsFailClosed
+=== RUN   TestContentPolicyActionVectorsFailClosed/[read_process_save]
+=== RUN   TestContentPolicyActionVectorsFailClosed/[read_disclose]
+=== RUN   TestContentPolicyActionVectorsFailClosed/[]
+=== RUN   TestContentPolicyActionVectorsFailClosed/[]#01
+=== RUN   TestContentPolicyActionVectorsFailClosed/[read_read]
+=== RUN   TestContentPolicyActionVectorsFailClosed/[unknown]
+=== RUN   TestContentPolicyActionVectorsFailClosed/[read_process_save_sync_disclose_read]
+--- PASS: TestContentPolicyActionVectorsFailClosed (0.24s)
+    --- PASS: TestContentPolicyActionVectorsFailClosed/[read_process_save] (0.01s)
+    --- PASS: TestContentPolicyActionVectorsFailClosed/[read_disclose] (0.01s)
+    --- PASS: TestContentPolicyActionVectorsFailClosed/[] (0.00s)
+    --- PASS: TestContentPolicyActionVectorsFailClosed/[]#01 (0.00s)
+    --- PASS: TestContentPolicyActionVectorsFailClosed/[read_read] (0.00s)
+    --- PASS: TestContentPolicyActionVectorsFailClosed/[unknown] (0.01s)
+    --- PASS: TestContentPolicyActionVectorsFailClosed/[read_process_save_sync_disclose_read] (0.00s)
+=== RUN   TestContentClosurePolicyIntersectionUsesClockAfterRealPolicyLock
+=== RUN   TestContentClosurePolicyIntersectionUsesClockAfterRealPolicyLock/late=false
+=== RUN   TestContentClosurePolicyIntersectionUsesClockAfterRealPolicyLock/late=true
+--- PASS: TestContentClosurePolicyIntersectionUsesClockAfterRealPolicyLock (1.40s)
+    --- PASS: TestContentClosurePolicyIntersectionUsesClockAfterRealPolicyLock/late=false (0.44s)
+    --- PASS: TestContentClosurePolicyIntersectionUsesClockAfterRealPolicyLock/late=true (0.96s)
+=== RUN   TestContentPostScheduleAdmissionRollsBackLateVersion
+=== RUN   TestContentPostScheduleAdmissionRollsBackLateVersion/accept_before/late=false
+=== RUN   TestContentPostScheduleAdmissionRollsBackLateVersion/accept_before/late=true
+=== RUN   TestContentPostScheduleAdmissionRollsBackLateVersion/target_policy/late=false
+=== RUN   TestContentPostScheduleAdmissionRollsBackLateVersion/target_policy/late=true
+=== RUN   TestContentPostScheduleAdmissionRollsBackLateVersion/ancestor_policy/late=false
+=== RUN   TestContentPostScheduleAdmissionRollsBackLateVersion/ancestor_policy/late=true
+=== RUN   TestContentPostScheduleAdmissionRollsBackLateVersion/retention/late=false
+=== RUN   TestContentPostScheduleAdmissionRollsBackLateVersion/retention/late=true
+--- PASS: TestContentPostScheduleAdmissionRollsBackLateVersion (5.51s)
+    --- PASS: TestContentPostScheduleAdmissionRollsBackLateVersion/accept_before/late=false (0.29s)
+    --- PASS: TestContentPostScheduleAdmissionRollsBackLateVersion/accept_before/late=true (1.13s)
+    --- PASS: TestContentPostScheduleAdmissionRollsBackLateVersion/target_policy/late=false (0.31s)
+    --- PASS: TestContentPostScheduleAdmissionRollsBackLateVersion/target_policy/late=true (0.99s)
+    --- PASS: TestContentPostScheduleAdmissionRollsBackLateVersion/ancestor_policy/late=false (0.37s)
+    --- PASS: TestContentPostScheduleAdmissionRollsBackLateVersion/ancestor_policy/late=true (1.18s)
+    --- PASS: TestContentPostScheduleAdmissionRollsBackLateVersion/retention/late=false (0.26s)
+    --- PASS: TestContentPostScheduleAdmissionRollsBackLateVersion/retention/late=true (0.98s)
+=== RUN   TestContentLateAdmissionExtraCauseCannotFixRejection
+--- PASS: TestContentLateAdmissionExtraCauseCannotFixRejection (0.65s)
+=== RUN   TestContentPostScheduleAliasPreservesOriginalCapOnRollback
+=== RUN   TestContentPostScheduleAliasPreservesOriginalCapOnRollback/late=false
+=== RUN   TestContentPostScheduleAliasPreservesOriginalCapOnRollback/late=true
+--- PASS: TestContentPostScheduleAliasPreservesOriginalCapOnRollback (3.67s)
+    --- PASS: TestContentPostScheduleAliasPreservesOriginalCapOnRollback/late=false (1.82s)
+    --- PASS: TestContentPostScheduleAliasPreservesOriginalCapOnRollback/late=true (1.85s)
+=== RUN   TestContentLateAdmissionRespectsCompetingOriginalCommand
+=== RUN   TestContentLateAdmissionRespectsCompetingOriginalCommand/different_digest=false
+=== RUN   TestContentLateAdmissionRespectsCompetingOriginalCommand/different_digest=true
+--- PASS: TestContentLateAdmissionRespectsCompetingOriginalCommand (1.81s)
+    --- PASS: TestContentLateAdmissionRespectsCompetingOriginalCommand/different_digest=false (0.92s)
+    --- PASS: TestContentLateAdmissionRespectsCompetingOriginalCommand/different_digest=true (0.89s)
+=== RUN   TestContentCommitUnknownKeepsAcceptedAndLateRejectedTruth
+=== RUN   TestContentCommitUnknownKeepsAcceptedAndLateRejectedTruth/late_rejection=false
+=== RUN   TestContentCommitUnknownKeepsAcceptedAndLateRejectedTruth/late_rejection=true
+--- PASS: TestContentCommitUnknownKeepsAcceptedAndLateRejectedTruth (0.99s)
+    --- PASS: TestContentCommitUnknownKeepsAcceptedAndLateRejectedTruth/late_rejection=false (0.30s)
+    --- PASS: TestContentCommitUnknownKeepsAcceptedAndLateRejectedTruth/late_rejection=true (0.69s)
+=== RUN   TestContentAdmissionReaderExpiryCannotDiscloseAfterWait
+=== RUN   TestContentAdmissionReaderExpiryCannotDiscloseAfterWait/original_key/late=false
+=== RUN   TestContentAdmissionReaderExpiryCannotDiscloseAfterWait/original_key/late=true
+=== RUN   TestContentAdmissionReaderExpiryCannotDiscloseAfterWait/second_save/late=false
+=== RUN   TestContentAdmissionReaderExpiryCannotDiscloseAfterWait/second_save/late=true
+--- PASS: TestContentAdmissionReaderExpiryCannotDiscloseAfterWait (3.48s)
+    --- PASS: TestContentAdmissionReaderExpiryCannotDiscloseAfterWait/original_key/late=false (0.39s)
+    --- PASS: TestContentAdmissionReaderExpiryCannotDiscloseAfterWait/original_key/late=true (1.17s)
+    --- PASS: TestContentAdmissionReaderExpiryCannotDiscloseAfterWait/second_save/late=false (0.49s)
+    --- PASS: TestContentAdmissionReaderExpiryCannotDiscloseAfterWait/second_save/late=true (1.44s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/component	29.796s
+NATIVE_EXIT status=0 group_absent=True

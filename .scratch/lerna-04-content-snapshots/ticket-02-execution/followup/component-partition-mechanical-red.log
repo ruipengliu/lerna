@@ -1,0 +1,53 @@
+✔ native Go discovery failure preserves its exit status (113.245971ms)
+✖ positive partition includes future tests, Unicode, Examples and Fuzz seeds (325.975559ms)
+✔ absent durable group never becomes an empty selector that runs all tests (155.731645ms)
+✔ duplicate, empty and ambiguous inventories fail closed (227.42795ms)
+✔ a native race-group failure remains a failure (137.643696ms)
+✖ normal entry uses the same complete positive partition without race (185.978884ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 4
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1258.22794
+
+✖ failing tests:
+
+test at scripts/component-integration-race.test.mjs:70:1
+✖ positive partition includes future tests, Unicode, Examples and Fuzz seeds (325.975559ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /7 runnables \(1 closure, 1 content, 1 durable, 4 other\)/. Input:
+  
+  'Component integration race: 7 runnables (1 durable, 6 other)\n' +
+    'Component integration race: running durable (1 runnables)\n' +
+    'Component integration race: running other (6 runnables)\n'
+  
+      at TestContext.<anonymous> (file:///tmp/lerna-worktrees/content-snapshots-02/scripts/component-integration-race.test.mjs:88:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'Component integration race: 7 runnables (1 durable, 6 other)\nComponent integration race: running durable (1 runnables)\nComponent integration race: running other (6 runnables)\n',
+    expected: /7 runnables \(1 closure, 1 content, 1 durable, 4 other\)/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at scripts/component-integration-race.test.mjs:141:1
+✖ normal entry uses the same complete positive partition without race (185.978884ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  2 !== 4
+  
+      at TestContext.<anonymous> (file:///tmp/lerna-worktrees/content-snapshots-02/scripts/component-integration-race.test.mjs:145:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 2,
+    expected: 4,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+NATIVE_EXIT status=1 group_absent=True

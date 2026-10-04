@@ -1,0 +1,292 @@
+ACTUAL_GROUP normal durable 60
+=== RUN   TestDurableControlRealSourceFailureIsDependencyUnavailable
+--- PASS: TestDurableControlRealSourceFailureIsDependencyUnavailable (0.50s)
+=== RUN   TestDurableControlExpiredProofReplayRequiresCurrentAccess
+--- PASS: TestDurableControlExpiredProofReplayRequiresCurrentAccess (1.14s)
+=== RUN   TestDurableControlProofBindsPrincipalIssuerAndOriginalIdentity
+=== RUN   TestDurableControlProofBindsPrincipalIssuerAndOriginalIdentity/subject
+=== RUN   TestDurableControlProofBindsPrincipalIssuerAndOriginalIdentity/delegation
+=== RUN   TestDurableControlProofBindsPrincipalIssuerAndOriginalIdentity/decision
+=== RUN   TestDurableControlProofBindsPrincipalIssuerAndOriginalIdentity/task
+=== RUN   TestDurableControlProofBindsPrincipalIssuerAndOriginalIdentity/digest
+=== RUN   TestDurableControlProofBindsPrincipalIssuerAndOriginalIdentity/issuer
+=== RUN   TestDurableControlProofBindsPrincipalIssuerAndOriginalIdentity/proof_owner
+=== RUN   TestDurableControlProofBindsPrincipalIssuerAndOriginalIdentity/proof_hash
+=== RUN   TestDurableControlProofBindsPrincipalIssuerAndOriginalIdentity/proof_length
+=== RUN   TestDurableControlProofBindsPrincipalIssuerAndOriginalIdentity/revision
+=== RUN   TestDurableControlProofBindsPrincipalIssuerAndOriginalIdentity/proof_expiry
+--- PASS: TestDurableControlProofBindsPrincipalIssuerAndOriginalIdentity (0.27s)
+    --- PASS: TestDurableControlProofBindsPrincipalIssuerAndOriginalIdentity/subject (0.02s)
+    --- PASS: TestDurableControlProofBindsPrincipalIssuerAndOriginalIdentity/delegation (0.01s)
+    --- PASS: TestDurableControlProofBindsPrincipalIssuerAndOriginalIdentity/decision (0.01s)
+    --- PASS: TestDurableControlProofBindsPrincipalIssuerAndOriginalIdentity/task (0.01s)
+    --- PASS: TestDurableControlProofBindsPrincipalIssuerAndOriginalIdentity/digest (0.01s)
+    --- PASS: TestDurableControlProofBindsPrincipalIssuerAndOriginalIdentity/issuer (0.02s)
+    --- PASS: TestDurableControlProofBindsPrincipalIssuerAndOriginalIdentity/proof_owner (0.01s)
+    --- PASS: TestDurableControlProofBindsPrincipalIssuerAndOriginalIdentity/proof_hash (0.01s)
+    --- PASS: TestDurableControlProofBindsPrincipalIssuerAndOriginalIdentity/proof_length (0.01s)
+    --- PASS: TestDurableControlProofBindsPrincipalIssuerAndOriginalIdentity/revision (0.01s)
+    --- PASS: TestDurableControlProofBindsPrincipalIssuerAndOriginalIdentity/proof_expiry (0.01s)
+=== RUN   TestDurableControlReadsRealSnapshotFloorAndForbidsExpectedRevision
+--- PASS: TestDurableControlReadsRealSnapshotFloorAndForbidsExpectedRevision (0.20s)
+=== RUN   TestDurableControlSeparatesAcceptBeforeExecutionAndContextDeadlines
+=== RUN   TestDurableControlSeparatesAcceptBeforeExecutionAndContextDeadlines/accept_before
+=== RUN   TestDurableControlSeparatesAcceptBeforeExecutionAndContextDeadlines/execution_deadline
+=== RUN   TestDurableControlSeparatesAcceptBeforeExecutionAndContextDeadlines/resource_context
+--- PASS: TestDurableControlSeparatesAcceptBeforeExecutionAndContextDeadlines (4.96s)
+    --- PASS: TestDurableControlSeparatesAcceptBeforeExecutionAndContextDeadlines/accept_before (1.32s)
+    --- PASS: TestDurableControlSeparatesAcceptBeforeExecutionAndContextDeadlines/execution_deadline (1.25s)
+    --- PASS: TestDurableControlSeparatesAcceptBeforeExecutionAndContextDeadlines/resource_context (2.38s)
+=== RUN   TestDurableControlFinishCommitsBeforeConcurrentCancelPreservingOriginalFacts
+--- PASS: TestDurableControlFinishCommitsBeforeConcurrentCancelPreservingOriginalFacts (0.33s)
+=== RUN   TestDurableControlOriginalCommandPrecedesMethodAndClosedBindingConflicts
+=== RUN   TestDurableControlOriginalCommandPrecedesMethodAndClosedBindingConflicts/decide
+=== RUN   TestDurableControlOriginalCommandPrecedesMethodAndClosedBindingConflicts/cancel
+--- PASS: TestDurableControlOriginalCommandPrecedesMethodAndClosedBindingConflicts (0.46s)
+    --- PASS: TestDurableControlOriginalCommandPrecedesMethodAndClosedBindingConflicts/decide (0.25s)
+    --- PASS: TestDurableControlOriginalCommandPrecedesMethodAndClosedBindingConflicts/cancel (0.21s)
+=== RUN   TestDurableControlResourceLimitsRetainFailureAndAllowExactCounterpart
+=== RUN   TestDurableControlResourceLimitsRetainFailureAndAllowExactCounterpart/zero_input
+=== RUN   TestDurableControlResourceLimitsRetainFailureAndAllowExactCounterpart/zero_output
+=== RUN   TestDurableControlResourceLimitsRetainFailureAndAllowExactCounterpart/zero_steps
+=== RUN   TestDurableControlResourceLimitsRetainFailureAndAllowExactCounterpart/zero_cost
+=== RUN   TestDurableControlResourceLimitsRetainFailureAndAllowExactCounterpart/short_input
+=== RUN   TestDurableControlResourceLimitsRetainFailureAndAllowExactCounterpart/short_output
+=== RUN   TestDurableControlResourceLimitsRetainFailureAndAllowExactCounterpart/bad_source
+=== RUN   TestDurableControlResourceLimitsRetainFailureAndAllowExactCounterpart/cost_unit
+=== RUN   TestDurableControlResourceLimitsRetainFailureAndAllowExactCounterpart/exact_allowance
+=== RUN   TestDurableControlResourceLimitsRetainFailureAndAllowExactCounterpart/maximum_decimal
+--- PASS: TestDurableControlResourceLimitsRetainFailureAndAllowExactCounterpart (5.01s)
+    --- PASS: TestDurableControlResourceLimitsRetainFailureAndAllowExactCounterpart/zero_input (0.38s)
+    --- PASS: TestDurableControlResourceLimitsRetainFailureAndAllowExactCounterpart/zero_output (0.40s)
+    --- PASS: TestDurableControlResourceLimitsRetainFailureAndAllowExactCounterpart/zero_steps (0.38s)
+    --- PASS: TestDurableControlResourceLimitsRetainFailureAndAllowExactCounterpart/zero_cost (0.48s)
+    --- PASS: TestDurableControlResourceLimitsRetainFailureAndAllowExactCounterpart/short_input (0.41s)
+    --- PASS: TestDurableControlResourceLimitsRetainFailureAndAllowExactCounterpart/short_output (0.39s)
+    --- PASS: TestDurableControlResourceLimitsRetainFailureAndAllowExactCounterpart/bad_source (0.37s)
+    --- PASS: TestDurableControlResourceLimitsRetainFailureAndAllowExactCounterpart/cost_unit (0.45s)
+    --- PASS: TestDurableControlResourceLimitsRetainFailureAndAllowExactCounterpart/exact_allowance (0.84s)
+    --- PASS: TestDurableControlResourceLimitsRetainFailureAndAllowExactCounterpart/maximum_decimal (0.90s)
+=== RUN   TestDurableControlCancelsWithoutOrdinaryCapacityAndFencesOldClaim
+=== RUN   TestDurableControlCancelsWithoutOrdinaryCapacityAndFencesOldClaim/quota_zero
+=== RUN   TestDurableControlCancelsWithoutOrdinaryCapacityAndFencesOldClaim/saturated
+=== RUN   TestDurableControlCancelsWithoutOrdinaryCapacityAndFencesOldClaim/started
+--- PASS: TestDurableControlCancelsWithoutOrdinaryCapacityAndFencesOldClaim (2.56s)
+    --- PASS: TestDurableControlCancelsWithoutOrdinaryCapacityAndFencesOldClaim/quota_zero (0.91s)
+    --- PASS: TestDurableControlCancelsWithoutOrdinaryCapacityAndFencesOldClaim/saturated (0.80s)
+    --- PASS: TestDurableControlCancelsWithoutOrdinaryCapacityAndFencesOldClaim/started (0.85s)
+=== RUN   TestDurableControlDeadlineMaintenanceClosesBeyondOnePageAtZeroQuota
+--- PASS: TestDurableControlDeadlineMaintenanceClosesBeyondOnePageAtZeroQuota (4.10s)
+=== RUN   TestDurableCancelBeforeDecideSurvivesBothOwnersReopen
+--- PASS: TestDurableCancelBeforeDecideSurvivesBothOwnersReopen (0.33s)
+=== RUN   TestDurableCancelStopsNextPublicationAfterArtifactReadback
+--- PASS: TestDurableCancelStopsNextPublicationAfterArtifactReadback (0.42s)
+=== RUN   TestDurableCancelBeforeFinishPreservesPublishedUnadoptedBytes
+--- PASS: TestDurableCancelBeforeFinishPreservesPublishedUnadoptedBytes (0.32s)
+=== RUN   TestDurableControlPreparedV2StopsNextPublicationAfterArtifactReadback
+--- PASS: TestDurableControlPreparedV2StopsNextPublicationAfterArtifactReadback (0.35s)
+=== RUN   TestDurableControlPreparedV2StopsFinishAfterProposalReadback
+=== RUN   TestDurableControlPreparedV2StopsFinishAfterProposalReadback/delta_candidate_result
+=== RUN   TestDurableControlPreparedV2StopsFinishAfterProposalReadback/delta_only
+=== RUN   TestDurableControlPreparedV2StopsFinishAfterProposalReadback/actions_four
+--- PASS: TestDurableControlPreparedV2StopsFinishAfterProposalReadback (0.92s)
+    --- PASS: TestDurableControlPreparedV2StopsFinishAfterProposalReadback/delta_candidate_result (0.31s)
+    --- PASS: TestDurableControlPreparedV2StopsFinishAfterProposalReadback/delta_only (0.27s)
+    --- PASS: TestDurableControlPreparedV2StopsFinishAfterProposalReadback/actions_four (0.33s)
+=== RUN   TestDurableControlPreservesTerminalFactsAndOrdersRevisions
+=== RUN   TestDurableControlPreservesTerminalFactsAndOrdersRevisions/completed
+=== RUN   TestDurableControlPreservesTerminalFactsAndOrdersRevisions/failed
+=== RUN   TestDurableControlPreservesTerminalFactsAndOrdersRevisions/cancelled
+--- PASS: TestDurableControlPreservesTerminalFactsAndOrdersRevisions (1.15s)
+    --- PASS: TestDurableControlPreservesTerminalFactsAndOrdersRevisions/completed (0.39s)
+    --- PASS: TestDurableControlPreservesTerminalFactsAndOrdersRevisions/failed (0.38s)
+    --- PASS: TestDurableControlPreservesTerminalFactsAndOrdersRevisions/cancelled (0.38s)
+=== RUN   TestDurableControlStopReceiptAndJobShareTransactionRecovery
+=== RUN   TestDurableControlStopReceiptAndJobShareTransactionRecovery/rollback
+=== RUN   TestDurableControlStopReceiptAndJobShareTransactionRecovery/commit_reply_lost
+--- PASS: TestDurableControlStopReceiptAndJobShareTransactionRecovery (0.47s)
+    --- PASS: TestDurableControlStopReceiptAndJobShareTransactionRecovery/rollback (0.26s)
+    --- PASS: TestDurableControlStopReceiptAndJobShareTransactionRecovery/commit_reply_lost (0.21s)
+=== RUN   TestDurableDecisionPreparedRecoversLostPublicationWithoutSecondFee
+--- PASS: TestDurableDecisionPreparedRecoversLostPublicationWithoutSecondFee (0.40s)
+=== RUN   TestDurableDecisionStartIsOnePermissionAndUnknownWorkConsumesOriginalLimit
+--- PASS: TestDurableDecisionStartIsOnePermissionAndUnknownWorkConsumesOriginalLimit (1.17s)
+=== RUN   TestDurableDecisionConcurrentStartAndCumulativeUnknownUsage
+--- PASS: TestDurableDecisionConcurrentStartAndCumulativeUnknownUsage (1.40s)
+=== RUN   TestDurableDecisionOriginalLimitsGateStartAndWholePreparedOutput
+=== RUN   TestDurableDecisionOriginalLimitsGateStartAndWholePreparedOutput/zero_steps
+=== RUN   TestDurableDecisionOriginalLimitsGateStartAndWholePreparedOutput/zero_cost
+=== RUN   TestDurableDecisionOriginalLimitsGateStartAndWholePreparedOutput/bounded_input
+=== RUN   TestDurableDecisionOriginalLimitsGateStartAndWholePreparedOutput/whole_output
+--- PASS: TestDurableDecisionOriginalLimitsGateStartAndWholePreparedOutput (0.95s)
+    --- PASS: TestDurableDecisionOriginalLimitsGateStartAndWholePreparedOutput/zero_steps (0.19s)
+    --- PASS: TestDurableDecisionOriginalLimitsGateStartAndWholePreparedOutput/zero_cost (0.32s)
+    --- PASS: TestDurableDecisionOriginalLimitsGateStartAndWholePreparedOutput/bounded_input (0.23s)
+    --- PASS: TestDurableDecisionOriginalLimitsGateStartAndWholePreparedOutput/whole_output (0.21s)
+=== RUN   TestDurableDecisionAuthorityCannotRewriteFullDelegatedSubject
+--- PASS: TestDurableDecisionAuthorityCannotRewriteFullDelegatedSubject (0.28s)
+=== RUN   TestDurableDecisionAuthorityCannotRewriteFixedCommandInput
+--- PASS: TestDurableDecisionAuthorityCannotRewriteFixedCommandInput (0.23s)
+=== RUN   TestDurableDecisionOriginalReceiptSurvivesComponentConfigurationChange
+--- PASS: TestDurableDecisionOriginalReceiptSurvivesComponentConfigurationChange (0.16s)
+=== RUN   TestDurableDecisionInterruptedComputedOutputRetainsUnknownAllowance
+=== RUN   TestDurableDecisionInterruptedComputedOutputRetainsUnknownAllowance/remaining_original_allowance
+=== RUN   TestDurableDecisionInterruptedComputedOutputRetainsUnknownAllowance/original_steps_spent
+=== RUN   TestDurableDecisionInterruptedComputedOutputRetainsUnknownAllowance/original_cost_spent
+--- PASS: TestDurableDecisionInterruptedComputedOutputRetainsUnknownAllowance (3.74s)
+    --- PASS: TestDurableDecisionInterruptedComputedOutputRetainsUnknownAllowance/remaining_original_allowance (1.31s)
+    --- PASS: TestDurableDecisionInterruptedComputedOutputRetainsUnknownAllowance/original_steps_spent (1.20s)
+    --- PASS: TestDurableDecisionInterruptedComputedOutputRetainsUnknownAllowance/original_cost_spent (1.22s)
+=== RUN   TestDurableDecisionPreparedBeforePublicationResumesWithoutNewStart
+--- PASS: TestDurableDecisionPreparedBeforePublicationResumesWithoutNewStart (1.25s)
+=== RUN   TestDurableDecisionCannotCompleteWithDifferentPublisherReference
+--- PASS: TestDurableDecisionCannotCompleteWithDifferentPublisherReference (0.30s)
+=== RUN   TestDurableDecisionTwoIdentitiesAndFixedLegacyView
+--- PASS: TestDurableDecisionTwoIdentitiesAndFixedLegacyView (0.35s)
+=== RUN   TestDurableDecisionRollbackAndTokenIsolation
+--- PASS: TestDurableDecisionRollbackAndTokenIsolation (0.24s)
+=== RUN   TestDurableDecisionCrossTenantAndOwnerAuthorization
+--- PASS: TestDurableDecisionCrossTenantAndOwnerAuthorization (0.21s)
+=== RUN   TestDurableDecisionOriginalReplaySurvivesAcceptanceCutoff
+--- PASS: TestDurableDecisionOriginalReplaySurvivesAcceptanceCutoff (0.73s)
+=== RUN   TestDurableDecisionPoolCoversNonAnchorDeadlineAtZeroQuota
+--- PASS: TestDurableDecisionPoolCoversNonAnchorDeadlineAtZeroQuota (0.99s)
+=== RUN   TestDurableDecisionStartFencesClaimAndRequiresRecordedStart
+--- PASS: TestDurableDecisionStartFencesClaimAndRequiresRecordedStart (0.31s)
+=== RUN   TestDurableDecisionLastQueueSlotAcrossStoreInstances
+--- PASS: TestDurableDecisionLastQueueSlotAcrossStoreInstances (0.34s)
+=== RUN   TestDurableDecisionMissingPoolPreservesOriginalIdentity
+--- PASS: TestDurableDecisionMissingPoolPreservesOriginalIdentity (0.27s)
+=== RUN   TestDurableDecisionTenantQuotaCombinesTwoOwners
+--- PASS: TestDurableDecisionTenantQuotaCombinesTwoOwners (0.38s)
+=== RUN   TestDurableProposalNativeSourceFailureRetainsDependencyMeaning
+--- PASS: TestDurableProposalNativeSourceFailureRetainsDependencyMeaning (0.26s)
+=== RUN   TestDurableProposalImmutableCaseBindingSurvivesRejectedReseed
+=== RUN   TestDurableProposalImmutableCaseBindingSurvivesRejectedReseed/same_snapshot_new_case
+=== RUN   TestDurableProposalImmutableCaseBindingSurvivesRejectedReseed/wrong_rule_version
+=== RUN   TestDurableProposalImmutableCaseBindingSurvivesRejectedReseed/wrong_config_digest
+--- PASS: TestDurableProposalImmutableCaseBindingSurvivesRejectedReseed (0.26s)
+    --- PASS: TestDurableProposalImmutableCaseBindingSurvivesRejectedReseed/same_snapshot_new_case (0.00s)
+    --- PASS: TestDurableProposalImmutableCaseBindingSurvivesRejectedReseed/wrong_rule_version (0.00s)
+    --- PASS: TestDurableProposalImmutableCaseBindingSurvivesRejectedReseed/wrong_config_digest (0.00s)
+=== RUN   TestDurableProposalOriginalLimitsMatrix
+=== RUN   TestDurableProposalOriginalLimitsMatrix/zero_steps
+=== RUN   TestDurableProposalOriginalLimitsMatrix/zero_cost
+=== RUN   TestDurableProposalOriginalLimitsMatrix/bounded_input
+=== RUN   TestDurableProposalOriginalLimitsMatrix/whole_artifact_and_proposal
+=== RUN   TestDurableProposalOriginalLimitsMatrix/whole_no_artifact_proposal
+=== RUN   TestDurableProposalOriginalLimitsMatrix/max_actions_0
+=== RUN   TestDurableProposalOriginalLimitsMatrix/max_actions_1
+=== RUN   TestDurableProposalOriginalLimitsMatrix/max_actions_2
+=== RUN   TestDurableProposalOriginalLimitsMatrix/max_actions_3
+=== RUN   TestDurableProposalOriginalLimitsMatrix/max_actions_4
+--- PASS: TestDurableProposalOriginalLimitsMatrix (2.56s)
+    --- PASS: TestDurableProposalOriginalLimitsMatrix/zero_steps (0.21s)
+    --- PASS: TestDurableProposalOriginalLimitsMatrix/zero_cost (0.26s)
+    --- PASS: TestDurableProposalOriginalLimitsMatrix/bounded_input (0.23s)
+    --- PASS: TestDurableProposalOriginalLimitsMatrix/whole_artifact_and_proposal (0.23s)
+    --- PASS: TestDurableProposalOriginalLimitsMatrix/whole_no_artifact_proposal (0.23s)
+    --- PASS: TestDurableProposalOriginalLimitsMatrix/max_actions_0 (0.24s)
+    --- PASS: TestDurableProposalOriginalLimitsMatrix/max_actions_1 (0.24s)
+    --- PASS: TestDurableProposalOriginalLimitsMatrix/max_actions_2 (0.33s)
+    --- PASS: TestDurableProposalOriginalLimitsMatrix/max_actions_3 (0.26s)
+    --- PASS: TestDurableProposalOriginalLimitsMatrix/max_actions_4 (0.31s)
+=== RUN   TestDurableProposalPreparedV2RecoversActualReplyLoss
+=== RUN   TestDurableProposalPreparedV2RecoversActualReplyLoss/delta_only
+=== RUN   TestDurableProposalPreparedV2RecoversActualReplyLoss/actions_four
+=== RUN   TestDurableProposalPreparedV2RecoversActualReplyLoss/input_request
+=== RUN   TestDurableProposalPreparedV2RecoversActualReplyLoss/delta_candidate_result
+=== RUN   TestDurableProposalPreparedV2RecoversActualReplyLoss/cannot_continue
+--- PASS: TestDurableProposalPreparedV2RecoversActualReplyLoss (2.05s)
+    --- PASS: TestDurableProposalPreparedV2RecoversActualReplyLoss/delta_only (0.41s)
+    --- PASS: TestDurableProposalPreparedV2RecoversActualReplyLoss/actions_four (0.45s)
+    --- PASS: TestDurableProposalPreparedV2RecoversActualReplyLoss/input_request (0.41s)
+    --- PASS: TestDurableProposalPreparedV2RecoversActualReplyLoss/delta_candidate_result (0.42s)
+    --- PASS: TestDurableProposalPreparedV2RecoversActualReplyLoss/cannot_continue (0.36s)
+=== RUN   TestDurableProposalRuleVersionRetainsUnknownCaseMeaning
+=== RUN   TestDurableProposalRuleVersionRetainsUnknownCaseMeaning/fixture-rule/2
+=== RUN   TestDurableProposalRuleVersionRetainsUnknownCaseMeaning/fixture-rule/3
+--- PASS: TestDurableProposalRuleVersionRetainsUnknownCaseMeaning (0.49s)
+    --- PASS: TestDurableProposalRuleVersionRetainsUnknownCaseMeaning/fixture-rule/2 (0.25s)
+    --- PASS: TestDurableProposalRuleVersionRetainsUnknownCaseMeaning/fixture-rule/3 (0.25s)
+=== RUN   TestDurableProposalCandidateSourceEvidenceUsesAllowedPurpose
+--- PASS: TestDurableProposalCandidateSourceEvidenceUsesAllowedPurpose (0.29s)
+=== RUN   TestDurableProposalDeltaOnlyHasNoInventedArtifact
+--- PASS: TestDurableProposalDeltaOnlyHasNoInventedArtifact (0.31s)
+=== RUN   TestDurableProposalFourIndependentActions
+--- PASS: TestDurableProposalFourIndependentActions (0.28s)
+=== RUN   TestDurableProposalInputRequestIsClarificationWithReadableSchema
+--- PASS: TestDurableProposalInputRequestIsClarificationWithReadableSchema (0.28s)
+=== RUN   TestDurableProposalDeltaWithCandidatePreservesBothSuggestions
+--- PASS: TestDurableProposalDeltaWithCandidatePreservesBothSuggestions (0.27s)
+=== RUN   TestDurableProposalCannotContinueCompletesWithoutTaskVerdict
+--- PASS: TestDurableProposalCannotContinueCompletesWithoutTaskVerdict (0.23s)
+=== RUN   TestDurableProposalFixedDependsOnOutputFailsThroughPublicCodec
+--- PASS: TestDurableProposalFixedDependsOnOutputFailsThroughPublicCodec (0.26s)
+=== RUN   TestDurableProposalRejectsValidBindingRefsInWrongArgumentPair
+--- PASS: TestDurableProposalRejectsValidBindingRefsInWrongArgumentPair (0.25s)
+=== RUN   TestDurableProposalArgumentsRequireSourcePurposeConsumption
+--- PASS: TestDurableProposalArgumentsRequireSourcePurposeConsumption (0.26s)
+=== RUN   TestDurableProposalReplacementMustUseCurrentConditionRevision
+--- PASS: TestDurableProposalReplacementMustUseCurrentConditionRevision (0.24s)
+=== RUN   TestDurableProposalBoundedInvalidOutputMatrix
+=== RUN   TestDurableProposalBoundedInvalidOutputMatrix/invalid_delta_duplicate_replace
+=== RUN   TestDurableProposalBoundedInvalidOutputMatrix/invalid_processed_omission
+=== RUN   TestDurableProposalBoundedInvalidOutputMatrix/invalid_disclosed_foreign_ref
+=== RUN   TestDurableProposalBoundedInvalidOutputMatrix/invalid_actions_capability_pair
+=== RUN   TestDurableProposalBoundedInvalidOutputMatrix/invalid_actions_future_result
+=== RUN   TestDurableProposalBoundedInvalidOutputMatrix/invalid_actions_duplicate_keys
+=== RUN   TestDurableProposalBoundedInvalidOutputMatrix/invalid_actions_fifth
+=== RUN   TestDurableProposalBoundedInvalidOutputMatrix/invalid_advance_combined
+=== RUN   TestDurableProposalBoundedInvalidOutputMatrix/invalid_raw_duplicate_field
+=== RUN   TestDurableProposalBoundedInvalidOutputMatrix/invalid_raw_unknown_field
+=== RUN   TestDurableProposalBoundedInvalidOutputMatrix/invalid_empty_delta_none
+=== RUN   TestDurableProposalBoundedInvalidOutputMatrix/invalid_candidate_evidence_requirement
+=== RUN   TestDurableProposalBoundedInvalidOutputMatrix/invalid_candidate_evidence_purpose
+=== RUN   TestDurableProposalBoundedInvalidOutputMatrix/invalid_input_confirmation
+=== RUN   TestDurableProposalBoundedInvalidOutputMatrix/invalid_input_schema
+--- PASS: TestDurableProposalBoundedInvalidOutputMatrix (3.85s)
+    --- PASS: TestDurableProposalBoundedInvalidOutputMatrix/invalid_delta_duplicate_replace (0.22s)
+    --- PASS: TestDurableProposalBoundedInvalidOutputMatrix/invalid_processed_omission (0.27s)
+    --- PASS: TestDurableProposalBoundedInvalidOutputMatrix/invalid_disclosed_foreign_ref (0.24s)
+    --- PASS: TestDurableProposalBoundedInvalidOutputMatrix/invalid_actions_capability_pair (0.23s)
+    --- PASS: TestDurableProposalBoundedInvalidOutputMatrix/invalid_actions_future_result (0.24s)
+    --- PASS: TestDurableProposalBoundedInvalidOutputMatrix/invalid_actions_duplicate_keys (0.27s)
+    --- PASS: TestDurableProposalBoundedInvalidOutputMatrix/invalid_actions_fifth (0.25s)
+    --- PASS: TestDurableProposalBoundedInvalidOutputMatrix/invalid_advance_combined (0.24s)
+    --- PASS: TestDurableProposalBoundedInvalidOutputMatrix/invalid_raw_duplicate_field (0.32s)
+    --- PASS: TestDurableProposalBoundedInvalidOutputMatrix/invalid_raw_unknown_field (0.27s)
+    --- PASS: TestDurableProposalBoundedInvalidOutputMatrix/invalid_empty_delta_none (0.23s)
+    --- PASS: TestDurableProposalBoundedInvalidOutputMatrix/invalid_candidate_evidence_requirement (0.27s)
+    --- PASS: TestDurableProposalBoundedInvalidOutputMatrix/invalid_candidate_evidence_purpose (0.25s)
+    --- PASS: TestDurableProposalBoundedInvalidOutputMatrix/invalid_input_confirmation (0.25s)
+    --- PASS: TestDurableProposalBoundedInvalidOutputMatrix/invalid_input_schema (0.29s)
+=== RUN   TestDurableDecisionReadDistinguishesAbsenceAndActualStoreUnavailable
+--- PASS: TestDurableDecisionReadDistinguishesAbsenceAndActualStoreUnavailable (0.26s)
+=== RUN   TestDurableDecisionFinishFencesExpiredClaimAfterBothPublications
+--- PASS: TestDurableDecisionFinishFencesExpiredClaimAfterBothPublications (2.28s)
+=== RUN   TestDurableRuleProposalSurvivesReopen
+--- PASS: TestDurableRuleProposalSurvivesReopen (0.29s)
+=== RUN   TestDurableDecisionStartRollbackKeepsOriginalAllowance
+--- PASS: TestDurableDecisionStartRollbackKeepsOriginalAllowance (0.26s)
+=== RUN   TestDurableDecisionCommitReplyLossPreservesPreparedAndCompletedFacts
+=== RUN   TestDurableDecisionCommitReplyLossPreservesPreparedAndCompletedFacts/prepared
+=== RUN   TestDurableDecisionCommitReplyLossPreservesPreparedAndCompletedFacts/finish
+--- PASS: TestDurableDecisionCommitReplyLossPreservesPreparedAndCompletedFacts (0.75s)
+    --- PASS: TestDurableDecisionCommitReplyLossPreservesPreparedAndCompletedFacts/prepared (0.30s)
+    --- PASS: TestDurableDecisionCommitReplyLossPreservesPreparedAndCompletedFacts/finish (0.45s)
+=== RUN   TestDurableDecisionSnapshotLockAndManifestConsumeInputBound
+=== RUN   TestDurableDecisionSnapshotLockAndManifestConsumeInputBound/snapshot
+=== RUN   TestDurableDecisionSnapshotLockAndManifestConsumeInputBound/lock
+=== RUN   TestDurableDecisionSnapshotLockAndManifestConsumeInputBound/manifest
+--- PASS: TestDurableDecisionSnapshotLockAndManifestConsumeInputBound (1.15s)
+    --- PASS: TestDurableDecisionSnapshotLockAndManifestConsumeInputBound/snapshot (0.50s)
+    --- PASS: TestDurableDecisionSnapshotLockAndManifestConsumeInputBound/lock (0.32s)
+    --- PASS: TestDurableDecisionSnapshotLockAndManifestConsumeInputBound/manifest (0.33s)
+=== RUN   TestDurableDecisionPreparedPublicationCannotCrossOriginalDeadline
+--- PASS: TestDurableDecisionPreparedPublicationCannotCrossOriginalDeadline (3.15s)
+=== RUN   TestDurableDecisionPreparedCannotRefreshOriginalExpiredPermission
+--- PASS: TestDurableDecisionPreparedCannotRefreshOriginalExpiredPermission (3.14s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/component	60.683s
+NATIVE_EXIT status=0 group_absent=True

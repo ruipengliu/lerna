@@ -1,0 +1,12 @@
+--- FAIL: TestContentNewAssociationRequiresCurrentDirectSourceAdmission (0.97s)
+    --- FAIL: TestContentNewAssociationRequiresCurrentDirectSourceAdmission/process (0.57s)
+        content_association_test.go:49: association reopened publication <nil>
+    --- FAIL: TestContentNewAssociationRequiresCurrentDirectSourceAdmission/save (0.40s)
+        content_association_test.go:49: association reopened publication <nil>
+--- FAIL: TestContentDirectReadPermissionsAreCurrentAndSeparate (2.09s)
+    --- FAIL: TestContentDirectReadPermissionsAreCurrentAndSeparate/expired (0.35s)
+        content_direct_read_test.go:130: permitted exact content not published
+FAIL
+FAIL	github.com/ruipengliu/lerna/conformance/component	22.305s
+FAIL
+NATIVE_EXIT status=1 group_absent=True

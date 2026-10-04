@@ -1,0 +1,26 @@
+=== RUN   TestContentPostScheduleAdmissionRollsBackLateVersion
+=== RUN   TestContentPostScheduleAdmissionRollsBackLateVersion/accept_before/late=false
+=== RUN   TestContentPostScheduleAdmissionRollsBackLateVersion/accept_before/late=true
+    content_post_schedule_test.go:110: expected fixed expired rejection
+=== RUN   TestContentPostScheduleAdmissionRollsBackLateVersion/target_policy/late=false
+=== RUN   TestContentPostScheduleAdmissionRollsBackLateVersion/target_policy/late=true
+    content_post_schedule_test.go:110: expected fixed forbidden rejection
+=== RUN   TestContentPostScheduleAdmissionRollsBackLateVersion/ancestor_policy/late=false
+=== RUN   TestContentPostScheduleAdmissionRollsBackLateVersion/ancestor_policy/late=true
+    content_post_schedule_test.go:110: expected fixed forbidden rejection
+=== RUN   TestContentPostScheduleAdmissionRollsBackLateVersion/retention/late=false
+=== RUN   TestContentPostScheduleAdmissionRollsBackLateVersion/retention/late=true
+    content_post_schedule_test.go:110: expected fixed expired rejection
+--- FAIL: TestContentPostScheduleAdmissionRollsBackLateVersion (4.26s)
+    --- PASS: TestContentPostScheduleAdmissionRollsBackLateVersion/accept_before/late=false (0.23s)
+    --- FAIL: TestContentPostScheduleAdmissionRollsBackLateVersion/accept_before/late=true (0.88s)
+    --- PASS: TestContentPostScheduleAdmissionRollsBackLateVersion/target_policy/late=false (0.15s)
+    --- FAIL: TestContentPostScheduleAdmissionRollsBackLateVersion/target_policy/late=true (0.87s)
+    --- PASS: TestContentPostScheduleAdmissionRollsBackLateVersion/ancestor_policy/late=false (0.22s)
+    --- FAIL: TestContentPostScheduleAdmissionRollsBackLateVersion/ancestor_policy/late=true (0.90s)
+    --- PASS: TestContentPostScheduleAdmissionRollsBackLateVersion/retention/late=false (0.16s)
+    --- FAIL: TestContentPostScheduleAdmissionRollsBackLateVersion/retention/late=true (0.85s)
+FAIL
+FAIL	github.com/ruipengliu/lerna/conformance/component	4.274s
+FAIL
+NATIVE_EXIT status=1 group_absent=True

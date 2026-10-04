@@ -1,0 +1,9 @@
+{
+  "actual_tool_completed": true,
+  "tool_exit": 0,
+  "native_exit": 0,
+  "group_absent": true,
+  "auditor_group": 2596197,
+  "raw": "final-resource-audit.raw",
+  "qualification": "actual completed exec; original unknowns retained; no per-Close acknowledgment inferred"
+}

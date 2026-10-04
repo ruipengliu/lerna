@@ -1,0 +1,6 @@
+--- FAIL: TestContentHiddenAncestorControlsCurrentDerivedUse (0.35s)
+    content_closure_test.go:32: hidden ancestor disclosure revocation bypassed {{published {{content-tenant content-owner} output 1 sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060 text/plain 6} YWxwaGEK <nil>}}
+FAIL
+FAIL	github.com/ruipengliu/lerna/conformance/component	0.363s
+FAIL
+NATIVE_EXIT status=1 group_absent=True

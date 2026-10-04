@@ -1,0 +1,30 @@
+?   	github.com/ruipengliu/lerna/adapters/objectstore/local	[no test files]
+?   	github.com/ruipengliu/lerna/adapters/postgres	[no test files]
+ok  	github.com/ruipengliu/lerna/adapters/postgres/content	1.072s
+?   	github.com/ruipengliu/lerna/adapters/postgres/decision_engine	[no test files]
+ok  	github.com/ruipengliu/lerna/adapters/postgres/internal/pgstore	1.091s
+ok  	github.com/ruipengliu/lerna/adapters/sqlite	1.041s
+?   	github.com/ruipengliu/lerna/cmd/durable-work-fixture	[no test files]
+?   	github.com/ruipengliu/lerna/cmd/sqlite-durable-work-fixture	[no test files]
+?   	github.com/ruipengliu/lerna/components/decision_engine	[no test files]
+ok  	github.com/ruipengliu/lerna/conformance/component	11.168s
+?   	github.com/ruipengliu/lerna/conformance/component/valuerunner	[no test files]
+?   	github.com/ruipengliu/lerna/conformance/component/valuerunner_v1_1	[no test files]
+?   	github.com/ruipengliu/lerna/conformance/component/valuerunner_v1_2	[no test files]
+?   	github.com/ruipengliu/lerna/conformance/internal/contentfixture	[no test files]
+ok  	github.com/ruipengliu/lerna/conformance/internal/decisionfixture	1.145s
+ok  	github.com/ruipengliu/lerna/conformance/internal/testkit/process	1.060s
+ok  	github.com/ruipengliu/lerna/conformance/internal/testkit/target	16.435s
+?   	github.com/ruipengliu/lerna/contract	[no test files]
+?   	github.com/ruipengliu/lerna/contract/gen/go	[no test files]
+?   	github.com/ruipengliu/lerna/contract/gen/go/v1_1	[no test files]
+?   	github.com/ruipengliu/lerna/contract/gen/go/v1_2	[no test files]
+?   	github.com/ruipengliu/lerna/contract/v1_1	[no test files]
+ok  	github.com/ruipengliu/lerna/contract/v1_2	1.647s
+ok  	github.com/ruipengliu/lerna/domain/content	1.066s
+?   	github.com/ruipengliu/lerna/host/durablework	[no test files]
+ok  	github.com/ruipengliu/lerna/internal/durableworkdemo	1.223s
+?   	github.com/ruipengliu/lerna/internal/sqlclosetest	[no test files]
+?   	github.com/ruipengliu/lerna/runtime	[no test files]
+ok  	github.com/ruipengliu/lerna/runtime/workpool	1.042s
+NATIVE_EXIT status=0 group_absent=True

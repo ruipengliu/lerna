@@ -1,7 +1,16 @@
 #!/usr/bin/env bash
-# Keep each Component race group inside the original per-package deadline.
+# Keep each complete Component group inside the original per-package deadline.
 # Discover current tests so future Test, Example and Fuzz seed cases are included.
 set -euo pipefail
+mode=race
+declare -a race_flags=(-race)
+if (($# == 1)) && [[ "$1" == --normal ]]; then
+  mode=normal
+  race_flags=()
+elif (($# != 0)); then
+  echo 'Expected no argument or --normal' >&2
+  exit 1
+fi
 
 if inventory=$(go test -p=1 -count=1 -tags=integration -timeout=120s ./conformance/component -list .); then
   :
@@ -11,7 +20,7 @@ else
   exit "$status"
 fi
 
-declare -a durable=() other=()
+declare -a closure=() content=() durable=() other=()
 declare -A seen=()
 count=0
 while IFS= read -r name; do
@@ -22,7 +31,11 @@ while IFS= read -r name; do
     fi
     seen[$name]=1
     count=$((count + 1))
-    if [[ "$name" == TestDurable* ]]; then
+    if [[ "$name" == TestContentFullClosureIncludesIntermediateVersionsAndExact64Bound ]]; then
+      closure+=("$name")
+    elif [[ "$name" == TestContent* ]]; then
+      content+=("$name")
+    elif [[ "$name" == TestDurable* ]]; then
       durable+=("$name")
     else
       other+=("$name")
@@ -38,11 +51,11 @@ while IFS= read -r name; do
   fi
 done <<< "$inventory"
 
-if ((count == 0 || count != ${#durable[@]} + ${#other[@]})); then
+if ((count == 0 || count != ${#closure[@]} + ${#content[@]} + ${#durable[@]} + ${#other[@]})); then
   echo 'Component integration-race inventory is empty or incomplete' >&2
   exit 1
 fi
-echo "Component integration race: $count runnables (${#durable[@]} durable, ${#other[@]} other)"
+echo "Component integration $mode: $count runnables (${#closure[@]} closure, ${#content[@]} content, ${#durable[@]} durable, ${#other[@]} other)"
 
 # Use exact positive unions (Go RE2 has no negative lookahead). Escape literals
 # rather than assuming future Go-valid Unicode identifiers fit an ASCII filter.
@@ -50,7 +63,7 @@ run_group() {
   local group=$1 name char escaped selector='' i
   shift
   if (($# == 0)); then
-    echo "Component integration race: empty $group group"
+    echo "Component integration $mode: empty $group group"
     return
   fi
   for name in "$@"; do
@@ -64,9 +77,22 @@ run_group() {
     done
     selector+="${selector:+|}$escaped"
   done
-  echo "Component integration race: running $group ($# runnables)"
-  go test -p=1 -count=1 -race -tags=integration -timeout=120s ./conformance/component -run "^($selector)$"
+  echo "Component integration $mode: running $group ($# runnables)"
+  go test -p=1 -count=1 "${race_flags[@]}" -tags=integration -timeout=120s ./conformance/component -run "^($selector)$"
 }
 
+run_group closure "${closure[@]}"
+# Alternate the exact discovered Content list across two finite groups. This
+# includes future cases once; no empty union may silently execute all tests.
+declare -a content_a=() content_b=()
+for ((index = 0; index < ${#content[@]}; index++)); do
+  if ((index % 2 == 0)); then
+    content_a+=("${content[index]}")
+  else
+    content_b+=("${content[index]}")
+  fi
+done
+run_group content_a "${content_a[@]}"
+run_group content_b "${content_b[@]}"
 run_group durable "${durable[@]}"
 run_group other "${other[@]}"

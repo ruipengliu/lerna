@@ -1,0 +1,6 @@
+--- FAIL: TestContentLegacyBackfillRestoresOriginalExpiryAndFailedHolderResponsibilities (0.20s)
+    content_legacy_test.go:25: legacy original policy maintenance unregistered source_unavailable
+FAIL
+FAIL	github.com/ruipengliu/lerna/conformance/component	0.222s
+FAIL
+NATIVE_EXIT status=1 group_absent=True

@@ -1,0 +1,8 @@
+{
+  "Replace": {
+    "/tmp/lerna-worktrees/content-snapshots-02/adapters/postgres/content/policy.go": "/workspace/lerna-content-02-fix-57ea60c628f8/phase-diagnostic-overlay/adapters/postgres/content/policy.go",
+    "/tmp/lerna-worktrees/content-snapshots-02/adapters/postgres/content/facts.go": "/workspace/lerna-content-02-fix-57ea60c628f8/phase-diagnostic-overlay/adapters/postgres/content/facts.go",
+    "/tmp/lerna-worktrees/content-snapshots-02/adapters/postgres/content/management.go": "/workspace/lerna-content-02-fix-57ea60c628f8/phase-diagnostic-overlay/adapters/postgres/content/management.go",
+    "/tmp/lerna-worktrees/content-snapshots-02/conformance/component/content_closure_test.go": "/workspace/lerna-content-02-fix-57ea60c628f8/phase-diagnostic-overlay/conformance/component/content_closure_test.go"
+  }
+}

@@ -1,0 +1,1320 @@
+{
+  "axis": "Spec",
+  "base": "f05b2f1068958ba6b63e6c1dc58d6cd1684446cc",
+  "prior_head": "4c6219fb420cdd63ea67f6db4c0106779ea9ccfa",
+  "head": "5c02440800d87eba2af461c210e4333ff45c1633",
+  "merge_base": "f05b2f1068958ba6b63e6c1dc58d6cd1684446cc",
+  "commits": [
+    "5c02440 test(content): partition every current case into finite integration groups",
+    "4c6219f perf(content): sample policy clock after materialized row lock",
+    "6a9aa65 fix(content): preserve admission bounds and combine current source actions",
+    "75202ee test(content): cover natural handoff through both worker consumers",
+    "3f44032 fix(content): hand off original natural checks and retain all SQL close causes",
+    "8d64ad1 fix(content): preserve propagation deadlines and admission expiry obligations",
+    "57ea60c Preserve exact native Content archives and normalize restore EOF",
+    "d3fb9c7 Merge commit '70f69e524592491a5ad37754cf0793ee131acec6' into codex/content-snapshots-ticket-02",
+    "482dc1d Implement current Content source closure and durable policy propagation",
+    "70f69e5 docs(content): adopt current-policy oracle and responsibility decisions",
+    "f54d697 docs: record verified Content checkpoint CI and full finite integration scope"
+  ],
+  "path_count": 54,
+  "stat": "54 files changed, 8571 insertions(+), 218 deletions(-)",
+  "delta_stat": "2 files changed, 24 insertions(+), 1 deletion(-)",
+  "carry_count": 52,
+  "carry_exact_mode_type_blob": [
+    {
+      "path": ".gitattributes",
+      "entry": "100644 blob 61a70d47da26cf8ccd7433f5c878adb3d21933fd"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/ci-verification.md",
+      "entry": "100644 blob 0ff82eff7d7398fb0bb4575473f0d42a98a90f0f"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/issues/02-current-source-policies.md",
+      "entry": "100644 blob 5a87fa60b272cb6a4a8cc30992a59dec8a4f022b"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/ticket-01-exit-evidence.md",
+      "entry": "100644 blob e295032e6dedc4c6d9eebd44b6b552a282cefe41"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/ticket-02-oracle-decisions.md",
+      "entry": "100644 blob f00e774605be856ea1d135a1db18b2266e44c7a8"
+    },
+    {
+      "path": ".scratch/lerna-implementation/progress.md",
+      "entry": "100644 blob f792702f05528219ce9ef4c2a7f7fc765464b555"
+    },
+    {
+      "path": "Makefile",
+      "entry": "100644 blob 12610df8beeb5c6efe4d8cd0df234297a9e924e4"
+    },
+    {
+      "path": "adapters/postgres/content/facts.go",
+      "entry": "100644 blob d0eba95a81b13c06575111aa9e5442ccc8ccf492"
+    },
+    {
+      "path": "adapters/postgres/content/management.go",
+      "entry": "100644 blob 085a4207fa94a92f36e86913be7f72cf5370adfd"
+    },
+    {
+      "path": "adapters/postgres/content/management_rows_test.go",
+      "entry": "100644 blob 0d3b5d44f3f0d6ad495a41a103d4a7de1629cd92"
+    },
+    {
+      "path": "adapters/postgres/content/migrate.go",
+      "entry": "100644 blob e12754f772a1587c86008d628273e8d48b6cd04b"
+    },
+    {
+      "path": "adapters/postgres/content/migrations/0002_source_policies.sql",
+      "entry": "100644 blob 02a082a5a0edfa57d0e8d2a2680b0af5ad9a5a41"
+    },
+    {
+      "path": "adapters/postgres/content/policy.go",
+      "entry": "100644 blob b1952900799084c64366f064e738045faf811b72"
+    },
+    {
+      "path": "conformance/component/content_association_test.go",
+      "entry": "100644 blob ce45b9331b17a1142e8e0847056b802d0186f28e"
+    },
+    {
+      "path": "conformance/component/content_closure_test.go",
+      "entry": "100644 blob bdbe606348847be8dd3238b9eaa115a56e2fb231"
+    },
+    {
+      "path": "conformance/component/content_direct_read_test.go",
+      "entry": "100644 blob 35460c48c30a76585eb1f282fcc8da13a5975c58"
+    },
+    {
+      "path": "conformance/component/content_inherited_expiry_test.go",
+      "entry": "100644 blob d2802a3c9e6ee9df9fe685fe11874b210d959272"
+    },
+    {
+      "path": "conformance/component/content_legacy_test.go",
+      "entry": "100644 blob 2f2089c418055e781a3710d1dd9d89da9a7d58a6"
+    },
+    {
+      "path": "conformance/component/content_management_test.go",
+      "entry": "100644 blob acda6b07df81e26729f64e0fd1609c3edbe19774"
+    },
+    {
+      "path": "conformance/component/content_policy_actions_test.go",
+      "entry": "100644 blob eb3793ad92c91e432a9c7801fc26a93644a7b140"
+    },
+    {
+      "path": "conformance/component/content_post_schedule_test.go",
+      "entry": "100644 blob 49bb76200416b7355f0d774552b21c4de0139084"
+    },
+    {
+      "path": "conformance/component/content_processing_deadline_test.go",
+      "entry": "100644 blob 5cf994ae4aec2ef7ed91f87a77453f2ea345c2cc"
+    },
+    {
+      "path": "conformance/internal/contentfixture/legacy.go",
+      "entry": "100644 blob 06438b6fda8cff8f38a657fafbc83fe44e7f7cae"
+    },
+    {
+      "path": "conformance/internal/contentfixture/migration_test.go",
+      "entry": "100644 blob 1791ce393db68ec70dacaf38713edb9e8f702c29"
+    },
+    {
+      "path": "conformance/internal/contentfixture/policy_lock.go",
+      "entry": "100644 blob 16b589f806c0a5e5252b4f9e66071461c297c438"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/README.md",
+      "entry": "100644 blob e8df491fa6760db9241c0d99626cf271cac8b812"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/76f0298c5432c6b1e28ae5a2c2cc4e8624fd32cffa6112173de32a68c90652c4",
+      "entry": "100644 blob 4a58007052a65fbc2fc3f910f2855f45a4058e74"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/SHA256SUMS",
+      "entry": "100644 blob d2545d360368671e6ec56046039e281914b1e537"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/da1384e8c6e31d165b9f0442b2d2f1f57a875a20156041bfedfcc4ce779654dc",
+      "entry": "100644 blob 4a58007052a65fbc2fc3f910f2855f45a4058e74"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/observation.json",
+      "entry": "100644 blob b7ce2095534dea1607e76a89f728e3acde1fbf9b"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/original-pg18-dump.sql",
+      "entry": "100644 blob 020d384621925b7c04d66df8033cd724633a3b3e"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/producer.go.txt",
+      "entry": "100644 blob c1a827b11b104ccf362ed591c718d28ded3b6ec3"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/restore.sql",
+      "entry": "100644 blob 38d6e2767a557ed4e1db93b68ae2b66eebc94558"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/76f0298c5432c6b1e28ae5a2c2cc4e8624fd32cffa6112173de32a68c90652c4",
+      "entry": "100644 blob 4a58007052a65fbc2fc3f910f2855f45a4058e74"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/SHA256SUMS",
+      "entry": "100644 blob f9380af712926c7fe266e5e2e906ffeac9719379"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/da1384e8c6e31d165b9f0442b2d2f1f57a875a20156041bfedfcc4ce779654dc",
+      "entry": "100644 blob 4a58007052a65fbc2fc3f910f2855f45a4058e74"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/observation.json",
+      "entry": "100644 blob 3acae85bca5e1660eda18a89e984862c84f45f64"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/original-pg18-dump.sql",
+      "entry": "100644 blob fb80a1b0332078e5f97a0966fdebfba571e649a5"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/producer.go.txt",
+      "entry": "100644 blob 7cc3438a191d9a17a11e4eb3b910c9af4ed9f3e9"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/restore.sql",
+      "entry": "100644 blob 0c0431fd59927f5896b812ceac411fbee8eb2c0e"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/76f0298c5432c6b1e28ae5a2c2cc4e8624fd32cffa6112173de32a68c90652c4",
+      "entry": "100644 blob 4a58007052a65fbc2fc3f910f2855f45a4058e74"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/SHA256SUMS",
+      "entry": "100644 blob 141cdf1f4494009c9d9ff026e40dd15e3036d307"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/da1384e8c6e31d165b9f0442b2d2f1f57a875a20156041bfedfcc4ce779654dc",
+      "entry": "100644 blob 4a58007052a65fbc2fc3f910f2855f45a4058e74"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/observation.json",
+      "entry": "100644 blob 3acae85bca5e1660eda18a89e984862c84f45f64"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/original-pg18-dump.sql",
+      "entry": "100644 blob db3a215fa72a2578721074367fff42cc9bb3bd32"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/producer.go.txt",
+      "entry": "100644 blob fed889074954ea57c20e3cb8dfbb79fbdfefa5a0"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/restore.sql",
+      "entry": "100644 blob 7fe3fbb5ab51a0d8d52d1534869c105c50aa2235"
+    },
+    {
+      "path": "conformance/internal/contentfixture/world.go",
+      "entry": "100644 blob c7f0d553dc2a6f76b17c2867a713a0c909b3955e"
+    },
+    {
+      "path": "domain/content/closure.go",
+      "entry": "100644 blob f78c51e10d52eea2c7e7a7537622fe27d84a4735"
+    },
+    {
+      "path": "domain/content/management.go",
+      "entry": "100644 blob 3e07b466d896748497b8933a86f16075d9c47e42"
+    },
+    {
+      "path": "domain/content/ports.go",
+      "entry": "100644 blob 2ca2ffa51ad61adfed1642aeae0de36c22af15e7"
+    },
+    {
+      "path": "domain/content/service.go",
+      "entry": "100644 blob 68789baacde422ed80b5b8a9615c751a0d032f5d"
+    }
+  ],
+  "fresh_count": 2,
+  "paths": [
+    {
+      "path": ".gitattributes",
+      "entry": "100644 blob 61a70d47da26cf8ccd7433f5c878adb3d21933fd",
+      "qualification": "exact-object carry from own complete4c621 review"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/ci-verification.md",
+      "entry": "100644 blob 0ff82eff7d7398fb0bb4575473f0d42a98a90f0f",
+      "qualification": "exact-object carry from own complete4c621 review"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/issues/02-current-source-policies.md",
+      "entry": "100644 blob 5a87fa60b272cb6a4a8cc30992a59dec8a4f022b",
+      "qualification": "exact-object carry from own complete4c621 review"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/ticket-01-exit-evidence.md",
+      "entry": "100644 blob e295032e6dedc4c6d9eebd44b6b552a282cefe41",
+      "qualification": "exact-object carry from own complete4c621 review"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/ticket-02-oracle-decisions.md",
+      "entry": "100644 blob f00e774605be856ea1d135a1db18b2266e44c7a8",
+      "qualification": "exact-object carry from own complete4c621 review"
+    },
+    {
+      "path": ".scratch/lerna-implementation/progress.md",
+      "entry": "100644 blob f792702f05528219ce9ef4c2a7f7fc765464b555",
+      "qualification": "exact-object carry from own complete4c621 review"
+    },
+    {
+      "path": "Makefile",
+      "entry": "100644 blob 12610df8beeb5c6efe4d8cd0df234297a9e924e4",
+      "qualification": "exact-object carry from own complete4c621 review"
+    },
+    {
+      "path": "adapters/postgres/content/facts.go",
+      "entry": "100644 blob d0eba95a81b13c06575111aa9e5442ccc8ccf492",
+      "qualification": "exact-object carry from own complete4c621 review"
+    },
+    {
+      "path": "adapters/postgres/content/management.go",
+      "entry": "100644 blob 085a4207fa94a92f36e86913be7f72cf5370adfd",
+      "qualification": "exact-object carry from own complete4c621 review"
+    },
+    {
+      "path": "adapters/postgres/content/management_rows_test.go",
+      "entry": "100644 blob 0d3b5d44f3f0d6ad495a41a103d4a7de1629cd92",
+      "qualification": "exact-object carry from own complete4c621 review"
+    },
+    {
+      "path": "adapters/postgres/content/migrate.go",
+      "entry": "100644 blob e12754f772a1587c86008d628273e8d48b6cd04b",
+      "qualification": "exact-object carry from own complete4c621 review"
+    },
+    {
+      "path": "adapters/postgres/content/migrations/0002_source_policies.sql",
+      "entry": "100644 blob 02a082a5a0edfa57d0e8d2a2680b0af5ad9a5a41",
+      "qualification": "exact-object carry from own complete4c621 review"
+    },
+    {
+      "path": "adapters/postgres/content/policy.go",
+      "entry": "100644 blob b1952900799084c64366f064e738045faf811b72",
+      "qualification": "exact-object carry from own complete4c621 review"
+    },
+    {
+      "path": "conformance/component/content_association_test.go",
+      "entry": "100644 blob ce45b9331b17a1142e8e0847056b802d0186f28e",
+      "qualification": "exact-object carry from own complete4c621 review"
+    },
+    {
+      "path": "conformance/component/content_closure_test.go",
+      "entry": "100644 blob bdbe606348847be8dd3238b9eaa115a56e2fb231",
+      "qualification": "exact-object carry from own complete4c621 review"
+    },
+    {
+      "path": "conformance/component/content_direct_read_test.go",
+      "entry": "100644 blob 35460c48c30a76585eb1f282fcc8da13a5975c58",
+      "qualification": "exact-object carry from own complete4c621 review"
+    },
+    {
+      "path": "conformance/component/content_inherited_expiry_test.go",
+      "entry": "100644 blob d2802a3c9e6ee9df9fe685fe11874b210d959272",
+      "qualification": "exact-object carry from own complete4c621 review"
+    },
+    {
+      "path": "conformance/component/content_legacy_test.go",
+      "entry": "100644 blob 2f2089c418055e781a3710d1dd9d89da9a7d58a6",
+      "qualification": "exact-object carry from own complete4c621 review"
+    },
+    {
+      "path": "conformance/component/content_management_test.go",
+      "entry": "100644 blob acda6b07df81e26729f64e0fd1609c3edbe19774",
+      "qualification": "exact-object carry from own complete4c621 review"
+    },
+    {
+      "path": "conformance/component/content_policy_actions_test.go",
+      "entry": "100644 blob eb3793ad92c91e432a9c7801fc26a93644a7b140",
+      "qualification": "exact-object carry from own complete4c621 review"
+    },
+    {
+      "path": "conformance/component/content_post_schedule_test.go",
+      "entry": "100644 blob 49bb76200416b7355f0d774552b21c4de0139084",
+      "qualification": "exact-object carry from own complete4c621 review"
+    },
+    {
+      "path": "conformance/component/content_processing_deadline_test.go",
+      "entry": "100644 blob 5cf994ae4aec2ef7ed91f87a77453f2ea345c2cc",
+      "qualification": "exact-object carry from own complete4c621 review"
+    },
+    {
+      "path": "conformance/internal/contentfixture/legacy.go",
+      "entry": "100644 blob 06438b6fda8cff8f38a657fafbc83fe44e7f7cae",
+      "qualification": "exact-object carry from own complete4c621 review"
+    },
+    {
+      "path": "conformance/internal/contentfixture/migration_test.go",
+      "entry": "100644 blob 1791ce393db68ec70dacaf38713edb9e8f702c29",
+      "qualification": "exact-object carry from own complete4c621 review"
+    },
+    {
+      "path": "conformance/internal/contentfixture/policy_lock.go",
+      "entry": "100644 blob 16b589f806c0a5e5252b4f9e66071461c297c438",
+      "qualification": "exact-object carry from own complete4c621 review"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/README.md",
+      "entry": "100644 blob e8df491fa6760db9241c0d99626cf271cac8b812",
+      "qualification": "exact-object carry from own complete4c621 review"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/76f0298c5432c6b1e28ae5a2c2cc4e8624fd32cffa6112173de32a68c90652c4",
+      "entry": "100644 blob 4a58007052a65fbc2fc3f910f2855f45a4058e74",
+      "qualification": "exact-object carry from own complete4c621 review"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/SHA256SUMS",
+      "entry": "100644 blob d2545d360368671e6ec56046039e281914b1e537",
+      "qualification": "exact-object carry from own complete4c621 review"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/da1384e8c6e31d165b9f0442b2d2f1f57a875a20156041bfedfcc4ce779654dc",
+      "entry": "100644 blob 4a58007052a65fbc2fc3f910f2855f45a4058e74",
+      "qualification": "exact-object carry from own complete4c621 review"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/observation.json",
+      "entry": "100644 blob b7ce2095534dea1607e76a89f728e3acde1fbf9b",
+      "qualification": "exact-object carry from own complete4c621 review"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/original-pg18-dump.sql",
+      "entry": "100644 blob 020d384621925b7c04d66df8033cd724633a3b3e",
+      "qualification": "exact-object carry from own complete4c621 review"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/producer.go.txt",
+      "entry": "100644 blob c1a827b11b104ccf362ed591c718d28ded3b6ec3",
+      "qualification": "exact-object carry from own complete4c621 review"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/restore.sql",
+      "entry": "100644 blob 38d6e2767a557ed4e1db93b68ae2b66eebc94558",
+      "qualification": "exact-object carry from own complete4c621 review"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/76f0298c5432c6b1e28ae5a2c2cc4e8624fd32cffa6112173de32a68c90652c4",
+      "entry": "100644 blob 4a58007052a65fbc2fc3f910f2855f45a4058e74",
+      "qualification": "exact-object carry from own complete4c621 review"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/SHA256SUMS",
+      "entry": "100644 blob f9380af712926c7fe266e5e2e906ffeac9719379",
+      "qualification": "exact-object carry from own complete4c621 review"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/da1384e8c6e31d165b9f0442b2d2f1f57a875a20156041bfedfcc4ce779654dc",
+      "entry": "100644 blob 4a58007052a65fbc2fc3f910f2855f45a4058e74",
+      "qualification": "exact-object carry from own complete4c621 review"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/observation.json",
+      "entry": "100644 blob 3acae85bca5e1660eda18a89e984862c84f45f64",
+      "qualification": "exact-object carry from own complete4c621 review"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/original-pg18-dump.sql",
+      "entry": "100644 blob fb80a1b0332078e5f97a0966fdebfba571e649a5",
+      "qualification": "exact-object carry from own complete4c621 review"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/producer.go.txt",
+      "entry": "100644 blob 7cc3438a191d9a17a11e4eb3b910c9af4ed9f3e9",
+      "qualification": "exact-object carry from own complete4c621 review"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/restore.sql",
+      "entry": "100644 blob 0c0431fd59927f5896b812ceac411fbee8eb2c0e",
+      "qualification": "exact-object carry from own complete4c621 review"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/76f0298c5432c6b1e28ae5a2c2cc4e8624fd32cffa6112173de32a68c90652c4",
+      "entry": "100644 blob 4a58007052a65fbc2fc3f910f2855f45a4058e74",
+      "qualification": "exact-object carry from own complete4c621 review"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/SHA256SUMS",
+      "entry": "100644 blob 141cdf1f4494009c9d9ff026e40dd15e3036d307",
+      "qualification": "exact-object carry from own complete4c621 review"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/da1384e8c6e31d165b9f0442b2d2f1f57a875a20156041bfedfcc4ce779654dc",
+      "entry": "100644 blob 4a58007052a65fbc2fc3f910f2855f45a4058e74",
+      "qualification": "exact-object carry from own complete4c621 review"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/observation.json",
+      "entry": "100644 blob 3acae85bca5e1660eda18a89e984862c84f45f64",
+      "qualification": "exact-object carry from own complete4c621 review"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/original-pg18-dump.sql",
+      "entry": "100644 blob db3a215fa72a2578721074367fff42cc9bb3bd32",
+      "qualification": "exact-object carry from own complete4c621 review"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/producer.go.txt",
+      "entry": "100644 blob fed889074954ea57c20e3cb8dfbb79fbdfefa5a0",
+      "qualification": "exact-object carry from own complete4c621 review"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/restore.sql",
+      "entry": "100644 blob 7fe3fbb5ab51a0d8d52d1534869c105c50aa2235",
+      "qualification": "exact-object carry from own complete4c621 review"
+    },
+    {
+      "path": "conformance/internal/contentfixture/world.go",
+      "entry": "100644 blob c7f0d553dc2a6f76b17c2867a713a0c909b3955e",
+      "qualification": "exact-object carry from own complete4c621 review"
+    },
+    {
+      "path": "domain/content/closure.go",
+      "entry": "100644 blob f78c51e10d52eea2c7e7a7537622fe27d84a4735",
+      "qualification": "exact-object carry from own complete4c621 review"
+    },
+    {
+      "path": "domain/content/management.go",
+      "entry": "100644 blob 3e07b466d896748497b8933a86f16075d9c47e42",
+      "qualification": "exact-object carry from own complete4c621 review"
+    },
+    {
+      "path": "domain/content/ports.go",
+      "entry": "100644 blob 2ca2ffa51ad61adfed1642aeae0de36c22af15e7",
+      "qualification": "exact-object carry from own complete4c621 review"
+    },
+    {
+      "path": "domain/content/service.go",
+      "entry": "100644 blob 68789baacde422ed80b5b8a9615c751a0d032f5d",
+      "qualification": "exact-object carry from own complete4c621 review"
+    },
+    {
+      "path": "scripts/component-integration-race.test.mjs",
+      "entry": "100644 blob 52b18d09403a4a213a334431021e2283abe9a999",
+      "qualification": "full fixed object read"
+    },
+    {
+      "path": "scripts/test-component-integration-race.sh",
+      "entry": "100644 blob f4d0b86fe24af27baf17d3be2a9e794818e8fb09",
+      "qualification": "full fixed object read"
+    }
+  ],
+  "entire_tree_unchanged_count": 910,
+  "origin_objects_qualified": [
+    {
+      "path": ".scratch/lerna-04-content-snapshots/spec.md",
+      "tree_entry": "100644 blob fa9f86bf3d8167a4514c6813f79ca532a33eda43\t.scratch/lerna-04-content-snapshots/spec.md"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/issues/02-current-source-policies.md",
+      "tree_entry": "100644 blob 5a87fa60b272cb6a4a8cc30992a59dec8a4f022b\t.scratch/lerna-04-content-snapshots/issues/02-current-source-policies.md"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/ticket-02-handoff.md",
+      "tree_entry": "100644 blob dc280a744bb2d4b68c9ed2da7299ef4fd034cae9\t.scratch/lerna-04-content-snapshots/ticket-02-handoff.md"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/ticket-02-oracle-decisions.md",
+      "tree_entry": "100644 blob f00e774605be856ea1d135a1db18b2266e44c7a8\t.scratch/lerna-04-content-snapshots/ticket-02-oracle-decisions.md"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/decisions.md",
+      "tree_entry": "100644 blob 7fd3021e1c2e9cf6648e7d92c20da5286cb72030\t.scratch/lerna-04-content-snapshots/decisions.md"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/final-api-handoff.md",
+      "tree_entry": "100644 blob 5ad2ecb81a2ec449394f97b503937a65f158ad21\t.scratch/lerna-04-content-snapshots/final-api-handoff.md"
+    },
+    {
+      "path": "AGENTS.md",
+      "tree_entry": "100644 blob 1860c96f250663e46ee69d81f8c17539a74a22ad\tAGENTS.md"
+    },
+    {
+      "path": "CONTEXT.md",
+      "tree_entry": "100644 blob d3d3ae0ebef7410f40e76f80ba3049bebf5ab1ac\tCONTEXT.md"
+    },
+    {
+      "path": "docs/adr/0006-authorization-budget-at-action-boundaries.md",
+      "tree_entry": "100644 blob 77d90c078faec789d028f6f7ffeade66ca444089\tdocs/adr/0006-authorization-budget-at-action-boundaries.md"
+    },
+    {
+      "path": "docs/adr/0007-versioned-content-memory-snapshots.md",
+      "tree_entry": "100644 blob b40a72034fe71cc31aed957c29450c56402487b4\tdocs/adr/0007-versioned-content-memory-snapshots.md"
+    }
+  ],
+  "adopted_requirements": [
+    "/tmp/lerna-04-ticket-02-race-closure-decision.md",
+    "/tmp/lerna-04-ticket-02-post-schedule-admission-decision.md",
+    "/tmp/lerna-04-ticket-02-retention-observation-decision.md",
+    "/tmp/lerna-04-ticket-02-identity-reuse-decision.md",
+    "/tmp/lerna-04-ticket-02-next-closure-perf-decision.md",
+    "/tmp/lerna-04-ticket-02-after-policy-group-perf-decision.md"
+  ],
+  "frozen_objects": [
+    {
+      "path": "adapters/postgres/content/migrations/0001_content.sql",
+      "entry": "100644 blob 9f14fd8caa76419618d568e80ecefa43281f7aec"
+    },
+    {
+      "path": "conformance/fixtures/1.0.0/commands.json",
+      "entry": "100644 blob 649b88634ec7f0aa59324f5371e0ba26ea0f8e7e"
+    },
+    {
+      "path": "conformance/fixtures/1.0.0/digests.json",
+      "entry": "100644 blob 13e883060de541a47138e54dab6dc5a9bf98c4f6"
+    },
+    {
+      "path": "conformance/fixtures/1.0.0/negotiations.json",
+      "entry": "100644 blob 8ef3a558dc314cc768011983b7cb1e9ac67eb26c"
+    },
+    {
+      "path": "conformance/fixtures/1.0.0/queries.json",
+      "entry": "100644 blob 09a090eac1d86b8c44ee2de4d3433f1b44147c14"
+    },
+    {
+      "path": "conformance/fixtures/1.0.0/responses.json",
+      "entry": "100644 blob 42f6836d0766154711de4f449418952265657b59"
+    },
+    {
+      "path": "conformance/fixtures/1.0.0/schema-digests.json",
+      "entry": "100644 blob 041ad8865556f16c0e1a916d1854745db2bb0875"
+    },
+    {
+      "path": "conformance/fixtures/1.0.0/values.json",
+      "entry": "100644 blob bf28b18d1c9f627b0faf020960d6ffc181020355"
+    },
+    {
+      "path": "conformance/fixtures/1.1.0/README.md",
+      "entry": "100644 blob 56f366d0da8a205569fd2650730f6f4ec5938118"
+    },
+    {
+      "path": "conformance/fixtures/1.1.0/digest-input.json",
+      "entry": "100644 blob 4ca5ba8ea5a8f76f9852f8d4711da31f98f21791"
+    },
+    {
+      "path": "conformance/fixtures/1.1.0/fixtures.json",
+      "entry": "100644 blob bc9d05c6f5571df0dd32b7e9f53a5f4463d1d0c8"
+    },
+    {
+      "path": "conformance/fixtures/1.1.0/queries.json",
+      "entry": "100644 blob 68dfa70a32a070ae4f2fe62f3334036d9d293bef"
+    },
+    {
+      "path": "conformance/fixtures/1.1.0/schema-digests.json",
+      "entry": "100644 blob a44aaf604113c47b77ae55f6f41767618d321349"
+    },
+    {
+      "path": "conformance/fixtures/1.1.0/valid/decide.json",
+      "entry": "100644 blob d059b2ec7799a15307820b05ea234705c2295b08"
+    },
+    {
+      "path": "conformance/fixtures/1.2.0/digests.json",
+      "entry": "100644 blob dc72de0081d223bb851d75a43a5c6231855226ae"
+    },
+    {
+      "path": "conformance/fixtures/1.2.0/fixtures.json",
+      "entry": "100644 blob 4c4853e3a5b8e4574df39f5dc6b1d5ba06a5a0c4"
+    },
+    {
+      "path": "conformance/fixtures/1.2.0/put-alpha.json",
+      "entry": "100644 blob e2cd344ef68916e29c59c6b70067525e6ce4945a"
+    },
+    {
+      "path": "conformance/fixtures/deterministic-target/v1/0001_target.sql",
+      "entry": "100644 blob 9ba7fbcfe912344307aa3175cb232525dae104fa"
+    },
+    {
+      "path": "conformance/fixtures/deterministic-target/v1/README.md",
+      "entry": "100644 blob 339458f357ddb649df51fd0ac51b454d870ee5ab"
+    },
+    {
+      "path": "conformance/fixtures/deterministic-target/v1/SHA256SUMS",
+      "entry": "100644 blob 61ea7f4f3661b7cc9688af27399cc3d5d17cc0e9"
+    },
+    {
+      "path": "conformance/fixtures/deterministic-target/v1/target.go.txt",
+      "entry": "100644 blob 6aa6b6f2192c9a9048c846cfc1e3b1b8d9e14253"
+    },
+    {
+      "path": "conformance/fixtures/deterministic-target/v1/writer_linux.go.txt",
+      "entry": "100644 blob 52698a1ccd00202735e47648a371cf062d35a0db"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/pg-v1/0001_admission.sql",
+      "entry": "100644 blob 94bbf3ee3faabc120bcebf37f092d7463e6ce014"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/pg-v1/README.md",
+      "entry": "100644 blob c33b4321425aab250d3b661e6b0569d8f68ba956"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/pg-v1/SHA256SUMS",
+      "entry": "100644 blob 677d1c51867b1b865fe0fe0b56c9cffc078107c4"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/pg-v1/commands.json",
+      "entry": "100644 blob 61e78662c54d3b95c318d3863298ed3b7a44bada"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/pg-v1/database.sql",
+      "entry": "100644 blob 0d808828d4b581cb3a1acb8af785624ef31b85bf"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/pg-v1/provenance.md",
+      "entry": "100644 blob ae9f5bc261f7dab13aa6a7bd62e2102d62230ef6"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/pg-v1/writer-observation.json",
+      "entry": "100644 blob c0ab1882fecbfca2f7ef04e09fc66149515b7236"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/pg-v1/writer-revision.txt",
+      "entry": "100644 blob d1b368b5a2ee1f2d29be05264f29e8a72da8a201"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/pg-v2/0001_admission.sql",
+      "entry": "100644 blob 94bbf3ee3faabc120bcebf37f092d7463e6ce014"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/pg-v2/0002_claims.sql",
+      "entry": "100644 blob 6fcc7f37590e9dcf6b08a11ad24c4ba8ad54842e"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/pg-v2/README.md",
+      "entry": "100644 blob 6664872f9a21cbe455c42db5170767cd5f6c1d1e"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/pg-v2/SHA256SUMS",
+      "entry": "100644 blob 2de77fc5584fb2a05cbacfe0fd8bb59f06991df2"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/pg-v2/database.sql",
+      "entry": "100644 blob 27555d1f1b7225efac167c8df2f2f2e961e5887e"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/pg-v2/migrations.json",
+      "entry": "100644 blob 2d1d28f4a6fcc2fbb6a042b9fcd7bc27cf3f6a7e"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/pg-v2/writer-observation.json",
+      "entry": "100644 blob cf5568c743c165de2143f15598bdd1b22d06e083"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/pg-v2/writer-revision.txt",
+      "entry": "100644 blob ddfd972d36d6dbbe626760e88142fbda3c4f06ee"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/pg-v2/writer-schema.txt",
+      "entry": "100644 blob bc3bc458769abf9fe95a645b46e0d9c21df07b72"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/sqlite-v1/0001_admission.sql",
+      "entry": "100644 blob 3adfd5c494dfcaf33b6377d5f2ebcff530ef70e8"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/sqlite-v1/README.md",
+      "entry": "100644 blob 431e82e23199001af7b4c65847726e5e76f03d1b"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/sqlite-v1/SHA256SUMS",
+      "entry": "100644 blob 0203ce7b4b8f8cef73ad90e6d24e8d5a6f635b68"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/sqlite-v1/commands.json",
+      "entry": "100644 blob 61e78662c54d3b95c318d3863298ed3b7a44bada"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/sqlite-v1/database.sqlite",
+      "entry": "100644 blob 4f4d52dd44d03b4e00f1f694ed5cc38326763780"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/sqlite-v1/provenance.md",
+      "entry": "100644 blob d4314b24d109801b96d2dd6a10f5a8e7075d7c3f"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/sqlite-v1/writer-observation.json",
+      "entry": "100644 blob a62fbbc6b394142749bf8388ac4eb9536e11dc7c"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/sqlite-v1/writer-revision.txt",
+      "entry": "100644 blob 6315ca649c2cbace277652c3463e3fadd31a971d"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/sqlite-v2/0001_admission.sql",
+      "entry": "100644 blob 3adfd5c494dfcaf33b6377d5f2ebcff530ef70e8"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/sqlite-v2/0002_claims.sql",
+      "entry": "100644 blob 9108b0eefb9ae0d2b88687d91f16e91c39b14889"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/sqlite-v2/README.md",
+      "entry": "100644 blob c5eae1cd27875a6e60f2e385b7193bcb982d95e4"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/sqlite-v2/SHA256SUMS",
+      "entry": "100644 blob 134312d0c728d4bf2638372f00b71cf59b79a337"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/sqlite-v2/database.sqlite",
+      "entry": "100644 blob 609bc84800c21b6859036bf29b1637d219f4e6f5"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/sqlite-v2/migrations.json",
+      "entry": "100644 blob 86cdbf82316a9b471c5294605d328aca5b591ba2"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/sqlite-v2/writer-observation.json",
+      "entry": "100644 blob 782b67102b27dda89d1fcd283734f126d35cffa7"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/sqlite-v2/writer-revision.txt",
+      "entry": "100644 blob ddfd972d36d6dbbe626760e88142fbda3c4f06ee"
+    },
+    {
+      "path": "conformance/fixtures/durable-work/v2-writer.go.txt",
+      "entry": "100644 blob 95eccc19e821b75dd6a4343548e84a2216ac90c0"
+    },
+    {
+      "path": "contract/README.md",
+      "entry": "100644 blob 945664a86f1dcfef0ea4fb63755e35f864d04f0c"
+    },
+    {
+      "path": "contract/codec.go",
+      "entry": "100644 blob 70b38914a080e104274a3b13adbd0aea5421f7f1"
+    },
+    {
+      "path": "contract/commands.go",
+      "entry": "100644 blob acc20a9f8f7dcbfe39b2a35d1a62233496ca36af"
+    },
+    {
+      "path": "contract/digest.go",
+      "entry": "100644 blob 76298716fc17d56f801b7836ed85662e08e2d1ea"
+    },
+    {
+      "path": "contract/gen/go/v1_1/values.go",
+      "entry": "100644 blob 1f017286e431e70b8cb7b0f2b883d906dc8a7536"
+    },
+    {
+      "path": "contract/gen/go/v1_2/values.go",
+      "entry": "100644 blob 5266a817cf2d664d46be59acd143fb5dc26c944e"
+    },
+    {
+      "path": "contract/gen/go/values.go",
+      "entry": "100644 blob 178959d94f46c4e37368cbba1332650f911e84a4"
+    },
+    {
+      "path": "contract/json.go",
+      "entry": "100644 blob d5076c4e4bc8185d80ee5f40b6b33d4aad19d841"
+    },
+    {
+      "path": "contract/negotiation.go",
+      "entry": "100644 blob 503694d269ec50df692b4f991f5b98ed9ff3173c"
+    },
+    {
+      "path": "contract/query.go",
+      "entry": "100644 blob e98113f775f0a083c76da3e4319b77419deedab5"
+    },
+    {
+      "path": "contract/readfacts.go",
+      "entry": "100644 blob 90a9a997543735d6b2257407fe2d42bd59507afc"
+    },
+    {
+      "path": "contract/receipts.go",
+      "entry": "100644 blob cf36b83c451fdf938be1d630845260c4c9e2ab6f"
+    },
+    {
+      "path": "contract/schema/1.0.0/methods.json",
+      "entry": "100644 blob 9cb0312cdcd62af8636bca0c262b84f2142c888e"
+    },
+    {
+      "path": "contract/schema/1.0.0/values.json",
+      "entry": "100644 blob a087d4d0a86c90c5f670890d68b247d6cc9441e9"
+    },
+    {
+      "path": "contract/schema/1.1.0/methods.json",
+      "entry": "100644 blob 04a6d81ddf301b719f6c40849140c95630bb54d4"
+    },
+    {
+      "path": "contract/schema/1.1.0/values.json",
+      "entry": "100644 blob 854222f9ada3979515db5c6ad8369800d66d2b27"
+    },
+    {
+      "path": "contract/schema/1.2.0/methods.json",
+      "entry": "100644 blob ae9081b5ca9f612c6c733d4c4ab479f635ecec57"
+    },
+    {
+      "path": "contract/schema/1.2.0/values.json",
+      "entry": "100644 blob cf07da4c149555b5da8526520b7ba82796fa94b5"
+    },
+    {
+      "path": "contract/v1_1/README.md",
+      "entry": "100644 blob 71c3b9cb601baf54440fc184e37eda67766dfd9c"
+    },
+    {
+      "path": "contract/v1_1/codec.go",
+      "entry": "100644 blob b63fa369e5c7bbd545b4eb95e92f9710dbb6365d"
+    },
+    {
+      "path": "contract/v1_1/commands.go",
+      "entry": "100644 blob 1b7e2007f93efbbecc3d52cdcf46283b843a57a1"
+    },
+    {
+      "path": "contract/v1_1/decision.go",
+      "entry": "100644 blob fb9c074fe9ef76c83c45702cef072398224d4e11"
+    },
+    {
+      "path": "contract/v1_1/digest.go",
+      "entry": "100644 blob 00ffa51e7f0051ebfab78fc983f5a8f9a6d9e1f3"
+    },
+    {
+      "path": "contract/v1_1/json.go",
+      "entry": "100644 blob 0f95ccd3ede44baf7340b5ca1e5dd4b3c7f029ed"
+    },
+    {
+      "path": "contract/v1_1/negotiation.go",
+      "entry": "100644 blob 2f6f7fd5e0a7220c4b99fe841875396f9038b32b"
+    },
+    {
+      "path": "contract/v1_1/query.go",
+      "entry": "100644 blob e129deaef20857092e11785a10c5d009a3299dff"
+    },
+    {
+      "path": "contract/v1_1/readfacts.go",
+      "entry": "100644 blob 101571dcbbe912b644c4a444dad2154004c294d3"
+    },
+    {
+      "path": "contract/v1_1/receipts.go",
+      "entry": "100644 blob dd678c27126fbe2cb94d73c9b65f302887841f7d"
+    },
+    {
+      "path": "contract/v1_1/values.go",
+      "entry": "100644 blob e28adb7d45e3cdb6ca131cee570d4d8d693d572b"
+    },
+    {
+      "path": "contract/v1_2/README.md",
+      "entry": "100644 blob 87640827eab96c6fba65a490fd5dd41930e0ffd2"
+    },
+    {
+      "path": "contract/v1_2/codec.go",
+      "entry": "100644 blob 27f7d103ce375887e077738e8bd53d85d6036aa6"
+    },
+    {
+      "path": "contract/v1_2/commands.go",
+      "entry": "100644 blob 8ac6e728ad8a482c5fecd8be6c192d30b06f26d2"
+    },
+    {
+      "path": "contract/v1_2/content.go",
+      "entry": "100644 blob f26c5bd9779e2cc6178cdf5d15d7622a6850f1b3"
+    },
+    {
+      "path": "contract/v1_2/content_response_test.go",
+      "entry": "100644 blob 22c44f78b620e8000d6489c510c16a65330e1c6b"
+    },
+    {
+      "path": "contract/v1_2/content_test.go",
+      "entry": "100644 blob db13525d10e32b35896086c4c28eb64342cc272c"
+    },
+    {
+      "path": "contract/v1_2/digest.go",
+      "entry": "100644 blob 00343578bda1280f7f92db0495f8f9a4261b098b"
+    },
+    {
+      "path": "contract/v1_2/digest_test.go",
+      "entry": "100644 blob 1683b3ec055134fc4990b5bb1534ce7cbb12ac52"
+    },
+    {
+      "path": "contract/v1_2/json.go",
+      "entry": "100644 blob a769d52eab3c40866c723a0fead5ee90f92d2bcf"
+    },
+    {
+      "path": "contract/v1_2/query.go",
+      "entry": "100644 blob f627f0e48ccf8a7539218e5d8d8fe72a871f3019"
+    },
+    {
+      "path": "contract/v1_2/readfacts.go",
+      "entry": "100644 blob 6f5872ddf7ca0fcbada5a7a2b2675c5761b1ce0e"
+    },
+    {
+      "path": "contract/v1_2/receipts.go",
+      "entry": "100644 blob c52757e98ef423ef7291b7eb101b5141dcd8f3e9"
+    },
+    {
+      "path": "contract/v1_2/values.go",
+      "entry": "100644 blob aa341320ed1746ec1f9e555bc22e93838490b381"
+    },
+    {
+      "path": "contract/values.go",
+      "entry": "100644 blob 670ef3bfa9afb476c43eb62ba1d9627e46304835"
+    },
+    {
+      "path": "sdk/typescript/README.md",
+      "entry": "100644 blob d94d8d09d6c896238c9b245f61db25b6e086f919"
+    },
+    {
+      "path": "sdk/typescript/package.json",
+      "entry": "100644 blob 84fd1d573d9219a124a6d15816449ceb50907ad0"
+    },
+    {
+      "path": "sdk/typescript/src/codec-boundary.test.ts",
+      "entry": "100644 blob 777a8166743876f7c1f9aeaed8b6cc3410cb23ce"
+    },
+    {
+      "path": "sdk/typescript/src/codec.ts",
+      "entry": "100644 blob d22d020793741e7f4cff8c339a672f2a96ed8c4f"
+    },
+    {
+      "path": "sdk/typescript/src/commands.test.ts",
+      "entry": "100644 blob e35ac61ede74a899226a95ef00c1bdc2d94e4fe2"
+    },
+    {
+      "path": "sdk/typescript/src/commands.ts",
+      "entry": "100644 blob 4aa7c78da895101ba70cc582047f93e880cc71aa"
+    },
+    {
+      "path": "sdk/typescript/src/digest.ts",
+      "entry": "100644 blob cf91166cfe824867bf24ee1243ebec887309dbdf"
+    },
+    {
+      "path": "sdk/typescript/src/digests.test.ts",
+      "entry": "100644 blob 8983dd71c8af143ff13e560bf8bb02796659c015"
+    },
+    {
+      "path": "sdk/typescript/src/errors.ts",
+      "entry": "100644 blob 1793509f73f6be3fd3cac88711d1ca5705ce43aa"
+    },
+    {
+      "path": "sdk/typescript/src/generated/values.ts",
+      "entry": "100644 blob c4b2c7dd85dd9f1ef7b100e628928293e477bf58"
+    },
+    {
+      "path": "sdk/typescript/src/index.ts",
+      "entry": "100644 blob a413e67d5e6df257c57de40e59892f014049ff5a"
+    },
+    {
+      "path": "sdk/typescript/src/json.ts",
+      "entry": "100644 blob f9a761c740fd1eb0e7d438598c03ca7597c9d25a"
+    },
+    {
+      "path": "sdk/typescript/src/negotiation.test.ts",
+      "entry": "100644 blob 6cff69bc42bf987788e90ebb73ea935693a2f3c5"
+    },
+    {
+      "path": "sdk/typescript/src/negotiation.ts",
+      "entry": "100644 blob 33945c29b01c0197824a0c25263df4f7b97f01f5"
+    },
+    {
+      "path": "sdk/typescript/src/query.test.ts",
+      "entry": "100644 blob b202304a11582c4ce1212156f59cac696bf4040a"
+    },
+    {
+      "path": "sdk/typescript/src/query.ts",
+      "entry": "100644 blob 390327e6dfd92badceaa848af7d1bedde9c00e6c"
+    },
+    {
+      "path": "sdk/typescript/src/readfacts.test.ts",
+      "entry": "100644 blob b26cda676368855792e7b97b85d2b0dca637cc32"
+    },
+    {
+      "path": "sdk/typescript/src/readfacts.ts",
+      "entry": "100644 blob 99dc339446907782096b425635a067e388b8d4e9"
+    },
+    {
+      "path": "sdk/typescript/src/receipts.test.ts",
+      "entry": "100644 blob b74f09982f84d7ffe59fd101983ecc6d6bee1b00"
+    },
+    {
+      "path": "sdk/typescript/src/receipts.ts",
+      "entry": "100644 blob 00215f4a6b8e4c18cab5f1012c575d9f6740cf1c"
+    },
+    {
+      "path": "sdk/typescript/src/response-semantics.ts",
+      "entry": "100644 blob eaa75fccbb7cba4bfc388fc1f200d33cea80e402"
+    },
+    {
+      "path": "sdk/typescript/src/schema-integrity.test.ts",
+      "entry": "100644 blob 790fa5ba9e8b7c0ff0c266c4b7e18ec3f84d319b"
+    },
+    {
+      "path": "sdk/typescript/src/v1_1/codec.ts",
+      "entry": "100644 blob abc41a2c048e3f383f4197d45c8073ef02ad7702"
+    },
+    {
+      "path": "sdk/typescript/src/v1_1/commands.ts",
+      "entry": "100644 blob f91b4f9c1cab905687ff461e1df3d4def9decdf4"
+    },
+    {
+      "path": "sdk/typescript/src/v1_1/decision.test.ts",
+      "entry": "100644 blob 8c0849fc1848d5aca182fddaef513610c4012388"
+    },
+    {
+      "path": "sdk/typescript/src/v1_1/decision.ts",
+      "entry": "100644 blob f75db4008cfa151a047eb469548f89b8ce7c269e"
+    },
+    {
+      "path": "sdk/typescript/src/v1_1/digest.ts",
+      "entry": "100644 blob 8e17233ce75557c57753580faf62844534df8476"
+    },
+    {
+      "path": "sdk/typescript/src/v1_1/errors.ts",
+      "entry": "100644 blob 1793509f73f6be3fd3cac88711d1ca5705ce43aa"
+    },
+    {
+      "path": "sdk/typescript/src/v1_1/generated/values.ts",
+      "entry": "100644 blob c3f82f850ab9f2388f7f30813cece39e960afc42"
+    },
+    {
+      "path": "sdk/typescript/src/v1_1/index.ts",
+      "entry": "100644 blob dd1d569fb2b4620dbf5603eaca1c47aa355179cd"
+    },
+    {
+      "path": "sdk/typescript/src/v1_1/json.ts",
+      "entry": "100644 blob ff5d2827a6ecd7e1cc0dbda9d83d7bf7e1961782"
+    },
+    {
+      "path": "sdk/typescript/src/v1_1/negotiation.test.ts",
+      "entry": "100644 blob de2f36e51a29819b761d012bb4c5e29fe0b81404"
+    },
+    {
+      "path": "sdk/typescript/src/v1_1/negotiation.ts",
+      "entry": "100644 blob 33945c29b01c0197824a0c25263df4f7b97f01f5"
+    },
+    {
+      "path": "sdk/typescript/src/v1_1/query.test.ts",
+      "entry": "100644 blob 20a3c9fa98ca3d6fd95c4e80bd04c8d9d75f4c52"
+    },
+    {
+      "path": "sdk/typescript/src/v1_1/query.ts",
+      "entry": "100644 blob 390327e6dfd92badceaa848af7d1bedde9c00e6c"
+    },
+    {
+      "path": "sdk/typescript/src/v1_1/readfacts.ts",
+      "entry": "100644 blob 99dc339446907782096b425635a067e388b8d4e9"
+    },
+    {
+      "path": "sdk/typescript/src/v1_1/receipts.ts",
+      "entry": "100644 blob 00215f4a6b8e4c18cab5f1012c575d9f6740cf1c"
+    },
+    {
+      "path": "sdk/typescript/src/v1_1/response-semantics.ts",
+      "entry": "100644 blob 237a692201be3c44c0d887a6688e2c162446f4cd"
+    },
+    {
+      "path": "sdk/typescript/src/v1_1/valuerunner.ts",
+      "entry": "100644 blob 8c29fc076fcb5874b0d5cfee3c41fa65abbd60d0"
+    },
+    {
+      "path": "sdk/typescript/src/v1_2/codec.ts",
+      "entry": "100644 blob 0e54c6a60ac05f62b06ee824df8261f011b18d91"
+    },
+    {
+      "path": "sdk/typescript/src/v1_2/commands.ts",
+      "entry": "100644 blob f91b4f9c1cab905687ff461e1df3d4def9decdf4"
+    },
+    {
+      "path": "sdk/typescript/src/v1_2/content.test.ts",
+      "entry": "100644 blob 90ebaf67b37bc3a895253467b937c4c8440d14eb"
+    },
+    {
+      "path": "sdk/typescript/src/v1_2/content.ts",
+      "entry": "100644 blob f26d5b19a843dad26a9013e5bc50659accf2d589"
+    },
+    {
+      "path": "sdk/typescript/src/v1_2/digest.ts",
+      "entry": "100644 blob 8e17233ce75557c57753580faf62844534df8476"
+    },
+    {
+      "path": "sdk/typescript/src/v1_2/errors.ts",
+      "entry": "100644 blob 1793509f73f6be3fd3cac88711d1ca5705ce43aa"
+    },
+    {
+      "path": "sdk/typescript/src/v1_2/generated/values.ts",
+      "entry": "100644 blob e36c1a31d7b6ed32203e3c527b678dc7631dcd56"
+    },
+    {
+      "path": "sdk/typescript/src/v1_2/index.ts",
+      "entry": "100644 blob c4d09a8524fa5e4521a7b2c79800b02f98bd1edc"
+    },
+    {
+      "path": "sdk/typescript/src/v1_2/json.ts",
+      "entry": "100644 blob ff5d2827a6ecd7e1cc0dbda9d83d7bf7e1961782"
+    },
+    {
+      "path": "sdk/typescript/src/v1_2/query.ts",
+      "entry": "100644 blob 390327e6dfd92badceaa848af7d1bedde9c00e6c"
+    },
+    {
+      "path": "sdk/typescript/src/v1_2/readfacts.ts",
+      "entry": "100644 blob 99dc339446907782096b425635a067e388b8d4e9"
+    },
+    {
+      "path": "sdk/typescript/src/v1_2/receipts.ts",
+      "entry": "100644 blob 00215f4a6b8e4c18cab5f1012c575d9f6740cf1c"
+    },
+    {
+      "path": "sdk/typescript/src/v1_2/response-semantics.ts",
+      "entry": "100644 blob b1af14e091cc47023f4d527f122370730a7f2db2"
+    },
+    {
+      "path": "sdk/typescript/src/v1_2/valuerunner.ts",
+      "entry": "100644 blob bb7d5dc81ebe367c3131963206aa90a087418eff"
+    },
+    {
+      "path": "sdk/typescript/src/valuerunner.ts",
+      "entry": "100644 blob e61724a2d6675be6d5e9442328d5c5f06cd84c2e"
+    },
+    {
+      "path": "sdk/typescript/src/values.test.ts",
+      "entry": "100644 blob 028dd65ca251cfad6349cde5e7110547ffda4ffb"
+    },
+    {
+      "path": "sdk/typescript/tsconfig.json",
+      "entry": "100644 blob 71bf13cf659af42f5c76d0107904c91bd511498f"
+    }
+  ],
+  "migrations_unchanged": {
+    "adapters/postgres/content/migrations/0001_content.sql": "100644 blob 9f14fd8caa76419618d568e80ecefa43281f7aec",
+    "adapters/postgres/content/migrations/0002_source_policies.sql": "100644 blob 02a082a5a0edfa57d0e8d2a2680b0af5ad9a5a41"
+  },
+  "archive_object_and_hash_checks": {
+    "legacy-v1": {
+      "all_six_hashes_valid": true,
+      "files_qualified_exact_mode_type_blob": [
+        {
+          "path": "conformance/internal/contentfixture/testdata/legacy-v1/76f0298c5432c6b1e28ae5a2c2cc4e8624fd32cffa6112173de32a68c90652c4",
+          "entry": "100644 blob 4a58007052a65fbc2fc3f910f2855f45a4058e74"
+        },
+        {
+          "path": "conformance/internal/contentfixture/testdata/legacy-v1/da1384e8c6e31d165b9f0442b2d2f1f57a875a20156041bfedfcc4ce779654dc",
+          "entry": "100644 blob 4a58007052a65fbc2fc3f910f2855f45a4058e74"
+        },
+        {
+          "path": "conformance/internal/contentfixture/testdata/legacy-v1/observation.json",
+          "entry": "100644 blob 3acae85bca5e1660eda18a89e984862c84f45f64"
+        },
+        {
+          "path": "conformance/internal/contentfixture/testdata/legacy-v1/original-pg18-dump.sql",
+          "entry": "100644 blob db3a215fa72a2578721074367fff42cc9bb3bd32"
+        },
+        {
+          "path": "conformance/internal/contentfixture/testdata/legacy-v1/producer.go.txt",
+          "entry": "100644 blob fed889074954ea57c20e3cb8dfbb79fbdfefa5a0"
+        },
+        {
+          "path": "conformance/internal/contentfixture/testdata/legacy-v1/restore.sql",
+          "entry": "100644 blob 7fe3fbb5ab51a0d8d52d1534869c105c50aa2235"
+        },
+        {
+          "path": "conformance/internal/contentfixture/testdata/legacy-v1/SHA256SUMS",
+          "entry": "100644 blob 141cdf1f4494009c9d9ff026e40dd15e3036d307"
+        }
+      ]
+    },
+    "legacy-many-policies": {
+      "all_six_hashes_valid": true,
+      "files_qualified_exact_mode_type_blob": [
+        {
+          "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/76f0298c5432c6b1e28ae5a2c2cc4e8624fd32cffa6112173de32a68c90652c4",
+          "entry": "100644 blob 4a58007052a65fbc2fc3f910f2855f45a4058e74"
+        },
+        {
+          "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/da1384e8c6e31d165b9f0442b2d2f1f57a875a20156041bfedfcc4ce779654dc",
+          "entry": "100644 blob 4a58007052a65fbc2fc3f910f2855f45a4058e74"
+        },
+        {
+          "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/observation.json",
+          "entry": "100644 blob 3acae85bca5e1660eda18a89e984862c84f45f64"
+        },
+        {
+          "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/original-pg18-dump.sql",
+          "entry": "100644 blob fb80a1b0332078e5f97a0966fdebfba571e649a5"
+        },
+        {
+          "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/producer.go.txt",
+          "entry": "100644 blob 7cc3438a191d9a17a11e4eb3b910c9af4ed9f3e9"
+        },
+        {
+          "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/restore.sql",
+          "entry": "100644 blob 0c0431fd59927f5896b812ceac411fbee8eb2c0e"
+        },
+        {
+          "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/SHA256SUMS",
+          "entry": "100644 blob f9380af712926c7fe266e5e2e906ffeac9719379"
+        }
+      ]
+    },
+    "legacy-expired-ancestor": {
+      "all_six_hashes_valid": true,
+      "files_qualified_exact_mode_type_blob": [
+        {
+          "path": "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/76f0298c5432c6b1e28ae5a2c2cc4e8624fd32cffa6112173de32a68c90652c4",
+          "entry": "100644 blob 4a58007052a65fbc2fc3f910f2855f45a4058e74"
+        },
+        {
+          "path": "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/da1384e8c6e31d165b9f0442b2d2f1f57a875a20156041bfedfcc4ce779654dc",
+          "entry": "100644 blob 4a58007052a65fbc2fc3f910f2855f45a4058e74"
+        },
+        {
+          "path": "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/observation.json",
+          "entry": "100644 blob b7ce2095534dea1607e76a89f728e3acde1fbf9b"
+        },
+        {
+          "path": "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/original-pg18-dump.sql",
+          "entry": "100644 blob 020d384621925b7c04d66df8033cd724633a3b3e"
+        },
+        {
+          "path": "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/producer.go.txt",
+          "entry": "100644 blob c1a827b11b104ccf362ed591c718d28ded3b6ec3"
+        },
+        {
+          "path": "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/restore.sql",
+          "entry": "100644 blob 38d6e2767a557ed4e1db93b68ae2b66eebc94558"
+        },
+        {
+          "path": "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/SHA256SUMS",
+          "entry": "100644 blob d2545d360368671e6ec56046039e281914b1e537"
+        }
+      ]
+    }
+  },
+  "all_seven_AC": {
+    "1": "Full unchanged current independent action/ref/SubjectBinding qualification carried; new locked-row CTE then outer clock verified statically and direct-port normal/late native tests fully read. No cached pre-lock now; all domain post-record authority priorities unchanged.",
+    "2": "full private transaction observation contains exact refs and locked records; identity sort retains algorithm, intermediate/shared/cycle/64/65 and owner boundaries preserved; full original finite test inputs/limits retained",
+    "3": "observed all-source ValidUntil/RetainUntil/Current cap bounds; target post-schedule actual cap reread; own original cap and complete original writer Subject/Purpose maintained in scheduler; no cross-Tx permit",
+    "4": "publication startup/completion acquire own current closure; final hidden ancestor native object test carried/read; Put post-pending-writes reader/freshtime abort with all temporary writes rollback; Get targetF1/twogates original binding preserved",
+    "5": "same-Tx source facts/maintenance original budget/change/holder pending, full-page deadline and historical/natural handoff maintained; legacy after own mutation rereads source; original own3P2 remain closed",
+    "6": "original command replay priorities, second rejection Tx current reader/original winner/digest/currentreader/unknown, exact per-call marker equality excludes joined failure; public normal/late/delegation alias and competing winner tests fully read",
+    "7": "native/public object and management observations reviewed; mechanical barriers/metadata/CommitUnknown injection accurately separated; complete dynamic4partition normal/race inventories no selectors omitted; reviewer did not execute; observed previous failed60s race remains failed and latest checks pending"
+  },
+  "new_delta_qualification": {
+    "paths": [
+      "scripts/component-integration-race.test.mjs",
+      "scripts/test-component-integration-race.sh"
+    ],
+    "all_Go_objects_equal_prior": true,
+    "static_top_level_source_declaration_inventory": {
+      "runnables": 170,
+      "closure": 1,
+      "content_a": 33,
+      "content_b": 33,
+      "durable": 60,
+      "other": 43
+    },
+    "inventory_limit": "Source declarations are static corroboration; runtime discovery remains authoritative and was not run by reviewer.",
+    "shell_semantics": "Complete dynamic discovered positive inventory, duplicate/empty/ambiguous fail closed, Content alternates once across two groups, empty groups never launch, exact escaped anchored selectors, original120s deadlines and separate whole64 consumer unchanged.",
+    "tests": "Seven mechanical tests fully read; no reviewer execution.",
+    "archive_hash_entries_recomputed": 18
+  },
+  "counts": {
+    "a": 0,
+    "b": 0,
+    "c": 0,
+    "worst": null
+  },
+  "limits": "Readonly git objects/static hashes only. No reviewer native/build/test/DB/environment/other-axis input. Parent Node7/7 and prior4c64race54.75 external only. Failed temporary launcher all170 SIGTERM directWait-15/tool241/groupAbsent; Closeunknown scopes preserved, not green/fixed-source coverage. New complete groupsnormal/race/check/audit/CI/delivery pending;7AC unchecked."
+}

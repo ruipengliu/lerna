@@ -1,0 +1,200 @@
+//go:build integration
+
+package component_test
+
+import (
+	"context"
+	"errors"
+	"fmt"
+	"github.com/ruipengliu/lerna/contract"
+	"os"
+	"testing"
+	"time"
+
+	fixture "github.com/ruipengliu/lerna/conformance/internal/contentfixture"
+	v "github.com/ruipengliu/lerna/contract/v1_2"
+	"github.com/ruipengliu/lerna/domain/content"
+	"github.com/ruipengliu/lerna/runtime"
+)
+
+// This finite mechanical fence follows the real scheduler's successful writes.
+// It is not a PostgreSQL failure or a substitute for the public business oracle.
+type postScheduleFence struct {
+	content.Repository
+	until time.Time
+	late  bool
+}
+
+func (r *postScheduleFence) ScheduleRetention(ctx context.Context, tx runtime.Tx, policy *content.FixturePolicy, record content.Record, sources []content.Record, budget time.Duration) error {
+	if err := r.Repository.ScheduleRetention(ctx, tx, policy, record, sources, budget); err != nil {
+		return err
+	}
+	if !r.late {
+		return nil
+	}
+	timer := time.NewTimer(time.Until(r.until) + 20*time.Millisecond)
+	defer timer.Stop()
+	select {
+	case <-timer.C:
+		return nil
+	case <-ctx.Done():
+		return ctx.Err()
+	}
+}
+func fencedContentService(t *testing.T, w *fixture.World, repository content.Repository) *content.Service {
+	t.Helper()
+	service, err := content.New(content.Config{Owner: contentOwner, Store: repository, Objects: w.Objects, Limits: content.Limits{MaxPreparingVersions: 16, MaxStagingBytes: 4 * 262144, Lease: time.Minute, WorkTimeout: 5 * time.Second}, PublishBudget: time.Minute, MaxPublicationAttempts: 3, Worker: "post-schedule-conformance"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	return service
+}
+func TestContentPostScheduleAdmissionRollsBackLateVersion(t *testing.T) {
+	for _, mode := range []string{"accept_before", "target_policy", "ancestor_policy", "retention"} {
+		for _, late := range []bool{false, true} {
+			t.Run(fmt.Sprintf("%s/late=%t", mode, late), func(t *testing.T) {
+				ctx, cancel := context.WithTimeout(context.Background(), 12*time.Second)
+				defer cancel()
+				w := fixture.New(t, ctx)
+				base := contentService(t, w)
+				var source v.ContentRef
+				if mode == "ancestor_policy" {
+					source = alphaRef
+					installContentPolicy(t, ctx, w, source)
+					if _, ok := putContentRequest(t, ctx, base, contentPut(t, source, "fence-source", "YWxwaGEK")).AsAccepted(); !ok {
+						t.Fatal("normal source refused")
+					}
+					if _, err := base.Step(ctx); err != nil {
+						t.Fatal(err)
+					}
+					assertContentBody(t, ctx, base, source, nil, "alpha\n")
+				}
+				ref := alphaRef
+				ref.ContentID = "fenced-output"
+				installContentPolicy(t, ctx, w, ref)
+				request := contentPut(t, ref, "fenced-command", "YWxwaGEK")
+				if mode == "ancestor_policy" {
+					request.Payload.Sources = []v.ContentRef{source}
+				}
+				until := time.Now().UTC().Add(750 * time.Millisecond).Truncate(time.Microsecond)
+				if mode == "accept_before" {
+					request.AcceptBefore = v.Time(until.Format("2006-01-02T15:04:05.000000Z"))
+				}
+				if mode == "retention" {
+					request.Payload.RetainUntil = v.Time(until.Format("2006-01-02T15:04:05.000000Z"))
+				}
+				if mode == "target_policy" || mode == "ancestor_policy" {
+					policyRef := ref
+					if mode == "ancestor_policy" {
+						policyRef = source
+					}
+					policy := content.FixturePolicy{Ref: policyRef, Subject: contentPrincipal, Purpose: "verification", Revision: 2, ValidUntil: until, RetainUntil: time.Now().Add(time.Hour), Read: true, Process: true, Save: true, Disclose: true}
+					if err := w.Store().InstallFixturePolicy(ctx, policy, 1); err != nil {
+						t.Fatal(err)
+					}
+				}
+				service := fencedContentService(t, w, &postScheduleFence{Repository: w.Store(), until: until, late: late})
+				receipt := putContentRequest(t, ctx, service, request)
+				if !late {
+					if _, ok := receipt.AsAccepted(); !ok {
+						t.Fatal("same scheduler normal rejected", receipt)
+					}
+					if _, err := service.Step(ctx); err != nil {
+						t.Fatal(err)
+					}
+					assertContentBody(t, ctx, service, ref, nil, "alpha\n")
+					return
+				}
+				reason := v.ErrorCode("expired")
+				if mode == "target_policy" || mode == "ancestor_policy" {
+					reason = "forbidden"
+				}
+				requireRejection(t, receipt, reason)
+				w.Reopen(ctx)
+				service = contentService(t, w)
+				command, err := service.GetCommand(ctx, contentCommandGetWire(t, request.CommandID), &contentPrincipal)
+				found, ok := command.AsFound()
+				rejected, fixed := found.Receipt.AsRejected()
+				if err != nil || !ok || !fixed || rejected.Reason != reason {
+					t.Fatal("late rejection not durably fixed", err, command)
+				}
+				view, err := service.Get(ctx, contentGetWire(t, ref, nil), &contentPrincipal)
+				// Renew only current target policy to observe absence; the old cutoff and
+				// failed transaction are never rewritten into a successful admission.
+				if mode == "target_policy" {
+					wide := time.Now().Add(time.Hour)
+					if err := w.Store().InstallFixturePolicy(ctx, content.FixturePolicy{Ref: ref, Subject: contentPrincipal, Purpose: "verification", Revision: 3, ValidUntil: wide, RetainUntil: wide, Read: true, Process: true, Save: true, Disclose: true}, 2); err != nil {
+						t.Fatal(err)
+					}
+					view, err = service.Get(ctx, contentGetWire(t, ref, nil), &contentPrincipal)
+				}
+				if _, absent := view.AsNotFound(); err != nil || !absent {
+					t.Fatal("late temporary version committed", err, view)
+				}
+				manager, err := content.NewManager(content.ManagementConfig{Owner: contentOwner, Store: w.Store(), TrustedSubject: contentPrincipal, TrustedUntil: time.Now().Add(time.Hour), PageSize: 2, WorkBudget: time.Minute})
+				if err != nil {
+					t.Fatal(err)
+				}
+				observation, _, err := manager.ObserveAdmissionChanges(ctx, &contentPrincipal, ref, "", 2)
+				if err != nil || len(observation) != 0 {
+					t.Fatal("late admission left inherited responsibility", err, observation)
+				}
+				if _, err = service.Step(ctx); err != nil {
+					t.Fatal(err)
+				}
+				entries, err := os.ReadDir(w.Directory)
+				expected := 0
+				if mode == "ancestor_policy" {
+					expected = 1
+				}
+				if err != nil || len(entries) != expected {
+					t.Fatal("late transaction published an object", err, len(entries))
+				}
+			})
+		}
+	}
+}
+
+// This decorator injects an extra callback-return cause after a real rollback
+// path. It does not claim a PostgreSQL native Rollback/Close failure.
+type abortCauseRepository struct {
+	content.Repository
+	cause error
+}
+
+func (r *abortCauseRepository) Within(ctx context.Context, owner contract.OwnerRef, fn func(context.Context, runtime.Tx) error) error {
+	err := r.Repository.Within(ctx, owner, fn)
+	if err != nil {
+		return errors.Join(err, r.cause)
+	}
+	return nil
+}
+func TestContentLateAdmissionExtraCauseCannotFixRejection(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), 12*time.Second)
+	defer cancel()
+	w := fixture.New(t, ctx)
+	installContentPolicy(t, ctx, w, alphaRef)
+	until := time.Now().UTC().Add(450 * time.Millisecond).Truncate(time.Microsecond)
+	request := contentPut(t, alphaRef, "extra-abort-cause", "YWxwaGEK")
+	request.AcceptBefore = v.Time(until.Format("2006-01-02T15:04:05.000000Z"))
+	injected := errors.New("mechanical extra callback-return cause")
+	service := fencedContentService(t, w, &postScheduleFence{Repository: &abortCauseRepository{Repository: w.Store(), cause: injected}, until: until, late: true})
+	raw, err := v.Encode(request)
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, err = service.Put(ctx, raw, &contentPrincipal)
+	if !errors.Is(err, injected) {
+		t.Fatal("unclassified abort cause was washed into a fixed receipt", err)
+	}
+	w.Reopen(ctx)
+	service = contentService(t, w)
+	command, err := service.GetCommand(ctx, contentCommandGetWire(t, request.CommandID), &contentPrincipal)
+	if _, absent := command.AsNotFound(); err != nil || !absent {
+		t.Fatal("extra-cause abort created a rejection transaction", err, command)
+	}
+	view, err := service.Get(ctx, contentGetWire(t, alphaRef, nil), &contentPrincipal)
+	if _, absent := view.AsNotFound(); err != nil || !absent {
+		t.Fatal("extra-cause callback committed temporary version", err, view)
+	}
+}

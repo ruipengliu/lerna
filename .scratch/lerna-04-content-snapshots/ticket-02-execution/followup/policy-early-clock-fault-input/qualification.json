@@ -1,0 +1,9 @@
+{
+  "base": "6a9aa658c912be5c8fed022ceda2511212d19a70",
+  "qualification": "actual completed mechanical red source preserved before correcting faulty variant; captured after native completion, not before compiler; no Go source change between format/run and capture",
+  "paths": {
+    "adapters/postgres/content/policy.go": "99c7fe4b39bc9ea38b4ae90e3806e1164e8cb2e497d97b0ac714ab3895946d0f",
+    "conformance/component/content_policy_actions_test.go": "698ddd4d06ebcd0f286f253589564510362d8d59a8c6f82b29b6d0709bdc76b3",
+    "conformance/internal/contentfixture/policy_lock.go": "f0b9dc75958e233836fad06c3c11a4709feed28efe52d495304e93246ae7db01"
+  }
+}

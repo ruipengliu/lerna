@@ -1,0 +1,25 @@
+{
+  "hashes_verified": [
+    "76f0298c5432c6b1e28ae5a2c2cc4e8624fd32cffa6112173de32a68c90652c4",
+    "da1384e8c6e31d165b9f0442b2d2f1f57a875a20156041bfedfcc4ce779654dc",
+    "observation.json",
+    "original-pg18-dump.sql",
+    "producer.go.txt",
+    "restore.sql"
+  ],
+  "copy_insert_literal_equal": true,
+  "rows_by_table": {
+    "command_receipts": 3,
+    "content_fixture_command_readers": 1,
+    "content_fixture_policies": 68,
+    "content_schema_migrations": 1,
+    "content_versions": 3,
+    "jobs": 3
+  },
+  "all_json_cells_decoded": 78,
+  "ddl_mechanically_equal": true,
+  "dump_size": 112782,
+  "original_cutoff": "2026-10-04T16:00:30.057895Z",
+  "all_three_receipts_equal_observation": true,
+  "two_bodies_exact_alpha": true
+}

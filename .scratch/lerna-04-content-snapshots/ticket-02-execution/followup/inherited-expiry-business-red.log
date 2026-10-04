@@ -1,0 +1,6 @@
+--- FAIL: TestContentLaterAdmissionInheritsOriginalAncestorExpiry (2.16s)
+    content_inherited_expiry_test.go:35: post-watermark descendant has no original ancestor maintenance obligation <nil> [] 
+FAIL
+FAIL	github.com/ruipengliu/lerna/conformance/component	2.167s
+FAIL
+NATIVE_EXIT status=1 group_absent=True

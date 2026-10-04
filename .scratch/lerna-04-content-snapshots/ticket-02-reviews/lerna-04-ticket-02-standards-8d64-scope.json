@@ -1,0 +1,2055 @@
+{
+  "axis": "Standards only",
+  "base": "f05b2f1068958ba6b63e6c1dc58d6cd1684446cc",
+  "head": "8d64ad1ed8eee35d07ee3fc990dd2696729ef9c8",
+  "merge_base": "f05b2f1068958ba6b63e6c1dc58d6cd1684446cc",
+  "diff_command": "git diff f05b2f1068958ba6b63e6c1dc58d6cd1684446cc...8d64ad1ed8eee35d07ee3fc990dd2696729ef9c8",
+  "commit_count": 6,
+  "path_count": 42,
+  "text_added": 5887,
+  "text_deleted": 62,
+  "commits": [
+    {
+      "commit": "f54d697b50d63490a2ed573b8dd91c18d3178110",
+      "parents": [
+        "f05b2f1068958ba6b63e6c1dc58d6cd1684446cc"
+      ],
+      "subject": "docs: record verified Content checkpoint CI and full finite integration scope"
+    },
+    {
+      "commit": "70f69e524592491a5ad37754cf0793ee131acec6",
+      "parents": [
+        "f54d697b50d63490a2ed573b8dd91c18d3178110"
+      ],
+      "subject": "docs(content): adopt current-policy oracle and responsibility decisions"
+    },
+    {
+      "commit": "482dc1def90c9ccafe3be850ec28e0f4e81f71c2",
+      "parents": [
+        "f05b2f1068958ba6b63e6c1dc58d6cd1684446cc"
+      ],
+      "subject": "Implement current Content source closure and durable policy propagation"
+    },
+    {
+      "commit": "d3fb9c7e56293f9be30da13c012c0863c0da6aa1",
+      "parents": [
+        "482dc1def90c9ccafe3be850ec28e0f4e81f71c2",
+        "70f69e524592491a5ad37754cf0793ee131acec6"
+      ],
+      "subject": "Merge commit '70f69e524592491a5ad37754cf0793ee131acec6' into codex/content-snapshots-ticket-02"
+    },
+    {
+      "commit": "57ea60c628f82140f5700503107d3e2fe4a86dec",
+      "parents": [
+        "d3fb9c7e56293f9be30da13c012c0863c0da6aa1"
+      ],
+      "subject": "Preserve exact native Content archives and normalize restore EOF"
+    },
+    {
+      "commit": "8d64ad1ed8eee35d07ee3fc990dd2696729ef9c8",
+      "parents": [
+        "57ea60c628f82140f5700503107d3e2fe4a86dec"
+      ],
+      "subject": "fix(content): preserve propagation deadlines and admission expiry obligations"
+    }
+  ],
+  "prior_report": "/tmp/lerna-04-ticket-02-standards-57ea.md",
+  "prior_scope": "/tmp/lerna-04-ticket-02-standards-57ea-scope.json",
+  "qualification": {
+    "changed_incremental_paths": 7,
+    "carried_prior_paths": 35,
+    "all_carried_mode_type_blob_equal": true,
+    "all_standards_sources_equal": true,
+    "archive_original_objects_equal": true,
+    "existing_frozen_count": 73,
+    "existing_frozen_all_equal": true
+  },
+  "paths": [
+    {
+      "path": ".gitattributes",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "f46bc4f2ddbc04629aee3d25570dd412b4fbb425"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "580a3fc4afc14d39cb8e2a797017a8bc970933ef"
+      },
+      "prior_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "580a3fc4afc14d39cb8e2a797017a8bc970933ef"
+      },
+      "status": "carried_full_57ea_review_with_actual_mode_type_blob_equality"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/ci-verification.md",
+      "base": null,
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "0ff82eff7d7398fb0bb4575473f0d42a98a90f0f"
+      },
+      "prior_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "0ff82eff7d7398fb0bb4575473f0d42a98a90f0f"
+      },
+      "status": "carried_full_57ea_review_with_actual_mode_type_blob_equality"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/issues/02-current-source-policies.md",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "5fb73a9c24fbcfe44786a087987e8c07050d6c85"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "5a87fa60b272cb6a4a8cc30992a59dec8a4f022b"
+      },
+      "prior_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "5a87fa60b272cb6a4a8cc30992a59dec8a4f022b"
+      },
+      "status": "carried_full_57ea_review_with_actual_mode_type_blob_equality"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/ticket-01-exit-evidence.md",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "5fc776b0156e0eeaf2f283a2c8c80670d03220a8"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "e295032e6dedc4c6d9eebd44b6b552a282cefe41"
+      },
+      "prior_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "e295032e6dedc4c6d9eebd44b6b552a282cefe41"
+      },
+      "status": "carried_full_57ea_review_with_actual_mode_type_blob_equality"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/ticket-02-oracle-decisions.md",
+      "base": null,
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "f00e774605be856ea1d135a1db18b2266e44c7a8"
+      },
+      "prior_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "f00e774605be856ea1d135a1db18b2266e44c7a8"
+      },
+      "status": "carried_full_57ea_review_with_actual_mode_type_blob_equality"
+    },
+    {
+      "path": ".scratch/lerna-implementation/progress.md",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "27ff2ac04b7e8f1c655821aedbccf1c5f6a47d28"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "f792702f05528219ce9ef4c2a7f7fc765464b555"
+      },
+      "prior_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "f792702f05528219ce9ef4c2a7f7fc765464b555"
+      },
+      "status": "carried_full_57ea_review_with_actual_mode_type_blob_equality"
+    },
+    {
+      "path": "adapters/postgres/content/facts.go",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "cfd0b2ab3cacf3a229c76f44987b8e4bb2248c17"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "9e9dd22ec1ae18347a37cb315e9ba5b4909eb7c4"
+      },
+      "prior_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "9e9dd22ec1ae18347a37cb315e9ba5b4909eb7c4"
+      },
+      "status": "carried_full_57ea_review_with_actual_mode_type_blob_equality"
+    },
+    {
+      "path": "adapters/postgres/content/management.go",
+      "base": null,
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "7dd7a1c8c803a308b5f7afccb28ee353ceb50944"
+      },
+      "prior_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "63c6046ffa1e342962068a8aa4d49622cd64f413"
+      },
+      "status": "fresh_full_hunks_and_context_review"
+    },
+    {
+      "path": "adapters/postgres/content/management_rows_test.go",
+      "base": null,
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "0ca62a75e52c88101a9e3bc991e0c9e6e83690b3"
+      },
+      "prior_head": null,
+      "status": "fresh_full_hunks_and_context_review"
+    },
+    {
+      "path": "adapters/postgres/content/migrate.go",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "f9f7d3d6e694d3fbb30958e040a1e98f1c9edbeb"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "e12754f772a1587c86008d628273e8d48b6cd04b"
+      },
+      "prior_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "e12754f772a1587c86008d628273e8d48b6cd04b"
+      },
+      "status": "carried_full_57ea_review_with_actual_mode_type_blob_equality"
+    },
+    {
+      "path": "adapters/postgres/content/migrations/0002_source_policies.sql",
+      "base": null,
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "02a082a5a0edfa57d0e8d2a2680b0af5ad9a5a41"
+      },
+      "prior_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "02a082a5a0edfa57d0e8d2a2680b0af5ad9a5a41"
+      },
+      "status": "carried_full_57ea_review_with_actual_mode_type_blob_equality"
+    },
+    {
+      "path": "adapters/postgres/content/policy.go",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "0f042009652d1970309385b25a48ae1ae28ca447"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "9b8752f1f78e42202287c618740e769d1ee2fe28"
+      },
+      "prior_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "9b8752f1f78e42202287c618740e769d1ee2fe28"
+      },
+      "status": "carried_full_57ea_review_with_actual_mode_type_blob_equality"
+    },
+    {
+      "path": "conformance/component/content_association_test.go",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "8c4b4589c5c89b7edeb56981d92c9ba56a9490e6"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "ce45b9331b17a1142e8e0847056b802d0186f28e"
+      },
+      "prior_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "ce45b9331b17a1142e8e0847056b802d0186f28e"
+      },
+      "status": "carried_full_57ea_review_with_actual_mode_type_blob_equality"
+    },
+    {
+      "path": "conformance/component/content_closure_test.go",
+      "base": null,
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "9c310565fc92023afcbb5cf9b612a988c6e273eb"
+      },
+      "prior_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "9c310565fc92023afcbb5cf9b612a988c6e273eb"
+      },
+      "status": "carried_full_57ea_review_with_actual_mode_type_blob_equality"
+    },
+    {
+      "path": "conformance/component/content_direct_read_test.go",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "683b1a2383bd631af1fa735c865bae0ccbad4fbc"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "35460c48c30a76585eb1f282fcc8da13a5975c58"
+      },
+      "prior_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "35460c48c30a76585eb1f282fcc8da13a5975c58"
+      },
+      "status": "carried_full_57ea_review_with_actual_mode_type_blob_equality"
+    },
+    {
+      "path": "conformance/component/content_inherited_expiry_test.go",
+      "base": null,
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "d2802a3c9e6ee9df9fe685fe11874b210d959272"
+      },
+      "prior_head": null,
+      "status": "fresh_full_hunks_and_context_review"
+    },
+    {
+      "path": "conformance/component/content_legacy_test.go",
+      "base": null,
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "e92bef112f567d96cbc7bad2a3522cf18f1ad49d"
+      },
+      "prior_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "c8c72a6ae35c3c182861bbcac60e39d7e1e627b6"
+      },
+      "status": "fresh_full_hunks_and_context_review"
+    },
+    {
+      "path": "conformance/component/content_management_test.go",
+      "base": null,
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "acda6b07df81e26729f64e0fd1609c3edbe19774"
+      },
+      "prior_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "acda6b07df81e26729f64e0fd1609c3edbe19774"
+      },
+      "status": "carried_full_57ea_review_with_actual_mode_type_blob_equality"
+    },
+    {
+      "path": "conformance/component/content_processing_deadline_test.go",
+      "base": null,
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "560b6999a848cd91e44296a4dda9e4260b713097"
+      },
+      "prior_head": null,
+      "status": "fresh_full_hunks_and_context_review"
+    },
+    {
+      "path": "conformance/internal/contentfixture/legacy.go",
+      "base": null,
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "74eb7e9de71910040569dd94a64e7827f09e56cf"
+      },
+      "prior_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "74eb7e9de71910040569dd94a64e7827f09e56cf"
+      },
+      "status": "carried_full_57ea_review_with_actual_mode_type_blob_equality"
+    },
+    {
+      "path": "conformance/internal/contentfixture/migration_test.go",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "cbd624527c5d9956cb96a44e7d82796e351ad860"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "1791ce393db68ec70dacaf38713edb9e8f702c29"
+      },
+      "prior_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "1791ce393db68ec70dacaf38713edb9e8f702c29"
+      },
+      "status": "carried_full_57ea_review_with_actual_mode_type_blob_equality"
+    },
+    {
+      "path": "conformance/internal/contentfixture/policy_lock.go",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "dd90aa6cf32bd6a95edae07b227a2886975226c4"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "75197823b793f2fe2ac3b8685d08a5fc9c635e15"
+      },
+      "prior_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "75197823b793f2fe2ac3b8685d08a5fc9c635e15"
+      },
+      "status": "carried_full_57ea_review_with_actual_mode_type_blob_equality"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/README.md",
+      "base": null,
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "7e24c596de836d3cb6daaddf66108719dcf49c6e"
+      },
+      "prior_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "7e24c596de836d3cb6daaddf66108719dcf49c6e"
+      },
+      "status": "carried_full_57ea_review_with_actual_mode_type_blob_equality"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/76f0298c5432c6b1e28ae5a2c2cc4e8624fd32cffa6112173de32a68c90652c4",
+      "base": null,
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "4a58007052a65fbc2fc3f910f2855f45a4058e74"
+      },
+      "prior_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "4a58007052a65fbc2fc3f910f2855f45a4058e74"
+      },
+      "status": "carried_full_57ea_review_with_actual_mode_type_blob_equality"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/SHA256SUMS",
+      "base": null,
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "f9380af712926c7fe266e5e2e906ffeac9719379"
+      },
+      "prior_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "f9380af712926c7fe266e5e2e906ffeac9719379"
+      },
+      "status": "carried_full_57ea_review_with_actual_mode_type_blob_equality"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/da1384e8c6e31d165b9f0442b2d2f1f57a875a20156041bfedfcc4ce779654dc",
+      "base": null,
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "4a58007052a65fbc2fc3f910f2855f45a4058e74"
+      },
+      "prior_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "4a58007052a65fbc2fc3f910f2855f45a4058e74"
+      },
+      "status": "carried_full_57ea_review_with_actual_mode_type_blob_equality"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/observation.json",
+      "base": null,
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "3acae85bca5e1660eda18a89e984862c84f45f64"
+      },
+      "prior_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "3acae85bca5e1660eda18a89e984862c84f45f64"
+      },
+      "status": "carried_full_57ea_review_with_actual_mode_type_blob_equality"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/original-pg18-dump.sql",
+      "base": null,
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "fb80a1b0332078e5f97a0966fdebfba571e649a5"
+      },
+      "prior_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "fb80a1b0332078e5f97a0966fdebfba571e649a5"
+      },
+      "status": "carried_full_57ea_review_with_actual_mode_type_blob_equality"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/producer.go.txt",
+      "base": null,
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "7cc3438a191d9a17a11e4eb3b910c9af4ed9f3e9"
+      },
+      "prior_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "7cc3438a191d9a17a11e4eb3b910c9af4ed9f3e9"
+      },
+      "status": "carried_full_57ea_review_with_actual_mode_type_blob_equality"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/restore.sql",
+      "base": null,
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "0c0431fd59927f5896b812ceac411fbee8eb2c0e"
+      },
+      "prior_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "0c0431fd59927f5896b812ceac411fbee8eb2c0e"
+      },
+      "status": "carried_full_57ea_review_with_actual_mode_type_blob_equality"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/76f0298c5432c6b1e28ae5a2c2cc4e8624fd32cffa6112173de32a68c90652c4",
+      "base": null,
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "4a58007052a65fbc2fc3f910f2855f45a4058e74"
+      },
+      "prior_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "4a58007052a65fbc2fc3f910f2855f45a4058e74"
+      },
+      "status": "carried_full_57ea_review_with_actual_mode_type_blob_equality"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/SHA256SUMS",
+      "base": null,
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "141cdf1f4494009c9d9ff026e40dd15e3036d307"
+      },
+      "prior_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "141cdf1f4494009c9d9ff026e40dd15e3036d307"
+      },
+      "status": "carried_full_57ea_review_with_actual_mode_type_blob_equality"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/da1384e8c6e31d165b9f0442b2d2f1f57a875a20156041bfedfcc4ce779654dc",
+      "base": null,
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "4a58007052a65fbc2fc3f910f2855f45a4058e74"
+      },
+      "prior_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "4a58007052a65fbc2fc3f910f2855f45a4058e74"
+      },
+      "status": "carried_full_57ea_review_with_actual_mode_type_blob_equality"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/observation.json",
+      "base": null,
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "3acae85bca5e1660eda18a89e984862c84f45f64"
+      },
+      "prior_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "3acae85bca5e1660eda18a89e984862c84f45f64"
+      },
+      "status": "carried_full_57ea_review_with_actual_mode_type_blob_equality"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/original-pg18-dump.sql",
+      "base": null,
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "db3a215fa72a2578721074367fff42cc9bb3bd32"
+      },
+      "prior_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "db3a215fa72a2578721074367fff42cc9bb3bd32"
+      },
+      "status": "carried_full_57ea_review_with_actual_mode_type_blob_equality"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/producer.go.txt",
+      "base": null,
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "fed889074954ea57c20e3cb8dfbb79fbdfefa5a0"
+      },
+      "prior_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "fed889074954ea57c20e3cb8dfbb79fbdfefa5a0"
+      },
+      "status": "carried_full_57ea_review_with_actual_mode_type_blob_equality"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/restore.sql",
+      "base": null,
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "7fe3fbb5ab51a0d8d52d1534869c105c50aa2235"
+      },
+      "prior_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "7fe3fbb5ab51a0d8d52d1534869c105c50aa2235"
+      },
+      "status": "carried_full_57ea_review_with_actual_mode_type_blob_equality"
+    },
+    {
+      "path": "conformance/internal/contentfixture/world.go",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "373b35d6a6c6ec74ee493892440dde7a503cb91d"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "c7f0d553dc2a6f76b17c2867a713a0c909b3955e"
+      },
+      "prior_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "c7f0d553dc2a6f76b17c2867a713a0c909b3955e"
+      },
+      "status": "carried_full_57ea_review_with_actual_mode_type_blob_equality"
+    },
+    {
+      "path": "domain/content/closure.go",
+      "base": null,
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "e4f9961915bb9cc2026cf90e6c1d5049a2f4189d"
+      },
+      "prior_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "e4f9961915bb9cc2026cf90e6c1d5049a2f4189d"
+      },
+      "status": "carried_full_57ea_review_with_actual_mode_type_blob_equality"
+    },
+    {
+      "path": "domain/content/management.go",
+      "base": null,
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "1d67f00a4dc53c73bfd7910b8934f004d4d0dc0b"
+      },
+      "prior_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "1ab256e794d9eb614eb77362450289c415d7e048"
+      },
+      "status": "fresh_full_hunks_and_context_review"
+    },
+    {
+      "path": "domain/content/ports.go",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "77ee047197b87d245355d550eeabfdc937237844"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "8bc6f124241afc5f0a75f3ef252fc46fa61e128a"
+      },
+      "prior_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "8bc6f124241afc5f0a75f3ef252fc46fa61e128a"
+      },
+      "status": "carried_full_57ea_review_with_actual_mode_type_blob_equality"
+    },
+    {
+      "path": "domain/content/service.go",
+      "base": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "7bafcbb5648b0794ad49ec8cd67671f0366b202e"
+      },
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "1808b6e2bac28ff7613fd4b9075f154a574eb47f"
+      },
+      "prior_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "1b28b39f5c675423a13619d76c2cc8b5f8e67c1f"
+      },
+      "status": "fresh_full_hunks_and_context_review"
+    }
+  ],
+  "standards_sources": [
+    {
+      "path": "AGENTS.md",
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "1860c96f250663e46ee69d81f8c17539a74a22ad"
+      },
+      "equal_prior_01_delivery": true,
+      "equal_57ea": true
+    },
+    {
+      "path": "CONTEXT.md",
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "d3d3ae0ebef7410f40e76f80ba3049bebf5ab1ac"
+      },
+      "equal_prior_01_delivery": true,
+      "equal_57ea": true
+    },
+    {
+      "path": "docs/agents/domain.md",
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "35249041162b1eed5b873d97fc430fb3e4adb18f"
+      },
+      "equal_prior_01_delivery": true,
+      "equal_57ea": true
+    },
+    {
+      "path": "docs/agents/issue-tracker.md",
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "0209a19af92c9c485cf3acc3d9e253171517ea17"
+      },
+      "equal_prior_01_delivery": true,
+      "equal_57ea": true
+    },
+    {
+      "path": "docs/agents/triage-labels.md",
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "b716855d485f3865f9dfde2a82141721f065b2e7"
+      },
+      "equal_prior_01_delivery": true,
+      "equal_57ea": true
+    },
+    {
+      "path": ".agents/skills/code-review/SKILL.md",
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "e28d7acbf7b3bb4d7817b7eb5d9c105af03f6ec4"
+      },
+      "equal_prior_01_delivery": true,
+      "equal_57ea": true
+    },
+    {
+      "path": "docs/adr/README.md",
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "a1e67bde600589486c35af759d2b57c3fc53fe8a"
+      },
+      "equal_prior_01_delivery": true,
+      "equal_57ea": true
+    },
+    {
+      "path": "docs/adr/0004-transactional-durable-work.md",
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "497860fb9aba9df9232d8595741804d9b1a55cbc"
+      },
+      "equal_prior_01_delivery": true,
+      "equal_57ea": true
+    },
+    {
+      "path": "docs/adr/0005-explicit-effect-uncertainty.md",
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "a57ea259a1febcd2506a7484e70599cc2c05b317"
+      },
+      "equal_prior_01_delivery": true,
+      "equal_57ea": true
+    },
+    {
+      "path": "docs/adr/0006-authorization-budget-at-action-boundaries.md",
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "77d90c078faec789d028f6f7ffeade66ca444089"
+      },
+      "equal_prior_01_delivery": true,
+      "equal_57ea": true
+    },
+    {
+      "path": "docs/adr/0007-versioned-content-memory-snapshots.md",
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "b40a72034fe71cc31aed957c29450c56402487b4"
+      },
+      "equal_prior_01_delivery": true,
+      "equal_57ea": true
+    },
+    {
+      "path": "docs/adr/0009-versioned-activation-and-recovery.md",
+      "head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "b6e33755bae9d7b63ac1e3d8eb9b0eea3ac20b96"
+      },
+      "equal_prior_01_delivery": true,
+      "equal_57ea": true
+    }
+  ],
+  "frozen_existing_qualification": {
+    "count": 73,
+    "all_equal": true,
+    "objects": [
+      {
+        "path": "adapters/postgres/content/migrations/0001_content.sql",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "9f14fd8caa76419618d568e80ecefa43281f7aec"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "9f14fd8caa76419618d568e80ecefa43281f7aec"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "adapters/postgres/decision_engine/migrations/0001_decisions.sql",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "67577456392ba15d60a0dae1fce295e7e5e8a756"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "67577456392ba15d60a0dae1fce295e7e5e8a756"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/1.0.0/commands.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "649b88634ec7f0aa59324f5371e0ba26ea0f8e7e"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "649b88634ec7f0aa59324f5371e0ba26ea0f8e7e"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/1.0.0/digests.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "13e883060de541a47138e54dab6dc5a9bf98c4f6"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "13e883060de541a47138e54dab6dc5a9bf98c4f6"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/1.0.0/negotiations.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "8ef3a558dc314cc768011983b7cb1e9ac67eb26c"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "8ef3a558dc314cc768011983b7cb1e9ac67eb26c"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/1.0.0/queries.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "09a090eac1d86b8c44ee2de4d3433f1b44147c14"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "09a090eac1d86b8c44ee2de4d3433f1b44147c14"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/1.0.0/responses.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "42f6836d0766154711de4f449418952265657b59"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "42f6836d0766154711de4f449418952265657b59"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/1.0.0/schema-digests.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "041ad8865556f16c0e1a916d1854745db2bb0875"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "041ad8865556f16c0e1a916d1854745db2bb0875"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/1.0.0/values.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "bf28b18d1c9f627b0faf020960d6ffc181020355"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "bf28b18d1c9f627b0faf020960d6ffc181020355"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/1.1.0/README.md",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "56f366d0da8a205569fd2650730f6f4ec5938118"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "56f366d0da8a205569fd2650730f6f4ec5938118"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/1.1.0/digest-input.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "4ca5ba8ea5a8f76f9852f8d4711da31f98f21791"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "4ca5ba8ea5a8f76f9852f8d4711da31f98f21791"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/1.1.0/fixtures.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "bc9d05c6f5571df0dd32b7e9f53a5f4463d1d0c8"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "bc9d05c6f5571df0dd32b7e9f53a5f4463d1d0c8"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/1.1.0/queries.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "68dfa70a32a070ae4f2fe62f3334036d9d293bef"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "68dfa70a32a070ae4f2fe62f3334036d9d293bef"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/1.1.0/schema-digests.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "a44aaf604113c47b77ae55f6f41767618d321349"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "a44aaf604113c47b77ae55f6f41767618d321349"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/1.1.0/valid/decide.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "d059b2ec7799a15307820b05ea234705c2295b08"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "d059b2ec7799a15307820b05ea234705c2295b08"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/1.2.0/digests.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "dc72de0081d223bb851d75a43a5c6231855226ae"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "dc72de0081d223bb851d75a43a5c6231855226ae"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/1.2.0/fixtures.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "4c4853e3a5b8e4574df39f5dc6b1d5ba06a5a0c4"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "4c4853e3a5b8e4574df39f5dc6b1d5ba06a5a0c4"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/1.2.0/put-alpha.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "e2cd344ef68916e29c59c6b70067525e6ce4945a"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "e2cd344ef68916e29c59c6b70067525e6ce4945a"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/deterministic-target/v1/0001_target.sql",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "9ba7fbcfe912344307aa3175cb232525dae104fa"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "9ba7fbcfe912344307aa3175cb232525dae104fa"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/deterministic-target/v1/README.md",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "339458f357ddb649df51fd0ac51b454d870ee5ab"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "339458f357ddb649df51fd0ac51b454d870ee5ab"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/deterministic-target/v1/SHA256SUMS",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "61ea7f4f3661b7cc9688af27399cc3d5d17cc0e9"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "61ea7f4f3661b7cc9688af27399cc3d5d17cc0e9"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/deterministic-target/v1/target.go.txt",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "6aa6b6f2192c9a9048c846cfc1e3b1b8d9e14253"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "6aa6b6f2192c9a9048c846cfc1e3b1b8d9e14253"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/deterministic-target/v1/writer_linux.go.txt",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "52698a1ccd00202735e47648a371cf062d35a0db"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "52698a1ccd00202735e47648a371cf062d35a0db"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/pg-v1/0001_admission.sql",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "94bbf3ee3faabc120bcebf37f092d7463e6ce014"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "94bbf3ee3faabc120bcebf37f092d7463e6ce014"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/pg-v1/README.md",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "c33b4321425aab250d3b661e6b0569d8f68ba956"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "c33b4321425aab250d3b661e6b0569d8f68ba956"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/pg-v1/SHA256SUMS",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "677d1c51867b1b865fe0fe0b56c9cffc078107c4"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "677d1c51867b1b865fe0fe0b56c9cffc078107c4"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/pg-v1/commands.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "61e78662c54d3b95c318d3863298ed3b7a44bada"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "61e78662c54d3b95c318d3863298ed3b7a44bada"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/pg-v1/database.sql",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "0d808828d4b581cb3a1acb8af785624ef31b85bf"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "0d808828d4b581cb3a1acb8af785624ef31b85bf"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/pg-v1/provenance.md",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "ae9f5bc261f7dab13aa6a7bd62e2102d62230ef6"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "ae9f5bc261f7dab13aa6a7bd62e2102d62230ef6"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/pg-v1/writer-observation.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "c0ab1882fecbfca2f7ef04e09fc66149515b7236"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "c0ab1882fecbfca2f7ef04e09fc66149515b7236"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/pg-v1/writer-revision.txt",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "d1b368b5a2ee1f2d29be05264f29e8a72da8a201"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "d1b368b5a2ee1f2d29be05264f29e8a72da8a201"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/pg-v2/0001_admission.sql",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "94bbf3ee3faabc120bcebf37f092d7463e6ce014"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "94bbf3ee3faabc120bcebf37f092d7463e6ce014"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/pg-v2/0002_claims.sql",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "6fcc7f37590e9dcf6b08a11ad24c4ba8ad54842e"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "6fcc7f37590e9dcf6b08a11ad24c4ba8ad54842e"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/pg-v2/README.md",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "6664872f9a21cbe455c42db5170767cd5f6c1d1e"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "6664872f9a21cbe455c42db5170767cd5f6c1d1e"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/pg-v2/SHA256SUMS",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "2de77fc5584fb2a05cbacfe0fd8bb59f06991df2"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "2de77fc5584fb2a05cbacfe0fd8bb59f06991df2"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/pg-v2/database.sql",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "27555d1f1b7225efac167c8df2f2f2e961e5887e"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "27555d1f1b7225efac167c8df2f2f2e961e5887e"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/pg-v2/migrations.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "2d1d28f4a6fcc2fbb6a042b9fcd7bc27cf3f6a7e"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "2d1d28f4a6fcc2fbb6a042b9fcd7bc27cf3f6a7e"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/pg-v2/writer-observation.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "cf5568c743c165de2143f15598bdd1b22d06e083"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "cf5568c743c165de2143f15598bdd1b22d06e083"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/pg-v2/writer-revision.txt",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "ddfd972d36d6dbbe626760e88142fbda3c4f06ee"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "ddfd972d36d6dbbe626760e88142fbda3c4f06ee"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/pg-v2/writer-schema.txt",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "bc3bc458769abf9fe95a645b46e0d9c21df07b72"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "bc3bc458769abf9fe95a645b46e0d9c21df07b72"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/sqlite-v1/0001_admission.sql",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "3adfd5c494dfcaf33b6377d5f2ebcff530ef70e8"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "3adfd5c494dfcaf33b6377d5f2ebcff530ef70e8"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/sqlite-v1/README.md",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "431e82e23199001af7b4c65847726e5e76f03d1b"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "431e82e23199001af7b4c65847726e5e76f03d1b"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/sqlite-v1/SHA256SUMS",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "0203ce7b4b8f8cef73ad90e6d24e8d5a6f635b68"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "0203ce7b4b8f8cef73ad90e6d24e8d5a6f635b68"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/sqlite-v1/commands.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "61e78662c54d3b95c318d3863298ed3b7a44bada"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "61e78662c54d3b95c318d3863298ed3b7a44bada"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/sqlite-v1/database.sqlite",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "4f4d52dd44d03b4e00f1f694ed5cc38326763780"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "4f4d52dd44d03b4e00f1f694ed5cc38326763780"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/sqlite-v1/provenance.md",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "d4314b24d109801b96d2dd6a10f5a8e7075d7c3f"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "d4314b24d109801b96d2dd6a10f5a8e7075d7c3f"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/sqlite-v1/writer-observation.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "a62fbbc6b394142749bf8388ac4eb9536e11dc7c"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "a62fbbc6b394142749bf8388ac4eb9536e11dc7c"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/sqlite-v1/writer-revision.txt",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "6315ca649c2cbace277652c3463e3fadd31a971d"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "6315ca649c2cbace277652c3463e3fadd31a971d"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/sqlite-v2/0001_admission.sql",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "3adfd5c494dfcaf33b6377d5f2ebcff530ef70e8"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "3adfd5c494dfcaf33b6377d5f2ebcff530ef70e8"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/sqlite-v2/0002_claims.sql",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "9108b0eefb9ae0d2b88687d91f16e91c39b14889"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "9108b0eefb9ae0d2b88687d91f16e91c39b14889"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/sqlite-v2/README.md",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "c5eae1cd27875a6e60f2e385b7193bcb982d95e4"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "c5eae1cd27875a6e60f2e385b7193bcb982d95e4"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/sqlite-v2/SHA256SUMS",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "134312d0c728d4bf2638372f00b71cf59b79a337"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "134312d0c728d4bf2638372f00b71cf59b79a337"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/sqlite-v2/database.sqlite",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "609bc84800c21b6859036bf29b1637d219f4e6f5"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "609bc84800c21b6859036bf29b1637d219f4e6f5"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/sqlite-v2/migrations.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "86cdbf82316a9b471c5294605d328aca5b591ba2"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "86cdbf82316a9b471c5294605d328aca5b591ba2"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/sqlite-v2/writer-observation.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "782b67102b27dda89d1fcd283734f126d35cffa7"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "782b67102b27dda89d1fcd283734f126d35cffa7"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/sqlite-v2/writer-revision.txt",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "ddfd972d36d6dbbe626760e88142fbda3c4f06ee"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "ddfd972d36d6dbbe626760e88142fbda3c4f06ee"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/fixtures/durable-work/v2-writer.go.txt",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "95eccc19e821b75dd6a4343548e84a2216ac90c0"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "95eccc19e821b75dd6a4343548e84a2216ac90c0"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/internal/decisionfixture/migrations/0001_fixture.sql",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "ef64669f1c14705a34b0590bc25989dbe23f3133"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "ef64669f1c14705a34b0590bc25989dbe23f3133"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/internal/decisionfixture/testdata/legacy-970fd90/adapters/postgres/decision_engine/migrations/0001_decisions.sql.txt",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "67577456392ba15d60a0dae1fce295e7e5e8a756"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "67577456392ba15d60a0dae1fce295e7e5e8a756"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/internal/decisionfixture/testdata/legacy-970fd90/conformance/internal/decisionfixture/migrations/0001_fixture.sql.txt",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "ef64669f1c14705a34b0590bc25989dbe23f3133"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "ef64669f1c14705a34b0590bc25989dbe23f3133"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/internal/decisionfixture/testdata/legacy-final01/adapters/postgres/decision_engine/migrations/0001_decisions.sql.txt",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "67577456392ba15d60a0dae1fce295e7e5e8a756"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "67577456392ba15d60a0dae1fce295e7e5e8a756"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/internal/decisionfixture/testdata/legacy-final01/conformance/internal/decisionfixture/migrations/0001_fixture.sql.txt",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "ef64669f1c14705a34b0590bc25989dbe23f3133"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "ef64669f1c14705a34b0590bc25989dbe23f3133"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "conformance/internal/testkit/target/migrations/0001_target.sql",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "9ba7fbcfe912344307aa3175cb232525dae104fa"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "9ba7fbcfe912344307aa3175cb232525dae104fa"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "contract/gen/go/v1_1/values.go",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "1f017286e431e70b8cb7b0f2b883d906dc8a7536"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "1f017286e431e70b8cb7b0f2b883d906dc8a7536"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "contract/gen/go/v1_2/values.go",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "5266a817cf2d664d46be59acd143fb5dc26c944e"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "5266a817cf2d664d46be59acd143fb5dc26c944e"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "contract/gen/go/values.go",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "178959d94f46c4e37368cbba1332650f911e84a4"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "178959d94f46c4e37368cbba1332650f911e84a4"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "contract/schema/1.0.0/methods.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "9cb0312cdcd62af8636bca0c262b84f2142c888e"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "9cb0312cdcd62af8636bca0c262b84f2142c888e"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "contract/schema/1.0.0/values.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "a087d4d0a86c90c5f670890d68b247d6cc9441e9"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "a087d4d0a86c90c5f670890d68b247d6cc9441e9"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "contract/schema/1.1.0/methods.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "04a6d81ddf301b719f6c40849140c95630bb54d4"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "04a6d81ddf301b719f6c40849140c95630bb54d4"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "contract/schema/1.1.0/values.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "854222f9ada3979515db5c6ad8369800d66d2b27"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "854222f9ada3979515db5c6ad8369800d66d2b27"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "contract/schema/1.2.0/methods.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "ae9081b5ca9f612c6c733d4c4ab479f635ecec57"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "ae9081b5ca9f612c6c733d4c4ab479f635ecec57"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "contract/schema/1.2.0/values.json",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "cf07da4c149555b5da8526520b7ba82796fa94b5"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "cf07da4c149555b5da8526520b7ba82796fa94b5"
+        },
+        "unchanged": true
+      },
+      {
+        "path": "sdk/typescript/src/generated/values.ts",
+        "base": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "c4b2c7dd85dd9f1ef7b100e628928293e477bf58"
+        },
+        "head": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "c4b2c7dd85dd9f1ef7b100e628928293e477bf58"
+        },
+        "unchanged": true
+      }
+    ]
+  },
+  "new_archives": [
+    {
+      "archive": "legacy-v1",
+      "declared_product_provenance": "1a7d910238eb74cddc712d92b0ba4014a72ff507",
+      "original_schema": "lerna_test_4aee55540d91e5d8db9131fb",
+      "hashes": [
+        {
+          "path": "conformance/internal/contentfixture/testdata/legacy-v1/76f0298c5432c6b1e28ae5a2c2cc4e8624fd32cffa6112173de32a68c90652c4",
+          "expected_sha256": "b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",
+          "actual_sha256": "b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",
+          "equal": true,
+          "bytes": 6
+        },
+        {
+          "path": "conformance/internal/contentfixture/testdata/legacy-v1/da1384e8c6e31d165b9f0442b2d2f1f57a875a20156041bfedfcc4ce779654dc",
+          "expected_sha256": "b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",
+          "actual_sha256": "b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",
+          "equal": true,
+          "bytes": 6
+        },
+        {
+          "path": "conformance/internal/contentfixture/testdata/legacy-v1/observation.json",
+          "expected_sha256": "68bc86f8352de8e25b04f13425f15d662dac9e5a7b23ff2c04f606bbdda1c692",
+          "actual_sha256": "68bc86f8352de8e25b04f13425f15d662dac9e5a7b23ff2c04f606bbdda1c692",
+          "equal": true,
+          "bytes": 6097
+        },
+        {
+          "path": "conformance/internal/contentfixture/testdata/legacy-v1/original-pg18-dump.sql",
+          "expected_sha256": "9c7b297e46305efffddc04e13021060ba1dce1e64ccdf2e12cdad8a6e3bc7c4f",
+          "actual_sha256": "9c7b297e46305efffddc04e13021060ba1dce1e64ccdf2e12cdad8a6e3bc7c4f",
+          "equal": true,
+          "bytes": 35216
+        },
+        {
+          "path": "conformance/internal/contentfixture/testdata/legacy-v1/producer.go.txt",
+          "expected_sha256": "10eae3352f0c5b9df2cd0136b7dcfc625777bff5b2c99505714e3ddcc6cfcc3c",
+          "actual_sha256": "10eae3352f0c5b9df2cd0136b7dcfc625777bff5b2c99505714e3ddcc6cfcc3c",
+          "equal": true,
+          "bytes": 3837
+        },
+        {
+          "path": "conformance/internal/contentfixture/testdata/legacy-v1/restore.sql",
+          "expected_sha256": "73646bcd175570c614c11163a55ed09b21a35c957aacd1cadcbd523bd6a30ac5",
+          "actual_sha256": "73646bcd175570c614c11163a55ed09b21a35c957aacd1cadcbd523bd6a30ac5",
+          "equal": true,
+          "bytes": 35128
+        }
+      ],
+      "all_SHA256_equal": true,
+      "full_restore_translation_equal_ignoring_surrounding_whitespace": true,
+      "raw_structure_sha256": "ae4fc9b61f14cef79e0b4d1ad2ceb9a7f16911817f11056106506cc896a353c9",
+      "row_counts": {
+        "legacy_content.command_receipts": 3,
+        "legacy_content.content_fixture_command_readers": 1,
+        "legacy_content.content_fixture_policies": 3,
+        "legacy_content.content_schema_migrations": 1,
+        "legacy_content.content_versions": 3,
+        "legacy_content.jobs": 3
+      },
+      "raw_dump_unchanged_482_to_pin": true,
+      "producer_unchanged_482_to_pin": true,
+      "qualification": "Static full-byte/structure/row translation; not a native restore or independent Close acknowledgement."
+    },
+    {
+      "archive": "legacy-many-policies",
+      "declared_product_provenance": "1a7d910238eb74cddc712d92b0ba4014a72ff507",
+      "original_schema": "lerna_test_a230998266aca1270c72b73e",
+      "hashes": [
+        {
+          "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/76f0298c5432c6b1e28ae5a2c2cc4e8624fd32cffa6112173de32a68c90652c4",
+          "expected_sha256": "b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",
+          "actual_sha256": "b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",
+          "equal": true,
+          "bytes": 6
+        },
+        {
+          "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/da1384e8c6e31d165b9f0442b2d2f1f57a875a20156041bfedfcc4ce779654dc",
+          "expected_sha256": "b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",
+          "actual_sha256": "b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",
+          "equal": true,
+          "bytes": 6
+        },
+        {
+          "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/observation.json",
+          "expected_sha256": "68bc86f8352de8e25b04f13425f15d662dac9e5a7b23ff2c04f606bbdda1c692",
+          "actual_sha256": "68bc86f8352de8e25b04f13425f15d662dac9e5a7b23ff2c04f606bbdda1c692",
+          "equal": true,
+          "bytes": 6097
+        },
+        {
+          "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/original-pg18-dump.sql",
+          "expected_sha256": "57181b9e3761ff172bcc9a2ff6498a9ef06a6de3d425e3da784d5e510314573d",
+          "actual_sha256": "57181b9e3761ff172bcc9a2ff6498a9ef06a6de3d425e3da784d5e510314573d",
+          "equal": true,
+          "bytes": 112761
+        },
+        {
+          "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/producer.go.txt",
+          "expected_sha256": "bf5a001a41891ea1c7affb5baed54282adc725a0df2caa3d0e96a1ae9f46d5c6",
+          "actual_sha256": "bf5a001a41891ea1c7affb5baed54282adc725a0df2caa3d0e96a1ae9f46d5c6",
+          "equal": true,
+          "bytes": 4511
+        },
+        {
+          "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/restore.sql",
+          "expected_sha256": "424c8402da2b2204b8d4fe03200e45d4e19995a35b24e1203709c7663f137fdc",
+          "actual_sha256": "424c8402da2b2204b8d4fe03200e45d4e19995a35b24e1203709c7663f137fdc",
+          "equal": true,
+          "bytes": 123853
+        }
+      ],
+      "all_SHA256_equal": true,
+      "full_restore_translation_equal_ignoring_surrounding_whitespace": true,
+      "raw_structure_sha256": "ae4fc9b61f14cef79e0b4d1ad2ceb9a7f16911817f11056106506cc896a353c9",
+      "row_counts": {
+        "legacy_content.command_receipts": 3,
+        "legacy_content.content_fixture_command_readers": 1,
+        "legacy_content.content_fixture_policies": 68,
+        "legacy_content.content_schema_migrations": 1,
+        "legacy_content.content_versions": 3,
+        "legacy_content.jobs": 3
+      },
+      "raw_dump_unchanged_482_to_pin": true,
+      "producer_unchanged_482_to_pin": true,
+      "qualification": "Static full-byte/structure/row translation; not a native restore or independent Close acknowledgement."
+    }
+  ],
+  "Fowler12": {
+    "Mysterious Name": "No separate finding; current policy, source closure, watermark, Claim and holder vocabulary identifies purpose.",
+    "Duplicated Code": "OPEN possible P3: four new/live typed SQL page readers repeat limit+1, scan/decode/cursor and joined-close shape. Typed functions do not centralize the shape. Optional judgement, not a hard gate.",
+    "Feature Envy": "No separate finding; domain owns classification; adapter owns SQL/data mapping.",
+    "Data Clumps": "No separate finding; original change and holder identities are already PolicyChange/CleanupResponsibility types; fixed Tx ports need explicit arguments.",
+    "Primitive Obsession": "No separate finding; closed action/state strings reflect bounded contract phases; refs and subjects are named contract types.",
+    "Repeated Switches": "Repository closed finite action/phase cases override polymorphism heuristic.",
+    "Shotgun Surgery": "No separate finding; feature changes cross domain/adapters/tests by documented responsibility.",
+    "Divergent Change": "No separate finding; manager file covers related current-policy management, legacy maintenance and propagation.",
+    "Speculative Generality": "No separate finding; read barriers/backfill fixture hook and paging have current real consumers.",
+    "Message Chains": "No separate finding; explicit injected config/Store navigation follows owner boundary.",
+    "Middle Man": "Repository consumer ports and decorator-retention requirement justify ScheduleRetention/AdvancePolicyJob forwarding.",
+    "Refused Bequest": "No separate finding; test wrappers embed ports and override actual fault/barrier consumers."
+  },
+  "original_findings": {
+    "processing_deadline_P2": "CLOSED: fresh checks after locks and all visited original deadlines at final decision; original cursor/deadline residual retained.",
+    "three_pagination_Close_P2": "CLOSED at original reported locations: named results join primary, iteration and Close causes.",
+    "possible_Duplicated_Code_P3": "OPEN: now four typed consumers repeat the same shape."
+  },
+  "current_findings": {
+    "hard_count": 1,
+    "hard_worst": "P2",
+    "smell_count": 1,
+    "smell_worst": "P3",
+    "hard": "Same-family cause loss remains on Scan/JSON failure in UnindexedVersions/PendingChanges at PG management.go:120/231.",
+    "smell": "Four typed page-consumption functions at management.go:71/289/385/429."
+  },
+  "scope_limits": [
+    "No reviewer native/build/test/DB/Go execution, env/credentials reading, cleanup or repository writes.",
+    "No Spec/root/Astra new-finding reports read.",
+    "Supplied sole-owner controls: tool54467 Component18.402/mechanical rows0.018 actual native0/groupAbsentTrue.",
+    "New race/check/audit and expired-old0001 archive delta pending; preserved original archive limits remain.",
+    "Seven AC claimed and unchecked; this is not acceptance."
+  ]
+}

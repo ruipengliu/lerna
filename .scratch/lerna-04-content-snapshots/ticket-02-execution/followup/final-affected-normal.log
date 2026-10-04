@@ -1,0 +1,5 @@
+ok  	github.com/ruipengliu/lerna/conformance/component	104.650s
+ok  	github.com/ruipengliu/lerna/conformance/internal/contentfixture	0.125s
+ok  	github.com/ruipengliu/lerna/adapters/objectstore/local	0.008s [no tests to run]
+ok  	github.com/ruipengliu/lerna/adapters/postgres/content	0.017s
+NATIVE_EXIT status=0 group_absent=True

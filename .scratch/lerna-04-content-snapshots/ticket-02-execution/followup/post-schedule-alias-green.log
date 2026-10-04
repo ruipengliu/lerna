@@ -1,0 +1,9 @@
+=== RUN   TestContentPostScheduleAliasPreservesOriginalCapOnRollback
+=== RUN   TestContentPostScheduleAliasPreservesOriginalCapOnRollback/late=false
+=== RUN   TestContentPostScheduleAliasPreservesOriginalCapOnRollback/late=true
+--- PASS: TestContentPostScheduleAliasPreservesOriginalCapOnRollback (3.47s)
+    --- PASS: TestContentPostScheduleAliasPreservesOriginalCapOnRollback/late=false (1.78s)
+    --- PASS: TestContentPostScheduleAliasPreservesOriginalCapOnRollback/late=true (1.69s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/component	3.483s
+NATIVE_EXIT status=0 group_absent=True

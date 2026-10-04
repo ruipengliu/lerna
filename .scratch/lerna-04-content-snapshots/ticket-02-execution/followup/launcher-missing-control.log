@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/workspace/lerna-content-02-fix-57ea60c628f8/run-component-group.py", line 9, in <module>
+    record=json.loads(manifest.read_text());names=record['names'];assert names and len(names)==len(set(names))==record['denominator']
+                      ^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1027, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/lerna-content-02-fix-57ea60c628f8/launcher-missing.json'
+NATIVE_EXIT status=1 group_absent=True

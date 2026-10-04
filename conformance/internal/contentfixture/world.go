@@ -36,6 +36,10 @@ type World struct {
 }
 
 func New(t *testing.T, ctx context.Context) *World {
+	return newWorld(t, ctx, nil)
+}
+
+func newWorld(t *testing.T, ctx context.Context, beforeMigrate func(*World)) *World {
 	t.Helper()
 	w := &World{t: t}
 	t.Cleanup(func() {
@@ -95,6 +99,9 @@ func New(t *testing.T, ctx context.Context) *World {
 	w.current, err = pgcontent.Open(ctx, w.Config)
 	if err != nil {
 		t.Fatal(err)
+	}
+	if beforeMigrate != nil {
+		beforeMigrate(w)
 	}
 	if err = w.current.Migrate(ctx); err != nil {
 		t.Fatal(err)

@@ -1,0 +1,7 @@
+--- FAIL: TestContentDelayedHistoricalPageHandsOffOriginalNaturalValidUntil (1.25s)
+    --- FAIL: TestContentDelayedHistoricalPageHandsOffOriginalNaturalValidUntil/late=true (0.81s)
+        content_processing_deadline_test.go:252: initial history completed after ValidUntil without durable original natural check {pc-1b6a2f8646992bfed575e9cf36e17d41fd7602d3792ce122b8cf3506d93ca1b3 {{content-tenant content-owner} direct-target 1 sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060 text/plain 6} {content-tenant verified-subject []} verification [] 2026-10-04 16:04:27.667658 +0000 UTC not_required false true 65e8ee006e32944edbc7f2819c969a3cf35ffcad8b474543b3ea8972ffffc26e.1.tmp published use_review } {pc-1b6a2f8646992bfed575e9cf36e17d41fd7602d3792ce122b8cf3506d93ca1b3 <nil> {{{content-tenant content-owner} second-source 1 sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060 text/plain 6} {content-tenant verified-subject []} verification 2 2026-10-04 16:03:28.161452 +0000 UTC 2026-10-04 17:03:27.661452342 +0000 UTC true true true false true} 0x1cf501f32000 3  2026-10-04 16:04:27.667658 +0000 UTC 2026-10-04 16:03:27.667658 +0000 UTC 2026-10-04 16:03:28.161452 +0000 UTC 2026-10-04 16:04:28.161452 +0000 UTC complete policy_change 3 }
+FAIL
+FAIL	github.com/ruipengliu/lerna/conformance/component	1.257s
+FAIL
+NATIVE_EXIT status=1 group_absent=True

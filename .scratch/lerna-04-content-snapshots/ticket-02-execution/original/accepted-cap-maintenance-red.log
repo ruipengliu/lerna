@@ -1,0 +1,6 @@
+--- FAIL: TestContentAcceptedRequestCapHasOriginalExpiryMaintenance (2.38s)
+    content_management_test.go:392: expired accepted cap has no cleanup/current-use responsibility {pc-c0b0e9052edd3d68d306fe5f84ebd12e61a0cf420d9007ddb2c6a185225c3be4 {{content-tenant content-owner} alpha 1 sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060 text/plain 6} {content-tenant verified-subject []} verification [] 2026-10-04 14:35:41.771273 +0000 UTC not_required false true da73fc3f262e288d3fbf5bf06db2ebcfbb031f2a5cacbc4e8be74a516714a028.1.tmp published use_review } {pc-c0b0e9052edd3d68d306fe5f84ebd12e61a0cf420d9007ddb2c6a185225c3be4 {{{content-tenant content-owner} alpha 1 sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060 text/plain 6} {content-tenant verified-subject []} verification 1 2026-10-04 15:34:39.739190668 +0000 UTC 2026-10-04 15:34:39.739190668 +0000 UTC true true true true true} <nil> 1  2026-10-04 14:35:41.771273 +0000 UTC 2026-10-04 14:34:41.771273 +0000 UTC 2026-10-04 14:34:41.771273 +0000 UTC 2026-10-04 14:35:41.771273 +0000 UTC complete 1 }
+FAIL
+FAIL	github.com/ruipengliu/lerna/conformance/component	2.393s
+FAIL
+NATIVE_EXIT status=1 group_absent=True

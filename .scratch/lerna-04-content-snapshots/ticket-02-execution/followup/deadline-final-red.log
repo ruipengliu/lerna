@@ -1,0 +1,6 @@
+--- FAIL: TestContentProcessingDeadlineRechecksAllChangesAtFinalDecision (0.90s)
+    content_processing_deadline_test.go:92: final decision missed an earlier original change deadline <nil> {pc-1b6a2f8646992bfed575e9cf36e17d41fd7602d3792ce122b8cf3506d93ca1b3 {{{content-tenant content-owner} second-source 1 sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060 text/plain 6} {content-tenant verified-subject []} verification 2 2026-10-04 16:27:28.15060623 +0000 UTC 2026-10-04 16:27:28.15060623 +0000 UTC true true false false true} 0x6de1469c400 3  2026-10-04 16:27:28.65060623 +0000 UTC 2026-10-04 16:27:28.15060623 +0000 UTC 2026-10-04 16:27:28.15060623 +0000 UTC 2026-10-04 16:27:28.65060623 +0000 UTC scheduled 2 }
+FAIL
+FAIL	github.com/ruipengliu/lerna/conformance/component	0.917s
+FAIL
+NATIVE_EXIT status=1 group_absent=True

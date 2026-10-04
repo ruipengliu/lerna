@@ -1,0 +1,2 @@
+{"Schema":"lerna_test_4aee55540d91e5d8db9131fb","Before":[{"Version":1,"Checksum":"sha256:00363b79dafb6eb1f373be9ef08e915fe23cc3db0fa55345e8ae6c051ce0c1ed"}],"After":[{"Version":1,"Checksum":"sha256:00363b79dafb6eb1f373be9ef08e915fe23cc3db0fa55345e8ae6c051ce0c1ed"},{"Version":2,"Checksum":"sha256:99519565ff1146d7cfc468413b449538c6ba71335e86edc8fd447a3bbff922a8"}],"ReceiptPreserved":3,"PublishedBytes":2,"FailedStagingPending":true,"OriginalDues":["2099-01-01T00:00:00Z","2099-01-01T00:00:00Z","2099-01-01T00:00:00Z"]}
+NATIVE_EXIT status=0 group_absent=True

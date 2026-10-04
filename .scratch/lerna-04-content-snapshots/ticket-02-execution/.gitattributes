@@ -1,0 +1,2 @@
+# Preserve verbatim native logs and source snapshots as evidence.
+* -text whitespace=-blank-at-eol,-blank-at-eof

@@ -1,0 +1,34 @@
+File: component-race-measured.test
+Build ID: 338053581179ee33436817f3706c41920cdbb541
+Type: cpu
+Time: 2026-10-04 16:41:01 UTC
+Duration: 60.05s, Total samples = 45.67s (76.05%)
+Active filters:
+   focus=subjectKey|Record.ValidateIdentity
+Showing nodes accounting for 0.12s, 0.26% of 45.67s total
+Dropped 82 nodes (cum <= 0.23s)
+Showing top 22 nodes out of 153
+      flat  flat%   sum%        cum   cum%
+         0     0%     0%      3.08s  6.74%  github.com/ruipengliu/lerna/adapters/postgres/internal/pgstore.(*Core).Within
+         0     0%     0%      3.06s  6.70%  github.com/ruipengliu/lerna/adapters/postgres/content.(*Store).Within
+         0     0%     0%      3.02s  6.61%  github.com/ruipengliu/lerna/conformance/component_test.TestContentFullClosureIncludesIntermediateVersionsAndExact64Bound
+         0     0%     0%      3.01s  6.59%  testing.tRunner
+         0     0%     0%      2.90s  6.35%  github.com/ruipengliu/lerna/domain/content.(*Service).registeredClosure.func1
+         0     0%     0%      2.81s  6.15%  github.com/ruipengliu/lerna/domain/content.(*Service).registeredClosure
+     0.01s 0.022% 0.022%      2.14s  4.69%  github.com/ruipengliu/lerna/adapters/postgres/content.subjectKey
+     0.04s 0.088%  0.11%      2.05s  4.49%  github.com/ruipengliu/lerna/contract/v1_2.Encode[go.shape.struct { TenantID github.com/ruipengliu/lerna/contract/gen/go/v1_2.ID "json:\"tenant_id\""; SubjectID github.com/ruipengliu/lerna/contract/gen/go/v1_2.ID "json:\"subject_id\""; DelegationChain []github.com/ruipengliu/lerna/contract/gen/go/v1_2.DelegatedSubject "json:\"delegation_chain\"" }]
+         0     0%  0.11%      1.90s  4.16%  github.com/ruipengliu/lerna/adapters/postgres/content.(*Store).CheckPolicy
+         0     0%  0.11%      1.74s  3.81%  github.com/ruipengliu/lerna/domain/content.(*Service).Step
+         0     0%  0.11%      1.72s  3.77%  github.com/ruipengliu/lerna/domain/content.(*Service).publicationPolicy
+         0     0%  0.11%      1.32s  2.89%  github.com/ruipengliu/lerna/domain/content.(*Service).Put.func1
+         0     0%  0.11%      1.30s  2.85%  github.com/ruipengliu/lerna/conformance/component_test.putContentRequest
+         0     0%  0.11%      1.30s  2.85%  github.com/ruipengliu/lerna/domain/content.(*Service).Put
+     0.01s 0.022%  0.13%      1.17s  2.56%  github.com/ruipengliu/lerna/contract/v1_2.Validate
+         0     0%  0.13%      1.08s  2.36%  github.com/ruipengliu/lerna/domain/content.Record.ValidateIdentity
+         0     0%  0.13%      1.07s  2.34%  github.com/ruipengliu/lerna/domain/content.VersionIdentity
+         0     0%  0.13%      1.05s  2.30%  github.com/ruipengliu/lerna/adapters/postgres/content.(*Store).LockVersion
+         0     0%  0.13%      0.99s  2.17%  github.com/ruipengliu/lerna/contract/v1_2.Encode[go.shape.struct { Owner github.com/ruipengliu/lerna/contract/gen/go/v1_2.OwnerRef "json:\"owner\""; ContentID github.com/ruipengliu/lerna/contract/gen/go/v1_2.ID "json:\"content_id\""; Version string "json:\"version\""; Hash string "json:\"hash\""; MediaType string "json:\"media_type\""; ByteLength github.com/ruipengliu/lerna/contract/gen/go/v1_2.Revision "json:\"byte_length\"" }]
+         0     0%  0.13%      0.92s  2.01%  github.com/ruipengliu/lerna/domain/content.(*Service).Step.func2
+         0     0%  0.13%      0.90s  1.97%  github.com/santhosh-tekuri/jsonschema/v6.(*Schema).validate
+     0.06s  0.13%  0.26%      0.88s  1.93%  github.com/santhosh-tekuri/jsonschema/v6.(*validator).validate
+NATIVE_EXIT status=0 group_absent=True

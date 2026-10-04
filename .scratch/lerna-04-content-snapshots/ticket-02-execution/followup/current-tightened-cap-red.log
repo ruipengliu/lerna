@@ -1,0 +1,7 @@
+--- FAIL: TestContentHistoricalTighteningClassifiesNewCapAtCurrentTime (1.31s)
+    --- FAIL: TestContentHistoricalTighteningClassifiesNewCapAtCurrentTime/late=true (0.92s)
+        content_processing_deadline_test.go:109: newly persisted cap is already expired but holder recorded not_required {pc-1b6a2f8646992bfed575e9cf36e17d41fd7602d3792ce122b8cf3506d93ca1b3 {{content-tenant content-owner} direct-target 1 sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060 text/plain 6} {content-tenant verified-subject []} verification [] 2026-10-04 15:47:28.47847 +0000 UTC not_required false true 65e8ee006e32944edbc7f2819c969a3cf35ffcad8b474543b3ea8972ffffc26e.1.tmp published use_review }
+FAIL
+FAIL	github.com/ruipengliu/lerna/conformance/component	1.333s
+FAIL
+NATIVE_EXIT status=1 group_absent=True

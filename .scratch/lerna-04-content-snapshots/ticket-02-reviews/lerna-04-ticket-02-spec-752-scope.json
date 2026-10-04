@@ -1,0 +1,310 @@
+{
+  "axis": "Spec",
+  "base": "f05b2f1068958ba6b63e6c1dc58d6cd1684446cc",
+  "prior_head": "3f44032ffaaf9cd51fc253399412252767f0f737",
+  "head": "75202ee0077b5bf12b432b5017ad97a1dfcab681",
+  "merge_base": "f05b2f1068958ba6b63e6c1dc58d6cd1684446cc",
+  "commits": [
+    "75202ee0077b5bf12b432b5017ad97a1dfcab681 test(content): cover natural handoff through both worker consumers",
+    "3f44032ffaaf9cd51fc253399412252767f0f737 fix(content): hand off original natural checks and retain all SQL close causes",
+    "8d64ad1ed8eee35d07ee3fc990dd2696729ef9c8 fix(content): preserve propagation deadlines and admission expiry obligations",
+    "57ea60c628f82140f5700503107d3e2fe4a86dec Preserve exact native Content archives and normalize restore EOF",
+    "d3fb9c7e56293f9be30da13c012c0863c0da6aa1 Merge commit '70f69e524592491a5ad37754cf0793ee131acec6' into codex/content-snapshots-ticket-02",
+    "482dc1def90c9ccafe3be850ec28e0f4e81f71c2 Implement current Content source closure and durable policy propagation",
+    "70f69e524592491a5ad37754cf0793ee131acec6 docs(content): adopt current-policy oracle and responsibility decisions",
+    "f54d697b50d63490a2ed573b8dd91c18d3178110 docs: record verified Content checkpoint CI and full finite integration scope"
+  ],
+  "path_count": 49,
+  "stat": "49 files changed, 7162 insertions(+), 62 deletions(-)",
+  "delta_stat": "1 file changed, 50 insertions(+), 43 deletions(-)",
+  "fresh_paths": [
+    "conformance/component/content_processing_deadline_test.go"
+  ],
+  "fresh_review": "Complete fixed test object and diff read. Four native public cases: Manager.Step/Content.Step x future/delayed original ValidUntil; exact original natural Due/Deadline/watermark, five actions/pending known holder, normal Get/body. Remaining original test cases unchanged.",
+  "carry_count": 48,
+  "carry_exact_mode_type_blob": [
+    {
+      "path": ".gitattributes",
+      "mode_type_blob": "100644 blob 61a70d47da26cf8ccd7433f5c878adb3d21933fd"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/ci-verification.md",
+      "mode_type_blob": "100644 blob 0ff82eff7d7398fb0bb4575473f0d42a98a90f0f"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/issues/02-current-source-policies.md",
+      "mode_type_blob": "100644 blob 5a87fa60b272cb6a4a8cc30992a59dec8a4f022b"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/ticket-01-exit-evidence.md",
+      "mode_type_blob": "100644 blob e295032e6dedc4c6d9eebd44b6b552a282cefe41"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/ticket-02-oracle-decisions.md",
+      "mode_type_blob": "100644 blob f00e774605be856ea1d135a1db18b2266e44c7a8"
+    },
+    {
+      "path": ".scratch/lerna-implementation/progress.md",
+      "mode_type_blob": "100644 blob f792702f05528219ce9ef4c2a7f7fc765464b555"
+    },
+    {
+      "path": "adapters/postgres/content/facts.go",
+      "mode_type_blob": "100644 blob 9e9dd22ec1ae18347a37cb315e9ba5b4909eb7c4"
+    },
+    {
+      "path": "adapters/postgres/content/management.go",
+      "mode_type_blob": "100644 blob 185165840a9bde50f0234e99150a6a50fb00c40c"
+    },
+    {
+      "path": "adapters/postgres/content/management_rows_test.go",
+      "mode_type_blob": "100644 blob 0d3b5d44f3f0d6ad495a41a103d4a7de1629cd92"
+    },
+    {
+      "path": "adapters/postgres/content/migrate.go",
+      "mode_type_blob": "100644 blob e12754f772a1587c86008d628273e8d48b6cd04b"
+    },
+    {
+      "path": "adapters/postgres/content/migrations/0002_source_policies.sql",
+      "mode_type_blob": "100644 blob 02a082a5a0edfa57d0e8d2a2680b0af5ad9a5a41"
+    },
+    {
+      "path": "adapters/postgres/content/policy.go",
+      "mode_type_blob": "100644 blob 9b8752f1f78e42202287c618740e769d1ee2fe28"
+    },
+    {
+      "path": "conformance/component/content_association_test.go",
+      "mode_type_blob": "100644 blob ce45b9331b17a1142e8e0847056b802d0186f28e"
+    },
+    {
+      "path": "conformance/component/content_closure_test.go",
+      "mode_type_blob": "100644 blob 9c310565fc92023afcbb5cf9b612a988c6e273eb"
+    },
+    {
+      "path": "conformance/component/content_direct_read_test.go",
+      "mode_type_blob": "100644 blob 35460c48c30a76585eb1f282fcc8da13a5975c58"
+    },
+    {
+      "path": "conformance/component/content_inherited_expiry_test.go",
+      "mode_type_blob": "100644 blob d2802a3c9e6ee9df9fe685fe11874b210d959272"
+    },
+    {
+      "path": "conformance/component/content_legacy_test.go",
+      "mode_type_blob": "100644 blob 2f2089c418055e781a3710d1dd9d89da9a7d58a6"
+    },
+    {
+      "path": "conformance/component/content_management_test.go",
+      "mode_type_blob": "100644 blob acda6b07df81e26729f64e0fd1609c3edbe19774"
+    },
+    {
+      "path": "conformance/internal/contentfixture/legacy.go",
+      "mode_type_blob": "100644 blob 06438b6fda8cff8f38a657fafbc83fe44e7f7cae"
+    },
+    {
+      "path": "conformance/internal/contentfixture/migration_test.go",
+      "mode_type_blob": "100644 blob 1791ce393db68ec70dacaf38713edb9e8f702c29"
+    },
+    {
+      "path": "conformance/internal/contentfixture/policy_lock.go",
+      "mode_type_blob": "100644 blob 75197823b793f2fe2ac3b8685d08a5fc9c635e15"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/README.md",
+      "mode_type_blob": "100644 blob e8df491fa6760db9241c0d99626cf271cac8b812"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/76f0298c5432c6b1e28ae5a2c2cc4e8624fd32cffa6112173de32a68c90652c4",
+      "mode_type_blob": "100644 blob 4a58007052a65fbc2fc3f910f2855f45a4058e74"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/SHA256SUMS",
+      "mode_type_blob": "100644 blob d2545d360368671e6ec56046039e281914b1e537"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/da1384e8c6e31d165b9f0442b2d2f1f57a875a20156041bfedfcc4ce779654dc",
+      "mode_type_blob": "100644 blob 4a58007052a65fbc2fc3f910f2855f45a4058e74"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/observation.json",
+      "mode_type_blob": "100644 blob b7ce2095534dea1607e76a89f728e3acde1fbf9b"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/original-pg18-dump.sql",
+      "mode_type_blob": "100644 blob 020d384621925b7c04d66df8033cd724633a3b3e"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/producer.go.txt",
+      "mode_type_blob": "100644 blob c1a827b11b104ccf362ed591c718d28ded3b6ec3"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-expired-ancestor/restore.sql",
+      "mode_type_blob": "100644 blob 38d6e2767a557ed4e1db93b68ae2b66eebc94558"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/76f0298c5432c6b1e28ae5a2c2cc4e8624fd32cffa6112173de32a68c90652c4",
+      "mode_type_blob": "100644 blob 4a58007052a65fbc2fc3f910f2855f45a4058e74"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/SHA256SUMS",
+      "mode_type_blob": "100644 blob f9380af712926c7fe266e5e2e906ffeac9719379"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/da1384e8c6e31d165b9f0442b2d2f1f57a875a20156041bfedfcc4ce779654dc",
+      "mode_type_blob": "100644 blob 4a58007052a65fbc2fc3f910f2855f45a4058e74"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/observation.json",
+      "mode_type_blob": "100644 blob 3acae85bca5e1660eda18a89e984862c84f45f64"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/original-pg18-dump.sql",
+      "mode_type_blob": "100644 blob fb80a1b0332078e5f97a0966fdebfba571e649a5"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/producer.go.txt",
+      "mode_type_blob": "100644 blob 7cc3438a191d9a17a11e4eb3b910c9af4ed9f3e9"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-many-policies/restore.sql",
+      "mode_type_blob": "100644 blob 0c0431fd59927f5896b812ceac411fbee8eb2c0e"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/76f0298c5432c6b1e28ae5a2c2cc4e8624fd32cffa6112173de32a68c90652c4",
+      "mode_type_blob": "100644 blob 4a58007052a65fbc2fc3f910f2855f45a4058e74"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/SHA256SUMS",
+      "mode_type_blob": "100644 blob 141cdf1f4494009c9d9ff026e40dd15e3036d307"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/da1384e8c6e31d165b9f0442b2d2f1f57a875a20156041bfedfcc4ce779654dc",
+      "mode_type_blob": "100644 blob 4a58007052a65fbc2fc3f910f2855f45a4058e74"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/observation.json",
+      "mode_type_blob": "100644 blob 3acae85bca5e1660eda18a89e984862c84f45f64"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/original-pg18-dump.sql",
+      "mode_type_blob": "100644 blob db3a215fa72a2578721074367fff42cc9bb3bd32"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/producer.go.txt",
+      "mode_type_blob": "100644 blob fed889074954ea57c20e3cb8dfbb79fbdfefa5a0"
+    },
+    {
+      "path": "conformance/internal/contentfixture/testdata/legacy-v1/restore.sql",
+      "mode_type_blob": "100644 blob 7fe3fbb5ab51a0d8d52d1534869c105c50aa2235"
+    },
+    {
+      "path": "conformance/internal/contentfixture/world.go",
+      "mode_type_blob": "100644 blob c7f0d553dc2a6f76b17c2867a713a0c909b3955e"
+    },
+    {
+      "path": "domain/content/closure.go",
+      "mode_type_blob": "100644 blob e4f9961915bb9cc2026cf90e6c1d5049a2f4189d"
+    },
+    {
+      "path": "domain/content/management.go",
+      "mode_type_blob": "100644 blob bea1dc9703538ff7f825d819775eb5ca8ac212a6"
+    },
+    {
+      "path": "domain/content/ports.go",
+      "mode_type_blob": "100644 blob 8bc6f124241afc5f0a75f3ef252fc46fa61e128a"
+    },
+    {
+      "path": "domain/content/service.go",
+      "mode_type_blob": "100644 blob 1808b6e2bac28ff7613fd4b9075f154a574eb47f"
+    }
+  ],
+  "all_tree_unchanged_count": 909,
+  "all_product_SQL_archives_unchanged": true,
+  "origin_objects_unchanged": [
+    {
+      "path": ".scratch/lerna-04-content-snapshots/spec.md",
+      "tree_entry": "100644 blob fa9f86bf3d8167a4514c6813f79ca532a33eda43\t.scratch/lerna-04-content-snapshots/spec.md"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/issues/02-current-source-policies.md",
+      "tree_entry": "100644 blob 5a87fa60b272cb6a4a8cc30992a59dec8a4f022b\t.scratch/lerna-04-content-snapshots/issues/02-current-source-policies.md"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/ticket-02-handoff.md",
+      "tree_entry": "100644 blob dc280a744bb2d4b68c9ed2da7299ef4fd034cae9\t.scratch/lerna-04-content-snapshots/ticket-02-handoff.md"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/ticket-02-oracle-decisions.md",
+      "tree_entry": "100644 blob f00e774605be856ea1d135a1db18b2266e44c7a8\t.scratch/lerna-04-content-snapshots/ticket-02-oracle-decisions.md"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/decisions.md",
+      "tree_entry": "100644 blob 7fd3021e1c2e9cf6648e7d92c20da5286cb72030\t.scratch/lerna-04-content-snapshots/decisions.md"
+    },
+    {
+      "path": ".scratch/lerna-04-content-snapshots/final-api-handoff.md",
+      "tree_entry": "100644 blob 5ad2ecb81a2ec449394f97b503937a65f158ad21\t.scratch/lerna-04-content-snapshots/final-api-handoff.md"
+    },
+    {
+      "path": "AGENTS.md",
+      "tree_entry": "100644 blob 1860c96f250663e46ee69d81f8c17539a74a22ad\tAGENTS.md"
+    },
+    {
+      "path": "CONTEXT.md",
+      "tree_entry": "100644 blob d3d3ae0ebef7410f40e76f80ba3049bebf5ab1ac\tCONTEXT.md"
+    },
+    {
+      "path": "docs/adr/0006-authorization-budget-at-action-boundaries.md",
+      "tree_entry": "100644 blob 77d90c078faec789d028f6f7ffeade66ca444089\tdocs/adr/0006-authorization-budget-at-action-boundaries.md"
+    },
+    {
+      "path": "docs/adr/0007-versioned-content-memory-snapshots.md",
+      "tree_entry": "100644 blob b40a72034fe71cc31aed957c29450c56402487b4\tdocs/adr/0007-versioned-content-memory-snapshots.md"
+    }
+  ],
+  "all_seven_AC": {
+    "1": "independent five actions, exact bindings and fresh policy gates; prior full source and unchanged action tests carried",
+    "2": "full finite closure, middle/shared dedup and owner/tenant refusal; exact closure code/tests carried",
+    "3": "original monotonic caps, purpose qualification, all ancestor inherited expiry obligations; service and manager delta read",
+    "4": "same-Tx final publication qualification; unchanged facts/policy and prior race tests carried",
+    "5": "All same-Tx holder/propagation obligations, all-pages finite original deadline/renewal classification and late initial natural handoff qualified, no false cleanup; own P2 closed.",
+    "6": "auth-before-existence/bytes, allowed normal cases and source declaration boundary; prior exact-object tests carried",
+    "7": "Public/native test structures and independent object byte observations reviewed; new actual expired0001 archive qualification including79 literal rows/78 JSON cells and partial backfill/reopen test. No reviewer execution."
+  },
+  "prior_completed_report": "/tmp/lerna-04-ticket-02-spec-3f44.md",
+  "prior_source_scope": "/tmp/lerna-04-ticket-02-spec-3f44-scope.json",
+  "archive_proof_qualified_unchanged": {
+    "hashes_verified": [
+      "76f0298c5432c6b1e28ae5a2c2cc4e8624fd32cffa6112173de32a68c90652c4",
+      "da1384e8c6e31d165b9f0442b2d2f1f57a875a20156041bfedfcc4ce779654dc",
+      "observation.json",
+      "original-pg18-dump.sql",
+      "producer.go.txt",
+      "restore.sql"
+    ],
+    "copy_insert_literal_equal": true,
+    "rows_by_table": {
+      "command_receipts": 3,
+      "content_fixture_command_readers": 1,
+      "content_fixture_policies": 68,
+      "content_schema_migrations": 1,
+      "content_versions": 3,
+      "jobs": 3
+    },
+    "all_json_cells_decoded": 78,
+    "ddl_mechanically_equal": true,
+    "dump_size": 112782,
+    "original_cutoff": "2026-10-04T16:00:30.057895Z",
+    "all_three_receipts_equal_observation": true,
+    "two_bodies_exact_alpha": true
+  },
+  "adopted_requirement_clarifications": [
+    "/tmp/lerna-04-ticket-02-inherited-expiry-decision.md",
+    "/tmp/lerna-04-ticket-02-renewal-classification-decision.md"
+  ],
+  "counts": {
+    "a": 0,
+    "b": 0,
+    "c": 0,
+    "worst": null
+  },
+  "limits": "No reviewer tests/build/native/DB/environment/cleanup/install/repo edits or other-axis reports. Parent focused2.667/registry.028/Localfull.065 native0/groupAbsent external evidence only; final race/check/audit/CI pending; 7AC unchecked."
+}

@@ -1,0 +1,8 @@
+{
+  "actual_pid": 2530735,
+  "actual_group": 2530735,
+  "original_ack": "process_group 2530735 2530735 /workspace/lerna-content-02-fix-57ea60c628f8",
+  "actual_executable": "/workspace/lerna-content-02-fix-57ea60c628f8/component-race-materialized.test",
+  "qualification": "erroneous empty selector launched all; intentional exact-owner stop before outer timeout; preserve current scopes and native per-Close unknown",
+  "original_stat": "2530735 (component-race-) S 2530734 2530735 2530735 0 -1 4194560 116876 2368 0 0 5711 1253 2 0 20 0 9 0 10553879 2348093440 40213 18446744073709551615 4194304 15816304 140737219913920 0 0 0 0 0 2143420159 0 0 0 17 3 0 0 0 0 0 24621056 25102016 232099840 140737219919779 140737219919909 140737219919909 140737219923882 0\n"
+}

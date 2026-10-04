@@ -1,0 +1,3 @@
+# command-line-arguments
+/workspace/lerna-content-02-f05b2f1068958/old-writer.go:28:49: any does not satisfy v1_2.Value
+NATIVE_EXIT status=1 group_absent=True

@@ -1,0 +1,2902 @@
+root /workspace/lerna-content-02-fix-57ea60c628f8 27 559638
+process_group 2307583 2307583 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_9ff05a887d32acdf8ae1873d
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3987270752 27 559928
+postgres lerna_test_cc3223f4f9fda5b12f9bb4a6
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2738543161 27 559928
+pg_policy_connections lerna_test_cc3223f4f9fda5b12f9bb4a6
+pg_policy_holder lerna_test_cc3223f4f9fda5b12f9bb4a6 370726
+postgres lerna_test_792f33821b23730dcf92cf64
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3062805726 27 559928
+postgres lerna_test_0f57cb0e6fd260e98881c1c8
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-4071063291 27 559928
+pg_policy_connections lerna_test_0f57cb0e6fd260e98881c1c8
+pg_policy_holder lerna_test_0f57cb0e6fd260e98881c1c8 370741
+native_exit 2307583 2307583 status=1 group_absent=True
+process_group 2309137 2309137 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_ce97d4b94d1b0d0a20f9fa4f
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3914742434 27 559643
+native_exit 2309137 2309137 status=1 group_absent=True
+process_group 2310720 2310720 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_4378557561f367e9610d9954
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3550660104 27 559645
+postgres lerna_test_0abaea50eaaa75b58b0a1551
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2955850302 27 559645
+pg_policy_connections lerna_test_0abaea50eaaa75b58b0a1551
+pg_policy_holder lerna_test_0abaea50eaaa75b58b0a1551 371244
+postgres lerna_test_dd98c757cb6dbe61b94055c8
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2318422621 27 559645
+postgres lerna_test_7e7144000295194003f819eb
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1440305501 27 559645
+pg_policy_connections lerna_test_7e7144000295194003f819eb
+pg_policy_holder lerna_test_7e7144000295194003f819eb 371260
+postgres lerna_test_55e84bccfe0a10b030efc3b0
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-618553961 27 559645
+native_exit 2310720 2310720 status=0 group_absent=True
+process_group 2314312 2314312 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_680bc95fb3cd8f972b834698
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3133479731 27 559645
+native_exit 2314312 2314312 status=1 group_absent=True
+process_group 2315749 2315749 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_34d822073177f2c516a5a599
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3165308413 27 560962
+native_exit 2315749 2315749 status=1 group_absent=True
+process_group 2318650 2318650 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_716e666b46fdd4ac2fd4fe20
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3109508265 27 559646
+postgres lerna_test_016b8d2293f37d4af891cb03
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2612815055 27 559646
+pg_legacy_restore_connection lerna_test_016b8d2293f37d4af891cb03
+postgres lerna_test_5c0c71c17d52383ff3500d1f
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-709309724 27 559646
+pg_legacy_restore_connection lerna_test_5c0c71c17d52383ff3500d1f
+postgres lerna_test_4105bbd6b96add22bd13d91f
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3740341979 27 559646
+postgres lerna_test_956a07432fbd0fdefd277e39
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3663834169 27 559646
+pg_policy_connections lerna_test_956a07432fbd0fdefd277e39
+pg_policy_holder lerna_test_956a07432fbd0fdefd277e39 372618
+postgres lerna_test_e2e74514329293783c61301a
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1819643455 27 559646
+postgres lerna_test_cb42f30686d0374207f392ad
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3695547573 27 559646
+pg_policy_connections lerna_test_cb42f30686d0374207f392ad
+pg_policy_holder lerna_test_cb42f30686d0374207f392ad 372626
+postgres lerna_test_5eda1d966cf9bad6643961df
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3185088582 27 559646
+native_exit 2318650 2318650 status=0 group_absent=True
+process_group 2323915 2323915 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2323915 2323915 status=1 group_absent=True
+process_group 2324897 2324897 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2324897 2324897 status=1 group_absent=True
+process_group 2325401 2325401 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2325401 2325401 status=0 group_absent=True
+process_group 2327557 2327557 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_e3b743a805493196405a0a17
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1775985393 27 559647
+postgres lerna_test_455d9208f2c6939728160b71
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2104802858 27 559647
+native_exit 2327557 2327557 status=1 group_absent=True
+process_group 2332229 2332229 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_45ccca9263a78994f09b537d
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3987191648 27 559648
+postgres lerna_test_c602fb1414b15ca4b0173d14
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2624005432 27 559648
+postgres lerna_test_a26ae44b3c5cc47c936a6327
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-426741661 27 559648
+postgres lerna_test_f9ee49f177c65c6cc7cc53ba
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3304568437 27 559648
+pg_legacy_restore_connection lerna_test_f9ee49f177c65c6cc7cc53ba
+postgres lerna_test_3f9387e9047db08ffb41477d
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1583536106 27 559648
+pg_legacy_restore_connection lerna_test_3f9387e9047db08ffb41477d
+postgres lerna_test_7100c04cc7c2021ec04c365d
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2809248649 27 559648
+postgres lerna_test_f0a2dc0cd34e45eefa9b9ca1
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3326018174 27 559648
+pg_policy_connections lerna_test_f0a2dc0cd34e45eefa9b9ca1
+pg_policy_holder lerna_test_f0a2dc0cd34e45eefa9b9ca1 374936
+postgres lerna_test_341eee8709af9d20319e1abd
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3846374059 27 559648
+postgres lerna_test_30f3fb9423ffd1c3532ba1ef
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2193476327 27 559648
+pg_policy_connections lerna_test_30f3fb9423ffd1c3532ba1ef
+pg_policy_holder lerna_test_30f3fb9423ffd1c3532ba1ef 374952
+postgres lerna_test_5ada64e052aca68848777a3b
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1876606262 27 559648
+native_exit 2332229 2332229 status=0 group_absent=True
+process_group 2335611 2335611 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_a9c3be999ba5157e85d08d9f
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2140193115 27 559647
+postgres lerna_test_bf2476801f045a8f02e456a1
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-56126883 27 559647
+native_exit 2335611 2335611 status=1 group_absent=True
+process_group 2337767 2337767 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_9bb1f78b3def01fcbccac53e
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2613994065 27 559648
+postgres lerna_test_347325f360e64e5ff23a54b2
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1520224505 27 559648
+postgres lerna_test_2e4db72d89e12f18a0d3c818
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-604532274 27 559648
+postgres lerna_test_a31d2537c40681623ee60772
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-609227108 27 559648
+pg_legacy_restore_connection lerna_test_a31d2537c40681623ee60772
+postgres lerna_test_6a7f1393c8a2d8eb43ed95ec
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-639282091 27 559648
+pg_legacy_restore_connection lerna_test_6a7f1393c8a2d8eb43ed95ec
+postgres lerna_test_e2a8f2dd627958ba70aaac0a
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2499144480 27 559648
+postgres lerna_test_c2637c7e65daaa53c188044b
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3247977410 27 559648
+pg_policy_connections lerna_test_c2637c7e65daaa53c188044b
+pg_policy_holder lerna_test_c2637c7e65daaa53c188044b 375896
+postgres lerna_test_f5d4db1235b9c4ce6e2c15bc
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2792302767 27 559713
+postgres lerna_test_09e7e025b1e27134b62cfa4d
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-516310531 27 559713
+pg_policy_connections lerna_test_09e7e025b1e27134b62cfa4d
+pg_policy_holder lerna_test_09e7e025b1e27134b62cfa4d 375912
+postgres lerna_test_3b668dadc3d69fe005427329
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2428002460 27 559713
+postgres lerna_test_05c7c55550c370852e899326
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1476569548 27 559713
+postgres lerna_test_aae3f4fff8fbc0348e49f1be
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-4086134206 27 559713
+native_exit 2337767 2337767 status=0 group_absent=True
+process_group 2341553 2341553 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_e98c61614d735a0628060f95
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1585768394 27 559648
+native_exit 2341553 2341553 status=1 group_absent=True
+process_group 2343636 2343636 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2343636 2343636 status=1 group_absent=True
+process_group 2344429 2344429 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_2681ea955a8f3bee99e3adf0
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-4211166173 27 560756
+postgres lerna_test_5ff6d1af694e6bc2ee2d73cc
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3917970932 27 560756
+postgres lerna_test_f8a25c45a08eb23d2d1f41fe
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1556153865 27 560756
+postgres lerna_test_e898da5c72a3f43814321526
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2943016488 27 560756
+postgres lerna_test_37cdab0f1a6eab4fc9c456c6
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3190565327 27 560756
+postgres lerna_test_a120e763f1307faa0f6280e5
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1998378247 27 560756
+native_exit 2344429 2344429 status=0 group_absent=True
+process_group 2349030 2349030 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_0f1c5a1f611092cdc6767b61
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1578415723 27 560129
+postgres lerna_test_fa7d3862969418bf3d5b4c34
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1211734033 27 560129
+postgres lerna_test_c928b5510928774252a74406
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-784501491 27 560129
+postgres lerna_test_8dddc031b53f00afa5deac36
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2558262213 27 559697
+postgres lerna_test_6cc10fa9c8850b8afd0a255d
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3049307105 27 559697
+postgres lerna_test_927bb1a58e5c7739792a650d
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-516738476 27 559697
+postgres lerna_test_71779dad879c41b406a80693
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2635776394 27 559697
+pg_legacy_restore_connection lerna_test_71779dad879c41b406a80693
+postgres lerna_test_0f210dee93c4e20a57d3e5d8
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1853655923 27 559697
+pg_legacy_restore_connection lerna_test_0f210dee93c4e20a57d3e5d8
+postgres lerna_test_cdb8565b5cf46dd7f4a50d65
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-4061821890 27 559697
+postgres lerna_test_8dea0c28fcb8e42e3b047767
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-305283470 27 559697
+pg_policy_connections lerna_test_8dea0c28fcb8e42e3b047767
+pg_policy_holder lerna_test_8dea0c28fcb8e42e3b047767 377885
+postgres lerna_test_3087ea8e9ef8786d1395cd2f
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2151061818 27 559697
+postgres lerna_test_9bf68ba70567578f043384a2
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-293355756 27 559697
+pg_policy_connections lerna_test_9bf68ba70567578f043384a2
+pg_policy_holder lerna_test_9bf68ba70567578f043384a2 377894
+postgres lerna_test_64e1bf9ee89d90572a50bbac
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1390808534 27 559697
+postgres lerna_test_dd9a8d33695293302deb211e
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3295110073 27 559697
+postgres lerna_test_1d82bc1c1825c5cab90223f3
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-485708913 27 559697
+native_exit 2349030 2349030 status=0 group_absent=True
+process_group 2350923 2350923 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2350923 2350923 status=0 group_absent=True
+objects /workspace/lerna-content-02-fix-57ea60c628f8/legacy-expired-objects 27 559653
+process_group 2353865 2353865 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2353865 2353865 status=0 group_absent=True
+binary /workspace/lerna-content-02-fix-57ea60c628f8/old-writer-expired 27 559761 sha256=d96b3b22292fbd0b2e0151cfa0476f90901fc5c743bbcfe446e8c711641f7a79 source=1a7d910238eb74cddc712d92b0ba4014a72ff507
+process_group 2355026 2355026 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_de87bd29399603c7d0ae9691
+native_exit 2355026 2355026 status=0 group_absent=True
+process_group 2355687 2355687 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2355687 2355687 status=0 group_absent=True
+process_group 2359110 2359110 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_70d222df6223f958c442bb25
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2661612246 27 559974
+postgres lerna_test_3e38a62726349fc0ea65295e
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3745775313 27 559974
+native_exit 2359110 2359110 status=1 group_absent=True
+process_group 2361038 2361038 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_78f5bce7cc53060e5575c251
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-513893184 27 560259
+postgres lerna_test_153d15049c6058ba85e6c560
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2713456864 27 560259
+postgres lerna_test_fa8dc6740f78895ee5dc0bce
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3007645309 27 560259
+postgres lerna_test_23a5463e64b60bed2cff1f43
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-4236530483 27 560259
+pg_policy_connections lerna_test_23a5463e64b60bed2cff1f43
+pg_policy_holder lerna_test_23a5463e64b60bed2cff1f43 379862
+postgres lerna_test_e087f32c39205a29d569b7f5
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2264756418 27 560259
+postgres lerna_test_455140d287ae0f8e17a467db
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1357069420 27 560259
+pg_policy_connections lerna_test_455140d287ae0f8e17a467db
+pg_policy_holder lerna_test_455140d287ae0f8e17a467db 379870
+postgres lerna_test_60100ca00191cf9b492de56d
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1182560489 27 560259
+postgres lerna_test_625e4fed51d987d7c0599132
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-4116019996 27 560259
+postgres lerna_test_d6011af88bf4d5eaa8faeb2f
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-441352323 27 560259
+native_exit 2361038 2361038 status=0 group_absent=True
+process_group 2363583 2363583 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2363583 2363583 status=1 group_absent=True
+process_group 2365912 2365912 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_dc4b8aa2cf380357e6763489
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1237894664 27 560778
+postgres lerna_test_f5793489a6e49398a3c26cc1
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3356235287 27 560778
+postgres lerna_test_4c9943e2d5e1004ce35f0ff7
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1011633409 27 560778
+pg_legacy_restore_connection lerna_test_4c9943e2d5e1004ce35f0ff7
+postgres lerna_test_5fc83a11dcc137e88b16fc6d
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1944864612 27 560778
+postgres lerna_test_48b15d155c21a53d973d62d6
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-702014776 27 560778
+pg_policy_connections lerna_test_48b15d155c21a53d973d62d6
+pg_policy_holder lerna_test_48b15d155c21a53d973d62d6 380661
+postgres lerna_test_e9068dee0cc9e5ca1b1349e6
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1596297903 27 560778
+postgres lerna_test_36dca89b6b3f68c1efa70800
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1256696266 27 560778
+pg_policy_connections lerna_test_36dca89b6b3f68c1efa70800
+pg_policy_holder lerna_test_36dca89b6b3f68c1efa70800 380670
+postgres lerna_test_a3a6e27e45393c5d1c3ea5cb
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-665448640 27 560778
+postgres lerna_test_f0a8c912eaaeddbb094d9e49
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-375044890 27 560778
+postgres lerna_test_8c032f05c596b0564e638d51
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3971899747 27 560778
+native_exit 2365912 2365912 status=0 group_absent=True
+process_group 2370233 2370233 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2370233 2370233 status=0 group_absent=True
+process_group 2371131 2371131 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_b340552b8e15d942e1821ae8
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3578405655 27 559984
+postgres lerna_test_9e76bcb17abc9a0a8d599644
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-564309163 27 559984
+postgres lerna_test_dc05a925d37fd8b34b1c439e
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2024067624 27 559984
+postgres lerna_test_1ac7be3c5ae48ad6f5c62515
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1772514417 27 559984
+pg_policy_connections lerna_test_1ac7be3c5ae48ad6f5c62515
+pg_policy_holder lerna_test_1ac7be3c5ae48ad6f5c62515 381524
+postgres lerna_test_1f0674008211de0800a412fe
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2529417664 27 559984
+postgres lerna_test_c980de36a496e193eeb9dc97
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1119256763 27 559984
+postgres lerna_test_c067cc02a127e5152e597cdb
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2199668501 27 559984
+pg_policy_connections lerna_test_c067cc02a127e5152e597cdb
+pg_policy_holder lerna_test_c067cc02a127e5152e597cdb 381533
+postgres lerna_test_fefefc4a6735a9d22b79f199
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3107974228 27 559984
+pg_policy_connections lerna_test_fefefc4a6735a9d22b79f199
+pg_policy_holder lerna_test_fefefc4a6735a9d22b79f199 381545
+postgres lerna_test_1d78d00b1008d299ccb3ce33
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2582353790 27 559984
+postgres lerna_test_f69eacf5d41347d6eede9977
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3227202027 27 559984
+postgres lerna_test_cfded8b07e94bf5217015228
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-483332798 27 559984
+postgres lerna_test_d8f0fe4892b47177a09804bd
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-41981409 27 559984
+postgres lerna_test_4c01ff6c9cb48abbe3f38457
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3207385590 27 559984
+postgres lerna_test_6adff0e44da0f8ac0067f274
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-717747520 27 559984
+postgres lerna_test_3a068fdb7a499d07b1bccedc
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1560170489 27 559984
+postgres lerna_test_ec99ac221817e688ea77edab
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3248761131 27 559984
+postgres lerna_test_dfaff11e57e9bb4246429d2d
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3620284225 27 559984
+postgres lerna_test_fb32efc051ae2753a74827ae
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1445739904 27 559984
+postgres lerna_test_5c2a23a968ca47446f980d30
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1157234340 27 559984
+postgres lerna_test_617aa1322fbcc34f18ff2f40
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3568898993 27 559984
+postgres lerna_test_db0f99269f397e37451dc98a
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-344431182 27 559984
+postgres lerna_test_2a7c6d20f9c34de4a90c2cb4
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-4147936102 27 559984
+fixture_object_file /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-4147936102/da73fc3f262e288d3fbf5bf06db2ebcfbb031f2a5cacbc4e8be74a516714a028
+postgres lerna_test_bd43fe4409b1360c867ba421
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2291616324 27 559984
+postgres lerna_test_b0ce2ffae8a6345a25c775d2
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3116243428 27 559984
+postgres lerna_test_9049550f0e57a349d3e5eb97
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3379637613 27 559984
+postgres lerna_test_f08d03c19fa9f442c7eb895e
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2052466464 27 559984
+fixture_object_file /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2052466464/da73fc3f262e288d3fbf5bf06db2ebcfbb031f2a5cacbc4e8be74a516714a028
+postgres lerna_test_751478d2b58871f21df7272e
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2068212508 27 559984
+fixture_object_file /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2068212508/da73fc3f262e288d3fbf5bf06db2ebcfbb031f2a5cacbc4e8be74a516714a028
+postgres lerna_test_b0ae13afaeb600d321b5f81e
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2321293454 27 559984
+postgres lerna_test_983a862c11d6d803303dea1f
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3682455956 27 559984
+postgres lerna_test_354b65fe95db579fc1e2d75c
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-322281420 27 559984
+postgres lerna_test_5ef4c727450c7d958a598e99
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2787220760 27 559984
+postgres lerna_test_14ddc69c7fd3c69dc2b8ee0c
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-4185509819 27 559984
+postgres lerna_test_1ec41adf77ccf81af507e55d
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3315593608 27 559984
+postgres lerna_test_817bb075a9b0121c4a2acb40
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1849102799 27 559984
+postgres lerna_test_73fb097689f003647bb85349
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3064806745 27 559984
+postgres lerna_test_9c42f200ecc29e8e1b5d8d49
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1540121026 27 559984
+pg_legacy_restore_connection lerna_test_9c42f200ecc29e8e1b5d8d49
+postgres lerna_test_90ea68fae7129a9b4e552437
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1278776608 27 560075
+pg_legacy_restore_connection lerna_test_90ea68fae7129a9b4e552437
+postgres lerna_test_1f18970b0c0d6e29386959ef
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2678985899 27 560075
+pg_legacy_restore_connection lerna_test_1f18970b0c0d6e29386959ef
+postgres lerna_test_2cac934d37eef7cd25c760aa
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2161667410 27 560075
+postgres lerna_test_b4fb420330c7b52302d67308
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2264097199 27 560075
+postgres lerna_test_6f5fe31ad9928c500167aef6
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-888761595 27 560075
+postgres lerna_test_769e5d1603722e5ad5753ecb
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3064643333 27 560075
+postgres lerna_test_5687c51308eb9da4b48facab
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-783702295 27 560075
+postgres lerna_test_732f7e6fbf42325a12825bb2
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1920720558 27 560075
+postgres lerna_test_db51031c261444f3fd428395
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2455835917 27 560075
+postgres lerna_test_31e300edcdf066080b7aec64
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1242711092 27 560075
+postgres lerna_test_5ac20cac2df2090bab5fc7a7
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2561155144 27 560075
+pg_policy_holder lerna_test_5ac20cac2df2090bab5fc7a7 381938
+postgres lerna_test_550abfd91a7c08e25f3bff2a
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1970887184 27 560075
+postgres lerna_test_0d25e4573d72cff13a1d0b17
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2168901374 27 560075
+postgres lerna_test_471a4be54a34eb09680b4035
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-540029631 27 560075
+postgres lerna_test_7005746a34b99c749253cee8
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1790164475 27 560075
+postgres lerna_test_731c9c509b6b835bd4acb60c
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3787071721 27 560075
+postgres lerna_test_db0dca997bbe29a8d7c20cf9
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3146717781 27 560075
+postgres lerna_test_9b63062ac856ef15a5dad2e0
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3164203930 27 560075
+postgres lerna_test_0deeabd0248ac906c6044929
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1467958895 27 560075
+postgres lerna_test_543ff4dc6b85df838e3c98c4
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-784126019 27 560075
+postgres lerna_test_09f52f47ca660eaa9449a455
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2968458321 27 560075
+postgres lerna_test_94476e752c14044136295161
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-136478639 27 560075
+postgres lerna_test_b9c6709dfcea56baded47b67
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-388956552 27 560075
+pg_policy_connections lerna_test_b9c6709dfcea56baded47b67
+pg_policy_holder lerna_test_b9c6709dfcea56baded47b67 381994
+postgres lerna_test_f9fdec2565124011bc91dafd
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-34288123 27 560075
+postgres lerna_test_f9ff05d7761cd7bb1b425125
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1543443491 27 560075
+pg_policy_connections lerna_test_f9ff05d7761cd7bb1b425125
+pg_policy_holder lerna_test_f9ff05d7761cd7bb1b425125 382010
+postgres lerna_test_c98740868280c183faa267fa
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3188116915 27 560075
+postgres lerna_test_669ec9e84dd7ef5c84e4681c
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1442506999 27 560075
+postgres lerna_test_6b56bf3507e8175d70e0d3df
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2433201745 27 560075
+postgres lerna_test_f14c198c54dee53420f3b017
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1697947049 27 560075
+postgres lerna_test_5cc0c907c4c445d0982601a2
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1214848096 27 560075
+postgres lerna_test_596b6f82cc1b37d26c195f49
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3264393608 27 560075
+postgres lerna_test_cbb0e7aa2f2f6c1f820ee531
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2175678108 27 560075
+postgres lerna_test_9e51843f447189f4a0571619
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2375731216 27 560075
+pg_policy_connections lerna_test_9e51843f447189f4a0571619
+pg_policy_holder lerna_test_9e51843f447189f4a0571619 382048
+postgres lerna_test_3dd2bf5f9bc43ec02ec4ebf6
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-46389311 27 560075
+pg_policy_connections lerna_test_3dd2bf5f9bc43ec02ec4ebf6
+pg_policy_holder lerna_test_3dd2bf5f9bc43ec02ec4ebf6 382052
+postgres lerna_test_4f28f2722062736b96174ce4
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1965192978 27 560075
+pg_policy_connections lerna_test_4f28f2722062736b96174ce4
+pg_policy_holder lerna_test_4f28f2722062736b96174ce4 382056
+postgres lerna_test_81be99714ba476753fafb78f
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-4223175383 27 560075
+pg_policy_connections lerna_test_81be99714ba476753fafb78f
+pg_policy_holder lerna_test_81be99714ba476753fafb78f 382068
+postgres lerna_test_abd617aa4d397209f0130eab
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2114642697 27 560075
+pg_policy_connections lerna_test_abd617aa4d397209f0130eab
+pg_policy_holder lerna_test_abd617aa4d397209f0130eab 382072
+postgres lerna_test_d3931c57b10aac8732e1456b
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-73768974 27 560075
+pg_policy_connections lerna_test_d3931c57b10aac8732e1456b
+pg_policy_holder lerna_test_d3931c57b10aac8732e1456b 382076
+postgres lerna_test_0b862490f8cf88d2285be4f7
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2744300525 27 560075
+pg_policy_connections lerna_test_0b862490f8cf88d2285be4f7
+pg_policy_holder lerna_test_0b862490f8cf88d2285be4f7 382088
+postgres lerna_test_bf3ce4cde50db9417517149e
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-4185855281 27 560075
+pg_policy_connections lerna_test_bf3ce4cde50db9417517149e
+pg_policy_holder lerna_test_bf3ce4cde50db9417517149e 382092
+postgres lerna_test_a0ae40084cca6efaf066fb75
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-148319517 27 560075
+pg_policy_connections lerna_test_a0ae40084cca6efaf066fb75
+pg_policy_holder lerna_test_a0ae40084cca6efaf066fb75 382096
+postgres lerna_test_9596c710b7a383efb8884766
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-445711806 27 560075
+pg_policy_connections lerna_test_9596c710b7a383efb8884766
+pg_policy_holder lerna_test_9596c710b7a383efb8884766 382100
+postgres lerna_test_9b640c0ebf98a6d9f6b6b30a
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2493783622 27 560075
+pg_policy_connections lerna_test_9b640c0ebf98a6d9f6b6b30a
+pg_policy_holder lerna_test_9b640c0ebf98a6d9f6b6b30a 382112
+postgres lerna_test_593b6d9713b6daf5cb6ce41b
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1524956311 27 560075
+postgres lerna_test_a76a8a3169f458b6d989e852
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1939392025 27 560075
+postgres lerna_test_75df9a301bee02e7a48a344d
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-557318980 27 560075
+postgres lerna_test_b7206bb8881bd7e915d36dfd
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1994971948 27 560075
+postgres lerna_test_514aebf14122fcd7c0318444
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-4245813521 27 560075
+postgres lerna_test_0a35e2ce5501a5d0e29fa1f2
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-4115927133 27 560075
+postgres lerna_test_06d8111a57af0af5025c6cd2
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-773993408 27 560075
+postgres lerna_test_980085111eb6cb288f2ce3ac
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1976166976 27 560075
+postgres lerna_test_fdba5581e3e98553dfb7e435
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-4030249914 27 560075
+postgres lerna_test_86a01e2ec0d3d2973f10c61f
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1396078872 27 560075
+postgres lerna_test_c80f4c573a2ea3c70b97966a
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1702817286 27 560075
+postgres lerna_test_c800cc3b1bbe1b2d62629bfa
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3023246395 27 560075
+postgres lerna_test_715eff2fddcc4622db21de7c
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2347173312 27 560075
+postgres lerna_test_c28cafcc5f52930083eda0ef
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1083872232 27 560075
+postgres lerna_test_7c2efb0425bf846addc3b495
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3771352813 27 560164
+pg_migration_connection lerna_test_7c2efb0425bf846addc3b495
+native_exit 2371131 2371131 status=0 group_absent=True
+process_group 2377404 2377404 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_63ddd8c5bb8fb69f4ce63ce2
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-406545041 27 560429
+postgres lerna_test_e37506763c1fea696d31cf73
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2433963799 27 560429
+postgres lerna_test_8ba8dab8c1a0083a9890b6ab
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1337354780 27 560429
+postgres lerna_test_acf76955ce81f485a84239a3
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1032887 27 560429
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-fixture-close-3147421264 27 560423
+fixture_close_control /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-fixture-close-3147421264
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-fixture-close-3180640813 27 560423
+fixture_close_control /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-fixture-close-3180640813
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-fixture-close-672935558 27 560423
+fixture_close_control /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-fixture-close-672935558
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-local-lifetime-1060355087 27 559729
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-local-lifetime-3971980139 27 559729
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-local-lifetime-1136869805 27 559729
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-local-lifetime-143307110 27 559729
+native_exit 2377404 2377404 status=0 group_absent=True
+process_group 2379296 2379296 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2379296 2379296 status=0 group_absent=True
+process_group 2379313 2379313 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2379313 2379313 status=0 group_absent=True
+binary /workspace/lerna-content-02-fix-57ea60c628f8/component-race.test 27 560675 sha256=d4cb8519d540da3478540a2d237b0517aef4077438ead139a01d8df6cae17f0b source=75202ee0077b5bf12b432b5017ad97a1dfcab681 flags=race,integration,p1
+process_group 2383864 2383864 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2383864 2383864 status=0 group_absent=True
+process_group 2389574 2389574 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_472df512697a4fd10669077a
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-642115727 27 559672
+native_exit 2389574 2389574 status=1 group_absent=True
+artifact /workspace/lerna-content-02-fix-57ea60c628f8/closure-before.cpu 27 559672 role=cpu_profile source=75202ee0077b5bf12b432b5017ad97a1dfcab681
+process_group 2396843 2396843 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_b6ce61b275025991b40cc02f
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-386990544 27 559681
+native_exit 2396843 2396843 status=1 group_absent=True
+process_group 2398432 2398432 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2398432 2398432 status=0 group_absent=True
+process_group 2399532 2399532 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2399532 2399532 status=0 group_absent=True
+process_group 2400017 2400017 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2400017 2400017 status=0 group_absent=True
+binary /workspace/lerna-content-02-fix-57ea60c628f8/component-race-sort.test 27 560141 sha256=1573767cecfd08955ea7b0c316fb26185fe453423ba1b7dfd9b7e1236afe50ad source=752-plus-sort flags=race-c-p1-integration
+process_group 2401353 2401353 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_5c802b157c0bbc9357cad744
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1155553200 27 560159
+native_exit 2401353 2401353 status=1 group_absent=True
+process_group 2405305 2405305 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2405305 2405305 status=0 group_absent=True
+process_group 2405845 2405845 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2405845 2405845 status=0 group_absent=True
+binary /workspace/lerna-content-02-fix-57ea60c628f8/component-race-observation.test 27 560436 sha256=9b12e65984e9a3e76213f2bdf69f71c1775bfae25ff97e92a6808e3d28a0d202 source=752-plus-closure-observation flags=race-c-p1-integration
+process_group 2406576 2406576 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_dff89c057e5526089003865c
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3958727127 27 560454
+native_exit 2406576 2406576 status=1 group_absent=True
+process_group 2410066 2410066 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2410066 2410066 status=0 group_absent=True
+process_group 2410571 2410571 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2410571 2410571 status=0 group_absent=True
+binary /workspace/lerna-content-02-fix-57ea60c628f8/component-race-measured.test 27 560014 sha256=dcc762b04429356b6143526f898dabc14574397572cc5d7219511adfa28913c7 source=752-plus-observation-timing flags=race-c-p1-integration
+artifact /workspace/lerna-content-02-fix-57ea60c628f8/closure-measured.cpu 27 560031 role=cpu_profile source=752-plus-observation-timing
+process_group 2412319 2412319 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_ef5afdfcdd57a6a692b7bdd1
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1052914000 27 560032
+native_exit 2412319 2412319 status=1 group_absent=True
+process_group 2414312 2414312 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2414312 2414312 status=0 group_absent=True
+artifact /workspace/lerna-content-02-fix-57ea60c628f8/measured-compile-input 27 559676 role=source_snapshot
+artifact /workspace/lerna-content-02-fix-57ea60c628f8/current-nil-draft-input 27 559690 role=source_snapshot
+process_group 2420427 2420427 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2420427 2420427 status=0 group_absent=True
+binary /workspace/lerna-content-02-fix-57ea60c628f8/component-race-nil-clock.test 27 560000 sha256=497fb62b8ca2d2f529653c772e178f1652f5b1df7614eaabdf5ce9cccaa0c1e8 source=current-nil-draft-input flags=race-c-p1-integration
+process_group 2421693 2421693 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_e6e7a4338d1eed65294d5e9b
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3709548573 27 560033
+native_exit 2421693 2421693 status=1 group_absent=True
+process_group 2427321 2427321 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2427321 2427321 status=0 group_absent=True
+process_group 2428436 2428436 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2428436 2428436 status=0 group_absent=True
+process_group 2428723 2428723 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_bca747314e0c459a2a2a85b5
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1442056440 27 560065
+postgres lerna_test_92edf681890f3831723436d2
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1368919445 27 560065
+postgres lerna_test_0a014b037a05e39933fe0ea4
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-370042903 27 560065
+postgres lerna_test_e0dac83502d25cab5ddf755d
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3769808148 27 560065
+postgres lerna_test_879b0b340f5063c3f4f2ec54
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-4069221127 27 560065
+postgres lerna_test_504f484783c5106308027b1a
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1923874828 27 560065
+postgres lerna_test_35395ebc677b3890c67e937e
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-319899290 27 560065
+postgres lerna_test_24b5e4b6df8ec95087fb0521
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2074770611 27 560065
+native_exit 2428723 2428723 status=1 group_absent=True
+process_group 2431461 2431461 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2431461 2431461 status=0 group_absent=True
+process_group 2431891 2431891 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_aeb35f1c5487651d76c43a6d
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-4024215206 27 560315
+postgres lerna_test_bf19b6a8c57c9169fa608bd5
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1482959545 27 560315
+postgres lerna_test_04454b5fd3059da41d105b99
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2031509923 27 560315
+postgres lerna_test_d9f28c133e515f09ce96659d
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1854284621 27 560315
+postgres lerna_test_afa9e560710df303e74f3a52
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-884869647 27 560315
+postgres lerna_test_a20b9ca7bbc2ba5618ef6d43
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1751992679 27 560315
+postgres lerna_test_36afa40128cbbbaa484d5503
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-403255085 27 560315
+postgres lerna_test_ec68b99a18861225983d0e4a
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1079181654 27 560315
+native_exit 2431891 2431891 status=0 group_absent=True
+process_group 2436071 2436071 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2436071 2436071 status=0 group_absent=True
+process_group 2437133 2437133 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2437133 2437133 status=0 group_absent=True
+process_group 2437399 2437399 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_969d6aa3357b66f31ac2f22a
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-792519071 27 560070
+native_exit 2437399 2437399 status=1 group_absent=True
+process_group 2439293 2439293 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_7fdb6f236badda61aa4881a4
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2169646018 27 560580
+postgres lerna_test_b8d76d95393ba07b7b7fb62f
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-4014788836 27 560580
+postgres lerna_test_48da4fdf8a10df00bf238f9f
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2664372827 27 560580
+postgres lerna_test_05c8d3016800ada1242cc697
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-109991594 27 560580
+postgres lerna_test_ba2638345ea55a22f311c66c
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-860870787 27 560580
+postgres lerna_test_0742c9ae99a23e816e64f21f
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-4072022445 27 560580
+postgres lerna_test_a854aa261a998d79fee67060
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-477933039 27 560580
+postgres lerna_test_f9dd98043c7019b4e407a3b9
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-506864542 27 560580
+postgres lerna_test_aa966d87402117e02cb3464b
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-631547609 27 560580
+native_exit 2439293 2439293 status=0 group_absent=True
+artifact /workspace/lerna-content-02-fix-57ea60c628f8/source-records-compile-input 27 559730 role=source_snapshot
+process_group 2441590 2441590 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2441590 2441590 status=0 group_absent=True
+binary /workspace/lerna-content-02-fix-57ea60c628f8/component-race-source-records.test 27 560301 sha256=cfcdd40783bb9b45f3001e4978fd8ff525a6decb1bedfd795acbcfdd68fb96ee source=source-records-compile-input flags=race-c-p1-integration
+process_group 2443820 2443820 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_af17e83f119b0b7ef223417f
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1441009753 27 559715
+native_exit 2443820 2443820 status=1 group_absent=True
+process_group 2449551 2449551 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2449551 2449551 status=0 group_absent=True
+artifact /workspace/lerna-content-02-fix-57ea60c628f8/closure-ports-compile-input 27 559710 role=source_snapshot
+process_group 2450507 2450507 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2450507 2450507 status=0 group_absent=True
+binary /workspace/lerna-content-02-fix-57ea60c628f8/component-race-port-timings.test 27 560046 sha256=d7804b2876975518a6649b852a0acbfce4739373cef7b056c1ec50a2f3796e7e source=closure-ports-compile-input flags=race-c-p1-integration
+process_group 2451997 2451997 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_e1f3cca1ec485bacb249476a
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2648903398 27 560051
+native_exit 2451997 2451997 status=1 group_absent=True
+process_group 2455252 2455252 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2455252 2455252 status=0 group_absent=True
+process_group 2459860 2459860 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2459860 2459860 status=0 group_absent=True
+process_group 2460197 2460197 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_9c4e875534fcc142f88adcf6
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2250773054 27 560108
+postgres lerna_test_79c6870ce4c8c415cc0306c2
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-4200972477 27 560108
+native_exit 2460197 2460197 status=1 group_absent=True
+process_group 2462216 2462216 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_acbe50cc1591365ba0eb950e
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-725157596 27 560350
+postgres lerna_test_72eab1114a089b54b8c32c03
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3405832948 27 560350
+native_exit 2462216 2462216 status=0 group_absent=True
+process_group 2467074 2467074 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2467074 2467074 status=0 group_absent=True
+artifact /workspace/lerna-content-02-fix-57ea60c628f8/identity-reuse-compile-input 27 559726 role=source_snapshot
+process_group 2468853 2468853 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2468853 2468853 status=0 group_absent=True
+binary /workspace/lerna-content-02-fix-57ea60c628f8/component-race-identity-reuse.test 27 560129 sha256=a4ccfa939390ddc801a05f3ab023b3f90a4f91b188c409fae46cb0b50095a9a9 source=identity-reuse-compile-input flags=race-c-p1-integration
+process_group 2471338 2471338 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_f294b5164f2c265dbb3dbaeb
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2406982635 27 559781
+native_exit 2471338 2471338 status=1 group_absent=True
+process_group 2481848 2481848 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2481848 2481848 status=0 group_absent=True
+process_group 2487910 2487910 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_97d87739c6983b5e1ab0e34f
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3191139938 27 560086
+postgres lerna_test_d609efcb3d49bc779b82e114
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1388490903 27 560086
+postgres lerna_test_d48384c829586546a1964002
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-4186984981 27 560086
+postgres lerna_test_2745b8c114009bb1f3eec8de
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-66874352 27 560086
+postgres lerna_test_d84ea04b5a7435225463acc3
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3802901692 27 560086
+postgres lerna_test_c8445f1a36499e839995c958
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-4102110127 27 560086
+pg_policy_connections lerna_test_c8445f1a36499e839995c958
+pg_policy_holder lerna_test_c8445f1a36499e839995c958 401672
+postgres lerna_test_d0c31318531de98e83823ee3
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3585653025 27 560086
+postgres lerna_test_19a0e0e685b5db2b33c2bd06
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2779873220 27 560086
+native_exit 2487910 2487910 status=0 group_absent=True
+process_group 2489923 2489923 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2489923 2489923 status=0 group_absent=True
+process_group 2490195 2490195 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_d15f995fa5806c580cc13e6c
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3760725979 27 560354
+pg_policy_connections lerna_test_d15f995fa5806c580cc13e6c
+pg_policy_holder lerna_test_d15f995fa5806c580cc13e6c 402041
+postgres lerna_test_b2a258a17bbe343a2200705f
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-162117331 27 560354
+pg_policy_connections lerna_test_b2a258a17bbe343a2200705f
+pg_policy_holder lerna_test_b2a258a17bbe343a2200705f 402045
+postgres lerna_test_40659c5f6c4ffe4acb3cf261
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2819678155 27 560354
+pg_policy_connections lerna_test_40659c5f6c4ffe4acb3cf261
+pg_policy_holder lerna_test_40659c5f6c4ffe4acb3cf261 402049
+postgres lerna_test_f897e6f8f2961e6d08419739
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1803618552 27 560354
+pg_policy_connections lerna_test_f897e6f8f2961e6d08419739
+pg_policy_holder lerna_test_f897e6f8f2961e6d08419739 402053
+native_exit 2490195 2490195 status=1 group_absent=True
+process_group 2491834 2491834 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2491834 2491834 status=0 group_absent=True
+process_group 2492943 2492943 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2492943 2492943 status=0 group_absent=True
+process_group 2492949 2492949 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_b6dfc153019a4a2575b72f92
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2145605342 27 560625
+pg_policy_connections lerna_test_b6dfc153019a4a2575b72f92
+pg_policy_holder lerna_test_b6dfc153019a4a2575b72f92 402530
+postgres lerna_test_fdbdd173bbfb29e2cc8bc73f
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1035842806 27 560625
+pg_policy_connections lerna_test_fdbdd173bbfb29e2cc8bc73f
+pg_policy_holder lerna_test_fdbdd173bbfb29e2cc8bc73f 402534
+postgres lerna_test_021a0bd52d3228d426fbdeb0
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3155876182 27 560625
+pg_policy_connections lerna_test_021a0bd52d3228d426fbdeb0
+pg_policy_holder lerna_test_021a0bd52d3228d426fbdeb0 402538
+postgres lerna_test_461a66d435145d04b1c4d2c3
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1629932758 27 560625
+pg_policy_connections lerna_test_461a66d435145d04b1c4d2c3
+pg_policy_holder lerna_test_461a66d435145d04b1c4d2c3 402542
+postgres lerna_test_182a9ea25b3a134054f87cfb
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2423750886 27 560625
+postgres lerna_test_3529ccad25048d355ea1459b
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-152246327 27 560625
+postgres lerna_test_57ab20896684c74f94dfb9ba
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3151615652 27 560625
+postgres lerna_test_66f3a2fb55c30812fc26ed04
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-584586119 27 560625
+postgres lerna_test_66f849a03e50ea19e6caf0f6
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-823725213 27 560625
+postgres lerna_test_c234d93f556eefe98184c853
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1283182449 27 560625
+postgres lerna_test_87fae539ec95343c39c735a2
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1808964620 27 560625
+native_exit 2492949 2492949 status=1 group_absent=True
+process_group 2494351 2494351 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2494351 2494351 status=0 group_absent=True
+process_group 2494357 2494357 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_4e73c36e66bfc79ae845b412
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-4017052975 27 560916
+pg_policy_connections lerna_test_4e73c36e66bfc79ae845b412
+pg_policy_holder lerna_test_4e73c36e66bfc79ae845b412 402764
+postgres lerna_test_3f66e9327f72c076aa850ffd
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-4244190061 27 560916
+pg_policy_connections lerna_test_3f66e9327f72c076aa850ffd
+pg_policy_holder lerna_test_3f66e9327f72c076aa850ffd 402776
+postgres lerna_test_38469fa2f25fa9df991edf4a
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-616483273 27 560916
+pg_policy_connections lerna_test_38469fa2f25fa9df991edf4a
+pg_policy_holder lerna_test_38469fa2f25fa9df991edf4a 402780
+postgres lerna_test_fbc360d72ad3af754207a27e
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3443960663 27 560916
+pg_policy_connections lerna_test_fbc360d72ad3af754207a27e
+pg_policy_holder lerna_test_fbc360d72ad3af754207a27e 402784
+postgres lerna_test_7951906b3d4378432277320e
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3960421962 27 560916
+postgres lerna_test_043518adcf7e74c1d12a3c70
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2304544125 27 560916
+postgres lerna_test_c22f2296990e7451b5708a81
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3264869854 27 560916
+postgres lerna_test_16004165b481e5106c1433b9
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2795985918 27 560916
+postgres lerna_test_96c013687abed9dd3eac05ef
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-560400166 27 560916
+postgres lerna_test_2f0e168ea3dd4bd87ebf35b1
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2105608849 27 560916
+postgres lerna_test_3669741500b9b644b9df6b42
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1569086387 27 560916
+native_exit 2494357 2494357 status=0 group_absent=True
+objects /workspace/lerna-content-02-fix-57ea60c628f8/policy-actions-compile-input 27 560923
+process_group 2495348 2495348 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2495348 2495348 status=0 group_absent=True
+artifact /workspace/lerna-content-02-fix-57ea60c628f8/component-race-policy-actions.test 27 561228 f1ce7b131ec1349b8b64ec301b8ce24e1899875b3348e7bd807d878870abd4f4
+process_group 2496434 2496434 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_4c6546ad602dc71af44ccf37
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2359441169 27 559794
+native_exit 2496434 2496434 status=1 group_absent=True
+process_group 2499227 2499227 /workspace/lerna-content-02-fix-57ea60c628f8
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-F79ORo 27 559811
+process_group 2499240 2499240 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-F79ORo
+process_exit 2499240 confirmed=true
+contract_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-F79ORo
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-8AhjgG 27 559811
+process_group 2499248 2499248 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-8AhjgG
+process_exit 2499248 confirmed=true
+contract_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-8AhjgG
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-tJFrqe 27 559811
+process_group 2499287 2499287 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-tJFrqe
+process_exit 2499287 confirmed=true
+contract_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-tJFrqe
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-HnyhDV 27 559811
+process_group 2499302 2499302 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-HnyhDV
+process_exit 2499302 confirmed=true
+contract_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-HnyhDV
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-HJAq0s 27 559811
+process_group 2499310 2499310 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-HJAq0s
+process_exit 2499310 confirmed=true
+contract_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-HJAq0s
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-ARSJGr 27 559811
+process_group 2499318 2499318 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-ARSJGr
+process_exit 2499318 confirmed=true
+contract_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-ARSJGr
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-dreMcl 27 559811
+process_group 2499326 2499326 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-dreMcl
+process_exit 2499326 confirmed=true
+contract_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-dreMcl
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-v78X17 27 559811
+process_group 2499341 2499341 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-v78X17
+process_exit 2499341 confirmed=true
+contract_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-v78X17
+native_exit 2499227 2499227 status=1 group_absent=True
+process_group 2500179 2500179 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2500179 2500179 status=0 group_absent=True
+process_group 2500212 2500212 /workspace/lerna-content-02-fix-57ea60c628f8
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-IHkOdf 27 559854
+process_group 2500225 2500225 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-IHkOdf
+process_exit 2500225 confirmed=true
+contract_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-IHkOdf
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-14KtyB 27 559842
+process_group 2500233 2500233 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-14KtyB
+process_exit 2500233 confirmed=true
+contract_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-14KtyB
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-x53yfp 27 559842
+process_group 2500269 2500269 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-x53yfp
+process_exit 2500269 confirmed=true
+contract_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-x53yfp
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-lhyT16 27 559842
+process_group 2500285 2500285 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-lhyT16
+process_exit 2500285 confirmed=true
+contract_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-lhyT16
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-DDnccg 27 559842
+process_group 2500312 2500312 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-DDnccg
+process_exit 2500312 confirmed=true
+contract_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-DDnccg
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-gmZmBf 27 559842
+process_group 2500327 2500327 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-gmZmBf
+process_exit 2500327 confirmed=true
+contract_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-gmZmBf
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-PANev2 27 559842
+process_group 2500335 2500335 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-PANev2
+process_exit 2500335 confirmed=true
+contract_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-PANev2
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-uBmdDe 27 559842
+process_group 2500350 2500350 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-uBmdDe
+process_exit 2500350 confirmed=true
+contract_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-uBmdDe
+native_exit 2500212 2500212 status=0 group_absent=True
+process_group 2500878 2500878 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_be737ad1ac823a92a8e62ea7
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3505085472 27 560142
+native_exit 2500878 2500878 status=0 group_absent=True
+process_group 2503375 2503375 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2503375 2503375 status=0 group_absent=True
+process_group 2503381 2503381 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_621c0c83362a0c15fde7b1e5
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-4091543774 27 560490
+pg_policy_connections lerna_test_621c0c83362a0c15fde7b1e5
+pg_policy_holder lerna_test_621c0c83362a0c15fde7b1e5 404284
+postgres lerna_test_146a07513d8e97bbbfa52e34
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3385643916 27 560490
+pg_policy_connections lerna_test_146a07513d8e97bbbfa52e34
+pg_policy_holder lerna_test_146a07513d8e97bbbfa52e34 404288
+native_exit 2503381 2503381 status=0 group_absent=True
+process_group 2504751 2504751 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_5c125172520ff060179f39a7
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3031611994 27 560257
+pg_policy_connections lerna_test_5c125172520ff060179f39a7
+pg_policy_holder lerna_test_5c125172520ff060179f39a7 404527
+postgres lerna_test_8d8973b12ed928033f5d297b
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2462449572 27 560257
+pg_policy_connections lerna_test_8d8973b12ed928033f5d297b
+pg_policy_holder lerna_test_8d8973b12ed928033f5d297b 404531
+postgres lerna_test_da680c846a40011b86781236
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-214901835 27 560257
+pg_policy_connections lerna_test_da680c846a40011b86781236
+pg_policy_holder lerna_test_da680c846a40011b86781236 404543
+postgres lerna_test_66b6df63773f092a9583f8c9
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1320373922 27 560257
+pg_policy_connections lerna_test_66b6df63773f092a9583f8c9
+pg_policy_holder lerna_test_66b6df63773f092a9583f8c9 404547
+postgres lerna_test_683d20a1126b0f2e8cfb5916
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-802180195 27 560257
+postgres lerna_test_53ccce5999c82aef0c10b763
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-4093202525 27 560257
+postgres lerna_test_103d08c7c952f8ff91077b68
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-439118994 27 560257
+postgres lerna_test_91ec5738aa321cc0749b5e1c
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2498417850 27 560257
+postgres lerna_test_6d0da07477ec8e91f9b597e3
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2649974335 27 560257
+postgres lerna_test_993394df3ac8498bcb82a690
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2961610384 27 560257
+postgres lerna_test_e45c975abb48c010063a95aa
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1375203960 27 560257
+postgres lerna_test_08168507165b3caec6a2ebf7
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1640155199 27 560257
+pg_policy_connections lerna_test_08168507165b3caec6a2ebf7
+pg_policy_holder lerna_test_08168507165b3caec6a2ebf7 404598
+postgres lerna_test_461d1b76c8d7504267ad0624
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3686936370 27 560257
+pg_policy_connections lerna_test_461d1b76c8d7504267ad0624
+pg_policy_holder lerna_test_461d1b76c8d7504267ad0624 404602
+postgres lerna_test_d16dd9652e67468acefd9d84
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2429351596 27 560257
+postgres lerna_test_f6a36cdceaab359bbb1d7a8d
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-449786503 27 560257
+postgres lerna_test_a8303a3e16b926b55f2d247c
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3621066430 27 560257
+postgres lerna_test_2b4f1c3dc8168a88a4fcd53f
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-674033214 27 560257
+postgres lerna_test_c332b50834f2a3df0459150a
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1586369468 27 560257
+postgres lerna_test_b6f98ca43f3d0512eb188f37
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2221255562 27 560257
+postgres lerna_test_f88881a39a4f3b153045874d
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2891084063 27 560257
+postgres lerna_test_2d1a8de8a73ec3292a5f4466
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3837181434 27 560257
+postgres lerna_test_a92b3a84df422b1649594a42
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1467515394 27 560257
+postgres lerna_test_c86402d42a1db0998fbdeb0a
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-295195778 27 560257
+postgres lerna_test_d48f315acdb10d367e50f07d
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3202618274 27 560257
+postgres lerna_test_c907f0a8563ed4a5b494b0d9
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-4213326183 27 560257
+postgres lerna_test_01dc9c8c11aefbb63d9e67aa
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1592587800 27 560257
+postgres lerna_test_b0027ecc2a0f45b390677f8d
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-934602395 27 560257
+postgres lerna_test_cb7decc13b2fb36b410f8c7a
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3718558309 27 560257
+postgres lerna_test_20a339f163c663f848e4d6d3
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-50296470 27 560257
+postgres lerna_test_19732644821ed0cbb72f87f0
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1928856940 27 560257
+pg_policy_connections lerna_test_19732644821ed0cbb72f87f0
+pg_policy_holder lerna_test_19732644821ed0cbb72f87f0 404707
+postgres lerna_test_cf05ea7ff6537768de891567
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1271354057 27 560257
+postgres lerna_test_a3fdddd6d9885399a15efcf5
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3345794014 27 560257
+native_exit 2504751 2504751 status=0 group_absent=True
+objects /workspace/lerna-content-02-fix-57ea60c628f8/phase-diagnostic-overlay 27 559785
+process_group 2510282 2510282 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2510282 2510282 status=0 group_absent=True
+artifact /workspace/lerna-content-02-fix-57ea60c628f8/closure-policy-phases.cpu 27 560115
+artifact /workspace/lerna-content-02-fix-57ea60c628f8/component-race-phase-diagnostic.test 27 560104 460a9f82cccd4bdf555e8085863d6243c8325aaa2b98f4f2f9698a0f7f99f262
+process_group 2511680 2511680 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_e648bdf53217ff563c5b9e88
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1974496463 27 560117
+native_exit 2511680 2511680 status=1 group_absent=True
+process_group 2514286 2514286 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2514286 2514286 status=0 group_absent=True
+process_group 2516124 2516124 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2516124 2516124 status=0 group_absent=True
+process_group 2516130 2516130 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_c5cdc67330abb0aabca1471d
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-342605132 27 560437
+pg_policy_connections lerna_test_c5cdc67330abb0aabca1471d
+pg_policy_holder lerna_test_c5cdc67330abb0aabca1471d 406517
+pg_policy_holder lerna_test_c5cdc67330abb0aabca1471d 406519
+postgres lerna_test_f8daa323e17c26fd3807a25b
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3855989630 27 560437
+pg_policy_connections lerna_test_f8daa323e17c26fd3807a25b
+pg_policy_holder lerna_test_f8daa323e17c26fd3807a25b 406522
+native_exit 2516130 2516130 status=1 group_absent=True
+objects /workspace/lerna-content-02-fix-57ea60c628f8/policy-early-clock-fault-input 27 560438
+process_group 2517905 2517905 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2517905 2517905 status=0 group_absent=True
+process_group 2517911 2517911 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_5e2c51765e89492e77491232
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1604666792 27 560743
+pg_policy_connections lerna_test_5e2c51765e89492e77491232
+pg_policy_holder lerna_test_5e2c51765e89492e77491232 406813
+postgres lerna_test_93f8003511a701cdb3c6127b
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-4006597192 27 560743
+pg_policy_connections lerna_test_93f8003511a701cdb3c6127b
+pg_policy_holder lerna_test_93f8003511a701cdb3c6127b 406826
+postgres lerna_test_9196a3ca62b8b855f631510b
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3088241823 27 560743
+pg_policy_connections lerna_test_9196a3ca62b8b855f631510b
+pg_policy_holder lerna_test_9196a3ca62b8b855f631510b 406830
+postgres lerna_test_17f693a88001cc86789ec00c
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2804537957 27 560743
+pg_policy_connections lerna_test_17f693a88001cc86789ec00c
+pg_policy_holder lerna_test_17f693a88001cc86789ec00c 406834
+postgres lerna_test_8bf01f0a94b812f0dbbc0799
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1276223327 27 560743
+postgres lerna_test_af77d3cbf939ae07cd7d23d9
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-4137532736 27 560743
+postgres lerna_test_0e459c33ea5e8a26e16041c9
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1952672751 27 560747
+postgres lerna_test_3d6107664b6fd2b4f26509e0
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3235652944 27 560747
+postgres lerna_test_b191c45e57dd5fc6045692ce
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-4008805845 27 560747
+postgres lerna_test_177f4946712f2360dd37f86e
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2591587405 27 560747
+postgres lerna_test_50d9e88e19c9aa5b03831bfc
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-425197332 27 560747
+postgres lerna_test_79a5304ae0acb44162723116
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-115467015 27 560747
+pg_policy_connections lerna_test_79a5304ae0acb44162723116
+pg_policy_holder lerna_test_79a5304ae0acb44162723116 406869
+postgres lerna_test_c9f3d7983e240d7151f20049
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2243517950 27 560747
+pg_policy_connections lerna_test_c9f3d7983e240d7151f20049
+pg_policy_holder lerna_test_c9f3d7983e240d7151f20049 406873
+postgres lerna_test_c95131cdc7c41959009d11c5
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3377223913 27 559801
+pg_policy_connections lerna_test_c95131cdc7c41959009d11c5
+pg_policy_holder lerna_test_c95131cdc7c41959009d11c5 406877
+pg_policy_holder lerna_test_c95131cdc7c41959009d11c5 406879
+postgres lerna_test_8d11fe97c17fcd0b3ddaaf45
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-497781448 27 559801
+pg_policy_connections lerna_test_8d11fe97c17fcd0b3ddaaf45
+pg_policy_holder lerna_test_8d11fe97c17fcd0b3ddaaf45 406882
+pg_policy_holder lerna_test_8d11fe97c17fcd0b3ddaaf45 406892
+native_exit 2517911 2517911 status=0 group_absent=True
+process_group 2519708 2519708 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2519708 2519708 status=0 group_absent=True
+artifact /workspace/lerna-content-02-fix-57ea60c628f8/component-race-materialized.test 27 560109 bd5df06af72bdbaa546af0d20db1748ab23dbe9ac6f06158bc4e4bc126d00b54
+process_group 2522237 2522237 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_64b25af322770fa89c564f8d
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3552471020 27 559826
+native_exit 2522237 2522237 status=0 group_absent=True
+process_group 2524703 2524703 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2524703 2524703 status=0 group_absent=True
+process_group 2526787 2526787 /workspace/lerna-content-02-fix-57ea60c628f8
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-62tKpR 27 559813
+process_group 2526800 2526800 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-62tKpR
+process_exit 2526800 confirmed=true
+contract_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-62tKpR
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-157oj0 27 559813
+process_group 2526808 2526808 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-157oj0
+process_exit 2526808 confirmed=true
+contract_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-157oj0
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-N9K1Qr 27 559813
+process_group 2526865 2526865 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-N9K1Qr
+process_exit 2526865 confirmed=true
+contract_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-N9K1Qr
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-AiVLGy 27 559813
+process_group 2526880 2526880 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-AiVLGy
+process_exit 2526880 confirmed=true
+contract_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-AiVLGy
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-IZXRTq 27 559813
+process_group 2526888 2526888 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-IZXRTq
+process_exit 2526888 confirmed=true
+contract_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-IZXRTq
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-muvymZ 27 559813
+process_group 2526896 2526896 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-muvymZ
+process_exit 2526896 confirmed=true
+contract_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-muvymZ
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-Dj9E4b 27 559813
+process_group 2526904 2526904 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-Dj9E4b
+process_exit 2526904 confirmed=true
+contract_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-Dj9E4b
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-zpYqki 27 559813
+process_group 2526919 2526919 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-zpYqki
+process_exit 2526919 confirmed=true
+contract_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-zpYqki
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-7eyYSs 27 559813
+process_group 2526955 2526955 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-7eyYSs
+process_exit 2526955 confirmed=true
+contract_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-7eyYSs
+native_exit 2526787 2526787 status=1 group_absent=True
+process_group 2528152 2528152 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2528152 2528152 status=0 group_absent=True
+process_group 2528204 2528204 /workspace/lerna-content-02-fix-57ea60c628f8
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-fLl9aH 27 559805
+process_group 2528217 2528217 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-fLl9aH
+process_exit 2528217 confirmed=true
+contract_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-fLl9aH
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-F4E7g4 27 559805
+process_group 2528225 2528225 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-F4E7g4
+process_exit 2528225 confirmed=true
+contract_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-F4E7g4
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-tz7R57 27 559805
+process_group 2528261 2528261 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-tz7R57
+process_exit 2528261 confirmed=true
+contract_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-tz7R57
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-Q3iInu 27 559805
+process_group 2528276 2528276 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-Q3iInu
+process_exit 2528276 confirmed=true
+contract_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-Q3iInu
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-60RmKF 27 559805
+process_group 2528284 2528284 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-60RmKF
+process_exit 2528284 confirmed=true
+contract_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-60RmKF
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-aYfXly 27 559805
+process_group 2528292 2528292 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-aYfXly
+process_exit 2528292 confirmed=true
+contract_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-aYfXly
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-a2MYJF 27 559805
+process_group 2528300 2528300 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-a2MYJF
+process_exit 2528300 confirmed=true
+contract_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-a2MYJF
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-A64jH5 27 559805
+process_group 2528340 2528340 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-A64jH5
+process_exit 2528340 confirmed=true
+contract_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-A64jH5
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-YpbCew 27 559805
+process_group 2528376 2528376 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-YpbCew
+process_exit 2528376 confirmed=true
+contract_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-YpbCew
+native_exit 2528204 2528204 status=0 group_absent=True
+process_group 2530735 2530735 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_8ae3dcdb8c6d9d90d734f3cf
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-364921148 27 559815
+postgres lerna_test_49739d5dc82b233c149c1196
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3618388553 27 559814
+postgres lerna_test_ff256fc98ae409f8a7e3ae4d
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1487833229 27 559814
+postgres lerna_test_deb52285a1376018050d49f3
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-30017478 27 559814
+pg_policy_connections lerna_test_deb52285a1376018050d49f3
+pg_policy_holder lerna_test_deb52285a1376018050d49f3 409008
+postgres lerna_test_5090c7db4357d7c9bb004dbd
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-18837591 27 559814
+postgres lerna_test_738aac79ca738cbbeb2520fa
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3740232645 27 559814
+postgres lerna_test_410d73f9d17b4c6d2f478d17
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3375932572 27 559814
+pg_policy_connections lerna_test_410d73f9d17b4c6d2f478d17
+pg_policy_holder lerna_test_410d73f9d17b4c6d2f478d17 409042
+postgres lerna_test_3d8f22caf81bc53c864184b3
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2969202680 27 559814
+pg_policy_connections lerna_test_3d8f22caf81bc53c864184b3
+pg_policy_holder lerna_test_3d8f22caf81bc53c864184b3 409054
+postgres lerna_test_5a086a144029e664161a50f6
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3162705894 27 559814
+postgres lerna_test_238d4b41b380895b97dd021e
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-237214591 27 559814
+postgres lerna_test_3fc873bb156c91f890ecda8f
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-716689836 27 559814
+postgres lerna_test_07bf7cf9a505564bca2c55d3
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2498998748 27 559814
+postgres lerna_test_0f77c32083ce7785e9c0b709
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2584355506 27 559814
+postgres lerna_test_ce3c090cc185bcf27f647dd6
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3097139674 27 559814
+postgres lerna_test_a79a386d251b8f62772d5e73
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-713957013 27 559814
+postgres lerna_test_d5fb00fff889fa613fc369c0
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3212104266 27 559814
+postgres lerna_test_14bdc36b3899e44c07ce92ad
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-235302129 27 559805
+postgres lerna_test_c9b927723d74450c3b21f651
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3171016777 27 559805
+postgres lerna_test_d16bab9828348b56da28e21e
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1325159606 27 559805
+postgres lerna_test_982a803ad8411b38f3f2500e
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1101636849 27 559805
+postgres lerna_test_2092058cdb905984febd60f4
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2444805893 27 559805
+postgres lerna_test_ef1f46498fbe230f38d03f3a
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-96148631 27 559805
+fixture_object_file /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-96148631/da73fc3f262e288d3fbf5bf06db2ebcfbb031f2a5cacbc4e8be74a516714a028
+postgres lerna_test_df426de3a72e1a0b4191ba00
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-6892571 27 559805
+postgres lerna_test_e7269df68a1d44b608fa42ec
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2684800625 27 559805
+postgres lerna_test_6f1fe25eaadd50b3acbcffa0
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3436933336 27 559805
+postgres lerna_test_22aa7cc9827bc21d75a0e299
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3452770296 27 559805
+fixture_object_file /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3452770296/da73fc3f262e288d3fbf5bf06db2ebcfbb031f2a5cacbc4e8be74a516714a028
+postgres lerna_test_7a622321634856d7b662e3d9
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2920104239 27 559805
+fixture_object_file /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2920104239/da73fc3f262e288d3fbf5bf06db2ebcfbb031f2a5cacbc4e8be74a516714a028
+postgres lerna_test_f6b40ebcebf6e39f20c51b78
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2125946720 27 559805
+postgres lerna_test_934b0f3bf6423c40ebd3eaab
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-738071011 27 559805
+postgres lerna_test_3daeeeed42bd12d92c0c77cf
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1641009507 27 559805
+postgres lerna_test_6a937be77b87cb4001d1bf90
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2424867356 27 559805
+postgres lerna_test_c6c9c4799e5247692b6a63b3
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1930007185 27 559805
+postgres lerna_test_b9fe933d76e8572d03d9386b
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2959221250 27 559805
+postgres lerna_test_16acdd42d46e7eed90e920be
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2614035287 27 559805
+postgres lerna_test_8ed917057c239007adf32e62
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3709296071 27 559805
+postgres lerna_test_ecb1926fa7b73b9e409f1862
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2484974683 27 559805
+pg_legacy_restore_connection lerna_test_ecb1926fa7b73b9e409f1862
+postgres lerna_test_7b89746e244a7c60f61bfbdc
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3248427957 27 559805
+pg_legacy_restore_connection lerna_test_7b89746e244a7c60f61bfbdc
+postgres lerna_test_f457379a3164bdf81757acec
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2057047736 27 559805
+pg_legacy_restore_connection lerna_test_f457379a3164bdf81757acec
+postgres lerna_test_75dc5e0734f11e478116050d
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-104417834 27 559805
+postgres lerna_test_17ff3c0062f18527717babc9
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-298625017 27 559805
+native_owner_stop 2530735 2530735 reason=empty_selector_abort
+native_exit 2530735 2530735 status=-15 group_absent=True
+artifact /workspace/lerna-content-02-fix-57ea60c628f8/generate-runtime-manifest.py 27 559814
+artifact /workspace/lerna-content-02-fix-57ea60c628f8/run-component-group.py 27 559819
+artifact /workspace/lerna-content-02-fix-57ea60c628f8/group-launch-spy.py 27 559815
+process_group 2539890 2539890 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2539890 2539890 status=1 group_absent=True
+process_group 2540731 2540731 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2540731 2540731 status=1 group_absent=True
+process_group 2540756 2540756 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2540756 2540756 status=1 group_absent=True
+process_group 2540761 2540761 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2540761 2540761 status=0 group_absent=True
+process_group 2541981 2541981 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_052bfae73fe64928f0c76c1d
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-4095403957 27 559826
+postgres lerna_test_708ecf1de50bd81499ce92e9
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-86678864 27 559826
+postgres lerna_test_1c794c99db74aa9c37e3a461
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1366833340 27 559826
+pg_policy_connections lerna_test_1c794c99db74aa9c37e3a461
+pg_policy_holder lerna_test_1c794c99db74aa9c37e3a461 411052
+postgres lerna_test_8f667ce3f7c23104b5c4a9f1
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2304949830 27 559826
+postgres lerna_test_b8ad83b2ea0e0f8731da562f
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2995090915 27 559826
+pg_policy_connections lerna_test_b8ad83b2ea0e0f8731da562f
+pg_policy_holder lerna_test_b8ad83b2ea0e0f8731da562f 411083
+postgres lerna_test_5697a295c92bbf133fc0e298
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-311302093 27 559826
+postgres lerna_test_485c0e8572187572739eda1f
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1980928517 27 559826
+postgres lerna_test_6d737441b39692cb685d3e4f
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2461295038 27 559826
+postgres lerna_test_fc22deb8d3e33466f3bfc131
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2489527490 27 559826
+postgres lerna_test_5b10445b8701e848c0a330ce
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3989202669 27 559826
+postgres lerna_test_1814b72bfe37a07f7f01a8a2
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3471398786 27 559826
+fixture_object_file /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3471398786/da73fc3f262e288d3fbf5bf06db2ebcfbb031f2a5cacbc4e8be74a516714a028
+postgres lerna_test_96579818e2d386e25c6a7566
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2370386552 27 559826
+fixture_object_file /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2370386552/da73fc3f262e288d3fbf5bf06db2ebcfbb031f2a5cacbc4e8be74a516714a028
+postgres lerna_test_d0d6e126d5b4ea8f637558f2
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2892091741 27 559826
+postgres lerna_test_17c184f934c45dce9a07cf64
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-923166489 27 559826
+postgres lerna_test_4dbed107a51d889d10d90782
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3133658416 27 559826
+postgres lerna_test_cf5bd9ff1264e15daa672bc9
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2527648136 27 559826
+postgres lerna_test_2cfcd26bb4b436937e4011fe
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2195031693 27 559826
+pg_legacy_restore_connection lerna_test_2cfcd26bb4b436937e4011fe
+postgres lerna_test_eaae3240d49cafffff6676dc
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3984888180 27 559826
+pg_legacy_restore_connection lerna_test_eaae3240d49cafffff6676dc
+postgres lerna_test_983fc5f86934a1e65ab2eb27
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2268276074 27 559826
+postgres lerna_test_1be36befb03e9b9290a01739
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-249550032 27 559826
+postgres lerna_test_480404d1c38abf28fb372014
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3351017534 27 559826
+postgres lerna_test_198fa8b60336844014a29a7d
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2019427418 27 559826
+postgres lerna_test_328888900d1c8fa85dc49c38
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2466300246 27 559826
+postgres lerna_test_6cb69bb80f543519b9a6e446
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-712585509 27 559826
+postgres lerna_test_2c2dcb8dbfac9f9ed29567ab
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2290908776 27 559826
+pg_policy_connections lerna_test_2c2dcb8dbfac9f9ed29567ab
+pg_policy_holder lerna_test_2c2dcb8dbfac9f9ed29567ab 411245
+postgres lerna_test_fa3e7cc6b15798694b205e32
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1664801222 27 559826
+pg_policy_connections lerna_test_fa3e7cc6b15798694b205e32
+pg_policy_holder lerna_test_fa3e7cc6b15798694b205e32 411249
+postgres lerna_test_cbcdcfc6d7039b4e28ad90e2
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-173782588 27 559826
+pg_policy_connections lerna_test_cbcdcfc6d7039b4e28ad90e2
+pg_policy_holder lerna_test_cbcdcfc6d7039b4e28ad90e2 411261
+postgres lerna_test_7ff980303cfc90fdd14fa61f
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1481681565 27 559826
+pg_policy_connections lerna_test_7ff980303cfc90fdd14fa61f
+pg_policy_holder lerna_test_7ff980303cfc90fdd14fa61f 411265
+postgres lerna_test_e8e2b1c8867ae2e3d59d2c49
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-241835940 27 559826
+postgres lerna_test_25ade587a82f45d6eb3bc0c2
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3455917414 27 559826
+pg_policy_connections lerna_test_25ade587a82f45d6eb3bc0c2
+pg_policy_holder lerna_test_25ade587a82f45d6eb3bc0c2 411271
+pg_policy_holder lerna_test_25ade587a82f45d6eb3bc0c2 411273
+postgres lerna_test_7b4fdc039d39c58ca3326905
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2102696060 27 559826
+pg_policy_connections lerna_test_7b4fdc039d39c58ca3326905
+pg_policy_holder lerna_test_7b4fdc039d39c58ca3326905 411283
+pg_policy_holder lerna_test_7b4fdc039d39c58ca3326905 411287
+postgres lerna_test_e5eee8cb215657a8d7a378dc
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3736159669 27 559826
+postgres lerna_test_f8a48ee051488d82507165eb
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-473831498 27 559826
+postgres lerna_test_d421074d6c48d79ac30da881
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1516179999 27 559826
+postgres lerna_test_b996c93c1b08199374e4af6f
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2063094952 27 559826
+postgres lerna_test_58ec5a82e422ac1a28f3ef2e
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-4051886609 27 559826
+postgres lerna_test_5061c2157d4e470ed3dc9984
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3147276038 27 559826
+postgres lerna_test_1552096ff9dd636e4cf84e00
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3817239536 27 559826
+postgres lerna_test_48463e0c4f1330ca2afb6fd1
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3996162061 27 559826
+pg_policy_connections lerna_test_48463e0c4f1330ca2afb6fd1
+pg_policy_holder lerna_test_48463e0c4f1330ca2afb6fd1 411325
+postgres lerna_test_685b194517c853d0c66b47d4
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2537241231 27 559826
+postgres lerna_test_7b0fc46dd51d8c137fef2ea5
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-764081526 27 559826
+postgres lerna_test_2925bf765c24a1bcccdcb872
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2720609308 27 559826
+postgres lerna_test_d54759ac2bda3d7edc84805d
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2721057302 27 559826
+postgres lerna_test_226d47be01aa25cd57a6bfc0
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1933358031 27 559826
+postgres lerna_test_7caa71f81b723ed0888c8595
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2250103033 27 559826
+postgres lerna_test_6f782aacc90ff535e8329136
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-522709779 27 559826
+postgres lerna_test_741648ebbd550474eb5f083d
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-49979354 27 559826
+postgres lerna_test_188654a6a4f80f06a43df764
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3594444617 27 559826
+pg_policy_connections lerna_test_188654a6a4f80f06a43df764
+pg_policy_holder lerna_test_188654a6a4f80f06a43df764 411380
+postgres lerna_test_15054dfa115ef1f0e6b5c79c
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-515938240 27 559826
+pg_policy_connections lerna_test_15054dfa115ef1f0e6b5c79c
+pg_policy_holder lerna_test_15054dfa115ef1f0e6b5c79c 411384
+postgres lerna_test_1e33e361fde3718fb7d40009
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1515650289 27 559826
+postgres lerna_test_1e43e44a9182c65e345e4da5
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-608556751 27 559826
+postgres lerna_test_12675209da41d76b81e877ae
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2391481377 27 559826
+postgres lerna_test_8f9ecfdbcaef8180eaf7e0d3
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1823424180 27 559826
+postgres lerna_test_4e6445f1b2063d1127786fb2
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1286413203 27 559826
+native_exit 2541981 2541981 status=0 group_absent=True
+process_group 2545067 2545067 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_e9648aa1ba5b12038c515246
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3059712743 27 559873
+postgres lerna_test_52cb5c7fb60ceb53ae794032
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-893248599 27 559873
+postgres lerna_test_0fdf86f2da2449b08c9415ff
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3481470784 27 559873
+pg_policy_connections lerna_test_0fdf86f2da2449b08c9415ff
+pg_policy_holder lerna_test_0fdf86f2da2449b08c9415ff 411692
+postgres lerna_test_e3857788e93ec81d8cce2eba
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2084209447 27 559873
+postgres lerna_test_013ed62ed00cd01d9be053b9
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-90129172 27 559873
+postgres lerna_test_833bb573503967e889d85201
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-4218414885 27 559873
+postgres lerna_test_41ec3b5075a37a70272c3ca3
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-600335079 27 559873
+postgres lerna_test_779ec06edaecf7838f6dc63d
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-821782482 27 559873
+postgres lerna_test_9ba440261d374d5d9de5ba8e
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1441551500 27 559873
+postgres lerna_test_2f9c0a1021268ccc9d6a6567
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-928940575 27 559873
+postgres lerna_test_75766af989d5babe752a22fe
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-4206490478 27 559873
+postgres lerna_test_5249683aa55711d5672f2b49
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1362054568 27 559873
+fixture_object_file /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1362054568/da73fc3f262e288d3fbf5bf06db2ebcfbb031f2a5cacbc4e8be74a516714a028
+postgres lerna_test_3755eb31845f6de7f9620162
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-302427059 27 559873
+postgres lerna_test_f6f75db7564f3b2502391b69
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3243787711 27 559873
+postgres lerna_test_2b640df5cd33c33580e3ef69
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-983783632 27 559873
+postgres lerna_test_0097115804efebb2c0359bb0
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1922686848 27 559873
+postgres lerna_test_579df58fb27fa4f3adfa07d3
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2743110642 27 559873
+postgres lerna_test_87fcdc8fec5b6431c68a07f0
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2457004047 27 559873
+postgres lerna_test_80f62edf07a790b102220be4
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3761378401 27 559873
+pg_legacy_restore_connection lerna_test_80f62edf07a790b102220be4
+postgres lerna_test_bc61d9763a0849e50ecc27e7
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3553558122 27 559873
+postgres lerna_test_1a183d57158befa033081eb4
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1646636631 27 559873
+postgres lerna_test_6ecc8602d0735f055ac795d2
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1255653505 27 559873
+postgres lerna_test_c9bf84ceabc784244bc0448e
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2537020592 27 559873
+postgres lerna_test_63d137c46a808a1cabacc9a3
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3026084118 27 559873
+postgres lerna_test_5efd9df879aea732d1a75dc0
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3062955693 27 559873
+postgres lerna_test_692fb85ba1a2b947ee3d95c8
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-375027033 27 559873
+pg_policy_holder lerna_test_692fb85ba1a2b947ee3d95c8 411840
+postgres lerna_test_2a15320c82c0a8da281fa831
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1030437764 27 559873
+postgres lerna_test_ff3a103248205af925dd29b1
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-4242660797 27 559873
+postgres lerna_test_2385bcf63b5361a367bb033b
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2106532131 27 559873
+postgres lerna_test_993e54425d20a7cbf2481269
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3355454226 27 559873
+postgres lerna_test_d9cf43fe0b2d5d8a81325627
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-716431680 27 559873
+postgres lerna_test_11bf982646050d31d93b0dde
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3790343220 27 559873
+postgres lerna_test_81ef5ba37284e6caf1b1599a
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2504319772 27 559873
+postgres lerna_test_ca1717554c9090a6441ea12b
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-788482138 27 559873
+postgres lerna_test_a13123ff508d0febc985fadb
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1386536429 27 560037
+pg_policy_connections lerna_test_a13123ff508d0febc985fadb
+pg_policy_holder lerna_test_a13123ff508d0febc985fadb 411893
+postgres lerna_test_a05353f298f0666b2d4a3903
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-4031768480 27 560037
+pg_policy_connections lerna_test_a05353f298f0666b2d4a3903
+pg_policy_holder lerna_test_a05353f298f0666b2d4a3903 411897
+postgres lerna_test_cf1328a2fc627a66e28da909
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2132712713 27 560037
+postgres lerna_test_193317f01be1bc2d4b79e26c
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2529315682 27 560037
+postgres lerna_test_ea2b3705f71e165d3761b86d
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3584228504 27 560037
+postgres lerna_test_ec48479bcf14d828eecde0b0
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-233970386 27 560037
+postgres lerna_test_38f0d4697d05ab5039867cf7
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1481182851 27 560037
+postgres lerna_test_5a3edb6240a7f0ab524cc3e2
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-4291132151 27 560037
+postgres lerna_test_ae17cf54c4cd7b04ebf87183
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2117196046 27 560037
+postgres lerna_test_9b87ed2853f60f1945b9dd2d
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-196749224 27 560037
+postgres lerna_test_9b33f634447c52c59fe27afd
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-159839005 27 560037
+postgres lerna_test_4cf28735ce0dd08c179d2cc3
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1005493632 27 560037
+postgres lerna_test_c9f1b367bf52bcadfd0276bb
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-459371833 27 560037
+postgres lerna_test_8cb64e9c5da5365be141d803
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2577450837 27 560037
+postgres lerna_test_7a61193bddd37234f9e93c09
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3129013111 27 560037
+postgres lerna_test_943c3bf9303f276938891546
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-115946994 27 560037
+postgres lerna_test_d840faf0c403a92a4551ff47
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-258563385 27 560037
+pg_policy_connections lerna_test_d840faf0c403a92a4551ff47
+pg_policy_holder lerna_test_d840faf0c403a92a4551ff47 411985
+postgres lerna_test_f52c0ad8da37c7e28147b155
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-192535032 27 560037
+postgres lerna_test_4051043f87aea52bb61c13a7
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3916348745 27 560037
+pg_policy_connections lerna_test_4051043f87aea52bb61c13a7
+pg_policy_holder lerna_test_4051043f87aea52bb61c13a7 412002
+postgres lerna_test_afdf1633f6e65f231c2e3f46
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2768055030 27 559826
+postgres lerna_test_327eb373baeafdbcdfe6c968
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2004956372 27 559826
+postgres lerna_test_50f7a1862f9c5d2eb41eaf3d
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2646688942 27 559826
+postgres lerna_test_88e42020a3793c33381e5c43
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3004227194 27 559826
+pg_policy_connections lerna_test_88e42020a3793c33381e5c43
+pg_policy_holder lerna_test_88e42020a3793c33381e5c43 412023
+postgres lerna_test_45e8072ebf0a4dd62b48297a
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-128614883 27 559826
+pg_policy_connections lerna_test_45e8072ebf0a4dd62b48297a
+pg_policy_holder lerna_test_45e8072ebf0a4dd62b48297a 412035
+postgres lerna_test_d0f675d16fc8907d9598fb71
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2774218429 27 559826
+pg_policy_connections lerna_test_d0f675d16fc8907d9598fb71
+pg_policy_holder lerna_test_d0f675d16fc8907d9598fb71 412039
+postgres lerna_test_36295533bcc1384dcbfe20e5
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-46258978 27 559826
+pg_policy_connections lerna_test_36295533bcc1384dcbfe20e5
+pg_policy_holder lerna_test_36295533bcc1384dcbfe20e5 412043
+postgres lerna_test_c27ea7d91103c5ba8fc74c10
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2843257421 27 559826
+pg_policy_connections lerna_test_c27ea7d91103c5ba8fc74c10
+pg_policy_holder lerna_test_c27ea7d91103c5ba8fc74c10 412055
+postgres lerna_test_de8abca4789d9be36bd5d3b0
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2836460257 27 559826
+pg_policy_connections lerna_test_de8abca4789d9be36bd5d3b0
+pg_policy_holder lerna_test_de8abca4789d9be36bd5d3b0 412059
+postgres lerna_test_bdca053b8b98d7fa9339d13d
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3070604036 27 559826
+pg_policy_connections lerna_test_bdca053b8b98d7fa9339d13d
+pg_policy_holder lerna_test_bdca053b8b98d7fa9339d13d 412063
+postgres lerna_test_96b0ebc731ecaa87d3662347
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3014709467 27 559826
+pg_policy_connections lerna_test_96b0ebc731ecaa87d3662347
+pg_policy_holder lerna_test_96b0ebc731ecaa87d3662347 412075
+postgres lerna_test_a75c33a5c060d34dec1ce128
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-4138308662 27 559826
+pg_policy_connections lerna_test_a75c33a5c060d34dec1ce128
+pg_policy_holder lerna_test_a75c33a5c060d34dec1ce128 412079
+postgres lerna_test_b8a509dffe3042cc1e0aa1d5
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-4125008375 27 559826
+postgres lerna_test_8c4eb77c294f1bf090348e95
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2704043583 27 559826
+postgres lerna_test_f5bde2f8fdaae03a61b91388
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1735253941 27 559826
+postgres lerna_test_afd1f56ef15c14db1d6070d6
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1289287037 27 559826
+postgres lerna_test_76c18d35729c9852f122a176
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1735965973 27 559826
+postgres lerna_test_4bc34c8977a7cfd1ac90e6bd
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2919842873 27 559826
+postgres lerna_test_29dbee3a5c2df15e9140c944
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-148649108 27 559826
+postgres lerna_test_54248cfaedbaecf285051485
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-651384427 27 559826
+postgres lerna_test_7c91bc68bcc72aa45b3206f0
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2521284035 27 559826
+native_exit 2545067 2545067 status=0 group_absent=True
+process_group 2549906 2549906 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_e42ea9fe77211f57da02013a
+postgres lerna_test_8b346aa98026c2d82a712ef9
+postgres lerna_test_14aae484884fa97360b8f5dc
+postgres lerna_test_749bfd31174d5d43b7c26fd9
+postgres lerna_test_d60ed3e47a664d07bce68c34
+postgres lerna_test_1a1fe15fddb7f9ff4a36ce2d
+postgres lerna_test_052d3f9cb9136af228020183
+postgres lerna_test_491ead54d558c9f1572a7a0a
+postgres lerna_test_93c648b565eafa8142042a09
+postgres lerna_test_b7207cee57ceab86498289ba
+postgres lerna_test_025464015a709ede331ef472
+postgres lerna_test_6b4485da14ba06f4fe8527b8
+postgres lerna_test_75f6049057a1203adfd8a1b1
+postgres lerna_test_4b0e6d4b010327bcc9b4db54
+postgres lerna_test_ca852e72d5ffb9adc7167fa2
+postgres lerna_test_b159113beb4a4271eb8ba6cd
+postgres lerna_test_929ca362036dd1b1431457ce
+postgres lerna_test_01fbada0aa3df8c36a6f9a3d
+postgres lerna_test_0dc2b3249e78bd3927154aa5
+postgres lerna_test_551854d22937f61bb12e0c32
+postgres lerna_test_87c58d1def1614f3a458b90b
+postgres lerna_test_e8d415ec46e7a77796c4f816
+postgres lerna_test_1dca35114ffc361affb4c3d5
+postgres lerna_test_76817c176a6ba8d373c3cf8b
+postgres lerna_test_2ebf8c7abcdb798a2e14d5ab
+postgres lerna_test_acc44161c52f29142e20ad00
+postgres lerna_test_0ec627f21cb11964e54c4965
+postgres lerna_test_f54cce013e59dea61f674046
+postgres lerna_test_a8c389be6e0ff6353516b59f
+postgres lerna_test_78e3a5077d8d5d15f8d74b00
+postgres lerna_test_667457d2a9d6a2fb447c2b6b
+postgres lerna_test_9f29ea7fe42274451a2d51c2
+postgres lerna_test_90e0b1b12a760b50eb9684a6
+postgres lerna_test_55b2d15792f2093dd4fb1888
+postgres lerna_test_c8ca89055f1d3857eeef6f07
+postgres lerna_test_93e6df6850f013bc23f4238a
+postgres lerna_test_ebc4c537a5c3e490f71e2734
+postgres lerna_test_af767978757c2f8b630f5955
+postgres lerna_test_944f2fedb7486b9f66fbbf5c
+postgres lerna_test_1ee2b5d0bacd8a3ea6d8427f
+postgres lerna_test_ba602f199e1c1a92a540f792
+postgres lerna_test_d134bbb6bf9db097bc50a21c
+postgres lerna_test_1366cf43b95767fca5ba98b6
+postgres lerna_test_b425b2f388010fd35ddc30cd
+postgres lerna_test_f26a13de95e1ae28e2875bd0
+postgres lerna_test_d2b37ec876c7efc881487553
+postgres lerna_test_568346cb79b86b464aefe39e
+postgres lerna_test_226b7b5c2a667892c36074c2
+postgres lerna_test_f9dc48afe3cd097cdd7f2c13
+postgres lerna_test_7b04149a3e3a0358bf0abb8c
+postgres lerna_test_d26e49bc7deae4945c74bf12
+postgres lerna_test_e519cfd2920c0185a1ca5051
+postgres lerna_test_4766ae48d260fad510f9e7fc
+postgres lerna_test_ff09ee11f4dd92b12a162c02
+postgres lerna_test_11c8669918b3e514a34fd1b2
+postgres lerna_test_99a72904d8e174c74029a543
+postgres lerna_test_f9c82a26987c6edca8b2be0f
+postgres lerna_test_d0cabbf38a41f35875db0544
+postgres lerna_test_4cad2b202c5550c04c52c81b
+postgres lerna_test_ffaad02f67b3c6c54e040485
+postgres lerna_test_718e86438cdc6a5151a75d73
+postgres lerna_test_14eb9339072e0df2d1b42bd5
+postgres lerna_test_88713ec9f071093b8c774c2e
+postgres lerna_test_d271f9ae046d2400152c12e2
+postgres lerna_test_ac75985e6534fc895fcfc43a
+postgres lerna_test_f8c20de11ef6c6a98598f592
+postgres lerna_test_5a150855d3acb3bfd5857320
+postgres lerna_test_879c06105fc9ce9caae82116
+postgres lerna_test_6daf1be9ca75fde89be4dc8d
+postgres lerna_test_81a0bf3732135441f908b1c8
+postgres lerna_test_b8f84bd1f71f9a6a12fed476
+postgres lerna_test_0a38dabaae9a690a4f9a2dda
+postgres lerna_test_7bc955ed5a89e728372de648
+postgres lerna_test_719c5db060c75265994a116d
+postgres lerna_test_6fb522b6b028abea24d9aa2e
+postgres lerna_test_4158a5eaa51ebb1164a1934b
+postgres lerna_test_4cee7ec090b15f31c5f61019
+postgres lerna_test_aa5ccecaac14b3cdebbf4178
+postgres lerna_test_d4e9b46932be9bb1beeebf98
+postgres lerna_test_b4445ff7e74fb9cb1e7e8bf4
+postgres lerna_test_2a5457b1bb1159280e7e2e10
+postgres lerna_test_e6b913053876bbeb4c4f97d9
+postgres lerna_test_c309d4e04930708d5a0d58d5
+postgres lerna_test_bec0c9a495cf9709f7164429
+postgres lerna_test_de286a13895527627c133965
+postgres lerna_test_f471d28a6227101dcca99daa
+postgres lerna_test_f8b011c9cfea8453d193ce56
+postgres lerna_test_691cf14ae2be2d9381624617
+postgres lerna_test_11a04469fa375d2d6760f395
+postgres lerna_test_2296db92e2b9d66dc73e2980
+postgres lerna_test_58e3f120d75ea1a4804f57aa
+postgres lerna_test_e5aa2e3329642bdf7d3e1c17
+postgres lerna_test_2203bcc890fd8deaf17dd98c
+postgres lerna_test_36648c1f44e3a0fecee2f4f6
+postgres lerna_test_dd166b2f652c3f77e34f96a0
+postgres lerna_test_32f8a6a3041b09efbe766d7f
+postgres lerna_test_68f32033f58aab7643dac11f
+postgres lerna_test_5167e39832258e9c91fc582b
+postgres lerna_test_7384d67b7c5c3db57a325bac
+postgres lerna_test_96bed7e32039f908e14b8c62
+postgres lerna_test_47ec33f7abc5852fd1980a2e
+postgres lerna_test_75d351878fa4334b42e585ea
+postgres lerna_test_fbbd4a783db68091eeb7ff12
+postgres lerna_test_16fd0147f8c8e57ffaf0f0e2
+postgres lerna_test_f847e7b5a1073b9ed45cbcec
+postgres lerna_test_0ab7310ee68ca620df9e7050
+postgres lerna_test_5b08ecfddc6a3622c0bd7014
+postgres lerna_test_28c9a1fdb0295ad3756951bd
+postgres lerna_test_a2146021d10e9e0a773b5c75
+postgres lerna_test_69edfc9756d861d392a6755b
+postgres lerna_test_4b60e868b1f004b49edbb84f
+postgres lerna_test_40adafa74c2e93848d3dd200
+postgres lerna_test_387b0071037acb5b8c173a2c
+postgres lerna_test_49c846419bae9f0a6b01c2e4
+postgres lerna_test_26de2e86ac635a50fa71ab4c
+postgres lerna_test_ccbde20dabeea78da24dc56a
+postgres lerna_test_6409f0ca7c50258bcbd813aa
+postgres lerna_test_66a67504db71640a58c8ea58
+postgres lerna_test_20e54fcde68a5a24bf42d547
+postgres lerna_test_b8ef5ccaf73e03537ec0038a
+postgres lerna_test_2680f35c91b6f0ee549403af
+postgres lerna_test_c4c3aeae19363ffb4dad2139
+postgres lerna_test_ac4a19f3cf60e84f481d618a
+postgres lerna_test_3f11ee801f86c005fc8cf0ff
+postgres lerna_test_3f01ea3df55606c2dcc812a8
+postgres lerna_test_84379aaecaa908b29e165e56
+postgres lerna_test_42a28e981357df221a709d40
+postgres lerna_test_795db71284858baa56bac6bb
+postgres lerna_test_a2fd24f214e4e01fa3c21ca0
+postgres lerna_test_65ba1d02278741a9f3578da4
+postgres lerna_test_9edcd52b829d3905ffff33fd
+postgres lerna_test_ff69993aceaa06d363bf90f1
+postgres lerna_test_c2153487de02336125a9e7bc
+postgres lerna_test_0a5898a4018c0c4138e6a783
+postgres lerna_test_231a3c41c2ffacbafc19f634
+postgres lerna_test_be55ecd36ac482e4da8bf9e4
+postgres lerna_test_c9ae43928b485fd93df76afb
+postgres lerna_test_364b9727387e3259b4aac58c
+postgres lerna_test_781b31a1c10edf4a7af18bf3
+postgres lerna_test_5fe3380437e6149ed93adecf
+postgres lerna_test_670dc61a0b5d763c69679554
+postgres lerna_test_f809d652400a829ce87af2c0
+postgres lerna_test_4bff4d231e41c2d201024757
+postgres lerna_test_afa87022d675d8869f094588
+postgres lerna_test_03147895f3f4bca1139ff1e9
+postgres lerna_test_26482c452a2ad994cbfcc7fe
+postgres lerna_test_2d97ff52d73b8e343ed79cfd
+postgres lerna_test_bd09c92003b30f586b3f2b2e
+postgres lerna_test_51db01c24975f8dbb1720966
+postgres lerna_test_2785790912e315df3da9ad52
+postgres lerna_test_3991a5e8f68cb66503c3ad4c
+postgres lerna_test_b0487cbab63e0c54001fb8cc
+postgres lerna_test_7a96e30619626fb3e8c037ee
+postgres lerna_test_b48297fef167677805d09c23
+postgres lerna_test_cc743c0d2715e6aceaa46d41
+postgres lerna_test_0ed7ad422d605021057d2210
+postgres lerna_test_5d129e839ff574250d0d0b36
+postgres lerna_test_3700df1f60a772a59508e85e
+postgres lerna_test_b504b2b04d05e24a05a14c72
+postgres lerna_test_72c1b8217320a24959d569ce
+postgres lerna_test_36c20b0471af2f5e40bed349
+postgres lerna_test_0a1ad7d7c89b2b72153c8ed4
+postgres lerna_test_77f40e2e95e3ae4ec229afb0
+postgres lerna_test_5a1dbd62d5e0cf0a75158ef6
+postgres lerna_test_be0d1692c79a7f69156cd1d6
+postgres lerna_test_1fb4f9b5d743368e649e5f71
+postgres lerna_test_f651c4cb02b7aa2848151148
+postgres lerna_test_efd0c02f0aa8f8ab67584f25
+postgres lerna_test_480d2432c4ad77b62c2ed849
+postgres lerna_test_60961c1a230b612d81f447d7
+postgres lerna_test_57b0a19bd08e7ead28bf3223
+postgres lerna_test_8e50c91803699f83a33b81b8
+postgres lerna_test_15c82f686d15aaf497d07ba8
+postgres lerna_test_9e03959eb1df3b3b17a729e4
+postgres lerna_test_14dd03f6914fc3fce3773d78
+postgres lerna_test_8d1fdfed5a931ddd9b0ea223
+postgres lerna_test_8d6b10e409040fbd87a68e88
+postgres lerna_test_50b19803fb8110c68f26fb3b
+postgres lerna_test_3b4314ebb908d699ef176b10
+postgres lerna_test_9f01912dde70ab5fbe035d50
+postgres lerna_test_5107d2b4eace954f8930bed3
+postgres lerna_test_3f0be467476eedeb09360278
+postgres lerna_test_4cfec9b293a49e59e44b184d
+postgres lerna_test_3154820759776c937c305ebe
+postgres lerna_test_bd4414e69309d7e046946aeb
+postgres lerna_test_d0929c89453de7e7eb7a320e
+postgres lerna_test_99a6d4a5139039993138ba4d
+postgres lerna_test_e8c9430717ba3c51f16ddf67
+postgres lerna_test_88997cb2b62061a8988b7754
+postgres lerna_test_41396be0fbd7e3a9dd8e33d8
+postgres lerna_test_0f1f34a107be9ba2351db3a1
+postgres lerna_test_1881611c7846dfa4b4fa8458
+postgres lerna_test_2f4fb79465b81000c4f811ef
+postgres lerna_test_4501e2a754183dc5e69c2a42
+postgres lerna_test_cb1a7eadab73fcff37256766
+postgres lerna_test_d3a2b2f692bd4c575dafc4b4
+postgres lerna_test_67861c85e3f65cd9eab38e9b
+postgres lerna_test_88877b939049d39b3e51002f
+postgres lerna_test_840de0b108c8e07686c85ac0
+postgres lerna_test_c400bbf8cf4ec0c261afad50
+postgres lerna_test_7a044fdeb1ce4c09482baab1
+postgres lerna_test_a35dee5047967909ee5a8eae
+postgres lerna_test_0d77bdd4686ccab3b5537db9
+postgres lerna_test_4c6b37e9c156e7ad0bc7cd4c
+postgres lerna_test_50f558ae87119fdf39c1c6c8
+postgres lerna_test_ce197a3ac6a23d47a96e991b
+postgres lerna_test_800192df04848d63fc143db4
+postgres lerna_test_98cf6623ad9b247dbc2b8e85
+postgres lerna_test_23c69d853e8e94f1a6604e10
+postgres lerna_test_6d432c7e6150284c0ff0201f
+postgres lerna_test_39487d0968ebd0778582b563
+postgres lerna_test_585c7296cfa42f206842188b
+postgres lerna_test_85ae6f65d41081d6eaaf6db6
+postgres lerna_test_18a1b3b333e3de558960f89c
+postgres lerna_test_f8f0d2381708aa1e5b6c6d2f
+postgres lerna_test_25115529862c5ee716e72883
+postgres lerna_test_24be4ae259bc63ca99d04dac
+postgres lerna_test_36db283fe62c4f19aeb3a967
+postgres lerna_test_a888ca8d027a3c4c8c2ee1f8
+postgres lerna_test_be4a011b4ccab6b8eda2dd26
+postgres lerna_test_d198b173f51855adcd9f0ee2
+postgres lerna_test_a95d6826496c0e2a29f467ed
+postgres lerna_test_1c48143349f7652dfab3cdd5
+postgres lerna_test_58b31f2b98acab4d5b29a89c
+postgres lerna_test_364d235c7aca7e516ac9cf0d
+postgres lerna_test_deaad2a388b8309406a737d4
+postgres lerna_test_c21617061fdda0890cf4c4c1
+postgres lerna_test_0e8fbc325a29aae8fccc3ae0
+postgres lerna_test_e23d3c06c9bc7a761e2819c9
+postgres lerna_test_4ca8b3779fd375fea933d0fd
+native_exit 2549906 2549906 status=0 group_absent=True
+process_group 2555562 2555562 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2555562 2555562 status=1 group_absent=True
+process_group 2558816 2558816 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2558816 2558816 status=0 group_absent=True
+process_group 2561719 2561719 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_91b840dc4a0d6a5b9ce96f7f
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2016131294 27 560199
+native_exit 2561719 2561719 status=0 group_absent=True
+process_group 2566669 2566669 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_f0c9e93c03e04f575357967b
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-693795072 27 560534
+postgres lerna_test_cbb8b285d5a0bc925ebb8e1a
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3811680043 27 560534
+postgres lerna_test_bcfa16e589eded2fd84fec23
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3761485309 27 560534
+pg_policy_connections lerna_test_bcfa16e589eded2fd84fec23
+pg_policy_holder lerna_test_bcfa16e589eded2fd84fec23 416141
+postgres lerna_test_f7a9a858e0ee0d8c1ff13442
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2139279853 27 560534
+postgres lerna_test_a0a39413fee760dad5f70c4b
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2854904923 27 560534
+pg_policy_connections lerna_test_a0a39413fee760dad5f70c4b
+pg_policy_holder lerna_test_a0a39413fee760dad5f70c4b 416148
+postgres lerna_test_09dc95b2ec1bffdd417384c1
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-474906332 27 560534
+postgres lerna_test_4429bcb219dc856f7bac7c7f
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3570708524 27 560534
+postgres lerna_test_e7b693a9e2b30ad4dd633edb
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-288231663 27 560534
+postgres lerna_test_80faafeab72d786849501ca0
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1789403708 27 560534
+postgres lerna_test_c09b75ee2615a9e5d675d570
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-4229053961 27 560534
+postgres lerna_test_88dd4ed0b6a416bfd640c6a9
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2478128614 27 560534
+fixture_object_file /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2478128614/da73fc3f262e288d3fbf5bf06db2ebcfbb031f2a5cacbc4e8be74a516714a028
+postgres lerna_test_cd41d0d4e0a1bae38de58f76
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3699522195 27 560534
+fixture_object_file /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3699522195/da73fc3f262e288d3fbf5bf06db2ebcfbb031f2a5cacbc4e8be74a516714a028
+postgres lerna_test_467afadbd1266f65d723b887
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3146574463 27 560534
+postgres lerna_test_d98afd970a78e1583ca821b5
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-931505668 27 560534
+postgres lerna_test_73300d98d0945c4bda965f6b
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1884819640 27 560534
+postgres lerna_test_e472f31398eb3a0093cb8ba9
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2086068600 27 560534
+postgres lerna_test_2aa1e097ffc00c61c453e50c
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1357725669 27 560534
+pg_legacy_restore_connection lerna_test_2aa1e097ffc00c61c453e50c
+postgres lerna_test_2aebadbe8844fa4327e6d07e
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-453240754 27 560534
+pg_legacy_restore_connection lerna_test_2aebadbe8844fa4327e6d07e
+postgres lerna_test_0c2336f85f441c48e2e95093
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2355175983 27 560534
+postgres lerna_test_2b13c969a6e89dbe44587940
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1415281048 27 560534
+postgres lerna_test_9a09926750e104d814880fef
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2504614845 27 560534
+postgres lerna_test_428e8b032f5b395119785d98
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1774674822 27 560534
+postgres lerna_test_862624c8f63d2453867f19c2
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1247446476 27 560616
+postgres lerna_test_931121abf6d2325e677e42bd
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2796320838 27 560616
+postgres lerna_test_93bf7f6bff1c6ae4e984d1ee
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2527454165 27 560616
+pg_policy_connections lerna_test_93bf7f6bff1c6ae4e984d1ee
+pg_policy_holder lerna_test_93bf7f6bff1c6ae4e984d1ee 416284
+postgres lerna_test_93f57052ac43440bd9b357ce
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2255399813 27 560616
+pg_policy_connections lerna_test_93f57052ac43440bd9b357ce
+pg_policy_holder lerna_test_93f57052ac43440bd9b357ce 416288
+postgres lerna_test_7a79db6339ca8274f655a50b
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-179990062 27 560616
+pg_policy_connections lerna_test_7a79db6339ca8274f655a50b
+pg_policy_holder lerna_test_7a79db6339ca8274f655a50b 416292
+postgres lerna_test_7949ba138948319054b5d516
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-467688911 27 560616
+pg_policy_connections lerna_test_7949ba138948319054b5d516
+pg_policy_holder lerna_test_7949ba138948319054b5d516 416296
+postgres lerna_test_c4ebbbb83b9da98aa1cde034
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-364021668 27 560616
+postgres lerna_test_67d3f1cb68c6b1aaeb793bf6
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3870986392 27 560616
+pg_policy_connections lerna_test_67d3f1cb68c6b1aaeb793bf6
+pg_policy_holder lerna_test_67d3f1cb68c6b1aaeb793bf6 416310
+pg_policy_holder lerna_test_67d3f1cb68c6b1aaeb793bf6 416312
+postgres lerna_test_014a586bed015127e6cd5a48
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1736312998 27 560616
+pg_policy_connections lerna_test_014a586bed015127e6cd5a48
+pg_policy_holder lerna_test_014a586bed015127e6cd5a48 416315
+pg_policy_holder lerna_test_014a586bed015127e6cd5a48 416317
+postgres lerna_test_6f47c44ddd8ee46d3859ac53
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-532928550 27 560616
+postgres lerna_test_ada3a29ecce383d368582c5d
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1400732492 27 560616
+postgres lerna_test_9bb211f28f8ff8e65c881220
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2167969130 27 560616
+postgres lerna_test_bf495dff7f500fcca09100b8
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-532787759 27 560622
+postgres lerna_test_60419ec22d25ba662bd1c098
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-180141210 27 560622
+postgres lerna_test_6b96befcc9722166da114e53
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3814923998 27 560622
+postgres lerna_test_4020b789114b39d3d4cf6374
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2891970042 27 560622
+postgres lerna_test_079c96a6b019ef561649e388
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3863948232 27 560622
+pg_policy_connections lerna_test_079c96a6b019ef561649e388
+pg_policy_holder lerna_test_079c96a6b019ef561649e388 416354
+postgres lerna_test_704e4b129c9b50e818646809
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2354507181 27 560622
+postgres lerna_test_9ecda42df82b93b7d2a62d54
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2595116324 27 560622
+postgres lerna_test_4a59691f7f44917dab933a86
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2737289252 27 560622
+postgres lerna_test_0fa298a6077d153605d652cc
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1645787983 27 560622
+postgres lerna_test_fa291cb309bb248f452fdde7
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1497095610 27 560622
+postgres lerna_test_a06c1e5501ed2e75e4c21b16
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-4096937795 27 560622
+postgres lerna_test_347750b52d39d8719039bdfb
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2696177116 27 560622
+postgres lerna_test_1b9cdb1b526230345cf0ff47
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1798010382 27 560622
+postgres lerna_test_4640a13f9a06c580a2ed1f3f
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3749976147 27 560622
+pg_policy_connections lerna_test_4640a13f9a06c580a2ed1f3f
+pg_policy_holder lerna_test_4640a13f9a06c580a2ed1f3f 416402
+postgres lerna_test_37d73db2490e19b00b13c130
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-877627973 27 560622
+pg_policy_connections lerna_test_37d73db2490e19b00b13c130
+pg_policy_holder lerna_test_37d73db2490e19b00b13c130 416406
+postgres lerna_test_182b891a72667b57ecf49a1e
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3842988336 27 560622
+postgres lerna_test_8e40c595cbd4d6d0da27431c
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-273106620 27 560622
+postgres lerna_test_57cbccb659ce917e0e280fbc
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-780333869 27 560622
+postgres lerna_test_735aa5477eacdd9d755048df
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2722094992 27 560622
+postgres lerna_test_bd29e29b454e6088b418f5a3
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1946580704 27 560622
+native_exit 2566669 2566669 status=0 group_absent=True
+artifact /workspace/lerna-content-02-fix-57ea60c628f8/audit02.go 27 559842
+process_group 2575274 2575274 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_3e26eddc74fac65da7821782
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1871772196 27 560202
+postgres lerna_test_3b2b254c3860ce159406a40f
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2442310989 27 560202
+postgres lerna_test_f6430072af1b0a63dbc7dd4f
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2670687595 27 560202
+pg_policy_connections lerna_test_f6430072af1b0a63dbc7dd4f
+pg_policy_holder lerna_test_f6430072af1b0a63dbc7dd4f 417775
+postgres lerna_test_7322a2c19e9b6bf7a843b541
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3226157430 27 560202
+postgres lerna_test_901a11b087f52b2298788002
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3714576405 27 560202
+postgres lerna_test_9498d86698e45d59d61e029f
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1759451039 27 560202
+postgres lerna_test_35501e293c4a5078769fb7b6
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3074288203 27 560202
+postgres lerna_test_b7ab7ca118eb87126b86ec5d
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-377955011 27 560202
+postgres lerna_test_b709e6ba04da23b312f120c8
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3131956078 27 560202
+postgres lerna_test_aed0a851c94a73007f62b7e8
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2502458615 27 560202
+postgres lerna_test_03a367ff2e4b27bdb0f9f461
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2089921918 27 560202
+postgres lerna_test_4261387896b809203cb66688
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2202881369 27 560202
+fixture_object_file /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2202881369/da73fc3f262e288d3fbf5bf06db2ebcfbb031f2a5cacbc4e8be74a516714a028
+postgres lerna_test_2e7ac6581b65c38f23515a82
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1277477141 27 560202
+postgres lerna_test_b2105995d84c8f9adae79b27
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3525336203 27 560202
+postgres lerna_test_d5a5199ef7e4be70d205bb11
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3734997164 27 560202
+postgres lerna_test_2d9f5ce8e8423c62c4fae326
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1406971384 27 560202
+postgres lerna_test_56706734adbb16e08e8a421e
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2452985853 27 560202
+postgres lerna_test_eb5159e306c96081a5ddd686
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3950214321 27 560202
+postgres lerna_test_bf40bb3676baea751cc72fdf
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-4234571838 27 560202
+pg_legacy_restore_connection lerna_test_bf40bb3676baea751cc72fdf
+postgres lerna_test_3e259212a056717c41b388c7
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-986297498 27 560202
+postgres lerna_test_8db8b00a08e6a685c14b3173
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-862112133 27 560202
+postgres lerna_test_a1898478c6aacf9acee82716
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3962459232 27 560202
+postgres lerna_test_bea1abb55d7f03c591879c4b
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2852245359 27 560202
+postgres lerna_test_77b7a662255974162c9ca0a9
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1230685337 27 560202
+postgres lerna_test_f92729d65178075bca3b818c
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2126307551 27 560202
+postgres lerna_test_d71743ce8505a14c33544519
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3837348894 27 560202
+pg_policy_holder lerna_test_d71743ce8505a14c33544519 417881
+postgres lerna_test_484de1bf10f6f6b69c12f1ce
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-4118209558 27 560202
+postgres lerna_test_d22fb43b93280c5099637a2b
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3517162153 27 560202
+postgres lerna_test_581c49984958e6dad92fcd45
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3994851208 27 560202
+postgres lerna_test_8bb10798c521ede78332992b
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3408618443 27 560202
+postgres lerna_test_ef06e765fc4afa73b2d8bb41
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1685670839 27 560202
+postgres lerna_test_141175e995eff394ddefdf42
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2251982675 27 560202
+postgres lerna_test_5e3d07861601334e38f75cd0
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1713825449 27 560202
+postgres lerna_test_8ed4488bfaacf649df3b84c8
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3481361403 27 560202
+postgres lerna_test_88c3de4cce593861c1a714ad
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2309835154 27 560202
+pg_policy_connections lerna_test_88c3de4cce593861c1a714ad
+pg_policy_holder lerna_test_88c3de4cce593861c1a714ad 417934
+postgres lerna_test_bd82a054687a6153afbb1ac2
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-4160221896 27 560202
+pg_policy_connections lerna_test_bd82a054687a6153afbb1ac2
+pg_policy_holder lerna_test_bd82a054687a6153afbb1ac2 417939
+postgres lerna_test_1160a29c043c0deedb603538
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-456986048 27 560202
+postgres lerna_test_934454bc1ded013c12d7d2a5
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-102694730 27 560202
+postgres lerna_test_2c77c13b675a5c19e8bfda7b
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1243816803 27 560202
+postgres lerna_test_f52a69c1f077608b7ec86355
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1666236208 27 560202
+postgres lerna_test_d9f5910c43e3b858bef2582f
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3230496282 27 560202
+postgres lerna_test_bf1042ab69225698498b1469
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-50890973 27 560202
+postgres lerna_test_ab34e448353290c2a4df2abc
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1532516455 27 560202
+postgres lerna_test_e1df07eda8bb46d73acb9783
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3520778542 27 560202
+postgres lerna_test_8da9fbfdb74147ae65191a12
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3873561002 27 560202
+postgres lerna_test_81d73d83afa48ca2d0ed2a73
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3143562120 27 560202
+postgres lerna_test_197cf3ecb629d94883877aab
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1281932626 27 560202
+postgres lerna_test_05766750d0ccb1b3772f2b83
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3013298066 27 560202
+postgres lerna_test_60f1df802c120a2db7bfa496
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2591766556 27 560202
+postgres lerna_test_fc911adc35b0b79421f5e3c2
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1661765635 27 560202
+postgres lerna_test_275bfaec77610aefe75fe7ed
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2625930290 27 560202
+pg_policy_connections lerna_test_275bfaec77610aefe75fe7ed
+pg_policy_holder lerna_test_275bfaec77610aefe75fe7ed 418020
+postgres lerna_test_c1e3ec8859c2f8d50b583a53
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-195331815 27 560202
+postgres lerna_test_b6f7de047062fb06713aedd0
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2613835635 27 560202
+pg_policy_connections lerna_test_b6f7de047062fb06713aedd0
+pg_policy_holder lerna_test_b6f7de047062fb06713aedd0 418028
+postgres lerna_test_8d457d92f5129f785c416eaa
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-640202263 27 560202
+postgres lerna_test_cf37fcbeaa78520929858e07
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-653826828 27 560202
+postgres lerna_test_2aeea473cea82e0a552edcd9
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2984556068 27 560202
+postgres lerna_test_608c3cdbffc400d2c2fb2a02
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3928432110 27 560202
+pg_policy_connections lerna_test_608c3cdbffc400d2c2fb2a02
+pg_policy_holder lerna_test_608c3cdbffc400d2c2fb2a02 418050
+postgres lerna_test_43849d35f1733c62cd79b386
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1857684710 27 560202
+pg_policy_connections lerna_test_43849d35f1733c62cd79b386
+pg_policy_holder lerna_test_43849d35f1733c62cd79b386 418062
+postgres lerna_test_75a8dcd0320a18e8bd489e71
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3044883812 27 560202
+pg_policy_connections lerna_test_75a8dcd0320a18e8bd489e71
+pg_policy_holder lerna_test_75a8dcd0320a18e8bd489e71 418066
+postgres lerna_test_3f4e69c014dc9548db622bce
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-4273612698 27 560202
+pg_policy_connections lerna_test_3f4e69c014dc9548db622bce
+pg_policy_holder lerna_test_3f4e69c014dc9548db622bce 418070
+postgres lerna_test_54e9616e497c054532714638
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1705606459 27 560202
+pg_policy_connections lerna_test_54e9616e497c054532714638
+pg_policy_holder lerna_test_54e9616e497c054532714638 418074
+postgres lerna_test_112cf39335af4e655cd45b97
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-968714457 27 560202
+pg_policy_connections lerna_test_112cf39335af4e655cd45b97
+pg_policy_holder lerna_test_112cf39335af4e655cd45b97 418086
+postgres lerna_test_87ed826c478e1757ce3ff905
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-217659194 27 560202
+pg_policy_connections lerna_test_87ed826c478e1757ce3ff905
+pg_policy_holder lerna_test_87ed826c478e1757ce3ff905 418090
+postgres lerna_test_28b3c04ac306988686161828
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1916566830 27 560202
+pg_policy_connections lerna_test_28b3c04ac306988686161828
+pg_policy_holder lerna_test_28b3c04ac306988686161828 418094
+postgres lerna_test_cd365c3df4307fbae492eb58
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1662182421 27 560202
+pg_policy_connections lerna_test_cd365c3df4307fbae492eb58
+pg_policy_holder lerna_test_cd365c3df4307fbae492eb58 418106
+postgres lerna_test_fa579439a79dcb505dc908f8
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-4143882762 27 560202
+postgres lerna_test_0ae95580d1827333ac5b60e5
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2539501239 27 560202
+postgres lerna_test_848eaf75c04ad55b6ee633bf
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2770265633 27 560202
+postgres lerna_test_60e0ab02d75a5a017500e811
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-2021040108 27 560202
+postgres lerna_test_542bc64b6dd85fb906183707
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3717484069 27 560202
+postgres lerna_test_94f55e7f2291ffd49ddfa5aa
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-61371703 27 560202
+postgres lerna_test_33d3f1b046ca4e19ea5f3e4c
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3762693713 27 560202
+postgres lerna_test_f394e912a20db5cd1be1ec26
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-874294905 27 560202
+postgres lerna_test_aeed22d76b0de4156ce76eab
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-3681974046 27 560202
+native_exit 2575274 2575274 status=0 group_absent=True
+process_group 2576796 2576796 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_fefeb970591f2c3ba94311ce
+postgres lerna_test_447261f68e47695900a7e5df
+postgres lerna_test_81841000c0645b41345ada6d
+postgres lerna_test_9e4245ef96bce5446e8addf2
+postgres lerna_test_1b08975da5291b7c676a2c41
+postgres lerna_test_240199386e8616434641dd2f
+postgres lerna_test_63d0918119bc8279ca41372a
+postgres lerna_test_093fa62fbb82f612b97e7f58
+postgres lerna_test_9efeb0a9becb4f8bd2ed20ed
+postgres lerna_test_781e0d2cdcb98d054ac2b106
+postgres lerna_test_b32a2f77ed5cc56f517a79c0
+postgres lerna_test_7a40fdc2c5514ede60a07479
+postgres lerna_test_437ba403f05392cf0386efd3
+postgres lerna_test_cfeba9523d8c5784b2038701
+postgres lerna_test_fc7b55396f85ba858f054236
+postgres lerna_test_1832865987a1e43d26411397
+postgres lerna_test_15f00e1380b4f3364f6e794f
+postgres lerna_test_bcd24b262fee45d16175f674
+postgres lerna_test_34d191e62a38b06954f418d2
+postgres lerna_test_002a6c81efc1b04b80cc4dc9
+postgres lerna_test_611f2170cb75282b2f738884
+postgres lerna_test_50c542afc02eb48c73c14cb9
+postgres lerna_test_256dc8de62215ab362b36cb0
+postgres lerna_test_ca3536d1a5e3ebaa8ee0c9b4
+postgres lerna_test_de191c8ded088d9d22a0bcb4
+postgres lerna_test_bc662448104c2987b6e5f076
+postgres lerna_test_f98cab886287dc46bd267462
+postgres lerna_test_856d74a5be19a6500c84de28
+postgres lerna_test_63483d7572a49f1c9c2c1eef
+postgres lerna_test_261c43e9abcff9f7dcc7c48f
+postgres lerna_test_adc4f07817640d6d67053a12
+postgres lerna_test_0c25e53626e41d5ab177c6bd
+postgres lerna_test_94c08e590266b62f3e979cff
+postgres lerna_test_cf93e74140e2d0252dd7bb12
+postgres lerna_test_ee9e57794c504f48e343d25a
+postgres lerna_test_bfee6cfa0297dc6fa091e8ca
+postgres lerna_test_05695b32d6225b6c9064a7a5
+postgres lerna_test_3900e431a93fa0407955bdb6
+postgres lerna_test_5733590721751c057b6fd013
+postgres lerna_test_5264c6d7e16772e1cef5fdf8
+postgres lerna_test_9a7584475f859a2e4328cd2e
+postgres lerna_test_df7b001a930d374608d1aba5
+postgres lerna_test_6e4fb1281785ca61b66e257e
+postgres lerna_test_52ed1ddfb52233a1871bf1ae
+postgres lerna_test_1f1f3f7135fc0f3474d4e31d
+postgres lerna_test_45e310355391cde408ddef93
+postgres lerna_test_73ad60373ad10e7f2b6d9b76
+postgres lerna_test_decdd674ead3e1f78dcfbed3
+postgres lerna_test_82806c8f0cfd3e117963f490
+postgres lerna_test_f106ad15c8ec75fff7418088
+postgres lerna_test_b5b752c44938fdf7df1b95fc
+postgres lerna_test_148bbc8466ac43479f43ce80
+postgres lerna_test_320ff7b8a45560669768b894
+postgres lerna_test_09b190a90022ae898ced5393
+postgres lerna_test_656f006c6a137054b0b2e7d1
+postgres lerna_test_b06b5a37081085655a9aae5b
+postgres lerna_test_b5d7ca30644ab94d4fc1ba7c
+postgres lerna_test_0ff5c72a47c58dce0eb090b9
+postgres lerna_test_767f3f55fa664f603e508660
+postgres lerna_test_4299e9f157f9438fa706204c
+postgres lerna_test_63d07eb2270f7226fc95c524
+postgres lerna_test_df58c1e55cc35c0466106cd4
+postgres lerna_test_55ead3a76971f3495a4c9abb
+postgres lerna_test_02e3076a0f4b443e993b62da
+postgres lerna_test_1fde3e5d29b3c9fff3ae07f5
+postgres lerna_test_83f1eb97bf041fb31045d764
+postgres lerna_test_b0c5b3fb15749a2cff94d48d
+postgres lerna_test_1abeff31512236a810dd9757
+postgres lerna_test_0a4d5e85cc4361d9dc290e37
+postgres lerna_test_48d904f0f13d1a252c04d8db
+postgres lerna_test_e0eb673d25d59da44340366d
+postgres lerna_test_af9e88c7ed33344e7f310752
+postgres lerna_test_0f460e57ef9c3ed19908c18d
+postgres lerna_test_9630e23b886a8dae0c54ada1
+postgres lerna_test_021d9da3cd80642032908fd9
+postgres lerna_test_f0c534c9bb0d607456d375ba
+postgres lerna_test_1f00ad0c5730f220856a33c8
+postgres lerna_test_8307561b6106264662533d48
+postgres lerna_test_256a66a9ca73cd271d042cd0
+postgres lerna_test_2e23892a809f6b710d5a46e9
+postgres lerna_test_9fbc1e00bb4b9ea9e1f746c4
+postgres lerna_test_ce7edbe6cf1a812d9566d364
+postgres lerna_test_a3cdcc101214b4af0e84c7a4
+postgres lerna_test_8a8d6835acda8201c2a13180
+postgres lerna_test_99f6951beaee20f16c5516af
+postgres lerna_test_470df7acf5452bf74e3a1f8e
+postgres lerna_test_2b29ce0ed9e03bab0da01269
+postgres lerna_test_2e585859cd43e1aec20f2ad9
+postgres lerna_test_93cefe04108b1375c86e49b5
+postgres lerna_test_c462173441b11d1705708b11
+postgres lerna_test_b736abfb5447dd178dc6fc97
+postgres lerna_test_9b220adc39dbae3eff550cbc
+postgres lerna_test_7a8c0c370c204b62625581a4
+postgres lerna_test_76fc5d122435ea140f836765
+postgres lerna_test_bbbf57bbb876a46a69488ea3
+postgres lerna_test_e3d84d4fe63f065a69a71166
+postgres lerna_test_23a3167273d4872a3afc2eff
+postgres lerna_test_21bf12ddc001f0820098a879
+postgres lerna_test_d823fe3db5bae62b894f1c0f
+postgres lerna_test_b4a46fa2b268f5b89f48a759
+postgres lerna_test_e1fbb205ba905d0c54be5d78
+postgres lerna_test_ac1feeb1b829c466479268b9
+postgres lerna_test_b3313b06ff1763034a6f8dcd
+postgres lerna_test_85f5b0d56ea9a4aab6d69071
+postgres lerna_test_2929f58924e253e8afeefb6f
+postgres lerna_test_b3b50dec933cca3c17c3eeb6
+postgres lerna_test_c630b336671a4bade8622540
+postgres lerna_test_1766bb67d9c3d485dd9ad2b4
+postgres lerna_test_93666d2378e1088d9e510dfa
+postgres lerna_test_16ebeac95256297e3978c2a9
+postgres lerna_test_786e61058cbf31979582a6e2
+postgres lerna_test_36530f82e6322fb647fd6263
+postgres lerna_test_f50cdebdff46bac9d260e5ad
+postgres lerna_test_4ca7888c4359b01191d1472f
+postgres lerna_test_dac90cbd0559c730a47a2f65
+postgres lerna_test_5a33c637d2562bc5318d9706
+postgres lerna_test_f7005cdbeefc7361c438fc21
+postgres lerna_test_d4c18a966b5d1cdc34a00bf4
+postgres lerna_test_d85467c56fd7fc40124f1f6a
+postgres lerna_test_945112e8e83fc432bfc6a065
+postgres lerna_test_bf459e6ebbce876dbb6cd228
+postgres lerna_test_4e2b3e7cc95b0af8cbcac5f0
+postgres lerna_test_cd7096721fc4b357b422032a
+postgres lerna_test_73284f6e62a1754aa8ba7da1
+postgres lerna_test_98ff47b4cf0026e9b6fbd771
+postgres lerna_test_ff8a7f13ef28f18d1e335c60
+postgres lerna_test_5be5821b10f6ddaddb407082
+postgres lerna_test_a57634bc193ecdecda22fe56
+postgres lerna_test_9d055f56b687e8875bbcf7bc
+postgres lerna_test_47e2c7c30f4731b87cfd0344
+postgres lerna_test_ae66d0a8605d23c70fec1020
+postgres lerna_test_bfcae8d8c23401e633d41c0c
+postgres lerna_test_36b9a323e8df8b617ae55552
+postgres lerna_test_50333e68eef7b192481d9bac
+postgres lerna_test_3d5e8d7150fd45418768eb58
+postgres lerna_test_fc078ede4f0da00b27e29721
+postgres lerna_test_4208c34b8f10c13ba12452bd
+postgres lerna_test_4ce702b76cc1b88bc0312a26
+postgres lerna_test_156b12d7b0e83e667b6bdcf3
+postgres lerna_test_87d34fe03aad5a79fc836843
+postgres lerna_test_52ccfe99d31e63537f900b2d
+postgres lerna_test_934d7d5e6267a758702ab38e
+postgres lerna_test_115c0abd2d504493d73fe51d
+postgres lerna_test_46770985c76db82b51ac430d
+postgres lerna_test_0fce31475bbdba6e93689058
+postgres lerna_test_7a3cf8bcd0c0517e9622aabe
+postgres lerna_test_856146f534b4b1a9d0100e32
+postgres lerna_test_4c250e433001160b34398405
+postgres lerna_test_bd77bb233437fb9fad179210
+postgres lerna_test_abcbcebba6ddafa27db838e9
+postgres lerna_test_ccaa342e10d7c628b0035fb5
+postgres lerna_test_44b839f2270ae0055163bd75
+postgres lerna_test_6de16477f39434fc23e1f1ca
+postgres lerna_test_58071810a2218186c8b1ebfc
+postgres lerna_test_1063d8e2cd25ca07619ca932
+postgres lerna_test_6e76e104013e2fd0d18302db
+postgres lerna_test_3d15ba6d0f776a7f4a80bfde
+postgres lerna_test_7954dad3c8debec9de9c262b
+postgres lerna_test_2b497dee698e9e7f8a145c9d
+postgres lerna_test_3561961b9a8c0c8717760c28
+postgres lerna_test_f84ef6ecdebe89c08d395319
+postgres lerna_test_acb6bc8e28b116f4a9151529
+postgres lerna_test_469c4fe7a0e9d774bb9155e3
+postgres lerna_test_f4439ec110656efba6759b41
+postgres lerna_test_b6d8c0867e332901e9c5fd56
+postgres lerna_test_b15496ee6ce5f54b5aefe1ea
+postgres lerna_test_e0b4d566fc67b9f5f2b63ba2
+postgres lerna_test_1a063600587b17c61a1cbedf
+postgres lerna_test_8f10806f6c277ee963389c76
+postgres lerna_test_b12598e0902891521ef583cd
+postgres lerna_test_11f648dd6912a200c9fa74e6
+postgres lerna_test_d1db7732b7c352ccc9151d5e
+postgres lerna_test_68a59a008c8796e03b83438b
+postgres lerna_test_e33ec4e5677ff9b83f5cfd73
+postgres lerna_test_7e44955315f0f60f37fbe432
+postgres lerna_test_0a9a6b67329eeeb3b4e42af9
+postgres lerna_test_3142a7e0a1941a36074a10df
+postgres lerna_test_c09fa66dcb8b41b207528bfb
+postgres lerna_test_9fc96dca4421d933f9107c5d
+postgres lerna_test_e471443433cf642b896d07bd
+postgres lerna_test_3b907fe60a36f4aca60c5bad
+postgres lerna_test_e97a9ced2d5c4688c2f7e544
+postgres lerna_test_fb91db89b9fbaf61367b2a00
+postgres lerna_test_ad1f3b4c75e9a543ef3edc39
+postgres lerna_test_5e2275522289fbaeaacb72d0
+postgres lerna_test_85b6abb1afdc664776c614a1
+postgres lerna_test_b8baab5dcf40e8dbda66b633
+postgres lerna_test_d0f76e355eb41ba9995385ff
+postgres lerna_test_94e0d0dcea2204466f8e105a
+postgres lerna_test_41be8e202677dddbd38acc22
+postgres lerna_test_efdb036a7fa71b8caef679d3
+postgres lerna_test_4cf8dfd3a40ab6de076754db
+postgres lerna_test_f25851bde218888bd23a34ac
+postgres lerna_test_72df43b33a2d3a0efee241a1
+postgres lerna_test_f0e47974b7bf6fe5513be591
+postgres lerna_test_a6f481241178556cf8781a5b
+postgres lerna_test_c28a27398e7ff534420d7ad8
+postgres lerna_test_fa5bf8a74faa08f06deac326
+postgres lerna_test_f6237a4cfa06909187c676c8
+postgres lerna_test_94452f7a5faa3eaee017e9ae
+postgres lerna_test_0f1d5017a8e8c5a87a3e72fe
+postgres lerna_test_4a7f361b819c5857e852a167
+postgres lerna_test_e834da8aea85ec1725ad14cc
+postgres lerna_test_7c672d26eafc6a935463ba9d
+postgres lerna_test_7c1368dc902c4171440c4cd6
+postgres lerna_test_062e6b32d50de075e4fcd2b5
+postgres lerna_test_7bb19e7e5fba90e956a8a342
+postgres lerna_test_dfb7675a52921aa451ee19e5
+postgres lerna_test_92a01b51d2e38056cfad3326
+postgres lerna_test_c73c2a0c16c69837f04acbba
+postgres lerna_test_d600ba1ccfa6c005cac2d914
+postgres lerna_test_f524bf7dc50cc3cf10b41488
+postgres lerna_test_c177f444c86d87c8e58f0d17
+postgres lerna_test_ffb5c68c959c85ed632c4d44
+postgres lerna_test_b9bb678705e631ac81c97129
+postgres lerna_test_fe87c90b13c2ca8645683843
+postgres lerna_test_a5141051b709b07671ffefd6
+postgres lerna_test_a90d63cfbc622f1d342b5339
+postgres lerna_test_3df068d4974ee9923a29676c
+postgres lerna_test_21966e4aa7f794b6b8cc294e
+postgres lerna_test_5af69ee71dc41d57d692c00e
+postgres lerna_test_1d12ae97f8f4a5d7d2fb91f5
+postgres lerna_test_09fa605d5d02774f59212ca5
+postgres lerna_test_efea855f7b43f484fda87387
+postgres lerna_test_1f6a7fb6f48be842df33bdf1
+postgres lerna_test_b554cdeb687c937d0b47110a
+postgres lerna_test_b9a2cf5cd768c6be34ea1838
+postgres lerna_test_1dce7f932d3701ffec34511a
+postgres lerna_test_da6ab889d09a438e54a0538b
+postgres lerna_test_8f5decff735ba9731968ac21
+native_exit 2576796 2576796 status=0 group_absent=True
+process_group 2579341 2579341 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2579341 2579341 status=0 group_absent=True
+process_group 2580240 2580240 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_49ed2e4fdb3f8a805b88277b
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-626120810 27 561084
+pg_migration_connection lerna_test_49ed2e4fdb3f8a805b88277b
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-fixture-close-1272623920 27 561084
+fixture_close_control /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-fixture-close-1272623920
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-fixture-close-1267401765 27 561084
+fixture_close_control /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-fixture-close-1267401765
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-fixture-close-343805048 27 561084
+fixture_close_control /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-fixture-close-343805048
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-local-lifetime-479932268 27 561088
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-local-lifetime-1943518334 27 561088
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-local-lifetime-2611849359 27 561088
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-local-lifetime-226140195 27 561088
+native_exit 2580240 2580240 status=0 group_absent=True
+process_group 2581282 2581282 /workspace/lerna-content-02-fix-57ea60c628f8
+postgres lerna_test_dc3bc169497d60eefa2f157b
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-objects-1071428921 27 561373
+pg_migration_connection lerna_test_dc3bc169497d60eefa2f157b
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-fixture-close-1432153999 27 561373
+fixture_close_control /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-fixture-close-1432153999
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-fixture-close-3376267812 27 561373
+fixture_close_control /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-fixture-close-3376267812
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-fixture-close-2139910557 27 561373
+fixture_close_control /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-fixture-close-2139910557
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-local-lifetime-660164067 27 561378
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-local-lifetime-1378426923 27 561378
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-local-lifetime-1478085415 27 561378
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-local-lifetime-1108930016 27 561378
+native_exit 2581282 2581282 status=0 group_absent=True
+process_group 2582989 2582989 /workspace/lerna-content-02-fix-57ea60c628f8
+directory /workspace/lerna-content-02-fix-57ea60c628f8/lerna-03-legacy-upgrade-1650315739
+process_group 2583148 2583148 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-03-legacy-upgrade-1650315739
+process_group 2583394 2583394 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-03-legacy-upgrade-1650315739
+postgres lerna_test_4efd52533573a50579830200
+postgres lerna_test_dc31680956374fef933e1f4b
+postgres lerna_test_565de03ae666d06315b5e5bc
+postgres lerna_test_558d408c0fa502bd291c10ba
+postgres lerna_test_322070d50bbd6827ac6b6e79
+postgres lerna_test_2bee5b1e427af40d1ff0bee7
+postgres lerna_test_982e019b18948683624b219a
+postgres lerna_test_f8153c2f4f93cb527f247684
+postgres lerna_test_f035ab0b2b04d0adf2c7b454
+postgres lerna_test_39b419bfb73b4c301a332455
+postgres lerna_test_affaacb970d1cf91778f2510
+postgres lerna_test_ee7c72c9867a1502b3a4310d
+directory /workspace/lerna-content-02-fix-57ea60c628f8/lerna-03-legacy-upgrade-370942236
+process_group 2583544 2583544 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-03-legacy-upgrade-370942236
+process_group 2583786 2583786 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-03-legacy-upgrade-370942236
+postgres lerna_test_92054f3c59737dc1ca1524fd
+postgres lerna_test_579a6fc036a9a66a6c47e647
+postgres lerna_test_5f95b968fc925055a0f16496
+postgres lerna_test_e4272b64b144c1834f700457
+postgres lerna_test_5a7e1bc09f613eb74119183f
+postgres lerna_test_820ab978ee96319d4c32beea
+postgres lerna_test_40422c054b140926d0b3684c
+postgres lerna_test_7fe3b198b087e77b9a171d04
+postgres lerna_test_9b8faa36e7e199d55e4f67d4
+postgres lerna_test_143a6ca79d34c2676bce386f
+postgres lerna_test_7f680594e0fb7cdc62c01b92
+postgres lerna_test_2045c29d7e02e621c2cebbaa
+postgres lerna_test_e4272b64b144c1834f700457
+postgres lerna_test_7fe3b198b087e77b9a171d04
+postgres lerna_test_5a7e1bc09f613eb74119183f
+postgres lerna_test_9b8faa36e7e199d55e4f67d4
+postgres lerna_test_820ab978ee96319d4c32beea
+postgres lerna_test_143a6ca79d34c2676bce386f
+postgres lerna_test_7f680594e0fb7cdc62c01b92
+postgres lerna_test_2045c29d7e02e621c2cebbaa
+postgres lerna_test_92054f3c59737dc1ca1524fd
+postgres lerna_test_579a6fc036a9a66a6c47e647
+postgres lerna_test_5f95b968fc925055a0f16496
+postgres lerna_test_40422c054b140926d0b3684c
+directory /workspace/lerna-content-02-fix-57ea60c628f8/lerna-03-legacy-upgrade-2748614346
+process_group 2583893 2583893 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-03-legacy-upgrade-2748614346
+process_group 2584157 2584157 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-03-legacy-upgrade-2748614346
+postgres lerna_test_68e567f53a16f209060cedb2
+postgres lerna_test_1708e4a5cdbc50ceebc1e6f1
+postgres lerna_test_227f79dbe010dba2ece1fb24
+postgres lerna_test_30cc32438c0c6fc119a1345a
+postgres lerna_test_3c82508186ec85af031abce4
+postgres lerna_test_35e411a3b97aca93b63fd324
+postgres lerna_test_36b01c6fadbc2e7207d169e6
+postgres lerna_test_f3969270e123901ed755ddf6
+postgres lerna_test_f83251dda3d13bfab66a5ef8
+postgres lerna_test_a7abceb7fda0d5a649b338f8
+postgres lerna_test_59ef5619df7578a2ffba8012
+postgres lerna_test_a0a273ab21c90437d6024834
+postgres lerna_test_bb67b8c83c75f8a5ea055905
+postgres lerna_test_1a2e83dc772f7de3508b6b0f
+postgres lerna_test_4efa6bd187c2207c8ad3afba
+postgres lerna_test_3604c15975fc7ddc6b09ede6
+postgres lerna_test_18218fd21bfde70b1503ee23
+postgres lerna_test_ff964fb1f01e9e4907cd0ffd
+postgres lerna_test_b3dffe113cb7aa057cbae43b
+postgres lerna_test_7258ca58056374db94bac46c
+native_exit 2582989 2582989 status=0 group_absent=True
+process_group 2585464 2585464 /workspace/lerna-content-02-fix-57ea60c628f8
+directory /workspace/lerna-content-02-fix-57ea60c628f8/lerna-03-legacy-upgrade-3534663153
+process_group 2585608 2585608 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-03-legacy-upgrade-3534663153
+process_group 2585851 2585851 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-03-legacy-upgrade-3534663153
+postgres lerna_test_ff60ec36e95d0fc61b3a2682
+postgres lerna_test_348a7e3288e27bc90f1aa703
+postgres lerna_test_0c3e3e975ee32213f7047d76
+postgres lerna_test_85bebba61716e3808e4c5304
+postgres lerna_test_a7798575d3e67b41a41fbb58
+postgres lerna_test_e0ed2e77203ab6f7da55b69f
+postgres lerna_test_9ac78c658c9d3c4947d18aad
+postgres lerna_test_f84ced1389913e6aaa8018a8
+postgres lerna_test_574abd921530e6c064674f2f
+postgres lerna_test_4e4ec1c4ed27c1d682a969ea
+postgres lerna_test_944ec38943d15b2fef7c5c66
+postgres lerna_test_4cec49bd6ba1e1645a0a3ce1
+directory /workspace/lerna-content-02-fix-57ea60c628f8/lerna-03-legacy-upgrade-1723486705
+process_group 2586051 2586051 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-03-legacy-upgrade-1723486705
+process_group 2586292 2586292 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-03-legacy-upgrade-1723486705
+postgres lerna_test_1a5d77bef89cb723859ec66b
+postgres lerna_test_e83fc1977b29f3cc992929cd
+postgres lerna_test_8ab14e780412d16b4adadbf3
+postgres lerna_test_63805e10b4f2c3c1e8860075
+postgres lerna_test_ba031029cebddd461ef03ce5
+postgres lerna_test_969bb403e5315e409fccbae2
+postgres lerna_test_a86c89404501c002f1a6b8bc
+postgres lerna_test_dc71ab8a97e844473537bc73
+postgres lerna_test_cfb504b12c32ebadb6c3efe8
+postgres lerna_test_279ebcbe84f0ef5516a42cf0
+postgres lerna_test_3f2a0ee403b5d9557615b061
+postgres lerna_test_7a6c9bae97c4be1272e54eff
+postgres lerna_test_a86c89404501c002f1a6b8bc
+postgres lerna_test_7a6c9bae97c4be1272e54eff
+postgres lerna_test_1a5d77bef89cb723859ec66b
+postgres lerna_test_e83fc1977b29f3cc992929cd
+postgres lerna_test_8ab14e780412d16b4adadbf3
+postgres lerna_test_dc71ab8a97e844473537bc73
+postgres lerna_test_63805e10b4f2c3c1e8860075
+postgres lerna_test_ba031029cebddd461ef03ce5
+postgres lerna_test_cfb504b12c32ebadb6c3efe8
+postgres lerna_test_279ebcbe84f0ef5516a42cf0
+postgres lerna_test_3f2a0ee403b5d9557615b061
+postgres lerna_test_969bb403e5315e409fccbae2
+directory /workspace/lerna-content-02-fix-57ea60c628f8/lerna-03-legacy-upgrade-1751234949
+process_group 2586445 2586445 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-03-legacy-upgrade-1751234949
+process_group 2586687 2586687 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-03-legacy-upgrade-1751234949
+postgres lerna_test_89fbeb5d12a8fc615704a4be
+postgres lerna_test_1339783dd0039937b7e4b5c4
+postgres lerna_test_02cba4e42772dc1207f9e8f7
+postgres lerna_test_7343fda37252870184ecad9d
+postgres lerna_test_67d46fc10ec455ad7d16e6ca
+postgres lerna_test_8eb176990433c968353b6d6f
+postgres lerna_test_1e809c5ef534f6534742c3ff
+postgres lerna_test_5e2638de3e3cd8f3787016e4
+postgres lerna_test_dd1c5f781d59d3265d175ff6
+postgres lerna_test_983a5478dad81014f17d9d0c
+postgres lerna_test_2fe16ae5a1fec321b50a2066
+postgres lerna_test_b1f888d1c1740bc88578a73f
+postgres lerna_test_002671114fbcadc8257f7646
+postgres lerna_test_e7b6d2dae08cd55172cad76d
+postgres lerna_test_a6d40bece01d621f7df7ac17
+postgres lerna_test_6f91ebd2d1c63b94c2f0d39f
+postgres lerna_test_f69fd80c9f7a329ff0f2e7ea
+postgres lerna_test_dbcff8cb2a1d98f22e4ca12f
+postgres lerna_test_4b829064e80309da25ccf2f4
+postgres lerna_test_8775b1c5c6a3a20f32ee0697
+native_exit 2585464 2585464 status=0 group_absent=True
+process_group 2587234 2587234 /workspace/lerna-content-02-fix-57ea60c628f8
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-2539628272
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-466138795
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-1923673872
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-3954210333
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-839875536
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-432757502
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-2862681326
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-2087743747
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-1931662354
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-3106307124
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-1221879357
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-2582206106
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-735214546
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-610131258
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-1093942267
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-616330324
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-1176462936
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-186437379
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-3564618662
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-3037549300
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-2220233691
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-2424890100
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-633176097
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-1125555678
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-2507373650
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-3343057162
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-1685465514
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-1647537341
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-1446088606
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-2246422954
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-697884923
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-2879485423
+native_exit 2587234 2587234 status=0 group_absent=True
+process_group 2589470 2589470 /workspace/lerna-content-02-fix-57ea60c628f8
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-tool-ownership-kMwBT0 27 564646
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-YD8c0Z 27 564645
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-tool-ownership-kMwBT0 27 564646
+process_group 2590151 2590151 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-YD8c0Z
+process_group 2590156 2590156 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-tool-ownership-kMwBT0
+process_exit 2590156 confirmed=true
+contract_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-tool-ownership-kMwBT0
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-tool-ownership-b3a2ZO 27 564646
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-tool-ownership-b3a2ZO 27 564646
+process_group 2590172 2590172 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-tool-ownership-b3a2ZO
+process_exit 2590151 confirmed=true
+contract_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-YD8c0Z
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-JK1fjE 27 564645
+process_group 2590183 2590183 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-JK1fjE
+process_exit 2590172 confirmed=true
+contract_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-tool-ownership-b3a2ZO
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-tool-ownership-P7BwHe 27 564646
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-tool-ownership-P7BwHe 27 564646
+process_group 2590193 2590193 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-tool-ownership-P7BwHe
+process_exit 2590193 confirmed=true
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-tool-ownership-0o91Ce 27 564646
+generator /workspace/lerna-content-02-fix-57ea60c628f8/lerna-tool-ownership-0o91Ce 27 564646
+process_exit 2590213 confirmed=true
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-tool-ownership-0S1vVv 27 564646
+generator /workspace/lerna-content-02-fix-57ea60c628f8/lerna-tool-ownership-0S1vVv 27 564646
+process_group 2590221 2590221 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-tool-ownership-0S1vVv
+process_exit 2590221 confirmed=true
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-tool-ownership-TxVf5O 27 564646
+generator /workspace/lerna-content-02-fix-57ea60c628f8/lerna-tool-ownership-TxVf5O 27 564646
+process_group 2590224 2590224 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-tool-ownership-TxVf5O
+process_exit 2590224 confirmed=true
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-tool-ownership-hhKLnk 27 564646
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-tool-ownership-hhKLnk 27 564646
+process_group 2590231 2590231 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-tool-ownership-hhKLnk
+process_group 2590246 2590246 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-tool-ownership-hhKLnk
+process_exit 2590231 confirmed=false
+process_exit 2590183 confirmed=true
+process_exit 2590246 confirmed=true
+contract_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-JK1fjE
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-tool-ownership-EpHCjn 27 564645
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-Zvgcx8 27 564646
+process_group 2590266 2590266 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-Zvgcx8
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-tool-ownership-EpHCjn 27 564645
+process_group 2590269 2590269 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-tool-ownership-EpHCjn
+process_exit 2590269 confirmed=true
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-tool-ownership-ND3i7a 27 564645
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-tool-ownership-mL0oXd 27 564645
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-tool-ownership-x6V2BP 27 564650
+process_exit 2590266 confirmed=true
+contract_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-Zvgcx8
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-xc4lF1 27 564646
+objects /workspace/lerna-content-02-fix-57ea60c628f8/lerna-tool-ownership-MZBHIg 27 564645
+process_group 2590303 2590303 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-xc4lF1
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-tool-ownership-MZBHIg 27 564645
+process_group 2590305 2590305 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-tool-ownership-MZBHIg
+process_exit 2590305 confirmed=true
+process_exit 2590303 confirmed=true
+contract_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-xc4lF1
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-PGtqIh 27 564645
+process_group 2590318 2590318 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-PGtqIh
+process_exit 2590318 confirmed=true
+contract_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-PGtqIh
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-BNUKkI 27 564645
+process_group 2590333 2590333 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-BNUKkI
+process_exit 2590333 confirmed=true
+contract_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-BNUKkI
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-WMikvh 27 564645
+process_group 2590355 2590355 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-WMikvh
+process_exit 2590355 confirmed=true
+contract_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-WMikvh
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-wTv3RX 27 564650
+process_group 2590394 2590394 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-wTv3RX
+process_exit 2590394 confirmed=true
+contract_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-wTv3RX
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-vqtCoT 27 564650
+process_group 2590432 2590432 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-vqtCoT
+process_exit 2590432 confirmed=true
+contract_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-component-race-tool-vqtCoT
+generator /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-yCpC5G 27 559843
+process_group 2590708 2590708 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-yCpC5G
+process_exit 2590708 confirmed=true
+generator_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-yCpC5G
+generator /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-UBzVXd 27 559843
+process_group 2590715 2590715 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-UBzVXd
+process_exit 2590715 confirmed=true
+generator_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-UBzVXd
+generator /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-FHCnSu 27 559843
+process_group 2590722 2590722 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-FHCnSu
+process_exit 2590722 confirmed=true
+generator_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-FHCnSu
+generator /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-GPGtZv 27 559843
+process_group 2590729 2590729 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-GPGtZv
+process_exit 2590729 confirmed=true
+generator_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-GPGtZv
+generator /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-zODcqi 27 559843
+process_group 2590736 2590736 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-zODcqi
+process_exit 2590736 confirmed=true
+generator_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-zODcqi
+generator /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-ZpQnbJ 27 559843
+process_group 2590743 2590743 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-ZpQnbJ
+process_exit 2590743 confirmed=true
+generator_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-ZpQnbJ
+generator /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-j7SVb8 27 559843
+process_group 2590750 2590750 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-j7SVb8
+process_exit 2590750 confirmed=true
+generator_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-j7SVb8
+generator /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-TDbUfv 27 559843
+process_group 2590757 2590757 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-TDbUfv
+process_exit 2590757 confirmed=true
+generator_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-TDbUfv
+generator /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-mZsiyl 27 559843
+process_group 2590764 2590764 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-mZsiyl
+process_exit 2590764 confirmed=true
+generator_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-mZsiyl
+generator /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-Q8OyvV 27 559843
+process_group 2590771 2590771 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-Q8OyvV
+process_exit 2590771 confirmed=true
+generator_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-Q8OyvV
+generator /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-GX78G2 27 559843
+process_group 2590778 2590778 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-GX78G2
+process_exit 2590778 confirmed=true
+generator_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-GX78G2
+generator /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-34Kjqi 27 559843
+process_group 2590785 2590785 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-34Kjqi
+process_exit 2590785 confirmed=true
+generator_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-34Kjqi
+generator /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-LmoDtR 27 559843
+process_group 2590792 2590792 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-LmoDtR
+process_exit 2590792 confirmed=true
+generator_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-LmoDtR
+generator /workspace/lerna-content-02-fix-57ea60c628f8/lerna-schema-change-uZclD6 27 559843
+process_group 2590799 2590799 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-schema-change-uZclD6
+process_exit 2590799 confirmed=true
+generator_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-schema-change-uZclD6
+generator /workspace/lerna-content-02-fix-57ea60c628f8/lerna-schema-change-rI1E08 27 559843
+process_group 2590930 2590930 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-schema-change-rI1E08
+process_exit 2590930 confirmed=true
+generator_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-schema-change-rI1E08
+generator /workspace/lerna-content-02-fix-57ea60c628f8/lerna-schema-change-PSA7O9 27 559843
+process_group 2591016 2591016 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-schema-change-PSA7O9
+process_exit 2591016 confirmed=true
+generator_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-schema-change-PSA7O9
+generator /workspace/lerna-content-02-fix-57ea60c628f8/lerna-schema-change-j8DC2v 27 559843
+process_group 2591150 2591150 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-schema-change-j8DC2v
+process_exit 2591150 confirmed=true
+generator_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-schema-change-j8DC2v
+generator /workspace/lerna-content-02-fix-57ea60c628f8/lerna-schema-change-t7tU6A 27 559843
+process_group 2591255 2591255 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-schema-change-t7tU6A
+process_exit 2591255 confirmed=true
+generator_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-schema-change-t7tU6A
+generator /workspace/lerna-content-02-fix-57ea60c628f8/lerna-schema-change-SRvNpl 27 559843
+process_group 2591366 2591366 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-schema-change-SRvNpl
+process_exit 2591366 confirmed=true
+generator_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-schema-change-SRvNpl
+generator /workspace/lerna-content-02-fix-57ea60c628f8/lerna-schema-change-RHNxZU 27 559843
+process_group 2591498 2591498 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-schema-change-RHNxZU
+process_exit 2591498 confirmed=true
+generator_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-schema-change-RHNxZU
+generator /workspace/lerna-content-02-fix-57ea60c628f8/lerna-schema-change-73gB8G 27 559843
+process_group 2591583 2591583 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-schema-change-73gB8G
+process_exit 2591583 confirmed=true
+generator_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-schema-change-73gB8G
+generator /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-entry-b4diqz 27 559843
+process_group 2591714 2591714 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-entry-b4diqz
+generator /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-v1_1-GfS7ub 27 559858
+process_group 2591721 2591721 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-v1_1-GfS7ub
+process_exit 2591721 confirmed=true
+generator_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-v1_1-GfS7ub
+generator /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-v1_1-olsGlh 27 559858
+process_group 2591855 2591855 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-v1_1-olsGlh
+process_exit 2591855 confirmed=true
+generator_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-v1_1-olsGlh
+generator /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-v1_1-9k3X5j 27 559858
+process_group 2591888 2591888 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-v1_1-9k3X5j
+process_exit 2591888 confirmed=true
+generator_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-v1_1-9k3X5j
+generator /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-v1_1-xltsrI 27 559837
+process_group 2591921 2591921 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-v1_1-xltsrI
+process_exit 2591921 confirmed=true
+generator_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-v1_1-xltsrI
+generator /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-v1_1-zJ9Oq8 27 559837
+process_group 2591954 2591954 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-v1_1-zJ9Oq8
+process_exit 2591954 confirmed=true
+generator_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-v1_1-zJ9Oq8
+generator /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-v1_1-cxHcwY 27 559837
+process_group 2591987 2591987 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-v1_1-cxHcwY
+process_exit 2591987 confirmed=true
+generator_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-v1_1-cxHcwY
+generator /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-v1_1-ms8gVO 27 559837
+process_group 2592046 2592046 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-v1_1-ms8gVO
+process_exit 2592046 confirmed=true
+generator_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-v1_1-ms8gVO
+generator /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-v1_1-NTGErX 27 559837
+process_group 2592099 2592099 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-v1_1-NTGErX
+process_exit 2592099 confirmed=true
+generator_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-v1_1-NTGErX
+generator /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-v1_1-S3rkuy 27 559837
+process_group 2592189 2592189 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-v1_1-S3rkuy
+process_exit 2592189 confirmed=true
+generator_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-v1_1-S3rkuy
+generator /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-v1_1-cSxpMQ 27 559837
+process_group 2592321 2592321 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-v1_1-cSxpMQ
+process_exit 2592321 confirmed=true
+generator_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-v1_1-cSxpMQ
+generator /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-v1_1-LKIUtu 27 559837
+process_group 2592405 2592405 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-v1_1-LKIUtu
+process_exit 2592405 confirmed=true
+generator_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-v1_1-LKIUtu
+generator /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-v1_1-wmuX0c 27 559837
+process_group 2592538 2592538 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-v1_1-wmuX0c
+process_exit 2592538 confirmed=true
+generator_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-v1_1-wmuX0c
+process_exit 2591714 confirmed=true
+generator_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-generator-entry-b4diqz
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-1182930208
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-1024829669
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-113250193
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-2247409263
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-1459173393
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-3610450764
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-2838459335
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-3020656121
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-2915343132
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-2680949832
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-279038915
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-669006356
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-3156987996
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-1027177002
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-1443777500
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-1018644476
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-1387895300
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-4237289558
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-2488276203
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-1074571613
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-3343662225
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-906541254
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-2426587717
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-3695673526
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-2789979366
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-3190053413
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-1060682439
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-908917839
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-1135813995
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-1758394804
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-4240732973
+sqlite-target /workspace/lerna-content-02-fix-57ea60c628f8/lerna-target-04-2382200322
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-contract-pPN6QL 27 559837
+process_group 2593732 2593732 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-contract-pPN6QL
+producer 2593769 2589470 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-contract-pPN6QL
+producer 2593775 2589470 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-contract-pPN6QL
+process_group 2593803 2593803 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-contract-pPN6QL
+process_group 2593875 2593875 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-contract-pPN6QL
+process_group 2593892 2593892 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-contract-pPN6QL
+process_group 2593957 2593957 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-contract-pPN6QL
+process_group 2593974 2593974 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-contract-pPN6QL
+process_group 2594018 2594018 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-contract-pPN6QL
+process_group 2594060 2594060 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-contract-pPN6QL
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-contract-GbWWEH 27 560383
+process_group 2594067 2594067 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-contract-GbWWEH
+producer 2594131 2594060 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-contract-GbWWEH
+producer 2594136 2594060 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-contract-GbWWEH
+process_group 2594146 2594146 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-contract-GbWWEH
+process_group 2594215 2594215 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-contract-GbWWEH
+process_exit 2594067 confirmed=true
+producer_exit 2594131 closed=true
+producer_exit 2594136 closed=true
+process_exit 2594146 confirmed=true
+process_exit 2594215 confirmed=true
+contract_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-contract-GbWWEH
+process_exit 2593732 confirmed=true
+producer_exit 2593769 closed=true
+producer_exit 2593775 closed=true
+process_exit 2593803 confirmed=true
+process_exit 2593875 confirmed=true
+process_exit 2593892 confirmed=true
+process_exit 2593957 confirmed=true
+process_exit 2593974 confirmed=true
+process_exit 2594018 confirmed=true
+process_exit 2594060 confirmed=true
+contract_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-contract-pPN6QL
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-contract-xJcT4N 27 559837
+process_group 2594246 2594246 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-contract-xJcT4N
+producer 2594301 2589470 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-contract-xJcT4N
+producer 2594306 2589470 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-contract-xJcT4N
+process_group 2594315 2594315 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-contract-xJcT4N
+process_group 2594370 2594370 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-contract-xJcT4N
+process_group 2594389 2594389 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-contract-xJcT4N
+process_group 2594421 2594421 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-contract-xJcT4N
+process_group 2594459 2594459 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-contract-xJcT4N
+process_group 2594491 2594491 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-contract-xJcT4N
+process_group 2594513 2594513 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-contract-xJcT4N
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-contract-WNCbZK 27 565247
+process_group 2594520 2594520 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-contract-WNCbZK
+producer 2594558 2594513 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-contract-WNCbZK
+producer 2594563 2594513 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-contract-WNCbZK
+process_group 2594619 2594619 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-contract-WNCbZK
+process_group 2594663 2594663 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-contract-WNCbZK
+process_exit 2594520 confirmed=true
+producer_exit 2594558 closed=true
+producer_exit 2594563 closed=true
+process_exit 2594619 confirmed=true
+process_exit 2594663 confirmed=true
+contract_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-contract-WNCbZK
+process_exit 2594246 confirmed=true
+producer_exit 2594301 closed=true
+producer_exit 2594306 closed=true
+process_exit 2594315 confirmed=true
+process_exit 2594370 confirmed=true
+process_exit 2594389 confirmed=true
+process_exit 2594421 confirmed=true
+process_exit 2594459 confirmed=true
+process_exit 2594491 confirmed=true
+process_exit 2594513 confirmed=true
+contract_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-contract-xJcT4N
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-contract-HAm7Q4 27 559837
+process_group 2594694 2594694 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-contract-HAm7Q4
+producer 2594762 2589470 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-contract-HAm7Q4
+producer 2594767 2589470 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-contract-HAm7Q4
+process_exit 2594694 confirmed=true
+producer_exit 2594762 closed=true
+producer_exit 2594767 closed=true
+contract_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-contract-HAm7Q4
+contract /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-contract-4BktP6 27 559837
+process_group 2594804 2594804 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-contract-4BktP6
+producer 2594840 2589470 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-contract-4BktP6
+producer 2594845 2589470 /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-contract-4BktP6
+process_exit 2594804 confirmed=true
+producer_exit 2594840 closed=true
+producer_exit 2594845 closed=true
+contract_removed /workspace/lerna-content-02-fix-57ea60c628f8/lerna-content-contract-4BktP6
+native_exit 2589470 2589470 status=0 group_absent=True
+process_group 2596197 2596197 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2596197 2596197 status=0 group_absent=True
+process_group 2598209 2598209 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2598209 2598209 status=0 group_absent=True
+artifact /workspace/lerna-content-02-fix-57ea60c628f8/audit02.go exact existing file fsync before final native audit
+process_group 2600026 2600026 /workspace/lerna-content-02-fix-57ea60c628f8
+native_exit 2600026 2600026 status=0 group_absent=True

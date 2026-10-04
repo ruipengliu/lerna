@@ -1,0 +1,1363 @@
+{
+  "source": "5c02440800d87eba2af461c210e4333ff45c1633",
+  "product_source": "4c6219fb420cdd63ea67f6db4c0106779ea9ccfa",
+  "files": [
+    {
+      "original": "/workspace/lerna-content-02-f05b2f1068958/accepted-cap-and-history-green.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/original/accepted-cap-and-history-green.log",
+      "sha256": "7ca3dabd0f367249e8f73d2a7ac3f54648c92074a32aa2653ce6900821742f58",
+      "bytes": 101
+    },
+    {
+      "original": "/workspace/lerna-content-02-f05b2f1068958/accepted-cap-maintenance-red.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/original/accepted-cap-maintenance-red.log",
+      "sha256": "f0cfe267a4abca4785eab0b6b67841dee60ef168e1cf91c39036be1918a5f03c",
+      "bytes": 1213
+    },
+    {
+      "original": "/workspace/lerna-content-02-f05b2f1068958/affected-first.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/original/affected-first.log",
+      "sha256": "fcd2976201a12e36ea18bcca7a6244d746fb3a0fdad5518da95637b24d2d2bbe",
+      "bytes": 766
+    },
+    {
+      "original": "/workspace/lerna-content-02-f05b2f1068958/affected-normal-takeover.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/original/affected-normal-takeover.log",
+      "sha256": "ee197a67989784bc44535ab1dac72109c01ace8184f7ee9510c86b8f6dc00a22",
+      "bytes": 263
+    },
+    {
+      "original": "/workspace/lerna-content-02-f05b2f1068958/affected-race-takeover.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/original/affected-race-takeover.log",
+      "sha256": "39107081d5b5ddbecaffb698f4761c205b1b3cb1adfc0162ed8bdf2bee03dc6a",
+      "bytes": 41
+    },
+    {
+      "original": "/workspace/lerna-content-02-f05b2f1068958/binding-and-oracle-green.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/original/binding-and-oracle-green.log",
+      "sha256": "02b14078bb619953f6a4139016d5b30483b339f048cf8ab98aeff96bfe4809f6",
+      "bytes": 101
+    },
+    {
+      "original": "/workspace/lerna-content-02-f05b2f1068958/binding-responsibility-red.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/original/binding-responsibility-red.log",
+      "sha256": "6d2e32da7d5524ede6fcbefd90b0d648f30041f29eed62b481f3aed9347f22d8",
+      "bytes": 2014
+    },
+    {
+      "original": "/workspace/lerna-content-02-f05b2f1068958/bootstrap-takeover.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/original/bootstrap-takeover.log",
+      "sha256": "8a87d54eabf494482fdce8519f0babfb941aa09f00f97faf80cda1dd7ae3ebec",
+      "bytes": 1020
+    },
+    {
+      "original": "/workspace/lerna-content-02-f05b2f1068958/closure-green.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/original/closure-green.log",
+      "sha256": "3547ea267b23cad2efe8cef5b3d04ca7b07dac7ba0ba3740a5fcd4897677f3a3",
+      "bytes": 101
+    },
+    {
+      "original": "/workspace/lerna-content-02-f05b2f1068958/closure-red.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/original/closure-red.log",
+      "sha256": "d6a7aaa8761a18142ae2e2b2fbdd94e48bdd1b7678f04631592003cda9d3591c",
+      "bytes": 415
+    },
+    {
+      "original": "/workspace/lerna-content-02-f05b2f1068958/expanded.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/original/expanded.log",
+      "sha256": "e77ccd8123f0678a8d1d616d7e098dab3493ab038ad31b9e506f517f94821777",
+      "bytes": 284
+    },
+    {
+      "original": "/workspace/lerna-content-02-f05b2f1068958/fmt.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/original/fmt.log",
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+      "bytes": 39
+    },
+    {
+      "original": "/workspace/lerna-content-02-f05b2f1068958/legacy-finite-policy-green.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/original/legacy-finite-policy-green.log",
+      "sha256": "580af4eb4614538ed5a0bbedf06169f42319a207d94caf2ecf6a1b058bb6ad4d",
+      "bytes": 101
+    },
+    {
+      "original": "/workspace/lerna-content-02-f05b2f1068958/legacy-maintenance-green.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/original/legacy-maintenance-green.log",
+      "sha256": "dc8ebf520e2e1b4a2d2069a6c5233042760e95f5e466f3ca4b3762fb42f15621",
+      "bytes": 101
+    },
+    {
+      "original": "/workspace/lerna-content-02-f05b2f1068958/legacy-maintenance-red.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/original/legacy-maintenance-red.log",
+      "sha256": "cf050f04a63887933767cee5593f7e4e788db2644267760786b64cff9028c20c",
+      "bytes": 306
+    },
+    {
+      "original": "/workspace/lerna-content-02-f05b2f1068958/legacy-policy-pages-green.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/original/legacy-policy-pages-green.log",
+      "sha256": "121000e2f1dea390d8c598a88ef6ad10664d32bd5d2e29035895959fd018540e",
+      "bytes": 101
+    },
+    {
+      "original": "/workspace/lerna-content-02-f05b2f1068958/legacy-readiness-green.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/original/legacy-readiness-green.log",
+      "sha256": "1e06bfd6936804e7f5a2ee3d3abe89496c6a66f2fff9ed466d12a0dde41713ef",
+      "bytes": 101
+    },
+    {
+      "original": "/workspace/lerna-content-02-f05b2f1068958/legacy-readiness-red.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/original/legacy-readiness-red.log",
+      "sha256": "96e04f536e7c906269f281913599e0a36e13ed07ec309fd87fda0b723bdaa879",
+      "bytes": 294
+    },
+    {
+      "original": "/workspace/lerna-content-02-f05b2f1068958/maintenance-and-ancestor-green.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/original/maintenance-and-ancestor-green.log",
+      "sha256": "3cf7dea38fe4868f595907e56c18735a9f45ec5990974aa21586af669d014858",
+      "bytes": 101
+    },
+    {
+      "original": "/workspace/lerna-content-02-f05b2f1068958/maintenance-budget-red.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/original/maintenance-budget-red.log",
+      "sha256": "1d39f046598562da4acfe3cd5c37a91930d1b05aff4beaeb03ba216756a11021",
+      "bytes": 1272
+    },
+    {
+      "original": "/workspace/lerna-content-02-f05b2f1068958/maintenance-known-holder-red.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/original/maintenance-known-holder-red.log",
+      "sha256": "2407e4e1ddf11fbe74e6acb8c9965e758d9b86a033d9c6742de262a4c418220e",
+      "bytes": 847
+    },
+    {
+      "original": "/workspace/lerna-content-02-f05b2f1068958/management-api-red.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/original/management-api-red.log",
+      "sha256": "30bd594c0594ceaa41173e9085c3c9a2ea37b888173b92e9a777f3695b478e28",
+      "bytes": 678
+    },
+    {
+      "original": "/workspace/lerna-content-02-f05b2f1068958/management-clock-green.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/original/management-clock-green.log",
+      "sha256": "7823d458073be805b0585036ffb7d3b7fd4e963746c34f163695db9755458fd6",
+      "bytes": 101
+    },
+    {
+      "original": "/workspace/lerna-content-02-f05b2f1068958/management-clock-red.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/original/management-clock-red.log",
+      "sha256": "7640e1f9c6c6388f4640c34a1a3a28d99660e9bd3a4e30570c6efcf2781e9997",
+      "bytes": 279
+    },
+    {
+      "original": "/workspace/lerna-content-02-f05b2f1068958/management-green.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/original/management-green.log",
+      "sha256": "d2a1e39e8064a713290250fac9b59873ad595a5010250e3fbdcdc3eefb98e5de",
+      "bytes": 101
+    },
+    {
+      "original": "/workspace/lerna-content-02-f05b2f1068958/old-dump-container-exact.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/original/old-dump-container-exact.log",
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+      "bytes": 39
+    },
+    {
+      "original": "/workspace/lerna-content-02-f05b2f1068958/old-dump-exact.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/original/old-dump-exact.log",
+      "sha256": "e1f1edd91d548b19f0f05753b98013aedc6e51f311c0ff54dcb175bd3f93f11b",
+      "bytes": 100
+    },
+    {
+      "original": "/workspace/lerna-content-02-f05b2f1068958/old-dump-green.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/original/old-dump-green.log",
+      "sha256": "af22798b1a9df237f64f95e094053df6aea2c9582b55f5dc6f4bcc944e5050a0",
+      "bytes": 86
+    },
+    {
+      "original": "/workspace/lerna-content-02-f05b2f1068958/old-dump-many-container-exact.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/original/old-dump-many-container-exact.log",
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+      "bytes": 39
+    },
+    {
+      "original": "/workspace/lerna-content-02-f05b2f1068958/old-dump.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/original/old-dump.log",
+      "sha256": "af22798b1a9df237f64f95e094053df6aea2c9582b55f5dc6f4bcc944e5050a0",
+      "bytes": 86
+    },
+    {
+      "original": "/workspace/lerna-content-02-f05b2f1068958/old-inspect.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/original/old-inspect.log",
+      "sha256": "0ed64b56646b9c36387fd6c16dbfa1c3463997948d3997a96c20e7ce81da347d",
+      "bytes": 77
+    },
+    {
+      "original": "/workspace/lerna-content-02-f05b2f1068958/old-writer-actual.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/original/old-writer-actual.log",
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+      "bytes": 39
+    },
+    {
+      "original": "/workspace/lerna-content-02-f05b2f1068958/old-writer-build-green.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/original/old-writer-build-green.log",
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+      "bytes": 39
+    },
+    {
+      "original": "/workspace/lerna-content-02-f05b2f1068958/old-writer-build.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/original/old-writer-build.log",
+      "sha256": "d5ae8af47d16d5f5bbdd0027269c697eca0bf9c1a4c379fd69dcd25b8d4a5033",
+      "bytes": 159
+    },
+    {
+      "original": "/workspace/lerna-content-02-f05b2f1068958/old-writer-many-actual.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/original/old-writer-many-actual.log",
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+      "bytes": 39
+    },
+    {
+      "original": "/workspace/lerna-content-02-f05b2f1068958/original-legacy-upgrade-green.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/original/original-legacy-upgrade-green.log",
+      "sha256": "17f67b7bf5a3d07dab4392093545051693c7858bf896d9107bebe88e3d5feea0",
+      "bytes": 560
+    },
+    {
+      "original": "/workspace/lerna-content-02-f05b2f1068958/owned-scopes.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/original/owned-scopes.log",
+      "sha256": "1410345809e81fc502d509425b71c9c85592f07db3218d19d730d6dc8504cd84",
+      "bytes": 43505
+    },
+    {
+      "original": "/workspace/lerna-content-02-f05b2f1068958/propagation-green.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/original/propagation-green.log",
+      "sha256": "95ed951fa8db58a5fe35bbcdf1d532051d4f0d387dd71c561b919bb68bc98682",
+      "bytes": 101
+    },
+    {
+      "original": "/workspace/lerna-content-02-f05b2f1068958/race-timeout-boundary.json",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/original/race-timeout-boundary.json",
+      "sha256": "7508d57ce45b923475abcb11b7f9c77a99b37daf4f6877d6025cde29496c8a25",
+      "bytes": 864
+    },
+    {
+      "original": "/workspace/lerna-content-02-f05b2f1068958/root-ack.json",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/original/root-ack.json",
+      "sha256": "e0791f0f399ae614e5062d36ec953278284f2122389f0b988ef5375bd5ccfde9",
+      "bytes": 149
+    },
+    {
+      "original": "/workspace/lerna-content-02-f05b2f1068958/run-native.py",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/original/run-native.py",
+      "sha256": "56a4b16bad2a7ab46c894e18ff132bb3cec988584de20c9197b1255fc1efd6d2",
+      "bytes": 1185
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/admission-actions-affected-race.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/admission-actions-affected-race.log",
+      "sha256": "208a357e28b95c6ac2b8f270ce5a7021cb1ae036a498d7049188115a5ed92647",
+      "bytes": 7965
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/admission-binding-controls.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/admission-binding-controls.log",
+      "sha256": "b87e6d9cd8a477c32ed83002be1800697a8e3734bd8266f83ea2067133ea0a97",
+      "bytes": 168
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/audit02.go",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/audit02.go.txt",
+      "sha256": "6e97089a01e5dfad3fa0601640d0469e112f565092e80cbf17328ca5d9fa9762",
+      "bytes": 6601
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/closure-before-cumulative.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/closure-before-cumulative.log",
+      "sha256": "a900ffcf9031f7d2842a551c26c3a14500223ab45a3d3230531da10de851db2f",
+      "bytes": 3410
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/closure-before-profile.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/closure-before-profile.log",
+      "sha256": "8747addda5b64dd0c568c8683c46d381dd5e91353046524ab2c25f5ab7d67120",
+      "bytes": 266
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/closure-before-top.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/closure-before-top.log",
+      "sha256": "f49cd9e317bade7a405a9de66eebb8021f55ef0060e7b2895c1bc027adae6726",
+      "bytes": 2131
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/closure-identity-cumulative.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/closure-identity-cumulative.log",
+      "sha256": "65172759090848654e24323bacde62cfe099404f1aefbed2e931574708bb2149",
+      "bytes": 3532
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/closure-identity-reuse-compile.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/closure-identity-reuse-compile.log",
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+      "bytes": 39
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/closure-identity-reuse-race.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/closure-identity-reuse-race.log",
+      "sha256": "716889558c3f25e351753e98b04972676f5d3ad25c95b54f3d5ce8f1fbf8c546",
+      "bytes": 1480
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/closure-materialized-compile.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/closure-materialized-compile.log",
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+      "bytes": 39
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/closure-materialized-race.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/closure-materialized-race.log",
+      "sha256": "ade58ccfc4ffd7d76c4b6a1278dadd617cf1dc5baa01d87f963c6e62b0eb78fa",
+      "bytes": 1666
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/closure-measured-compile.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/closure-measured-compile.log",
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+      "bytes": 39
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/closure-measured-cumulative.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/closure-measured-cumulative.log",
+      "sha256": "fe735b5b2e4c0f9371ce353b1df30f9719489d313d7f8bb5d50488d62c6c2327",
+      "bytes": 3046
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/closure-measured-race.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/closure-measured-race.log",
+      "sha256": "f2ce2f4148d6f32baee909beb6a1c91a4be225af258646ff35fc33440fbb13fc",
+      "bytes": 435
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/closure-nil-clock-compile.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/closure-nil-clock-compile.log",
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+      "bytes": 39
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/closure-nil-clock-race.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/closure-nil-clock-race.log",
+      "sha256": "46eaedeca0c83c5839969ace219a37a26c2e1b9cca964701936f85df9e1d2d75",
+      "bytes": 413
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/closure-observation-compile.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/closure-observation-compile.log",
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+      "bytes": 39
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/closure-observation-format.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/closure-observation-format.log",
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+      "bytes": 39
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/closure-observation-race.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/closure-observation-race.log",
+      "sha256": "9abb7de0eb201c085ddda0d65577985b62f17fe798778d28686411182f48cdad",
+      "bytes": 294
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/closure-phase-diagnostic-compile.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/closure-phase-diagnostic-compile.log",
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+      "bytes": 39
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/closure-policy-actions-compile.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/closure-policy-actions-compile.log",
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+      "bytes": 39
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/closure-policy-actions-green-final.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/closure-policy-actions-green-final.log",
+      "sha256": "0814c72d2cd88cd9c3b752ec1fbd907d1f8ee598ce9b595dc403e43a08d023e5",
+      "bytes": 3250
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/closure-policy-actions-green.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/closure-policy-actions-green.log",
+      "sha256": "c163d512b3946e0bef98c8360d611b6fa49559fcdf8b9ffff8f09bfeda75e39d",
+      "bytes": 3585
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/closure-policy-actions-normal.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/closure-policy-actions-normal.log",
+      "sha256": "a028df38b3c2b8d2337dd35d2f819e13f55634ff00133044865fefac60b5321d",
+      "bytes": 1727
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/closure-policy-actions-race.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/closure-policy-actions-race.log",
+      "sha256": "db9b1237a814bfb68cebe106d161d7ab476229a1cfb10d9eb31b332e8241595a",
+      "bytes": 1692
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/closure-policy-lock-control.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/closure-policy-lock-control.log",
+      "sha256": "bfdcf6b630d973150eebdfe2159cd3dd04eaed8a83976eabde2a7cdc2e58edab",
+      "bytes": 630
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/closure-policy-order-red.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/closure-policy-order-red.log",
+      "sha256": "41cd54c232d6c007062150a7b0748836c732f3bca26c44ef54afe581e1ec902e",
+      "bytes": 1469
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/closure-policy-phases-cumulative.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/closure-policy-phases-cumulative.log",
+      "sha256": "d09ef2a3004eb1a35bc0549564342a87ccf7794ae9532a3878cf1a79d3627745",
+      "bytes": 18585
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/closure-policy-phases-race.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/closure-policy-phases-race.log",
+      "sha256": "f6142fe7d632f685b94835ce5c74e4020b627666a60821105ef279ab781e52f2",
+      "bytes": 3032
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/closure-port-timings-race.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/closure-port-timings-race.log",
+      "sha256": "b24e52646753f69ee9671c805a7b757e48818ed5d831a8dca90b5af66b72939a",
+      "bytes": 1467
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/closure-ports-compile-input/adapters/postgres/content/management.go",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/closure-ports-compile-input/adapters/postgres/content/management.go.txt",
+      "sha256": "515210a582c48d2e7a8ac34b35b628ce211414c5cfe2b0a27a9afb491e34629a",
+      "bytes": 19350
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/closure-ports-compile-input/conformance/component/content_closure_test.go",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/closure-ports-compile-input/conformance/component/content_closure_test.go.txt",
+      "sha256": "756840592bce9fe5ca1d8edae0976905d1e022fa0189fe4a537db1b24d0b7e17",
+      "bytes": 14132
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/closure-ports-compile-input/conformance/component/content_post_schedule_test.go",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/closure-ports-compile-input/conformance/component/content_post_schedule_test.go.txt",
+      "sha256": "0349c4a549e271ba96834e09333adb657c29c5788d9727cf7b5e153edc638cec",
+      "bytes": 8101
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/closure-ports-compile-input/domain/content/closure.go",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/closure-ports-compile-input/domain/content/closure.go.txt",
+      "sha256": "4c4b0cf5ee0bf20389ae033fb76ff7305860cd5d3d803475024c636f9f50e9f6",
+      "bytes": 6173
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/closure-ports-compile-input/domain/content/management.go",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/closure-ports-compile-input/domain/content/management.go.txt",
+      "sha256": "ffec01c66703998b0a467526eb0f446dd539497630ccbac0a2e969d39e3f295d",
+      "bytes": 37385
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/closure-ports-compile-input/domain/content/ports.go",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/closure-ports-compile-input/domain/content/ports.go.txt",
+      "sha256": "4208d1060d5c41f46367a0472e9e759fd39c98af1a8b39863a3831c363d14aa1",
+      "bytes": 4500
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/closure-ports-compile-input/domain/content/service.go",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/closure-ports-compile-input/domain/content/service.go.txt",
+      "sha256": "f5b9062adcc52f2fb2bab36219bce771c32dc2b31c9cc807f5b980862b55e06f",
+      "bytes": 29341
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/closure-ports-compile-input/qualification.json",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/closure-ports-compile-input/qualification.json",
+      "sha256": "fe1a81d0ec6254cf9e1f388045a55ebc903e2f69b13f7d53546993bd1bee5120",
+      "bytes": 937
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/closure-ports-compile.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/closure-ports-compile.log",
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+      "bytes": 39
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/closure-ports-format.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/closure-ports-format.log",
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+      "bytes": 39
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/closure-sort-compile.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/closure-sort-compile.log",
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+      "bytes": 39
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/closure-sort-race.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/closure-sort-race.log",
+      "sha256": "37ce2d60500c7eaa8d0b61c84fd407c71acf5b8c1ea88dcfbefdc1d1c1a22a53",
+      "bytes": 275
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/closure-source-records-compile.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/closure-source-records-compile.log",
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+      "bytes": 39
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/closure-source-records-race.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/closure-source-records-race.log",
+      "sha256": "7f07b01d61b6b8de1150557f3470b5fedf61cfcfcb94ffb0cf768c6b04ea6b8d",
+      "bytes": 404
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/closure-timing-format.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/closure-timing-format.log",
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+      "bytes": 39
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/component-content-partition-mechanical-green.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/component-content-partition-mechanical-green.log",
+      "sha256": "6386b8dcd7a8e2a47e6a969a67343314ae63d54e5084b4f003cc4b0ab6a47b73",
+      "bytes": 730
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/component-content-partition-mechanical-red.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/component-content-partition-mechanical-red.log",
+      "sha256": "4f2b56b7af5feb600c3148106aa136264ec082f16baaa345724020f4efc361c1",
+      "bytes": 1411
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/component-partition-mechanical-green.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/component-partition-mechanical-green.log",
+      "sha256": "c3ae336961af6291a26aee4ba17e576302b7c86c7f0eb79862d7b66854018716",
+      "bytes": 638
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/component-partition-mechanical-red.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/component-partition-mechanical-red.log",
+      "sha256": "7058ce18734d3f86e947499250c206f056dc726d693292f4608d6aa1e8bcfbdc",
+      "bytes": 2472
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/component-race-compile.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/component-race-compile.log",
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+      "bytes": 39
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/component-race-content-closure.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/component-race-content-closure.log",
+      "sha256": "0f9648a7b2369272b85ff1baa045dee75729e482fcaffe292a3c540159178af0",
+      "bytes": 272
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/component-race-inventory.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/component-race-inventory.log",
+      "sha256": "a4b1662b044f14bbecd8a7607ca4199b4e894f92759aef93de0fb1556f4ef7cd",
+      "bytes": 9031
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/current-cap-coverage-green.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/current-cap-coverage-green.log",
+      "sha256": "95e07c28f8788dd947de5b9efa9ac00dbd819df24ad9331060b1fea85856f279",
+      "bytes": 168
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/current-nil-draft-input/conformance/component/content_closure_test.go",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/current-nil-draft-input/conformance/component/content_closure_test.go.txt",
+      "sha256": "4d12d8da2a242ac81af3c91d7ccdc0d45d9531a1e1428e9d67586e947081031b",
+      "bytes": 11612
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/current-nil-draft-input/domain/content/closure.go",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/current-nil-draft-input/domain/content/closure.go.txt",
+      "sha256": "4c4b0cf5ee0bf20389ae033fb76ff7305860cd5d3d803475024c636f9f50e9f6",
+      "bytes": 6173
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/current-nil-draft-input/domain/content/management.go",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/current-nil-draft-input/domain/content/management.go.txt",
+      "sha256": "09c8786e5587aa3e8c1f4efb5a70b1dc6ec65ec5d3dcf5c16afc1878ffdd7b82",
+      "bytes": 36718
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/current-nil-draft-input/domain/content/service.go",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/current-nil-draft-input/domain/content/service.go.txt",
+      "sha256": "5987974c1c15ed1def2de664b9f6faa7e4436f7717de2abc34eb6c2c45936145",
+      "bytes": 26381
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/current-nil-draft-input/qualification.json",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/current-nil-draft-input/qualification.json",
+      "sha256": "68608acb4763f376660fa797dd68eef577fdde2c7d2fd2af8f7cca3bbfb4477b",
+      "bytes": 567
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/current-tightened-cap-red.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/current-tightened-cap-red.log",
+      "sha256": "86774a8e3e04868d0dae572a687cac64837d5de1010ec425333362a80564acf5",
+      "bytes": 814
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/deadline-final-red.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/deadline-final-red.log",
+      "sha256": "aeb0eb62b04d02267948cd04f1adf8f2ba74460e7d7e7855c6d7e38fa184dee4",
+      "bytes": 849
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/deadline-lock-final-green.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/deadline-lock-final-green.log",
+      "sha256": "cae93c9be8cceb4dedbfb947a8650f0fd11b309909ad2c1b05cd0c7834170f47",
+      "bytes": 101
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/deadline-lock-red.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/deadline-lock-red.log",
+      "sha256": "e89664b81f192ccf37cf292df084382c6e7c7cf7adb8cd8aeb2f2b27d78f214d",
+      "bytes": 1704
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/dual-consumer-format.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/dual-consumer-format.log",
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+      "bytes": 39
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/empty-selector-stop-boundary.json",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/empty-selector-stop-boundary.json",
+      "sha256": "25b0070a4e7e1eab584afe70c00f0fdc31eef01de1dc539b3cd034e56ac47290",
+      "bytes": 764
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/empty-selector-stop-final.json",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/empty-selector-stop-final.json",
+      "sha256": "a9c980051841100ef6fbf50d80ebfbdcbeb6ddca87b58444a1c36c3abb556de3",
+      "bytes": 260
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/expired-archive-and-full-rows-controls.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/expired-archive-and-full-rows-controls.log",
+      "sha256": "9747fe1b867585bd0cf60ced72f589c4ad7f70a3d1d90e09a9688698d52494dd",
+      "bytes": 167
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/final-affected-normal.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/final-affected-normal.log",
+      "sha256": "f63f29dd54192a7deb5f58a4250df4ea89a2f5e9671191ada98344d52e37d76a",
+      "bytes": 330
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/final-base-race.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/final-base-race.log",
+      "sha256": "175ff9055d0e5b0c9c94407df8219e0e4405a0e5dd385e259d75d75519be49ea",
+      "bytes": 2082
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/final-consumers-and-lifetime-normal.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/final-consumers-and-lifetime-normal.log",
+      "sha256": "ef17e10b345458657bd09e4bc53eb34eb8a0d5f4eb01f253b3752120b6e99781",
+      "bytes": 244
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/final-decisionfixture-normal.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/final-decisionfixture-normal.log",
+      "sha256": "8f9e5ca8c9fed51d92e5f92525523752568fd2fb3c4d7e9010121098964237d3",
+      "bytes": 1057
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/final-decisionfixture-race.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/final-decisionfixture-race.log",
+      "sha256": "e903920904477cb374e6abfe9ac4c1dce42282e0378ef82d00124054c2a4c84e",
+      "bytes": 117
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/final-fixtures-rows-normal.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/final-fixtures-rows-normal.log",
+      "sha256": "1faddd2b3d641e7c87785dc3fa43854a97820b6560b2483ccc7fae9488cf04b3",
+      "bytes": 248
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/final-fixtures-rows-race.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/final-fixtures-rows-race.log",
+      "sha256": "3e386e3f307f025c861dd0eca2734da63b191ad6326a5f4c4bf1eb24f5de8849",
+      "bytes": 248
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/final-locked-check.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/final-locked-check.log",
+      "sha256": "058ef3c0a65aace54fa51c77c3ff5c4838f87fd11430822ff0c04cbbd2e298d2",
+      "bytes": 16144
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/final-module-verify.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/final-module-verify.log",
+      "sha256": "7f1ee9f963e1a74cb8991a349c9dac3856389b416523f969cc9614914b3c6704",
+      "bytes": 60
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/final-resource-audit-native.json",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/final-resource-audit-native.json",
+      "sha256": "85e4a013801eddb83703acc0ddb697061e8f1b9ad967150e99658a13baf5cce0",
+      "bytes": 293
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/final-resource-audit.json",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/final-resource-audit.json",
+      "sha256": "0a9d74eb1640a625633895691a2ff600298ab221edfc0aa29e4ef109c11361dd",
+      "bytes": 2992
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/final-resource-audit.raw",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/final-resource-audit.raw",
+      "sha256": "d7aa2353492fcdb12f6cc420dda7066c9300a123fe9dafdd2c2a7995a5baacb7",
+      "bytes": 3031
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/fix-format.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/fix-format.log",
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+      "bytes": 39
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/followup-format.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/followup-format.log",
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+      "bytes": 39
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/full-rows-mechanical-red.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/full-rows-mechanical-red.log",
+      "sha256": "65c2803ef09a0785b2bc6b3cc6c8a034e5e477de25d7fe879436af05dc2e402e",
+      "bytes": 1142
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/historical-natural-handoff-green.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/historical-natural-handoff-green.log",
+      "sha256": "bfcf73f9bb995474d54710ac90268789763b3fe3797b0adc6647f1e1396296df",
+      "bytes": 101
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/historical-natural-handoff-red.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/historical-natural-handoff-red.log",
+      "sha256": "bb74df9b231d197be423da04508c2cefa7665932c2744da676ef28bf0bcdb905",
+      "bytes": 1394
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/identity-reuse-compile-input/adapters/postgres/content/facts.go",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/identity-reuse-compile-input/adapters/postgres/content/facts.go.txt",
+      "sha256": "8d53cb773a4711ff9866f5974b399de96eec137d82a92b97886c0825802cb069",
+      "bytes": 9213
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/identity-reuse-compile-input/adapters/postgres/content/management.go",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/identity-reuse-compile-input/adapters/postgres/content/management.go.txt",
+      "sha256": "515210a582c48d2e7a8ac34b35b628ce211414c5cfe2b0a27a9afb491e34629a",
+      "bytes": 19350
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/identity-reuse-compile-input/adapters/postgres/content/policy.go",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/identity-reuse-compile-input/adapters/postgres/content/policy.go.txt",
+      "sha256": "e72b25a38667a25f14a6b17e2be0d6b10b690b85546d6518c11a6d60edaba12b",
+      "bytes": 4499
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/identity-reuse-compile-input/conformance/component/content_closure_test.go",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/identity-reuse-compile-input/conformance/component/content_closure_test.go.txt",
+      "sha256": "756840592bce9fe5ca1d8edae0976905d1e022fa0189fe4a537db1b24d0b7e17",
+      "bytes": 14132
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/identity-reuse-compile-input/conformance/component/content_post_schedule_test.go",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/identity-reuse-compile-input/conformance/component/content_post_schedule_test.go.txt",
+      "sha256": "54b096a6ebf9c16acd7de96d48a0816fcbfcd9c71d95fa6e486530aec64804c0",
+      "bytes": 12151
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/identity-reuse-compile-input/domain/content/closure.go",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/identity-reuse-compile-input/domain/content/closure.go.txt",
+      "sha256": "4c4b0cf5ee0bf20389ae033fb76ff7305860cd5d3d803475024c636f9f50e9f6",
+      "bytes": 6173
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/identity-reuse-compile-input/domain/content/management.go",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/identity-reuse-compile-input/domain/content/management.go.txt",
+      "sha256": "ffec01c66703998b0a467526eb0f446dd539497630ccbac0a2e969d39e3f295d",
+      "bytes": 37385
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/identity-reuse-compile-input/domain/content/ports.go",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/identity-reuse-compile-input/domain/content/ports.go.txt",
+      "sha256": "4208d1060d5c41f46367a0472e9e759fd39c98af1a8b39863a3831c363d14aa1",
+      "bytes": 4500
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/identity-reuse-compile-input/domain/content/service.go",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/identity-reuse-compile-input/domain/content/service.go.txt",
+      "sha256": "f5b9062adcc52f2fb2bab36219bce771c32dc2b31c9cc807f5b980862b55e06f",
+      "bytes": 29341
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/identity-reuse-compile-input/qualification.json",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/identity-reuse-compile-input/qualification.json",
+      "sha256": "5e331503f443af5e0d330c710fcd4f03b7be19abad9991b74f2f4739adf89f3f",
+      "bytes": 1158
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/identity-reuse-format.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/identity-reuse-format.log",
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+      "bytes": 39
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/inherited-deadline-legacy-green.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/inherited-deadline-legacy-green.log",
+      "sha256": "6c7ed70e4637460ba6ecf2b67d467a3a8884605329ad0efeed99989bc4546bd3",
+      "bytes": 101
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/inherited-expiry-business-red.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/inherited-expiry-business-red.log",
+      "sha256": "a75019fe9245910581011f9ee0617d5590e5359593a934e0451b562cffc1c1ed",
+      "bytes": 310
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/inherited-expiry-red.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/inherited-expiry-red.log",
+      "sha256": "1287d150e38376a60359882e094aa082e9449aa7d9c14092afd68343036db138",
+      "bytes": 370
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/launcher-empty-control.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/launcher-empty-control.log",
+      "sha256": "5c621103afca2a1a51fcdb9d0c58690802f0e71a340faecb18bcd4e803db0884",
+      "bytes": 390
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/launcher-mismatch-control.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/launcher-mismatch-control.log",
+      "sha256": "8f4d2b804f3a2f92c257d090e59c585de6177c672db3c64fd229e7c2ee5a9618",
+      "bytes": 388
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/launcher-missing-control.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/launcher-missing-control.log",
+      "sha256": "70e36e76b27d2913270329de61906ad59563415b8023478d01e383df93536e78",
+      "bytes": 983
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/launcher-normal-control.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/launcher-normal-control.log",
+      "sha256": "e99cdf6db44d091ef8e127f5329ce2db51346d549c29b122cfac8df7acb531ae",
+      "bytes": 92
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/materialized-binary-qualification.json",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/materialized-binary-qualification.json",
+      "sha256": "43ab9128084b9dbe8810f8a021f1c7c186dee8e17130b477411402787ee07467",
+      "bytes": 364
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/materialized-inventory.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/materialized-inventory.log",
+      "sha256": "dd40a0406098ceb0a303c29f9edd6d8a7a6aba43d7e7e37617fa603fbac9fe90",
+      "bytes": 9631
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/materialized-normal-closure.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/materialized-normal-closure.log",
+      "sha256": "bd06a53ac90adcb5b4fa1b1a71e970e507c0a8e2df9aef6bf3099bec462e7aa6",
+      "bytes": 1753
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/materialized-normal-content-a.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/materialized-normal-content-a.log",
+      "sha256": "50eed76c9b0ea3c080a0fa7121794a3ae2befc459707ef1e41398e8140eda13e",
+      "bytes": 13404
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/materialized-normal-content-b.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/materialized-normal-content-b.log",
+      "sha256": "b5c46813e3b00979fccbdf24aec5fe04d78e7501862cdaa17639bd1498919382",
+      "bytes": 14588
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/materialized-normal-durable.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/materialized-normal-durable.log",
+      "sha256": "2ad8cfd412f1f8ebbb3a29d3d0eaade3e3636bf2da4f0a6761d689451252c577",
+      "bytes": 24152
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/materialized-normal-other.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/materialized-normal-other.log",
+      "sha256": "4731da0f1e7b4e92d8bd1c186743c147da89edafdd1ac0913045ba66a1e9d00e",
+      "bytes": 53843
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/materialized-race-content-a-final.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/materialized-race-content-a-final.log",
+      "sha256": "d66f481ff8489254f5f222e4fa0cecbb96c7f07f2c4218d0a44a05b7407809a3",
+      "bytes": 13339
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/materialized-race-content-a.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/materialized-race-content-a.log",
+      "sha256": "9b21cee4a8248e9395cf866ad21b65961dee73e7c371f8e1ea8024bee780a480",
+      "bytes": 10292
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/materialized-race-content-b.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/materialized-race-content-b.log",
+      "sha256": "493dc1b954c86b79fdde2519432e6a6cb4d1ac2dc5e4cef05d225edec0f00495",
+      "bytes": 14523
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/materialized-race-durable.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/materialized-race-durable.log",
+      "sha256": "5deb80c740495d4c15f789452021c71d32567064007c1616b976205be46b58ea",
+      "bytes": 24088
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/materialized-race-other-final.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/materialized-race-other-final.log",
+      "sha256": "750fc88f089b0b2c84392b6b5ade61e4e209ab47d9d0ec77a21f6b4d954ae5d9",
+      "bytes": 53779
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/materialized-race-other.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/materialized-race-other.log",
+      "sha256": "ff0cf1bc108fc2a958c81c5eacd1e1b96614aeb292519fe3e484e52083900e2e",
+      "bytes": 8428
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/materialized-runtime-manifest.json",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/materialized-runtime-manifest.json",
+      "sha256": "5a2e80e35673b9a71b3ef691ca483870cea8b97f911af31e177ae4857d792c13",
+      "bytes": 60475
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/measured-compile-input/conformance/component/content_closure_test.go",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/measured-compile-input/conformance/component/content_closure_test.go.txt",
+      "sha256": "4d12d8da2a242ac81af3c91d7ccdc0d45d9531a1e1428e9d67586e947081031b",
+      "bytes": 11612
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/measured-compile-input/domain/content/closure.go",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/measured-compile-input/domain/content/closure.go.txt",
+      "sha256": "3080333aaf36c5f83fb8f533e83d64ab5900767b873ea4d7b9db105b542f3134",
+      "bytes": 6107
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/measured-compile-input/domain/content/management.go",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/measured-compile-input/domain/content/management.go.txt",
+      "sha256": "09c8786e5587aa3e8c1f4efb5a70b1dc6ec65ec5d3dcf5c16afc1878ffdd7b82",
+      "bytes": 36718
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/measured-compile-input/domain/content/service.go",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/measured-compile-input/domain/content/service.go.txt",
+      "sha256": "5987974c1c15ed1def2de664b9f6faa7e4436f7717de2abc34eb6c2c45936145",
+      "bytes": 26381
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/measured-compile-input/qualification.json",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/measured-compile-input/qualification.json",
+      "sha256": "286b50765ea33cddbad2777d8c5a8f5b774c964dd3b9c6356688beca837e3a13",
+      "bytes": 586
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/old-expired-build.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/old-expired-build.log",
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+      "bytes": 39
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/old-expired-dump.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/old-expired-dump.log",
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+      "bytes": 39
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/old-expired-producer.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/old-expired-producer.log",
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+      "bytes": 39
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/owned-scopes.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/owned-scopes.log",
+      "sha256": "641e4d59262a429e9b92599c555497335a8ec5a3d3943d4344ea7b78b5f8e673",
+      "bytes": 195096
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/page-close-baseline-mechanical-red.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/page-close-baseline-mechanical-red.log",
+      "sha256": "0628737d039d19f5cb3cc092d7a206c66bf3ad34a6ccda8357f26248bda7ea7a",
+      "bytes": 2087
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/page-close-mechanical-green.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/page-close-mechanical-green.log",
+      "sha256": "6ea4306e3e49e95c5c3ae1eecc3b19e1e598424bc6712579062a3351600e57f5",
+      "bytes": 105
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/page-close-mechanical-red.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/page-close-mechanical-red.log",
+      "sha256": "722c30a7513c016c954c9c98a0e0669f7335c825381f04c9c0c109452f450dca",
+      "bytes": 2566
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/phase-diagnostic-overlay/adapters/postgres/content/facts.go",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/phase-diagnostic-overlay/adapters/postgres/content/facts.go.txt",
+      "sha256": "ff60cc9cf5750a30963bf47cd25151f1c8ae90346980fc86ad295caf2a18ba63",
+      "bytes": 9729
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/phase-diagnostic-overlay/adapters/postgres/content/management.go",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/phase-diagnostic-overlay/adapters/postgres/content/management.go.txt",
+      "sha256": "31913f9b9acee1c6fe79d771369a635ef1a29e4ebe505708ddb9dc94f1944538",
+      "bytes": 19912
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/phase-diagnostic-overlay/adapters/postgres/content/policy.go",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/phase-diagnostic-overlay/adapters/postgres/content/policy.go.txt",
+      "sha256": "95161fc521068f72e18296be53713b0bf02c9cf5f2aa9d85c0533b493a40710d",
+      "bytes": 5904
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/phase-diagnostic-overlay/conformance/component/content_closure_test.go",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/phase-diagnostic-overlay/conformance/component/content_closure_test.go.txt",
+      "sha256": "ce985e83b0b6f6d9b9f58a9a26a84fa98daac7abf9a1c9a441f3b5924e582d90",
+      "bytes": 14356
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/phase-diagnostic-overlay/overlay.json",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/phase-diagnostic-overlay/overlay.json",
+      "sha256": "6b85fee8f676a32df37c375d20eda35874de96a57d7f4ca03640a2c7678230b4",
+      "bytes": 824
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/phase-diagnostic-overlay/qualification.json",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/phase-diagnostic-overlay/qualification.json",
+      "sha256": "a5d895741aa1834821a1c2ee831005b543875921338dd583c2b664d7e1a66d0d",
+      "bytes": 655
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/policy-actions-compile-input/adapters/postgres/content/facts.go",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/policy-actions-compile-input/adapters/postgres/content/facts.go.txt",
+      "sha256": "8d53cb773a4711ff9866f5974b399de96eec137d82a92b97886c0825802cb069",
+      "bytes": 9213
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/policy-actions-compile-input/adapters/postgres/content/management.go",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/policy-actions-compile-input/adapters/postgres/content/management.go.txt",
+      "sha256": "515210a582c48d2e7a8ac34b35b628ce211414c5cfe2b0a27a9afb491e34629a",
+      "bytes": 19350
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/policy-actions-compile-input/adapters/postgres/content/policy.go",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/policy-actions-compile-input/adapters/postgres/content/policy.go.txt",
+      "sha256": "53d9ffe4f11340ac4e9e349b5f684438d4045292d4c423f7994f677e65099929",
+      "bytes": 4719
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/policy-actions-compile-input/conformance/component/content_closure_test.go",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/policy-actions-compile-input/conformance/component/content_closure_test.go.txt",
+      "sha256": "0ab6e19d1151fcdccc50a3c09055846db466f482d93ce8dd1a6ac7b084919f46",
+      "bytes": 14318
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/policy-actions-compile-input/conformance/component/content_policy_actions_test.go",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/policy-actions-compile-input/conformance/component/content_policy_actions_test.go.txt",
+      "sha256": "e228abe8b64b13e049398ce04baba918ff89c235bb731d1070b5606b7210cf8c",
+      "bytes": 7311
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/policy-actions-compile-input/conformance/component/content_post_schedule_test.go",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/policy-actions-compile-input/conformance/component/content_post_schedule_test.go.txt",
+      "sha256": "79d0681554f9b3b65fa80e4496fe7ec49fc13f041c2aa3a6bd75a6e150ac6f3f",
+      "bytes": 22740
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/policy-actions-compile-input/domain/content/closure.go",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/policy-actions-compile-input/domain/content/closure.go.txt",
+      "sha256": "a9be60cab6c310690f1de543926996e3f31197c3ff6d9c5153d2f30a2c467da7",
+      "bytes": 6394
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/policy-actions-compile-input/domain/content/management.go",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/policy-actions-compile-input/domain/content/management.go.txt",
+      "sha256": "ffec01c66703998b0a467526eb0f446dd539497630ccbac0a2e969d39e3f295d",
+      "bytes": 37385
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/policy-actions-compile-input/domain/content/ports.go",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/policy-actions-compile-input/domain/content/ports.go.txt",
+      "sha256": "92180e1eb2293f6391af3d16f4ba5a1f48578b181e5f9639975e8d4a4297e1dd",
+      "bytes": 4502
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/policy-actions-compile-input/domain/content/service.go",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/policy-actions-compile-input/domain/content/service.go.txt",
+      "sha256": "af676986c362e157c08b1cc7dcdd3b0211c57417cb8726bd8a9429dc0104e16f",
+      "bytes": 29371
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/policy-actions-compile-input/qualification.json",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/policy-actions-compile-input/qualification.json",
+      "sha256": "df8c6c0b12fec02894caee5c353fed5be35236c97d8f4436ce29ac3bd7c37239",
+      "bytes": 1286
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/policy-early-clock-fault-input/adapters/postgres/content/policy.go",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/policy-early-clock-fault-input/adapters/postgres/content/policy.go.txt",
+      "sha256": "99c7fe4b39bc9ea38b4ae90e3806e1164e8cb2e497d97b0ac714ab3895946d0f",
+      "bytes": 4576
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/policy-early-clock-fault-input/conformance/component/content_policy_actions_test.go",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/policy-early-clock-fault-input/conformance/component/content_policy_actions_test.go.txt",
+      "sha256": "698ddd4d06ebcd0f286f253589564510362d8d59a8c6f82b29b6d0709bdc76b3",
+      "bytes": 12673
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/policy-early-clock-fault-input/conformance/internal/contentfixture/policy_lock.go",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/policy-early-clock-fault-input/conformance/internal/contentfixture/policy_lock.go.txt",
+      "sha256": "f0b9dc75958e233836fad06c3c11a4709feed28efe52d495304e93246ae7db01",
+      "bytes": 6989
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/policy-early-clock-fault-input/qualification.json",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/policy-early-clock-fault-input/qualification.json",
+      "sha256": "bd868ac679e40fd220603418d50af4dd35d11143f667be42ec2e76793135954b",
+      "bytes": 650
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/policy-port-early-clock-mechanical-red.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/policy-port-early-clock-mechanical-red.log",
+      "sha256": "7268da0af26ae2ed3bb4b9976abe812345efd5369cb3a2d9e3064011ee78e266",
+      "bytes": 1144
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/policy-port-materialized-clock-green.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/policy-port-materialized-clock-green.log",
+      "sha256": "2da3f565a80be8c638eec5857b35bd7c7afb40ea0c15e3064723ea54b4a972a3",
+      "bytes": 5260
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/post-schedule-alias-green.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/post-schedule-alias-green.log",
+      "sha256": "768979bdc5a7c4c73796ea8203199ec695115b1d02d722dadc88b09457959f35",
+      "bytes": 594
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/post-schedule-alias-red-format.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/post-schedule-alias-red-format.log",
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+      "bytes": 39
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/post-schedule-alias-red.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/post-schedule-alias-red.log",
+      "sha256": "71ff4f6db95760af980b821280fefb2390c0cd98558c4e60868c9b8847d0ed7a",
+      "bytes": 671
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/post-schedule-boundaries-control.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/post-schedule-boundaries-control.log",
+      "sha256": "c49ea8aa59c5c83b0636e4ed2f582e235ea52b14ab77f7cf1123ebc9f5772517",
+      "bytes": 2052
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/post-schedule-boundaries-format.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/post-schedule-boundaries-format.log",
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+      "bytes": 39
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/post-schedule-business-green.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/post-schedule-business-green.log",
+      "sha256": "b24d79b9100032e9c4ce5819df9698159c2eddfe32f623f68c835042a975c990",
+      "bytes": 1728
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/post-schedule-business-red.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/post-schedule-business-red.log",
+      "sha256": "0dc5a4b09e36a0ec6131fec1c6d3212be122889f3b6eb3f5072e5fbbb284d8f9",
+      "bytes": 2025
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/post-schedule-extra-cause-green.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/post-schedule-extra-cause-green.log",
+      "sha256": "dd09ed942f500516852b98f54c58674b0715aa85c679967cb10deb09cf62c911",
+      "bytes": 1862
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/post-schedule-extra-cause-red.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/post-schedule-extra-cause-red.log",
+      "sha256": "9f82275854fb5fdaa736e7d5a992ab931fd917b62b6f7a1c896c56edbf0ddbe3",
+      "bytes": 347
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/post-schedule-extra-red-format.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/post-schedule-extra-red-format.log",
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+      "bytes": 39
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/post-schedule-green-format.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/post-schedule-green-format.log",
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+      "bytes": 39
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/post-schedule-red-format.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/post-schedule-red-format.log",
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+      "bytes": 39
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/post-schedule-red-format2.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/post-schedule-red-format2.log",
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+      "bytes": 39
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/pre-module-final-resource-audit-native.json",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/pre-module-final-resource-audit-native.json",
+      "sha256": "70a095ddff4f2551d485d81907d937f563edf8931fc3ad3b6a937cb02ac4481d",
+      "bytes": 273
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/pre-module-final-resource-audit.json",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/pre-module-final-resource-audit.json",
+      "sha256": "a94cf37bdbba661a5e3c8193af2dc84f43d5f9afd32fd0525c92a9b2637182a8",
+      "bytes": 2781
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/pre-module-final-resource-audit.raw",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/pre-module-final-resource-audit.raw",
+      "sha256": "6f76e47c434218ac8fd46ebb3af198ffea34900569e09431c67d01cf15d0ae75",
+      "bytes": 2820
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/protected-base-qualification.json",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/protected-base-qualification.json",
+      "sha256": "86e3b1ed91a5587ba0979d7111d370b16148fc63aa0d2c796b99b549146457ca",
+      "bytes": 16023
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/renewal-classification-red.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/renewal-classification-red.log",
+      "sha256": "6bb62f5976c563c1db918bb8e3b3e0b4376215953950186d198cdddef178df44",
+      "bytes": 2633
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/renewal-inheritance-close-green.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/renewal-inheritance-close-green.log",
+      "sha256": "383bbfebd809c198981448245cb3906bc3f57580090de7f0502d3711c8cb0fc4",
+      "bytes": 168
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/residual-coverage-red.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/residual-coverage-red.log",
+      "sha256": "9d09c67d0fceb82f1285ccd7b345cb3647be82dce2157e2ac811ab1595dd6c73",
+      "bytes": 1272
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/residual-current-cap-green-final.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/residual-current-cap-green-final.log",
+      "sha256": "f60911295fdda89ccd42653b83a141d314703c6b7297f3f916ec9429ca743e41",
+      "bytes": 101
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/residual-current-cap-green.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/residual-current-cap-green.log",
+      "sha256": "1f773e60c4a011e4a443ca313c43c5bf0dddf6a33f364eb96a4371ec56090f91",
+      "bytes": 257
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/retention-observation-format.log",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/retention-observation-format.log",
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+      "bytes": 39
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/root-ack.json",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/root-ack.json",
+      "sha256": "25ac290a77455b9247f54773d69d360c4a42fca7adbc4c5a4f27225090dc7ff9",
+      "bytes": 153
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/run-component-group.py",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/run-component-group.py",
+      "sha256": "7b118dc2d2d4e0e3419e5d87b5d18a9cb82ccd052c53d74d4d68e68a1b7d52a7",
+      "bytes": 1847
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/run-native.py",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/run-native.py",
+      "sha256": "56a4b16bad2a7ab46c894e18ff132bb3cec988584de20c9197b1255fc1efd6d2",
+      "bytes": 1185
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/source-records-compile-input/adapters/postgres/content/management.go",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/source-records-compile-input/adapters/postgres/content/management.go.txt",
+      "sha256": "515210a582c48d2e7a8ac34b35b628ce211414c5cfe2b0a27a9afb491e34629a",
+      "bytes": 19350
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/source-records-compile-input/conformance/component/content_closure_test.go",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/source-records-compile-input/conformance/component/content_closure_test.go.txt",
+      "sha256": "4d12d8da2a242ac81af3c91d7ccdc0d45d9531a1e1428e9d67586e947081031b",
+      "bytes": 11612
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/source-records-compile-input/conformance/component/content_post_schedule_test.go",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/source-records-compile-input/conformance/component/content_post_schedule_test.go.txt",
+      "sha256": "0349c4a549e271ba96834e09333adb657c29c5788d9727cf7b5e153edc638cec",
+      "bytes": 8101
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/source-records-compile-input/domain/content/closure.go",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/source-records-compile-input/domain/content/closure.go.txt",
+      "sha256": "4c4b0cf5ee0bf20389ae033fb76ff7305860cd5d3d803475024c636f9f50e9f6",
+      "bytes": 6173
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/source-records-compile-input/domain/content/management.go",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/source-records-compile-input/domain/content/management.go.txt",
+      "sha256": "ffec01c66703998b0a467526eb0f446dd539497630ccbac0a2e969d39e3f295d",
+      "bytes": 37385
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/source-records-compile-input/domain/content/ports.go",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/source-records-compile-input/domain/content/ports.go.txt",
+      "sha256": "4208d1060d5c41f46367a0472e9e759fd39c98af1a8b39863a3831c363d14aa1",
+      "bytes": 4500
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/source-records-compile-input/domain/content/service.go",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/source-records-compile-input/domain/content/service.go.txt",
+      "sha256": "f5b9062adcc52f2fb2bab36219bce771c32dc2b31c9cc807f5b980862b55e06f",
+      "bytes": 29341
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/source-records-compile-input/qualification.json",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/source-records-compile-input/qualification.json",
+      "sha256": "1ace3cd73d621e5a5f80e12dcbbd55f0e2d3b891eb7c4c345e7edc1e5c6d7344",
+      "bytes": 951
+    },
+    {
+      "original": "/workspace/lerna-content-02-fix-57ea60c628f8/update-group-result.py",
+      "tracked": ".scratch/lerna-04-content-snapshots/ticket-02-execution/followup/update-group-result.py",
+      "sha256": "05605695cd6833d25b48bd7c739f36fe067ebdd05fdd5f0de83158aee1e1860b",
+      "bytes": 1153
+    }
+  ],
+  "qualification": "verbatim originals; each input/report/log retains its own source/status/cutoff; no late reclassification or per-Close inference; .go snapshots have .txt suffix only to keep them non-runtime evidence"
+}
