@@ -293,5 +293,3 @@ ALTER TABLE ONLY legacy_content.jobs
 --
 -- PostgreSQL database dump complete
 --
-
-
