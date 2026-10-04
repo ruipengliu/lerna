@@ -8,6 +8,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"errors"
+	"fmt"
 	d "github.com/ruipengliu/lerna/domain/content"
 	"io"
 	"os"
@@ -39,6 +40,7 @@ func actualNative() native {
 }
 
 type Store struct {
+	binding                   string
 	root                      *os.Root
 	directory                 *os.File
 	ops                       native
@@ -82,6 +84,9 @@ func open(path string, ops native) (*Store, error) {
 		holder.directory = directory
 		holder.directoryClose = firstClose(func() error { return ops.closeFile(directory) })
 	}
+	if err == nil && directory == nil {
+		err = ErrUnavailable
+	}
 	if err != nil {
 		closeErr := holder.Close()
 		if closeErr != nil {
@@ -89,8 +94,31 @@ func open(path string, ops native) (*Store, error) {
 		}
 		return nil, errors.Join(ErrUnavailable, err)
 	}
+	// Bind the opened directory descriptor, not a later configurable pathname.
+	// Reject a replacement between path qualification and opening the holder.
+	actual, statErr := directory.Stat()
+	if statErr == nil && (!actual.IsDir() || !os.SameFile(info, actual)) {
+		statErr = ErrUnavailable
+	}
+	if statErr != nil {
+		closeErr := holder.Close()
+		if closeErr != nil {
+			return holder, errors.Join(ErrUnavailable, statErr, closeErr)
+		}
+		return nil, errors.Join(ErrUnavailable, statErr)
+	}
+	identity, ok := actual.Sys().(*syscall.Stat_t)
+	if !ok {
+		closeErr := holder.Close()
+		if closeErr != nil {
+			return holder, errors.Join(ErrUnavailable, closeErr)
+		}
+		return nil, ErrUnavailable
+	}
+	holder.binding = fmt.Sprintf("linux-directory:%d:%d", identity.Dev, identity.Ino)
 	return holder, nil
 }
+func (s *Store) Binding() string { return s.binding }
 func (s *Store) Ready(ctx context.Context) error {
 	if ctx == nil {
 		return ErrUnavailable

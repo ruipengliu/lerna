@@ -106,3 +106,30 @@ tracer必须持久固定原真实root身份并拒绝错root。没有为其claim�
 仍待实际实施/证据，不用当前三vertical替七AC。
 
 本轮已明确release LOCAL/no pending native；没有任何旧资源cleanup。
+
+## 第四vertical：拒绝错误物理root的伪删除ACK（进行中）
+
+`TestContentWrongPhysicalRootCannotAcknowledgeOriginalHolderErasure`沿原真实
+PG接纳/发布/Get/自愿Seal，再把相同holderID映射到独立登记的空root。
+首red暴露假ACK：`holder-binding-first-red.log` actual0.319s，line46
+期望ErrHolderBinding却nil；PID/PGID2704020/start11259402/exit1，
+groupAbsent=true、无timeout。已实际completion并明确release LOCAL。
+
+当前静态修复从最初接纳记录原对象holder Open时真实FD Stat dev/inode；
+Objects.Binding是纯访问器、不在PG锁内进行介质等待。原Record/PG独立列
+及publication attempt固定该值；发布startup/final、实际Put、Get实际Read
+和Seal消费原事实。primary holder identity携带同一binding，cleanup及
+对象adapter在实际Fence/Observe前都核原绑定，错误root不能取得原ACK。
+Binding相等不证明Close或物理删除。旧未binding记录保持未知，绝不自动
+用当前配置空目录认领。真实受信来源回填/旧writer停止升级另待qualification。
+| 原日志 | 实际结果 |
+| --- | --- |
+| `holder-binding-first-green.log` | exact normal0.382s；PID/PGID2709956/start11283913/exit0/groupAbsent=true。 |
+| `holder-binding-race-controls.log` | component三exact race2.758s与local reopen/CloseDrain两个exact race1.116s均通过；PID/PGID2710457/start11285609/exit1/groupAbsent=true。末尾hash命令误写不存在的0002文件名导致整体exit1，此失败保留，不报整个命令green。 |
+| `holder-binding-frozen-hash-repair.log` | 单独正确0001/0002_source_policies.sql哈希与原冻结值相等；PID/PGID2711539/start11289518/exit0/groupAbsent=true。 |
+
+所有原wrapper均无timeout；无pending native，已明确release LOCAL。
+此轮实际拒绝错root后，原root以同Seal/Deadline恢复并经独立精确字节观察
+确认删除。前三vertical已在新binding source上作相关race控制，并覆盖本地
+原holder reopen/CloseDrain。first-Seal已错root的独立正常/拒绝对照另待后续。
+未实施受信legacy回填、真实停止旧writer升级、secondary、进程竞争或全七AC。

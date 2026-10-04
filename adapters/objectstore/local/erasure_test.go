@@ -29,6 +29,7 @@ func TestErasedExactVersionCannotBeReinstalledAfterReopen(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	identity.Binding = store.Binding()
 	if err = store.Put(ctx, key, key+".1.tmp", ref.Hash, 6, []byte("alpha\n")); err != nil {
 		t.Fatal(err)
 	}

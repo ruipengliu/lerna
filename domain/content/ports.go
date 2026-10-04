@@ -24,6 +24,9 @@ type FixturePolicy struct {
 }
 
 type Objects interface {
+	// Binding is the immutable physical identity captured when opening the holder.
+	// It performs no I/O and is not a Close or erasure acknowledgement.
+	Binding() string
 	Put(context.Context, string, string, string, int64, []byte) error
 	Read(context.Context, string, string, int64) ([]byte, error)
 }
@@ -37,6 +40,7 @@ type Limits struct {
 }
 
 type Record struct {
+	PrimaryHolderBinding   string           `json:"primary_holder_binding,omitempty"`
 	Ref                    v.ContentRef     `json:"content_ref"`
 	Sources                []v.ContentRef   `json:"sources"`
 	Purpose                string           `json:"purpose"`

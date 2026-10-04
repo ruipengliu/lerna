@@ -1,6 +1,6 @@
 # 04票05进行中的内部API（未交付）
 
-仅当前前三vertical产品边界；整票七AC未完成，1.2合同冻结且不增加delete方法。
+仅当前前四vertical产品边界；整票七AC未完成，1.2合同冻结且不增加delete方法。
 
 `Lifecycle.Seal`目前是有限受信管理配置授权的原完整保存主体自愿封闭：
 准确ref、原purpose、固定SealID、原有限Deadline。同Tx保存单调seal、两
@@ -30,12 +30,22 @@ revision/ValidUntil的受信fixture许可，只披露ref/evidence_available，�
 metadata许可；查询不创建工作。未gone的metadata-only视图不返回正文。
 
 `ErasingObjects`承担Tx外实际对象效果；固定ErasureIdentity绑定完整ref、
-原ObjectKey、具体HolderID及SealID。FenceAndErase仅删准确finalkey及
+原ObjectKey、具体HolderID、SealID及原物理介质Binding。FenceAndErase仅删准确finalkey及
 显式登记attempt；ObserveErasure独立受锁重开正文事实并分页报告未知残留。
 flock inode永久保留，sealed/pending marker不含正文；nativebodyClose未知
 保留lockFD和holder责任。当前本机Linux协议不防未升级的旧二进制writer；
 必须真实停旧writer后升级，再允许新协议writer。
 
-未闭合机制：当前holderID仅经可信配置映射到root，尚未持久核原真实root
-身份，错root不能作为有效eraseACK。下一tracer补此绑定；两root副本、
-跨进程晚写、孤儿竞争与全部拒绝/恢复尚无完成声明。
+`Objects.Binding()`是Open实际FD Stat取得的稳定设备号/inode纯访问器，
+不是用户输入、不是CloseACK，也不证明删除。最初preparing接纳同时持久
+Record.PrimaryHolderBinding与PG独立列，既有记录不能换binding；原publication
+attempt同时携带原binding。publish startup/final、实际Put/Get Read核同原
+介质。Seal只消费原版本的已登记binding，不能从当前空root认领历史正文。
+primary holder保存同一原binding；原cleanup claim前和adapter的实际
+Fence/Observe前分别核对。wrong-after-seal独立root拒绝且原root同deadline
+恢复已实际通过；first-Seal错root独立对照尚待后续。
+
+未binding legacy保持未知、不会自动用当前config修复；受信回填必须另有
+准确原ref/key/原介质责任与独立原字节对照，真实停止旧writer后才升级。
+目前未实施该回填资格；两root副本、跨进程晚写、孤儿竞争与全部拒绝/恢复
+仍无完成声明，四个partial vertical不代表整票七AC。

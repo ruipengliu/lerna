@@ -35,7 +35,7 @@ func New(config Config) (*Service, error) {
 	if _, err := v.Encode(config.Owner); err != nil {
 		return nil, err
 	}
-	if config.Store == nil || config.Objects == nil || config.Limits.MaxPreparingVersions < 1 || config.Limits.MaxPreparingVersions > 4096 || config.Limits.MaxStagingBytes < 1 || config.Limits.MaxStagingBytes > 1<<30 || config.Limits.Lease <= 0 || config.Limits.Lease > 5*time.Minute || config.Limits.WorkTimeout <= 0 || config.Limits.WorkTimeout > config.Limits.Lease || config.PublishBudget <= 0 || config.PublishBudget > 24*time.Hour || config.MaxPublicationAttempts < 1 || config.MaxPublicationAttempts > 16 || config.Worker == "" || len(config.Worker) > 128 {
+	if config.Store == nil || config.Objects == nil || config.Objects.Binding() == "" || config.Limits.MaxPreparingVersions < 1 || config.Limits.MaxPreparingVersions > 4096 || config.Limits.MaxStagingBytes < 1 || config.Limits.MaxStagingBytes > 1<<30 || config.Limits.Lease <= 0 || config.Limits.Lease > 5*time.Minute || config.Limits.WorkTimeout <= 0 || config.Limits.WorkTimeout > config.Limits.Lease || config.PublishBudget <= 0 || config.PublishBudget > 24*time.Hour || config.MaxPublicationAttempts < 1 || config.MaxPublicationAttempts > 16 || config.Worker == "" || len(config.Worker) > 128 {
 		return nil, errors.New("explicit finite Content storage, limits, publication policy and worker required")
 	}
 	return &Service{config: config}, nil
@@ -320,7 +320,7 @@ func (s *Service) Put(ctx context.Context, raw []byte, subject *v.SubjectBinding
 			return err
 		}
 		deadline := earlier(effective, now.Add(s.config.PublishBudget))
-		record = &Record{Ref: request.Payload.ContentRef, Sources: append([]v.ContentRef{}, request.Payload.Sources...), Purpose: string(request.Payload.Purpose), Subject: principal, TupleDigest: tuple, ObjectID: id, ObjectKey: key, RequestedRetainUntil: request.Payload.RetainUntil, EffectiveRetainUntil: wireTime(effective), CurrentRetainUntil: wireTime(effective), AdmittedAt: wireTime(now), PublishDeadline: wireTime(deadline), Publication: "preparing", Revision: 1, StagingHolder: true, Bytes: bytes, MaxPublicationAttempts: s.config.MaxPublicationAttempts}
+		record = &Record{PrimaryHolderBinding: s.config.Objects.Binding(), Ref: request.Payload.ContentRef, Sources: append([]v.ContentRef{}, request.Payload.Sources...), Purpose: string(request.Payload.Purpose), Subject: principal, TupleDigest: tuple, ObjectID: id, ObjectKey: key, RequestedRetainUntil: request.Payload.RetainUntil, EffectiveRetainUntil: wireTime(effective), CurrentRetainUntil: wireTime(effective), AdmittedAt: wireTime(now), PublishDeadline: wireTime(deadline), Publication: "preparing", Revision: 1, StagingHolder: true, Bytes: bytes, MaxPublicationAttempts: s.config.MaxPublicationAttempts}
 		if bytes == nil {
 			record.Bytes = []byte{}
 		}
@@ -663,7 +663,12 @@ func (s *Service) getBody(ctx context.Context, raw []byte, subject *v.SubjectBin
 	length, _ := strconv.ParseInt(string(ref.ByteLength), 10, 64)
 	bounded, cancel := context.WithDeadline(ctx, readBefore)
 	defer cancel()
-	bytes, err := s.config.Objects.Read(bounded, record.ObjectKey, ref.Hash, length)
+	var bytes []byte
+	if record.PrimaryHolderBinding == "" || record.PrimaryHolderBinding != s.config.Objects.Binding() {
+		err = ErrHolderBinding
+	} else {
+		bytes, err = s.config.Objects.Read(bounded, record.ObjectKey, ref.Hash, length)
+	}
 	if err == nil {
 		err = bounded.Err()
 	}
@@ -892,6 +897,9 @@ func (s *Service) Step(ctx context.Context) (bool, error) {
 	length, _ := strconv.ParseInt(string(selected.Ref.ByteLength), 10, 64)
 	if selected.Publication == "preparing" {
 		ioErr = bounded.Err()
+		if ioErr == nil && (selected.PrimaryHolderBinding == "" || selected.PrimaryHolderBinding != s.config.Objects.Binding()) {
+			ioErr = ErrHolderBinding
+		}
 		if ioErr == nil {
 			ioErr = s.config.Objects.Put(bounded, selected.ObjectKey, selected.AttemptKey, selected.Ref.Hash, length, selected.Bytes)
 		}
@@ -975,6 +983,9 @@ func (s *Service) publicationPolicy(ctx context.Context, tx runtime.Tx, record R
 	}
 	if record.BodySeal != nil {
 		return current, ioBefore, "forbidden", nil
+	}
+	if record.PrimaryHolderBinding == "" || record.PrimaryHolderBinding != s.config.Objects.Binding() {
+		return current, ioBefore, "", ErrHolderBinding
 	}
 	current = earlier(current, policy.RetainUntil)
 	ioBefore = earlier(ioBefore, policy.ValidUntil)

@@ -173,6 +173,9 @@ func (s *Store) installSeal(ctx context.Context, identity d.ErasureIdentity, exp
 
 func (s *Store) FenceAndErase(ctx context.Context, identity d.ErasureIdentity, attempts []string) (observed d.ErasureObservation, returnErr error) {
 	observed.Identity = identity
+	if identity.Binding == "" || identity.Binding != s.Binding() {
+		return observed, d.ErrHolderBinding
+	}
 	expected, err := sealBytes(identity)
 	if err != nil {
 		return observed, err
@@ -223,6 +226,9 @@ func (s *Store) FenceAndErase(ctx context.Context, identity d.ErasureIdentity, a
 
 func (s *Store) ObserveErasure(ctx context.Context, identity d.ErasureIdentity, cursor string, limit int) (observed d.ErasureObservation, returnErr error) {
 	observed.Identity = identity
+	if identity.Binding == "" || identity.Binding != s.Binding() {
+		return observed, d.ErrHolderBinding
+	}
 	expected, err := sealBytes(identity)
 	if err != nil {
 		return observed, err

@@ -1,4 +1,6 @@
 -- Additive Content owner protocol. Old non-fencing writers must be stopped.
+-- Unknown legacy media remains unbound until separately qualified by its owner.
+ALTER TABLE content_versions ADD COLUMN primary_holder_binding text NOT NULL DEFAULT '';
 ALTER TABLE content_versions ADD COLUMN body_seal bytea;
 ALTER TABLE content_versions ADD COLUMN body_gone boolean NOT NULL DEFAULT false;
 ALTER TABLE content_versions ADD CONSTRAINT content_body_gone_check CHECK(NOT body_gone OR (body_seal IS NOT NULL AND staging IS NULL));

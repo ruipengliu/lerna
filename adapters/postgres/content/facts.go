@@ -95,10 +95,10 @@ func (s *Store) LockVersion(ctx context.Context, token runtime.Tx, ref v.Content
 		return nil, err
 	}
 	var body, staging, seal []byte
-	var objectID, keyStored, tuple, publication string
+	var objectID, keyStored, tuple, publication, binding string
 	var revision int64
 	var gone bool
-	err = tx.QueryRowContext(ctx, `SELECT body,staging,object_id,object_key,tuple_digest,publication,revision,body_seal,body_gone FROM `+s.core.Table("content_versions")+` WHERE tenant_id=$1 AND owner_id=$2 AND content_id=$3 AND version=$4 FOR UPDATE`, ref.Owner.TenantID, ref.Owner.OwnerID, ref.ContentID, ref.Version).Scan(&body, &staging, &objectID, &keyStored, &tuple, &publication, &revision, &seal, &gone)
+	err = tx.QueryRowContext(ctx, `SELECT body,staging,object_id,object_key,tuple_digest,publication,revision,body_seal,body_gone,primary_holder_binding FROM `+s.core.Table("content_versions")+` WHERE tenant_id=$1 AND owner_id=$2 AND content_id=$3 AND version=$4 FOR UPDATE`, ref.Owner.TenantID, ref.Owner.OwnerID, ref.ContentID, ref.Version).Scan(&body, &staging, &objectID, &keyStored, &tuple, &publication, &revision, &seal, &gone, &binding)
 	if errors.Is(err, sql.ErrNoRows) {
 		return nil, nil
 	}
@@ -118,7 +118,7 @@ func (s *Store) LockVersion(ctx context.Context, token runtime.Tx, ref v.Content
 		}
 	}
 	record.Bytes = staging
-	if record.BodyGone != gone {
+	if record.BodyGone != gone || record.PrimaryHolderBinding != binding {
 		return nil, runtime.ErrScope
 	}
 	if record.BodySeal == nil {
@@ -130,7 +130,7 @@ func (s *Store) LockVersion(ctx context.Context, token runtime.Tx, ref v.Content
 		if err != nil {
 			return nil, err
 		}
-		if string(expected) != string(seal) || record.BodySeal.Ref != record.Ref {
+		if string(expected) != string(seal) || record.BodySeal.Ref != record.Ref || record.BodySeal.PrimaryHolderBinding != record.PrimaryHolderBinding {
 			return nil, runtime.ErrScope
 		}
 	}
@@ -175,7 +175,7 @@ func (s *Store) SaveVersion(ctx context.Context, token runtime.Tx, record d.Reco
 	}
 	var seal []byte
 	if record.BodySeal != nil {
-		if record.BodySeal.Ref != record.Ref || record.BodySeal.ID == "" || record.BodySeal.Purpose != record.Purpose || !record.BodySeal.Deadline.After(record.BodySeal.StartedAt) {
+		if record.BodySeal.Ref != record.Ref || record.BodySeal.ID == "" || record.BodySeal.Purpose != record.Purpose || record.BodySeal.PrimaryHolderBinding != record.PrimaryHolderBinding || !record.BodySeal.Deadline.After(record.BodySeal.StartedAt) {
 			return runtime.ErrScope
 		}
 		seal, err = json.Marshal(record.BodySeal)
@@ -183,7 +183,7 @@ func (s *Store) SaveVersion(ctx context.Context, token runtime.Tx, record d.Reco
 			return err
 		}
 	}
-	result, err := tx.ExecContext(ctx, `INSERT INTO `+s.core.Table("content_versions")+`(tenant_id,owner_id,content_id,version,object_id,object_key,tuple_digest,publication,revision,body,staging,body_seal,body_gone)VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)ON CONFLICT(tenant_id,owner_id,content_id,version)DO UPDATE SET publication=excluded.publication,revision=excluded.revision,body=excluded.body,staging=excluded.staging,body_seal=excluded.body_seal,body_gone=excluded.body_gone WHERE content_versions.tuple_digest=excluded.tuple_digest AND content_versions.object_id=excluded.object_id AND content_versions.revision<excluded.revision AND (content_versions.body_seal IS NULL OR content_versions.body_seal=excluded.body_seal) AND (NOT content_versions.body_gone OR excluded.body_gone)`, record.Ref.Owner.TenantID, record.Ref.Owner.OwnerID, record.Ref.ContentID, record.Ref.Version, record.ObjectID, record.ObjectKey, record.TupleDigest, record.Publication, record.Revision, body, record.Bytes, seal, record.BodyGone)
+	result, err := tx.ExecContext(ctx, `INSERT INTO `+s.core.Table("content_versions")+`(tenant_id,owner_id,content_id,version,object_id,object_key,tuple_digest,publication,revision,body,staging,body_seal,body_gone,primary_holder_binding)VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)ON CONFLICT(tenant_id,owner_id,content_id,version)DO UPDATE SET publication=excluded.publication,revision=excluded.revision,body=excluded.body,staging=excluded.staging,body_seal=excluded.body_seal,body_gone=excluded.body_gone WHERE content_versions.tuple_digest=excluded.tuple_digest AND content_versions.object_id=excluded.object_id AND content_versions.revision<excluded.revision AND content_versions.primary_holder_binding=excluded.primary_holder_binding AND (content_versions.body_seal IS NULL OR content_versions.body_seal=excluded.body_seal) AND (NOT content_versions.body_gone OR excluded.body_gone)`, record.Ref.Owner.TenantID, record.Ref.Owner.OwnerID, record.Ref.ContentID, record.Ref.Version, record.ObjectID, record.ObjectKey, record.TupleDigest, record.Publication, record.Revision, body, record.Bytes, seal, record.BodyGone, record.PrimaryHolderBinding)
 	if err != nil {
 		return err
 	}

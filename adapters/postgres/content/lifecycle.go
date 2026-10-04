@@ -30,10 +30,11 @@ func (s *Store) SavePublicationAttempt(ctx context.Context, token runtime.Tx, re
 		return err
 	}
 	body, err := json.Marshal(struct {
+		Binding    string       `json:"binding"`
 		Ref        v.ContentRef `json:"content_ref"`
 		ObjectKey  string       `json:"object_key"`
 		AttemptKey string       `json:"attempt_key"`
-	}{record.Ref, record.ObjectKey, record.AttemptKey})
+	}{record.PrimaryHolderBinding, record.Ref, record.ObjectKey, record.AttemptKey})
 	if err != nil {
 		return err
 	}
@@ -165,6 +166,13 @@ func (s *Store) PublicationAttempts(ctx context.Context, token runtime.Tx, ref v
 	if err != nil {
 		return nil, "", err
 	}
+	record, err := s.LockVersion(ctx, token, ref)
+	if err != nil {
+		return nil, "", err
+	}
+	if record == nil || record.Ref != ref {
+		return nil, "", runtime.ErrScope
+	}
 	rows, err := tx.QueryContext(ctx, `SELECT attempt_key,body FROM `+s.core.Table("content_publication_attempts")+` WHERE tenant_id=$1 AND owner_id=$2 AND object_id=$3 AND attempt_key>$4 ORDER BY attempt_key LIMIT $5`, ref.Owner.TenantID, ref.Owner.OwnerID, id, cursor, limit+1)
 	if err != nil {
 		return nil, "", err
@@ -177,6 +185,7 @@ func (s *Store) PublicationAttempts(ctx context.Context, token runtime.Tx, ref v
 			return nil, "", err
 		}
 		var registered struct {
+			Binding    string       `json:"binding"`
 			Ref        v.ContentRef `json:"content_ref"`
 			ObjectKey  string       `json:"object_key"`
 			AttemptKey string       `json:"attempt_key"`
@@ -184,7 +193,7 @@ func (s *Store) PublicationAttempts(ctx context.Context, token runtime.Tx, ref v
 		if err = json.Unmarshal(body, &registered); err != nil {
 			return nil, "", err
 		}
-		if registered.Ref != ref || registered.ObjectKey != key || registered.AttemptKey != name {
+		if registered.Ref != ref || registered.ObjectKey != key || registered.AttemptKey != name || registered.Binding != record.PrimaryHolderBinding {
 			return nil, "", runtime.ErrScope
 		}
 		attempts = append(attempts, name)

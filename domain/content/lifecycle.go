@@ -32,13 +32,14 @@ type StagingObservation struct {
 }
 
 type BodySeal struct {
-	PrimaryHolderID string           `json:"primary_holder_id"`
-	ID              string           `json:"id"`
-	Ref             v.ContentRef     `json:"content_ref"`
-	Subject         v.SubjectBinding `json:"subject"`
-	Purpose         string           `json:"purpose"`
-	StartedAt       time.Time        `json:"started_at"`
-	Deadline        time.Time        `json:"deadline"`
+	PrimaryHolderBinding string           `json:"primary_holder_binding"`
+	PrimaryHolderID      string           `json:"primary_holder_id"`
+	ID                   string           `json:"id"`
+	Ref                  v.ContentRef     `json:"content_ref"`
+	Subject              v.SubjectBinding `json:"subject"`
+	Purpose              string           `json:"purpose"`
+	StartedAt            time.Time        `json:"started_at"`
+	Deadline             time.Time        `json:"deadline"`
 }
 
 type BodyHolder struct {
@@ -124,6 +125,9 @@ func (l *Lifecycle) Seal(ctx context.Context, subject *v.SubjectBinding, request
 		if record == nil || record.Ref != request.Ref || record.Purpose != request.Purpose || !sameSavingSubject(record.Subject, l.config.TrustedSubject) {
 			return refusal("forbidden")
 		}
+		if record.PrimaryHolderBinding == "" || record.PrimaryHolderBinding != l.config.Objects.Binding() {
+			return ErrHolderBinding
+		}
 		if record.BodySeal != nil {
 			seal := record.BodySeal
 			if seal.ID != request.SealID || seal.Ref != request.Ref || seal.Purpose != request.Purpose || seal.PrimaryHolderID != l.config.PrimaryHolderID || !seal.Deadline.Equal(request.Deadline) {
@@ -139,7 +143,7 @@ func (l *Lifecycle) Seal(ctx context.Context, subject *v.SubjectBinding, request
 		if !request.Deadline.After(now) || request.Deadline.After(now.Add(l.config.WorkBudget)) || request.Deadline.After(l.config.TrustedUntil) {
 			return refusal("expired")
 		}
-		record.BodySeal = &BodySeal{ID: request.SealID, Ref: record.Ref, Subject: record.Subject, Purpose: record.Purpose, PrimaryHolderID: l.config.PrimaryHolderID, StartedAt: now, Deadline: request.Deadline}
+		record.BodySeal = &BodySeal{PrimaryHolderBinding: record.PrimaryHolderBinding, ID: request.SealID, Ref: record.Ref, Subject: record.Subject, Purpose: record.Purpose, PrimaryHolderID: l.config.PrimaryHolderID, StartedAt: now, Deadline: request.Deadline}
 		record.CleanupPending = true
 		record.Revision++
 		if err = l.store.SaveVersion(ctx, tx, *record); err != nil {
@@ -147,6 +151,9 @@ func (l *Lifecycle) Seal(ctx context.Context, subject *v.SubjectBinding, request
 		}
 		for _, holder := range []struct{ kind, id string }{{"pg-staging", "postgres-staging"}, {"primary", l.config.PrimaryHolderID}} {
 			identity := ErasureIdentity{Ref: record.Ref, ObjectKey: record.ObjectKey, HolderID: holder.id, SealID: request.SealID}
+			if holder.kind == "primary" {
+				identity.Binding = record.PrimaryHolderBinding
+			}
 			if err = l.store.SaveBodyHolder(ctx, tx, BodyHolder{Kind: holder.kind, Identity: identity, Deadline: request.Deadline, State: "pending", Responsible: holder.id, Reason: "holder_unconfirmed"}); err != nil {
 				return err
 			}
@@ -299,6 +306,9 @@ func (l *Lifecycle) Step(ctx context.Context, subject *v.SubjectBinding) (bool, 
 			}
 			if !now.Before(record.BodySeal.Deadline) {
 				continue
+			}
+			if found && holder.Kind == "primary" && (holder.Identity.Binding == "" || holder.Identity.Binding != record.PrimaryHolderBinding || holder.Identity.Binding != record.BodySeal.PrimaryHolderBinding || holder.Identity.Binding != l.config.Objects.Binding()) {
+				return ErrHolderBinding
 			}
 			until := earlier(earlier(now.Add(time.Minute), record.BodySeal.Deadline), l.config.TrustedUntil)
 			claim, err = l.store.Claim(ctx, tx, job, l.config.Worker, now, until)
