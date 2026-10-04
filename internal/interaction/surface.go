@@ -414,6 +414,9 @@ func (s *Service) CloseSurfaceTx(ctx context.Context, tx runtime.Tx, a runtime.A
 	if c.ExpectedRevision == nil || *c.ExpectedRevision != r.Revision {
 		return Surface{}, api.E("revision_conflict", "surface_changed")
 	}
+	if r.State == "closed" {
+		return r.Surface, nil
+	}
 	old := r.Revision
 	r.Revision++
 	r.State = "closed"
@@ -590,6 +593,9 @@ func (s *Service) ClosePresentationTx(ctx context.Context, tx runtime.Tx, a runt
 	}
 	if c.ExpectedRevision == nil || *c.ExpectedRevision != r.Revision {
 		return Presentation{}, api.E("revision_conflict", "presentation_changed")
+	}
+	if r.State == "closed" {
+		return r.Presentation, nil
 	}
 	r.State = "closed"
 	r.IntentRevision++

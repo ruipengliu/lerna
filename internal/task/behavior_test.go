@@ -218,6 +218,20 @@ func TestCurrentFullCoverageAndChecksCreateImmutableResultBeforePublication(t *t
 	rule := fixtureRule()
 	bridge := &evidenceBridge{rules: map[string]api.RuleDefinition{rule.RuleRef.ComponentID: rule}}
 	h := newHarness(t, task.Ports{Gate: bridge}, rule)
+	identity := &resultIdentity{values: map[string]string{}, calls: map[string]int{}}
+	service, e := task.New(task.Config{Identity: identity, Policies: []task.TaskPolicy{h.policy}, Rules: []api.RuleDefinition{rule}, Participants: []string{"task", "governance"}}, task.Ports{Gate: bridge})
+	if e != nil {
+		t.Fatal(e)
+	}
+	if len(identity.calls) != 0 {
+		t.Fatal("constructor generated a business identity")
+	}
+	h.service = service
+	registry := runtime.NewRegistry()
+	if e = service.Register(registry); e != nil {
+		t.Fatal(e)
+	}
+	h.dispatch.Registry = registry
 	bridge.service = governance.New(h.store, governance.Options{})
 	current := readyTask(t, h, rule)
 	artifact := h.content("independently verified artifact fixture")
@@ -229,6 +243,9 @@ func TestCurrentFullCoverageAndChecksCreateImmutableResultBeforePublication(t *t
 	result, err := h.service.Complete(context.Background(), h.store, h.scope, h.trusted(), task.CompleteInput{TaskID: current.TaskID, ExpectedGoalRevision: current.GoalRevision, ArtifactRefs: []api.ContentRef{artifact}})
 	if err != nil {
 		t.Fatal(err)
+	}
+	if result.ResultID != identity.values["result"] || identity.calls["result"] != 1 || identity.calls["upload"] != 1 {
+		t.Fatalf("completion bypassed injected original identity: %+v calls%v", result, identity.calls)
 	}
 	b, err := h.query("task.result", current.TaskID, task.ResultInput{})
 	if err != nil {
@@ -293,4 +310,19 @@ func TestCurrentFullCoverageAndChecksCreateImmutableResultBeforePublication(t *t
 	if err != nil || !api.Equal(before, api.Raw(view.Result)) || len(view.NoticeRefs) != 1 || len(view.Notices) != 1 || view.Notices[0] != notice.Reason {
 		t.Fatalf("late defect lost or rewrote Result %+v %v", view, err)
 	}
+}
+
+// 原身份端口按用途保存第一次输出；测试通过公开 Result 观察实际消费。
+type resultIdentity struct {
+	values map[string]string
+	calls  map[string]int
+}
+
+func (i *resultIdentity) NewID(prefix string) string {
+	i.calls[prefix]++
+	id := api.NewID(prefix)
+	if i.values[prefix] == "" {
+		i.values[prefix] = id
+	}
+	return id
 }

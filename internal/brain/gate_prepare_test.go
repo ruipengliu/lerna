@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/ruipengliu/lerna/api"
+	"github.com/ruipengliu/lerna/conformance/testkit"
 	"github.com/ruipengliu/lerna/internal/brain"
 	"github.com/ruipengliu/lerna/internal/task"
 	"github.com/ruipengliu/lerna/runtime"
@@ -94,9 +95,26 @@ func TestBrainEachNewJobPreparesCurrentGateBeforeOriginalSingleHTTP(t *testing.T
 			}
 			calls := g.calls
 			g.fault = context.Canceled
-			cancelOriginalBrain(t, f)
-			if err := runtime.Drain(context.Background(), f.store, f.scope, f.registry, 20); err != nil || g.calls != calls || f.posts.Load() != 1 {
+			jobs := testkit.ObserveJobs(f.store)
+			jobs.ForbidChanges = true
+			dispatch := runtime.Dispatcher{Store: jobs, OwnerID: f.scope.OwnerID, Registry: f.registry}
+			original, err := dispatch.Lookup(context.Background(), f.auth, f.command.CommandID)
+			if err != nil || original.Stage != "applied" {
+				t.Fatalf("completed original receipt %+v %v", original, err)
+			}
+			// 原 Decision 已完成；终态控制须准确拒绝，不产生取消事实或新责任。
+			command := api.Command{Protocol: api.Protocol, Profile: api.Profile, LogicalServiceID: f.scope.OwnerID, CommandID: api.NewID("command"), TargetID: f.command.TargetID, Method: "brain.cancel", ExpiresAt: api.Time(time.Now().Add(time.Minute)), Payload: api.Raw(brain.CancelInput{DecisionID: f.command.TargetID, TaskRef: view.TaskRef})}
+			if receipt, err := dispatch.Command(context.Background(), f.auth, api.Raw(command)); err != nil || receipt.Stage != "rejected" || receipt.Error == nil || receipt.Error.Code != "invalid_state" || receipt.Error.Reason != "decision_completed" {
+				t.Fatalf("completed cancellation reported a false transition %+v %v", receipt, err)
+			}
+			if err := runtime.Drain(context.Background(), jobs, f.scope, f.registry, 20); err != nil || g.calls != calls || f.posts.Load() != 1 {
 				t.Fatalf("terminal recovery acquired new materials calls=%d %v", g.calls, err)
+			}
+			if current, err := f.brain.Get(context.Background(), jobs, f.scope, f.auth, f.command.TargetID); err != nil || !api.Equal(current, view) {
+				t.Fatalf("terminal cancellation changed original Decision facts %+v %v", current, err)
+			}
+			if current, err := dispatch.Lookup(context.Background(), f.auth, f.command.CommandID); err != nil || !api.Equal(current, original) {
+				t.Fatalf("terminal cancellation changed original receipt %+v %v", current, err)
 			}
 		})
 	}

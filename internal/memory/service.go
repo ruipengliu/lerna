@@ -17,6 +17,7 @@ import (
 var Participants = []string{"content", "memory"}
 
 type Service struct {
+	Identity            runtime.Identity
 	Store               runtime.Store
 	Objects             ObjectStore
 	Authorization       Authorization
@@ -31,7 +32,7 @@ type Service struct {
 }
 
 func New(store runtime.Store, objects ObjectStore) *Service {
-	return &Service{Store: store, Objects: objects, Location: "local", Participants: []string{"content", "memory"}}
+	return &Service{Identity: runtime.RandomIdentity{}, Store: store, Objects: objects, Location: "local", Participants: []string{"content", "memory"}}
 }
 
 func (s *Service) participants() []string {

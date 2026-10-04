@@ -126,7 +126,7 @@ func (s *Service) SealRejectedIncomingTx(ctx context.Context, tx runtime.Tx, aut
 			if err = api.ValidateRecord("AllocationClosure", closure); err != nil {
 				return out, err
 			}
-			closureID := api.NewID("closure")
+			closureID := s.config.Identity.NewID("closure")
 			if err = tx.Create(ctx, closures, closureID, a.AllocationID, closure); err != nil {
 				return out, err
 			}

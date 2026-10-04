@@ -630,6 +630,12 @@ func TestExecutorDeviceResourceObservationAndTakeoverSeparateSavedFromStopped(t 
 		if !lease.ActuallyStopped || lease.State != "released" {
 			t.Fatalf("physical takeover residual %+v", lease)
 		}
+		originalReleased := lease
+		rev = lease.Revision
+		r = f.command(t, "resource.release", id, domain.LeaseInput{ResourceID: id, HolderID: lease.HolderID, InstanceID: lease.InstanceID, ControlEpoch: lease.ControlEpoch}, &rev)
+		if err = api.Decode(r.Output, &lease); err != nil || r.Stage != "applied" || !api.Equal(lease, originalReleased) {
+			t.Fatalf("released resource regressed on original current epoch: %+v %v", r, err)
+		}
 		r = f.command(t, "resource.acquire", id, domain.AcquireInput{ResourceID: id, HolderID: holder, InstanceID: api.NewID("instance"), ExpectedControlEpoch: 1, LeaseUntil: api.Time(time.Now().Add(time.Minute))}, nil)
 		if r.Stage != "rejected" {
 			t.Fatalf("old epoch reacquired %+v", r)

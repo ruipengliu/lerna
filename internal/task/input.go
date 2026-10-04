@@ -267,7 +267,7 @@ func (s *Service) prepareInputTx(ctx context.Context, tx runtime.Tx, auth runtim
 		return InputOutput{}, e
 	}
 
-	pending := pendingInput{Revision: 1, CommandID: c.CommandID, UploadID: api.NewID("upload"), Input: in, Auth: auth, State: "pending"}
+	pending := pendingInput{Revision: 1, CommandID: c.CommandID, UploadID: s.config.Identity.NewID("upload"), Input: in, Auth: auth, State: "pending"}
 	if e = tx.Create(ctx, pendingInputs, c.CommandID, in.TaskID, pending); e != nil {
 		return InputOutput{}, e
 	}

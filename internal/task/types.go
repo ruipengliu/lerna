@@ -53,6 +53,7 @@ type AnswerSchemaDefinition struct {
 	Schema api.Schema
 }
 type Config struct {
+	Identity           runtime.Identity
 	AnswerSchemas      []AnswerSchemaDefinition
 	Policies           []TaskPolicy
 	Rules              []api.RuleDefinition

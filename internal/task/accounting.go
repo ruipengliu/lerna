@@ -50,7 +50,7 @@ func (s *Service) reserveTx(ctx context.Context, tx runtime.Tx, t *taskState, ki
 	if uint64(len(rows)) >= s.config.MaxRelations {
 		return Reservation{}, api.E("overloaded", "reservation_capacity")
 	}
-	r := Reservation{ReservationID: api.NewID("reservation"), Revision: 1, TaskID: t.Task.TaskID, SourceKind: kind, SourceRef: source, BindingState: "bound", State: "open", Units: []ReservationUnit{}, Incidents: []string{}}
+	r := Reservation{ReservationID: s.config.Identity.NewID("reservation"), Revision: 1, TaskID: t.Task.TaskID, SourceKind: kind, SourceRef: source, BindingState: "bound", State: "open", Units: []ReservationUnit{}, Incidents: []string{}}
 	for _, a := range bound {
 		index := -1
 		for i, b := range t.Task.Budget {

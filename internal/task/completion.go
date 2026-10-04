@@ -168,7 +168,7 @@ func (s *Service) completeTx(ctx context.Context, tx runtime.Tx, auth runtime.Au
 			}
 		}
 	}
-	result := api.Result{TaskID: t.Task.TaskID, GoalRevision: t.Task.GoalRevision, ArtifactRefs: in.ArtifactRefs, CompletionBasis: basis, ConditionResults: selected, CoverageRef: *t.Task.CurrentCoverageRef, Limitations: in.Limitations, CompletedAt: api.Time(now), ResultID: api.NewID("result"), Revision: 1}
+	result := api.Result{TaskID: t.Task.TaskID, GoalRevision: t.Task.GoalRevision, ArtifactRefs: in.ArtifactRefs, CompletionBasis: basis, ConditionResults: selected, CoverageRef: *t.Task.CurrentCoverageRef, Limitations: in.Limitations, CompletedAt: api.Time(now), ResultID: s.config.Identity.NewID("result"), Revision: 1}
 	if result.Limitations == nil {
 		result.Limitations = []string{}
 	}
@@ -184,7 +184,7 @@ func (s *Service) completeTx(ctx context.Context, tx runtime.Tx, auth runtime.Au
 		return api.Result{}, e
 	}
 	ref := tx.Scope().Ref(result.ResultID, 1)
-	publication := resultPublication{ResultRef: ref, Revision: 1, UploadID: api.NewID("upload"), State: "pending", Notices: []string{}, NoticeRefs: []api.ObjectRef{}}
+	publication := resultPublication{ResultRef: ref, Revision: 1, UploadID: s.config.Identity.NewID("upload"), State: "pending", Notices: []string{}, NoticeRefs: []api.ObjectRef{}}
 	if e = tx.Create(ctx, publications, result.ResultID, t.Task.TaskID, publication); e != nil {
 		return api.Result{}, e
 	}
@@ -413,7 +413,7 @@ func (s *Service) acceptTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth
 	if e = tx.Put(ctx, inputs, req.RequestID, rev, req); e != nil {
 		return AcceptOutput{}, e
 	}
-	check := api.ConditionResult{CheckID: api.NewID("check"), TaskID: in.TaskID, GoalRevision: in.GoalRevision, RequirementID: requirement.RequirementID, RequirementRevision: requirement.Revision, ArtifactRef: in.CandidateRef, RuleRef: requirement.RuleRef, EvaluatorRef: requirement.RuleRef, Verdict: "pass", Applicability: "usable", Basis: "user_accepted", EvidenceRefs: []api.ContentRef{in.CandidateRef, in.LimitationsRef}, ObservedAt: api.Time(now), CheckedAt: api.Time(now), ScopeRef: in.LimitationsRef}
+	check := api.ConditionResult{CheckID: s.config.Identity.NewID("check"), TaskID: in.TaskID, GoalRevision: in.GoalRevision, RequirementID: requirement.RequirementID, RequirementRevision: requirement.Revision, ArtifactRef: in.CandidateRef, RuleRef: requirement.RuleRef, EvaluatorRef: requirement.RuleRef, Verdict: "pass", Applicability: "usable", Basis: "user_accepted", EvidenceRefs: []api.ContentRef{in.CandidateRef, in.LimitationsRef}, ObservedAt: api.Time(now), CheckedAt: api.Time(now), ScopeRef: in.LimitationsRef}
 	trusted := auth
 	trusted.Roles = append(append([]string{}, auth.Roles...), "evidence")
 	ref, e := s.RecordCheckTx(ctx, tx, trusted, check)

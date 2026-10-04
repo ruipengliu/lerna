@@ -139,7 +139,7 @@ func grantListSlot(i int) string { return fmt.Sprintf("slot_%02d", i) }
 
 // Only expired original QueryBindings release slots; a grant time boundary does
 // not let a repeated first query mint a new snapshot inside its original TTL.
-func acquireGrantListQuery(ctx context.Context, tx runtime.Tx, expected grantListQuery, now time.Time) (string, grantListQuery, error) {
+func (s *Service) acquireGrantListQuery(ctx context.Context, tx runtime.Tx, expected grantListQuery, now time.Time) (string, grantListQuery, error) {
 	rows, err := tx.List(ctx, ns("grant_list_queries"), "", "", grantListSlots+1)
 	if err != nil {
 		return "", expected, err
@@ -187,7 +187,7 @@ func acquireGrantListQuery(ctx context.Context, tx runtime.Tx, expected grantLis
 		if _, err = rand.Read(key); err != nil {
 			return "", expected, err
 		}
-		expected.Key, expected.Nonce = base64.RawURLEncoding.EncodeToString(key), api.NewID("cursor")
+		expected.Key, expected.Nonce = base64.RawURLEncoding.EncodeToString(key), s.Ports.Identity.NewID("cursor")
 		if exists {
 			err = tx.Put(ctx, ns("grant_list_queries"), id, revision, expected)
 		} else {
@@ -293,7 +293,7 @@ func (s *Service) listGrants(ctx context.Context, store runtime.Store, scope run
 		var slot, after string
 		var saved grantListQuery
 		if in.Cursor == "" {
-			slot, saved, e = acquireGrantListQuery(ctx, tx, expected, now)
+			slot, saved, e = s.acquireGrantListQuery(ctx, tx, expected, now)
 			if e == nil && (saved.QueryDigest != queryDigest || saved.QueryExpiresAt != expected.QueryExpiresAt) {
 				return api.E("idempotency_conflict", "grant_list_original_query_changed")
 			}

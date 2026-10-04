@@ -127,41 +127,11 @@ func (j *FileJournal) Save(ctx context.Context, entry Entry) error {
 	}
 	name := entry.Command.CommandID + ".json"
 	tmp := entry.Command.CommandID + "." + api.NewID("write") + ".tmp"
-	f, e := j.root.OpenFile(tmp, os.O_CREATE|os.O_EXCL|os.O_WRONLY, 0600)
-	if e != nil {
-		return e
-	}
 	b := api.Raw(entry)
 	if len(b) > 1<<20 {
-		f.Close()
-		j.root.Remove(tmp)
 		return api.E("invalid_request", "journal_entry_too_large")
 	}
-	if _, e = f.Write(b); e == nil {
-		e = f.Sync()
-	}
-	closeErr := f.Close()
-	if e == nil {
-		e = closeErr
-	}
-	if e != nil {
-		j.root.Remove(tmp)
-		return e
-	}
-	if e = j.root.Rename(tmp, name); e != nil {
-		j.root.Remove(tmp)
-		return e
-	}
-	dir, e := j.root.Open(".")
-	if e != nil {
-		return e
-	}
-	e = dir.Sync()
-	closeErr = dir.Close()
-	if e == nil {
-		e = closeErr
-	}
-	return e
+	return writeDurableFile(j.root, tmp, name, b)
 }
 
 // 在原 flock 内限制新责任；已存在 ID 的核对、回执更新与重传保留原容量。

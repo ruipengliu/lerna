@@ -69,12 +69,12 @@ func parse(args []string) (options, string, error) {
 	return o, op, nil
 }
 
-func readFile(path string, max int64, private bool) ([]byte, error) {
+func readFile(path string, max int64, private bool) (body []byte, err error) {
 	f, err := os.OpenFile(path, os.O_RDONLY|syscall.O_NOFOLLOW, 0)
 	if err != nil {
 		return nil, err
 	}
-	defer f.Close()
+	defer func() { err = errors.Join(err, f.Close()) }()
 	info, err := f.Stat()
 	if err != nil {
 		return nil, err
@@ -164,7 +164,7 @@ func endpoint(value string, development bool) (*url.URL, error) {
 	return u, nil
 }
 
-func run(ctx context.Context, args []string, out io.Writer) error {
+func run(ctx context.Context, args []string, out io.Writer) (err error) {
 	o, operation, err := parse(args)
 	if err != nil {
 		return err
@@ -210,14 +210,14 @@ func run(ctx context.Context, args []string, out io.Writer) error {
 		if e != nil {
 			return e
 		}
-		defer ws.Close()
+		defer func() { err = errors.Join(err, ws.Close()) }()
 		transport = ws
 	case "grpcs", "grpc":
 		grpc, e := harness.DialGRPC(ctx, o.endpoint, token, d, tlsConfig, o.development)
 		if e != nil {
 			return e
 		}
-		defer grpc.Close()
+		defer func() { err = errors.Join(err, grpc.Close()) }()
 		transport = grpc
 	}
 	if operation == "query" {
@@ -246,7 +246,7 @@ func run(ctx context.Context, args []string, out io.Writer) error {
 	if err != nil {
 		return err
 	}
-	defer release()
+	defer func() { err = errors.Join(err, release()) }()
 	c, err := harness.NewClient(transport, j, d)
 	if err != nil {
 		return err
@@ -376,7 +376,7 @@ func (readOnlyJournal) Pending(context.Context, int) ([]harness.Entry, bool, err
 	return nil, false, api.E("unsupported", "query_journal_read_only")
 }
 
-func commandJournal(path, scope string) (*harness.FileJournal, func(), error) {
+func commandJournal(path, scope string) (*harness.FileJournal, func() error, error) {
 	if !filepath.IsAbs(path) {
 		return nil, nil, api.E("invalid_request", "absolute_journal_directory_required")
 	}
@@ -396,19 +396,14 @@ func commandJournal(path, scope string) (*harness.FileJournal, func(), error) {
 	}
 	lock, err := root.OpenFile(".cli.lock", os.O_CREATE|os.O_RDWR|syscall.O_NOFOLLOW, 0600)
 	if err != nil {
-		root.Close()
-		return nil, nil, err
+		return nil, nil, errors.Join(err, root.Close())
 	}
 	if err = syscall.Flock(int(lock.Fd()), syscall.LOCK_EX|syscall.LOCK_NB); err != nil {
-		lock.Close()
-		root.Close()
-		return nil, nil, api.E("overloaded", "cli_journal_in_use")
+		return nil, nil, errors.Join(api.E("overloaded", "cli_journal_in_use"), err, lock.Close(), root.Close())
 	}
 	j, err := harness.OpenJournal(path, scope)
 	if err != nil {
-		lock.Close()
-		root.Close()
-		return nil, nil, err
+		return nil, nil, errors.Join(err, lock.Close(), root.Close())
 	}
-	return j, func() { _ = j.Close(); _ = lock.Close(); _ = root.Close() }, nil
+	return j, func() error { return errors.Join(j.Close(), lock.Close(), root.Close()) }, nil
 }

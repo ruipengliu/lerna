@@ -319,13 +319,13 @@ func (s *Service) QueryMemory(ctx context.Context, scope runtime.Scope, auth run
 	sourceRefs := []api.ContentRef{in.QueryRef, in.ScopeRef, spec.TextRef}
 	view := QueryView{QueryID: queryID, Revision: 1, PrincipalID: auth.SubjectID, Digest: digest, VisibilityToken: token, SourceParts: make([]QueryPart, len(sourceRefs)), MatchParts: make([]QueryPart, len(matches)), ExpiresAt: api.Time(expires), ChangeHead: head.ChangeHead, Partial: partial, Gaps: unique(gaps), RemainingPermissionChecks: ctx.Value(permissionBudgetKey{}).(*permissionBudget).remaining}
 	for i, ref := range sourceRefs {
-		view.SourceParts[i], err = queryPart("querysource", ref)
+		view.SourceParts[i], err = s.queryPart("querysource", ref)
 		if err != nil {
 			return api.Page[Match]{}, err
 		}
 	}
 	for i, match := range matches {
-		view.MatchParts[i], err = queryPart("querymatch", match)
+		view.MatchParts[i], err = s.queryPart("querymatch", match)
 		if err != nil {
 			return api.Page[Match]{}, err
 		}
@@ -537,9 +537,9 @@ func (view QueryView) sources(ctx context.Context, tx runtime.Tx) ([]api.Content
 	return sources, nil
 }
 
-func queryPart(kind string, value any) (QueryPart, error) {
+func (s *Service) queryPart(kind string, value any) (QueryPart, error) {
 	digest, err := api.Digest(value)
-	return QueryPart{ObjectID: api.NewID(kind), Digest: digest}, err
+	return QueryPart{ObjectID: runtime.IdentityOrDefault(s.Identity).NewID(kind), Digest: digest}, err
 }
 
 func (part QueryPart) read(ctx context.Context, tx runtime.Tx, namespace string, value any) error {
@@ -586,7 +586,7 @@ func querySnapshotExpiry(ctx context.Context, now time.Time) (time.Time, error) 
 }
 
 func (s *Service) ListMemory(ctx context.Context, scope runtime.Scope, auth runtime.Auth, in ListMemoryInput) (api.Page[MemoryRecord], error) {
-	return s.listMemory(ctx, scope, auth, api.NewID("list"), in)
+	return s.listMemory(ctx, scope, auth, runtime.IdentityOrDefault(s.Identity).NewID("list"), in)
 }
 
 type listView struct {

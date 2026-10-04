@@ -371,6 +371,12 @@ func TestEstimateAcceptanceRequiresAccurateRiskPreviewAndCurrentSameOwnerScope(t
 	if r.Stage != "applied" {
 		t.Fatalf("revoke: %+v", r)
 	}
+	firstRevoke := r
+	revision = 2
+	_, r = command(t, f, "policy.acceptance.revoke", in.AcceptanceID, governance.RefInput{Ref: f.scope.Ref(in.AcceptanceID, 2)}, &revision)
+	if r.Stage != "applied" || !api.Equal(r.Output, firstRevoke.Output) {
+		t.Fatalf("repeat acceptance revoke changed facts: %+v", r)
+	}
 	if err := check(request); err == nil || !api.IsCode(err, "forbidden") {
 		t.Fatalf("retracted risk acceptance remained current: %v", err)
 	}

@@ -2,6 +2,7 @@ package governance_test
 
 import (
 	"context"
+	"github.com/ruipengliu/lerna/conformance/testkit"
 	"os"
 	"path/filepath"
 	"sync/atomic"
@@ -271,6 +272,12 @@ func TestRollbackUsesIndependentOldApprovalAndOldStopCannotDisableIt(t *testing.
 	if r.Stage != "applied" {
 		t.Fatalf("revoke candidate: %+v", r)
 	}
+	firstRevoke := r
+	revision = 2
+	_, r = command(t, f, "release.approval.revoke", newID, governance.RefInput{Ref: f.scope.Ref(newID, 2)}, &revision)
+	if r.Stage != "applied" || !api.Equal(r.Output, firstRevoke.Output) {
+		t.Fatalf("repeat revoke changed approval or original stop duty: %+v", r)
+	}
 	rollback := activateNow(t, f, target, old, oldApproval, 2, 3)
 	if rollback.Head.Generation != 3 || !rollback.Head.Enabled || !api.Equal(rollback.Readiness.ApprovalRef, oldApproval) {
 		t.Fatalf("rollback: %+v", rollback)
@@ -283,5 +290,50 @@ func TestRollbackUsesIndependentOldApprovalAndOldStopCannotDisableIt(t *testing.
 	}
 	if _, err := os.Stat(filepath.Join(h.root, current.Readiness.InstanceID)); err != nil {
 		t.Fatalf("rollback instance exited: %v", err)
+	}
+}
+
+func TestRepeatedCurrentDeactivateKeepsOriginalStopDuty(t *testing.T) {
+	h := &lifecycleHost{root: t.TempDir()}
+	f := environment(t, governance.Options{Lifecycle: h})
+	h.proof = ref(t, f, "selftest")
+	jobs := testkit.ObserveJobs(f.store)
+	f.store = jobs
+	f.dispatcher.Store = jobs
+	target := api.NewID("target")
+	_, r := command(t, f, "extensions.target.register", target, governance.TargetRegister{TargetID: target, DataFormat: "v1"}, nil)
+	if r.Stage != "applied" {
+		t.Fatal(r)
+	}
+	install := installation(t, f, target)
+	approved := approval(t, f, install, target)
+	active := activateNow(t, f, target, install, approved, 0, 1)
+	in := governance.DeactivateRequest{TargetID: target, ActivationRef: *active.Head.CurrentActivationRef, ExpectedGeneration: active.Head.Generation}
+	revision := active.Head.Revision
+	_, first := command(t, f, "extensions.deactivate", target, in, &revision)
+	if first.Stage != "applied" {
+		t.Fatal(first)
+	}
+	var out governance.StateOutput
+	if e := api.Decode(first.Output, &out); e != nil {
+		t.Fatal(e)
+	}
+	revision = out.Ref.Revision
+	originalJobs := api.Raw(jobs.Jobs)
+	jobs.ForbidChanges = true
+	_, repeated := command(t, f, "extensions.deactivate", target, in, &revision)
+	if repeated.Stage != "applied" || !api.Equal(repeated.Output, first.Output) || !api.Equal(originalJobs, api.Raw(jobs.Jobs)) {
+		t.Fatalf("repeat deactivate lost original duty: %+v", repeated)
+	}
+	stale := revision - 1
+	_, rejected := command(t, f, "extensions.deactivate", target, in, &stale)
+	if rejected.Stage != "rejected" || !api.IsCode(rejected.Error, "revision_conflict") {
+		t.Fatalf("same-state bypassed CAS: %+v", rejected)
+	}
+	jobs.ForbidChanges = false
+	drain(t, f, "governance.stop")
+	stopped := query[governance.ExtensionRead](t, f, "extensions.read", governance.IDInput{ID: target})
+	if stopped.Head.Enabled || stopped.Head.Revision != revision {
+		t.Fatalf("original stop rewrote control: %+v", stopped)
 	}
 }

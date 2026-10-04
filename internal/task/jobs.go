@@ -1115,7 +1115,7 @@ func (s *Service) internalDelegationJob(ctx context.Context, store runtime.Store
 				binding, e := tx.LookupKey(ctx, delegationClosures, closureKey)
 				var closureRef api.ObjectRef
 				if confirmedNotFound(e) {
-					closureID := api.NewID("closure")
+					closureID := s.config.Identity.NewID("closure")
 					c := DelegationClosure{DelegationID: d.DelegationID, Revision: 1, GoalWorkClosed: true, EffectsClosed: true, AllocationClosureRef: *inc.ClosureRef, TransfersClosed: true, ProofRefs: []api.ContentRef{allocationClosure.ProofRef}, ClosedAt: allocationClosure.ClosedAt}
 					if e = tx.Create(ctx, delegationClosures, closureID, d.ParentTaskRef.ObjectID, c); e != nil {
 						return e

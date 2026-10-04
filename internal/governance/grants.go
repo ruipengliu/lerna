@@ -163,7 +163,7 @@ func (s *Service) beginConfirmed(ctx context.Context, tx runtime.Tx, auth runtim
 	_, err = tx.Get(ctx, ns("pending_confirmation"), c.CommandID, &pending)
 	if errMissing(err) {
 		id := digestID("confirmation", []string{c.CommandID, intent})
-		confirm := api.Confirmation{RequestID: id, OwnerID: tx.Scope().OwnerID, Revision: 1, OriginalCommandID: c.CommandID, IntentHash: intent, PreviewRefs: previews, ExpiresAt: expires, State: "pending", Challenge: api.NewID("challenge"), TrustedUserSessionRef: auth.Ref(tx.Scope().OwnerID)}
+		confirm := api.Confirmation{RequestID: id, OwnerID: tx.Scope().OwnerID, Revision: 1, OriginalCommandID: c.CommandID, IntentHash: intent, PreviewRefs: previews, ExpiresAt: expires, State: "pending", Challenge: s.Ports.Identity.NewID("challenge"), TrustedUserSessionRef: auth.Ref(tx.Scope().OwnerID)}
 		record := ConfirmationRecord{Confirmation: confirm, SubjectID: auth.SubjectID, CredentialGeneration: auth.CredentialGeneration, PendingCommandID: c.CommandID}
 		if err = tx.Create(ctx, ns("confirmations"), id, auth.SubjectID, record); err != nil {
 			return nil, runtime.Outcome{}, err
@@ -345,6 +345,10 @@ func (s *Service) revokeGrant(ctx context.Context, tx runtime.Tx, auth runtime.A
 	}
 	if g.Revision != in.GrantRef.Revision {
 		return runtime.Outcome{}, api.E("revision_conflict", "revision_changed")
+	}
+	if g.State == "revoked" {
+		ref := tx.Scope().Ref(g.GrantID, g.Revision)
+		return runtime.Applied(ConfirmedOutput{Ref: &ref, State: g.State}), nil
 	}
 	confirm, pending, err := s.beginConfirmed(ctx, tx, auth, c, in.PreviewRefs, in.ConfirmationExpiresAt)
 	if err != nil || confirm == nil {
@@ -1010,6 +1014,9 @@ func (s *Service) revokeAcceptance(ctx context.Context, tx runtime.Tx, auth runt
 	}
 	if err = requireCAS(c, rev); err != nil {
 		return runtime.Outcome{}, err
+	}
+	if out.State == "revoked" {
+		return runtime.Applied(StateOutput{Ref: tx.Scope().Ref(in.Ref.ObjectID, out.Revision), State: out.State}), nil
 	}
 	out.Revision = rev + 1
 	out.State = "revoked"

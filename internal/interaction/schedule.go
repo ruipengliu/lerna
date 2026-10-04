@@ -232,8 +232,11 @@ func (s *Service) ControlScheduleTx(ctx context.Context, tx runtime.Tx, a runtim
 	if c.ExpectedRevision == nil || *c.ExpectedRevision != r.Revision {
 		return ScheduleOutput{}, api.E("revision_conflict", "rule_changed")
 	}
-	if r.State == "deleted" {
+	if r.State == "deleted" && c.Method != "schedule.delete" {
 		return ScheduleOutput{}, api.E("gone", "schedule_deleted")
+	}
+	if c.Method == "schedule.pause" && r.State == "paused" || c.Method == "schedule.resume" && r.State == "enabled" || c.Method == "schedule.delete" && r.State == "deleted" {
+		return scheduleOutput(tx.Scope(), r), nil
 	}
 	now, err := tx.Now(ctx)
 	if err != nil {
@@ -391,7 +394,7 @@ func (s *Service) Trigger(ctx context.Context, store runtime.Store, scope runtim
 				break
 			}
 			if skipped == nil {
-				skipped = &SkipRange{SkipID: api.NewID("skip"), ScheduleRef: scope.Ref(r.ScheduleID, r.Revision), RuleRevision: r.RuleRevision, FirstPlannedAt: api.Time(due), Reason: reason}
+				skipped = &SkipRange{SkipID: s.config.Identity.NewID("skip"), ScheduleRef: scope.Ref(r.ScheduleID, r.Revision), RuleRevision: r.RuleRevision, FirstPlannedAt: api.Time(due), Reason: reason}
 			}
 			skipped.Count++
 			skipped.LastPlannedAt = api.Time(due)
@@ -414,7 +417,7 @@ func (s *Service) Trigger(ctx context.Context, store runtime.Store, scope runtim
 				r.ResumeAfter = nil
 			}
 			if !due.After(now) && count < 100 && time.Since(start) < 10*time.Millisecond && r.ResumeAfter == nil {
-				id := api.NewID("occurrence")
+				id := s.config.Identity.NewID("occurrence")
 				deadline := due.Add(time.Duration(r.TaskTimeoutSeconds) * time.Second)
 				accept := due.Add(60 * time.Second)
 				if deadline.Before(accept) {
@@ -485,7 +488,7 @@ func (s *Service) advancePaused(ctx context.Context, tx runtime.Tx, r *scheduleR
 			break
 		}
 		if skipped == nil {
-			skipped = &SkipRange{SkipID: api.NewID("skip"), ScheduleRef: pending.ScheduleRef, RuleRevision: pending.RuleRevision, FirstPlannedAt: api.Time(due), Reason: "paused"}
+			skipped = &SkipRange{SkipID: s.config.Identity.NewID("skip"), ScheduleRef: pending.ScheduleRef, RuleRevision: pending.RuleRevision, FirstPlannedAt: api.Time(due), Reason: "paused"}
 		}
 		skipped.Count++
 		skipped.LastPlannedAt = api.Time(due)

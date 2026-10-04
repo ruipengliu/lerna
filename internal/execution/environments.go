@@ -171,7 +171,7 @@ func (s *Service) environmentCreate(ctx context.Context, tx rt.Tx, a rt.Auth, c 
 	if err != nil || !expires.After(now) {
 		return Environment{}, api.E("expired", "environment_expired")
 	}
-	env := Environment{EnvironmentID: p.EnvironmentID, Revision: 1, ConfigRef: p.ConfigRef, IsolationDigest: isolation.IsolationDigest, InstallLockRef: p.InstallLockRef, InstanceID: api.NewID("instance"), Generation: 1, Phase: "preparing", RuntimeKind: isolation.RuntimeKind, Limits: p.Limits, ExpiresAt: p.ExpiresAt, ProcessedSources: p.SourceRefs, ActiveOperationIDs: []string{}, StopResiduals: []string{}, HostCallIDs: []string{}, HostCallParents: []string{}, Principal: a, PreparationCommandID: c.CommandID, ActuallyExited: true}
+	env := Environment{EnvironmentID: p.EnvironmentID, Revision: 1, ConfigRef: p.ConfigRef, IsolationDigest: isolation.IsolationDigest, InstallLockRef: p.InstallLockRef, InstanceID: s.cfg.Identity.NewID("instance"), Generation: 1, Phase: "preparing", RuntimeKind: isolation.RuntimeKind, Limits: p.Limits, ExpiresAt: p.ExpiresAt, ProcessedSources: p.SourceRefs, ActiveOperationIDs: []string{}, StopResiduals: []string{}, HostCallIDs: []string{}, HostCallParents: []string{}, Principal: a, PreparationCommandID: c.CommandID, ActuallyExited: true}
 	if err = tx.Create(ctx, Namespace+".environments", p.EnvironmentID, "", env); err != nil {
 		return env, err
 	}
@@ -324,7 +324,7 @@ func (s *Service) environmentRestore(ctx context.Context, tx rt.Tx, a rt.Auth, c
 		return env, api.E("unsupported", "checkpoint_incompatible")
 	}
 	env.Generation++
-	env.InstanceID = api.NewID("instance")
+	env.InstanceID = s.cfg.Identity.NewID("instance")
 	env.Phase = "preparing"
 	env.Revision = rev + 1
 	env.NamespaceRef = &cp.ContentRef

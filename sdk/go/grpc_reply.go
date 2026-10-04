@@ -136,30 +136,7 @@ func (j *ReplyJournal) write(entry ReplyEntry) error {
 	}
 	name := entry.Delivery.DeliveryID + ".json"
 	temp := entry.Delivery.DeliveryID + "." + api.NewID("write") + ".tmp"
-	f, e := j.root.OpenFile(temp, os.O_CREATE|os.O_EXCL|os.O_WRONLY, 0600)
-	if e != nil {
-		return e
-	}
-	defer j.root.Remove(temp)
-	_, e = f.Write(b)
-	if e == nil {
-		e = f.Sync()
-	}
-	closed := f.Close()
-	if e != nil {
-		return e
-	}
-	if closed != nil {
-		return closed
-	}
-	if e = j.root.Rename(temp, name); e != nil {
-		return e
-	}
-	dir, e := j.root.Open(".")
-	if e != nil {
-		return e
-	}
-	return errors.Join(dir.Sync(), dir.Close())
+	return writeDurableFile(j.root, temp, name, b)
 }
 func (j *ReplyJournal) Save(ctx context.Context, d grpcwire.Delivery, reply grpcwire.Reply) error {
 	if e := ctx.Err(); e != nil {

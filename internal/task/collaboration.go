@@ -80,8 +80,8 @@ func (s *Service) delegateTx(ctx context.Context, tx runtime.Tx, auth runtime.Au
 			return DelegateOutput{}, api.E("invalid_state", "active_subtree_limit")
 		}
 	}
-	allocationID := api.NewID("allocation")
-	allocationCommand := api.Command{TargetID: allocationID, CommandID: api.NewID("command")}
+	allocationID := s.config.Identity.NewID("allocation")
+	allocationCommand := api.Command{TargetID: allocationID, CommandID: s.config.Identity.NewID("command")}
 	allocation, e := s.AllocateTx(ctx, tx, auth, allocationCommand, AllocateInput{AllocationID: allocationID, ParentTaskRef: taskRef(tx, t), ReceiverID: in.ReceiverID, Limits: in.Budget, Deadline: in.Deadline})
 	if e != nil {
 		return DelegateOutput{}, e
@@ -101,7 +101,7 @@ func (s *Service) delegateTx(ctx context.Context, tx runtime.Tx, auth runtime.Au
 	ancestorRefs = append(ancestorRefs, taskRef(tx, t))
 	d := Delegation{DelegateInput: in, Revision: 1, CreationKey: in.DelegationID, CommandRef: tx.Scope().Ref(c.CommandID, 1), AllocationRef: allocation.AllocationRef, AncestorTaskRefs: ancestorRefs, Phase: "preparing"}
 	if in.Internal {
-		childID := api.NewID("task")
+		childID := s.config.Identity.NewID("task")
 		var a Allocation
 		if _, e = tx.Get(ctx, allocations, allocationID, &a); e != nil {
 			return DelegateOutput{}, e
@@ -112,7 +112,7 @@ func (s *Service) delegateTx(ctx context.Context, tx runtime.Tx, auth runtime.Au
 		if e != nil {
 			return DelegateOutput{}, e
 		}
-		childCommand := api.Command{TargetID: childID, CommandID: api.NewID("command")}
+		childCommand := api.Command{TargetID: childID, CommandID: s.config.Identity.NewID("command")}
 		sub, e := s.SubmitTx(ctx, tx, submitterAuth(tx.Scope(), t), childCommand, SubmitInput{OrchestratorID: tx.Scope().OwnerID, GoalRef: in.GoalRef, PolicyRef: in.PolicyRef, Deadline: in.Deadline, Budget: in.Budget})
 		if e != nil {
 			return DelegateOutput{}, e
@@ -317,7 +317,7 @@ func (s *Service) childCreateTx(ctx context.Context, tx runtime.Tx, auth runtime
 	if uint64(len(rows)) >= s.config.MaxTasksPerSubject {
 		return ChildOutput{}, api.E("overloaded", "child_handle_limit")
 	}
-	h := ChildHandle{ChildCreateInput: in, Revision: 1, SubjectID: auth.SubjectID, SubjectGeneration: auth.CredentialGeneration, SubjectRoles: append([]string{}, auth.Roles...), State: "preparing", SessionCommandRef: api.ObjectRef{TenantID: tx.Scope().TenantID, OwnerID: in.SessionOwnerID, ObjectID: api.NewID("command"), Revision: 1}}
+	h := ChildHandle{ChildCreateInput: in, Revision: 1, SubjectID: auth.SubjectID, SubjectGeneration: auth.CredentialGeneration, SubjectRoles: append([]string{}, auth.Roles...), State: "preparing", SessionCommandRef: api.ObjectRef{TenantID: tx.Scope().TenantID, OwnerID: in.SessionOwnerID, ObjectID: s.config.Identity.NewID("command"), Revision: 1}}
 	if e = tx.Create(ctx, children, in.ChildID, auth.SubjectID, h); e != nil {
 		return ChildOutput{}, e
 	}
@@ -442,7 +442,7 @@ func (s *Service) childSendTx(ctx context.Context, tx runtime.Tx, auth runtime.A
 		}
 		frozenAuth := auth
 		frozenAuth.Roles = append([]string{}, auth.Roles...)
-		tr := Transfer{TransferID: api.NewID("transfer"), Revision: 1, DelegationID: d.DelegationID, Kind: "input", CommandRef: tx.Scope().Ref(api.NewID("command"), 1), State: "queued", Input: in, ActorAuth: frozenAuth, SourceSubmissionRef: tx.Scope().Ref(c.CommandID, 1), ExpiresAt: api.Time(expires)}
+		tr := Transfer{TransferID: s.config.Identity.NewID("transfer"), Revision: 1, DelegationID: d.DelegationID, Kind: "input", CommandRef: tx.Scope().Ref(s.config.Identity.NewID("command"), 1), State: "queued", Input: in, ActorAuth: frozenAuth, SourceSubmissionRef: tx.Scope().Ref(c.CommandID, 1), ExpiresAt: api.Time(expires)}
 		if e := tx.Create(ctx, transfers, tr.TransferID, h.ChildID, tr); e != nil {
 			return out, e
 		}

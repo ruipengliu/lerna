@@ -81,6 +81,7 @@ type Ports struct {
 	Calendar     Calendar
 }
 type Config struct {
+	Identity          runtime.Identity
 	DiscoveryOwnerID  string
 	Participants      []string
 	BranchQueueLimit  uint64
@@ -98,6 +99,7 @@ type Service struct {
 }
 
 func New(config Config, ports Ports) (*Service, error) {
+	config.Identity = runtime.IdentityOrDefault(config.Identity)
 	if config.BranchQueueLimit == 0 {
 		config.BranchQueueLimit = 20
 	}

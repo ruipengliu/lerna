@@ -57,6 +57,16 @@ func TestUnknownModelCallIsNeverSentTwice(t *testing.T) {
 	if engine.sent != 1 || got.Decision.PhysicalRequestCount != 1 || !got.Decision.SendStarted || got.Decision.Status != "provider_result_unknown" || got.Decision.UsageFinal {
 		t.Fatalf("lost-result facts sent=%d view=%+v", engine.sent, got)
 	}
+	cancelCommand := api.Command{Protocol: api.Protocol, Profile: api.Profile, LogicalServiceID: scope.OwnerID, CommandID: api.NewID("command"), TargetID: id, Method: "brain.cancel", ExpiresAt: api.Time(time.Now().Add(time.Minute)), Payload: api.Raw(brain.CancelInput{DecisionID: id, TaskRef: snap.TaskRef, Reason: "停止原请求"})}
+	firstCancel, e := dispatch.Command(ctx, auth, api.Raw(cancelCommand))
+	if e != nil || firstCancel.Stage != "applied" {
+		t.Fatalf("cancel %+v %v", firstCancel, e)
+	}
+	cancelCommand.CommandID = api.NewID("command")
+	repeated, e := dispatch.Command(ctx, auth, api.Raw(cancelCommand))
+	if e != nil || repeated.Stage != "applied" || !api.Equal(repeated.Output, firstCancel.Output) {
+		t.Fatalf("repeat cancel changed original responsibility: %+v %v", repeated, e)
+	}
 	duplicate, e := dispatch.Command(ctx, auth, api.Raw(command))
 	if e != nil || duplicate.Stage != "accepted" {
 		t.Fatalf("original accepted lookup: %+v %v", duplicate, e)

@@ -591,6 +591,9 @@ func (s *Service) deactivate(ctx context.Context, tx runtime.Tx, a runtime.Auth,
 	if head.Generation != in.ExpectedGeneration || head.CurrentActivationRef == nil || head.CurrentActivationRef.ObjectID != in.ActivationRef.ObjectID {
 		return runtime.Outcome{}, api.E("revision_conflict", "activation_replaced")
 	}
+	if !head.Enabled {
+		return runtime.Applied(StateOutput{Ref: tx.Scope().Ref(head.TargetID, head.Revision), State: "disabled"}), nil
+	}
 	head.Enabled = false
 	head.Revision = rev + 1
 	if err = tx.Put(ctx, ns("heads"), head.TargetID, rev, head); err != nil {
@@ -810,6 +813,9 @@ func (s *Service) revokeApproval(ctx context.Context, tx runtime.Tx, a runtime.A
 	}
 	if err = requireCAS(c, rev); err != nil {
 		return runtime.Outcome{}, err
+	}
+	if approval.State == "revoked" {
+		return runtime.Applied(StateOutput{Ref: tx.Scope().Ref(approval.ApprovalID, approval.Revision), State: approval.State}), nil
 	}
 	approval.Revision = rev + 1
 	approval.State = "revoked"

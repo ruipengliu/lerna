@@ -45,8 +45,8 @@ func (s *Service) ApplicationEventTx(ctx context.Context, tx runtime.Tx, a runti
 	if err != nil {
 		return ApplicationEventOutput{}, err
 	}
-	id := api.NewID("application_event")
-	r := applicationEventRecord{ApplicationEvent: ApplicationEvent{EventID: id, Revision: 1, PresentationRef: tx.Scope().Ref(c.TargetID, view.Presentation.Revision), SurfaceRef: in.SurfaceRef, Name: in.Name, State: "queued", Command: api.Command{Protocol: api.Protocol, Profile: api.Profile, LogicalServiceID: rule.OwnerID, CommandID: api.NewID("command"), Method: rule.Method, TargetID: rule.TargetID, ExpectedRevision: rule.ExpectedRevision, ExpiresAt: api.Time(now.Add(time.Duration(rule.AcceptForSeconds) * time.Second)), Payload: in.Payload}}, Auth: a}
+	id := s.config.Identity.NewID("application_event")
+	r := applicationEventRecord{ApplicationEvent: ApplicationEvent{EventID: id, Revision: 1, PresentationRef: tx.Scope().Ref(c.TargetID, view.Presentation.Revision), SurfaceRef: in.SurfaceRef, Name: in.Name, State: "queued", Command: api.Command{Protocol: api.Protocol, Profile: api.Profile, LogicalServiceID: rule.OwnerID, CommandID: s.config.Identity.NewID("command"), Method: rule.Method, TargetID: rule.TargetID, ExpectedRevision: rule.ExpectedRevision, ExpiresAt: api.Time(now.Add(time.Duration(rule.AcceptForSeconds) * time.Second)), Payload: in.Payload}}, Auth: a}
 	if err = tx.Create(ctx, applicationEvents, id, a.SubjectID, r); err != nil {
 		return ApplicationEventOutput{}, err
 	}

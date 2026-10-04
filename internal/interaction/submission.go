@@ -177,7 +177,7 @@ func (s *Service) SubmitGoalTx(ctx context.Context, tx runtime.Tx, a runtime.Aut
 	default:
 		return SubmissionOutput{}, invalid("unknown_submission_kind")
 	}
-	id := api.NewID("submission")
+	id := s.config.Identity.NewID("submission")
 	ref := tx.Scope().Ref(id, 1)
 	record := submissionRecord{SubmissionView: SubmissionView{Submission: api.Submission{SubmissionID: id, TenantID: tx.Scope().TenantID, OwnerID: tx.Scope().OwnerID, Revision: 1, SessionRef: in.SessionRef, BranchID: in.BranchRef.ObjectID, Kind: kind, ContentRef: in.ContentRef, TargetTaskRef: in.TargetTaskRef, PredecessorTaskRef: in.PredecessorTaskRef, ExpectedGoalRevision: in.ExpectedGoalRevision, State: "queued", CreatedAt: api.Time(now)}, AttachmentRefs: append([]api.ContentRef{}, in.AttachmentRefs...), QueueDeadline: api.Time(now.Add(s.config.QueueTTL))}, Auth: a, Goal: &in, GoalQueue: newGoal, OrderKey: orderKey, CreatedCommandID: c.CommandID}
 	if deadline.Before(now.Add(s.config.QueueTTL)) {
@@ -208,7 +208,7 @@ func (s *Service) SubmitGoalTx(ctx context.Context, tx runtime.Tx, a runtime.Aut
 }
 func (s *Service) goalCommand(scope runtime.Scope, source api.ObjectRef, r submissionRecord, now time.Time) *api.Command {
 	owner := s.config.DiscoveryOwnerID
-	target := api.NewID("task")
+	target := s.config.Identity.NewID("task")
 	method := "task.submit"
 	expires := now.Add(s.config.DeliveryTTL)
 	deadline, _ := api.ParseTime(r.Goal.TaskDeadline)
@@ -222,7 +222,7 @@ func (s *Service) goalCommand(scope runtime.Scope, source api.ObjectRef, r submi
 		method = "task.steer"
 		payload = taskSteer{TaskID: target, BaseGoalRevision: *r.Submission.ExpectedGoalRevision, AmendmentRef: r.Submission.ContentRef, SourceSubmissionRef: source, PrepareDeadline: r.Goal.TaskDeadline}
 	}
-	return &api.Command{Protocol: api.Protocol, Profile: api.Profile, LogicalServiceID: owner, CommandID: api.NewID("command"), Method: method, TargetID: target, ExpiresAt: api.Time(expires), Payload: api.Raw(payload)}
+	return &api.Command{Protocol: api.Protocol, Profile: api.Profile, LogicalServiceID: owner, CommandID: s.config.Identity.NewID("command"), Method: method, TargetID: target, ExpiresAt: api.Time(expires), Payload: api.Raw(payload)}
 }
 func (s *Service) addSubjectQueue(ctx context.Context, tx runtime.Tx, subject string) error {
 	var q queueRecord
@@ -265,7 +265,7 @@ func (s *Service) saveInput(ctx context.Context, tx runtime.Tx, session *session
 	session.Sequence++
 	r.Submission.Seq = session.Sequence
 	r.Submission.HistoryCutoff = branch.Branch.HistoryCutoff
-	r.Submission.MessageID = api.NewID("message")
+	r.Submission.MessageID = s.config.Identity.NewID("message")
 	ref := tx.Scope().Ref(r.Submission.SubmissionID, 1)
 	message := api.Message{MessageID: r.Submission.MessageID, SessionRef: r.Submission.SessionRef, BranchID: branch.Branch.BranchID, Seq: session.Sequence, ParentMessageID: branch.Branch.HeadMessageID, Role: "user", ContentRef: r.Submission.ContentRef, SubmissionRef: &ref, CreatedAt: api.Time(now)}
 	if err := tx.Create(ctx, messages, message.MessageID, session.Session.SessionID, message); err != nil {
@@ -482,7 +482,7 @@ func (s *Service) ForwardInputTx(ctx context.Context, tx runtime.Tx, a runtime.A
 	if err != nil {
 		return SubmissionOutput{}, err
 	}
-	id := api.NewID("submission")
+	id := s.config.Identity.NewID("submission")
 	ref := tx.Scope().Ref(id, 1)
 	r := submissionRecord{SubmissionView: SubmissionView{Submission: api.Submission{SubmissionID: id, TenantID: tx.Scope().TenantID, OwnerID: tx.Scope().OwnerID, Revision: 1, SessionRef: in.SessionRef, BranchID: in.BranchRef.ObjectID, Kind: "input", ContentRef: in.AnswerRef, RequestRef: &in.RequestRef, State: "queued", CreatedAt: api.Time(now)}, AttachmentRefs: append([]api.ContentRef{}, in.PreviewRefs...), QueueDeadline: request.ExpiresAt}, Auth: a, Input: &in, InputView: &view, CreatedCommandID: c.CommandID}
 	commandExpiry := now.Add(s.config.DeliveryTTL)
@@ -501,7 +501,7 @@ func (s *Service) ForwardInputTx(ctx context.Context, tx runtime.Tx, a runtime.A
 		payload = taskAnswer{TaskID: request.TargetRef.ObjectID, RequestRef: in.RequestRef, GoalRevision: *request.GoalRevision, AnswerRef: in.AnswerRef}
 		r.Submission.TargetTaskRef = &request.TargetRef
 	}
-	r.Command = &api.Command{Protocol: api.Protocol, Profile: api.Profile, LogicalServiceID: request.OwnerID, CommandID: api.NewID("command"), Method: view.Method, TargetID: request.TargetRef.ObjectID, ExpiresAt: api.Time(commandExpiry), Payload: api.Raw(payload)}
+	r.Command = &api.Command{Protocol: api.Protocol, Profile: api.Profile, LogicalServiceID: request.OwnerID, CommandID: s.config.Identity.NewID("command"), Method: view.Method, TargetID: request.TargetRef.ObjectID, ExpiresAt: api.Time(commandExpiry), Payload: api.Raw(payload)}
 	r.Submission.DispatchCommandRef = &api.ObjectRef{TenantID: tx.Scope().TenantID, OwnerID: request.OwnerID, ObjectID: r.Command.CommandID, Revision: 1}
 	if _, err = api.ParseJSON(view.AnswerSchema); err != nil {
 		return SubmissionOutput{}, invalid("answer_schema_invalid")
@@ -548,7 +548,7 @@ func (s *Service) ReplyTx(ctx context.Context, tx runtime.Tx, a runtime.Auth, c 
 		return ReplyOutput{}, api.E("overloaded", "session_sequence_exhausted")
 	}
 	session.Sequence++
-	message := api.Message{MessageID: api.NewID("message"), SessionRef: r.Submission.SessionRef, BranchID: r.Submission.BranchID, Seq: session.Sequence, ParentMessageID: r.Submission.MessageID, Role: in.Role, ContentRef: in.ContentRef, SubmissionRef: &in.SubmissionRef, CreatedAt: api.Time(now)}
+	message := api.Message{MessageID: s.config.Identity.NewID("message"), SessionRef: r.Submission.SessionRef, BranchID: r.Submission.BranchID, Seq: session.Sequence, ParentMessageID: r.Submission.MessageID, Role: in.Role, ContentRef: in.ContentRef, SubmissionRef: &in.SubmissionRef, CreatedAt: api.Time(now)}
 	if err = tx.Create(ctx, messages, message.MessageID, c.TargetID, message); err != nil {
 		return ReplyOutput{}, err
 	}

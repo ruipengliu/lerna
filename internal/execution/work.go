@@ -106,9 +106,12 @@ func (s *Service) run(ctx context.Context, st rt.Store, sc rt.Scope, w rt.Work) 
 	}
 	window, err := s.selectControlWindow(ctx, st, sc, op.Invoke)
 	if err != nil {
-		return s.closeUnstarted(ctx, st, sc, w, err)
+		if businessError(err) {
+			return s.closeUnstarted(ctx, st, sc, w, err)
+		}
+		return err
 	}
-	attempt := Attempt{AttemptID: api.NewID("attempt"), OperationID: op.Operation.OperationID, Revision: 1, AttemptNo: 1, Phase: "prepared", Prepared: prepared, Permit: StartPermit{ProofRefs: []api.ContentRef{}}, Effect: "not_started", MayApplyLater: false, ControlWindowID: window.WindowID, ControlWindow: window, EvidenceRefs: []api.ContentRef{}, Usage: []api.Amount{}, ActuallyStopped: true}
+	attempt := Attempt{AttemptID: s.cfg.Identity.NewID("attempt"), OperationID: op.Operation.OperationID, Revision: 1, AttemptNo: 1, Phase: "prepared", Prepared: prepared, Permit: StartPermit{ProofRefs: []api.ContentRef{}}, Effect: "not_started", MayApplyLater: false, ControlWindowID: window.WindowID, ControlWindow: window, EvidenceRefs: []api.ContentRef{}, Usage: []api.Amount{}, ActuallyStopped: true}
 	attempt.PreparedBytes = append([]byte{}, prepared.Encoded...)
 	if _, independent := s.cfg.Authority.(ControlWindowSource); !independent {
 		authority, err := s.cfg.Authority.PrepareStart(ctx, sc, StartRequest{ControlWindow: window, Invoke: op.Invoke, Intent: intent, AttemptID: attempt.AttemptID, Auth: op.Principal})
@@ -674,7 +677,18 @@ func (s *Service) selectControlWindow(ctx context.Context, st rt.Store, sc rt.Sc
 		return api.ControlSnapshot{}, api.E("overloaded", "control_window_set_requires_batch")
 	}
 	selected := p.ControlSnapshot
-	now := time.Now().UTC()
+	var now time.Time
+	status, err := st.Within(ctx, sc, s.participants(), func(tx rt.Tx) error {
+		var e error
+		now, e = tx.Now(ctx)
+		return e
+	})
+	if status == rt.CommitUnknown {
+		return api.ControlSnapshot{}, rt.ErrCommitUnknown
+	}
+	if err != nil {
+		return api.ControlSnapshot{}, err
+	}
 	var latest time.Time
 	for _, r := range records {
 		var candidate api.ControlSnapshot

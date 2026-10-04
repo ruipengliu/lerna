@@ -438,10 +438,11 @@ func (s *Service) cancelRun(ctx context.Context, tx runtime.Tx, a runtime.Auth, 
 	if err != nil {
 		return runtime.Outcome{}, err
 	}
-	run.GateOpen = false
-	if run.State != "sealed" {
-		run.State = "cancelling"
+	if run.State == "sealed" || run.State == "cancelling" {
+		return runtime.Applied(StateOutput{Ref: tx.Scope().Ref(in.ID, run.Revision), State: run.State}), nil
 	}
+	run.GateOpen = false
+	run.State = "cancelling"
 	run.Revision = rev + 1
 	if err = tx.Put(ctx, ns("runs"), in.ID, rev, run); err != nil {
 		return runtime.Outcome{}, err

@@ -261,7 +261,7 @@ func (s *Service) refreshIncomingTx(ctx context.Context, tx runtime.Tx, t taskSt
 			if e = api.ValidateRecord("AllocationClosure", closure); e != nil {
 				return e
 			}
-			closureID := api.NewID("closure")
+			closureID := s.config.Identity.NewID("closure")
 			if e = tx.Create(ctx, closures, closureID, t.Task.TaskID, closure); e != nil {
 				return e
 			}

@@ -93,7 +93,7 @@ func (s *Service) Occur(ctx context.Context, store runtime.Store, scope runtime.
 			}
 			if reason == "" {
 				if e = s.ports.ScheduleGate.CheckTx(ctx, tx, occ.Auth, occ.Frozen.PolicyRef, occ.Frozen.InstallLockRef, occ.Frozen.Budget); e != nil {
-					if api.IsCode(e, "dependency_unavailable") || api.IsCode(e, "overloaded") {
+					if !scheduleRefusal(e) {
 						return e
 					}
 					reason = "permission_or_budget_blocked"
@@ -101,7 +101,7 @@ func (s *Service) Occur(ctx context.Context, store runtime.Store, scope runtime.
 			}
 			if reason == "" {
 				if e = s.content(ctx, tx, occ.Auth, occ.Frozen.TemplateRef, "task.goal"); e != nil {
-					if api.IsCode(e, "dependency_unavailable") {
+					if !contentRefusal(e) {
 						return e
 					}
 					reason = "input_unpublished"
@@ -119,8 +119,8 @@ func (s *Service) Occur(ctx context.Context, store runtime.Store, scope runtime.
 				prepared = occ
 				return tx.Guard(ctx, work.Claim)
 			}
-			taskID := api.NewID("task")
-			occ.Command = &api.Command{Protocol: api.Protocol, Profile: api.Profile, LogicalServiceID: s.config.DiscoveryOwnerID, CommandID: api.NewID("command"), Method: "task.submit", TargetID: taskID, ExpiresAt: occ.AcceptBefore, Payload: api.Raw(taskSubmit{OrchestratorID: s.config.DiscoveryOwnerID, GoalRef: occ.Frozen.TemplateRef, PolicyRef: occ.Frozen.PolicyRef, Deadline: occ.TaskDeadline, Budget: occ.Frozen.Budget})}
+			taskID := s.config.Identity.NewID("task")
+			occ.Command = &api.Command{Protocol: api.Protocol, Profile: api.Profile, LogicalServiceID: s.config.DiscoveryOwnerID, CommandID: s.config.Identity.NewID("command"), Method: "task.submit", TargetID: taskID, ExpiresAt: occ.AcceptBefore, Payload: api.Raw(taskSubmit{OrchestratorID: s.config.DiscoveryOwnerID, GoalRef: occ.Frozen.TemplateRef, PolicyRef: occ.Frozen.PolicyRef, Deadline: occ.TaskDeadline, Budget: occ.Frozen.Budget})}
 			occ.Phase = "sending"
 			if e = saveOccurrence(ctx, tx, &occ); e != nil {
 				return e
@@ -209,4 +209,48 @@ func (s *Service) waitOccurrence(ctx context.Context, store runtime.Store, scope
 		}
 		return runtime.Waiting(now.Add(time.Second)), nil
 	})
+}
+
+// 只有端口明确裁决的领域拒绝才能关闭原槽；存储、解码及容量故障保留原责任。
+// Join 的混合原因及外部 proof 到期都不足以证明原输入永久不可用。
+func occurrenceRefusal(err error) *api.Error {
+	for depth := 0; err != nil && depth < 8; depth++ {
+		if refusal, ok := err.(*api.Error); ok {
+			if refusal.Cause == nil {
+				return refusal
+			}
+			return nil
+		}
+		if _, mixed := err.(interface{ Unwrap() []error }); mixed {
+			return nil
+		}
+		single, ok := err.(interface{ Unwrap() error })
+		if !ok {
+			return nil
+		}
+		err = single.Unwrap()
+	}
+	return nil
+}
+func scheduleRefusal(err error) bool {
+	refusal := occurrenceRefusal(err)
+	if refusal == nil {
+		return false
+	}
+	switch refusal.Code + "/" + refusal.Reason {
+	case "forbidden/credential_revoked", "forbidden/role_changed", "forbidden/schedule_configuration_unregistered", "invalid_state/budget_unavailable", "invalid_request/budget_limit_exceeded":
+		return true
+	}
+	return false
+}
+func contentRefusal(err error) bool {
+	refusal := occurrenceRefusal(err)
+	if refusal == nil {
+		return false
+	}
+	switch refusal.Code + "/" + refusal.Reason {
+	case "forbidden/credential_revoked", "forbidden/role_changed", "forbidden/source_closed", "forbidden/source_forbidden", "gone/retention_expired":
+		return true
+	}
+	return false
 }

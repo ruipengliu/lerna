@@ -138,6 +138,7 @@ type EnvironmentIsolation struct {
 	IsolationDigest string
 }
 type Config struct {
+	Identity              rt.Identity
 	OwnerID               string
 	Content               ContentPort
 	Authority             AuthorityPort

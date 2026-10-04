@@ -75,7 +75,7 @@ func (s *Service) adoptRequirementsTx(ctx context.Context, tx runtime.Tx, auth r
 	if e != nil {
 		return api.RequirementAdoption{}, e
 	}
-	a := api.RequirementAdoption{AdoptionID: api.NewID("adoption"), TaskRef: taskRef(tx, t), SourceKind: sourceKind, SourceRef: source, BaseGoalRevision: t.Task.GoalRevision, ResultGoalRevision: t.Task.GoalRevision, Outcome: "unchanged", Mappings: []api.RequirementMapping{}, ValidationReportRef: report.ReportRef, ReasonCodes: []string{}, DecidedAt: api.Time(now)}
+	a := api.RequirementAdoption{AdoptionID: s.config.Identity.NewID("adoption"), TaskRef: taskRef(tx, t), SourceKind: sourceKind, SourceRef: source, BaseGoalRevision: t.Task.GoalRevision, ResultGoalRevision: t.Task.GoalRevision, Outcome: "unchanged", Mappings: []api.RequirementMapping{}, ValidationReportRef: report.ReportRef, ReasonCodes: []string{}, DecidedAt: api.Time(now)}
 	if a.SourceKind == "template" {
 		a.SourceKind = "command"
 	}
@@ -176,7 +176,7 @@ func (s *Service) adoptRequirementsTx(ctx context.Context, tx runtime.Tx, auth r
 			a.Mappings = append(a.Mappings, api.RequirementMapping{CandidateKey: c.CandidateKey, RequirementID: r.RequirementID, Revision: r.Revision})
 			continue
 		}
-		r := api.Requirement{RequirementID: api.NewID("requirement"), Revision: 1, Kind: c.Kind, StatementRef: c.StatementRef, SourceRefs: c.SourceRefs, Origin: c.Origin, RuleRef: c.RuleRef, RuleParametersRef: c.RuleParametersRef, Required: c.Required, AdoptionID: a.AdoptionID}
+		r := api.Requirement{RequirementID: s.config.Identity.NewID("requirement"), Revision: 1, Kind: c.Kind, StatementRef: c.StatementRef, SourceRefs: c.SourceRefs, Origin: c.Origin, RuleRef: c.RuleRef, RuleParametersRef: c.RuleParametersRef, Required: c.Required, AdoptionID: a.AdoptionID}
 		if match >= 0 {
 			r.RequirementID = next[match].RequirementID
 			r.Revision = next[match].Revision + 1
@@ -360,7 +360,7 @@ func (s *Service) attachTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth
 	if !api.IsCode(e, "not_found") {
 		return AttachOutput{}, e
 	}
-	req := CheckRequest{CheckID: api.NewID("check"), Revision: 1, Input: in, State: "pending", CreatorID: auth.SubjectID}
+	req := CheckRequest{CheckID: s.config.Identity.NewID("check"), Revision: 1, Input: in, State: "pending", CreatorID: auth.SubjectID}
 	if e = tx.Create(ctx, checkRequests, req.CheckID, in.TaskID, req); e != nil {
 		return AttachOutput{}, e
 	}

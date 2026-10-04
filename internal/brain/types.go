@@ -54,6 +54,7 @@ type Encoding struct {
 	ProcessedSources []api.ContentRef `json:"processed_sources"`
 }
 type Config struct {
+	Identity     runtime.Identity
 	Profiles     []Profile
 	Content      Content
 	Engine       Engine

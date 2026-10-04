@@ -51,6 +51,7 @@ type Service struct {
 }
 
 func New(config Config, ports Ports) (*Service, error) {
+	config.Identity = runtime.IdentityOrDefault(config.Identity)
 	if len(config.Policies) == 0 {
 		return nil, fmt.Errorf("task policies must be explicitly configured")
 	}

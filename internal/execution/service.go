@@ -17,6 +17,7 @@ type Service struct {
 
 func driverKey(r api.ComponentRef) string { return r.ComponentID + "/" + r.Version + "/" + r.Digest }
 func New(c Config) (*Service, error) {
+	c.Identity = rt.IdentityOrDefault(c.Identity)
 	if !api.ValidID(c.OwnerID) || c.Location == "" {
 		return nil, api.E("invalid_request", "invalid_executor_configuration")
 	}

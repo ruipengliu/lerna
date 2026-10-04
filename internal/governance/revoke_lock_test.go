@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/ruipengliu/lerna/conformance/testkit"
 	"testing"
 	"time"
 
@@ -78,6 +79,14 @@ func TestGrantRevokeLocksExactPreviewBeforeCurrentGrantAndRetainsPendingCAS(t *t
 	current := query[governance.GrantRecord](t, f, "grant.read", governance.IDInput{ID: g.GrantID})
 	if current.Grant.State != "revoked" || current.Grant.Revision != 2 {
 		t.Fatalf("ordered revoke did not change exactly its original grant %+v", current)
+	}
+	jobs := testkit.ObserveJobs(f.store)
+	f.dispatcher.Store = jobs
+	jobs.ForbidChanges = true
+	repeatedCAS := uint64(2)
+	_, repeated := command(t, f, "grant.revoke", g.GrantID, governance.GrantRevoke{GrantRef: f.scope.Ref(g.GrantID, 2), PreviewRefs: []api.ContentRef{preview}, ConfirmationExpiresAt: api.Time(time.Now().Add(time.Hour))}, &repeatedCAS)
+	if repeated.Stage != "applied" || !api.Equal(repeated.Output, closed.Output) {
+		t.Fatalf("repeated current revoke changed grant: %+v", repeated)
 	}
 	stale := uint64(1)
 	_, rejected := command(t, f, "grant.revoke", g.GrantID, governance.GrantRevoke{GrantRef: f.scope.Ref(g.GrantID, 1), PreviewRefs: []api.ContentRef{preview}, ConfirmationExpiresAt: api.Time(time.Now().Add(time.Hour))}, &stale)

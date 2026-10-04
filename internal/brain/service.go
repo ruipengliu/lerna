@@ -16,6 +16,7 @@ type Service struct {
 }
 
 func New(c Config) (*Service, error) {
+	c.Identity = runtime.IdentityOrDefault(c.Identity)
 	if c.Content == nil || c.Engine == nil || c.Gate == nil || len(c.Profiles) == 0 || len(c.Profiles) > 100 {
 		return nil, api.E("invalid_request", "invalid_brain_configuration")
 	}
@@ -62,6 +63,12 @@ func (s *Service) Register(r *runtime.Registry) error {
 			}
 			if !allowed(a, d) || !api.Equal(in.TaskRef, d.Input.TaskRef) {
 				return runtime.Outcome{}, api.E("forbidden", "decision_target_mismatch")
+			}
+			if d.CancelRequested || d.Phase == "cancelled" {
+				return runtime.Applied(Output{tx.Scope().Ref(in.DecisionID, d.Record.Revision), d.Record.Status}), nil
+			}
+			if d.Phase == "completed" {
+				return runtime.Outcome{}, api.E("invalid_state", "decision_completed")
 			}
 			d.CancelRequested = true
 			if !d.Record.SendStarted {
@@ -140,7 +147,7 @@ func (s *Service) decide(ctx context.Context, tx runtime.Tx, a runtime.Auth, c a
 	if e != nil || !now.Before(deadline) {
 		return Output{}, api.E("expired", "decision_expired")
 	}
-	d := decision{Revision: 1, Record: api.DecisionRecord{DecisionID: in.DecisionID, OwnerID: tx.Scope().OwnerID, Revision: 1, SnapshotRevision: in.SnapshotRevision, Status: "accepted", Usage: []api.Amount{}, UsageFinal: !s.config.Engine.Physical()}, Input: in, Principal: a, CommandID: c.CommandID, InputDigest: digest, Phase: "accepted", CallID: api.NewID("call"), Publications: []pendingContent{}, ProposalContentID: api.NewID("content")}
+	d := decision{Revision: 1, Record: api.DecisionRecord{DecisionID: in.DecisionID, OwnerID: tx.Scope().OwnerID, Revision: 1, SnapshotRevision: in.SnapshotRevision, Status: "accepted", Usage: []api.Amount{}, UsageFinal: !s.config.Engine.Physical()}, Input: in, Principal: a, CommandID: c.CommandID, InputDigest: digest, Phase: "accepted", CallID: s.config.Identity.NewID("call"), Publications: []pendingContent{}, ProposalContentID: s.config.Identity.NewID("content")}
 	if e = tx.Create(ctx, records, in.DecisionID, in.TaskRef.ObjectID, d); e != nil {
 		return Output{}, e
 	}
@@ -441,7 +448,7 @@ func (s *Service) saveGenerated(ctx context.Context, store runtime.Store, scope 
 			n.Phase = "publishing"
 			n.Publications = []pendingContent{}
 			for _, c := range out.Contents {
-				n.Publications = append(n.Publications, pendingContent{GeneratedContent: c, ContentID: api.NewID("content")})
+				n.Publications = append(n.Publications, pendingContent{GeneratedContent: c, ContentID: s.config.Identity.NewID("content")})
 			}
 			return nil
 		})

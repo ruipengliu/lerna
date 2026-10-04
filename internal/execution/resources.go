@@ -200,6 +200,9 @@ func (s *Service) release(ctx context.Context, tx rt.Tx, a rt.Auth, c api.Comman
 	if err != nil {
 		return lease, err
 	}
+	if lease.State == "released" || lease.State == "releasing" {
+		return lease, nil
+	}
 	lease.Revision = rev + 1
 	lease.State = "releasing"
 	lease.ActuallyStopped = false

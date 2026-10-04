@@ -288,7 +288,7 @@ func (s *Service) steerTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth,
 	if e = s.authorize(ctx, tx, auth, "task.steer", []api.ContentRef{in.AmendmentRef}, []api.ObjectRef{in.SourceSubmissionRef}); e != nil {
 		return TaskOutput{}, e
 	}
-	pending := pendingSteer{Input: in, Revision: 1, CommandID: c.CommandID, SubjectID: auth.SubjectID, UploadID: api.NewID("upload"), State: "pending"}
+	pending := pendingSteer{Input: in, Revision: 1, CommandID: c.CommandID, SubjectID: auth.SubjectID, UploadID: s.config.Identity.NewID("upload"), State: "pending"}
 	if e = tx.Create(ctx, steers, c.CommandID, in.TaskID, pending); e != nil {
 		return TaskOutput{}, e
 	}
@@ -539,7 +539,7 @@ func (s *Service) controlSnapshot(ctx context.Context, tx runtime.Tx, t taskStat
 	if !now.Before(before) {
 		return api.ControlSnapshot{}, api.E("expired", "control_window_expired")
 	}
-	window := api.ControlSnapshot{OrchestratorID: tx.Scope().OwnerID, TaskID: t.Task.TaskID, GoalRevision: t.Task.GoalRevision, ControlRevision: t.Task.ControlRevision, Status: status, Control: control, IssuedAt: api.Time(now), StartBefore: api.Time(before), WindowID: api.NewID("window")}
+	window := api.ControlSnapshot{OrchestratorID: tx.Scope().OwnerID, TaskID: t.Task.TaskID, GoalRevision: t.Task.GoalRevision, ControlRevision: t.Task.ControlRevision, Status: status, Control: control, IssuedAt: api.Time(now), StartBefore: api.Time(before), WindowID: s.config.Identity.NewID("window")}
 	window.ProofRef, e = s.ports.ControlProof.SealControl(ctx, tx, window)
 	if e != nil {
 		return api.ControlSnapshot{}, e

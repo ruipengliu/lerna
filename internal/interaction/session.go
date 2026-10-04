@@ -248,9 +248,10 @@ func (s *Service) ControlSessionTx(ctx context.Context, tx runtime.Tx, auth runt
 	if c.ExpectedRevision == nil || *c.ExpectedRevision != r.Session.Revision {
 		return SessionOutput{}, api.E("revision_conflict", "revision_changed")
 	}
-	if r.Session.State == "deleted" {
+	if r.Session.State == "deleted" && c.Method != "session.delete" {
 		return SessionOutput{}, api.E("gone", "session_deleted")
 	}
+	state := r.Session.State
 	switch c.Method {
 	case "session.archive":
 		r.Session.State = "archived"
@@ -261,8 +262,10 @@ func (s *Service) ControlSessionTx(ctx context.Context, tx runtime.Tx, auth runt
 	default:
 		return SessionOutput{}, invalid("unknown_control")
 	}
-	if err = saveSession(ctx, tx, &r); err != nil {
-		return SessionOutput{}, err
+	if r.Session.State != state {
+		if err = saveSession(ctx, tx, &r); err != nil {
+			return SessionOutput{}, err
+		}
 	}
 	var b branchRecord
 	if _, err = tx.Get(ctx, branches, r.Session.DefaultBranchID, &b); err != nil {

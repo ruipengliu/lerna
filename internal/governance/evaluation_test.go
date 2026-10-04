@@ -219,6 +219,11 @@ func TestFormalAttemptAndHoldoutRemainOccupiedAfterCancellation(t *testing.T) {
 	if r.Stage != "applied" {
 		t.Fatalf("cancel: %+v", r)
 	}
+	firstCancel := r
+	_, r = command(t, f, "evaluation.cancel", runID, governance.IDInput{ID: runID}, nil)
+	if r.Stage != "applied" || !api.Equal(r.Output, firstCancel.Output) {
+		t.Fatalf("repeat cancellation changed run facts: %+v", r)
+	}
 	drain(t, f, "governance.eval_cancel")
 	next := evaluationPlan(t, f, content, 1, "formal", time.Now().Add(time.Minute), &pr)
 	registerFormalPlanFixture(t, f, next)
@@ -332,6 +337,11 @@ func TestRealPairedRunSealsOriginalStatisticsAndLateFailureInvalidatesQualificat
 	}
 	drain(t, f, "governance.exposure")
 	view := query[governance.EvaluationRead](t, f, "evaluation.read", governance.IDInput{ID: runID})
+	_, cancelled := command(t, f, "evaluation.cancel", runID, governance.IDInput{ID: runID}, nil)
+	var cancellation governance.StateOutput
+	if err := api.Decode(cancelled.Output, &cancellation); err != nil || cancelled.Stage != "applied" || cancellation.State != "sealed" || cancellation.Ref.Revision != view.Run.Revision {
+		t.Fatalf("sealed cancellation misreported or changed original run: %+v %v", cancelled, err)
+	}
 	if !view.Qualification.Eligible {
 		t.Fatalf("normal sealed feedback invalidated own report: %+v", view)
 	}

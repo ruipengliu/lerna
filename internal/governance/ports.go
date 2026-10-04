@@ -110,6 +110,7 @@ type GrantMetadataGate interface {
 }
 
 type Options struct {
+	Identity          runtime.Identity
 	GrantMetadataGate GrantMetadataGate
 	KnowledgeGate     KnowledgeGate
 	ResultNotices     ResultNoticeSink
@@ -134,6 +135,7 @@ type Service struct {
 }
 
 func New(store runtime.Store, options Options) *Service {
+	options.Identity = runtime.IdentityOrDefault(options.Identity)
 	return &Service{Store: store, Ports: options}
 }
 
