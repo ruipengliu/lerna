@@ -68,3 +68,10 @@ A 阶段在 01–03 完成后退出：共同身份、两种数据库耐久工作
 依据：[validation](../../docs/architecture/validation.md#工程切片与退出条件)、[validation](../../docs/architecture/validation.md#故障与并发反例)、[capabilities](../../docs/architecture/capabilities.md#决策引擎只形成下一步提案)、[contracts](../../docs/architecture/contracts.md#能力模块方法)、[ADR-0002](../../docs/adr/0002-stable-kernel-replaceable-strategies.md)、[ADR-0004](../../docs/adr/0004-transactional-durable-work.md)、[ADR-0005](../../docs/adr/0005-explicit-effect-uncertainty.md)。
 
 2026-10-04，准确c9de1ba的[CI37174778053](ci-verification.md)已实际success，包含新增PG普通/race及原双库回归；旧待核验记录保留为历史。02/03/06已claimed并采用[候选兼容](proposal-decisions.md)、[控制](control-decisions.md)、[实际生命周期](process-lifecycle-handoff.md)，使用新的独立工作树。当前21/42AC，完整profile及whole03仍未退出。
+
+
+2026-10-04，02有界候选票七AC resolved。准确产品3d60b6a、完整产品回归25287d5、
+最终共享helper与独立两个原public producer消费者及两轴固定复核8f94f26；详细
+[七AC退出证据](ticket-02-exit-evidence.md)与[API](ticket-02-api-handoff.md)保存实际命令、
+资源、失败及资格边界。当前本交付树01／02／04／05／06合计34/42AC；03取消／资源、
+实际最终合并树架构、完整profile广告与远端CI仍由root后续验收，Implementation继续in-progress。

@@ -27,6 +27,10 @@ type Config struct {
 }
 type Service struct{ config Config }
 
+func supportedRuleVersion(version string) bool {
+	return version == "fixture-rule/2" || version == "fixture-rule/3"
+}
+
 func New(cfg Config) (*Service, error) {
 	if _, err := v.Encode(cfg.Owner); err != nil {
 		return nil, err
@@ -256,7 +260,7 @@ func (s *Service) Decide(ctx context.Context, data []byte, trusted *v.SubjectBin
 			} else {
 				receipt = accepted(command, request.Target)
 			}
-		} else if request.Payload.ComponentRef != s.config.Component || permission.ChargeBasis != "durable_rule_start" || permission.RuleVersion != "fixture-rule/2" {
+		} else if request.Payload.ComponentRef != s.config.Component || permission.ChargeBasis != "durable_rule_start" || !supportedRuleVersion(permission.RuleVersion) {
 			receipt = rejected(command, "unsupported")
 		} else {
 			if _, _, err = s.config.Store.PoolQueue(ctx, tx, state, oldObject(request.Target), "decide", "ordinary"); err != nil {

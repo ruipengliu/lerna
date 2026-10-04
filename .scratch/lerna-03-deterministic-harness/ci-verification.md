@@ -44,3 +44,21 @@ normal25.652s/race52.726s、新 Component22.831s/39.189s、Source／旧writer7.5
 上述历史success不关闭这一检查。实际工作流会在原recovery包normal／race中运行新增PG
 Decision进程故事，基础check运行target正常套件；没有独立target race的远端步骤，
 不得将远端范围扩成该证据。本地target最终race16.526s已有真实记录。
+
+
+## 06准确949检查点的真实CI
+
+Root已读取准确head949c39237fda562e8bda994a8e1454a27232dc72的
+[run37185512618](https://github.com/ruipengliu/lerna/actions/runs/37185512618)、
+两个job的全部step及实际日志，completed/success。contracts111386471262与
+durable-admission111386471367均success；locked bootstrap、模块校验、生成一致性、
+类型检查、JS20／TS37及build通过。81新／158旧共同夹具正反序均实际双向字节往返，
+远端target普通1.521s；没有独立target race步骤。
+
+固定psql18.6／工具生命周期race1.629s；旧双库与新增Decision进程恢复
+normal29.421s/race66.181s；真实PG Component22.791s/38.557s、
+Source及原writer7.785s/10.387s；27项历史hash逐项OK。数据库count1、有限timeout120，
+新增Component／Source按p1顺序执行。部分不变unit输出cached，不称全部无缓存。
+
+该CI仅覆盖949已整合的01／04／05／06，不覆盖后来候选票cad6905或未合入取消票。
+候选本检查点的新push CI待核验；完整03profile、架构和最终退出仍未由此关闭。
