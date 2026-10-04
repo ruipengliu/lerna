@@ -41,8 +41,8 @@ func TestContentTargetReadPoliciesBindExactPublishedDeclaration(t *testing.T) {
 				case "length":
 					altered.ByteLength = "7"
 				}
-				// A current visible request declaration mismatch remains integrity. Policy
-				// full-ref binding is evaluated after this existing exact-record comparison.
+				// Bind policy to actual A before comparing the requested declaration B.
+				// Authorization for actual A permits integrity for that incorrect request.
 				mismatch, err := service.Get(ctx, contentGetWire(t, altered, nil), &contentPrincipal)
 				integrity, ok := mismatch.AsRejected()
 				if err != nil || !ok || integrity.Reason != "integrity" {
