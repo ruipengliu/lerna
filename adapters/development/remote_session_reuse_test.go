@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/ruipengliu/lerna/adapters/collaboration"
+	"github.com/ruipengliu/lerna/adapters/execution"
 	"github.com/ruipengliu/lerna/api"
 	"github.com/ruipengliu/lerna/internal/governance"
 	"github.com/ruipengliu/lerna/internal/interaction"
@@ -217,11 +218,8 @@ func TestConfiguredRemoteChildSecondGoalNeedsRealClosureAndFreshOnceAllocation(t
 
 func configureRemoteReuseProfile(ctx context.Context, t *testing.T, a, b *configuredAgentEndpoint, p collaboration.RemoteAgentProfile, permissions []api.ObjectRef) collaboration.RemoteAgentProfile {
 	t.Helper()
-	p = configureRemoteFileScope(ctx, t, a, b, p, permissions[0])
-	values := p.Values
-	values.PermissionRefs = append([]api.ObjectRef{}, permissions...)
-	// 固定16用途；仅用历史元数据的child.new_goal替换本片不需要的need_context。
-	values.MaterialPurposes = []string{"task.goal", "task.submit", "content.write", "brain.input", "task.context", "task.delegate", "task.steer", "task.snapshot", "task.action", "execution.arguments", "brain.output", "task.attach_evidence", "task.complete", "task.input", "child.new_goal", "task.accept_result"}
+	// 管理阶段只安装准确最终profile；未消费的中间file profile不需要重开App。
+	values := remoteSessionReuseProfileValues(p.Values, permissions, b.app.ReadBinding, b.app.WriteBinding, b.app.Scope.OwnerID, component("managed-files"))
 	var err error
 	p, err = collaboration.NewRemoteAgentProfile(api.NewID("agent"), "1.0.0", values)
 	if err != nil {
@@ -241,6 +239,20 @@ func configureRemoteReuseProfile(ctx context.Context, t *testing.T, a, b *config
 		e.startRun(t)
 	}
 	return p
+}
+
+func remoteSessionReuseProfileValues(values collaboration.RemoteAgentValues, permissions []api.ObjectRef, readBinding, writeBinding api.ObjectRef, receiver string, resource api.ComponentRef) collaboration.RemoteAgentValues {
+	values.PermissionRefs = append([]api.ObjectRef{}, permissions...)
+	values.CapabilityRefs = []api.ComponentRef{execution.FileReadCapability().Ref, execution.FileWriteCapability().Ref}
+	values.BindingRefs = []api.ObjectRef{readBinding, writeBinding}
+	values.ResourceRefs = []api.ComponentRef{resource}
+	values.ActionScopes = []collaboration.RemoteActionScope{
+		{CapabilityRef: values.CapabilityRefs[0], BindingRef: readBinding, Resources: []string{"managed-files"}, ResourceRefs: []api.ComponentRef{resource}, Actions: []string{"file.read"}, Recipient: receiver, Location: "cloud"},
+		{CapabilityRef: values.CapabilityRefs[1], BindingRef: writeBinding, Resources: []string{"managed-files"}, ResourceRefs: []api.ComponentRef{resource}, Actions: []string{"file.write"}, Recipient: receiver, Location: "cloud"},
+	}
+	// 固定16用途；仅用历史元数据的child.new_goal替换本片不需要的need_context。
+	values.MaterialPurposes = []string{"task.goal", "task.submit", "content.write", "brain.input", "task.context", "task.delegate", "task.steer", "task.snapshot", "task.action", "execution.arguments", "brain.output", "task.attach_evidence", "task.complete", "task.input", "child.new_goal", "task.accept_result"}
+	return values
 }
 func publishRemoteSessionHistoryGoal(ctx context.Context, t *testing.T, b *configuredAgentEndpoint, session api.ObjectRef, text string) api.ContentRef {
 	t.Helper()

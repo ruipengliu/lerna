@@ -90,13 +90,24 @@ type remoteSessionCurrentWithdrawal struct {
 
 func remoteSessionCurrentWithdrawalOriginal(ctx context.Context, t *testing.T, driver string) remoteSessionCurrentWithdrawal {
 	t.Helper()
+	started := time.Now()
+	stage := func(name string) {
+		deadline, _ := ctx.Deadline()
+		t.Logf("original fixture stage=%s at=%s elapsed=%s remaining=%s", name, time.Now().UTC().Format(time.RFC3339Nano), time.Since(started), time.Until(deadline))
+	}
+	stage("begin")
 	a, b, p := configuredAgentPairWithParentDriver(t, driver)
+	stage("pair_ready")
 	permission := approveRemoteDelegationGrant(ctx, t, a, b.app.Scope.OwnerID)
+	stage("grant_ready")
 	p = configureRemoteReuseProfile(ctx, t, a, b, p, []api.ObjectRef{permission})
+	stage("final_profile_ready")
 	handle, _ := configureOriginalRemoteSession(ctx, t, a, b, p)
+	stage("session_ready")
 	history := publishRemoteSessionHistoryGoal(ctx, t, b, *handle.ChildSessionRef, "This exact ordinary history confers no continuing identity or Scope authority.")
 	goal, parent := configuredAgentOriginalParent(ctx, t, a)
 	send, d, child := sendRemoteSessionNewGoal(ctx, t, a, b, p, handle, parent, goal, permission, 1)
+	stage("original_child_ready")
 	meta, err := b.app.RemoteAgent.ChildSessionContext(ctx, b.app.Scope, child)
 	if err != nil || meta == nil || meta.SourceCommandRef != a.app.Scope.Ref(send.CommandID, 1) || meta.SessionRef != *handle.ChildSessionRef || meta.HistoryCutoff != 1 || meta.Binding.AccessScopeRef != handle.AccessScopeRef {
 		t.Fatal("accepted original Session/cutoff/send mapping", err)
