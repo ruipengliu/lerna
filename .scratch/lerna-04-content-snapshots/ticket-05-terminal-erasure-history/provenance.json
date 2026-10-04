@@ -1,0 +1,11 @@
+{
+  "source": "/tmp/lerna-04-ticket-05-terminal-erasure-history-decision.md",
+  "bytes": 7389,
+  "sha256": "3185552b6a06156793a6faaf20c01b46f2decb26fe4e02de3c44544e5553adb7",
+  "agent": "/root/results_08_decisions",
+  "model": "gpt-6-astra",
+  "reasoning_effort": "high",
+  "source_partial": "51e331ea18d42ce32442003a343aa451d30e460c",
+  "integration_before_adoption": "1fbb9d0d7f606b515c900e44fec83fa73a282e0c",
+  "qualification": "Static minimal terminal-history decision following root-read actual natural-phase first red 2.309s native1 group_absent. Ordinary writer not yet fixed or qualified."
+}
