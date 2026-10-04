@@ -394,6 +394,21 @@ func (s *Service) inputJob(ctx context.Context, store runtime.Store, scope runti
 		return tx.Put(ctx, pendingInputs, pending.CommandID, rev, current)
 	})
 }
+
+// 这里只固定已完整收束快照的首次来源证明；它不是当前启动许可。
+// 每次查询仍先核当次 Task 与全部关系，迟到的新事实拥有自己的快照键。
+type closedTaskProof struct {
+	TaskRef        api.ObjectRef  `json:"task_ref"`
+	SnapshotDigest string         `json:"snapshot_digest"`
+	IssuedAt       string         `json:"issued_at"`
+	ProofRef       api.ContentRef `json:"proof_ref"`
+}
+
+// 宿主可再次核原签封记录及出版拒绝，不能在此出站、重签或创建新责任。
+type closureProofValidator interface {
+	CheckClosureProofTx(context.Context, runtime.Tx, ClosureView) error
+}
+
 func (s *Service) Closure(ctx context.Context, store runtime.Store, scope runtime.Scope, auth runtime.Auth, ref api.ObjectRef) (ClosureView, error) {
 	if e := runtime.CheckRef(scope, ref); e != nil {
 		return ClosureView{}, e
@@ -457,11 +472,41 @@ func (s *Service) Closure(ctx context.Context, store runtime.Store, scope runtim
 			refs = append(refs, tx.Scope().Ref(child.TaskID, child.Revision))
 		}
 		out = ClosureView{TaskRef: taskRef(tx, t), GoalWorkClosed: terminal(t), EffectsClosed: effects, AccountingOpen: t.Task.AccountingOpen, IssuedAt: api.Time(now), SnapshotDigest: digest, EvidenceRefs: refs}
+		closed := out.GoalWorkClosed && out.EffectsClosed && !out.AccountingOpen
+		sealKey := t.Task.TaskID + "/" + digest
+		if closed {
+			var original closedTaskProof
+			e = tx.GetVersion(ctx, "task.closed_snapshot_proofs", sealKey, 1, &original)
+			if e == nil {
+				if original.TaskRef != out.TaskRef || original.SnapshotDigest != out.SnapshotDigest {
+					return api.E("idempotency_conflict", "original_closed_snapshot_changed")
+				}
+				if _, e = api.ParseTime(original.IssuedAt); e != nil {
+					return e
+				}
+				out.IssuedAt, out.ProofRef = original.IssuedAt, original.ProofRef
+				if e = s.checkSourceProof(tx.Scope(), out.ProofRef); e != nil {
+					return e
+				}
+				if validator, ok := s.ports.ClosureProof.(closureProofValidator); ok {
+					return validator.CheckClosureProofTx(ctx, tx, out)
+				}
+				return nil
+			} else if !confirmedNotFound(e) {
+				return e
+			}
+		}
 		out.ProofRef, e = s.ports.ClosureProof.SealClosureTx(ctx, tx, out)
 		if e != nil {
 			return e
 		}
-		return s.checkSourceProof(tx.Scope(), out.ProofRef)
+		if e = s.checkSourceProof(tx.Scope(), out.ProofRef); e != nil {
+			return e
+		}
+		if closed {
+			return tx.Create(ctx, "task.closed_snapshot_proofs", sealKey, t.Task.TaskID, closedTaskProof{TaskRef: out.TaskRef, SnapshotDigest: out.SnapshotDigest, IssuedAt: out.IssuedAt, ProofRef: out.ProofRef})
+		}
+		return nil
 	})
 	return out, err
 }

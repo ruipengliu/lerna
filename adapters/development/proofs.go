@@ -123,6 +123,30 @@ func (p closureProof) SealClosureTx(ctx context.Context, tx runtime.Tx, c task.C
 	}
 	return ref, e
 }
+
+// 重读已封存的原来源证明，不更新签发时间或出版责任。
+// VerifySource 仅核历史来源；当前 State/控制启动仍核各自的有限窗口。
+func (p closureProof) CheckClosureProofTx(ctx context.Context, tx runtime.Tx, c task.ClosureView) error {
+	var saved sealedProof
+	if _, err := tx.Get(ctx, "platform.proofs", c.ProofRef.ContentID, &saved); err != nil {
+		return err
+	}
+	unsigned := c
+	unsigned.ProofRef = api.ContentRef{}
+	if saved.Closure == nil || !api.Equal(*saved.Closure, unsigned) || saved.Ref != c.ProofRef || api.Hash([]byte(saved.Compact)) != c.ProofRef.Hash || uint64(len(saved.Compact)) != c.ProofRef.ByteLength {
+		return api.E("idempotency_conflict", "original_closed_proof_changed")
+	}
+	if saved.PublicationFailure != nil {
+		return api.E("invalid_state", "proof_publication_failed")
+	}
+	digest, err := api.Digest(unsigned)
+	if err != nil {
+		return err
+	}
+	_, err = p.a.Keys.VerifySource(saved.Compact, platform.ProofClaims{TenantID: tx.Scope().TenantID, Issuer: tx.Scope().OwnerID, Audience: tx.Scope().OwnerID, Purpose: "closure", ObjectRef: c.TaskRef, Digest: digest, WindowID: c.ProofRef.ContentID})
+	return err
+}
+
 func (a *App) verifyControlTx(ctx context.Context, tx runtime.Tx, auth runtime.Auth, c api.ControlSnapshot) error {
 	if !auth.HasRole("service") || auth.SubjectID != c.OrchestratorID {
 		return api.E("forbidden", "orchestrator_identity_required")
