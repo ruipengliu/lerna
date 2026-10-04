@@ -38,6 +38,7 @@ type CapabilityBinding struct {
 // Snapshot is explicitly a fixture manifest, not an Orchestrator Snapshot.
 type Snapshot struct {
  Ref v.SnapshotRef `json:"snapshot_ref"`
+ Raw []byte `json:"-"`
  TaskRef v.TaskObjectRef `json:"task_ref"`
  GoalRevision v.Revision `json:"goal_revision"`
  ControlRevision v.Revision `json:"control_revision"`
@@ -72,6 +73,7 @@ type Record struct {
  Failure *v.DecisionFailure `json:"failure,omitempty"`
  ControlBasis *v.ControlBasis `json:"control_basis,omitempty"`
  Reason string `json:"reason,omitempty"`
+ CloseTaskRef *v.TaskObjectRef `json:"close_task_ref,omitempty"`
  StartedEpoch int64 `json:"started_epoch"`
 }
 type CommandRecord struct {
@@ -86,7 +88,8 @@ type Repository interface {
  LockDecision(context.Context,runtime.Tx,v.DecisionRef)(*Record,error)
  SaveDecision(context.Context,runtime.Tx,Record)error
  ReadDecision(context.Context,runtime.Tx,v.DecisionRef)(*Record,error)
- ReadCommand(context.Context,runtime.Tx,v.CommandRef)(*CommandRecord,error)
+ ExpiredCandidates(context.Context,runtime.Tx,time.Time,int)([]runtime.Job,error)
+ ReadCommandRecord(context.Context,runtime.Tx,v.CommandRef)(*CommandRecord,error)
 }
 // Pool ports remain owned by this consumer. Only the shared finite values and
 // pure FIFO calculations live in workpool.
