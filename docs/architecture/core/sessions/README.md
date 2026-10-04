@@ -8,6 +8,7 @@
 | 2026-10-04 | 按[第三轮评审处理记录](../../../review/archive/round-3/disposition.md)修订：区分输入的"任务已接纳"与"已处理"，会改变任务依据的输入处理之前，目标推进和成功关闭等待（R3-01）。 |
 | 2026-10-05 | 可读性：2.4 增加确认状态与两种消费目标的流程图。规则不变。 |
 | 2026-10-05 | 2.5 写明不改变任务依据的回答同时推进 `bound_input_version`，与任务编排 2.2 对齐，并增加输入类别与版本影响图；第 3 节的错误指引区分确定拒绝与结果未知。 |
+| 2026-10-05 | 用户输入的 `kind` 改为 `input_kind`；2.1 写明与契约的关系。 |
 
 - 状态：草稿
 - 负责满足：C6、C7；协同 C1、C2、C5；直接承担 G3，协同保障 G4、G6–G9、G11、G12
@@ -54,6 +55,8 @@
 
 ### 2.1 通用字段
 
+本节的字段同时出现在命令信封和会话保存的对象中；公共的会话输入、确认对象以[核心契约 2.3](../contracts/README.md#23-对象一览)为准，同名字段含义相同。
+
 所有持久对象带 `user_id`、对象标识和契约版本，可变对象带修订号。时间字段用于展示、诊断或明确的到期判断，不得代替业务顺序。
 
 | 字段 | 语义 |
@@ -76,7 +79,7 @@
 | 会话 | `session_id`、`status`、`last_committed_seq`、`revision` | 独立于任务创建和关闭 |
 | 分支 | `branch_id`、`parent_branch_id`、`fork_message_id`、`fork_snapshot_seq`、`head_message_id`、`revision` | 父链无环；历史前缀固定到具体的消息版本 |
 | 消息事件 | `event_id`、`session_seq`、`branch_id`、`message_id`、`parent_message_id`、`event_kind`、`content_ref` | 身份和已有顺序不改写；正文可以被内容治理撤回 |
-| 用户输入 | `input_id`、`message_id`、`kind`、目标引用、提交时看到的版本、`routing_status` | 投递后目标不可静默改变 |
+| 用户输入 | `input_id`、`message_id`、`input_kind`、目标引用、提交时看到的版本、`routing_status` | 投递后目标不可静默改变 |
 | 任务关联 | `association_id`、`session_id`、`branch_id`、`task_id`、`role`、`revision` | 角色为"控制"或"引用"；关联不转移任务负责方，也不是授权 |
 | 输入请求 | `request_id`、`kind`、来源会话/分支/任务、请求版本、正文引用、有效期、状态 | 独立 UI 中的问题可以不关联任务 |
 | 确认绑定 | 事项类型（`GRANT_ISSUANCE` 签发授权、`OPERATION_ADMISSION` 动作准入）、事项标识、条件集版本、输入版本、关联版本、事项摘要（覆盖事项类型）、相关授权版本 | 由核心固定，回应方不得修改；事项类型在消费时不能更换 |

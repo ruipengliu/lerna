@@ -9,6 +9,7 @@
 | 2026-10-04 | 按[第三轮评审处理记录](../../../review/archive/round-3/disposition.md)修订：条件集接纳绑定已处理的输入版本（R3-01）；冻结只存在于 `VERIFYING`（R3-02）；准入记录保存祖先控制依据和记忆依赖（R3-03、R3-05）；模型调用按"提议请求 + 调用位置"标识（R3-04）；内容区分原始观察与派生解释（R3-06）。主流程第 3 步改为先固定模型输入再准入，补上第二轮 R2-05 漏改的一处。 |
 | 2026-10-04 | 按[第四轮评审处理记录](../../../review/disposition.md)修订：开始核验递增控制代次，被拒绝后已开始的清单动作须收尾才能补建（R4-01）；父任务等直接子任务全部关闭后才开始核验（R4-02）；从未开放出口的动作以原账本的内部封闭证明收尾（R4-05）。 |
 | 2026-10-05 | 顶层整理：2.5 只保留状态和转换，增加任务、动作、核验轮次三张状态图；2.6 由"两个门禁"改为"四道门禁"，把散在任务编排、出口闸门、授权等文档中的准入、开始、重试、完成条件集中到一处，并列出递增控制代次的全部事件和收尾的两条路径。第 4 节主线表的局部持久化点改称"持久点 n"，"P4""P5"只指出口闸门的编号。规则内容不变。 一致性修正：门禁条件加稳定编号（准入-1 等），供模块文档引用；记忆依赖区分当前依据与历史视图；开始门禁区分首次开始与安全重发；完成门禁关闭时比较本轮核验记录的依据；准备类准入也豁免条件集已接纳；准入失败时确定的拒绝仍作为决定保存；不改变依据的回答同步推进已处理输入版本；授权确认不带条件集版本；三个错误码的分类改为"不可恢复"。 |
+| 2026-10-05 | 字段与状态统一：内容增加发布维度（`publish_status`，暂存、已发布、隔离），`media_type` 写明指核验后的类型；会话输入的 `sequence` 改为 `session_seq`；新增"模块文档的字段表与本表的关系"。 |
 
 - 状态：草稿
 - 负责满足：A4；为 A1–A3、C1–C9、G1–G12 提供共同定义
@@ -89,6 +90,8 @@ Ref = 全局名字 + revision + schema_id + digest（可选）
 
 下表列出最小字段集合和唯一写入方。正文和原始证据一律用内容引用，避免把私密数据复制到每个对象。字段命名是建议的机器名称，含义以中文说明为准。
 
+**模块文档的字段表与本表的关系。**模块文档里的字段表默认描述本模块的内部记录或读取视图。与本表同名的字段含义相同；模块不得给本表已有的字段另起名字。模块需要更细的字段时（例如内容治理把 `media_type` 细分为声明值和核验值），必须写明它与本表字段的关系。
+
 | 对象 | 关键字段 | 唯一写入方与约束 |
 | --- | --- | --- |
 | 任务（Task） | `goal_ref`、`owner_domain_id`、`requirements_version`、`input_version`、`lifecycle`、`control`、`progress`、`waiting_on[]`、`planning_generation`、`parent_task_ref?`、`result_ref?` | 任务编排。负责方从创建到关闭不变；父子关系不转移子任务的责任 |
@@ -104,9 +107,9 @@ Ref = 全局名字 + revision + schema_id + digest（可选）
 | 预算（Budget） | `scope_ref`、`limits[]`、`use_control`、`reserved`、`settled`、`unresolved_usage_refs[]` | 预算。额度、预留和实耗分开记录；关闭后不再接受新消耗，但仍接受已发生的费用 |
 | 预算依据 | `budget_ref`、`unit`、`ceiling`、`rate_basis_ref?`、`reservation_ref` | 准入时保存。`ceiling` 是本次调用的费用上界；上界未知的调用不准入 |
 | 用量回报 | `report_id`、`operation_id`、`attempt_id`、`billing_source`、`source_revision`、`measurement`、`amounts[]`、`evidence_refs[]` | 预算接收。区分累计值、增量、更正和退款；按计费来源去重，不得只按动作去重 |
-| 内容（Content） | `content_version`、`media_type`、`location_ref`、`digest?`、`source`（区分可信出口固定的**原始观察**与插件或模型产生的**派生解释**）、`acquired_at`、`producer_ref?`、`producer_instance_ref?`、`derived_from[]`、`policy_ref`（含操作权利和处理目的的上限）、`retention_until?`、`use_status`、`cleanup_status` | 内容治理。原始字节、索引、摘要、模型输出都可以进入派生关系 |
+| 内容（Content） | `content_version`、`media_type`（核验后的类型）、`location_ref`、`digest?`、`source`（区分可信出口固定的**原始观察**与插件或模型产生的**派生解释**）、`acquired_at`、`producer_ref?`、`producer_instance_ref?`、`derived_from[]`、`policy_ref`（含操作权利和处理目的的上限）、`retention_until?`、`publish_status`、`use_status`、`cleanup_status` | 内容治理。原始字节、索引、摘要、模型输出都可以进入派生关系 |
 | 结果（Result） | `task_id`、`outcome`、`close_reason`、`requirements_version`、`requirement_evaluations[]`、`operation_snapshot_refs[]`、`uncertainties[]`、`pending_responsibility_refs[]`、`answer_ref?`、`usage_snapshot_ref`、`closed_at` | 任务编排，与任务关闭在同一事务写入，之后不再修改。`requirement_evaluations[]` 逐条列出条件、核验规则及版本、条件来源（用户、模板、模型整理）和结论，供用户判断条件集是否漏项 |
-| 会话输入 | `session_id`、`sequence`、`task_id?`、`input_kind`、`content_ref` | 会话。会话可以不关联任务 |
+| 会话输入 | `session_id`、`session_seq`、`task_id?`、`input_kind`、`content_ref` | 会话。会话可以不关联任务 |
 | 确认 | `session_id`、`subject_kind`（`GRANT_ISSUANCE` 或 `OPERATION_ADMISSION`）、`scope`、`requirements_version?`（只用于动作准入）、`intent_fingerprint`（覆盖 `subject_kind`）、`expires_at`、`consumed_by?: GrantIssuanceRef \| AdmissionRef` | 会话。只能被与之匹配的那个事项消费一次；消费目标是互斥的类型联合，类型必须与 `subject_kind` 一致 |
 | 命令记录 | `CommandIdentity`、指纹、阶段（已受理／已决定）、决定、结果引用、负责域、提交位置 | 持久工作。受理与待办同事务提交；决定与业务事实同事务提交，只写一次 |
 | 待办工作（Job） | 工作标识、输入引用、状态、`claim_epoch`、租约、输出引用 | 持久工作 |
@@ -153,6 +156,7 @@ Ref = 全局名字 + revision + schema_id + digest（可选）
 | 迟到可能性 | 从未可能发出时为 `RULED_OUT`；可能发出后为 `MAY_OCCUR`；`MAY_OCCUR → RULED_OUT` | 必须有明确证明，不得由超时、租约过期或用户取消推断 |
 | 授权 | `ACTIVE → REVOKED`；撤销另有完成状态 `PENDING → COMPLETE`。是否过期、剩余次数都由有效期和使用记录计算，不是状态 | `REVOKED` 一经写入即拒绝新准入和新凭据；各执行端点确认停止后撤销才 `COMPLETE`。任何时候都可以撤销，包括次数已用完、已过期的授权 |
 | 预算使用 | `OPEN → CLOSED` | 关闭后仍可追加已发生的费用；预留只有在证明不会再产生对应费用后才能释放 |
+| 内容发布 | `STAGED → PUBLISHED`；`STAGED` 或 `PUBLISHED` → `QUARANTINED` | 只有 `PUBLISHED` 的版本才可能 `USABLE`；隔离的版本不可使用 |
 | 内容使用 | `USABLE → UNUSABLE` | 删除或撤回时立即不可用，不等清理完成 |
 | 内容清理 | `NONE → REQUESTED → CLEANING → CLEANED` | `CLEANED` 必须覆盖全部已登记的受控持有方、历史版本和派生项 |
 

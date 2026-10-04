@@ -8,6 +8,7 @@
 | 2026-10-04 | 按[第三轮评审处理记录](../../../review/archive/round-3/disposition.md)修订：效果证据区分可信出口固定的原始观察与适配器的派生解释，终局结论由受信解释规则判定（R3-06）。 |
 | 2026-10-04 | 按[第四轮评审处理记录](../../../review/disposition.md)修订：收尾分内部封闭证明和外部终局核验两条受信路径，从未开放出口的动作不需要外部观察（R4-05）。 |
 | 2026-10-05 | 可读性：2.3 增加收尾两条证据路径的流程图。规则不变。 交接关联改用完整的 `CommandIdentity`。 |
+| 2026-10-05 | 字段名统一为 `external_key_scope`、`next_reconcile_at`；2.1 写明公共字段与内部记录的边界。 |
 
 - 状态：草稿
 - 负责满足：C4、C5；直接负责 G1、G2（动作收尾部分）、G3、G11；协同落实 G4、G5、G8–G10、G12
@@ -45,6 +46,8 @@ Lerna 能保证的是"责任和记录在故障后可恢复"。效果能否自动
 
 ### 2.1 关键字段
 
+本表混合了公共对象和账本的内部记录：动作、执行尝试和效果的公共字段以[核心契约 2.3](../contracts/README.md#23-对象一览)为准，同名字段含义相同；交接关联、核对记录、补传记录是账本的内部记录。
+
 | 对象 | 关键字段 | 约束 |
 | --- | --- | --- |
 | 动作意图 | `operation_id`、`task_id`、`admission_ref`、`requirements_version` | 动作标识在准入时生成；不从参数哈希推导 |
@@ -55,10 +58,10 @@ Lerna 能保证的是"责任和记录在故障后可恢复"。效果能否自动
 | 能力依据 | `adapter_version`、`provider_api_version`、`capability_snapshot` | 保存当时的能力声明；恢复时与当前声明取两者都能保证的部分 |
 | 动作状态 | `lifecycle`、`dispatch`、`effect`、`late_effect`、`reconcile_state`、`ledger_revision` | 派发封闭不可逆；每次改变递增修订 |
 | 执行尝试 | `attempt_id`、`attempt_no`、`phase` | 结果未知后的重发复用原尝试；不得用新尝试规避未知 |
-| 外部键绑定 | `external_key`、`key_scope`、`key_valid_until?`、`first_possible_send_at` | 在第一次出口前持久保存；无法证明的窗口不得自动重发 |
+| 外部键绑定 | `external_key`、`external_key_scope`、`key_valid_until?`、`first_possible_send_at` | 在第一次出口前持久保存；无法证明的窗口不得自动重发 |
 | 出口记录 | `attempt_id`、`send_seq`、`purpose`、`claim_epoch`、`provider_request_id?` | 每次物理发送一条记录 |
 | 效果证据 | `observation_id`、`source`、`evidence_ref`、`resource_version`、`observed_at`、`terminality_proof?`、`raw_observation_refs[]`、`interpretation_rule_ref?`、`adapter_version` | 时间戳不得作为跨来源的排序依据；终局证明必须覆盖原尝试。强结论（`NOT_APPLIED`、`RULED_OUT`）只有两条受信路径：没有任何发送进入 `DISPATCH_POSSIBLE` 时，用原账本的内部封闭证明；至少一次发送可能已发生时，只能基于可信出口固定的原始观察，由受信解释规则判定。见 2.3 |
-| 核对记录 | `policy_version`、`next_check_at`、`check_count`、`limits`、`pause_reason?` | 调度和暂停原因持久保存；暂停不改变效果 |
+| 核对记录 | `policy_version`、`next_reconcile_at`、`check_count`、`limits`、`pause_reason?` | 调度和暂停原因持久保存；暂停不改变效果 |
 | 补传记录 | `writer_stream_id`、`stream_epoch`、`event_seq`、`event_digest`、`acknowledged_prefix` | 流身份不复用；只推进已被持久接纳的连续前缀 |
 | 费用关联 | `billing_source_ref`、`budget_delivery_ref` | 计费来源由预算去重，不得用尝试标识代替 |
 
