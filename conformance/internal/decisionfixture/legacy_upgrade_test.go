@@ -963,10 +963,56 @@ func restoreFrozenProduction(t *testing.T, final01 bool, driver []byte) string {
 		if err := os.WriteFile(destination, driver, 0600); err != nil {
 			t.Fatal("final01 consumer driver write:", err)
 		}
+	} else {
+		// All frozen payload/provenance hashes have been validated above. Only
+		// this scope's added supervision driver receives the release guard;
+		// archived production and the immutable driver artifact stay intact.
+		destination := filepath.Join(dir, "conformance", "internal", "decisionfixture", "legacy_writer_test.go")
+		original, err := readUpgradeBounded(destination, 32*1024)
+		if err != nil {
+			t.Fatal(upgradeCause("historical added-driver read", err))
+		}
+		guarded, err := guard970AddedDriverRelease(original)
+		if err != nil {
+			t.Fatal(upgradeCause("historical added-driver release guard", err))
+		}
+		if err = os.WriteFile(destination, guarded, 0600); err != nil {
+			t.Fatal(upgradeCause("historical guarded driver write", err))
+		}
 	}
 	success = true
 	return dir
 }
+
+// The original 970 closure labels this file added_driver, not production.
+// Its verified sha256 is immutable. This finite restoration-only patch changes
+// exactly the two post-READY refusal exits, so an unconfirmed current writer
+// cannot cause the old t.Cleanup administrators to drop transferred schemas.
+// Normal RELEASE and every business state/publication oracle are unchanged.
+func guard970AddedDriverRelease(original []byte) ([]byte, error) {
+	const originalHash = "266f74ee54198afde427b64dc0468bde8a123ec11a03ddef58c33594c38d42bc"
+	sum := sha256.Sum256(original)
+	if hex.EncodeToString(sum[:]) != originalHash {
+		return nil, errors.New("historical added-driver source hash mismatch")
+	}
+	before := []string{
+		"\tcase err := <-released:\n\t\tif err != nil {\n\t\t\tt.Fatal(err)\n\t\t}",
+		"\t\tt.Fatal(\"legacy parent release deadline\")",
+	}
+	after := []string{
+		"\tcase err := <-released:\n\t\tif err != nil {\n\t\t\tfmt.Fprintln(os.Stderr, \"historical RELEASE unconfirmed; retain acknowledged scopes\")\n\t\t\tos.Exit(2)\n\t\t}",
+		"\t\tfmt.Fprintln(os.Stderr, \"historical RELEASE deadline; retain acknowledged scopes\")\n\t\tos.Exit(2)",
+	}
+	guarded := string(original)
+	for index, source := range before {
+		if strings.Count(guarded, source) != 1 {
+			return nil, errors.New("historical added-driver release guard source mismatch")
+		}
+		guarded = strings.Replace(guarded, source, after[index], 1)
+	}
+	return []byte(guarded), nil
+}
+
 func safeUpgradePath(path string) bool {
 	return path != "" && !filepath.IsAbs(path) && filepath.Clean(path) == path && path != ".." && !strings.HasPrefix(path, "../")
 }
