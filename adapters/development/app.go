@@ -319,11 +319,7 @@ func OpenAppForRole(ctx context.Context, c Config, initialize bool, role string)
 	if e != nil {
 		return nil, fmt.Errorf("construct Brain: %w", e)
 	}
-	a.TaskPolicy = task.TaskPolicy{PolicyRef: component("task-policy"), ContinuationLimit: 30, RepairLimit: 3, NoProgressLimit: 8, ContextRoundLimit: 3, SafeAttemptLimit: 1, MaxRequirements: 20, MaxDelegations: 20, MaxDepth: 4, CostMode: "strict", BudgetLimits: []api.Amount{{Unit: "USD", Value: "100"}}, MaxEvidenceStalenessSeconds: 300, MaxDurationSeconds: 3600, InputPolicyRef: a.AnswerSchema, RuleRegistryRef: component("rule-registry")}
-	if c.WASI != nil && c.WASI.CPUSecondsBudgetLimit != "" {
-		a.TaskPolicy.BudgetLimits = append(a.TaskPolicy.BudgetLimits, api.Amount{Unit: "cpu_seconds", Value: c.WASI.CPUSecondsBudgetLimit})
-	}
-	a.TaskPolicy.PolicyRef.Digest, _ = api.Digest(a.TaskPolicy)
+	a.TaskPolicy = builtinTaskPolicy(c, a.AnswerSchema)
 	a.Knowledge, e = configureKnowledge(a, c.Knowledge)
 	if e != nil {
 		return nil, e
