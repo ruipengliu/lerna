@@ -14,6 +14,8 @@ import (
 
 var helperName = regexp.MustCompile(`^Test[A-Za-z0-9]+$`)
 
+var ErrClosing = errors.New("test child lifecycle closing")
+
 // Child is a direct os.Executable test child, never a compiler/provider or
 // arbitrary executable. Its concrete owner registers it before calling Start.
 type Child struct {
@@ -24,6 +26,10 @@ type Child struct {
 	startAttempted, hasProcess, confirmed, expectedKill                     bool
 	waitErr                                                                 error
 	output                                                                  output
+	afterStart                                                              func()
+	startDone                                                               chan struct{}
+	closing                                                                 bool
+	startErr                                                                error
 }
 
 // New returns a nonnil cleanup holder after any pipe allocation. No process is
@@ -40,7 +46,7 @@ func New(ctx context.Context, helper, marker string) (*Child, error) {
 	if err != nil {
 		return nil, cause("test executable unavailable", err)
 	}
-	c := &Child{done: make(chan struct{})}
+	c := &Child{done: make(chan struct{}), startDone: make(chan struct{})}
 	c.cmd = exec.CommandContext(ctx, executable, "-test.run=^"+helper+"$", "-test.count=1", "-test.timeout=30s")
 	c.cmd.Env = append(os.Environ(), marker)
 	c.cmd.Stdout, c.cmd.Stderr = &c.output, &c.output
@@ -65,13 +71,21 @@ func New(ctx context.Context, helper, marker string) (*Child, error) {
 
 func (c *Child) Start() error {
 	c.mu.Lock()
+	if c.closing {
+		c.mu.Unlock()
+		return ErrClosing
+	}
 	if c.startAttempted {
 		c.mu.Unlock()
 		return errors.New("test child Start repeated")
 	}
 	c.startAttempted = true
 	c.mu.Unlock()
+	defer close(c.startDone)
 	err := c.cmd.Start()
+	if c.afterStart != nil {
+		c.afterStart()
+	}
 	if c.cmd.Process != nil {
 		c.mu.Lock()
 		c.hasProcess = true
@@ -92,7 +106,20 @@ func (c *Child) Start() error {
 			closed = append(closed, cause("test child inherited parent endpoint close unknown", p.Close()))
 		}
 	}
-	return errors.Join(cause("test child Start failed", err), errors.Join(closed...))
+	result := errors.Join(cause("test child Start failed", err), errors.Join(closed...))
+	c.mu.Lock()
+	c.startErr = result
+	c.mu.Unlock()
+	return result
+}
+
+func (c *Child) awaitStart(ctx context.Context) error {
+	select {
+	case <-c.startDone:
+		return nil
+	case <-ctx.Done():
+		return cause("test child Start completion unknown", ctx.Err())
+	}
 }
 
 func (c *Child) Send(ctx context.Context, value any) error {
@@ -115,15 +142,20 @@ func (c *Child) Wait(ctx context.Context) (bool, error) {
 		return false, errors.New("finite child Wait context required")
 	}
 	c.mu.Lock()
-	hasProcess := c.hasProcess
 	attempted := c.startAttempted
 	c.mu.Unlock()
-	if !hasProcess {
-		if attempted {
-			return true, nil
-		} // Start returned no OS handle.
+	if !attempted {
 		return false, errors.New("child has not attempted Start")
 	}
+	if err := c.awaitStart(ctx); err != nil {
+		return false, err
+	}
+	c.mu.Lock()
+	hasProcess, startErr := c.hasProcess, c.startErr
+	c.mu.Unlock()
+	if !hasProcess {
+		return true, startErr
+	} // Actual Start completed with no OS handle.
 	select {
 	case <-c.done:
 		c.mu.Lock()
@@ -148,6 +180,15 @@ func killed(err error) bool {
 
 // KillWait validates the actual SIGKILL WaitStatus, not just any nonzero exit.
 func (c *Child) KillWait(ctx context.Context) error {
+	if ctx == nil {
+		return errors.New("child SIGKILL context required")
+	}
+	if _, ok := ctx.Deadline(); !ok {
+		return errors.New("finite child SIGKILL context required")
+	}
+	if err := c.awaitStart(ctx); err != nil {
+		return err
+	}
 	if c.cmd.Process == nil {
 		return errors.New("child SIGKILL requires actual process")
 	}
@@ -179,12 +220,28 @@ func (c *Child) closePipes() error {
 // errors. Unknown Wait or first pipe Close reports false, holding both concrete
 // scopes. Parent native DB unknown remains independent of child exit.
 func (c *Child) Stop(ctx context.Context) (bool, error) {
+	if ctx == nil {
+		return false, errors.New("child Stop context required")
+	}
+	if _, ok := ctx.Deadline(); !ok {
+		return false, errors.New("finite child Stop context required")
+	}
+	c.mu.Lock()
+	c.closing = true
+	attempted := c.startAttempted
+	c.mu.Unlock()
+	if attempted {
+		if err := c.awaitStart(ctx); err != nil {
+			return false, err
+		}
+	}
 	c.mu.Lock()
 	hasProcess, confirmed, expected := c.hasProcess, c.confirmed, c.expectedKill
+	startErr := c.startErr
 	c.mu.Unlock()
 	if !hasProcess {
 		err := c.closePipes()
-		return err == nil, err
+		return err == nil, errors.Join(startErr, err)
 	}
 	var killErr error
 	sentKill := false
@@ -197,6 +254,9 @@ func (c *Child) Stop(ctx context.Context) (bool, error) {
 	}
 	confirmed, waitErr := c.Wait(ctx)
 	if confirmed && (expected || sentKill && killed(waitErr)) {
+		c.mu.Lock()
+		c.expectedKill = true
+		c.mu.Unlock()
 		waitErr = nil
 	}
 	pipeErr := c.closePipes()
