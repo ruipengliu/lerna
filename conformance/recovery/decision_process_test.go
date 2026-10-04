@@ -57,26 +57,39 @@ type heldRuleStore struct {
 
 func (s *heldRuleStore) Within(ctx context.Context, owner contract.OwnerRef, fn func(context.Context, runtime.Tx) error) error {
 	marker := &completionMarker{}
-	return s.Store.Within(ctx, owner, func(txctx context.Context, tx runtime.Tx) error {
+	err := s.Store.Within(ctx, owner, func(txctx context.Context, tx runtime.Tx) error {
 		txctx = context.WithValue(txctx, completionMarkerKey{}, marker)
 		if err := fn(txctx, tx); err != nil {
 			return err
 		}
-		if marker.stage == nil {
+		if marker.stage == nil || s.cfg.Gate != "completed_staged_before_commit" {
 			return nil
 		}
-		if err := s.pipes.Emit(txctx, *marker.stage); err != nil {
-			return err
-		}
-		var release ruleProcessFrame
-		if err := s.pipes.Receive(txctx, &release); err != nil {
-			return err
-		}
-		if release.Stage != "release" || release.Scenario != s.cfg.Scenario || release.Generation != s.cfg.Generation {
-			return errors.New("wrong original completion gate release")
-		}
-		return nil
+		return s.hold(txctx, *marker.stage)
 	})
+	if err != nil {
+		return err
+	}
+	if marker.stage != nil && s.cfg.Gate == "completed_commit_before_reply" {
+		// Core has actually returned successful Commit. Its transaction context
+		// is now cancelled; the original finite child context owns this reply hold.
+		return s.hold(ctx, *marker.stage)
+	}
+	return nil
+}
+
+func (s *heldRuleStore) hold(ctx context.Context, stage ruleProcessFrame) error {
+	if err := s.pipes.Emit(ctx, stage); err != nil {
+		return err
+	}
+	var release ruleProcessFrame
+	if err := s.pipes.Receive(ctx, &release); err != nil {
+		return err
+	}
+	if release.Stage != "release" || release.Scenario != s.cfg.Scenario || release.Generation != s.cfg.Generation {
+		return errors.New("wrong original completion gate release")
+	}
+	return nil
 }
 
 func (s *heldRuleStore) SaveDecision(ctx context.Context, tx runtime.Tx, record decision.Record) error {
@@ -91,7 +104,7 @@ func (s *heldRuleStore) SaveDecision(ctx context.Context, tx runtime.Tx, record 
 		return errors.New("original completed callback identity missing")
 	}
 	proposal, artifact := *record.ProposalRef, record.ArtifactRefs[0]
-	marker.stage = &ruleProcessFrame{Scenario: s.cfg.Scenario, Generation: s.cfg.Generation, Stage: "completed_staged_before_commit", ProposalRef: &proposal, ArtifactRef: &artifact}
+	marker.stage = &ruleProcessFrame{Scenario: s.cfg.Scenario, Generation: s.cfg.Generation, Stage: s.cfg.Gate, ProposalRef: &proposal, ArtifactRef: &artifact}
 	return nil
 }
 
@@ -152,7 +165,7 @@ func TestDecisionRuleProcess(t *testing.T) {
 	if err = pipes.Receive(ctx, &cfg); err != nil {
 		t.Fatal(err)
 	}
-	if cfg.Scenario == "" || cfg.Generation < 1 || (cfg.Gate != "" && cfg.Gate != "published_before_finish" && cfg.Gate != "completed_staged_before_commit") {
+	if cfg.Scenario == "" || cfg.Generation < 1 || (cfg.Gate != "" && cfg.Gate != "published_before_finish" && cfg.Gate != "completed_staged_before_commit" && cfg.Gate != "completed_commit_before_reply") {
 		t.Fatal("invalid normal rule process configuration")
 	}
 	connection := postgres.Config{DSN: os.Getenv("LERNA_TEST_POSTGRES_DSN"), Schema: cfg.Source.Schema, MaxOpenConnections: 4, TransactionTimeout: 3 * time.Second, StatementTimeout: 2 * time.Second, LockTimeout: time.Second}
@@ -184,7 +197,7 @@ func TestDecisionRuleProcess(t *testing.T) {
 		publisher = &heldRulePublisher{Publisher: source, cfg: cfg, pipes: pipes}
 	}
 	var consumerStore decision.Store = store
-	if cfg.Gate == "completed_staged_before_commit" {
+	if cfg.Gate == "completed_staged_before_commit" || cfg.Gate == "completed_commit_before_reply" {
 		consumerStore = &heldRuleStore{Store: store, cfg: cfg, pipes: pipes}
 	}
 	service, err := newRuleProcessService(consumerStore, source, publisher, cfg.Scene, fmt.Sprintf("rule-process-%d", cfg.Generation))
@@ -517,6 +530,136 @@ func TestDecisionNormalChildPublishesOriginalProposalAndReceipt(t *testing.T) {
 }
 
 func sameRuleJSON(a, b []byte) bool { return string(a) == string(b) }
+
+func TestDecisionSIGKILLAfterCompletionCommitRetainsOriginalReplyFact(t *testing.T) {
+	for _, kill := range []bool{false, true} {
+		name := "normal_release"
+		if kill {
+			name = "SIGKILL_response_unknown"
+		}
+		t.Run(name, func(t *testing.T) {
+			ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+			defer cancel()
+			w := fixture.NewWorld(t, ctx)
+			scene := w.Scenario()
+			service := w.Service()
+			raw, err := v.Encode(scene.Request)
+			if err != nil {
+				t.Fatal(err)
+			}
+			out, err := service.Decide(ctx, raw, &scene.Subject)
+			if err != nil {
+				t.Fatal(err)
+			}
+			received, ok := out.AsReceived()
+			if !ok {
+				t.Fatal("original fixed receipt missing")
+			}
+			if _, ok = received.Receipt.AsAccepted(); !ok {
+				t.Fatal("original Decision rejected")
+			}
+			child, _ := startRuleChild(t, w, ctx, "completed_commit_before_reply", 1)
+			var stage ruleProcessFrame
+			if err = child.Event(ctx, &stage); err != nil {
+				t.Fatal("actual completed COMMIT/pre-reply gate missing:", err)
+			}
+			if stage.Stage != "completed_commit_before_reply" || stage.Scenario != "original-rule-decision" || stage.Generation != 1 || stage.ProposalRef == nil || stage.ArtifactRef == nil {
+				t.Fatal("wrong committed original Decision identity")
+			}
+			// Independent public Get must see completed before the child returns.
+			view, err := service.Get(ctx, scene.GetJSON, &scene.Subject)
+			if err != nil {
+				t.Fatal(err)
+			}
+			found, ok := view.AsFound()
+			if !ok {
+				t.Fatal("original committed Decision missing")
+			}
+			completed, ok := found.Decision.AsCompleted()
+			if !ok || completed.ProposalRef != *stage.ProposalRef || completed.Proposal.DecisionRef != scene.DecisionRef {
+				t.Fatal("held stage preceded actual completed COMMIT")
+			}
+			original, err := v.Encode(found.Decision)
+			if err != nil {
+				t.Fatal(err)
+			}
+			proposalBytes, err := w.ReadArtifact(ctx, completed.ProposalRef)
+			if err != nil {
+				t.Fatal("independent committed Proposal publication missing", err)
+			}
+			candidate, ok := completed.Proposal.Advance.AsCandidateResult()
+			if !ok || len(candidate.ArtifactRefs) != 1 || candidate.ArtifactRefs[0] != *stage.ArtifactRef {
+				t.Fatal("original committed artifact identity missing")
+			}
+			artifact, err := w.ReadArtifact(ctx, candidate.ArtifactRefs[0])
+			if err != nil || string(artifact) != "fixture result: alpha\n" {
+				t.Fatal("independent original artifact bytes missing", err)
+			}
+			if kill {
+				killCtx, killCancel := context.WithTimeout(ctx, 2*time.Second)
+				defer killCancel()
+				if err = child.KillWait(killCtx); err != nil {
+					t.Fatal(err)
+				}
+				var reply ruleProcessFrame
+				if err = child.Reply(killCtx, &reply); err != io.EOF {
+					t.Fatal("killed committed Decision returned reply", err)
+				}
+				confirmed, closeErr := child.Stop(killCtx)
+				if !confirmed || closeErr != nil {
+					t.Fatal("committed Decision exit/pipe cleanup unknown", closeErr)
+				}
+			} else {
+				if err = child.Send(ctx, ruleProcessFrame{Stage: "release", Scenario: stage.Scenario, Generation: 1}); err != nil {
+					t.Fatal(err)
+				}
+				finishRuleChild(t, ctx, child, 1)
+			}
+			w.Reopen(ctx)
+			service = w.Service()
+			step, err := service.Step(ctx)
+			if err != nil || step.Processed != 0 {
+				t.Fatal("completed original Decision was processed again", err)
+			}
+			view, err = service.Get(ctx, scene.GetJSON, &scene.Subject)
+			if err != nil {
+				t.Fatal(err)
+			}
+			found, ok = view.AsFound()
+			if !ok {
+				t.Fatal("original completed Decision absent after reopen")
+			}
+			after, err := v.Encode(found.Decision)
+			if err != nil || !sameRuleJSON(original, after) {
+				t.Fatal("original committed Proposal/usage/revision changed", err)
+			}
+			proposalAfter, err := w.ReadArtifact(ctx, completed.ProposalRef)
+			if err != nil || !sameRuleJSON(proposalBytes, proposalAfter) {
+				t.Fatal("original committed Proposal bytes changed", err)
+			}
+			artifactAfter, err := w.ReadArtifact(ctx, candidate.ArtifactRefs[0])
+			if err != nil || !sameRuleJSON(artifact, artifactAfter) {
+				t.Fatal("original committed artifact bytes changed", err)
+			}
+			query, err := service.GetCommand(ctx, scene.CommandGetJSON, &scene.Subject)
+			if err != nil {
+				t.Fatal(err)
+			}
+			fixed, ok := query.AsFound()
+			if !ok {
+				t.Fatal("original accepted receipt absent after committed kill")
+			}
+			a, err := v.Encode(received.Receipt)
+			if err != nil {
+				t.Fatal(err)
+			}
+			b, err := v.Encode(fixed.Receipt)
+			if err != nil || !sameRuleJSON(a, b) {
+				t.Fatal("committed kill changed original fixed receipt", err)
+			}
+		})
+	}
+}
 
 func TestDecisionSIGKILLAfterPublicationRecoversOriginalRefs(t *testing.T) {
 	for _, kill := range []bool{false, true} {
