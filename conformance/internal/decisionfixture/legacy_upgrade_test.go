@@ -978,9 +978,9 @@ func restoreFrozenProduction(t *testing.T, final01 bool, driver []byte) string {
 		if err != nil {
 			t.Fatal(upgradeCause("historical added-driver read", err))
 		}
-		guarded, err := guard970AddedDriverRelease(original)
+		guarded, err := guard970AddedDriverQualificationAndRelease(original)
 		if err != nil {
-			t.Fatal(upgradeCause("historical added-driver release guard", err))
+			t.Fatal(upgradeCause("historical added-driver qualification/release guard", err))
 		}
 		if err = os.WriteFile(destination, guarded, 0600); err != nil {
 			t.Fatal(upgradeCause("historical guarded driver write", err))
@@ -991,28 +991,36 @@ func restoreFrozenProduction(t *testing.T, final01 bool, driver []byte) string {
 }
 
 // The original 970 closure labels this file added_driver, not production.
-// Its verified sha256 is immutable. This finite restoration-only patch changes
-// exactly the two post-READY refusal exits, so an unconfirmed current writer
-// cannot cause the old t.Cleanup administrators to drop transferred schemas.
-// Normal RELEASE and every business state/publication oracle are unchanged.
-func guard970AddedDriverRelease(original []byte) ([]byte, error) {
+// Its verified sha256 is immutable. This finite restoration-only conversion
+// tightens the added driver's Claim cause/qualification oracle and two
+// post-READY refusal exits. Original production, requests, normal fact creation
+// and READY protocol stay unchanged; the driver error oracle is strengthened.
+func guard970AddedDriverQualificationAndRelease(original []byte) ([]byte, error) {
 	const originalHash = "266f74ee54198afde427b64dc0468bde8a123ec11a03ddef58c33594c38d42bc"
 	sum := sha256.Sum256(original)
 	if hex.EncodeToString(sum[:]) != originalHash {
 		return nil, errors.New("historical added-driver source hash mismatch")
 	}
 	before := []string{
+		"\t\"encoding/json\"\n",
+		"\tv \"github.com/ruipengliu/lerna/contract/v1_1\"\n",
+		"\t\t\tif err != nil || claim == nil {\n\t\t\t\tt.Fatal(\"old publication claim missing\")\n\t\t\t}",
+		"\t\t\tif err = service.RunClaim(ctx, claim.Claim); err == nil {\n\t\t\t\tt.Fatal(\"expired old Finish unexpectedly committed\")\n\t\t\t}",
 		"\tcase err := <-released:\n\t\tif err != nil {\n\t\t\tt.Fatal(err)\n\t\t}",
 		"\t\tt.Fatal(\"legacy parent release deadline\")",
 	}
 	after := []string{
+		"\t\"encoding/json\"\n\t\"errors\"\n",
+		"\tv \"github.com/ruipengliu/lerna/contract/v1_1\"\n\t\"github.com/ruipengliu/lerna/runtime\"\n",
+		"\t\t\tif err != nil {\n\t\t\t\tt.Fatal(\"old publication claim failed:\", err)\n\t\t\t}\n\t\t\tif claim == nil {\n\t\t\t\tt.Fatal(\"old publication claim missing\")\n\t\t\t}",
+		"\t\t\terr = service.RunClaim(ctx, claim.Claim)\n\t\t\tqualified := errors.Is(err, runtime.ErrClaim)\n\t\t\tfor cause, depth := err, 0; qualified && cause != nil; depth++ {\n\t\t\t\tif depth == 32 {\n\t\t\t\t\tqualified = false\n\t\t\t\t\tbreak\n\t\t\t\t}\n\t\t\t\tif joined, ok := cause.(interface{ Unwrap() []error }); ok {\n\t\t\t\t\tcauses := joined.Unwrap()\n\t\t\t\t\tif len(causes) != 1 {\n\t\t\t\t\t\tqualified = false\n\t\t\t\t\t\tbreak\n\t\t\t\t\t}\n\t\t\t\t\tcause = causes[0]\n\t\t\t\t} else {\n\t\t\t\t\tcause = errors.Unwrap(cause)\n\t\t\t\t}\n\t\t\t}\n\t\t\tif !qualified {\n\t\t\t\tt.Fatal(\"old publication Finish qualification failed or included other causes:\", err)\n\t\t\t}",
 		"\tcase err := <-released:\n\t\tif err != nil {\n\t\t\tfmt.Fprintln(os.Stderr, \"historical RELEASE unconfirmed; retain acknowledged scopes\")\n\t\t\tos.Exit(2)\n\t\t}",
 		"\t\tfmt.Fprintln(os.Stderr, \"historical RELEASE deadline; retain acknowledged scopes\")\n\t\tos.Exit(2)",
 	}
 	guarded := string(original)
 	for index, source := range before {
 		if strings.Count(guarded, source) != 1 {
-			return nil, errors.New("historical added-driver release guard source mismatch")
+			return nil, errors.New("historical added-driver qualification/release source mismatch")
 		}
 		guarded = strings.Replace(guarded, source, after[index], 1)
 	}
