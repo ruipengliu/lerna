@@ -300,6 +300,31 @@ func verifyUpgradeCase(t *testing.T, ctx context.Context, old upgradeCase) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	// DDL classifies measurements only. Business closure belongs to the real
+	// current owner's Maintain transaction and trusted database clock.
+	migrated, err := service.Get(ctx, old.GetRequest, &subject)
+	if err != nil {
+		t.Fatal(err)
+	}
+	migratedFound, ok := migrated.AsFound()
+	if !ok {
+		t.Fatal("classified old fact unavailable")
+	}
+	migratedBytes, err := v.Encode(migratedFound.Decision)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var beforeDDL, afterDDL map[string]json.RawMessage
+	_ = json.Unmarshal(old.DecisionBefore, &beforeDDL)
+	_ = json.Unmarshal(migratedBytes, &afterDDL)
+	for _, key := range []string{"status", "revision"} {
+		if !sameUpgradeJSON(beforeDDL[key], afterDDL[key]) {
+			t.Fatalf("migration changed business %s before owner Maintain", key)
+		}
+	}
+	if _, err = service.Maintain(ctx); err != nil {
+		t.Fatal(err)
+	}
 	view, err := service.Get(ctx, old.GetRequest, &subject)
 	if err != nil {
 		t.Fatal(err)
