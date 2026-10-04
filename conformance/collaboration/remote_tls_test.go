@@ -373,8 +373,15 @@ func TestRemoteTLSLostCreateKeepsOriginalAllocationChildAndGoal(t *testing.T) {
 	goal := parent.publish(t, goalBody)
 	id := api.NewID("delegation")
 	in := task.DelegateInput{DelegationID: id, ParentTaskRef: parent.scope.Ref(current.TaskID, current.Revision), ParentGoalRevision: current.GoalRevision, GoalRef: goal, InputRefs: []api.ContentRef{}, AgentBindingRef: profile.Values.AgentBindingRef, PermissionRefs: []api.ObjectRef{}, Budget: []api.Amount{{Unit: "USD", Value: "3"}}, Deadline: api.Time(time.Now().Add(10 * time.Minute)), PolicyRef: child.taskPolicy.PolicyRef, ReceiverID: child.scope.OwnerID}
-	delegated, err := parent.task.Delegate(parent.ctx, parent.store, parent.scope, parent.auth, parent.command("task.delegate", id, in), in)
-	if err != nil {
+	// 原普通委派必须经登记入口共同提交封套、回执与固定 handoff；
+	// 直接 Task.Delegate 不产生后续恢复所需的原 StoredCommand。
+	originalDelegate := parent.command("collaboration.delegate", id, in)
+	delegateReceipt, err := parent.dispatch.Command(parent.ctx, parent.auth, api.Raw(originalDelegate))
+	if err != nil || delegateReceipt.Stage != "applied" || delegateReceipt.Error != nil {
+		t.Fatalf("original public delegation %+v %v", delegateReceipt, err)
+	}
+	var delegated task.DelegateOutput
+	if err = api.Decode(delegateReceipt.Output, &delegated); err != nil {
 		t.Fatal(err)
 	}
 	var d task.Delegation
@@ -388,11 +395,12 @@ func TestRemoteTLSLostCreateKeepsOriginalAllocationChildAndGoal(t *testing.T) {
 		t.Fatal(err)
 	}
 	child.lostCreate.Store(true)
-	if _, err = parent.remote.Create(parent.ctx, parent.scope, d, allocation); err == nil {
+	_, firstCreateErr := parent.remote.Create(parent.ctx, parent.scope, d, allocation)
+	if firstCreateErr == nil {
 		t.Fatal("actual lost create reply was accepted as known")
 	}
 	if child.creates.Load() != 1 {
-		t.Fatalf("initial physical create calls %d", child.creates.Load())
+		t.Fatalf("initial physical create calls %d: original error %v", child.creates.Load(), firstCreateErr)
 	}
 	pending, err := parent.remote.Create(parent.ctx, parent.scope, d, allocation)
 	if err != nil || pending.ChildTaskRef != nil {
@@ -431,6 +439,9 @@ func TestRemoteTLSLostCreateKeepsOriginalAllocationChildAndGoal(t *testing.T) {
 	all, err := child.store.List(child.ctx, child.scope, "task.tasks", child.auth.SubjectID, "", 10)
 	if err != nil || len(all) != 1 {
 		t.Fatalf("duplicate child tasks %d %v", len(all), err)
+	}
+	if replayed, err := parent.dispatch.Command(parent.ctx, parent.auth, api.Raw(originalDelegate)); err != nil || !api.Equal(replayed, delegateReceipt) || child.creates.Load() != 1 {
+		t.Fatalf("original delegate receipt changed or created again %+v %v", replayed, err)
 	}
 	parentCurrent, err := parent.task.Read(parent.ctx, parent.store, parent.scope, parent.auth, current.TaskID)
 	if err != nil || parentCurrent.Status != "active" || parentCurrent.ResultRef != nil || parentCurrent.Budget[0].Reserved != "3" {

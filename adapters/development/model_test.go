@@ -316,11 +316,17 @@ func TestConfiguredModelLostReplyPreservesOriginalCallAndOpenAccounting(t *testi
 	if err = a.Close(); err != nil {
 		t.Fatal(err)
 	}
+	// 重开是独立观察阶段；不刷新原 Task、命令、证明或 Claim 的任何业务期限。
+	cancel()
+	ctx, reopenCancel := context.WithTimeout(context.Background(), 45*time.Second)
+	defer reopenCancel()
+	reopenStarted := time.Now()
 	reopened, err := OpenApp(ctx, cfg, false)
 	if err != nil {
 		t.Fatal(err)
 	}
 	defer reopened.Close()
+	t.Logf("original_reopen_observer elapsed=%s", time.Since(reopenStarted))
 	if err = runtime.Drain(ctx, reopened.Store, reopened.Scope, reopened.Registry, 100); err != nil {
 		t.Fatal(err)
 	}

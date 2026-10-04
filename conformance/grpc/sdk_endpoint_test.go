@@ -241,7 +241,8 @@ func verifyGoWSEndpointUnknown(t *testing.T, f *unaryFixture) {
 		t.Fatal(err)
 	}
 	defer ws.Close()
-	for deadline := time.Now().Add(4 * time.Second); time.Now().Before(deadline); {
+	// Ack 是异步持久观察；使用原 15 秒观察 ctx，不额外截短为 4 秒。
+	for ctx.Err() == nil {
 		entry, err = journal.Invocation(ctx, d.DeliveryID)
 		if err != nil {
 			t.Fatal(err)
@@ -249,7 +250,10 @@ func verifyGoWSEndpointUnknown(t *testing.T, f *unaryFixture) {
 		if entry.Ack != nil {
 			break
 		}
-		time.Sleep(5 * time.Millisecond)
+		select {
+		case <-ctx.Done():
+		case <-time.After(5 * time.Millisecond):
+		}
 	}
 	if entry.Ack == nil || !entry.Ack.Stored || receiver.invoked.Load() != 1 || receiver.lookedUp.Load() < 1 || entry.Invocation.Sequence != 1 || !api.Equal(entry.Delivery, d) {
 		t.Fatalf("unknown replay reexecuted or lost original identity: %+v invoke=%d lookup=%d", entry, receiver.invoked.Load(), receiver.lookedUp.Load())

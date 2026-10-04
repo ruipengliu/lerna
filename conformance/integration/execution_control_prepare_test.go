@@ -260,9 +260,11 @@ func TestPreparedAttemptCommitUnknownResumesItsOriginalEncodedRequest(t *testing
 	if err != nil || status != rt.Committed || len(works) != 1 {
 		t.Fatalf("claim %+v %v", works, err)
 	}
-	armed.Store(true)
+	// 只在原 prepared Attempt 的实际 Create 成功后武装提交答复故障。
+	// Driver.Prepare 后仍有只读时钟事务；不能以“下一事务”代替这个边界。
+	boundary := &preparedAttemptCommitBoundary{Store: st, QueryBindingStore: st, operationID: in.OperationID, armed: &armed}
 	handler, _ := f.registry.Job(domain.RunJob)
-	if err = handler(context.Background(), st, f.sc, works[0]); !errors.Is(err, rt.ErrCommitUnknown) {
+	if err = handler(context.Background(), boundary, f.sc, works[0]); !errors.Is(err, rt.ErrCommitUnknown) {
 		t.Fatalf("prepared actual commit not unknown: %v", err)
 	}
 	var before domain.OperationView
@@ -320,4 +322,35 @@ func TestOldWorkerAfterPreparedWindowCannotEnterActualTarget(t *testing.T) {
 	if len(view.Attempts.Items) != 1 || view.Operation.Effect != "applied" || driver.prepared.Load() != 1 || !api.Equal(command, authority.original) {
 		t.Fatalf("new worker changed original preparation/window: %+v", view)
 	}
+}
+
+// 原事务和 SQLite 的 AfterCommit 故障保持真实；只观察准确 Attempt 创建边界。
+type preparedAttemptCommitBoundary struct {
+	rt.Store
+	rt.QueryBindingStore
+	operationID string
+	armed       *atomic.Bool
+}
+
+func (s *preparedAttemptCommitBoundary) Within(ctx context.Context, scope rt.Scope, parts []string, fn func(rt.Tx) error) (rt.CommitStatus, error) {
+	status, err := s.Store.Within(ctx, scope, parts, func(tx rt.Tx) error {
+		return fn(preparedAttemptCommitTx{Tx: tx, boundary: s})
+	})
+	if status == rt.RolledBack {
+		s.armed.Store(false)
+	}
+	return status, err
+}
+
+type preparedAttemptCommitTx struct {
+	rt.Tx
+	boundary *preparedAttemptCommitBoundary
+}
+
+func (tx preparedAttemptCommitTx) Create(ctx context.Context, namespace, id, parent string, value any) error {
+	err := tx.Tx.Create(ctx, namespace, id, parent, value)
+	if attempt, ok := value.(domain.Attempt); err == nil && ok && namespace == domain.Namespace+".attempts" && parent == tx.boundary.operationID && attempt.OperationID == parent && attempt.AttemptID == id && attempt.Phase == "prepared" {
+		tx.boundary.armed.Store(true)
+	}
+	return err
 }

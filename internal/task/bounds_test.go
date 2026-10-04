@@ -21,8 +21,20 @@ func TestReservationCapacityRejectsBeforeLosingCompleteBudgetIndex(t *testing.T)
 		t.Fatal(err)
 	}
 	current := h.submit(t)
-	if _, err = s.PrepareDecision(context.Background(), h.store, h.scope, h.trusted(), h.prepared(current, "1")); err != nil {
+	first := h.prepared(current, "1")
+	if _, err = s.PrepareDecision(context.Background(), h.store, h.scope, h.trusted(), first); err != nil {
 		t.Fatal(err)
+	}
+	current, err = s.Read(context.Background(), h.store, h.scope, h.auth, current.TaskID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err = s.PrepareDecision(context.Background(), h.store, h.scope, h.trusted(), h.prepared(current, "1")); !isTaskRejection(err, "invalid_state", "decision_pending") {
+		t.Fatalf("unconsumed original Decision did not retain serial gate: %v", err)
+	}
+	// 消费原提案后才观察预留集合容量；拒绝提案不释放仍未知的原预留。
+	if out, err := s.ConsumeProposal(context.Background(), h.store, h.scope, h.trusted(), task.Proposal{DecisionID: first.DecisionID, Kind: "refine_requirements", ReasonRef: current.GoalRef}, nil); err != nil || out.Outcome != "rejected" {
+		t.Fatalf("original proposal consumption %+v %v", out, err)
 	}
 	current, err = s.Read(context.Background(), h.store, h.scope, h.auth, current.TaskID)
 	if err != nil {

@@ -42,6 +42,16 @@ func TestLatestTaskSnapshotUsesExactOriginalAndRejectsOldControlAfterPause(t *te
 	if err != nil {
 		t.Fatal(err)
 	}
+	if _, err = h.service.PrepareDecision(ctx, h.store, h.scope, h.trusted(), h.prepared(current, "0")); !isTaskRejection(err, "invalid_state", "decision_pending") {
+		t.Fatalf("unconsumed original snapshot lost pending gate: %v", err)
+	}
+	if out, err := h.service.ConsumeProposal(ctx, h.store, h.scope, h.trusted(), task.Proposal{DecisionID: first.DecisionID, Kind: "refine_requirements", ReasonRef: current.GoalRef}, nil); err != nil || out.Outcome != "rejected" {
+		t.Fatalf("original proposal consumption %+v %v", out, err)
+	}
+	current, err = h.service.Read(ctx, h.store, h.scope, h.auth, original.TaskID)
+	if err != nil {
+		t.Fatal(err)
+	}
 	second := h.prepared(current, "0")
 	secondIntent, err := h.service.PrepareDecision(ctx, h.store, h.scope, h.trusted(), second)
 	if err != nil {

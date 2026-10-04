@@ -7,7 +7,11 @@ permissions:
 jobs:
   linux-reference:
     runs-on: ubuntu-24.04
-    timeout-minutes: 180
+    timeout-minutes: 360
+    strategy:
+      fail-fast: false
+      matrix:
+        suite: [normal, race]
     services:
       postgres:
         image: postgres:17.11@sha256:639ab7ceb90e13123085b741fb31ef493fba25463002f6da665352e7b534b652
@@ -55,10 +59,13 @@ jobs:
           # A failed namespace/resource probe fails qualification; it is never counted as a skipped pass.
           go test -v ./conformance/integration -run '^TestRestrictedWASIEnvironmentRequiresActualPinnedRuntimeBeforeReady$' -count=1
       - name: Generate, validate and run real SQLite and PostgreSQL checks
+        if: matrix.suite == 'normal'
         run: scripts/check
       - name: Run reference race checks
-        run: go test -race -p 2 -count=1 -timeout=90m ./...
+        if: matrix.suite == 'race'
+        run: python3 scripts/test_go.py --race
       - name: Run real browser against the reference PostgreSQL service
+        if: matrix.suite == 'normal'
         run: |
           pnpm exec playwright install --with-deps chromium
           export HARNESS_CHROMIUM="$(node --input-type=module -e 'import { chromium } from "playwright"; process.stdout.write(chromium.executablePath())')"

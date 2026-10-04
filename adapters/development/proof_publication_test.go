@@ -144,6 +144,11 @@ func TestExpiredUnacceptedClosureProofRecordsFailureAndFinishesOriginalJob(t *te
 			if err = a.Close(); err != nil {
 				t.Fatal(err)
 			}
+			// 重开是独立观察阶段；不刷新原 Task、命令、证明或 Claim 的任何业务期限。
+			cancel()
+			ctx, reopenCancel := context.WithTimeout(context.Background(), 45*time.Second)
+			defer reopenCancel()
+			reopenStarted := time.Now()
 			reopened, err := OpenApp(ctx, cfg, false)
 			if err != nil {
 				t.Fatal(err)
@@ -153,6 +158,7 @@ func TestExpiredUnacceptedClosureProofRecordsFailureAndFinishesOriginalJob(t *te
 					t.Error(err)
 				}
 			})
+			t.Logf("original_reopen_observer elapsed=%s", time.Since(reopenStarted))
 			recovered, err := reopened.Task.Read(ctx, reopened.Store, reopened.Scope, reopened.UserAuth, id)
 			if err != nil || !api.Equal(recovered, current) {
 				t.Fatalf("proof failure changed original terminal Task: %v", err)

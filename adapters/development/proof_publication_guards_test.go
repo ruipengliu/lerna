@@ -196,6 +196,11 @@ func runProofPublicationGuard(t *testing.T, driver, scenario string) {
 	if err = a.Close(); err != nil {
 		t.Fatal(err)
 	}
+	// 重开是独立观察阶段；不刷新原 Task、命令、证明或 Claim 的任何业务期限。
+	cancel()
+	ctx, reopenCancel := context.WithTimeout(context.Background(), 45*time.Second)
+	defer reopenCancel()
+	reopenStarted := time.Now()
 	reopened, err := OpenApp(ctx, cfg, false)
 	if err != nil {
 		t.Fatal(err)
@@ -205,6 +210,7 @@ func runProofPublicationGuard(t *testing.T, driver, scenario string) {
 			t.Error(err)
 		}
 	})
+	t.Logf("original_reopen_observer elapsed=%s", time.Since(reopenStarted))
 	var after sealedProof
 	if _, err = reopened.Store.Read(ctx, reopened.Scope, "platform.proofs", saved.Ref.ContentID, 0, &after); err != nil || !api.Equal(after, saved) {
 		t.Fatalf("original proof responsibility changed after reopen: %v", err)

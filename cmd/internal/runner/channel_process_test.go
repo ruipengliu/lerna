@@ -234,6 +234,24 @@ func testPublicGatewayChannelProcesses(t *testing.T, classifiedExecutor bool) {
 	if err != nil {
 		t.Fatal("actual public gateway HTTPS discovery did not become ready", err)
 	}
+	// HTTPS discovery 只证明 Gateway 就绪；先观察两原 Application 的监听启动，
+	// 再建立唯一业务连接，避免把进程启动时间混入原 5 秒 Channel 接纳窗口。
+	applicationsReady := time.Now().Add(70 * time.Second)
+	for _, address := range []string{firstAddress, secondAddress} {
+		for {
+			probe, e := (&net.Dialer{Timeout: time.Second}).DialContext(ctx, "tcp", address)
+			if e == nil {
+				if e = probe.Close(); e != nil {
+					t.Fatal(e)
+				}
+				break
+			}
+			if ctx.Err() != nil || !time.Now().Before(applicationsReady) {
+				t.Fatalf("original Application listener did not become ready: %v", e)
+			}
+			time.Sleep(20 * time.Millisecond)
+		}
+	}
 	conn, _, err := websocket.Dial(ctx, "wss://"+gatewayAddress+"/connect", &websocket.DialOptions{HTTPClient: httpClient, HTTPHeader: http.Header{"Authorization": []string{"Bearer " + token}}, Subprotocols: []string{"harness-wss.v1"}})
 	if err != nil {
 		t.Fatal(err)
@@ -243,7 +261,7 @@ func testPublicGatewayChannelProcesses(t *testing.T, classifiedExecutor bool) {
 	_, raw, err := conn.Read(ctx)
 	var ready harness.WSReady
 	if err != nil || api.Decode(raw, &ready) != nil || ready.Type != "ready" || ready.IdentityScope != discovery.IdentityScope {
-		t.Fatal("public channel did not return one accurate Ready")
+		t.Fatalf("public channel did not return one accurate Ready: type=%s identity_match=%v read_error=%v", ready.Type, ready.IdentityScope == discovery.IdentityScope, err)
 	}
 	original := api.Command{Protocol: api.Protocol, Profile: api.Profile, LogicalServiceID: c.OwnerID, CommandID: api.NewID("command"), Method: "session.create", TargetID: c.OwnerID, ExpiresAt: api.Time(time.Now().Add(time.Minute)), Payload: api.Raw(interaction.CreateSessionInput{SessionID: api.NewID("session"), DefaultBranchID: api.NewID("branch"), ConfigRef: api.ComponentRef{ComponentID: api.NewID("component"), Version: "1.0.0", Digest: api.Hash([]byte("public-channel-session"))}})}
 	request := func(seq uint64, kind string, payload any) harness.WSResponse {
