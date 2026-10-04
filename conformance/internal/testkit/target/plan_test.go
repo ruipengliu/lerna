@@ -3,6 +3,7 @@ package target_test
 import (
 	"errors"
 	"reflect"
+	"strings"
 	"testing"
 	"time"
 
@@ -333,5 +334,90 @@ func TestNoQueryLateOriginalAndPlanDeadlinePreserveResponsibility(t *testing.T) 
 	state, err := observer.Plan(f.ctx, expired.ID)
 	if err != nil || state.Cursor != 1 {
 		t.Fatalf("expired cursor advanced: %+v %v", state, err)
+	}
+}
+
+func TestPlanIdentityFiniteConfigurationAndRecordedRejection(t *testing.T) {
+	f := newFixture(t)
+	writer := f.open()
+	input := target.Request{Key: "original", Resource: "fake-document", Data: []byte("normal")}
+	plan := target.Plan{ID: "bounded", Seed: 17, Deadline: f.now.Add(time.Hour), Steps: []target.Step{{ID: "missing", Kind: target.ApplyReceived, Input: input}, {ID: "normal", Kind: target.WriteNormally, Input: input}}}
+	for _, change := range []func(*target.Plan){
+		func(p *target.Plan) { p.ID = strings.Repeat("x", 129) }, func(p *target.Plan) { p.Steps = nil }, func(p *target.Plan) { p.Steps = append(p.Steps, p.Steps[0]) }, func(p *target.Plan) { p.Steps[0].Kind = "unbounded" }, func(p *target.Plan) { p.Deadline = f.now }, func(p *target.Plan) { p.Deadline = f.now.Add(25 * time.Hour) }, func(p *target.Plan) { p.Deadline = time.Date(2500, 1, 1, 0, 0, 0, 0, time.UTC) },
+	} {
+		bad := plan
+		bad.Steps = append([]target.Step{}, plan.Steps...)
+		change(&bad)
+		if _, err := writer.InstallPlan(f.ctx, bad); err == nil {
+			t.Fatalf("unbounded/ambiguous plan accepted: %+v", bad)
+		}
+	}
+	if _, err := writer.InstallPlan(f.ctx, plan); err != nil {
+		t.Fatal(err)
+	}
+	changed := plan
+	changed.Steps = append([]target.Step{}, plan.Steps...)
+	changed.Steps[0].Input.Data = []byte("changed")
+	if _, err := writer.InstallPlan(f.ctx, changed); !errors.Is(err, target.ErrPlanConflict) {
+		t.Fatalf("changed exact input under original scenario: %v", err)
+	}
+	_, err := writer.RunEvent(f.ctx, plan.ID, "missing")
+	if !errors.Is(err, target.ErrNotFound) {
+		t.Fatalf("missing durable original cannot be applied: %v", err)
+	}
+	observer, err := f.observer()
+	if err != nil {
+		t.Fatal(err)
+	}
+	state, err := observer.Plan(f.ctx, plan.ID)
+	if err != nil || state.Cursor != 1 || len(state.Events) != 1 || state.Events[0].Outcome != "not_found" || state.Events[0].Phase != "rejected" {
+		t.Fatalf("bounded rejection record: %+v %v", state, err)
+	}
+	_, err = writer.RunEvent(f.ctx, plan.ID, "missing")
+	if !errors.Is(err, target.ErrNotFound) {
+		t.Fatalf("duplicate rejection changed result: %v", err)
+	}
+	if _, err = writer.RunEvent(f.ctx, plan.ID, "normal"); err != nil {
+		t.Fatal(err)
+	}
+	value, err := writer.Read(f.ctx, input.Resource)
+	if err != nil || value.Version != 1 || string(value.Data) != "normal" {
+		t.Fatalf("normal after explicit rejection: %+v %v", value, err)
+	}
+}
+
+func TestConcurrentDuplicateFaultEventCommitsOnlyOriginalOnce(t *testing.T) {
+	f := newFixture(t)
+	writer := f.open()
+	input := target.Request{Key: "original", Resource: "fake-document", Data: []byte("normal")}
+	plan := target.Plan{ID: "concurrent", Seed: 1, Deadline: f.now.Add(time.Hour), Steps: []target.Step{{ID: "lost", Kind: target.DropResponse, Input: input}}}
+	if _, err := writer.InstallPlan(f.ctx, plan); err != nil {
+		t.Fatal(err)
+	}
+	results := make(chan error, 6)
+	for range 6 {
+		go func() { _, err := writer.RunEvent(f.ctx, plan.ID, "lost"); results <- err }()
+	}
+	for range 6 {
+		select {
+		case err := <-results:
+			if !errors.Is(err, target.ErrResponseLost) {
+				t.Errorf("duplicate fault response: %v", err)
+			}
+		case <-f.ctx.Done():
+			t.Fatal(f.ctx.Err())
+		}
+	}
+	observer, err := f.observer()
+	if err != nil {
+		t.Fatal(err)
+	}
+	fact, err := observer.Observe(f.ctx, input.Key)
+	if err != nil || fact.Value.Version != 1 || len(fact.Receives) != 1 {
+		t.Fatalf("duplicate event actual target fact: %+v %v", fact, err)
+	}
+	state, err := observer.Plan(f.ctx, plan.ID)
+	if err != nil || state.Cursor != 1 || len(state.Events) != 1 {
+		t.Fatalf("duplicate event actual cursor: %+v %v", state, err)
 	}
 }
