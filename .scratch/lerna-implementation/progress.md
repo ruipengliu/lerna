@@ -227,3 +227,7 @@ root全文读取[Astra六票复核](../lerna-04-content-snapshots/published-tick
 2026-10-04，票02七AC resolved，交付651036/产品4c621/工具5c024，正式merge6f88740双parents及完整tree等于worker；[逐AC证据](../lerna-04-content-snapshots/ticket-02-exit-evidence.md)保留所有实际测试/审查与unknown范围。完整170 normal/race每模式一次，fixture/Decision/base race/locked check/module verify通过；最终双轴0hard/1可选P3 KEEP、Spec a0b0c0、架构0necessary。5 schemas/8 roots、旧Z与空selector per-Close unknown保留，未cleanup。当前15/41，whole04 in-progress、完整1.2广告OFF；03/05直接前置已满足。新准确push CI待核，旧首票7c CI不替代新源。
 
 2026-10-04，02接受push904ec5f的准确CI37227467190两job/全部steps success；root读取37Node/44TS/158+89+101两序、完整170 normal/race五组、Recovery25.988/61.392及fixture各包，见[CI](../lerna-04-content-snapshots/ci-verification.md#票02准确904ec5f的ci)。早期pending保留历史，03/05已独立claimed，LOCAL按自然TDD边界串行交接；旧unknown不动，whole04仍15/41。
+
+## 切片04上下文未派发观察差量
+
+2026-10-04 19:53 UTC，采用[窄oracle决定](../lerna-04-content-snapshots/ticket-03-no-dispatch-oracle/README.md)：冻结1.1 Decision.Get没有not_found，仅把其result_unavailable作辅助，以当前授权原Command not_found、可信fixture准确无binding/dispatch和真实Decide入口有限观察共同证明。原handoff字节不改、七AC不减。03部分9bb61d4真实完整上下文三owner重开/规则全文回显normal1.561，echo reserve拒绝与正常对照1.902通过；入口完整观察及其余容量/恢复/竞态尚未完成，不标resolved。05部分8986829正文封闭normal/race通过，实际删除和剩余holder/并发/孤儿出口仍在实施。当前15/41AC，所有22切片授权继续。
