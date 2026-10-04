@@ -6,6 +6,8 @@
 
 ## 当前状态
 
+2026-10-04 21:46 UTC，05原政策seal／全holder ACK的真实正常链路0.465s、五个受影响控制的race3.659s通过；初次0.249s列时间精度拒绝保留，修正只比较pgx可表达的微秒值，不改原policy或deadline。准确partial `641020d` 仍在独立WT，尚未正式合入或接受。03 B-disclose在include／omit两种真实Completed对照之后，仅撤披露，立即及三个owner重开后M和实际artifact均准确拒绝，内部完整M处理与原回执／历史保持；实际2.923s通过，partial `1148a1f`。05权威擦除后新责任仍误记ObjectHolder=true的真实0.335s失败已复现，最小修复正在验证。原Snapshot三轮／累计字节／绝对期限的耐久门和其他清理边界继续实施；两票未接受，仍15/41项AC，完整1.2不广告，全部22切片授权继续。
+
 2026-10-04 21:35 UTC，采用[原政策责任与全holder ACK决定](../lerna-04-content-snapshots/ticket-05-policy-seal-ack/README.md)：原准确policy key和deadline同Tx绑定seal、holder、Job及责任，真实全holder确认后才将原责任记erased；已过期预算不续期、不同seal不改身份。正常恢复save的消费0.366s及race1.745s已通过；save仍撤销时无seal的真实0.406s失败保留，最小绿色链路在实施。03正文选材mismatch修复0.775／canonical0.087、include／omit正常5.187通过；B-process1.806、B-save1.832证明各自独立权限门与真实原拒绝回执。初始及更新policy的Sync均false，没有附带Sync变化。B-disclose、原Snapshot累积预算／恢复及其余票据边界尚待验证，两票未接受或合入，当前仍15/41项AC，全部22切片继续。
 
 2026-10-04 21:18 UTC，采用[政策清理资格决定](../lerna-04-content-snapshots/ticket-05-policy-cleanup-qualification/README.md)：原责任完整比较和当前save／cap资格允许无物理效果的 `not_required` 核对，普通pending规则、历史期限与其他holder责任不变；全页版本／policy资格先于责任锁，最后采新鲜DB时间。真实首red0.246s已复现消费stub缺失，green与ObjectHolder相邻修正分别待验证。03部分真实metadata主因2.160、Proposal主因2.217、UTF8必要约束2.131、62直接材料完整Lock64链路11.540、完整当前Found回复1.474均通过；1MiB边界有独立red→green，不声称真实装配能达到所有单独上限。B正文要求omit但原A仍selected的真实0.904s失败已保留，正文选材最小修复正在实施。两票尚未正式接受或整合，全部22切片授权继续。
