@@ -6,6 +6,8 @@
 
 ## 当前状态
 
+2026-10-04 22:27 UTC，03原Snapshot预算partial `9534d2c`：原三轮跨重开真实出版／第四精确次数拒绝1.624s通过，后续关闭错误保留及verbose资格1.521s证明原65536内18次材料／四产物回读共27840字节、每轮9280。首次固定20000的累计额度资格1.373s通过：两轮正常，第三A／B后18582字节，M验证预约不足且未到达真实Content，重开不重置。首次compileFAIL保留，原red实际Go watchdog120s、本green30s，caller30s不变。05同原责任自然phase保erased正常2.293s／race5.570s已通过；真实删除后单次replyloss沿确认Defer100ms及原seal／期限恢复，原合法纳秒metadata列编码修复正常0.437s／race1.793s通过，早期失败与fixture截断对照单列。metadata三层完整来源／delegation／用途／绑定及实际祖先许可到期正常1.229s／相关race4.035s通过。两票仍在独立WT未接受或正式合入，剩余unknown／修订／期限／Prepared、过期cap／完整分页／真实升级继续，仍15/41AC及完整1.2不广告，全部22切片授权有效。
+
 2026-10-04，采用[原擦除结论保持决定](../lerna-04-content-snapshots/ticket-05-terminal-erasure-history/README.md)：同原责任真实全ACK后，普通自然phase须保留erased和完整历史，仍执行动作union及原期限min；其他change独立，普通入口不制造新ACK。真实自然到期2.309s失败已复现结论倒退及旧holder历史丢失，修复待验证。迟到真实成功Put的Finish已修正当前holder不复活，正常0.282s及四项相关race2.990s通过。03合法长度但错误正文选材拒绝0.753s通过；原快照预算正在静态实现，尚无green。全部22切片继续，当前仍15/41项AC、两票未接受及完整1.2不广告。
 
 2026-10-04，采用[原Snapshot耐久编译预算决定](../lerna-04-content-snapshots/ticket-03-original-budget/README.md)：原完整SnapshotRef固定三轮、累计真实读取和绝对期限，显式consumer-owned端口及追加fixture0004，编译材料与四份产物验证回读共用原预算，worker保留原Prepared／费用。原三轮完整出版及第三前重开后第四轮仍成功的真实1.974s失败已保留；预算实现与独立字节／期限／未知验证待完成。05权威擦除后新责任ObjectHolder标记修复正常0.365s及四项相关race3.649s通过，旧责任历史union保持；迟到Finish仍待独立验证。03反向include冲突0.611s通过。两票仍未接受，15/41项AC及全22授权不变。
