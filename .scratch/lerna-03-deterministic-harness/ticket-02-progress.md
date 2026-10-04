@@ -21,11 +21,12 @@ Proposal; the candidate also reads its actual artifact. No Task revision changes
 | `cannot_continue` | .416 s, failed instead of completed Proposal | 1.580 s with four earlier cases; old `/2` control 1.787 s | `6b489f2` |
 | Fixed raw `depends_on` | .521 s, output bytes zero because case had not generated output | .795 s with independent four-action control | `015cdb4` |
 | Fixed wrong binding/argument tuple | .551 s, output bytes zero because case had not generated output | .999 s with four-action and affected fixed raw controls | `dff4fa1` |
-| Actual argument purpose denied by Source | .646 s, output bytes zero because case had not generated output | 1.176 s with legal-purpose four-action and wrong-pair controls | Purpose-consumption change accompanying this record |
+| Actual argument purpose denied by Source | .646 s, output bytes zero because case had not generated output | 1.176 s with legal-purpose four-action and wrong-pair controls | `6f76995` |
+| Condition replacement with wrong revision | .465 s, output bytes zero because case had not generated output | .719 s with current-revision delta control | Condition-revision change accompanying this record |
 
 Red child processes exited 1; listed green child processes exited 0. Each run
 used `-p=1 -tags=integration -count=1 -timeout=120s` and finished before the
-next run. The latest audit after `dff4fa1` found all 72 unique successful PG
+next run. The latest audit after `6f76995` found all 80 unique successful PG
 schema acknowledgements absent, with no live test session, child or DB holder.
 The exact external registry remains available to the coordinating root. The
 purpose test independently confirms the exact argument is readable as
@@ -40,15 +41,18 @@ and separately query the original Decision. Neither is claimed as a behavioral
 red or a passing result.
 
 The original `Prepared` fields, digest function and validation function have
-been compared byte-for-byte with baseline. The immutable final01 archive has
-68 exact production files (447637 bytes) from `696ac49846105a16f33e5de86dc621a3858651b2`.
-These are source checks, **not** actual old-writer upgrade results. A separate
-03 driver actually found missing original `record.schema.json` embed bytes on
-its first archive build; the original 68 files remain exact, but the archive
-is not yet proven complete. A precise original-file append is pending from
-the shared archive owner. Mechanical
-restore/supervision helpers are present; archive build, independent old-producer
-states and upgrade oracles are still pending.
+been compared byte-for-byte with baseline. A separate 03 driver actually found
+missing original `record.schema.json` embed bytes on its first archive build.
+The original 68 payloads remain unchanged. The adopted append `ce817bb` adds
+those exact 1123 original bytes and derived metadata; `10e335e` fixes the
+mechanical compiler cancellation to use its actual process holder.
+Independent source checks confirm all 69 production files (448760 bytes) equal
+`696ac49846105a16f33e5de86dc621a3858651b2` byte-for-byte and all 71 hash entries
+match. These are source checks, **not** actual old-writer upgrade results. Mechanical
+restore/supervision helpers are present; this ticket's own archive driver build,
+independent old-producer states and upgrade oracles are still pending. A separate
+03 driver has compiled the repaired source and reached its own business oracles;
+that does not establish this ticket's prepared-format compatibility.
 
 Remaining work includes other finite wrong-output
 and source/revision counterexamples, original action/output/input limits, new

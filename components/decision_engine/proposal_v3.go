@@ -19,7 +19,7 @@ import (
 func (s *Service) calculateProposalV3(ctx context.Context, work Work, snapshot Snapshot, processed []v.ContentRef, first []byte, inputBytes int) completion {
 	artifactOutput := 0
 	switch snapshot.Rule {
-	case "delta_only", "actions_four", "input_request", "delta_candidate_result", "cannot_continue", "invalid_actions_depends_on", "invalid_actions_binding_pair", "invalid_actions_denied_purpose":
+	case "delta_only", "actions_four", "input_request", "delta_candidate_result", "cannot_continue", "invalid_actions_depends_on", "invalid_actions_binding_pair", "invalid_actions_denied_purpose", "invalid_delta_stale_condition":
 	default:
 		return failedCompletion("proposal_invalid", inputBytes, artifactOutput, 1)
 	}
@@ -27,6 +27,12 @@ func (s *Service) calculateProposalV3(ctx context.Context, work Work, snapshot S
 		return failedCompletion("proposal_invalid", inputBytes, artifactOutput, 1)
 	}
 	replacement := snapshot.RequirementRefs[0]
+	if snapshot.Rule == "invalid_delta_stale_condition" {
+		replacement.Revision = "2"
+		if replacement.Revision == snapshot.RequirementRefs[0].Revision {
+			replacement.Revision = "1"
+		}
+	}
 	proposal := v.Proposal{
 		DecisionRef: work.Record.Ref, SnapshotRef: snapshot.Ref,
 		GoalRevision: snapshot.GoalRevision, ControlRevision: snapshot.ControlRevision,

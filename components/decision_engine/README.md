@@ -72,6 +72,9 @@ new combination of authority.
 Source grant permits reading the arguments as rule input and denies the action
 purpose. It fails during actual Source consumption, with a legal-purpose normal
 case using the same finite action construction.
+`invalid_delta_stale_condition` keeps the current condition identity but emits a
+different well-formed revision. Current exact RequirementRef inclusion rejects
+the replacement; a normal `delta_only` case preserves the current revision.
 
 Each `/3` evaluation records one confirmed rule step, retains the original
 durable-start fee and makes zero model requests. It reads all declared material,

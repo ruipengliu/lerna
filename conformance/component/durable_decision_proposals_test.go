@@ -429,6 +429,10 @@ func TestDurableProposalArgumentsRequireSourcePurposeConsumption(t *testing.T) {
 	assertFixedProposalFailure(t, "invalid_actions_denied_purpose")
 }
 
+func TestDurableProposalReplacementMustUseCurrentConditionRevision(t *testing.T) {
+	assertFixedProposalFailure(t, "invalid_delta_stale_condition")
+}
+
 func assertFixedProposalFailure(t *testing.T, rule string) {
 	t.Helper()
 	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
