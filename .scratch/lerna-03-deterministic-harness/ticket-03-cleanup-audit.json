@@ -1,0 +1,164 @@
+{
+  "pg_ack": 1545,
+  "pg_present": [],
+  "fs_ack": 1,
+  "fs_present": [
+    "/workspace/lerna-03-ticket-03-dbtmp-qfo17ozy"
+  ],
+  "sqlite_ack": 244,
+  "sqlite_present": [],
+  "sqlite-target_ack": 64,
+  "sqlite-target_present": [],
+  "directory_ack": 14,
+  "directory_present": [
+    "/workspace/lerna-03-ticket-03-dbtmp-qfo17ozy/lerna-03-legacy-upgrade-3540254111"
+  ],
+  "source": "882e97b596ac2baa034881766041944b0da2e05e",
+  "recorded_at_utc": "2026-10-04T09:23:45.047334+00:00",
+  "registry_sha256": "6bc4d800318550e16791ebdbc5da7575548b98f049683b9b1cf82b7b049307e9",
+  "process_group_ack": 23,
+  "process_group_observations": [
+    {
+      "pid": 1449638,
+      "pgid": 1449638,
+      "exact_directory": "/workspace/lerna-03-ticket-03-dbtmp-qfo17ozy/lerna-03-legacy-upgrade-970704750",
+      "observation": "absent"
+    },
+    {
+      "pid": 1457438,
+      "pgid": 1457438,
+      "exact_directory": "/workspace/lerna-03-ticket-03-dbtmp-qfo17ozy/lerna-03-legacy-upgrade-2896965582",
+      "observation": "absent"
+    },
+    {
+      "pid": 1458339,
+      "pgid": 1458339,
+      "exact_directory": "/workspace/lerna-03-ticket-03-dbtmp-qfo17ozy/lerna-03-legacy-upgrade-1552246654",
+      "observation": "absent"
+    },
+    {
+      "pid": 1683843,
+      "pgid": 1683843,
+      "exact_directory": "/workspace/lerna-03-ticket-03-dbtmp-qfo17ozy/lerna-03-legacy-upgrade-3370614318",
+      "observation": "absent"
+    },
+    {
+      "pid": 1684082,
+      "pgid": 1684082,
+      "exact_directory": "/workspace/lerna-03-ticket-03-dbtmp-qfo17ozy/lerna-03-legacy-upgrade-3370614318",
+      "observation": "absent"
+    },
+    {
+      "pid": 1684255,
+      "pgid": 1684255,
+      "exact_directory": "/workspace/lerna-03-ticket-03-dbtmp-qfo17ozy/lerna-03-legacy-upgrade-2700312290",
+      "observation": "absent"
+    },
+    {
+      "pid": 1684497,
+      "pgid": 1684497,
+      "exact_directory": "/workspace/lerna-03-ticket-03-dbtmp-qfo17ozy/lerna-03-legacy-upgrade-2700312290",
+      "observation": "absent"
+    },
+    {
+      "pid": 1686370,
+      "pgid": 1686370,
+      "exact_directory": "/workspace/lerna-03-ticket-03-dbtmp-qfo17ozy/lerna-03-legacy-upgrade-2783086707",
+      "observation": "absent"
+    },
+    {
+      "pid": 1686622,
+      "pgid": 1686622,
+      "exact_directory": "/workspace/lerna-03-ticket-03-dbtmp-qfo17ozy/lerna-03-legacy-upgrade-2783086707",
+      "observation": "absent"
+    },
+    {
+      "pid": 1686825,
+      "pgid": 1686825,
+      "exact_directory": "/workspace/lerna-03-ticket-03-dbtmp-qfo17ozy/lerna-03-legacy-upgrade-3455444914",
+      "observation": "absent"
+    },
+    {
+      "pid": 1687068,
+      "pgid": 1687068,
+      "exact_directory": "/workspace/lerna-03-ticket-03-dbtmp-qfo17ozy/lerna-03-legacy-upgrade-3455444914",
+      "observation": "absent"
+    },
+    {
+      "pid": 1751324,
+      "pgid": 1751324,
+      "exact_directory": "/workspace/lerna-03-ticket-03-dbtmp-qfo17ozy/lerna-03-legacy-upgrade-594957454",
+      "observation": "absent"
+    },
+    {
+      "pid": 1751566,
+      "pgid": 1751566,
+      "exact_directory": "/workspace/lerna-03-ticket-03-dbtmp-qfo17ozy/lerna-03-legacy-upgrade-594957454",
+      "observation": "absent"
+    },
+    {
+      "pid": 1751766,
+      "pgid": 1751766,
+      "exact_directory": "/workspace/lerna-03-ticket-03-dbtmp-qfo17ozy/lerna-03-legacy-upgrade-3335179552",
+      "observation": "absent"
+    },
+    {
+      "pid": 1752045,
+      "pgid": 1752045,
+      "exact_directory": "/workspace/lerna-03-ticket-03-dbtmp-qfo17ozy/lerna-03-legacy-upgrade-3335179552",
+      "observation": "absent"
+    },
+    {
+      "pid": 1752205,
+      "pgid": 1752205,
+      "exact_directory": "/workspace/lerna-03-ticket-03-dbtmp-qfo17ozy/lerna-03-legacy-upgrade-1105730477",
+      "observation": "absent"
+    },
+    {
+      "pid": 1752477,
+      "pgid": 1752477,
+      "exact_directory": "/workspace/lerna-03-ticket-03-dbtmp-qfo17ozy/lerna-03-legacy-upgrade-1105730477",
+      "observation": "absent"
+    },
+    {
+      "pid": 1757798,
+      "pgid": 1757798,
+      "exact_directory": "/workspace/lerna-03-ticket-03-dbtmp-qfo17ozy/lerna-03-legacy-upgrade-4006732175",
+      "observation": "absent"
+    },
+    {
+      "pid": 1758060,
+      "pgid": 1758060,
+      "exact_directory": "/workspace/lerna-03-ticket-03-dbtmp-qfo17ozy/lerna-03-legacy-upgrade-4006732175",
+      "observation": "absent"
+    },
+    {
+      "pid": 1758260,
+      "pgid": 1758260,
+      "exact_directory": "/workspace/lerna-03-ticket-03-dbtmp-qfo17ozy/lerna-03-legacy-upgrade-4005654411",
+      "observation": "absent"
+    },
+    {
+      "pid": 1758501,
+      "pgid": 1758501,
+      "exact_directory": "/workspace/lerna-03-ticket-03-dbtmp-qfo17ozy/lerna-03-legacy-upgrade-4005654411",
+      "observation": "absent"
+    },
+    {
+      "pid": 1758650,
+      "pgid": 1758650,
+      "exact_directory": "/workspace/lerna-03-ticket-03-dbtmp-qfo17ozy/lerna-03-legacy-upgrade-3009446527",
+      "observation": "absent"
+    },
+    {
+      "pid": 1758894,
+      "pgid": 1758894,
+      "exact_directory": "/workspace/lerna-03-ticket-03-dbtmp-qfo17ozy/lerna-03-legacy-upgrade-3009446527",
+      "observation": "absent"
+    }
+  ],
+  "process_group_not_absent": [],
+  "protected_unknown_directory": "/workspace/lerna-03-ticket-03-dbtmp-qfo17ozy/lerna-03-legacy-upgrade-3540254111",
+  "all_current_sessions_exited": true,
+  "deletion_actions": "none; exact observation only"
+}

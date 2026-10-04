@@ -1,7 +1,8 @@
 # 03 cancellation and finite resources: implementation checkpoints
 
-Ticket03 remains **claimed**. This is an implementation record, not a ticket or
-whole-profile exit. Worktree `deterministic-harness-03` started clean at
+Ticket03 is **resolved** after root accepted all eight checks. This records
+historical implementation checkpoints and the final ticket exit; it does not
+close the whole profile. Worktree `deterministic-harness-03` started clean at
 `e29675d75f5135995614e4eb2faadf6c2ac1581d`. Root owns integration, external push,
 exclusive test slots and final independent reviews. All integration commands use
 `-p=1 -tags=integration -count=1 -timeout=120s`; normal and race runs are sequential.
@@ -72,7 +73,7 @@ before Close/Drop. Current recovery child migration count is adapted by
 with no old SQL/archive rewrite. At checkpoint1e752 merge and count adaptation awaited affected actual verification;
 root949's previous two-migration CI is not substituted for the new checks below.
 
-Remaining gates: final candidate-format/action-budget overlap after ticket02
+Historical checkpoint1e752 remaining gates: final candidate-format/action-budget overlap after ticket02
 formally exits and root merges it; new-source historical970/FINAL01 upgrade,
 current PG child stories and all affected current PG/old dual-store normal/race;
 final checks and frozen-source hashes; latest integration merge and independent
@@ -140,10 +141,55 @@ with a safe stage error retaining other causes instead of treating any failure
 as a valid denial. The same real Source/no-Snapshot/reopen selector first
 normal0.247s/race1.820s passed; no fabricated red or native SQL fault is claimed.
 
-The latest exact audit is439 unique PG ACK absent,8 directory ACK with only
+Checkpointff exact audit is439 unique PG ACK absent,8 directory ACK with only
 original3540254111 unknown retained, and11 actual compiler/producer groups
 absent. The overlay also contains an observed Node cache; it remains retained
 with the protected unknown window. All current sessions/child/worker/DB/build
 exited and the global slot was explicitly released. Final necessary broad
 checks and actual /3 dualPrepared combination await the formal ticket02 root
 integration; no peer moving business tree is picked and no profile is advertised.
+
+
+## Final formally combined source and ticket exit
+
+Formal root02/06 checkpoint `5bcdea8669adb49c341342e5b05deadffa0b8661`
+was clean-merged as `b0beb2da45204276029d5dd11bfcec2439d46dfa`.
+Final product/tests `882e97b596ac2baa034881766041944b0da2e05e` preserve
+original /2 Prepared/domain1 and apply the same Stop/Claim/current saved-output
+qualification to both formats before every actual publication, save/defer/Finish.
+Actual /3 candidate produces one artifact plus Proposal; actual delta/actions
+produce zero artifacts. No invented multiartifact case follows from cap16.
+The real configuration-change original-receipt regression failed0.422s atb0;
+minimal adopted current Component/basis/version validation for a fresh matching
+alias preserves originalkey/mismatch/cancelled priority. Related normal1.258s
+and the later full suites pass. Initial selected normal3.666s had a slash-filter
+restriction; separate nonslash2.872s and final full suites cover all table cases.
+
+At unchanged882: standard makecheck0/wall47.259s, fresh base-race0/wall53.914s,
+modules0, all seven SHA manifests172entries0; actual89 new+158 old Go/TS corpora
+roundtrip in both directions and both orders. Unchanged pure1.0 reverse helpers
+used cache; developing1.1 helpers are fresh and no cached run is relabelled.
+Full Component/Source PG normal60.881/29.966s0. Whole same-package race failed
+Component120.073s while Source28.434s passed; that failure remains recorded.
+Actual tagged102-test inventory was partitioned into disjoint60/42 exactname
+unions, with empty missing/extra/intersection, each stillcount1/p1/120s.
+They passed race110.803/11.781s0. Original full recovery PG/SQLite/currentnative
+Decision migration3 stories normal37.201/race87.979s0. Root owns adopting that
+same finite partition into the remote race entry; earlier CI is historical.
+
+Final exact audit:1545 unique PG ACK,244 recovery SQLite and64target directories
+absent;14archive ACK directories have only original3540254111 unknown present;
+23actual ACK compiler/producer groups observed absent. Parent overlay and Node
+cache remain with protectedunknown. Every current session/child/worker/DB/build
+holder exited before explicit global RELEASE. Unknown history is not rewritten.
+The [literal audit](ticket-03-cleanup-audit.json) records exact observations and
+registry SHA, with no deletion actions.
+
+Root FULLread two independent complete882 reports (40commits46paths):
+Standards0hard/0smell, Speca0/b0/c0. All original findings have the same sole
+fixer and remain closed. Reports are [preserved verbatim](ticket-03-review-combined-followup.md)
+with pending-split cutoff; subsequent actual partition/recovery results are
+separate facts. Root accepted all eight AC and authorized tracker resolution.
+Final changes after882 are documentation only; see [exit evidence](ticket-03-exit-evidence.md),
+[API handoff](ticket-03-api-handoff.md) and [exact partition](ticket-03-component-race-partition.md).
+Whole03/profile/architecture/remote-CI exit remains root-owned and unclaimed here.
