@@ -162,9 +162,28 @@ func TestContentDirectSourcesRequireSeparateReadProcessSaveAndRetention(t *testi
 			if err != nil {
 				t.Fatal(err)
 			}
-			failed, ok := view.AsFailed()
-			if !ok || failed.Reason != "forbidden" {
-				t.Fatal("current direct source permission did not stop original publication")
+			if action == "read" {
+				denied, ok := view.AsRejected()
+				if !ok || denied.Reason != "forbidden" {
+					t.Fatal("current source read denial disclosed failed target observation")
+				}
+			} else {
+				failed, ok := view.AsFailed()
+				if !ok || failed.Reason != "forbidden" {
+					t.Fatal("current direct source permission did not stop original publication")
+				}
+			}
+			command, err := service.GetCommand(ctx, contentCommandGetWire(t, pendingRequest.CommandID), &contentPrincipal)
+			if err != nil {
+				t.Fatal(err)
+			}
+			found, ok := command.AsFound()
+			if !ok {
+				t.Fatal("original publication history disappeared")
+			}
+			progress, ok := found.Progress.AsContent()
+			if !ok || progress.Publication != "failed" {
+				t.Fatal("original source responsibility did not fail")
 			}
 			entries, err := os.ReadDir(w.Directory)
 			if err != nil || len(entries) != 2 {

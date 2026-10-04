@@ -91,7 +91,7 @@ func (s *Store) CheckPolicy(ctx context.Context, token runtime.Tx, subject v.Sub
 	if err = json.Unmarshal(body, &policy); err != nil {
 		return nil, err
 	}
-	if policy.Ref.Owner != ref.Owner || policy.Ref.ContentID != ref.ContentID || policy.Ref.Version != ref.Version || policy.Purpose != purpose || !now.Before(policy.ValidUntil) || !now.Before(policy.RetainUntil) {
+	if policy.Ref.Owner != ref.Owner || policy.Ref.ContentID != ref.ContentID || policy.Ref.Version != ref.Version || policy.Purpose != purpose || !now.Before(policy.ValidUntil) {
 		return nil, nil
 	}
 	match, _, err := subjectKey(policy.Subject)

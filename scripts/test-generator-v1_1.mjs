@@ -1,90 +1,10 @@
 // Exercise the public two-version generator without changing the frozen source.
-import {
-  mkdtempSync,
-  readFileSync,
-  writeFileSync,
-  mkdirSync,
-  rmSync,
-  statSync,
-  openSync,
-  closeSync,
-  fsyncSync,
-  writeSync,
-} from 'node:fs';
+import { mkdtempSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join, resolve, dirname, isAbsolute } from 'node:path';
+import { join, resolve } from 'node:path';
 import { boundedBuild } from './bounded-build.mjs';
+import { ownConformanceScope } from './conformance-ownership.mjs';
 import assert from 'node:assert/strict';
-// Mechanical exact ownership for this public generator fixture only.
-function ackGeneratorDirectory(dir) {
-  const identity = statSync(dir);
-  let confirmed = true;
-  function useFD(path, flags, action) {
-    let fd;
-    const causes = [];
-    try {
-      fd = openSync(path, flags, 0o600);
-      action(fd);
-    } catch (error) {
-      causes.push(error);
-    }
-    if (fd !== undefined) {
-      try {
-        closeSync(fd);
-      } catch (error) {
-        causes.push(error);
-      }
-    }
-    if (causes.length) {
-      confirmed = false;
-      throw new AggregateError(causes, 'generator FD ownership unconfirmed');
-    }
-  }
-  for (const path of [dir, dirname(dir)]) useFD(path, 'r', fsyncSync);
-  const registry =
-    process.env.LERNA_TEST_OWNED_SCOPE_REGISTRY ??
-    join(dir, 'owned-scopes.log');
-  if (!isAbsolute(registry))
-    throw Error('absolute owned generator registry required');
-  function record(line) {
-    useFD(registry, 'a', (fd) => {
-      const bytes = Buffer.from(line + '\n');
-      for (let offset = 0; offset < bytes.length; ) {
-        const count = writeSync(fd, bytes, offset, bytes.length - offset);
-        if (count <= 0) throw Error('ledger short write');
-        offset += count;
-      }
-      fsyncSync(fd);
-    });
-    useFD(dirname(registry), 'r', fsyncSync);
-  }
-  record(`generator ${dir} ${identity.dev} ${identity.ino}`);
-  return {
-    ackProcess: (pid) => {
-      try {
-        const stat = readFileSync(`/proc/${pid}/stat`, 'utf8');
-        const group = Number(
-          stat.slice(stat.lastIndexOf(')') + 2).split(' ')[2],
-        );
-        if (group !== pid) throw Error('generator native group mismatch');
-        record(`process_group ${pid} ${group} ${dir}`);
-      } catch (error) {
-        confirmed = false;
-        throw error;
-      }
-    },
-    remove: () => {
-      if (!confirmed)
-        throw Error(`generator ownership unknown; retained exact scope ${dir}`);
-      const current = statSync(dir);
-      if (current.dev !== identity.dev || current.ino !== identity.ino)
-        throw Error('owned generator identity changed');
-      rmSync(dir, { recursive: true });
-      if (registry !== join(dir, 'owned-scopes.log'))
-        record(`generator_removed ${dir}`);
-    },
-  };
-}
 
 const generator = resolve('scripts/generate.mjs');
 const original = JSON.parse(
@@ -95,8 +15,9 @@ const inventory = JSON.parse(
 );
 async function generate(mutate = () => {}) {
   const dir = mkdtempSync(join(tmpdir(), 'lerna-generator-v1_1-'));
-  const scope = ackGeneratorDirectory(dir);
+  const scope = ownConformanceScope(dir, 'generator');
   let exitConfirmed = true;
+  let startedPID;
   let failure;
   try {
     writeFileSync(
@@ -125,21 +46,27 @@ async function generate(mutate = () => {}) {
     exitConfirmed = false;
     const result = await boundedBuild(process.execPath, [generator], {
       cwd: dir,
-      onStart: scope.ackProcess,
+      onStart: (pid) => {
+        startedPID = pid;
+        scope.start(pid, 'compiler');
+      },
       encoding: 'utf8',
       timeout: 30000,
     });
+    scope.exited(startedPID, 'compiler', result.exitConfirmed);
     exitConfirmed = result.exitConfirmed;
-    if (result.cleanupErrors.length)
+    const nativeCauses = [
+      result.error,
+      ...result.cleanupErrors,
+      ...(!result.exitConfirmed
+        ? [Error(`generator original native exit unknown: ${dir}`)]
+        : []),
+    ].filter(Boolean);
+    if (nativeCauses.length)
       throw new AggregateError(
-        result.cleanupErrors,
-        `generator cleanup failed; retained scope ${dir}`,
+        nativeCauses,
+        'generator native execution failed',
       );
-    assert.ok(
-      exitConfirmed,
-      `generator descendants unconfirmed; retained scope ${dir}`,
-    );
-    assert.ifError(result.error);
     if (result.status !== 0) return { error: result.stderr };
     for (const path of [
       'contract/gen/go/values.go',
@@ -168,16 +95,7 @@ async function generate(mutate = () => {}) {
     failure = error;
     throw error;
   } finally {
-    if (exitConfirmed) {
-      try {
-        scope.remove();
-      } catch (error) {
-        throw new AggregateError(
-          [failure, error].filter(Boolean),
-          `generator and scope cleanup failed: ${dir}`,
-        );
-      }
-    }
+    scope.finish(failure);
   }
 }
 const baseline = await generate();

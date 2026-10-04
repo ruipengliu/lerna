@@ -21,7 +21,7 @@ func (w *World) WriteIndependentObject(name string, bytes []byte) {
 		w.t.Fatal(err)
 	}
 	closeFile := w.ownSetupFile(file)
-	if err = register("fixture_object_file " + w.Directory + "/" + name); err != nil {
+	if err = w.register("fixture_object_file " + w.Directory + "/" + name); err != nil {
 		w.t.Fatal(errors.Join(err, closeFile()))
 	}
 	_, writeErr := file.Write(bytes)

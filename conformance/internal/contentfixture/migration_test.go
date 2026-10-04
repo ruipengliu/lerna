@@ -36,7 +36,7 @@ func TestContentMigrationEmptyRepeatAndChecksum(t *testing.T) {
 	if err = db.PingContext(ctx); err != nil {
 		t.Fatal(err)
 	}
-	if err = register("pg_migration_connection " + w.Config.Schema); err != nil {
+	if err = w.register("pg_migration_connection " + w.Config.Schema); err != nil {
 		t.Fatal(err)
 	}
 	if _, err = db.ExecContext(ctx, `UPDATE "`+w.Config.Schema+`".content_schema_migrations SET checksum=$1 WHERE version=1`, "sha256:0000000000000000000000000000000000000000000000000000000000000000"); err != nil {

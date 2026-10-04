@@ -32,12 +32,12 @@ func ownedLocalRoot(t *testing.T) (string, func()) {
 	}
 	info, err := dir.Stat()
 	if err != nil {
-		t.Fatal(err)
+		t.Fatal(errors.Join(err, dir.Close()))
 	}
 	st := info.Sys().(*syscall.Stat_t)
 	parent, err := os.Open(filepath.Dir(root))
 	if err != nil {
-		t.Fatal(err)
+		t.Fatal(errors.Join(err, dir.Close()))
 	}
 	if err = errors.Join(dir.Sync(), parent.Sync(), dir.Close(), parent.Close()); err != nil {
 		t.Fatal(err)
@@ -240,5 +240,21 @@ func TestCloseDrainTimeoutRetainsActiveInvocationUntilRealReturn(t *testing.T) {
 	}
 	if err = store.Close(); err != nil {
 		t.Fatal("pre-drain timeout did not allow confirmed closure after real exit", err)
+	}
+}
+
+func TestOpenPreservesActualMissingPathCause(t *testing.T) {
+	root, confirmed := ownedLocalRoot(t)
+	normal, err := Open(root)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err = normal.Close(); err != nil {
+		t.Fatal(err)
+	}
+	confirmed()
+	holder, err := Open(filepath.Join(root, "missing"))
+	if holder != nil || !errors.Is(err, ErrUnavailable) || !errors.Is(err, os.ErrNotExist) {
+		t.Fatal("valid absolute missing path discarded actual native cause", err)
 	}
 }

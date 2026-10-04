@@ -1,90 +1,10 @@
 // Public generation command must fail closed rather than publish ambiguous contracts.
-import {
-  mkdtempSync,
-  readFileSync,
-  writeFileSync,
-  mkdirSync,
-  rmSync,
-  statSync,
-  openSync,
-  closeSync,
-  fsyncSync,
-  writeSync,
-} from 'node:fs';
+import { mkdtempSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join, resolve, dirname, isAbsolute } from 'node:path';
+import { join, resolve } from 'node:path';
 import { boundedBuild } from './bounded-build.mjs';
+import { ownConformanceScope } from './conformance-ownership.mjs';
 import assert from 'node:assert/strict';
-// Mechanical exact ownership for this public generator fixture only.
-function ackGeneratorDirectory(dir) {
-  const identity = statSync(dir);
-  let confirmed = true;
-  function useFD(path, flags, action) {
-    let fd;
-    const causes = [];
-    try {
-      fd = openSync(path, flags, 0o600);
-      action(fd);
-    } catch (error) {
-      causes.push(error);
-    }
-    if (fd !== undefined) {
-      try {
-        closeSync(fd);
-      } catch (error) {
-        causes.push(error);
-      }
-    }
-    if (causes.length) {
-      confirmed = false;
-      throw new AggregateError(causes, 'generator FD ownership unconfirmed');
-    }
-  }
-  for (const path of [dir, dirname(dir)]) useFD(path, 'r', fsyncSync);
-  const registry =
-    process.env.LERNA_TEST_OWNED_SCOPE_REGISTRY ??
-    join(dir, 'owned-scopes.log');
-  if (!isAbsolute(registry))
-    throw Error('absolute owned generator registry required');
-  function record(line) {
-    useFD(registry, 'a', (fd) => {
-      const bytes = Buffer.from(line + '\n');
-      for (let offset = 0; offset < bytes.length; ) {
-        const count = writeSync(fd, bytes, offset, bytes.length - offset);
-        if (count <= 0) throw Error('ledger short write');
-        offset += count;
-      }
-      fsyncSync(fd);
-    });
-    useFD(dirname(registry), 'r', fsyncSync);
-  }
-  record(`generator ${dir} ${identity.dev} ${identity.ino}`);
-  return {
-    ackProcess: (pid) => {
-      try {
-        const stat = readFileSync(`/proc/${pid}/stat`, 'utf8');
-        const group = Number(
-          stat.slice(stat.lastIndexOf(')') + 2).split(' ')[2],
-        );
-        if (group !== pid) throw Error('generator native group mismatch');
-        record(`process_group ${pid} ${group} ${dir}`);
-      } catch (error) {
-        confirmed = false;
-        throw error;
-      }
-    },
-    remove: () => {
-      if (!confirmed)
-        throw Error(`generator ownership unknown; retained exact scope ${dir}`);
-      const current = statSync(dir);
-      if (current.dev !== identity.dev || current.ino !== identity.ino)
-        throw Error('owned generator identity changed');
-      rmSync(dir, { recursive: true });
-      if (registry !== join(dir, 'owned-scopes.log'))
-        record(`generator_removed ${dir}`);
-    },
-  };
-}
 
 function copyNewVersion(dir) {
   for (const version of ['1.1.0', '1.2.0']) {
@@ -214,8 +134,10 @@ const probes = [
 ];
 for (const [name, mutate, expected] of probes) {
   const dir = mkdtempSync(join(tmpdir(), 'lerna-generator-'));
-  const scope = ackGeneratorDirectory(dir);
+  const scope = ownConformanceScope(dir, 'generator');
   let exitConfirmed = true;
+  let startedPID;
+  let failure;
   try {
     const schema = structuredClone(original);
     const changedInventory = JSON.parse(inventory);
@@ -233,22 +155,34 @@ for (const [name, mutate, expected] of probes) {
     exitConfirmed = false;
     const result = await boundedBuild(process.execPath, [generator], {
       cwd: dir,
-      onStart: scope.ackProcess,
+      onStart: (pid) => {
+        startedPID = pid;
+        scope.start(pid, 'compiler');
+      },
       encoding: 'utf8',
       timeout: 10000,
     });
+    scope.exited(startedPID, 'compiler', result.exitConfirmed);
     exitConfirmed = result.exitConfirmed;
-    assert.ok(
-      exitConfirmed,
-      `generator native exit unconfirmed; retained ${dir}`,
-    );
-    assert.deepEqual(result.cleanupErrors, []);
-    assert.ifError(result.error);
+    const nativeCauses = [
+      result.error,
+      ...result.cleanupErrors,
+      ...(!result.exitConfirmed
+        ? [Error(`generator original native exit unknown: ${dir}`)]
+        : []),
+    ].filter(Boolean);
+    if (nativeCauses.length)
+      throw new AggregateError(
+        nativeCauses,
+        'generator native execution failed',
+      );
     assert.notEqual(result.status, 0, name);
     assert.match(result.stderr, expected, name);
+  } catch (error) {
+    failure = error;
+    throw error;
   } finally {
-    if (exitConfirmed) scope.remove();
-    else throw Error(`generator native exit unknown; retained ${dir}`);
+    scope.finish(failure);
   }
 }
 console.log(`${probes.length} generation refusal probes passed.`);
@@ -257,8 +191,10 @@ console.log(`${probes.length} generation refusal probes passed.`);
 // observations guard complete input/output and common-definition fingerprints.
 const digestPair = async (changed, methods = JSON.parse(inventory)) => {
   const dir = mkdtempSync(join(tmpdir(), 'lerna-schema-change-'));
-  const scope = ackGeneratorDirectory(dir);
+  const scope = ownConformanceScope(dir, 'generator');
   let exitConfirmed = true;
+  let startedPID;
+  let failure;
   try {
     mkdirSync(join(dir, 'contract/schema/1.0.0'), { recursive: true });
     writeFileSync(
@@ -273,17 +209,27 @@ const digestPair = async (changed, methods = JSON.parse(inventory)) => {
     exitConfirmed = false;
     const result = await boundedBuild(process.execPath, [generator], {
       cwd: dir,
-      onStart: scope.ackProcess,
+      onStart: (pid) => {
+        startedPID = pid;
+        scope.start(pid, 'compiler');
+      },
       encoding: 'utf8',
       timeout: 30000,
     });
+    scope.exited(startedPID, 'compiler', result.exitConfirmed);
     exitConfirmed = result.exitConfirmed;
-    assert.ok(
-      exitConfirmed,
-      `generator native exit unconfirmed; retained ${dir}`,
-    );
-    assert.deepEqual(result.cleanupErrors, []);
-    assert.ifError(result.error);
+    const nativeCauses = [
+      result.error,
+      ...result.cleanupErrors,
+      ...(!result.exitConfirmed
+        ? [Error(`generator original native exit unknown: ${dir}`)]
+        : []),
+    ].filter(Boolean);
+    if (nativeCauses.length)
+      throw new AggregateError(
+        nativeCauses,
+        'generator native execution failed',
+      );
     assert.equal(result.status, 0, result.stderr);
     const output = readFileSync(join(dir, 'contract/gen/go/values.go'), 'utf8');
     const input = /InputSchemaDigest: "(sha256:[0-9a-f]{64})"/.exec(output);
@@ -291,9 +237,11 @@ const digestPair = async (changed, methods = JSON.parse(inventory)) => {
     assert.ok(input);
     assert.ok(response);
     return [input[1], response[1]];
+  } catch (error) {
+    failure = error;
+    throw error;
   } finally {
-    if (exitConfirmed) scope.remove();
-    else throw Error(`generator native exit unknown; retained ${dir}`);
+    scope.finish(failure);
   }
 };
 const baseline = await digestPair(original);
@@ -372,20 +320,40 @@ for (const [name, mutate, affected] of [
 console.log('8 schema generation golden/change scenarios passed.');
 
 const nestedDir = mkdtempSync(join(tmpdir(), 'lerna-generator-entry-'));
-const nestedScope = ackGeneratorDirectory(nestedDir);
+const nestedScope = ownConformanceScope(nestedDir, 'generator');
 let nestedExitConfirmed = false;
+let nestedPID, nestedFailure;
 try {
   const newer = await boundedBuild(
     process.execPath,
     ['scripts/test-generator-v1_1.mjs'],
-    { stdio: 'inherit', timeout: 60000, onStart: nestedScope.ackProcess },
+    {
+      stdio: 'inherit',
+      timeout: 60000,
+      onStart: (pid) => {
+        nestedPID = pid;
+        nestedScope.start(pid, 'compiler');
+      },
+    },
   );
+  nestedScope.exited(nestedPID, 'compiler', newer.exitConfirmed);
   nestedExitConfirmed = newer.exitConfirmed;
-  assert.ok(nestedExitConfirmed);
-  assert.deepEqual(newer.cleanupErrors, []);
-  assert.ifError(newer.error);
+  const nativeCauses = [
+    newer.error,
+    ...newer.cleanupErrors,
+    ...(!newer.exitConfirmed
+      ? [Error(`nested original native exit unknown: ${nestedDir}`)]
+      : []),
+  ].filter(Boolean);
+  if (nativeCauses.length)
+    throw new AggregateError(
+      nativeCauses,
+      'nested generator native execution failed',
+    );
   assert.equal(newer.status, 0, 'isolated 1.1 generator checks');
+} catch (error) {
+  nestedFailure = error;
+  throw error;
 } finally {
-  if (nestedExitConfirmed) nestedScope.remove();
-  else throw Error(`nested generator unknown; retained ${nestedDir}`);
+  nestedScope.finish(nestedFailure);
 }

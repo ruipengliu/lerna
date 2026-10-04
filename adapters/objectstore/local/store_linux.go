@@ -56,11 +56,17 @@ func open(path string, ops native) (*Store, error) {
 		return nil, ErrUnavailable
 	}
 	info, err := os.Lstat(path)
-	if err != nil || !info.IsDir() || info.Mode()&os.ModeSymlink != 0 {
+	if err != nil {
+		return nil, errors.Join(ErrUnavailable, err)
+	}
+	if !info.IsDir() || info.Mode()&os.ModeSymlink != 0 {
 		return nil, ErrUnavailable
 	}
 	resolved, err := filepath.EvalSymlinks(path)
-	if err != nil || resolved != path {
+	if err != nil {
+		return nil, errors.Join(ErrUnavailable, err)
+	}
+	if resolved != path {
 		return nil, ErrUnavailable
 	}
 	root, err := os.OpenRoot(path)

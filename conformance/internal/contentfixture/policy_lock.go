@@ -12,7 +12,26 @@ import (
 
 // HoldPolicy is a mechanical lock-wait fixture, never a business oracle.
 // It retains both exact connections until their native Close is confirmed.
-func (w *World) HoldPolicy(ctx context.Context, ref v.ContentRef) (release func() error, waitBlocked func(context.Context) error) {
+func (w *World) HoldPolicy(ctx context.Context, ref v.ContentRef) (func() error, func(context.Context) error) {
+	return w.holdReadRow(ctx, `SELECT 1 FROM "`+w.Config.Schema+`".content_fixture_policies WHERE tenant_id=$1 AND owner_id=$2 AND content_id=$3 AND version=$4 FOR UPDATE`, ref.Owner.TenantID, ref.Owner.OwnerID, ref.ContentID, ref.Version)
+}
+func (w *World) HoldVersion(ctx context.Context, ref v.ContentRef) (func() error, func(context.Context) error) {
+	return w.holdReadRow(ctx, `SELECT 1 FROM "`+w.Config.Schema+`".content_versions WHERE tenant_id=$1 AND owner_id=$2 AND content_id=$3 AND version=$4 FOR UPDATE`, ref.Owner.TenantID, ref.Owner.OwnerID, ref.ContentID, ref.Version)
+}
+func (w *World) HoldCommandReader(ctx context.Context, owner v.OwnerRef) (func() error, func(context.Context) error) {
+	return w.holdReadRow(ctx, `SELECT 1 FROM "`+w.Config.Schema+`".content_fixture_command_readers WHERE tenant_id=$1 AND owner_id=$2 FOR UPDATE`, owner.TenantID, owner.OwnerID)
+}
+
+func (w *World) HoldCommand(ctx context.Context, ref v.CommandRef) (func() error, func(context.Context) error) {
+	key, err := v.Encode(ref)
+	if err != nil {
+		w.t.Fatal(err)
+	}
+	return w.holdReadRow(ctx, `SELECT 1 FROM (SELECT pg_advisory_xact_lock(1,hashtext($1))) held`, w.Config.Schema+string(key))
+}
+
+// Only the concrete lock controls above can supply this private query.
+func (w *World) holdReadRow(ctx context.Context, lockQuery string, args ...any) (release func() error, waitBlocked func(context.Context) error) {
 	w.t.Helper()
 	locker, err := sql.Open("pgx", w.Config.DSN)
 	if err != nil {
@@ -50,7 +69,7 @@ func (w *World) HoldPolicy(ctx context.Context, ref v.ContentRef) (release func(
 	if err = observer.PingContext(ctx); err != nil {
 		w.t.Fatal(err)
 	}
-	if err = register("pg_policy_connections " + w.Config.Schema); err != nil {
+	if err = w.register("pg_policy_connections " + w.Config.Schema); err != nil {
 		w.t.Fatal(err)
 	}
 	tx, err = locker.BeginTx(ctx, nil)
@@ -61,11 +80,11 @@ func (w *World) HoldPolicy(ctx context.Context, ref v.ContentRef) (release func(
 	if err = tx.QueryRowContext(ctx, "SELECT pg_backend_pid()").Scan(&pid); err != nil {
 		w.t.Fatal(err)
 	}
-	if err = register(fmt.Sprintf("pg_policy_holder %s %d", w.Config.Schema, pid)); err != nil {
+	if err = w.register(fmt.Sprintf("pg_policy_holder %s %d", w.Config.Schema, pid)); err != nil {
 		w.t.Fatal(err)
 	}
 	var revision int64
-	if err = tx.QueryRowContext(ctx, `SELECT revision FROM "`+w.Config.Schema+`".content_fixture_policies WHERE tenant_id=$1 AND owner_id=$2 AND content_id=$3 AND version=$4 FOR UPDATE`, ref.Owner.TenantID, ref.Owner.OwnerID, ref.ContentID, ref.Version).Scan(&revision); err != nil {
+	if err = tx.QueryRowContext(ctx, lockQuery, args...).Scan(&revision); err != nil {
 		w.t.Fatal(err)
 	}
 	waitBlocked = func(ctx context.Context) error {

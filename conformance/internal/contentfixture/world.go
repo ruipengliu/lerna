@@ -30,6 +30,7 @@ type World struct {
 	closing               bool
 	setupClosers          []func() error
 	setupCloseErr         error
+	setupNativeClose      func(*os.File) error
 	retainedInvocation    bool
 	infrastructureClosers []func() error
 }
@@ -61,7 +62,7 @@ func New(t *testing.T, ctx context.Context) *World {
 		t.Fatal(err)
 	}
 	w.owns = true
-	if err = register("postgres " + w.Config.Schema); err != nil {
+	if err = w.register("postgres " + w.Config.Schema); err != nil {
 		t.Fatal(err)
 	}
 	w.Directory, err = os.MkdirTemp("", "lerna-content-objects-")
@@ -88,7 +89,7 @@ func New(t *testing.T, ctx context.Context) *World {
 	if err = errors.Join(directory.Sync(), parent.Sync(), closeDirectory(), closeParent()); err != nil {
 		t.Fatal(err)
 	}
-	if err = register(fmt.Sprintf("objects %s %d %d", w.Directory, w.device, w.inode)); err != nil {
+	if err = w.register(fmt.Sprintf("objects %s %d %d", w.Directory, w.device, w.inode)); err != nil {
 		t.Fatal(err)
 	}
 	w.current, err = pgcontent.Open(ctx, w.Config)
@@ -104,7 +105,12 @@ func New(t *testing.T, ctx context.Context) *World {
 	}
 	return w
 }
-func register(line string) error {
+func (w *World) register(line string) (err error) {
+	defer func() {
+		if err != nil {
+			w.setupCloseErr = errors.Join(w.setupCloseErr, err)
+		}
+	}()
 	path := os.Getenv("LERNA_TEST_OWNED_SCOPE_REGISTRY")
 	if !filepath.IsAbs(path) {
 		return errors.New("absolute owned registry required")
@@ -113,8 +119,9 @@ func register(line string) error {
 	if err != nil {
 		return err
 	}
+	closeFile := w.ownSetupFile(f)
 	_, err = fmt.Fprintln(f, line)
-	err = errors.Join(err, f.Sync(), f.Close())
+	err = errors.Join(err, f.Sync(), closeFile())
 	if err != nil {
 		return err
 	}
@@ -122,7 +129,8 @@ func register(line string) error {
 	if err != nil {
 		return err
 	}
-	return errors.Join(dir.Sync(), dir.Close())
+	closeDirectory := w.ownSetupFile(dir)
+	return errors.Join(dir.Sync(), closeDirectory())
 }
 func (w *World) Store() *pgcontent.Store { return w.current }
 func (w *World) Reopen(ctx context.Context) {
@@ -210,9 +218,14 @@ func (w *World) Cleanup() error {
 func (w *World) ownSetupFile(file *os.File) func() error {
 	var once sync.Once
 	var firstErr error
+	nativeClose := file.Close
+	if w.setupNativeClose != nil {
+		close := w.setupNativeClose
+		nativeClose = func() error { return close(file) }
+	}
 	closeFile := func() error {
 		once.Do(func() {
-			firstErr = file.Close()
+			firstErr = nativeClose()
 			if firstErr != nil {
 				w.setupCloseErr = errors.Join(w.setupCloseErr, firstErr)
 			}

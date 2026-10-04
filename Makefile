@@ -17,7 +17,7 @@ lint:
 	go vet ./...
 	pnpm lint
 test:
-	node --test scripts/contract-runner.test.mjs scripts/bounded-build.test.mjs scripts/component-integration-race.test.mjs
+	node --test scripts/conformance-ownership.test.mjs scripts/contract-runner.test.mjs scripts/bounded-build.test.mjs scripts/component-integration-race.test.mjs
 	node scripts/test-generator.mjs
 	go test ./...
 	pnpm test

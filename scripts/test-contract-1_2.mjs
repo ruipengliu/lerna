@@ -1,85 +1,23 @@
 // Exact version-specific conformance; no arbitrary version registry.
-import {
-  mkdtempSync,
-  readFileSync,
-  rmSync,
-  openSync,
-  closeSync,
-  fsyncSync,
-  writeSync,
-  statSync,
-} from 'node:fs';
+import { mkdtempSync, readFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join, dirname, isAbsolute } from 'node:path';
+import { join } from 'node:path';
 import { requireBuild } from './bounded-build.mjs';
 import { startRunner } from './contract-runner.mjs';
+import { ownConformanceScope } from './conformance-ownership.mjs';
 import assert from 'node:assert/strict';
 const dir = mkdtempSync(join(tmpdir(), 'lerna-content-contract-'));
-const identity = statSync(dir);
-let ownershipConfirmed = true;
-// One short-lived FD at a time. Preserve action and native Close causes together.
-function useFD(path, flags, action) {
-  let fd;
-  const causes = [];
-  try {
-    fd = openSync(path, flags, 0o600);
-    action(fd);
-  } catch (error) {
-    causes.push(error);
-  }
-  if (fd !== undefined) {
-    try {
-      closeSync(fd);
-    } catch (error) {
-      causes.push(error);
-    }
-  }
-  if (causes.length) {
-    ownershipConfirmed = false;
-    throw new AggregateError(
-      causes,
-      `owned conformance FD unconfirmed: ${path}`,
-    );
-  }
-}
-for (const path of [dir, dirname(dir)]) useFD(path, 'r', fsyncSync);
-const registry =
-  process.env.LERNA_TEST_OWNED_SCOPE_REGISTRY ?? join(dir, 'owned-scopes.log');
-if (!isAbsolute(registry))
-  throw Error('absolute owned contract registry required');
-function record(line) {
-  useFD(registry, 'a', (fd) => {
-    const bytes = Buffer.from(line + '\n');
-    for (let offset = 0; offset < bytes.length; ) {
-      const written = writeSync(fd, bytes, offset, bytes.length - offset);
-      if (written <= 0) throw Error('ownership ledger short write');
-      offset += written;
-    }
-    fsyncSync(fd);
-  });
-  useFD(dirname(registry), 'r', fsyncSync);
-}
-function processGroup(pid) {
-  try {
-    const stat = readFileSync(`/proc/${pid}/stat`, 'utf8');
-    return Number(stat.slice(stat.lastIndexOf(')') + 2).split(' ')[2]);
-  } catch (error) {
-    ownershipConfirmed = false;
-    throw error;
-  }
-}
-record(`contract ${dir} ${identity.dev} ${identity.ino}`);
-
+const scope = ownConformanceScope(dir, 'contract');
 const controller = new AbortController();
 const interrupt = () => controller.abort();
 process.once('SIGINT', interrupt);
 process.once('SIGTERM', interrupt);
 const deadline = setTimeout(interrupt, 50000);
 let runners = [],
-  failure,
-  buildsConfirmed = true;
+  failure;
 try {
   const executable = join(dir, 'go-values');
+  let startedPID;
   try {
     await requireBuild(
       'go',
@@ -89,17 +27,14 @@ try {
         signal: controller.signal,
         stdio: 'inherit',
         onStart: (pid) => {
-          const group = processGroup(pid);
-          if (group !== pid) {
-            ownershipConfirmed = false;
-            throw Error('compiler native group mismatch');
-          }
-          record(`process_group ${pid} ${group} ${dir}`);
+          startedPID = pid;
+          scope.start(pid, 'compiler');
         },
       },
     );
+    scope.exited(startedPID, 'compiler', true);
   } catch (error) {
-    buildsConfirmed = error.exitConfirmed === true;
+    scope.exited(startedPID, 'compiler', error.exitConfirmed === true);
     throw error;
   }
   let fixtures = JSON.parse(
@@ -110,14 +45,14 @@ try {
     signal: controller.signal,
   });
   runners.push(go);
-  record(`producer ${go.pid} ${processGroup(go.pid)} ${dir}`);
+  scope.start(go.pid, 'producer');
   const ts = startRunner(
     process.execPath,
     ['sdk/typescript/src/v1_2/valuerunner.ts', '--batch'],
     { signal: controller.signal },
   );
   runners.push(ts);
-  record(`producer ${ts.pid} ${processGroup(ts.pid)} ${dir}`);
+  scope.start(ts.pid, 'producer');
   for (const fixture of fixtures) {
     for (const [lang, runner, other] of [
       ['go', go, ts],
@@ -176,33 +111,10 @@ try {
   clearTimeout(deadline);
   process.removeListener('SIGINT', interrupt);
   process.removeListener('SIGTERM', interrupt);
-  const errors = [
-    failure,
-    ...results
-      .filter((result) => result.status === 'rejected')
-      .map((result) => result.reason),
-  ].filter(Boolean);
+  const errors = results
+    .filter((result) => result.status === 'rejected')
+    .map((result) => result.reason);
   for (const runner of runners)
-    record(`producer_exit ${runner.pid} closed=${runner.exitConfirmed}`);
-  if (
-    ownershipConfirmed &&
-    buildsConfirmed &&
-    runners.every((runner) => runner.exitConfirmed)
-  ) {
-    const current = statSync(dir);
-    if (current.dev !== identity.dev || current.ino !== identity.ino)
-      errors.push(Error('owned contract scope identity changed'));
-    else {
-      rmSync(dir, { recursive: true });
-      if (registry !== join(dir, 'owned-scopes.log'))
-        record(`contract_removed ${dir}`);
-    }
-  } else
-    errors.push(
-      Error(
-        `native compiler/producer close unconfirmed; exact scope retained ${dir}`,
-      ),
-    );
-  if (errors.length)
-    throw new AggregateError(errors, 'exact 1.2 conformance failed');
+    scope.exited(runner.pid, 'producer', runner.exitConfirmed);
+  scope.finish(failure, errors);
 }
