@@ -68,6 +68,10 @@ generation measurements remain durable, with no automatic repair job.
 using an existing binding with another binding's arguments. Exact Snapshot
 tuple inclusion rejects it after decoding; individually valid refs confer no
 new combination of authority.
+`invalid_actions_denied_purpose` keeps every Snapshot tuple intact but its fixed
+Source grant permits reading the arguments as rule input and denies the action
+purpose. It fails during actual Source consumption, with a legal-purpose normal
+case using the same finite action construction.
 
 Each `/3` evaluation records one confirmed rule step, retains the original
 durable-start fee and makes zero model requests. It reads all declared material,

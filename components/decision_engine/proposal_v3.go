@@ -19,7 +19,7 @@ import (
 func (s *Service) calculateProposalV3(ctx context.Context, work Work, snapshot Snapshot, processed []v.ContentRef, first []byte, inputBytes int) completion {
 	artifactOutput := 0
 	switch snapshot.Rule {
-	case "delta_only", "actions_four", "input_request", "delta_candidate_result", "cannot_continue", "invalid_actions_depends_on", "invalid_actions_binding_pair":
+	case "delta_only", "actions_four", "input_request", "delta_candidate_result", "cannot_continue", "invalid_actions_depends_on", "invalid_actions_binding_pair", "invalid_actions_denied_purpose":
 	default:
 		return failedCompletion("proposal_invalid", inputBytes, artifactOutput, 1)
 	}
@@ -34,7 +34,7 @@ func (s *Service) calculateProposalV3(ctx context.Context, work Work, snapshot S
 		RequirementDelta:    []v.RequirementDelta{{LocalKey: "condition-replacement", StatementRef: snapshot.MaterialRefs[0], RuleRef: snapshot.MaterialRefs[1], SourceRefs: slices.Clone(processed), Kind: "output", Required: true, ReplacesRef: &replacement}},
 		Advance:             v.NewProposalAdvanceNone(v.ProposalAdvanceNone{}),
 	}
-	if snapshot.Rule == "actions_four" || snapshot.Rule == "invalid_actions_depends_on" || snapshot.Rule == "invalid_actions_binding_pair" {
+	if snapshot.Rule == "actions_four" || snapshot.Rule == "invalid_actions_depends_on" || snapshot.Rule == "invalid_actions_binding_pair" || snapshot.Rule == "invalid_actions_denied_purpose" {
 		if len(snapshot.CapabilityBindings) != 4 {
 			return failedCompletion("proposal_invalid", inputBytes, artifactOutput, 1)
 		}

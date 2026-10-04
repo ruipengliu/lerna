@@ -6,6 +6,7 @@ import (
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
+	"errors"
 	"reflect"
 	"strconv"
 	"testing"
@@ -50,7 +51,7 @@ func proposalScenario(t *testing.T, ctx context.Context, world *fixture.World, v
 	snapshot.MaterialRefs = append(snapshot.MaterialRefs, ruleRef)
 	materials := []fixture.Material{{Ref: scene.MaterialRef, Bytes: material}, {Ref: ruleRef, Bytes: ruleBytes}}
 	purposes := []string{"decide", "get", "command.get", "start", "material", "rule.input", "fixture.lock", "publish", "proposal.publish", "artifact.publish", "rule.condition"}
-	if rule == "actions_four" || rule == "invalid_actions_depends_on" || rule == "invalid_actions_binding_pair" {
+	if rule == "actions_four" || rule == "invalid_actions_depends_on" || rule == "invalid_actions_binding_pair" || rule == "invalid_actions_denied_purpose" {
 		for i := 1; i <= 4; i++ {
 			id := v.ID("slot-" + strconv.Itoa(i))
 			body := []byte(`{"target":"` + string(id) + `","operation":"read"}`)
@@ -59,7 +60,9 @@ func proposalScenario(t *testing.T, ctx context.Context, world *fixture.World, v
 			snapshot.MaterialRefs = append(snapshot.MaterialRefs, ref)
 			snapshot.CapabilityBindings = append(snapshot.CapabilityBindings, decision.CapabilityBinding{CapabilityRef: v.CapabilityRef{TenantID: snapshot.Ref.TenantID, OwnerID: snapshot.Ref.OwnerID, Kind: "capability", ID: "fixture-read", Revision: "1"}, BindingRef: v.BindingRef{TenantID: snapshot.Ref.TenantID, OwnerID: snapshot.Ref.OwnerID, Kind: "binding", ID: id, Revision: "1"}, ArgumentsRef: ref, Purpose: "fixture.read"})
 		}
-		purposes = append(purposes, "fixture.read")
+		if rule != "invalid_actions_denied_purpose" {
+			purposes = append(purposes, "fixture.read")
+		}
 	}
 	if rule == "input_request" {
 		question := []byte("Which source should the report compare?")
@@ -422,12 +425,29 @@ func TestDurableProposalRejectsValidBindingRefsInWrongArgumentPair(t *testing.T)
 	assertFixedProposalFailure(t, "invalid_actions_binding_pair")
 }
 
+func TestDurableProposalArgumentsRequireSourcePurposeConsumption(t *testing.T) {
+	assertFixedProposalFailure(t, "invalid_actions_denied_purpose")
+}
+
 func assertFixedProposalFailure(t *testing.T, rule string) {
 	t.Helper()
 	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 	defer cancel()
 	world := fixture.NewWorld(t, ctx)
-	scene, _ := proposalScenario(t, ctx, world, "fixture-rule/3", rule)
+	scene, snapshot := proposalScenario(t, ctx, world, "fixture-rule/3", rule)
+	if rule == "invalid_actions_denied_purpose" {
+		permission, err := world.Source().Authorize(ctx, scene.Subject, scene.DecisionRef, "start", &scene.Request.Payload)
+		if err != nil {
+			t.Fatal(err)
+		}
+		binding := snapshot.CapabilityBindings[0]
+		if body, err := world.Source().ReadMaterial(ctx, binding.ArgumentsRef, "rule.input", permission, v.MaxBodyBytes); err != nil || len(body) == 0 {
+			t.Fatal("the argument is not a real readable fixed source", err)
+		}
+		if _, err := world.Source().ReadMaterial(ctx, binding.ArgumentsRef, binding.Purpose, permission, v.MaxBodyBytes); !errors.Is(err, decision.ErrForbidden) {
+			t.Fatal("the exact Source permission unexpectedly allows the action purpose", err)
+		}
+	}
 	service := proposalService(t, world, scene)
 	receipt := acceptAccounting(t, ctx, service, scene)
 	if step, err := service.Step(ctx); err != nil || step.Processed != 1 {
