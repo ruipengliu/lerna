@@ -5,7 +5,7 @@ Proposal progress. It reads a trusted fixture Snapshot and publishes through
 consumer-owned ports. It owns no Task, Content, Grant or provider fact.
 
 `New` requires explicit finite storage, authorization, source, publisher, owner,
-component, worker and lease configuration. `Decide`, `Get` and `GetCommand`
+component, worker and lease configuration. `Decide`, `Cancel`, `Get` and `GetCommand`
 consume strict 1.1.0 bytes and a trusted SubjectBinding. The incomplete
 `decision_engine` profile remains unadvertised. The original 1.0.0 codec and
 methods remain frozen; `LegacyReader` exposes only losslessly representable
@@ -44,6 +44,32 @@ Publication and independent readback run outside that transaction, always using
 the original keys, bytes, digests, sources and permissions. Finish commits only
 after both independent publications read back exactly. The accepted receipt
 never changes with progress.
+
+Cancellation additionally requires the explicit `ControlAuthority` configuration
+port. Current principal/scope access and the immutable Task-owner fixture proof
+are separate observations. Current access runs before original Command replay;
+the original applied receipt remains readable after its first-admission proof
+and command cutoff expire, while current access revocation still prevents replay.
+New control binds the exact Decision, Task and original input digest and must be
+higher than the real Snapshot floor or prior adopted control. Generic
+`expected_revision` is forbidden for this method.
+
+Decision owner migration `0003_decision_stops.sql` adds a separate monotonic stop
+fact. An absent Decision can be closed without inventing an original Input or
+Snapshot. Active cancellation stops its exact original Job and saves the stop,
+cancelled Decision and fixed applied receipt in one short owner transaction;
+ordinary quota or saturation does not block it. A terminal Decision remains
+frozen: newer stop control appears only in `Get.current_control`, with scope
+`local_decision_work`. Every new publication has a current local qualification
+check, and a late Finish cannot adopt output after a committed stop. Independent
+Source calls already in flight may leave unadopted bytes; cancellation does not
+claim publication deletion or cross-owner atomic revocation.
+
+Command metadata version `2` has exactly one typed decide/cancel branch. The
+reader retains the original unversioned decide-only metadata and receipts without
+rewriting their bytes or digest. Deployment must confirm old writers have exited
+before new writers use stop facts or new metadata; mixed old/new writing is not
+supported. The unchanged final01 production archive supplies real upgrade states.
 
 A replacement reuses prepared output without calculating again or charging a
 second start. Transient publication failure retains waiting responsibility with
