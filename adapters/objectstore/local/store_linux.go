@@ -47,6 +47,7 @@ type Store struct {
 	closing                   bool
 	rootClose, directoryClose func() error
 	files                     map[*os.File]func() error
+	keyLocks                  map[*os.File]bool
 	childCloseErr             error
 }
 
@@ -73,7 +74,7 @@ func open(path string, ops native) (*Store, error) {
 	if err != nil {
 		return nil, errors.Join(ErrUnavailable, err)
 	}
-	holder := &Store{root: root, ops: ops, gate: make(chan struct{}, 1), files: map[*os.File]func() error{}}
+	holder := &Store{root: root, ops: ops, gate: make(chan struct{}, 1), files: map[*os.File]func() error{}, keyLocks: map[*os.File]bool{}}
 	holder.gate <- struct{}{}
 	holder.rootClose = firstClose(func() error { return ops.closeRoot(root) })
 	directory, err := ops.openDirectory(root)
@@ -136,6 +137,7 @@ func (s *Store) track(file *os.File) func() error {
 			s.childCloseErr = errors.Join(s.childCloseErr, err)
 		} else {
 			delete(s.files, file)
+			delete(s.keyLocks, file)
 		}
 		return err
 	})
@@ -172,12 +174,28 @@ func (s *Store) CloseContext(ctx context.Context) error {
 	}
 	s.mu.Lock()
 	children := make([]func() error, 0, len(s.files))
-	for _, closeFile := range s.files {
-		children = append(children, closeFile)
+	for file, closeFile := range s.files {
+		if !s.keyLocks[file] {
+			children = append(children, closeFile)
+		}
 	}
 	s.mu.Unlock()
 	for _, closeFile := range children {
 		_ = closeFile()
+	}
+	// A body Close error cannot prove its descriptor has stopped accessing
+	// bytes. Keep the coordination lock until actual process exit; retrying a
+	// sticky firstClose must never unlock it by closing the lock descriptor.
+	s.mu.Lock()
+	locks := make([]func() error, 0, len(s.keyLocks))
+	if s.childCloseErr == nil {
+		for file := range s.keyLocks {
+			locks = append(locks, s.files[file])
+		}
+	}
+	s.mu.Unlock()
+	for _, closeLock := range locks {
+		_ = closeLock()
 	}
 	var rootErr, directoryErr error
 	if s.rootClose != nil {
@@ -196,7 +214,7 @@ func (s *Store) Close() error {
 	defer cancel()
 	return s.CloseContext(ctx)
 }
-func (s *Store) Put(ctx context.Context, key, temporary, hash string, length int64, data []byte) error {
+func (s *Store) Put(ctx context.Context, key, temporary, hash string, length int64, data []byte) (returnErr error) {
 	if !keyPattern.MatchString(key) || !temporaryPattern.MatchString(temporary) || !strings.HasPrefix(temporary, key+".") {
 		return ErrUnavailable
 	}
@@ -207,6 +225,14 @@ func (s *Store) Put(ctx context.Context, key, temporary, hash string, length int
 		return err
 	}
 	defer s.release()
+	finishLock, err := s.lockKey(ctx, key, syscall.LOCK_EX)
+	if err != nil {
+		return err
+	}
+	defer func() { returnErr = errors.Join(returnErr, finishLock()) }()
+	if err = s.requireOpenKey(key); err != nil {
+		return err
+	}
 	file, err := s.root.OpenFile(temporary, os.O_CREATE|os.O_EXCL|os.O_WRONLY|syscall.O_NOFOLLOW|syscall.O_NONBLOCK, 0600)
 	if err != nil {
 		return errors.Join(ErrUnavailable, err)
@@ -245,6 +271,9 @@ func (s *Store) Put(ctx context.Context, key, temporary, hash string, length int
 	if err = ctx.Err(); err != nil {
 		return err
 	}
+	if err = s.requireOpenKey(key); err != nil {
+		return err
+	}
 	err = s.root.Link(temporary, key)
 	if err != nil && !errors.Is(err, os.ErrExist) {
 		return errors.Join(ErrUnavailable, err)
@@ -268,9 +297,9 @@ func (s *Store) Put(ctx context.Context, key, temporary, hash string, length int
 	if err = s.directory.Sync(); err != nil {
 		return errors.Join(ErrUnavailable, err)
 	}
-	return ctx.Err()
+	return errors.Join(ctx.Err(), finishLock())
 }
-func (s *Store) Read(ctx context.Context, key, hash string, length int64) ([]byte, error) {
+func (s *Store) Read(ctx context.Context, key, hash string, length int64) (returned []byte, returnErr error) {
 	if !keyPattern.MatchString(key) || length < 0 || length > MaxBytes {
 		return nil, ErrUnavailable
 	}
@@ -278,6 +307,19 @@ func (s *Store) Read(ctx context.Context, key, hash string, length int64) ([]byt
 		return nil, err
 	}
 	defer s.release()
+	finishLock, err := s.lockKey(ctx, key, syscall.LOCK_SH)
+	if err != nil {
+		return nil, err
+	}
+	defer func() {
+		if closeErr := finishLock(); closeErr != nil {
+			returned = nil
+			returnErr = errors.Join(returnErr, closeErr)
+		}
+	}()
+	if err = s.requireOpenKey(key); err != nil {
+		return nil, err
+	}
 	data, err := s.read(key)
 	if err != nil {
 		return nil, err
@@ -286,6 +328,9 @@ func (s *Store) Read(ctx context.Context, key, hash string, length int64) ([]byt
 		return nil, err
 	}
 	if err = ctx.Err(); err != nil {
+		return nil, err
+	}
+	if err = finishLock(); err != nil {
 		return nil, err
 	}
 	return data, nil
