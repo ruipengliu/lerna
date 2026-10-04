@@ -33,6 +33,16 @@ Conformance creates old accepted/running/completed facts with the frozen real
 old writer, drains it, upgrades through this adapter, and observes the preserved
 facts through the public current queries.
 
+Migration0003 creates this owner's separate `decision_stops` table with an exact
+Decision FK and bounded decimal control revision. It does not rewrite existing
+Decision JSON, status, revision, old Command metadata or receipts. A normal
+current Cancel transaction adopts a trusted stop and closes active original
+responsibility; completed/failed/cancelled Decision facts remain immutable while
+new stop control advances independently. Command metadata has strict
+decide/cancel version2 writes and lossless unversioned decide-only reads. Old
+final01 writers must be drained and their exit confirmed before using0003 or
+new metadata; mixed writing cannot safely enforce the stop gate.
+
 Test cleanup retains independent administrative handles. Only acknowledged
 CREATE schemas registered in the fsynced ownership ledger may be removed;
 names, timestamps and row contents do not establish deletion authority.

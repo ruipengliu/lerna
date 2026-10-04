@@ -462,8 +462,8 @@ func verifyUpgradeCase(t *testing.T, ctx context.Context, old upgradeCase, curre
 	if err != nil {
 		t.Fatal(upgradeCause("legacy "+old.Name, err))
 	}
-	if len(old.Migrations) != 1 || len(versions) != 2 || versions[0].Version != old.Migrations[0].Version || versions[0].Checksum != old.Migrations[0].Checksum || versions[1].Version != 2 {
-		t.Fatal("upgrade replaced original checksum or lacks owner0002")
+	if len(old.Migrations) != 1 || len(versions) != 3 || versions[0].Version != old.Migrations[0].Version || versions[0].Checksum != old.Migrations[0].Checksum || versions[1].Version != 2 || versions[2].Version != 3 {
+		t.Fatal("upgrade replaced original checksum or lacks append-only owner0002/0003")
 	}
 	if err = store.Migrate(ctx); err != nil {
 		t.Fatal(upgradeCause("legacy "+old.Name, err))

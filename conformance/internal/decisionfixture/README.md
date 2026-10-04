@@ -36,6 +36,24 @@ Decision identity. `command.get` uses an explicitly seeded owner read permission
 for that exact owner and principal; its request identity does not stand in for a
 Decision identity. Passing a ContentRef or altering a Permission grants no access.
 
+Source migration `0002_control_access.sql` stores a distinct current control
+access scope. `SeedControlAccess` updates only the exact owner/principal/Decision
+scope; `AuthorizeControl` checks its permitted cancel/get or owner command-read
+purpose and current database time. It grants no execution Permission. Immutable
+`IssueControl` proofs are accurately labelled `fixture_control/1`, issued by
+this fixture Task owner and stored as exact ContentRef bytes. `VerifyControl`
+checks issuer, complete delegated principal, Decision, Task, input digest,
+control revision and proof expiry. When original Input exists it separately
+reads the accurate original Snapshot/manifest control floor; absence requires no
+invented Snapshot. Expiring proof adoption does not expire an already adopted
+Decision-owner stop, and refreshing current access cannot rewrite a proof.
+
+`PublicationExists` is an independent authorized observation of the original
+publication key/body/source tuple. It creates neither bytes nor receipt; a false
+result can establish that a planned output was never published while another
+artifact remains independently readable. It establishes fixture storage facts,
+not production Task or Content authority.
+
 Publication uses the original permission and publication key. Same bytes and
 source references return the original identity after reopening; different bytes
 or sources conflict. Publication, subsequent readback and Decision completion

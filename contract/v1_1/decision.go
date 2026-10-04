@@ -220,6 +220,17 @@ func decisionSemantics(name string, value any) error {
 		if v["status"] == "cancelled" && v["input"] != nil && !sameExact(object(v["task_ref"]), object(object(v["input"])["task_ref"])) {
 			return invalid()
 		}
+		if v["status"] == "cancelled" && v["input"] == nil {
+			usage := object(v["usage"])
+			for _, name := range []string{"input_bytes", "output_bytes", "rule_steps", "rule_starts", "model_requests"} {
+				if usage[name] != "0" {
+					return invalid()
+				}
+			}
+			if object(usage["cost"])["integer_value"] != "0" || usage["measurements_complete"] != true {
+				return invalid()
+			}
+		}
 		if v["status"] == "completed" {
 			if !unique(v["artifact_refs"], "") {
 				return invalid()
@@ -235,6 +246,16 @@ func decisionSemantics(name string, value any) error {
 			decision := object(v["decision"])
 			if !sameIdentity(object(v["decision_ref"]), object(decision["decision_ref"])) {
 				return invalid()
+			}
+			if current, ok := v["current_control"]; ok {
+				control := object(current)
+				task := decision["task_ref"]
+				if input, ok := decision["input"]; ok {
+					task = object(input)["task_ref"]
+				}
+				if control["decision_input_digest"] != decision["input_digest"] || !sameExact(object(control["task_ref"]), object(task)) {
+					return invalid()
+				}
 			}
 			return decisionSemantics("Decision", decision)
 		}

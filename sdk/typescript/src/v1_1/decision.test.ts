@@ -12,6 +12,7 @@ import {
   schema,
   negotiate,
   ContractError,
+  type Values,
 } from './index.ts';
 import { decode as decodeOld } from '../index.ts';
 const fixtures = new URL(
@@ -89,4 +90,68 @@ test('complete declared digests do not advertise unfinished profile and schemas 
   assert.throws(() => decodeOld('ErrorCode', '"decision_mismatch"'));
   assert.equal(decode('ErrorCode', '"decision_mismatch"'), 'decision_mismatch');
   assert.ok(Object.isFrozen(schema.$defs.Proposal.properties.advance));
+});
+
+test('cancelled before Input has exact zero observations from shared bytes', () => {
+  const raw: unknown = JSON.parse(
+    readFileSync(new URL('fixtures.json', fixtures), 'utf8'),
+  );
+  assert.ok(Array.isArray(raw));
+  const selected: unknown[] = raw.filter((fixture: unknown) => {
+    assert.ok(fixture && typeof fixture === 'object' && 'name' in fixture);
+    return (
+      fixture.name === 'cancel before decide no fake snapshot' ||
+      fixture.name === 'current stop outside frozen cancelled Decision' ||
+      (typeof fixture.name === 'string' &&
+        fixture.name.startsWith('pre-input cancellation cannot invent '))
+    );
+  });
+  assert.equal(selected.length, 5);
+  for (const fixture of selected) {
+    assert.ok(fixture && typeof fixture === 'object');
+    assert.ok('name' in fixture && typeof fixture.name === 'string');
+    assert.ok(
+      'schema' in fixture &&
+        (fixture.schema === 'Decision' ||
+          fixture.schema === 'DecisionGetResponse'),
+    );
+    assert.ok('wire' in fixture && typeof fixture.wire === 'string');
+    assert.ok('valid' in fixture && typeof fixture.valid === 'boolean');
+    const roundtrip = () => {
+      let decision: Values['Decision'];
+      if (fixture.schema === 'Decision') {
+        decision = decode('Decision', fixture.wire);
+      } else {
+        const response = decode('DecisionGetResponse', fixture.wire);
+        assert.equal(response.status, 'found');
+        if (response.status !== 'found')
+          throw Error('missing controlled Decision');
+        decision = response.decision;
+      }
+      return decode('Decision', encode('Decision', decision));
+    };
+    if (!fixture.valid) {
+      assert.throws(
+        roundtrip,
+        (cause) =>
+          cause instanceof ContractError && cause.code === 'schema_invalid',
+        fixture.name,
+      );
+      continue;
+    }
+    const closed = roundtrip();
+    assert.equal(closed.status, 'cancelled');
+    if (closed.status !== 'cancelled') throw Error('missing cancellation');
+    assert.equal(closed.input, undefined);
+    for (const quantity of [
+      closed.usage.input_bytes,
+      closed.usage.output_bytes,
+      closed.usage.rule_steps,
+      closed.usage.rule_starts,
+      closed.usage.model_requests,
+      closed.usage.cost.integer_value,
+    ])
+      assert.equal(quantity, '0');
+    assert.equal(closed.usage.measurements_complete, true);
+  }
 });

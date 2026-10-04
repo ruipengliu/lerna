@@ -242,6 +242,13 @@ func (s *Service) Claim(ctx context.Context) (*Work, error) {
 		if err != nil {
 			return err
 		}
+		stop, err := s.config.Store.ReadStop(ctx, tx, ref)
+		if err != nil {
+			return err
+		}
+		if stop != nil {
+			return nil
+		}
 		if record == nil || terminal(record.Status) || record.Input == nil || record.InputDigest != observation.InputDigest {
 			return nil
 		}
@@ -327,6 +334,13 @@ func (s *Service) Start(ctx context.Context, claim runtime.Claim) (*Work, error)
 		record, err := s.config.Store.LockDecision(ctx, tx, ref)
 		if err != nil {
 			return err
+		}
+		stop, err := s.config.Store.ReadStop(ctx, tx, ref)
+		if err != nil {
+			return err
+		}
+		if stop != nil {
+			return runtime.ErrClaim
 		}
 		if record == nil || terminal(record.Status) || record.InputDigest != observation.InputDigest {
 			return runtime.ErrClaim
@@ -647,6 +661,13 @@ func (s *Service) lockedWork(ctx context.Context, tx runtime.Tx, work Work) (*Re
 	if err != nil {
 		return nil, time.Time{}, err
 	}
+	stop, err := s.config.Store.ReadStop(ctx, tx, work.Record.Ref)
+	if err != nil {
+		return nil, time.Time{}, err
+	}
+	if stop != nil {
+		return nil, time.Time{}, runtime.ErrClaim
+	}
 	if record == nil || record.Status != "running" || record.StartedEpoch != work.Claim.Epoch || record.InputDigest != work.Record.InputDigest || record.StartSequence != work.Record.StartSequence {
 		return nil, time.Time{}, runtime.ErrClaim
 	}
@@ -748,6 +769,21 @@ func (s *Service) publishPrepared(ctx context.Context, work Work) error {
 	defer cancel()
 	for _, publication := range prepared.publications {
 		if err = bounded.Err(); err != nil {
+			return err
+		}
+		// This local qualification precedes each new independent publication.
+		// It does not make a subsequently in-flight Source call atomic with Stop.
+		if err = s.config.Store.Within(bounded, oldOwner(decisionOwner(work.Record.Ref)), func(ctx context.Context, tx runtime.Tx) error {
+			current, _, err := s.lockedWork(ctx, tx, work)
+			if err != nil {
+				return err
+			}
+			saved, err := current.preparedOutput()
+			if err != nil || saved.digest != prepared.digest {
+				return runtime.ErrClaim
+			}
+			return nil
+		}); err != nil {
 			return err
 		}
 		actual, err := s.config.Publisher.Publish(bounded, publication.key, publication.body, prepared.sources, work.Permission)

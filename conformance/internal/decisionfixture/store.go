@@ -147,6 +147,9 @@ func (s *Store) within(ctx context.Context, fn func(context.Context, *sql.Tx, ti
 //go:embed migrations/0001_fixture.sql
 var migration string
 
+//go:embed migrations/0002_control_access.sql
+var controlMigration string
+
 func (s *Store) Migrate(ctx context.Context) error {
 	return s.within(ctx, func(ctx context.Context, tx *sql.Tx, _ time.Time) error {
 		// The immutable owner-local migration has no dependency on host migrations.
@@ -167,12 +170,29 @@ func (s *Store) Migrate(ctx context.Context) error {
 			if stored != checksum {
 				return errors.New("fixture migration checksum mismatch")
 			}
+		} else {
+			if _, err := tx.ExecContext(ctx, source); err != nil {
+				return err
+			}
+			if _, err := tx.ExecContext(ctx, `INSERT INTO `+s.table("fixture_migrations")+` VALUES(1,$1)`, checksum); err != nil {
+				return err
+			}
+		}
+		var stored string
+		err := tx.QueryRowContext(ctx, `SELECT checksum FROM `+s.table("fixture_migrations")+` WHERE version=2`).Scan(&stored)
+		if err == nil {
+			if stored != digest([]byte(controlMigration)) {
+				return errors.New("fixture control migration checksum mismatch")
+			}
 			return nil
 		}
-		if _, err := tx.ExecContext(ctx, source); err != nil {
+		if !errors.Is(err, sql.ErrNoRows) {
 			return err
 		}
-		_, err := tx.ExecContext(ctx, `INSERT INTO `+s.table("fixture_migrations")+` VALUES(1,$1)`, checksum)
+		if _, err = tx.ExecContext(ctx, fmt.Sprintf(controlMigration, s.table("fixture_control_access"))); err != nil {
+			return err
+		}
+		_, err = tx.ExecContext(ctx, `INSERT INTO `+s.table("fixture_migrations")+` VALUES(2,$1)`, digest([]byte(controlMigration)))
 		return err
 	})
 }

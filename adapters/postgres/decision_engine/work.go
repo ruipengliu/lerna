@@ -50,11 +50,28 @@ func (s *Store) StopRevision(ctx context.Context, token runtime.Tx, job runtime.
 	if err != nil {
 		return err
 	}
-	if revision < 1 || revision > job.WorkRevision {
+	if revision < 1 || revision > job.WorkRevision || job.Object.Kind != "decision" || job.Object.ID == "" || job.Object.Revision != nil || job.Phase != "decide" {
 		return runtime.ErrWorkBounds
 	}
-	_, err = tx.ExecContext(ctx, `UPDATE `+s.table("jobs")+` SET completed_revision=$4,state=CASE WHEN work_revision>$4 THEN 'ready' ELSE 'done' END,claimed_revision=NULL,worker_id=NULL,lease_until=NULL,pool_claim_epoch=NULL WHERE tenant_id=$1 AND owner_id=$2 AND job_id=$3 AND object_kind='decision' AND phase='decide' AND completed_revision<$4 AND (claimed_revision IS NULL OR claimed_revision=$4)`, token.Owner().TenantID, token.Owner().OwnerID, job.ID, revision)
-	return err
+	result, err := tx.ExecContext(ctx, `UPDATE `+s.table("jobs")+` SET completed_revision=$4,state=CASE WHEN work_revision>$4 THEN 'ready' ELSE 'done' END,claimed_revision=NULL,worker_id=NULL,lease_until=NULL,pool_claim_epoch=NULL WHERE tenant_id=$1 AND owner_id=$2 AND job_id=$3 AND object_kind='decision' AND object_id=$5 AND phase='decide' AND work_revision>=$4 AND completed_revision<$4 AND (claimed_revision IS NULL OR claimed_revision<=$4)`, token.Owner().TenantID, token.Owner().OwnerID, job.ID, revision, job.Object.ID)
+	if err != nil {
+		return err
+	}
+	count, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if count == 1 {
+		return nil
+	}
+	current, err := s.LockDecisionJob(ctx, token, v.DecisionRef{TenantID: v.ID(job.Object.TenantID), OwnerID: v.ID(job.Object.OwnerID), Kind: "decision", ID: v.ID(job.Object.ID)})
+	if err != nil {
+		return err
+	}
+	if current == nil || current.ID != job.ID || current.CompletedRevision < revision {
+		return runtime.ErrClaim
+	}
+	return nil
 }
 func (s *Store) LockPool(ctx context.Context, tx runtime.Tx) (workpool.State, error) {
 	return s.core.LockPool(ctx, tx)

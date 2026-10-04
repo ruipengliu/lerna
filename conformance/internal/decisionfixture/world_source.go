@@ -36,6 +36,7 @@ type SourceWorld struct {
 	scenario      Scenario
 	owns          bool
 	closing       bool
+	workerExits   []<-chan struct{}
 	children      []*process.Child
 }
 
@@ -128,6 +129,9 @@ func (w *SourceWorld) Reopen(ctx context.Context) {
 	if w.closing {
 		w.t.Fatal("fixture is closing")
 	}
+	if err := waitWorkerExits(ctx, w.workerExits); err != nil {
+		w.t.Fatal(err)
+	}
 	if err := joinChildren(ctx, w.children); err != nil {
 		w.t.Fatal(err)
 	}
@@ -150,6 +154,9 @@ func (w *SourceWorld) Cleanup() error {
 	joined, childErr := stopChildren(w.children)
 	if !joined {
 		return childErr
+	}
+	if err := waitWorkerExits(ctx, w.workerExits); err != nil {
+		return errors.Join(childErr, err)
 	}
 	if w.source != nil {
 		if err := w.source.Close(); err != nil {

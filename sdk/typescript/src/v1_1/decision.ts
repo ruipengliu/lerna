@@ -184,6 +184,21 @@ export function decisionSemantics(name: string, value: unknown): boolean {
         canonical(v.task_ref) !== canonical(object(v.input).task_ref)
       )
         return false;
+      if (v.status === 'cancelled' && v.input === undefined) {
+        const usage = object(v.usage);
+        if (
+          ![
+            'input_bytes',
+            'output_bytes',
+            'rule_steps',
+            'rule_starts',
+            'model_requests',
+          ].every((name) => usage[name] === '0') ||
+          object(usage.cost).integer_value !== '0' ||
+          usage.measurements_complete !== true
+        )
+          return false;
+      }
       if (v.status === 'completed')
         return (
           unique(v.artifact_refs) &&
@@ -198,6 +213,15 @@ export function decisionSemantics(name: string, value: unknown): boolean {
       return (
         v.status !== 'found' ||
         (identity(v.decision_ref, object(v.decision).decision_ref) &&
+          (v.current_control === undefined ||
+            (object(v.current_control).decision_input_digest ===
+              object(v.decision).input_digest &&
+              canonical(object(v.current_control).task_ref) ===
+                canonical(
+                  object(v.decision).input === undefined
+                    ? object(v.decision).task_ref
+                    : object(object(v.decision).input).task_ref,
+                ))) &&
           decisionSemantics('Decision', v.decision))
       );
   }

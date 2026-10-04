@@ -120,6 +120,9 @@ try {
     'go',
     [
       'test',
+      '-p=1',
+      '-count=1',
+      '-timeout=120s',
       './conformance/component',
       '-run',
       'FixedDecision|DecisionDigest|AuthenticatedQuery11',

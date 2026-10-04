@@ -21,7 +21,7 @@
   },
   {
     "schema": "DecisionGetResponse",
-    "digest": "sha256:c492721f8f2c0261e9dfb40160289f6bd44bc4f7a782feb8368a589fb7142440"
+    "digest": "sha256:c086cd3aa01c5e468bf68296e7f80a0e0b88db6076895df925267acfb21bb55b"
   },
   {
     "schema": "DecisionCancelRequest",
