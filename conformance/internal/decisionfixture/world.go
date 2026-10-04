@@ -194,6 +194,18 @@ func (w *World) AdditionalScenario(ctx context.Context, ownerID, id v.ID, deadli
 	scene.Request.Target = scene.DecisionRef
 	scene.Request.Payload.DecisionID = id
 	scene.Request.Payload.Deadline = v.Time(deadline.UTC().Truncate(time.Microsecond).Format("2006-01-02T15:04:05.000000Z"))
+	commandQuery, err := v.DecodeCommand(scene.CommandGetJSON)
+	if err != nil {
+		w.t.Fatal(err)
+	}
+	commandQuery.Target.OwnerID = ownerID
+	commandQuery.Target.ID = scene.Request.CommandID
+	commandQuery.Payload.CommandRef.Owner.OwnerID = ownerID
+	commandQuery.Payload.CommandRef.CommandID = scene.Request.CommandID
+	scene.CommandGetJSON, err = v.Encode(commandQuery)
+	if err != nil {
+		w.t.Fatal(err)
+	}
 	scene.GetJSON, err = v.Encode(v.DecisionGetRequest{ContractVersion: v.Version, Profile: "decision_engine", CommandID: "read-fixture-decision", Target: scene.DecisionRef, Method: "decision_engine.get", AcceptBefore: scene.Request.AcceptBefore, Payload: v.DecisionGetPayload{DecisionRef: scene.DecisionRef}})
 	if err != nil {
 		w.t.Fatal(err)
