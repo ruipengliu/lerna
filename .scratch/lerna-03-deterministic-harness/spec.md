@@ -57,6 +57,8 @@ Depends on: [01](../lerna-01-command-contracts/spec.md)、[02](../lerna-02-durab
 
 2026-10-03，前置01及02均完整退出；02受测源码f56d930、准确整合/CI5548744、退出文档df2dbe5。按授权代理批准的六票42AC与[最终接法](final-handoff.md)采用[决定](decisions.md)、[存储](storage-handoff.md)、[容量](capacity-handoff.md)，root发布独立issues并启动01与04；真实图whole02→01/04、01→02/03、04→05、01+05→06。1.1.0/Decision/独立目标尚未验收；对外完整范围仍为原1.0.0 command.get。完整profile广告/整片审查及最终CI由root在六票退出后核实，不是06隐藏业务依赖。
 
+2026-10-04，04独立目标与05耐久故障计划各6AC已resolved，准确整合f11135b与077f616；05受测a0198ed的19项normal/race、真实历史SQLite writer升级及两轴复核已通过。其故障阶段只是本地目标事实，不代表06进程SIGKILL或外部供应商证据；全片仍in-progress，01与后续规则、取消/限额及恢复票尚未全部退出。详见[04](issues/04-durable-test-target.md)、[05](issues/05-durable-fault-plans.md)。
+
 A 阶段在 01–03 完成后退出：共同身份、两种数据库耐久工作与确定性故障设施均可运行，不开放真实副作用。
 
 依赖项表示实现先决条件；`ready-for-agent` 表示规格已明确，不表示依赖已完成或能力已开放。全部验收通过并附准确版本、环境、命令、结果和限制后，才可将本切片记为完成。共同执行与证据规则见[切片索引](../lerna-implementation/README.md)。
