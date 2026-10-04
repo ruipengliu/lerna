@@ -15,18 +15,30 @@ states can represent an authenticated cancellation before a decide arrived,
 without inventing an input or Snapshot. Proposal uses a mandatory closed advance
 union; requirement deltas may accompany one advance, and `none` requires a delta.
 
-`DecisionUsage.rule_starts` records exact cumulative durable rule start events.
-The fixed fixture policy charges each durable start; `cost` is that exact fixture
-charge, even when the process dies before physical computation is confirmed. It
-is not CPU or provider billing. `model_requests` remains exactly zero.
+`DecisionUsage.rule_starts` records durable rule start billing events under the
+original fixed Component and readable fixture manifest. For the current
+durable-start policy, these events and their fixture `cost` are exact even if a
+process dies before physical computation is confirmed. They are not CPU or
+provider billing, and `model_requests` remains zero.
 
 `rule_steps`, `input_bytes`, and `output_bytes` record cumulative physical
 observations that have been durably confirmed. `measurements_complete: false`
-means these three counts may be lower bounds, including after a later successful
-completion. It does not make the start count, fixture cost, or model request count
-uncertain. Both precision fields are required, including an explicit false value;
-earlier 1.1 development bodies missing them are rejected. Updating durable old records
+means confirmed counts may be lower bounds, including after a later successful
+completion. **Legacy records also have incomplete billing precision**: their
+saved cost can be a lower bound, and recorded zero does not establish zero total
+cost. Legacy `rule_starts: "0"` means no confirmed new-style billing event, not
+zero historical physical starts. Interpret precision using the original input's
+Component/manifest billing basis; the boolean alone does not choose a policy.
+
+Both precision fields are required, including an explicit false value. Earlier
+1.1 development bodies missing them are rejected. Updating durable old records
 requires an explicit owner migration rather than a permissive codec fallback.
+`failed / usage_unavailable` exposes legacy unaccounted execution without
+inventing measurements or fees. `failed / billing_basis_unsupported` preserves
+an unstarted fixed input whose original billing implementation was retired; it
+does not silently move that input to a new charging policy. Existing legacy
+terminal states and their Proposal/ref facts remain observable with incomplete
+precision where warranted.
 
 The fixed `max_rule_steps` limit controls durable start allowance. The input size
 limit covers one complete fixed input (Snapshot, fixture lock, manifest and actual

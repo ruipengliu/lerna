@@ -1106,15 +1106,15 @@
               "additionalProperties": false
             }
           ],
-          "description": "Exact cumulative fixture durable-rule-start charges under the fixed fixture policy; not CPU or real model/provider charges."
+          "description": "Recorded cumulative fixture charges under the original fixed Component/manifest billing basis. Durable-start charges are exact; legacy unaccounted execution may leave this value a lower bound, including recorded zero. Never synthesize fees or interpret legacy zero as a known total zero."
         },
         "rule_starts": {
           "$ref": "#/$defs/Revision",
-          "description": "Exact cumulative durable rule starts charged by the fixed fixture policy; does not prove physical computation occurred."
+          "description": "Recorded cumulative durable-start billing events under the fixed input basis. For the durable-start rule these events are exact; legacy zero means no confirmed new-style event, not zero historical physical starts."
         },
         "measurements_complete": {
           "type": "boolean",
-          "description": "Whether cumulative input_bytes, output_bytes and rule_steps cover all physical observations; false means these confirmed counts may be lower bounds. Does not weaken exact rule_starts, fixture cost or zero model_requests."
+          "description": "Whether recorded usage observations are complete. False marks confirmed counts that may be lower bounds. The fixed Component and readable manifest determine billing precision: durable-start fixture cost remains exact, while legacy unaccounted cost and historical starts are also incomplete. Model requests remain zero; never infer a billing basis from this flag alone."
         }
       },
       "required": [
@@ -1691,8 +1691,11 @@
         "output_over_limit",
         "rule_limit_exceeded",
         "deadline_elapsed",
-        "budget_exhausted"
-      ]
+        "budget_exhausted",
+        "usage_unavailable",
+        "billing_basis_unsupported"
+      ],
+      "description": "Bounded asynchronous Decision failure. usage_unavailable preserves legacy unaccounted execution and recorded lower bounds; billing_basis_unsupported preserves an unstarted input whose fixed billing basis is no longer executable."
     },
     "DecisionAccepted": {
       "type": "object",

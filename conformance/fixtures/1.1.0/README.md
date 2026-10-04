@@ -27,3 +27,10 @@ Use `node scripts/test-contract-1_1.mjs --usage-only` for the small accounting
 contract subset, or append `--reverse` to reverse that subset. The complete shared
 contract suite remains the integration gate after the owner implementation is
 updated.
+
+Legacy billing fixtures retain original results and recorded measurements.
+`usage_unavailable` and `billing_basis_unsupported` are closed asynchronous
+failure values. A legacy incomplete cost of zero represents the stored lower
+bound; it does not prove actual total charges were zero. Historical start counts
+are likewise not fabricated. The accurate Component/manifest basis distinguishes
+legacy fee-at-finish records from current durable-start billing events.

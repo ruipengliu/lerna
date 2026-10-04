@@ -417,7 +417,9 @@ export type DecisionFailure =
   | 'output_over_limit'
   | 'rule_limit_exceeded'
   | 'deadline_elapsed'
-  | 'budget_exhausted';
+  | 'budget_exhausted'
+  | 'usage_unavailable'
+  | 'billing_basis_unsupported';
 export type DecisionAccepted = {
   status: 'accepted';
   decision_ref: DecisionRef;
@@ -550,7 +552,7 @@ export const declaredMethods = Object.freeze(
       input_schema_digest:
         'sha256:1b6e9e016c071b7319b55668d1defc841d247d2900b7bb180195422fc1ab1b1d',
       output_schema_digest:
-        'sha256:db82313273efa302dddb0ec02f5d071c7a8dde47efd6c14a10c0683f25f75972',
+        'sha256:c492721f8f2c0261e9dfb40160289f6bd44bc4f7a782feb8368a589fb7142440',
     },
     {
       contract_version: '1.1.0',
@@ -617,7 +619,7 @@ export const inputSchemas = Object.freeze(
         inputDigest:
           'sha256:1b6e9e016c071b7319b55668d1defc841d247d2900b7bb180195422fc1ab1b1d',
         outputDigest:
-          'sha256:db82313273efa302dddb0ec02f5d071c7a8dde47efd6c14a10c0683f25f75972',
+          'sha256:c492721f8f2c0261e9dfb40160289f6bd44bc4f7a782feb8368a589fb7142440',
       },
       {
         version: '1.1.0',
@@ -1850,17 +1852,17 @@ export const schema = deepFreeze({
             },
           ],
           description:
-            'Exact cumulative fixture durable-rule-start charges under the fixed fixture policy; not CPU or real model/provider charges.',
+            'Recorded cumulative fixture charges under the original fixed Component/manifest billing basis. Durable-start charges are exact; legacy unaccounted execution may leave this value a lower bound, including recorded zero. Never synthesize fees or interpret legacy zero as a known total zero.',
         },
         rule_starts: {
           $ref: '#/$defs/Revision',
           description:
-            'Exact cumulative durable rule starts charged by the fixed fixture policy; does not prove physical computation occurred.',
+            'Recorded cumulative durable-start billing events under the fixed input basis. For the durable-start rule these events are exact; legacy zero means no confirmed new-style event, not zero historical physical starts.',
         },
         measurements_complete: {
           type: 'boolean',
           description:
-            'Whether cumulative input_bytes, output_bytes and rule_steps cover all physical observations; false means these confirmed counts may be lower bounds. Does not weaken exact rule_starts, fixture cost or zero model_requests.',
+            'Whether recorded usage observations are complete. False marks confirmed counts that may be lower bounds. The fixed Component and readable manifest determine billing precision: durable-start fixture cost remains exact, while legacy unaccounted cost and historical starts are also incomplete. Model requests remain zero; never infer a billing basis from this flag alone.',
         },
       },
       required: [
@@ -2438,7 +2440,11 @@ export const schema = deepFreeze({
         'rule_limit_exceeded',
         'deadline_elapsed',
         'budget_exhausted',
+        'usage_unavailable',
+        'billing_basis_unsupported',
       ],
+      description:
+        'Bounded asynchronous Decision failure. usage_unavailable preserves legacy unaccounted execution and recorded lower bounds; billing_basis_unsupported preserves an unstarted input whose fixed billing basis is no longer executable.',
     },
     DecisionAccepted: {
       type: 'object',
