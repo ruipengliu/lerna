@@ -9,7 +9,7 @@
   },
   {
     "schema": "DecisionDecideRequest",
-    "digest": "sha256:734ce632efd621b33a4bc73dab26bc55a9ab531ac3fce792633244f85cd5d71d"
+    "digest": "sha256:061ab394b11f5dee8c05694a28bab82f0b27ea9b4dacd797f4af5be310c6ee1c"
   },
   {
     "schema": "CommandReceipt",
@@ -21,7 +21,7 @@
   },
   {
     "schema": "DecisionGetResponse",
-    "digest": "sha256:46dd67555185458e73e0e582c3d1a1896aa0be3a4a6dc798b8ef83d664016395"
+    "digest": "sha256:5e0fac2b0cdb2c98d85d2c18d89e64814e73fa47106d9ec1594e389e95ce9435"
   },
   {
     "schema": "DecisionCancelRequest",

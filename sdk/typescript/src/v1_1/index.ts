@@ -15,4 +15,10 @@ export type { CommandFactReader } from './readfacts.ts';
 
 export { negotiate } from './negotiation.ts';
 
-export { decodeDecide, decodeGet, decodeCancel, decisionInputDigest, decisionInputDigestAlgorithm } from './decision.ts';
+export {
+  decodeDecide,
+  decodeGet,
+  decodeCancel,
+  decisionInputDigest,
+  decisionInputDigestAlgorithm,
+} from './decision.ts';

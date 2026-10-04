@@ -287,7 +287,7 @@ export type DecisionUsage = {
   input_bytes: Revision;
   output_bytes: Revision;
   rule_steps: Revision;
-  model_requests: Revision;
+  model_requests: '0';
   cost: Amount;
 };
 export type DecisionDecidePayload = {
@@ -535,7 +535,7 @@ export const declaredMethods = Object.freeze(
       input_schema: 'DecisionDecideRequest',
       output_schema: 'CommandReceipt',
       input_schema_digest:
-        'sha256:734ce632efd621b33a4bc73dab26bc55a9ab531ac3fce792633244f85cd5d71d',
+        'sha256:061ab394b11f5dee8c05694a28bab82f0b27ea9b4dacd797f4af5be310c6ee1c',
       output_schema_digest:
         'sha256:08d6c13b3f335c50f51fe594181781b41cc55252afde33b5755881880ece0f31',
     },
@@ -548,7 +548,7 @@ export const declaredMethods = Object.freeze(
       input_schema_digest:
         'sha256:1b6e9e016c071b7319b55668d1defc841d247d2900b7bb180195422fc1ab1b1d',
       output_schema_digest:
-        'sha256:46dd67555185458e73e0e582c3d1a1896aa0be3a4a6dc798b8ef83d664016395',
+        'sha256:5e0fac2b0cdb2c98d85d2c18d89e64814e73fa47106d9ec1594e389e95ce9435',
     },
     {
       contract_version: '1.1.0',
@@ -601,7 +601,7 @@ export const inputSchemas = Object.freeze(
         output: 'CommandReceipt',
         advertised: false,
         inputDigest:
-          'sha256:734ce632efd621b33a4bc73dab26bc55a9ab531ac3fce792633244f85cd5d71d',
+          'sha256:061ab394b11f5dee8c05694a28bab82f0b27ea9b4dacd797f4af5be310c6ee1c',
         outputDigest:
           'sha256:08d6c13b3f335c50f51fe594181781b41cc55252afde33b5755881880ece0f31',
       },
@@ -615,7 +615,7 @@ export const inputSchemas = Object.freeze(
         inputDigest:
           'sha256:1b6e9e016c071b7319b55668d1defc841d247d2900b7bb180195422fc1ab1b1d',
         outputDigest:
-          'sha256:46dd67555185458e73e0e582c3d1a1896aa0be3a4a6dc798b8ef83d664016395',
+          'sha256:5e0fac2b0cdb2c98d85d2c18d89e64814e73fa47106d9ec1594e389e95ce9435',
       },
       {
         version: '1.1.0',
@@ -1750,18 +1750,44 @@ export const schema = deepFreeze({
       properties: {
         max_input_bytes: {
           $ref: '#/$defs/Revision',
+          pattern:
+            '^(0|[1-9][0-9]{0,5}|10[0-3][0-9]{4}|104[0-7][0-9]{3}|1048[0-4][0-9]{2}|10485[0-6][0-9]|104857[0-6])$',
+          type: 'string',
         },
         max_output_bytes: {
           $ref: '#/$defs/Revision',
+          pattern:
+            '^(0|[1-9][0-9]{0,5}|10[0-3][0-9]{4}|104[0-7][0-9]{3}|1048[0-4][0-9]{2}|10485[0-6][0-9]|104857[0-6])$',
+          type: 'string',
         },
         max_rule_steps: {
           $ref: '#/$defs/Revision',
+          pattern: '^(0|[1-9][0-9]{0,2}|10[01][0-9]|102[0-4])$',
+          type: 'string',
         },
         max_actions: {
           $ref: '#/$defs/Revision',
+          pattern: '^[0-4]$',
+          type: 'string',
         },
         max_cost: {
           $ref: '#/$defs/Amount',
+          allOf: [
+            {
+              type: 'object',
+              properties: {
+                unit: {
+                  type: 'string',
+                  pattern: '^fixture([._:-][A-Za-z0-9._:-]+)?$',
+                },
+                integer_value: {
+                  $ref: '#/$defs/Revision',
+                },
+              },
+              required: ['unit', 'integer_value'],
+              additionalProperties: false,
+            },
+          ],
         },
       },
       required: [
@@ -1787,9 +1813,26 @@ export const schema = deepFreeze({
         },
         model_requests: {
           $ref: '#/$defs/Revision',
+          const: '0',
         },
         cost: {
           $ref: '#/$defs/Amount',
+          allOf: [
+            {
+              type: 'object',
+              properties: {
+                unit: {
+                  type: 'string',
+                  pattern: '^fixture([._:-][A-Za-z0-9._:-]+)?$',
+                },
+                integer_value: {
+                  $ref: '#/$defs/Revision',
+                },
+              },
+              required: ['unit', 'integer_value'],
+              additionalProperties: false,
+            },
+          ],
         },
       },
       required: [

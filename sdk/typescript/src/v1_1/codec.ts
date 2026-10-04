@@ -92,7 +92,11 @@ export function validate<K extends keyof Values>(
   if (!isWireValue(value)) return false;
   const validator = ajv.getSchema(`${schema.$id}#/$defs/${name}`);
   if (!validator) throw new Error(`unsupported value type ${name}`);
-  return validator(value) === true && responseSemantics(name, value) && decisionSemantics(name, value);
+  return (
+    validator(value) === true &&
+    responseSemantics(name, value) &&
+    decisionSemantics(name, value)
+  );
 }
 function schemaError(name: string): Error {
   return new ContractError('schema_invalid', new Error(name));

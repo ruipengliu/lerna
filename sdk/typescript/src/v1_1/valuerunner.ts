@@ -4,7 +4,9 @@ import {
   encode,
   schema,
   decodeCommand,
-  decodeDecide, decodeGet, decodeCancel,
+  decodeDecide,
+  decodeGet,
+  decodeCancel,
   ContractError,
   type Values,
 } from './index.ts';
@@ -13,9 +15,12 @@ function supportedName(name: string | undefined): name is keyof Values {
 }
 // Both tool modes enter this one public typed codec path.
 function roundtrip(name: string | undefined, input: Uint8Array): string {
-  if (name === 'DecideInput') return encode('DecisionDecideRequest',decodeDecide(input));
-  if (name === 'GetInput') return encode('DecisionGetRequest',decodeGet(input));
-  if (name === 'CancelInput') return encode('DecisionCancelRequest',decodeCancel(input));
+  if (name === 'DecideInput')
+    return encode('DecisionDecideRequest', decodeDecide(input));
+  if (name === 'GetInput')
+    return encode('DecisionGetRequest', decodeGet(input));
+  if (name === 'CancelInput')
+    return encode('DecisionCancelRequest', decodeCancel(input));
   if (name === 'CommandInput')
     return encode('CommandGetRequest', decodeCommand(input));
   if (supportedName(name)) return encode(name, decode(name, input));

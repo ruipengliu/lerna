@@ -29,10 +29,7 @@
           "$ref": "#/$defs/ID"
         }
       },
-      "required": [
-        "tenant_id",
-        "owner_id"
-      ],
+      "required": ["tenant_id", "owner_id"],
       "additionalProperties": false
     },
     "ObjectRef": {
@@ -54,12 +51,7 @@
           "$ref": "#/$defs/Revision"
         }
       },
-      "required": [
-        "tenant_id",
-        "owner_id",
-        "kind",
-        "id"
-      ],
+      "required": ["tenant_id", "owner_id", "kind", "id"],
       "additionalProperties": false
     },
     "ContentRef": {
@@ -109,10 +101,7 @@
           "$ref": "#/$defs/Revision"
         }
       },
-      "required": [
-        "unit",
-        "integer_value"
-      ],
+      "required": ["unit", "integer_value"],
       "additionalProperties": false
     },
     "Gap": {
@@ -120,16 +109,10 @@
       "properties": {
         "reason": {
           "type": "string",
-          "enum": [
-            "retention",
-            "authorization_changed",
-            "source_unavailable"
-          ]
+          "enum": ["retention", "authorization_changed", "source_unavailable"]
         }
       },
-      "required": [
-        "reason"
-      ],
+      "required": ["reason"],
       "additionalProperties": false
     },
     "ReadScope": {
@@ -142,10 +125,7 @@
           "$ref": "#/$defs/Kind"
         }
       },
-      "required": [
-        "owner",
-        "object_type"
-      ],
+      "required": ["owner", "object_type"],
       "additionalProperties": false
     },
     "CollectionView": {
@@ -159,10 +139,7 @@
           "maxItems": 1000
         },
         "cursor": {
-          "type": [
-            "string",
-            "null"
-          ],
+          "type": ["string", "null"],
           "minLength": 1,
           "maxLength": 4096
         },
@@ -271,9 +248,7 @@
           "$ref": "#/$defs/ErrorCode"
         }
       },
-      "required": [
-        "code"
-      ],
+      "required": ["code"],
       "additionalProperties": false
     },
     "MethodName": {
@@ -295,9 +270,7 @@
           "$ref": "#/$defs/ID"
         }
       },
-      "required": [
-        "trace_id"
-      ],
+      "required": ["trace_id"],
       "additionalProperties": false
     },
     "CommandPayload": {
@@ -357,10 +330,7 @@
           "$ref": "#/$defs/ID"
         }
       },
-      "required": [
-        "owner",
-        "command_id"
-      ],
+      "required": ["owner", "command_id"],
       "additionalProperties": false
     },
     "CommandGetPayload": {
@@ -370,9 +340,7 @@
           "$ref": "#/$defs/CommandRef"
         }
       },
-      "required": [
-        "command_ref"
-      ],
+      "required": ["command_ref"],
       "additionalProperties": false
     },
     "CommandGetRequest": {
@@ -434,20 +402,12 @@
           "$ref": "#/$defs/ID"
         }
       },
-      "required": [
-        "tenant_id",
-        "owner_id",
-        "kind",
-        "id"
-      ],
+      "required": ["tenant_id", "owner_id", "kind", "id"],
       "additionalProperties": false
     },
     "NextAction": {
       "type": "string",
-      "enum": [
-        "query_original",
-        "resolve_rejection"
-      ]
+      "enum": ["query_original", "resolve_rejection"]
     },
     "CommandReceiptAccepted": {
       "type": "object",
@@ -470,11 +430,7 @@
           "const": "query_original"
         }
       },
-      "required": [
-        "state",
-        "command_ref",
-        "object_ref"
-      ],
+      "required": ["state", "command_ref", "object_ref"],
       "additionalProperties": false
     },
     "CommandReceiptApplied": {
@@ -498,12 +454,7 @@
           "const": "query_original"
         }
       },
-      "required": [
-        "state",
-        "command_ref",
-        "object_ref",
-        "revision"
-      ],
+      "required": ["state", "command_ref", "object_ref", "revision"],
       "additionalProperties": false
     },
     "CommandReceiptRejected": {
@@ -524,11 +475,7 @@
           "const": "resolve_rejection"
         }
       },
-      "required": [
-        "state",
-        "command_ref",
-        "reason"
-      ],
+      "required": ["state", "command_ref", "reason"],
       "additionalProperties": false
     },
     "CommandReceipt": {
@@ -564,12 +511,7 @@
           "$ref": "#/$defs/Revision"
         }
       },
-      "required": [
-        "tenant_id",
-        "owner_id",
-        "kind",
-        "id"
-      ],
+      "required": ["tenant_id", "owner_id", "kind", "id"],
       "additionalProperties": false
     },
     "CommandProgressNone": {
@@ -580,9 +522,7 @@
           "const": "none"
         }
       },
-      "required": [
-        "kind"
-      ],
+      "required": ["kind"],
       "additionalProperties": false
     },
     "CommandProgressUnavailable": {
@@ -597,10 +537,7 @@
           "const": "dependency_unavailable"
         }
       },
-      "required": [
-        "kind",
-        "reason"
-      ],
+      "required": ["kind", "reason"],
       "additionalProperties": false
     },
     "CommandProgressTask": {
@@ -628,12 +565,7 @@
           ]
         }
       },
-      "required": [
-        "kind",
-        "object_ref",
-        "revision",
-        "status"
-      ],
+      "required": ["kind", "object_ref", "revision", "status"],
       "additionalProperties": false
     },
     "CommandProgress": {
@@ -669,12 +601,7 @@
           "$ref": "#/$defs/CommandProgress"
         }
       },
-      "required": [
-        "status",
-        "command_ref",
-        "receipt",
-        "progress"
-      ],
+      "required": ["status", "command_ref", "receipt", "progress"],
       "additionalProperties": false
     },
     "CommandGetResponseNotFound": {
@@ -688,10 +615,7 @@
           "$ref": "#/$defs/CommandRef"
         }
       },
-      "required": [
-        "status",
-        "command_ref"
-      ],
+      "required": ["status", "command_ref"],
       "additionalProperties": false
     },
     "CommandGetResponseGone": {
@@ -705,10 +629,7 @@
           "$ref": "#/$defs/CommandRef"
         }
       },
-      "required": [
-        "status",
-        "command_ref"
-      ],
+      "required": ["status", "command_ref"],
       "additionalProperties": false
     },
     "CommandGetResponseUnavailable": {
@@ -726,11 +647,7 @@
           "const": "dependency_unavailable"
         }
       },
-      "required": [
-        "status",
-        "command_ref",
-        "reason"
-      ],
+      "required": ["status", "command_ref", "reason"],
       "additionalProperties": false
     },
     "CommandGetResponseRejected": {
@@ -744,10 +661,7 @@
           "$ref": "#/$defs/ErrorCode"
         }
       },
-      "required": [
-        "status",
-        "reason"
-      ],
+      "required": ["status", "reason"],
       "additionalProperties": false
     },
     "CommandGetResponse": {
@@ -780,10 +694,7 @@
           "$ref": "#/$defs/CommandReceipt"
         }
       },
-      "required": [
-        "status",
-        "receipt"
-      ],
+      "required": ["status", "receipt"],
       "additionalProperties": false
     },
     "TransportOutcomeCommitUnknown": {
@@ -801,11 +712,7 @@
           "const": "query_or_retransmit_original"
         }
       },
-      "required": [
-        "status",
-        "command_ref",
-        "next_action"
-      ],
+      "required": ["status", "command_ref", "next_action"],
       "additionalProperties": false
     },
     "TransportOutcome": {
@@ -829,10 +736,7 @@
           "$ref": "#/$defs/ID"
         }
       },
-      "required": [
-        "tenant_id",
-        "subject_id"
-      ]
+      "required": ["tenant_id", "subject_id"]
     },
     "SubjectBinding": {
       "type": "object",
@@ -852,11 +756,7 @@
           "maxItems": 16
         }
       },
-      "required": [
-        "tenant_id",
-        "subject_id",
-        "delegation_chain"
-      ]
+      "required": ["tenant_id", "subject_id", "delegation_chain"]
     },
     "SchemaDigest": {
       "type": "string",
@@ -943,12 +843,7 @@
           "$ref": "#/$defs/ID"
         }
       },
-      "required": [
-        "tenant_id",
-        "owner_id",
-        "kind",
-        "id"
-      ],
+      "required": ["tenant_id", "owner_id", "kind", "id"],
       "additionalProperties": false
     },
     "SnapshotRef": {
@@ -971,13 +866,7 @@
           "$ref": "#/$defs/Revision"
         }
       },
-      "required": [
-        "tenant_id",
-        "owner_id",
-        "kind",
-        "id",
-        "revision"
-      ],
+      "required": ["tenant_id", "owner_id", "kind", "id", "revision"],
       "additionalProperties": false
     },
     "RequirementRef": {
@@ -1000,13 +889,7 @@
           "$ref": "#/$defs/Revision"
         }
       },
-      "required": [
-        "tenant_id",
-        "owner_id",
-        "kind",
-        "id",
-        "revision"
-      ],
+      "required": ["tenant_id", "owner_id", "kind", "id", "revision"],
       "additionalProperties": false
     },
     "CapabilityRef": {
@@ -1029,13 +912,7 @@
           "$ref": "#/$defs/Revision"
         }
       },
-      "required": [
-        "tenant_id",
-        "owner_id",
-        "kind",
-        "id",
-        "revision"
-      ],
+      "required": ["tenant_id", "owner_id", "kind", "id", "revision"],
       "additionalProperties": false
     },
     "BindingRef": {
@@ -1058,13 +935,7 @@
           "$ref": "#/$defs/Revision"
         }
       },
-      "required": [
-        "tenant_id",
-        "owner_id",
-        "kind",
-        "id",
-        "revision"
-      ],
+      "required": ["tenant_id", "owner_id", "kind", "id", "revision"],
       "additionalProperties": false
     },
     "UseRef": {
@@ -1087,13 +958,7 @@
           "$ref": "#/$defs/Revision"
         }
       },
-      "required": [
-        "tenant_id",
-        "owner_id",
-        "kind",
-        "id",
-        "revision"
-      ],
+      "required": ["tenant_id", "owner_id", "kind", "id", "revision"],
       "additionalProperties": false
     },
     "InstallLockRef": {
@@ -1116,13 +981,7 @@
           "$ref": "#/$defs/Revision"
         }
       },
-      "required": [
-        "tenant_id",
-        "owner_id",
-        "kind",
-        "id",
-        "revision"
-      ],
+      "required": ["tenant_id", "owner_id", "kind", "id", "revision"],
       "additionalProperties": false
     },
     "ComponentRef": {
@@ -1158,19 +1017,43 @@
       "type": "object",
       "properties": {
         "max_input_bytes": {
-          "$ref": "#/$defs/Revision"
+          "$ref": "#/$defs/Revision",
+          "pattern": "^(0|[1-9][0-9]{0,5}|10[0-3][0-9]{4}|104[0-7][0-9]{3}|1048[0-4][0-9]{2}|10485[0-6][0-9]|104857[0-6])$",
+          "type": "string"
         },
         "max_output_bytes": {
-          "$ref": "#/$defs/Revision"
+          "$ref": "#/$defs/Revision",
+          "pattern": "^(0|[1-9][0-9]{0,5}|10[0-3][0-9]{4}|104[0-7][0-9]{3}|1048[0-4][0-9]{2}|10485[0-6][0-9]|104857[0-6])$",
+          "type": "string"
         },
         "max_rule_steps": {
-          "$ref": "#/$defs/Revision"
+          "$ref": "#/$defs/Revision",
+          "pattern": "^(0|[1-9][0-9]{0,2}|10[01][0-9]|102[0-4])$",
+          "type": "string"
         },
         "max_actions": {
-          "$ref": "#/$defs/Revision"
+          "$ref": "#/$defs/Revision",
+          "pattern": "^[0-4]$",
+          "type": "string"
         },
         "max_cost": {
-          "$ref": "#/$defs/Amount"
+          "$ref": "#/$defs/Amount",
+          "allOf": [
+            {
+              "type": "object",
+              "properties": {
+                "unit": {
+                  "type": "string",
+                  "pattern": "^fixture([._:-][A-Za-z0-9._:-]+)?$"
+                },
+                "integer_value": {
+                  "$ref": "#/$defs/Revision"
+                }
+              },
+              "required": ["unit", "integer_value"],
+              "additionalProperties": false
+            }
+          ]
         }
       },
       "required": [
@@ -1195,10 +1078,27 @@
           "$ref": "#/$defs/Revision"
         },
         "model_requests": {
-          "$ref": "#/$defs/Revision"
+          "$ref": "#/$defs/Revision",
+          "const": "0"
         },
         "cost": {
-          "$ref": "#/$defs/Amount"
+          "$ref": "#/$defs/Amount",
+          "allOf": [
+            {
+              "type": "object",
+              "properties": {
+                "unit": {
+                  "type": "string",
+                  "pattern": "^fixture([._:-][A-Za-z0-9._:-]+)?$"
+                },
+                "integer_value": {
+                  "$ref": "#/$defs/Revision"
+                }
+              },
+              "required": ["unit", "integer_value"],
+              "additionalProperties": false
+            }
+          ]
         }
       },
       "required": [
@@ -1258,9 +1158,7 @@
           "$ref": "#/$defs/DecisionRef"
         }
       },
-      "required": [
-        "decision_ref"
-      ],
+      "required": ["decision_ref"],
       "additionalProperties": false
     },
     "ControlBasis": {
@@ -1537,10 +1435,7 @@
           "maxItems": 16
         }
       },
-      "required": [
-        "requirement_ref",
-        "evidence_refs"
-      ],
+      "required": ["requirement_ref", "evidence_refs"],
       "additionalProperties": false
     },
     "ProposalAdvanceNone": {
@@ -1551,9 +1446,7 @@
           "const": "none"
         }
       },
-      "required": [
-        "kind"
-      ],
+      "required": ["kind"],
       "additionalProperties": false
     },
     "ProposalAdvanceActions": {
@@ -1572,10 +1465,7 @@
           "maxItems": 4
         }
       },
-      "required": [
-        "kind",
-        "actions"
-      ],
+      "required": ["kind", "actions"],
       "additionalProperties": false
     },
     "ProposalAdvanceInputRequest": {
@@ -1647,12 +1537,7 @@
           "maxItems": 16
         }
       },
-      "required": [
-        "kind",
-        "artifact_refs",
-        "evidence",
-        "limitations"
-      ],
+      "required": ["kind", "artifact_refs", "evidence", "limitations"],
       "additionalProperties": false
     },
     "ProposalAdvanceCannotContinue": {
@@ -1684,11 +1569,7 @@
           "maxItems": 16
         }
       },
-      "required": [
-        "kind",
-        "reason",
-        "missing_requirements"
-      ],
+      "required": ["kind", "reason", "missing_requirements"],
       "additionalProperties": false
     },
     "ProposalAdvance": {
@@ -2072,11 +1953,7 @@
           "$ref": "#/$defs/Decision"
         }
       },
-      "required": [
-        "status",
-        "decision_ref",
-        "decision"
-      ],
+      "required": ["status", "decision_ref", "decision"],
       "additionalProperties": false
     },
     "DecisionGetResponseResultUnavailable": {
@@ -2090,10 +1967,7 @@
           "$ref": "#/$defs/DecisionRef"
         }
       },
-      "required": [
-        "status",
-        "decision_ref"
-      ],
+      "required": ["status", "decision_ref"],
       "additionalProperties": false
     },
     "DecisionGetResponseUnavailable": {
@@ -2111,11 +1985,7 @@
           "const": "dependency_unavailable"
         }
       },
-      "required": [
-        "status",
-        "decision_ref",
-        "reason"
-      ],
+      "required": ["status", "decision_ref", "reason"],
       "additionalProperties": false
     },
     "DecisionGetResponseRejected": {
@@ -2129,10 +1999,7 @@
           "$ref": "#/$defs/ErrorCode"
         }
       },
-      "required": [
-        "status",
-        "reason"
-      ],
+      "required": ["status", "reason"],
       "additionalProperties": false
     },
     "DecisionGetResponse": {
@@ -2176,12 +2043,7 @@
           ]
         }
       },
-      "required": [
-        "kind",
-        "object_ref",
-        "revision",
-        "status"
-      ],
+      "required": ["kind", "object_ref", "revision", "status"],
       "additionalProperties": false
     }
   }

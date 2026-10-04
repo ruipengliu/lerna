@@ -21,7 +21,8 @@ export function decodeCommand(wire: string | Uint8Array): CommandGetRequest {
   const envelope = parseCommand(wire);
   if (envelope.contract_version !== version)
     throw new ContractError('version_unsupported');
-  if (envelope.profile !== 'command' || envelope.method !== 'command.get') throw new ContractError('unsupported');
+  if (envelope.profile !== 'command' || envelope.method !== 'command.get')
+    throw new ContractError('unsupported');
   const registered = inputSchemas.find(
     (entry) =>
       entry.version === envelope.contract_version &&

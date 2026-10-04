@@ -96,6 +96,10 @@ func decisionSemantics(name string, value any) error {
 			x := item
 			if key != "" {
 				x = object(item)[key]
+				if key == "requirement_ref" {
+					r := object(x)
+					x = []any{r["tenant_id"], r["owner_id"], r["kind"], r["id"]}
+				}
 			}
 			data, _ := json.Marshal(x)
 			s := string(data)
@@ -152,7 +156,8 @@ func decisionSemantics(name string, value any) error {
 				return invalid()
 			}
 			if r, ok := m["replaces_ref"]; ok {
-				b, _ := json.Marshal(r)
+				ref := object(r)
+				b, _ := json.Marshal([]any{ref["tenant_id"], ref["owner_id"], ref["kind"], ref["id"]})
 				if seen[string(b)] {
 					return invalid()
 				}
@@ -160,6 +165,10 @@ func decisionSemantics(name string, value any) error {
 			}
 		}
 		return decisionSemantics("ProposalAdvance", v["advance"])
+	case "ProposalEvidence":
+		if !unique(v["evidence_refs"], "") {
+			return invalid()
+		}
 	case "RequirementDelta", "ProposalAction":
 		if !unique(v["source_refs"], "") {
 			return invalid()
@@ -189,6 +198,9 @@ func decisionSemantics(name string, value any) error {
 				return invalid()
 			}
 		case "cannot_continue":
+			if refs, ok := v["artifact_refs"]; ok && !unique(refs, "") {
+				return invalid()
+			}
 			if !unique(v["missing_requirements"], "") {
 				return invalid()
 			}
@@ -205,7 +217,13 @@ func decisionSemantics(name string, value any) error {
 				return err
 			}
 		}
+		if v["status"] == "cancelled" && v["input"] != nil && !sameExact(object(v["task_ref"]), object(object(v["input"])["task_ref"])) {
+			return invalid()
+		}
 		if v["status"] == "completed" {
+			if !unique(v["artifact_refs"], "") {
+				return invalid()
+			}
 			p := object(v["proposal"])
 			if !sameIdentity(object(v["decision_ref"]), object(p["decision_ref"])) || !sameExact(object(object(v["input"])["snapshot_ref"]), object(p["snapshot_ref"])) {
 				return invalid()

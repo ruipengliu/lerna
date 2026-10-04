@@ -18,11 +18,11 @@ try {
   const executable = join(dir, 'go-values');
   execFileSync(
     'go',
-    ['build', '-o', executable, './conformance/component/valuerunner'],
+    ['build', '-o', executable, './conformance/component/valuerunner_v1_1'],
     { stdio: 'inherit', timeout: 60000 },
   );
-  const fixtures = ['values', 'commands', 'responses'].flatMap((name) =>
-    JSON.parse(readFileSync(`conformance/fixtures/1.0.0/${name}.json`, 'utf8')),
+  const fixtures = JSON.parse(
+    readFileSync('conformance/fixtures/1.1.0/fixtures.json', 'utf8'),
   );
   if (process.argv.includes('--reverse')) fixtures.reverse();
   const go = startRunner(executable, ['--batch'], {
@@ -31,7 +31,7 @@ try {
   runners.push(go);
   const ts = startRunner(
     process.execPath,
-    ['sdk/typescript/src/valuerunner.ts', '--batch'],
+    ['sdk/typescript/src/v1_1/valuerunner.ts', '--batch'],
     { signal: controller.signal },
   );
   runners.push(ts);
@@ -46,7 +46,12 @@ try {
       const first = await run(
         lang,
         fixture.schema,
-        ' '.repeat(fixture.leading_spaces ?? 0) + fixture.wire,
+        Buffer.concat([
+          Buffer.from(' '.repeat(fixture.leading_spaces ?? 0)),
+          fixture.wire_base64
+            ? Buffer.from(fixture.wire_base64, 'base64')
+            : Buffer.from(fixture.wire),
+        ]),
         `${fixture.name} first`,
       );
       if (!fixture.valid) {
@@ -76,6 +81,11 @@ try {
         `${lang} cross-roundtrip: ${fixture.name}: ${JSON.stringify(second.error)}`,
       );
       assert.deepEqual(
+        second.wire,
+        first.wire,
+        `${lang} preserved canonical raw bytes: ${fixture.name}`,
+      );
+      assert.deepEqual(
         JSON.parse(first.wire.toString('utf8')),
         JSON.parse(fixture.wire),
         `${lang} exact values: ${fixture.name}`,
@@ -89,42 +99,22 @@ try {
   }
   await Promise.all(runners.map((runner) => runner.close()));
   runners = [];
-  // Shared independent goldens test the public digest in each implementation.
-  execFileSync('go', ['test', './conformance/component', '-run', 'Digest'], {
-    stdio: 'inherit',
-    timeout: 60000,
-  });
-  execFileSync('node', ['--test', 'sdk/typescript/src/digests.test.ts'], {
-    stdio: 'inherit',
-    timeout: 60000,
-  });
-  // The same authenticated query scenarios run through each public entry point.
   execFileSync(
     'go',
-    ['test', './conformance/component', '-run', 'AuthenticatedQuery'],
-    {
-      stdio: 'inherit',
-      timeout: 60000,
-    },
-  );
-  execFileSync('node', ['--test', 'sdk/typescript/src/query.test.ts'], {
-    stdio: 'inherit',
-    timeout: 60000,
-  });
-  execFileSync(
-    'go',
-    ['test', './conformance/component', '-run', 'Negotiation'],
+    [
+      'test',
+      './conformance/component',
+      '-run',
+      'FixedDecision|DecisionDigest|AuthenticatedQuery11',
+    ],
     { stdio: 'inherit', timeout: 60000 },
   );
-  execFileSync('node', ['--test', 'sdk/typescript/src/negotiation.test.ts'], {
-    stdio: 'inherit',
-    timeout: 60000,
-  });
   execFileSync(
     process.execPath,
     [
-      'scripts/test-contract-1_1.mjs',
-      ...(process.argv.includes('--reverse') ? ['--reverse'] : []),
+      '--test',
+      'sdk/typescript/src/v1_1/decision.test.ts',
+      'sdk/typescript/src/v1_1/query.test.ts',
     ],
     { stdio: 'inherit', timeout: 60000 },
   );
