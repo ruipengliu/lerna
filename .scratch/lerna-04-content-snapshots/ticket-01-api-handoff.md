@@ -122,3 +122,5 @@ exists, both bind to the full requested ContentRef before not_found. Correct pol
 for actual A plus incorrect request B still yields integrity; a policy for another
 same-identity declaration yields forbidden rather than integrity/not_found. The
 same authorized observation runs at initial admission and final body disclosure.
+
+2026-10-04，root已按最终1a7接受本票并合入eba167d。前述“待接受”保留原交付时状态，当前接法见[退出记录](ticket-01-exit-evidence.md)；后票从实际集成tip复用，不扩大已开放范围。

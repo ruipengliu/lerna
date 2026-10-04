@@ -9,7 +9,7 @@
 - 切片 01：**completed**。原任务 01–06 与后置架构任务 07 均 resolved；正确性修复、独立架构优化和 CI portability 已合入。受测实现提交 `23bac17ba0909c7a4d49d846eb08bc63391b99f0` 的真实远端 CI success，全部退出证据见[spec](../lerna-01-command-contracts/spec.md#切片退出证据2026-10-03)。
 - 切片 02：**completed**。10票68项AC resolved；最终源码f56d930、整合5548744。本地完整顺序count1集成50.431s/race93.834s，独立两轴全部原发现关闭/新增0，fixture架构收益复核闭合；准确CI37162569420 success，完整退出及旧未知schema/CID限制见[证据](../lerna-02-durable-work/exit-evidence.md)。
 - 切片 03：**completed**。六票42/42AC及原六项验收完成；受测882e97b/6bf5750、交付1aa21fc、整合391b4d8，完整profile/共享104项race及两轴/架构闭合。准确47ebce1 CI37194868564 success；10worktrees清理/分支保留。完整[退出](../lerna-03-deterministic-harness/exit-evidence.md)保留失败和未知资源。A阶段01–03完整退出，下一frontier04。
-- 切片 04：**in-progress**。03完整退出5fbb1a0后实际API复核相等，采用具体Content-backed mandatory-context映射，发布六票41AC；首票01 claimed，当前实现/验收未完成。
+- 切片 04：**in-progress**。03完整退出5fbb1a0后实际API复核相等，采用具体Content-backed mandatory-context映射，发布六票41AC；首票01已resolved，8/41AC完成，受测14ead、交付1a7、正式合并eba167d；完整1.2 profile仍不广告，其余五票依图推进。
 - 切片 05–22：**not-started**。仅条件准备，依赖未满足，不代表实现或验收。
 
 ## 切片 01 过程检查点（历史记录）
@@ -208,3 +208,9 @@ merger正式合入cad6905ed64bde26883ef226455ebe1e221e97c2，parents949c392＋5b
 2026-10-04，准确03退出5fbb1a0后采用最终API映射，f706fe4发布六票41AC；图为01→02→03→04及02→05→06，只有01claimed。首票在独立Content工作树/分支实施，实际PG公开put的首条业务red为“正确有限字节应被耐久接纳”却返回unavailable，native exit1且确切schema清理完成；尚未得到green或本票退出。
 
 root全文读取[Astra六票复核](../lerna-04-content-snapshots/published-ticket-review.md)并采用[1.2形状决定](../lerna-04-content-snapshots/contract-shape-decision.md)。Content自己的短Tx/字节介质/准确版本与固定回执边界明确；保留期到不冒称gone，完整1.2 profile仍不广告。当前只有首票持有本地构建/测试/数据库槽，其他审阅只读；历史未知资源保持保护。05–22继续等待其真实整片依赖。
+
+## 切片04首票接受并整合
+
+2026-10-04，01八AC均resolved，交付1a7、受测14ead及两行普通注释4ace资格，合并eba167d双parents/完整tree等于worker。真实PG+本地对象、当前完整授权双门禁、准确身份及固定回执、有限范围、真实重开和旧reader正常/拒绝通过；[首票证据](../lerna-04-content-snapshots/ticket-01-exit-evidence.md)保留各原pin及失败。最终两轴Standards0hard/1可选KEEP P3、Spec a0b0c0，必要架构F1关闭；受测完整check35工具/44TS/三版158+89+101两序双向及Get race22.361 native0。353组/289schema/65PID/518scope无live/residual；worker释放LOCAL槽，overlay/日志/cache/WT保留到整片清理，旧未知不动。
+
+当前8/41不等于04整片退出；完整来源闭包、Snapshot、holder/物理清理和SIGKILL仍待。新准确push CI待核；下一frontier02，05–22仍依真实整片退出。

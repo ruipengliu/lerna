@@ -68,3 +68,5 @@ Depends on: [01](../lerna-01-command-contracts/spec.md)、[02](../lerna-02-durab
 
 
 2026-10-04，首票的[1.2机器合同形状](contract-shape-decision.md)已正式采用，[六票复核](published-ticket-review.md)无必要修正。准确版本、固定有效保留上限、响应身份/range、当前权限和真实清理状态由该决定闭合；这不是已完成行为或04退出证据。
+
+2026-10-04，首票8/8AC已resolved，交付1a7、受测14ead、合并eba167d；[独立审查及执行退出记录](ticket-01-exit-evidence.md)说明准确资格与限制。切片累计8/41、Implementation仍in-progress；后续来源闭包、上下文、正文清理/holder及SIGKILL等待对应票据。本检查点新CI待准确push head核验，不使用旧64文档CI补新源码证据。

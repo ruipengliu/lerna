@@ -4,16 +4,16 @@
 
 **Blocked by:** None（01–03整片退出及实际API复核已满足）
 
-**Status:** claimed
+**Status:** resolved
 
-- [ ] 准确1.2.0闭合Content put/get及新Command读取合同、Go/TS隔离类型/编解码/共同黄金随完整正常链交付；1.0/1.1方法、Schema、拒绝及旧黄金冻结，未完整profile不广告。
-- [ ] 真实PG Content owner在一短Tx提交有界staging、准确声明、固定accepted和必要Job；上传不在持锁Tx，accepted与published明确区分。
-- [ ] 独立真实本地对象adapter执行有界临时写、原字节hash/length核验、文件Sync、不覆盖安装、目录Sync及独立回读后才确认发布；失败不报告可读published。
-- [ ] 原Command键/摘要幂等与准确Content版本身份分别去重；同版本不能换字节/来源/用途，异声明version_conflict，原回执及责任优先于新尝试。
-- [ ] 严格canonical padded base64、256KiB解码正文/1MiB总包、64有限sources、准确hash/byte_length、版本、空内容及有限range正反例；拒绝越界、未知/重复字段，不截断。
-- [ ] 显式耐久read/process/save测试政策、受信主体/owner、有限限额/截止从首次开放起有效，缺配置硬失败；不是允许全部或生产Grant，跨租户拒绝。
-- [ ] 准确put/get/Command事实及真实PG+对象重开恢复正常完成，缺失/损坏字节返回integrity/unavailable；查询不修补或另找latest，旧reader仅无损桥接否则保原unavailable。
-- [ ] 新owner真实空库初始化、重复/checksum及现有受影响旧路径验证，1.0/1.1已发布SQL/archive保持；登记确切scope并在native退出后安全清理，公开业务验收不靠私表/调用次数。
+- [x] 准确1.2.0闭合Content put/get及新Command读取合同、Go/TS隔离类型/编解码/共同黄金随完整正常链交付；1.0/1.1方法、Schema、拒绝及旧黄金冻结，未完整profile不广告。
+- [x] 真实PG Content owner在一短Tx提交有界staging、准确声明、固定accepted和必要Job；上传不在持锁Tx，accepted与published明确区分。
+- [x] 独立真实本地对象adapter执行有界临时写、原字节hash/length核验、文件Sync、不覆盖安装、目录Sync及独立回读后才确认发布；失败不报告可读published。
+- [x] 原Command键/摘要幂等与准确Content版本身份分别去重；同版本不能换字节/来源/用途，异声明version_conflict，原回执及责任优先于新尝试。
+- [x] 严格canonical padded base64、256KiB解码正文/1MiB总包、64有限sources、准确hash/byte_length、版本、空内容及有限range正反例；拒绝越界、未知/重复字段，不截断。
+- [x] 显式耐久read/process/save测试政策、受信主体/owner、有限限额/截止从首次开放起有效，缺配置硬失败；不是允许全部或生产Grant，跨租户拒绝。
+- [x] 准确put/get/Command事实及真实PG+对象重开恢复正常完成，缺失/损坏字节返回integrity/unavailable；查询不修补或另找latest，旧reader仅无损桥接否则保原unavailable。
+- [x] 新owner真实空库初始化、重复/checksum及现有受影响旧路径验证，1.0/1.1已发布SQL/archive保持；登记确切scope并在native退出后安全清理，公开业务验收不靠私表/调用次数。
 
 ## Comments
 
@@ -39,3 +39,5 @@ Job、Linux真实Sync/noclobber/dirSync/独立回读、真实重开及公开Cont
 通过；新机器记录见[../ticket-01-resource-audit-target-policy.json](../ticket-01-resource-audit-target-policy.json)。
 原72 findings、初始不充分after-mismatch建议和对应实际green历史均保留，新candidate仍待
 root最终独立source/doc qualification接受，当前不勾8项或写resolved。
+
+2026-10-04，root按最终1a7独立两轴/架构/实际执行及资源资格接受8/8AC，正式合并eba167d；详细记录见[首票退出](../ticket-01-exit-evidence.md)。以上pending为历史审阅阶段，当前已resolved；04整片及其余33AC继续实施。

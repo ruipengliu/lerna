@@ -321,3 +321,5 @@ This supersedes72 as the delivery review candidate only. All8 remain claimed and
 unchecked until root accepts independent fixed source and final documentation;
 no full slice04 advertisement, push/root merge/CI or later ticket completion is
 claimed by these results.
+
+2026-10-04，root最终接受8AC并正式合入eba167d，见[首票退出](ticket-01-exit-evidence.md)。原pending/失败按当时状态保留；worker已明确释放LOCAL native槽，未新增native测试或清理。

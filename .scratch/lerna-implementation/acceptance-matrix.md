@@ -171,3 +171,7 @@ Source成功关闭后的真正读取失败不是native Close或COMMIT故障；�
 ## 切片03完整退出
 
 2026-10-04，六票42AC及原六项、完整1.1四方法/共同黄金、真实DB与104动态race、两轴最终0、架构0必要新重构、准确47ebce1 CI37194868564通过。[证据](../lerna-03-deterministic-harness/exit-evidence.md)映射原身份/候选拒绝/独立效果/窗口不足/重启计划/有限正常对照。A阶段01–03退出；G2仅此本地DB/规则/测试目标范围，G3第二业务实现、Task/Grant/Provider及生产质量容量待后续。120.073超时和未知资源保持，10worktrees清理不代表全环境零。
+
+## 切片04首票检查点（整片未退出）
+
+2026-10-04，首票8AC已resolved，真实有限准确Content从PG accepted到独立对象published/回读、版本冲突/完整声明、当前主体/用途/read-disclose、查询不修补、真实重开及旧reader桥接通过。[证据](../lerna-04-content-snapshots/ticket-01-exit-evidence.md)绑定14ead受测/1a7交付/eba合并。F22杀进程、F12完整上下文、完整来源闭包和跨holder清理仍留后票，未关闭04整片或G5整体；新准确CI待核。
