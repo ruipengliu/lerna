@@ -12,6 +12,7 @@ import (
 	"slices"
 	"strings"
 	"time"
+	"unicode/utf8"
 
 	decision "github.com/ruipengliu/lerna/components/decision_engine"
 	v "github.com/ruipengliu/lerna/contract/v1_1"
@@ -106,7 +107,7 @@ func validateSnapshot(s decision.Snapshot) error {
 	if err := v.Validate("Revision", string(s.ControlRevision)); err != nil {
 		return err
 	}
-	if s.Rule == "" || len(s.MaterialRefs) > 64 || len(s.RequirementRefs) > 64 || len(s.CapabilityBindings) > 64 || len(s.AnswerSchemaRefs) > 16 || len(s.UseRefs) == 0 || len(s.UseRefs) > 64 {
+	if s.Rule == "" || !utf8.ValidString(s.Rule) || len([]rune(s.Rule)) > 1024 || len(s.MaterialRefs) > 64 || len(s.RequirementRefs) > 64 || len(s.CapabilityBindings) > 64 || len(s.AnswerSchemaRefs) > 16 || len(s.UseRefs) == 0 || len(s.UseRefs) > 64 {
 		return errors.New("fixture snapshot bounds")
 	}
 	for _, ref := range append(slices.Clone(s.MaterialRefs), s.AnswerSchemaRefs...) {
@@ -156,6 +157,14 @@ func (s *Store) Seed(ctx context.Context, b Bundle) (v.ContentRef, error) {
 	}
 	if _, err := v.Encode(b.Permission.Subject); err != nil {
 		return manifestRef, err
+	}
+	for _, purpose := range b.Purposes {
+		if purpose == "" || !utf8.ValidString(purpose) || len([]rune(purpose)) > 1024 {
+			return manifestRef, decision.ErrForbidden
+		}
+	}
+	if !utf8.ValidString(b.RuleVersion) || len([]rune(b.RuleVersion)) > 1024 {
+		return manifestRef, decision.ErrForbidden
 	}
 	if b.Permission.TaskRef != b.Snapshot.TaskRef || b.Permission.ComponentRef != b.Snapshot.ComponentRef || !reflect.DeepEqual(b.Permission.UseRefs, b.Snapshot.UseRefs) || b.DecisionRef.TenantID != s.owner.TenantID || b.DecisionRef.TenantID != b.Permission.Subject.TenantID || b.Permission.DecisionOwner != (v.OwnerRef{TenantID: b.DecisionRef.TenantID, OwnerID: b.DecisionRef.OwnerID}) || b.Snapshot.Ref.OwnerID != s.owner.OwnerID || b.Snapshot.Ref.TenantID != s.owner.TenantID || b.Snapshot.TaskRef.OwnerID != s.owner.OwnerID || b.Snapshot.TaskRef.TenantID != s.owner.TenantID || b.RuleVersion == "" || len(b.Purposes) == 0 || len(b.Purposes) > 16 || len(b.Materials) > 96 {
 		return manifestRef, decision.ErrForbidden
@@ -390,6 +399,9 @@ func (s *Store) ReadSnapshot(ctx context.Context, ref v.SnapshotRef, p decision.
 		if err = closedJSON(body, &out); err != nil {
 			return decision.ErrUnavailable
 		}
+		if out.Ref != ref || out.TaskRef != g.Permission.TaskRef || out.ComponentRef != g.Permission.ComponentRef || !reflect.DeepEqual(out.UseRefs, g.Permission.UseRefs) {
+			return decision.ErrUnavailable
+		}
 		out.Raw = slices.Clone(body)
 		return validateSnapshot(out)
 	})
@@ -413,8 +425,8 @@ func (s *Store) ReadMaterial(ctx context.Context, ref v.ContentRef, purpose stri
 	})
 	return out, err
 }
-func (s *Store) ReadFixtureLock(ctx context.Context, ref v.InstallLockRef, p decision.Permission) ([]byte, error) {
-	var out []byte
+func (s *Store) ReadFixtureLock(ctx context.Context, ref v.InstallLockRef, p decision.Permission) (decision.FixtureLock, error) {
+	var out decision.FixtureLock
 	err := s.within(ctx, func(ctx context.Context, tx *sql.Tx, _ time.Time) error {
 		g, err := s.current(ctx, tx, p, "fixture.lock")
 		if err != nil {
@@ -423,12 +435,12 @@ func (s *Store) ReadFixtureLock(ctx context.Context, ref v.InstallLockRef, p dec
 		if g.LockRef != ref {
 			return decision.ErrForbidden
 		}
-		out, err = s.object(ctx, tx, ref, "lock")
+		out.Raw, err = s.object(ctx, tx, ref, "lock")
 		if err != nil {
 			return err
 		}
 		var lock ComponentFixtureLock
-		if err = closedJSON(out, &lock); err != nil {
+		if err = closedJSON(out.Raw, &lock); err != nil {
 			return decision.ErrUnavailable
 		}
 		if lock.ComponentRef != p.ComponentRef || lock.ManifestRef != g.ManifestRef || lock.Kind != "component_fixture_lock" {
@@ -448,6 +460,10 @@ func (s *Store) ReadFixtureLock(ctx context.Context, ref v.InstallLockRef, p dec
 		if fixed.Kind != "durable_fixture_manifest" || fixed.RuleVersion != lock.RuleVersion || fixed.Snapshot.ComponentRef != lock.ComponentRef || string(lock.ComponentRef.ArtifactDigest) != digest([]byte(lock.RuleVersion)) || string(lock.ComponentRef.ConfigDigest) != digest([]byte(fixed.Snapshot.Rule)) {
 			return decision.ErrUnavailable
 		}
+		out.ManifestRef = lock.ManifestRef
+		out.ManifestRaw = slices.Clone(manifest)
+		out.ComponentRef = lock.ComponentRef
+		out.RuleVersion = lock.RuleVersion
 		return validateSnapshot(fixed.Snapshot)
 	})
 	return out, err

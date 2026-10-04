@@ -51,10 +51,17 @@ type Snapshot struct {
 	UseRefs            []v.UseRef          `json:"use_refs"`
 	Rule               string              `json:"rule"`
 }
+type FixtureLock struct {
+	Raw          []byte
+	ManifestRef  v.ContentRef
+	ManifestRaw  []byte
+	ComponentRef v.ComponentRef
+	RuleVersion  string
+}
 type Source interface {
 	ReadSnapshot(context.Context, v.SnapshotRef, Permission) (Snapshot, error)
 	ReadMaterial(context.Context, v.ContentRef, string, Permission) ([]byte, error)
-	ReadFixtureLock(context.Context, v.InstallLockRef, Permission) ([]byte, error)
+	ReadFixtureLock(context.Context, v.InstallLockRef, Permission) (FixtureLock, error)
 }
 type Publisher interface {
 	Publish(context.Context, string, []byte, []v.ContentRef, Permission) (v.ContentRef, error)

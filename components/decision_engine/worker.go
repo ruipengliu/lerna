@@ -388,11 +388,15 @@ func (s *Service) calculate(ctx context.Context, work Work) completion {
 	if snapshot.Ref != input.SnapshotRef || snapshot.ComponentRef != input.ComponentRef || snapshot.TaskRef.ID != input.TaskRef.ID || snapshot.TaskRef.OwnerID != input.TaskRef.OwnerID || snapshot.TaskRef.TenantID != input.TaskRef.TenantID || len(snapshot.MaterialRefs) < 1 || len(snapshot.MaterialRefs) > 64 || len(snapshot.RequirementRefs) < 1 || len(snapshot.RequirementRefs) > 64 {
 		return failedCompletion("snapshot_unavailable", usage)
 	}
-	lockBytes, err := s.config.Source.ReadFixtureLock(ctx, input.ComponentRef.InstallLockRef, work.Permission)
+	lock, err := s.config.Source.ReadFixtureLock(ctx, input.ComponentRef.InstallLockRef, work.Permission)
 	if err != nil {
 		return failedCompletion("snapshot_unavailable", usage)
 	}
-	inputBytes := len(snapshot.Raw) + len(lockBytes)
+	if lock.ComponentRef != input.ComponentRef || len(snapshot.MaterialRefs) > 63 {
+		return failedCompletion("input_over_limit", usage)
+	}
+	processed := append([]v.ContentRef{lock.ManifestRef}, snapshot.MaterialRefs...)
+	inputBytes := len(snapshot.Raw) + len(lock.Raw) + len(lock.ManifestRaw)
 	var first []byte
 	for index, ref := range snapshot.MaterialRefs {
 		if err = ctx.Err(); err != nil {
@@ -436,7 +440,7 @@ func (s *Service) calculate(ctx context.Context, work Work) completion {
 		return failedCompletion("output_over_limit", usage)
 	}
 	key := string(work.Record.Ref.TenantID) + "/" + string(work.Record.Ref.OwnerID) + "/" + string(work.Record.Ref.ID) + "/" + work.Record.InputDigest
-	artifact, err := s.config.Publisher.Publish(ctx, key+"/artifact", artifactBytes, snapshot.MaterialRefs, work.Permission)
+	artifact, err := s.config.Publisher.Publish(ctx, key+"/artifact", artifactBytes, processed, work.Permission)
 	if err != nil {
 		return failedCompletion("snapshot_unavailable", usage)
 	}
@@ -448,7 +452,7 @@ func (s *Service) calculate(ctx context.Context, work Work) completion {
 	for _, requirement := range snapshot.RequirementRefs {
 		evidence = append(evidence, v.ProposalEvidence{RequirementRef: requirement, EvidenceRefs: []v.ContentRef{artifact}})
 	}
-	proposal := v.Proposal{DecisionRef: work.Record.Ref, SnapshotRef: input.SnapshotRef, GoalRevision: snapshot.GoalRevision, ControlRevision: snapshot.ControlRevision, ProcessedSourceRefs: snapshot.MaterialRefs, RequirementDelta: []v.RequirementDelta{}, Advance: v.NewProposalAdvanceCandidateResult(v.ProposalAdvanceCandidateResult{ArtifactRefs: []v.ContentRef{artifact}, Evidence: evidence, Limitations: []string{}})}
+	proposal := v.Proposal{DecisionRef: work.Record.Ref, SnapshotRef: input.SnapshotRef, GoalRevision: snapshot.GoalRevision, ControlRevision: snapshot.ControlRevision, ProcessedSourceRefs: processed, RequirementDelta: []v.RequirementDelta{}, Advance: v.NewProposalAdvanceCandidateResult(v.ProposalAdvanceCandidateResult{ArtifactRefs: []v.ContentRef{artifact}, Evidence: evidence, Limitations: []string{}})}
 	proposalBytes, err := v.Encode(proposal)
 	if err != nil {
 		return failedCompletion("proposal_invalid", usage)
@@ -458,7 +462,7 @@ func (s *Service) calculate(ctx context.Context, work Work) completion {
 	if !withinLimit(outputBytes, input.Limits.MaxOutputBytes) {
 		return failedCompletion("output_over_limit", usage)
 	}
-	proposalRef, err := s.config.Publisher.Publish(ctx, key+"/proposal", proposalBytes, snapshot.MaterialRefs, work.Permission)
+	proposalRef, err := s.config.Publisher.Publish(ctx, key+"/proposal", proposalBytes, processed, work.Permission)
 	if err != nil {
 		return failedCompletion("snapshot_unavailable", usage)
 	}
