@@ -4,6 +4,7 @@
 | --- | --- |
 | 2026-10-04 | 初版：对象与归属、标识与精确引用、多维状态、命令信封与错误模型、能力声明、版本演进规则。 |
 | 2026-10-04 | 按 `CLAUDE.md` 写作要求和[文档规范](../../conventions.md)修订用语：约束统一为"必须／不得""建议／不建议"，不再使用"应"；"执行端"统一为"执行端点"，发布回滚统一为"回滚"，授权统一用"撤销"。设计内容不变。 |
+| 2026-10-04 | 按[架构评审处理记录](../../../review/README.md)修订：定义唯一的 `CommandIdentity`，回执分为受理回执和决定回执，查询结果分五种（RV1、RV2）；授权控制状态只保留 `ACTIVE`/`REVOKED`，次数与期限改为计算值（RV3）；Grant 拆分 `use_rights[]` 与 `processing_purposes[]`（RV9）；新增端侧账本连续性记录（RV7）、条件集接纳和完成核验轮次的状态（RV6、RV11）；Result 列出条件来源。 |
 
 - 状态：草稿
 - 负责满足：A4；为 A1–A3、C1–C9、G1–G12 提供共同定义
@@ -92,17 +93,18 @@ Ref = 全局名字 + revision + schema_id + digest（可选）
 | 动作（Operation） | `admission_ref`、`executor_endpoint_id`、`adapter_ref`、`parameters_ref`、`capability_snapshot`、`lifecycle`、`dispatch`、`attempt_refs[]`、`effect_ref`、`closure_evidence_refs[]` | 动作账本。执行端点固定；取消不会把它变成另一个动作 |
 | 执行尝试（Attempt） | `operation_id`、`attempt_id`、`external_key`、`external_key_scope`、`key_valid_until?`、`phase`、`send_count`、`claim_epoch`、`observation_refs[]` | 动作账本。结果未知时按原标识和原外部键重发，只增加发送计数 |
 | 效果（Effect） | `operation_id`、`covered_attempt_ids[]`、`outcome`、`late_effect`、`evidence_refs[]`、`next_reconcile_at?` | 动作账本。必须注明证据覆盖了哪些尝试；没有证据不得默认为未生效 |
-| 授权（Grant） | `subject_ref`、`resource_scope`、`actions[]`、`purposes[]`、`valid_from`、`valid_until?`、`use_mode`、`parent_grant_ref?`、`revocation_epoch`、`status`、`revocation_completion?` | 授权。用途分为读取、保存、同步、行动；委派后的有效权限是全部来源的交集 |
-| 凭据 | `credential_id`、`grant_refs[]`、`task_id?`、`operation_ref?`、`audience`、`purpose`、`scope`、`issued_at`、`expires_at`、`revocation_epoch`、`proof` | 授权签发。出口凭据绑定具体动作和出口；检索凭据绑定任务、用途和期限。签名有效不等于当前有效 |
+| 授权（Grant） | `subject_ref`、`resource_scope`、`actions[]`、`use_rights[]`、`processing_purposes[]`、`purpose_vocabulary_version`、`valid_from`、`valid_until?`、`use_mode`、`use_pool_id`、`parent_grant_ref?`、`revocation_epoch`、`status`、`revocation_completion?` | 授权。操作权利分为读取、保存、同步、行动；处理目的是独立维度（见 [ADR 0002](../../../adr/0002-processing-purposes.md)），缺省不等于全部。委派后的有效权限是全部来源的交集 |
+| 凭据 | `credential_id`、`grant_refs[]`、`task_id?`、`operation_ref?`、`use_ref?`、`audience`、`use_right`、`processing_purpose`、`scope`、`issued_at`、`expires_at`、`revocation_epoch`、`proof` | 授权签发。出口凭据绑定具体动作、使用记录和出口；检索凭据绑定任务、操作权利、处理目的和期限。签名有效不等于当前有效 |
 | 预算（Budget） | `scope_ref`、`limits[]`、`use_control`、`reserved`、`settled`、`unresolved_usage_refs[]` | 预算。额度、预留和实耗分开记录；关闭后不再接受新消耗，但仍接受已发生的费用 |
 | 预算依据 | `budget_ref`、`unit`、`ceiling`、`rate_basis_ref?`、`reservation_ref` | 准入时保存。`ceiling` 是本次调用的费用上界；上界未知的调用不准入 |
 | 用量回报 | `report_id`、`operation_id`、`attempt_id`、`billing_source`、`source_revision`、`measurement`、`amounts[]`、`evidence_refs[]` | 预算接收。区分累计值、增量、更正和退款；按计费来源去重，不得只按动作去重 |
-| 内容（Content） | `content_version`、`media_type`、`location_ref`、`digest?`、`source`、`acquired_at`、`producer_ref?`、`derived_from[]`、`policy_ref`、`retention_until?`、`use_status`、`cleanup_status` | 内容治理。原始字节、索引、摘要、模型输出都可以进入派生关系 |
-| 结果（Result） | `task_id`、`outcome`、`close_reason`、`requirements_version`、`requirement_evaluations[]`、`operation_snapshot_refs[]`、`uncertainties[]`、`pending_responsibility_refs[]`、`answer_ref?`、`usage_snapshot_ref`、`closed_at` | 任务编排，与任务关闭在同一事务写入，之后不再修改 |
+| 内容（Content） | `content_version`、`media_type`、`location_ref`、`digest?`、`source`、`acquired_at`、`producer_ref?`、`producer_instance_ref?`、`derived_from[]`、`policy_ref`（含操作权利和处理目的的上限）、`retention_until?`、`use_status`、`cleanup_status` | 内容治理。原始字节、索引、摘要、模型输出都可以进入派生关系 |
+| 结果（Result） | `task_id`、`outcome`、`close_reason`、`requirements_version`、`requirement_evaluations[]`、`operation_snapshot_refs[]`、`uncertainties[]`、`pending_responsibility_refs[]`、`answer_ref?`、`usage_snapshot_ref`、`closed_at` | 任务编排，与任务关闭在同一事务写入，之后不再修改。`requirement_evaluations[]` 逐条列出条件、核验规则及版本、条件来源（用户、模板、模型整理）和结论，供用户判断条件集是否漏项 |
 | 会话输入 | `session_id`、`sequence`、`task_id?`、`input_kind`、`content_ref` | 会话。会话可以不关联任务 |
 | 确认 | `session_id`、`scope`、`requirements_version`、`intent_fingerprint`、`expires_at`、`consumed_by?` | 会话。只能被与之匹配的那个意图消费一次 |
-| 命令回执 | 命令身份、指纹、决定、结果引用、负责域、提交位置 | 持久工作，与业务决定在同一事务提交 |
+| 命令记录 | `CommandIdentity`、指纹、阶段（已受理／已决定）、决定、结果引用、负责域、提交位置 | 持久工作。受理与待办同事务提交；决定与业务事实同事务提交，只写一次 |
 | 待办工作（Job） | 工作标识、输入引用、状态、`claim_epoch`、租约、输出引用 | 持久工作 |
+| 端侧账本连续性 | `ledger_domain_id`、`install_instance_id`、`recovery_epoch`、`startup_state`、`last_witnessed_start_ref?` | 动作账本。`ledger_domain_id` 是原责任身份；其余字段不得互相代替。连续性不能由账本自身的记录证明，判据见[部署 4.2](../../topics/deployment.md#42-断网与重连) |
 | 运行记录事件 | `event_id`、`related_refs[]`、`causation_id?`、`trace_id?`、`occurred_at`、`recorded_at`、`detail_ref?` | 运行记录。只关联事实，不得当作账本、授权或费用的证据 |
 
 后续阶段的对象遵守同样规则：**记忆条目**区分事实、偏好、推断和经验，带来源内容引用、时间、置信度和适用范围，其来源和用途由内容治理持有；**扩展声明**包含实现版本、能力、依赖和所需权限，但安装声明本身不是授权。
@@ -132,13 +134,16 @@ Ref = 全局名字 + revision + schema_id + digest（可选）
 | 任务推进 | `RUNNING`、`WAITING`（附 `waiting_on[]`：用户、核对、外部依赖、授权、预算） | 只在 `OPEN` 时有意义 |
 | 结果 | `SUCCEEDED`、`FAILED`、`CANCELLED` | 只有通过完成门禁才能为 `SUCCEEDED`；后两者可以遗留未知项 |
 | 条件 | 追加新版本，任务切换当前条件集版本 | 任意增删改都使旧版本的提议失效；已准入动作的责任不受影响 |
+| 条件集接纳 | `DRAFT → ACCEPTED`；修改产生新版本，重新从 `DRAFT` 开始 | 只有 `ACCEPTED` 的版本能支撑成功；核验规则换成更弱的规则，与删除必要条件需要同样的可信依据 |
+| 完成核验轮次 | `VERIFYING → PASSED / REJECTED`；带单调递增的轮次号 | `VERIFYING` 期间暂停新的目标准入；`REJECTED` 记录逐项缺口并解除暂停。只有 `PASSED` 的轮次能以 `SUCCEEDED` 关闭任务 |
+| 命令 | 同步：`不存在 → ACCEPTED / REJECTED`；异步：`不存在 → SUBMITTED → ACCEPTED / REJECTED` | `SUBMITTED` 只表示已承担给出决定的责任，不是业务决定。决定只写一次 |
 | 提议 | 内容不可变；接收、准入、拒绝、过期由独立决定表达 | 推理不得自行把提议标成"已授权"或"已完成" |
 | 动作生命周期 | `ACCEPTED → ACTIVE → SETTLED` | 全部尝试都有确定效果，或有不会再迟到生效的证明，才能 `SETTLED`；从未发送的动作可以直接 `SETTLED` |
 | 动作派发 | `OPEN → SEALED` | 封闭后不再创建或发送任何尝试；不得重新打开 |
 | 执行尝试 | `REGISTERED → DISPATCH_POSSIBLE → OBSERVED`；从未发送的可直接封闭 | 调用外部之前必须先持久写入 `DISPATCH_POSSIBLE`；崩溃后按"可能已发出"处理 |
 | 效果 | 没有任何尝试进入 `DISPATCH_POSSIBLE` 时为 `NOT_APPLIED`；第一次写入 `DISPATCH_POSSIBLE` 时转为 `UNKNOWN`；之后由证据转为 `APPLIED` 或 `NOT_APPLIED` | 由覆盖全部相关尝试的证据决定。暂时查不到不是最终否定 |
 | 迟到可能性 | 从未可能发出时为 `RULED_OUT`；可能发出后为 `MAY_OCCUR`；`MAY_OCCUR → RULED_OUT` | 必须有明确证明，不得由超时、租约过期或用户取消推断 |
-| 授权 | `ACTIVE → REVOKED / CONSUMED / EXPIRED`；撤销另有完成状态 `PENDING → COMPLETE` | `REVOKED` 一经写入即拒绝新准入和新凭据；各执行端点确认停止后撤销才 `COMPLETE` |
+| 授权 | `ACTIVE → REVOKED`；撤销另有完成状态 `PENDING → COMPLETE`。是否过期、剩余次数都由有效期和使用记录计算，不是状态 | `REVOKED` 一经写入即拒绝新准入和新凭据；各执行端点确认停止后撤销才 `COMPLETE`。任何时候都可以撤销，包括次数已用完、已过期的授权 |
 | 预算使用 | `OPEN → CLOSED` | 关闭后仍可追加已发生的费用；预留只有在证明不会再产生对应费用后才能释放 |
 | 内容使用 | `USABLE → UNUSABLE` | 删除或撤回时立即不可用，不等清理完成 |
 | 内容清理 | `NONE → REQUESTED → CLEANING → CLEANED` | `CLEANED` 必须覆盖全部已登记的受控持有方、历史版本和派生项 |
@@ -153,7 +158,8 @@ Ref = 全局名字 + revision + schema_id + digest（可选）
 
 ```text
 可以记为成功 ⇔
-  当前全部必要条件都有合格证据
+  当前条件集已接纳（ACCEPTED）
+  且 当前全部必要条件都有合格证据
   且 全部已准入动作都已 SETTLED
   且 关闭事务中读到的条件集版本、输入版本和控制状态仍允许成功
 ```
@@ -179,17 +185,19 @@ Ref = 全局名字 + revision + schema_id + digest（可选）
 | 结构 | 必需内容与语义 |
 | --- | --- |
 | 命令信封 | `user_id`、`issuer_id`、`command_id`、`target_domain_id`、`command_kind`、`subject`、`contract_version`、`schema_id`、`must_understand[]`、`expected_revision?`、`payload`、`fingerprint_version`、`fingerprint`、`accept_until?`、`credential` |
-| 回执 | 原命令身份和指纹；决定为 `ACCEPTED` 或 `REJECTED`；决定引用、结果引用、负责域、持久提交位置 |
-| 查询响应 | 负责域和读到的修订；明确区分"已有决定""尚未发现决定""无法查询"。后两者不得解释为"未执行" |
+| 命令身份（`CommandIdentity`） | `(user_id, issuer_id, target_domain_id, command_id)`。提交、查询、回执、交接、SDK 待发记录和退役记录都引用这一类型，不得自行列出其中一部分 |
+| 受理回执 | 原命令身份和指纹；阶段 `SUBMITTED`；待办引用、负责域、持久提交位置。只用于异步命令，**不是业务决定** |
+| 决定回执 | 原命令身份和指纹；决定为 `ACCEPTED` 或 `REJECTED`；决定引用、结果引用、负责域、持久提交位置 |
+| 查询响应 | 负责域和读到的修订；结果是以下之一：`NOT_FOUND`（尚未发现）、`SUBMITTED`（已受理待决定）、`DECIDED`（附决定回执）、`RETIRED`（命名空间或记录已退役，旧命令被拒绝）、`UNAVAILABLE`（无法查询）。`NOT_FOUND` 和 `UNAVAILABLE` 不得解释为"未执行" |
 | 通知 | 来源域、事件标识、对象引用、对象修订、因果关联、Schema。通知只是唤醒信号，权威状态要向写入方查询 |
 | 错误 | `code`、`category`、`command_acceptance`、`recovery_action`、`related_refs[]`、`responsible_domain_id?`、`retry_after?`、受限的诊断引用 |
 
-**幂等范围**是 `(user_id, issuer_id, target_domain_id, command_id)`。同一范围内：
+**幂等范围**是 `CommandIdentity`。`issuer_id` 由认证得出的调用主体决定，核心核验该主体是否有权使用这个命名空间，不得采信正文自报的值。刷新令牌、重连、更换网关、重启进程和轮换密钥都不改变原命令的 `issuer_id`；已退役的命名空间不得分配给新的安装实例。跨域交接时，源域以自己的固定服务命名空间创建目标命令，并保存源命令到目标命令的映射。同一范围内：
 
 - 指纹相同，返回原决定；
 - 指纹不同，返回 `IDEMPOTENCY_CONFLICT`。
 
-拒绝也是一个决定。条件改变后想要不同的结果，必须用新的命令标识，不能指望原标识得到新决定。回执的保留期必须覆盖相关责任的存续期；清理后仍要能拒绝迟到的旧命令，不得在删掉键后把旧请求当新请求处理。
+拒绝也是一个决定。只有确定的业务原因才写 `REJECTED`；暂时不可达、复制待核实不是拒绝。条件改变后想要不同的结果，必须用新的命令标识，不能指望原标识得到新决定。回执的保留期必须覆盖相关责任的存续期；清理后仍要能拒绝迟到的旧命令，不得在删掉键后把旧请求当新请求处理。
 
 **指纹**由用户、负责域、命令类型、对象和条件引用、业务参数、授权范围、预算依据和确认绑定计算，排除连接地址、超时设置、追踪标识和可刷新的认证凭据。指纹基于带版本号、明确列出字段的语义投影计算，而不是原始序列化字节。原因是 Protobuf 的确定性序列化不是规范化序列化，Schema、构建或运行库变化都可能改变字节。不理解的安全相关字段必须拒绝，不得先忽略再计算指纹。
 
@@ -240,7 +248,7 @@ Ref = 全局名字 + revision + schema_id + digest（可选）
 | 用户控制（任务编排） | 暂停或取消已保存，封闭工作已登记 | 外部动作已停止 | 命令身份 |
 | 关闭任务（任务编排） | Result 与任务终态原子持久 | 遗留的核对和费用已结束 | 命令身份 |
 | 签发凭据（授权） | 受限凭据和使用依据已记录 | 之后的使用无需再检查 | 签发命令 |
-| 登记或使用内容（内容治理） | 登记已持久；使用只拿到本次用途允许的数据 | 可以另作他用 | 登记按命令身份 |
+| 登记或使用内容（内容治理） | 登记已持久；使用只拿到本次操作权利和处理目的允许的数据 | 可以另作他用 | 登记按命令身份 |
 | 查询回执（原负责方） | 返回原决定，或明确的查询状态 | 未找到等于未执行 | 天然幂等 |
 
 ## 4 关键流程
@@ -301,7 +309,7 @@ Ref = 全局名字 + revision + schema_id + digest（可选）
 | G5 | 模型调用、核对查询等核心安排的工作同样以准入记录为来源 | 模型、摘要、嵌入、嵌套工具、核对路径都能在闸门处被观察到 |
 | G6 | 提议与准入记录、效果、Result 是不同类型，由不同写入方写 | 推理无法写入核心状态；完成判断不得直接关闭任务 |
 | G7 | 授权来源链和范围交集；扩展声明不等于授权 | 子任务、插件和回滚版本都不得扩大来源权限 |
-| G8 | 四种用途分别表达；历史依据与当前许可分开；失联时的错误码 | 旧快照、旧凭据、撤销后的缓存、失联端点都不得继续新的使用 |
+| G8 | 四种操作权利与处理目的分别表达；历史依据与当前许可分开；失联时的错误码 | 旧快照、旧凭据、撤销后的缓存、失联端点都不得继续新的使用 |
 | G9 | 精确内容版本、派生关系、使用状态与清理状态分开 | 清理期间新产生的派生项、离线缓存、历史版本都不会被漏掉 |
 | G10 | 计费来源与来源修订；累计、增量、更正、退款分开 | 重复、乱序、取消后到达的账单和更正都不会重复计算或丢失 |
 | G11 | 任务负责方、动作执行端点、原交接身份固定；工作领取另用代次 | 故障后不得通过换端、换动作、换任务掩盖未知 |
@@ -400,6 +408,8 @@ AWS 的做法是由调用方提供请求标识表达意图：同一标识、不�
 | 测试 | 输入或注入 | 必须满足 | 对应 |
 | --- | --- | --- | --- |
 | 命令幂等 | 同一命令重复提交、并发提交 | 只有一个决定、一个动作意图，返回原回执 | G3、G4 |
+| 命令身份 | 不同 issuer 使用相同 command_id；轮换凭据后查询原命令；冒用其他 issuer | 前者是两条独立命令；轮换后仍找回原决定；冒用被拒绝 | G3、G12 |
+| 受理后再决定 | 异步命令受理后、决定前崩溃；期间撤销授权或预算不足 | 只有一个受理、一个决定；可以拒绝，受理记录不被改写 | G3、G4 |
 | 同键异意图 | 保持标识，改变用户、参数、条件或预算 | 明确冲突，不执行第二种意图 | G3、G12 |
 | R7 每一段崩溃 | 本方记录后、对方接纳后、本方保存回执前分别崩溃 | 查询原交接恢复，不新建动作，责任不中断 | G3、G11 |
 | 出口前后崩溃 | 登记尝试后、发送前后、保存结果前崩溃 | 可能已发出的保持未知；按能力核对或安全重发 | G1、G4 |
@@ -408,7 +418,8 @@ AWS 的做法是由调用方提供请求标识表达意图：同一标识、不�
 | 幂等键期限 | 在有效期内外分别恢复同一尝试 | 期内按原键恢复；期外停止盲目重发 | G1 |
 | 条件和输入并发变更 | 提议产生后修改条件或补充输入 | 旧提议不得准入；已有动作的责任仍可查 | C1、G4 |
 | 迟到的旧提议 | 推理重试后新旧两个提议都回来 | 旧规划代次的提议不得准入 | G4、G6 |
-| 完成门禁 | 漏一个动作、证据过期、证据不足、仍可能迟到生效 | 任务不得成功关闭，并返回具体缺口 | G2 |
+| 完成门禁 | 漏一个动作、证据过期、证据不足、仍可能迟到生效、条件集未接纳 | 任务不得成功关闭，并返回具体缺口 | G2 |
+| 授权次数与撤销 | 一次性授权被占用后撤销；过期后撤销 | 撤销都成立；未发出的原动作出口被拒绝 | G8 |
 | 取消竞争 | 在准入、交接、派发和回报的每个阶段取消 | 停止新推进；已发出的继续核对；取消回执不声称外部已停止 | C7、G1、G11 |
 | 出口全覆盖 | 模型、摘要、嵌入、核对和嵌套工具分别调用 | 每条路径都有准入记录、尝试、授权和费用关联 | G4、G5 |
 | 预算并发 | 两个调用在费用回报前同时准入 | 已结清加已预留不超过上限；未知费用不被当作零 | G10 |
