@@ -49,10 +49,13 @@ type processFrame struct {
 // physical pipe allocation, cancellation, single Wait and exit confirmation.
 type hostProcess struct {
 	physical *process.Child
-	ctx      context.Context
-	cancel   context.CancelFunc
-	waited   bool
-	cfg      processConfig
+	// Normal construction binds the actual Child.Stop. A mechanical lifetime
+	// test may substitute this cleanup boundary without opening a physical scope.
+	stopPhysical func(context.Context) (bool, error)
+	ctx          context.Context
+	cancel       context.CancelFunc
+	waited       bool
+	cfg          processConfig
 }
 
 func startHostProcess(t *testing.T, cfg processConfig) *hostProcess {
@@ -67,7 +70,8 @@ func startHostProcess(t *testing.T, cfg processConfig) *hostProcess {
 	physical, err := process.New(ctx, "TestDurableWorkHostProcess", "LERNA_DURABLE_WORK_PROCESS=1")
 	child := &hostProcess{physical: physical, ctx: ctx, cancel: cancel, cfg: cfg}
 	if physical != nil {
-		cfg.fixture.child = child
+		child.stopPhysical = physical.Stop
+		cfg.fixture.registerChild(child)
 	} // Before Start/firstready, including partial allocation.
 	t.Cleanup(func() {
 		cleanup, stop := context.WithTimeout(context.Background(), 2*time.Second)
@@ -392,11 +396,11 @@ func processWorker(t *testing.T, store workStore, clock runtime.Clock) *durablew
 // Historical child errors remain diagnostics; only unconfirmed physical
 // cleanup prevents this concrete fixture from closing/dropping its scope.
 func (p *hostProcess) stop(ctx context.Context) error {
-	if p.physical == nil {
+	if p.stopPhysical == nil {
 		p.cancel()
 		return nil
 	}
-	confirmed, err := p.physical.Stop(ctx)
+	confirmed, err := p.stopPhysical(ctx)
 	p.waited = confirmed
 	p.cancel()
 	return err

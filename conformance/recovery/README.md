@@ -12,7 +12,7 @@
 
 未完成工作按实际 Claim 返回的 LeaseUntil 恢复，不刷新期限。原 prepared 输入、发布 key、摘要、refs、当前权限与公开 usage 保留，未知测量保持原下界及 MeasurementsComplete。独立 publisher 事实不能证明 Source 与 Decision 跨 owner 原子提交。
 
-`conformance/internal/testkit/process` 由本包原 durable demo 和独立目标共同使用：有限三条管道、唯一 Wait、Start 完成屏障、Stop-before-Start 门禁和首次 FD 关闭结果。确认退出与历史错误分别返回；未知退出或未知 native Close 保留精确 scope。父进程自己的未知连接不能由子进程退出擦除。原生无 context 的关闭需要实际进程监督，不能遗弃关闭 goroutine 后删除目录。
+`conformance/internal/testkit/process` 由本包原 durable demo 和独立目标共同使用：有限三条管道、唯一 Wait、Start 完成屏障、Stop-before-Start 门禁和首次 FD 关闭结果。确认退出与历史错误分别返回；未知退出或未知 native Close 保留精确 scope。父进程自己的未知连接不能由子进程退出擦除。原 demo 每代具体 holder 持续保留，前代 FD 未知会阻止整个 scope 删除；下一代关闭成功不能替前代确认。最多16代，在 New 分配管道前拒绝超限。原生无 context 的关闭需要实际进程监督，不能遗弃关闭 goroutine 后删除目录。
 
 运行 Decision 四个故事（先 normal 实际退出，再运行 race）：
 

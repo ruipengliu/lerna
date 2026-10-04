@@ -295,54 +295,73 @@ func assertProcessTargetFact(t *testing.T, f *fixture, writer *target.Target, in
 }
 
 func TestTargetSIGKILLBeforeCommitRollsBackFactAndCursor(t *testing.T) {
-	f := newFixture(t)
-	writer := f.open()
-	input := target.Request{Key: "original-process-key", Resource: "fake-process-document", Data: []byte{0, 255, 10}}
-	if _, err := writer.InstallPlan(f.ctx, target.Plan{ID: "process-before", Seed: 73, Deadline: f.now.Add(3 * time.Minute), Steps: []target.Step{{ID: "write-1", Kind: target.WriteNormally, Input: input}}}); err != nil {
-		t.Fatal(err)
+	for _, kill := range []bool{false, true} {
+		name := "normal_release"
+		if kill {
+			name = "SIGKILL_before_COMMIT"
+		}
+		t.Run(name, func(t *testing.T) {
+			f := newFixture(t)
+			writer := f.open()
+			input := target.Request{Key: "original-process-key", Resource: "fake-process-document", Data: []byte{0, 255, 10}}
+			if _, err := writer.InstallPlan(f.ctx, target.Plan{ID: "process-before", Seed: 73, Deadline: f.now.Add(3 * time.Minute), Steps: []target.Step{{ID: "write-1", Kind: target.WriteNormally, Input: input}}}); err != nil {
+				t.Fatal(err)
+			}
+			if err := writer.Close(); err != nil {
+				t.Fatal(err)
+			}
+			f.writer = nil
+			child := startTargetChild(t, f, "process-before", "write-1", "before_commit", 1)
+			var gate targetProcessFrame
+			if err := child.Event(f.ctx, &gate); err != nil {
+				t.Fatal("actual target pre-COMMIT checkpoint missing:", err)
+			}
+			if gate.Stage != "before_commit" || gate.Scenario != "process-before" || gate.Event != "write-1" || gate.Generation != 1 {
+				t.Fatal("wrong target pre-COMMIT identity")
+			}
+			if !kill {
+				if err := child.Send(f.ctx, targetProcessFrame{Scenario: "process-before", Event: "write-1", Generation: 1, Stage: "release"}); err != nil {
+					t.Fatal(err)
+				}
+				result := finishTargetChild(t, f, child, "process-before", "write-1", 1)
+				if result.Phase != "committed" || result.Outcome != "applied" {
+					t.Fatal("released original pre-COMMIT event did not commit")
+				}
+				writer = f.open()
+				assertProcessTargetFact(t, f, writer, input, "process-before", 1)
+				return
+			}
+			killTargetChild(t, f, child)
+			writer = f.open()
+			if _, err := writer.Query(f.ctx, input.Key); !errors.Is(err, target.ErrNotFound) {
+				t.Fatal("pre-COMMIT original query unexpectedly committed", err)
+			}
+			if _, err := writer.Read(f.ctx, input.Resource); !errors.Is(err, target.ErrNotFound) {
+				t.Fatal("pre-COMMIT value unexpectedly committed", err)
+			}
+			observer, err := f.observer()
+			if err != nil {
+				t.Fatal(err)
+			}
+			if _, err = observer.Observe(f.ctx, input.Key); !errors.Is(err, target.ErrNotFound) {
+				t.Fatal("pre-COMMIT receipt/receive unexpectedly durable", err)
+			}
+			plan, err := observer.Plan(f.ctx, "process-before")
+			if err != nil || plan.Cursor != 0 || len(plan.Events) != 0 {
+				t.Fatal("pre-COMMIT cursor unexpectedly advanced", err)
+			}
+			if err = writer.Close(); err != nil {
+				t.Fatal(err)
+			}
+			f.writer = nil
+			// A fresh child/coordinator resumes the saved original event.
+			successor := startTargetChild(t, f, plan.Plan.ID, plan.Plan.Steps[plan.Cursor].ID, "", 2)
+			finishTargetChild(t, f, successor, "process-before", "write-1", 2)
+			writer = f.open()
+			assertProcessTargetFact(t, f, writer, input, "process-before", 1)
+		})
 	}
-	if err := writer.Close(); err != nil {
-		t.Fatal(err)
-	}
-	f.writer = nil
-	child := startTargetChild(t, f, "process-before", "write-1", "before_commit", 1)
-	var gate targetProcessFrame
-	if err := child.Event(f.ctx, &gate); err != nil {
-		t.Fatal("actual target pre-COMMIT checkpoint missing:", err)
-	}
-	if gate.Stage != "before_commit" || gate.Scenario != "process-before" || gate.Event != "write-1" || gate.Generation != 1 {
-		t.Fatal("wrong target pre-COMMIT identity")
-	}
-	killTargetChild(t, f, child)
-	writer = f.open()
-	if _, err := writer.Query(f.ctx, input.Key); !errors.Is(err, target.ErrNotFound) {
-		t.Fatal("pre-COMMIT original query unexpectedly committed", err)
-	}
-	if _, err := writer.Read(f.ctx, input.Resource); !errors.Is(err, target.ErrNotFound) {
-		t.Fatal("pre-COMMIT value unexpectedly committed", err)
-	}
-	observer, err := f.observer()
-	if err != nil {
-		t.Fatal(err)
-	}
-	if _, err = observer.Observe(f.ctx, input.Key); !errors.Is(err, target.ErrNotFound) {
-		t.Fatal("pre-COMMIT receipt/receive unexpectedly durable", err)
-	}
-	plan, err := observer.Plan(f.ctx, "process-before")
-	if err != nil || plan.Cursor != 0 || len(plan.Events) != 0 {
-		t.Fatal("pre-COMMIT cursor unexpectedly advanced", err)
-	}
-	if err = writer.Close(); err != nil {
-		t.Fatal(err)
-	}
-	f.writer = nil
-	// A fresh child/coordinator resumes the saved original event.
-	successor := startTargetChild(t, f, plan.Plan.ID, plan.Plan.Steps[plan.Cursor].ID, "", 2)
-	finishTargetChild(t, f, successor, "process-before", "write-1", 2)
-	writer = f.open()
-	assertProcessTargetFact(t, f, writer, input, "process-before", 1)
 }
-
 func killTargetChild(t *testing.T, f *fixture, child *process.Child) {
 	t.Helper()
 	ctx, cancel := context.WithTimeout(f.ctx, 2*time.Second)

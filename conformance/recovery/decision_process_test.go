@@ -305,19 +305,7 @@ func TestDecisionSIGKILLBeforeCompletionCommitRestoresOriginalProposal(t *testin
 				t.Fatal("staged completed became visible before held actual COMMIT")
 			}
 			if kill {
-				killCtx, killCancel := context.WithTimeout(ctx, 2*time.Second)
-				defer killCancel()
-				if err = child.KillWait(killCtx); err != nil {
-					t.Fatal(err)
-				}
-				var reply ruleProcessFrame
-				if err = child.Reply(killCtx, &reply); err != io.EOF {
-					t.Fatal("killed staged Decision returned reply", err)
-				}
-				confirmed, closeErr := child.Stop(killCtx)
-				if !confirmed || closeErr != nil {
-					t.Fatal("staged Decision exit/pipe cleanup unconfirmed", closeErr)
-				}
+				killRuleChild(t, ctx, child)
 			} else {
 				if err = child.Send(ctx, ruleProcessFrame{Stage: "release", Scenario: stage.Scenario, Generation: 1}); err != nil {
 					t.Fatal(err)
@@ -455,6 +443,25 @@ func finishRuleChild(t *testing.T, ctx context.Context, child *process.Child, ge
 	confirmed, err = child.Stop(ctx)
 	if !confirmed || err != nil {
 		t.Fatal("normal Decision child physical cleanup:", err)
+	}
+}
+
+// The three real Rule stories share only their physical kill/reply/FD sequence;
+// original Proposal, receipt and usage assertions stay with each caller.
+func killRuleChild(t *testing.T, ctx context.Context, child *process.Child) {
+	t.Helper()
+	killCtx, cancel := context.WithTimeout(ctx, 2*time.Second)
+	defer cancel()
+	if err := child.KillWait(killCtx); err != nil {
+		t.Fatal("Decision SIGKILL not confirmed:", err)
+	}
+	var reply ruleProcessFrame
+	if err := child.Reply(killCtx, &reply); err != io.EOF {
+		t.Fatal("killed Decision returned reply or malformed frame", err)
+	}
+	confirmed, err := child.Stop(killCtx)
+	if !confirmed || err != nil {
+		t.Fatal("killed Decision exit/pipe cleanup unknown", err)
 	}
 }
 
@@ -596,19 +603,7 @@ func TestDecisionSIGKILLAfterCompletionCommitRetainsOriginalReplyFact(t *testing
 				t.Fatal("independent original artifact bytes missing", err)
 			}
 			if kill {
-				killCtx, killCancel := context.WithTimeout(ctx, 2*time.Second)
-				defer killCancel()
-				if err = child.KillWait(killCtx); err != nil {
-					t.Fatal(err)
-				}
-				var reply ruleProcessFrame
-				if err = child.Reply(killCtx, &reply); err != io.EOF {
-					t.Fatal("killed committed Decision returned reply", err)
-				}
-				confirmed, closeErr := child.Stop(killCtx)
-				if !confirmed || closeErr != nil {
-					t.Fatal("committed Decision exit/pipe cleanup unknown", closeErr)
-				}
+				killRuleChild(t, ctx, child)
 			} else {
 				if err = child.Send(ctx, ruleProcessFrame{Stage: "release", Scenario: stage.Scenario, Generation: 1}); err != nil {
 					t.Fatal(err)
@@ -723,19 +718,7 @@ func TestDecisionSIGKILLAfterPublicationRecoversOriginalRefs(t *testing.T) {
 				t.Fatal("Decision references completed before held Finish")
 			}
 			if kill {
-				killCtx, killCancel := context.WithTimeout(ctx, 2*time.Second)
-				defer killCancel()
-				if err = child.KillWait(killCtx); err != nil {
-					t.Fatal(err)
-				}
-				var reply ruleProcessFrame
-				if err = child.Reply(killCtx, &reply); err != io.EOF {
-					t.Fatal("killed Decision returned a reply", err)
-				}
-				confirmed, closeErr := child.Stop(killCtx)
-				if !confirmed || closeErr != nil {
-					t.Fatal("killed Decision physical cleanup unconfirmed", closeErr)
-				}
+				killRuleChild(t, ctx, child)
 			} else {
 				if err = child.Send(ctx, ruleProcessFrame{Stage: "release", Scenario: stage.Scenario, Generation: 1}); err != nil {
 					t.Fatal(err)
