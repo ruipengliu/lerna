@@ -9,12 +9,13 @@ import (
 	"errors"
 	"math"
 	"time"
+	"unicode/utf8"
 )
 
 var ErrPending = errors.New("original_request_pending")
 
 func validateRequest(r Request) error {
-	if r.Key == "" || len(r.Key) > 128 || r.Resource == "" || len(r.Resource) > 128 || len(r.Data) > 1024*1024 {
+	if !utf8.ValidString(r.Key) || !utf8.ValidString(r.Resource) || r.Key == "" || len(r.Key) > 128 || r.Resource == "" || len(r.Resource) > 128 || len(r.Data) > 1024*1024 {
 		return errors.New("invalid bounded test write")
 	}
 	return nil

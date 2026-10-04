@@ -23,7 +23,7 @@
 
 ## 有限耐久故障计划（私有环境 seam）
 
-`InstallPlan(ctx, Plan)` 固定 scenario ID、准确 uint64 Seed、Deadline 和 1–64 个唯一稳定 event ID / Kind / Input；总材料最多 4 MiB。Seed 记录测试作者的选择来源，执行顺序与输入明确保存在 Steps；执行器不从 seed 临时重新生成步骤。相同 ID 的任一配置变化返回 ErrPlanConflict，已有原配置重装只返回原 cursor，不刷新期限或重发已完成步骤。新隔离文件、相同 seed/input/steps 可复演相同目标逻辑，物理 DatabaseID 保持独立。
+`InstallPlan(ctx, Plan)` 固定 scenario ID、准确 uint64 Seed、Deadline 和 1–64 个唯一稳定 event ID / Kind / Input；总材料最多 4 MiB。Plan/event/原键/资源字符串必须是有效 UTF-8，防止 JSON 编码静默改变身份；内容仍是准确任意字节。Seed 记录测试作者的选择来源，执行顺序与输入明确保存在 Steps；执行器不从 seed 临时重新生成步骤。相同 ID 的任一配置变化返回 ErrPlanConflict，已有原配置重装只返回原 cursor，不刷新期限或重发已完成步骤。新隔离文件、相同 seed/input/steps 可复演相同目标逻辑，物理 DatabaseID 保持独立。
 
 `RunEvent(ctx, scenarioID, eventID)` 每次最多推进一个配置步骤。Cursor 之后的事件返回 ErrOutOfOrder，不应用请求；已完成 event 返回固定原结果/错误，不再次发送。有效步骤依计划顺序有限推进；同一原请求可由不同 event 明确重传，其接收观察仍属目标事实。每个新步骤在目标锁内检查计划 Deadline，并以剩余期限和 IOTimeout 限制 I/O；到期 ErrPlanExpired 不执行新步骤，也不删除 pending 责任。没有后台循环、任意 sleep 或可变业务故障参数。
 
@@ -38,3 +38,5 @@
 `Observer.Plan(ctx, id)` 在独立只读事务提供准确配置、cursor 和已保存 event/phase/outcome。它与 Observer.Observe 一样是 privileged 测试事实；普通 provider 不获得此查询能力。已知 conflict/expiry/pending/not_found 拒绝保存有限事件结果，重复 event 返回同一错误；未能提交的 SQLite/context 错误保留原因与未知范围，不假装已消费 cursor。进程 SIGKILL 和提交边界同步归恢复票；这里没有预建任意 hook 或生产 workflow。
 
 历史升级验证由 `conformance/fixtures/deterministic-target/v1` 的冻结原 writer 源完成：仅机械改包名与内嵌原 SQL，在根唯一 module 下编译并正常运行，确认 child exit 后由当前目标升级同一 overlay 文件。它不等于 SIGKILL 或断电证据。
+
+历史 writer 的构建若失败或超时，直接 go 进程退出不足以确认编译子进程结束，测试保守保留准确 scope 并报告清理未确认；没有假设 WaitDelay 已终止全部后代。正常构建完整成功后才视为构建子进程已收束，历史 writer 也必须确认实际 exit。

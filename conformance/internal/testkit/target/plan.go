@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"math"
 	"time"
+	"unicode/utf8"
 )
 
 type Kind string
@@ -52,13 +53,13 @@ var ErrOutOfOrder = errors.New("event_out_of_order")
 var ErrPlanExpired = errors.New("plan_deadline_expired")
 
 func validatePlan(p Plan) error {
-	if p.ID == "" || len(p.ID) > 128 || len(p.Steps) == 0 || len(p.Steps) > 64 || p.Deadline.IsZero() || p.Deadline.Before(time.Unix(0, math.MinInt64)) || p.Deadline.After(time.Unix(0, math.MaxInt64)) {
+	if !utf8.ValidString(p.ID) || p.ID == "" || len(p.ID) > 128 || len(p.Steps) == 0 || len(p.Steps) > 64 || p.Deadline.IsZero() || p.Deadline.Before(time.Unix(0, math.MinInt64)) || p.Deadline.After(time.Unix(0, math.MaxInt64)) {
 		return errors.New("invalid bounded test plan")
 	}
 	ids := map[string]bool{}
 	total := 0
 	for _, step := range p.Steps {
-		if step.ID == "" || len(step.ID) > 128 || ids[step.ID] || (step.Kind != ReceiveOnly && step.Kind != ApplyReceived && step.Kind != WriteNormally && step.Kind != DisconnectBeforeCommit && step.Kind != DropResponse) {
+		if !utf8.ValidString(step.ID) || step.ID == "" || len(step.ID) > 128 || ids[step.ID] || (step.Kind != ReceiveOnly && step.Kind != ApplyReceived && step.Kind != WriteNormally && step.Kind != DisconnectBeforeCommit && step.Kind != DropResponse) {
 			return errors.New("invalid bounded plan event")
 		}
 		ids[step.ID] = true

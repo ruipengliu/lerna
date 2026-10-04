@@ -55,10 +55,20 @@ func TestPublishedV1WriterUpgradesWithOriginalFactsAndMigration(t *testing.T) {
 	defer cancel()
 	build := exec.CommandContext(buildCtx, "go", "build", "-o", binary, filepath.Join(f.directory, "target_v1.go"), filepath.Join(f.directory, "writer_v1.go"), filepath.Join(f.directory, "main_v1.go"))
 	build.WaitDelay = time.Second
-	registerChild(f, build)
+	buildConfirmed := false
+	f.closers = append(f.closers, func() error {
+		if build.Process == nil {
+			return nil
+		}
+		if !buildConfirmed {
+			return errors.New("historical build descendants unconfirmed; retain exact scope")
+		}
+		return nil
+	})
 	if output, err := build.CombinedOutput(); err != nil {
 		t.Fatalf("actual frozen writer build: %v %s", err, output)
 	}
+	buildConfirmed = true
 	runCtx, stop := context.WithTimeout(context.Background(), 5*time.Second)
 	defer stop()
 	child := exec.CommandContext(runCtx, binary, f.cfg.Path, f.cfg.Identity, strconv.FormatInt(f.now.UnixNano(), 10))

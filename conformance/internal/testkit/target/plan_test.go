@@ -421,3 +421,34 @@ func TestConcurrentDuplicateFaultEventCommitsOnlyOriginalOnce(t *testing.T) {
 		t.Fatalf("duplicate event actual cursor: %+v %v", state, err)
 	}
 }
+
+func TestPlanRejectsLossyUTF8OriginalIdentities(t *testing.T) {
+	f := newFixture(t)
+	writer := f.open()
+	original := target.Plan{ID: "exact", Seed: 1, Deadline: f.now.Add(time.Hour), Steps: []target.Step{{ID: "write", Kind: target.WriteNormally, Input: target.Request{Key: "a\xff", Resource: "fake-document", Data: []byte("normal")}}}}
+	_, err := writer.InstallPlan(f.ctx, original)
+	if err == nil {
+		t.Fatal("invalid UTF8 key silently changed during durable plan encoding")
+	}
+	for _, change := range []func(*target.Plan){func(p *target.Plan) { p.ID = "a\xff" }, func(p *target.Plan) { p.Steps[0].ID = "a\xff" }, func(p *target.Plan) { p.Steps[0].Input.Resource = "a\xff" }} {
+		invalid := original
+		invalid.Steps = append([]target.Step{}, original.Steps...)
+		invalid.Steps[0].Input.Key = "valid"
+		change(&invalid)
+		if _, err = writer.InstallPlan(f.ctx, invalid); err == nil {
+			t.Fatal("invalid UTF8 identity persisted lossily")
+		}
+	}
+	original.Steps[0].Input.Key = "原键"
+	original.Steps[0].Input.Resource = "资源\x00准确"
+	if _, err = writer.InstallPlan(f.ctx, original); err != nil {
+		t.Fatal(err)
+	}
+	if _, err = writer.RunEvent(f.ctx, original.ID, "write"); err != nil {
+		t.Fatal(err)
+	}
+	fact, err := writer.Query(f.ctx, "原键")
+	if err != nil || fact.Value.Resource != "资源\x00准确" || string(fact.Value.Data) != "normal" {
+		t.Fatalf("normal Unicode exact input: %+v %v", fact, err)
+	}
+}
