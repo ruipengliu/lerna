@@ -127,3 +127,36 @@ native process holders for cancellation and retain unconfirmed acknowledgments
 or scanner exit. They have been adopted by source review; this ticket's final
 actual upgrade check against them remains pending. No frozen payload or SQL
 migration has been changed.
+
+Final integration with root `949c392` produced clean source `1a9b5c5`.
+All `TestDurableProposal` cases passed normal 11.646 s and race 26.934 s,
+with each actual session exiting before the next command. This includes all
+five independently committed reply-loss branches and the three real immutable
+Source reseed refusals. The original 81 shared fixtures remain unchanged.
+The first codec invocation failed because this worktree lacked the locked Ajv
+dependency; that installation failure is not a contract or behavioral red.
+After successful `make bootstrap`, all 83 actual cross-language round trips
+passed in both orders at `60c9519`. The reverse subsidiary pure Go test output
+was cached; the 83 runner exchanges themselves were freshly executed.
+
+Independent Standards review identified a real error-classification defect:
+a native Source material-read failure during Proposal validation was wrongly
+reported as `proposal_invalid`. A transparent Source wrapper successfully closes
+the real Source only at the declared action-purpose read, delegates the actual
+read to that closed native holder, and observes its real failure. Public query
+after reopening reproduced the defect (normal 0.557 s, exit 1). The fix preserves
+the original read error for the existing worker dependency boundary;
+`ErrForbidden` remains `proposal_invalid` and `ErrInputLimit` remains
+`input_over_limit`. A private concrete helper consolidates the four bounded
+purpose reads while retaining every membership check and observed byte charge.
+The same public fault case and related normal, purpose, original-limit and
+invalid-output controls passed normal 16.502 s, actual session exit 0. Its fixed
+accepted receipt, one fee, measured generation and absence of another runnable
+job survive owner reopen. This is a successful native close followed by a real
+read failure; it is not an injected Close or COMMIT failure.
+
+The adopted `60c9519` shared restoration guard preserves old-970 schemas on
+post-ready EOF/deadline only after verifying every original archive hash. Frozen
+production and archived added-driver bytes remain unchanged. Failure-path
+retention is static adoption; final actual normal upgrades and race checks
+against the updated restoration helper remain pending.

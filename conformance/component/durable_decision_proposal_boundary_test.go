@@ -21,6 +21,88 @@ import (
 	"github.com/ruipengliu/lerna/runtime"
 )
 
+// This finite environment fault delegates ordinary rule input to the real
+// Source. At the declared semantic purpose it actually closes that native
+// owner, then attempts the real read; it never manufactures a dependency error.
+type closingProposalSource struct {
+	decision.Source
+	native    *fixture.Store
+	purpose   string
+	readError error
+}
+
+func (s *closingProposalSource) ReadMaterial(ctx context.Context, ref v.ContentRef, purpose string, permission decision.Permission, limit int64) ([]byte, error) {
+	if purpose == s.purpose {
+		if err := s.native.Close(); err != nil {
+			return nil, err
+		}
+	}
+	body, err := s.Source.ReadMaterial(ctx, ref, purpose, permission, limit)
+	if purpose == s.purpose {
+		s.readError = err
+	}
+	return body, err
+}
+
+func TestDurableProposalNativeSourceFailureRetainsDependencyMeaning(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+	defer cancel()
+	world := fixture.NewWorld(t, ctx)
+	scene, _ := proposalScenario(t, ctx, world, "fixture-rule/3", "actions_four")
+	source := &closingProposalSource{Source: world.Source(), native: world.Source(), purpose: "fixture.read"}
+	service, err := decision.New(decision.Config{Owner: v.OwnerRef{TenantID: scene.DecisionRef.TenantID, OwnerID: scene.DecisionRef.OwnerID}, Store: world.Store(), Source: source, Authority: world.Source(), Publisher: world.Source(), Component: scene.Request.Payload.ComponentRef, Worker: "native-source-failure-worker", Lease: 5 * time.Second, PoolControl: true})
+	if err != nil {
+		t.Fatal(err)
+	}
+	receipt := acceptAccounting(t, ctx, service, scene)
+	if step, err := service.Step(ctx); err != nil || step.Processed != 1 {
+		t.Fatal("finite native failure step", err)
+	}
+	if source.readError == nil {
+		t.Fatal("declared purpose did not execute an actual closed native read", source.readError)
+	}
+	world.Reopen(ctx)
+	service = proposalService(t, world, scene)
+	view, err := service.Get(ctx, scene.GetJSON, &scene.Subject)
+	if err != nil {
+		t.Fatal(err)
+	}
+	found, ok := view.AsFound()
+	if !ok {
+		t.Fatal("original dependency failure unavailable")
+	}
+	failed, ok := found.Decision.AsFailed()
+	if !ok || failed.Failure != "snapshot_unavailable" {
+		t.Fatalf("native Source failure: expected snapshot_unavailable, got %s", failed.Failure)
+	}
+	if failed.Usage.RuleStarts != "1" || failed.Usage.RuleSteps != "1" || failed.Usage.Cost.IntegerValue != "1" || failed.Usage.ModelRequests != "0" || failed.Usage.OutputBytes == "0" || !failed.Usage.MeasurementsComplete {
+		t.Fatal("dependency failure lost actual bounded observations", failed.Usage)
+	}
+	command, err := service.GetCommand(ctx, scene.CommandGetJSON, &scene.Subject)
+	if err != nil {
+		t.Fatal(err)
+	}
+	fixed, ok := command.AsFound()
+	if !ok || !reflect.DeepEqual(fixed.Receipt, receipt) {
+		t.Fatal("dependency failure changed original accepted receipt")
+	}
+	raw, err := v.Encode(scene.Request)
+	if err != nil {
+		t.Fatal(err)
+	}
+	replay, err := service.Decide(ctx, raw, &scene.Subject)
+	if err != nil {
+		t.Fatal(err)
+	}
+	received, ok := replay.AsReceived()
+	if !ok || !reflect.DeepEqual(received.Receipt, receipt) {
+		t.Fatal("dependency failure created another charging identity")
+	}
+	if step, err := service.Step(ctx); err != nil || step.Processed != 0 {
+		t.Fatal("dependency terminal retained automatic repair", err)
+	}
+}
+
 func TestDurableProposalImmutableCaseBindingSurvivesRejectedReseed(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 	defer cancel()

@@ -137,11 +137,16 @@ func (s *Service) calculateProposalV3(ctx context.Context, work Work, snapshot S
 		return failedCompletion("proposal_invalid", inputBytes, artifactOutput+len(raw), 1)
 	}
 	if err = s.validateProposalV3(ctx, work, snapshot, processed, decoded, artifacts, &inputBytes); err != nil {
-		reason := v.DecisionFailure("proposal_invalid")
 		if errors.Is(err, ErrInputLimit) {
-			reason = "input_over_limit"
+			return failedCompletion("input_over_limit", inputBytes, artifactOutput+len(raw), 1)
 		}
-		return failedCompletion(reason, inputBytes, artifactOutput+len(raw), 1)
+		if errors.Is(err, ErrForbidden) {
+			return failedCompletion("proposal_invalid", inputBytes, artifactOutput+len(raw), 1)
+		}
+		// Preserve the actual dependency cause for the existing worker boundary.
+		// Failure to read cannot establish that a structurally valid proposal is
+		// invalid; confirmed generation/read observations still belong to it.
+		return completion{inputBytes: inputBytes, outputBytes: artifactOutput + len(raw), ruleSteps: 1, err: err}
 	}
 	raw, err = v.Encode(decoded)
 	if err != nil {
@@ -233,13 +238,8 @@ func (s *Service) validateProposalV3(ctx context.Context, work Work, snapshot Sn
 			if !slices.Contains(proposalMaterialRefs(snapshot), ref) {
 				return ErrForbidden
 			}
-			body, err := s.config.Source.ReadMaterial(ctx, ref, "rule.condition", work.Permission, cap-int64(*inputBytes))
-			*inputBytes += len(body)
-			if err != nil {
+			if _, err := s.readProposalMaterial(ctx, work, ref, "rule.condition", cap, inputBytes); err != nil {
 				return err
-			}
-			if hash(body) != ref.Hash || strconv.Itoa(len(body)) != string(ref.ByteLength) {
-				return ErrForbidden
 			}
 		}
 	}
@@ -261,13 +261,8 @@ func (s *Service) validateProposalV3(ctx context.Context, work Work, snapshot Sn
 					return ErrForbidden
 				}
 			}
-			body, err := s.config.Source.ReadMaterial(ctx, action.ArgumentsRef, action.Purpose, work.Permission, cap-int64(*inputBytes))
-			*inputBytes += len(body)
-			if err != nil {
+			if _, err := s.readProposalMaterial(ctx, work, action.ArgumentsRef, action.Purpose, cap, inputBytes); err != nil {
 				return err
-			}
-			if hash(body) != action.ArgumentsRef.Hash || strconv.Itoa(len(body)) != string(action.ArgumentsRef.ByteLength) {
-				return ErrForbidden
 			}
 		}
 	} else if candidate, ok := proposal.Advance.AsCandidateResult(); ok {
@@ -291,13 +286,8 @@ func (s *Service) validateProposalV3(ctx context.Context, work Work, snapshot Sn
 				if !slices.Contains(proposalMaterialRefs(snapshot), ref) {
 					return ErrForbidden
 				}
-				body, err := s.config.Source.ReadMaterial(ctx, ref, "rule.evidence", work.Permission, cap-int64(*inputBytes))
-				*inputBytes += len(body)
-				if err != nil {
+				if _, err := s.readProposalMaterial(ctx, work, ref, "rule.evidence", cap, inputBytes); err != nil {
 					return err
-				}
-				if hash(body) != ref.Hash || strconv.Itoa(len(body)) != string(ref.ByteLength) {
-					return ErrForbidden
 				}
 			}
 		}
@@ -319,13 +309,9 @@ func (s *Service) validateProposalV3(ctx context.Context, work Work, snapshot Sn
 			}{ref, "rule.preview"})
 		}
 		for _, material := range materials {
-			body, err := s.config.Source.ReadMaterial(ctx, material.ref, material.purpose, work.Permission, cap-int64(*inputBytes))
-			*inputBytes += len(body)
+			body, err := s.readProposalMaterial(ctx, work, material.ref, material.purpose, cap, inputBytes)
 			if err != nil {
 				return err
-			}
-			if hash(body) != material.ref.Hash || strconv.Itoa(len(body)) != string(material.ref.ByteLength) {
-				return ErrForbidden
 			}
 			if material.purpose == "rule.answer_schema" {
 				if err := validateFixtureAnswerSchema(body); err != nil {
@@ -350,6 +336,21 @@ func (s *Service) validateProposalV3(ctx context.Context, work Work, snapshot Sn
 		return ErrForbidden
 	}
 	return ctx.Err()
+}
+
+// Membership and interpretation stay with each concrete Proposal branch.
+// This shared read preserves actual partial-byte observations and native errors
+// while enforcing the same remaining budget and exact immutable content.
+func (s *Service) readProposalMaterial(ctx context.Context, work Work, ref v.ContentRef, purpose string, limit int64, inputBytes *int) ([]byte, error) {
+	body, err := s.config.Source.ReadMaterial(ctx, ref, purpose, work.Permission, limit-int64(*inputBytes))
+	*inputBytes += len(body)
+	if err != nil {
+		return body, err
+	}
+	if hash(body) != ref.Hash || strconv.Itoa(len(body)) != string(ref.ByteLength) {
+		return body, ErrForbidden
+	}
+	return body, nil
 }
 
 // Rule/3 processes the entire finite declared fixture material set, including
