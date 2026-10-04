@@ -220,7 +220,7 @@ func (r *Remote) delegate(ctx context.Context, tx runtime.Tx, auth runtime.Auth,
 		if scopeErr != nil {
 			return runtime.Outcome{}, scopeErr
 		}
-		if _, scopeErr = r.planCreateTx(ctx, tx, current.Delegation, current.Allocation); scopeErr != nil {
+		if _, scopeErr = r.planCreateCommandTx(ctx, tx, current.Delegation, current.Allocation, &remoteDelegationCommand{Command: c, Auth: auth}); scopeErr != nil {
 			return runtime.Outcome{}, scopeErr
 		}
 	}

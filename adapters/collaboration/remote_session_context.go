@@ -16,7 +16,27 @@ type RemoteSessionContext struct {
 	Binding          RemoteSessionBinding `json:"binding"`
 }
 
-func (r *Remote) originalSessionContextTx(ctx context.Context, tx runtime.Tx, d task.Delegation, subject api.ObjectRef) (*RemoteSessionContext, error) {
+// 这只是当前已验证的普通 delegate 入口，不冒充 StoredCommand 或原回执。
+type remoteDelegationCommand struct {
+	Command api.Command
+	Auth    runtime.Auth
+}
+
+func (r *Remote) originalSessionContextTx(ctx context.Context, tx runtime.Tx, d task.Delegation, subject api.ObjectRef, current *remoteDelegationCommand) (*RemoteSessionContext, error) {
+	if current != nil {
+		c := current.Command
+		if c.Method != "collaboration.delegate" || c.LogicalServiceID != tx.Scope().OwnerID || c.TargetID != d.DelegationID || d.CommandRef != tx.Scope().Ref(c.CommandID, 1) || current.Auth.Ref(tx.Scope().OwnerID) != subject {
+			return nil, api.E("forbidden", "original_delegate_command_changed")
+		}
+		var input task.DelegateInput
+		if err := api.Decode(c.Payload, &input); err != nil {
+			return nil, err
+		}
+		if !api.Equal(input, d.DelegateInput) {
+			return nil, api.E("forbidden", "original_delegate_input_changed")
+		}
+		return nil, nil
+	}
 	original, err := tx.LoadCommand(ctx, d.CommandRef.ObjectID)
 	if err != nil {
 		return nil, err
@@ -99,7 +119,11 @@ func (r *Remote) ChildSessionContext(ctx context.Context, scope runtime.Scope, a
 
 // 原 send 的不可变身份与当前本地主体/AccessScope分开核验；普通历史不会授权本次Use。
 func (r *Remote) checkOriginalSessionContextTx(ctx context.Context, tx runtime.Tx, actor runtime.Auth, d task.Delegation, expected *RemoteSessionContext) error {
-	actual, err := r.originalSessionContextTx(ctx, tx, d, actor.Ref(tx.Scope().OwnerID))
+	return r.checkOriginalSessionCommandTx(ctx, tx, actor, d, expected, nil)
+}
+
+func (r *Remote) checkOriginalSessionCommandTx(ctx context.Context, tx runtime.Tx, actor runtime.Auth, d task.Delegation, expected *RemoteSessionContext, current *remoteDelegationCommand) error {
+	actual, err := r.originalSessionContextTx(ctx, tx, d, actor.Ref(tx.Scope().OwnerID), current)
 	if err != nil {
 		return err
 	}

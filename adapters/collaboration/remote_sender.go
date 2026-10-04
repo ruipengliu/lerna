@@ -38,6 +38,12 @@ func (r *Remote) planCreate(ctx context.Context, d task.Delegation, a task.Alloc
 	return out, err
 }
 func (r *Remote) planCreateTx(ctx context.Context, tx runtime.Tx, d task.Delegation, a task.Allocation) (remoteSent, error) {
+	return r.planCreateCommandTx(ctx, tx, d, a, nil)
+}
+
+// 首次普通委派的原封套仍在 Dispatcher 的 Apply 事务中，尚无耐久回执。
+// 只有该准确入口传入原命令；Job 和 child.send 恢复仍读取原存量身份。
+func (r *Remote) planCreateCommandTx(ctx context.Context, tx runtime.Tx, d task.Delegation, a task.Allocation, command *remoteDelegationCommand) (remoteSent, error) {
 	var out remoteSent
 	profile, err := r.outgoingProfile(d)
 	if err != nil {
@@ -75,11 +81,11 @@ func (r *Remote) planCreateTx(ctx context.Context, tx runtime.Tx, d task.Delegat
 		}
 		packet := RemoteCreateInput{CreationKey: d.CreationKey, CreateCommandID: remoteID("command", id, "create"), ChildTaskID: remoteID("task", id, "child"), ProfileRef: profile.ProfileRef, DelegationRef: r.cfg.Scope.Ref(d.DelegationID, 1), AllocationRef: d.AllocationRef, SourceDatabaseID: r.cfg.Scope.DatabaseID, SubjectRef: current.SubjectRef, Input: d.DelegateInput, AncestorTaskRefs: append([]api.ObjectRef{}, d.AncestorTaskRefs...), ForeignReferences: []memory.ForeignReference{}}
 		packet.OriginalCommandRef, packet.ParentSources = d.CommandRef, current.ParentSources
-		packet.SessionContext, err = r.originalSessionContextTx(ctx, tx, d, current.SubjectRef)
+		packet.SessionContext, err = r.originalSessionContextTx(ctx, tx, d, current.SubjectRef, command)
 		if err != nil {
 			return err
 		}
-		if err = r.checkOriginalSessionContextTx(ctx, tx, actor, d, packet.SessionContext); err != nil {
+		if err = r.checkOriginalSessionCommandTx(ctx, tx, actor, d, packet.SessionContext, command); err != nil {
 			return err
 		}
 		pending := append([]api.ContentRef{d.GoalRef}, d.InputRefs...)
