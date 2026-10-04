@@ -13,6 +13,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"net/url"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -86,7 +87,8 @@ func TestFrozenLegacyWriterUpgrade(t *testing.T) {
 	build.Stderr = &diagnostics
 	if err := build.Run(); err != nil {
 		buildCancel()
-		t.Fatal("frozen historical writer build failed (bounded diagnostics retained by child)")
+		t.Logf("bounded frozen writer build diagnostics: %s", diagnostics.safeText(os.Getenv("LERNA_TEST_POSTGRES_DSN")))
+		t.Fatal(fmt.Errorf("frozen historical writer build failed: %w", err))
 	}
 	buildCancel()
 	childCtx, childCancel := context.WithTimeout(context.Background(), 65*time.Second)
@@ -626,6 +628,26 @@ func (w *upgradeOutput) Write(p []byte) (int, error) {
 	return n, nil
 }
 
+func (w *upgradeOutput) safeText(dsn string) string {
+	w.mu.Lock()
+	defer w.mu.Unlock()
+	text := string(w.bytes)
+	if dsn != "" {
+		text = strings.ReplaceAll(text, dsn, "[connection redacted]")
+	}
+	if parsed, err := url.Parse(dsn); err == nil && parsed.User != nil {
+		for _, secret := range []string{parsed.User.Username(), parsed.User.String()} {
+			if secret != "" {
+				text = strings.ReplaceAll(text, secret, "[credential redacted]")
+			}
+		}
+		if secret, ok := parsed.User.Password(); ok && secret != "" {
+			text = strings.ReplaceAll(text, secret, "[credential redacted]")
+		}
+	}
+	return text
+}
+
 func restoreFrozenWriter(t *testing.T) string {
 	t.Helper()
 	root := filepath.Join("testdata", "legacy-970fd90")
@@ -739,21 +761,43 @@ func restoreFrozenWriter(t *testing.T) string {
 func safeUpgradePath(path string) bool {
 	return path != "" && !filepath.IsAbs(path) && filepath.Clean(path) == path && path != ".." && !strings.HasPrefix(path, "../")
 }
-func readUpgradeBounded(path string, max int64) ([]byte, error) {
+func readUpgradeBounded(path string, max int64) (body []byte, result error) {
 	file, err := os.Open(path)
 	if err != nil {
 		return nil, err
 	}
-	defer file.Close()
+	defer func() { result = errors.Join(result, file.Close()) }()
 	stat, err := file.Stat()
-	if err != nil || !stat.Mode().IsRegular() || stat.Size() > max {
+	if err != nil {
+		return nil, fmt.Errorf("bounded frozen file stat: %w", err)
+	}
+	if !stat.Mode().IsRegular() || stat.Size() > max {
 		return nil, errors.New("invalid bounded frozen file")
 	}
 	return io.ReadAll(io.LimitReader(file, max+1))
 }
+
+// Database diagnostics retain their original cause while printing only the
+// cleanup stage; connection configuration and driver credentials are private.
+type upgradeCleanupError struct {
+	stage string
+	cause error
+}
+
+func (e *upgradeCleanupError) Error() string {
+	return "exact historical cleanup " + e.stage + " failed"
+}
+func (e *upgradeCleanupError) Unwrap() error { return e.cause }
+func cleanupCause(stage string, err error) error {
+	if err == nil {
+		return nil
+	}
+	return &upgradeCleanupError{stage: stage, cause: err}
+}
+
 func cleanupUpgradeScopes(registry string) (result error) {
 	body, err := readUpgradeBounded(registry, 4096)
-	if os.IsNotExist(err) {
+	if errors.Is(err, os.ErrNotExist) {
 		return nil
 	}
 	if err != nil {
@@ -774,25 +818,24 @@ func cleanupUpgradeScopes(registry string) (result error) {
 	defer cancel()
 	db, err := sql.Open("pgx", os.Getenv("LERNA_TEST_POSTGRES_DSN"))
 	if err != nil {
-		return errors.New("exact cleanup open failed")
+		return cleanupCause("open", err)
 	}
-	defer func() { result = errors.Join(result, db.Close()) }()
+	defer func() { result = errors.Join(result, cleanupCause("close", db.Close())) }()
 	db.SetMaxOpenConns(1)
 	for name := range names {
 		tx, err := db.BeginTx(ctx, nil)
 		if err != nil {
-			return errors.New("exact cleanup begin failed")
+			return cleanupCause("begin", err)
 		}
 		_, err = tx.ExecContext(ctx, "SET LOCAL statement_timeout='2s'; SET LOCAL lock_timeout='1s'")
 		if err == nil {
 			_, err = tx.ExecContext(ctx, `DROP SCHEMA IF EXISTS "`+name+`" CASCADE`)
 		}
 		if err != nil {
-			_ = tx.Rollback()
-			return errors.New("exact cleanup failed")
+			return errors.Join(cleanupCause("exec", err), cleanupCause("rollback", tx.Rollback()))
 		}
 		if err = tx.Commit(); err != nil {
-			return errors.New("exact cleanup commit failed")
+			return cleanupCause("commit", err)
 		}
 	}
 	return nil
