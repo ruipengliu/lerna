@@ -21,13 +21,23 @@ Lifecycle.Step独立确认才能置对应holder erased。
 候选Observe
 短Tx先结束，新Tx整页policy/Version与全部祖先save资格完成后，再锁责任
 完整CAS，最后fresh时间门；输出重新Observe。原保存basis是Record.Subject
-完整delegation/Purpose，历史change窗口不充当前授权。原cap过期/已seal/
-unknown等保持pending；原维护deadline过期也不续旧Job或改原deadline。
+完整delegation/Purpose，历史change窗口不充当前授权。已seal/unknown等
+保持pending；原维护deadline过期也不续旧Job或改原deadline。
 独立QualifyPolicyCleanupNotRequired只改已存在原责任的not_required/residual，
 保留Actions/Reason/Deadline/holders/attempt/publication，不粗清Record pending。
 恢复分支normal/race及实际两次重开已通过；当前savefalse正常封闭→真实
-Lifecycle全ACK→原责任erased也通过。拒绝竞争/其他触发/过期cap窗口仍待
+Lifecycle全ACK→原责任erased也通过。拒绝竞争/其他触发窗口仍待
 独立资格，不将此入口存在视为所有policy cleanup已实现。
+
+原target持久accepted cap到期是已单独验证的保存失效因果，不依赖历史
+Save true→false。只有原pending/holder_unconfirmed/accepted_retention_expired
+候选，在同Tx全原身份/结构资格与严格有效非zero持久cap解析、fresh DB
+now>=cap、原执行Deadline仍live及原管理窗口后，复用同原seal/key/Deadline。
+当前宽Save政策不能raise旧cap；policy缺失不解释为false，policy/结构错误
+照常返回。最后责任锁等待后再核cap/deadlineclock，整页rollback保持。
+原target2s真实到期normal/race已经完成真实擦除/原责任erased/reopen/V2
+正常/固定回执；malformed cap纯unit资格不冒PG私row故障。祖先/目标化
+AdmissionTarget/缺policy组合/过执行窗与锁等待竞争仍待必要资格。
 
 原policy seal增加immutable PolicyChangeKey（voluntary/旧缺字段为空），与
 完整ref/Subject/Purpose/原责任Deadline/稳定sealID核准firstkey关联。PG

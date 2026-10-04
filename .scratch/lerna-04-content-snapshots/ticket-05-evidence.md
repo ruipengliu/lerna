@@ -532,3 +532,43 @@ Step没有新work，两个ancestor仍正常。未写SQL时间或Job due，未新
 subject/delegation/purpose/ref和传递两级祖先许可，不宣称真实PG锁等待后
 expiry/CAS竞争、已sealed祖先的独立metadata子场景或retentioncap consumer
 路径已执行；后续必要义务仍沿真实单tracer。
+
+## 原accepted cap真实到期的独立清理因果
+
+`TestContentExpiredOriginalAcceptedCapStartsCleanupDespiteCurrentWideRenewal`
+真实原policy Rev1 wide、V1请求接纳current+2s RetainUntil，原scheduled
+Due/ExpiryDue固定该cap；原alpha normal。当前Rev2 wide/save=true不能抬
+旧cap，独立同ContentID V2 beta normal。actualWorld.Reopen等原cap+20ms，
+真实Manager.Step登记同原key pending/accepted_retention_expired/历史holder
+true、仍live原Deadline及原ExpiryDeadline保持，V1 Get expired而独立alpha
+仍存在。Consume后无seal/Observe unavailable造成line107业务red，红后
+删除/ACK/replay没有执行，不用随后green洗这条日志。
+
+完整读root采用的归档
+`/workspace/lerna/.scratch/lerna-04-content-snapshots/ticket-05-expired-accepted-cap/decision.md`
+8172B/SHA256134530eb6f9a43f8ca339b3341a05645813d23f155c80fe599f9d816bff34fd8。
+最小分支仅原pending/holder_unconfirmed/accepted_retention_expired候选；
+Reason不当删除许可，同Tx原fullRef/fullSubject/Purpose/knownphase/结构
+闭包资格照旧。严格canonical解析非zero/year有效原持久cap，锁后fresh
+DB Now>=cap且原责任Deadline仍live、原WorkBudget/TrustedUntil内；缺宽
+currentpolicy不解释成Save=false，也不能使确定cap到期重新可续存。仍
+传递实际policy/结构查询错误，全页先Version/policy/结构后holder/Job/原
+责任CAS；最后cap<=freshNow<原Deadline再核，任失败全页rollback。旧
+restored-safe/currentfalse原因门不扩大，AdmissionTarget/multipolicy不拓展。
+原sealID/key/Deadline及Lifecycle ALLACK专用原责任ACK未新增框架。
+
+| 日志（位于 `/tmp/lerna-04-ticket05-execution/`） | 实际结果 |
+| --- | --- |
+| `accepted-cap-first-red.log` | actual2.216s/case2.21s，PID/PGID2916513/start12171780/nativeexit1/groupAbsent=true。 |
+| `accepted-cap-malformed-unit.log` | exact纯unit actual0.010s，PID/PGID2931542/start12234225/nativeexit0/groupAbsent=true；非法/空/zero/year0/非canonical不得成为到期证据，合法原时间不变。不是PG故障注入或业务row mutation。 |
+| `accepted-cap-first-green.log` | exact actual2.469s，PID/PGID2932078/start12236270/nativeexit0/groupAbsent=true。 |
+| `accepted-cap-race-controls.log` | cap/currentpolicy/restored-safe/natural-erasure-history四授权exact actual6.864s，PID/PGID2932551/start12237850/nativeexit0/groupAbsent=true，两个frozen迁移SHA准确。 |
+
+原caller20/test30/wrapper120、原2s cap/+20ms以及live原责任窗口保持，无
+SQLclock/due/Deadline伪造或time扩展。session40474/1898/31542/72537均
+actual结束并明确release LOCAL/no pending。green真实执行首red未到部分：
+同原key/Deadline seal仍pending、实际staging/primary清理、再次World.Reopen
+原责任erased且保accepted_retention_expired原因和原Deadline、独立原alpha
+缺失/全部holder ACK、V2beta正常，以及严格Encode原回执逐字相同。当前
+target自身cap因果与pure malformed解析已执行；祖先/AdmissionTarget、
+缺政策组合、原执行窗已过、真实锁等待/CAS与整页仍待各自必要资格。

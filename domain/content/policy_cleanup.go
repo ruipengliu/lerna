@@ -34,6 +34,7 @@ func (l *Lifecycle) ConsumePolicyCleanup(ctx context.Context, subject *v.Subject
 			expected CleanupResponsibility
 			record   *Record
 			request  SealRequest
+			cap      time.Time
 		}
 		qualified := []qualification{}
 		seals := []sealing{}
@@ -42,11 +43,15 @@ func (l *Lifecycle) ConsumePolicyCleanup(ctx context.Context, subject *v.Subject
 			if original.ChangeKey != changeKey || original.Ref.Owner != l.config.Owner {
 				return runtime.ErrScope
 			}
-			if original.BodyCleanup != "pending" || original.Reason != "" || original.Residual != "holder_unconfirmed" {
+			capCandidate := original.Reason == "accepted_retention_expired"
+			if original.BodyCleanup != "pending" || original.Residual != "holder_unconfirmed" || original.Reason != "" && !capCandidate {
 				continue
 			}
 			change := candidates.Change
-			if change.Reason != "" && change.Reason != "original_deadline_expired" || change.AdmissionTarget != nil || change.Previous == nil || !change.Previous.Save || change.Policy.Save || change.Previous.Ref != change.Policy.Ref || change.Previous.Purpose != change.Policy.Purpose || !sameSavingSubject(change.Previous.Subject, change.Policy.Subject) {
+			if change.Reason != "" && change.Reason != "original_deadline_expired" || change.AdmissionTarget != nil {
+				continue
+			}
+			if !capCandidate && (change.Previous == nil || !change.Previous.Save || change.Policy.Save || change.Previous.Ref != change.Policy.Ref || change.Previous.Purpose != change.Policy.Purpose || !sameSavingSubject(change.Previous.Subject, change.Policy.Subject)) {
 				continue
 			}
 			if _, known := propagationPhase(change); !known {
@@ -89,7 +94,16 @@ func (l *Lifecycle) ConsumePolicyCleanup(ctx context.Context, subject *v.Subject
 			if err != nil {
 				return err
 			}
-			if !now.Before(cutoff(record.CurrentRetainUntil)) {
+			var expiredCap time.Time
+			if capCandidate {
+				expiredCap, err = cleanupAcceptedCap(record.CurrentRetainUntil)
+				if err != nil {
+					return err
+				}
+				if now.Before(expiredCap) {
+					continue
+				}
+			} else if !now.Before(cutoff(record.CurrentRetainUntil)) {
 				continue
 			}
 			service := Service{config: Config{Owner: l.config.Owner, Store: l.store}}
@@ -119,7 +133,7 @@ func (l *Lifecycle) ConsumePolicyCleanup(ctx context.Context, subject *v.Subject
 				known = known && current != nil
 				knownFalse = knownFalse || current != nil && !current.Save
 			}
-			if known && knownFalse {
+			if capCandidate || known && knownFalse {
 				if err = l.manager.current(ctx, tx); err != nil {
 					return err
 				}
@@ -127,10 +141,10 @@ func (l *Lifecycle) ConsumePolicyCleanup(ctx context.Context, subject *v.Subject
 				if err != nil {
 					return err
 				}
-				if !now.Before(original.Deadline) || original.Deadline.After(now.Add(l.config.WorkBudget)) || original.Deadline.After(l.config.TrustedUntil) {
+				if !now.Before(original.Deadline) || original.Deadline.After(now.Add(l.config.WorkBudget)) || original.Deadline.After(l.config.TrustedUntil) || !expiredCap.IsZero() && now.Before(expiredCap) {
 					continue
 				}
-				seals = append(seals, sealing{original, record, SealRequest{Ref: record.Ref, Purpose: record.Purpose, SealID: policySealID(changeKey, record.Ref), Deadline: original.Deadline}})
+				seals = append(seals, sealing{expected: original, record: record, request: SealRequest{Ref: record.Ref, Purpose: record.Purpose, SealID: policySealID(changeKey, record.Ref), Deadline: original.Deadline}, cap: expiredCap})
 				continue
 			}
 			if policy == nil || policy.Ref != record.Ref {
@@ -189,7 +203,7 @@ func (l *Lifecycle) ConsumePolicyCleanup(ctx context.Context, subject *v.Subject
 			}
 		}
 		for _, current := range seals {
-			if !now.Before(current.request.Deadline) {
+			if !now.Before(current.request.Deadline) || !current.cap.IsZero() && now.Before(current.cap) {
 				return refusal("expired")
 			}
 		}
@@ -202,6 +216,15 @@ func (l *Lifecycle) ConsumePolicyCleanup(ctx context.Context, subject *v.Subject
 }
 
 func changeKeyForCleanup(change PolicyChange) string { return changeKey(change.Policy) }
+
+// Destructive cleanup cannot treat cutoff's parse-error zero as an expired cap.
+func cleanupAcceptedCap(text v.Time) (time.Time, error) {
+	cap, err := time.Parse("2006-01-02T15:04:05.000000Z", string(text))
+	if err != nil || cap.IsZero() || cap.Year() < 1 || cap.Format("2006-01-02T15:04:05.000000Z") != string(text) {
+		return time.Time{}, runtime.ErrScope
+	}
+	return cap, nil
+}
 
 func policySealID(key string, ref v.ContentRef) string {
 	raw, _ := json.Marshal(struct {
