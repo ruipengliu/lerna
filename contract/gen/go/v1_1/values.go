@@ -1090,7 +1090,7 @@ type DecisionCurrentControl struct {
 	Scope               string        `json:"scope"`
 }
 
-// DeclaredMethods includes typed development methods, without advertising availability.
+// DeclaredMethods returns the typed inventory; availability is declared separately.
 func DeclaredMethods() []MethodSupport {
 	return []MethodSupport{
 		{ContractVersion: "1.1.0", Profile: "command", Method: "command.get", InputSchema: "CommandGetRequest", OutputSchema: "CommandGetResponse", InputSchemaDigest: "sha256:707b59034ccd29e10c37c51901195dd95bce61c52f2aa78c4616e89cbb29310e", OutputSchemaDigest: "sha256:acce8f9a36a278baf933a60835eca7006a313785f3d96fc458403a46cb2108b5"},
@@ -1104,6 +1104,9 @@ func DeclaredMethods() []MethodSupport {
 func SupportedMethods() []MethodSupport {
 	return []MethodSupport{
 		{ContractVersion: "1.1.0", Profile: "command", Method: "command.get", InputSchema: "CommandGetRequest", OutputSchema: "CommandGetResponse", InputSchemaDigest: "sha256:707b59034ccd29e10c37c51901195dd95bce61c52f2aa78c4616e89cbb29310e", OutputSchemaDigest: "sha256:acce8f9a36a278baf933a60835eca7006a313785f3d96fc458403a46cb2108b5"},
+		{ContractVersion: "1.1.0", Profile: "decision_engine", Method: "decision_engine.decide", InputSchema: "DecisionDecideRequest", OutputSchema: "CommandReceipt", InputSchemaDigest: "sha256:b2ac1e52e121f4b62b57e4bf8676fc685cb68a8cccfd4955c71c6a9a45ff6b30", OutputSchemaDigest: "sha256:08d6c13b3f335c50f51fe594181781b41cc55252afde33b5755881880ece0f31"},
+		{ContractVersion: "1.1.0", Profile: "decision_engine", Method: "decision_engine.get", InputSchema: "DecisionGetRequest", OutputSchema: "DecisionGetResponse", InputSchemaDigest: "sha256:1b6e9e016c071b7319b55668d1defc841d247d2900b7bb180195422fc1ab1b1d", OutputSchemaDigest: "sha256:c086cd3aa01c5e468bf68296e7f80a0e0b88db6076895df925267acfb21bb55b"},
+		{ContractVersion: "1.1.0", Profile: "decision_engine", Method: "decision_engine.cancel", InputSchema: "DecisionCancelRequest", OutputSchema: "CommandReceipt", InputSchemaDigest: "sha256:c714d0677522b69dc6d3a2f6ca4a5f1afbb451cb992237c7f52a8a357675fe64", OutputSchemaDigest: "sha256:08d6c13b3f335c50f51fe594181781b41cc55252afde33b5755881880ece0f31"},
 	}
 }
 

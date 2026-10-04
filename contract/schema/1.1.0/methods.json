@@ -8,17 +8,17 @@
     {
       "input_schema": "DecisionDecideRequest",
       "output_schema": "CommandReceipt",
-      "advertised": false
+      "advertised": true
     },
     {
       "input_schema": "DecisionGetRequest",
       "output_schema": "DecisionGetResponse",
-      "advertised": false
+      "advertised": true
     },
     {
       "input_schema": "DecisionCancelRequest",
       "output_schema": "CommandReceipt",
-      "advertised": false
+      "advertised": true
     }
   ]
 }

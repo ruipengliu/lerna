@@ -66,7 +66,7 @@ while child.poll() is None and time.monotonic()<end:
         except ChildProcessError: pass
     time.sleep(.01)
 if child.poll() is None:
-    
+
     if os.path.exists(sys.argv[3]):
         group=json.load(open(sys.argv[3]))['group']
         try: os.killpg(group,9)

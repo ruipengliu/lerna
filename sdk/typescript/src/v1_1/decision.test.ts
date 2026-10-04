@@ -7,10 +7,8 @@ import {
   decodeDecide,
   decisionInputDigest,
   commandDigest,
-  supportedMethods,
   declaredMethods,
   schema,
-  negotiate,
   ContractError,
   type Values,
 } from './index.ts';
@@ -61,8 +59,7 @@ test('fixed input has independent command and decision digest goldens', async ()
     raw.decision_digest,
   );
 });
-test('complete declared digests do not advertise unfinished profile and schemas remain isolated', () => {
-  assert.equal(supportedMethods.length, 1);
+test('complete declared digests and schemas remain isolated', () => {
   assert.equal(declaredMethods.length, 4);
   const goldens: unknown = JSON.parse(
     readFileSync(new URL('schema-digests.json', fixtures), 'utf8'),
@@ -72,21 +69,6 @@ test('complete declared digests do not advertise unfinished profile and schemas 
     assert.equal(method.input_schema_digest, goldens[2 * i].digest);
     assert.equal(method.output_schema_digest, goldens[2 * i + 1].digest);
   });
-  const method = declaredMethods[1];
-  assert.ok(method);
-  assert.throws(
-    () =>
-      negotiate(
-        encode('NegotiationRequest', {
-          contract_version: '1.1.0',
-          profile: 'decision_engine',
-          method: 'decision_engine.decide',
-          input_schema_digest: method.input_schema_digest,
-          output_schema_digest: method.output_schema_digest,
-        }),
-      ),
-    (e) => e instanceof ContractError && e.code === 'unsupported',
-  );
   assert.throws(() => decodeOld('ErrorCode', '"decision_mismatch"'));
   assert.equal(decode('ErrorCode', '"decision_mismatch"'), 'decision_mismatch');
   assert.ok(Object.isFrozen(schema.$defs.Proposal.properties.advance));

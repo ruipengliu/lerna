@@ -1,6 +1,8 @@
 # TypeScript 公共合同
 
-当前私有包 `@lerna/contract` **1.0.0** 提供[公共合同](../../contract/README.md)、严格原始 JSON 编解码、原命令摘要、固定回执／当前进展解码，以及受信注入事实源的 `getCommand`。唯一支持路径是 `1.0.0 / command / command.get`；`supportedMethods` 和 `negotiate` 要求准确版本及输入／输出 Schema 摘要。材料尚未作为发布包上线，设计占位版本和未完成方法不开放。
+当前私有包 `@lerna/contract` **1.0.0** 的默认入口提供[公共合同](../../contract/README.md)、严格原始 JSON 编解码、原命令摘要、固定回执／当前进展解码，以及受信注入事实源的 `getCommand`。该入口唯一支持路径是 `1.0.0 / command / command.get`；`supportedMethods` 和 `negotiate` 要求准确版本及输入／输出 Schema 摘要。材料尚未作为发布包上线，设计占位版本和未完成方法不开放。
+
+隔离入口 `@lerna/contract/v1_1` 提供[1.1.0 合同](../../contract/v1_1/README.md)：`command / command.get` 及 `decision_engine / decision_engine.decide、get、cancel` 四方法均有完整输入／输出 Schema 摘要并支持准确协商。协商通过只证明合同兼容；真实调用仍需组件入口的受信主体、授权、预算和期限核验。包版本不改变原默认入口的 1.0.0 承诺。
 
 `src/generated/` 来自同版 JSON Schema 与明确方法清单；公开入口为 `src/index.ts`。`parseCommand` 只验证通用信封，成功不证明方法已开放；`decodeCommand` 验证具体方法。`commandDigest` 绑定原业务内容与受信主体，不授予权限。`getCommand` 要求宿主注入已认证主体、读取授权、准确原 owner 目录、时钟和有限 `maxReadDurationMs`，不会从 payload 取得可信身份或改变原命令身份。`decodeCommandResponse` / `encodeCommandResponse` 保持固定接纳事实与当前进展的差异。
 

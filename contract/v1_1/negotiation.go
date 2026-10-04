@@ -28,5 +28,6 @@ func Negotiate(data []byte) (MethodSupport, error) {
 	return result, refusal("unsupported", nil)
 }
 
-// DeclaredMethods exposes complete development schema fingerprints without claiming availability.
+// DeclaredMethods exposes the typed inventory and its complete schema fingerprints.
+// SupportedMethods separately determines which entries are available.
 func DeclaredMethods() []MethodSupport { return wire.DeclaredMethods() }

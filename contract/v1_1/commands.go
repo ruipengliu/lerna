@@ -29,7 +29,7 @@ func ParseCommand(data []byte) (CommandEnvelope, error) {
 }
 
 // DecodeCommand checks execution eligibility and the complete method schema.
-// 1.1.0 currently registers only command.get; parsing an envelope is insufficient.
+// This decoder handles command.get; Decision methods have separate typed decoders.
 func DecodeCommand(data []byte) (CommandGetRequest, error) {
 	var result CommandGetRequest
 	envelope, err := ParseCommand(data)

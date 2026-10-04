@@ -1,0 +1,9 @@
+{
+  "baseline": "384511046bc05e1d9857990a365b5850deb7562f",
+  "verified_paths": 222,
+  "mismatches": [],
+  "fixtures": {
+    "1.0.0": 158,
+    "1.1.0": 89
+  }
+}

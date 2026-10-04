@@ -26,8 +26,8 @@ func decodeMethod[T Value](data []byte, method string) (T, error) {
 	return value, nil
 }
 
-// DecodeDecide validates a directly callable developing Component method. It
-// does not advertise the unfinished profile or confer execution permission.
+// DecodeDecide validates a closed Component request. Method availability is
+// declared separately; decoding does not confer execution permission.
 func DecodeDecide(data []byte) (DecisionDecideRequest, error) {
 	return decodeMethod[DecisionDecideRequest](data, "decision_engine.decide")
 }
