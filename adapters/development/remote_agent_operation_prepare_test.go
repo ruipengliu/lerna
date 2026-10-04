@@ -236,5 +236,15 @@ func assertRemotePreparedAttemptStoppedByCurrentParent(ctx context.Context, t *t
 	if len(restored.Attempts.Items) != 1 || restored.Attempts.Items[0].AttemptID != original.Attempts.Items[0].AttemptID || restored.Attempts.Items[0].StartedAt != "" || restored.Operation.ResultRef != nil || restored.Operation.Effect != "not_started" || !restored.NewAttemptsClosed || !restored.ActuallyStopped || restored.Operation.ExecutionState != "closed" {
 		t.Fatalf("prepared restore crossed the physical barrier or changed the original responsibility after parent pause: original_attempt=%s actual_attempts=%+v effect=%s result_ref=%+v new_attempts_closed=%t actually_stopped=%t execution_state=%s", original.Attempts.Items[0].AttemptID, restored.Attempts.Items, restored.Operation.Effect, restored.Operation.ResultRef, restored.NewAttemptsClosed, restored.ActuallyStopped, restored.Operation.ExecutionState)
 	}
-	t.Logf("original prepared operation=%s attempt=%s reopened_same_attempt=true current_parent_queried=true no_start=true original_unstarted_closed=true", operationID, original.Attempts.Items[0].AttemptID)
+	// 查原开始屏障实际持久的拒绝原因，不把五秒窗自然到期当作父暂停门禁通过。
+	var stopped struct {
+		CancelReason string `json:"cancel_reason"`
+	}
+	if _, err = b.app.Store.Read(ctx, b.app.Scope, execution.Namespace+".operations", operationID, 0, &stopped); err != nil {
+		t.Fatal(err)
+	}
+	if stopped.CancelReason != "forbidden: remote_parent_scope_denied" && stopped.CancelReason != "invalid_state: remote_parent_paused" {
+		t.Fatalf("original prepared start did not consume the actual current parent pause: %s", stopped.CancelReason)
+	}
+	t.Logf("original prepared operation=%s attempt=%s reopened_same_attempt=true current_parent_queried=true no_start=true original_unstarted_closed=true actual_current_pause_cause=%s", operationID, original.Attempts.Items[0].AttemptID, stopped.CancelReason)
 }

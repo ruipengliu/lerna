@@ -276,6 +276,11 @@ func (e executionAuthority) VerifyStart(ctx context.Context, tx runtime.Tx, r ex
 	if er != nil {
 		return execution.StartPermit{}, er
 	}
+	// 原准备许可不替代本次开始的当前 Task/父范围门禁。
+	// 沿已锁原根、预算先核材料和父门，再取得平台凭据锁。
+	if er = e.a.Task.CheckTaskCurrentTx(ctx, tx, r.Auth, original.TaskRef.ObjectID, true); er != nil {
+		return execution.StartPermit{}, er
+	}
 	if er := currentCredentialTx(ctx, tx, r.Auth); er != nil {
 		return execution.StartPermit{}, er
 	}
