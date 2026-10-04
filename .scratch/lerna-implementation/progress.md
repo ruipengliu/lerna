@@ -6,6 +6,8 @@
 
 ## 当前状态
 
+2026-10-04 22:53 UTC，原cap清理partial `d849b7a1`：非法持久时间拒绝unit0.010s、真实清理链2.469s、cap／当前撤save／恢复save／自然phase四项race6.864s通过；原seal key／责任Deadline、独立物理缺失、重开ACK、新version与固定回执均核准，旧0001／0002校验和保持。03完整材料投影修复partial `d427c49`，正常2.609s及投影＋include／omit相关race14.541s通过。原三次早期数量溢出计数资格首次1.853s因额外要求诊断维度而失败，真实正常对照已完成、原返回准确context_overflow；仅收紧测试断言后复验，未宣称三轮已通过。采用[旧holder绑定升级决定](../lerna-04-content-snapshots/ticket-05-legacy-holder-binding/README.md)，只支持可完整核准的原scope，真实旧writer／停止／原介质／完整attempts及CAS仍待实施；不操作任何历史unknown scope。两票依然claimed、whole04仍15/41。
+
 2026-10-04 22:44 UTC，采用[原接受保留期限清理决定](../lerna-04-content-snapshots/ticket-05-expired-accepted-cap/README.md)：严格解析并重新核对原持久cap到期，完整保存主体／用途／准确ref和结构闭包不变，原清理执行期限不续期，复用原seal及全holder ACK；最小修复正在静态实施。03独立正常Completed对照1.63s后，真实出版的坏shell／manifest／lock一致遗漏原Selected A，Source却接受，实际2.580s业务失败已保留；将共享核对M＋全部原selected材料的完整投影，后续Lock／重开尚未执行。两项均不构成新票退出或整片完成。
 
 2026-10-04 22:40 UTC，03读取响应丢失资格 `963b463` 实际2.320s通过：真实6字节读取后响应丢失，原预约重开仍占6字节，重放预约不获新读取许可；第二轮真实编译后Reserved9286／Confirmed9280／Unknown6保持。输入修订资格1.799s通过：同原Snapshot合法更新goal后，原65536额度及三轮上限保持，18次真实回读累计27926字节；扩额到65537准确拒绝且当前输入和计数不变，第四轮准确拒绝。05 metadata资格固定 `e5b38a57`，实际最终测试已核完整三层来源和准确授权，仍为既有协议的独立资格。
