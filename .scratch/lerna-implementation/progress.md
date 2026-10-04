@@ -6,6 +6,12 @@
 
 ## 当前状态
 
+2026-10-04 22:44 UTC，采用[原接受保留期限清理决定](../lerna-04-content-snapshots/ticket-05-expired-accepted-cap/README.md)：严格解析并重新核对原持久cap到期，完整保存主体／用途／准确ref和结构闭包不变，原清理执行期限不续期，复用原seal及全holder ACK；最小修复正在静态实施。03独立正常Completed对照1.63s后，真实出版的坏shell／manifest／lock一致遗漏原Selected A，Source却接受，实际2.580s业务失败已保留；将共享核对M＋全部原selected材料的完整投影，后续Lock／重开尚未执行。两项均不构成新票退出或整片完成。
+
+2026-10-04 22:40 UTC，03读取响应丢失资格 `963b463` 实际2.320s通过：真实6字节读取后响应丢失，原预约重开仍占6字节，重放预约不获新读取许可；第二轮真实编译后Reserved9286／Confirmed9280／Unknown6保持。输入修订资格1.799s通过：同原Snapshot合法更新goal后，原65536额度及三轮上限保持，18次真实回读累计27926字节；扩额到65537准确拒绝且当前输入和计数不变，第四轮准确拒绝。05 metadata资格固定 `e5b38a57`，实际最终测试已核完整三层来源和准确授权，仍为既有协议的独立资格。
+
+05原接受保留期限的真实2.216s业务失败已保留：原2秒cap自然到期、原清理执行期限仍live、当前宽策略续期不能复活旧cap；旧读取返回expired且独立旧字节仍在，新准确version正常。消费者未建立原seal，后续erase／ACK未执行，不称已通过；最小因果分支正由已授权Astra审定。两票仍claimed、独立WT未正式合入，仍15/41AC、完整1.2不广告。进度提交 `1a5d71f0d8cd8e7529bd26440d52859aa1ee5610` 已实际push；所有历史未知scope保持保留。
+
 2026-10-04 22:27 UTC，03原Snapshot预算partial `9534d2c`：原三轮跨重开真实出版／第四精确次数拒绝1.624s通过，后续关闭错误保留及verbose资格1.521s证明原65536内18次材料／四产物回读共27840字节、每轮9280。首次固定20000的累计额度资格1.373s通过：两轮正常，第三A／B后18582字节，M验证预约不足且未到达真实Content，重开不重置。首次compileFAIL保留，原red实际Go watchdog120s、本green30s，caller30s不变。05同原责任自然phase保erased正常2.293s／race5.570s已通过；真实删除后单次replyloss沿确认Defer100ms及原seal／期限恢复，原合法纳秒metadata列编码修复正常0.437s／race1.793s通过，早期失败与fixture截断对照单列。metadata三层完整来源／delegation／用途／绑定及实际祖先许可到期正常1.229s／相关race4.035s通过。两票仍在独立WT未接受或正式合入，剩余unknown／修订／期限／Prepared、过期cap／完整分页／真实升级继续，仍15/41AC及完整1.2不广告，全部22切片授权有效。
 
 2026-10-04，采用[原擦除结论保持决定](../lerna-04-content-snapshots/ticket-05-terminal-erasure-history/README.md)：同原责任真实全ACK后，普通自然phase须保留erased和完整历史，仍执行动作union及原期限min；其他change独立，普通入口不制造新ACK。真实自然到期2.309s失败已复现结论倒退及旧holder历史丢失，修复待验证。迟到真实成功Put的Finish已修正当前holder不复活，正常0.282s及四项相关race2.990s通过。03合法长度但错误正文选材拒绝0.753s通过；原快照预算正在静态实现，尚无green。全部22切片继续，当前仍15/41项AC、两票未接受及完整1.2不广告。
