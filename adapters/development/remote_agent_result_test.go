@@ -109,6 +109,10 @@ func runConfiguredRemoteChildReport(t *testing.T, parentDriver string) {
 	t.Logf("actual parent driver=%s owner=%s database=%s child driver=%s owner=%s database=%s", a.config.Driver, a.app.Scope.OwnerID, a.app.Scope.DatabaseID, b.config.Driver, b.app.Scope.OwnerID, b.app.Scope.DatabaseID)
 	permission := approveRemoteDelegationGrant(ctx, t, a, b.app.Scope.OwnerID)
 	profile = configureRemoteFileScope(ctx, t, a, b, profile, permission)
+	parentJobs := &configuredReportJobInventory{jobs: make(map[string]api.Job)}
+	childJobs := &configuredReportJobInventory{jobs: make(map[string]api.Job)}
+	a.app.Store = &configuredReportInventoryStore{Store: a.app.Store, inventory: parentJobs}
+	b.app.Store = &configuredReportInventoryStore{Store: b.app.Store, inventory: childJobs}
 	goal, parent := configuredAgentOriginalParent(ctx, t, a)
 	id := api.NewID("delegation")
 	in := task.DelegateInput{DelegationID: id, ParentTaskRef: a.app.Scope.Ref(parent.TaskID, parent.Revision), ParentGoalRevision: parent.GoalRevision, GoalRef: goal, InputRefs: []api.ContentRef{}, AgentBindingRef: profile.Values.AgentBindingRef, PermissionRefs: []api.ObjectRef{permission}, Budget: []api.Amount{{Unit: "USD", Value: "2"}}, Deadline: api.Time(time.Now().Add(3 * time.Minute)), PolicyRef: b.app.TaskPolicy.PolicyRef, ReceiverID: b.app.Scope.OwnerID}
@@ -227,7 +231,7 @@ func runConfiguredRemoteChildReport(t *testing.T, parentDriver string) {
 				if replayErr != nil || !api.Equal(again, receipt) {
 					t.Fatalf("original delegation replay changed parent responsibility: %+v %v", again, replayErr)
 				}
-				configuredAgentCloseReportAccounting(ctx, t, a, b, parent.TaskID, childID, permission)
+				configuredAgentCloseReportAccounting(ctx, t, a, b, parent.TaskID, childID, permission, id, parentJobs, childJobs)
 				a.reopenOriginal(t)
 				b.reopenOriginal(t)
 				for _, expected := range []struct {
@@ -246,6 +250,15 @@ func runConfiguredRemoteChildReport(t *testing.T, parentDriver string) {
 					saved, saveErr := os.ReadFile(filepath.Join(expected.endpoint.config.DataRoot, "files", "reports/parent.md"))
 					if saveErr != nil || string(saved) != "# Parent independently verifies\n\nA child reply alone cannot complete this parent.\n" {
 						t.Fatalf("original physical report changed after join/reopen: %q %v", saved, saveErr)
+					}
+				}
+				for _, entry := range []struct {
+					endpoint  *configuredAgentEndpoint
+					inventory *configuredReportJobInventory
+				}{{a, parentJobs}, {b, childJobs}} {
+					finished, jobs, jobsErr := configuredReportJobsDone(ctx, entry.endpoint, entry.inventory)
+					if jobsErr != nil || !finished {
+						t.Fatalf("original business Jobs changed after actual join/reopen: %+v %v", jobs, jobsErr)
 					}
 				}
 				again, replayErr = a.app.Dispatcher.Command(ctx, a.app.UserAuth, api.Raw(original))
@@ -355,9 +368,10 @@ func configuredReportDrainBatch(ctx context.Context, t *testing.T, e *configured
 }
 
 // 费用仍由原两方Job归并；出版结果不是立即结清的替代断言。
-func configuredAgentCloseReportAccounting(ctx context.Context, t *testing.T, a, b *configuredAgentEndpoint, parentID, childID string, permission api.ObjectRef) {
+func configuredAgentCloseReportAccounting(ctx context.Context, t *testing.T, a, b *configuredAgentEndpoint, parentID, childID string, permission api.ObjectRef, delegationID string, parentJobs, childJobs *configuredReportJobInventory) {
 	t.Helper()
 	batch := 0
+	var finalState *collaboration.RemoteState
 	for {
 		closed := true
 		for _, endpoint := range []struct {
@@ -376,8 +390,46 @@ func configuredAgentCloseReportAccounting(ctx context.Context, t *testing.T, a, 
 		grant := configuredAgentGrant(ctx, t, a, permission)
 		closed = closed && grant.OnceConsumed && api.Equal(grant.Reserved, []api.Amount{{Unit: "USD", Value: "0"}})
 		if closed {
-			t.Logf("actual original report accounting closed: parent=%s child=%s Grant=%s once=%v reserved=%v spent=%v", parentID, childID, permission.ObjectID, grant.OnceConsumed, grant.Reserved, grant.Spent)
-			return
+			delegation, err := a.app.Task.DelegationRead(ctx, a.app.Store, a.app.Scope, a.app.UserAuth, delegationID)
+			if err != nil {
+				t.Fatal(err)
+			}
+			allocation, err := a.app.Task.AllocationRead(ctx, a.app.Store, a.app.Scope, a.app.UserAuth, delegation.AllocationRef.ObjectID)
+			if err != nil {
+				t.Fatal(err)
+			}
+			incoming, err := b.app.Task.IncomingRead(ctx, b.app.Store, b.app.Scope, b.app.ServiceAuth, delegation.AllocationRef)
+			if err != nil {
+				t.Fatal(err)
+			}
+			closed = delegation.Phase == "closed" && delegation.GoalWorkClosed && delegation.EffectsClosed && delegation.ClosureRef != nil && allocation.State == "settled" && allocation.ClosureRef != nil && incoming.Gate == "closed" && incoming.ClosureRef != nil && !incoming.ClosurePending && *allocation.ClosureRef == *incoming.ClosureRef
+			if closed && finalState == nil {
+				// 只取一次真实最终签名状态；重复查询不会不断生成新证明责任。
+				state, stateErr := a.app.RemoteAgent.State(ctx, a.app.Scope, delegation)
+				if stateErr != nil {
+					t.Fatal(stateErr)
+				}
+				if state.Task == nil || state.Task.TaskID != childID || state.Task.AccountingOpen || state.DelegationClosure == nil || state.DelegationClosureRef == nil || *state.DelegationClosureRef != *delegation.ClosureRef || state.TaskClosure == nil || state.AllocationClosure == nil || state.AllocationClosureRef == nil || *state.AllocationClosureRef != *incoming.ClosureRef || !state.Fact.GoalWorkClosed || !state.Fact.EffectsClosed || !state.Fact.TransfersClosed || !state.Fact.UsageFinal || state.Fact.Usage == nil {
+					t.Fatalf("original signed three-layer Closure incomplete: %+v", state)
+				}
+				finalState = &state
+			}
+			if closed {
+				proofs := append(append([]api.ContentRef{}, finalState.DelegationClosure.ProofRefs...), finalState.Fact.Usage.ProofRefs...)
+				closed = configuredReportProofsPublished(ctx, t, a, b, proofs)
+				parentDone, parentStates, parentErr := configuredReportJobsDone(ctx, a, parentJobs)
+				childDone, childStates, childErr := configuredReportJobsDone(ctx, b, childJobs)
+				if parentErr != nil || childErr != nil {
+					t.Fatalf("original business Job observation: %v", errors.Join(parentErr, childErr))
+				}
+				if closed && parentDone && childDone {
+					if !configuredReportHasJob(parentStates, task.JobDelegation, "delegation/"+delegationID) || !configuredReportHasCorrection(childStates, delegation.AllocationRef.ObjectID) {
+						t.Fatal("original delegation/correction Job identity not observed")
+					}
+					t.Logf("actual original report accounting and business Jobs closed: parent=%s child=%s Grant=%s once=%v reserved=%v spent=%v delegation_closure=%s allocation_closure=%s parent_jobs=%s child_jobs=%s", parentID, childID, permission.ObjectID, grant.OnceConsumed, grant.Reserved, grant.Spent, delegation.ClosureRef.ObjectID, incoming.ClosureRef.ObjectID, api.Raw(parentStates), api.Raw(childStates))
+					return
+				}
+			}
 		}
 		batch++
 		for _, endpoint := range []struct {
