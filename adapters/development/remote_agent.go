@@ -213,6 +213,9 @@ func (a *App) configureRemoteAgent(local *collaboration.Adapter) (*collaboration
 		if err != nil {
 			return nil, err
 		}
+		if err = retainRemoteSessionCreateDecoder(client); err != nil {
+			return nil, err
+		}
 		peers = append(peers, collaboration.RemotePeer{Scope: scope, Client: client, Keys: keys})
 		ports[scope.OwnerID] = &providers.ForeignSourceClient{SDK: client, Keys: keys, SourceScope: scope, ConsumerScope: a.Scope}
 		assembly.peers[scope.OwnerID] = cfg

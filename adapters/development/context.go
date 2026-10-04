@@ -156,10 +156,16 @@ func (c contextCompiler) Prepare(ctx context.Context, scope runtime.Scope, auth 
 		registered.Entries = entries
 		processed = uniqueSources(append(append(processed, bundle.Selection.SourceRefs...), packet))
 	}
+	sessionMaterials, e := c.a.remoteSessionHistoryMaterials(ctx, scope, auth, t)
+	if e != nil {
+		return task.PreparedDecision{}, e
+	}
+	processed = uniqueSources(append(processed, sessionMaterials...))
 	processed, materials, e := c.a.wasiContext(ctx, scope, facts, registered, processed)
 	if e != nil {
 		return task.PreparedDecision{}, e
 	}
+	materials = uniqueSources(append(materials, sessionMaterials...))
 	if c.a.Model != nil {
 		packet, err := c.a.Publish(ctx, scope, c.a.ServiceAuth, stableID("content", "context-facts/"+key), "application/vnd.harness.context+json", api.Raw(struct {
 			Facts                   task.ContextFacts                  `json:"facts"`

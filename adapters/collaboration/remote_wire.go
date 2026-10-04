@@ -18,6 +18,7 @@ const (
 )
 
 type RemoteCreateInput struct {
+	SessionContext     *RemoteSessionContext     `json:"session_context,omitempty"`
 	CreationKey        string                    `json:"creation_key"`
 	CreateCommandID    string                    `json:"create_command_id"`
 	ChildTaskID        string                    `json:"child_task_id"`
@@ -142,6 +143,9 @@ func (r *Remote) validatePacket(p RemoteCreateInput) (RemoteAgentProfile, error)
 		return profile, err
 	}
 	if err = validateRemoteAdmission(p, profile); err != nil {
+		return profile, err
+	}
+	if err = r.validateOriginalSessionContext(p, profile); err != nil {
 		return profile, err
 	}
 	if _, err = api.Canonical(api.Raw(p)); err != nil {

@@ -8,7 +8,7 @@ import (
 	"github.com/ruipengliu/lerna/runtime"
 )
 
-// PrepareInputPublicationContext 为原 steer 的文档发布取得独立 service 许可。
+// PrepareInputPublicationContext 为原 steer/clarify_goal 的文档发布取得独立 service 许可。
 // user 的读取证明不能授权发布者；只使用宿主已固定的 MaterialPrincipal。
 // 调用方先 PrepareInputContext；本方法不创造父范围或刷新原引用保存期限。
 func (r *Remote) PrepareInputPublicationContext(ctx context.Context, commandID string) (context.Context, error) {
@@ -23,7 +23,7 @@ func (r *Remote) PrepareInputPublicationContext(ctx context.Context, commandID s
 	if saved.Command.CommandID != commandID || saved.Phase != "forwarded" {
 		return ctx, api.E("invalid_state", "original_remote_input_not_forwarded")
 	}
-	if saved.Packet.Input.Kind != "steer" {
+	if saved.Packet.Input.Kind != "steer" && saved.Packet.Input.Kind != "answer_request" {
 		return ctx, nil
 	}
 	if r.cfg.MaterialPrincipal == nil || r.cfg.Memory == nil || !api.Equal(*r.cfg.MaterialPrincipal, r.cfg.Auth) {
@@ -42,7 +42,9 @@ func (r *Remote) PrepareInputPublicationContext(ctx context.Context, commandID s
 		return ctx, err
 	}
 	var actual api.Task
+	var actor runtime.Auth
 	var reference memory.ForeignReference
+	needsPublication := saved.Packet.Input.Kind == "steer"
 	err = r.within(ctx, func(tx runtime.Tx) error {
 		original, err := tx.LoadCommand(ctx, commandID)
 		if err != nil {
@@ -55,7 +57,7 @@ func (r *Remote) PrepareInputPublicationContext(ctx context.Context, commandID s
 		if err != nil {
 			return err
 		}
-		actor, err := r.cfg.Authority.ResolveSubjectTx(ctx, tx, saved.Packet.SubjectRef, profile, false)
+		actor, err = r.cfg.Authority.ResolveSubjectTx(ctx, tx, saved.Packet.SubjectRef, profile, false)
 		if err != nil {
 			return err
 		}
@@ -77,6 +79,22 @@ func (r *Remote) PrepareInputPublicationContext(ctx context.Context, commandID s
 		}
 		if err = r.CheckTaskCurrentTx(ctx, tx, actual, false); err != nil {
 			return err
+		}
+		if saved.Packet.Input.Kind == "answer_request" {
+			if saved.Packet.Input.RequestRef == nil {
+				return api.E("invalid_request", "original_answer_request_missing")
+			}
+			view, err := s.RequestViewTx(ctx, tx, actor, *saved.Packet.Input.RequestRef)
+			if err != nil {
+				return err
+			}
+			if view.RequestRef != *saved.Packet.Input.RequestRef || view.Request.TargetRef.ObjectID != actual.TaskID || view.Request.GoalRevision == nil || *view.Request.GoalRevision != actual.GoalRevision || view.Request.State != "pending" {
+				return api.E("revision_conflict", "original_answer_request_changed")
+			}
+			needsPublication = view.Request.Purpose == "clarify_goal"
+			if !needsPublication {
+				return nil
+			}
 		}
 		allowed := false
 		for _, purpose := range profile.Values.MaterialPurposes {
@@ -104,7 +122,7 @@ func (r *Remote) PrepareInputPublicationContext(ctx context.Context, commandID s
 		}
 		return nil
 	})
-	if err != nil {
+	if err != nil || !needsPublication {
 		return ctx, err
 	}
 	use, err := r.cfg.Memory.PrepareForeignUse(ctx, r.cfg.Scope, *r.cfg.MaterialPrincipal, reference)
@@ -118,6 +136,14 @@ func (r *Remote) PrepareInputPublicationContext(ctx context.Context, commandID s
 	prepared, err = r.cfg.Memory.PrepareForeignContext(prepared, r.cfg.Scope, *r.cfg.MaterialPrincipal, []api.ContentRef{saved.Packet.Input.ContentRef, actual.GoalRef}, "content.write", profile.Values.Location)
 	if err != nil {
 		return ctx, err
+	}
+	if saved.Packet.Input.Kind == "answer_request" {
+		// 最终消费调用的是原用户的 task.input；发布者 content.write 证明
+		// 不能代替它。此处只沿原已登记 holder 取得本次 Current，不增用途。
+		prepared, err = r.cfg.Memory.PrepareForeignContext(prepared, r.cfg.Scope, actor, []api.ContentRef{saved.Packet.Input.ContentRef}, "task.input", profile.Values.Location)
+		if err != nil {
+			return ctx, err
+		}
 	}
 	// 多个源 Current 或慢介质之后刷新同一个原父证明，不借 disk 旧许可。
 	return r.PrepareChildContext(prepared, saved.Command.TargetID)

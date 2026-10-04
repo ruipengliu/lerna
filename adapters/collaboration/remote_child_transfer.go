@@ -114,22 +114,6 @@ func (r *Remote) planChildTransfer(ctx context.Context, scope runtime.Scope, tr 
 		if tr.Input.AnswerRef == nil || input.RequestRef == nil {
 			return saved, api.E("invalid_request", "original_answer_transfer_incomplete")
 		}
-		peer, ok := r.peers[d.ReceiverID]
-		if !ok {
-			return saved, api.E("unsupported", "remote_agent_transport_unconfigured")
-		}
-		raw, err := peer.Client.Query(ctx, api.Query{Protocol: api.Protocol, Profile: api.Profile, LogicalServiceID: d.ReceiverID, QueryID: api.NewID("query"), Method: "collaboration.child.request.get", TargetID: input.RequestRef.ObjectID, Payload: api.Raw(RemoteChildRequestInput{ParentOwnerID: scope.OwnerID, CreationKey: d.CreationKey, RequestRef: *input.RequestRef})})
-		if err != nil {
-			return saved, err
-		}
-		var request task.InputRequestView
-		if err = api.Decode(raw, &request); err != nil {
-			return saved, err
-		}
-		if request.RequestRef != *input.RequestRef || request.Request.TargetRef.ObjectID != d.ChildTaskRef.ObjectID || request.Request.GoalRevision == nil || request.Request.State != "pending" {
-			return saved, api.E("revision_conflict", "request_version_changed")
-		}
-		input.ChildGoalRevision = *request.Request.GoalRevision
 		input.ContentRef = *tr.Input.AnswerRef
 	default:
 		return saved, api.E("unsupported", "remote_input_kind_unconfigured")
@@ -152,7 +136,7 @@ func (r *Remote) planChildTransfer(ctx context.Context, scope runtime.Scope, tr 
 		if !api.IsCode(err, "not_found") {
 			return err
 		}
-		// 准确 request goal 已在外部核定；仅保存资料，首次真正准入仍在原 Dispatcher Tx。
+		// 先固定原命令与原请求；准确请求版本由已接纳原命令的 Job 查询。
 		if err = tx.Create(ctx, "collaboration.remote_child_transfer_input", tr.TransferID, tr.DelegationID, input); err != nil {
 			return err
 		}
@@ -181,6 +165,16 @@ func (r *Remote) receiveChildTransfer(ctx context.Context, tx runtime.Tx, actor 
 	var input RemoteInputSend
 	if _, err = tx.Get(ctx, "collaboration.remote_child_transfer_input", in.TransferID, &input); err != nil {
 		return runtime.Outcome{}, err
+	}
+	if input.Kind == "answer_request" {
+		now, err := tx.Now(ctx)
+		if err != nil {
+			return runtime.Outcome{}, err
+		}
+		if _, err = tx.Raise(ctx, JobRemoteChildRequestPrepare, "request/"+in.TransferID, tx.Scope().Ref(in.TransferID, 1), now); err != nil {
+			return runtime.Outcome{}, err
+		}
+		return runtime.Accepted(RemoteInputAck{TransferID: in.TransferID, Phase: "pending"}), nil
 	}
 	outgoing, err := r.planInputTx(ctx, tx, actor, c, input, saved.Transfer.SourceSubmissionRef)
 	if err != nil {
@@ -226,7 +220,7 @@ func (r *Remote) registerRemoteChildTransfer() error {
 			return err
 		}
 	}
-	return nil
+	return r.cfg.Registry.RegisterJob(JobRemoteChildRequestPrepare, r.childRequestPrepareJob)
 }
 
 // IsOriginalChildTransferSubmission 只辨认真正消费了原输入的 receiver 命令。

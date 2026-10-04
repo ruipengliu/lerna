@@ -128,6 +128,13 @@ func (r *Remote) sourceAllocation(ctx context.Context, peer runtime.Auth, q api.
 			}
 			allowed = gateErr == nil
 		}
+		if allowed && saved.Packet.SessionContext != nil {
+			gateErr = r.checkOriginalSessionContextTx(ctx, tx, actor, current.Delegation, saved.Packet.SessionContext)
+			if gateErr != nil && !api.IsCode(gateErr, "forbidden") && !api.IsCode(gateErr, "expired") && !api.IsCode(gateErr, "invalid_state") {
+				return gateErr
+			}
+			allowed = gateErr == nil
+		}
 		reason := ""
 		if !allowed {
 			var e *api.Error
