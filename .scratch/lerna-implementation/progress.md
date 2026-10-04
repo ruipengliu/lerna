@@ -8,7 +8,7 @@
 
 - 切片 01：**completed**。原任务 01–06 与后置架构任务 07 均 resolved；正确性修复、独立架构优化和 CI portability 已合入。受测实现提交 `23bac17ba0909c7a4d49d846eb08bc63391b99f0` 的真实远端 CI success，全部退出证据见[spec](../lerna-01-command-contracts/spec.md#切片退出证据2026-10-03)。
 - 切片 02：**completed**。10票68项AC resolved；最终源码f56d930、整合5548744。本地完整顺序count1集成50.431s/race93.834s，独立两轴全部原发现关闭/新增0，fixture架构收益复核闭合；准确CI37162569420 success，完整退出及旧未知schema/CID限制见[证据](../lerna-02-durable-work/exit-evidence.md)。
-- 切片 03：**in-progress**。全部六票、42/42 项 AC 已 resolved并正式整合；取消/限额源882e97b、交付8385b9b、整合4b94cb6，完整 tree 与 worker相同。完整check、基础race、真实PG／原双库恢复及102项Component有限分组race通过，整包120秒超时保留为历史失败。新1.1完整profile、分组CI入口、整片两轴／架构／最终CI与退出仍待完成。
+- 切片 03：**in-progress**。全部六票、42/42 项 AC 已 resolved并正式整合；取消/限额源882e97b、交付8385b9b、整合4b94cb6，完整 tree 与 worker相同。完整check、基础race、真实PG／原双库恢复及102项Component有限分组race通过，整包120秒超时保留为历史失败。本地完整1.1 profile及共享分组CI入口已整合391b4d8（交付1aa21fc、受测6bf5750）；完整164commits/360paths两轴最终0，架构必要新增重构0。新共享race入口全部104项及Recovery/Source已通过，准确新push CI与整片退出仍待核验。
 - 切片 04–22：**not-started**。04–22仅在`/tmp`准备条件决定和票据草案；真实前置整片退出后再按最终API复核、发布和实施，草案不代表实现或验收证据。
 
 ## 切片 01 过程检查点（历史记录）
@@ -188,3 +188,10 @@ merger正式合入cad6905ed64bde26883ef226455ebe1e221e97c2，parents949c392＋5b
 882标准check／fresh基础race／模块与七manifest172项0；真实Component／Source正常60.881／29.966，Source race28.434。Component整包race120.073超时仍是失败，真实102项互斥完整60／42分组race110.803／11.781通过，时限不变；原PG／SQLite及当前native Decision恢复正常37.201／race87.979通过。两轴0遗留，1545PG／244SQLite／64target登记范围absent，原3540254111未知目录／overlay保留。全部工具会话已退出。
 
 前检查点5bc的[准确CI37189797348](../lerna-03-deterministic-harness/ci-verification.md#02准确5bc检查点的真实ci)已真实success，只证明当时83夹具／旧两迁移等范围；不替代882取消／Source0002／Decision0003／89夹具组合。当前42/42子AC不等于whole03退出。先完成准确完整profile及新的有限CI入口，再由root执行整片审查／架构／push／最终CI；04–22继续依真实whole依赖，不因子AC完成而提前启动。
+
+
+## 切片03完整profile与整体审查检查点
+
+2026-10-04，正式整合391b4d8的whole tree与交付1aa21fc一致，准确parents3845110+1aa21fc。三项广告flag实际生成后，1.1 command.get与三个Decision方法准确协商开放；原1.0和158旧fixtures冻结、89新版原payload未变。本地新shared入口实际串行Recoveryrace79.934s、动态全部104Component=60项102.204s+44项11.633s、Source28.271s，nativefinalexit0，期限仍120s。完整两轴[报告](../lerna-03-deterministic-harness/code-review.md)最终0，历史绝对链接P2已闭合；[架构](../lerna-03-deterministic-harness/architecture-review.md)0必要新重构。
+
+[本地证据](../lerna-03-deterministic-harness/whole-exit-evidence.md)严格区分6bf受测与五项空白/文档followup、589ACK中的414uniquePG及122SQLite/32Target/3archive/6groups全absent、自身overlay/cache197保留和历史未知资源保护。原整包Component120.073失败继续保留。此处不引用旧5bcCI证明新源码；本次准确push CI待核，Implementation继续in-progress。

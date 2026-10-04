@@ -78,3 +78,6 @@ A 阶段在 01–03 完成后退出：共同身份、两种数据库耐久工作
 
 
 2026-10-04，取消／限额票03八AC已resolved，受测882e97b、纯文档交付8385b9b，正式整合4b94cb6完整tree与worker相同。[逐AC证据](ticket-03-exit-evidence.md)保存两种真实并发顺序、nilInput关闭、资源／期限、双prepared Stop门禁、旧writer升级及全部本地检查；[分组证据](ticket-03-component-race-partition.md)保留Component整包120.073超时及随后完整102项有限分组race0。全部六票42/42子AC已关闭，Implementation仍in-progress：完整profile／分组CI入口／整片两轴与架构／最终push CI尚未退出。旧5bc CI已真实success，准确范围见[CI记录](ci-verification.md#02准确5bc检查点的真实ci)。
+
+
+2026-10-04，完整profile/共享有限race入口已按受测6bf5750、交付1aa21fc正式整合391b4d8；完整两轴[审查](code-review.md)固定164commits/360paths各最终0，[架构](architecture-review.md)0必要新增重构，本地全部104Component与Recovery/Source shared入口真实exit0。完整[本地证据](whole-exit-evidence.md)及两个literal audits保留失败与资源限制。准确新push CI及整片退出尚待核验，Implementation仍in-progress。
