@@ -81,6 +81,14 @@ func buildFrozenWriter(t *testing.T, dir string) *upgradeOutput {
 	command := exec.CommandContext(ctx, "go", "test", "-c", "-o", filepath.Join(dir, "legacy.test"), "./conformance/internal/decisionfixture")
 	command.Dir = dir
 	setUpgradeProcessBounds(command)
+	// A compiler timeout cancels only the actual child holder. Once Wait has
+	// reaped it, a numeric PID cannot authorize a signal to a putative old group.
+	command.Cancel = func() error {
+		if command.Process == nil {
+			return os.ErrProcessDone
+		}
+		return command.Process.Kill()
+	}
 	diagnostics := &upgradeOutput{}
 	command.Stdout = diagnostics
 	command.Stderr = diagnostics
@@ -92,9 +100,11 @@ func buildFrozenWriter(t *testing.T, dir string) *upgradeOutput {
 			return
 		}
 		if command.Process != nil && !confirmed {
-			cancel()
-			if err := syscall.Kill(-command.Process.Pid, syscall.SIGKILL); err != nil && !errors.Is(err, syscall.ESRCH) {
-				t.Error(upgradeCause("frozen build group kill", err))
+			if !exited {
+				cancel()
+				if err := command.Process.Kill(); err != nil && !errors.Is(err, os.ErrProcessDone) {
+					t.Error(upgradeCause("frozen build holder kill", err))
+				}
 			}
 			if !exited && waited != nil {
 				select {
