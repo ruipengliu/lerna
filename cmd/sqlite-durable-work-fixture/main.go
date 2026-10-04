@@ -25,7 +25,7 @@ func main() {
 		os.Exit(1)
 	}
 }
-func run() error {
+func run() (resultErr error) {
 	commandsPath := flag.String("commands", "conformance/fixtures/durable-work/sqlite-v1/commands.json", "fixed fake-data commands")
 	output := flag.String("output", "", "new output directory for actual SQLite file and Host observation")
 	flag.Parse()
@@ -38,10 +38,12 @@ func run() error {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 	store, err := sqlite.Open(ctx, sqlite.Config{Path: filepath.Join(*output, "database.sqlite"), TransactionTimeout: 3 * time.Second, BusyTimeout: 100 * time.Millisecond})
+	if store != nil {
+		defer func() { resultErr = errors.Join(resultErr, store.Close()) }()
+	}
 	if err != nil {
 		return err
 	}
-	defer store.Close()
 	if err = store.Migrate(ctx); err != nil {
 		return err
 	}

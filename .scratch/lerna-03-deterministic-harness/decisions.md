@@ -139,3 +139,50 @@ spec 六项验收映射：1→01+06；2→02；3→04+05；4→04+05；5→01+05
 已明确处理的设计空隙：04/05 前无真实 Snapshot/Content/Task 权威→明确耐久 fixture source；“互斥候选”与 delta 共存→仅推进分支互斥；新 receipt 原因无法由旧版表达→旧视图沿既有 unavailable，新版完整读取；泛型 CAS 与先取消后创建→方法使用绑定输入的单调控制修订；未完整 profile→root 明确最后整合开放；进程恢复与全片关闭→分离责任，删除假依赖。这些不得在实现中静默回退成旧 enum 扩张、fixture 冒充真实服务或省略范围。
 
 02 退出后，实施者依据实际代码决定短 Tx/Job/Claim 端口接法、SQL 字段和索引、适当 Go/TS 私有文件划分、source/publisher seam 的实际函数名、规则表实现及测试同步通道；这些不需要再问用户。先检查能否复用 02 的有限截止、持久重试、墓碑和进程设施，再加当前真正需要的最小函数。不得预先冻结不存在的接口、为全部后续版本/模型供应商造框架，或扩大为真实 Task/Content/Executor 功能。
+
+## 10. 规则 Start 计量与耐久发布实施细化（2026-10-04）
+
+root FULL read并采用授权Astra的窄决定
+`/tmp/lerna-03-rule-start-accounting-decision.md`。这细化第5节既有有限规则用量，
+不新增Task/计费领域或跨owner事务。首票的真实实现发现，Start提交后进程可能
+尚未计算；不能将该窗口伪报为已完成规则步骤。
+
+- 未发布1.1.0 Usage新增闭合必需字段`rule_starts`和
+  `measurements_complete`。`rule_starts`记录耐久规则启动；步骤限额保守以启动数
+  占用，费用依据准确fixture-rule/2组件、manifest、lock和Permission中固定的
+  `durable_rule_start`及每Start一fixture单位。`rule_steps`只记录确认的实际规则
+  执行。未确认窗口保留false；已确认字节/步骤是累计下界，不因接替归零。
+  新计费基线费用准确；旧计费升级时已记录费用亦可能只为下界。模型请求为零。
+- 同Claim/epoch无prepared只能授予一次计算资格。下一epoch可能补算时仍累计
+  原starts/费用并保持先前未知观察；原限额耗尽则停止新增Start，不填假物理步骤。
+- Publisher提供窄`PlanPublication`准确引用规划，授权检查和引用算法留在真实
+  独立fixture owner；规划不发布正文。取得准确artifactRef后纯装配完整Proposal，
+  先检查artifact+Proposal总输出及完整响应上限，同短Tx固定原keys、准确bytes/
+  hashes/refs、来源和确认用量。然后Tx外按原键实际Publish及独立ReadPublished，
+  最后短Finish再校验当前Claim、pool、trustedtime、权限期限和原deadline。
+  prepared恢复只发布/读回/Finish，不重算或再收费。可恢复发布失败使用既有闭合
+  waiting/dependency_unavailable，100ms后重试，最多8次且受原deadline限制。
+- 不默改旧fixture-rule/1的fee-at-finish绑定，也不构造双计费执行器。
+  owner0002在旧writer已退出/排空后只分类升级，业务关闭由正常owner维护短Tx执行：旧accepted无执行证据保零新starts/
+  费用，固定failed/billing_basis_unsupported；旧running/waiting保留已记录用量
+  下界并failed/usage_unavailable、不造start1/fee1。旧终态状态、Proposal和
+  发布identity保留，不推断过去只启动一次。原input/accepted/manifest绑定不改。
+  新调用旧binding先currentauth、再原key优先；新key固定unsupported无新Job。
+  新正常执行必须新的准确fixture-rule/2 binding和新Decision。
+
+这项细化随首票基本准入、真实旧writer升级、Start/prepared/限额恢复验收；特殊
+候选、取消和完整SIGKILL矩阵仍分别由02/03/06交付，不能以它们尚未实施为漏记
+首票启动或费用的理由。实际端口与恢复政策见components/decision_engine/README.md。
+
+### 实施细化：真实 holder 的初始化与关闭
+
+PG Core 与 fixture Source 保存首次 database/sql Close 结果，并发调用等待
+该结果；首次失败在本进程内保持 unknown，后续 Close 不可伪造确认。
+Open 双失败返回非空 cleanup-only holder 与安全包装的原始两项原因，
+所有实际调用方先保留 concrete holder 再判断错误，不把 typed nil 装入接口。
+SQLite 保留 native Close 之前的 drain timeout 可重试语义；native Close
+失败不释放 writer exclusion，首次 release 失败亦保持 unknown。文件取得后
+的初始化失败沿同一阶段化清理，精确 scope 仅在真实退出/关闭确认后清理。
+机械 sql.OpenDB 测试无物理资源，不冒充 pgx/sqlite3 native 故障；实际双库、
+Decision/Source 与旧 writer 升级恢复分别验证。此为已有未知责任边界的
+实施修正，不扩合同、迁移或生产能力声明。

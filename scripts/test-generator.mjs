@@ -10,6 +10,14 @@ import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import assert from 'node:assert/strict';
+function copyNewVersion(dir) {
+  mkdirSync(join(dir, 'contract/schema/1.1.0'), { recursive: true });
+  for (const name of ['values.json', 'methods.json'])
+    writeFileSync(
+      join(dir, 'contract/schema/1.1.0', name),
+      readFileSync(`contract/schema/1.1.0/${name}`),
+    );
+}
 const generator = resolve('scripts/generate.mjs');
 const original = JSON.parse(
   readFileSync('contract/schema/1.0.0/values.json', 'utf8'),
@@ -141,6 +149,7 @@ for (const [name, mutate, expected] of probes) {
       join(dir, 'contract/schema/1.0.0/methods.json'),
       JSON.stringify(changedInventory),
     );
+    copyNewVersion(dir);
     const result = spawnSync('node', [generator], {
       cwd: dir,
       encoding: 'utf8',
@@ -169,6 +178,7 @@ const digestPair = (changed, methods = JSON.parse(inventory)) => {
       join(dir, 'contract/schema/1.0.0/methods.json'),
       JSON.stringify(methods),
     );
+    copyNewVersion(dir);
     const result = spawnSync('node', [generator], {
       cwd: dir,
       encoding: 'utf8',
@@ -260,3 +270,10 @@ for (const [name, mutate, affected] of [
     );
 }
 console.log('8 schema generation golden/change scenarios passed.');
+
+const newer = spawnSync(process.execPath, ['scripts/test-generator-v1_1.mjs'], {
+  stdio: 'inherit',
+  timeout: 60000,
+});
+assert.ifError(newer.error);
+assert.equal(newer.status, 0, 'isolated 1.1 generator checks');

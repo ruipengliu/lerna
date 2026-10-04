@@ -41,10 +41,12 @@ func run() (resultErr error) {
 	defer cancel()
 	const schema = "lerna_test_000000000000000000000001"
 	store, err := postgres.Open(ctx, postgres.Config{DSN: dsn, Schema: schema, TransactionTimeout: 3 * time.Second, StatementTimeout: 2 * time.Second, LockTimeout: time.Second})
+	if store != nil {
+		defer func() { resultErr = errors.Join(resultErr, store.Close()) }()
+	}
 	if err != nil {
 		return err
 	}
-	defer store.Close()
 	if err = store.CreateSchema(ctx); err != nil {
 		return err
 	}

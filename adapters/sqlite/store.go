@@ -13,8 +13,8 @@ import (
 
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/ruipengliu/lerna/contract"
-	demo "github.com/ruipengliu/lerna/internal/durableworkdemo"
 	"github.com/ruipengliu/lerna/runtime"
+	"github.com/ruipengliu/lerna/runtime/workpool"
 )
 
 type Config struct {
@@ -38,6 +38,9 @@ var ErrWriterActive = errors.New("SQLite writable Host already active")
 var ErrCloseTimeout = errors.New("SQLite owner transaction did not stop before close deadline")
 
 func Open(ctx context.Context, cfg Config) (*Store, error) {
+	return open(ctx, cfg, sql.Open, acquireWriter)
+}
+func open(ctx context.Context, cfg Config, openDB func(string, string) (*sql.DB, error), acquire func(context.Context, string) (func() error, error)) (*Store, error) {
 	if ctx == nil || cfg.Path == "" || cfg.Path == ":memory:" || cfg.TransactionTimeout <= 0 || cfg.BusyTimeout < time.Millisecond || cfg.BusyTimeout > cfg.TransactionTimeout {
 		return nil, errors.New("invalid file SQLite configuration")
 	}
@@ -46,35 +49,50 @@ func Open(ctx context.Context, cfg Config) (*Store, error) {
 		return nil, err
 	}
 	cfg.Path = path
-	release, err := acquireWriter(ctx, path)
-	if err != nil {
-		return nil, err
+	release, startupErr := acquire(ctx, path)
+	if release == nil {
+		return nil, startupErr
 	}
-	keepWriter := false
-	defer func() {
-		if !keepWriter {
-			_ = release()
+	shutdown, stop := context.WithCancel(context.Background())
+	holder := &Store{config: cfg, writer: make(chan struct{}, 1), closer: make(chan struct{}, 1), shutdown: shutdown, stop: stop, releaseWriter: release}
+	fail := func(err error) (*Store, error) {
+		if closeErr := holder.Close(); closeErr != nil {
+			return holder, errors.Join(&lifecycleError{stage: "startup", cause: err}, closeErr)
 		}
-	}()
+		return nil, &lifecycleError{stage: "startup", cause: err}
+	}
+	if startupErr != nil {
+		return fail(startupErr)
+	}
 	uri := url.URL{Scheme: "file", Path: path}
 	params := url.Values{"_journal_mode": {"WAL"}, "_synchronous": {"FULL"}, "_foreign_keys": {"on"}, "_busy_timeout": {fmt.Sprint(cfg.BusyTimeout.Milliseconds())}, "_txlock": {"immediate"}}
 	uri.RawQuery = params.Encode()
-	db, err := sql.Open("sqlite3", uri.String())
+	holder.db, err = openDB("sqlite3", uri.String())
 	if err != nil {
-		return nil, err
+		return fail(err)
 	}
-	db.SetMaxOpenConns(1)
-	db.SetMaxIdleConns(1)
+	holder.db.SetMaxOpenConns(1)
+	holder.db.SetMaxIdleConns(1)
 	bounded, cancel := context.WithTimeout(ctx, cfg.TransactionTimeout)
 	defer cancel()
-	if err = db.PingContext(bounded); err != nil {
-		db.Close()
-		return nil, err
+	if err = holder.db.PingContext(bounded); err != nil {
+		return fail(err)
 	}
-	keepWriter = true
-	shutdown, stop := context.WithCancel(context.Background())
-	return &Store{db: db, config: cfg, writer: make(chan struct{}, 1), closer: make(chan struct{}, 1), shutdown: shutdown, stop: stop, releaseWriter: release}, nil
+	return holder, nil
 }
+
+type lifecycleError struct {
+	stage string
+	cause error
+}
+
+func (e *lifecycleError) Error() string {
+	if e.stage == "startup" {
+		return "SQLite startup failed"
+	}
+	return "SQLite " + e.stage + " unconfirmed"
+}
+func (e *lifecycleError) Unwrap() error { return e.cause }
 
 // Close cancels and drains entire owner transactions before releasing the
 // process lock. A callback must obey its finite context. If it does not exit in
@@ -99,13 +117,26 @@ func (s *Store) Close() error {
 	case <-ctx.Done():
 		return ErrCloseTimeout
 	}
-	s.closeErr = errors.Join(s.db.Close(), s.releaseWriter())
+	// Drain timeouts above can retry. Once native Close is actually attempted,
+	// retain its outcome forever and release exclusion only after confirmed nil.
+	if s.db != nil {
+		if err := s.db.Close(); err != nil {
+			s.closeErr = &lifecycleError{stage: "database close", cause: err}
+			s.closeComplete = true
+			return s.closeErr
+		}
+	}
+	if s.releaseWriter != nil {
+		if err := s.releaseWriter(); err != nil {
+			s.closeErr = &lifecycleError{stage: "writer release", cause: err}
+		}
+	}
 	s.closeComplete = true
 	return s.closeErr
 }
 
 type transaction struct {
-	pool       *demo.PoolState
+	pool       *workpool.State
 	poolLocked bool
 	store      *Store
 	sql        *sql.Tx

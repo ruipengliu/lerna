@@ -134,3 +134,10 @@ conditional fairness, trusted assembly, restoration and scope-binding limits.
 Slice 02 as a whole still awaits review closure, architecture review and final CI.
 Local recovery evidence and its historical resource/fault-domain limits remain
 in the [slice specification](../../.scratch/lerna-02-durable-work/spec.md).
+
+Open may return a non-nil cleanup-only Store with an error after acquiring a
+file or writer lock. Retain it and reject business activity. Drain timeouts before
+native database close remain retryable after callbacks exit. Once native close
+is attempted, its failed result stays unknown and writer exclusion is not
+released. Writer release occurs only after database close succeeds; a failed
+release also stays unknown and does not authorize deleting the owned files.

@@ -117,6 +117,9 @@ export function startRunner(command, args, { timeoutMs = 10000, signal } = {}) {
     }
   }
   return {
+    get exitConfirmed() {
+      return finished;
+    },
     get pid() {
       return child.pid;
     },

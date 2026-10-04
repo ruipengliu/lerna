@@ -120,6 +120,14 @@ try {
     stdio: 'inherit',
     timeout: 60000,
   });
+  execFileSync(
+    process.execPath,
+    [
+      'scripts/test-contract-1_1.mjs',
+      ...(process.argv.includes('--reverse') ? ['--reverse'] : []),
+    ],
+    { stdio: 'inherit', timeout: 60000 },
+  );
   console.log(
     `${fixtures.length} shared fixtures (${process.argv.includes('--reverse') ? 'reverse' : 'forward'} order) passed; all positive values completed real Go→TS and TS→Go roundtrips.`,
   );

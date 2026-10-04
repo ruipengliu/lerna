@@ -21,17 +21,18 @@ import (
 // writer, never a proxy: Host transactions retain their same-Store identity.
 // Administrative ownership survives every business writer generation.
 type ownedFixture struct {
-	backend   string
-	pg        postgres.Config
-	sq        sqlite.Config
-	admin     *postgres.Store
-	owns      bool
-	directory string
-	current   waitStore
-	peers     []*postgres.Store
-	holders   []*pgTransactionHold
-	closing   bool
-	child     *hostProcess
+	backend     string
+	pg          postgres.Config
+	sq          sqlite.Config
+	admin       *postgres.Store
+	owns        bool
+	directory   string
+	current     waitStore
+	peers       []*postgres.Store
+	sqlitePeers []*sqlite.Store
+	holders     []*pgTransactionHold
+	closing     bool
+	child       *hostProcess
 }
 
 func newOwnedFixture(t *testing.T, backend string, migrate bool) *ownedFixture {
@@ -115,9 +116,19 @@ func (f *ownedFixture) Open(ctx context.Context) (waitStore, error) {
 	var store waitStore
 	var err error
 	if f.backend == "postgres" {
-		store, err = postgres.Open(ctx, f.pg)
+		var pg *postgres.Store
+		pg, err = postgres.Open(ctx, f.pg)
+		if pg != nil {
+			store = pg
+			f.current = pg
+		}
 	} else {
-		store, err = sqlite.Open(ctx, f.sq)
+		var sq *sqlite.Store
+		sq, err = sqlite.Open(ctx, f.sq)
+		if sq != nil {
+			store = sq
+			f.current = sq
+		}
 	}
 	if err != nil {
 		return nil, fmt.Errorf("fixture %s open: %w", f.backend, err)
@@ -192,6 +203,17 @@ func (f *ownedFixture) cleanup(holderContext context.Context) error {
 			f.peers[i] = nil
 		}
 	}
+	for i, peer := range f.sqlitePeers {
+		if peer == nil {
+			continue
+		}
+		if err := peer.Close(); err != nil {
+			errs = append(errs, err)
+			handlesClosed = false
+		} else {
+			f.sqlitePeers[i] = nil
+		}
+	}
 	if !handlesClosed {
 		return errors.Join(errs...)
 	}
@@ -248,10 +270,12 @@ func (f *ownedFixture) openPGPeer(t *testing.T, cfg postgres.Config) *postgres.S
 		t.Fatal("fixture is closing")
 	}
 	peer, err := postgres.Open(contextFor(t), cfg)
+	if peer != nil {
+		f.peers = append(f.peers, peer)
+	}
 	if err != nil {
 		t.Fatal(err)
 	}
-	f.peers = append(f.peers, peer)
 	return peer
 }
 func (f *ownedFixture) ConcurrentWriter(t *testing.T) waitStore {

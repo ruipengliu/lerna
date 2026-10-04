@@ -1,0 +1,1302 @@
+[
+  {
+    "name": "allowed-existing-read",
+    "request": "{\"contract_version\":\"1.1.0\",\"profile\":\"command\",\"method\":\"command.get\",\"command_id\":\"read-association\",\"target\":{\"tenant_id\":\"t\",\"owner_id\":\"o\",\"kind\":\"command\",\"id\":\"original\"},\"payload\":{\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"original\"}},\"accept_before\":\"2026-10-03T01:00:00.000000Z\"}",
+    "authorization": "normal",
+    "directory": "normal",
+    "observation": {
+      "status": "found",
+      "command_ref": {
+        "owner": {
+          "tenant_id": "t",
+          "owner_id": "o"
+        },
+        "command_id": "original"
+      },
+      "receipt": {
+        "state": "accepted",
+        "command_ref": {
+          "owner": {
+            "tenant_id": "t",
+            "owner_id": "o"
+          },
+          "command_id": "original"
+        },
+        "object_ref": {
+          "tenant_id": "t",
+          "owner_id": "tasks",
+          "kind": "task",
+          "id": "task-1"
+        },
+        "next_action": "query_original"
+      },
+      "progress": {
+        "kind": "none"
+      }
+    },
+    "trusted_subject": {
+      "tenant_id": "t",
+      "subject_id": "allowed",
+      "delegation_chain": []
+    },
+    "expected": {
+      "status": "found",
+      "command_ref": {
+        "owner": {
+          "tenant_id": "t",
+          "owner_id": "o"
+        },
+        "command_id": "original"
+      },
+      "receipt": {
+        "state": "accepted",
+        "command_ref": {
+          "owner": {
+            "tenant_id": "t",
+            "owner_id": "o"
+          },
+          "command_id": "original"
+        },
+        "object_ref": {
+          "tenant_id": "t",
+          "owner_id": "tasks",
+          "kind": "task",
+          "id": "task-1"
+        },
+        "next_action": "query_original"
+      },
+      "progress": {
+        "kind": "none"
+      }
+    }
+  },
+  {
+    "name": "allowed-absent-read",
+    "request": "{\"contract_version\":\"1.1.0\",\"profile\":\"command\",\"method\":\"command.get\",\"command_id\":\"read-association\",\"target\":{\"tenant_id\":\"t\",\"owner_id\":\"o\",\"kind\":\"command\",\"id\":\"absent\"},\"payload\":{\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"absent\"}},\"accept_before\":\"2026-10-03T01:00:00.000000Z\"}",
+    "authorization": "normal",
+    "directory": "normal",
+    "observation": {
+      "status": "not_found",
+      "command_ref": {
+        "owner": {
+          "tenant_id": "t",
+          "owner_id": "o"
+        },
+        "command_id": "absent"
+      }
+    },
+    "trusted_subject": {
+      "tenant_id": "t",
+      "subject_id": "allowed",
+      "delegation_chain": []
+    },
+    "expected": {
+      "status": "not_found",
+      "command_ref": {
+        "owner": {
+          "tenant_id": "t",
+          "owner_id": "o"
+        },
+        "command_id": "absent"
+      }
+    }
+  },
+  {
+    "name": "allowed-delegated-read",
+    "request": "{\"contract_version\":\"1.1.0\",\"profile\":\"command\",\"method\":\"command.get\",\"command_id\":\"read-association\",\"target\":{\"tenant_id\":\"t\",\"owner_id\":\"o\",\"kind\":\"command\",\"id\":\"original\"},\"payload\":{\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"original\"}},\"accept_before\":\"2026-10-03T01:00:00.000000Z\"}",
+    "authorization": "normal",
+    "directory": "normal",
+    "observation": {
+      "status": "found",
+      "command_ref": {
+        "owner": {
+          "tenant_id": "t",
+          "owner_id": "o"
+        },
+        "command_id": "original"
+      },
+      "receipt": {
+        "state": "accepted",
+        "command_ref": {
+          "owner": {
+            "tenant_id": "t",
+            "owner_id": "o"
+          },
+          "command_id": "original"
+        },
+        "object_ref": {
+          "tenant_id": "t",
+          "owner_id": "tasks",
+          "kind": "task",
+          "id": "task-1"
+        },
+        "next_action": "query_original"
+      },
+      "progress": {
+        "kind": "none"
+      }
+    },
+    "trusted_subject": {
+      "tenant_id": "t",
+      "subject_id": "allowed",
+      "delegation_chain": [
+        {
+          "tenant_id": "t",
+          "subject_id": "delegator"
+        }
+      ]
+    },
+    "expected": {
+      "status": "found",
+      "command_ref": {
+        "owner": {
+          "tenant_id": "t",
+          "owner_id": "o"
+        },
+        "command_id": "original"
+      },
+      "receipt": {
+        "state": "accepted",
+        "command_ref": {
+          "owner": {
+            "tenant_id": "t",
+            "owner_id": "o"
+          },
+          "command_id": "original"
+        },
+        "object_ref": {
+          "tenant_id": "t",
+          "owner_id": "tasks",
+          "kind": "task",
+          "id": "task-1"
+        },
+        "next_action": "query_original"
+      },
+      "progress": {
+        "kind": "none"
+      }
+    }
+  },
+  {
+    "name": "denied-subject-existing",
+    "request": "{\"contract_version\":\"1.1.0\",\"profile\":\"command\",\"method\":\"command.get\",\"command_id\":\"read-association\",\"target\":{\"tenant_id\":\"t\",\"owner_id\":\"o\",\"kind\":\"command\",\"id\":\"original\"},\"payload\":{\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"original\"}},\"accept_before\":\"2026-10-03T01:00:00.000000Z\"}",
+    "authorization": "normal",
+    "directory": "normal",
+    "observation": {
+      "status": "found",
+      "command_ref": {
+        "owner": {
+          "tenant_id": "t",
+          "owner_id": "o"
+        },
+        "command_id": "original"
+      },
+      "receipt": {
+        "state": "accepted",
+        "command_ref": {
+          "owner": {
+            "tenant_id": "t",
+            "owner_id": "o"
+          },
+          "command_id": "original"
+        },
+        "object_ref": {
+          "tenant_id": "t",
+          "owner_id": "tasks",
+          "kind": "task",
+          "id": "task-1"
+        },
+        "next_action": "query_original"
+      },
+      "progress": {
+        "kind": "none"
+      }
+    },
+    "trusted_subject": {
+      "tenant_id": "t",
+      "subject_id": "stranger",
+      "delegation_chain": []
+    },
+    "expected": {
+      "status": "rejected",
+      "reason": "forbidden"
+    }
+  },
+  {
+    "name": "denied-subject-absent",
+    "request": "{\"contract_version\":\"1.1.0\",\"profile\":\"command\",\"method\":\"command.get\",\"command_id\":\"read-association\",\"target\":{\"tenant_id\":\"t\",\"owner_id\":\"o\",\"kind\":\"command\",\"id\":\"absent\"},\"payload\":{\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"absent\"}},\"accept_before\":\"2026-10-03T01:00:00.000000Z\"}",
+    "authorization": "normal",
+    "directory": "normal",
+    "observation": {
+      "status": "not_found",
+      "command_ref": {
+        "owner": {
+          "tenant_id": "t",
+          "owner_id": "o"
+        },
+        "command_id": "absent"
+      }
+    },
+    "trusted_subject": {
+      "tenant_id": "t",
+      "subject_id": "stranger",
+      "delegation_chain": []
+    },
+    "expected": {
+      "status": "rejected",
+      "reason": "forbidden"
+    }
+  },
+  {
+    "name": "missing-principal-existing",
+    "request": "{\"contract_version\":\"1.1.0\",\"profile\":\"command\",\"method\":\"command.get\",\"command_id\":\"read-association\",\"target\":{\"tenant_id\":\"t\",\"owner_id\":\"o\",\"kind\":\"command\",\"id\":\"original\"},\"payload\":{\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"original\"}},\"accept_before\":\"2026-10-03T01:00:00.000000Z\"}",
+    "authorization": "normal",
+    "directory": "normal",
+    "observation": {
+      "status": "found",
+      "command_ref": {
+        "owner": {
+          "tenant_id": "t",
+          "owner_id": "o"
+        },
+        "command_id": "original"
+      },
+      "receipt": {
+        "state": "accepted",
+        "command_ref": {
+          "owner": {
+            "tenant_id": "t",
+            "owner_id": "o"
+          },
+          "command_id": "original"
+        },
+        "object_ref": {
+          "tenant_id": "t",
+          "owner_id": "tasks",
+          "kind": "task",
+          "id": "task-1"
+        },
+        "next_action": "query_original"
+      },
+      "progress": {
+        "kind": "none"
+      }
+    },
+    "expected": {
+      "status": "rejected",
+      "reason": "forbidden"
+    }
+  },
+  {
+    "name": "missing-principal-absent",
+    "request": "{\"contract_version\":\"1.1.0\",\"profile\":\"command\",\"method\":\"command.get\",\"command_id\":\"read-association\",\"target\":{\"tenant_id\":\"t\",\"owner_id\":\"o\",\"kind\":\"command\",\"id\":\"absent\"},\"payload\":{\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"absent\"}},\"accept_before\":\"2026-10-03T01:00:00.000000Z\"}",
+    "authorization": "normal",
+    "directory": "normal",
+    "observation": {
+      "status": "not_found",
+      "command_ref": {
+        "owner": {
+          "tenant_id": "t",
+          "owner_id": "o"
+        },
+        "command_id": "absent"
+      }
+    },
+    "expected": {
+      "status": "rejected",
+      "reason": "forbidden"
+    }
+  },
+  {
+    "name": "invalid-principal-existing",
+    "request": "{\"contract_version\":\"1.1.0\",\"profile\":\"command\",\"method\":\"command.get\",\"command_id\":\"read-association\",\"target\":{\"tenant_id\":\"t\",\"owner_id\":\"o\",\"kind\":\"command\",\"id\":\"original\"},\"payload\":{\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"original\"}},\"accept_before\":\"2026-10-03T01:00:00.000000Z\"}",
+    "authorization": "normal",
+    "directory": "normal",
+    "observation": {
+      "status": "found",
+      "command_ref": {
+        "owner": {
+          "tenant_id": "t",
+          "owner_id": "o"
+        },
+        "command_id": "original"
+      },
+      "receipt": {
+        "state": "accepted",
+        "command_ref": {
+          "owner": {
+            "tenant_id": "t",
+            "owner_id": "o"
+          },
+          "command_id": "original"
+        },
+        "object_ref": {
+          "tenant_id": "t",
+          "owner_id": "tasks",
+          "kind": "task",
+          "id": "task-1"
+        },
+        "next_action": "query_original"
+      },
+      "progress": {
+        "kind": "none"
+      }
+    },
+    "trusted_subject": {
+      "tenant_id": "t",
+      "subject_id": "",
+      "delegation_chain": []
+    },
+    "expected": {
+      "status": "rejected",
+      "reason": "forbidden"
+    }
+  },
+  {
+    "name": "invalid-principal-absent",
+    "request": "{\"contract_version\":\"1.1.0\",\"profile\":\"command\",\"method\":\"command.get\",\"command_id\":\"read-association\",\"target\":{\"tenant_id\":\"t\",\"owner_id\":\"o\",\"kind\":\"command\",\"id\":\"absent\"},\"payload\":{\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"absent\"}},\"accept_before\":\"2026-10-03T01:00:00.000000Z\"}",
+    "authorization": "normal",
+    "directory": "normal",
+    "observation": {
+      "status": "not_found",
+      "command_ref": {
+        "owner": {
+          "tenant_id": "t",
+          "owner_id": "o"
+        },
+        "command_id": "absent"
+      }
+    },
+    "trusted_subject": {
+      "tenant_id": "t",
+      "subject_id": "",
+      "delegation_chain": []
+    },
+    "expected": {
+      "status": "rejected",
+      "reason": "forbidden"
+    }
+  },
+  {
+    "name": "cross-tenant-existing",
+    "request": "{\"contract_version\":\"1.1.0\",\"profile\":\"command\",\"method\":\"command.get\",\"command_id\":\"read-association\",\"target\":{\"tenant_id\":\"t\",\"owner_id\":\"o\",\"kind\":\"command\",\"id\":\"original\"},\"payload\":{\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"original\"}},\"accept_before\":\"2026-10-03T01:00:00.000000Z\"}",
+    "authorization": "normal",
+    "directory": "normal",
+    "observation": {
+      "status": "found",
+      "command_ref": {
+        "owner": {
+          "tenant_id": "t",
+          "owner_id": "o"
+        },
+        "command_id": "original"
+      },
+      "receipt": {
+        "state": "accepted",
+        "command_ref": {
+          "owner": {
+            "tenant_id": "t",
+            "owner_id": "o"
+          },
+          "command_id": "original"
+        },
+        "object_ref": {
+          "tenant_id": "t",
+          "owner_id": "tasks",
+          "kind": "task",
+          "id": "task-1"
+        },
+        "next_action": "query_original"
+      },
+      "progress": {
+        "kind": "none"
+      }
+    },
+    "trusted_subject": {
+      "tenant_id": "other",
+      "subject_id": "allowed",
+      "delegation_chain": []
+    },
+    "expected": {
+      "status": "rejected",
+      "reason": "forbidden"
+    }
+  },
+  {
+    "name": "cross-tenant-absent",
+    "request": "{\"contract_version\":\"1.1.0\",\"profile\":\"command\",\"method\":\"command.get\",\"command_id\":\"read-association\",\"target\":{\"tenant_id\":\"t\",\"owner_id\":\"o\",\"kind\":\"command\",\"id\":\"absent\"},\"payload\":{\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"absent\"}},\"accept_before\":\"2026-10-03T01:00:00.000000Z\"}",
+    "authorization": "normal",
+    "directory": "normal",
+    "observation": {
+      "status": "not_found",
+      "command_ref": {
+        "owner": {
+          "tenant_id": "t",
+          "owner_id": "o"
+        },
+        "command_id": "absent"
+      }
+    },
+    "trusted_subject": {
+      "tenant_id": "other",
+      "subject_id": "allowed",
+      "delegation_chain": []
+    },
+    "expected": {
+      "status": "rejected",
+      "reason": "forbidden"
+    }
+  },
+  {
+    "name": "untrusted-delegation-existing",
+    "request": "{\"contract_version\":\"1.1.0\",\"profile\":\"command\",\"method\":\"command.get\",\"command_id\":\"read-association\",\"target\":{\"tenant_id\":\"t\",\"owner_id\":\"o\",\"kind\":\"command\",\"id\":\"original\"},\"payload\":{\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"original\"}},\"accept_before\":\"2026-10-03T01:00:00.000000Z\"}",
+    "authorization": "normal",
+    "directory": "normal",
+    "observation": {
+      "status": "found",
+      "command_ref": {
+        "owner": {
+          "tenant_id": "t",
+          "owner_id": "o"
+        },
+        "command_id": "original"
+      },
+      "receipt": {
+        "state": "accepted",
+        "command_ref": {
+          "owner": {
+            "tenant_id": "t",
+            "owner_id": "o"
+          },
+          "command_id": "original"
+        },
+        "object_ref": {
+          "tenant_id": "t",
+          "owner_id": "tasks",
+          "kind": "task",
+          "id": "task-1"
+        },
+        "next_action": "query_original"
+      },
+      "progress": {
+        "kind": "none"
+      }
+    },
+    "trusted_subject": {
+      "tenant_id": "t",
+      "subject_id": "allowed",
+      "delegation_chain": [
+        {
+          "tenant_id": "other",
+          "subject_id": "admin"
+        }
+      ]
+    },
+    "expected": {
+      "status": "rejected",
+      "reason": "forbidden"
+    }
+  },
+  {
+    "name": "untrusted-delegation-absent",
+    "request": "{\"contract_version\":\"1.1.0\",\"profile\":\"command\",\"method\":\"command.get\",\"command_id\":\"read-association\",\"target\":{\"tenant_id\":\"t\",\"owner_id\":\"o\",\"kind\":\"command\",\"id\":\"absent\"},\"payload\":{\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"absent\"}},\"accept_before\":\"2026-10-03T01:00:00.000000Z\"}",
+    "authorization": "normal",
+    "directory": "normal",
+    "observation": {
+      "status": "not_found",
+      "command_ref": {
+        "owner": {
+          "tenant_id": "t",
+          "owner_id": "o"
+        },
+        "command_id": "absent"
+      }
+    },
+    "trusted_subject": {
+      "tenant_id": "t",
+      "subject_id": "allowed",
+      "delegation_chain": [
+        {
+          "tenant_id": "other",
+          "subject_id": "admin"
+        }
+      ]
+    },
+    "expected": {
+      "status": "rejected",
+      "reason": "forbidden"
+    }
+  },
+  {
+    "name": "self-reported-owner-is-no-grant",
+    "request": "{\"contract_version\":\"1.1.0\",\"profile\":\"command\",\"method\":\"command.get\",\"command_id\":\"read-association\",\"target\":{\"tenant_id\":\"t\",\"owner_id\":\"other\",\"kind\":\"command\",\"id\":\"original\"},\"payload\":{\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"other\"},\"command_id\":\"original\"}},\"accept_before\":\"2026-10-03T01:00:00.000000Z\"}",
+    "authorization": "normal",
+    "directory": "normal",
+    "observation": {
+      "status": "found",
+      "command_ref": {
+        "owner": {
+          "tenant_id": "t",
+          "owner_id": "o"
+        },
+        "command_id": "original"
+      },
+      "receipt": {
+        "state": "accepted",
+        "command_ref": {
+          "owner": {
+            "tenant_id": "t",
+            "owner_id": "o"
+          },
+          "command_id": "original"
+        },
+        "object_ref": {
+          "tenant_id": "t",
+          "owner_id": "tasks",
+          "kind": "task",
+          "id": "task-1"
+        },
+        "next_action": "query_original"
+      },
+      "progress": {
+        "kind": "none"
+      }
+    },
+    "trusted_subject": {
+      "tenant_id": "t",
+      "subject_id": "allowed",
+      "delegation_chain": []
+    },
+    "expected": {
+      "status": "rejected",
+      "reason": "forbidden"
+    }
+  },
+  {
+    "name": "target-tenant-cannot-override-principal",
+    "request": "{\"contract_version\":\"1.1.0\",\"profile\":\"command\",\"method\":\"command.get\",\"command_id\":\"read-association\",\"target\":{\"tenant_id\":\"other\",\"owner_id\":\"o\",\"kind\":\"command\",\"id\":\"original\"},\"payload\":{\"command_ref\":{\"owner\":{\"tenant_id\":\"other\",\"owner_id\":\"o\"},\"command_id\":\"original\"}},\"accept_before\":\"2026-10-03T01:00:00.000000Z\"}",
+    "authorization": "normal",
+    "directory": "normal",
+    "observation": {
+      "status": "found",
+      "command_ref": {
+        "owner": {
+          "tenant_id": "t",
+          "owner_id": "o"
+        },
+        "command_id": "original"
+      },
+      "receipt": {
+        "state": "accepted",
+        "command_ref": {
+          "owner": {
+            "tenant_id": "t",
+            "owner_id": "o"
+          },
+          "command_id": "original"
+        },
+        "object_ref": {
+          "tenant_id": "t",
+          "owner_id": "tasks",
+          "kind": "task",
+          "id": "task-1"
+        },
+        "next_action": "query_original"
+      },
+      "progress": {
+        "kind": "none"
+      }
+    },
+    "trusted_subject": {
+      "tenant_id": "t",
+      "subject_id": "allowed",
+      "delegation_chain": []
+    },
+    "expected": {
+      "status": "rejected",
+      "reason": "forbidden"
+    }
+  },
+  {
+    "name": "payload-cannot-forge-principal",
+    "request": "{\"contract_version\":\"1.1.0\",\"profile\":\"command\",\"method\":\"command.get\",\"command_id\":\"read-association\",\"target\":{\"tenant_id\":\"t\",\"owner_id\":\"o\",\"kind\":\"command\",\"id\":\"original\"},\"payload\":{\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"original\"},\"subject_id\":\"allowed\",\"tenant_id\":\"t\"},\"accept_before\":\"2026-10-03T01:00:00.000000Z\"}",
+    "authorization": "normal",
+    "directory": "normal",
+    "observation": {
+      "status": "found",
+      "command_ref": {
+        "owner": {
+          "tenant_id": "t",
+          "owner_id": "o"
+        },
+        "command_id": "original"
+      },
+      "receipt": {
+        "state": "accepted",
+        "command_ref": {
+          "owner": {
+            "tenant_id": "t",
+            "owner_id": "o"
+          },
+          "command_id": "original"
+        },
+        "object_ref": {
+          "tenant_id": "t",
+          "owner_id": "tasks",
+          "kind": "task",
+          "id": "task-1"
+        },
+        "next_action": "query_original"
+      },
+      "progress": {
+        "kind": "none"
+      }
+    },
+    "trusted_subject": {
+      "tenant_id": "t",
+      "subject_id": "allowed",
+      "delegation_chain": []
+    },
+    "error": "schema_invalid"
+  },
+  {
+    "name": "authorization-failure-existing",
+    "request": "{\"contract_version\":\"1.1.0\",\"profile\":\"command\",\"method\":\"command.get\",\"command_id\":\"read-association\",\"target\":{\"tenant_id\":\"t\",\"owner_id\":\"o\",\"kind\":\"command\",\"id\":\"original\"},\"payload\":{\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"original\"}},\"accept_before\":\"2026-10-03T01:00:00.000000Z\"}",
+    "authorization": "failure",
+    "directory": "normal",
+    "observation": {
+      "status": "found",
+      "command_ref": {
+        "owner": {
+          "tenant_id": "t",
+          "owner_id": "o"
+        },
+        "command_id": "original"
+      },
+      "receipt": {
+        "state": "accepted",
+        "command_ref": {
+          "owner": {
+            "tenant_id": "t",
+            "owner_id": "o"
+          },
+          "command_id": "original"
+        },
+        "object_ref": {
+          "tenant_id": "t",
+          "owner_id": "tasks",
+          "kind": "task",
+          "id": "task-1"
+        },
+        "next_action": "query_original"
+      },
+      "progress": {
+        "kind": "none"
+      }
+    },
+    "trusted_subject": {
+      "tenant_id": "t",
+      "subject_id": "allowed",
+      "delegation_chain": []
+    },
+    "expected": {
+      "status": "rejected",
+      "reason": "forbidden"
+    }
+  },
+  {
+    "name": "authorization-failure-absent",
+    "request": "{\"contract_version\":\"1.1.0\",\"profile\":\"command\",\"method\":\"command.get\",\"command_id\":\"read-association\",\"target\":{\"tenant_id\":\"t\",\"owner_id\":\"o\",\"kind\":\"command\",\"id\":\"absent\"},\"payload\":{\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"absent\"}},\"accept_before\":\"2026-10-03T01:00:00.000000Z\"}",
+    "authorization": "failure",
+    "directory": "normal",
+    "observation": {
+      "status": "found",
+      "command_ref": {
+        "owner": {
+          "tenant_id": "t",
+          "owner_id": "o"
+        },
+        "command_id": "original"
+      },
+      "receipt": {
+        "state": "accepted",
+        "command_ref": {
+          "owner": {
+            "tenant_id": "t",
+            "owner_id": "o"
+          },
+          "command_id": "original"
+        },
+        "object_ref": {
+          "tenant_id": "t",
+          "owner_id": "tasks",
+          "kind": "task",
+          "id": "task-1"
+        },
+        "next_action": "query_original"
+      },
+      "progress": {
+        "kind": "none"
+      }
+    },
+    "trusted_subject": {
+      "tenant_id": "t",
+      "subject_id": "allowed",
+      "delegation_chain": []
+    },
+    "expected": {
+      "status": "rejected",
+      "reason": "forbidden"
+    }
+  },
+  {
+    "name": "directory-failure",
+    "request": "{\"contract_version\":\"1.1.0\",\"profile\":\"command\",\"method\":\"command.get\",\"command_id\":\"read-association\",\"target\":{\"tenant_id\":\"t\",\"owner_id\":\"o\",\"kind\":\"command\",\"id\":\"original\"},\"payload\":{\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"original\"}},\"accept_before\":\"2026-10-03T01:00:00.000000Z\"}",
+    "authorization": "normal",
+    "directory": "failure",
+    "observation": {
+      "status": "found",
+      "command_ref": {
+        "owner": {
+          "tenant_id": "t",
+          "owner_id": "o"
+        },
+        "command_id": "original"
+      },
+      "receipt": {
+        "state": "accepted",
+        "command_ref": {
+          "owner": {
+            "tenant_id": "t",
+            "owner_id": "o"
+          },
+          "command_id": "original"
+        },
+        "object_ref": {
+          "tenant_id": "t",
+          "owner_id": "tasks",
+          "kind": "task",
+          "id": "task-1"
+        },
+        "next_action": "query_original"
+      },
+      "progress": {
+        "kind": "none"
+      }
+    },
+    "trusted_subject": {
+      "tenant_id": "t",
+      "subject_id": "allowed",
+      "delegation_chain": []
+    },
+    "expected": {
+      "status": "unavailable",
+      "command_ref": {
+        "owner": {
+          "tenant_id": "t",
+          "owner_id": "o"
+        },
+        "command_id": "original"
+      },
+      "reason": "dependency_unavailable"
+    }
+  },
+  {
+    "name": "directory-wrong_owner",
+    "request": "{\"contract_version\":\"1.1.0\",\"profile\":\"command\",\"method\":\"command.get\",\"command_id\":\"read-association\",\"target\":{\"tenant_id\":\"t\",\"owner_id\":\"o\",\"kind\":\"command\",\"id\":\"original\"},\"payload\":{\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"original\"}},\"accept_before\":\"2026-10-03T01:00:00.000000Z\"}",
+    "authorization": "normal",
+    "directory": "wrong_owner",
+    "observation": {
+      "status": "found",
+      "command_ref": {
+        "owner": {
+          "tenant_id": "t",
+          "owner_id": "o"
+        },
+        "command_id": "original"
+      },
+      "receipt": {
+        "state": "accepted",
+        "command_ref": {
+          "owner": {
+            "tenant_id": "t",
+            "owner_id": "o"
+          },
+          "command_id": "original"
+        },
+        "object_ref": {
+          "tenant_id": "t",
+          "owner_id": "tasks",
+          "kind": "task",
+          "id": "task-1"
+        },
+        "next_action": "query_original"
+      },
+      "progress": {
+        "kind": "none"
+      }
+    },
+    "trusted_subject": {
+      "tenant_id": "t",
+      "subject_id": "allowed",
+      "delegation_chain": []
+    },
+    "expected": {
+      "status": "unavailable",
+      "command_ref": {
+        "owner": {
+          "tenant_id": "t",
+          "owner_id": "o"
+        },
+        "command_id": "original"
+      },
+      "reason": "dependency_unavailable"
+    }
+  },
+  {
+    "name": "directory-wrong_tenant",
+    "request": "{\"contract_version\":\"1.1.0\",\"profile\":\"command\",\"method\":\"command.get\",\"command_id\":\"read-association\",\"target\":{\"tenant_id\":\"t\",\"owner_id\":\"o\",\"kind\":\"command\",\"id\":\"original\"},\"payload\":{\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"original\"}},\"accept_before\":\"2026-10-03T01:00:00.000000Z\"}",
+    "authorization": "normal",
+    "directory": "wrong_tenant",
+    "observation": {
+      "status": "found",
+      "command_ref": {
+        "owner": {
+          "tenant_id": "t",
+          "owner_id": "o"
+        },
+        "command_id": "original"
+      },
+      "receipt": {
+        "state": "accepted",
+        "command_ref": {
+          "owner": {
+            "tenant_id": "t",
+            "owner_id": "o"
+          },
+          "command_id": "original"
+        },
+        "object_ref": {
+          "tenant_id": "t",
+          "owner_id": "tasks",
+          "kind": "task",
+          "id": "task-1"
+        },
+        "next_action": "query_original"
+      },
+      "progress": {
+        "kind": "none"
+      }
+    },
+    "trusted_subject": {
+      "tenant_id": "t",
+      "subject_id": "allowed",
+      "delegation_chain": []
+    },
+    "expected": {
+      "status": "unavailable",
+      "command_ref": {
+        "owner": {
+          "tenant_id": "t",
+          "owner_id": "o"
+        },
+        "command_id": "original"
+      },
+      "reason": "dependency_unavailable"
+    }
+  },
+  {
+    "name": "directory-missing_reader",
+    "request": "{\"contract_version\":\"1.1.0\",\"profile\":\"command\",\"method\":\"command.get\",\"command_id\":\"read-association\",\"target\":{\"tenant_id\":\"t\",\"owner_id\":\"o\",\"kind\":\"command\",\"id\":\"original\"},\"payload\":{\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"original\"}},\"accept_before\":\"2026-10-03T01:00:00.000000Z\"}",
+    "authorization": "normal",
+    "directory": "missing_reader",
+    "observation": {
+      "status": "found",
+      "command_ref": {
+        "owner": {
+          "tenant_id": "t",
+          "owner_id": "o"
+        },
+        "command_id": "original"
+      },
+      "receipt": {
+        "state": "accepted",
+        "command_ref": {
+          "owner": {
+            "tenant_id": "t",
+            "owner_id": "o"
+          },
+          "command_id": "original"
+        },
+        "object_ref": {
+          "tenant_id": "t",
+          "owner_id": "tasks",
+          "kind": "task",
+          "id": "task-1"
+        },
+        "next_action": "query_original"
+      },
+      "progress": {
+        "kind": "none"
+      }
+    },
+    "trusted_subject": {
+      "tenant_id": "t",
+      "subject_id": "allowed",
+      "delegation_chain": []
+    },
+    "expected": {
+      "status": "unavailable",
+      "command_ref": {
+        "owner": {
+          "tenant_id": "t",
+          "owner_id": "o"
+        },
+        "command_id": "original"
+      },
+      "reason": "dependency_unavailable"
+    }
+  },
+  {
+    "name": "original-owner-unavailable",
+    "request": "{\"contract_version\":\"1.1.0\",\"profile\":\"command\",\"method\":\"command.get\",\"command_id\":\"read-association\",\"target\":{\"tenant_id\":\"t\",\"owner_id\":\"o\",\"kind\":\"command\",\"id\":\"original\"},\"payload\":{\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"original\"}},\"accept_before\":\"2026-10-03T01:00:00.000000Z\"}",
+    "authorization": "normal",
+    "directory": "normal",
+    "observation": {
+      "status": "unavailable",
+      "command_ref": {
+        "owner": {
+          "tenant_id": "t",
+          "owner_id": "o"
+        },
+        "command_id": "original"
+      },
+      "reason": "dependency_unavailable"
+    },
+    "trusted_subject": {
+      "tenant_id": "t",
+      "subject_id": "allowed",
+      "delegation_chain": []
+    },
+    "expected": {
+      "status": "unavailable",
+      "command_ref": {
+        "owner": {
+          "tenant_id": "t",
+          "owner_id": "o"
+        },
+        "command_id": "original"
+      },
+      "reason": "dependency_unavailable"
+    }
+  },
+  {
+    "name": "original-owner-retention",
+    "request": "{\"contract_version\":\"1.1.0\",\"profile\":\"command\",\"method\":\"command.get\",\"command_id\":\"read-association\",\"target\":{\"tenant_id\":\"t\",\"owner_id\":\"o\",\"kind\":\"command\",\"id\":\"original\"},\"payload\":{\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"original\"}},\"accept_before\":\"2026-10-03T01:00:00.000000Z\"}",
+    "authorization": "normal",
+    "directory": "normal",
+    "observation": {
+      "status": "gone",
+      "command_ref": {
+        "owner": {
+          "tenant_id": "t",
+          "owner_id": "o"
+        },
+        "command_id": "original"
+      }
+    },
+    "trusted_subject": {
+      "tenant_id": "t",
+      "subject_id": "allowed",
+      "delegation_chain": []
+    },
+    "expected": {
+      "status": "gone",
+      "command_ref": {
+        "owner": {
+          "tenant_id": "t",
+          "owner_id": "o"
+        },
+        "command_id": "original"
+      }
+    }
+  },
+  {
+    "name": "read-cutoff-expired",
+    "request": "{\"contract_version\":\"1.1.0\",\"profile\":\"command\",\"method\":\"command.get\",\"command_id\":\"read-association\",\"target\":{\"tenant_id\":\"t\",\"owner_id\":\"o\",\"kind\":\"command\",\"id\":\"original\"},\"payload\":{\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"original\"}},\"accept_before\":\"2026-10-03T00:00:00.000000Z\"}",
+    "authorization": "normal",
+    "directory": "normal",
+    "observation": {
+      "status": "found",
+      "command_ref": {
+        "owner": {
+          "tenant_id": "t",
+          "owner_id": "o"
+        },
+        "command_id": "original"
+      },
+      "receipt": {
+        "state": "accepted",
+        "command_ref": {
+          "owner": {
+            "tenant_id": "t",
+            "owner_id": "o"
+          },
+          "command_id": "original"
+        },
+        "object_ref": {
+          "tenant_id": "t",
+          "owner_id": "tasks",
+          "kind": "task",
+          "id": "task-1"
+        },
+        "next_action": "query_original"
+      },
+      "progress": {
+        "kind": "none"
+      }
+    },
+    "trusted_subject": {
+      "tenant_id": "t",
+      "subject_id": "allowed",
+      "delegation_chain": []
+    },
+    "expected": {
+      "status": "rejected",
+      "reason": "expired"
+    }
+  },
+  {
+    "name": "denied-subject-directory-failure",
+    "request": "{\"contract_version\":\"1.1.0\",\"profile\":\"command\",\"method\":\"command.get\",\"command_id\":\"read-association\",\"target\":{\"tenant_id\":\"t\",\"owner_id\":\"o\",\"kind\":\"command\",\"id\":\"original\"},\"payload\":{\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"original\"}},\"accept_before\":\"2026-10-03T01:00:00.000000Z\"}",
+    "authorization": "normal",
+    "directory": "failure",
+    "observation": {
+      "status": "found",
+      "command_ref": {
+        "owner": {
+          "tenant_id": "t",
+          "owner_id": "o"
+        },
+        "command_id": "original"
+      },
+      "receipt": {
+        "state": "accepted",
+        "command_ref": {
+          "owner": {
+            "tenant_id": "t",
+            "owner_id": "o"
+          },
+          "command_id": "original"
+        },
+        "object_ref": {
+          "tenant_id": "t",
+          "owner_id": "tasks",
+          "kind": "task",
+          "id": "task-1"
+        },
+        "next_action": "query_original"
+      },
+      "progress": {
+        "kind": "none"
+      }
+    },
+    "trusted_subject": {
+      "tenant_id": "t",
+      "subject_id": "stranger",
+      "delegation_chain": []
+    },
+    "expected": {
+      "status": "rejected",
+      "reason": "forbidden"
+    }
+  },
+  {
+    "name": "denied-subject-directory-wrong_owner",
+    "request": "{\"contract_version\":\"1.1.0\",\"profile\":\"command\",\"method\":\"command.get\",\"command_id\":\"read-association\",\"target\":{\"tenant_id\":\"t\",\"owner_id\":\"o\",\"kind\":\"command\",\"id\":\"original\"},\"payload\":{\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"original\"}},\"accept_before\":\"2026-10-03T01:00:00.000000Z\"}",
+    "authorization": "normal",
+    "directory": "wrong_owner",
+    "observation": {
+      "status": "found",
+      "command_ref": {
+        "owner": {
+          "tenant_id": "t",
+          "owner_id": "o"
+        },
+        "command_id": "original"
+      },
+      "receipt": {
+        "state": "accepted",
+        "command_ref": {
+          "owner": {
+            "tenant_id": "t",
+            "owner_id": "o"
+          },
+          "command_id": "original"
+        },
+        "object_ref": {
+          "tenant_id": "t",
+          "owner_id": "tasks",
+          "kind": "task",
+          "id": "task-1"
+        },
+        "next_action": "query_original"
+      },
+      "progress": {
+        "kind": "none"
+      }
+    },
+    "trusted_subject": {
+      "tenant_id": "t",
+      "subject_id": "stranger",
+      "delegation_chain": []
+    },
+    "expected": {
+      "status": "rejected",
+      "reason": "forbidden"
+    }
+  },
+  {
+    "name": "denied-subject-untrusted-fact",
+    "request": "{\"contract_version\":\"1.1.0\",\"profile\":\"command\",\"method\":\"command.get\",\"command_id\":\"read-association\",\"target\":{\"tenant_id\":\"t\",\"owner_id\":\"o\",\"kind\":\"command\",\"id\":\"original\"},\"payload\":{\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"original\"}},\"accept_before\":\"2026-10-03T01:00:00.000000Z\"}",
+    "authorization": "normal",
+    "directory": "normal",
+    "observation": {
+      "status": "gone",
+      "command_ref": {
+        "owner": {
+          "tenant_id": "other",
+          "owner_id": "other"
+        },
+        "command_id": "secret"
+      }
+    },
+    "trusted_subject": {
+      "tenant_id": "t",
+      "subject_id": "stranger",
+      "delegation_chain": []
+    },
+    "expected": {
+      "status": "rejected",
+      "reason": "forbidden"
+    }
+  },
+  {
+    "name": "fixed-new-receipt-decision_mismatch",
+    "request": "{\"contract_version\":\"1.1.0\",\"profile\":\"command\",\"method\":\"command.get\",\"command_id\":\"read-association\",\"target\":{\"tenant_id\":\"t\",\"owner_id\":\"o\",\"kind\":\"command\",\"id\":\"original\"},\"payload\":{\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"original\"}},\"accept_before\":\"2026-10-03T01:00:00.000000Z\"}",
+    "authorization": "normal",
+    "directory": "normal",
+    "observation": {
+      "status": "found",
+      "command_ref": {
+        "owner": {
+          "tenant_id": "t",
+          "owner_id": "o"
+        },
+        "command_id": "original"
+      },
+      "receipt": {
+        "state": "rejected",
+        "command_ref": {
+          "owner": {
+            "tenant_id": "t",
+            "owner_id": "o"
+          },
+          "command_id": "original"
+        },
+        "reason": "decision_mismatch"
+      },
+      "progress": {
+        "kind": "none"
+      }
+    },
+    "trusted_subject": {
+      "tenant_id": "t",
+      "subject_id": "allowed",
+      "delegation_chain": []
+    },
+    "expected": {
+      "status": "found",
+      "command_ref": {
+        "owner": {
+          "tenant_id": "t",
+          "owner_id": "o"
+        },
+        "command_id": "original"
+      },
+      "receipt": {
+        "state": "rejected",
+        "command_ref": {
+          "owner": {
+            "tenant_id": "t",
+            "owner_id": "o"
+          },
+          "command_id": "original"
+        },
+        "reason": "decision_mismatch"
+      },
+      "progress": {
+        "kind": "none"
+      }
+    }
+  },
+  {
+    "name": "fixed-new-receipt-decision_cancelled",
+    "request": "{\"contract_version\":\"1.1.0\",\"profile\":\"command\",\"method\":\"command.get\",\"command_id\":\"read-association\",\"target\":{\"tenant_id\":\"t\",\"owner_id\":\"o\",\"kind\":\"command\",\"id\":\"original\"},\"payload\":{\"command_ref\":{\"owner\":{\"tenant_id\":\"t\",\"owner_id\":\"o\"},\"command_id\":\"original\"}},\"accept_before\":\"2026-10-03T01:00:00.000000Z\"}",
+    "authorization": "normal",
+    "directory": "normal",
+    "observation": {
+      "status": "found",
+      "command_ref": {
+        "owner": {
+          "tenant_id": "t",
+          "owner_id": "o"
+        },
+        "command_id": "original"
+      },
+      "receipt": {
+        "state": "rejected",
+        "command_ref": {
+          "owner": {
+            "tenant_id": "t",
+            "owner_id": "o"
+          },
+          "command_id": "original"
+        },
+        "reason": "decision_cancelled"
+      },
+      "progress": {
+        "kind": "none"
+      }
+    },
+    "trusted_subject": {
+      "tenant_id": "t",
+      "subject_id": "allowed",
+      "delegation_chain": []
+    },
+    "expected": {
+      "status": "found",
+      "command_ref": {
+        "owner": {
+          "tenant_id": "t",
+          "owner_id": "o"
+        },
+        "command_id": "original"
+      },
+      "receipt": {
+        "state": "rejected",
+        "command_ref": {
+          "owner": {
+            "tenant_id": "t",
+            "owner_id": "o"
+          },
+          "command_id": "original"
+        },
+        "reason": "decision_cancelled"
+      },
+      "progress": {
+        "kind": "none"
+      }
+    }
+  }
+]

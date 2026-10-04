@@ -32,7 +32,11 @@ func TestPostgresStartupPreservesContextCause(t *testing.T) {
 			cancel()
 			store, err := postgres.Open(ctx, cfg)
 			if store != nil {
-				store.Close()
+				if closeErr := store.Close(); closeErr != nil {
+					t.Fatal(errors.Join(err, closeErr))
+				}
+			}
+			if err == nil {
 				t.Fatal("startup unexpectedly succeeded")
 			}
 			if !errors.Is(err, cause) {
@@ -43,7 +47,11 @@ func TestPostgresStartupPreservesContextCause(t *testing.T) {
 			}
 			sq, err := sqlite.Open(ctx, sqlite.Config{Path: filepath.Join(t.TempDir(), "ledger.sqlite"), TransactionTimeout: time.Second, BusyTimeout: 100 * time.Millisecond})
 			if sq != nil {
-				sq.Close()
+				if closeErr := sq.Close(); closeErr != nil {
+					t.Fatal(errors.Join(err, closeErr))
+				}
+			}
+			if err == nil {
 				t.Fatal("SQLite canceled startup succeeded")
 			}
 			if !errors.Is(err, cause) {
@@ -53,6 +61,9 @@ func TestPostgresStartupPreservesContextCause(t *testing.T) {
 	}
 	store, err := postgres.Open(contextFor(t), cfg)
 	if err != nil {
+		if store != nil {
+			err = errors.Join(err, store.Close())
+		}
 		t.Fatal(err)
 	}
 	if err = store.Close(); err != nil {
@@ -64,7 +75,11 @@ func TestPostgresStartupPreservesDriverClassificationWithoutSecrets(t *testing.T
 	cfg := postgres.Config{DSN: "postgres://startup-user:startup-secret@localhost/db?connect_timeout=invalid", Schema: "lerna_startup", TransactionTimeout: time.Second, StatementTimeout: 500 * time.Millisecond, LockTimeout: 100 * time.Millisecond}
 	store, err := postgres.Open(contextFor(t), cfg)
 	if store != nil {
-		store.Close()
+		if closeErr := store.Close(); closeErr != nil {
+			t.Fatal(errors.Join(err, closeErr))
+		}
+	}
+	if err == nil {
 		t.Fatal("invalid driver configuration succeeded")
 	}
 	var cause *pgconn.ParseConfigError
