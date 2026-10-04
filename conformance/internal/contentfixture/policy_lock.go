@@ -2,10 +2,13 @@ package contentfixture
 
 import (
 	"context"
+	"crypto/sha256"
 	"database/sql"
 	"errors"
 	"fmt"
 	v "github.com/ruipengliu/lerna/contract/v1_2"
+	"github.com/ruipengliu/lerna/domain/content"
+	"strings"
 	"sync"
 	"time"
 )
@@ -143,4 +146,52 @@ func (w *World) FailResponsibilityWrites(ctx context.Context) func() error {
 		w.t.Fatal(err)
 	}
 	return release
+}
+
+// PolicyClockPlan observes only the execution plan of the exact proposed query.
+// It reads no policy bodies and logs no query parameters. The existing World
+// owns this connection and confirms its Close before destructive cleanup.
+func (w *World) PolicyClockPlan(ctx context.Context, policy content.FixturePolicy) ([]string, error) {
+	db, err := sql.Open("pgx", w.Config.DSN)
+	if err != nil {
+		return nil, err
+	}
+	db.SetMaxOpenConns(1)
+	var once sync.Once
+	var closeErr error
+	closeDB := func() error { once.Do(func() { closeErr = db.Close() }); return closeErr }
+	w.infrastructureClosers = append(w.infrastructureClosers, closeDB)
+	if err = db.PingContext(ctx); err != nil {
+		return nil, err
+	}
+	var pid int
+	if err = db.QueryRowContext(ctx, "SELECT pg_backend_pid()").Scan(&pid); err != nil {
+		return nil, err
+	}
+	if err = w.register(fmt.Sprintf("pg_policy_holder %s %d", w.Config.Schema, pid)); err != nil {
+		return nil, err
+	}
+	subject, err := v.Encode(policy.Subject)
+	if err != nil {
+		return nil, err
+	}
+	key := sha256.Sum256(subject)
+	query := `EXPLAIN (VERBOSE, COSTS OFF) WITH locked_policy AS MATERIALIZED (SELECT body FROM "` + w.Config.Schema + `".content_fixture_policies WHERE tenant_id=$1 AND owner_id=$2 AND subject_key=$3 AND content_id=$4 AND version=$5 AND purpose=$6 FOR SHARE) SELECT body,clock_timestamp() FROM locked_policy`
+	rows, err := db.QueryContext(ctx, query, policy.Ref.Owner.TenantID, policy.Ref.Owner.OwnerID, fmt.Sprintf("%x", key), policy.Ref.ContentID, policy.Ref.Version, policy.Purpose)
+	if err != nil {
+		return nil, err
+	}
+	var plan []string
+	for rows.Next() {
+		var line string
+		if err = rows.Scan(&line); err != nil {
+			break
+		}
+		if strings.Contains(line, "Cond:") || strings.Contains(line, "Filter:") {
+			continue
+		}
+		plan = append(plan, line)
+	}
+	err = errors.Join(err, rows.Err(), rows.Close())
+	return plan, err
 }

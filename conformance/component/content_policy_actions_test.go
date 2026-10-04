@@ -10,6 +10,7 @@ import (
 	v "github.com/ruipengliu/lerna/contract/v1_2"
 	"github.com/ruipengliu/lerna/domain/content"
 	"github.com/ruipengliu/lerna/runtime"
+	"strings"
 	"testing"
 	"time"
 )
@@ -274,6 +275,79 @@ func TestContentClosurePolicyIntersectionUsesClockAfterRealPolicyLock(t *testing
 				}
 			case <-ctx.Done():
 				t.Fatal(ctx.Err())
+			}
+		})
+	}
+}
+
+// The adapter's own trusted time must follow the real policy lock. This direct
+// boundary prevents later domain clocks from hiding an early SQL clock sample.
+func TestContentPolicyPortClockFollowsLockedRow(t *testing.T) {
+	for _, late := range []bool{false, true} {
+		t.Run(fmt.Sprintf("late=%t", late), func(t *testing.T) {
+			ctx, cancel := context.WithTimeout(context.Background(), 12*time.Second)
+			defer cancel()
+			w := fixture.New(t, ctx)
+			installContentPolicy(t, ctx, w, alphaRef)
+			until := time.Now().UTC().Add(600 * time.Millisecond).Truncate(time.Microsecond)
+			policy := content.FixturePolicy{Ref: alphaRef, Subject: contentPrincipal, Purpose: "verification", Revision: 2, ValidUntil: until, RetainUntil: time.Now().Add(time.Hour), Read: true, Process: true, Save: true, Disclose: true}
+			if err := w.Store().InstallFixturePolicy(ctx, policy, 1); err != nil {
+				t.Fatal(err)
+			}
+			release, wait := w.HoldPolicy(ctx, alphaRef)
+			done := make(chan struct {
+				policy *content.FixturePolicy
+				err    error
+			}, 1)
+			finished := make(chan struct{})
+			go func() {
+				defer close(finished)
+				var p *content.FixturePolicy
+				err := w.Store().Within(ctx, contract.OwnerRef{TenantID: contract.ID(contentOwner.TenantID), OwnerID: contract.ID(contentOwner.OwnerID)}, func(ctx context.Context, tx runtime.Tx) error {
+					now, err := w.Store().Now(ctx, tx)
+					if err != nil {
+						return err
+					}
+					p, err = w.Store().CheckPolicy(ctx, tx, contentPrincipal, alphaRef, "verification", []string{"read", "process", "save"}, now)
+					return err
+				})
+				done <- struct {
+					policy *content.FixturePolicy
+					err    error
+				}{p, err}
+			}()
+			joinContentRead(t, w, release, finished)
+			if err := wait(ctx); err != nil {
+				t.Fatal(err)
+			}
+			if late {
+				waitUntil(t, ctx, until.Add(20*time.Millisecond))
+			}
+			if err := release(); err != nil {
+				t.Fatal(err)
+			}
+			select {
+			case result := <-done:
+				if result.err != nil {
+					t.Fatal(result.err)
+				}
+				if late && result.policy != nil {
+					t.Fatal("port reused trusted time sampled before real row lock")
+				}
+				if !late && (result.policy == nil || result.policy.Ref != alphaRef) {
+					t.Fatal("normal locked policy refused")
+				}
+			case <-ctx.Done():
+				t.Fatal(ctx.Err())
+			}
+			plan, err := w.PolicyClockPlan(ctx, policy)
+			if err != nil {
+				t.Fatal(err)
+			}
+			joined := strings.Join(plan, "\n")
+			t.Log("mechanical PG execution plan (conditions omitted):\n" + joined)
+			if !strings.Contains(joined, "CTE Scan on locked_policy") || !strings.Contains(joined, "LockRows") || !strings.Contains(joined, "locked_policy.body, clock_timestamp()") {
+				t.Fatal("expected materialized locked row and outer clock projection", joined)
 			}
 		})
 	}

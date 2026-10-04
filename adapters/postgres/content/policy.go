@@ -41,19 +41,16 @@ func (s *Store) CheckPolicy(ctx context.Context, token runtime.Tx, subject v.Sub
 		return nil, err
 	}
 	var body []byte
-	err = tx.QueryRowContext(ctx, `SELECT body FROM `+s.core.Table("content_fixture_policies")+` WHERE tenant_id=$1 AND owner_id=$2 AND subject_key=$3 AND content_id=$4 AND version=$5 AND purpose=$6 FOR SHARE`, ref.Owner.TenantID, ref.Owner.OwnerID, key, ref.ContentID, ref.Version, purpose).Scan(&body)
+	err = tx.QueryRowContext(ctx, `WITH locked_policy AS MATERIALIZED (SELECT body FROM `+s.core.Table("content_fixture_policies")+` WHERE tenant_id=$1 AND owner_id=$2 AND subject_key=$3 AND content_id=$4 AND version=$5 AND purpose=$6 FOR SHARE) SELECT body,clock_timestamp() FROM locked_policy`, ref.Owner.TenantID, ref.Owner.OwnerID, key, ref.ContentID, ref.Version, purpose).Scan(&body, &now)
 	if errors.Is(err, sql.ErrNoRows) {
 		return nil, nil
 	}
 	if err != nil {
 		return nil, err
 	}
-	// A row-lock wait can outlive an earlier observation. Re-sample trusted
-	// database time only after this exact policy has been locked.
-	now, err = s.core.Now(ctx, token)
-	if err != nil {
-		return nil, err
-	}
+	// The MATERIALIZED locked row is obtained before the outer volatile clock
+	// projection. Keep clock_timestamp outside LockRows; transaction or statement
+	// timestamps, and independent clock CTEs, can precede the actual lock wait.
 	var policy contentdomain.FixturePolicy
 	if err = json.Unmarshal(body, &policy); err != nil {
 		return nil, err
