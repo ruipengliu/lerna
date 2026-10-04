@@ -177,6 +177,7 @@ type publicationControlGate struct {
 	proposalBody    []byte
 	proposalSources []v.ContentRef
 	artifact        v.ContentRef
+	afterProposal   bool
 	reached         chan struct{}
 	resume          chan struct{}
 	once            sync.Once
@@ -199,6 +200,8 @@ func (p *publicationControlGate) ReadPublished(ctx context.Context, ref v.Conten
 	}
 	if ref != p.proposal {
 		p.artifact = ref
+	}
+	if (ref == p.proposal) == p.afterProposal {
 		p.once.Do(func() { close(p.reached) })
 		select {
 		case <-p.resume:
@@ -209,11 +212,20 @@ func (p *publicationControlGate) ReadPublished(ctx context.Context, ref v.Conten
 	return body, nil
 }
 func TestDurableCancelStopsNextPublicationAfterArtifactReadback(t *testing.T) {
+	runPublicationControlCase(t, false)
+}
+
+func TestDurableCancelBeforeFinishPreservesPublishedUnadoptedBytes(t *testing.T) {
+	runPublicationControlCase(t, true)
+}
+
+func runPublicationControlCase(t *testing.T, afterProposal bool) {
+	t.Helper()
 	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 	defer cancel()
 	w := fixture.NewWorld(t, ctx)
 	scene := w.Scenario()
-	gate := &publicationControlGate{Publisher: w.Source(), reached: make(chan struct{}), resume: make(chan struct{})}
+	gate := &publicationControlGate{Publisher: w.Source(), afterProposal: afterProposal, reached: make(chan struct{}), resume: make(chan struct{})}
 	s, err := decision.New(decision.Config{Owner: v.OwnerRef{TenantID: scene.DecisionRef.TenantID, OwnerID: scene.DecisionRef.OwnerID}, Store: w.Store(), Authority: w.Source(), ControlAuthority: w.Source(), Source: w.Source(), Publisher: gate, Component: scene.Request.Payload.ComponentRef, Worker: "cancel-publication", Lease: 5 * time.Second, PoolControl: true})
 	if err != nil {
 		t.Fatal(err)
@@ -281,10 +293,15 @@ func TestDurableCancelStopsNextPublicationAfterArtifactReadback(t *testing.T) {
 		t.Fatal("independent original artifact lost", err)
 	}
 	exists, err := w.Source().PublicationExists(ctx, gate.proposalKey, gate.proposalBody, gate.proposalSources, permission)
-	if err != nil || exists {
-		t.Fatal("cancel started the exact original Proposal publication after public readback", err)
+	if err != nil || exists != afterProposal {
+		t.Fatal("cancel changed the exact observed publication boundary", err)
 	}
-	if _, err = w.Source().ReadPublished(ctx, gate.proposal, permission); !errors.Is(err, decision.ErrForbidden) {
+	proposalBytes, err := w.Source().ReadPublished(ctx, gate.proposal, permission)
+	if afterProposal {
+		if err != nil || string(proposalBytes) != string(gate.proposalBody) {
+			t.Fatal("cancel erased independently published unadopted Proposal bytes", err)
+		}
+	} else if !errors.Is(err, decision.ErrForbidden) {
 		t.Fatal("cancel started a new Proposal publication after the public readback gate", err)
 	}
 	view, err := s.Get(ctx, scene.GetJSON, &scene.Subject)
@@ -322,5 +339,169 @@ func TestDurableCancelStopsNextPublicationAfterArtifactReadback(t *testing.T) {
 	claim, err := w.Service().Claim(ctx)
 	if err != nil || claim != nil {
 		t.Fatal("reopened cancelled Job was claimable", err)
+	}
+}
+
+func controlReceipt(t *testing.T, ctx context.Context, s *decision.Service, request v.DecisionCancelRequest, subject v.SubjectBinding) v.CommandReceipt {
+	t.Helper()
+	raw, err := v.Encode(request)
+	if err != nil {
+		t.Fatal(err)
+	}
+	result, err := s.Cancel(ctx, raw, &subject)
+	if err != nil {
+		t.Fatal(err)
+	}
+	received, ok := result.AsReceived()
+	if !ok {
+		t.Fatal("trusted cancel did not yield a durable receipt")
+	}
+	return received.Receipt
+}
+func controlView(t *testing.T, ctx context.Context, s *decision.Service, scene fixture.Scenario) v.DecisionGetResponseFound {
+	t.Helper()
+	result, err := s.Get(ctx, scene.GetJSON, &scene.Subject)
+	if err != nil {
+		t.Fatal(err)
+	}
+	found, ok := result.AsFound()
+	if !ok {
+		t.Fatal("original Decision unavailable")
+	}
+	return found
+}
+
+// The completed case observes Finish's actual commit before applying control.
+// The complementary readback gate above applies control before that same Finish.
+func TestDurableControlPreservesTerminalFactsAndOrdersRevisions(t *testing.T) {
+	for _, terminal := range []string{"completed", "failed", "cancelled"} {
+		t.Run(terminal, func(t *testing.T) {
+			ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+			defer cancel()
+			w := fixture.NewWorld(t, ctx)
+			scene := w.Scenario()
+			if terminal == "failed" {
+				scene.Request.Payload.Limits.MaxOutputBytes = "0"
+			}
+			s := w.Service()
+			original := acceptAccounting(t, ctx, s, scene)
+			if terminal == "cancelled" {
+				r := sceneControl(t, ctx, w, scene, "2", "first-active-cancel")
+				receipt := controlReceipt(t, ctx, s, r, scene.Subject)
+				if _, ok := receipt.AsApplied(); !ok {
+					t.Fatal("active cancel was not applied")
+				}
+			} else {
+				step, err := s.Step(ctx)
+				if err != nil || step.Processed != 1 {
+					t.Fatal("real terminal work", err)
+				}
+			}
+			before := controlView(t, ctx, s, scene)
+			var revision v.Revision
+			switch terminal {
+			case "completed":
+				completed, ok := before.Decision.AsCompleted()
+				if !ok {
+					t.Fatal("Finish did not commit completed")
+				}
+				revision = completed.Revision
+				permit, err := w.Source().Authorize(ctx, scene.Subject, scene.DecisionRef, "get", nil)
+				if err != nil {
+					t.Fatal(err)
+				}
+				published, err := w.Source().ReadPublished(ctx, completed.ProposalRef, permit)
+				encoded, encodeErr := v.Encode(completed.Proposal)
+				if err != nil || encodeErr != nil || string(published) != string(encoded) {
+					t.Fatal("completed original Proposal bytes unavailable", errors.Join(err, encodeErr))
+				}
+			case "failed":
+				failed, ok := before.Decision.AsFailed()
+				if !ok || failed.Failure != "output_over_limit" {
+					t.Fatal("zero output did not produce original failure")
+				}
+				revision = failed.Revision
+			case "cancelled":
+				closed, ok := before.Decision.AsCancelled()
+				if !ok {
+					t.Fatal("active cancellation did not commit")
+				}
+				revision = closed.Revision
+			}
+			frozen, err := v.Encode(before.Decision)
+			if err != nil {
+				t.Fatal(err)
+			}
+			high := sceneControl(t, ctx, w, scene, "3", "higher-terminal-control")
+			receipt := controlReceipt(t, ctx, s, high, scene.Subject)
+			applied, ok := receipt.AsApplied()
+			if !ok || applied.Revision != revision {
+				t.Fatal("terminal control changed Decision object revision")
+			}
+			low := sceneControl(t, ctx, w, scene, "2", "lower-terminal-control")
+			rejected := controlReceipt(t, ctx, s, low, scene.Subject)
+			refusal, ok := rejected.AsRejected()
+			if !ok || refusal.Reason != "revision_changed" {
+				t.Fatal("lower control was not durably refused")
+			}
+			same := high
+			same.CommandID = "same-terminal-control"
+			same.Payload.Reason = "different audit text, same adopted stop"
+			receipt = controlReceipt(t, ctx, s, same, scene.Subject)
+			if _, ok = receipt.AsApplied(); !ok {
+				t.Fatal("same revision and stop binding was not idempotent")
+			}
+			changed := high
+			changed.CommandID = "changed-same-control"
+			until, err := time.Parse("2006-01-02T15:04:05.000000Z", string(high.Payload.ControlBasis.ValidUntil))
+			if err != nil {
+				t.Fatal(err)
+			}
+			changed.Payload.ControlBasis, err = w.Source().IssueControl(ctx, fixture.ControlClaim{Subject: scene.Subject, DecisionRef: scene.DecisionRef, TaskRef: scene.Request.Payload.TaskRef, InputDigest: high.Payload.DecisionInputDigest, ControlRevision: "3", ValidUntil: v.Time(until.Add(-time.Second).Format("2006-01-02T15:04:05.000000Z"))})
+			if err != nil {
+				t.Fatal(err)
+			}
+			rejected = controlReceipt(t, ctx, s, changed, scene.Subject)
+			refusal, ok = rejected.AsRejected()
+			if !ok || refusal.Reason != "decision_mismatch" {
+				t.Fatal("same revision accepted a different durable proof binding")
+			}
+			maximum := sceneControl(t, ctx, w, scene, "9223372036854775807", "max-terminal-control")
+			receipt = controlReceipt(t, ctx, s, maximum, scene.Subject)
+			applied, ok = receipt.AsApplied()
+			if !ok || applied.Revision != revision {
+				t.Fatal("exact large decimal control changed original object revision")
+			}
+			w.Reopen(ctx)
+			s = w.Service()
+			after := controlView(t, ctx, s, scene)
+			still, err := v.Encode(after.Decision)
+			if err != nil || string(still) != string(frozen) {
+				t.Fatal("higher controls rewrote frozen terminal facts", err)
+			}
+			if after.CurrentControl == nil || after.CurrentControl.ControlBasis.ControlRevision != "9223372036854775807" || after.CurrentControl.Scope != "local_decision_work" {
+				t.Fatal("reopened control lost exact decimal order or local stopping scope")
+			}
+			command, err := s.GetCommand(ctx, scene.CommandGetJSON, &scene.Subject)
+			if err != nil {
+				t.Fatal(err)
+			}
+			fixed, ok := command.AsFound()
+			if !ok {
+				t.Fatal("terminal control lost original accepted receipt")
+			}
+			initial, err := v.Encode(original)
+			if err != nil {
+				t.Fatal(err)
+			}
+			actual, err := v.Encode(fixed.Receipt)
+			if err != nil || string(actual) != string(initial) {
+				t.Fatal("terminal control changed original Command receipt", err)
+			}
+			claim, err := s.Claim(ctx)
+			if err != nil || claim != nil {
+				t.Fatal("terminal control re-created work", err)
+			}
+		})
 	}
 }
