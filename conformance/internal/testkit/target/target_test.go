@@ -285,20 +285,17 @@ func TestTargetIdentityDurabilitySettingsAndMigrationAreObserved(t *testing.T) {
 	f.writer = nil
 	changed := f.cfg
 	changed.Identity = "another-target"
-	if wrong, err := f.trackedOpen(changed); err == nil {
-		wrong.Close()
+	if _, err := f.trackedOpen(changed); err == nil {
 		t.Fatal("reopen changed identity")
 	}
 	changed = f.cfg
 	changed.Window = 2 * time.Minute
-	if wrong, err := f.trackedOpen(changed); err == nil {
-		wrong.Close()
+	if _, err := f.trackedOpen(changed); err == nil {
 		t.Fatal("reopen changed guarantee window")
 	}
 	changed = f.cfg
 	changed.QueryMode = target.QueryDisabled
-	if wrong, err := f.trackedOpen(changed); err == nil {
-		wrong.Close()
+	if _, err := f.trackedOpen(changed); err == nil {
 		t.Fatal("reopen changed query guarantee")
 	}
 	writer = f.open()
@@ -311,9 +308,8 @@ func TestTargetIdentityDurabilitySettingsAndMigrationAreObserved(t *testing.T) {
 	if err != nil || other.DatabaseID == settings.DatabaseID {
 		t.Fatalf("isolated files need independent DB identities: %+v %v", other, err)
 	}
-	observer, err := f.trackedObserver(target.ObserverConfig{Path: f.cfg.Path, Identity: "another-target", IOTimeout: time.Second})
+	_, err = f.trackedObserver(target.ObserverConfig{Path: f.cfg.Path, Identity: "another-target", IOTimeout: time.Second})
 	if err == nil {
-		observer.Close()
 		t.Fatal("observer ignored durable identity")
 	}
 }
@@ -379,16 +375,15 @@ func TestRejectsForeignDatabaseAndUnboundedConfiguration(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	f.closers = append(f.closers, foreign.Close)
 	_, err = foreign.ExecContext(f.ctx, "CREATE TABLE unrelated_owner(value TEXT)")
 	if err != nil {
-		foreign.Close()
 		t.Fatal(err)
 	}
 	if err = foreign.Close(); err != nil {
 		t.Fatal(err)
 	}
-	if wrong, err := f.trackedOpen(f.cfg); err == nil {
-		wrong.Close()
+	if _, err := f.trackedOpen(f.cfg); err == nil {
 		t.Fatal("target adopted unrelated owner database")
 	}
 	second := newFixture(t)
@@ -402,8 +397,7 @@ func TestRejectsForeignDatabaseAndUnboundedConfiguration(t *testing.T) {
 	} {
 		cfg := second.cfg
 		change(&cfg)
-		if wrong, err := second.trackedOpen(cfg); err == nil {
-			wrong.Close()
+		if _, err := second.trackedOpen(cfg); err == nil {
 			t.Fatal("invalid config accepted")
 		}
 	}
