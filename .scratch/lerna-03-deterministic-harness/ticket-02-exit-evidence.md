@@ -11,7 +11,9 @@ The corrected mechanical recovery test and complete check pin is
 `25287d5a08ff01d5265e56b06faf87cd37a09006`, based on the actual root integration
 `949c39237fda562e8bda994a8e1454a27232dc72`. The separate shared compiler cause
 correction is now `0f6d23a98f099d7b2ba2750389be10a8c5acfcda` (original
-`d90962c`); its related final execution is pending. Subsequent document changes
+`d90962c`). Strict restored-970 qualification and its mechanical checks are
+`6b98eb0b59606d990bc6c563e053315bd2527c47` (original `4cb3717`); their related
+final execution is pending. Subsequent document changes
 do not change the tested product. See [adopted Proposal decisions](proposal-decisions.md),
 [progress and failure history](ticket-02-progress.md) and [ticket](issues/02-bounded-proposals.md).
 
@@ -87,7 +89,14 @@ unchanged. Only the current hash-verified restored added-driver receives the
 finite retention/qualification correction. EOF/deadline retention is a static
 adoption, not a replayed native fault. Earlier successful old-970 upgrades do
 not prove that RunClaim returned the newly required specific ErrClaim type.
-Related upgraded-consumer verification of that correction remains pending.
+The adopted [qualification decision](legacy-driver-qualification-decision.md)
+permits only six unique fragment changes after the complete original archive
+and exact added-driver hash are verified. The restored derivative is 8572 bytes,
+SHA256 `aa7097a937c0defb5ee7e356b4e2ee71b7c069d7f96b514a2bdc07c07db05945`.
+It distinguishes missing Claim, actual Claim error, wrapped ErrClaim and
+additional joined causes with a finite 32-layer bound. Mechanical source
+conversion and safe joined-stage checks do not reproduce native Wait/group
+failure. Related actual upgraded-consumer verification remains pending.
 
 Checkpoint exact audit at `25287d5` found all **1580 unique PG schemas**, **64
 target directories**, **244 recovery SQLite directories**, **11 archive

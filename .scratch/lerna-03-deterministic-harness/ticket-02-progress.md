@@ -200,3 +200,16 @@ prove that specific error type. The new committed helper requires its own real
 normal/race consumer results and review before ticket closure. This ticket's
 FINAL01 proposal driver instead deliberately requires context.Canceled, and is
 not reinterpreted as an expired-claim case.
+
+Root FULL-read and adopted shared compiler correction `d90962c`, only-picked as
+`0f6d23a`, and strict old-driver conversion `4cb3717`, only-picked as `6b98eb0`.
+The committed [qualification decision](legacy-driver-qualification-decision.md)
+keeps both production archives immutable and explicitly narrows the restored
+970 added-driver oracle. The derivative is 8572 bytes / SHA256
+`aa7097a937c0defb5ee7e356b4e2ee71b7c069d7f96b514a2bdc07c07db05945`.
+Existing errors.Is qualification now also refuses multiple joined causes and
+an unbounded unwrap chain. Two explicit post-READY retention exits remain.
+The new mechanical checks cover exact bounded source conversion and safe
+joined-stage error inspection; they do not reproduce native Wait/group failure.
+This ticket has not yet run them or the two related actual upgrade consumers.
+No 03 control-driver or moving business implementation was picked.
