@@ -242,6 +242,13 @@ func (s *Service) Claim(ctx context.Context) (*Work, error) {
 		if err != nil {
 			return err
 		}
+		stop, err := s.config.Store.ReadStop(ctx, tx, ref)
+		if err != nil {
+			return err
+		}
+		if stop != nil {
+			return nil
+		}
 		if record == nil || terminal(record.Status) || record.Input == nil || record.InputDigest != observation.InputDigest {
 			return nil
 		}
@@ -327,6 +334,13 @@ func (s *Service) Start(ctx context.Context, claim runtime.Claim) (*Work, error)
 		record, err := s.config.Store.LockDecision(ctx, tx, ref)
 		if err != nil {
 			return err
+		}
+		stop, err := s.config.Store.ReadStop(ctx, tx, ref)
+		if err != nil {
+			return err
+		}
+		if stop != nil {
+			return runtime.ErrClaim
 		}
 		if record == nil || terminal(record.Status) || record.InputDigest != observation.InputDigest {
 			return runtime.ErrClaim
