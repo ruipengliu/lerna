@@ -174,6 +174,14 @@ func (a *App) ReadContentBytes(ctx context.Context, scope runtime.Scope, auth ru
 	if err != nil {
 		return nil, err
 	}
+	// 请求地点和本地介质地点都由 Memory 的原完整门禁核验；本次入口
+	// 必须分别取得同一准确用途的当前来源证明，不能借用上次 cloud 许可。
+	if location != a.Memory.Location {
+		ctx, err = a.prepareForeignSources(ctx, scope, auth, []api.ContentRef{ref}, purpose, a.Memory.Location)
+		if err != nil {
+			return nil, err
+		}
+	}
 	return a.Memory.ReadBytes(ctx, scope, auth, ref, purpose, location)
 }
 
