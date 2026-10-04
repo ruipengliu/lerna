@@ -90,16 +90,36 @@ func TestFrozenFinal01ControlWriter(t *testing.T) {
 		}
 		if name == "publication_running" || name == "prepared_waiting" {
 			claim, err := service.Claim(ctx)
-			if err != nil || claim == nil {
-				t.Fatal("old publication claim missing:", err)
+			if err != nil {
+				t.Fatal("old publication claim failed:", err)
+			}
+			if claim == nil {
+				t.Fatal("old publication claim missing")
 			}
 			if name == "publication_running" {
 				publisher.until = claim.Claim.LeaseUntil.Add(5 * time.Millisecond)
 			}
 			err = service.RunClaim(ctx, claim.Claim)
 			if name == "publication_running" {
-				if !errors.Is(err, runtime.ErrClaim) {
-					t.Fatal("old publication Finish did not lose its original lease qualification:", err)
+				qualified := errors.Is(err, runtime.ErrClaim)
+				for cause, depth := err, 0; qualified && cause != nil; depth++ {
+					if depth == 32 {
+						qualified = false
+						break
+					}
+					if joined, ok := cause.(interface{ Unwrap() []error }); ok {
+						causes := joined.Unwrap()
+						if len(causes) != 1 {
+							qualified = false
+							break
+						}
+						cause = causes[0]
+					} else {
+						cause = errors.Unwrap(cause)
+					}
+				}
+				if !qualified {
+					t.Fatal("old publication Finish qualification failed or included other causes:", err)
 				}
 				if len(publisher.refs) != 2 {
 					t.Fatal("old publication window missing actual source outputs")
