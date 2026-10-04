@@ -229,3 +229,115 @@ func TestDurableDecisionLastQueueSlotAcrossStoreInstances(t *testing.T) {
 		t.Fatalf("capacity retry on original identity failed: %v", err)
 	}
 }
+
+func TestDurableDecisionMissingPoolPreservesOriginalIdentity(t *testing.T) {
+	ctx := decisionContext(t)
+	world := fixture.NewWorld(t, ctx)
+	scene := world.Scenario()
+	service := world.Service()
+	inactive := workpool.Default("fixture-decision-pool", []contract.OwnerRef{{TenantID: contract.ID(scene.DecisionRef.TenantID), OwnerID: "idle-owner"}})
+	if err := service.InstallPool(ctx, inactive, 1); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := service.Decide(ctx, encode11(t, scene.Request), &scene.Subject); !errors.Is(err, workpool.ErrMissing) {
+		t.Fatalf("missing pool admitted original: %v", err)
+	}
+	view, err := service.Get(ctx, scene.GetJSON, &scene.Subject)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, ok := view.AsResultUnavailable(); !ok {
+		t.Fatal("missing pool left a Decision")
+	}
+	command, err := service.GetCommand(ctx, scene.CommandGetJSON, &scene.Subject)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, ok := command.AsNotFound(); !ok {
+		t.Fatal("missing pool left receipt")
+	}
+	active := workpool.Default("fixture-decision-pool", []contract.OwnerRef{{TenantID: contract.ID(scene.DecisionRef.TenantID), OwnerID: contract.ID(scene.DecisionRef.OwnerID)}})
+	if err = service.InstallPool(ctx, active, 2); err != nil {
+		t.Fatal(err)
+	}
+	outcome, err := service.Decide(ctx, encode11(t, scene.Request), &scene.Subject)
+	requireAccepted(t, outcome, err)
+	step, err := service.Step(ctx)
+	if err != nil || step.Processed != 1 {
+		t.Fatalf("normal qualified retry failed: %v", err)
+	}
+	if err = service.InstallPool(ctx, inactive, 3); err != nil {
+		t.Fatal(err)
+	}
+	outcome, err = service.Decide(ctx, encode11(t, scene.Request), &scene.Subject)
+	requireAccepted(t, outcome, err)
+	changed := scene.Request
+	changed.Payload.Limits.MaxRuleSteps = "1000"
+	_, err = service.Decide(ctx, encode11(t, changed), &scene.Subject)
+	var public *v.ContractError
+	if !errors.As(err, &public) || public.Code != "idempotency_conflict" {
+		t.Fatalf("changed original bypassed identity: %v", err)
+	}
+	association := scene.Request
+	association.CommandID = "new-unqualified-association"
+	if _, err = service.Decide(ctx, encode11(t, association), &scene.Subject); !errors.Is(err, workpool.ErrMissing) {
+		t.Fatalf("new unqualified command created fixed fact: %v", err)
+	}
+	command, err = service.GetCommand(ctx, scene.CommandGetJSON, &scene.Subject)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, ok := command.AsFound(); !ok {
+		t.Fatal("original read lost with missing pool")
+	}
+}
+func TestDurableDecisionTenantQuotaCombinesTwoOwners(t *testing.T) {
+	ctx := decisionContext(t)
+	world := fixture.NewWorld(t, ctx)
+	scene := world.Scenario()
+	service := world.Service()
+	second := world.AdditionalScenario(ctx, "second-owner", "second-decision", time.Now().Add(time.Minute))
+	cfg := workpool.Default("fixture-decision-pool", []contract.OwnerRef{{TenantID: contract.ID(scene.DecisionRef.TenantID), OwnerID: contract.ID(scene.DecisionRef.OwnerID)}, {TenantID: contract.ID(second.DecisionRef.TenantID), OwnerID: contract.ID(second.DecisionRef.OwnerID)}})
+	cfg.Limits[0].Concurrent = 2
+	for index := range cfg.Quotas {
+		if cfg.Quotas[index].Lane == "ordinary" {
+			cfg.Quotas[index].Concurrent = 1
+		}
+	}
+	if err := service.InstallPool(ctx, cfg, 1); err != nil {
+		t.Fatal(err)
+	}
+	secondService := world.ServiceFor(v.OwnerRef{TenantID: second.DecisionRef.TenantID, OwnerID: second.DecisionRef.OwnerID}, "fixture-worker", 5*time.Second)
+	out, err := service.Decide(ctx, encode11(t, scene.Request), &scene.Subject)
+	requireAccepted(t, out, err)
+	out, err = secondService.Decide(ctx, encode11(t, second.Request), &second.Subject)
+	requireAccepted(t, out, err)
+	first, err := service.Claim(ctx)
+	if err != nil || first == nil {
+		t.Fatalf("normal first claim: %v", err)
+	}
+	other, err := secondService.Claim(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if other != nil {
+		t.Fatal("same tenant overallocated across owners")
+	}
+	if err = service.RunClaim(ctx, first.Claim); err != nil {
+		t.Fatal(err)
+	}
+	other, err = secondService.Claim(ctx)
+	if err != nil || other == nil {
+		t.Fatalf("released quota did not serve second owner: %v", err)
+	}
+	if err = secondService.RunClaim(ctx, other.Claim); err != nil {
+		t.Fatal(err)
+	}
+	observation, err := service.ObservePool(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if observation.Active["ordinary"] != 0 || observation.Queued["ordinary"] != 0 {
+		t.Fatal("normal completions retained quota")
+	}
+}
