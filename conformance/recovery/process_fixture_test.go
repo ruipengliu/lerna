@@ -9,10 +9,7 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"os/exec"
 	"strings"
-	"sync"
-	"syscall"
 	"testing"
 	"time"
 
@@ -48,45 +45,14 @@ type processFrame struct {
 	Observation     *demo.Observation          `json:",omitempty"`
 }
 
-// Business frames remain demo-specific; physical framing/cancellation is shared
-// with the actual Decision and target child consumers.
-func writeProcessFrame(ctx context.Context, file *os.File, value any) error {
-	return process.WriteFrame(ctx, file, value)
-}
-func readProcessFrame(ctx context.Context, file *os.File, value any) error {
-	return process.ReadFrame(ctx, file, value)
-}
-
-type processOutput struct {
-	mu   sync.Mutex
-	data []byte
-}
-
-func (b *processOutput) Write(data []byte) (int, error) {
-	b.mu.Lock()
-	defer b.mu.Unlock()
-	n := len(data)
-	if room := 8192 - len(b.data); room > 0 {
-		if len(data) > room {
-			data = data[:room]
-		}
-		b.data = append(b.data, data...)
-	}
-	return n, nil
-}
-func (b *processOutput) String() string { b.mu.Lock(); defer b.mu.Unlock(); return string(b.data) }
-
+// The demo owns business frames and stages; shared process.Child owns all
+// physical pipe allocation, cancellation, single Wait and exit confirmation.
 type hostProcess struct {
-	cmd                    *exec.Cmd
-	ctx                    context.Context
-	cancel                 context.CancelFunc
-	control, events, reply *os.File
-	done                   chan error
-	output                 *processOutput
-	waited                 bool
-	waitObserved           bool
-	waitError              error
-	cfg                    processConfig
+	physical *process.Child
+	ctx      context.Context
+	cancel   context.CancelFunc
+	waited   bool
+	cfg      processConfig
 }
 
 func startHostProcess(t *testing.T, cfg processConfig) *hostProcess {
@@ -98,67 +64,25 @@ func startHostProcess(t *testing.T, cfg processConfig) *hostProcess {
 		t.Fatal(err)
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), processDeadline)
-	executable, err := os.Executable()
-	if err != nil {
-		cancel()
-		t.Fatal(err)
-	}
-	controlRead, controlWrite, err := os.Pipe()
-	if err != nil {
-		cancel()
-		t.Fatal(err)
-	}
-	eventRead, eventWrite, err := os.Pipe()
-	if err != nil {
-		controlRead.Close()
-		controlWrite.Close()
-		cancel()
-		t.Fatal(err)
-	}
-	replyRead, replyWrite, err := os.Pipe()
-	if err != nil {
-		controlRead.Close()
-		controlWrite.Close()
-		eventRead.Close()
-		eventWrite.Close()
-		cancel()
-		t.Fatal(err)
-	}
-	output := new(processOutput)
-	cmd := exec.CommandContext(ctx, executable, "-test.run=^TestDurableWorkHostProcess$", "-test.count=1", "-test.timeout=15s")
-	cmd.Env = append(os.Environ(), "LERNA_DURABLE_WORK_PROCESS=1")
-	cmd.Stdin = controlRead
-	cmd.ExtraFiles = []*os.File{eventWrite, replyWrite}
-	cmd.Stdout, cmd.Stderr = output, output
-	cmd.WaitDelay = time.Second
-	if err = cmd.Start(); err != nil {
-		// A reported spawn failure with an OS handle is not proof of exit.
-		// Preserve that borrow and let bounded Kill/Wait establish its state.
-		if cmd.Process != nil {
-			child := &hostProcess{cmd: cmd, ctx: ctx, cancel: cancel, control: controlWrite, events: eventRead, reply: replyRead, done: make(chan error, 1), output: output, cfg: cfg}
-			cfg.fixture.child = child
-			go func() { child.done <- cmd.Wait() }()
-		}
-		for _, f := range []*os.File{controlRead, controlWrite, eventRead, eventWrite, replyRead, replyWrite} {
-			f.Close()
-		}
-		cancel()
-		t.Fatal(err)
-	}
-	controlRead.Close()
-	eventWrite.Close()
-	replyWrite.Close()
-	child := &hostProcess{cmd: cmd, ctx: ctx, cancel: cancel, control: controlWrite, events: eventRead, reply: replyRead, done: make(chan error, 1), output: output, cfg: cfg}
-	cfg.fixture.child = child
-	go func() { child.done <- cmd.Wait() }()
+	physical, err := process.New(ctx, "TestDurableWorkHostProcess", "LERNA_DURABLE_WORK_PROCESS=1")
+	child := &hostProcess{physical: physical, ctx: ctx, cancel: cancel, cfg: cfg}
+	if physical != nil {
+		cfg.fixture.child = child
+	} // Before Start/firstready, including partial allocation.
 	t.Cleanup(func() {
 		cleanup, stop := context.WithTimeout(context.Background(), 2*time.Second)
 		defer stop()
-		if err := child.stop(cleanup); err != nil {
-			t.Error(err)
+		if e := child.stop(cleanup); e != nil {
+			t.Error(e)
 		}
 	})
-	if err = writeProcessFrame(ctx, controlWrite, cfg); err != nil {
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err = physical.Start(); err != nil {
+		t.Fatal(err)
+	}
+	if err = physical.Send(ctx, cfg); err != nil {
 		t.Fatal(err)
 	}
 	ready := child.event(t, "configured")
@@ -168,8 +92,8 @@ func startHostProcess(t *testing.T, cfg processConfig) *hostProcess {
 func (p *hostProcess) event(t *testing.T, stage string) processFrame {
 	t.Helper()
 	var frame processFrame
-	if err := readProcessFrame(p.ctx, p.events, &frame); err != nil {
-		t.Fatalf("scenario=%s expected=%s pipe=%v child=%s", p.cfg.Scenario, stage, err, p.output.String())
+	if err := p.physical.Event(p.ctx, &frame); err != nil {
+		t.Fatalf("scenario=%s expected=%s pipe=%v", p.cfg.Scenario, stage, err)
 	}
 	if frame.Scenario != p.cfg.Scenario || frame.Stage != stage || frame.Generation != p.cfg.Generation || !frame.Now.Equal(p.cfg.Now) {
 		t.Fatalf("wrong process stage: %+v expected=%s generation=%d", frame, stage, p.cfg.Generation)
@@ -179,56 +103,32 @@ func (p *hostProcess) event(t *testing.T, stage string) processFrame {
 }
 func (p *hostProcess) send(t *testing.T, stage string, work *durablework.Work, projection *durablework.Projection) {
 	t.Helper()
-	if err := writeProcessFrame(p.ctx, p.control, processFrame{Scenario: p.cfg.Scenario, Stage: stage, Generation: p.cfg.Generation, Now: p.cfg.Now, Work: work, Projection: projection}); err != nil {
+	if err := p.physical.Send(p.ctx, processFrame{Scenario: p.cfg.Scenario, Stage: stage, Generation: p.cfg.Generation, Now: p.cfg.Now, Work: work, Projection: projection}); err != nil {
 		t.Fatal(err)
 	}
 }
 func (p *hostProcess) wait(t *testing.T, killed bool) {
 	t.Helper()
 	if p.waited {
-		t.Fatal("child Wait repeated")
-	}
-	var err error
-	select {
-	case err = <-p.done:
-	case <-p.ctx.Done():
-		_ = p.cmd.Process.Kill()
-		select {
-		case err = <-p.done:
-		case <-time.After(2 * time.Second):
-			t.Fatal("child failed finite kill/Wait cleanup")
-		}
-		if e := p.confirmExit(err); e != nil {
-			t.Fatal(e)
-		}
-		t.Fatalf("child exceeded physical deadline: %v %s", err, p.output.String())
-	}
-	if e := p.confirmExit(err); e != nil {
-		t.Fatal(e)
+		t.Fatal("child Wait observation repeated")
 	}
 	if killed {
-		var exit *exec.ExitError
-		if !errors.As(err, &exit) {
-			t.Fatalf("child not killed: %v %s", err, p.output.String())
-		}
-		status, ok := exit.Sys().(syscall.WaitStatus)
-		if !ok || !status.Signaled() || status.Signal() != syscall.SIGKILL {
-			t.Fatalf("child did not receive SIGKILL: %v %s", err, p.output.String())
-		}
-	} else if err != nil {
-		t.Fatalf("child exited unexpectedly: %v %s", err, p.output.String())
+		t.Fatal("SIGKILL must use actual shared KillWait")
+	}
+	confirmed, err := p.physical.Wait(p.ctx)
+	p.waited = confirmed
+	if !confirmed || err != nil {
+		t.Fatal("normal child exit not confirmed:", err)
 	}
 }
 func (p *hostProcess) kill(t *testing.T) {
 	t.Helper()
-	if err := p.cmd.Process.Kill(); err != nil {
+	if err := p.physical.KillWait(p.ctx); err != nil {
 		t.Fatal(err)
 	}
-	p.wait(t, true)
-	// Business replies are a separate pipe. Killing before its gate opens must
-	// produce EOF, never a receipt copied from the control event.
+	p.waited = true
 	var reply processFrame
-	if err := readProcessFrame(p.ctx, p.reply, &reply); err != io.EOF {
+	if err := p.physical.Reply(p.ctx, &reply); err != io.EOF {
 		t.Fatalf("killed child sent business reply or malformed frame: %v", err)
 	}
 }
@@ -312,21 +212,19 @@ func TestDurableWorkHostProcess(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), processDeadline)
 	defer cancel()
-	// exec hands over blocking descriptors. NewFile only joins the Go poller
-	// for nonblocking descriptors, which lets context-owned Close interrupt IO.
-	// Rewrap stdin too: os.Stdin was initialized before this mode change.
-	for _, fd := range []int{0, 3, 4} {
-		if err := syscall.SetNonblock(fd, true); err != nil {
-			t.Fatal("inherited process pipe unavailable")
-		}
+	pipes, err := process.OpenInherited()
+	if pipes != nil {
+		defer func() {
+			if e := pipes.Close(); e != nil {
+				t.Error(e)
+			}
+		}()
 	}
-	control := os.NewFile(0, "process-control")
-	events, reply := os.NewFile(3, "process-events"), os.NewFile(4, "host-reply")
-	defer control.Close()
-	defer events.Close()
-	defer reply.Close()
+	if err != nil {
+		t.Fatal(err)
+	}
 	var cfg processConfig
-	if err := readProcessFrame(ctx, control, &cfg); err != nil {
+	if err := pipes.Receive(ctx, &cfg); err != nil {
 		t.Fatal(err)
 	}
 	if cfg.Scenario == "" || cfg.Generation < 1 || cfg.Now.IsZero() {
@@ -350,13 +248,13 @@ func TestDurableWorkHostProcess(t *testing.T) {
 		return processFrame{Scenario: cfg.Scenario, Stage: stage, Generation: cfg.Generation, Now: cfg.Now}
 	}
 	emit := func(value processFrame) {
-		if err := writeProcessFrame(ctx, events, value); err != nil {
+		if err := pipes.Emit(ctx, value); err != nil {
 			t.Fatal(err)
 		}
 	}
 	receive := func(stage string) processFrame {
 		var value processFrame
-		if err := readProcessFrame(ctx, control, &value); err != nil {
+		if err := pipes.Receive(ctx, &value); err != nil {
 			t.Fatal(err)
 		}
 		if value.Scenario != cfg.Scenario || value.Stage != stage || value.Generation != cfg.Generation || !value.Now.Equal(cfg.Now) {
@@ -435,7 +333,7 @@ func TestDurableWorkHostProcess(t *testing.T) {
 			t.Fatal(err)
 		}
 		emit(frame("completed"))
-		if err := writeProcessFrame(ctx, reply, frame("worker_reply")); err != nil {
+		if err := pipes.Respond(ctx, frame("worker_reply")); err != nil {
 			t.Fatal(err)
 		}
 		return
@@ -443,11 +341,11 @@ func TestDurableWorkHostProcess(t *testing.T) {
 
 	if cfg.Gate == "writes_staged_before_commit" {
 		h.Runner = gateBeforeCommit{TxRunner: store, pause: func(gatectx context.Context) error {
-			if err := writeProcessFrame(gatectx, events, frame(cfg.Gate)); err != nil {
+			if err := pipes.Emit(gatectx, frame(cfg.Gate)); err != nil {
 				return err
 			}
 			var value processFrame
-			if err := readProcessFrame(gatectx, control, &value); err != nil {
+			if err := pipes.Receive(gatectx, &value); err != nil {
 				return err
 			}
 			if value.Scenario != cfg.Scenario || value.Stage != "release" || value.Generation != cfg.Generation || !value.Now.Equal(cfg.Now) {
@@ -473,7 +371,7 @@ func TestDurableWorkHostProcess(t *testing.T) {
 	}
 	value := frame("host_reply")
 	value.Outcome = &out
-	if err := writeProcessFrame(ctx, reply, value); err != nil {
+	if err := pipes.Respond(ctx, value); err != nil {
 		t.Fatal(err)
 	}
 }
@@ -491,40 +389,15 @@ func processWorker(t *testing.T, store workStore, clock runtime.Clock) *durablew
 	return worker
 }
 
-// Wait belongs to this process module. The fixture only asks it for bounded
-// release and joins its actual exit before reopening or deleting its scope.
-func (p *hostProcess) confirmExit(err error) error {
-	p.waitObserved = true
-	p.waitError = err
-	if p.cmd.ProcessState == nil {
-		return errors.Join(errors.New("child Wait exit unconfirmed"), err)
-	}
-	p.waited = true
-	return nil
-}
+// Historical child errors remain diagnostics; only unconfirmed physical
+// cleanup prevents this concrete fixture from closing/dropping its scope.
 func (p *hostProcess) stop(ctx context.Context) error {
-	if !p.waited {
-		if p.waitObserved {
-			return errors.Join(errors.New("child Wait exit unconfirmed"), p.waitError)
-		}
-		if err := p.cmd.Process.Kill(); err != nil && !errors.Is(err, os.ErrProcessDone) {
-			return fmt.Errorf("child Kill: %w", err)
-		}
-		select {
-		case err := <-p.done:
-			if err = p.confirmExit(err); err != nil {
-				return err
-			}
-		case <-ctx.Done():
-			return fmt.Errorf("child cleanup Wait unconfirmed: %w", ctx.Err())
-		}
+	if p.physical == nil {
+		p.cancel()
+		return nil
 	}
-	var errs []error
-	for _, file := range []*os.File{p.control, p.events, p.reply} {
-		if err := file.Close(); err != nil && !errors.Is(err, os.ErrClosed) {
-			errs = append(errs, err)
-		}
-	}
+	confirmed, err := p.physical.Stop(ctx)
+	p.waited = confirmed
 	p.cancel()
-	return errors.Join(errs...)
+	return err
 }

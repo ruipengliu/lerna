@@ -23,7 +23,7 @@ type Child struct {
 	controlRead, controlWrite, eventRead, eventWrite, replyRead, replyWrite *endpoint
 	done                                                                    chan struct{}
 	mu                                                                      sync.Mutex
-	startAttempted, hasProcess, confirmed, expectedKill                     bool
+	startAttempted, hasProcess, confirmed, expectedExit                     bool
 	waitErr                                                                 error
 	output                                                                  output
 	afterStart                                                              func()
@@ -178,6 +178,21 @@ func killed(err error) bool {
 	return ok && status.Signaled() && status.Signal() == syscall.SIGKILL
 }
 
+// WaitFailure confirms the actual Go test child's expected exit1 in a negative
+// physical pipe-deadline test. Raw Wait keeps its original error; only cleanup
+// treats this explicitly validated diagnostic as already handled.
+func (c *Child) WaitFailure(ctx context.Context) error {
+	confirmed, err := c.Wait(ctx)
+	var failed *exec.ExitError
+	if !confirmed || !errors.As(err, &failed) || failed.ExitCode() != 1 {
+		return errors.Join(errors.New("expected test child exit1 not confirmed"), err)
+	}
+	c.mu.Lock()
+	c.expectedExit = true
+	c.mu.Unlock()
+	return nil
+}
+
 // KillWait validates the actual SIGKILL WaitStatus, not just any nonzero exit.
 func (c *Child) KillWait(ctx context.Context) error {
 	if ctx == nil {
@@ -201,7 +216,7 @@ func (c *Child) KillWait(ctx context.Context) error {
 		return errors.Join(errors.New("expected SIGKILL exit not confirmed"), waitErr)
 	}
 	c.mu.Lock()
-	c.expectedKill = true
+	c.expectedExit = true
 	c.mu.Unlock()
 	return nil
 }
@@ -236,7 +251,7 @@ func (c *Child) Stop(ctx context.Context) (bool, error) {
 		}
 	}
 	c.mu.Lock()
-	hasProcess, confirmed, expected := c.hasProcess, c.confirmed, c.expectedKill
+	hasProcess, confirmed, expected := c.hasProcess, c.confirmed, c.expectedExit
 	startErr := c.startErr
 	c.mu.Unlock()
 	if !hasProcess {
@@ -255,7 +270,7 @@ func (c *Child) Stop(ctx context.Context) (bool, error) {
 	confirmed, waitErr := c.Wait(ctx)
 	if confirmed && (expected || sentKill && killed(waitErr)) {
 		c.mu.Lock()
-		c.expectedKill = true
+		c.expectedExit = true
 		c.mu.Unlock()
 		waitErr = nil
 	}
