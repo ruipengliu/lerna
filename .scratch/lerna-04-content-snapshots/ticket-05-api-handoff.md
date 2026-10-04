@@ -62,5 +62,7 @@ Seal从原已登记复制事实分页建secondary清理责任，不能凭当前�
 holder。BodyHolder保留CopyID、原effectdeadline与准确AttemptKeys，清理
 Deadline仍为同原seal截止。离线（真实原holder.Close且无活动port）保留
 responsible/residual与原deadline，staging+primary ACK可gone但全global
-不complete。真实两World重开原责任恢复已通过normal及race；实际删除
-失败/ACKloss/迟到copy竞争仍待各自资格控制。
+不complete。真实两World重开原责任恢复已通过normal及race；真实删除失败已有独立qualification：owned exact-key非空目录造成native
+ENOTEMPTY，实际原copy inode/字节保留，原责任不ACK；恢复同own准确文件，
+两个World真实重开同原预算擦除。原Binding/CopyID/effectDeadline跨页独立
+断言亦补真实运行。ACKloss/迟到copy竞争仍待各自资格控制。

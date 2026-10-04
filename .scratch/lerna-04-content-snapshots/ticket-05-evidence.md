@@ -171,7 +171,9 @@ no pending。copy登记在原版本锁内、Tx外实际primaryRead/secondaryPut�
 test独立读两root准确key的alpha字节，确认不同inode，之后真实Close第二
 对象holder并使用无活动secondary port配置。staging/primary独立erased后
 只允许明确metadata gone，全holder仍pending；跨两页观察保持secondary原
-binding/responsible/清理deadline/原effectdeadline与attempt责任。离线副本
+responsible/清理deadline。该次运行未assert Binding/CopyID/EffectDeadline/
+AttemptKeys；源代码持久保存它们，不能视为执行核验，后续相关qualification
+补实际port binding/原copyID/effectdeadline断言另跑。离线副本
 独立字节仍存在；secondary与Content World真实Reopen后推进同原seal预算，
 准确副本消失且全部ACK。不把nil offlineport当native删除失败实验；真实
 删除失败、ACKloss、copy/Seal并发当前门拒绝另待独立tracer。
@@ -179,3 +181,27 @@ binding/responsible/清理deadline/原effectdeadline与attempt责任。离线副
 五个partial vertical不等于七AC接受；还缺跨进程迟到安装两序、精确孤儿
 publish竞争、policy cleanup消费、legacy停止writer真实回填、全部attempt/
 传播页及metadata拒绝/祖先路径。没有清理其他owner资源或push。
+
+### 第二holder原字段与真实删除失败独立qualification
+
+补充offline断言不是镜像attempt常量：原actual Objects.Binding、CopyRequest.ID
+及CopyRequest.Deadline分别与跨holder页观察的Binding/CopyID/EffectDeadline
+核对。`secondary-offline-original-copy-fields-qualification.log` actual0.631s，
+PID/PGID2741795/start11417526/exit0/groupAbsent=true；原.518/3.883未assert
+这些字段的限定保持。AttemptKeys当前只有持久source与实际效果覆盖，未claim
+独立字段断言。
+
+`TestContentSecondaryNativeRemovalFailureRetainsOriginalResponsibility`先真实
+正常复制及独立两root不同inode字节核对。受限owned fixture把原准确key
+的copy inode保在key/body并以非空目录占据准确key，Linux原生Remove真实
+返回ENOTEMPTY；不是注入适配器error。primary/staging可gone，secondary
+保留residual/responsible/binding/原copy/effect及清理deadline，全global不ACK；
+独立key/body仍为原alpha。fixture只恢复本own已登记准确inode/key，随后两
+World真实Reopen，以同原seal/deadline最终擦除并确认globalACK。
+
+`secondary-native-removal-failure-qualification.log` actual0.486s，
+PID/PGID2741403/start11416103/exit0/groupAbsent=true。已有协议直接green，
+未造新red；该异常目录和恢复是受信故障实验，不宣传协议阻挡任意外部
+OS写者。fixture新目录Sync/Close由原setup ownership跟踪；不碰任何旧root。
+两个native均无timeout且actualcompletion，明确release LOCAL/no pending。
+ACKloss与真实跨进程晚写/孤儿/旧writer受控升级仍待各自tracer。

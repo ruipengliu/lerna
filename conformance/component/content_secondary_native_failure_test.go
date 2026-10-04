@@ -9,11 +9,12 @@ import (
 	"github.com/ruipengliu/lerna/domain/content"
 	"os"
 	"path/filepath"
+	"syscall"
 	"testing"
 	"time"
 )
 
-func TestContentIndependentSecondaryOfflineRetainsOriginalCleanupResponsibility(t *testing.T) {
+func TestContentSecondaryNativeRemovalFailureRetainsOriginalResponsibility(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 	defer cancel()
 	w := fixture.New(t, ctx)
@@ -58,35 +59,33 @@ func TestContentIndependentSecondaryOfflineRetainsOriginalCleanupResponsibility(
 	if err != nil || string(bytes) != "alpha\n" {
 		t.Fatal("independent secondary bytes", err)
 	}
-	// Actually close its media holder. Offline config has no active object port.
-	if err = secondary.Objects.Close(); err != nil {
-		t.Fatal(err)
-	}
-	config.SecondaryObjects = nil
-	offline, err := content.NewLifecycle(config)
-	if err != nil {
-		t.Fatal(err)
-	}
+	secondary.BlockExactObjectRemoval(key)
+	faulted := l
 	sealRequest := content.SealRequest{Ref: alphaRef, Purpose: "verification", SealID: "original-secondary-seal", Deadline: time.Now().Add(time.Minute).UTC().Truncate(time.Microsecond)}
-	if _, err = offline.Seal(ctx, &contentPrincipal, sealRequest); err != nil {
+	if _, err = faulted.Seal(ctx, &contentPrincipal, sealRequest); err != nil {
 		t.Fatal(err)
 	}
+	var removalErr error
 	for i := 0; i < 4; i++ {
-		worked, e := offline.Step(ctx, &contentPrincipal)
+		worked, e := faulted.Step(ctx, &contentPrincipal)
 		if e != nil {
+			removalErr = e
 			break
 		}
 		if !worked {
 			break
 		}
 	}
+	if !errors.Is(removalErr, syscall.ENOTEMPTY) {
+		t.Fatalf("expected actual native nonempty-key deletion failure: %v", removalErr)
+	}
 	primaryErased := false
 	pending := false
 	cursor := ""
 	for {
-		observed, e := offline.Observe(ctx, &contentPrincipal, alphaRef, cursor)
+		observed, e := faulted.Observe(ctx, &contentPrincipal, alphaRef, cursor)
 		if e != nil || observed.CleanupComplete {
-			t.Fatalf("offline copy falsely complete: %+v %v", observed, e)
+			t.Fatalf("failed copy falsely complete: %+v %v", observed, e)
 		}
 		for _, holder := range observed.Holders {
 			if holder.Identity.HolderID == "primary" && holder.State == "erased" {
@@ -102,23 +101,24 @@ func TestContentIndependentSecondaryOfflineRetainsOriginalCleanupResponsibility(
 		cursor = observed.NextCursor
 	}
 	if !primaryErased || !pending {
-		t.Fatal("offline independent holder responsibility lost", primaryErased, pending)
+		t.Fatal("failed independent holder responsibility lost", primaryErased, pending)
 	}
-	bytes, err = os.ReadFile(filepath.Join(secondary.Directory, key))
+	bytes, err = os.ReadFile(filepath.Join(secondary.Directory, key, "body"))
 	if err != nil || string(bytes) != "alpha\n" {
-		t.Fatal("offline actual copy disappeared", err)
+		t.Fatal("actual failed-removal copy disappeared", err)
 	}
 	if _, err = os.ReadFile(filepath.Join(w.Directory, key)); !errors.Is(err, os.ErrNotExist) {
 		t.Fatal("primary body retained", err)
 	}
-	if err = offline.InstallMetadataPolicy(ctx, &contentPrincipal, content.MetadataPolicy{Ref: alphaRef, Subject: contentPrincipal, Purpose: "verification", Revision: 1, ValidUntil: until}, 0); err != nil {
+	if err = faulted.InstallMetadataPolicy(ctx, &contentPrincipal, content.MetadataPolicy{Ref: alphaRef, Subject: contentPrincipal, Purpose: "verification", Revision: 1, ValidUntil: until}, 0); err != nil {
 		t.Fatal(err)
 	}
 	view, err := service.Get(ctx, contentGetWire(t, alphaRef, nil), &contentPrincipal)
 	gone, ok := view.AsGone()
 	if err != nil || !ok || gone.EvidenceAvailable {
-		t.Fatalf("primary gone while secondary pending: %+v %v", view, err)
+		t.Fatalf("primary gone while failed secondary pending: %+v %v", view, err)
 	}
+	secondary.RestoreExactObjectRemoval(key)
 	secondary.Reopen(ctx)
 	w.Reopen(ctx)
 	config.Store = w.Store()
