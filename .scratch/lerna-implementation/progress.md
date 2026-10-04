@@ -6,6 +6,8 @@
 
 ## 当前状态
 
+2026-10-04，采用[票03内部溢出诊断决定](../lerna-04-content-snapshots/ticket-03-overflow-diagnostic/README.md)：实际拒绝维度与可选完整测量沿原错误链返回，保留独立 Content 限制及缺测量，不新增公共合同、数据库或成功 Bundle。真实 metadata／Proposal 主因测试仍待实施。03部分单Content边界已真实unit red→green，合法原Decision限额的真实链路2.314s通过：20万字目标完整回显，262144字目标加完整metadata由Content层拒绝且无派发。第一次非法2MiB限额被schema挡住的失败保留，不算业务red。05跨进程第一顺序0.050s实际通过，写者关闭有独立ACK；反序与第一对照0.081s通过，真实fence后第二进程迟到Put拒绝，原eraser SIGKILL／Wait后重开确认正文缺失。被杀holder无逻辑Close ACK，其准确root4116685529（dev33/inode326495）保持unknown并保留，kernel退出及后续观察不推逻辑关闭。其余AC仍待验证，两票尚未正式合入或接受，全部22切片继续按依赖实施。
+
 - 切片 01：**completed**。原任务 01–06 与后置架构任务 07 均 resolved；正确性修复、独立架构优化和 CI portability 已合入。受测实现提交 `23bac17ba0909c7a4d49d846eb08bc63391b99f0` 的真实远端 CI success，全部退出证据见[spec](../lerna-01-command-contracts/spec.md#切片退出证据2026-10-03)。
 - 切片 02：**completed**。10票68项AC resolved；最终源码f56d930、整合5548744。本地完整顺序count1集成50.431s/race93.834s，独立两轴全部原发现关闭/新增0，fixture架构收益复核闭合；准确CI37162569420 success，完整退出及旧未知schema/CID限制见[证据](../lerna-02-durable-work/exit-evidence.md)。
 - 切片 03：**completed**。六票42/42AC及原六项验收完成；受测882e97b/6bf5750、交付1aa21fc、整合391b4d8，完整profile/共享104项race及两轴/架构闭合。准确47ebce1 CI37194868564 success；10worktrees清理/分支保留。完整[退出](../lerna-03-deterministic-harness/exit-evidence.md)保留失败和未知资源。A阶段01–03完整退出，下一frontier04。
