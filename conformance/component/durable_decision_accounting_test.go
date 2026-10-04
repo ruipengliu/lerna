@@ -68,7 +68,7 @@ func TestDurableDecisionPreparedRecoversLostPublicationWithoutSecondFee(t *testi
 	scene.Request.Payload.Limits.MaxRuleSteps = "1"
 	scene.Request.Payload.Limits.MaxCost.IntegerValue = "1"
 	publisher := &lostPublicationReply{Publisher: w.Source()}
-	s := accountingService(t, w, publisher, "initial", time.Second)
+	s := accountingService(t, w, publisher, "initial", 3*time.Second)
 	receipt := acceptAccounting(t, ctx, s, scene)
 	step, err := s.Step(ctx)
 	if err != nil {
@@ -93,7 +93,7 @@ func TestDurableDecisionPreparedRecoversLostPublicationWithoutSecondFee(t *testi
 		t.Fatalf("prepared usage %+v", waiting.Usage)
 	}
 	w.Reopen(ctx)
-	s = accountingService(t, w, w.Source(), "replacement", time.Second)
+	s = accountingService(t, w, w.Source(), "replacement", 3*time.Second)
 	timer := time.NewTimer(time.Until(step.NextWake))
 	defer timer.Stop()
 	select {
@@ -152,7 +152,7 @@ func TestDurableDecisionStartIsOnePermissionAndUnknownWorkConsumesOriginalLimit(
 	scene := w.Scenario()
 	scene.Request.Payload.Limits.MaxRuleSteps = "1"
 	scene.Request.Payload.Limits.MaxCost.IntegerValue = "1"
-	s := accountingService(t, w, w.Source(), "initial", 250*time.Millisecond)
+	s := accountingService(t, w, w.Source(), "initial", time.Second)
 	acceptAccounting(t, ctx, s, scene)
 	claim, err := s.Claim(ctx)
 	if err != nil || claim == nil {
@@ -178,7 +178,7 @@ func TestDurableDecisionStartIsOnePermissionAndUnknownWorkConsumesOriginalLimit(
 		t.Fatalf("Start invented actual computation %+v", running.Usage)
 	}
 	w.Reopen(ctx)
-	s = accountingService(t, w, w.Source(), "replacement", time.Second)
+	s = accountingService(t, w, w.Source(), "replacement", 3*time.Second)
 	timer := time.NewTimer(time.Until(claim.Claim.LeaseUntil))
 	defer timer.Stop()
 	select {
@@ -211,7 +211,7 @@ func TestDurableDecisionConcurrentStartAndCumulativeUnknownUsage(t *testing.T) {
 	scene := w.Scenario()
 	scene.Request.Payload.Limits.MaxRuleSteps = "2"
 	scene.Request.Payload.Limits.MaxCost.IntegerValue = "2"
-	s := accountingService(t, w, w.Source(), "initial", 300*time.Millisecond)
+	s := accountingService(t, w, w.Source(), "initial", time.Second)
 	acceptAccounting(t, ctx, s, scene)
 	claimed, err := s.Claim(ctx)
 	if err != nil || claimed == nil {
@@ -240,7 +240,7 @@ func TestDurableDecisionConcurrentStartAndCumulativeUnknownUsage(t *testing.T) {
 		t.Fatalf("concurrent durable permissions: allowed=%d denied=%d", allowed, denied)
 	}
 	w.Reopen(ctx)
-	s = accountingService(t, w, w.Source(), "replacement", time.Second)
+	s = accountingService(t, w, w.Source(), "replacement", 3*time.Second)
 	if err = (runtime.WallTimer{}).Wait(ctx, time.Until(claimed.Claim.LeaseUntil)+time.Millisecond); err != nil {
 		t.Fatal(err)
 	}

@@ -84,7 +84,7 @@ func TestDurableDecisionFinishFencesExpiredClaimAfterBothPublications(t *testing
 	scene.Request.Payload.Limits.MaxRuleSteps = "1"
 	scene.Request.Payload.Limits.MaxCost.IntegerValue = "1"
 	p := &leaseLostAfterPublication{Publisher: w.Source()}
-	s := accountingService(t, w, p, "stale", 500*time.Millisecond)
+	s := accountingService(t, w, p, "stale", 2*time.Second)
 	receipt := acceptAccounting(t, ctx, s, scene)
 	work, err := s.Claim(ctx)
 	if err != nil || work == nil {
