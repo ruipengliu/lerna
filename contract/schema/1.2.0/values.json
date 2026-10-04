@@ -1,0 +1,963 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lerna.dev/contract/1.2.0/values.json",
+  "$defs": {
+    "ID": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "Revision": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)$",
+      "format": "int64-decimal"
+    },
+    "Time": {
+      "type": "string",
+      "format": "utc-microseconds"
+    },
+    "Kind": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9._-]{0,63}$"
+    },
+    "OwnerRef": {
+      "type": "object",
+      "properties": {
+        "tenant_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "owner_id": {
+          "$ref": "#/$defs/ID"
+        }
+      },
+      "required": ["tenant_id", "owner_id"],
+      "additionalProperties": false
+    },
+    "ObjectRef": {
+      "type": "object",
+      "properties": {
+        "tenant_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "owner_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "kind": {
+          "$ref": "#/$defs/Kind"
+        },
+        "id": {
+          "$ref": "#/$defs/ID"
+        },
+        "revision": {
+          "$ref": "#/$defs/Revision"
+        }
+      },
+      "required": ["tenant_id", "owner_id", "kind", "id"],
+      "additionalProperties": false
+    },
+    "ContentRef": {
+      "type": "object",
+      "properties": {
+        "owner": {
+          "$ref": "#/$defs/OwnerRef"
+        },
+        "content_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]*$",
+          "format": "int64-decimal"
+        },
+        "hash": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "media_type": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 255,
+          "pattern": "^[A-Za-z0-9!#$&^_.+-]+/[A-Za-z0-9!#$&^_.+-]+$"
+        },
+        "byte_length": {
+          "$ref": "#/$defs/Revision"
+        }
+      },
+      "required": [
+        "owner",
+        "content_id",
+        "version",
+        "hash",
+        "media_type",
+        "byte_length"
+      ],
+      "additionalProperties": false
+    },
+    "ErrorCode": {
+      "type": "string",
+      "enum": [
+        "schema_invalid",
+        "version_unsupported",
+        "forbidden",
+        "expired",
+        "idempotency_conflict",
+        "revision_changed",
+        "budget_exhausted",
+        "dependency_unavailable",
+        "unsupported",
+        "version_conflict",
+        "integrity",
+        "input_over_limit",
+        "range_invalid",
+        "source_unavailable"
+      ]
+    },
+    "PublicError": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "$ref": "#/$defs/ErrorCode"
+        }
+      },
+      "required": ["code"],
+      "additionalProperties": false
+    },
+    "MethodName": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]{0,31}\\.[a-z][a-z0-9_]{0,31}$"
+    },
+    "ProfileName": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]{0,31}$"
+    },
+    "ContractVersion": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$"
+    },
+    "TraceContext": {
+      "type": "object",
+      "properties": {
+        "trace_id": {
+          "$ref": "#/$defs/ID"
+        }
+      },
+      "required": ["trace_id"],
+      "additionalProperties": false
+    },
+    "CommandPayload": {
+      "type": "object",
+      "additionalProperties": true,
+      "maxProperties": 1024
+    },
+    "CommandEnvelope": {
+      "type": "object",
+      "properties": {
+        "contract_version": {
+          "$ref": "#/$defs/ContractVersion"
+        },
+        "profile": {
+          "$ref": "#/$defs/ProfileName"
+        },
+        "command_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "target": {
+          "$ref": "#/$defs/ObjectRef"
+        },
+        "method": {
+          "$ref": "#/$defs/MethodName"
+        },
+        "payload": {
+          "$ref": "#/$defs/CommandPayload"
+        },
+        "accept_before": {
+          "$ref": "#/$defs/Time"
+        },
+        "expected_revision": {
+          "$ref": "#/$defs/Revision"
+        },
+        "trace_context": {
+          "$ref": "#/$defs/TraceContext"
+        }
+      },
+      "required": [
+        "contract_version",
+        "profile",
+        "command_id",
+        "target",
+        "method",
+        "payload",
+        "accept_before"
+      ],
+      "additionalProperties": false
+    },
+    "CommandRef": {
+      "type": "object",
+      "properties": {
+        "owner": {
+          "$ref": "#/$defs/OwnerRef"
+        },
+        "command_id": {
+          "$ref": "#/$defs/ID"
+        }
+      },
+      "required": ["owner", "command_id"],
+      "additionalProperties": false
+    },
+    "CommandGetPayload": {
+      "type": "object",
+      "properties": {
+        "command_ref": {
+          "$ref": "#/$defs/CommandRef"
+        }
+      },
+      "required": ["command_ref"],
+      "additionalProperties": false
+    },
+    "CommandGetRequest": {
+      "type": "object",
+      "properties": {
+        "contract_version": {
+          "type": "string",
+          "const": "1.2.0"
+        },
+        "profile": {
+          "type": "string",
+          "const": "command"
+        },
+        "command_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "target": {
+          "$ref": "#/$defs/CommandTarget"
+        },
+        "method": {
+          "type": "string",
+          "const": "command.get"
+        },
+        "accept_before": {
+          "$ref": "#/$defs/Time"
+        },
+        "payload": {
+          "$ref": "#/$defs/CommandGetPayload"
+        },
+        "trace_context": {
+          "$ref": "#/$defs/TraceContext"
+        }
+      },
+      "required": [
+        "contract_version",
+        "profile",
+        "command_id",
+        "target",
+        "method",
+        "accept_before",
+        "payload"
+      ],
+      "additionalProperties": false
+    },
+    "CommandTarget": {
+      "type": "object",
+      "properties": {
+        "tenant_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "owner_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "kind": {
+          "type": "string",
+          "const": "command"
+        },
+        "id": {
+          "$ref": "#/$defs/ID"
+        }
+      },
+      "required": ["tenant_id", "owner_id", "kind", "id"],
+      "additionalProperties": false
+    },
+    "CommandReceiptAccepted": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "type": "string",
+          "const": "accepted"
+        },
+        "command_ref": {
+          "$ref": "#/$defs/CommandRef"
+        },
+        "object_ref": {
+          "$ref": "#/$defs/ContentTarget"
+        },
+        "next_action": {
+          "type": "string",
+          "const": "query_original"
+        },
+        "content_ref": {
+          "$ref": "#/$defs/ContentRef"
+        },
+        "retain_until": {
+          "$ref": "#/$defs/Time"
+        }
+      },
+      "required": [
+        "state",
+        "command_ref",
+        "object_ref",
+        "content_ref",
+        "retain_until"
+      ],
+      "additionalProperties": false
+    },
+    "CommandReceiptRejected": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "type": "string",
+          "const": "rejected"
+        },
+        "command_ref": {
+          "$ref": "#/$defs/CommandRef"
+        },
+        "reason": {
+          "$ref": "#/$defs/ErrorCode"
+        },
+        "next_action": {
+          "type": "string",
+          "const": "resolve_rejection"
+        }
+      },
+      "required": ["state", "command_ref", "reason"],
+      "additionalProperties": false
+    },
+    "CommandReceipt": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/CommandReceiptAccepted"
+        },
+        {
+          "$ref": "#/$defs/CommandReceiptRejected"
+        }
+      ]
+    },
+    "CommandProgressNone": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "const": "none"
+        }
+      },
+      "required": ["kind"],
+      "additionalProperties": false
+    },
+    "CommandProgressUnavailable": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "const": "unavailable"
+        },
+        "reason": {
+          "type": "string",
+          "const": "dependency_unavailable"
+        }
+      },
+      "required": ["kind", "reason"],
+      "additionalProperties": false
+    },
+    "CommandProgress": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/CommandProgressNone"
+        },
+        {
+          "$ref": "#/$defs/CommandProgressUnavailable"
+        },
+        {
+          "$ref": "#/$defs/CommandProgressContent"
+        }
+      ]
+    },
+    "CommandGetResponseFound": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "const": "found"
+        },
+        "command_ref": {
+          "$ref": "#/$defs/CommandRef"
+        },
+        "receipt": {
+          "$ref": "#/$defs/CommandReceipt"
+        },
+        "progress": {
+          "$ref": "#/$defs/CommandProgress"
+        }
+      },
+      "required": ["status", "command_ref", "receipt", "progress"],
+      "additionalProperties": false
+    },
+    "CommandGetResponseNotFound": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "const": "not_found"
+        },
+        "command_ref": {
+          "$ref": "#/$defs/CommandRef"
+        }
+      },
+      "required": ["status", "command_ref"],
+      "additionalProperties": false
+    },
+    "CommandGetResponseGone": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "const": "gone"
+        },
+        "command_ref": {
+          "$ref": "#/$defs/CommandRef"
+        }
+      },
+      "required": ["status", "command_ref"],
+      "additionalProperties": false
+    },
+    "CommandGetResponseUnavailable": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "const": "unavailable"
+        },
+        "command_ref": {
+          "$ref": "#/$defs/CommandRef"
+        },
+        "reason": {
+          "type": "string",
+          "const": "dependency_unavailable"
+        }
+      },
+      "required": ["status", "command_ref", "reason"],
+      "additionalProperties": false
+    },
+    "CommandGetResponseRejected": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "const": "rejected"
+        },
+        "reason": {
+          "$ref": "#/$defs/ErrorCode"
+        }
+      },
+      "required": ["status", "reason"],
+      "additionalProperties": false
+    },
+    "CommandGetResponse": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/CommandGetResponseFound"
+        },
+        {
+          "$ref": "#/$defs/CommandGetResponseNotFound"
+        },
+        {
+          "$ref": "#/$defs/CommandGetResponseGone"
+        },
+        {
+          "$ref": "#/$defs/CommandGetResponseUnavailable"
+        },
+        {
+          "$ref": "#/$defs/CommandGetResponseRejected"
+        }
+      ]
+    },
+    "TransportOutcomeReceived": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "const": "received"
+        },
+        "receipt": {
+          "$ref": "#/$defs/CommandReceipt"
+        }
+      },
+      "required": ["status", "receipt"],
+      "additionalProperties": false
+    },
+    "TransportOutcomeCommitUnknown": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "const": "commit_unknown"
+        },
+        "command_ref": {
+          "$ref": "#/$defs/CommandRef"
+        },
+        "next_action": {
+          "type": "string",
+          "const": "query_or_retransmit_original"
+        }
+      },
+      "required": ["status", "command_ref", "next_action"],
+      "additionalProperties": false
+    },
+    "TransportOutcome": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/TransportOutcomeReceived"
+        },
+        {
+          "$ref": "#/$defs/TransportOutcomeCommitUnknown"
+        }
+      ]
+    },
+    "DelegatedSubject": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "tenant_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "subject_id": {
+          "$ref": "#/$defs/ID"
+        }
+      },
+      "required": ["tenant_id", "subject_id"]
+    },
+    "SubjectBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "tenant_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "subject_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "delegation_chain": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/DelegatedSubject"
+          },
+          "maxItems": 16
+        }
+      },
+      "required": ["tenant_id", "subject_id", "delegation_chain"]
+    },
+    "SchemaDigest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "MethodSupport": {
+      "type": "object",
+      "properties": {
+        "contract_version": {
+          "$ref": "#/$defs/ContractVersion"
+        },
+        "profile": {
+          "$ref": "#/$defs/ProfileName"
+        },
+        "method": {
+          "$ref": "#/$defs/MethodName"
+        },
+        "input_schema": {
+          "$ref": "#/$defs/ID"
+        },
+        "output_schema": {
+          "$ref": "#/$defs/ID"
+        },
+        "input_schema_digest": {
+          "$ref": "#/$defs/SchemaDigest"
+        },
+        "output_schema_digest": {
+          "$ref": "#/$defs/SchemaDigest"
+        }
+      },
+      "required": [
+        "contract_version",
+        "profile",
+        "method",
+        "input_schema",
+        "output_schema",
+        "input_schema_digest",
+        "output_schema_digest"
+      ],
+      "additionalProperties": false
+    },
+    "NegotiationRequest": {
+      "type": "object",
+      "properties": {
+        "contract_version": {
+          "$ref": "#/$defs/ContractVersion"
+        },
+        "profile": {
+          "$ref": "#/$defs/ProfileName"
+        },
+        "method": {
+          "$ref": "#/$defs/MethodName"
+        },
+        "input_schema_digest": {
+          "$ref": "#/$defs/SchemaDigest"
+        },
+        "output_schema_digest": {
+          "$ref": "#/$defs/SchemaDigest"
+        }
+      },
+      "required": [
+        "contract_version",
+        "profile",
+        "method",
+        "input_schema_digest",
+        "output_schema_digest"
+      ],
+      "additionalProperties": false
+    },
+    "Purpose": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "ContentTarget": {
+      "type": "object",
+      "properties": {
+        "tenant_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "owner_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "kind": {
+          "type": "string",
+          "const": "content"
+        },
+        "id": {
+          "$ref": "#/$defs/ID"
+        }
+      },
+      "required": ["tenant_id", "owner_id", "kind", "id"],
+      "additionalProperties": false
+    },
+    "ContentRange": {
+      "type": "object",
+      "properties": {
+        "offset": {
+          "$ref": "#/$defs/Revision"
+        },
+        "length": {
+          "$ref": "#/$defs/Revision"
+        }
+      },
+      "required": ["offset", "length"],
+      "additionalProperties": false
+    },
+    "ContentPutPayload": {
+      "type": "object",
+      "properties": {
+        "content_ref": {
+          "$ref": "#/$defs/ContentRef"
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ContentRef"
+          },
+          "maxItems": 64,
+          "uniqueItems": true
+        },
+        "purpose": {
+          "$ref": "#/$defs/Purpose"
+        },
+        "bytes_base64": {
+          "type": "string",
+          "maxLength": 349528,
+          "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"
+        },
+        "retain_until": {
+          "$ref": "#/$defs/Time"
+        }
+      },
+      "required": [
+        "content_ref",
+        "sources",
+        "purpose",
+        "bytes_base64",
+        "retain_until"
+      ],
+      "additionalProperties": false
+    },
+    "ContentGetPayload": {
+      "type": "object",
+      "properties": {
+        "content_ref": {
+          "$ref": "#/$defs/ContentRef"
+        },
+        "purpose": {
+          "$ref": "#/$defs/Purpose"
+        },
+        "range": {
+          "$ref": "#/$defs/ContentRange"
+        }
+      },
+      "required": ["content_ref", "purpose"],
+      "additionalProperties": false
+    },
+    "ContentPutRequest": {
+      "type": "object",
+      "properties": {
+        "contract_version": {
+          "type": "string",
+          "const": "1.2.0"
+        },
+        "profile": {
+          "type": "string",
+          "const": "content"
+        },
+        "command_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "target": {
+          "$ref": "#/$defs/ContentTarget"
+        },
+        "method": {
+          "type": "string",
+          "const": "content.put"
+        },
+        "accept_before": {
+          "$ref": "#/$defs/Time"
+        },
+        "payload": {
+          "$ref": "#/$defs/ContentPutPayload"
+        },
+        "trace_context": {
+          "$ref": "#/$defs/TraceContext"
+        }
+      },
+      "required": [
+        "contract_version",
+        "profile",
+        "command_id",
+        "target",
+        "method",
+        "accept_before",
+        "payload"
+      ],
+      "additionalProperties": false
+    },
+    "ContentGetRequest": {
+      "type": "object",
+      "properties": {
+        "contract_version": {
+          "type": "string",
+          "const": "1.2.0"
+        },
+        "profile": {
+          "type": "string",
+          "const": "content"
+        },
+        "command_id": {
+          "$ref": "#/$defs/ID"
+        },
+        "target": {
+          "$ref": "#/$defs/ContentTarget"
+        },
+        "method": {
+          "type": "string",
+          "const": "content.get"
+        },
+        "accept_before": {
+          "$ref": "#/$defs/Time"
+        },
+        "payload": {
+          "$ref": "#/$defs/ContentGetPayload"
+        },
+        "trace_context": {
+          "$ref": "#/$defs/TraceContext"
+        }
+      },
+      "required": [
+        "contract_version",
+        "profile",
+        "command_id",
+        "target",
+        "method",
+        "accept_before",
+        "payload"
+      ],
+      "additionalProperties": false
+    },
+    "CommandProgressContent": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "const": "content"
+        },
+        "content_ref": {
+          "$ref": "#/$defs/ContentRef"
+        },
+        "publication": {
+          "type": "string",
+          "enum": ["preparing", "published", "failed"]
+        }
+      },
+      "required": ["kind", "content_ref", "publication"],
+      "additionalProperties": false
+    },
+    "ContentGetResponsePreparing": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "const": "preparing"
+        },
+        "content_ref": {
+          "$ref": "#/$defs/ContentRef"
+        }
+      },
+      "required": ["status", "content_ref"],
+      "additionalProperties": false
+    },
+    "ContentGetResponsePublished": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "const": "published"
+        },
+        "content_ref": {
+          "$ref": "#/$defs/ContentRef"
+        },
+        "bytes_base64": {
+          "type": "string",
+          "maxLength": 349528,
+          "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"
+        },
+        "range": {
+          "$ref": "#/$defs/ContentRange"
+        }
+      },
+      "required": ["status", "content_ref", "bytes_base64"],
+      "additionalProperties": false
+    },
+    "ContentGetResponseFailed": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "const": "failed"
+        },
+        "content_ref": {
+          "$ref": "#/$defs/ContentRef"
+        },
+        "reason": {
+          "type": "string",
+          "enum": [
+            "integrity",
+            "dependency_unavailable",
+            "forbidden",
+            "expired",
+            "source_unavailable"
+          ]
+        }
+      },
+      "required": ["status", "content_ref", "reason"],
+      "additionalProperties": false
+    },
+    "ContentGetResponseGone": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "const": "gone"
+        },
+        "content_ref": {
+          "$ref": "#/$defs/ContentRef"
+        },
+        "evidence_available": {
+          "type": "boolean",
+          "const": false
+        }
+      },
+      "required": ["status", "content_ref", "evidence_available"],
+      "additionalProperties": false
+    },
+    "ContentGetResponseUnavailable": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "const": "unavailable"
+        },
+        "content_ref": {
+          "$ref": "#/$defs/ContentRef"
+        },
+        "reason": {
+          "type": "string",
+          "enum": ["integrity", "dependency_unavailable"]
+        }
+      },
+      "required": ["status", "content_ref", "reason"],
+      "additionalProperties": false
+    },
+    "ContentGetResponseNotFound": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "const": "not_found"
+        },
+        "content_ref": {
+          "$ref": "#/$defs/ContentRef"
+        }
+      },
+      "required": ["status", "content_ref"],
+      "additionalProperties": false
+    },
+    "ContentGetResponseRejected": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "const": "rejected"
+        },
+        "reason": {
+          "$ref": "#/$defs/ErrorCode"
+        }
+      },
+      "required": ["status", "reason"],
+      "additionalProperties": false
+    },
+    "ContentGetResponse": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ContentGetResponsePreparing"
+        },
+        {
+          "$ref": "#/$defs/ContentGetResponsePublished"
+        },
+        {
+          "$ref": "#/$defs/ContentGetResponseFailed"
+        },
+        {
+          "$ref": "#/$defs/ContentGetResponseGone"
+        },
+        {
+          "$ref": "#/$defs/ContentGetResponseUnavailable"
+        },
+        {
+          "$ref": "#/$defs/ContentGetResponseNotFound"
+        },
+        {
+          "$ref": "#/$defs/ContentGetResponseRejected"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "methods": [
+    {
+      "input_schema": "CommandGetRequest",
+      "output_schema": "CommandGetResponse",
+      "advertised": false
+    },
+    {
+      "input_schema": "ContentPutRequest",
+      "output_schema": "CommandReceipt",
+      "advertised": false
+    },
+    {
+      "input_schema": "ContentGetRequest",
+      "output_schema": "ContentGetResponse",
+      "advertised": false
+    }
+  ]
+}

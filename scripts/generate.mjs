@@ -30,6 +30,17 @@ const configurations = [
     ts: 'sdk/typescript/src/v1_1/generated/values.ts',
     runner: 'conformance/component/valuerunner_v1_1/types.go',
   },
+  {
+    version: '1.2.0',
+    source: 'contract/schema/1.2.0/values.json',
+    go: 'contract/gen/go/v1_2/values.go',
+    aliases: 'contract/v1_2/values.go',
+    namespace: 'v1_2',
+    goImport: 'github.com/ruipengliu/lerna/contract/gen/go/v1_2',
+    contractImport: 'github.com/ruipengliu/lerna/contract/v1_2',
+    ts: 'sdk/typescript/src/v1_2/generated/values.ts',
+    runner: 'conformance/component/valuerunner_v1_2/types.go',
+  },
 ];
 for (const configuration of configurations) {
   const source = configuration.source;
@@ -46,6 +57,7 @@ for (const configuration of configurations) {
     'additionalProperties',
     'items',
     'maxItems',
+    'uniqueItems',
     'maxProperties',
     'minItems',
     'pattern',
@@ -325,10 +337,10 @@ func (value *CommandPayload) UnmarshalJSON(data []byte) error { var raw json.Raw
   const methods = inventory.methods.map((entry) => {
     if (
       Object.keys(entry).sort().join() !==
-        (configuration.version === '1.1.0'
+        (configuration.version !== '1.0.0'
           ? 'advertised,input_schema,output_schema'
           : 'input_schema,output_schema') ||
-      (configuration.version === '1.1.0' &&
+      (configuration.version !== '1.0.0' &&
         typeof entry.advertised !== 'boolean') ||
       typeof entry.input_schema !== 'string' ||
       typeof entry.output_schema !== 'string'
@@ -351,7 +363,7 @@ func (value *CommandPayload) UnmarshalJSON(data []byte) error { var raw json.Raw
     return {
       ...input,
       output: entry.output_schema,
-      ...(configuration.version === '1.1.0'
+      ...(configuration.version !== '1.0.0'
         ? { advertised: entry.advertised }
         : {}),
       inputDigest: schemaDigest(entry.input_schema),
@@ -370,7 +382,7 @@ func (value *CommandPayload) UnmarshalJSON(data []byte) error { var raw json.Raw
   const support = declaredSupport.filter(
     (_, index) => methods[index].advertised ?? true,
   );
-  if (configuration.version === '1.1.0') {
+  if (configuration.version !== '1.0.0') {
     go += `// DeclaredMethods returns the typed inventory; availability is declared separately.\nfunc DeclaredMethods() []MethodSupport { return []MethodSupport{\n`;
     for (const m of declaredSupport)
       go += `{${Object.entries(m)
