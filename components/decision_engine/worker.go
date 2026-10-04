@@ -538,9 +538,16 @@ func (s *Service) calculate(ctx context.Context, work Work) completion {
 	if !reflect.DeepEqual(observedSnapshot, manifest.Snapshot) {
 		return failedCompletion("snapshot_unavailable", inputBytes, 0, 0)
 	}
-	processed := append([]v.ContentRef{lock.ManifestRef}, snapshot.MaterialRefs...)
+	materialRefs := snapshot.MaterialRefs
+	if work.Permission.RuleVersion == "fixture-rule/3" {
+		materialRefs = proposalMaterialRefs(snapshot)
+		if len(materialRefs) > 63 {
+			return failedCompletion("proposal_invalid", inputBytes, 0, 0)
+		}
+	}
+	processed := append([]v.ContentRef{lock.ManifestRef}, materialRefs...)
 	var first []byte
-	for index, ref := range snapshot.MaterialRefs {
+	for index, ref := range materialRefs {
 		expected, err := strconv.ParseInt(string(ref.ByteLength), 10, 64)
 		if err != nil || expected > cap-int64(inputBytes) {
 			return failedCompletion("input_over_limit", inputBytes, 0, 0)

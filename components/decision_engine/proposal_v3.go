@@ -4,9 +4,11 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"io"
 	"reflect"
 	"slices"
 	"strconv"
+	"strings"
 
 	v "github.com/ruipengliu/lerna/contract/v1_1"
 )
@@ -14,7 +16,7 @@ import (
 // A rule/3 case is one bounded fixture evaluation. It proposes changes only;
 // the current Task revisions and original durable-start fee are preserved.
 func (s *Service) calculateProposalV3(ctx context.Context, work Work, snapshot Snapshot, processed []v.ContentRef, inputBytes int) completion {
-	if (snapshot.Rule != "delta_only" && snapshot.Rule != "actions_four") || len(snapshot.MaterialRefs) < 2 {
+	if (snapshot.Rule != "delta_only" && snapshot.Rule != "actions_four" && snapshot.Rule != "input_request") || len(snapshot.MaterialRefs) < 2 {
 		return failedCompletion("proposal_invalid", inputBytes, 0, 1)
 	}
 	replacement := snapshot.RequirementRefs[0]
@@ -35,6 +37,13 @@ func (s *Service) calculateProposalV3(ctx context.Context, work Work, snapshot S
 			actions = append(actions, v.ProposalAction{LocalKey: v.ID("action-" + strconv.Itoa(i+1)), CapabilityRef: binding.CapabilityRef, BindingRef: binding.BindingRef, ArgumentsRef: binding.ArgumentsRef, Purpose: binding.Purpose, SourceRefs: slices.Clone(processed)})
 		}
 		proposal.Advance = v.NewProposalAdvanceActions(v.ProposalAdvanceActions{Actions: actions})
+	}
+	if snapshot.Rule == "input_request" {
+		if len(snapshot.MaterialRefs) < 3 || len(snapshot.AnswerSchemaRefs) != 1 {
+			return failedCompletion("proposal_invalid", inputBytes, 0, 1)
+		}
+		proposal.RequirementDelta = []v.RequirementDelta{}
+		proposal.Advance = v.NewProposalAdvanceInputRequest(v.ProposalAdvanceInputRequest{QuestionRef: snapshot.MaterialRefs[2], AnswerSchemaRef: snapshot.AnswerSchemaRefs[0], Purpose: "clarification", PreviewRefs: []v.ContentRef{snapshot.MaterialRefs[0]}})
 	}
 	// Raw decoding is the same closed public codec used by callers. Source and
 	// purpose inclusion follows here, rather than in a codec with database access.
@@ -108,7 +117,7 @@ func (s *Service) validateProposalV3(ctx context.Context, work Work, snapshot Sn
 			}
 		}
 		for _, ref := range []v.ContentRef{delta.StatementRef, delta.RuleRef} {
-			if !slices.Contains(snapshot.MaterialRefs, ref) {
+			if !slices.Contains(proposalMaterialRefs(snapshot), ref) {
 				return ErrForbidden
 			}
 			body, err := s.config.Source.ReadMaterial(ctx, ref, "rule.condition", work.Permission, cap-int64(*inputBytes))
@@ -131,7 +140,7 @@ func (s *Service) validateProposalV3(ctx context.Context, work Work, snapshot Sn
 		}
 		for _, action := range advance.Actions {
 			binding := CapabilityBinding{CapabilityRef: action.CapabilityRef, BindingRef: action.BindingRef, ArgumentsRef: action.ArgumentsRef, Purpose: action.Purpose}
-			if !slices.Contains(snapshot.CapabilityBindings, binding) || !slices.Contains(snapshot.MaterialRefs, action.ArgumentsRef) {
+			if !slices.Contains(snapshot.CapabilityBindings, binding) || !slices.Contains(proposalMaterialRefs(snapshot), action.ArgumentsRef) {
 				return ErrForbidden
 			}
 			for _, ref := range action.SourceRefs {
@@ -148,8 +157,120 @@ func (s *Service) validateProposalV3(ctx context.Context, work Work, snapshot Sn
 				return ErrForbidden
 			}
 		}
+	} else if request, ok := proposal.Advance.AsInputRequest(); ok {
+		if request.Purpose != "clarification" || !slices.Contains(snapshot.MaterialRefs, request.QuestionRef) || !slices.Contains(snapshot.AnswerSchemaRefs, request.AnswerSchemaRef) {
+			return ErrForbidden
+		}
+		materials := []struct {
+			ref     v.ContentRef
+			purpose string
+		}{{request.QuestionRef, "rule.question"}, {request.AnswerSchemaRef, "rule.answer_schema"}}
+		for _, ref := range request.PreviewRefs {
+			if !slices.Contains(snapshot.MaterialRefs, ref) {
+				return ErrForbidden
+			}
+			materials = append(materials, struct {
+				ref     v.ContentRef
+				purpose string
+			}{ref, "rule.preview"})
+		}
+		for _, material := range materials {
+			body, err := s.config.Source.ReadMaterial(ctx, material.ref, material.purpose, work.Permission, cap-int64(*inputBytes))
+			*inputBytes += len(body)
+			if err != nil {
+				return err
+			}
+			if hash(body) != material.ref.Hash || strconv.Itoa(len(body)) != string(material.ref.ByteLength) {
+				return ErrForbidden
+			}
+			if material.purpose == "rule.answer_schema" {
+				if err := validateFixtureAnswerSchema(body); err != nil {
+					return err
+				}
+			}
+		}
 	} else {
 		return ErrForbidden
 	}
 	return ctx.Err()
+}
+
+// Rule/3 processes the entire finite declared fixture material set, including
+// schema and argument refs that need not also occur in MaterialRefs. No refs
+// are silently clipped to fit Proposal's source bound.
+func proposalMaterialRefs(snapshot Snapshot) []v.ContentRef {
+	refs := slices.Clone(snapshot.MaterialRefs)
+	for _, binding := range snapshot.CapabilityBindings {
+		if !slices.Contains(refs, binding.ArgumentsRef) {
+			refs = append(refs, binding.ArgumentsRef)
+		}
+	}
+	for _, ref := range snapshot.AnswerSchemaRefs {
+		if !slices.Contains(refs, ref) {
+			refs = append(refs, ref)
+		}
+	}
+	return refs
+}
+
+// The fixture accepts a closed string schema with a finite maxLength (1..256)
+// and an optional bounded minLength. Schema metadata uses JSON numbers; this
+// grammar never resolves URLs/$ref or loads code and rejects duplicate keys.
+func validateFixtureAnswerSchema(body []byte) error {
+	if len(body) > 4096 {
+		return ErrForbidden
+	}
+	d := json.NewDecoder(strings.NewReader(string(body)))
+	d.UseNumber()
+	first, err := d.Token()
+	if err != nil || first != json.Delim('{') {
+		return ErrForbidden
+	}
+	seen := map[string]bool{}
+	minimum, maximum := 0, 0
+	for d.More() {
+		token, err := d.Token()
+		if err != nil {
+			return ErrForbidden
+		}
+		key, ok := token.(string)
+		if !ok || seen[key] {
+			return ErrForbidden
+		}
+		seen[key] = true
+		value, err := d.Token()
+		if err != nil {
+			return ErrForbidden
+		}
+		switch key {
+		case "type":
+			if value != "string" {
+				return ErrForbidden
+			}
+		case "minLength", "maxLength":
+			number, ok := value.(json.Number)
+			if !ok {
+				return ErrForbidden
+			}
+			n, err := strconv.Atoi(string(number))
+			if err != nil || n < 0 || n > 256 {
+				return ErrForbidden
+			}
+			if key == "minLength" {
+				minimum = n
+			} else {
+				maximum = n
+			}
+		default:
+			return ErrForbidden
+		}
+	}
+	end, err := d.Token()
+	if err != nil || end != json.Delim('}') || !seen["type"] || !seen["maxLength"] || maximum < 1 || minimum > maximum {
+		return ErrForbidden
+	}
+	if _, err := d.Token(); err != io.EOF {
+		return ErrForbidden
+	}
+	return nil
 }

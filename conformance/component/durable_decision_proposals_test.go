@@ -60,6 +60,16 @@ func proposalScenario(t *testing.T, ctx context.Context, world *fixture.World, v
 		}
 		purposes = append(purposes, "fixture.read")
 	}
+	if rule == "input_request" {
+		question := []byte("Which source should the report compare?")
+		questionRef := source.Ref("proposal-question", "text/plain", question)
+		schema := []byte(`{"type":"string","maxLength":256}`)
+		schemaRef := source.Ref("proposal-answer-schema", "application/schema+json", schema)
+		materials = append(materials, fixture.Material{Ref: questionRef, Bytes: question}, fixture.Material{Ref: schemaRef, Bytes: schema})
+		snapshot.MaterialRefs = append(snapshot.MaterialRefs, questionRef)
+		snapshot.AnswerSchemaRefs = []v.ContentRef{schemaRef}
+		purposes = append(purposes, "rule.question", "rule.answer_schema", "rule.preview")
+	}
 	permission.ComponentRef = snapshot.ComponentRef
 	permission.RuleVersion = version
 	scene.ManifestRef, err = source.Seed(ctx, fixture.Bundle{DecisionRef: scene.DecisionRef, Permission: permission, Snapshot: snapshot, Materials: materials, Purposes: purposes, RuleVersion: version, ChargeBasis: permission.ChargeBasis, RuleStartCharge: permission.RuleStartCharge})
@@ -219,5 +229,64 @@ func TestDurableProposalFourIndependentActions(t *testing.T) {
 	}
 	if completed.Usage.RuleStarts != "1" || completed.Usage.ModelRequests != "0" {
 		t.Fatal("one fixture evaluation became repeated execution or a physical model request")
+	}
+}
+
+func TestDurableProposalInputRequestIsClarificationWithReadableSchema(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+	defer cancel()
+	world := fixture.NewWorld(t, ctx)
+	scene, snapshot := proposalScenario(t, ctx, world, "fixture-rule/3", "input_request")
+	service := proposalService(t, world, scene)
+	raw, err := v.Encode(scene.Request)
+	if err != nil {
+		t.Fatal(err)
+	}
+	outcome, err := service.Decide(ctx, raw, &scene.Subject)
+	if err != nil {
+		t.Fatal(err)
+	}
+	received, ok := outcome.AsReceived()
+	if !ok {
+		t.Fatal("input clarification not received")
+	}
+	if _, ok := received.Receipt.AsAccepted(); !ok {
+		t.Fatal("input clarification not accepted")
+	}
+	if _, err := service.Step(ctx); err != nil {
+		t.Fatal(err)
+	}
+	world.Reopen(ctx)
+	service = proposalService(t, world, scene)
+	view, err := service.Get(ctx, scene.GetJSON, &scene.Subject)
+	if err != nil {
+		t.Fatal(err)
+	}
+	found, ok := view.AsFound()
+	if !ok {
+		t.Fatal("original clarification unavailable")
+	}
+	completed, ok := found.Decision.AsCompleted()
+	if !ok {
+		t.Fatal("clarification proposal did not complete")
+	}
+	request, ok := completed.Proposal.Advance.AsInputRequest()
+	if !ok || request.Purpose != "clarification" || request.AnswerSchemaRef != snapshot.AnswerSchemaRefs[0] || len(request.PreviewRefs) != 1 || request.PreviewRefs[0] != scene.MaterialRef || len(completed.ArtifactRefs) != 0 {
+		t.Fatal("request expanded into authorization, invented an artifact or lost its fixed schema/preview")
+	}
+	permission, err := world.Source().Authorize(ctx, scene.Subject, scene.DecisionRef, "get", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	question, err := world.Source().ReadMaterial(ctx, request.QuestionRef, "rule.question", permission, v.MaxBodyBytes)
+	if err != nil || string(question) != "Which source should the report compare?" {
+		t.Fatal("question not bound to actual readable bytes", err)
+	}
+	schema, err := world.Source().ReadMaterial(ctx, request.AnswerSchemaRef, "rule.answer_schema", permission, v.MaxBodyBytes)
+	if err != nil || string(schema) != `{"type":"string","maxLength":256}` {
+		t.Fatal("schema not bound to actual readable bytes", err)
+	}
+	if len(completed.Proposal.ProcessedSourceRefs) != 5 {
+		t.Fatal("schema outside MaterialRefs omitted from actually processed sources")
 	}
 }
