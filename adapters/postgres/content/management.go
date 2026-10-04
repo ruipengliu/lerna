@@ -65,9 +65,14 @@ func (s *Store) PoliciesForVersion(ctx context.Context, token runtime.Tx, ref v.
 	if err != nil {
 		return nil, "", err
 	}
-	defer rows.Close()
-	policies := []d.FixturePolicy{}
-	last, next := "", ""
+	return readPoliciesForVersionPage(rows, limit)
+}
+
+func readPoliciesForVersionPage(rows *sql.Rows, limit int) (policies []d.FixturePolicy, next string, resultErr error) {
+	var err error
+	defer func() { resultErr = errors.Join(resultErr, rows.Err(), rows.Close()) }()
+	policies = []d.FixturePolicy{}
+	last := ""
 	for rows.Next() {
 		var body []byte
 		var key string
@@ -85,7 +90,7 @@ func (s *Store) PoliciesForVersion(ctx context.Context, token runtime.Tx, ref v.
 		policies = append(policies, policy)
 		last = key
 	}
-	return policies, next, rows.Err()
+	return policies, next, nil
 }
 func (s *Store) LockSourceIndex(ctx context.Context, token runtime.Tx) (int64, error) {
 	tx, err := s.core.LocalSQL(ctx, token)
@@ -238,6 +243,33 @@ func (s *Store) PendingChanges(ctx context.Context, token runtime.Tx, id string)
 	}
 	return out, rows.Err()
 }
+
+// HasSourceCoverage reads one exact registered edge, without changing a watermark.
+func (s *Store) HasSourceCoverage(ctx context.Context, token runtime.Tx, source, target v.ContentRef, watermark int64) (bool, error) {
+	tx, err := s.core.SQL(ctx, token, commonOwner(source.Owner))
+	if err != nil {
+		return false, err
+	}
+	if source.Owner != target.Owner {
+		return false, runtime.ErrScope
+	}
+	ancestor, _, err := d.VersionIdentity(source)
+	if err != nil {
+		return false, err
+	}
+	descendant, _, err := d.VersionIdentity(target)
+	if err != nil {
+		return false, err
+	}
+	ref, err := v.Encode(target)
+	if err != nil {
+		return false, err
+	}
+	var covered bool
+	err = tx.QueryRowContext(ctx, `SELECT EXISTS(SELECT 1 FROM `+s.core.Table("content_source_edges")+` WHERE tenant_id=$1 AND owner_id=$2 AND ancestor_id=$3 AND descendant_id=$4 AND generation<=$5 AND ref=$6)`, source.Owner.TenantID, source.Owner.OwnerID, ancestor, descendant, watermark, ref).Scan(&covered)
+	return covered, err
+}
+
 func (s *Store) Descendants(ctx context.Context, token runtime.Tx, source v.ContentRef, watermark int64, cursor string, limit int) ([]v.ContentRef, string, error) {
 	tx, err := s.core.LocalSQL(ctx, token)
 	if err != nil {
@@ -251,9 +283,14 @@ func (s *Store) Descendants(ctx context.Context, token runtime.Tx, source v.Cont
 	if err != nil {
 		return nil, "", err
 	}
-	defer rows.Close()
-	out := []v.ContentRef{}
-	next := ""
+	return readDescendantsPage(rows, limit)
+}
+
+func readDescendantsPage(rows *sql.Rows, limit int) (out []v.ContentRef, next string, resultErr error) {
+	var err error
+	defer func() { resultErr = errors.Join(resultErr, rows.Err(), rows.Close()) }()
+	out = []v.ContentRef{}
+	next = ""
 	last := ""
 	for rows.Next() {
 		var body []byte
@@ -272,7 +309,7 @@ func (s *Store) Descendants(ctx context.Context, token runtime.Tx, source v.Cont
 		out = append(out, ref)
 		last = key
 	}
-	return out, next, rows.Err()
+	return out, next, nil
 }
 func (s *Store) SaveResponsibility(ctx context.Context, token runtime.Tx, responsibility d.CleanupResponsibility) error {
 	tx, err := s.core.LocalSQL(ctx, token)
@@ -282,6 +319,49 @@ func (s *Store) SaveResponsibility(ctx context.Context, token runtime.Tx, respon
 	id, _, err := d.VersionIdentity(responsibility.Ref)
 	if err != nil {
 		return err
+	}
+	var previousBody []byte
+	err = tx.QueryRowContext(ctx, `SELECT body FROM `+s.core.Table("content_cleanup_responsibilities")+` WHERE tenant_id=$1 AND owner_id=$2 AND change_key=$3 AND object_id=$4 FOR UPDATE`, token.Owner().TenantID, token.Owner().OwnerID, responsibility.ChangeKey, id).Scan(&previousBody)
+	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+		return err
+	}
+	if err == nil {
+		var previous d.CleanupResponsibility
+		if err = json.Unmarshal(previousBody, &previous); err != nil {
+			return err
+		}
+		if previous.Ref != responsibility.Ref {
+			return runtime.ErrScope
+		}
+		if previous.BodyCleanup == "pending" {
+			// Renewal is a current-use observation, never native cleanup ACK.
+			responsibility.BodyCleanup = previous.BodyCleanup
+			responsibility.Residual = previous.Residual
+			if previous.Reason != "" {
+				responsibility.Reason = previous.Reason
+			}
+			responsibility.StagingHolder = responsibility.StagingHolder || previous.StagingHolder
+			responsibility.ObjectHolder = responsibility.ObjectHolder || previous.ObjectHolder
+			if previous.AttemptKey != "" {
+				responsibility.AttemptKey = previous.AttemptKey
+			}
+		}
+		if previous.Deadline.Before(responsibility.Deadline) {
+			responsibility.Deadline = previous.Deadline
+		}
+		union := map[string]bool{}
+		for _, action := range previous.Actions {
+			union[action] = true
+		}
+		for _, action := range responsibility.Actions {
+			union[action] = true
+		}
+		responsibility.Actions = []string{}
+		for _, action := range []string{"read", "process", "save", "sync", "disclose"} {
+			if union[action] {
+				responsibility.Actions = append(responsibility.Actions, action)
+			}
+		}
 	}
 	body, err := json.Marshal(responsibility)
 	if err != nil {
@@ -299,9 +379,14 @@ func (s *Store) Responsibilities(ctx context.Context, token runtime.Tx, key, cur
 	if err != nil {
 		return nil, "", err
 	}
-	defer rows.Close()
-	out := []d.CleanupResponsibility{}
-	next := ""
+	return readResponsibilitiesPage(rows, limit)
+}
+
+func readResponsibilitiesPage(rows *sql.Rows, limit int) (out []d.CleanupResponsibility, next string, resultErr error) {
+	var err error
+	defer func() { resultErr = errors.Join(resultErr, rows.Err(), rows.Close()) }()
+	out = []d.CleanupResponsibility{}
+	next = ""
 	last := ""
 	for rows.Next() {
 		var body []byte
@@ -320,8 +405,52 @@ func (s *Store) Responsibilities(ctx context.Context, token runtime.Tx, key, cur
 		out = append(out, responsibility)
 		last = id
 	}
-	return out, next, rows.Err()
+	return out, next, nil
 }
+func (s *Store) AdmissionChanges(ctx context.Context, token runtime.Tx, ref v.ContentRef, cursor string, limit int) (out []d.PolicyChange, next string, resultErr error) {
+	tx, err := s.core.SQL(ctx, token, commonOwner(ref.Owner))
+	if err != nil {
+		return nil, "", err
+	}
+	if limit < 1 || limit > 64 {
+		return nil, "", runtime.ErrWorkBounds
+	}
+	body, err := json.Marshal(ref)
+	if err != nil {
+		return nil, "", err
+	}
+	rows, err := tx.QueryContext(ctx, `SELECT body,change_key FROM `+s.core.Table("content_policy_changes")+` WHERE tenant_id=$1 AND owner_id=$2 AND convert_from(body,'UTF8')::jsonb->'admission_target'=$3::jsonb AND change_key>$4 ORDER BY change_key LIMIT $5`, ref.Owner.TenantID, ref.Owner.OwnerID, string(body), cursor, limit+1)
+	if err != nil {
+		return nil, "", err
+	}
+	return readAdmissionChangesPage(rows, limit)
+}
+
+func readAdmissionChangesPage(rows *sql.Rows, limit int) (out []d.PolicyChange, next string, resultErr error) {
+	var err error
+	defer func() { resultErr = errors.Join(resultErr, rows.Err(), rows.Close()) }()
+	out = []d.PolicyChange{}
+	last := ""
+	for rows.Next() {
+		var body []byte
+		var key string
+		if err = rows.Scan(&body, &key); err != nil {
+			return nil, "", err
+		}
+		if len(out) == limit {
+			next = last
+			break
+		}
+		var change d.PolicyChange
+		if err = json.Unmarshal(body, &change); err != nil {
+			return nil, "", err
+		}
+		out = append(out, change)
+		last = key
+	}
+	return out, next, nil
+}
+
 func (s *Store) NextPolicyWork(ctx context.Context, token runtime.Tx, id string) (int64, error) {
 	tx, err := s.core.LocalSQL(ctx, token)
 	if err != nil {

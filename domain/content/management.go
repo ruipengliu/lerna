@@ -17,18 +17,20 @@ type ManagementConflict struct{}
 func (*ManagementConflict) Error() string { return "Content policy revision conflict" }
 
 type PolicyChange struct {
-	Key            string         `json:"key"`
-	Policy         FixturePolicy  `json:"policy"`
-	Previous       *FixturePolicy `json:"previous,omitempty"`
-	Watermark      int64          `json:"watermark"`
-	Cursor         string         `json:"cursor"`
-	Deadline       time.Time      `json:"deadline"`
-	Due            time.Time      `json:"due"`
-	ExpiryDue      time.Time      `json:"expiry_due"`
-	ExpiryDeadline time.Time      `json:"expiry_deadline"`
-	State          string         `json:"state"`
-	WorkRevision   int64          `json:"work_revision"`
-	Reason         string         `json:"reason,omitempty"`
+	Key             string         `json:"key"`
+	AdmissionTarget *v.ContentRef  `json:"admission_target,omitempty"`
+	Policy          FixturePolicy  `json:"policy"`
+	Previous        *FixturePolicy `json:"previous,omitempty"`
+	Watermark       int64          `json:"watermark"`
+	Cursor          string         `json:"cursor"`
+	Deadline        time.Time      `json:"deadline"`
+	Due             time.Time      `json:"due"`
+	ExpiryDue       time.Time      `json:"expiry_due"`
+	ExpiryDeadline  time.Time      `json:"expiry_deadline"`
+	State           string         `json:"state"`
+	Phase           string         `json:"phase,omitempty"`
+	WorkRevision    int64          `json:"work_revision"`
+	Reason          string         `json:"reason,omitempty"`
 }
 type CleanupResponsibility struct {
 	ChangeKey     string           `json:"change_key"`
@@ -65,7 +67,9 @@ type ManagementRepository interface {
 	SaveSources(context.Context, runtime.Tx, v.ContentRef, []v.ContentRef) error
 	SaveChange(context.Context, runtime.Tx, PolicyChange) error
 	ReadChange(context.Context, runtime.Tx, string) (*PolicyChange, error)
+	AdmissionChanges(context.Context, runtime.Tx, v.ContentRef, string, int) ([]PolicyChange, string, error)
 	PendingChanges(context.Context, runtime.Tx, string) ([]PolicyChange, error)
+	HasSourceCoverage(context.Context, runtime.Tx, v.ContentRef, v.ContentRef, int64) (bool, error)
 	Descendants(context.Context, runtime.Tx, v.ContentRef, int64, string, int) ([]v.ContentRef, string, error)
 	SaveResponsibility(context.Context, runtime.Tx, CleanupResponsibility) error
 	Responsibilities(context.Context, runtime.Tx, string, string, int) ([]CleanupResponsibility, string, error)
@@ -171,6 +175,11 @@ func (m *Manager) RebuildSources(ctx context.Context, subject *v.SubjectBinding)
 					return err
 				}
 			}
+			if next == "" {
+				if err = m.scheduleInherited(ctx, tx, record, true, watermark); err != nil {
+					return err
+				}
+			}
 			if err = m.config.Store.SaveBackfillProgress(ctx, tx, record.Ref, next, next == ""); err != nil {
 				return err
 			}
@@ -200,7 +209,7 @@ func (m *Manager) restoreLegacyMaintenance(ctx context.Context, tx runtime.Tx, r
 	if string(a) == string(b) && record.Purpose == policy.Purpose {
 		due = earlier(due, cutoff(record.CurrentRetainUntil))
 	}
-	change := PolicyChange{Key: key, Policy: policy, Watermark: watermark, Due: due, Deadline: due.Add(m.config.WorkBudget), ExpiryDue: due, ExpiryDeadline: due.Add(m.config.WorkBudget), State: "scheduled"}
+	change := PolicyChange{Key: key, Policy: policy, Watermark: watermark, Due: due, Deadline: due.Add(m.config.WorkBudget), ExpiryDue: due, ExpiryDeadline: due.Add(m.config.WorkBudget), State: "scheduled", Phase: "natural_expiry"}
 	actions, cleanup := affected(change, record.Ref, now)
 	if len(actions) > 0 || cleanup {
 		// An already invalid saving basis requires immediate registration, even
@@ -308,7 +317,7 @@ func (m *Manager) install(ctx context.Context, subject *v.SubjectBinding, policy
 		}
 		deadline := now.Add(m.config.WorkBudget)
 		expiry := earlier(policy.ValidUntil, policy.RetainUntil)
-		result = PolicyChange{Key: key, Policy: policy, Previous: old, Watermark: watermark, Deadline: deadline, Due: now, ExpiryDue: expiry, ExpiryDeadline: expiry.Add(m.config.WorkBudget), State: "complete"}
+		result = PolicyChange{Key: key, Policy: policy, Previous: old, Watermark: watermark, Deadline: deadline, Due: now, ExpiryDue: expiry, ExpiryDeadline: expiry.Add(m.config.WorkBudget), State: "complete", Phase: "policy_change"}
 		if record != nil {
 			result.State = "pending"
 			result.WorkRevision, err = m.config.Store.NextPolicyWork(ctx, tx, record.ObjectID)
@@ -362,7 +371,11 @@ func affected(change PolicyChange, source v.ContentRef, now time.Time) ([]string
 	return out, cleanup
 }
 func (m *Manager) register(ctx context.Context, tx runtime.Tx, change PolicyChange, record Record, source v.ContentRef, now time.Time) error {
-	actions, cleanup := affected(change, source, now)
+	qualificationTime := now
+	if change.Phase == "policy_change" {
+		qualificationTime = change.Due
+	}
+	actions, cleanup := affected(change, source, qualificationTime)
 	reason := ""
 	if change.Policy.Ref != source {
 		reason = "source_binding_mismatch"
@@ -374,13 +387,6 @@ func (m *Manager) register(ctx context.Context, tx runtime.Tx, change PolicyChan
 	state := "not_required"
 	residual := "use_review"
 	if applies {
-		if !now.Before(cutoff(record.CurrentRetainUntil)) {
-			actions = []string{"read", "process", "save", "sync", "disclose"}
-			cleanup = true
-			if reason == "" {
-				reason = "accepted_retention_expired"
-			}
-		}
 		cap := earlier(cutoff(record.CurrentRetainUntil), change.Policy.RetainUntil)
 		if cap.Before(cutoff(record.CurrentRetainUntil)) {
 			record.CurrentRetainUntil = wireTime(cap)
@@ -389,11 +395,33 @@ func (m *Manager) register(ctx context.Context, tx runtime.Tx, change PolicyChan
 				return err
 			}
 		}
+		// Historical policy facts and current cap qualification are separate.
+		// A newly narrowed persisted cap can already have expired during work.
+		var err error
+		now, err = m.config.Store.Now(ctx, tx)
+		if err != nil {
+			return err
+		}
+		if !now.Before(cap) {
+			actions = []string{"read", "process", "save", "sync", "disclose"}
+			cleanup = true
+			if reason == "" {
+				reason = "accepted_retention_expired"
+			}
+		}
+		if change.Reason == "maintenance_coverage_unknown" {
+			cleanup = true
+			reason = change.Reason
+			residual = "current_basis_unconfirmed"
+		}
 		if cleanup {
 			state = "pending"
-			residual = "holder_unconfirmed"
+			if residual != "current_basis_unconfirmed" {
+				residual = "holder_unconfirmed"
+			}
 		}
 	}
+
 	return m.config.Store.SaveResponsibility(ctx, tx, CleanupResponsibility{ChangeKey: change.Key, Ref: record.Ref, Subject: change.Policy.Subject, Purpose: change.Policy.Purpose, Actions: actions, Deadline: change.Deadline, BodyCleanup: state, StagingHolder: record.StagingHolder, ObjectHolder: record.ObjectHolder, AttemptKey: record.AttemptKey, Publication: record.Publication, Residual: residual, Reason: reason})
 }
 func (m *Manager) ObserveChange(ctx context.Context, subject *v.SubjectBinding, key, cursor string, limit int) (PropagationObservation, error) {
@@ -434,7 +462,51 @@ func (m *Manager) ObservePolicyChange(ctx context.Context, subject *v.SubjectBin
 	return m.ObserveChange(ctx, subject, changeKey(policy), "", 64)
 }
 
+// ObserveAdmissionChanges discovers fixed admission obligations without creating
+// maintenance work. Each exact key can be observed through ObserveChange.
+func (m *Manager) ObserveAdmissionChanges(ctx context.Context, subject *v.SubjectBinding, ref v.ContentRef, cursor string, limit int) ([]PolicyChange, string, error) {
+	if err := m.authorize(ctx, subject); err != nil {
+		return nil, "", err
+	}
+	if ref.Owner != m.config.Owner {
+		return nil, "", refusal("forbidden")
+	}
+	if _, err := v.Encode(ref); err != nil {
+		return nil, "", err
+	}
+	if limit < 1 || limit > 64 || len(cursor) > 128 {
+		return nil, "", refusal("input_over_limit")
+	}
+	var out []PolicyChange
+	var next string
+	err := m.config.Store.Within(ctx, owner(m.config.Owner), func(ctx context.Context, tx runtime.Tx) error {
+		if err := m.current(ctx, tx); err != nil {
+			return err
+		}
+		var err error
+		out, next, err = m.config.Store.AdmissionChanges(ctx, tx, ref, cursor, limit)
+		if err != nil {
+			return err
+		}
+		return m.current(ctx, tx)
+	})
+	return out, next, err
+}
+
 func (m *Manager) scheduleAdmission(ctx context.Context, tx runtime.Tx, policy *FixturePolicy, record Record) error {
+	// Maintenance follows the original saving subject/purpose, including aliases.
+	policySubject, _ := v.Encode(policy.Subject)
+	recordSubject, _ := v.Encode(record.Subject)
+	if string(policySubject) != string(recordSubject) || policy.Purpose != record.Purpose {
+		var err error
+		policy, err = m.config.Store.LockPolicy(ctx, tx, FixturePolicy{Ref: record.Ref, Subject: record.Subject, Purpose: record.Purpose})
+		if err != nil {
+			return err
+		}
+		if policy == nil {
+			return ErrUnavailable
+		}
+	}
 	change, err := m.config.Store.ReadChange(ctx, tx, changeKey(*policy))
 	if err != nil {
 		return err
@@ -442,32 +514,244 @@ func (m *Manager) scheduleAdmission(ctx context.Context, tx runtime.Tx, policy *
 	if change == nil {
 		return ErrUnavailable
 	}
-	if change.State != "complete" {
-		return nil
+	due := earlier(earlier(policy.ValidUntil, policy.RetainUntil), cutoff(record.CurrentRetainUntil))
+	if change.State == "complete" {
+		watermark, err := m.config.Store.LockSourceIndex(ctx, tx)
+		if err != nil {
+			return err
+		}
+		budget := change.ExpiryDeadline.Sub(change.ExpiryDue)
+		if budget <= 0 || budget > 24*time.Hour {
+			return ErrUnavailable
+		}
+		change.Watermark = watermark
+		change.State = "scheduled"
+		change.Phase = "natural_expiry"
+		change.Due = due
+		change.ExpiryDue = due
+		change.ExpiryDeadline = due.Add(budget)
+		change.Deadline = change.ExpiryDeadline
+		if err = m.triggerChange(ctx, tx, change); err != nil {
+			return err
+		}
+	} else if due.Before(change.ExpiryDue) {
+		// A newly observed narrower cap does not overwrite the original change.
+		if err = m.scheduleTarget(ctx, tx, *policy, record, record, *change, due); err != nil {
+			return err
+		}
 	}
-	watermark, err := m.config.Store.LockSourceIndex(ctx, tx)
+	return m.scheduleInherited(ctx, tx, record, false, 0)
+}
+
+func admissionKey(target v.ContentRef, policy FixturePolicy, due time.Time) string {
+	raw, _ := json.Marshal(struct {
+		Domain   string
+		Target   v.ContentRef
+		Source   v.ContentRef
+		Subject  v.SubjectBinding
+		Purpose  string
+		Revision int64
+		Due      time.Time
+		Reason   string
+	}{"content-inherited-expiry-1", target, policy.Ref, policy.Subject, policy.Purpose, policy.Revision, due, "natural_expiry"})
+	sum := sha256.Sum256(raw)
+	return "ip-" + hex.EncodeToString(sum[:])
+}
+
+// triggerChange preserves the source's global work revision and earliest due.
+func (m *Manager) triggerChange(ctx context.Context, tx runtime.Tx, change *PolicyChange) error {
+	id, _, err := VersionIdentity(change.Policy.Ref)
 	if err != nil {
 		return err
 	}
-	change.Watermark = watermark
-	change.State = "scheduled"
-	change.Due = earlier(earlier(policy.ValidUntil, policy.RetainUntil), cutoff(record.CurrentRetainUntil))
-	budget := change.ExpiryDeadline.Sub(change.ExpiryDue)
-	if budget <= 0 || budget > 24*time.Hour {
-		return ErrUnavailable
-	}
-	change.ExpiryDue = change.Due
-	change.ExpiryDeadline = change.Due.Add(budget)
-	change.Deadline = change.ExpiryDeadline
-	change.WorkRevision, err = m.config.Store.NextPolicyWork(ctx, tx, record.ObjectID)
+	change.WorkRevision, err = m.config.Store.NextPolicyWork(ctx, tx, id)
 	if err != nil {
 		return err
 	}
 	if err = m.config.Store.SaveChange(ctx, tx, *change); err != nil {
 		return err
 	}
-	_, err = m.config.Store.Trigger(ctx, tx, contract.ObjectRef{TenantID: contract.ID(record.Ref.Owner.TenantID), OwnerID: contract.ID(record.Ref.Owner.OwnerID), Kind: "content", ID: contract.ID(record.ObjectID)}, "policy_propagation", change.WorkRevision, change.Due)
+	_, err = m.config.Store.Trigger(ctx, tx, contract.ObjectRef{TenantID: contract.ID(change.Policy.Ref.Owner.TenantID), OwnerID: contract.ID(change.Policy.Ref.Owner.OwnerID), Kind: "content", ID: contract.ID(id)}, "policy_propagation", change.WorkRevision, change.Due)
 	return err
+}
+
+func (m *Manager) scheduleTarget(ctx context.Context, tx runtime.Tx, policy FixturePolicy, source, target Record, basis PolicyChange, due time.Time) error {
+	budget := basis.ExpiryDeadline.Sub(basis.ExpiryDue)
+	if budget <= 0 || budget > 24*time.Hour {
+		return ErrUnavailable
+	}
+	key := admissionKey(target.Ref, policy, due)
+	deadline := due.Add(budget)
+	existing, err := m.config.Store.ReadChange(ctx, tx, key)
+	if err != nil {
+		return err
+	}
+	if existing != nil {
+		if existing.AdmissionTarget == nil || *existing.AdmissionTarget != target.Ref || !samePolicy(existing.Policy, policy) || !existing.ExpiryDue.Equal(due) || !existing.ExpiryDeadline.Equal(deadline) {
+			return &ManagementConflict{}
+		}
+		return nil
+	}
+	ref := target.Ref
+	change := PolicyChange{Key: key, Policy: policy, AdmissionTarget: &ref, Due: due, Deadline: deadline, ExpiryDue: due, ExpiryDeadline: deadline, State: "scheduled", Phase: "natural_expiry"}
+	now, err := m.config.Store.Now(ctx, tx)
+	if err != nil {
+		return err
+	}
+	if !now.Before(due) {
+		change.State = "pending"
+		if !now.Before(deadline) {
+			change.State = "residual"
+			change.Reason = "original_deadline_expired"
+		}
+		if err = m.registerNatural(ctx, tx, change, source, target); err != nil {
+			return err
+		}
+	}
+	return m.triggerChange(ctx, tx, &change)
+}
+
+func (m *Manager) scheduleInherited(ctx context.Context, tx runtime.Tx, record Record, legacy bool, watermark int64) error {
+	service := &Service{config: Config{Owner: record.Ref.Owner, Store: m.config.Store}}
+	refs, err := service.registeredClosure(ctx, tx, record.Ref, record.Sources, record.Subject, record.Purpose, nil)
+	if err != nil {
+		return err
+	}
+	for _, ref := range refs {
+		source, err := m.config.Store.LockVersion(ctx, tx, ref)
+		if err != nil {
+			return err
+		}
+		if source == nil || source.Ref != ref {
+			return runtime.ErrScope
+		}
+		policy, err := m.config.Store.LockPolicy(ctx, tx, FixturePolicy{Ref: ref, Subject: record.Subject, Purpose: record.Purpose})
+		if err != nil {
+			return err
+		}
+		if policy == nil {
+			return ErrUnavailable
+		}
+		basis, err := m.config.Store.ReadChange(ctx, tx, changeKey(*policy))
+		if err != nil {
+			return err
+		}
+		if basis == nil && legacy {
+			// Ancestors can sort after this descendant. Register their original
+			// basis now; their independent policy pages still remain incomplete.
+			if err = m.restoreLegacyMaintenance(ctx, tx, *source, *policy, watermark); err != nil {
+				return err
+			}
+			basis, err = m.config.Store.ReadChange(ctx, tx, changeKey(*policy))
+			if err != nil {
+				return err
+			}
+		}
+		if basis == nil {
+			return ErrUnavailable
+		}
+		due := earlier(earlier(policy.ValidUntil, policy.RetainUntil), cutoff(source.CurrentRetainUntil))
+		if err = m.scheduleTarget(ctx, tx, *policy, *source, record, *basis, due); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// A targeted obligation qualifies the current exact ancestral saving basis,
+// without confusing its policy ref with the descendant or reviving old caps.
+func (m *Manager) registerNatural(ctx context.Context, tx runtime.Tx, change PolicyChange, source, target Record) error {
+	current, err := m.config.Store.LockPolicy(ctx, tx, change.Policy)
+	if err != nil {
+		return err
+	}
+	now, err := m.config.Store.Now(ctx, tx)
+	if err != nil {
+		return err
+	}
+	classified := change
+	classified.Phase = "natural_expiry"
+	classified.Previous = nil
+	if current == nil {
+		classified.Policy.Read = false
+		classified.Policy.Process = false
+		classified.Policy.Save = false
+		classified.Policy.Sync = false
+		classified.Policy.Disclose = false
+	} else {
+		classified.Policy = *current
+	}
+	if current != nil && current.Ref == source.Ref && current.Save && now.Before(current.ValidUntil) && now.Before(current.RetainUntil) && now.Before(cutoff(source.CurrentRetainUntil)) && now.Before(cutoff(target.CurrentRetainUntil)) {
+		basis, err := m.config.Store.ReadChange(ctx, tx, changeKey(*current))
+		if err != nil {
+			return err
+		}
+		covered := false
+		var coverage *PolicyChange
+		if basis != nil && executableMaintenance(*basis, now) {
+			if target.Ref == source.Ref {
+				covered = true
+			} else {
+				covered, err = m.config.Store.HasSourceCoverage(ctx, tx, source.Ref, target.Ref, basis.Watermark)
+				if err != nil {
+					return err
+				}
+			}
+		}
+		if covered {
+			coverage = basis
+		}
+		if !covered {
+			due := earlier(earlier(current.ValidUntil, current.RetainUntil), cutoff(source.CurrentRetainUntil))
+			point, err := m.config.Store.ReadChange(ctx, tx, admissionKey(target.Ref, *current, due))
+			if err != nil {
+				return err
+			}
+			covered = point != nil && point.AdmissionTarget != nil && *point.AdmissionTarget == target.Ref && samePolicy(point.Policy, *current) && point.ExpiryDue.Equal(due) && executableMaintenance(*point, now)
+			if covered {
+				coverage = point
+			}
+		}
+		// The coverage reads may wait too; classification uses the final clock.
+		now, err = m.config.Store.Now(ctx, tx)
+		if err != nil {
+			return err
+		}
+		if coverage == nil || !executableMaintenance(*coverage, now) {
+			classified.Reason = "maintenance_coverage_unknown"
+		}
+	}
+	if !now.Before(cutoff(source.CurrentRetainUntil)) {
+		classified.Policy.ValidUntil = earlier(classified.Policy.ValidUntil, cutoff(source.CurrentRetainUntil))
+	}
+	return m.register(ctx, tx, classified, target, source.Ref, now)
+}
+
+func executableMaintenance(change PolicyChange, now time.Time) bool {
+	_, known := propagationPhase(change)
+	return known && (change.State == "pending" || change.State == "scheduled") && now.Before(change.Deadline) && now.Before(change.ExpiryDeadline)
+}
+
+func propagationPhase(change PolicyChange) (string, bool) {
+	if change.Phase == "policy_change" || change.Phase == "natural_expiry" {
+		return change.Phase, true
+	}
+	if change.Phase != "" {
+		return "", false
+	}
+	if change.AdmissionTarget != nil || change.State == "scheduled" && change.Due.Equal(change.ExpiryDue) && change.Deadline.Equal(change.ExpiryDeadline) {
+		return "natural_expiry", true
+	}
+	if change.Previous != nil {
+		return "policy_change", true
+	}
+	return "", false
+}
+func (m *Manager) registerPropagation(ctx context.Context, tx runtime.Tx, change PolicyChange, source, target Record, now time.Time) error {
+	if change.Phase == "natural_expiry" {
+		return m.registerNatural(ctx, tx, change, source, target)
+	}
+	return m.register(ctx, tx, change, target, source.Ref, now)
 }
 
 // Step advances one bounded page, retaining the frozen watermark and deadlines.
@@ -533,67 +817,160 @@ func (m *Manager) advanceJob(ctx context.Context, tx runtime.Tx, job runtime.Job
 	if err != nil {
 		return false, err
 	}
-	nextDue := time.Time{}
+	// Snapshot the original page boundary before any scheduling transition.
+	// Timely holder facts may survive, but an unqualified page never advances.
+	visited := []PolicyChange{}
+	residual := func(original PolicyChange) error {
+		original.State = "residual"
+		original.Reason = "original_deadline_expired"
+		return m.config.Store.SaveChange(ctx, tx, original)
+	}
 	for _, change := range changes {
+		currentSource, err := m.config.Store.LockVersion(ctx, tx, source.Ref)
+		if err != nil {
+			return false, err
+		}
+		if currentSource == nil || currentSource.Ref != source.Ref {
+			return false, runtime.ErrScope
+		}
+		source = *currentSource
+		now, err = m.config.Store.Now(ctx, tx)
+		if err != nil {
+			return false, err
+		}
 		if change.Due.After(now) {
-			if nextDue.IsZero() || change.Due.Before(nextDue) {
-				nextDue = change.Due
+			continue
+		}
+		phase, knownPhase := propagationPhase(change)
+		change.Phase = phase
+		original := change
+		visited = append(visited, original)
+		if change.AdmissionTarget != nil {
+			target, err := m.config.Store.LockVersion(ctx, tx, *change.AdmissionTarget)
+			if err != nil {
+				return false, err
+			}
+			if target == nil || target.Ref != *change.AdmissionTarget {
+				return false, runtime.ErrScope
+			}
+			if target.Ref != source.Ref {
+				service := &Service{config: Config{Owner: target.Ref.Owner, Store: m.config.Store}}
+				refs, err := service.registeredClosure(ctx, tx, target.Ref, target.Sources, target.Subject, target.Purpose, nil)
+				if err != nil {
+					return false, err
+				}
+				found := false
+				for _, ref := range refs {
+					if ref == source.Ref {
+						found = true
+					}
+				}
+				if !found {
+					return false, runtime.ErrScope
+				}
+			}
+			if err = m.registerNatural(ctx, tx, change, source, *target); err != nil {
+				return false, err
+			}
+			now, err = m.config.Store.Now(ctx, tx)
+			if err != nil {
+				return false, err
+			}
+			if !now.Before(original.Deadline) {
+				if err = residual(original); err != nil {
+					return false, err
+				}
+			} else {
+				change.State = "complete"
+				if err = m.config.Store.SaveChange(ctx, tx, change); err != nil {
+					return false, err
+				}
 			}
 			continue
 		}
-		if !now.Before(change.Deadline) {
-			// The processing budget bounds descendant traversal, not ownership
-			// of the already known source holder. Preserve that finite fact even
-			// when the remaining frozen watermark becomes residual.
-			if err = m.register(ctx, tx, change, source, source.Ref, now); err != nil {
-				return false, err
-			}
+		// The source is already a known finite holder, even after the budget.
+		if err = m.registerPropagation(ctx, tx, change, source, source, now); err != nil {
+			return false, err
+		}
+		if !knownPhase {
 			change.State = "residual"
-			change.Reason = "original_deadline_expired"
+			change.Reason = "legacy_phase_unknown"
 			if err = m.config.Store.SaveChange(ctx, tx, change); err != nil {
 				return false, err
 			}
 			continue
 		}
-		if err = m.register(ctx, tx, change, source, source.Ref, now); err != nil {
-			return false, err
-		}
-		refs, next, err := m.config.Store.Descendants(ctx, tx, change.Policy.Ref, change.Watermark, change.Cursor, m.config.PageSize)
+		now, err = m.config.Store.Now(ctx, tx)
 		if err != nil {
 			return false, err
 		}
+		if !now.Before(original.Deadline) {
+			if err = residual(original); err != nil {
+				return false, err
+			}
+			continue
+		}
+		refs, next, readErr := m.config.Store.Descendants(ctx, tx, change.Policy.Ref, change.Watermark, change.Cursor, m.config.PageSize)
+		if readErr != nil {
+			return false, readErr
+		}
+		expired := false
 		for _, ref := range refs {
-			record, err := m.config.Store.LockVersion(ctx, tx, ref)
+			now, err = m.config.Store.Now(ctx, tx)
 			if err != nil {
 				return false, err
+			}
+			if !now.Before(original.Deadline) {
+				expired = true
+				break
+			}
+			record, lockErr := m.config.Store.LockVersion(ctx, tx, ref)
+			if lockErr != nil {
+				return false, lockErr
+			}
+			now, err = m.config.Store.Now(ctx, tx)
+			if err != nil {
+				return false, err
+			}
+			if !now.Before(original.Deadline) {
+				expired = true
+				break
 			}
 			if record == nil || record.Ref != ref {
 				return false, runtime.ErrScope
 			}
-			if err = m.register(ctx, tx, change, *record, source.Ref, now); err != nil {
+			if err = m.registerPropagation(ctx, tx, change, source, *record, now); err != nil {
 				return false, err
 			}
+		}
+		now, err = m.config.Store.Now(ctx, tx)
+		if err != nil {
+			return false, err
+		}
+		if expired || !now.Before(original.Deadline) {
+			if err = residual(original); err != nil {
+				return false, err
+			}
+			continue
 		}
 		change.Cursor = next
 		if next == "" {
 			change.State = "complete"
 			if now.Before(change.ExpiryDue) {
 				change.State = "scheduled"
+				change.Phase = "natural_expiry"
 				change.Cursor = ""
 				change.Due = change.ExpiryDue
 				change.Deadline = change.ExpiryDeadline
-			}
-		}
-		if change.State == "pending" || change.State == "scheduled" {
-			if nextDue.IsZero() || change.Due.Before(nextDue) {
-				nextDue = change.Due
 			}
 		}
 		if err = m.config.Store.SaveChange(ctx, tx, change); err != nil {
 			return false, err
 		}
 	}
-	nextDue, err = m.config.Store.NextPolicyDue(ctx, tx, source.ObjectID)
+	// Include the final due read in the blocking work, then qualify every
+	// original change together while their rows remain locked by this Tx.
+	nextDue, err := m.config.Store.NextPolicyDue(ctx, tx, source.ObjectID)
 	if err != nil {
 		return false, err
 	}
@@ -603,6 +980,35 @@ func (m *Manager) advanceJob(ctx context.Context, tx runtime.Tx, job runtime.Job
 	}
 	if err = m.config.Store.ValidateClaim(ctx, tx, *claim, now); err != nil {
 		return false, err
+	}
+	expired := map[string]bool{}
+	for {
+		changed := false
+		for _, original := range visited {
+			if !now.Before(original.Deadline) && !expired[original.Key] {
+				if err = residual(original); err != nil {
+					return false, err
+				}
+				expired[original.Key] = true
+				changed = true
+			}
+		}
+		if !changed {
+			break
+		}
+		// At most one transition per visited change (the existing 64-row
+		// bound). Requalify after recomputation, including earlier changes.
+		nextDue, err = m.config.Store.NextPolicyDue(ctx, tx, source.ObjectID)
+		if err != nil {
+			return false, err
+		}
+		now, err = m.config.Store.Now(ctx, tx)
+		if err != nil {
+			return false, err
+		}
+		if err = m.config.Store.ValidateClaim(ctx, tx, *claim, now); err != nil {
+			return false, err
+		}
 	}
 	if !nextDue.IsZero() {
 		if !nextDue.After(now) {

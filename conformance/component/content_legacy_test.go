@@ -48,6 +48,17 @@ func TestContentLegacyBackfillRestoresOriginalExpiryAndFailedHolderResponsibilit
 		if i == 2 && (len(observation.Responsibilities) != 1 || observation.Responsibilities[0].BodyCleanup != "pending" || !observation.Responsibilities[0].StagingHolder || observation.Responsibilities[0].Publication != "failed") {
 			t.Fatal("failed legacy staging responsibility lost", observation)
 		}
+		if i > 0 {
+			obligations, next, err := manager.ObserveAdmissionChanges(ctx, &contentPrincipal, request.Payload.ContentRef, "", 64)
+			if err != nil || next != "" || len(obligations) != i {
+				t.Fatal("legacy inherited obligations incomplete", err, obligations, next)
+			}
+			for _, obligation := range obligations {
+				if obligation.Phase != "natural_expiry" || !obligation.Due.Equal(until) || !obligation.Deadline.Equal(until.Add(time.Minute)) {
+					t.Fatal("legacy original inherited deadline/phase refreshed", obligation)
+				}
+			}
+		}
 		service := contentService(t, w)
 		view, err := service.GetCommand(ctx, contentCommandGetWire(t, request.CommandID), &contentPrincipal)
 		found, ok := view.AsFound()

@@ -262,6 +262,9 @@ func (s *Service) Put(ctx context.Context, raw []byte, subject *v.SubjectBinding
 				if err = s.config.Store.SaveVersion(ctx, tx, *record); err != nil {
 					return err
 				}
+				if err = s.config.Store.ScheduleRetention(ctx, tx, policy, *record, s.config.PublishBudget); err != nil {
+					return err
+				}
 			}
 			fixed = accepted(ref, *record)
 			return s.config.Store.SaveCommand(ctx, tx, ref, CommandRecord{Digest: digest, Subject: principal, Ref: record.Ref, Purpose: record.Purpose, Receipt: fixed})
