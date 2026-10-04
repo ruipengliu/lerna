@@ -13,8 +13,8 @@ import (
 
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/ruipengliu/lerna/contract"
-	demo "github.com/ruipengliu/lerna/internal/durableworkdemo"
 	"github.com/ruipengliu/lerna/runtime"
+	"github.com/ruipengliu/lerna/runtime/workpool"
 )
 
 type Config struct {
@@ -105,7 +105,7 @@ func (s *Store) Close() error {
 }
 
 type transaction struct {
-	pool       *demo.PoolState
+	pool       *workpool.State
 	poolLocked bool
 	store      *Store
 	sql        *sql.Tx

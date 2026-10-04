@@ -2,9 +2,7 @@ package postgres
 
 import (
 	"context"
-	"crypto/rand"
 	"database/sql"
-	"encoding/hex"
 	"errors"
 	"time"
 
@@ -41,27 +39,7 @@ func (s *Store) SaveInput(ctx context.Context, token runtime.Tx, owner contract.
 	return err
 }
 func (s *Store) Trigger(ctx context.Context, token runtime.Tx, object contract.ObjectRef, phase string, revision int64, due time.Time) (runtime.Job, error) {
-	var job runtime.Job
-	owner := contract.OwnerRef{TenantID: object.TenantID, OwnerID: object.OwnerID}
-	tx, err := s.token(ctx, token, owner)
-	if err != nil {
-		return job, err
-	}
-	if revision <= 0 {
-		return job, runtime.ErrWorkBounds
-	}
-	var nonce [16]byte
-	if _, err = rand.Read(nonce[:]); err != nil {
-		return job, err
-	}
-	job.Object = object
-	job.Object.Revision = nil
-	job.Phase = phase
-	err = tx.QueryRowContext(ctx, `INSERT INTO `+s.table("jobs")+`(tenant_id,owner_id,job_id,object_kind,object_id,phase,work_revision,state,due_at) VALUES($1,$2,$3,$4,$5,$6,$7,'ready',$8) ON CONFLICT(tenant_id,owner_id,object_kind,object_id,phase) DO UPDATE SET work_revision=EXCLUDED.work_revision,due_at=EXCLUDED.due_at,state=CASE WHEN `+s.table("jobs")+`.state='leased' THEN 'leased' ELSE 'ready' END WHERE EXCLUDED.work_revision > `+s.table("jobs")+`.work_revision RETURNING job_id,work_revision,completed_revision,state,due_at`, owner.TenantID, owner.OwnerID, "job-"+hex.EncodeToString(nonce[:]), object.Kind, object.ID, phase, revision, due).Scan(&job.ID, &job.WorkRevision, &job.CompletedRevision, &job.State, &job.DueAt)
-	if errors.Is(err, sql.ErrNoRows) {
-		return job, runtime.ErrWorkBounds
-	}
-	return job, err
+	return s.core.Trigger(ctx, token, object, phase, revision, due)
 }
 func (s *Store) ObserveInput(ctx context.Context, owner contract.OwnerRef, id contract.ID) (demo.Observation, error) {
 	var result demo.Observation

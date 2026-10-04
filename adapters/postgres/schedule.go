@@ -150,45 +150,13 @@ func (s *Store) ObserveSchedule(ctx context.Context, owner contract.OwnerRef, id
 	return out, err
 }
 func (s *Store) ClaimActive(ctx context.Context, token runtime.Tx, job runtime.Job, now time.Time) (bool, error) {
-	owner := contract.OwnerRef{TenantID: job.Object.TenantID, OwnerID: job.Object.OwnerID}
-	tx, err := s.token(ctx, token, owner)
-	if err != nil {
-		return false, err
-	}
-	var active bool
-	err = tx.QueryRowContext(ctx, `SELECT state='leased' AND lease_until>$4 FROM `+s.table("jobs")+` WHERE tenant_id=$1 AND owner_id=$2 AND job_id=$3`, owner.TenantID, owner.OwnerID, job.ID, (now)).Scan(&active)
-	return active, err
+	return s.core.ClaimActive(ctx, token, job, now)
 }
 func (s *Store) ValidateClaim(ctx context.Context, token runtime.Tx, claim runtime.Claim, now time.Time) error {
-	owner := contract.OwnerRef{TenantID: claim.Object.TenantID, OwnerID: claim.Object.OwnerID}
-	tx, err := s.token(ctx, token, owner)
-	if err != nil {
-		return err
-	}
-	if !validClaim(claim) {
-		return runtime.ErrClaim
-	}
-	var found int
-	err = tx.QueryRowContext(ctx, `SELECT 1 FROM `+s.table("jobs")+` WHERE tenant_id=$1 AND owner_id=$2 AND job_id=$3 AND object_kind=$4 AND object_id=$5 AND phase=$6 AND state='leased' AND claimed_revision=$7 AND lease_epoch=$8 AND worker_id=$9 AND lease_until=$10 AND lease_until>$11 FOR UPDATE`, owner.TenantID, owner.OwnerID, claim.JobID, claim.Object.Kind, claim.Object.ID, claim.Phase, claim.ClaimedRevision, claim.Epoch, claim.Worker, (claim.LeaseUntil), (now)).Scan(&found)
-	if errors.Is(err, sql.ErrNoRows) {
-		return runtime.ErrClaim
-	}
-	return err
+	return s.core.ValidateClaim(ctx, token, claim, now)
 }
 func (s *Store) DeferClaim(ctx context.Context, token runtime.Tx, claim runtime.Claim, now, due time.Time) error {
-	if !due.After(now) {
-		return runtime.ErrWorkBounds
-	}
-	if err := s.ValidateClaim(ctx, token, claim, now); err != nil {
-		return err
-	}
-	owner := contract.OwnerRef{TenantID: claim.Object.TenantID, OwnerID: claim.Object.OwnerID}
-	tx, err := s.token(ctx, token, owner)
-	if err != nil {
-		return err
-	}
-	_, err = tx.ExecContext(ctx, `UPDATE `+s.table("jobs")+` SET state=CASE WHEN work_revision>$4 THEN 'ready' ELSE 'waiting' END,due_at=CASE WHEN work_revision>$4 THEN due_at ELSE $5 END,claimed_revision=NULL,worker_id=NULL,lease_until=NULL,pool_claim_epoch=NULL WHERE tenant_id=$1 AND owner_id=$2 AND job_id=$3`, owner.TenantID, owner.OwnerID, claim.JobID, claim.ClaimedRevision, (due))
-	return err
+	return s.core.DeferClaim(ctx, token, claim, now, due)
 }
 func (s *Store) NextWake(ctx context.Context, token runtime.Tx, now, fallback time.Time) (time.Time, error) {
 	tx, err := s.localToken(ctx, token)
@@ -227,14 +195,5 @@ func (s *Store) StopRevision(ctx context.Context, token runtime.Tx, job runtime.
 	return err
 }
 func (s *Store) ReleaseClaim(ctx context.Context, token runtime.Tx, claim runtime.Claim, now time.Time) error {
-	if err := s.ValidateClaim(ctx, token, claim, now); err != nil {
-		return err
-	}
-	owner := contract.OwnerRef{TenantID: claim.Object.TenantID, OwnerID: claim.Object.OwnerID}
-	tx, err := s.token(ctx, token, owner)
-	if err != nil {
-		return err
-	}
-	_, err = tx.ExecContext(ctx, `UPDATE `+s.table("jobs")+` SET state='ready',claimed_revision=NULL,worker_id=NULL,lease_until=NULL,pool_claim_epoch=NULL WHERE tenant_id=$1 AND owner_id=$2 AND job_id=$3`, owner.TenantID, owner.OwnerID, claim.JobID)
-	return err
+	return s.core.ReleaseClaim(ctx, token, claim, now)
 }
