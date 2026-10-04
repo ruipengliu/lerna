@@ -11,6 +11,7 @@ import (
 	"errors"
 	"fmt"
 	"regexp"
+	"sync"
 	"time"
 
 	"github.com/jackc/pgx/v5"
@@ -22,10 +23,12 @@ import (
 )
 
 type Store struct {
-	db      *sql.DB
-	cfg     postgres.Config
-	owner   v.OwnerRef
-	created bool
+	db        *sql.DB
+	cfg       postgres.Config
+	owner     v.OwnerRef
+	created   bool
+	closeOnce sync.Once
+	closeErr  error
 }
 
 var identifier = regexp.MustCompile(`^[a-z][a-z0-9_]{0,62}$`)
@@ -37,6 +40,9 @@ func (e *connectionError) Error() string { return "fixture PostgreSQL connection
 func (e *connectionError) Unwrap() error { return e.cause }
 
 func Open(ctx context.Context, cfg postgres.Config, owner v.OwnerRef) (*Store, error) {
+	return open(ctx, cfg, owner, sql.Open)
+}
+func open(ctx context.Context, cfg postgres.Config, owner v.OwnerRef, openDB func(string, string) (*sql.DB, error)) (*Store, error) {
 	if ctx == nil || cfg.DSN == "" || !identifier.MatchString(cfg.Schema) || cfg.TransactionTimeout <= 0 || cfg.StatementTimeout < time.Millisecond || cfg.LockTimeout < time.Millisecond || cfg.StatementTimeout > cfg.TransactionTimeout || cfg.LockTimeout > cfg.StatementTimeout || cfg.MaxOpenConnections < 0 || cfg.MaxOpenConnections > 64 {
 		return nil, errors.New("invalid fixture PostgreSQL configuration")
 	}
@@ -45,7 +51,7 @@ func Open(ctx context.Context, cfg postgres.Config, owner v.OwnerRef) (*Store, e
 	}
 	bounded, cancel := context.WithTimeout(ctx, cfg.TransactionTimeout)
 	defer cancel()
-	db, err := sql.Open("pgx", cfg.DSN)
+	db, err := openDB("pgx", cfg.DSN)
 	if err != nil {
 		return nil, &connectionError{err}
 	}
@@ -55,16 +61,28 @@ func Open(ctx context.Context, cfg postgres.Config, owner v.OwnerRef) (*Store, e
 	}
 	db.SetMaxOpenConns(connections)
 	db.SetMaxIdleConns(connections)
+	holder := &Store{db: db, cfg: cfg, owner: owner}
 	if err = db.PingContext(bounded); err != nil {
-		if closeErr := db.Close(); closeErr != nil {
-			// A caller must retain this handle until closure is confirmed.
-			return &Store{db: db, cfg: cfg, owner: owner}, errors.Join(&connectionError{err}, closeErr)
+		if closeErr := holder.Close(); closeErr != nil {
+			return holder, errors.Join(&connectionError{err}, closeErr)
 		}
 		return nil, &connectionError{err}
 	}
-	return &Store{db: db, cfg: cfg, owner: owner}, nil
+	return holder, nil
 }
-func (s *Store) Close() error             { return s.db.Close() }
+
+type closeError struct{ cause error }
+
+func (e *closeError) Error() string { return "fixture PostgreSQL close unconfirmed" }
+func (e *closeError) Unwrap() error { return e.cause }
+func (s *Store) Close() error {
+	s.closeOnce.Do(func() {
+		if err := s.db.Close(); err != nil {
+			s.closeErr = &closeError{err}
+		}
+	})
+	return s.closeErr
+}
 func (s *Store) table(name string) string { return `"` + s.cfg.Schema + `"."` + name + `"` }
 func (s *Store) CreateSchema(ctx context.Context) error {
 	if ctx == nil {

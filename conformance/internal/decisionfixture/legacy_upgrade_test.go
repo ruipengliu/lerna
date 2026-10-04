@@ -88,7 +88,7 @@ func TestFrozenLegacyWriterUpgrade(t *testing.T) {
 	if err := build.Run(); err != nil {
 		buildCancel()
 		t.Logf("bounded frozen writer build diagnostics: %s", diagnostics.safeText(os.Getenv("LERNA_TEST_POSTGRES_DSN")))
-		t.Fatal(fmt.Errorf("frozen historical writer build failed: %w", err))
+		t.Fatal(upgradeCause("frozen writer build", err))
 	}
 	buildCancel()
 	childCtx, childCancel := context.WithTimeout(context.Background(), 65*time.Second)
@@ -109,7 +109,7 @@ func TestFrozenLegacyWriterUpgrade(t *testing.T) {
 	child.Stderr = &diagnostics
 	if err = child.Start(); err != nil {
 		childCancel()
-		t.Fatal("historical writer start failed")
+		t.Fatal(upgradeCause("writer start", err))
 	}
 	readyCh := make(chan []byte, 1)
 	scanDone := make(chan struct{})
@@ -205,7 +205,7 @@ func TestFrozenLegacyWriterUpgrade(t *testing.T) {
 	decoder := json.NewDecoder(bytes.NewReader(frame))
 	decoder.DisallowUnknownFields()
 	if err = decoder.Decode(&ready); err != nil {
-		t.Fatal("invalid historical ready frame")
+		t.Fatal(upgradeCause("ready frame decode", err))
 	}
 	if ready.Protocol != "lerna-legacy-decision-970fd90-1" || len(ready.Cases) != 5 {
 		t.Fatal("historical protocol mismatch")
@@ -289,24 +289,24 @@ func verifyUpgradeCase(t *testing.T, ctx context.Context, old upgradeCase, curre
 		})
 	}
 	if err != nil {
-		t.Fatal("new decision writer open failed")
+		t.Fatal(upgradeCause("new Decision writer open", err))
 	}
 	if err = store.Migrate(ctx); err != nil {
-		t.Fatalf("legacy %s: %v", old.Name, err)
+		t.Fatal(upgradeCause("legacy "+old.Name, err))
 	}
 	versions, err := store.MigrationVersions(ctx)
 	if err != nil {
-		t.Fatalf("legacy %s: %v", old.Name, err)
+		t.Fatal(upgradeCause("legacy "+old.Name, err))
 	}
 	if len(old.Migrations) != 1 || len(versions) != 2 || versions[0].Version != old.Migrations[0].Version || versions[0].Checksum != old.Migrations[0].Checksum || versions[1].Version != 2 {
 		t.Fatal("upgrade replaced original checksum or lacks owner0002")
 	}
 	if err = store.Migrate(ctx); err != nil {
-		t.Fatalf("legacy %s: %v", old.Name, err)
+		t.Fatal(upgradeCause("legacy "+old.Name, err))
 	}
 	again, err := store.MigrationVersions(ctx)
 	if err != nil || !reflect.DeepEqual(versions, again) {
-		t.Fatal("repeated migration changed acknowledged ledger")
+		t.Fatal("repeated migration changed acknowledged ledger", upgradeCause("repeated migration versions", err))
 	}
 	cfg.Schema = old.SourceSchema
 	source, err := Open(ctx, cfg, old.SourceOwner)
@@ -319,25 +319,25 @@ func verifyUpgradeCase(t *testing.T, ctx context.Context, old upgradeCase, curre
 		})
 	}
 	if err != nil {
-		t.Fatal("new fixture reader open failed")
+		t.Fatal(upgradeCause("new fixture reader open", err))
 	}
 	subject, err := v.Decode[v.SubjectBinding](old.Subject)
 	if err != nil {
-		t.Fatalf("legacy %s: %v", old.Name, err)
+		t.Fatal(upgradeCause("legacy "+old.Name, err))
 	}
 	request, err := v.Decode[v.DecisionDecideRequest](old.Request)
 	if err != nil {
-		t.Fatalf("legacy %s: %v", old.Name, err)
+		t.Fatal(upgradeCause("legacy "+old.Name, err))
 	}
 	service, err := decision.New(decision.Config{Owner: v.OwnerRef{TenantID: request.Target.TenantID, OwnerID: request.Target.OwnerID}, Store: store, Authority: source, Source: source, Publisher: source, Component: request.Payload.ComponentRef, Worker: "upgrade-worker", Lease: 5 * time.Second, PoolControl: true})
 	if err != nil {
-		t.Fatalf("legacy %s: %v", old.Name, err)
+		t.Fatal(upgradeCause("legacy "+old.Name, err))
 	}
 	// DDL classifies measurements only. Business closure belongs to the real
 	// current owner's Maintain transaction and trusted database clock.
 	migrated, err := service.Get(ctx, old.GetRequest, &subject)
 	if err != nil {
-		t.Fatalf("legacy %s: %v", old.Name, err)
+		t.Fatal(upgradeCause("legacy "+old.Name, err))
 	}
 	migratedFound, ok := migrated.AsFound()
 	if !ok {
@@ -345,7 +345,7 @@ func verifyUpgradeCase(t *testing.T, ctx context.Context, old upgradeCase, curre
 	}
 	migratedBytes, err := v.Encode(migratedFound.Decision)
 	if err != nil {
-		t.Fatalf("legacy %s: %v", old.Name, err)
+		t.Fatal(upgradeCause("legacy "+old.Name, err))
 	}
 	var beforeDDL, afterDDL map[string]json.RawMessage
 	_ = json.Unmarshal(old.DecisionBefore, &beforeDDL)
@@ -356,11 +356,11 @@ func verifyUpgradeCase(t *testing.T, ctx context.Context, old upgradeCase, curre
 		}
 	}
 	if _, err = service.Maintain(ctx); err != nil {
-		t.Fatalf("legacy %s: %v", old.Name, err)
+		t.Fatal(upgradeCause("legacy "+old.Name, err))
 	}
 	view, err := service.Get(ctx, old.GetRequest, &subject)
 	if err != nil {
-		t.Fatalf("legacy %s: %v", old.Name, err)
+		t.Fatal(upgradeCause("legacy "+old.Name, err))
 	}
 	found, ok := view.AsFound()
 	if !ok {
@@ -368,7 +368,7 @@ func verifyUpgradeCase(t *testing.T, ctx context.Context, old upgradeCase, curre
 	}
 	current, err := v.Encode(found.Decision)
 	if err != nil {
-		t.Fatalf("legacy %s: %v", old.Name, err)
+		t.Fatal(upgradeCause("legacy "+old.Name, err))
 	}
 	var prior, next map[string]json.RawMessage
 	_ = json.Unmarshal(old.DecisionBefore, &prior)
@@ -396,14 +396,14 @@ func verifyUpgradeCase(t *testing.T, ctx context.Context, old upgradeCase, curre
 		}
 		permit, err := source.Authorize(ctx, subject, request.Target, "get", nil)
 		if err != nil {
-			t.Fatalf("legacy %s: %v", old.Name, err)
+			t.Fatal(upgradeCause("legacy "+old.Name, err))
 		}
 		if len(completed.ArtifactRefs) != 1 {
 			t.Fatal("legacy artifact identity missing")
 		}
 		body, err := source.ReadPublished(ctx, completed.ArtifactRefs[0], permit)
 		if err != nil || string(body) != "fixture result: alpha\n" {
-			t.Fatal("legacy original artifact unreadable")
+			t.Fatal("legacy original artifact unreadable", upgradeCause("artifact readback", err))
 		}
 	} else if old.Name == "failed" {
 		if !sameUpgradeJSON(prior["failure"], next["failure"]) {
@@ -428,18 +428,18 @@ func verifyUpgradeCase(t *testing.T, ctx context.Context, old upgradeCase, curre
 		}
 		permit, err := source.Authorize(ctx, subject, request.Target, "get", nil)
 		if err != nil {
-			t.Fatalf("legacy %s: %v", old.Name, err)
+			t.Fatal(upgradeCause("legacy "+old.Name, err))
 		}
 		for i, ref := range old.PublishedRefs {
 			actual, err := source.ReadPublished(ctx, ref, permit)
 			if err != nil || string(actual) != old.PublishedBodies[i] {
-				t.Fatal("old publication window changed exact original bytes/ref")
+				t.Fatal("old publication window changed exact original bytes/ref", upgradeCause("publication window readback", err))
 			}
 		}
 	}
 	command, err := service.GetCommand(ctx, old.CommandGetRequest, &subject)
 	if err != nil {
-		t.Fatalf("legacy %s: %v", old.Name, err)
+		t.Fatal(upgradeCause("legacy "+old.Name, err))
 	}
 	fixed, ok := command.AsFound()
 	if !ok {
@@ -447,11 +447,11 @@ func verifyUpgradeCase(t *testing.T, ctx context.Context, old upgradeCase, curre
 	}
 	encoded, err := v.Encode(fixed.Receipt)
 	if err != nil || !sameUpgradeJSON(encoded, old.AcceptedReceipt) {
-		t.Fatal("upgrade changed original accepted receipt")
+		t.Fatal("upgrade changed original accepted receipt", upgradeCause("original receipt encode", err))
 	}
 	replay, err := service.Decide(ctx, old.Request, &subject)
 	if err != nil {
-		t.Fatalf("legacy %s: %v", old.Name, err)
+		t.Fatal(upgradeCause("legacy "+old.Name, err))
 	}
 	receipt, ok := replay.AsReceived()
 	if !ok {
@@ -459,29 +459,29 @@ func verifyUpgradeCase(t *testing.T, ctx context.Context, old upgradeCase, curre
 	}
 	encoded, err = v.Encode(receipt.Receipt)
 	if err != nil || !sameUpgradeJSON(encoded, old.AcceptedReceipt) {
-		t.Fatal("old replay changed original receipt")
+		t.Fatal("old replay changed original receipt", upgradeCause("replayed receipt encode", err))
 	}
 	// Seed only a fixture permission for a new identity; no business record or job.
 	permit, err := source.Authorize(ctx, subject, request.Target, "get", nil)
 	if err != nil {
-		t.Fatalf("legacy %s: %v", old.Name, err)
+		t.Fatal(upgradeCause("legacy "+old.Name, err))
 	}
 	snapshot, err := source.ReadSnapshot(ctx, request.Payload.SnapshotRef, permit, v.MaxBodyBytes)
 	if err != nil {
-		t.Fatalf("legacy %s: %v", old.Name, err)
+		t.Fatal(upgradeCause("legacy "+old.Name, err))
 	}
 	materials := make([]Material, 0, len(snapshot.MaterialRefs))
 	for _, ref := range snapshot.MaterialRefs {
 		body, err := source.ReadMaterial(ctx, ref, "rule.input", permit, v.MaxBodyBytes)
 		if err != nil {
-			t.Fatalf("legacy %s: %v", old.Name, err)
+			t.Fatal(upgradeCause("legacy "+old.Name, err))
 		}
 		materials = append(materials, Material{Ref: ref, Bytes: body})
 	}
 	newRef := request.Target
 	newRef.ID = v.ID("upgrade-new-decision-" + old.Name)
 	if _, err = source.Seed(ctx, Bundle{DecisionRef: newRef, Permission: permit, Snapshot: snapshot, Materials: materials, Purposes: []string{"decide", "get", "command.get", "start", "material", "rule.input", "fixture.lock", "publish", "proposal.publish", "artifact.publish"}, RuleVersion: "fixture-rule/1"}); err != nil {
-		t.Fatalf("legacy %s: %v", old.Name, err)
+		t.Fatal(upgradeCause("legacy "+old.Name, err))
 	}
 	request.Target = newRef
 	request.Payload.DecisionID = newRef.ID
@@ -489,11 +489,11 @@ func verifyUpgradeCase(t *testing.T, ctx context.Context, old upgradeCase, curre
 	request.CommandID = v.ID("upgrade-new-" + old.Name)
 	raw, err := v.Encode(request)
 	if err != nil {
-		t.Fatalf("legacy %s: %v", old.Name, err)
+		t.Fatal(upgradeCause("legacy "+old.Name, err))
 	}
 	rejected, err := service.Decide(ctx, raw, &subject)
 	if err != nil {
-		t.Fatalf("legacy %s: %v", old.Name, err)
+		t.Fatal(upgradeCause("legacy "+old.Name, err))
 	}
 	durable, ok := rejected.AsReceived()
 	if !ok {
@@ -505,72 +505,84 @@ func verifyUpgradeCase(t *testing.T, ctx context.Context, old upgradeCase, curre
 	}
 	repeated, err := service.Decide(ctx, raw, &subject)
 	if err != nil {
-		t.Fatalf("legacy %s: %v", old.Name, err)
+		t.Fatal(upgradeCause("legacy "+old.Name, err))
 	}
 	fixedRejected, ok := repeated.AsReceived()
 	if !ok {
 		t.Fatal("unsupported replay missing")
 	}
-	a, _ := v.Encode(durable.Receipt)
-	b, _ := v.Encode(fixedRejected.Receipt)
+	a, err := v.Encode(durable.Receipt)
+	if err != nil {
+		t.Fatal(upgradeCause("unsupported original receipt encode", err))
+	}
+	b, err := v.Encode(fixedRejected.Receipt)
+	if err != nil {
+		t.Fatal(upgradeCause("unsupported repeated receipt encode", err))
+	}
 	if !sameUpgradeJSON(a, b) {
 		t.Fatal("unsupported fixed replay changed")
 	}
 	query, err := v.Decode[v.CommandGetRequest](old.CommandGetRequest)
 	if err != nil {
-		t.Fatalf("legacy %s: %v", old.Name, err)
+		t.Fatal(upgradeCause("legacy "+old.Name, err))
 	}
 	query.Payload.CommandRef.CommandID = request.CommandID
 	query.Target.ID = request.CommandID
 	queryRaw, err := v.Encode(query)
 	if err != nil {
-		t.Fatalf("legacy %s: %v", old.Name, err)
+		t.Fatal(upgradeCause("legacy "+old.Name, err))
 	}
 	queried, err := service.GetCommand(ctx, queryRaw, &subject)
 	if err != nil {
-		t.Fatalf("legacy %s: %v", old.Name, err)
+		t.Fatal(upgradeCause("legacy "+old.Name, err))
 	}
 	queriedFixed, ok := queried.AsFound()
 	if !ok {
 		t.Fatal("unsupported command fixed query unavailable")
 	}
-	queriedBytes, _ := v.Encode(queriedFixed.Receipt)
+	queriedBytes, err := v.Encode(queriedFixed.Receipt)
+	if err != nil {
+		t.Fatal(upgradeCause("unsupported queried receipt encode", err))
+	}
 	if !sameUpgradeJSON(a, queriedBytes) {
 		t.Fatal("unsupported query changed fixed receipt")
 	}
 	originalReplay, err := service.Decide(ctx, old.Request, &subject)
 	if err != nil {
-		t.Fatalf("legacy %s: %v", old.Name, err)
+		t.Fatal(upgradeCause("legacy "+old.Name, err))
 	}
 	originalFixed, ok := originalReplay.AsReceived()
 	if !ok {
 		t.Fatal("new refusal obscured original accepted replay")
 	}
-	originalBytes, _ := v.Encode(originalFixed.Receipt)
+	originalBytes, err := v.Encode(originalFixed.Receipt)
+	if err != nil {
+		t.Fatal(upgradeCause("original accepted receipt encode", err))
+	}
 	if !sameUpgradeJSON(originalBytes, old.AcceptedReceipt) {
 		t.Fatal("new refusal changed original accepted replay")
 	}
 	var get v.DecisionGetRequest
 	get, err = v.Decode[v.DecisionGetRequest](old.GetRequest)
 	if err != nil {
-		t.Fatalf("legacy %s: %v", old.Name, err)
+		t.Fatal(upgradeCause("legacy "+old.Name, err))
 	}
 	get.Target = newRef
 	get.Payload.DecisionRef = newRef
 	getRaw, err := v.Encode(get)
 	if err != nil {
-		t.Fatalf("legacy %s: %v", old.Name, err)
+		t.Fatal(upgradeCause("legacy "+old.Name, err))
 	}
 	absent, err := service.Get(ctx, getRaw, &subject)
 	if err != nil {
-		t.Fatalf("legacy %s: %v", old.Name, err)
+		t.Fatal(upgradeCause("legacy "+old.Name, err))
 	}
 	if _, ok := absent.AsResultUnavailable(); !ok {
 		t.Fatal("unsupported old binding created a business Decision")
 	}
 	claim, err := service.Claim(ctx)
 	if err != nil || claim != nil {
-		t.Fatal("legacy retirement or unsupported command left a runnable job")
+		t.Fatal("legacy retirement or unsupported command left a runnable job", upgradeCause("final Claim", err))
 	}
 }
 
@@ -653,7 +665,7 @@ func restoreFrozenWriter(t *testing.T) string {
 	root := filepath.Join("testdata", "legacy-970fd90")
 	sums, err := os.ReadFile(filepath.Join(root, "SHA256SUMS"))
 	if err != nil || len(sums) > 16*1024 {
-		t.Fatal("frozen checksum list unavailable")
+		t.Fatal("frozen checksum list unavailable", upgradeCause("checksum read", err))
 	}
 	checked := map[string]bool{}
 	for _, line := range strings.Split(strings.TrimSpace(string(sums)), "\n") {
@@ -673,11 +685,11 @@ func restoreFrozenWriter(t *testing.T) string {
 	}
 	body, err := os.ReadFile(filepath.Join(root, "provenance.json"))
 	if err != nil || !checked["provenance.json"] {
-		t.Fatal("frozen provenance missing")
+		t.Fatal("frozen provenance missing", upgradeCause("provenance read", err))
 	}
 	var provenance frozenProvenance
 	if err = json.Unmarshal(body, &provenance); err != nil || provenance.Format != "lerna-legacy-decision-closure-1" || provenance.SourceCommit != "970fd90260b5c4936cdb5c2b7a8589623126a5c2" || len(provenance.Files) != 69 || provenance.ProductionFileCount != 68 || provenance.ProductionBytes != 422534 || provenance.PayloadBytes != 430396 {
-		t.Fatal("frozen historical provenance mismatch")
+		t.Fatal("frozen historical provenance mismatch", upgradeCause("provenance decode", err))
 	}
 	registry := os.Getenv("LERNA_TEST_OWNED_SCOPE_REGISTRY")
 	if !filepath.IsAbs(registry) {
@@ -779,20 +791,35 @@ func readUpgradeBounded(path string, max int64) (body []byte, result error) {
 
 // Database diagnostics retain their original cause while printing only the
 // cleanup stage; connection configuration and driver credentials are private.
-type upgradeCleanupError struct {
+type upgradeStageError struct {
 	stage string
 	cause error
 }
 
-func (e *upgradeCleanupError) Error() string {
-	return "exact historical cleanup " + e.stage + " failed"
+func (e *upgradeStageError) Error() string {
+	message := "historical upgrade " + e.stage + " failed"
+	if errors.Is(e.cause, context.Canceled) {
+		return message + ": context cancelled"
+	}
+	if errors.Is(e.cause, context.DeadlineExceeded) {
+		return message + ": deadline exceeded"
+	}
+	var exit *exec.ExitError
+	if errors.As(e.cause, &exit) {
+		return fmt.Sprintf("%s: exit status %d", message, exit.ExitCode())
+	}
+	var errno syscall.Errno
+	if errors.As(e.cause, &errno) {
+		return fmt.Sprintf("%s: errno %d", message, errno)
+	}
+	return message
 }
-func (e *upgradeCleanupError) Unwrap() error { return e.cause }
-func cleanupCause(stage string, err error) error {
+func (e *upgradeStageError) Unwrap() error { return e.cause }
+func upgradeCause(stage string, err error) error {
 	if err == nil {
 		return nil
 	}
-	return &upgradeCleanupError{stage: stage, cause: err}
+	return &upgradeStageError{stage: stage, cause: err}
 }
 
 func cleanupUpgradeScopes(registry string) (result error) {
@@ -818,24 +845,24 @@ func cleanupUpgradeScopes(registry string) (result error) {
 	defer cancel()
 	db, err := sql.Open("pgx", os.Getenv("LERNA_TEST_POSTGRES_DSN"))
 	if err != nil {
-		return cleanupCause("open", err)
+		return upgradeCause("cleanup open", err)
 	}
-	defer func() { result = errors.Join(result, cleanupCause("close", db.Close())) }()
+	defer func() { result = errors.Join(result, upgradeCause("cleanup close", db.Close())) }()
 	db.SetMaxOpenConns(1)
 	for name := range names {
 		tx, err := db.BeginTx(ctx, nil)
 		if err != nil {
-			return cleanupCause("begin", err)
+			return upgradeCause("cleanup begin", err)
 		}
 		_, err = tx.ExecContext(ctx, "SET LOCAL statement_timeout='2s'; SET LOCAL lock_timeout='1s'")
 		if err == nil {
 			_, err = tx.ExecContext(ctx, `DROP SCHEMA IF EXISTS "`+name+`" CASCADE`)
 		}
 		if err != nil {
-			return errors.Join(cleanupCause("exec", err), cleanupCause("rollback", tx.Rollback()))
+			return errors.Join(upgradeCause("cleanup exec", err), upgradeCause("cleanup rollback", tx.Rollback()))
 		}
 		if err = tx.Commit(); err != nil {
-			return cleanupCause("commit", err)
+			return upgradeCause("cleanup commit", err)
 		}
 	}
 	return nil

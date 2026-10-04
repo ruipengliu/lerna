@@ -8,6 +8,7 @@ import (
 	"errors"
 	"fmt"
 	"regexp"
+	"sync"
 	"sync/atomic"
 	"time"
 
@@ -24,9 +25,11 @@ type Config struct {
 	TransactionTimeout, StatementTimeout, LockTimeout time.Duration
 }
 type Core struct {
-	db      *sql.DB
-	config  Config
-	created atomic.Bool
+	db        *sql.DB
+	config    Config
+	created   atomic.Bool
+	closeOnce sync.Once
+	closeErr  error
 }
 
 var identifier = regexp.MustCompile(`^[a-z][a-z0-9_]{0,62}$`)
@@ -41,7 +44,11 @@ type connectionError struct {
 func (e *connectionError) Error() string { return e.message }
 func (e *connectionError) Unwrap() error { return e.cause }
 
-func Open(ctx context.Context, cfg Config) (*Core, error) {
+func Open(ctx context.Context, cfg Config) (*Core, error) { return open(ctx, cfg, sql.Open) }
+
+// open supplies only the private database/sql construction seam for mechanical
+// lifecycle tests. Runtime always uses the fixed pgx driver.
+func open(ctx context.Context, cfg Config, openDB func(string, string) (*sql.DB, error)) (*Core, error) {
 	if ctx == nil || cfg.DSN == "" || !identifier.MatchString(cfg.Schema) || cfg.TransactionTimeout <= 0 || cfg.StatementTimeout < time.Millisecond || cfg.LockTimeout < time.Millisecond || cfg.StatementTimeout > cfg.TransactionTimeout || cfg.LockTimeout > cfg.StatementTimeout {
 		return nil, errors.New("invalid PostgreSQL configuration")
 	}
@@ -50,7 +57,7 @@ func Open(ctx context.Context, cfg Config) (*Core, error) {
 	}
 	bounded, cancel := context.WithTimeout(ctx, cfg.TransactionTimeout)
 	defer cancel()
-	db, err := sql.Open("pgx", cfg.DSN)
+	db, err := openDB("pgx", cfg.DSN)
 	if err != nil {
 		return nil, &connectionError{message: "PostgreSQL connection configuration rejected", cause: err}
 	}
@@ -60,14 +67,27 @@ func Open(ctx context.Context, cfg Config) (*Core, error) {
 	}
 	db.SetMaxOpenConns(connections)
 	db.SetMaxIdleConns(min(connections, 4))
+	holder := &Core{db: db, config: cfg}
 	if err = db.PingContext(bounded); err != nil {
-		db.Close()
-		return nil, &connectionError{message: "PostgreSQL connection unavailable", cause: err}
+		startupErr := &connectionError{message: "PostgreSQL connection unavailable", cause: err}
+		if closeErr := holder.Close(); closeErr != nil {
+			return holder, errors.Join(startupErr, closeErr)
+		}
+		return nil, startupErr
 	}
-	return &Core{db: db, config: cfg}, nil
+	return holder, nil
 }
-func (s *Core) DB() *sql.DB              { return s.db }
-func (s *Core) Close() error             { return s.db.Close() }
+func (s *Core) DB() *sql.DB { return s.db }
+
+// A failed first physical Close remains unknown: database/sql cannot retry it.
+func (s *Core) Close() error {
+	s.closeOnce.Do(func() {
+		if err := s.db.Close(); err != nil {
+			s.closeErr = &connectionError{message: "PostgreSQL close unconfirmed", cause: err}
+		}
+	})
+	return s.closeErr
+}
 func (s *Core) Table(name string) string { return `"` + s.config.Schema + `"."` + name + `"` }
 func (s *Core) CreateSchema(ctx context.Context) error {
 	ctx, cancel := context.WithTimeout(ctx, s.config.TransactionTimeout)

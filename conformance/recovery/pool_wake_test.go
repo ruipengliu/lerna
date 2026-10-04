@@ -279,6 +279,7 @@ func poolRunDeadline(t *testing.T, store workStore) {
 	timer = &poolTimer{clock: clock, registered: make(chan poolWait, 3)}
 	pool.Timer = timer
 	running, cancel = context.WithCancel(ctx)
+	defer cancel()
 	joined = false
 	go func() { done <- pool.Run(running, "worker-b", time.Minute, time.Second) }()
 	short = poolWait{}

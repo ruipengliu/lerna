@@ -173,3 +173,16 @@ root FULL read并采用授权Astra的窄决定
 这项细化随首票基本准入、真实旧writer升级、Start/prepared/限额恢复验收；特殊
 候选、取消和完整SIGKILL矩阵仍分别由02/03/06交付，不能以它们尚未实施为漏记
 首票启动或费用的理由。实际端口与恢复政策见components/decision_engine/README.md。
+
+### 实施细化：真实 holder 的初始化与关闭
+
+PG Core 与 fixture Source 保存首次 database/sql Close 结果，并发调用等待
+该结果；首次失败在本进程内保持 unknown，后续 Close 不可伪造确认。
+Open 双失败返回非空 cleanup-only holder 与安全包装的原始两项原因，
+所有实际调用方先保留 concrete holder 再判断错误，不把 typed nil 装入接口。
+SQLite 保留 native Close 之前的 drain timeout 可重试语义；native Close
+失败不释放 writer exclusion，首次 release 失败亦保持 unknown。文件取得后
+的初始化失败沿同一阶段化清理，精确 scope 仅在真实退出/关闭确认后清理。
+机械 sql.OpenDB 测试无物理资源，不冒充 pgx/sqlite3 native 故障；实际双库、
+Decision/Source 与旧 writer 升级恢复分别验证。此为已有未知责任边界的
+实施修正，不扩合同、迁移或生产能力声明。

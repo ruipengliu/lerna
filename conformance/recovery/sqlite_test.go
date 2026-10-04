@@ -72,6 +72,13 @@ func TestSQLiteWriterProcess(t *testing.T) {
 		return
 	}
 	store, err := sqlite.Open(contextFor(t), sqlite.Config{Path: path, TransactionTimeout: 3 * time.Second, BusyTimeout: 100 * time.Millisecond})
+	if store != nil {
+		defer func() {
+			if closeErr := store.Close(); closeErr != nil {
+				t.Error(closeErr)
+			}
+		}()
+	}
 	if os.Getenv("LERNA_SQLITE_PROCESS_ACTION") == "excluded" {
 		if !errors.Is(err, sqlite.ErrWriterActive) {
 			t.Fatalf("second process writer not excluded: %v", err)
@@ -81,7 +88,6 @@ func TestSQLiteWriterProcess(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer store.Close()
 	if err = store.Migrate(contextFor(t)); err != nil {
 		t.Fatal(err)
 	}
@@ -414,7 +420,8 @@ func TestSQLiteCloseCancelsAndWaitsForEntireOwnerTransaction(t *testing.T) {
 	}
 	second, err := sqlite.Open(ctx, cfg)
 	if second != nil {
-		second.Close()
+		fixture.sqlitePeers = append(fixture.sqlitePeers, second)
+		err = errors.Join(err, second.Close())
 	}
 	if !errors.Is(err, sqlite.ErrWriterActive) {
 		release()
@@ -480,7 +487,8 @@ func TestSQLiteCloseDeadlineRetainsOwnershipUntilCallbackExits(t *testing.T) {
 	}
 	second, err := sqlite.Open(contextFor(t), cfg)
 	if second != nil {
-		second.Close()
+		fixture.sqlitePeers = append(fixture.sqlitePeers, second)
+		err = errors.Join(err, second.Close())
 	}
 	if !errors.Is(err, sqlite.ErrWriterActive) {
 		release()

@@ -54,3 +54,9 @@ transaction work is bounded. Test world setup requires
 Only acknowledged CREATE names are appended, fsynced and registered. Independent
 administrative handles retain deletion authority across source reopening;
 cleanup has its own finite context and never guesses ownership from prefixes.
+
+Fixture PG Open can return a non-nil cleanup-only holder with an error. Worlds
+retain it before checking the error. Each holder waits for and preserves its
+first database/sql Close outcome: failure stays unknown, including on later
+cleanup attempts. Mechanical database/sql driver tests exercise this branch
+without physical resources; they do not claim native pgx close-failure evidence.

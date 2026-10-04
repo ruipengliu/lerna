@@ -22,10 +22,11 @@ type Store struct {
 
 func Open(ctx context.Context, cfg Config) (*Store, error) {
 	core, err := pgstore.Open(ctx, cfg)
-	if err != nil {
+	if core == nil {
 		return nil, err
 	}
-	return &Store{db: core.DB(), config: cfg, core: core}, nil
+	// Nonempty + error is cleanup-only, never successful service startup.
+	return &Store{db: core.DB(), config: cfg, core: core}, err
 }
 func (s *Store) Close() error                             { return s.core.Close() }
 func (s *Store) table(name string) string                 { return s.core.Table(name) }

@@ -26,10 +26,10 @@ type Store struct {
 
 func Open(ctx context.Context, cfg postgres.Config) (*Store, error) {
 	core, err := pgstore.Open(ctx, cfg)
-	if err != nil {
+	if core == nil {
 		return nil, err
 	}
-	return &Store{core: core, schema: cfg.Schema}, nil
+	return &Store{core: core, schema: cfg.Schema}, err
 }
 func (s *Store) Close() error                             { return s.core.Close() }
 func (s *Store) CreateSchema(ctx context.Context) error   { return s.core.CreateSchema(ctx) }

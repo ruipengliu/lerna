@@ -168,7 +168,8 @@ func TestOwnedFixtureCleanupKeepsActiveSQLiteFilesUntilConfirmedClose(t *testing
 	}
 	second, err := sqlite.Open(ctx, f.sq)
 	if second != nil {
-		second.Close()
+		f.sqlitePeers = append(f.sqlitePeers, second)
+		err = errors.Join(err, second.Close())
 	}
 	if !errors.Is(err, sqlite.ErrWriterActive) {
 		t.Fatalf("active original writer no longer excluded peers: %v", err)

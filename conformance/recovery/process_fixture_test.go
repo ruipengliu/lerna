@@ -312,9 +312,17 @@ func openProcessStore(ctx context.Context, cfg processConfig) (workStore, error)
 		if !strings.HasPrefix(cfg.Schema, "lerna_test_") || len(cfg.Schema) != len("lerna_test_")+24 {
 			return nil, errors.New("unregistered process schema shape")
 		}
-		return postgres.Open(ctx, postgres.Config{DSN: os.Getenv("LERNA_TEST_POSTGRES_DSN"), Schema: cfg.Schema, TransactionTimeout: 3 * time.Second, StatementTimeout: 2 * time.Second, LockTimeout: time.Second})
+		store, err := postgres.Open(ctx, postgres.Config{DSN: os.Getenv("LERNA_TEST_POSTGRES_DSN"), Schema: cfg.Schema, TransactionTimeout: 3 * time.Second, StatementTimeout: 2 * time.Second, LockTimeout: time.Second})
+		if store == nil {
+			return nil, err
+		}
+		return store, err
 	case "sqlite":
-		return sqlite.Open(ctx, sqlite.Config{Path: cfg.Path, TransactionTimeout: 3 * time.Second, BusyTimeout: 100 * time.Millisecond})
+		store, err := sqlite.Open(ctx, sqlite.Config{Path: cfg.Path, TransactionTimeout: 3 * time.Second, BusyTimeout: 100 * time.Millisecond})
+		if store == nil {
+			return nil, err
+		}
+		return store, err
 	}
 	return nil, errors.New("unsupported process backend")
 }
@@ -386,14 +394,16 @@ func TestDurableWorkHostProcess(t *testing.T) {
 		t.Fatal("invalid trusted process clock/scenario")
 	}
 	store, err := openProcessStore(ctx, cfg)
+	if store != nil {
+		defer func() {
+			if err := store.Close(); err != nil {
+				t.Error(err)
+			}
+		}()
+	}
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer func() {
-		if err := store.Close(); err != nil {
-			t.Error(err)
-		}
-	}()
 	clock := &controlledClock{admissionStore: store, instant: cfg.Now}
 	h := hostFor(store, owner, principal)
 	h.Clock = clock

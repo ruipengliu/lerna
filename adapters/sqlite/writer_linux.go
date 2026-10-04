@@ -6,6 +6,7 @@ import (
 	"context"
 	"errors"
 	"os"
+	"sync"
 	"syscall"
 )
 
@@ -20,7 +21,15 @@ func acquireWriter(ctx context.Context, path string) (func() error, error) {
 	if err != nil {
 		return nil, err
 	}
-	fail := func(err error) (func() error, error) { file.Close(); return nil, err }
+	var once sync.Once
+	var closeErr error
+	release := func() error { once.Do(func() { closeErr = file.Close() }); return closeErr }
+	fail := func(err error) (func() error, error) {
+		if releaseErr := release(); releaseErr != nil {
+			return release, errors.Join(err, &lifecycleError{stage: "initial file close", cause: releaseErr})
+		}
+		return nil, err
+	}
 	info, err := file.Stat()
 	if err != nil {
 		return fail(err)
@@ -34,7 +43,7 @@ func acquireWriter(ctx context.Context, path string) (func() error, error) {
 	for {
 		err = syscall.Flock(int(file.Fd()), syscall.LOCK_EX|syscall.LOCK_NB)
 		if err == nil {
-			return file.Close, nil
+			return release, nil
 		}
 		if errors.Is(err, syscall.EWOULDBLOCK) || errors.Is(err, syscall.EAGAIN) {
 			return fail(ErrWriterActive)

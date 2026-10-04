@@ -129,3 +129,9 @@ Claims; later reconfiguration cannot bless unregistered raw Claims. Expiry and
 exact stop maintenance needs no execution Claim and preserves other revisions.
 See [consumer pool contract](../../internal/durableworkdemo/README.md) for limits,
 conditional fairness, trusted assembly, restoration and scope-binding limits.
+
+Open may return a non-nil Store together with an error when startup cleanup is
+unconfirmed. Retain that handle for cleanup diagnostics; do not serve or migrate
+it. Close preserves and waits for its first database/sql close result. A failed
+first close stays unknown on every later call, so a subsequent nil from the
+underlying database/sql API cannot authorize deletion of an owned scope.
