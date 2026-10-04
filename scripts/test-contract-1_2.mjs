@@ -16,39 +16,60 @@ import { startRunner } from './contract-runner.mjs';
 import assert from 'node:assert/strict';
 const dir = mkdtempSync(join(tmpdir(), 'lerna-content-contract-'));
 const identity = statSync(dir);
-const directory = openSync(dir, 'r'),
-  parent = openSync(dirname(dir), 'r');
-try {
-  fsyncSync(directory);
-  fsyncSync(parent);
-} finally {
-  closeSync(directory);
-  closeSync(parent);
+let ownershipConfirmed = true;
+// One short-lived FD at a time. Preserve action and native Close causes together.
+function useFD(path, flags, action) {
+  let fd;
+  const causes = [];
+  try {
+    fd = openSync(path, flags, 0o600);
+    action(fd);
+  } catch (error) {
+    causes.push(error);
+  }
+  if (fd !== undefined) {
+    try {
+      closeSync(fd);
+    } catch (error) {
+      causes.push(error);
+    }
+  }
+  if (causes.length) {
+    ownershipConfirmed = false;
+    throw new AggregateError(
+      causes,
+      `owned conformance FD unconfirmed: ${path}`,
+    );
+  }
 }
+for (const path of [dir, dirname(dir)]) useFD(path, 'r', fsyncSync);
 const registry =
   process.env.LERNA_TEST_OWNED_SCOPE_REGISTRY ?? join(dir, 'owned-scopes.log');
 if (!isAbsolute(registry))
   throw Error('absolute owned contract registry required');
 function record(line) {
-  const ledger = openSync(registry, 'a', 0o600);
-  try {
-    writeSync(ledger, line + '\n');
-    fsyncSync(ledger);
-  } finally {
-    closeSync(ledger);
-  }
-  const fd = openSync(dirname(registry), 'r');
-  try {
+  useFD(registry, 'a', (fd) => {
+    const bytes = Buffer.from(line + '\n');
+    for (let offset = 0; offset < bytes.length; ) {
+      const written = writeSync(fd, bytes, offset, bytes.length - offset);
+      if (written <= 0) throw Error('ownership ledger short write');
+      offset += written;
+    }
     fsyncSync(fd);
-  } finally {
-    closeSync(fd);
+  });
+  useFD(dirname(registry), 'r', fsyncSync);
+}
+function processGroup(pid) {
+  try {
+    const stat = readFileSync(`/proc/${pid}/stat`, 'utf8');
+    return Number(stat.slice(stat.lastIndexOf(')') + 2).split(' ')[2]);
+  } catch (error) {
+    ownershipConfirmed = false;
+    throw error;
   }
 }
 record(`contract ${dir} ${identity.dev} ${identity.ino}`);
-function processGroup(pid) {
-  const stat = readFileSync(`/proc/${pid}/stat`, 'utf8');
-  return Number(stat.slice(stat.lastIndexOf(')') + 2).split(' ')[2]);
-}
+
 const controller = new AbortController();
 const interrupt = () => controller.abort();
 process.once('SIGINT', interrupt);
@@ -69,7 +90,10 @@ try {
         stdio: 'inherit',
         onStart: (pid) => {
           const group = processGroup(pid);
-          if (group !== pid) throw Error('compiler native group mismatch');
+          if (group !== pid) {
+            ownershipConfirmed = false;
+            throw Error('compiler native group mismatch');
+          }
           record(`process_group ${pid} ${group} ${dir}`);
         },
       },
@@ -160,7 +184,11 @@ try {
   ].filter(Boolean);
   for (const runner of runners)
     record(`producer_exit ${runner.pid} closed=${runner.exitConfirmed}`);
-  if (buildsConfirmed && runners.every((runner) => runner.exitConfirmed)) {
+  if (
+    ownershipConfirmed &&
+    buildsConfirmed &&
+    runners.every((runner) => runner.exitConfirmed)
+  ) {
     const current = statSync(dir);
     if (current.dev !== identity.dev || current.ino !== identity.ino)
       errors.push(Error('owned contract scope identity changed'));

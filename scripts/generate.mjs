@@ -57,7 +57,6 @@ for (const configuration of configurations) {
     'additionalProperties',
     'items',
     'maxItems',
-    'uniqueItems',
     'maxProperties',
     'minItems',
     'pattern',
@@ -73,6 +72,7 @@ for (const configuration of configurations) {
     'then',
     'else',
   ]);
+  if (configuration.version === '1.2.0') allowed.add('uniqueItems');
   function audit(node, path = []) {
     for (const [key, value] of Object.entries(node)) {
       if (

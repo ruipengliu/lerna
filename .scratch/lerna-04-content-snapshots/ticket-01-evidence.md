@@ -91,3 +91,62 @@ preparing refusal and failed retained-staging refusal pass. The combined Content
 digest and local lifetime run completed native exit 0, group absent. No whole-ticket
 acceptance, full inherited policy closure, cleanup completion or SIGKILL evidence
 is claimed here.
+
+## Locked checks and intermediate boundary (pending read-gate correction)
+
+The first complete `make check GOFLAGS='-mod=readonly -p=1'` reached new legacy CLI
+bookkeeping after lint/generated/25 tooling tests/two generator suites/all Go units/
+44 TS tests had passed, then failed actual exit 2 with its native group absent.
+The cause was this implementer's tool code reading a result from requireBuild's
+successful void return, not a business failure. Its exact compiler-only scope
+`lerna-contract-WsTf9u` (dev 27/inode 432932) was conservatively retained.
+Affected `make test-contract build` subsequently completed actual native exit 0:
+158 old1.0, 89 old1.1 and 101 new1.2 shared fixtures ran real Go↔TS roundtrips in
+both orders; Go and TS builds completed. A final accurate full `make check`
+then completed actual native exit 0/group absent, including every original tail.
+Logs are retained under the acknowledged overlay root as `check.log`,
+`contract-build.log` and `final-check.log`. No failed run is renamed a success.
+
+Necessary mechanical CLI/generator changes preserve exact root identity, fsynced
+scope/actual native-group/producer ACK, all native runner/build close evidence and
+short-lived FD action/Close causes. Ownership/ACK failures remain sticky and retain
+scopes. The old generator fixture's normal source inputs now include the explicit
+new1.2 config; `uniqueItems` remains unsupported in frozen old configs. Old golden
+and source bytes are unchanged. This is tooling safety, not a protocol or future
+resource framework change. Initial generator/CLI startup unknowns are not washed
+away by later success.
+
+Affected race run used `-p=1 -count=1 -race -tags=integration -timeout=120s` for
+Content domain/codec/local/world/public Component, including old real Decision
+identity/legacy observation control. Actual elapsed package times: domain1.111s,
+codec1.946s, local1.118s, world1.235s, Component15.561s; native exit0/group absent.
+It includes independent empty/binary/real256KiB publication, exact ranges, explicit
+policy actions/direct-source current gates and caps, wait/retry/body faults and
+no-clobber controls. Fresh/repeat/checksum migration passed and native reopen worked.
+Protected PG/SQLite V1/V2 archives verified every recorded SHA256. Historical PG
+and SQLite normal upgrade plus version2 refusal/rollback/original retry passed
+in0.851s, native exit0/group absent. No product limits, leases or timeouts were
+expanded for these checks.
+
+The retained compiler-only scope was closed only after original ACK identity,
+original group2011374 actual absence, original await normal-return proof through
+requireBuild's actual Wait/all-pipe/group confirmation, and independent observation
+that it contained only `go-values`. The TypeError occurred after that original
+successful await and before any producer started. This differs from a native
+closure unknown. Exact audit/removal was recorded durably; no prefix, PID/time
+heuristic or unrelated historical scope was deleted.
+
+Fresh exact resource audit observed177 registered groups (only the current auditor
+excluded, then its native exit0/group absent),69 registered PG schemas all absent,
+8 exact lock-holder backend PIDs all absent,160 recorded object/contract/generator
+roots all absent. The overlay root and its evidence files are retained. Audits
+query only ownership infrastructure, never private business tables as an oracle.
+Protected original02/03 unknown resources were neither inspected for deletion nor
+touched. Audit output is `resource-audit-after.json` under the owned root.
+
+The root has now adopted a necessary read-gate decision. This clean intermediate
+boundary is **not delivery or 8AC acceptance**: successful native object Read must
+be followed by a current read/disclose gate, and Get/GetCommand must recheck this
+read's AcceptBefore after all blocking locks. The adopted decision is source review,
+not injected failure evidence; the sole implementer will run public red→green with
+normal controls and fresh affected checks before a final delivery pin.

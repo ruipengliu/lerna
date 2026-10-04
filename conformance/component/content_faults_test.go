@@ -88,7 +88,7 @@ func TestContentPublishedDamageAndMissingNeverRepairOnQuery(t *testing.T) {
 			reason := "dependency_unavailable"
 			if fault == "damage" {
 				reason = "integrity"
-				err = os.WriteFile(path, []byte("wrong\n"), 0600)
+				w.WriteIndependentObject(entries[0].Name(), []byte("wrong\n"))
 			} else {
 				err = os.Remove(path)
 			}
@@ -232,5 +232,44 @@ func TestContentFailedStagingStillConsumesExplicitByteLimit(t *testing.T) {
 	entries, err := os.ReadDir(w.Directory)
 	if err != nil || len(entries) != 0 {
 		t.Fatal("bounded refusal unexpectedly installed bytes", err)
+	}
+}
+
+func TestContentNoClobberExistingBytesMustMatchBeforePublication(t *testing.T) {
+	for _, body := range []string{"alpha\n", "wrong\n"} {
+		t.Run(body[:5], func(t *testing.T) {
+			ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+			defer cancel()
+			w := fixture.New(t, ctx)
+			installContentPolicy(t, ctx, w, alphaRef)
+			service := contentService(t, w)
+			if _, ok := putContentRequest(t, ctx, service, contentPut(t, alphaRef, "original", "YWxwaGEK")).AsAccepted(); !ok {
+				t.Fatal("normal refused")
+			}
+			const key = "da73fc3f262e288d3fbf5bf06db2ebcfbb031f2a5cacbc4e8be74a516714a028" // independent shared original-identity golden
+			w.WriteIndependentObject(key, []byte(body))
+			if _, err := service.Step(ctx); err != nil {
+				t.Fatal(err)
+			}
+			view, err := service.Get(ctx, contentGetWire(t, alphaRef, nil), &contentPrincipal)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if body == "alpha\n" {
+				if _, ok := view.AsPublished(); !ok {
+					t.Fatal("matching native bytes not adopted")
+				}
+				assertContentBody(t, ctx, service, alphaRef, nil, body)
+			} else {
+				failed, ok := view.AsFailed()
+				if !ok || failed.Reason != "integrity" {
+					t.Fatal("wrong existing native bytes declared published")
+				}
+			}
+			data, err := os.ReadFile(filepath.Join(w.Directory, key))
+			if err != nil || string(data) != body {
+				t.Fatal("noclobber install overwrote existing independent bytes", err)
+			}
+		})
 	}
 }

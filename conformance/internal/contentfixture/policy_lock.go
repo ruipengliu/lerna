@@ -19,11 +19,7 @@ func (w *World) HoldPolicy(ctx context.Context, ref v.ContentRef) (release func(
 		w.t.Fatal(err)
 	}
 	locker.SetMaxOpenConns(1)
-	observer, err := sql.Open("pgx", w.Config.DSN)
-	if err != nil {
-		w.t.Fatal(errors.Join(err, locker.Close()))
-	}
-	observer.SetMaxOpenConns(1)
+	var observer *sql.DB
 	var tx *sql.Tx
 	var once sync.Once
 	var closeErr error
@@ -35,11 +31,19 @@ func (w *World) HoldPolicy(ctx context.Context, ref v.ContentRef) (release func(
 					closeErr = errors.Join(closeErr, err)
 				}
 			}
-			closeErr = errors.Join(closeErr, locker.Close(), observer.Close())
+			closeErr = errors.Join(closeErr, locker.Close())
+			if observer != nil {
+				closeErr = errors.Join(closeErr, observer.Close())
+			}
 		})
 		return closeErr
 	}
 	w.infrastructureClosers = append(w.infrastructureClosers, release)
+	observer, err = sql.Open("pgx", w.Config.DSN)
+	if err != nil {
+		w.t.Fatal(err)
+	}
+	observer.SetMaxOpenConns(1)
 	if err = locker.PingContext(ctx); err != nil {
 		w.t.Fatal(err)
 	}
