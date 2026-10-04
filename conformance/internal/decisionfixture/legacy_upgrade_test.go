@@ -96,21 +96,39 @@ func TestFrozenLegacyWriterUpgrade(t *testing.T) {
 	child.Dir = dir
 	setUpgradeProcessBounds(child)
 	child.Env = append(os.Environ(), "LERNA_TEST_OWNED_SCOPE_REGISTRY="+registry)
-	stdin, err := child.StdinPipe()
+	stdin, stdout, closePipes, err := openUpgradePipes(child)
+	started := false
+	// Before Start succeeds we own every acquired pipe end. Register cleanup
+	// before handling allocation errors; cancellation alone closes no pipes.
+	t.Cleanup(func() {
+		if started {
+			return
+		} // Successful Start/Wait uses the cleanup below.
+		childCancel()
+		if closePipes != nil {
+			if err := closePipes(); err != nil {
+				t.Error("pre-start pipe close unconfirmed; retain exact directory:", dir, err)
+				return
+			}
+		}
+		if child.Process != nil {
+			t.Error("pre-start process state unconfirmed; retain exact directory:", dir)
+			return
+		}
+		if err := os.RemoveAll(dir); err != nil {
+			t.Error(upgradeCause("pre-start directory cleanup", err))
+		}
+	})
 	if err != nil {
 		childCancel()
-		t.Fatal(err)
-	}
-	stdout, err := child.StdoutPipe()
-	if err != nil {
-		childCancel()
-		t.Fatal(err)
+		t.Fatal(upgradeCause("writer pipe allocation", err))
 	}
 	child.Stderr = &diagnostics
 	if err = child.Start(); err != nil {
 		childCancel()
 		t.Fatal(upgradeCause("writer start", err))
 	}
+	started = true
 	readyCh := make(chan []byte, 1)
 	scanDone := make(chan struct{})
 	go func() {
@@ -866,4 +884,33 @@ func cleanupUpgradeScopes(registry string) (result error) {
 		}
 	}
 	return nil
+}
+
+// openUpgradePipes owns only this command's four explicit pipe ends before
+// successful Start. Its cleanup is retained even if the second allocation fails.
+func openUpgradePipes(child *exec.Cmd) (io.WriteCloser, io.ReadCloser, func() error, error) {
+	stdin, err := child.StdinPipe()
+	if err != nil {
+		return nil, nil, nil, upgradeCause("stdin pipe allocation", err)
+	}
+	stdinChild := child.Stdin.(io.Closer) // StdinPipe itself assigned this OS file.
+	var stdout io.ReadCloser
+	var stdoutChild io.Closer
+	var once sync.Once
+	var closeErr error
+	cleanup := func() error {
+		once.Do(func() {
+			closeErr = errors.Join(upgradeCause("pre-start stdin parent close", stdin.Close()), upgradeCause("pre-start stdin child close", stdinChild.Close()))
+			if stdout != nil {
+				closeErr = errors.Join(closeErr, upgradeCause("pre-start stdout parent close", stdout.Close()), upgradeCause("pre-start stdout child close", stdoutChild.Close()))
+			}
+		})
+		return closeErr
+	}
+	stdout, err = child.StdoutPipe()
+	if err != nil {
+		return stdin, nil, cleanup, upgradeCause("stdout pipe allocation", err)
+	}
+	stdoutChild = child.Stdout.(io.Closer) // StdoutPipe itself assigned this OS file.
+	return stdin, stdout, cleanup, nil
 }

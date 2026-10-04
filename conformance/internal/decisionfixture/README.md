@@ -60,3 +60,9 @@ retain it before checking the error. Each holder waits for and preserves its
 first database/sql Close outcome: failure stays unknown, including on later
 cleanup attempts. Mechanical database/sql driver tests exercise this branch
 without physical resources; they do not claim native pgx close-failure evidence.
+
+Historical upgrade owns both parent and child ends of each pre-start OS pipe.
+Allocation refusal retains cleanup immediately; the first cleanup result is
+preserved. Successful Start transfers descriptor handling to the existing
+Start/Wait lifecycle. Unconfirmed closure retains the exact owned restore
+directory; no process is started in the allocation-refusal tests.
