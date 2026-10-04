@@ -1,6 +1,6 @@
 # 04票05进行中的内部API（未交付）
 
-仅当前前五vertical产品边界；整票七AC未完成，1.2合同冻结且不增加delete方法。
+仅当前已执行资格边界；整票七AC未完成，1.2合同冻结且不增加delete方法。
 
 `Lifecycle.Seal`目前是有限受信管理配置授权的原完整保存主体自愿封闭：
 准确ref、原purpose、固定SealID、原有限Deadline。同Tx保存单调seal、两
@@ -39,6 +39,13 @@ CurrentSavingPolicy真实原行FOR SHARE返回完整flags，不把CheckPolicy=ni
 新责任与别既有seal不自动挂接，secondary pending不global ACK；其他原
 触发需后续独立tracer，不改普通保守SaveResponsibility语义或历史union。
 
+same原政策责任后续真实natural phase不得撤销已有erased。普通写只保已
+存在准确tuple的终态/空residual及原Reason/AttemptKey/Publication（含空）、
+historical holderOR；Actions仍union、Deadline仍取较早。主动ordinary
+erased输入拒绝，唯一起源仍实际Lifecycle ALLACK port。pending旧保守
+分支保持。真实原2s到期/Manager.Step及重开normal/race已通过；其他key/
+scope/缺行不得借同objectID继承ACK，分别拒绝仍待必要qualification。
+
 Record.BodySeal是所有正文路径的同一个门。原Command当前reader获准时
 固定receipt照旧，sealed版本的新association不能创建publish或复制责任。
 Service.Step只处理原publish/policy_propagation，不消费body_cleanup。
@@ -72,8 +79,8 @@ Fence/Observe前分别核对。wrong-after-seal独立root拒绝且原root同dead
 
 未binding legacy保持未知、不会自动用当前config修复；受信回填必须另有
 准确原ref/key/原介质责任与独立原字节对照，真实停止旧writer后才升级。
-目前未实施该回填资格；跨进程晚写、孤儿竞争与全部拒绝/恢复仍无完成
-声明，五个partial vertical不代表整票七AC。
+目前未实施该回填资格；跨进程晚写/孤儿竞争的已执行范围见后文。全部
+拒绝窗口与升级scope仍无完成声明，当前partial资格不代表整票七AC。
 
 `Lifecycle.CopyToSecondary`仅受信内部有限原CopyRequest。配置固定一真实
 secondary holder，复制前同原Content version锁固定copy ID、完整保存主体/
@@ -97,8 +104,9 @@ ENOTEMPTY，实际原copy inode/字节保留，原责任不ACK；恢复同own准
 erased保持及metadata gone。迟到成功nativePut后的失败Finish另有独立真实
 gate/allACK/reopen tracer：`ioErr==nil && !BodyGone`不再重建当前holdertrue，
 新责任false、原receipt/failed progress/旧seal期限与独立absence保持。
-原caller20/publish5/join3/test30/wrapper120 normal/race通过；自然phase的
-原erased/历史union维持待独立tracer，不用本bool修正声称其已正确。
+原caller20/publish5/join3/test30/wrapper120 normal/race通过；same原责任
+natural phase的erased/历史union已另有独立2s真实到期normal/race资格，
+不把bool修正当该资格的替代。
 
 实际Linux跨进程两序已分别qualification：temp真实Sync返回后SIGSTOP，
 另一进程Erase有限等待flock；CONT之后actualPut/Close，再擦除。反序实际

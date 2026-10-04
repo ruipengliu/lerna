@@ -436,3 +436,35 @@ failed符合孤儿选择胜出，原Encode receipt保持，原seal/期限/实际
 82375/14233真实完成，明确release LOCAL/no pending。新责任false、原receipt
 字节固定/failed progress/fullref、旧seal及deadline、独立原文件不重建均
 实际执行。此资格与前published authority history独立，不覆盖自然phase。
+
+## 同原责任自然phase不得撤销已确认erased（独立vertical）
+
+`TestContentNaturalPolicyPhaseCannotUndoOriginalErasureAcknowledgement`真实
+normal publish；Rev2 savefalse的原ValidUntil为当前+2s，原RetainUntil仍wide。
+Service.Step实际转natural_expiry并保存原due；policy seal/真实ALLACK后
+原责任erased与历史ObjectHolder=true。actualWorld.Reopen，有限等待原due
+加20ms，真实Manager.Step自然注册该same key，line74回pending/residual
+holder_unconfirmed并将旧holdertrue抹false，造成真实业务red。
+
+随后完整读root正式采用归档
+`/workspace/lerna/.scratch/lerna-04-content-snapshots/ticket-05-terminal-erasure-history/decision.md`
+7389B/SHA2563185552b6a06156793a6faaf20c01b46f2decb26fe4e02de3c44544e5553adb7。
+普通SaveResponsibility先核txOwner/原完整key/ref/完整subject/purpose；主动
+输入erased拒绝。原pending分支未放宽/不冻新publication；独立previous
+erased分支精确保留合法空Residual、Reason/AttemptKey/Publication（含空），
+holder历史OR、全部状态原Actions确定union和Deadline既有min继续。责任锁
+后不新增反向Version/Seal/Policy锁，唯一起源仍Lifecycle全ACK专用port。
+
+| 日志 | 实际结果 |
+| --- | --- |
+| `policy-ack-natural-phase-first-red.log` | actual2.309s/case2.30s，PID/PGID2862036/start11934038/nativeexit1/groupAbsent=true。 |
+| `policy-ack-natural-phase-first-green.log` | exact actual2.293s，PID/PGID2870627/start11972161/nativeexit0/groupAbsent=true。 |
+| `policy-ack-natural-phase-race-controls.log` | natural/currentpolicy/restored/authority/lateFinish五已有exact actual5.570s，PID/PGID2871622/start11976142/nativeexit0/groupAbsent=true，两frozen迁移SHA准确。 |
+
+原caller20/test30/wrapper120及原2s due+20ms保持，无SQLdue/DBclock伪造，
+没有延原责任期限/Claim。session51771/92106/99140 actual完成，明确release
+LOCAL/no pending。same原责任自然phase后erased/空residual/原完整tuple/
+holder历史true/原attempt/publication/reason/deadline、五动作union与原
+watermark/due/ExpiryDeadline不刷新，以及再次World.Reopen均实际通过。
+不同change不继承/完整tuple拒绝/ordinary不得造ACK等边界目前为source
+guard，尚不作为分别执行证据；ACKloss/metadata/legacy等剩余AC继续。
