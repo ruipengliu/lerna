@@ -111,6 +111,10 @@ func NewLifecycle(config LifecycleConfig) (*Lifecycle, error) {
 }
 
 func (l *Lifecycle) Seal(ctx context.Context, subject *v.SubjectBinding, request SealRequest) (BodyCleanupObservation, error) {
+	return l.seal(ctx, subject, request, false)
+}
+
+func (l *Lifecycle) seal(ctx context.Context, subject *v.SubjectBinding, request SealRequest, orphanOnly bool) (BodyCleanupObservation, error) {
 	var observed BodyCleanupObservation
 	if err := l.manager.authorize(ctx, subject); err != nil {
 		return observed, err
@@ -135,6 +139,16 @@ func (l *Lifecycle) Seal(ctx context.Context, subject *v.SubjectBinding, request
 		// Trusted deletion is scoped to the original complete saving basis.
 		if record == nil || record.Ref != request.Ref || record.Purpose != request.Purpose || !sameSavingSubject(record.Subject, l.config.TrustedSubject) {
 			return refusal("forbidden")
+		}
+		// Publication finalization and orphan selection compete on this same
+		// original locked row. A live published reference always wins safely.
+		if orphanOnly {
+			if record.Publication == "published" {
+				return ErrOrphanReferenced
+			}
+			if record.Publication != "preparing" && record.Publication != "failed" {
+				return runtime.ErrScope
+			}
 		}
 		if record.PrimaryHolderBinding == "" || record.PrimaryHolderBinding != l.config.Objects.Binding() {
 			return ErrHolderBinding

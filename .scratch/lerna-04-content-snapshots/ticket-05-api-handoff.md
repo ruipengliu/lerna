@@ -74,3 +74,12 @@ Fence完成后SIGSTOP，另一latePut进程拒绝；原eraser SIGKILL后独立�
 和effectgate持久登记，positive Store.Close与kernel completion分列。
 被杀root holder的logicalClose未知仍保准确scope，不cleanup；新holder
 独立Truth不替原Close。旧非协议writer仍需真实停止升级，未claim该升级。
+
+`Lifecycle.SealOrphan`是受信准确原ref/原保存主体/用途/有限请求的条件入口，
+共享Seal的同原LockVersion Tx；published活引用ErrOrphanReferenced，只有
+preparing/failed原记录进入原seal/holder/attempt责任，绝不遍历其他scope。
+实际nativePut完成但PG Finish前孤儿先赢，迟到Finish不能publish或重建body，
+原receipt不变且新独立Version2正常。publish先赢的独立正常/拒绝/重开控制
+亦实际通过，无新seal或active cleanup；更早crossprocess物理fence仍独立
+负责迟到介质效果，不用PG前态/Claim代替。当前单attempt资格不证明完整
+旧attempt回填或未知归属，剩余全部AC继续实施。

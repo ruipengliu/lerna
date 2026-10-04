@@ -315,7 +315,7 @@ func TestCrossProcessPutFinishesBeforeOriginalErasure(t *testing.T) {
 	confirmed()
 }
 
-func TestCrossProcessClosedKeyRejectsLatePutAfterHolderDeath(t *testing.T) {
+func TestCrossProcessClosedKeyRejectsLatePutAndSurvivesHolderDeath(t *testing.T) {
 	root, _ := ownedLocalRoot(t) // killed original root holder never receives logical Close ACK
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()

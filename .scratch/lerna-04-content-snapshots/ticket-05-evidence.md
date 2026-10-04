@@ -230,7 +230,7 @@ outer go test timeout10s、原wrapper120s。所有pipes均真实Close，Wait有�
 
 ### 跨进程反序独立qualification：耐久墓碑先于迟到Put
 
-`TestCrossProcessClosedKeyRejectsLatePutAfterHolderDeath`先正常Put/独立alpha/
+`TestCrossProcessClosedKeyRejectsLatePutAndSurvivesHolderDeath`先正常Put/独立alpha/
 正向Close。eraser child真实FenceAndErase返回之后、Store.Close之前SIGSTOP；
 另一个late child真实Put必须ErrBodySealed，并实际Store.Close确认。再以原
 进程身份SIGKILL eraser，实际Wait验证SIGKILL与groupAbsent；completion的
@@ -256,3 +256,39 @@ positive logicalClose、kernel completion和old logicalClose未知，各mode身�
 没有造新red；两次序本机Linux事实不证明不守协议旧writer被防住。
 明确release LOCAL/no pending native。原初failedroot3977538271逻辑Close未知
 亦继续保留，后续绿色及此process Truth不能洗白它。
+
+反序case现名称最小修正为`...RejectsLatePutAndSurvivesHolderDeath`：实际latePut
+拒绝发生在eraser SIGKILL之前，之后独立Truth证明death不破坏已成fence。
+原.081命令及日志仍是旧`...AfterHolderDeath`名称，不改历史记录，也不claim
+死亡之后另一次latePut已执行。rename本身未另跑native，最终相关suite覆盖。
+
+## 精确孤儿条件封闭vertical与publish先赢资格
+
+`TestContentOrphanSealWinsBeforeLatePublicationAndPreservesLiveVersion`先正常
+同content_id Version2完整publish/Get/独立alpha，再接纳Version1的原Command。
+真实登记attempt并完成nativePut后，有限managed gate停在PG finalization之前。
+SealOrphan原stub对合法已登记未发布版本unavailable使line68业务red。cleanup
+释放gate并等待实际finished；不是把ctxcancel当已join。首red只运行到Seal。
+
+| 原日志 | 实际结果 |
+| --- | --- |
+| `orphan-first-red.log` | actual0.234s；PID/PGID2775878/start11564513/exit1/groupAbsent=true。 |
+| `orphan-first-green.log` | actual0.411s；PID/PGID2780347/start11583178/exit0/groupAbsent=true。 |
+| `orphan-race-controls.log` | actual2.431s，两exact race通过/frozenhash准确；PID/PGID2780777/start11584525/exit0/groupAbsent=true。但错误使用outer test45s，原授权为30s；此日志保留，不作本轮原30s资格。 |
+| `orphan-race-original-timeout-repair.log` | 同两exact改回原test30s actual2.481s；PID/PGID2782075/start11589763/exit0/groupAbsent=true。 |
+| `orphan-published-wins-qualification.log` | 新publish-wins独立case+原orphan已绿相关control actual0.531s；PID/PGID2787276/start11612319/exit0/groupAbsent=true，原test30s。 |
+
+所有wrapper均120s无timeout，业务caller20s/publish5s/原cleanup join3s保持。
+共享seal短Tx在同原LockVersion与current管理资格/准确ref/保存主体/用途内，
+只允许preparing/failed的孤儿选择；published活引用ErrOrphanReferenced。
+没有外Tx检查后再普通Seal的竞态。orphan先赢时沿原已登记attempt及精确key
+实际擦除，迟到PG Finish不能恢复published，原Commandreceipt固定不变；
+独立Version2准确对象与public body始终保持，真实World重开同seal/原期限。
+
+`TestContentPublishedReferenceWinsOrphanSelectionWithoutCreatingCleanup`真实
+Version1/2 published后选择原Version1 orphan被拒绝；Observe无seal，Step无
+active cleanup，两准确key独立字节及public body正常。真实World.Reopen后
+两版仍可读，原Version1 Command历史仍published。该case已有guard直接green，
+不是新red。不把精确目标Seam当任意root扫描删除器。完整多attempt/未知旧
+归属及停止legacy writer升级仍待独立tracer，不用目前单attempt声明全页。
+均明确release LOCAL/no pending native；原两个CloseUNKNOWN根继续保留。
