@@ -1,0 +1,247 @@
+package decisionfixture
+
+// This driver is added conformance code. Every production file beside it is
+// byte-exact git archive 970fd90 source. No business facts are fabricated here.
+import (
+	"bufio"
+	"context"
+	"encoding/json"
+	"fmt"
+	"io"
+	"os"
+	"testing"
+	"time"
+
+	decision "github.com/ruipengliu/lerna/components/decision_engine"
+	v "github.com/ruipengliu/lerna/contract/v1_1"
+)
+
+type legacyMigration struct {
+	Version  int64  `json:"version"`
+	Checksum string `json:"checksum"`
+}
+type legacyCase struct {
+	Name              string            `json:"name"`
+	SourceSchema      string            `json:"source_schema"`
+	DecisionSchema    string            `json:"decision_schema"`
+	SourceOwner       v.OwnerRef        `json:"source_owner"`
+	Request           json.RawMessage   `json:"request"`
+	Subject           json.RawMessage   `json:"subject"`
+	GetRequest        json.RawMessage   `json:"get_request"`
+	CommandGetRequest json.RawMessage   `json:"command_get_request"`
+	AcceptedReceipt   json.RawMessage   `json:"accepted_receipt"`
+	DecisionBefore    json.RawMessage   `json:"decision_before"`
+	Migrations        []legacyMigration `json:"migrations"`
+	PublishedRefs     []v.ContentRef    `json:"published_refs"`
+	PublishedBodies   []string          `json:"published_bodies"`
+	WritersDrained    bool              `json:"writers_drained"`
+}
+type legacyReady struct {
+	Protocol string       `json:"protocol"`
+	Cases    []legacyCase `json:"cases"`
+}
+
+func TestFrozenLegacyWriter(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), 55*time.Second)
+	defer cancel()
+	ready := legacyReady{Protocol: "lerna-legacy-decision-970fd90-1"}
+	for _, name := range []string{"accepted", "running", "completed", "failed", "publication_running"} {
+		world := NewWorld(t, ctx)
+		scene := world.Scenario()
+		service := world.Service()
+		var publisher *legacyExpiryPublisher
+		var err error
+		if name == "failed" {
+			scene.Request.Payload.Limits.MaxCost.IntegerValue = "0"
+		}
+		if name == "publication_running" {
+			publisher = &legacyExpiryPublisher{Publisher: world.source}
+			service, err = decision.New(decision.Config{Owner: v.OwnerRef{TenantID: scene.DecisionRef.TenantID, OwnerID: scene.DecisionRef.OwnerID}, Store: world.store, Authority: world.source, Source: world.source, Publisher: publisher, Component: scene.Request.Payload.ComponentRef, Worker: "old-publication-worker", Lease: 2 * time.Second, PoolControl: true})
+			if err != nil {
+				t.Fatal(err)
+			}
+		}
+		request, err := v.Encode(scene.Request)
+		if err != nil {
+			t.Fatal(err)
+		}
+		received, err := service.Decide(ctx, request, &scene.Subject)
+		if err != nil {
+			t.Fatal(err)
+		}
+		outcome, ok := received.AsReceived()
+		if !ok {
+			t.Fatal("old writer did not durably receive")
+		}
+		if _, ok = outcome.Receipt.AsAccepted(); !ok {
+			t.Fatal("old writer did not accept")
+		}
+		if name == "running" {
+			claim, err := service.Claim(ctx)
+			if err != nil || claim == nil {
+				t.Fatalf("old running claim: %v", err)
+			}
+			if _, err = service.Start(ctx, claim.Claim); err != nil {
+				t.Fatal(err)
+			}
+		}
+		if name == "publication_running" {
+			claim, err := service.Claim(ctx)
+			if err != nil || claim == nil {
+				t.Fatal("old publication claim missing")
+			}
+			publisher.until = claim.Claim.LeaseUntil.Add(5 * time.Millisecond)
+			if err = service.RunClaim(ctx, claim.Claim); err == nil {
+				t.Fatal("expired old Finish unexpectedly committed")
+			}
+			if len(publisher.refs) != 2 {
+				t.Fatal("old publication window missing actual source outputs")
+			}
+		}
+		if name == "completed" || name == "failed" {
+			result, err := service.Step(ctx)
+			if err != nil || result.Processed != 1 {
+				t.Fatalf("old completion: %v", err)
+			}
+		}
+		before, err := service.Get(ctx, scene.GetJSON, &scene.Subject)
+		if err != nil {
+			t.Fatal(err)
+		}
+		found, ok := before.AsFound()
+		if !ok {
+			t.Fatal("old fact unavailable")
+		}
+		switch name {
+		case "accepted":
+			if _, ok := found.Decision.AsAccepted(); !ok {
+				t.Fatal("old accepted state missing")
+			}
+		case "running", "publication_running":
+			if _, ok := found.Decision.AsRunning(); !ok {
+				t.Fatal("old running state missing")
+			}
+		case "failed":
+			if _, ok := found.Decision.AsFailed(); !ok {
+				t.Fatal("old actual fee-limit failure missing")
+			}
+		case "completed":
+			if _, ok := found.Decision.AsCompleted(); !ok {
+				t.Fatal("old completed state missing")
+			}
+		}
+		subject, err := v.Encode(scene.Subject)
+		if err != nil {
+			t.Fatal(err)
+		}
+		receipt, err := v.Encode(outcome.Receipt)
+		if err != nil {
+			t.Fatal(err)
+		}
+		decision, err := v.Encode(found.Decision)
+		if err != nil {
+			t.Fatal(err)
+		}
+		versions, err := world.store.MigrationVersions(ctx)
+		if err != nil {
+			t.Fatal(err)
+		}
+		migrations := make([]legacyMigration, len(versions))
+		for i, version := range versions {
+			migrations[i] = legacyMigration{version.Version, version.Checksum}
+		}
+		// Close the real writers and confirm drain before transmitting their exact
+		// CREATE-success identities. Original admin handles remain owned by World.
+		if err = world.store.Close(); err != nil {
+			t.Fatal(err)
+		}
+		world.store = nil
+		if err = world.source.Close(); err != nil {
+			t.Fatal(err)
+		}
+		world.source = nil
+		if !world.decisionOwned || !world.owns {
+			t.Fatal("old CREATE ownership missing")
+		}
+		var refs []v.ContentRef
+		var bodies []string
+		if publisher != nil {
+			refs = publisher.refs
+			bodies = publisher.bodies
+		}
+		ready.Cases = append(ready.Cases, legacyCase{PublishedRefs: refs, PublishedBodies: bodies, Name: name, SourceSchema: world.cfg.Schema, DecisionSchema: world.decisionCfg.Schema, SourceOwner: world.owner, Request: request, Subject: subject, GetRequest: scene.GetJSON, CommandGetRequest: scene.CommandGetJSON, AcceptedReceipt: receipt, DecisionBefore: decision, Migrations: migrations, WritersDrained: true})
+	}
+	bytes, err := json.Marshal(ready)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(bytes) > 128*1024 {
+		t.Fatal("ready frame exceeds finite bound")
+	}
+	if _, err = fmt.Fprintf(os.Stdout, "LERNA_LEGACY_READY %s\n", bytes); err != nil {
+		t.Fatal(err)
+	}
+	released := make(chan error, 1)
+	go func() {
+		scanner := bufio.NewScanner(io.LimitReader(os.Stdin, 32))
+		scanner.Buffer(make([]byte, 32), 32)
+		if !scanner.Scan() {
+			released <- fmt.Errorf("legacy release missing")
+			return
+		}
+		if scanner.Text() != "RELEASE" {
+			released <- fmt.Errorf("legacy release invalid")
+			return
+		}
+		released <- scanner.Err()
+	}()
+	select {
+	case err := <-released:
+		if err != nil {
+			t.Fatal(err)
+		}
+	case <-ctx.Done():
+		_ = os.Stdin.Close()
+		select {
+		case <-released:
+		case <-time.After(time.Second):
+		}
+		t.Fatal("legacy parent release deadline")
+	}
+	// NewWorld's owned t.Cleanup executes now, including the retained admins.
+}
+
+// Decorates only the publisher seam: both outputs are really persisted/read.
+// The wall clock crosses the actual acquired lease before returning Proposal.
+type legacyExpiryPublisher struct {
+	decision.Publisher
+	until  time.Time
+	refs   []v.ContentRef
+	bodies []string
+}
+
+func (p *legacyExpiryPublisher) Publish(ctx context.Context, key string, body []byte, sources []v.ContentRef, permission decision.Permission) (v.ContentRef, error) {
+	ref, err := p.Publisher.Publish(ctx, key, body, sources, permission)
+	if err != nil {
+		return ref, err
+	}
+	actual, err := p.Publisher.ReadPublished(ctx, ref, permission)
+	if err != nil {
+		return ref, err
+	}
+	if string(actual) != string(body) {
+		return ref, fmt.Errorf("old publication readback differs")
+	}
+	p.refs = append(p.refs, ref)
+	p.bodies = append(p.bodies, string(actual))
+	if _, err = v.Decode[v.Proposal](body); err == nil {
+		timer := time.NewTimer(time.Until(p.until))
+		defer timer.Stop()
+		select {
+		case <-timer.C:
+		case <-ctx.Done():
+			return ref, ctx.Err()
+		}
+	}
+	return ref, nil
+}
