@@ -23,11 +23,11 @@ Proposal; the candidate also reads its actual artifact. No Task revision changes
 | Fixed wrong binding/argument tuple | .551 s, output bytes zero because case had not generated output | .999 s with four-action and affected fixed raw controls | `dff4fa1` |
 | Actual argument purpose denied by Source | .646 s, output bytes zero because case had not generated output | 1.176 s with legal-purpose four-action and wrong-pair controls | `6f76995` |
 | Condition replacement with wrong revision | .465 s, output bytes zero because case had not generated output | .719 s with current-revision delta control | `6535a7a` |
-| 15 fixed invalid-output cases through the same public validation | 3.374 s, each fixed case failed to generate output for validation | 5.507 s with five normal branches; same selection race 12.664 s | Matrix change accompanying this record |
+| 15 fixed invalid-output cases through the same public validation | 3.374 s, each fixed case failed to generate output for validation | 5.507 s with five normal branches; same selection race 12.664 s | `706a0a0` |
 
 Red child processes exited 1; listed green child processes exited 0. Each run
 used `-p=1 -tags=integration -count=1 -timeout=120s` and finished before the
-next run. The latest audit after the matrix found all 196 unique successful PG
+next run. The audit after the invalid-output matrix found all 196 unique successful PG
 schema acknowledgements absent, with no live test session, child or DB holder.
 The exact external registry remains available to the coordinating root. The
 purpose test independently confirms the exact argument is readable as
@@ -63,7 +63,20 @@ independent old-producer states and upgrade oracles are still pending. A separat
 03 driver has compiled the repaired source and reached its own business oracles;
 that does not establish this ticket's prepared-format compatibility.
 
-Remaining work includes other finite wrong-output
-and source/revision counterexamples, original action/output/input limits, new
-prepared interruption recovery with and without artifacts, final01 public-writer
-compatibility, Go/TS raw conformance, root integration and independent review.
+A second bounded selection passed normal 4.279 s and race 12.535 s, with both
+actual sessions exiting 0 before the next operation. It contains ten original
+limit cases (zero steps/cost, actual input budget, total artifact/Proposal output
+budget, and action limits 0–4), two real independent publication commits whose
+replies are deliberately lost, original `/2` and new `/3` unknown labels, and
+allowed Source evidence consumption. The two recovered `/3` handoffs cover no
+artifact and an actual candidate artifact. After reopening both owners they
+retain the original input digest and measured usage, independently readable
+original planned references and bytes, and the fixed accepted receipt. Their
+one-step/one-fee allowance would reject any fresh evaluation. These are actual
+public Producer/Source and recovery results, not prepared-row fabrication.
+The latest exact audit found all 256 successful PG schema acknowledgements
+absent and no live test session, child or DB holder.
+
+Remaining work includes final01 public-writer compatibility, Go/TS raw
+conformance, root integration and independent review. The independent archive
+driver is being prepared; it has not yet been compiled or run.
