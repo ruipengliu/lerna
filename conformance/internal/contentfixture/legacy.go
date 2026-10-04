@@ -12,15 +12,17 @@ import (
 	"strings"
 	"sync"
 	"testing"
+	"time"
 )
 
-//go:embed testdata/legacy-v1/* testdata/legacy-many-policies/*
+//go:embed testdata/legacy-v1/* testdata/legacy-many-policies/* testdata/legacy-expired-ancestor/*
 var legacyFiles embed.FS
 
 type LegacyObservation struct {
-	Requests []v.ContentPutRequest
-	Receipts []v.CommandReceipt
-	States   []string
+	Requests         []v.ContentPutRequest
+	Receipts         []v.CommandReceipt
+	States           []string
+	SourceValidUntil time.Time
 }
 
 // NewLegacy restores an actual stopped 1a7 writer export, preserving its original
@@ -31,6 +33,10 @@ func NewLegacy(t *testing.T, ctx context.Context) (*World, LegacyObservation) {
 
 func NewLegacyPolicies(t *testing.T, ctx context.Context) (*World, LegacyObservation) {
 	return newLegacy(t, ctx, "legacy-many-policies")
+}
+
+func NewLegacyExpired(t *testing.T, ctx context.Context) (*World, LegacyObservation) {
+	return newLegacy(t, ctx, "legacy-expired-ancestor")
 }
 
 func newLegacy(t *testing.T, ctx context.Context, archive string) (*World, LegacyObservation) {

@@ -956,12 +956,16 @@ func (m *Manager) advanceJob(ctx context.Context, tx runtime.Tx, job runtime.Job
 		change.Cursor = next
 		if next == "" {
 			change.State = "complete"
-			if now.Before(change.ExpiryDue) {
+			if change.Phase == "policy_change" {
 				change.State = "scheduled"
 				change.Phase = "natural_expiry"
 				change.Cursor = ""
 				change.Due = change.ExpiryDue
 				change.Deadline = change.ExpiryDeadline
+				if !now.Before(change.Deadline) {
+					change.State = "residual"
+					change.Reason = "original_deadline_expired"
+				}
 			}
 		}
 		if err = m.config.Store.SaveChange(ctx, tx, change); err != nil {

@@ -238,3 +238,56 @@ func TestContentHistoricalTighteningClassifiesNewCapAtCurrentTime(t *testing.T) 
 		})
 	}
 }
+
+func TestContentDelayedHistoricalPageHandsOffOriginalNaturalValidUntil(t *testing.T) {
+	for _, late := range []bool{false, true} {
+		t.Run(fmt.Sprintf("late=%t", late), func(t *testing.T) {
+			ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+			defer cancel()
+			w := fixture.New(t, ctx)
+			service, request, source := publishedDirectContent(t, ctx, w)
+			m := trustedContentManager(t, w, 2)
+			due := time.Now().UTC().Add(500 * time.Millisecond).Truncate(time.Microsecond)
+			wide := time.Now().Add(time.Hour)
+			policy := content.FixturePolicy{Ref: source, Subject: contentPrincipal, Purpose: "verification", Revision: 2, ValidUntil: due, RetainUntil: wide, Read: true, Process: true, Save: true, Disclose: true}
+			original, err := m.InstallPolicy(ctx, &contentPrincipal, policy, 1)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if late {
+				waitUntil(t, ctx, due.Add(20*time.Millisecond))
+			}
+			for i := 0; i < 3; i++ {
+				if _, err = m.Step(ctx, &contentPrincipal); err != nil {
+					t.Fatal(err)
+				}
+			}
+			view, err := m.ObserveChange(ctx, &contentPrincipal, original.Key, "", 64)
+			if err != nil {
+				t.Fatal(err)
+			}
+			found := false
+			for _, r := range view.Responsibilities {
+				if r.Ref == request.Payload.ContentRef {
+					found = true
+					if late && (r.BodyCleanup != "pending" || len(r.Actions) != 5 || !r.ObjectHolder) {
+						t.Fatal("initial history completed after ValidUntil without durable original natural check", r, view.Change)
+					}
+					if !late && r.BodyCleanup != "not_required" {
+						t.Fatal("normal future ValidUntil misclassified", r)
+					}
+				}
+			}
+			if !found {
+				t.Fatal("target responsibility absent", view)
+			}
+			if late {
+				if view.Change.Phase != "natural_expiry" || !view.Change.Due.Equal(original.ExpiryDue) || !view.Change.Deadline.Equal(original.ExpiryDeadline) || view.Change.Watermark != original.Watermark {
+					t.Fatal("natural handoff refreshed original cutoff/watermark", view.Change)
+				}
+			} else {
+				assertContentBody(t, ctx, service, request.Payload.ContentRef, nil, "alpha\n")
+			}
+		})
+	}
+}

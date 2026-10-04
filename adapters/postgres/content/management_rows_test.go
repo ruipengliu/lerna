@@ -18,6 +18,7 @@ import (
 type pageConnector struct {
 	data              [][]driver.Value
 	closeErr, nextErr error
+	columns           []string
 }
 
 func (c pageConnector) Connect(context.Context) (driver.Conn, error) { return pageConnection{c}, nil }
@@ -41,8 +42,13 @@ type pageRows struct {
 	index int
 }
 
-func (*pageRows) Columns() []string { return []string{"body", "cursor"} }
-func (r *pageRows) Close() error    { return r.closeErr }
+func (r *pageRows) Columns() []string {
+	if r.columns != nil {
+		return r.columns
+	}
+	return []string{"body", "cursor"}
+}
+func (r *pageRows) Close() error { return r.closeErr }
 func (r *pageRows) Next(dest []driver.Value) error {
 	if r.index == len(r.data) {
 		if r.nextErr != nil {
@@ -126,6 +132,77 @@ func TestManagementPageRowsPreserveCloseAndPrimaryCauses(t *testing.T) {
 				case "scan-close":
 					if !errors.Is(err, closeCause) || !strings.Contains(err.Error(), "Scan error") {
 						t.Fatal("scan primary or close cause lost", err)
+					}
+				case "iteration":
+					if !errors.Is(err, nextCause) {
+						t.Fatal("iteration cause lost", err)
+					}
+				}
+			})
+		}
+	}
+}
+
+func TestManagementFullRowsPreserveEarlyFailureCloseCause(t *testing.T) {
+	consumers := []struct {
+		name    string
+		columns []string
+		read    func(*sql.Rows) (int, error)
+	}{
+		{"unindexed", []string{"body", "cursor"}, func(rows *sql.Rows) (int, error) { p, e := readUnindexedVersionsRows(rows); return len(p), e }},
+		{"pending", []string{"body"}, func(rows *sql.Rows) (int, error) { p, e := readPendingChangesRows(rows); return len(p), e }},
+	}
+	for _, c := range consumers {
+		for _, mode := range []string{"normal", "eof-close", "decode-close", "scan-close", "iteration"} {
+			t.Run(c.name+"/"+mode, func(t *testing.T) {
+				closeCause := errors.New("mechanical full rows close cause")
+				nextCause := errors.New("mechanical full iteration cause")
+				values := []driver.Value{[]byte("{}")}
+				if len(c.columns) == 2 {
+					values = append(values, "cursor")
+				}
+				fault := pageConnector{columns: c.columns, data: [][]driver.Value{values}}
+				switch mode {
+				case "eof-close":
+					fault.closeErr = closeCause
+				case "decode-close":
+					fault.data[0][0] = []byte("{")
+					fault.closeErr = closeCause
+				case "scan-close":
+					fault.data[0][0] = struct{}{}
+					fault.closeErr = closeCause
+				case "iteration":
+					fault.data = nil
+					fault.nextErr = nextCause
+				}
+				db := sql.OpenDB(fault)
+				defer func() {
+					if e := db.Close(); e != nil {
+						t.Error(e)
+					}
+				}()
+				rows, err := db.QueryContext(context.Background(), "mechanical")
+				if err != nil {
+					t.Fatal(err)
+				}
+				count, err := c.read(rows)
+				switch mode {
+				case "normal":
+					if err != nil || count != 1 {
+						t.Fatal("normal full rows", count, err)
+					}
+				case "eof-close":
+					if !errors.Is(err, closeCause) {
+						t.Fatal("EOF Close cause lost", err)
+					}
+				case "decode-close":
+					var syntax *json.SyntaxError
+					if !errors.Is(err, closeCause) || !errors.As(err, &syntax) {
+						t.Fatal("decode primary/Close cause lost", err)
+					}
+				case "scan-close":
+					if !errors.Is(err, closeCause) || !strings.Contains(err.Error(), "Scan error") {
+						t.Fatal("Scan primary/Close cause lost", err)
 					}
 				case "iteration":
 					if !errors.Is(err, nextCause) {

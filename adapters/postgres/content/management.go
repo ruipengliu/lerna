@@ -117,8 +117,13 @@ func (s *Store) UnindexedVersions(ctx context.Context, token runtime.Tx, limit i
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
-	out := []d.LegacySourcePage{}
+	return readUnindexedVersionsRows(rows)
+}
+
+func readUnindexedVersionsRows(rows *sql.Rows) (out []d.LegacySourcePage, resultErr error) {
+	var err error
+	defer func() { resultErr = errors.Join(resultErr, rows.Err(), rows.Close()) }()
+	out = []d.LegacySourcePage{}
 	for rows.Next() {
 		var body []byte
 		var cursor string
@@ -131,7 +136,7 @@ func (s *Store) UnindexedVersions(ctx context.Context, token runtime.Tx, limit i
 		}
 		out = append(out, d.LegacySourcePage{Record: record, PolicyCursor: cursor})
 	}
-	return out, rows.Err()
+	return out, nil
 }
 func (s *Store) SaveSources(ctx context.Context, token runtime.Tx, ref v.ContentRef, sources []v.ContentRef) error {
 	generation, err := s.LockSourceIndex(ctx, token)
@@ -228,8 +233,13 @@ func (s *Store) PendingChanges(ctx context.Context, token runtime.Tx, id string)
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
-	out := []d.PolicyChange{}
+	return readPendingChangesRows(rows)
+}
+
+func readPendingChangesRows(rows *sql.Rows) (out []d.PolicyChange, resultErr error) {
+	var err error
+	defer func() { resultErr = errors.Join(resultErr, rows.Err(), rows.Close()) }()
+	out = []d.PolicyChange{}
 	for rows.Next() {
 		var body []byte
 		if err = rows.Scan(&body); err != nil {
@@ -241,7 +251,7 @@ func (s *Store) PendingChanges(ctx context.Context, token runtime.Tx, id string)
 		}
 		out = append(out, change)
 	}
-	return out, rows.Err()
+	return out, nil
 }
 
 // HasSourceCoverage reads one exact registered edge, without changing a watermark.
