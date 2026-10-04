@@ -4,7 +4,7 @@
 
 **Blocked by:** 04 独立目标与原键保证
 
-**Status:** ready-for-agent
+**Status:** claimed
 
 - [ ] 私有环境fault plan保存准确输入、seed、step／event身份、有限次数、阶段、deadline和耐久cursor；故障选择不进入生产业务payload，不建立无限通用工作流。
 - [ ] 提交前断开配正常对照且无部分目标效果；提交后丢响应时独立query／observer证明已经写入，不能把通道断开当未执行。
@@ -17,3 +17,5 @@
 ## Comments
 
 2026-10-03，root依据授权Astra批准的粒度/真实edges及最终df2dbe5前置退出发布；本票验收尚未实现。等待上述直接前置resolved，不能以spec ready替代实现依赖。
+
+2026-10-04：直接前置04已resolved，最终受测代码cac8e9225b0394b5156bf3f83ad2f11b2b709855／clean tip792ee859424800a67501ea6c8b2291cde9c696cc经独立merger整合为f11135b24b67057a6cb87e68d87b848cc5ddd230；6AC、真实SQLite normal/race、基础检查和独立评审均有[前置票证据](04-durable-test-target.md)。本票现claimed，在新独立工作树实施，当前6AC仍未验收。实际接口交接/tmp/lerna-03-target-handoff.md，实施上下文/tmp/lerna-03-ticket-05-implementation-handoff.md；冻结0001，新增实际需要的0002和耐久阶段，不继承04通过冒充故障计划完成。
