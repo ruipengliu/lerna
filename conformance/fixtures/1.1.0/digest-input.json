@@ -1,0 +1,71 @@
+{
+  "request": {
+    "contract_version": "1.1.0",
+    "profile": "decision_engine",
+    "command_id": "command-a",
+    "target": {
+      "tenant_id": "tenant-a",
+      "owner_id": "decision-owner",
+      "kind": "decision",
+      "id": "decision-a"
+    },
+    "method": "decision_engine.decide",
+    "payload": {
+      "decision_id": "decision-a",
+      "task_ref": {
+        "tenant_id": "tenant-a",
+        "owner_id": "fixture-owner",
+        "kind": "task",
+        "id": "fixture-task"
+      },
+      "snapshot_ref": {
+        "tenant_id": "tenant-a",
+        "owner_id": "fixture-owner",
+        "kind": "snapshot",
+        "id": "snapshot-a",
+        "revision": "1"
+      },
+      "component_ref": {
+        "component_id": "rule-fixture",
+        "contract_version": "1.1.0",
+        "artifact_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "config_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+        "install_lock_ref": {
+          "tenant_id": "tenant-a",
+          "owner_id": "fixture-owner",
+          "kind": "install_lock",
+          "id": "fixture-lock",
+          "revision": "1"
+        }
+      },
+      "use_refs": [
+        {
+          "tenant_id": "tenant-a",
+          "owner_id": "fixture-owner",
+          "kind": "fixture_use",
+          "id": "use-a",
+          "revision": "1"
+        }
+      ],
+      "limits": {
+        "max_input_bytes": "1048576",
+        "max_output_bytes": "1048576",
+        "max_rule_steps": "1024",
+        "max_actions": "4",
+        "max_cost": {
+          "unit": "fixture_cost",
+          "integer_value": "100"
+        }
+      },
+      "deadline": "2026-10-04T00:01:00.000000Z"
+    },
+    "accept_before": "2026-10-04T00:00:00.000000Z"
+  },
+  "subject": {
+    "tenant_id": "tenant-a",
+    "subject_id": "subject-a",
+    "delegation_chain": []
+  },
+  "decision_digest": "sha256:d5c5b9d37ad69aa645d084d2b93bf7efa9f78bbe7a496509ceefa18552187fed",
+  "command_digest": "sha256:459ef4024d838d4521b7167bb428be24a84d99f3e1be9aaa3da0e8f01c959bcc"
+}

@@ -1,0 +1,24 @@
+{
+  "methods": [
+    {
+      "input_schema": "CommandGetRequest",
+      "output_schema": "CommandGetResponse",
+      "advertised": true
+    },
+    {
+      "input_schema": "DecisionDecideRequest",
+      "output_schema": "CommandReceipt",
+      "advertised": false
+    },
+    {
+      "input_schema": "DecisionGetRequest",
+      "output_schema": "DecisionGetResponse",
+      "advertised": false
+    },
+    {
+      "input_schema": "DecisionCancelRequest",
+      "output_schema": "CommandReceipt",
+      "advertised": false
+    }
+  ]
+}

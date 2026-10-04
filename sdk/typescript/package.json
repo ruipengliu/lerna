@@ -3,10 +3,13 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "exports": "./dist/index.js",
+  "exports": {
+    ".": "./dist/index.js",
+    "./v1_1": "./dist/v1_1/index.js"
+  },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "test": "node --experimental-strip-types --test src/*.test.ts",
+    "test": "node --experimental-strip-types --test src/*.test.ts src/v1_1/*.test.ts",
     "build": "tsc"
   },
   "dependencies": {
