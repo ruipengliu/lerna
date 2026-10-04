@@ -118,6 +118,11 @@ type applicationFixture struct {
 
 func newApplication(t *testing.T) *applicationFixture {
 	t.Helper()
+	return newApplicationWithGoalSchema(t, brain.LegacyGoalSchema())
+}
+
+func newApplicationWithGoalSchema(t *testing.T, goalSchema api.Schema) *applicationFixture {
+	t.Helper()
 	ctx := context.Background()
 	var store runtime.Store
 	var e error
@@ -182,7 +187,6 @@ func newApplication(t *testing.T) *applicationFixture {
 	schemaRef := api.ComponentRef{ComponentID: api.NewID("schema"), Version: "1", Digest: schemaDigest}
 	// 本夹具明确使用受限 Renderer 支持的封闭 answer/report 表单，
 	// 不包含需要引用选择与普通 Memory 解析的 preference 扩展。
-	goalSchema := brain.LegacyGoalSchema()
 	goalDigest, _ := api.Digest(goalSchema)
 	goalSchemaRef := api.ComponentRef{ComponentID: api.NewID("schema"), Version: "1", Digest: goalDigest}
 	ts, e := task.New(task.Config{Policies: []task.TaskPolicy{{PolicyRef: policy, ContinuationLimit: 100, RepairLimit: 3, NoProgressLimit: 5, ContextRoundLimit: 3, SafeAttemptLimit: 2, MaxRequirements: 100, MaxDelegations: 128, MaxDepth: 4, CostMode: "strict", BudgetLimits: []api.Amount{{Unit: "USD", Value: "100"}}, MaxEvidenceStalenessSeconds: 300, MaxDurationSeconds: 3600}}, Participants: []string{"task", "content", "memory", "interaction"}, AnswerSchemas: []task.AnswerSchemaDefinition{{Ref: schemaRef, Schema: schema}, {Ref: goalSchemaRef, Schema: goalSchema}}}, task.Ports{ClosureProof: proof, ControlProof: proof, Content: taskPublicationBridge{m, a, cp}})

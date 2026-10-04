@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"math"
 	"regexp"
 
 	"github.com/ruipengliu/lerna/api"
@@ -166,7 +167,17 @@ func restrictedFormSchema(schema api.Schema) error {
 		if depth > 8 || nodes > 256 {
 			return fmt.Errorf("form schema budget exceeded")
 		}
-		allowed := map[string]bool{"oneOf": true, "type": true, "properties": true, "required": true, "additionalProperties": true, "enum": true, "const": true, "minLength": true, "maxLength": true, "minimum": true, "maximum": true, "items": true, "minItems": true, "maxItems": true, "description": true, "title": true}
+		// The registered inline ContentRef is a closed atomic field. Its hash
+		// expression is fixed, and strict JSON already caps version at MaxSafeInteger.
+		// Count all seven scalar fields against the same depth/node budget.
+		if boundedContentRefForm(s) {
+			nodes += 7
+			if nodes > 256 || depth+1 > 8 {
+				return fmt.Errorf("form schema budget exceeded")
+			}
+			return nil
+		}
+		allowed := map[string]bool{"uniqueItems": true, "oneOf": true, "type": true, "properties": true, "required": true, "additionalProperties": true, "enum": true, "const": true, "minLength": true, "maxLength": true, "minimum": true, "maximum": true, "items": true, "minItems": true, "maxItems": true, "description": true, "title": true}
 		for k := range s {
 			if !allowed[k] {
 				return fmt.Errorf("unsupported form schema keyword %s", k)
@@ -188,25 +199,17 @@ func restrictedFormSchema(schema api.Schema) error {
 			}
 			return nil
 		}
-		if value, ok := s["const"]; ok {
-			switch v := value.(type) {
-			case string:
-				if len(v) > 65536 {
-					return fmt.Errorf("unbounded form const")
-				}
-			case float64:
-				if v < -float64(api.MaxSafeInteger) || v > float64(api.MaxSafeInteger) {
-					return fmt.Errorf("unbounded form const")
-				}
-			case bool:
-			default:
-				return fmt.Errorf("unsupported form const")
-			}
-			if len(s) == 1 {
-				return nil
-			}
-		}
 		kind, _ := s["type"].(string)
+		choices, choiceKind, err := boundedFormChoices(s)
+		if err != nil {
+			return err
+		}
+		if kind == "" {
+			kind = choiceKind
+		}
+		if _, exists := s["uniqueItems"]; exists && kind != "array" {
+			return fmt.Errorf("form uniqueness requires bounded scalar choices")
+		}
 		switch kind {
 		case "object":
 			if s["additionalProperties"] != false {
@@ -234,24 +237,30 @@ func restrictedFormSchema(schema api.Schema) error {
 			if !ok {
 				return fmt.Errorf("invalid form array")
 			}
+			if unique, exists := s["uniqueItems"]; exists {
+				if _, ok := unique.(bool); !ok {
+					return fmt.Errorf("invalid form uniqueness")
+				}
+				values, _, err := boundedFormChoices(child)
+				if err != nil || len(values) == 0 {
+					return fmt.Errorf("form uniqueness requires bounded scalar choices")
+				}
+			}
 			return inspect(child, depth+1)
 		case "string":
 			max, ok := schemaNumber(s["maxLength"])
-			if !ok || max < 1 || max > 65536 {
+			if len(choices) == 0 && (!ok || max < 1 || max > 65536) {
 				return fmt.Errorf("unbounded form string")
 			}
 		case "integer", "number":
 			min, ok := schemaNumber(s["minimum"])
 			max, okMax := schemaNumber(s["maximum"])
-			if !ok || !okMax || min > max || min < -float64(api.MaxSafeInteger) || max > float64(api.MaxSafeInteger) {
+			if len(choices) == 0 && (!ok || !okMax || min > max || min < -float64(api.MaxSafeInteger) || max > float64(api.MaxSafeInteger)) {
 				return fmt.Errorf("unbounded form number")
 			}
 		case "boolean":
 		default:
 			return fmt.Errorf("unsupported form field type")
-		}
-		if values, ok := s["enum"].([]any); ok && len(values) > 100 {
-			return fmt.Errorf("unbounded form enum")
 		}
 		return nil
 	}
@@ -261,6 +270,71 @@ func restrictedFormSchema(schema api.Schema) error {
 		return err
 	}
 	return inspect(normalized, 0)
+}
+
+// Recognize the complete registered inline ContentRef, rather than permitting
+// arbitrary patterns or unbounded integers in an otherwise unrelated field.
+func boundedContentRefForm(s api.Schema) bool {
+	reference := api.Object(map[string]any{
+		"tenant_id": api.String(), "owner_id": api.String(), "content_id": api.String(),
+		"version":    api.Schema{"type": "integer", "minimum": 1},
+		"hash":       api.Schema{"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+		"media_type": api.String(), "byte_length": api.Schema{"type": "integer", "minimum": 0, "maximum": 16 << 20},
+	}, "tenant_id", "owner_id", "content_id", "version", "hash", "media_type", "byte_length")
+	return api.Equal(s, reference)
+}
+
+// Finite primitive choices bound values even when the schema omits maxLength
+// or numeric endpoints. Compound, mixed, unsafe or noninteger choices fail closed.
+func boundedFormChoices(s api.Schema) ([]any, string, error) {
+	var values []any
+	if value, ok := s["const"]; ok {
+		if _, exists := s["enum"]; exists {
+			return nil, "", fmt.Errorf("ambiguous form choices")
+		}
+		values = []any{value}
+	} else if raw, ok := s["enum"]; ok {
+		var valid bool
+		values, valid = raw.([]any)
+		if !valid || len(values) == 0 || len(values) > 100 {
+			return nil, "", fmt.Errorf("unbounded form enum")
+		}
+	} else {
+		return nil, "", nil
+	}
+	kind, _ := s["type"].(string)
+	for _, value := range values {
+		actual := ""
+		switch v := value.(type) {
+		case string:
+			actual = "string"
+			if len(v) > 65536 {
+				return nil, "", fmt.Errorf("unbounded form choice")
+			}
+		case float64:
+			actual = "number"
+			if math.IsNaN(v) || math.IsInf(v, 0) || math.Abs(v) > float64(api.MaxSafeInteger) {
+				return nil, "", fmt.Errorf("unsafe form choice")
+			}
+			if kind == "integer" {
+				if math.Trunc(v) != v {
+					return nil, "", fmt.Errorf("noninteger form choice")
+				}
+				actual = "integer"
+			}
+		case bool:
+			actual = "boolean"
+		default:
+			return nil, "", fmt.Errorf("unsupported form choice")
+		}
+		if kind == "" {
+			kind = actual
+		}
+		if kind != actual {
+			return nil, "", fmt.Errorf("mixed form choices")
+		}
+	}
+	return values, kind, nil
 }
 func schemaNumber(v any) (float64, bool) { n, ok := v.(float64); return n, ok }
 func (s *Service) checkSurfaceInput(ctx context.Context, tx runtime.Tx, a runtime.Auth, in SurfaceInput) error {

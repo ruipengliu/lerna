@@ -1,0 +1,161 @@
+{
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "answer"
+        },
+        "body": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 65536
+        }
+      },
+      "required": ["kind", "body"],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "report"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "body": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 65536
+        },
+        "save_path": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "preference": {
+          "type": "object",
+          "properties": {
+            "query_ref": {
+              "type": "object",
+              "properties": {
+                "tenant_id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 4096
+                },
+                "owner_id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 4096
+                },
+                "content_id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 4096
+                },
+                "version": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "hash": {
+                  "type": "string",
+                  "pattern": "^sha256:[a-f0-9]{64}$"
+                },
+                "media_type": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 4096
+                },
+                "byte_length": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 16777216
+                }
+              },
+              "required": [
+                "tenant_id",
+                "owner_id",
+                "content_id",
+                "version",
+                "hash",
+                "media_type",
+                "byte_length"
+              ],
+              "additionalProperties": false
+            },
+            "scope_ref": {
+              "type": "object",
+              "properties": {
+                "tenant_id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 4096
+                },
+                "owner_id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 4096
+                },
+                "content_id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 4096
+                },
+                "version": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "hash": {
+                  "type": "string",
+                  "pattern": "^sha256:[a-f0-9]{64}$"
+                },
+                "media_type": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 4096
+                },
+                "byte_length": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 16777216
+                }
+              },
+              "required": [
+                "tenant_id",
+                "owner_id",
+                "content_id",
+                "version",
+                "hash",
+                "media_type",
+                "byte_length"
+              ],
+              "additionalProperties": false
+            },
+            "allowed_formats": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["plain", "bullet"]
+              },
+              "minItems": 1,
+              "maxItems": 2,
+              "uniqueItems": true
+            },
+            "default_format": {
+              "type": "string",
+              "enum": ["plain", "bullet"]
+            }
+          },
+          "required": ["query_ref", "scope_ref", "allowed_formats", "default_format"],
+          "additionalProperties": false
+        }
+      },
+      "required": ["kind", "title", "body", "save_path"],
+      "additionalProperties": false
+    }
+  ]
+}

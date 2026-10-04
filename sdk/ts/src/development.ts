@@ -58,6 +58,69 @@ const configSchema = {
     "task_deadline_seconds",
   ],
 };
+// Only the exact closed inline ContentRef registered by the modern Goal owner.
+// This does not permit a caller-selected pattern or a generic unbounded integer.
+const boundedContentRefForm = {
+  type: "object",
+  additionalProperties: false,
+  required: ["tenant_id", "owner_id", "content_id", "version", "hash", "media_type", "byte_length"],
+  properties: {
+    tenant_id: { type: "string", minLength: 1, maxLength: 4096 },
+    owner_id: { type: "string", minLength: 1, maxLength: 4096 },
+    content_id: { type: "string", minLength: 1, maxLength: 4096 },
+    version: { type: "integer", minimum: 1 },
+    hash: { type: "string", pattern: "^sha256:[a-f0-9]{64}$" },
+    media_type: { type: "string", minLength: 1, maxLength: 4096 },
+    byte_length: { type: "integer", minimum: 0, maximum: 16 << 20 },
+  },
+};
+function sameFormShape(actual: unknown, expected: unknown): boolean {
+  if (actual === expected) return true;
+  if (Array.isArray(expected))
+    return (
+      Array.isArray(actual) &&
+      actual.length === expected.length &&
+      expected.every((v, i) => sameFormShape(actual[i], v))
+    );
+  if (
+    !actual ||
+    !expected ||
+    typeof actual !== "object" ||
+    typeof expected !== "object" ||
+    Array.isArray(actual)
+  )
+    return false;
+  const a = actual as Record<string, unknown>,
+    e = expected as Record<string, unknown>;
+  return (
+    Object.keys(a).length === Object.keys(e).length &&
+    Object.keys(e).every((key) => Object.hasOwn(a, key) && sameFormShape(a[key], e[key]))
+  );
+}
+function boundedFormChoices(spec: Record<string, unknown>): { kind: unknown; choices?: unknown[] } {
+  const choices = spec.const !== undefined ? [spec.const] : spec.enum;
+  let kind = spec.type;
+  if (spec.const !== undefined && spec.enum !== undefined)
+    throw new ProtocolError("renderer_schema_choices");
+  if (choices === undefined) return { kind };
+  if (!Array.isArray(choices) || !choices.length || choices.length > 100)
+    throw new ProtocolError("renderer_schema_choices");
+  for (const item of choices) {
+    if (!["string", "number", "boolean"].includes(typeof item))
+      throw new ProtocolError("renderer_schema_choices");
+    kind ??= typeof item;
+    if (
+      typeof item !== (kind === "integer" ? "number" : kind) ||
+      (typeof item === "string" && new TextEncoder().encode(item).byteLength > 65536) ||
+      (typeof item === "number" &&
+        (!Number.isFinite(item) ||
+          Math.abs(item) > Number.MAX_SAFE_INTEGER ||
+          (kind === "integer" && !Number.isSafeInteger(item))))
+    )
+      throw new ProtocolError("renderer_schema_choices");
+  }
+  return { kind, choices };
+}
 /** 与受信 Renderer 相同的有界自包含表单；不接受脚本、远端或递归引用。 */
 export function validateFormSchema(schema: unknown): void {
   jsonBytes(schema);
@@ -77,6 +140,7 @@ export function validateFormSchema(schema: unknown): void {
     "items",
     "minItems",
     "maxItems",
+    "uniqueItems",
     "description",
     "title",
   ]);
@@ -84,34 +148,27 @@ export function validateFormSchema(schema: unknown): void {
     if (++nodes > 256 || depth > 8 || !value || Array.isArray(value) || typeof value !== "object")
       throw new ProtocolError("renderer_schema_budget");
     const spec = value as Record<string, unknown>;
+    if (sameFormShape(spec, boundedContentRefForm)) {
+      nodes += 7;
+      if (nodes > 256 || depth + 1 > 8) throw new ProtocolError("renderer_schema_budget");
+      return;
+    }
     if (Object.keys(spec).some((key) => !allowed.has(key)))
       throw new ProtocolError("renderer_schema_unsupported");
     if (spec.oneOf !== undefined) {
-      if (!Array.isArray(spec.oneOf) || spec.oneOf.length < 2 || spec.oneOf.length > 8)
+      if (
+        !Array.isArray(spec.oneOf) ||
+        spec.oneOf.length < 2 ||
+        spec.oneOf.length > 8 ||
+        Object.keys(spec).length !== 1
+      )
         throw new ProtocolError("renderer_schema_union_limit");
       for (const branch of spec.oneOf) inspect(branch, depth + 1);
       return;
     }
-    const choices = spec.const !== undefined ? [spec.const] : spec.enum;
-    let kind = spec.type;
-    if (choices !== undefined) {
-      if (
-        !Array.isArray(choices) ||
-        !choices.length ||
-        choices.length > 100 ||
-        choices.some((item) => !["string", "number", "boolean"].includes(typeof item))
-      )
-        throw new ProtocolError("renderer_schema_choices");
-      kind ??= typeof choices[0];
-      if (
-        choices.some(
-          (item) =>
-            typeof item !== (kind === "integer" ? "number" : kind) ||
-            (typeof item === "string" && item.length > 65536),
-        )
-      )
-        throw new ProtocolError("renderer_schema_choices");
-    }
+    const { kind, choices } = boundedFormChoices(spec);
+    if (Object.hasOwn(spec, "uniqueItems") && kind !== "array")
+      throw new ProtocolError("renderer_schema_uniqueness");
     if (kind === "object") {
       if (
         spec.additionalProperties !== false ||
@@ -129,6 +186,16 @@ export function validateFormSchema(schema: unknown): void {
         (spec.maxItems as number) > 100
       )
         throw new ProtocolError("renderer_schema_unbounded_array");
+      if (Object.hasOwn(spec, "uniqueItems")) {
+        if (
+          typeof spec.uniqueItems !== "boolean" ||
+          !spec.items ||
+          Array.isArray(spec.items) ||
+          typeof spec.items !== "object" ||
+          !boundedFormChoices(spec.items as Record<string, unknown>).choices
+        )
+          throw new ProtocolError("renderer_schema_uniqueness");
+      }
       inspect(spec.items, depth + 1);
     } else if (kind === "string") {
       if (
@@ -143,7 +210,11 @@ export function validateFormSchema(schema: unknown): void {
         !choices &&
         (typeof spec.minimum !== "number" ||
           typeof spec.maximum !== "number" ||
-          spec.minimum > spec.maximum)
+          spec.minimum > spec.maximum ||
+          !Number.isFinite(spec.minimum) ||
+          !Number.isFinite(spec.maximum) ||
+          spec.minimum < -Number.MAX_SAFE_INTEGER ||
+          spec.maximum > Number.MAX_SAFE_INTEGER)
       )
         throw new ProtocolError("renderer_schema_unbounded_number");
     } else if (kind !== "boolean") throw new ProtocolError("renderer_schema_unsupported_type");
