@@ -9,6 +9,7 @@
 | 2026-10-04 | 新增[整体方案](overview.md)作为解释性入口，并增加其维护规则。 |
 | 2026-10-04 | 改为首页：只保留阅读顺序和文档索引；层级、骨架、命名、写作规则、模板和 M1 文档清单移到[文档规范](conventions.md)。 |
 | 2026-10-04 | 索引登记 ADR 0001、0002（来自[架构评审处理记录](../review/archive/round-1/README.md)）。 |
+| 2026-10-04 | 索引登记 ADR 0003（来自[第二轮评审处理记录](../review/disposition.md)）。 |
 
 本目录存放 Lerna 的现行架构设计：一个面向个人用户、以可靠性契约为核心的 Agent Harness。目前只有设计，尚未实现；除项目目标和分层与模块已采纳外，其余文档都是草稿。
 
@@ -34,6 +35,7 @@
 | [文档规范](conventions.md) | 规范 | 已采纳 |
 | [ADR 0001 持久性按部署档位声明](../adr/0001-durability-profiles.md) | 2 决定 | 已采纳 |
 | [ADR 0002 授权区分操作权利与处理目的](../adr/0002-processing-purposes.md) | 2 决定 | 已采纳 |
+| [ADR 0003 替换资格分三类，公共契约与内部接口分开](../adr/0003-replacement-classes-and-assembly.md) | 2 决定 | 已采纳 |
 | [核心契约](core/contracts/README.md) | 3 设计 | 草稿 |
 | [持久工作](core/durable/README.md) | 3 设计 | 草稿 |
 | [动作账本](core/ledger/README.md) | 3 设计 | 草稿 |
