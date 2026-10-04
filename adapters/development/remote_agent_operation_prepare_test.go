@@ -31,12 +31,43 @@ func TestConfiguredRemoteOriginalPreparedAttemptCannotStartAfterParentPause(t *t
 
 func runConfiguredRemoteFirstOriginalOperation(t *testing.T, pausePrepared bool, driver string) {
 	t.Helper()
+	// 夹具准备含真实App、权限、profile和原parent Task活动，并非零IO。
+	// 此处明确改为fixture2m + 独立observer2m；旧整个case2m失败不回填。
+	// 所有已签发Task/Command/Use/证明绝对期限保持，阶段切换不刷新它们。
+	fixtureStarted := time.Now().UTC()
+	fixtureCtx, fixtureCancel := context.WithTimeout(context.Background(), 2*time.Minute)
+	defer fixtureCancel()
+	phaseStarted := fixtureStarted
+	logFixturePhase := func(name string) {
+		completed := time.Now().UTC()
+		deadline, _ := fixtureCtx.Deadline()
+		t.Logf("prepared fixture phase=%s actual_start=%s actual_end=%s elapsed=%s fixture_remaining=%s", name, api.Time(phaseStarted), api.Time(completed), completed.Sub(phaseStarted), time.Until(deadline))
+		phaseStarted = completed
+	}
+	a, b, profile := configuredAgentPairWithParentDriverContext(t, driver, fixtureCtx)
+	logFixturePhase("pair_original_exact_policy")
+	permission := approveRemoteDelegationGrant(fixtureCtx, t, a, b.app.Scope.OwnerID)
+	logFixturePhase("original_grant_approval")
+	profile = configureRemoteFileScope(fixtureCtx, t, a, b, profile, permission)
+	logFixturePhase("final_file_profile")
+	goal, parent := configuredAgentOriginalParent(fixtureCtx, t, a)
+	logFixturePhase("original_parent_snapshot_ready")
+	if err := fixtureCtx.Err(); err != nil {
+		t.Fatal("original fixture failed before observation", err)
+	}
+	fixtureCompleted := time.Now().UTC()
+	fixtureCancel()
+	observerStarted := time.Now().UTC()
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
 	defer cancel()
-	a, b, profile := configuredAgentPairWithParentDriver(t, driver)
-	permission := approveRemoteDelegationGrant(ctx, t, a, b.app.Scope.OwnerID)
-	profile = configureRemoteFileScope(ctx, t, a, b, profile, permission)
-	goal, parent := configuredAgentOriginalParent(ctx, t, a)
+	observerDeadline, _ := ctx.Deadline()
+	defer func() {
+		t.Logf("prepared observer actual_start=%s actual_end=%s elapsed=%s boundary_changed=true", api.Time(observerStarted), api.Time(time.Now().UTC()), time.Since(observerStarted))
+	}()
+	logObserverPhase := func(name string) {
+		t.Logf("prepared observer phase=%s actual_at=%s elapsed=%s remaining=%s original_parent_deadline=%s", name, api.Time(time.Now().UTC()), time.Since(observerStarted), time.Until(observerDeadline), parent.Deadline)
+	}
+	t.Logf("prepared test boundary fixture_started=%s fixture_completed=%s fixture_elapsed=%s observer_started=%s observer_deadline=%s observer_budget=2m original_parent_deadline=%s original_total_2m_case_boundary_changed=true", api.Time(fixtureStarted), api.Time(fixtureCompleted), fixtureCompleted.Sub(fixtureStarted), api.Time(observerStarted), api.Time(observerDeadline), parent.Deadline)
 	id := api.NewID("delegation")
 	in := task.DelegateInput{DelegationID: id, ParentTaskRef: a.app.Scope.Ref(parent.TaskID, parent.Revision), ParentGoalRevision: parent.GoalRevision, GoalRef: goal, InputRefs: []api.ContentRef{}, AgentBindingRef: profile.Values.AgentBindingRef, PermissionRefs: []api.ObjectRef{permission}, Budget: []api.Amount{{Unit: "USD", Value: "2"}}, Deadline: api.Time(time.Now().Add(3 * time.Minute)), PolicyRef: b.app.TaskPolicy.PolicyRef, ReceiverID: b.app.Scope.OwnerID}
 	original := api.Command{Protocol: api.Protocol, Profile: api.Profile, LogicalServiceID: a.app.Scope.OwnerID, CommandID: api.NewID("command"), Method: "collaboration.delegate", TargetID: id, ExpiresAt: api.Time(time.Now().Add(time.Minute)), Payload: api.Raw(in)}
@@ -56,6 +87,7 @@ func runConfiguredRemoteFirstOriginalOperation(t *testing.T, pausePrepared bool,
 		t.Fatalf("original independent child: %+v %v", state, err)
 	}
 	childID := state.Task.TaskID
+	logObserverPhase("original_child_created")
 	t.Logf("original parent=%s child=%s delegation=%s allocation=%s command=%s", parent.TaskID, childID, id, d.AllocationRef.ObjectID, original.CommandID)
 	var intent task.OperationIntent
 	// 不领取dispatch_operation：让本次独立入口亲自证明准备前的强门禁拒绝。
@@ -82,6 +114,7 @@ func runConfiguredRemoteFirstOriginalOperation(t *testing.T, pausePrepared bool,
 	if intent.OperationID == "" || intent.AdmissionSourceKind != "decision" || intent.CapabilityRef != execadapter.FileReadCapability().Ref {
 		t.Fatal("original first inspect action was not actually admitted")
 	}
+	logObserverPhase("first_original_intent_admitted")
 	flow := b.app.foreignContextFactory(ctx, runtime.Flow{Kind: "job", Scope: b.app.Scope, Auth: b.app.ServiceAuth})
 	check := func(current context.Context) error {
 		status, err := b.app.Store.Within(current, b.app.Scope, []string{"task", "collaboration", "content", "memory", "governance", "platform"}, func(tx runtime.Tx) error {
@@ -105,9 +138,11 @@ func runConfiguredRemoteFirstOriginalOperation(t *testing.T, pausePrepared bool,
 	if a.requests.Load()+b.requests.Load() != requests {
 		t.Fatal("substituted intent contacted the original parent authority")
 	}
+	logObserverPhase("before_original_prepare_dispatch")
 	if err = (executionBridge{b.app}).PrepareDispatch(flow, b.app.Scope, intent); err != nil {
 		t.Fatalf("original preparation: %v", err)
 	}
+	logObserverPhase("after_original_prepare_dispatch")
 	if err = check(flow); err != nil {
 		t.Fatalf("current proof did not reach the original shared entry: %v", err)
 	}
@@ -115,7 +150,9 @@ func runConfiguredRemoteFirstOriginalOperation(t *testing.T, pausePrepared bool,
 		t.Fatal("original first dispatch Job missing")
 	}
 	if pausePrepared {
+		logObserverPhase("before_original_prepared_pause_assertions")
 		assertRemotePreparedAttemptStoppedByCurrentParent(ctx, t, a, b, parent.TaskID, intent.OperationID)
+		logObserverPhase("after_original_prepared_pause_assertions")
 		return
 	}
 	if !configuredAgentStep(ctx, t, b, execution.RunJob) {

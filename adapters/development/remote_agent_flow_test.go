@@ -1,6 +1,7 @@
 package development
 
 import (
+	"bytes"
 	"context"
 	"crypto/x509"
 	"encoding/pem"
@@ -141,6 +142,12 @@ func configuredAgentPair(t *testing.T) (*configuredAgentEndpoint, *configuredAge
 
 func configuredAgentPairWithParentDriver(t *testing.T, parentDriver string) (*configuredAgentEndpoint, *configuredAgentEndpoint, collaboration.RemoteAgentProfile) {
 	t.Helper()
+	return configuredAgentPairWithParentDriverContext(t, parentDriver, context.Background())
+}
+
+// 仅prepared夹具传入有界准备context；旧调用及App.Run生命周期保持原样。
+func configuredAgentPairWithParentDriverContext(t *testing.T, parentDriver string, ctx context.Context) (*configuredAgentEndpoint, *configuredAgentEndpoint, collaboration.RemoteAgentProfile) {
+	t.Helper()
 	if parentDriver != "sqlite" && parentDriver != "postgres" {
 		t.Fatal("configured Agent requires an explicit SQLite or PostgreSQL parent")
 	}
@@ -151,7 +158,6 @@ func configuredAgentPairWithParentDriver(t *testing.T, parentDriver string) (*co
 		}
 		t.Setenv("HARNESS_DATABASE_DSN", dsn)
 	}
-	ctx := context.Background()
 	tenant, user := api.NewID("tenant"), api.NewID("subject")
 	endpoints := []*configuredAgentEndpoint{{}, {}}
 	for i, e := range endpoints {
@@ -230,7 +236,16 @@ func configuredAgentPairWithParentDriver(t *testing.T, parentDriver string) (*co
 		})
 	}
 	a, b := endpoints[0], endpoints[1]
-	profile, err := collaboration.NewRemoteAgentProfile(api.NewID("agent"), "1.0.0", collaboration.RemoteAgentValues{ParentOwnerID: a.config.OwnerID, ReceiverID: b.config.OwnerID, AgentBindingRef: runtime.Scope{TenantID: tenant, OwnerID: a.config.OwnerID}.Ref(api.NewID("binding"), 1), PolicyRef: component("task-policy"), InstallLockRef: component("builtin-install-lock"), SubjectRefs: []api.ObjectRef{{TenantID: tenant, OwnerID: a.config.OwnerID, ObjectID: user, Revision: 1}}, PermissionRefs: []api.ObjectRef{}, CapabilityRefs: []api.ComponentRef{}, BindingRefs: []api.ObjectRef{}, ResourceRefs: []api.ComponentRef{}, BudgetLimits: []api.Amount{{Unit: "USD", Value: "3"}}, MaxDepth: 4, MaxInputs: 4, Location: "cloud", MaterialPurposes: []string{"task.goal", "task.submit", "content.write", "brain.input", "task.context", "task.delegate", "task.steer", "task.snapshot", "task.action", "execution.arguments", "brain.output", "task.attach_evidence", "task.complete", "task.input", "task.need_context", "task.accept_result"}})
+	// 第一次真实安装即使用 App 相同的纯政策构造与当前 GoalSchema 摘要。
+	// 其后仍与已安装两端完整 refs/配置强核，不能假定构造规则永远相同。
+	answerSchema := component("goal-answer-schema")
+	answerDigest, digestErr := api.Digest(brain.GoalSchema())
+	if digestErr != nil {
+		t.Fatal(digestErr)
+	}
+	answerSchema.Digest = answerDigest
+	initialPolicy := builtinTaskPolicy(b.config, answerSchema)
+	profile, err := collaboration.NewRemoteAgentProfile(api.NewID("agent"), "1.0.0", collaboration.RemoteAgentValues{ParentOwnerID: a.config.OwnerID, ReceiverID: b.config.OwnerID, AgentBindingRef: runtime.Scope{TenantID: tenant, OwnerID: a.config.OwnerID}.Ref(api.NewID("binding"), 1), PolicyRef: initialPolicy.PolicyRef, InstallLockRef: component("builtin-install-lock"), SubjectRefs: []api.ObjectRef{{TenantID: tenant, OwnerID: a.config.OwnerID, ObjectID: user, Revision: 1}}, PermissionRefs: []api.ObjectRef{}, CapabilityRefs: []api.ComponentRef{}, BindingRefs: []api.ObjectRef{}, ResourceRefs: []api.ComponentRef{}, BudgetLimits: []api.Amount{{Unit: "USD", Value: "3"}}, MaxDepth: 4, MaxInputs: 4, Location: "cloud", MaterialPurposes: []string{"task.goal", "task.submit", "content.write", "brain.input", "task.context", "task.delegate", "task.steer", "task.snapshot", "task.action", "execution.arguments", "brain.output", "task.attach_evidence", "task.complete", "task.input", "task.need_context", "task.accept_result"}})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -247,21 +262,46 @@ func configuredAgentPairWithParentDriver(t *testing.T, parentDriver string) (*co
 			t.Fatal(err)
 		}
 	}
-	// 管理阶段读取实际Task政策/安装锁后登记新准确profile；之前未有委派责任。
+	// 管理阶段读取实际 Task 政策/安装锁。完整原配置相等时无需重复构造两端；
+	// 字段或摘要变化仍登记准确 profile 并按原路径重开，之后才有委派。
+	originalProfile := profile
 	values := profile.Values
 	values.PolicyRef, values.InstallLockRef = b.app.TaskPolicy.PolicyRef, b.app.InstallLock
 	profile, err = collaboration.NewRemoteAgentProfile(profile.ProfileRef.ComponentID, profile.ProfileRef.Version, values)
 	if err != nil {
 		t.Fatal(err)
 	}
+	originalBytes, err := api.Canonical(api.Raw(originalProfile))
+	if err != nil {
+		t.Fatal(err)
+	}
+	actualBytes, err := api.Canonical(api.Raw(profile))
+	if err != nil {
+		t.Fatal(err)
+	}
+	wantedProfiles, err := api.Canonical(api.Raw([]collaboration.RemoteAgentProfile{profile}))
+	if err != nil {
+		t.Fatal(err)
+	}
+	unchanged := originalProfile.ProfileRef == profile.ProfileRef && api.Equal(originalProfile, profile) && bytes.Equal(originalBytes, actualBytes)
 	for _, e := range endpoints {
-		if err = e.app.Close(); err != nil {
-			t.Fatal(err)
-		}
-		e.config.RemoteAgent.Profiles = []collaboration.RemoteAgentProfile{profile}
-		e.app, err = OpenApp(ctx, e.config, false)
+		configured, err := api.Canonical(api.Raw(e.config.RemoteAgent.Profiles))
 		if err != nil {
 			t.Fatal(err)
+		}
+		unchanged = unchanged && len(e.config.RemoteAgent.Profiles) == 1 && e.config.RemoteAgent.Profiles[0].ProfileRef == profile.ProfileRef && bytes.Equal(configured, wantedProfiles)
+	}
+	t.Logf("original paired profile equal=%v exact_ref=%s JCS=%s duplicate_reopens_skipped=%v", unchanged, profile.ProfileRef.Digest, api.Hash(actualBytes), unchanged)
+	for _, e := range endpoints {
+		if !unchanged {
+			if err = e.app.Close(); err != nil {
+				t.Fatal(err)
+			}
+			e.config.RemoteAgent.Profiles = []collaboration.RemoteAgentProfile{profile}
+			e.app, err = OpenApp(ctx, e.config, false)
+			if err != nil {
+				t.Fatal(err)
+			}
 		}
 		e.persistPrivateConfiguration(t)
 	}
