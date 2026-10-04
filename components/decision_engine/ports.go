@@ -1,0 +1,114 @@
+// Package decision_engine proposes bounded next steps; it owns no Task state.
+package decision_engine
+
+import (
+ "context"
+ "errors"
+ "time"
+
+ "github.com/ruipengliu/lerna/contract"
+ v "github.com/ruipengliu/lerna/contract/v1_1"
+ "github.com/ruipengliu/lerna/runtime"
+ "github.com/ruipengliu/lerna/runtime/workpool"
+)
+
+var ErrUnavailable=errors.New("decision dependency unavailable")
+var ErrForbidden=errors.New("decision authorization denied")
+var ErrPublicationConflict=errors.New("fixture publication identity conflict")
+
+// Permission is a current, trusted fixture authorization observation. It is
+// checked against database time after locks; it is not a production Grant.
+type Permission struct {
+ Subject v.SubjectBinding
+ DecisionOwner v.OwnerRef
+ TaskRef v.TaskObjectRef
+ ComponentRef v.ComponentRef
+ UseRefs []v.UseRef
+ ValidUntil time.Time
+}
+type Authority interface {
+ Authorize(context.Context,v.SubjectBinding,v.DecisionRef,string,*v.DecisionDecidePayload)(Permission,error)
+}
+type CapabilityBinding struct {
+ CapabilityRef v.ObjectRef `json:"capability_ref"`
+ BindingRef v.ObjectRef `json:"binding_ref"`
+ ArgumentsRef v.ContentRef `json:"arguments_ref"`
+ Purpose string `json:"purpose"`
+}
+// Snapshot is explicitly a fixture manifest, not an Orchestrator Snapshot.
+type Snapshot struct {
+ Ref v.SnapshotRef `json:"snapshot_ref"`
+ TaskRef v.TaskObjectRef `json:"task_ref"`
+ GoalRevision v.Revision `json:"goal_revision"`
+ ControlRevision v.Revision `json:"control_revision"`
+ ComponentRef v.ComponentRef `json:"component_ref"`
+ MaterialRefs []v.ContentRef `json:"material_refs"`
+ RequirementRefs []v.ObjectRef `json:"requirement_refs"`
+ CapabilityBindings []CapabilityBinding `json:"capability_bindings"`
+ AnswerSchemaRefs []v.ContentRef `json:"answer_schema_refs"`
+ UseRefs []v.UseRef `json:"use_refs"`
+ Rule string `json:"rule"`
+}
+type Source interface {
+ ReadSnapshot(context.Context,v.SnapshotRef,Permission)(Snapshot,error)
+ ReadMaterial(context.Context,v.ContentRef,string,Permission)([]byte,error)
+ ReadFixtureLock(context.Context,v.ObjectRef,Permission)([]byte,error)
+}
+type Publisher interface {
+ Publish(context.Context,string,[]byte,[]v.ContentRef,Permission)(v.ContentRef,error)
+ ReadPublished(context.Context,v.ContentRef,Permission)([]byte,error)
+}
+type Record struct {
+ Ref v.DecisionRef `json:"decision_ref"`
+ Input *v.DecisionDecidePayload `json:"input,omitempty"`
+ Subject v.SubjectBinding `json:"subject"`
+ InputDigest string `json:"input_digest"`
+ Revision int64 `json:"revision"`
+ Status string `json:"status"`
+ Proposal *v.Proposal `json:"proposal,omitempty"`
+ ProposalRef *v.ContentRef `json:"proposal_ref,omitempty"`
+ ArtifactRefs []v.ContentRef `json:"artifact_refs"`
+ Usage v.DecisionUsage `json:"usage"`
+ Failure *v.DecisionFailure `json:"failure,omitempty"`
+ ControlBasis *v.ControlBasis `json:"control_basis,omitempty"`
+ Reason string `json:"reason,omitempty"`
+ StartedEpoch int64 `json:"started_epoch"`
+}
+type CommandRecord struct {
+ Digest string `json:"digest"`
+ Request v.DecisionDecideRequest `json:"request"`
+ Subject v.SubjectBinding `json:"subject"`
+ Receipt v.CommandReceipt `json:"receipt"`
+}
+type Repository interface {
+ LockCommand(context.Context,runtime.Tx,v.CommandRef)(*CommandRecord,error)
+ SaveCommand(context.Context,runtime.Tx,v.CommandRef,CommandRecord)error
+ LockDecision(context.Context,runtime.Tx,v.DecisionRef)(*Record,error)
+ SaveDecision(context.Context,runtime.Tx,Record)error
+ ReadDecision(context.Context,runtime.Tx,v.DecisionRef)(*Record,error)
+ ReadCommand(context.Context,runtime.Tx,v.CommandRef)(*CommandRecord,error)
+}
+// Pool ports remain owned by this consumer. Only the shared finite values and
+// pure FIFO calculations live in workpool.
+type Pools interface {
+ LockPool(context.Context,runtime.Tx)(workpool.State,error)
+ InstallPool(context.Context,runtime.Tx,workpool.Config,int64,time.Time)error
+ PoolScope(context.Context,runtime.Tx)(string,error)
+ SavePoolCursor(context.Context,runtime.Tx,workpool.State,string,workpool.Cursor)error
+ PoolCounts(context.Context,runtime.Tx,workpool.State,string,contract.ID,time.Time)(int64,int64,int64,error)
+ PoolQueue(context.Context,runtime.Tx,workpool.State,contract.ObjectRef,string,string)(string,bool,error)
+ PoolReadyTenants(context.Context,runtime.Tx,workpool.State,string,time.Time)(map[contract.ID]time.Time,error)
+ PoolPage(context.Context,runtime.Tx,workpool.State,string,contract.ID,string,string,time.Time)([]runtime.Job,string,error)
+ RegisterPoolClaim(context.Context,runtime.Tx,workpool.State,runtime.Claim)error
+ ValidatePoolClaim(context.Context,runtime.Tx,workpool.State,runtime.Claim,time.Time)error
+ PoolNextWake(context.Context,runtime.Tx,workpool.State,string,time.Time,time.Time)(time.Time,error)
+}
+type Store interface {
+ runtime.TxRunner
+ runtime.Clock
+ runtime.JobStore
+ runtime.ClaimStore
+ runtime.ScheduleStore
+ Repository
+ Pools
+}
