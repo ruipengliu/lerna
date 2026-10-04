@@ -17,7 +17,7 @@ import (
 // the current Task revisions and original durable-start fee are preserved.
 func (s *Service) calculateProposalV3(ctx context.Context, work Work, snapshot Snapshot, processed []v.ContentRef, first []byte, inputBytes int) completion {
 	artifactOutput := 0
-	if (snapshot.Rule != "delta_only" && snapshot.Rule != "actions_four" && snapshot.Rule != "input_request" && snapshot.Rule != "delta_candidate_result") || len(snapshot.MaterialRefs) < 2 {
+	if (snapshot.Rule != "delta_only" && snapshot.Rule != "actions_four" && snapshot.Rule != "input_request" && snapshot.Rule != "delta_candidate_result" && snapshot.Rule != "cannot_continue") || len(snapshot.MaterialRefs) < 2 {
 		return failedCompletion("proposal_invalid", inputBytes, artifactOutput, 1)
 	}
 	replacement := snapshot.RequirementRefs[0]
@@ -45,6 +45,10 @@ func (s *Service) calculateProposalV3(ctx context.Context, work Work, snapshot S
 		}
 		proposal.RequirementDelta = []v.RequirementDelta{}
 		proposal.Advance = v.NewProposalAdvanceInputRequest(v.ProposalAdvanceInputRequest{QuestionRef: snapshot.MaterialRefs[2], AnswerSchemaRef: snapshot.AnswerSchemaRefs[0], Purpose: "clarification", PreviewRefs: []v.ContentRef{snapshot.MaterialRefs[0]}})
+	}
+	if snapshot.Rule == "cannot_continue" {
+		proposal.RequirementDelta = []v.RequirementDelta{}
+		proposal.Advance = v.NewProposalAdvanceCannotContinue(v.ProposalAdvanceCannotContinue{Reason: "fixture has no further applicable action", MissingRequirements: []v.RequirementRef{snapshot.RequirementRefs[0]}})
 	}
 	artifacts := []PreparedArtifact{}
 	if snapshot.Rule == "delta_candidate_result" {
@@ -237,6 +241,19 @@ func (s *Service) validateProposalV3(ctx context.Context, work Work, snapshot Sn
 			if material.purpose == "rule.answer_schema" {
 				if err := validateFixtureAnswerSchema(body); err != nil {
 					return err
+				}
+			}
+		}
+	} else if cannot, ok := proposal.Advance.AsCannotContinue(); ok {
+		for _, ref := range cannot.MissingRequirements {
+			if !slices.Contains(snapshot.RequirementRefs, ref) {
+				return ErrForbidden
+			}
+		}
+		if cannot.ArtifactRefs != nil {
+			for _, ref := range *cannot.ArtifactRefs {
+				if !slices.ContainsFunc(artifacts, func(artifact PreparedArtifact) bool { return artifact.Ref == ref }) {
+					return ErrForbidden
 				}
 			}
 		}

@@ -356,3 +356,59 @@ func TestDurableProposalDeltaWithCandidatePreservesBothSuggestions(t *testing.T)
 		t.Fatal("one actual fixture evaluation/fee was not preserved")
 	}
 }
+
+func TestDurableProposalCannotContinueCompletesWithoutTaskVerdict(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+	defer cancel()
+	world := fixture.NewWorld(t, ctx)
+	scene, snapshot := proposalScenario(t, ctx, world, "fixture-rule/3", "cannot_continue")
+	service := proposalService(t, world, scene)
+	raw, err := v.Encode(scene.Request)
+	if err != nil {
+		t.Fatal(err)
+	}
+	outcome, err := service.Decide(ctx, raw, &scene.Subject)
+	if err != nil {
+		t.Fatal(err)
+	}
+	received, ok := outcome.AsReceived()
+	if !ok {
+		t.Fatal("cannot-continue input not received")
+	}
+	if _, ok := received.Receipt.AsAccepted(); !ok {
+		t.Fatal("cannot-continue input not accepted")
+	}
+	if _, err := service.Step(ctx); err != nil {
+		t.Fatal(err)
+	}
+	world.Reopen(ctx)
+	service = proposalService(t, world, scene)
+	view, err := service.Get(ctx, scene.GetJSON, &scene.Subject)
+	if err != nil {
+		t.Fatal(err)
+	}
+	found, ok := view.AsFound()
+	if !ok {
+		t.Fatal("original cannot-continue unavailable")
+	}
+	completed, ok := found.Decision.AsCompleted()
+	if !ok {
+		t.Fatal("cannot_continue is a completed proposal, not a failed Decision or Task verdict")
+	}
+	cannot, ok := completed.Proposal.Advance.AsCannotContinue()
+	if !ok || cannot.Reason != "fixture has no further applicable action" || len(cannot.MissingRequirements) != 1 || cannot.MissingRequirements[0] != snapshot.RequirementRefs[0] || len(completed.ArtifactRefs) != 0 {
+		t.Fatal("cannot_continue lost its precise bounded reason/gap or invented an artifact")
+	}
+	permission, err := world.Source().Authorize(ctx, scene.Subject, scene.DecisionRef, "get", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	body, err := world.Source().ReadPublished(ctx, completed.ProposalRef, permission)
+	if err != nil {
+		t.Fatal(err)
+	}
+	proposal, err := v.Decode[v.Proposal](body)
+	if err != nil || proposal.GoalRevision != "1" || proposal.ControlRevision != "1" || len(proposal.ProcessedSourceRefs) != 3 {
+		t.Fatal("cannot_continue adopted Task authority or omitted its complete sources", err)
+	}
+}
