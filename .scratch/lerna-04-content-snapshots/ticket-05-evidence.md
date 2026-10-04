@@ -205,3 +205,24 @@ PID/PGID2741403/start11416103/exit0/groupAbsent=true。已有协议直接green�
 OS写者。fixture新目录Sync/Close由原setup ownership跟踪；不碰任何旧root。
 两个native均无timeout且actualcompletion，明确release LOCAL/no pending。
 ACKloss与真实跨进程晚写/孤儿/旧writer受控升级仍待各自tracer。
+
+## 跨进程第一顺序独立qualification：Put先持真实key锁
+
+`TestCrossProcessPutFinishesBeforeOriginalErasure`使用actual测试子进程，
+prestart责任在Start前fsync登记；实际Setsid PID/PGID/starttime ACK再次
+fsync后才释放pipe effectgate。child真实temp.Sync返回之后、Close/Link
+之前SIGSTOP。父通过独立temp alpha字节及20ms有限Erase deadline拒绝
+观察实际跨进程flock；SIGCONT后child真正Put/Store.Close返回nil并写明确
+CloseACK文件，父实际断言它再Wait/groupAbsent。kernel ACK不推逻辑Close。
+
+`crossprocess-put-first-qualification.log` actual0.050s、outerPID/PGID2752480/
+start11464036/exit0/groupAbsent=true/无timeout；ownroot3768632004 dev33/
+inode325796，childPID/PGID2752568/start11464086/exit0/groupAbsent=true。
+原callerctx5s deadline原样传给child，不重启业务预算；child测试timeout6s，
+outer go test timeout10s、原wrapper120s。所有pipes均真实Close，Wait有限。
+父原Erase及独立Open确认fenced/erased/准确final key缺失，父holder Close确认
+后才释放此自own root。失败/KILL时缺逻辑Close则根保持未知，不cleanup。
+
+该case是已有协议直接green，机械停点只控制真实Sync后的位置，不注入FS
+结果。反序墓碑先完成/迟到Put以及SIGKILL旧holder未知scope尚待独立case；
+不能用本单顺序或原receipt门宣称全部跨进程AC。明确release LOCAL/no pending。
