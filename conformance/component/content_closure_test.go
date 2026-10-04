@@ -8,6 +8,7 @@ import (
 	fixture "github.com/ruipengliu/lerna/conformance/internal/contentfixture"
 	v "github.com/ruipengliu/lerna/contract/v1_2"
 	"github.com/ruipengliu/lerna/domain/content"
+	"github.com/ruipengliu/lerna/runtime"
 	"os"
 	"path/filepath"
 	"sync"
@@ -54,21 +55,92 @@ func TestContentHiddenAncestorControlsCurrentDerivedUse(t *testing.T) {
 	}
 }
 
+// Port timings are mechanical diagnostics, never behavior assertions. Each
+// action set calls the real repository; logical flags are counted separately.
+type closurePortTiming struct {
+	calls   int
+	actions int
+	elapsed time.Duration
+}
+type closureTimingRepository struct {
+	content.Repository
+	stage   string
+	timings map[string]closurePortTiming
+}
+
+func (r *closureTimingRepository) measure(operation string, started time.Time) {
+	key := r.stage + "/" + operation
+	stat := r.timings[key]
+	stat.calls++
+	stat.elapsed += time.Since(started)
+	r.timings[key] = stat
+}
+func (r *closureTimingRepository) Now(ctx context.Context, tx runtime.Tx) (time.Time, error) {
+	started := time.Now()
+	defer r.measure("Now", started)
+	return r.Repository.Now(ctx, tx)
+}
+func (r *closureTimingRepository) CheckPolicy(ctx context.Context, tx runtime.Tx, subject v.SubjectBinding, ref v.ContentRef, purpose string, actions []string, now time.Time) (*content.FixturePolicy, error) {
+	started := time.Now()
+	defer func() {
+		r.measure("CheckPolicy", started)
+		key := r.stage + "/CheckPolicy"
+		stat := r.timings[key]
+		stat.actions += len(actions)
+		r.timings[key] = stat
+	}()
+	return r.Repository.CheckPolicy(ctx, tx, subject, ref, purpose, actions, now)
+}
+func (r *closureTimingRepository) LockVersion(ctx context.Context, tx runtime.Tx, ref v.ContentRef) (*content.Record, error) {
+	started := time.Now()
+	defer r.measure("LockVersion", started)
+	return r.Repository.LockVersion(ctx, tx, ref)
+}
+func (r *closureTimingRepository) ScheduleRetention(ctx context.Context, tx runtime.Tx, policy *content.FixturePolicy, record content.Record, sources []content.Record, budget time.Duration) error {
+	started := time.Now()
+	defer r.measure("ScheduleRetention", started)
+	return r.Repository.ScheduleRetention(ctx, tx, policy, record, sources, budget)
+}
+
 func TestContentFullClosureIncludesIntermediateVersionsAndExact64Bound(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
 	defer cancel()
 	w := fixture.New(t, ctx)
-	service := contentService(t, w)
+	metrics := &closureTimingRepository{Repository: w.Store(), timings: map[string]closurePortTiming{}}
+	service, err := content.New(content.Config{Owner: contentOwner, Store: metrics, Objects: w.Objects, Limits: content.Limits{MaxPreparingVersions: 16, MaxStagingBytes: 4 * 262144, Lease: time.Minute, WorkTimeout: 5 * time.Second}, PublishBudget: time.Minute, MaxPublicationAttempts: 3, Worker: "content-conformance"})
+	if err != nil {
+		t.Fatal(err)
+	}
 	var previous v.ContentRef
+	// These timings diagnose the finite native case; public receipts and bytes
+	// remain the oracle. The original context and full 64/65 inputs are fixed.
+	var installTime, putTime, stepTime time.Duration
+	var index int
+	stage := "setup"
+	started := time.Now()
+	t.Cleanup(func() {
+		t.Logf("closure timing i=%d stage=%s current=%s install=%s put=%s step=%s", index, stage, time.Since(started), installTime, putTime, stepTime)
+		for _, phase := range []string{"put", "step", "get"} {
+			for _, operation := range []string{"Now", "CheckPolicy", "LockVersion", "ScheduleRetention"} {
+				stat := metrics.timings[phase+"/"+operation]
+				t.Logf("closure port %s/%s calls=%d logical_actions=%d elapsed=%s", phase, operation, stat.calls, stat.actions, stat.elapsed)
+			}
+		}
+	})
 	for i := 0; i <= 65; i++ {
+		index, stage, started = i, "install", time.Now()
 		ref := alphaRef
 		ref.ContentID = v.ID(fmt.Sprintf("closure-%02d", i))
 		installContentPolicy(t, ctx, w, ref)
+		installTime += time.Since(started)
 		req := contentPut(t, ref, string(ref.ContentID), "YWxwaGEK")
 		if i > 0 {
 			req.Payload.Sources = []v.ContentRef{previous}
 		}
+		stage, started = "put", time.Now()
+		metrics.stage = stage
 		receipt := putContentRequest(t, ctx, service, req)
+		putTime += time.Since(started)
 		if i == 65 {
 			requireRejection(t, receipt, "input_over_limit")
 			break
@@ -76,10 +148,14 @@ func TestContentFullClosureIncludesIntermediateVersionsAndExact64Bound(t *testin
 		if _, ok := receipt.AsAccepted(); !ok {
 			t.Fatal("closure within limit refused", i, receipt)
 		}
+		stage, started = "step", time.Now()
+		metrics.stage = stage
 		if _, err := service.Step(ctx); err != nil {
 			t.Fatal(i, err)
 		}
+		stepTime += time.Since(started)
 		if i == 64 {
+			metrics.stage = "get"
 			assertContentBody(t, ctx, service, ref, nil, "alpha\n")
 		}
 		previous = ref

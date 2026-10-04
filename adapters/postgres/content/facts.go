@@ -86,7 +86,7 @@ func (s *Store) LockVersion(ctx context.Context, token runtime.Tx, ref v.Content
 	if err != nil {
 		return nil, err
 	}
-	id, _, err := d.VersionIdentity(ref)
+	id, expectedObjectKey, err := d.VersionIdentity(ref)
 	if err != nil {
 		return nil, err
 	}
@@ -111,8 +111,10 @@ func (s *Store) LockVersion(ctx context.Context, token runtime.Tx, ref v.Content
 	if record.Ref.Owner != ref.Owner || record.Ref.ContentID != ref.ContentID || record.Ref.Version != ref.Version || record.ObjectID != objectID || record.ObjectKey != keyStored || record.TupleDigest != tuple || record.Publication != publication || record.Revision != revision {
 		return nil, runtime.ErrScope
 	}
-	if err = record.ValidateIdentity(); err != nil {
-		return nil, err
+	if record.Ref != ref || record.ObjectID != id || record.ObjectKey != expectedObjectKey {
+		if err = record.ValidateIdentity(); err != nil {
+			return nil, err
+		}
 	}
 	record.Bytes = staging
 	return &record, nil

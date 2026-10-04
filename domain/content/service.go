@@ -83,6 +83,13 @@ func accepted(ref v.CommandRef, record Record) v.CommandReceipt {
 	next := "query_original"
 	return v.NewCommandReceiptAccepted(v.CommandReceiptAccepted{CommandRef: ref, ObjectRef: v.ContentTarget{TenantID: record.Ref.Owner.TenantID, OwnerID: record.Ref.Owner.OwnerID, Kind: "content", ID: record.Ref.ContentID}, ContentRef: record.Ref, RetainUntil: record.EffectiveRetainUntil, NextAction: &next})
 }
+
+// lateAdmissionAbort is unique to one Put invocation. Returning it from the
+// first callback prevents Commit; it is never a public protocol error.
+type lateAdmissionAbort struct{ reason v.ErrorCode }
+
+func (e *lateAdmissionAbort) Error() string { return "Content admission expired after pending writes" }
+
 func (s *Service) Put(ctx context.Context, raw []byte, subject *v.SubjectBinding) (v.TransportOutcome, error) {
 	request, err := v.DecodePut(raw)
 	if err != nil {
@@ -102,6 +109,7 @@ func (s *Service) Put(ctx context.Context, raw []byte, subject *v.SubjectBinding
 	}
 	ref := v.CommandRef{Owner: s.config.Owner, CommandID: request.CommandID}
 	var fixed v.CommandReceipt
+	late := &lateAdmissionAbort{}
 	err = s.config.Store.Within(ctx, owner(s.config.Owner), func(ctx context.Context, tx runtime.Tx) error {
 		now, err := s.config.Store.Now(ctx, tx)
 		if err != nil {
@@ -156,7 +164,7 @@ func (s *Service) Put(ctx context.Context, raw []byte, subject *v.SubjectBinding
 		if !now.Before(cutoff(request.AcceptBefore)) {
 			return reject("expired")
 		}
-		policy, err := s.config.Store.CheckPolicy(ctx, tx, principal, request.Payload.ContentRef, string(request.Payload.Purpose), "save", now)
+		policy, err := s.config.Store.CheckPolicy(ctx, tx, principal, request.Payload.ContentRef, string(request.Payload.Purpose), []string{"save"}, now)
 		if err != nil {
 			return err
 		}
@@ -215,32 +223,9 @@ func (s *Service) Put(ctx context.Context, raw []byte, subject *v.SubjectBinding
 			}
 			return err
 		}
-		for _, source := range sources {
-			if source.Owner.TenantID != s.config.Owner.TenantID {
-				return reject("forbidden")
-			}
-			if source.Owner != s.config.Owner {
-				return reject("unsupported")
-			}
-			for _, action := range []string{"read", "process", "save"} {
-				sourcePolicy, err := s.config.Store.CheckPolicy(ctx, tx, principal, source, string(request.Payload.Purpose), action, now)
-				if err != nil {
-					return err
-				}
-				if sourcePolicy == nil || sourcePolicy.Ref != source {
-					return reject("forbidden")
-				}
-				policyBefore = earlier(policyBefore, sourcePolicy.ValidUntil)
-				effective = earlier(effective, sourcePolicy.RetainUntil)
-			}
-			sourceRecord, err := s.config.Store.LockVersion(ctx, tx, source)
-			if err != nil {
-				return err
-			}
-			if sourceRecord == nil || sourceRecord.Ref != source || sourceRecord.Publication != "published" {
-				return reject("source_unavailable")
-			}
-			effective = earlier(effective, cutoff(sourceRecord.CurrentRetainUntil))
+		if len(sources.refs) > 0 {
+			policyBefore = earlier(policyBefore, sources.validBefore)
+			effective = earlier(effective, sources.retainBefore)
 		}
 		if err = checkReader(); err != nil {
 			return err
@@ -255,6 +240,41 @@ func (s *Service) Put(ctx context.Context, raw []byte, subject *v.SubjectBinding
 		if !now.Before(policyBefore) {
 			return reject("forbidden")
 		}
+		finalAdmission := func() error {
+			// Immediate natural registration can tighten this target in the
+			// same Tx. Source records are unchanged; consume its actual cap.
+			current, err := s.config.Store.LockVersion(ctx, tx, request.Payload.ContentRef)
+			if err != nil {
+				return err
+			}
+			if current == nil || current.Ref != request.Payload.ContentRef || current.TupleDigest != tuple {
+				return runtime.ErrScope
+			}
+			effective = earlier(effective, cutoff(current.CurrentRetainUntil))
+			now, err = s.config.Store.Now(ctx, tx)
+			if err != nil {
+				return err
+			}
+			if err = checkReader(); err != nil {
+				return err
+			}
+			now, err = s.config.Store.Now(ctx, tx)
+			if err != nil {
+				return err
+			}
+			reason := v.ErrorCode("")
+			if !now.Before(cutoff(request.AcceptBefore)) || !now.Before(effective) {
+				reason = "expired"
+			} else if !now.Before(policyBefore) {
+				reason = "forbidden"
+			}
+			if reason == "" {
+				return nil
+			}
+			late.reason = reason
+			fixed = v.CommandReceipt{}
+			return late
+		}
 		if record != nil {
 			if effective.Before(cutoff(record.CurrentRetainUntil)) {
 				record.CurrentRetainUntil = wireTime(effective)
@@ -262,12 +282,15 @@ func (s *Service) Put(ctx context.Context, raw []byte, subject *v.SubjectBinding
 				if err = s.config.Store.SaveVersion(ctx, tx, *record); err != nil {
 					return err
 				}
-				if err = s.config.Store.ScheduleRetention(ctx, tx, policy, *record, s.config.PublishBudget); err != nil {
+				if err = s.config.Store.ScheduleRetention(ctx, tx, policy, *record, sources.records, s.config.PublishBudget); err != nil {
 					return err
 				}
 			}
 			fixed = accepted(ref, *record)
-			return s.config.Store.SaveCommand(ctx, tx, ref, CommandRecord{Digest: digest, Subject: principal, Ref: record.Ref, Purpose: record.Purpose, Receipt: fixed})
+			if err = s.config.Store.SaveCommand(ctx, tx, ref, CommandRecord{Digest: digest, Subject: principal, Ref: record.Ref, Purpose: record.Purpose, Receipt: fixed}); err != nil {
+				return err
+			}
+			return finalAdmission()
 		}
 		available, err := s.config.Store.CheckCapacity(ctx, tx, s.config.Limits, int64(len(bytes)))
 		if err != nil {
@@ -301,10 +324,10 @@ func (s *Service) Put(ctx context.Context, raw []byte, subject *v.SubjectBinding
 		if err = s.config.Store.SaveVersion(ctx, tx, *record); err != nil {
 			return err
 		}
-		if err = s.config.Store.SaveSources(ctx, tx, record.Ref, sources); err != nil {
+		if err = s.config.Store.SaveSources(ctx, tx, record.Ref, sources.refs); err != nil {
 			return err
 		}
-		if err = s.config.Store.ScheduleRetention(ctx, tx, policy, *record, s.config.PublishBudget); err != nil {
+		if err = s.config.Store.ScheduleRetention(ctx, tx, policy, *record, sources.records, s.config.PublishBudget); err != nil {
 			return err
 		}
 
@@ -312,8 +335,60 @@ func (s *Service) Put(ctx context.Context, raw []byte, subject *v.SubjectBinding
 			return err
 		}
 		fixed = accepted(ref, *record)
-		return s.config.Store.SaveCommand(ctx, tx, ref, CommandRecord{Digest: digest, Subject: principal, Ref: record.Ref, Purpose: record.Purpose, Receipt: fixed})
+		if err = s.config.Store.SaveCommand(ctx, tx, ref, CommandRecord{Digest: digest, Subject: principal, Ref: record.Ref, Purpose: record.Purpose, Receipt: fixed}); err != nil {
+			return err
+		}
+		return finalAdmission()
 	})
+	if err == late {
+		// The first callback explicitly aborted. Reacquire the same original
+		// Command key in at most one short transaction, using the same ctx.
+		err = s.config.Store.Within(ctx, owner(s.config.Owner), func(ctx context.Context, tx runtime.Tx) error {
+			checkReader := func() error {
+				now, err := s.config.Store.Now(ctx, tx)
+				if err != nil {
+					return err
+				}
+				allowed, err := s.config.Store.CheckCommandReader(ctx, tx, principal, now)
+				if err != nil {
+					return err
+				}
+				if !allowed {
+					return refusal("forbidden")
+				}
+				return nil
+			}
+			if err := checkReader(); err != nil {
+				return err
+			}
+			original, err := s.config.Store.LockCommand(ctx, tx, ref)
+			if err != nil {
+				return err
+			}
+			if err = checkReader(); err != nil {
+				return err
+			}
+			if original != nil {
+				old, err := v.Encode(original.Subject)
+				if err != nil {
+					return err
+				}
+				if string(old) != string(subjectJSON) {
+					return refusal("forbidden")
+				}
+				if original.Digest != digest {
+					return refusal("idempotency_conflict")
+				}
+				fixed = original.Receipt
+				return nil
+			}
+			fixed = rejected(ref, late.reason)
+			if err = s.config.Store.SaveCommand(ctx, tx, ref, CommandRecord{Digest: digest, Subject: principal, Ref: request.Payload.ContentRef, Purpose: string(request.Payload.Purpose), Receipt: fixed}); err != nil {
+				return err
+			}
+			return checkReader()
+		})
+	}
 	if errors.Is(err, runtime.ErrCommitUnknown) {
 		return v.NewTransportOutcomeCommitUnknown(v.TransportOutcomeCommitUnknown{CommandRef: ref, NextAction: "query_or_retransmit_original"}), nil
 	}
@@ -353,7 +428,7 @@ func (s *Service) Get(ctx context.Context, raw []byte, subject *v.SubjectBinding
 		}
 		var targetPolicyRefs [2]v.ContentRef
 		for index, action := range []string{"read", "disclose"} {
-			policy, err := s.config.Store.CheckPolicy(ctx, tx, principal, ref, string(request.Payload.Purpose), action, now)
+			policy, err := s.config.Store.CheckPolicy(ctx, tx, principal, ref, string(request.Payload.Purpose), []string{action}, now)
 			if err != nil {
 				return err
 			}
@@ -432,46 +507,17 @@ func (s *Service) Get(ctx context.Context, raw []byte, subject *v.SubjectBinding
 			}
 			return err
 		}
-		for _, source := range sources {
-			if source.Owner != s.config.Owner {
-				return ErrUnavailable
-			}
-			for _, action := range []string{"read", "disclose"} {
-				policy, err := s.config.Store.CheckPolicy(ctx, tx, principal, source, string(request.Payload.Purpose), action, now)
-				if err != nil {
-					return err
-				}
-				if policy == nil || policy.Ref != source {
-					result = denied("forbidden")
-					record = nil
-					return nil
-				}
-				readBefore = earlier(readBefore, earlier(policy.ValidUntil, policy.RetainUntil))
-			}
-			sourceRecord, err := s.config.Store.LockVersion(ctx, tx, source)
-			if err != nil {
-				return err
-			}
-			now, err = s.config.Store.Now(ctx, tx)
-			if err != nil {
-				return err
-			}
-			if admission && !now.Before(cutoff(request.AcceptBefore)) || !now.Before(readBefore) {
-				result = denied("expired")
-				record = nil
-				return nil
-			}
-			if sourceRecord == nil || sourceRecord.Ref != source || sourceRecord.Publication != "published" {
-				result = denied("source_unavailable")
-				record = nil
-				return nil
-			}
-			readBefore = earlier(readBefore, cutoff(sourceRecord.CurrentRetainUntil))
-			if !now.Before(readBefore) {
-				result = denied("expired")
-				record = nil
-				return nil
-			}
+		if len(sources.refs) > 0 {
+			readBefore = earlier(readBefore, earlier(sources.validBefore, sources.retainBefore))
+		}
+		now, err = s.config.Store.Now(ctx, tx)
+		if err != nil {
+			return err
+		}
+		if admission && !now.Before(cutoff(request.AcceptBefore)) || !now.Before(readBefore) {
+			result = denied("expired")
+			record = nil
+			return nil
 		}
 		switch record.Publication {
 		case "preparing":
@@ -789,7 +835,7 @@ func (s *Service) Step(ctx context.Context) (bool, error) {
 func (s *Service) publicationPolicy(ctx context.Context, tx runtime.Tx, record Record, now time.Time) (time.Time, time.Time, v.ErrorCode, error) {
 	current := cutoff(record.CurrentRetainUntil)
 	ioBefore := earlier(current, cutoff(record.PublishDeadline))
-	policy, err := s.config.Store.CheckPolicy(ctx, tx, record.Subject, record.Ref, record.Purpose, "save", now)
+	policy, err := s.config.Store.CheckPolicy(ctx, tx, record.Subject, record.Ref, record.Purpose, []string{"save"}, now)
 	if err != nil {
 		return current, ioBefore, "", err
 	}
@@ -805,26 +851,9 @@ func (s *Service) publicationPolicy(ctx context.Context, tx runtime.Tx, record R
 		}
 		return current, ioBefore, "", err
 	}
-	for _, source := range sources {
-		for _, action := range []string{"read", "process", "save"} {
-			p, err := s.config.Store.CheckPolicy(ctx, tx, record.Subject, source, record.Purpose, action, now)
-			if err != nil {
-				return current, ioBefore, "", err
-			}
-			if p == nil || p.Ref != source {
-				return current, ioBefore, "forbidden", nil
-			}
-			current = earlier(current, p.RetainUntil)
-			ioBefore = earlier(ioBefore, p.ValidUntil)
-		}
-		sourceRecord, err := s.config.Store.LockVersion(ctx, tx, source)
-		if err != nil {
-			return current, ioBefore, "", err
-		}
-		if sourceRecord == nil || sourceRecord.Ref != source || sourceRecord.Publication != "published" {
-			return current, ioBefore, "source_unavailable", nil
-		}
-		current = earlier(current, cutoff(sourceRecord.CurrentRetainUntil))
+	if len(sources.refs) > 0 {
+		current = earlier(current, sources.retainBefore)
+		ioBefore = earlier(ioBefore, sources.validBefore)
 	}
 	now, err = s.config.Store.Now(ctx, tx)
 	if err != nil {

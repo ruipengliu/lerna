@@ -5,16 +5,38 @@ import (
 	v "github.com/ruipengliu/lerna/contract/v1_2"
 	"github.com/ruipengliu/lerna/runtime"
 	"sort"
+	"time"
 )
+
+// closureObservation exists only inside one owner transaction: every source
+// record is locked, and bounds include every actually checked action. It must
+// be discarded before another transaction or after changing a source fact.
+type closureObservation struct {
+	refs         []v.ContentRef
+	records      []Record
+	validBefore  time.Time
+	retainBefore time.Time
+}
+
+func (o *closureObservation) bound(valid, retain time.Time) {
+	if o.validBefore.IsZero() || valid.Before(o.validBefore) {
+		o.validBefore = valid
+	}
+	if o.retainBefore.IsZero() || retain.Before(o.retainBefore) {
+		o.retainBefore = retain
+	}
+}
 
 // registeredClosure preserves exact intermediate versions. Declarations remain
 // unchanged: this traversal is current qualification, never generation evidence.
-func (s *Service) registeredClosure(ctx context.Context, tx runtime.Tx, target v.ContentRef, roots []v.ContentRef, subject v.SubjectBinding, purpose string, actions []string) ([]v.ContentRef, error) {
+func (s *Service) registeredClosure(ctx context.Context, tx runtime.Tx, target v.ContentRef, roots []v.ContentRef, subject v.SubjectBinding, purpose string, actions []string) (closureObservation, error) {
+	var observed closureObservation
 	refs := map[string]v.ContentRef{}
+	records := map[string]Record{}
 	active := map[string]bool{}
 	targetID, _, err := VersionIdentity(target)
 	if err != nil {
-		return nil, err
+		return observed, err
 	}
 	var visit func(v.ContentRef) error
 	visit = func(ref v.ContentRef) error {
@@ -40,37 +62,59 @@ func (s *Service) registeredClosure(ctx context.Context, tx runtime.Tx, target v
 		if len(refs) >= 64 {
 			return refusal("input_over_limit")
 		}
-		now, err := s.config.Store.Now(ctx, tx)
-		if err != nil {
-			return err
+		var now time.Time
+		if len(actions) > 0 {
+			now, err = s.config.Store.Now(ctx, tx)
+			if err != nil {
+				return err
+			}
 		}
-		for _, action := range actions {
-			p, err := s.config.Store.CheckPolicy(ctx, tx, subject, ref, purpose, action, now)
+		var policy *FixturePolicy
+		if len(actions) > 0 {
+			p, err := s.config.Store.CheckPolicy(ctx, tx, subject, ref, purpose, actions, now)
 			if err != nil {
 				return err
 			}
 			if p == nil || p.Ref != ref {
 				return refusal("forbidden")
 			}
+			policy = p
+			observed.bound(p.ValidUntil, p.RetainUntil)
 		}
 		record, err := s.config.Store.LockVersion(ctx, tx, ref)
 		if err != nil {
 			return err
 		}
+		if len(actions) > 0 {
+			now, err = s.config.Store.Now(ctx, tx)
+			if err != nil {
+				return err
+			}
+			if !now.Before(policy.ValidUntil) {
+				return refusal("forbidden")
+			}
+			if !now.Before(policy.RetainUntil) {
+				return refusal("expired")
+			}
+		}
 		if record == nil || record.Ref != ref || record.Publication != "published" {
 			return refusal("source_unavailable")
 		}
-		now, err = s.config.Store.Now(ctx, tx)
-		if err != nil {
-			return err
-		}
-		if len(actions) > 0 && !now.Before(cutoff(record.CurrentRetainUntil)) {
-			return refusal("expired")
+		if len(actions) > 0 {
+			if !now.Before(cutoff(record.CurrentRetainUntil)) {
+				return refusal("expired")
+			}
 		}
 		refs[id] = ref
+		records[id] = *record
+		if observed.retainBefore.IsZero() || cutoff(record.CurrentRetainUntil).Before(observed.retainBefore) {
+			observed.retainBefore = cutoff(record.CurrentRetainUntil)
+		}
 		active[id] = true
 		children := append([]v.ContentRef{}, record.Sources...)
-		sortRefs(children)
+		if err := sortRefs(children); err != nil {
+			return err
+		}
 		for _, child := range children {
 			if err := visit(child); err != nil {
 				return err
@@ -80,25 +124,49 @@ func (s *Service) registeredClosure(ctx context.Context, tx runtime.Tx, target v
 		return nil
 	}
 	roots = append([]v.ContentRef{}, roots...)
-	sortRefs(roots)
+	if err := sortRefs(roots); err != nil {
+		return observed, err
+	}
 	for _, root := range roots {
 		if err := visit(root); err != nil {
-			return nil, err
+			return observed, err
 		}
 	}
-	out := make([]v.ContentRef, 0, len(refs))
-	for _, ref := range refs {
-		out = append(out, ref)
+	ids := make([]string, 0, len(refs))
+	for id := range refs {
+		ids = append(ids, id)
 	}
-	sortRefs(out)
-	return out, nil
+	sort.Strings(ids)
+	observed.refs = make([]v.ContentRef, 0, len(ids))
+	observed.records = make([]Record, 0, len(ids))
+	for _, id := range ids {
+		observed.refs = append(observed.refs, refs[id])
+		observed.records = append(observed.records, records[id])
+	}
+	return observed, nil
 }
-func sortRefs(refs []v.ContentRef) {
-	sort.Slice(refs, func(i, j int) bool {
-		a, _, _ := VersionIdentity(refs[i])
-		b, _, _ := VersionIdentity(refs[j])
-		return a < b
+func sortRefs(refs []v.ContentRef) error {
+	if len(refs) < 2 {
+		return nil
+	}
+	ordered := make([]struct {
+		ref v.ContentRef
+		id  string
+	}, len(refs))
+	for i, ref := range refs {
+		id, _, err := VersionIdentity(ref)
+		if err != nil {
+			return err
+		}
+		ordered[i].ref, ordered[i].id = ref, id
+	}
+	sort.Slice(ordered, func(i, j int) bool {
+		return ordered[i].id < ordered[j].id
 	})
+	for i := range ordered {
+		refs[i] = ordered[i].ref
+	}
+	return nil
 }
 func qualificationCode(err error) (v.ErrorCode, bool) {
 	e, ok := err.(*v.ContractError)
@@ -126,7 +194,7 @@ func (s *Service) AuthorizeUse(ctx context.Context, subject *v.SubjectBinding, r
 		if err != nil {
 			return err
 		}
-		p, err := s.config.Store.CheckPolicy(ctx, tx, principal, ref, purpose, action, now)
+		p, err := s.config.Store.CheckPolicy(ctx, tx, principal, ref, purpose, []string{action}, now)
 		if err != nil {
 			return err
 		}
@@ -143,27 +211,13 @@ func (s *Service) AuthorizeUse(ctx context.Context, subject *v.SubjectBinding, r
 		if record == nil || record.Ref != ref || record.Publication != "published" {
 			return refusal("source_unavailable")
 		}
-		refs, err := s.registeredClosure(ctx, tx, ref, record.Sources, principal, purpose, []string{action})
+		sources, err := s.registeredClosure(ctx, tx, ref, record.Sources, principal, purpose, []string{action})
 		if err != nil {
 			return err
 		}
 		bound := earlier(earlier(p.ValidUntil, p.RetainUntil), cutoff(record.CurrentRetainUntil))
-		for _, source := range refs {
-			policy, err := s.config.Store.CheckPolicy(ctx, tx, principal, source, purpose, action, now)
-			if err != nil {
-				return err
-			}
-			if policy == nil || policy.Ref != source {
-				return refusal("forbidden")
-			}
-			r, err := s.config.Store.LockVersion(ctx, tx, source)
-			if err != nil {
-				return err
-			}
-			if r == nil {
-				return refusal("source_unavailable")
-			}
-			bound = earlier(bound, earlier(earlier(policy.ValidUntil, policy.RetainUntil), cutoff(r.CurrentRetainUntil)))
+		if len(sources.refs) > 0 {
+			bound = earlier(bound, earlier(sources.validBefore, sources.retainBefore))
 		}
 		now, err = s.config.Store.Now(ctx, tx)
 		if err != nil {

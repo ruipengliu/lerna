@@ -78,9 +78,12 @@ type Repository interface {
 	LockObject(context.Context, runtime.Tx, string) (*Record, error)
 	SaveVersion(context.Context, runtime.Tx, Record) error
 	SaveSources(context.Context, runtime.Tx, v.ContentRef, []v.ContentRef) error
-	ScheduleRetention(context.Context, runtime.Tx, *FixturePolicy, Record, time.Duration) error
+	// Sources must be the complete, deterministic, already locked records from
+	// this same Tx's successful closure observation. Empty is complete; nil is
+	// not a deferred qualification. Decorators must forward them unchanged.
+	ScheduleRetention(context.Context, runtime.Tx, *FixturePolicy, Record, []Record, time.Duration) error
 	AdvancePolicyJob(context.Context, runtime.Tx, runtime.Job, Record, string, time.Duration, time.Duration) (bool, error)
-	CheckPolicy(context.Context, runtime.Tx, v.SubjectBinding, v.ContentRef, string, string, time.Time) (*FixturePolicy, error)
+	CheckPolicy(context.Context, runtime.Tx, v.SubjectBinding, v.ContentRef, string, []string, time.Time) (*FixturePolicy, error)
 	CheckCommandReader(context.Context, runtime.Tx, v.SubjectBinding, time.Time) (bool, error)
 	CheckCapacity(context.Context, runtime.Tx, Limits, int64) (bool, error)
 	runtime.JobStore

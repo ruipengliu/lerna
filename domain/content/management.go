@@ -163,7 +163,7 @@ func (m *Manager) RebuildSources(ctx context.Context, subject *v.SubjectBinding)
 			if err != nil {
 				return err
 			}
-			if err = m.config.Store.SaveSources(ctx, tx, record.Ref, refs); err != nil {
+			if err = m.config.Store.SaveSources(ctx, tx, record.Ref, refs.refs); err != nil {
 				return err
 			}
 			policies, next, err := m.config.Store.PoliciesForVersion(ctx, tx, record.Ref, page.PolicyCursor, m.config.PageSize)
@@ -493,7 +493,7 @@ func (m *Manager) ObserveAdmissionChanges(ctx context.Context, subject *v.Subjec
 	return out, next, err
 }
 
-func (m *Manager) scheduleAdmission(ctx context.Context, tx runtime.Tx, policy *FixturePolicy, record Record) error {
+func (m *Manager) scheduleAdmission(ctx context.Context, tx runtime.Tx, policy *FixturePolicy, record Record, sources []Record) error {
 	// Maintenance follows the original saving subject/purpose, including aliases.
 	policySubject, _ := v.Encode(policy.Subject)
 	recordSubject, _ := v.Encode(record.Subject)
@@ -540,7 +540,7 @@ func (m *Manager) scheduleAdmission(ctx context.Context, tx runtime.Tx, policy *
 			return err
 		}
 	}
-	return m.scheduleInherited(ctx, tx, record, false, 0)
+	return m.scheduleObservedSources(ctx, tx, record, sources, false, 0)
 }
 
 func admissionKey(target v.ContentRef, policy FixturePolicy, due time.Time) string {
@@ -617,14 +617,21 @@ func (m *Manager) scheduleInherited(ctx context.Context, tx runtime.Tx, record R
 	if err != nil {
 		return err
 	}
-	for _, ref := range refs {
-		source, err := m.config.Store.LockVersion(ctx, tx, ref)
-		if err != nil {
-			return err
-		}
-		if source == nil || source.Ref != ref {
+	return m.scheduleObservedSources(ctx, tx, record, refs.records, legacy, watermark)
+}
+
+// Ordinary admission consumes its same-Tx complete locked source observation.
+// Legacy entry points independently traverse first and re-read after mutation.
+func (m *Manager) scheduleObservedSources(ctx context.Context, tx runtime.Tx, record Record, sources []Record, legacy bool, watermark int64) error {
+	if sources == nil || len(sources) > 64 {
+		return runtime.ErrScope
+	}
+	for _, observed := range sources {
+		if observed.Ref.Owner != record.Ref.Owner || observed.Ref == record.Ref || observed.Publication != "published" {
 			return runtime.ErrScope
 		}
+		source := observed
+		ref := source.Ref
 		policy, err := m.config.Store.LockPolicy(ctx, tx, FixturePolicy{Ref: ref, Subject: record.Subject, Purpose: record.Purpose})
 		if err != nil {
 			return err
@@ -639,9 +646,17 @@ func (m *Manager) scheduleInherited(ctx context.Context, tx runtime.Tx, record R
 		if basis == nil && legacy {
 			// Ancestors can sort after this descendant. Register their original
 			// basis now; their independent policy pages still remain incomplete.
-			if err = m.restoreLegacyMaintenance(ctx, tx, *source, *policy, watermark); err != nil {
+			if err = m.restoreLegacyMaintenance(ctx, tx, source, *policy, watermark); err != nil {
 				return err
 			}
+			updated, err := m.config.Store.LockVersion(ctx, tx, ref)
+			if err != nil {
+				return err
+			}
+			if updated == nil || updated.Ref != ref {
+				return runtime.ErrScope
+			}
+			source = *updated
 			basis, err = m.config.Store.ReadChange(ctx, tx, changeKey(*policy))
 			if err != nil {
 				return err
@@ -651,7 +666,7 @@ func (m *Manager) scheduleInherited(ctx context.Context, tx runtime.Tx, record R
 			return ErrUnavailable
 		}
 		due := earlier(earlier(policy.ValidUntil, policy.RetainUntil), cutoff(source.CurrentRetainUntil))
-		if err = m.scheduleTarget(ctx, tx, *policy, *source, record, *basis, due); err != nil {
+		if err = m.scheduleTarget(ctx, tx, *policy, source, record, *basis, due); err != nil {
 			return err
 		}
 	}
@@ -860,7 +875,7 @@ func (m *Manager) advanceJob(ctx context.Context, tx runtime.Tx, job runtime.Job
 					return false, err
 				}
 				found := false
-				for _, ref := range refs {
+				for _, ref := range refs.refs {
 					if ref == source.Ref {
 						found = true
 					}
@@ -1025,9 +1040,9 @@ func (m *Manager) advanceJob(ctx context.Context, tx runtime.Tx, job runtime.Job
 
 // ScheduleRetention and AdvancePolicyJob keep the domain rules behind narrow
 // storage forwarding ports so Repository decorators retain required behavior.
-func ScheduleRetention(ctx context.Context, tx runtime.Tx, store ManagementRepository, policy *FixturePolicy, record Record, budget time.Duration) error {
+func ScheduleRetention(ctx context.Context, tx runtime.Tx, store ManagementRepository, policy *FixturePolicy, record Record, sources []Record, budget time.Duration) error {
 	m := &Manager{config: ManagementConfig{Owner: record.Ref.Owner, Store: store, PageSize: 64, WorkBudget: budget}}
-	return m.scheduleAdmission(ctx, tx, policy, record)
+	return m.scheduleAdmission(ctx, tx, policy, record, sources)
 }
 func AdvancePolicyJob(ctx context.Context, tx runtime.Tx, store ManagementRepository, job runtime.Job, record Record, worker string, lease, budget time.Duration) (bool, error) {
 	m := &Manager{config: ManagementConfig{Owner: record.Ref.Owner, Store: store, PageSize: 64, WorkBudget: budget}}

@@ -7,6 +7,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"errors"
+	"reflect"
 	"time"
 
 	"github.com/ruipengliu/lerna/contract"
@@ -30,7 +31,7 @@ func (s *Store) InstallFixturePolicy(ctx context.Context, policy contentdomain.F
 	return contentdomain.InstallFixturePolicy(ctx, s, policy, expected)
 }
 
-func (s *Store) CheckPolicy(ctx context.Context, token runtime.Tx, subject v.SubjectBinding, ref v.ContentRef, purpose, action string, now time.Time) (*contentdomain.FixturePolicy, error) {
+func (s *Store) CheckPolicy(ctx context.Context, token runtime.Tx, subject v.SubjectBinding, ref v.ContentRef, purpose string, actions []string, now time.Time) (*contentdomain.FixturePolicy, error) {
 	tx, err := s.core.SQL(ctx, token, commonOwner(ref.Owner))
 	if err != nil {
 		return nil, err
@@ -60,28 +61,41 @@ func (s *Store) CheckPolicy(ctx context.Context, token runtime.Tx, subject v.Sub
 	if policy.Ref.Owner != ref.Owner || policy.Ref.ContentID != ref.ContentID || policy.Ref.Version != ref.Version || policy.Purpose != purpose || !now.Before(policy.ValidUntil) {
 		return nil, nil
 	}
-	match, _, err := subjectKey(policy.Subject)
-	if err != nil {
-		return nil, err
+	match := key
+	if !reflect.DeepEqual(policy.Subject, subject) {
+		match, _, err = subjectKey(policy.Subject)
+		if err != nil {
+			return nil, err
+		}
 	}
 	if match != key {
 		return nil, nil
 	}
-	allowed := false
-	switch action {
-	case "read":
-		allowed = policy.Read
-	case "process":
-		allowed = policy.Process
-	case "save":
-		allowed = policy.Save
-	case "sync":
-		allowed = policy.Sync
-	case "disclose":
-		allowed = policy.Disclose
-	}
-	if !allowed {
+	if len(actions) == 0 || len(actions) > 5 {
 		return nil, nil
+	}
+	seen := map[string]bool{}
+	for _, action := range actions {
+		if seen[action] {
+			return nil, nil
+		}
+		seen[action] = true
+		allowed := false
+		switch action {
+		case "read":
+			allowed = policy.Read
+		case "process":
+			allowed = policy.Process
+		case "save":
+			allowed = policy.Save
+		case "sync":
+			allowed = policy.Sync
+		case "disclose":
+			allowed = policy.Disclose
+		}
+		if !allowed {
+			return nil, nil
+		}
 	}
 	return &policy, nil
 }

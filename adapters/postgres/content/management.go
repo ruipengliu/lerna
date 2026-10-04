@@ -471,8 +471,8 @@ func (s *Store) NextPolicyWork(ctx context.Context, token runtime.Tx, id string)
 	return revision, err
 }
 
-func (s *Store) ScheduleRetention(ctx context.Context, tx runtime.Tx, policy *d.FixturePolicy, record d.Record, budget time.Duration) error {
-	return d.ScheduleRetention(ctx, tx, s, policy, record, budget)
+func (s *Store) ScheduleRetention(ctx context.Context, tx runtime.Tx, policy *d.FixturePolicy, record d.Record, sources []d.Record, budget time.Duration) error {
+	return d.ScheduleRetention(ctx, tx, s, policy, record, sources, budget)
 }
 func (s *Store) AdvancePolicyJob(ctx context.Context, tx runtime.Tx, job runtime.Job, record d.Record, worker string, lease, budget time.Duration) (bool, error) {
 	return d.AdvancePolicyJob(ctx, tx, s, job, record, worker, lease, budget)
