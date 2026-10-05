@@ -1,0 +1,36 @@
+{
+  "status": "STOP_RELEASED",
+  "actual_one_fmt_normal_only_pass": true,
+  "native_actual": {
+    "event": "native_completion_ack",
+    "operation": "late-put-normal-control",
+    "pid": 4028563,
+    "pgid": 4028563,
+    "starttime": "16899866",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false,
+    "owned_raw_fsync_close_ack": true
+  },
+  "format_native_actual": {
+    "event": "native_completion_ack",
+    "operation": "late-put-format",
+    "pid": 4027597,
+    "pgid": 4027597,
+    "starttime": "16895564",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false,
+    "owned_raw_fsync_close_ack": true
+  },
+  "independent_both_current_group_absence": true,
+  "current26_equals_formatted_snapshot_and_manifest": true,
+  "formed26_manifest_sha256": "df707faeff172b1e817d124d8813da2ae9f1d1e3da90daf782263d3ddbbd47bc",
+  "raw_sha256": "84b8f0fcc5c6e4248a66c450e254d3a6a3cdb1be6f4f1f9d4d9d20936fe38eb2",
+  "postchecks_sha256": "f7681e0cb54f2352b9e79b5bb2993ea77d675c8bdaeebdfd184c233265952219",
+  "actual_Put_return_succeeded_and_Q_fullnativeCloseWaitStop_pass": true,
+  "no_new_unknown": true,
+  "historical8unknown_preserved": true,
+  "ledger_lines": 174,
+  "fault_race_oldfive_othernative_sourcefmt_unexecuted": true
+}

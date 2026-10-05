@@ -1,0 +1,28 @@
+{"argv": ["gofmt", "-w", "conformance/component/content_process_recovery_test.go"], "deadline_seconds": 120, "event": "native_start_ack", "operation": "late-put-format", "pgid": 4027597, "pid": 4027597, "root": "/tmp/lerna-04-ticket06-execution", "starttime": "16895564"}
+{"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "late-put-format", "owned_raw_fsync_close_ack": true, "pgid": 4027597, "pid": 4027597, "starttime": "16895564", "timed_out": false}
+{"argv": ["bash", "-c", ". /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local GOFLAGS=-mod=readonly; exec \"$@\"", "owned-locked", "go", "test", "-tags=integration", "-v", "-count=1", "-p=1", "-mod=readonly", "-timeout=120s", "./conformance/component", "-run", "^TestContentOriginalWorkerCannotInstallAcrossOriginalBodyFence$/^normal_release$"], "deadline_seconds": 120, "event": "native_start_ack", "operation": "late-put-normal-control", "pgid": 4028563, "pid": 4028563, "root": "/tmp/lerna-04-ticket06-execution", "starttime": "16899866"}
+postgres lerna_test_2f663e1a930e022081e8fe18
+objects /tmp/lerna-04-ticket06-execution/lerna-content-objects-2741457356 33 465150
+content_child_holder lerna_test_2f663e1a930e022081e8fe18 generation=1 native_close=UNKNOWN
+content_child_native lerna_test_2f663e1a930e022081e8fe18 generation=1 pid=4028773 pgid=4028563 start=16900483
+content_child_close lerna_test_2f663e1a930e022081e8fe18 generation=1 store=ACK objects=ACK
+{"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "late-put-normal-control", "owned_raw_fsync_close_ack": true, "pgid": 4028563, "pid": 4028563, "starttime": "16899866", "timed_out": false}
+{"argv": ["bash", "-c", ". /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local GOFLAGS=-mod=readonly; exec \"$@\"", "owned-locked", "go", "test", "-tags=integration", "-v", "-count=1", "-p=1", "-mod=readonly", "-timeout=120s", "./conformance/component", "-run", "^TestContentOriginalWorkerCannotInstallAcrossOriginalBodyFence$/^original_fence_before_late_put$"], "deadline_seconds": 120, "event": "native_start_ack", "operation": "late-put-original-fence-fault", "pgid": 4036592, "pid": 4036592, "root": "/tmp/lerna-04-ticket06-execution", "starttime": "16934843"}
+postgres lerna_test_12eb271ad47ca46653aa8aa2
+objects /tmp/lerna-04-ticket06-execution/lerna-content-objects-1278343551 33 465770
+content_child_holder lerna_test_12eb271ad47ca46653aa8aa2 generation=1 native_close=UNKNOWN
+content_child_native lerna_test_12eb271ad47ca46653aa8aa2 generation=1 pid=4036674 pgid=4036592 start=16934960
+content_child_close lerna_test_12eb271ad47ca46653aa8aa2 generation=1 store=ACK objects=ACK
+{"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "late-put-original-fence-fault", "owned_raw_fsync_close_ack": true, "pgid": 4036592, "pid": 4036592, "starttime": "16934843", "timed_out": false}
+{"argv": ["bash", "-c", ". /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local GOFLAGS=-mod=readonly; exec \"$@\"", "owned-locked", "go", "test", "-race", "-tags=integration", "-v", "-count=1", "-p=1", "-mod=readonly", "-timeout=120s", "./conformance/component", "-run", "^TestContentOriginalWorkerCannotInstallAcrossOriginalBodyFence$"], "deadline_seconds": 120, "event": "native_start_ack", "operation": "late-put-paired-race", "pgid": 4040390, "pid": 4040390, "root": "/tmp/lerna-04-ticket06-execution", "starttime": "16951580"}
+postgres lerna_test_539a6823a2ff044955104afa
+objects /tmp/lerna-04-ticket06-execution/lerna-content-objects-1843719278 33 466222
+content_child_holder lerna_test_539a6823a2ff044955104afa generation=1 native_close=UNKNOWN
+content_child_native lerna_test_539a6823a2ff044955104afa generation=1 pid=4040674 pgid=4040390 start=16952508
+content_child_close lerna_test_539a6823a2ff044955104afa generation=1 store=ACK objects=ACK
+postgres lerna_test_c69d3fc47d45247c30181d80
+objects /tmp/lerna-04-ticket06-execution/lerna-content-objects-1231648912 33 466227
+content_child_holder lerna_test_c69d3fc47d45247c30181d80 generation=1 native_close=UNKNOWN
+content_child_native lerna_test_c69d3fc47d45247c30181d80 generation=1 pid=4040710 pgid=4040390 start=16952671
+content_child_close lerna_test_c69d3fc47d45247c30181d80 generation=1 store=ACK objects=ACK
+{"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "late-put-paired-race", "owned_raw_fsync_close_ack": true, "pgid": 4040390, "pid": 4040390, "starttime": "16951580", "timed_out": false}

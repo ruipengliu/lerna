@@ -1,0 +1,26 @@
+{
+  "event": "native_start_ack",
+  "operation": "late-put-normal-control",
+  "pid": 4028563,
+  "pgid": 4028563,
+  "starttime": "16899866",
+  "root": "/tmp/lerna-04-ticket06-execution",
+  "argv": [
+    "bash",
+    "-c",
+    ". /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local GOFLAGS=-mod=readonly; exec \"$@\"",
+    "owned-locked",
+    "go",
+    "test",
+    "-tags=integration",
+    "-v",
+    "-count=1",
+    "-p=1",
+    "-mod=readonly",
+    "-timeout=120s",
+    "./conformance/component",
+    "-run",
+    "^TestContentOriginalWorkerCannotInstallAcrossOriginalBodyFence$/^normal_release$"
+  ],
+  "deadline_seconds": 120
+}

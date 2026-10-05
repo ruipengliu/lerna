@@ -1,0 +1,27 @@
+{
+  "observed_utc": "2026-10-05T12:07:17.375797+00:00",
+  "copy_source_and_archive_verified_files": 61,
+  "payload_bytes": 2263413,
+  "reference_pins_verified": 29,
+  "actual_phases": 10,
+  "complete_raw_lines": 285,
+  "scope_native_exact_original_intervals_verified": true,
+  "group_identity_wait_raw_pins_verified": true,
+  "root_FULL_raw_phase_history": [
+    1,
+    20,
+    1,
+    25,
+    25,
+    1,
+    13,
+    1,
+    99,
+    99
+  ],
+  "root_FULL_current332_and_minimaldiff_and_fmt": true,
+  "root_initial_audit_field_name_mismatch_corrected": "binding RED uses actual_native_Wait_and_groupabsence_footer, later phases use actual_native_Wait_groupabsence_ACK; original JSON unchanged",
+  "only_private_mechanism_qualified": true,
+  "PG_capacity_ticket_not_exited": true,
+  "original_unknown_not_backfilled": true
+}

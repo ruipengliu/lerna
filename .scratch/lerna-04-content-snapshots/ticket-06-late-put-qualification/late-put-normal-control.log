@@ -1,0 +1,10 @@
+=== RUN   TestContentOriginalWorkerCannotInstallAcrossOriginalBodyFence
+=== RUN   TestContentOriginalWorkerCannotInstallAcrossOriginalBodyFence/normal_release
+    content_process_recovery_test.go:1510: Content child native pid=4028773 pgid=4028563 start=16900483 generation=1
+    content_process_recovery_test.go:1567: actual original local.Put result=succeeded
+    content_process_recovery_test.go:1571: original live worker released and actual native Close/Wait/Stop before conservative original I/O4 cutoff
+--- PASS: TestContentOriginalWorkerCannotInstallAcrossOriginalBodyFence (0.67s)
+    --- PASS: TestContentOriginalWorkerCannotInstallAcrossOriginalBodyFence/normal_release (0.67s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/component	0.692s
+NATIVE_COMPLETION_ACK {"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "late-put-normal-control", "pgid": 4028563, "pid": 4028563, "starttime": "16899866", "timed_out": false}

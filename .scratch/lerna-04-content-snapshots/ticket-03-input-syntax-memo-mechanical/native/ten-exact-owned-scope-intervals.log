@@ -1,0 +1,20 @@
+process_group 3992592 3992592 /workspace/lerna-content-03-137311247276
+native_exit 3992592 3992592 status=0 group_absent=True
+process_group 3992623 3992623 /workspace/lerna-content-03-137311247276
+native_exit 3992623 3992623 status=1 group_absent=True
+process_group 4008725 4008725 /workspace/lerna-content-03-137311247276
+native_exit 4008725 4008725 status=0 group_absent=True
+process_group 4008732 4008732 /workspace/lerna-content-03-137311247276
+native_exit 4008732 4008732 status=0 group_absent=True
+process_group 4008860 4008860 /workspace/lerna-content-03-137311247276
+native_exit 4008860 4008860 status=0 group_absent=True
+process_group 4014613 4014613 /workspace/lerna-content-03-137311247276
+native_exit 4014613 4014613 status=0 group_absent=True
+process_group 4014619 4014619 /workspace/lerna-content-03-137311247276
+native_exit 4014619 4014619 status=1 group_absent=True
+process_group 4045505 4045505 /workspace/lerna-content-03-137311247276
+native_exit 4045505 4045505 status=0 group_absent=True
+process_group 4045512 4045512 /workspace/lerna-content-03-137311247276
+native_exit 4045512 4045512 status=0 group_absent=True
+process_group 4045654 4045654 /workspace/lerna-content-03-137311247276
+native_exit 4045654 4045654 status=0 group_absent=True

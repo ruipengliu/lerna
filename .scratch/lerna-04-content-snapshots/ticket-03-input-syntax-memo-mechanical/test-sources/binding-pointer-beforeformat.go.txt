@@ -1,0 +1,58 @@
+package decisionfixture
+
+import (
+	"reflect"
+	"testing"
+
+	v "github.com/ruipengliu/lerna/contract/v1_1"
+)
+
+// These controls exercise the existing real Binding syntax memo. They qualify
+// return ownership, not current authorization or large-graph capacity.
+func TestContextBindingDecodeOwnsNestedRevisionPointers(t *testing.T) {
+	for _, field := range []string{"operation_revision", "task_revision"} {
+		for _, phase := range []string{"cold", "hot"} {
+			t.Run(field+"/"+phase, func(t *testing.T) {
+				binding := bindingDecodeFixture()
+				operationRevision, taskRevision := v.Revision("7"), v.Revision("9")
+				binding.Input.Unresolved[0].OperationRef.Revision = &operationRevision
+				binding.Input.Request.Payload.TaskRef.Revision = &taskRevision
+				body := bindingDecodeBody(t, binding)
+				pristine := append([]byte(nil), body...)
+				var memo bindingDecodeMemo
+				scope := bindingDecodeScope{store: &Store{}, owner: v.OwnerRef{TenantID: "tenant", OwnerID: "owner"}, schema: "scope"}
+				count := 0
+				decode := func(b []byte, out any) error { count++; return closedJSON(b, out) }
+				got, err := memo.decode(scope, "input", "permission_key", "row", body, decode)
+				if err != nil || !reflect.DeepEqual(got, binding) { t.Fatal("cold counterpart changed", err) }
+				// This caller-owned byte mutation must not change the stored key.
+				body[0] = '!'
+				if phase == "hot" {
+					got, err = memo.decode(scope, "input", "permission_key", "row", pristine, decode)
+					if err != nil || !reflect.DeepEqual(got, binding) { t.Fatal("hot counterpart changed", err) }
+				}
+				if field == "operation_revision" { *got.Input.Unresolved[0].OperationRef.Revision = "changed" } else { *got.Input.Request.Payload.TaskRef.Revision = "changed" }
+				after, err := memo.decode(scope, "input", "permission_key", "row", pristine, decode)
+				if err != nil || !reflect.DeepEqual(after, binding) { t.Fatal("caller mutation poisoned successful stored Binding", field, phase, err) }
+				if count != 1 { t.Fatal("owned row key did not retain exact original bytes", count) }
+			})
+		}
+	}
+	t.Run("nil_counterpart", func(t *testing.T) {
+		binding := bindingDecodeFixture()
+		body := bindingDecodeBody(t, binding)
+		var memo bindingDecodeMemo
+		scope := bindingDecodeScope{store: &Store{}}
+		for range 2 {
+			got, err := memo.decode(scope, "input", "permission_key", "row", body, closedJSON)
+			if err != nil || !reflect.DeepEqual(got, binding) || got.Input.Unresolved[0].OperationRef.Revision != nil || got.Input.Request.Payload.TaskRef.Revision != nil { t.Fatal("nil Revision pointer changed", err) }
+			// Assigning nonnil pointers in a returned value must leave the next
+			// original nil representation intact as well.
+			revision := v.Revision("11")
+			got.Input.Unresolved[0].OperationRef.Revision = &revision
+			got.Input.Request.Payload.TaskRef.Revision = &revision
+		}
+		after, err := memo.decode(scope, "input", "permission_key", "row", body, closedJSON)
+		if err != nil || !reflect.DeepEqual(after, binding) { t.Fatal("nil counterpart was aliased", err) }
+	})
+}

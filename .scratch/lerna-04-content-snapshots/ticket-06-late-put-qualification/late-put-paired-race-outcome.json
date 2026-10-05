@@ -1,0 +1,11 @@
+{
+  "event": "native_completion_ack",
+  "operation": "late-put-paired-race",
+  "pid": 4040390,
+  "pgid": 4040390,
+  "starttime": "16951580",
+  "exit": 0,
+  "group_absent": true,
+  "timed_out": false,
+  "owned_raw_fsync_close_ack": true
+}

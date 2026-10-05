@@ -1,0 +1,20 @@
+=== RUN   TestContextBindingDecodeOwnsNestedRevisionPointers
+=== RUN   TestContextBindingDecodeOwnsNestedRevisionPointers/operation_revision/cold
+    context_binding_revision_clone_test.go:45: caller mutation poisoned successful stored Binding operation_revision cold <nil>
+=== RUN   TestContextBindingDecodeOwnsNestedRevisionPointers/operation_revision/hot
+    context_binding_revision_clone_test.go:45: caller mutation poisoned successful stored Binding operation_revision hot <nil>
+=== RUN   TestContextBindingDecodeOwnsNestedRevisionPointers/task_revision/cold
+    context_binding_revision_clone_test.go:45: caller mutation poisoned successful stored Binding task_revision cold <nil>
+=== RUN   TestContextBindingDecodeOwnsNestedRevisionPointers/task_revision/hot
+    context_binding_revision_clone_test.go:45: caller mutation poisoned successful stored Binding task_revision hot <nil>
+=== RUN   TestContextBindingDecodeOwnsNestedRevisionPointers/nil_counterpart
+--- FAIL: TestContextBindingDecodeOwnsNestedRevisionPointers (0.00s)
+    --- FAIL: TestContextBindingDecodeOwnsNestedRevisionPointers/operation_revision/cold (0.00s)
+    --- FAIL: TestContextBindingDecodeOwnsNestedRevisionPointers/operation_revision/hot (0.00s)
+    --- FAIL: TestContextBindingDecodeOwnsNestedRevisionPointers/task_revision/cold (0.00s)
+    --- FAIL: TestContextBindingDecodeOwnsNestedRevisionPointers/task_revision/hot (0.00s)
+    --- PASS: TestContextBindingDecodeOwnsNestedRevisionPointers/nil_counterpart (0.00s)
+FAIL
+FAIL	github.com/ruipengliu/lerna/conformance/internal/decisionfixture	0.012s
+FAIL
+NATIVE_EXIT status=1 group_absent=True

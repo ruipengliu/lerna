@@ -1,0 +1,88 @@
+package decisionfixture
+
+import (
+	"bytes"
+	"sync/atomic"
+
+	adapter "github.com/ruipengliu/lerna/adapters/content/decision"
+	v "github.com/ruipengliu/lerna/contract/v1_1"
+	compiler "github.com/ruipengliu/lerna/domain/task/context"
+)
+
+// This memo owns only a successful syntactic representation. Its callers must
+// first SELECT the entire original row and must still qualify current input,
+// permissions, clocks and transaction completion independently.
+type bindingDecodeScope struct {
+	store  *Store
+	owner  v.OwnerRef
+	schema string
+}
+type bindingDecodeEntry struct {
+	scope                  bindingDecodeScope
+	inputID, column, value string
+	body                   []byte
+	binding                adapter.Binding
+}
+type bindingDecodeMemo struct {
+	entry atomic.Pointer[bindingDecodeEntry]
+}
+
+func (m *bindingDecodeMemo) decode(scope bindingDecodeScope, inputID, column, value string, body []byte, decode func([]byte, any) error) (adapter.Binding, error) {
+	if entry := m.entry.Load(); entry != nil && entry.scope == scope && entry.inputID == inputID && entry.column == column && entry.value == value && bytes.Equal(body, entry.body) {
+		return cloneBinding(entry.binding), nil
+	}
+	var out adapter.Binding
+	if err := decode(body, &out); err != nil {
+		return out, err
+	}
+	if len(body) <= v.MaxBodyBytes && out.Bundle.Mandatory.Bytes == nil && out.Bundle.Shell.Bytes == nil && out.Bundle.Manifest.Bytes == nil && out.Bundle.Lock.Bytes == nil {
+		// Publish only a private successful syntax value. A subsequent current
+		// check or Commit failure does not turn it into authorization evidence.
+		m.entry.Store(&bindingDecodeEntry{scope: scope, inputID: inputID, column: column, value: value, body: copyBindingSlice(body), binding: cloneBinding(out)})
+	}
+	return out, nil
+}
+
+// Typed copies preserve nil versus present-empty slices, including every
+// nested mutable field in the fixed Input/Bundle/Request representation.
+func copyBindingSlice[T any](in []T) []T {
+	if in == nil {
+		return nil
+	}
+	out := make([]T, len(in))
+	copy(out, in)
+	return out
+}
+func cloneBinding(in adapter.Binding) adapter.Binding {
+	out := in
+	out.Input.Constraints = copyBindingSlice(in.Input.Constraints)
+	out.Input.Conditions = copyBindingSlice(in.Input.Conditions)
+	for i := range out.Input.Conditions {
+		out.Input.Conditions[i].Gaps = copyBindingSlice(in.Input.Conditions[i].Gaps)
+	}
+	out.Input.Control.Restrictions = copyBindingSlice(in.Input.Control.Restrictions)
+	out.Input.Budget.Unknown = copyBindingSlice(in.Input.Budget.Unknown)
+	out.Input.Unresolved = copyBindingSlice(in.Input.Unresolved)
+	out.Input.Progress = copyBindingSlice(in.Input.Progress)
+	out.Input.Materials = copyBindingSlice(in.Input.Materials)
+	out.Input.Omitted = copyBindingSlice(in.Input.Omitted)
+	out.Input.Gaps = copyBindingSlice(in.Input.Gaps)
+	out.Input.Request.Payload.UseRefs = copyBindingSlice(in.Input.Request.Payload.UseRefs)
+	if in.Input.Request.TraceContext != nil {
+		trace := *in.Input.Request.TraceContext
+		out.Input.Request.TraceContext = &trace
+	}
+	out.Bundle.Mandatory = cloneBindingObject(in.Bundle.Mandatory)
+	out.Bundle.Shell = cloneBindingObject(in.Bundle.Shell)
+	out.Bundle.Manifest = cloneBindingObject(in.Bundle.Manifest)
+	out.Bundle.Lock = cloneBindingObject(in.Bundle.Lock)
+	out.Bundle.Materials = copyBindingSlice(in.Bundle.Materials)
+	out.Bundle.Processed = copyBindingSlice(in.Bundle.Processed)
+	return out
+}
+func cloneBindingObject(in compiler.Object) compiler.Object {
+	out := in
+	out.Sources = copyBindingSlice(in.Sources)
+	out.Bytes = copyBindingSlice(in.Bytes)
+	return out
+}

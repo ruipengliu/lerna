@@ -1,0 +1,52 @@
+{
+  "STATIC_only_no_native_grant": true,
+  "workdir": "/tmp/lerna-worktrees/content-snapshots-03",
+  "locked_environment": "source /workspace/.lerna-env/env.sh; GOTOOLCHAIN=local GOFLAGS=-mod=readonly",
+  "supervisor": "/workspace/lerna-content-03-137311247276/run-native.py",
+  "supervisor_sha256": "82c4e6a19e1aaabbd4a2412f89eb54c0b1690221f92d3ea826b05ca455a2042e",
+  "format": [
+    "gofmt",
+    "-w",
+    "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_dispatch.go",
+    "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_input_decode.go"
+  ],
+  "mechanical_normal": [
+    "go",
+    "test",
+    "-v",
+    "-tags=integration",
+    "-p",
+    "1",
+    "-count=1",
+    "-timeout=120s",
+    "-overlay=/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-candidate-static/test-only-overlay-static.json",
+    "-run=^(TestContextBinding|TestContextInputDecode)",
+    "./conformance/internal/decisionfixture"
+  ],
+  "mechanical_race": [
+    "go",
+    "test",
+    "-race",
+    "-v",
+    "-tags=integration",
+    "-p",
+    "1",
+    "-count=1",
+    "-timeout=120s",
+    "-overlay=/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-candidate-static/test-only-overlay-static.json",
+    "-run=^(TestContextBinding|TestContextInputDecode)",
+    "./conformance/internal/decisionfixture"
+  ],
+  "outer_seconds": 120,
+  "sequence": "Only future separate rootgrant. Format two approved productfiles -> all actual Binding+Input normal -> iff PASS/Wait/currentgroupempty same race. No repair/retry/PG/capacity/native profiler. No test body has qualified new Input yet.",
+  "future_logs": {
+    "format": "/workspace/lerna-content-03-137311247276/context-input-memo-format.log",
+    "normal": "/workspace/lerna-content-03-137311247276/context-input-memo-normal.log",
+    "race": "/workspace/lerna-content-03-137311247276/context-input-memo-race.log"
+  },
+  "top_tests": {
+    "existing_Binding": 5,
+    "new_Binding_Revision": 1,
+    "new_Input": 6
+  }
+}

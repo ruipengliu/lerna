@@ -1,0 +1,21 @@
+{
+  "actual_format_single_blank_line_reverses_to_exact_static_candidate": true,
+  "clone_extraction_and_two_pointer_additions_reverse_to_exact_original_helper": true,
+  "before": {
+    "sha256": "457b065fb760a264f0c687f82275c1dd73af3414191cccee1bba80b527f04779",
+    "bytes": 3570
+  },
+  "candidate_beforeformat": {
+    "sha256": "16433c7f9dc2e610e48ba3030adac6b517f8a830e8883ee2bcacb2cc904aaa99",
+    "bytes": 4038
+  },
+  "formatted": {
+    "sha256": "fe6e723b65cf1864e8e5a1071f38c6b6752394c4e5a91a5d7e87a6bb9ea45fc3",
+    "bytes": 4039
+  },
+  "fmt_diff": {
+    "sha256": "86479f5541784a9190fb78a38472eba1e8c543f2c95d8057d9a728a186e2167b",
+    "bytes": 347
+  },
+  "original_no_semantic_normalization": true
+}

@@ -1,0 +1,170 @@
+{
+  "STATIC_capture_no_native": true,
+  "original_global_ledgers_reference_only": [
+    "/workspace/lerna-content-03-137311247276/native-identities.jsonl",
+    "/workspace/lerna-content-03-137311247276/owned-scopes.log"
+  ],
+  "exact_original_intervals": [
+    {
+      "phase": "binding_pointer_format",
+      "pid": 3992592,
+      "tick": "16744553",
+      "native_original_global_interval": [
+        79265,
+        79507
+      ],
+      "scope_original_global_interval": [
+        147855,
+        147981
+      ],
+      "native_selected_line_sha256": "0ca522cfe73557d5417e04c5508168f3b442a235b1727bfb486bcf6e36a56887",
+      "scope_interval_sha256": "6e93b14e9921711cd08e35216b2072ca1ca338d911749231d6219a028ea91af2"
+    },
+    {
+      "phase": "binding_pointer_first_red_normal",
+      "pid": 3992623,
+      "tick": "16744570",
+      "native_original_global_interval": [
+        79507,
+        79917
+      ],
+      "scope_original_global_interval": [
+        147981,
+        148107
+      ],
+      "native_selected_line_sha256": "2b5a970af9c3e590d947ba306922d451c4609f54143e1b196471fee43bd0b3dd",
+      "scope_interval_sha256": "ef4f74ab206ff5265aaf43ade7b44c628c28b9f87809e4333ec19977ad3189da"
+    },
+    {
+      "phase": "format",
+      "pid": 4008725,
+      "tick": "16813528",
+      "native_original_global_interval": [
+        79917,
+        80144
+      ],
+      "scope_original_global_interval": [
+        148107,
+        148233
+      ],
+      "native_selected_line_sha256": "357f3e3a3fae12170f4ed7848f93d482a8fcb0be871c35ec443861a89e9c494e",
+      "scope_interval_sha256": "323af5a3b3497c5af618747df2c681f9dbaca34ba251751e5233045bd58b3d1f"
+    },
+    {
+      "phase": "normal",
+      "pid": 4008732,
+      "tick": "16813540",
+      "native_original_global_interval": [
+        80144,
+        80521
+      ],
+      "scope_original_global_interval": [
+        148233,
+        148359
+      ],
+      "native_selected_line_sha256": "b2165bdc2c425fb2426c9d6c37da88dff0ef33cb59475d837cab75f9bcb7463d",
+      "scope_interval_sha256": "97e106eafbe0a7453750d2dfe2b4f6a9a9ce7c3c8aef7ddd4bdfdf4dd37a2fc4"
+    },
+    {
+      "phase": "race",
+      "pid": 4008860,
+      "tick": "16813795",
+      "native_original_global_interval": [
+        80521,
+        80907
+      ],
+      "scope_original_global_interval": [
+        148359,
+        148485
+      ],
+      "native_selected_line_sha256": "8c869777a2d3aea1b724fbefe4b6480beb730d9f89f78ffc7e8092152422b954",
+      "scope_interval_sha256": "add5d4f632e97e87cd3e245385f83b680000e882d8ee2c5a6d045754a8f31ee6"
+    },
+    {
+      "phase": "input_proposal_format",
+      "pid": 4014613,
+      "tick": "16839315",
+      "native_original_global_interval": [
+        80907,
+        81139
+      ],
+      "scope_original_global_interval": [
+        148485,
+        148611
+      ],
+      "native_selected_line_sha256": "711fabbe0ed55f62111a35ca7c6bd275376d25830e21ee9e48ebe813b9c12faf",
+      "scope_interval_sha256": "9b36a9914bbd3696f1bb31b2c97ca51df35c9e7131ac7e6e3fb8e7e57ac1a9ea"
+    },
+    {
+      "phase": "input_compile_first_red",
+      "pid": 4014619,
+      "tick": "16839328",
+      "native_original_global_interval": [
+        81139,
+        81518
+      ],
+      "scope_original_global_interval": [
+        148611,
+        148737
+      ],
+      "native_selected_line_sha256": "4c56d224d0383257f012e36d412e37e6619f0f7f3edd7040968731af2218ac17",
+      "scope_interval_sha256": "415de54aecd5a4f9f03a50233abc4ea3518a9cbbb282a6b691430496f481d6d5"
+    },
+    {
+      "phase": "format",
+      "pid": 4045505,
+      "tick": "16974337",
+      "native_original_global_interval": [
+        81518,
+        81845
+      ],
+      "scope_original_global_interval": [
+        148737,
+        148863
+      ],
+      "native_selected_line_sha256": "a1f57adc06b442606d0b165a8ba6eb018fd6558902eddc203933fb3089f021a8",
+      "scope_interval_sha256": "5b658e8e82118db116b83254e2e0bf373ebf96a13614ebbe0170e5d8ab9b6747"
+    },
+    {
+      "phase": "normal",
+      "pid": 4045512,
+      "tick": "16974354",
+      "native_original_global_interval": [
+        81845,
+        82272
+      ],
+      "scope_original_global_interval": [
+        148863,
+        148989
+      ],
+      "native_selected_line_sha256": "ce616672c423885caa6c49a02cddca63897e3980c0766aa0835e7cdc17591553",
+      "scope_interval_sha256": "b04ea76e85b47fea9d6116c17951a0c599ea368251c42df06fc79b66173edb1b"
+    },
+    {
+      "phase": "race",
+      "pid": 4045654,
+      "tick": "16974703",
+      "native_original_global_interval": [
+        82272,
+        82708
+      ],
+      "scope_original_global_interval": [
+        148989,
+        149115
+      ],
+      "native_selected_line_sha256": "cc93c7a16a5e7f1663cda204da62bbc4c1745d3a4ed66d81fa8cf546cbc3d5b2",
+      "scope_interval_sha256": "357b1f2b337c42dcd74e20524e07e89ab1ab70d6c13548d1e72bc743375599e5"
+    }
+  ],
+  "captured_native": {
+    "sha256": "2b2523cc0f64d2d90f134d2ebe14196ab8c10dd298fb58891a157e36c6057abd",
+    "bytes": 3443
+  },
+  "captured_scopes": {
+    "sha256": "574439f08f7db121376017b27ae496b845a981535567b4f2a2027f0744f2a13c",
+    "bytes": 1260
+  },
+  "each_interval_verified_against_original_prelaunch_and_actual_identity_scope": true,
+  "global_full_current_hash_not_mislabelled_as_selected_rows": true,
+  "preserves_original_FD_and_holder_UNKNOWN": true
+}

@@ -1,0 +1,97 @@
+{
+  "STATIC_only_no_native_grant": true,
+  "workdir": "/tmp/lerna-worktrees/content-snapshots-03",
+  "locked_environment": "source /workspace/.lerna-env/env.sh; GOTOOLCHAIN=local GOFLAGS=-mod=readonly",
+  "supervisor": "/workspace/lerna-content-03-137311247276/run-native.py",
+  "supervisor_sha256": "82c4e6a19e1aaabbd4a2412f89eb54c0b1690221f92d3ea826b05ca455a2042e",
+  "first_binding_test_format": [
+    "gofmt",
+    "-w",
+    "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/context_binding_revision_clone_test.go.txt"
+  ],
+  "first_binding_actual_behavior_red": [
+    "go",
+    "test",
+    "-v",
+    "-tags=integration",
+    "-p",
+    "1",
+    "-count=1",
+    "-timeout=120s",
+    "-overlay=/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/binding-only-overlay-static.json",
+    "-run=^TestContextBindingDecodeOwnsNestedRevisionPointers$",
+    "./conformance/internal/decisionfixture"
+  ],
+  "future_existing_and_new_binding_normal": [
+    "go",
+    "test",
+    "-v",
+    "-tags=integration",
+    "-p",
+    "1",
+    "-count=1",
+    "-timeout=120s",
+    "-overlay=/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/binding-only-overlay-static.json",
+    "-run=^TestContextBinding",
+    "./conformance/internal/decisionfixture"
+  ],
+  "future_existing_and_new_binding_race": [
+    "go",
+    "test",
+    "-race",
+    "-v",
+    "-tags=integration",
+    "-p",
+    "1",
+    "-count=1",
+    "-timeout=120s",
+    "-overlay=/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/binding-only-overlay-static.json",
+    "-run=^TestContextBinding",
+    "./conformance/internal/decisionfixture"
+  ],
+  "later_new_input_compile_red": [
+    "go",
+    "test",
+    "-v",
+    "-tags=integration",
+    "-p",
+    "1",
+    "-count=1",
+    "-timeout=120s",
+    "-overlay=/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-only-overlay-static.json",
+    "-run=^TestContextInputDecode",
+    "./conformance/internal/decisionfixture"
+  ],
+  "later_new_input_control_normal": [
+    "go",
+    "test",
+    "-v",
+    "-tags=integration",
+    "-p",
+    "1",
+    "-count=1",
+    "-timeout=120s",
+    "-overlay=/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-only-overlay-static.json",
+    "-run=^TestContextInputDecode",
+    "./conformance/internal/decisionfixture"
+  ],
+  "later_new_input_control_race": [
+    "go",
+    "test",
+    "-race",
+    "-v",
+    "-tags=integration",
+    "-p",
+    "1",
+    "-count=1",
+    "-timeout=120s",
+    "-overlay=/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-only-overlay-static.json",
+    "-run=^TestContextInputDecode",
+    "./conformance/internal/decisionfixture"
+  ],
+  "scope": "Separate future root grants. Only first Binding test overlay active in first phase; undefined Input proposal must remain isolated. No baseline shim; no test body has executed. All stages require fresh current source manifest after any approved implementation; this static source331 binds first Binding RED only, not later candidate implementation.",
+  "future_first_logs": {
+    "format": "/workspace/lerna-content-03-137311247276/context-binding-revision-pointer-first-red-format.log",
+    "red": "/workspace/lerna-content-03-137311247276/context-binding-revision-pointer-first-red-normal.log"
+  }
+}

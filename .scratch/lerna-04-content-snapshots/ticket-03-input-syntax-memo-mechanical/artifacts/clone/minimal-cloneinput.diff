@@ -1,0 +1,62 @@
+--- a/conformance/internal/decisionfixture/context_binding_decode.go
++++ b/conformance/internal/decisionfixture/context_binding_decode.go
+@@ -53,25 +53,42 @@
+ 	copy(out, in)
+ 	return out
+ }
++// cloneInput owns every mutable field in the current typed Input, including
++// optional Revision pointers nested in responsibility and request references.
++func cloneInput(in compiler.Input) compiler.Input {
++	out := in
++	out.Constraints = copyBindingSlice(in.Constraints)
++	out.Conditions = copyBindingSlice(in.Conditions)
++	for i := range out.Conditions {
++		out.Conditions[i].Gaps = copyBindingSlice(in.Conditions[i].Gaps)
++	}
++	out.Control.Restrictions = copyBindingSlice(in.Control.Restrictions)
++	out.Budget.Unknown = copyBindingSlice(in.Budget.Unknown)
++	out.Unresolved = copyBindingSlice(in.Unresolved)
++	for i := range out.Unresolved {
++		if in.Unresolved[i].OperationRef.Revision != nil {
++			revision := *in.Unresolved[i].OperationRef.Revision
++			out.Unresolved[i].OperationRef.Revision = &revision
++		}
++	}
++	out.Progress = copyBindingSlice(in.Progress)
++	out.Materials = copyBindingSlice(in.Materials)
++	out.Omitted = copyBindingSlice(in.Omitted)
++	out.Gaps = copyBindingSlice(in.Gaps)
++	out.Request.Payload.UseRefs = copyBindingSlice(in.Request.Payload.UseRefs)
++	if in.Request.Payload.TaskRef.Revision != nil {
++		revision := *in.Request.Payload.TaskRef.Revision
++		out.Request.Payload.TaskRef.Revision = &revision
++	}
++	if in.Request.TraceContext != nil {
++		trace := *in.Request.TraceContext
++		out.Request.TraceContext = &trace
++	}
++	return out
++}
+ func cloneBinding(in adapter.Binding) adapter.Binding {
+ 	out := in
+-	out.Input.Constraints = copyBindingSlice(in.Input.Constraints)
+-	out.Input.Conditions = copyBindingSlice(in.Input.Conditions)
+-	for i := range out.Input.Conditions {
+-		out.Input.Conditions[i].Gaps = copyBindingSlice(in.Input.Conditions[i].Gaps)
+-	}
+-	out.Input.Control.Restrictions = copyBindingSlice(in.Input.Control.Restrictions)
+-	out.Input.Budget.Unknown = copyBindingSlice(in.Input.Budget.Unknown)
+-	out.Input.Unresolved = copyBindingSlice(in.Input.Unresolved)
+-	out.Input.Progress = copyBindingSlice(in.Input.Progress)
+-	out.Input.Materials = copyBindingSlice(in.Input.Materials)
+-	out.Input.Omitted = copyBindingSlice(in.Input.Omitted)
+-	out.Input.Gaps = copyBindingSlice(in.Input.Gaps)
+-	out.Input.Request.Payload.UseRefs = copyBindingSlice(in.Input.Request.Payload.UseRefs)
+-	if in.Input.Request.TraceContext != nil {
+-		trace := *in.Input.Request.TraceContext
+-		out.Input.Request.TraceContext = &trace
+-	}
++	out.Input = cloneInput(in.Input)
+ 	out.Bundle.Mandatory = cloneBindingObject(in.Bundle.Mandatory)
+ 	out.Bundle.Shell = cloneBindingObject(in.Bundle.Shell)
+ 	out.Bundle.Manifest = cloneBindingObject(in.Bundle.Manifest)

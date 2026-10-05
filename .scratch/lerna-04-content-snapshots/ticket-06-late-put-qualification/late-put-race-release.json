@@ -1,0 +1,29 @@
+{
+  "status": "STOP_RELEASED",
+  "actual_one_preput_paired_race_only_pass": true,
+  "native_actual": {
+    "event": "native_completion_ack",
+    "operation": "late-put-paired-race",
+    "pid": 4040390,
+    "pgid": 4040390,
+    "starttime": "16951580",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false,
+    "owned_raw_fsync_close_ack": true
+  },
+  "independent_current_group_absent": true,
+  "no_DATA_RACE": true,
+  "current26_equals_formatted_snapshot_and_manifest": true,
+  "formed26_manifest_path": "/tmp/lerna-04-ticket06-execution/late-put-formatted-26-manifest.json",
+  "formed26_manifest_sha256": "df707faeff172b1e817d124d8813da2ae9f1d1e3da90daf782263d3ddbbd47bc",
+  "raw_path": "/tmp/lerna-04-ticket06-execution/late-put-paired-race.log",
+  "raw_sha256": "74ae4aab4a89a2801cb73cdbb73ac10892c5adfcec821f665f0e1df869becb1e",
+  "postchecks_path": "/tmp/lerna-04-ticket06-execution/late-put-race-postchecks.json",
+  "postchecks_sha256": "4690cc5ca99cbc14131c5787b86b0aedc6b229c56c9f7b28e987ff65fe47b998",
+  "genuine_actualPut_results_and_fullnativeCloseWaitStop_beforeQ_both": true,
+  "no_new_unknown": true,
+  "historical8unknown_untouched": true,
+  "ledger_lines": 193,
+  "affectedold5_othernative_sourcefmt_unexecuted": true
+}

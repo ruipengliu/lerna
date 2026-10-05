@@ -1,0 +1,210 @@
+package decisionfixture
+
+import (
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"reflect"
+	"strings"
+	"sync"
+	"sync/atomic"
+	"testing"
+
+	v "github.com/ruipengliu/lerna/contract/v1_1"
+	compiler "github.com/ruipengliu/lerna/domain/task/context"
+)
+
+// These private syntax controls are not public authority or capacity oracles.
+// The proposed inputDecodeMemo does not yet exist: initial execution would be
+// a compile failure, not a claimed behavioral RED. No baseline shim is used.
+func inputDecodeFixture() compiler.Input {
+	in := bindingDecodeFixture().Input
+	operationRevision, taskRevision := v.Revision("7"), v.Revision("9")
+	in.Unresolved[0].OperationRef.Revision = &operationRevision
+	in.Request.Payload.TaskRef.Revision = &taskRevision
+	return in
+}
+func inputDecodeBody(t *testing.T, in compiler.Input) []byte {
+	t.Helper()
+	body, err := json.Marshal(in)
+	if err != nil { t.Fatal(err) }
+	return body
+}
+func inputDecodeExpected(t *testing.T, body []byte) compiler.Input {
+	t.Helper()
+	var out compiler.Input
+	if err := closedJSON(body, &out); err != nil { t.Fatal(err) }
+	return out
+}
+func inputDecodeScopeFixture() bindingDecodeScope {
+	return bindingDecodeScope{store: &Store{}, owner: v.OwnerRef{TenantID: "tenant", OwnerID: "owner"}, schema: "scope"}
+}
+func TestContextInputDecodeReusesOnlyExactFreshRowBytes(t *testing.T) {
+	var memo inputDecodeMemo
+	scope := inputDecodeScopeFixture()
+	body := inputDecodeBody(t, inputDecodeFixture())
+	expected := inputDecodeExpected(t, body)
+	count := 0
+	decode := func(b []byte, out any) error { count++; return closedJSON(b, out) }
+	cold, err := memo.decode(scope, "input", body, decode)
+	if err != nil || !reflect.DeepEqual(cold, expected) || count != 1 { t.Fatal("cold syntax changed", err, count) }
+	// Mutation of the caller-owned raw row must not poison the owned key bytes.
+	pristine := append([]byte(nil), body...)
+	body[0] = '!'
+	hot, err := memo.decode(scope, "input", pristine, decode)
+	if err != nil || !reflect.DeepEqual(hot, expected) { t.Fatal("caller row mutation escaped", err) }
+	if count != 1 { t.Fatalf("identical fresh syntax decoded %d times, want 1", count) }
+}
+func TestContextInputDecodeOwnsEveryMutableReturn(t *testing.T) {
+	mutations := []struct { name string; change func(*compiler.Input) }{
+		{"constraints", func(in *compiler.Input) { in.Constraints[0] = "changed" }},
+		{"conditions", func(in *compiler.Input) { in.Conditions[0].Text = "changed" }},
+		{"condition_gaps", func(in *compiler.Input) { in.Conditions[0].Gaps[0] = "changed" }},
+		{"control_restrictions", func(in *compiler.Input) { in.Control.Restrictions[0] = "changed" }},
+		{"budget_unknown", func(in *compiler.Input) { in.Budget.Unknown[0] = "changed" }},
+		{"unresolved", func(in *compiler.Input) { in.Unresolved[0].ID = "changed" }},
+		{"operation_revision", func(in *compiler.Input) { *in.Unresolved[0].OperationRef.Revision = "changed" }},
+		{"progress", func(in *compiler.Input) { in.Progress[0] = "changed" }},
+		{"materials", func(in *compiler.Input) { in.Materials[0].Selected = false }},
+		{"omitted", func(in *compiler.Input) { in.Omitted[0] = "changed" }},
+		{"gaps", func(in *compiler.Input) { in.Gaps[0] = "changed" }},
+		{"use_refs", func(in *compiler.Input) { in.Request.Payload.UseRefs[0].ID = "changed" }},
+		{"task_revision", func(in *compiler.Input) { *in.Request.Payload.TaskRef.Revision = "changed" }},
+		{"trace", func(in *compiler.Input) { in.Request.TraceContext.TraceID = "changed" }},
+	}
+	for _, mutation := range mutations {
+		t.Run(mutation.name, func(t *testing.T) {
+			var memo inputDecodeMemo
+			body := inputDecodeBody(t, inputDecodeFixture())
+			expected := inputDecodeExpected(t, body)
+			count := 0
+			decode := func(b []byte, out any) error { count++; return closedJSON(b, out) }
+			scope := inputDecodeScopeFixture()
+			for _, phase := range []string{"cold", "hot"} {
+				got, err := memo.decode(scope, "input", body, decode)
+				if err != nil || !reflect.DeepEqual(got, expected) { t.Fatal(phase, "return changed before mutation", err) }
+				mutation.change(&got)
+				if reflect.DeepEqual(got, expected) { t.Fatal(phase, "mutation fixture had no effect") }
+				after, err := memo.decode(scope, "input", body, decode)
+				if err != nil || !reflect.DeepEqual(after, expected) { t.Fatal(phase, "return mutation poisoned stored syntax", err) }
+			}
+			if count != 1 { t.Fatal("same row did not reuse syntax", count) }
+		})
+	}
+}
+func TestContextInputDecodePreservesNilAndPresentEmpty(t *testing.T) {
+	inputs := []compiler.Input{{}, {
+		Constraints: []string{}, Conditions: []compiler.Condition{{Gaps: []string{}}},
+		Control: compiler.Control{Restrictions: []string{}}, Budget: compiler.Budget{Unknown: []string{}},
+		Unresolved: []compiler.Responsibility{}, Progress: []string{}, Materials: []compiler.Material{}, Omitted: []string{}, Gaps: []string{},
+		Request: v.DecisionDecideRequest{Payload: v.DecisionDecidePayload{UseRefs: []v.UseRef{}}, TraceContext: &v.TraceContext{}},
+	}}
+	for i, in := range inputs {
+		t.Run(fmt.Sprint(i), func(t *testing.T) {
+			var memo inputDecodeMemo
+			scope := inputDecodeScopeFixture()
+			body := inputDecodeBody(t, in)
+			count := 0
+			decode := func(b []byte, out any) error { count++; return closedJSON(b, out) }
+			for range 2 {
+				got, err := memo.decode(scope, "input", body, decode)
+				if err != nil || !reflect.DeepEqual(got, in) { t.Fatal("nil/empty syntax changed", err, got) }
+			}
+			if count != 1 { t.Fatal("nil/empty row did not reuse syntax", count) }
+		})
+	}
+}
+func TestContextInputDecodeScopeFullBytesAndSingleEntry(t *testing.T) {
+	base := inputDecodeScopeFixture()
+	body := inputDecodeBody(t, inputDecodeFixture())
+	cases := []struct { name string; scope bindingDecodeScope; id string; body []byte }{
+		{"store", bindingDecodeScope{store: &Store{}, owner: base.owner, schema: base.schema}, "input", body},
+		{"tenant", bindingDecodeScope{store: base.store, owner: v.OwnerRef{TenantID: "other", OwnerID: base.owner.OwnerID}, schema: base.schema}, "input", body},
+		{"owner", bindingDecodeScope{store: base.store, owner: v.OwnerRef{TenantID: base.owner.TenantID, OwnerID: "other"}, schema: base.schema}, "input", body},
+		{"schema", bindingDecodeScope{store: base.store, owner: base.owner, schema: "other"}, "input", body},
+		{"input_id", base, "other", body},
+		{"value_bytes", base, "input", bytes.Replace(body, []byte(`"original"`), []byte(`"changed"`), 1)},
+		{"whitespace_bytes", base, "input", append([]byte(" "), body...)},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			var memo inputDecodeMemo
+			count := 0
+			decode := func(b []byte, out any) error { count++; return closedJSON(b, out) }
+			for _, call := range []struct { scope bindingDecodeScope; id string; body []byte }{
+				{base, "input", body}, {tc.scope, tc.id, tc.body}, {tc.scope, tc.id, tc.body}, {base, "input", body},
+			} {
+				got, err := memo.decode(call.scope, call.id, call.body, decode)
+				if err != nil || !reflect.DeepEqual(got, inputDecodeExpected(t, call.body)) { t.Fatal("scope/full-byte syntax changed", err) }
+			}
+			if count != 3 { t.Fatalf("A/B/B/A must parse 3 times for one entry, got %d", count) }
+		})
+	}
+	var first, second inputDecodeMemo
+	count := 0
+	decode := func(b []byte, out any) error { count++; return closedJSON(b, out) }
+	for _, memo := range []*inputDecodeMemo{&first, &second} {
+		if _, err := memo.decode(base, "input", body, decode); err != nil { t.Fatal(err) }
+	}
+	if count != 2 { t.Fatal("separate dispatcher memos shared an entry", count) }
+}
+func TestContextInputDecodeStrictErrorsAndFiniteBodyBound(t *testing.T) {
+	valid := inputDecodeBody(t, inputDecodeFixture())
+	invalid := [][]byte{nil, {}, []byte(`{`), []byte(`{"goal":"a","goal":"b"}`), []byte(`{"unexpected":"x"}`), []byte(`{} {}`), []byte(`{"constraints":false}`), []byte(strings.Repeat(" ", v.MaxBodyBytes) + "{}")}
+	for i, body := range invalid {
+		t.Run(fmt.Sprint(i), func(t *testing.T) {
+			var memo inputDecodeMemo
+			scope := inputDecodeScopeFixture()
+			count := 0
+			decode := func(b []byte, out any) error { count++; return closedJSON(b, out) }
+			if _, err := memo.decode(scope, "input", valid, decode); err != nil { t.Fatal(err) }
+			var expected compiler.Input
+			originalErr := closedJSON(body, &expected)
+			if originalErr == nil { t.Fatal("invalid strict fixture accepted") }
+			for range 2 {
+				got, err := memo.decode(scope, "input", body, decode)
+				if err == nil || reflect.TypeOf(err) != reflect.TypeOf(originalErr) || err.Error() != originalErr.Error() || !reflect.DeepEqual(got, expected) { t.Fatal("strict failure or partial output changed", err, originalErr) }
+			}
+			if count != 3 { t.Fatal("failed syntax cached or valid syntax reused for changed bytes", count) }
+		})
+	}
+	var memo inputDecodeMemo
+	count := 0
+	decode := func(b []byte, out any) error { count++; return closedJSON(b, out) }
+	atLimit := append(bytes.Repeat([]byte(" "), v.MaxBodyBytes-len(valid)), valid...)
+	expected := inputDecodeExpected(t, atLimit)
+	scope := inputDecodeScopeFixture()
+	for range 2 {
+		got, err := memo.decode(scope, "input", atLimit, decode)
+		if err != nil || !reflect.DeepEqual(got, expected) { t.Fatal("exact original body limit changed", err) }
+	}
+	if count != 1 { t.Fatal("body at original limit was not reusable", count) }
+}
+func TestContextInputDecodeConcurrentIndependentResults(t *testing.T) {
+	var memo inputDecodeMemo
+	scope := inputDecodeScopeFixture()
+	body := inputDecodeBody(t, inputDecodeFixture())
+	expected := inputDecodeExpected(t, body)
+	var count atomic.Int64
+	decode := func(b []byte, out any) error { count.Add(1); return closedJSON(b, out) }
+	var workers sync.WaitGroup
+	for i := range 8 {
+		workers.Add(1)
+		go func(i int) {
+			defer workers.Done()
+			for j := range 20 {
+				id := "input"
+				if i%2 == 1 && j%2 == 0 { id = "other" }
+				got, err := memo.decode(scope, id, body, decode)
+				if err != nil || !reflect.DeepEqual(got, expected) { t.Errorf("concurrent result changed: %v", err); return }
+				got.Conditions[0].Gaps[0] = "changed"
+				*got.Unresolved[0].OperationRef.Revision = "changed"
+				*got.Request.Payload.TaskRef.Revision = "changed"
+				got.Request.TraceContext.TraceID = "changed"
+			}
+		}(i)
+	}
+	workers.Wait()
+	got, err := memo.decode(scope, "input", body, decode)
+	if err != nil || !reflect.DeepEqual(got, expected) || count.Load() == 0 { t.Fatal("concurrent return storage was shared", err) }
+}

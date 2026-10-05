@@ -1,0 +1,16 @@
+=== RUN   TestContentOriginalWorkerCannotInstallAcrossOriginalBodyFence
+=== RUN   TestContentOriginalWorkerCannotInstallAcrossOriginalBodyFence/normal_release
+    content_process_recovery_test.go:1510: Content child native pid=4040674 pgid=4040390 start=16952508 generation=1
+    content_process_recovery_test.go:1567: actual original local.Put result=succeeded
+    content_process_recovery_test.go:1571: original live worker released and actual native Close/Wait/Stop before conservative original I/O4 cutoff
+=== RUN   TestContentOriginalWorkerCannotInstallAcrossOriginalBodyFence/original_fence_before_late_put
+    content_process_recovery_test.go:1510: Content child native pid=4040710 pgid=4040390 start=16952671 generation=1
+    content_process_recovery_test.go:1685: original staging erased; uninstalled original primary remains pending
+    content_process_recovery_test.go:1703: actual original local.Put result=body_sealed
+    content_process_recovery_test.go:1708: same original live worker released and actual native Close/Wait/Stop before conservative original I/O4 cutoff after genuine original allACK
+--- PASS: TestContentOriginalWorkerCannotInstallAcrossOriginalBodyFence (3.77s)
+    --- PASS: TestContentOriginalWorkerCannotInstallAcrossOriginalBodyFence/normal_release (1.92s)
+    --- PASS: TestContentOriginalWorkerCannotInstallAcrossOriginalBodyFence/original_fence_before_late_put (1.86s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/component	4.825s
+NATIVE_COMPLETION_ACK {"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "late-put-paired-race", "pgid": 4040390, "pid": 4040390, "starttime": "16951580", "timed_out": false}

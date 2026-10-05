@@ -1,0 +1,25 @@
+=== RUN   TestContextBindingDecodeReusesOnlyExactFreshRowBytes
+--- PASS: TestContextBindingDecodeReusesOnlyExactFreshRowBytes (0.00s)
+=== RUN   TestContextBindingClonePreservesAllMutableFieldsAndNilEmpty
+--- PASS: TestContextBindingClonePreservesAllMutableFieldsAndNilEmpty (0.00s)
+=== RUN   TestContextBindingDecodeScopeLocatorAndBodyChangesRequireDecode
+--- PASS: TestContextBindingDecodeScopeLocatorAndBodyChangesRequireDecode (0.00s)
+=== RUN   TestContextBindingDecodeStrictFailuresAndNonMetadataRemainOriginal
+--- PASS: TestContextBindingDecodeStrictFailuresAndNonMetadataRemainOriginal (0.00s)
+=== RUN   TestContextBindingDecodeConcurrentIndependentResults
+--- PASS: TestContextBindingDecodeConcurrentIndependentResults (0.01s)
+=== RUN   TestContextBindingDecodeOwnsNestedRevisionPointers
+=== RUN   TestContextBindingDecodeOwnsNestedRevisionPointers/operation_revision/cold
+=== RUN   TestContextBindingDecodeOwnsNestedRevisionPointers/operation_revision/hot
+=== RUN   TestContextBindingDecodeOwnsNestedRevisionPointers/task_revision/cold
+=== RUN   TestContextBindingDecodeOwnsNestedRevisionPointers/task_revision/hot
+=== RUN   TestContextBindingDecodeOwnsNestedRevisionPointers/nil_counterpart
+--- PASS: TestContextBindingDecodeOwnsNestedRevisionPointers (0.00s)
+    --- PASS: TestContextBindingDecodeOwnsNestedRevisionPointers/operation_revision/cold (0.00s)
+    --- PASS: TestContextBindingDecodeOwnsNestedRevisionPointers/operation_revision/hot (0.00s)
+    --- PASS: TestContextBindingDecodeOwnsNestedRevisionPointers/task_revision/cold (0.00s)
+    --- PASS: TestContextBindingDecodeOwnsNestedRevisionPointers/task_revision/hot (0.00s)
+    --- PASS: TestContextBindingDecodeOwnsNestedRevisionPointers/nil_counterpart (0.00s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/internal/decisionfixture	0.032s
+NATIVE_EXIT status=0 group_absent=True

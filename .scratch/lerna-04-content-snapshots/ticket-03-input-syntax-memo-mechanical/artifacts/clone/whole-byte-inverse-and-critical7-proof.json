@@ -1,0 +1,71 @@
+{
+  "whole_byte_exact_inverse": true,
+  "method": "Delete only exact new cloneInput declaration/comment block; replace only cloneBinding input call with exact original before-input-copy block; every remaining whole file byte equals preserved original. Not whitespace-normalized.",
+  "before_sha256": "457b065fb760a264f0c687f82275c1dd73af3414191cccee1bba80b527f04779",
+  "candidate_sha256": "16433c7f9dc2e610e48ba3030adac6b517f8a830e8883ee2bcacb2cc904aaa99",
+  "critical7_before": {
+    "conformance/internal/decisionfixture/context_binding_decode.go": {
+      "sha256": "457b065fb760a264f0c687f82275c1dd73af3414191cccee1bba80b527f04779",
+      "bytes": 3570
+    },
+    "conformance/internal/decisionfixture/context_binding_decode_test.go": {
+      "sha256": "2333886aa9349e9c1e13d0c8b3a87165ba4742287b21f25fa240fc092ed00f8d",
+      "bytes": 10116
+    },
+    "conformance/internal/decisionfixture/context_dispatch.go": {
+      "sha256": "5c2b8d472fdbe458b9affb9a9543db3359c85c0dfa90d5357bea843995e624fb",
+      "bytes": 23388
+    },
+    "conformance/internal/decisionfixture/context_budget.go": {
+      "sha256": "b3ad33bb1ed9c89dc079afedb81dc9e43420a0609cb2b87422d1bb009ec9078d",
+      "bytes": 14532
+    },
+    "conformance/internal/decisionfixture/source.go": {
+      "sha256": "2698e49c206097583867ababbeba87a8c20942ed58b4606b6a8fc98fefbc7684",
+      "bytes": 19753
+    },
+    "domain/task/context/types.go": {
+      "sha256": "afea8dc64d9754ae67e157c5393b9ebbe03c10035ebd264c5a1ef852246f8be2",
+      "bytes": 4942
+    },
+    "contract/gen/go/v1_1/values.go": {
+      "sha256": "d00644ae3931e6d5a6ad2469fb6c3d3c1297134426bc5294a5ca350311ca5da6",
+      "bytes": 76985
+    }
+  },
+  "critical7_current": {
+    "conformance/internal/decisionfixture/context_binding_decode.go": {
+      "sha256": "16433c7f9dc2e610e48ba3030adac6b517f8a830e8883ee2bcacb2cc904aaa99",
+      "bytes": 4038
+    },
+    "conformance/internal/decisionfixture/context_binding_decode_test.go": {
+      "sha256": "2333886aa9349e9c1e13d0c8b3a87165ba4742287b21f25fa240fc092ed00f8d",
+      "bytes": 10116
+    },
+    "conformance/internal/decisionfixture/context_dispatch.go": {
+      "sha256": "5c2b8d472fdbe458b9affb9a9543db3359c85c0dfa90d5357bea843995e624fb",
+      "bytes": 23388
+    },
+    "conformance/internal/decisionfixture/context_budget.go": {
+      "sha256": "b3ad33bb1ed9c89dc079afedb81dc9e43420a0609cb2b87422d1bb009ec9078d",
+      "bytes": 14532
+    },
+    "conformance/internal/decisionfixture/source.go": {
+      "sha256": "2698e49c206097583867ababbeba87a8c20942ed58b4606b6a8fc98fefbc7684",
+      "bytes": 19753
+    },
+    "domain/task/context/types.go": {
+      "sha256": "afea8dc64d9754ae67e157c5393b9ebbe03c10035ebd264c5a1ef852246f8be2",
+      "bytes": 4942
+    },
+    "contract/gen/go/v1_1/values.go": {
+      "sha256": "d00644ae3931e6d5a6ad2469fb6c3d3c1297134426bc5294a5ca350311ca5da6",
+      "bytes": 76985
+    }
+  },
+  "critical7_changed": [
+    "conformance/internal/decisionfixture/context_binding_decode.go"
+  ],
+  "Inputmemo_unimplemented": true,
+  "no_native": true
+}

@@ -1,0 +1,196 @@
+--- source-unformatted/conformance/component/content_process_recovery_test.go
++++ source-formatted/conformance/component/content_process_recovery_test.go
+@@ -45,7 +45,7 @@
+ 	ObjectKey, Attempt                            string
+ 	Worked, Failed, StoreCloseACK, ObjectCloseACK bool
+ 	CauseClass                                    []string
+-	PutResult string `json:"put_result,omitempty"`
++	PutResult                                     string `json:"put_result,omitempty"`
+ }
+ 
+ func publicationProcessService(store content.Repository, objects content.Objects, worker string) (*content.Service, error) {
+@@ -170,32 +170,42 @@
+ 
+ func (o *contentProcessObjects) Put(ctx context.Context, key, attempt, hash string, length int64, body []byte) error {
+ 
+- if o.cfg.Gate == "claimed_before_actual_put" {
+-  objectID, expectedKey, err := content.VersionIdentity(o.cfg.Ref)
+-  claim := o.store.claim
+-  if err != nil || claim == nil || claim.Object.TenantID != contract.ID(o.cfg.Ref.Owner.TenantID) || claim.Object.OwnerID != contract.ID(o.cfg.Ref.Owner.OwnerID) || claim.Object.Kind != "content" || claim.Object.ID != contract.ID(objectID) || claim.Phase != "publish" || claim.JobID == "" || claim.Worker != "publication-child-"+strconv.Itoa(o.cfg.Generation) || claim.ClaimedRevision <= 0 || claim.Epoch <= 0 || key != expectedKey || attempt != fmt.Sprintf("%s.%d.tmp", expectedKey, claim.Epoch) || hash != o.cfg.Ref.Hash || length != 6 || int64(len(body)) != length {
+-   return errors.New("original Content before-actual-Put Claim/tuple mismatch")
+-  }
+-  frame := contentProcessFrame{Scenario: o.cfg.Scenario, Generation: o.cfg.Generation, Stage: o.cfg.Gate, LeaseUntil: claim.LeaseUntil, ObjectKey: key, Attempt: attempt}
+-  if err = o.pipes.Emit(ctx, frame); err != nil { return err }
+-  var release contentProcessFrame
+-  if err = o.pipes.Receive(ctx, &release); err != nil { return err }
+-  if release.Scenario != o.cfg.Scenario || release.Generation != o.cfg.Generation || release.Stage != "release" || release.PutResult != "" { return errors.New("wrong original Content before-actual-Put release") }
+-  // The original actual local Store and original incoming I/O context/args are
+-  // unchanged. No fixed error or post-call gate substitutes for this call.
+-  actualErr := o.Store.Put(ctx, key, attempt, hash, length, body)
+-  frame.Stage = "original_put_returned"
+-  frame.PutResult = "succeeded"
+-  if actualErr != nil {
+-   frame.PutResult = "other_failure"
+-   if errors.Is(actualErr, content.ErrBodySealed) { frame.PutResult = "body_sealed" }
+-   // Classification retains joined causes; body_sealed does not certify a
+-   // successful native first Close or conceal cancelled/failed actual I/O.
+-   frame.CauseClass = contentProcessCauseClasses(actualErr)
+-  }
+-  if emitErr := o.pipes.Emit(ctx, frame); emitErr != nil { return errors.Join(actualErr, emitErr) }
+-  return actualErr
+- }
++	if o.cfg.Gate == "claimed_before_actual_put" {
++		objectID, expectedKey, err := content.VersionIdentity(o.cfg.Ref)
++		claim := o.store.claim
++		if err != nil || claim == nil || claim.Object.TenantID != contract.ID(o.cfg.Ref.Owner.TenantID) || claim.Object.OwnerID != contract.ID(o.cfg.Ref.Owner.OwnerID) || claim.Object.Kind != "content" || claim.Object.ID != contract.ID(objectID) || claim.Phase != "publish" || claim.JobID == "" || claim.Worker != "publication-child-"+strconv.Itoa(o.cfg.Generation) || claim.ClaimedRevision <= 0 || claim.Epoch <= 0 || key != expectedKey || attempt != fmt.Sprintf("%s.%d.tmp", expectedKey, claim.Epoch) || hash != o.cfg.Ref.Hash || length != 6 || int64(len(body)) != length {
++			return errors.New("original Content before-actual-Put Claim/tuple mismatch")
++		}
++		frame := contentProcessFrame{Scenario: o.cfg.Scenario, Generation: o.cfg.Generation, Stage: o.cfg.Gate, LeaseUntil: claim.LeaseUntil, ObjectKey: key, Attempt: attempt}
++		if err = o.pipes.Emit(ctx, frame); err != nil {
++			return err
++		}
++		var release contentProcessFrame
++		if err = o.pipes.Receive(ctx, &release); err != nil {
++			return err
++		}
++		if release.Scenario != o.cfg.Scenario || release.Generation != o.cfg.Generation || release.Stage != "release" || release.PutResult != "" {
++			return errors.New("wrong original Content before-actual-Put release")
++		}
++		// The original actual local Store and original incoming I/O context/args are
++		// unchanged. No fixed error or post-call gate substitutes for this call.
++		actualErr := o.Store.Put(ctx, key, attempt, hash, length, body)
++		frame.Stage = "original_put_returned"
++		frame.PutResult = "succeeded"
++		if actualErr != nil {
++			frame.PutResult = "other_failure"
++			if errors.Is(actualErr, content.ErrBodySealed) {
++				frame.PutResult = "body_sealed"
++			}
++			// Classification retains joined causes; body_sealed does not certify a
++			// successful native first Close or conceal cancelled/failed actual I/O.
++			frame.CauseClass = contentProcessCauseClasses(actualErr)
++		}
++		if emitErr := o.pipes.Emit(ctx, frame); emitErr != nil {
++			return errors.Join(actualErr, emitErr)
++		}
++		return actualErr
++	}
+ 	if err := o.Store.Put(ctx, key, attempt, hash, length, body); err != nil {
+ 		return err
+ 	}
+@@ -1472,12 +1482,14 @@
+ 				}
+ 			}
+ 
+-   assertOriginalAbsent := func(attempt string) {
+-    t.Helper()
+-    for _, name := range []string{key, attempt} {
+-     if _, cause := os.ReadFile(filepath.Join(w.Directory, name)); !errors.Is(cause, os.ErrNotExist) { t.Fatal("original not-yet-installed exact body/attempt unexpectedly present") }
+-    }
+-   }
++			assertOriginalAbsent := func(attempt string) {
++				t.Helper()
++				for _, name := range []string{key, attempt} {
++					if _, cause := os.ReadFile(filepath.Join(w.Directory, name)); !errors.Is(cause, os.ErrNotExist) {
++						t.Fatal("original not-yet-installed exact body/attempt unexpectedly present")
++					}
++				}
++			}
+ 			management := content.ManagementConfig{Owner: contentOwner, Store: w.Store(), TrustedSubject: contentPrincipal, TrustedUntil: originalTrust, PageSize: 2, WorkBudget: 20 * time.Second}
+ 			makeLifecycle := func() *content.Lifecycle {
+ 				t.Helper()
+@@ -1510,37 +1522,43 @@
+ 				}
+ 			}
+ 
+-   observeActualPut := func(expected string) {
+-    t.Helper()
+-    var actual contentProcessFrame
+-    if cause := child.Event(ctx, &actual); cause != nil { t.Fatal("original actual Put-return witness unavailable:", contentProcessCauseClasses(cause)) }
+-    requireOriginalWindow("actual original Put-return event")
+-    if actual.Stage != "original_put_returned" || actual.Scenario != gate.Scenario || actual.Generation != gate.Generation || actual.ObjectKey != gate.ObjectKey || actual.Attempt != gate.Attempt || !actual.LeaseUntil.Equal(gate.LeaseUntil) || actual.PutResult != expected {
+-     t.Fatalf("original actual Put-return branch mismatch: result=%s cause_class=%v", actual.PutResult, actual.CauseClass)
+-    }
+-    if expected == "succeeded" && len(actual.CauseClass) != 0 { t.Fatal("successful original Put reported joined error causes") }
+-    if expected == "body_sealed" {
+-     for _, kind := range actual.CauseClass {
+-      switch kind {
+-      case "context_canceled", "context_deadline", "native_io", "native_fd_closed", "native_drain_unconfirmed", "content_unavailable", "original_claim_invalid", "scope_invalid", "commit_unknown", "object_integrity", "holder_binding":
+-       t.Fatalf("original body_sealed witness also has disqualifying cause_class=%v", actual.CauseClass)
+-      }
+-     }
+-    }
+-    // Only actual error-chain membership is witnessed here. Existing actual
+-    // first Store/ObjectCloseACK and Wait/Stop still qualify full success.
+-    t.Logf("actual original local.Put result=%s", actual.PutResult)
+-   }
+-   requireOriginalWindow("before-actual-Put gate")
+-   assertOriginalAbsent(gate.Attempt)
++			observeActualPut := func(expected string) {
++				t.Helper()
++				var actual contentProcessFrame
++				if cause := child.Event(ctx, &actual); cause != nil {
++					t.Fatal("original actual Put-return witness unavailable:", contentProcessCauseClasses(cause))
++				}
++				requireOriginalWindow("actual original Put-return event")
++				if actual.Stage != "original_put_returned" || actual.Scenario != gate.Scenario || actual.Generation != gate.Generation || actual.ObjectKey != gate.ObjectKey || actual.Attempt != gate.Attempt || !actual.LeaseUntil.Equal(gate.LeaseUntil) || actual.PutResult != expected {
++					t.Fatalf("original actual Put-return branch mismatch: result=%s cause_class=%v", actual.PutResult, actual.CauseClass)
++				}
++				if expected == "succeeded" && len(actual.CauseClass) != 0 {
++					t.Fatal("successful original Put reported joined error causes")
++				}
++				if expected == "body_sealed" {
++					for _, kind := range actual.CauseClass {
++						switch kind {
++						case "context_canceled", "context_deadline", "native_io", "native_fd_closed", "native_drain_unconfirmed", "content_unavailable", "original_claim_invalid", "scope_invalid", "commit_unknown", "object_integrity", "holder_binding":
++							t.Fatalf("original body_sealed witness also has disqualifying cause_class=%v", actual.CauseClass)
++						}
++					}
++				}
++				// Only actual error-chain membership is witnessed here. Existing actual
++				// first Store/ObjectCloseACK and Wait/Stop still qualify full success.
++				t.Logf("actual original local.Put result=%s", actual.PutResult)
++			}
++			requireOriginalWindow("before-actual-Put gate")
++			assertOriginalAbsent(gate.Attempt)
+ 			view, cause := service.Get(ctx, contentGetWire(t, alphaRef, nil), &contentPrincipal)
+ 			preparing, ok := view.AsPreparing()
+ 			if cause != nil || !ok || preparing.ContentRef != alphaRef {
+ 				t.Fatal("original staging-only version mistaken for published:", contentProcessCauseClasses(cause))
+ 			}
+ 			assertCommand("preparing")
+-   initialStaging, cause := makeLifecycle().ObserveStaging(ctx, &contentPrincipal, alphaRef)
+-   if cause != nil || initialStaging.Ref != alphaRef || !initialStaging.Present { t.Fatal("original before-Put persistent staging missing:", contentProcessCauseClasses(cause)) }
++			initialStaging, cause := makeLifecycle().ObserveStaging(ctx, &contentPrincipal, alphaRef)
++			if cause != nil || initialStaging.Ref != alphaRef || !initialStaging.Present {
++				t.Fatal("original before-Put persistent staging missing:", contentProcessCauseClasses(cause))
++			}
+ 			if !fence {
+ 				requireOriginalWindow("normal release")
+ 				if err = child.Send(ctx, contentProcessFrame{Scenario: gate.Scenario, Generation: 1, Stage: "release"}); err != nil {
+@@ -1660,9 +1678,11 @@
+ 				}
+ 				// Observe actual holder-id ordering and its unchanged counterpart.
+ 				if state(previous, "pg-staging") != "erased" && state(observed, "pg-staging") == "erased" && state(observed, "primary") != "erased" {
+-     if state(observed, "primary") != "pending" { t.Fatal("original uninstalled primary counterpart is not pending") }
+-     assertOriginalAbsent(gate.Attempt)
+-     t.Log("original staging erased; uninstalled original primary remains pending")
++					if state(observed, "primary") != "pending" {
++						t.Fatal("original uninstalled primary counterpart is not pending")
++					}
++					assertOriginalAbsent(gate.Attempt)
++					t.Log("original staging erased; uninstalled original primary remains pending")
+ 				}
+ 				if state(previous, "primary") != "erased" && state(observed, "primary") == "erased" && state(observed, "pg-staging") != "erased" {
+ 					counterpart, cause := lifecycle.ObserveStaging(ctx, &contentPrincipal, alphaRef)
+@@ -1683,8 +1703,8 @@
+ 			observeActualPut("body_sealed")
+ 			finishContentPublicationChild(t, ctx, w, child, 1)
+ 			requireOriginalWindow("same original worker actual Close/Wait/Stop")
+-   // Step may consume actual ErrBodySealed into failed/forbidden. The separate
+-   // actual Put-return enum, real native first Closes and Q are all required.
++			// Step may consume actual ErrBodySealed into failed/forbidden. The separate
++			// actual Put-return enum, real native first Closes and Q are all required.
+ 			t.Log("same original live worker released and actual native Close/Wait/Stop before conservative original I/O4 cutoff after genuine original allACK")
+ 			w.Reopen(ctx)
+ 			service, err = publicationProcessService(w.Store(), w.Objects, "fenced-live-put-reopened-observer")

@@ -1,0 +1,19 @@
+{
+  "two_exact_dispatch_edits_inverse_whole_original_file": true,
+  "before_dispatch": {
+    "sha256": "5c2b8d472fdbe458b9affb9a9543db3359c85c0dfa90d5357bea843995e624fb",
+    "bytes": 23388
+  },
+  "candidate_dispatch": {
+    "sha256": "c1042da40d5ab316d4bb788d7b866c4f1085ac595508a7751524d3bcb5c0161b",
+    "bytes": 23512
+  },
+  "new_helper_inverse": "Original path was absent; no old source overwritten",
+  "input_original_SQL_Scan_error_return_prefix_byteequal": true,
+  "currentAttempt_complete_file_byteequal": true,
+  "qualified_cloneInput_fe6_unchanged": {
+    "sha256": "fe6e723b65cf1864e8e5a1071f38c6b6752394c4e5a91a5d7e87a6bb9ea45fc3",
+    "bytes": 4039
+  },
+  "other330_whole_original_files_byteequal": true
+}

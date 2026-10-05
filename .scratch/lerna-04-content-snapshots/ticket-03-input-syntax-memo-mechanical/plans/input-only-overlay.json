@@ -1,0 +1,5 @@
+{
+  "Replace": {
+    "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_input_decode_test.go": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/context_input_decode_test.go.txt"
+  }
+}

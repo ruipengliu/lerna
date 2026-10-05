@@ -1,0 +1,51 @@
+{
+  "original_formed_manifest": {
+    "path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/formatted-source-manifest.json",
+    "sha256": "2d2e033fdfa98744dd44de72344dc1f224f8e7188ae1849f6f93292aadf35e28",
+    "bytes": 59032
+  },
+  "actual8_unchanged": [
+    {
+      "path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/context_world.go",
+      "sha256": "b69954a8448179b4505b5b4d12d38be82ab8d1ed2a78f104a08d06609c9429ca",
+      "bytes": 11631
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/context_claim_diagnostics.go",
+      "sha256": "573ae56fe178fb5f1cfa8898575ab5ca141f22077383173b383635e4a7b743e9",
+      "bytes": 13261
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/content_context_closure_test.go",
+      "sha256": "c668eacce37c9363cccaa243e2c484951582a872652d1a875c1281362a5c4e43",
+      "bytes": 4558
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/content_context_material_reachable_test.go",
+      "sha256": "4223c74583ac7ecace18402ec114708e7a43bbf1593da47bbc675e3a6617e7f2",
+      "bytes": 3369
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/content_context_test.go",
+      "sha256": "94f76122ebbb7e8240eab1c027576f15b1349ddaa66853368d78178ec13347aa",
+      "bytes": 18675
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/context_dispatch.go",
+      "sha256": "548a0016f6af04716c742ff48eabffc0c1ef09d85f175fdbf14f837a79f14a8d",
+      "bytes": 24156
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/context_budget.go",
+      "sha256": "343cc42a71cf1afc34316139216bde089cef1b00456c6d755de4f2f2430f9d8a",
+      "bytes": 14894
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/context_input_representation_observer.go",
+      "sha256": "046c3af2ffc6c2b6efb6aa98d4a793ed01ec9bc69c7308470c275f604e4744c3",
+      "bytes": 5108
+    }
+  ],
+  "no_old_measurementmap_reused": true,
+  "no_native": true
+}

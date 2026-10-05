@@ -1,0 +1,651 @@
+package decisionfixture
+
+import (
+	"bytes"
+	"context"
+	"database/sql"
+	_ "embed"
+	"errors"
+	"fmt"
+	adapter "github.com/ruipengliu/lerna/adapters/content/decision"
+	engine "github.com/ruipengliu/lerna/components/decision_engine"
+	v "github.com/ruipengliu/lerna/contract/v1_1"
+	c "github.com/ruipengliu/lerna/contract/v1_2"
+	"github.com/ruipengliu/lerna/domain/content"
+	compiler "github.com/ruipengliu/lerna/domain/task/context"
+	"math/big"
+	"reflect"
+	"time"
+)
+
+//go:embed migrations/0003_context_dispatch.sql
+var contextMigration string
+
+func (s *Store) Migrate(ctx context.Context) error {
+	if err := s.migrateBase(ctx); err != nil {
+		return err
+	}
+	if err := s.migrateContext(ctx); err != nil {
+		return err
+	}
+	return s.migrateCompileBudget(ctx)
+}
+func (s *Store) migrateContext(ctx context.Context) error {
+	return s.within(ctx, func(ctx context.Context, tx *sql.Tx, _ time.Time) error {
+		if _, err := tx.ExecContext(ctx, `SELECT pg_advisory_xact_lock(1786614101,hashtext($1))`, s.cfg.Schema); err != nil {
+			return err
+		}
+		var checksum string
+		err := tx.QueryRowContext(ctx, `SELECT checksum FROM `+s.table("fixture_migrations")+` WHERE version=3`).Scan(&checksum)
+		if err == nil {
+			if checksum != digest([]byte(contextMigration)) {
+				return errors.New("fixture context migration checksum mismatch")
+			}
+			return nil
+		}
+		if !errors.Is(err, sql.ErrNoRows) {
+			return err
+		}
+		if _, err = tx.ExecContext(ctx, fmt.Sprintf(contextMigration, s.table("fixture_context_inputs"), s.table("fixture_context_bindings"), s.table("fixture_context_dispatch"), s.table("fixture_context_publications"), s.table("fixture_context_failures"))); err != nil {
+			return err
+		}
+		_, err = tx.ExecContext(ctx, `INSERT INTO `+s.table("fixture_migrations")+` VALUES(3,$1)`, digest([]byte(contextMigration)))
+		return err
+	})
+}
+
+type ContextPolicyInstaller interface {
+	InstallPolicy(context.Context, *c.SubjectBinding, content.FixturePolicy, int64) (content.PolicyChange, error)
+}
+type ContextDispatcher struct {
+	bindingDecode  bindingDecodeMemo
+	Store          *Store
+	TrustedSubject v.SubjectBinding
+	TrustedUntil   time.Time
+	ContentOwner   c.OwnerRef
+	Policies       ContextPolicyInstaller
+}
+
+// ContextComponent is the fixture consumer's exact public send boundary.
+type ContextComponent interface {
+	Decide(context.Context, []byte, *v.SubjectBinding) (v.TransportOutcome, error)
+	GetCommand(context.Context, []byte, *v.SubjectBinding) (v.CommandGetResponse, error)
+}
+
+type ContextObservation struct {
+	BindingPresent  bool
+	DispatchPresent bool
+	Bundle          *compiler.Bundle
+	Status          string
+	Attempts        int
+	Generation      int64
+	Receipt         *v.CommandReceipt
+	InputRevision   v.Revision
+}
+
+func (d *ContextDispatcher) trusted(ctx context.Context, tx *sql.Tx) error {
+	if d.Store == nil || d.Policies == nil || d.TrustedUntil.IsZero() {
+		return engine.ErrForbidden
+	}
+	var now time.Time
+	if err := tx.QueryRowContext(ctx, `SELECT clock_timestamp()`).Scan(&now); err != nil {
+		return err
+	}
+	if !now.Before(d.TrustedUntil) {
+		return engine.ErrForbidden
+	}
+	return nil
+}
+func (d *ContextDispatcher) InstallInput(ctx context.Context, id string, in compiler.Input, expected v.Revision) error {
+	if id == "" || len(id) > 128 || in.Owner != d.Store.owner {
+		return engine.ErrForbidden
+	}
+	if err := compiler.ValidateCompileIdentity(in); err != nil {
+		return err
+	}
+	if err := compiler.ValidateInput(in); err != nil && !errors.Is(err, compiler.ErrOverflow) {
+		return err
+	}
+	body, err := jsonBytes(in)
+	if err != nil {
+		return err
+	}
+	return d.Store.within(ctx, func(ctx context.Context, tx *sql.Tx, _ time.Time) error {
+		if err := d.trusted(ctx, tx); err != nil {
+			return err
+		}
+		if _, err := tx.ExecContext(ctx, `SELECT pg_advisory_xact_lock(1786614104,hashtext($1))`, d.Store.cfg.Schema+"/"+id); err != nil {
+			return err
+		}
+		// All budget consumers use the same root-before-input row lock order.
+		root, err := d.lockCompileBudget(ctx, tx, in.Request.Payload.SnapshotRef)
+		if err != nil && !errors.Is(err, sql.ErrNoRows) {
+			return err
+		}
+		var prior []byte
+		var revision v.Revision
+		err = tx.QueryRowContext(ctx, `SELECT revision,body FROM `+d.Store.table("fixture_context_inputs")+` WHERE input_id=$1 FOR UPDATE`, id).Scan(&revision, &prior)
+		if err == nil {
+			if bytes.Equal(body, prior) {
+				if root == nil {
+					return &compiler.BudgetError{Reason: compiler.BudgetHistoricalUnknown}
+				}
+				return d.trusted(ctx, tx)
+			}
+			if revision != expected {
+				return compiler.ErrChanged
+			}
+		} else if !errors.Is(err, sql.ErrNoRows) {
+			return err
+		} else if expected != "0" {
+			return compiler.ErrChanged
+		}
+		if err = d.installCompileBudget(ctx, tx, in, root, prior != nil); err != nil {
+			return err
+		}
+		n, ok := new(big.Int).SetString(string(expected), 10)
+		if !ok {
+			return engine.ErrForbidden
+		}
+		n.Add(n, big.NewInt(1))
+		if n.String() != string(in.Revision) {
+			return compiler.ErrChanged
+		}
+		if err = d.trusted(ctx, tx); err != nil {
+			return err
+		}
+		_, err = tx.ExecContext(ctx, `INSERT INTO `+d.Store.table("fixture_context_inputs")+`(input_id,revision,body)VALUES($1,$2,$3)ON CONFLICT(input_id)DO UPDATE SET revision=excluded.revision,body=excluded.body`, id, in.Revision, body)
+		return err
+	})
+}
+func (d *ContextDispatcher) input(ctx context.Context, tx *sql.Tx, id string) (compiler.Input, error) {
+	var in compiler.Input
+	var body []byte
+	err := tx.QueryRowContext(ctx, `SELECT body FROM `+d.Store.table("fixture_context_inputs")+` WHERE input_id=$1 FOR UPDATE`, id).Scan(&body)
+	if err != nil {
+		return in, err
+	}
+	err = closedJSON(body, &in)
+	return in, err
+}
+func (d *ContextDispatcher) ObserveInput(ctx context.Context, id string) (compiler.Input, error) {
+	var out compiler.Input
+	err := d.Store.within(ctx, func(ctx context.Context, tx *sql.Tx, _ time.Time) error {
+		if err := d.trusted(ctx, tx); err != nil {
+			return err
+		}
+		var err error
+		out, err = d.input(ctx, tx, id)
+		if err != nil {
+			return err
+		}
+		return d.trusted(ctx, tx)
+	})
+	return out, err
+}
+func withoutBytes(b compiler.Bundle) compiler.Bundle {
+	b.Mandatory.Bytes = nil
+	b.Shell.Bytes = nil
+	b.Manifest.Bytes = nil
+	b.Lock.Bytes = nil
+	return b
+}
+func (d *ContextDispatcher) Bind(ctx context.Context, id string, in compiler.Input, b compiler.Bundle) error {
+	snapKey, err := key(in.Request.Payload.SnapshotRef)
+	if err != nil {
+		return err
+	}
+	permission := adapter.PermissionFor(in, d.TrustedSubject)
+	pkey, err := permissionKey(permission)
+	if err != nil {
+		return err
+	}
+	decisionKey, err := key(in.Request.Target)
+	if err != nil {
+		return err
+	}
+	binding := adapter.Binding{Input: in, Bundle: withoutBytes(b)}
+	body, err := jsonBytes(binding)
+	if err != nil {
+		return err
+	}
+	raw, err := v.Encode(in.Request)
+	if err != nil {
+		return err
+	}
+	deadline, err := time.Parse("2006-01-02T15:04:05.000000Z", string(in.Request.Payload.Deadline))
+	if err != nil {
+		return err
+	}
+	return d.Store.within(ctx, func(ctx context.Context, tx *sql.Tx, _ time.Time) error {
+		if err := d.trusted(ctx, tx); err != nil {
+			return err
+		}
+		current, err := d.input(ctx, tx, id)
+		if err != nil {
+			return err
+		}
+		if !reflect.DeepEqual(current, in) || current.Control.State != "running" {
+			return compiler.ErrChanged
+		}
+		var old []byte
+		err = tx.QueryRowContext(ctx, `SELECT body FROM `+d.Store.table("fixture_context_bindings")+` WHERE snapshot_key=$1 FOR UPDATE`, snapKey).Scan(&old)
+		if err == nil {
+			if !bytes.Equal(old, body) {
+				return engine.ErrPublicationConflict
+			}
+			return d.trusted(ctx, tx)
+		}
+		if !errors.Is(err, sql.ErrNoRows) {
+			return err
+		}
+		if err = d.trusted(ctx, tx); err != nil {
+			return err
+		}
+		var now time.Time
+		if err = tx.QueryRowContext(ctx, `SELECT clock_timestamp()`).Scan(&now); err != nil {
+			return err
+		}
+		if !now.Before(deadline) {
+			return engine.ErrForbidden
+		}
+		if _, err = tx.ExecContext(ctx, `INSERT INTO `+d.Store.table("fixture_context_bindings")+`(snapshot_key,input_id,input_revision,permission_key,decision_key,body)VALUES($1,$2,$3,$4,$5,$6)`, snapKey, id, in.Revision, pkey, decisionKey, body); err != nil {
+			return err
+		}
+		// This is the fixture's bounded persistent dispatch Job. It owns its original
+		// due, deadline, attempts, lease and generation in the same binding Tx.
+		_, err = tx.ExecContext(ctx, `INSERT INTO `+d.Store.table("fixture_context_dispatch")+`(snapshot_key,raw,state,due,deadline)VALUES($1,$2,'queued',$3,$4)`, snapKey, raw, now, deadline)
+		return err
+	})
+}
+func (d *ContextDispatcher) binding(ctx context.Context, tx *sql.Tx, column string, value string) (adapter.Binding, string, error) {
+	var out adapter.Binding
+	var body []byte
+	var id string
+	err := tx.QueryRowContext(ctx, `SELECT input_id,body FROM `+d.Store.table("fixture_context_bindings")+` WHERE `+column+`=$1 FOR UPDATE`, value).Scan(&id, &body)
+	if err != nil {
+		return out, id, err
+	}
+	out, err = d.bindingDecode.decode(bindingDecodeScope{store: d.Store, owner: d.Store.owner, schema: d.Store.cfg.Schema}, id, column, value, body, closedJSON)
+	if err != nil {
+		return out, id, err
+	}
+	current, err := d.input(ctx, tx, id)
+	if err != nil {
+		return out, id, err
+	}
+	if !reflect.DeepEqual(current, out.Input) || current.Control.State != "running" {
+		return out, id, engine.ErrForbidden
+	}
+	if err = d.trusted(ctx, tx); err != nil {
+		return out, id, err
+	}
+	return out, id, nil
+}
+func (d *ContextDispatcher) Binding(ctx context.Context, ref v.SnapshotRef, p engine.Permission, purpose string) (adapter.Binding, error) {
+	var out adapter.Binding
+	k, err := key(ref)
+	if err != nil {
+		return out, err
+	}
+	err = d.Store.within(ctx, func(ctx context.Context, tx *sql.Tx, _ time.Time) error {
+		if err := d.trusted(ctx, tx); err != nil {
+			return err
+		}
+		var err error
+		out, _, err = d.binding(ctx, tx, "snapshot_key", k)
+		if err != nil {
+			return err
+		}
+		if !reflect.DeepEqual(adapter.PermissionFor(out.Input, d.TrustedSubject), p) {
+			return engine.ErrForbidden
+		}
+		return d.trusted(ctx, tx)
+	})
+	return out, err
+}
+func (d *ContextDispatcher) Current(ctx context.Context, p engine.Permission, purpose string) (adapter.Binding, error) {
+	var out adapter.Binding
+	if purpose != "publish" && purpose != "rule.input" && purpose != "fixture.lock" {
+		return out, engine.ErrForbidden
+	}
+	k, err := permissionKey(p)
+	if err != nil {
+		return out, err
+	}
+	err = d.Store.within(ctx, func(ctx context.Context, tx *sql.Tx, _ time.Time) error {
+		if err := d.trusted(ctx, tx); err != nil {
+			return err
+		}
+		var err error
+		out, _, err = d.binding(ctx, tx, "permission_key", k)
+		if err != nil {
+			return err
+		}
+		if !reflect.DeepEqual(adapter.PermissionFor(out.Input, d.TrustedSubject), p) {
+			return engine.ErrForbidden
+		}
+		return d.trusted(ctx, tx)
+	})
+	return out, err
+}
+func (d *ContextDispatcher) Authorize(ctx context.Context, subject v.SubjectBinding, ref v.DecisionRef, purpose string, payload *v.DecisionDecidePayload) (engine.Permission, error) {
+	var out engine.Permission
+	if !reflect.DeepEqual(subject, d.TrustedSubject) || purpose != "decide" && purpose != "start" {
+		return out, engine.ErrForbidden
+	}
+	k, err := key(ref)
+	if err != nil {
+		return out, err
+	}
+	err = d.Store.within(ctx, func(ctx context.Context, tx *sql.Tx, _ time.Time) error {
+		if err := d.trusted(ctx, tx); err != nil {
+			return err
+		}
+		bound, _, err := d.binding(ctx, tx, "decision_key", k)
+		if err != nil {
+			return err
+		}
+		if payload == nil || !reflect.DeepEqual(*payload, bound.Input.Request.Payload) {
+			return engine.ErrForbidden
+		}
+		out = adapter.PermissionFor(bound.Input, subject)
+		return d.trusted(ctx, tx)
+	})
+	return out, err
+}
+func (d *ContextDispatcher) StagePublication(ctx context.Context, in compiler.Input, request c.ContentPutRequest) ([]byte, error) {
+	raw, err := c.Encode(request)
+	if err != nil {
+		return nil, err
+	}
+	commandKey, err := key(v.CommandRef{Owner: v.OwnerRef{TenantID: v.ID(request.Target.TenantID), OwnerID: v.ID(request.Target.OwnerID)}, CommandID: v.ID(request.CommandID)})
+	if err != nil {
+		return nil, err
+	}
+	var original []byte
+	err = d.Store.within(ctx, func(ctx context.Context, tx *sql.Tx, _ time.Time) error {
+		if err := d.trusted(ctx, tx); err != nil {
+			return err
+		}
+		var id string
+		err := tx.QueryRowContext(ctx, `SELECT input_id FROM `+d.Store.table("fixture_context_inputs")+` WHERE revision=$1 AND body=$2 FOR UPDATE`, in.Revision, mustJSON(in)).Scan(&id)
+		if errors.Is(err, sql.ErrNoRows) {
+			return engine.ErrForbidden
+		}
+		if err != nil {
+			return err
+		}
+		current, err := d.input(ctx, tx, id)
+		if err != nil {
+			return err
+		}
+		if !reflect.DeepEqual(current, in) || current.Control.State != "running" {
+			return compiler.ErrChanged
+		}
+		if _, err = tx.ExecContext(ctx, `SELECT pg_advisory_xact_lock(1786614105,hashtext($1))`, d.Store.cfg.Schema+"/"+commandKey); err != nil {
+			return err
+		}
+		err = tx.QueryRowContext(ctx, `SELECT raw FROM `+d.Store.table("fixture_context_publications")+` WHERE command_key=$1 FOR UPDATE`, commandKey).Scan(&original)
+		if err == nil {
+			if !bytes.Equal(original, raw) {
+				return engine.ErrPublicationConflict
+			}
+			return d.trusted(ctx, tx)
+		}
+		if !errors.Is(err, sql.ErrNoRows) {
+			return err
+		}
+		if err = d.trusted(ctx, tx); err != nil {
+			return err
+		}
+		_, err = tx.ExecContext(ctx, `INSERT INTO `+d.Store.table("fixture_context_publications")+`(command_key,input_id,input_revision,digest,raw)VALUES($1,$2,$3,$4,$5)`, commandKey, id, in.Revision, digest(raw), raw)
+		original = raw
+		return err
+	})
+	return original, err
+}
+func mustJSON(in compiler.Input) []byte { body, _ := jsonBytes(in); return body }
+func (d *ContextDispatcher) PrepareContent(ctx context.Context, in compiler.Input, ref c.ContentRef) error {
+	if ref.Owner != d.ContentOwner || in.Purpose == "" {
+		return engine.ErrForbidden
+	}
+	subject := c.SubjectBinding{TenantID: c.ID(d.TrustedSubject.TenantID), SubjectID: c.ID(d.TrustedSubject.SubjectID), DelegationChain: []c.DelegatedSubject{}}
+	for _, s := range d.TrustedSubject.DelegationChain {
+		subject.DelegationChain = append(subject.DelegationChain, c.DelegatedSubject{TenantID: c.ID(s.TenantID), SubjectID: c.ID(s.SubjectID)})
+	}
+	until, err := time.Parse("2006-01-02T15:04:05.000000Z", string(in.Request.Payload.Deadline))
+	if err != nil {
+		return err
+	}
+	retain, err := time.Parse("2006-01-02T15:04:05.000000Z", string(in.RetainUntil))
+	if err != nil {
+		return err
+	}
+	_, err = d.Policies.InstallPolicy(ctx, &subject, content.FixturePolicy{Ref: ref, Subject: subject, Purpose: in.Purpose, Revision: 1, ValidUntil: until, RetainUntil: retain, Read: true, Process: true, Save: true, Disclose: true}, 0)
+	return err
+}
+func (d *ContextDispatcher) RecordFailure(ctx context.Context, id string, revision v.Revision, reason string) error {
+	if reason != "context_overflow" && reason != "context_changed" {
+		return engine.ErrUnavailable
+	}
+	return d.Store.within(ctx, func(ctx context.Context, tx *sql.Tx, _ time.Time) error {
+		if err := d.trusted(ctx, tx); err != nil {
+			return err
+		}
+		in, err := d.input(ctx, tx, id)
+		if err != nil {
+			return err
+		}
+		if in.Revision != revision {
+			return compiler.ErrChanged
+		}
+		_, err = tx.ExecContext(ctx, `INSERT INTO `+d.Store.table("fixture_context_failures")+`(input_id,input_revision,reason)VALUES($1,$2,$3)ON CONFLICT(input_id,input_revision)DO NOTHING`, id, revision, reason)
+		return err
+	})
+}
+
+func (d *ContextDispatcher) Observe(ctx context.Context, id string) (ContextObservation, error) {
+	var out ContextObservation
+	err := d.Store.within(ctx, func(ctx context.Context, tx *sql.Tx, _ time.Time) error {
+		if err := d.trusted(ctx, tx); err != nil {
+			return err
+		}
+		in, err := d.input(ctx, tx, id)
+		if err != nil {
+			return err
+		}
+		out.InputRevision = in.Revision
+		out.Status = "input"
+		snapshotKey, err := key(in.Request.Payload.SnapshotRef)
+		if err != nil {
+			return err
+		}
+		var body []byte
+		var boundID string
+		var boundRevision v.Revision
+		err = tx.QueryRowContext(ctx, `SELECT input_id,input_revision,body FROM `+d.Store.table("fixture_context_bindings")+` WHERE snapshot_key=$1 FOR SHARE`, snapshotKey).Scan(&boundID, &boundRevision, &body)
+		if err == nil {
+			out.BindingPresent = true
+			var bound adapter.Binding
+			if err = closedJSON(body, &bound); err != nil {
+				return err
+			}
+			out.Bundle = &bound.Bundle
+			if boundID != id || boundRevision != in.Revision {
+				out.Status = "current_input_changed"
+			}
+		} else if !errors.Is(err, sql.ErrNoRows) {
+			return err
+		}
+		var receipt []byte
+		var dispatchState string
+		err = tx.QueryRowContext(ctx, `SELECT state,attempts,generation,receipt FROM `+d.Store.table("fixture_context_dispatch")+` WHERE snapshot_key=$1 FOR SHARE`, snapshotKey).Scan(&dispatchState, &out.Attempts, &out.Generation, &receipt)
+		if err == nil {
+			out.DispatchPresent = true
+			if out.Status != "current_input_changed" {
+				out.Status = dispatchState
+			}
+			if receipt != nil {
+				var fixed v.CommandReceipt
+				if err = closedJSON(receipt, &fixed); err != nil {
+					return err
+				}
+				out.Receipt = &fixed
+			}
+		} else if !errors.Is(err, sql.ErrNoRows) {
+			return err
+		}
+		// An orphaned binding or dispatch is explicitly visible. An empty JOIN is
+		// never interpreted as both original responsibilities being absent.
+		if out.BindingPresent != out.DispatchPresent {
+			out.Status = "inconsistent"
+		}
+		if !out.BindingPresent && !out.DispatchPresent {
+			var reason string
+			err = tx.QueryRowContext(ctx, `SELECT reason FROM `+d.Store.table("fixture_context_failures")+` WHERE input_id=$1 AND input_revision=$2`, id, in.Revision).Scan(&reason)
+			if err == nil {
+				out.Status = reason
+			} else if !errors.Is(err, sql.ErrNoRows) {
+				return err
+			}
+		}
+		return d.trusted(ctx, tx)
+	})
+	return out, err
+}
+
+// Step reconciles the original receipt before considering another send. A
+// finite claim is persisted in the fixture Job; all Component I/O is outside Tx.
+func (d *ContextDispatcher) Step(ctx context.Context, component ContextComponent) (bool, error) {
+	if component == nil {
+		return false, engine.ErrUnavailable
+	}
+	var snap string
+	var raw []byte
+	var binding adapter.Binding
+	var attempts int
+	var generation int64
+	err := d.Store.within(ctx, func(ctx context.Context, tx *sql.Tx, _ time.Time) error {
+		if err := d.trusted(ctx, tx); err != nil {
+			return err
+		}
+		var body []byte
+		err := tx.QueryRowContext(ctx, `SELECT q.snapshot_key,q.raw,b.body,q.attempts,q.generation FROM `+d.Store.table("fixture_context_dispatch")+` q JOIN `+d.Store.table("fixture_context_bindings")+` b USING(snapshot_key) WHERE q.state IN ('queued','unknown') AND q.due<=clock_timestamp() AND (q.lease_until IS NULL OR q.lease_until<=clock_timestamp()) ORDER BY q.due,q.snapshot_key LIMIT 1 FOR UPDATE OF q SKIP LOCKED`).Scan(&snap, &raw, &body, &attempts, &generation)
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil
+		}
+		if err != nil {
+			return err
+		}
+		if err = closedJSON(body, &binding); err != nil {
+			return err
+		}
+		if err = d.trusted(ctx, tx); err != nil {
+			return err
+		}
+		generation++
+		_, err = tx.ExecContext(ctx, `UPDATE `+d.Store.table("fixture_context_dispatch")+` SET generation=$2,lease_until=LEAST(deadline,clock_timestamp()+interval '5 seconds') WHERE snapshot_key=$1`, snap, generation)
+		return err
+	})
+	if err != nil || snap == "" {
+		return false, err
+	}
+	in := binding.Input
+	query, err := v.Encode(v.CommandGetRequest{ContractVersion: v.Version, Profile: "command", CommandID: "context-original-receipt", Target: v.CommandTarget{TenantID: in.Request.Target.TenantID, OwnerID: in.Request.Target.OwnerID, Kind: "command", ID: in.Request.CommandID}, Method: "command.get", AcceptBefore: v.Time(d.TrustedUntil.UTC().Format("2006-01-02T15:04:05.000000Z")), Payload: v.CommandGetPayload{CommandRef: v.CommandRef{Owner: v.OwnerRef{TenantID: in.Request.Target.TenantID, OwnerID: in.Request.Target.OwnerID}, CommandID: in.Request.CommandID}}})
+	if err != nil {
+		return true, err
+	}
+	if attempts > 0 {
+		response, e := component.GetCommand(ctx, query, &d.TrustedSubject)
+		if e != nil {
+			return true, e
+		}
+		if found, ok := response.AsFound(); ok {
+			return true, d.finishDispatch(ctx, snap, generation, found.Receipt)
+		}
+		if _, ok := response.AsNotFound(); !ok {
+			return true, engine.ErrUnavailable
+		}
+	}
+	// Fresh current input and original execution deadline qualify the actual send.
+	allowed := false
+	err = d.Store.within(ctx, func(ctx context.Context, tx *sql.Tx, _ time.Time) error {
+		if err := d.trusted(ctx, tx); err != nil {
+			return err
+		}
+		var gen int64
+		var state string
+		var lease, deadline, now time.Time
+		if err := tx.QueryRowContext(ctx, `SELECT generation,state,lease_until,deadline FROM `+d.Store.table("fixture_context_dispatch")+` WHERE snapshot_key=$1 FOR UPDATE`, snap).Scan(&gen, &state, &lease, &deadline); err != nil {
+			return err
+		}
+		var id string
+		if err := tx.QueryRowContext(ctx, `SELECT input_id FROM `+d.Store.table("fixture_context_bindings")+` WHERE snapshot_key=$1`, snap).Scan(&id); err != nil {
+			return err
+		}
+		current, err := d.input(ctx, tx, id)
+		if err != nil {
+			return err
+		}
+		if err = tx.QueryRowContext(ctx, `SELECT clock_timestamp()`).Scan(&now); err != nil {
+			return err
+		}
+		if gen != generation || state != "queued" && state != "unknown" || !now.Before(lease) {
+			return engine.ErrForbidden
+		}
+		if !reflect.DeepEqual(current, in) || current.Control.State != "running" || !now.Before(deadline) || attempts >= 3 {
+			_, err = tx.ExecContext(ctx, `UPDATE `+d.Store.table("fixture_context_dispatch")+` SET state='closed',lease_until=NULL WHERE snapshot_key=$1`, snap)
+			return err
+		}
+		if err = d.trusted(ctx, tx); err != nil {
+			return err
+		}
+		_, err = tx.ExecContext(ctx, `UPDATE `+d.Store.table("fixture_context_dispatch")+` SET state='unknown',attempts=attempts+1 WHERE snapshot_key=$1`, snap)
+		allowed = err == nil
+		return err
+	})
+	if err != nil || !allowed {
+		return true, err
+	}
+	response, err := component.Decide(ctx, raw, &d.TrustedSubject)
+	if err != nil {
+		return true, err
+	}
+	received, ok := response.AsReceived()
+	if !ok {
+		return true, engine.ErrUnavailable
+	}
+	return true, d.finishDispatch(ctx, snap, generation, received.Receipt)
+}
+func (d *ContextDispatcher) finishDispatch(ctx context.Context, snap string, generation int64, receipt v.CommandReceipt) error {
+	raw, err := v.Encode(receipt)
+	if err != nil {
+		return err
+	}
+	return d.Store.within(ctx, func(ctx context.Context, tx *sql.Tx, _ time.Time) error {
+		if err := d.trusted(ctx, tx); err != nil {
+			return err
+		}
+		var prior []byte
+		var gen int64
+		if err := tx.QueryRowContext(ctx, `SELECT generation,receipt FROM `+d.Store.table("fixture_context_dispatch")+` WHERE snapshot_key=$1 FOR UPDATE`, snap).Scan(&gen, &prior); err != nil {
+			return err
+		}
+		if prior != nil {
+			if !bytes.Equal(prior, raw) {
+				return engine.ErrPublicationConflict
+			}
+			return nil
+		}
+		if gen != generation {
+			return engine.ErrForbidden
+		}
+		_, err := tx.ExecContext(ctx, `UPDATE `+d.Store.table("fixture_context_dispatch")+` SET state='received',receipt=$2,lease_until=NULL WHERE snapshot_key=$1`, snap, raw)
+		return err
+	})
+}
+
+var _ adapter.Access = (*ContextDispatcher)(nil)
+var _ compiler.CurrentInput = (*ContextDispatcher)(nil)
+var _ engine.Authority = (*ContextDispatcher)(nil)

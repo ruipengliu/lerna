@@ -1,0 +1,10 @@
+--- before-format/context_binding_decode.go
++++ formatted/context_binding_decode.go
+@@ -53,6 +53,7 @@
+ 	copy(out, in)
+ 	return out
+ }
++
+ // cloneInput owns every mutable field in the current typed Input, including
+ // optional Revision pointers nested in responsibility and request references.
+ func cloneInput(in compiler.Input) compiler.Input {

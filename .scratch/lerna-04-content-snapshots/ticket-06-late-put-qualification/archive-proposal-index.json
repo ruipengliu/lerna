@@ -1,0 +1,354 @@
+{
+  "status": "STATIC_PROPOSAL_ONLY_NO_REPO_ARCHIVE_COMMIT_OR_NATIVE",
+  "target_after_root_adoption": "/tmp/lerna-worktrees/content-snapshots-06/.scratch/lerna-04-content-snapshots/ticket-06-late-put-qualification",
+  "original_count": 27,
+  "planned_repo_count_with_readme_and_inventory": 29,
+  "current_source_manifest_absolute_path": "/tmp/lerna-04-ticket06-execution/late-put-formatted-26-manifest.json",
+  "manifest_sha256": "df707faeff172b1e817d124d8813da2ae9f1d1e3da90daf782263d3ddbbd47bc",
+  "current26_verified": [
+    {
+      "path": "conformance/internal/contentfixture/world.go",
+      "bytes": 6607,
+      "sha256": "3e38d89f988422eacfa1b6e22e25905cec1db246d418177e34eaf5758b6fc14d",
+      "snapshot_equal": true
+    },
+    {
+      "path": "conformance/internal/contentfixture/process_borrow.go",
+      "bytes": 4979,
+      "sha256": "ed46b35916b9e1577e4ca1e0ddaf411e3de9407b51cb6ed38f8425406766e972",
+      "snapshot_equal": true
+    },
+    {
+      "path": "conformance/component/content_process_recovery_test.go",
+      "bytes": 79561,
+      "sha256": "c9a098141d23cda9c40d210539384d7cfb17b0d6b4f0222c16d70577308ff7e5",
+      "snapshot_equal": true
+    },
+    {
+      "path": "domain/content/service.go",
+      "bytes": 33783,
+      "sha256": "ffefc916fa8e08e2a39f2264a12090eb7aa2ecf020b7da63e270aff3e925a477",
+      "snapshot_equal": true
+    },
+    {
+      "path": "domain/content/ports.go",
+      "bytes": 5618,
+      "sha256": "51066cd99f2c79e8a5fc3f7b336cb0706f161899361681c99f8e6feff5454f90",
+      "snapshot_equal": true
+    },
+    {
+      "path": "domain/content/lifecycle.go",
+      "bytes": 23932,
+      "sha256": "0708c4eb51e28ab9b7a3210981e408ae2310511e9728ee2bf46ba87fc0802699",
+      "snapshot_equal": true
+    },
+    {
+      "path": "domain/content/identity.go",
+      "bytes": 1533,
+      "sha256": "e093a7918be9af0aeaec08c62b472de1141314812a71e3da386583237bbf60f0",
+      "snapshot_equal": true
+    },
+    {
+      "path": "adapters/objectstore/local/store_linux.go",
+      "bytes": 10790,
+      "sha256": "ea678add4d594d5cdd8dbfa50d29684ba998686cf649c58c19313391da298fe0",
+      "snapshot_equal": true
+    },
+    {
+      "path": "adapters/postgres/content/store.go",
+      "bytes": 777,
+      "sha256": "e1da8da60b48d85c5d668ac88a0d33da3c824603b93bc01e5dd821def34fa69d",
+      "snapshot_equal": true
+    },
+    {
+      "path": "adapters/postgres/content/facts.go",
+      "bytes": 10970,
+      "sha256": "e56785902e481eafdaa7904f44fabc44770d77f3d605da93906df827fe8a42d5",
+      "snapshot_equal": true
+    },
+    {
+      "path": "conformance/internal/testkit/process/child.go",
+      "bytes": 10242,
+      "sha256": "edf4cdce78c92c0150d7075cecc02e742b84a55fd910b3cb25adec6079a3be25",
+      "snapshot_equal": true
+    },
+    {
+      "path": "conformance/internal/testkit/process/pipes.go",
+      "bytes": 3022,
+      "sha256": "93cc1bd3b23817e453817abc18988c39e4300fa252d74890531650f53096401d",
+      "snapshot_equal": true
+    },
+    {
+      "path": "conformance/component/content_publication_test.go",
+      "bytes": 8105,
+      "sha256": "8f762b685f7df3470e13b2e3d7c1a89026bb8d90e3bf6b9efb44257e400430e9",
+      "snapshot_equal": true
+    },
+    {
+      "path": "conformance/component/content_orphan_test.go",
+      "bytes": 6789,
+      "sha256": "1732b6f28a4f83c698035b33e6da09b6dc8ae779a8f6895a4953b24086e2ba9f",
+      "snapshot_equal": true
+    },
+    {
+      "path": "adapters/postgres/content/migrations/0001_content.sql",
+      "bytes": 3682,
+      "sha256": "00363b79dafb6eb1f373be9ef08e915fe23cc3db0fa55345e8ae6c051ce0c1ed",
+      "snapshot_equal": true
+    },
+    {
+      "path": "adapters/postgres/content/migrations/0002_source_policies.sql",
+      "bytes": 2585,
+      "sha256": "99519565ff1146d7cfc468413b449538c6ba71335e86edc8fd447a3bbff922a8",
+      "snapshot_equal": true
+    },
+    {
+      "path": "adapters/postgres/content/migrations/0003_body_cleanup.sql",
+      "bytes": 2497,
+      "sha256": "92739b464b8661e26befe092028f20802b586e42bf1578bd9811dcf240c5b58f",
+      "snapshot_equal": true
+    },
+    {
+      "path": "domain/content/management.go",
+      "bytes": 37419,
+      "sha256": "c6fa3aa3dfee98ab82b873aa9d37e4c4725133390147e2d0aff04be49e3606ad",
+      "snapshot_equal": true
+    },
+    {
+      "path": "domain/content/policy_cleanup.go",
+      "bytes": 9846,
+      "sha256": "b11a31ac64bd405a194d4a9fc393f3f4065e6d986969a6fed26742557d267730",
+      "snapshot_equal": true
+    },
+    {
+      "path": "domain/content/orphan.go",
+      "bytes": 532,
+      "sha256": "065e383d7ee4a5f44a861edabb159c591a17fe4dd71637dc2935799681d7ad99",
+      "snapshot_equal": true
+    },
+    {
+      "path": "domain/content/erasure.go",
+      "bytes": 1293,
+      "sha256": "2cc7fbb842ebd8ab5c64b5aea147e51c679727bee2f52c11500aa4fe12d45e9b",
+      "snapshot_equal": true
+    },
+    {
+      "path": "adapters/postgres/content/management.go",
+      "bytes": 20480,
+      "sha256": "83012672bfb97efd82d63516dfb20437172db736b5f34e758e8806287fd1ba62",
+      "snapshot_equal": true
+    },
+    {
+      "path": "adapters/postgres/content/policy_cleanup.go",
+      "bytes": 7113,
+      "sha256": "839ef482fb52736a8d214d7bfef0b12eeb359e571117bdcc94c09d59dcb06548",
+      "snapshot_equal": true
+    },
+    {
+      "path": "adapters/postgres/content/lifecycle.go",
+      "bytes": 13952,
+      "sha256": "ad64ffe1dc4c86af93430bb8f6c4a9f0159a3cf539c40aeef233afff0aea640e",
+      "snapshot_equal": true
+    },
+    {
+      "path": "adapters/postgres/content/policy.go",
+      "bytes": 4834,
+      "sha256": "3cb31490a70e0141daa24b4766295ea1a57598194877eda6f19e58371a2d45d9",
+      "snapshot_equal": true
+    },
+    {
+      "path": "adapters/objectstore/local/erasure_linux.go",
+      "bytes": 10068,
+      "sha256": "5673f9b8bebdc96fd9f3d551d8dd31850b3b96c54e9363fcf7780c05be558bb4",
+      "snapshot_equal": true
+    }
+  ],
+  "originals": [
+    {
+      "original_absolute_path": "/tmp/lerna-04-ticket06-execution/late-put-format.log",
+      "proposed_archive_name": "late-put-format.log",
+      "bytes": 200,
+      "sha256": "28d853ec2ea8198fb33f57cdc0dfc9106078d80a32c6665d41ff34b9881a8564",
+      "actual_raw_lines": 1
+    },
+    {
+      "original_absolute_path": "/tmp/lerna-04-ticket06-execution/late-put-format-prelaunch.json",
+      "proposed_archive_name": "late-put-format-prelaunch.json",
+      "bytes": 306,
+      "sha256": "47750538f3aec4cf25a3e4dc5b3b2ba4d892766afdfa5f62384ac918d92e9c41"
+    },
+    {
+      "original_absolute_path": "/tmp/lerna-04-ticket06-execution/late-put-format-outcome.json",
+      "proposed_archive_name": "late-put-format-outcome.json",
+      "bytes": 233,
+      "sha256": "e32067900da493caf46242d13ceb93173ad1b6907cde30d81dc89088f2763087"
+    },
+    {
+      "original_absolute_path": "/tmp/lerna-04-ticket06-execution/late-put-normal-control.log",
+      "proposed_archive_name": "late-put-normal-control.log",
+      "bytes": 964,
+      "sha256": "84b8f0fcc5c6e4248a66c450e254d3a6a3cdb1be6f4f1f9d4d9d20936fe38eb2",
+      "actual_raw_lines": 10
+    },
+    {
+      "original_absolute_path": "/tmp/lerna-04-ticket06-execution/late-put-normal-control-prelaunch.json",
+      "proposed_archive_name": "late-put-normal-control-prelaunch.json",
+      "bytes": 628,
+      "sha256": "a9cd42d0d321a0dbf0cd72bb16807b4ad5ab621489cb2fb991ee1afb6553a54d"
+    },
+    {
+      "original_absolute_path": "/tmp/lerna-04-ticket06-execution/late-put-normal-control-outcome.json",
+      "proposed_archive_name": "late-put-normal-control-outcome.json",
+      "bytes": 241,
+      "sha256": "1b3e8e85c744c4fbfef521d36e7e02c1b612a0555ab20ed8a87fea9ab6b78cd3"
+    },
+    {
+      "original_absolute_path": "/tmp/lerna-04-ticket06-execution/late-put-original-fence-fault.log",
+      "proposed_archive_name": "late-put-original-fence-fault.log",
+      "bytes": 1152,
+      "sha256": "7f5120c092c9488272a1d2ba8b978927588fa582a0a6ff2525cd2ad8e014b9e7",
+      "actual_raw_lines": 11
+    },
+    {
+      "original_absolute_path": "/tmp/lerna-04-ticket06-execution/late-put-original-fence-fault-prelaunch.json",
+      "proposed_archive_name": "late-put-original-fence-fault-prelaunch.json",
+      "bytes": 650,
+      "sha256": "6b71fa18302028d0dd492af259bd3f99c8b55113ced9228862733762ff3ec552"
+    },
+    {
+      "original_absolute_path": "/tmp/lerna-04-ticket06-execution/late-put-original-fence-fault-outcome.json",
+      "proposed_archive_name": "late-put-original-fence-fault-outcome.json",
+      "bytes": 247,
+      "sha256": "707294ba9d809795b884a28cd391bf67132d1a11071510e386eb5d6700d84c1b"
+    },
+    {
+      "original_absolute_path": "/tmp/lerna-04-ticket06-execution/late-put-paired-race.log",
+      "proposed_archive_name": "late-put-paired-race.log",
+      "bytes": 1680,
+      "sha256": "74ae4aab4a89a2801cb73cdbb73ac10892c5adfcec821f665f0e1df869becb1e",
+      "actual_raw_lines": 16
+    },
+    {
+      "original_absolute_path": "/tmp/lerna-04-ticket06-execution/late-put-paired-race-prelaunch.json",
+      "proposed_archive_name": "late-put-paired-race-prelaunch.json",
+      "bytes": 621,
+      "sha256": "7c9ed85fc79781e2f886a8fa3b0e3b4af21a26eb265856e72a1d03dae26ef72a"
+    },
+    {
+      "original_absolute_path": "/tmp/lerna-04-ticket06-execution/late-put-paired-race-outcome.json",
+      "proposed_archive_name": "late-put-paired-race-outcome.json",
+      "bytes": 238,
+      "sha256": "503e67ae48c5ecd298134c1a06cf55d45a29c321b95ee5d5eaef6c51929014fa"
+    },
+    {
+      "original_absolute_path": "/tmp/lerna-04-ticket06-execution/late-put-format-facts.json",
+      "proposed_archive_name": "late-put-format-facts.json",
+      "bytes": 800,
+      "sha256": "39dc33c400f02af7a283f6125cc2ddaacc66fd699a3adcbd6518374371e203af"
+    },
+    {
+      "original_absolute_path": "/tmp/lerna-04-ticket06-execution/late-put-format-only.diff",
+      "proposed_archive_name": "late-put-format-only.diff",
+      "bytes": 12295,
+      "sha256": "962c4d554015240c2af9a1fb0907b8e344768888a9acc9a86dbec07f17e14584"
+    },
+    {
+      "original_absolute_path": "/tmp/lerna-04-ticket06-execution/late-put-normal-postchecks.json",
+      "proposed_archive_name": "late-put-normal-postchecks.json",
+      "bytes": 7584,
+      "sha256": "f7681e0cb54f2352b9e79b5bb2993ea77d675c8bdaeebdfd184c233265952219"
+    },
+    {
+      "original_absolute_path": "/tmp/lerna-04-ticket06-execution/late-put-fault-postchecks.json",
+      "proposed_archive_name": "late-put-fault-postchecks.json",
+      "bytes": 6821,
+      "sha256": "033523b2ef2780c1f8409b20a64b46fa54826326e1687fd1c21a3fff7e5b940e"
+    },
+    {
+      "original_absolute_path": "/tmp/lerna-04-ticket06-execution/late-put-race-postchecks.json",
+      "proposed_archive_name": "late-put-race-postchecks.json",
+      "bytes": 7274,
+      "sha256": "4690cc5ca99cbc14131c5787b86b0aedc6b229c56c9f7b28e987ff65fe47b998"
+    },
+    {
+      "original_absolute_path": "/tmp/lerna-04-ticket06-execution/late-put-normal-release.json",
+      "proposed_archive_name": "late-put-normal-release.json",
+      "bytes": 1245,
+      "sha256": "d44d6bdb670c9a8fc915253abf1d44750aec4d66d63856c111bac2ae0f40e0a8"
+    },
+    {
+      "original_absolute_path": "/tmp/lerna-04-ticket06-execution/late-put-fault-release.json",
+      "proposed_archive_name": "late-put-fault-release.json",
+      "bytes": 1252,
+      "sha256": "2efb8ee9d14a3a4e1dfd9de3d47b838e0d08968e2961acdd57570c6fb2f93d17"
+    },
+    {
+      "original_absolute_path": "/tmp/lerna-04-ticket06-execution/late-put-race-release.json",
+      "proposed_archive_name": "late-put-race-release.json",
+      "bytes": 1248,
+      "sha256": "653b33b0bcea714baab47d481fa3bee9a0f35cf33d497f753791d8d179620771"
+    },
+    {
+      "original_absolute_path": "/tmp/lerna-04-ticket06-execution/late-put-formatted-26-manifest.json",
+      "proposed_archive_name": "late-put-formatted-26-manifest.json",
+      "bytes": 6573,
+      "sha256": "df707faeff172b1e817d124d8813da2ae9f1d1e3da90daf782263d3ddbbd47bc"
+    },
+    {
+      "original_absolute_path": "/tmp/lerna-04-ticket06-late-put-static/before-qualified-26-manifest.json",
+      "proposed_archive_name": "before-qualified-26-manifest.json",
+      "bytes": 6305,
+      "sha256": "bbc855b582b9ee1ff30e7fca018f517b345abaec6befc83d6a71ccbcc060cca4"
+    },
+    {
+      "original_absolute_path": "/tmp/lerna-04-ticket06-late-put-static/candidate-unformatted-26-manifest.json",
+      "proposed_archive_name": "candidate-unformatted-26-manifest.json",
+      "bytes": 6300,
+      "sha256": "03551639d599bc12061467c03f5e205637f3f0ab4254dad139fec1bf8dbd5f8e"
+    },
+    {
+      "original_absolute_path": "/tmp/lerna-04-ticket06-late-put-static/late-put-only.diff",
+      "proposed_archive_name": "late-put-only.diff",
+      "bytes": 29427,
+      "sha256": "3e121d000f653d1ba985d4c09a2e7595666c1dbd134b82a6d89198d78b08dadd"
+    },
+    {
+      "original_absolute_path": "/tmp/lerna-04-ticket06-late-put-static/adopted-decision.md",
+      "proposed_archive_name": "adopted-decision.md",
+      "bytes": 6852,
+      "sha256": "794e8f999735b1a62131a61bf2a6fb9db24cc094730d56595687d9cbeab110d1"
+    },
+    {
+      "original_absolute_path": "/tmp/lerna-04-ticket06-late-put-static/source-commands.json",
+      "proposed_archive_name": "source-commands.json",
+      "bytes": 9168,
+      "sha256": "7f92447b27e57946e47da848cb9cfbcc9019a3d75df61bf55a9af6657a300d5f"
+    },
+    {
+      "original_absolute_path": "/tmp/lerna-06-late-put-archive-proposal/ledger-166-through-193.log",
+      "proposed_archive_name": "ledger-166-through-193.log",
+      "bytes": 4484,
+      "sha256": "86e1dcdb841f28c5ac93110dcb7f33a07a4d0441732a92f0c75e90f073a696eb"
+    }
+  ],
+  "ledger_original_intervals": [
+    [
+      166,
+      174
+    ],
+    [
+      175,
+      181
+    ],
+    [
+      182,
+      193
+    ]
+  ],
+  "ledger_join_equals_original_166_through_193": true,
+  "no_binary_or_repeated_source_snapshots": true,
+  "reconstruction": "base qualified source Git c11fd2092875417d039914f8ecbd083a7a846d3a + original late-put-only.diff + original late-put-format-only.diff; current26 pins/snapshot independently preserved outside repo",
+  "older_source_archive_and_eight_unknown_unchanged": true,
+  "affected_old5_on_current_producer_still_pending": true,
+  "whole_ticket_status": "claimed"
+}

@@ -1,0 +1,24 @@
+{
+  "observed_utc": "2026-10-05T12:13:18.451438+00:00",
+  "original_and_copy_exact_files": 27,
+  "actual_native_count": 4,
+  "root_FULL_raw_lines": [
+    1,
+    10,
+    11,
+    16
+  ],
+  "raw_lines_total": 38,
+  "root_FULL_unformatted_and_format_only_diffs": true,
+  "independent_current26_and_formatted_snapshot_verified": true,
+  "other25_equal_c11": true,
+  "root_independent_actualgroups_absent_at_each_qualification": true,
+  "original_ledger166_through193_exact": true,
+  "native_firstClose_and_Q_from_actual_tests": "original actual Put-return and dual firstClose/Wait/Stop beforeQ; actual normal/fault/race case results retained",
+  "new_UNKNOWN_from_this_vertical": false,
+  "original8firstClose_UNKNOWN_not_backfilled": true,
+  "PG_catalog_audit_not_executed": true,
+  "old5_currentproducer_regressions_pending": true,
+  "adopted_final_scope_sha256": "f734ff2e478a1a9ff4c6ac556ca865f6210740b8406b797606fad672336a9e41",
+  "ticket06_not_exited": true
+}

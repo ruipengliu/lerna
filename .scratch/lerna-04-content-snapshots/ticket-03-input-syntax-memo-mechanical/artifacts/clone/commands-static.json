@@ -1,0 +1,46 @@
+{
+  "STATIC_only_no_native_grant": true,
+  "workdir": "/tmp/lerna-worktrees/content-snapshots-03",
+  "locked_environment": "source /workspace/.lerna-env/env.sh; GOTOOLCHAIN=local GOFLAGS=-mod=readonly",
+  "supervisor": "/workspace/lerna-content-03-137311247276/run-native.py",
+  "supervisor_sha256": "82c4e6a19e1aaabbd4a2412f89eb54c0b1690221f92d3ea826b05ca455a2042e",
+  "format": [
+    "gofmt",
+    "-w",
+    "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_binding_decode.go"
+  ],
+  "binding_normal": [
+    "go",
+    "test",
+    "-v",
+    "-tags=integration",
+    "-p",
+    "1",
+    "-count=1",
+    "-timeout=120s",
+    "-overlay=/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/binding-only-overlay-static.json",
+    "-run=^TestContextBinding",
+    "./conformance/internal/decisionfixture"
+  ],
+  "binding_race": [
+    "go",
+    "test",
+    "-race",
+    "-v",
+    "-tags=integration",
+    "-p",
+    "1",
+    "-count=1",
+    "-timeout=120s",
+    "-overlay=/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/binding-only-overlay-static.json",
+    "-run=^TestContextBinding",
+    "./conformance/internal/decisionfixture"
+  ],
+  "outer_seconds": 120,
+  "sequence": "Future rootgrant only format one changed productfile -> normal existing+new Binding controls -> iff PASS+actual Wait/current-group-absence same race. Stop firstfailure nofix/retry. Inputundefined proposal isolated; overlay maps only existing framed revision test, product consumes actual WIP source.",
+  "future_logs": {
+    "format": "/workspace/lerna-content-03-137311247276/context-binding-cloneinput-format.log",
+    "normal": "/workspace/lerna-content-03-137311247276/context-binding-cloneinput-normal.log",
+    "race": "/workspace/lerna-content-03-137311247276/context-binding-cloneinput-race.log"
+  }
+}

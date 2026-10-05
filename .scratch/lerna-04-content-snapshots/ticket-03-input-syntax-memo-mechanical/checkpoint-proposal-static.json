@@ -1,0 +1,30 @@
+{
+  "STATIC_proposal_ONLY_no_commit": true,
+  "current_head": "b28b2e3182d97156c5fe203baf5cf2183631b7f2",
+  "current_WIP_status": " M adapters/postgres/content/policy.go\n M conformance/component/content_closure_test.go\n M conformance/component/content_policy_actions_test.go\n M conformance/internal/decisionfixture/context_binding_decode.go\n M conformance/internal/decisionfixture/context_dispatch.go\n M domain/content/closure.go\n M domain/content/policy_cleanup.go\n M domain/content/ports.go\n M domain/content/processing.go\n M domain/content/secondary.go\n M domain/content/service.go\n?? conformance/component/content_processing_ancestor_seal_test.go\n?? conformance/component/content_processing_body_seal_test.go\n?? conformance/internal/decisionfixture/context_input_decode.go\n",
+  "narrow_new_syntax_product_paths": [
+    "conformance/internal/decisionfixture/context_binding_decode.go",
+    "conformance/internal/decisionfixture/context_dispatch.go",
+    "conformance/internal/decisionfixture/context_input_decode.go"
+  ],
+  "prior_clock_BodySeal_currentWIP_requires_preserved_source332_pins": true,
+  "future_required_delivery_copies_need_separate_static_scope_acceptance": {
+    "conformance/internal/decisionfixture/context_binding_revision_clone_test.go": {
+      "source": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/context_binding_revision_clone_test.go.txt",
+      "sha256": "788392c885e895fbb8f8d0629bba4902bf45dc5745ff8b66ace94bcaa36c2cdb",
+      "bytes": 3128
+    },
+    "conformance/internal/decisionfixture/context_input_decode_test.go": {
+      "source": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/context_input_decode_test.go.txt",
+      "sha256": "abd49508a98c286950361add1f4c97f34b068c4772fe203b4a71789f2d465cdb",
+      "bytes": 10571
+    }
+  },
+  "proposed_semantic_status": "Partial checkpoint of current syntax mechanism/clone qualification only. Actual whole tree is source332 plus prior coupledclock/target/ancestor/source dependencies. Not PG freshness/authority/capacity accepted; no ticket done. Do not claim a commit of only3 productpaths reproduces whole currentqualified snapshot while earlierWIP omitted.",
+  "archive_index": {
+    "path": "/workspace/lerna-content-03-137311247276/input-memo-mechanical-compact-archive-proposal/archive-proposal-index.json",
+    "sha256": "fb75197ed5906e994c5a1972510f430fdff89454a95b8b15c74a633c3dd8b95d",
+    "bytes": 31890
+  },
+  "historical_original_measurement/RED/UNKNOWN_refs_unchanged": true
+}

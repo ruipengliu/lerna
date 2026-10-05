@@ -1,0 +1,32 @@
+{
+  "base": "b9db5cc67647a15d6556fe92941757034a1e80d1",
+  "head": "d0fcc61264904070ce94e1146f07327a0ef9b2aa",
+  "reports": [
+    {
+      "axis": "standards",
+      "source": "/tmp/lerna-partition-durable-standards-review.md",
+      "bytes": 2371,
+      "sha256": "b0b5d9c6c446901f25c236d9dbd51f9c912df881728c49471c5ffdea2b6cfbb5"
+    },
+    {
+      "axis": "spec",
+      "source": "/tmp/lerna-partition-durable-spec-review.md",
+      "bytes": 2769,
+      "sha256": "2f11c31abf2d1fd7019fd60c2338f203c546726a82d927f4b14fcb7a7e411d53"
+    }
+  ],
+  "Standards_hard": 0,
+  "Standards_optional_P3": 1,
+  "optional_decision": "KEEP: repeated flag assertions small; independent literal oracle retained; no necessary generic abstraction",
+  "Spec_code_findings": {
+    "missing": 0,
+    "unasked": 0,
+    "wrong": 0
+  },
+  "qualification_pending": [
+    "whole normal/race",
+    "current checks",
+    "resources",
+    "integration push and accurate CI"
+  ]
+}

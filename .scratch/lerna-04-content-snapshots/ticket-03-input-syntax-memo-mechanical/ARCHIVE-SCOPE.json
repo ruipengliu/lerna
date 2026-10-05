@@ -1,0 +1,25 @@
+{
+  "STATIC_only_no_commit_or_native": true,
+  "phases": 10,
+  "raw_lines": 285,
+  "actual_results": {
+    "Binding_first_behavior_RED": "fourcold/hot pointer fail, nilPASS; fmt0/normal1",
+    "complete_cloneInput": "fmt0, normal0/race0 original5+newpointer qualified",
+    "Input_API_compile_RED": "fmt0/compile1 nineundefined inputDecodeMemo; no test body executed",
+    "Input_success_syntax_memo": "fmt0diff, normal0/race0;12top+36sub each; only private mechanism qualified"
+  },
+  "original_current_source332_binding": "Group outcomes and formed-source manifests retain complete original pre/post pins, not duplicate332 source bytes or binaries. Necessary old/current three product sources and two original virtual test sources included.",
+  "UNKNOWN_preserved": [
+    "old original Go/CPU descriptor Close UNKNOWN",
+    "old firstPut cause/effect UNKNOWN",
+    "net observer overhead UNKNOWN",
+    "nativeabsence/own writerClose notholderACK"
+  ],
+  "next_scopes_not_qualified": [
+    "actual fresh PG current row/SQL failures/clock/policy/budget reopen",
+    "original4B capacity/benefit",
+    "whole ticket03/04 done"
+  ],
+  "virtual_tests_deliverable_not_yet_in_WT": true,
+  "original_beforefmt_and_both_realRED_preserved": true
+}

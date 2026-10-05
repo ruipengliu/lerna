@@ -1,0 +1,22 @@
+{
+  "status": "ACTUAL_ONLY_FORMAT_PASS_BEFORE_AUTHORIZED_ONE_NORMAL",
+  "format_native": {
+    "event": "native_completion_ack",
+    "operation": "late-put-format",
+    "pid": 4027597,
+    "pgid": 4027597,
+    "starttime": "16895564",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false,
+    "owned_raw_fsync_close_ack": true
+  },
+  "independent_current_group_absent": true,
+  "old25_unchanged": true,
+  "format_diff_bytes": 12295,
+  "format_diff_sha256": "962c4d554015240c2af9a1fb0907b8e344768888a9acc9a86dbec07f17e14584",
+  "formatted_test_bytes": 79561,
+  "formatted_test_sha256": "c9a098141d23cda9c40d210539384d7cfb17b0d6b4f0222c16d70577308ff7e5",
+  "formatted_manifest_bytes": 6573,
+  "formatted_manifest_sha256": "df707faeff172b1e817d124d8813da2ae9f1d1e3da90daf782263d3ddbbd47bc"
+}

@@ -1,0 +1,20 @@
+{
+  "current_Input_mutable_inventory": {
+    "Constraints": "slice string",
+    "Conditions": "slice Condition; each Gaps slice string",
+    "Control.Restrictions": "slice string",
+    "Budget.Unknown": "slice string",
+    "Unresolved": "slice Responsibility; each OperationRef.Revision *v.Revision (new complete typed pointer copy)",
+    "Progress": "slice string",
+    "Materials": "slice Material; exact v1_2 ContentRef and Selected/Role are value-only",
+    "Omitted": "slice string",
+    "Gaps": "slice string",
+    "Request.Payload.UseRefs": "slice UseRef; contract v1_1 fields are value-only",
+    "Request.Payload.TaskRef.Revision": "*v.Revision (new complete typed pointer copy)",
+    "Request.TraceContext": "*TraceContext; typed value currently contains only TraceID string"
+  },
+  "value_only_fields": "Owner, Revision, ObservedAt, Goal, GoalRevision, Conditions non-Gaps members, Control State/Revision, Budget non-Unknown members, Responsibility non-OperationRef.Revision members, Progress string values, Material nested ContentRef fields, Purpose, RetainUntil, Policy, remaining exact typed Request references/payload limits are value fields",
+  "nil_empty_preservation": "copyBindingSlice unchanged checks nil then make len; optional Revision and TraceContext copied only when nonnil; out := in copies exact original nil values otherwise",
+  "Binding_bundle_copy": "All Bundle Object Bytes/Sources and Bundle Materials/Processed copies byteexact unchanged. Binding decoder scope/atomic/bodykey/successeligibility/errorbranch function prefix byteexact unchanged.",
+  "existing_mutable_control": "Existing TestContextBindingClonePreservesAllMutableFieldsAndNilEmpty remains original; new actualRED TestContextBindingDecodeOwnsNestedRevisionPointers supplies the two nested pointer cold/hot +nil gaps. No claimed new Input memo behavior or PG authority coverage."
+}

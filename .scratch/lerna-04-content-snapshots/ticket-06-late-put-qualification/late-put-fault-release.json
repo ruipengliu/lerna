@@ -1,0 +1,28 @@
+{
+  "status": "STOP_RELEASED",
+  "actual_one_preput_fence_fault_only_pass": true,
+  "native_actual": {
+    "event": "native_completion_ack",
+    "operation": "late-put-original-fence-fault",
+    "pid": 4036592,
+    "pgid": 4036592,
+    "starttime": "16934843",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false,
+    "owned_raw_fsync_close_ack": true
+  },
+  "independent_current_group_absent": true,
+  "current26_equals_formatted_snapshot_and_manifest": true,
+  "formed26_manifest_path": "/tmp/lerna-04-ticket06-execution/late-put-formatted-26-manifest.json",
+  "formed26_manifest_sha256": "df707faeff172b1e817d124d8813da2ae9f1d1e3da90daf782263d3ddbbd47bc",
+  "raw_path": "/tmp/lerna-04-ticket06-execution/late-put-original-fence-fault.log",
+  "raw_sha256": "7f5120c092c9488272a1d2ba8b978927588fa582a0a6ff2525cd2ad8e014b9e7",
+  "postchecks_path": "/tmp/lerna-04-ticket06-execution/late-put-fault-postchecks.json",
+  "postchecks_sha256": "033523b2ef2780c1f8409b20a64b46fa54826326e1687fd1c21a3fff7e5b940e",
+  "genuineallACK_sameactualPut_bodysealed_fullnativeCloseWaitStop_beforeQ": true,
+  "no_new_unknown": true,
+  "historical8unknown_untouched": true,
+  "ledger_lines": 181,
+  "race_affectedold5_othernative_sourcefmt_unexecuted": true
+}

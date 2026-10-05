@@ -1,0 +1,58 @@
+--- before-format/context_binding_revision_clone_test.go
++++ formatted/context_binding_revision_clone_test.go
+@@ -24,17 +24,29 @@
+ 				count := 0
+ 				decode := func(b []byte, out any) error { count++; return closedJSON(b, out) }
+ 				got, err := memo.decode(scope, "input", "permission_key", "row", body, decode)
+-				if err != nil || !reflect.DeepEqual(got, binding) { t.Fatal("cold counterpart changed", err) }
++				if err != nil || !reflect.DeepEqual(got, binding) {
++					t.Fatal("cold counterpart changed", err)
++				}
+ 				// This caller-owned byte mutation must not change the stored key.
+ 				body[0] = '!'
+ 				if phase == "hot" {
+ 					got, err = memo.decode(scope, "input", "permission_key", "row", pristine, decode)
+-					if err != nil || !reflect.DeepEqual(got, binding) { t.Fatal("hot counterpart changed", err) }
++					if err != nil || !reflect.DeepEqual(got, binding) {
++						t.Fatal("hot counterpart changed", err)
++					}
+ 				}
+-				if field == "operation_revision" { *got.Input.Unresolved[0].OperationRef.Revision = "changed" } else { *got.Input.Request.Payload.TaskRef.Revision = "changed" }
++				if field == "operation_revision" {
++					*got.Input.Unresolved[0].OperationRef.Revision = "changed"
++				} else {
++					*got.Input.Request.Payload.TaskRef.Revision = "changed"
++				}
+ 				after, err := memo.decode(scope, "input", "permission_key", "row", pristine, decode)
+-				if err != nil || !reflect.DeepEqual(after, binding) { t.Fatal("caller mutation poisoned successful stored Binding", field, phase, err) }
+-				if count != 1 { t.Fatal("owned row key did not retain exact original bytes", count) }
++				if err != nil || !reflect.DeepEqual(after, binding) {
++					t.Fatal("caller mutation poisoned successful stored Binding", field, phase, err)
++				}
++				if count != 1 {
++					t.Fatal("owned row key did not retain exact original bytes", count)
++				}
+ 			})
+ 		}
+ 	}
+@@ -45,7 +57,9 @@
+ 		scope := bindingDecodeScope{store: &Store{}}
+ 		for range 2 {
+ 			got, err := memo.decode(scope, "input", "permission_key", "row", body, closedJSON)
+-			if err != nil || !reflect.DeepEqual(got, binding) || got.Input.Unresolved[0].OperationRef.Revision != nil || got.Input.Request.Payload.TaskRef.Revision != nil { t.Fatal("nil Revision pointer changed", err) }
++			if err != nil || !reflect.DeepEqual(got, binding) || got.Input.Unresolved[0].OperationRef.Revision != nil || got.Input.Request.Payload.TaskRef.Revision != nil {
++				t.Fatal("nil Revision pointer changed", err)
++			}
+ 			// Assigning nonnil pointers in a returned value must leave the next
+ 			// original nil representation intact as well.
+ 			revision := v.Revision("11")
+@@ -53,6 +67,8 @@
+ 			got.Input.Request.Payload.TaskRef.Revision = &revision
+ 		}
+ 		after, err := memo.decode(scope, "input", "permission_key", "row", body, closedJSON)
+-		if err != nil || !reflect.DeepEqual(after, binding) { t.Fatal("nil counterpart was aliased", err) }
++		if err != nil || !reflect.DeepEqual(after, binding) {
++			t.Fatal("nil counterpart was aliased", err)
++		}
+ 	})
+ }

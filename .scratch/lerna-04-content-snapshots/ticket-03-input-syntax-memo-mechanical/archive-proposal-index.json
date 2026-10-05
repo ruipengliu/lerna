@@ -1,0 +1,554 @@
+{
+  "STATIC_only_no_repository_mutation_or_native": true,
+  "proposed_repository_directory": ".scratch/lerna-04-content-snapshots/ticket-03-input-syntax-memo-mechanical",
+  "copy_entries": [
+    {
+      "payload_path": "outcomes/binding-red-original.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/first-binding-pointer-qualification-actual-outcome.json",
+      "sha256": "057f93ecdeca305a3f1dbd8871ad1a45aaaa86949db03b1de3d8d92cb2297df1",
+      "bytes": 356432
+    },
+    {
+      "payload_path": "raw/context-binding-revision-pointer-first-red-format.log",
+      "original_path": "/workspace/lerna-content-03-137311247276/context-binding-revision-pointer-first-red-format.log",
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+      "bytes": 39
+    },
+    {
+      "payload_path": "raw/context-binding-revision-pointer-first-red-normal.log",
+      "original_path": "/workspace/lerna-content-03-137311247276/context-binding-revision-pointer-first-red-normal.log",
+      "sha256": "b44a4dfb463feb2b32cb39b94ce72d3be076ecb7c733f6c0b3aa1beba6f21f1d",
+      "bytes": 1626
+    },
+    {
+      "payload_path": "outcomes/binding-green-original.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/binding-cloneinput-fix-static/binding-cloneinput-qualification-actual-outcome.json",
+      "sha256": "7031cb3782541840af4b8c30f8ad9c96e3ee57c5f0118478a498a5e181cc0a20",
+      "bytes": 480236
+    },
+    {
+      "payload_path": "raw/context-binding-cloneinput-format.log",
+      "original_path": "/workspace/lerna-content-03-137311247276/context-binding-cloneinput-format.log",
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+      "bytes": 39
+    },
+    {
+      "payload_path": "raw/context-binding-cloneinput-normal.log",
+      "original_path": "/workspace/lerna-content-03-137311247276/context-binding-cloneinput-normal.log",
+      "sha256": "dc4e40427d5733b5613700742b525cef32b68a2b4395a4191979db96543f8349",
+      "bytes": 1855
+    },
+    {
+      "payload_path": "raw/context-binding-cloneinput-race.log",
+      "original_path": "/workspace/lerna-content-03-137311247276/context-binding-cloneinput-race.log",
+      "sha256": "b30cdf3a9be35f4812bff0a965ef599759aa188832a79bd7e6afd7abc931373d",
+      "bytes": 1855
+    },
+    {
+      "payload_path": "outcomes/input-compile-red-original.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-proposal-compile-red-actual-outcome.json",
+      "sha256": "fc5fecaedd03165e54175e5b6aeb98542ff1e04f310430c8656af221fb7aff92",
+      "bytes": 356864
+    },
+    {
+      "payload_path": "raw/context-input-proposal-compile-red-format.log",
+      "original_path": "/workspace/lerna-content-03-137311247276/context-input-proposal-compile-red-format.log",
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+      "bytes": 39
+    },
+    {
+      "payload_path": "raw/context-input-proposal-compile-red-normal.log",
+      "original_path": "/workspace/lerna-content-03-137311247276/context-input-proposal-compile-red-normal.log",
+      "sha256": "ef7c18e73c627607fe6760cf8f620dadedb0f5db87d92eb78e1b1b36544cd2dd",
+      "bytes": 1571
+    },
+    {
+      "payload_path": "outcomes/input-green-original.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-candidate-static/input-memo-mechanical-qualification-actual-outcome.json",
+      "sha256": "10b372d46f4774d74af00f169148994dd68ce59767a86709736547619ac371b2",
+      "bytes": 483457
+    },
+    {
+      "payload_path": "raw/context-input-memo-format.log",
+      "original_path": "/workspace/lerna-content-03-137311247276/context-input-memo-format.log",
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+      "bytes": 39
+    },
+    {
+      "payload_path": "raw/context-input-memo-normal.log",
+      "original_path": "/workspace/lerna-content-03-137311247276/context-input-memo-normal.log",
+      "sha256": "80096f20c820bf997189f4a106f59fb6586c1cd402ac3c9ab0ca0f60fd296eb3",
+      "bytes": 7137
+    },
+    {
+      "payload_path": "raw/context-input-memo-race.log",
+      "original_path": "/workspace/lerna-content-03-137311247276/context-input-memo-race.log",
+      "sha256": "16e808497923075b275d6a6b3b6addcea021694e8aeca754f5e7a248ce2f8532",
+      "bytes": 7137
+    },
+    {
+      "payload_path": "plans/original-testfirst-README.md",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/README.md",
+      "sha256": "34d3c5ed084c27abfd30c908d571c75b527cd0a039294320aebc738b9e1206cf",
+      "bytes": 5068
+    },
+    {
+      "payload_path": "plans/original-testfirst-commands.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/commands-static.json",
+      "sha256": "4ea3d18a57a0b0081f960db7e46f99cbed60c646a0e0ddf7295aa402ec706e4f",
+      "bytes": 3399
+    },
+    {
+      "payload_path": "manifests/original-before331.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/source-manifest-static.json",
+      "sha256": "425dfbccbe3f57eb887d82ba6f8e2b82de5470fcc7c880ddfe3961ccfe78ba0c",
+      "bytes": 56606
+    },
+    {
+      "payload_path": "manifests/binding-red-formed331.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/binding-pointer-formatted-source-manifest.json",
+      "sha256": "367e894e641ecba7e12ce9991b94f5ecf1b320f91873fbf24f935187993bc2ec",
+      "bytes": 54782
+    },
+    {
+      "payload_path": "manifests/clone-green-formed331.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/binding-cloneinput-fix-static/formatted-source-manifest.json",
+      "sha256": "ac293f1252f81eba29eef70b60100cd4f9b434363d5d3be71e5a471951baf098",
+      "bytes": 108894
+    },
+    {
+      "payload_path": "manifests/input-compile-red-formed331.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-proposal-formatted-source-manifest.json",
+      "sha256": "d8c79a8973a5ba497487a03dd635ce09a4d1240feabdc19de23881eb5a1c9f67",
+      "bytes": 54846
+    },
+    {
+      "payload_path": "manifests/input-green-formed332.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-candidate-static/formatted-source-manifest.json",
+      "sha256": "3794728abfbad9e8ecd22729309c0f2653bdc2132b551cc51033f0dba6b3e762",
+      "bytes": 109792
+    },
+    {
+      "payload_path": "plans/binding-only-overlay.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/binding-only-overlay-static.json",
+      "sha256": "14449e0bb5e4b373c972219d030dec78070cbbc71a6e00898156a199a8ea0857",
+      "bytes": 270
+    },
+    {
+      "payload_path": "plans/input-only-overlay.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-only-overlay-static.json",
+      "sha256": "53073c103b135242460e434760936ff1083266a3455ee8480b90d7e34bde0fd6",
+      "bytes": 250
+    },
+    {
+      "payload_path": "diffs/binding-test-actual-format.diff",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/binding-pointer-actual-format.diff",
+      "sha256": "99c96a0046a4894a7244660e8a750afdcbce769b31f66a975f8b3ee45f86adda",
+      "bytes": 3048
+    },
+    {
+      "payload_path": "diffs/binding-test-original-proposed.diff",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/context_binding_revision_clone_test.go.proposed.diff",
+      "sha256": "66dd379c26f86bc38c13fbc016aefeb8124c57f2724f559b483a9031375a34f3",
+      "bytes": 3231
+    },
+    {
+      "payload_path": "diffs/input-test-actual-format.diff",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-proposal-actual-format.diff",
+      "sha256": "7c2dce0d844b789d4661a7e57855405c7f04181b0f0549dff950933eaa4dbc35",
+      "bytes": 9267
+    },
+    {
+      "payload_path": "diffs/input-test-original-proposed.diff",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/context_input_decode_test.go.proposed.diff",
+      "sha256": "96da722683b0b6da375f9d9685ad1303cd1f9978bdd8de1120fd24bd000c68f2",
+      "bytes": 10699
+    },
+    {
+      "payload_path": "test-sources/binding-pointer-beforeformat.go.txt",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/context_binding_revision_clone_test.before-format.go.txt",
+      "sha256": "86b3e1d4d8ea16d8620455e980250195bd16c4c7a89719e99ae3601aa2fb2114",
+      "bytes": 3060
+    },
+    {
+      "payload_path": "test-sources/binding-pointer-actual-qualified.go.txt",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/context_binding_revision_clone_test.go.txt",
+      "sha256": "788392c885e895fbb8f8d0629bba4902bf45dc5745ff8b66ace94bcaa36c2cdb",
+      "bytes": 3128
+    },
+    {
+      "payload_path": "test-sources/input-beforeformat.go.txt",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/context_input_decode_test.before-format.go.txt",
+      "sha256": "2483102cd8de2da76f024a28b995f0c84bea8f2f76195c5e1dbffdd24d4605bb",
+      "bytes": 10385
+    },
+    {
+      "payload_path": "test-sources/input-actual-qualified.go.txt",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/context_input_decode_test.go.txt",
+      "sha256": "abd49508a98c286950361add1f4c97f34b068c4772fe203b4a71789f2d465cdb",
+      "bytes": 10571
+    },
+    {
+      "payload_path": "results/binding-first-behavior-red.md",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/first-binding-pointer-results.md",
+      "sha256": "a9818dba613a0c85aa923cad98a337844ebef11f8b70bc7f42dcf3994532de69",
+      "bytes": 1684
+    },
+    {
+      "payload_path": "results/input-compile-red.md",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-compile-red-results.md",
+      "sha256": "b8d8527f946217d40f1de9fc889bb83266c81553309132d115b9467972d8a764",
+      "bytes": 1511
+    },
+    {
+      "payload_path": "artifacts/clone/README.md",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/binding-cloneinput-fix-static/README.md",
+      "sha256": "d834c01783cef16ba9e49c99177ca9564f7465c03b2520b852f7de34f80708ae",
+      "bytes": 2765
+    },
+    {
+      "payload_path": "artifacts/clone/commands-static.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/binding-cloneinput-fix-static/commands-static.json",
+      "sha256": "069884e4d6fcfa4ff00f401ac2f9a19aa23bae2193bd3e6138ffac0a777f7d1e",
+      "bytes": 1867
+    },
+    {
+      "payload_path": "artifacts/clone/minimal-cloneinput.diff",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/binding-cloneinput-fix-static/minimal-cloneinput.diff",
+      "sha256": "f801652c0617ba9e7d2934a3eddfbbbc17ba666700881a8000dc8ba36bc051c7",
+      "bytes": 2769
+    },
+    {
+      "payload_path": "artifacts/clone/mutable-inventory-static.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/binding-cloneinput-fix-static/mutable-inventory-static.json",
+      "sha256": "b94a55fe45ec1060082d7597ba59c980982cc90817206cc5ac53f35cb6537507",
+      "bytes": 1879
+    },
+    {
+      "payload_path": "artifacts/clone/whole-byte-inverse-and-critical7-proof.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/binding-cloneinput-fix-static/whole-byte-inverse-and-critical7-proof.json",
+      "sha256": "49bc1134cac6a7cb0ee5fd78d842bdf38c468c90318f2efe61bae9e72c9d7fc4",
+      "bytes": 3061
+    },
+    {
+      "payload_path": "artifacts/clone/actual-helper-format.diff",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/binding-cloneinput-fix-static/actual-helper-format.diff",
+      "sha256": "86479f5541784a9190fb78a38472eba1e8c543f2c95d8057d9a728a186e2167b",
+      "bytes": 347
+    },
+    {
+      "payload_path": "artifacts/clone/formed-byte-inverse-proof.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/binding-cloneinput-fix-static/formed-byte-inverse-proof.json",
+      "sha256": "4e23043ac97eed0650db72b02b05cda19a6930027d67a30feeef6ec82fb0df82",
+      "bytes": 710
+    },
+    {
+      "payload_path": "artifacts/clone/context_binding_decode.before.go.txt",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/binding-cloneinput-fix-static/context_binding_decode.before.go.txt",
+      "sha256": "457b065fb760a264f0c687f82275c1dd73af3414191cccee1bba80b527f04779",
+      "bytes": 3570
+    },
+    {
+      "payload_path": "artifacts/clone/context_binding_decode.before-format.go.txt",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/binding-cloneinput-fix-static/context_binding_decode.before-format.go.txt",
+      "sha256": "16433c7f9dc2e610e48ba3030adac6b517f8a830e8883ee2bcacb2cc904aaa99",
+      "bytes": 4038
+    },
+    {
+      "payload_path": "artifacts/clone/context_binding_decode.formatted.go.txt",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/binding-cloneinput-fix-static/context_binding_decode.formatted.go.txt",
+      "sha256": "fe6e723b65cf1864e8e5a1071f38c6b6752394c4e5a91a5d7e87a6bb9ea45fc3",
+      "bytes": 4039
+    },
+    {
+      "payload_path": "artifacts/clone/results.md",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/binding-cloneinput-fix-static/results.md",
+      "sha256": "3ea24b31b6567a82dcb50b79e907c4424aaea72099b2f0b63b8e64429e56becc",
+      "bytes": 1765
+    },
+    {
+      "payload_path": "artifacts/input/README.md",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-candidate-static/README.md",
+      "sha256": "fc5f58486e0b5f11c6e4d55f3d538d93bf0c49b325ae6d5db25d486bf10cf410",
+      "bytes": 4399
+    },
+    {
+      "payload_path": "artifacts/input/commands-static.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-candidate-static/commands-static.json",
+      "sha256": "64b322526b95815e0afa98ba7c0f05957460f99a7b55ffe1f848b75e882ce75a",
+      "bytes": 2085
+    },
+    {
+      "payload_path": "artifacts/input/minimal-input-memo.diff",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-candidate-static/minimal-input-memo.diff",
+      "sha256": "27206dba0ab2a6fa753c6efb93ea3b6ff2e7e291eeadff1d3efeca00f67d24ea",
+      "bytes": 2165
+    },
+    {
+      "payload_path": "artifacts/input/test-only-overlay-static.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-candidate-static/test-only-overlay-static.json",
+      "sha256": "163b9f72a8b9328d3633cee7e8c4384fb85bcd5b85af6c2d345d2a4ab502f8c6",
+      "bytes": 498
+    },
+    {
+      "payload_path": "artifacts/input/byte-exact-consumer-inverse-proof.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-candidate-static/byte-exact-consumer-inverse-proof.json",
+      "sha256": "2214d9959ec69d787a903ef6fcd6cbc0a78cefd4731bb46b3b492c618962f6c4",
+      "bytes": 720
+    },
+    {
+      "payload_path": "artifacts/input/historical-measurement-eight-replacements-unchanged.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-candidate-static/historical-measurement-eight-replacements-unchanged.json",
+      "sha256": "7549278e1ccb976b4881d943e6fa156fee65dc7bc64c8f9046ed92368202e12d",
+      "bytes": 2370
+    },
+    {
+      "payload_path": "artifacts/input/actual-two-product-format.diff",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-candidate-static/actual-two-product-format.diff",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "payload_path": "artifacts/input/context_dispatch.before.go.txt",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-candidate-static/context_dispatch.before.go.txt",
+      "sha256": "5c2b8d472fdbe458b9affb9a9543db3359c85c0dfa90d5357bea843995e624fb",
+      "bytes": 23388
+    },
+    {
+      "payload_path": "artifacts/input/context_dispatch.formatted.go.txt",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-candidate-static/context_dispatch.formatted.go.txt",
+      "sha256": "c1042da40d5ab316d4bb788d7b866c4f1085ac595508a7751524d3bcb5c0161b",
+      "bytes": 23512
+    },
+    {
+      "payload_path": "artifacts/input/context_input_decode.formatted.go.txt",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-candidate-static/context_input_decode.formatted.go.txt",
+      "sha256": "0fa3cc7acc76bc3d16c5fde7e6b5a45371f1aca2508bc35c781ae8287b3f256f",
+      "bytes": 1323
+    },
+    {
+      "payload_path": "artifacts/input/mechanical-results.md",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-candidate-static/mechanical-results.md",
+      "sha256": "a3bd29b11a45cefeefec913df146c1f28f80967ddc6d2bd05fd78df99c3a9704",
+      "bytes": 2167
+    },
+    {
+      "payload_path": "adopted-decisions/lerna-03-fresh-input-cost-next-decision.md",
+      "original_path": "/tmp/lerna-03-fresh-input-cost-next-decision.md",
+      "sha256": "7b885e575ed8e7f163622fe903cb1d8cb2476f9628553024a1661ed87975a9d5",
+      "bytes": 8599
+    },
+    {
+      "payload_path": "adopted-decisions/lerna-03-input-memo-tdd-next-decision.md",
+      "original_path": "/tmp/lerna-03-input-memo-tdd-next-decision.md",
+      "sha256": "94ab886c0c7d9b4a649482caf6477b2cb4e18f7e08a96ee7cbe378ba4bc3250f",
+      "bytes": 5301
+    },
+    {
+      "payload_path": "native/ten-exact-native-identity-records.jsonl",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-memo-mechanical-compact-archive-proposal/captured-intervals/ten-exact-native-identity-records.jsonl",
+      "sha256": "2b2523cc0f64d2d90f134d2ebe14196ab8c10dd298fb58891a157e36c6057abd",
+      "bytes": 3443
+    },
+    {
+      "payload_path": "native/ten-exact-owned-scope-intervals.log",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-memo-mechanical-compact-archive-proposal/captured-intervals/ten-exact-owned-scope-intervals.log",
+      "sha256": "574439f08f7db121376017b27ae496b845a981535567b4f2a2027f0744f2a13c",
+      "bytes": 1260
+    },
+    {
+      "payload_path": "native/ledger-interval-provenance.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-memo-mechanical-compact-archive-proposal/captured-intervals/ledger-interval-provenance.json",
+      "sha256": "30e13f9ddca804079eff2bcc59a41d81f3c46cdb7dddcc4380895f58125cf2ad",
+      "bytes": 5316
+    },
+    {
+      "payload_path": "ARCHIVE-SCOPE.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-memo-mechanical-compact-archive-proposal/finite-archive-scope.json",
+      "sha256": "973684da5c2e5220e809942c44d5471f71fc7cfaed8d3df9942027723e8c0183",
+      "bytes": 1240
+    }
+  ],
+  "reference_entries": [
+    {
+      "path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/first-binding-pointer-qualification-actual-outcome.reviewed.json",
+      "sha256": "1b25bfdcb988455555b633cd8591c1e7edcaa4cebf6c8db36845f476a7928ccd",
+      "bytes": 357663,
+      "reason": "Original outcome copied once; reviewed human scope summary preserved in finite results instead of another complete332/prepost duplicate"
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/binding_pointer_format-actual-outcome.json",
+      "sha256": "7fa75ad0be54be8117721b5573c82e3df8488e47c6cf80862309d838e6648dbd",
+      "bytes": 112949,
+      "reason": "Exact same parsed standalone phase object embedded in copied original group outcome; retain reference without duplicate bytes"
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/binding_pointer_format-prelaunch.json",
+      "sha256": "750056171695f0d12ab0bd3179be83b792477966244ffaee34e270490563f1dd",
+      "bytes": 55050,
+      "reason": "Exact same prelaunch object embedded in copied original group outcome; no duplicate archive"
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/binding_pointer_first_red_normal-actual-outcome.json",
+      "sha256": "57c4e2a325753814598c0f5bbcf795fcb8dbc4dd8e0089e50b6d5b3baa41bd1d",
+      "bytes": 113404,
+      "reason": "Exact same parsed standalone phase object embedded in copied original group outcome; retain reference without duplicate bytes"
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/binding_pointer_first_red_normal-prelaunch.json",
+      "sha256": "6b402932694476c11ce6255366d52e48e4b99aa5906aa97381a3915fc0cf1d24",
+      "bytes": 55260,
+      "reason": "Exact same prelaunch object embedded in copied original group outcome; no duplicate archive"
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/binding-cloneinput-fix-static/binding-cloneinput-qualification-actual-outcome.reviewed.json",
+      "sha256": "540bfe81212de3d1e51c069fe6f5fb4db244dfae2a52235be2d9441b302f5e7a",
+      "bytes": 481103,
+      "reason": "Original outcome copied once; reviewed human scope summary preserved in finite results instead of another complete332/prepost duplicate"
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/binding-cloneinput-fix-static/format-actual-outcome.json",
+      "sha256": "f29c04ffc5eb8f0bf87eeb0c244e14cc19fa732651d187212a4a51b754163acb",
+      "bytes": 112737,
+      "reason": "Exact same parsed standalone phase object embedded in copied original group outcome; retain reference without duplicate bytes"
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/binding-cloneinput-fix-static/format-prelaunch.json",
+      "sha256": "22d29ed9ebe07d1cdd02394e87ce2dfaed589ee92dea1f9edea22da67209427b",
+      "bytes": 54995,
+      "reason": "Exact same prelaunch object embedded in copied original group outcome; no duplicate archive"
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/binding-cloneinput-fix-static/normal-actual-outcome.json",
+      "sha256": "5ebccaa2a077e4539ac7f170b70e2fdc33cc9943765fc36721b2a58236da41b2",
+      "bytes": 113136,
+      "reason": "Exact same parsed standalone phase object embedded in copied original group outcome; retain reference without duplicate bytes"
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/binding-cloneinput-fix-static/normal-prelaunch.json",
+      "sha256": "7d6afac72ad56a11ec41aa8c98c3407e4b038bea8329938ce1beba3d97a614a9",
+      "bytes": 55177,
+      "reason": "Exact same prelaunch object embedded in copied original group outcome; no duplicate archive"
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/binding-cloneinput-fix-static/race-actual-outcome.json",
+      "sha256": "aeb964996beba8af12e9176831c31f00ff0b908955dcb66c2b56b0cfb8095279",
+      "bytes": 113158,
+      "reason": "Exact same parsed standalone phase object embedded in copied original group outcome; retain reference without duplicate bytes"
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/binding-cloneinput-fix-static/race-prelaunch.json",
+      "sha256": "b0a1c1454146c7621719f1af1ef33a18524b8287f6cdaa96d5f8656879f6dabb",
+      "bytes": 55186,
+      "reason": "Exact same prelaunch object embedded in copied original group outcome; no duplicate archive"
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-proposal-compile-red-actual-outcome.reviewed.json",
+      "sha256": "e91bf6e40f249b9b508ba80fd53b4007580529de9feb7b99ccb9fd0ca2b4fa05",
+      "bytes": 357643,
+      "reason": "Original outcome copied once; reviewed human scope summary preserved in finite results instead of another complete332/prepost duplicate"
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input_proposal_format-actual-outcome.json",
+      "sha256": "079e8e1b7805e7da7dc1655cefd567af02c6986720442de09f8d30d553499d72",
+      "bytes": 113128,
+      "reason": "Exact same parsed standalone phase object embedded in copied original group outcome; retain reference without duplicate bytes"
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input_proposal_format-prelaunch.json",
+      "sha256": "028c8cd0cb32ad2d1969c943e2f844499dcc3e5dfb9178078384a9d58fcde6cf",
+      "bytes": 55237,
+      "reason": "Exact same prelaunch object embedded in copied original group outcome; no duplicate archive"
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input_compile_first_red-actual-outcome.json",
+      "sha256": "35335f8a0a911b7a83b0b45ce36279e587521adfb55e3c60416893dabc73fc09",
+      "bytes": 113525,
+      "reason": "Exact same parsed standalone phase object embedded in copied original group outcome; retain reference without duplicate bytes"
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input_compile_first_red-prelaunch.json",
+      "sha256": "4d222c676c50641b00d74a4ffde8f8dfd7748a60d556d54c0727e536ac3085c8",
+      "bytes": 55418,
+      "reason": "Exact same prelaunch object embedded in copied original group outcome; no duplicate archive"
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-candidate-static/input-memo-mechanical-qualification-actual-outcome.reviewed.json",
+      "sha256": "2ed16bf13410b4f2dff623ea15e2b0203728356158a22721d790be9ce0a28f5f",
+      "bytes": 484541,
+      "reason": "Original outcome copied once; reviewed human scope summary preserved in finite results instead of another complete332/prepost duplicate"
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-candidate-static/format-actual-outcome.json",
+      "sha256": "2d8e5f6414d42a0b6f8d922e6ac9f9f198f01de4a284aa20bb512c201b2fbb04",
+      "bytes": 113770,
+      "reason": "Exact same parsed standalone phase object embedded in copied original group outcome; retain reference without duplicate bytes"
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-candidate-static/format-prelaunch.json",
+      "sha256": "5626a54630edb379e22be8b8479fc41db966c7d2377ffcd98c884ca4e4a23976",
+      "bytes": 55741,
+      "reason": "Exact same prelaunch object embedded in copied original group outcome; no duplicate archive"
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-candidate-static/normal-actual-outcome.json",
+      "sha256": "6fe0573405a90f61d5aebfca67da53c4da83a61069699ba42c5cc09a45b47a54",
+      "bytes": 114057,
+      "reason": "Exact same parsed standalone phase object embedded in copied original group outcome; retain reference without duplicate bytes"
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-candidate-static/normal-prelaunch.json",
+      "sha256": "d4759742f31944888c3d198b1ccce69612e17ed1d22e17fa67256fba7f71c74c",
+      "bytes": 55869,
+      "reason": "Exact same prelaunch object embedded in copied original group outcome; no duplicate archive"
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-candidate-static/race-actual-outcome.json",
+      "sha256": "d5cd340966b526a0e9c9a07714beb60348b77ac1aa5bc5fb06f71ca940a94fa7",
+      "bytes": 114079,
+      "reason": "Exact same parsed standalone phase object embedded in copied original group outcome; retain reference without duplicate bytes"
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-candidate-static/race-prelaunch.json",
+      "sha256": "7a196431129cde6f076c282185d805129adeae076d8e81912f4911ce0e150e17",
+      "bytes": 55878,
+      "reason": "Exact same prelaunch object embedded in copied original group outcome; no duplicate archive"
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/fresh-input-measured-race-compact-archive-proposal-v2/archive-proposal-index.json",
+      "sha256": "6674f9ab391080090a32c8204d40e5e6fc9e0cba3864ff1b96f025e97a5f3de9",
+      "bytes": 28957,
+      "reason": "Existing original historical qualification/capacity/measuredrace or strict owner facts; avoid duplicate bytes"
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/policy-clock-eight-qualification-compact-archive-proposal/archive-proposal-index.json",
+      "sha256": "5575dd0cbff0c7b08b9cb7e7bd60edd45397dfaf5cc65b6e88b61c51502d074a",
+      "bytes": 101027,
+      "reason": "Existing original historical qualification/capacity/measuredrace or strict owner facts; avoid duplicate bytes"
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/policy-clock-fresh-build-normal-race-compact-archive-proposal/archive-proposal-index.json",
+      "sha256": "1e72b730bf1f01675117a505b831084fdf4a15ad73892b37d1752a21e682d37e",
+      "bytes": 18751,
+      "reason": "Existing original historical qualification/capacity/measuredrace or strict owner facts; avoid duplicate bytes"
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/run-native.py",
+      "sha256": "82c4e6a19e1aaabbd4a2412f89eb54c0b1690221f92d3ea826b05ca455a2042e",
+      "bytes": 2304,
+      "reason": "Existing original historical qualification/capacity/measuredrace or strict owner facts; avoid duplicate bytes"
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/root-ack.json",
+      "sha256": "aaeb140f7460811096413c6e846532c06bf0c42e90e8a5f6b03cc8da0484dd6c",
+      "bytes": 83,
+      "reason": "Existing original historical qualification/capacity/measuredrace or strict owner facts; avoid duplicate bytes"
+    }
+  ],
+  "payload_files": 61,
+  "payload_bytes": 2263413,
+  "raw_lines": 285,
+  "mutable_global_ledgers_never_copy_sources": true,
+  "no_binary_CPUprofile_or_whole_source_snapshot": true,
+  "all_original_FAIL_UNKNOWN_immutable": true
+}

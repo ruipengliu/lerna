@@ -1,0 +1,13 @@
+# github.com/ruipengliu/lerna/conformance/internal/decisionfixture [github.com/ruipengliu/lerna/conformance/internal/decisionfixture.test]
+/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/context_input_decode_test.go.txt:47:11: undefined: inputDecodeMemo
+/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/context_input_decode_test.go.txt:90:13: undefined: inputDecodeMemo
+/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/context_input_decode_test.go.txt:125:13: undefined: inputDecodeMemo
+/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/context_input_decode_test.go.txt:161:13: undefined: inputDecodeMemo
+/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/context_input_decode_test.go.txt:181:20: undefined: inputDecodeMemo
+/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/context_input_decode_test.go.txt:184:26: undefined: inputDecodeMemo
+/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/context_input_decode_test.go.txt:198:13: undefined: inputDecodeMemo
+/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/context_input_decode_test.go.txt:221:11: undefined: inputDecodeMemo
+/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/context_input_decode_test.go.txt:238:11: undefined: inputDecodeMemo
+FAIL	github.com/ruipengliu/lerna/conformance/internal/decisionfixture [build failed]
+FAIL
+NATIVE_EXIT status=1 group_absent=True

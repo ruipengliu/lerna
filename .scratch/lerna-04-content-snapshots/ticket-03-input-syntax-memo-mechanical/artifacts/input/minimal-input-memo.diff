@@ -1,0 +1,61 @@
+--- a/conformance/internal/decisionfixture/context_dispatch.go
++++ b/conformance/internal/decisionfixture/context_dispatch.go
+@@ -59,6 +59,7 @@
+ }
+ type ContextDispatcher struct {
+ 	bindingDecode  bindingDecodeMemo
++	inputDecode    inputDecodeMemo
+ 	Store          *Store
+ 	TrustedSubject v.SubjectBinding
+ 	TrustedUntil   time.Time
+@@ -165,8 +166,7 @@
+ 	if err != nil {
+ 		return in, err
+ 	}
+-	err = closedJSON(body, &in)
+-	return in, err
++	return d.inputDecode.decode(bindingDecodeScope{store: d.Store, owner: d.Store.owner, schema: d.Store.cfg.Schema}, id, body, closedJSON)
+ }
+ func (d *ContextDispatcher) ObserveInput(ctx context.Context, id string) (compiler.Input, error) {
+ 	var out compiler.Input
+--- /dev/null
++++ b/conformance/internal/decisionfixture/context_input_decode.go
+@@ -0,0 +1,38 @@
++package decisionfixture
++
++import (
++	"bytes"
++	"sync/atomic"
++
++	v "github.com/ruipengliu/lerna/contract/v1_1"
++	compiler "github.com/ruipengliu/lerna/domain/task/context"
++)
++
++// inputDecodeMemo owns one successful syntactic representation only. The
++// consumer must first read the complete current row in its original transaction;
++// current permissions, clocks, budget and transaction completion are not cached.
++type inputDecodeEntry struct {
++	scope   bindingDecodeScope
++	inputID string
++	body    []byte
++	input   compiler.Input
++}
++type inputDecodeMemo struct {
++	entry atomic.Pointer[inputDecodeEntry]
++}
++
++func (m *inputDecodeMemo) decode(scope bindingDecodeScope, inputID string, body []byte, decode func([]byte, any) error) (compiler.Input, error) {
++	if entry := m.entry.Load(); entry != nil && entry.scope == scope && entry.inputID == inputID && bytes.Equal(body, entry.body) {
++		return cloneInput(entry.input), nil
++	}
++	var out compiler.Input
++	if err := decode(body, &out); err != nil {
++		return out, err
++	}
++	if len(body) <= v.MaxBodyBytes {
++		// The cold result and the immutable stored value own separate mutable
++		// fields. Caller changes to the original row cannot change the key.
++		m.entry.Store(&inputDecodeEntry{scope: scope, inputID: inputID, body: copyBindingSlice(body), input: cloneInput(out)})
++	}
++	return out, nil
++}
