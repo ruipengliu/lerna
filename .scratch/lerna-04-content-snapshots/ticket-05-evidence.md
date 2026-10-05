@@ -936,3 +936,36 @@ actualWait/groupAbsent，明确RELEASE/no pending。首红2.223原log/失败边�
 targeted policy lock-wait截止仍是单独pending最小tracer，旧ordinary wait及
 旧NotRequired whole-page CAS不冒称新targeted支路执行。不同creator、未知
 sourcepolicy或任意深图/副本等未由本case全部覆盖；七AC仍claimed未accept。
+
+### 准确 AdmissionTarget 原期限：same700ms 正常/真实锁等待越界
+
+`TestContentOriginalAdmissionCleanupDeadlineSurvivesCurrentTargetPolicyLockWait`
+是新targeted支路的独立真实资格，不用旧ordinarykey wait替代。两个新owned
+World均首次Manager/Lifecycle WorkBudget700ms、A原acceptedcap2s/currentRev2
+宽续期、target真实继承cap/完整保存closure正常与独立V2正常；public全部
+finiteAdmission pages确定原target/source/revision/capDue/cap+700msDeadline。
+真实cap+20ms，有限Manager.Step观察exactkey实际pending原责任，不假设队列
+首job；target正文expired但准确物理alpha仍在，原deadline未过。
+
+HoldPolicy(target)真实consumer阻塞观察ACK后，normal立刻positive release/
+rollback+连接Close；cutoff等待原dutyDeadline+20ms再同原release。consumer
+returned和finished均真实join。normal同原700ms实际seal/fullholder allACK/
+独立target物理absence；cutoff完整原公开observation未改，pending原reason/
+residual/deadline保持，无seal/activebodycleanup且原targetbytes保留。实际
+World.Reopen分别保持结果、source原alpha/noSeal及V2正常；source+target
+samekey byteReceipt/pubhistory不改。未扩大700ms、改due/SQLclock/原cap。
+
+| `/tmp/lerna-04-ticket05-execution/` 日志 | 实际结果 |
+| --- | --- |
+| `admission-cleanup-deadline-first-run.log` | -v exact两scope PASS5.325s（2.43/2.87），3175419/start13260429/exit0/groupAbsent/noTimeout。 |
+| `admission-cleanup-deadline-race.log` | -v sameexact-race两scope PASS6.905s（2.84/3.02），3176452/start13264854/exit0/groupAbsent/noTimeout。 |
+
+normal own namespaces62e80867416441ef44acb611与004b84cf037633b4ea8c0c29；
+race61f1d1ba80358b6bf1b3851c与a4d69799558d7cc8abc54b47，实际lockerPG PIDs
+normal518385/518399与race518574/518587登记。normalroots866594183(dev33/
+inode364806)、3750705853(33/364816)，raceroots106745217(33/365146)、3578505999
+(33/365157)精确登记；所有scope原Close路径完成，不从kernel退出替logical
+Close。caller20/Go30/wrapper120/join3/2s+20ms/700ms固定；sessions33979/7473
+actualcomplete、明确RELEASE/no pending。产品固定301be6d不改，首执行直接
+正常qualification，无虚构businessred。最小未知结构/currentpolicy错误gate与
+既有typedFS目录oracles及最终source/suites/reviews仍待；七AC未accept。

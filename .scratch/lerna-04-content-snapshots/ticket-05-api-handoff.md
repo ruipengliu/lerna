@@ -249,3 +249,12 @@ PG Bind/ACK/旧migration/首次seal关联规则均保持，无多trigger扩展�
 完成。exact2.422/race3.913原20/30/120/2s+20ms范围，明确RELEASE。新增
 targeted锁等待deadline回滚仍pending独立资格，旧普通key等待/CAS不代替。
 七AC均未accept，不把本次normal声明成whole04出口或未知历史scope权限。
+
+新targeted原deadline锁wait已有独立实际资格：两fresh初次700ms预算/2s cap
+真实source续宽和target继承、公开准确AdmissionTarget原due/deadline；实际
+HoldPolicy(target) blocked后正常立即release在原700ms内全ACK，原deadline
++20ms放行则全原pendingobservation/bytes保留、无seal/activecleanup。真实
+join/World.Reopen/sourcebytes/noSeal/V2/原source与target receipt/pub保持。
+exact两scope5.325/race6.905，原20/30/120/join3不改。该case准确覆盖新支路，
+没有借旧ordinarykey等待或源码存在冒执行；产品301be6d不改。最小unknown
+结构/currentpolicy错误资格、typedFS旧oracle整改与最终两轴审查/suite仍待。
