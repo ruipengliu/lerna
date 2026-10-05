@@ -37,7 +37,13 @@ func (s *Service) AcceptRequirements(ctx context.Context, caller *v1.Caller, c *
 		if t == nil {
 			return nil, command.Fail("NOT_FOUND")
 		}
-		if t.Revision != c.TaskRef.Revision || t.InputVersion != c.InputVersion {
+		if t.Revision != c.TaskRef.Revision || c.InputVersion > t.InputVersion || c.InputVersion == 0 || t.Lifecycle != v1.TaskLifecycle_TASK_LIFECYCLE_OPEN {
+			return nil, command.Fail("STALE_INPUT")
+		}
+		if t.BoundInputVersion < t.InputVersion && c.InputVersion != t.BoundInputVersion+1 {
+			return nil, command.Fail("INPUT_ORDER")
+		}
+		if c.InputVersion < t.BoundInputVersion {
 			return nil, command.Fail("STALE_INPUT")
 		}
 		if len(c.Conditions) == 0 {
@@ -57,16 +63,49 @@ func (s *Service) AcceptRequirements(ctx context.Context, caller *v1.Caller, c *
 		if e != nil {
 			return nil, e
 		}
+		boundVersion := c.InputVersion
+		if c.InputVersion > t.BoundInputVersion {
+			history, e := s.store.(InputStore).LoadTaskInputs(tx, t.TaskId)
+			if e != nil {
+				return nil, e
+			}
+			found := false
+			for _, input := range history.Inputs {
+				if input.InputVersion == c.InputVersion {
+					input.ProcessingStatus = "PROCESSED"
+					input.ProcessingDecision = c.Header.Identity
+					found = true
+				}
+			}
+			for _, input := range history.Inputs {
+				if input.InputVersion == boundVersion+1 && input.ProcessingStatus == "PROCESSED" {
+					boundVersion++
+				}
+			}
+			if !found {
+				return nil, command.Fail("INPUT_ORDER")
+			}
+			if e = s.store.(InputStore).SaveTaskInputs(tx, history); e != nil {
+				return nil, e
+			}
+		}
+		if e = s.supersedeVerification(tx, t, p); e != nil {
+			return nil, e
+		}
 		if p.Requirements != nil {
 			t.RequirementsVersion++
 		}
 		t.ControlGeneration++
 		t.Revision++
 		t.RequirementsStatus = v1.RequirementsStatus_REQUIREMENTS_STATUS_ACCEPTED
-		t.BoundInputVersion = c.InputVersion
-		t.WaitingOn = nil
+		t.BoundInputVersion = boundVersion
+		if boundVersion < t.InputVersion {
+			setInputWaiting(t, "INPUT_PROCESSING")
+		} else {
+			setInputWaiting(t, "")
+		}
 		ref := command.NewRef(s.user, s.domain, "requirements", "lerna.v1.Requirements")
-		p.Requirements = &v1.Requirements{Ref: ref, TaskId: t.TaskId, RequirementsVersion: t.RequirementsVersion, BoundInputVersion: c.InputVersion, Source: c.Source, Conditions: c.Conditions, AcceptedBy: c.Header.Identity}
+		p.Requirements = &v1.Requirements{Ref: ref, TaskId: t.TaskId, RequirementsVersion: t.RequirementsVersion, BoundInputVersion: boundVersion, Source: c.Source, Conditions: c.Conditions, AcceptedBy: c.Header.Identity}
 		if e = s.store.SaveTask(tx, t); e != nil {
 			return nil, e
 		}
@@ -99,6 +138,19 @@ func (s *Service) RequestProposal(ctx context.Context, caller *v1.Caller, c *v1.
 		t.PlanningGeneration++
 		t.Revision++
 		p.Snapshot = &v1.ContextSnapshot{Ref: command.NewRef(s.user, s.domain, "snapshot", "lerna.v1.ContextSnapshot"), TaskRef: &v1.Ref{Name: t.TaskId, Revision: t.Revision, SchemaId: "lerna.v1.Task"}, RequirementsVersion: t.RequirementsVersion, InputVersion: t.InputVersion, ControlGeneration: t.ControlGeneration, PlanningGeneration: t.PlanningGeneration, RequestRef: command.NewRef(s.user, s.domain, "proposal-request", "lerna.v1.ContextSnapshot"), ExpiresAtUnixMs: now + 300000, ContentRefs: []*v1.Ref{t.GoalRef}}
+		inputs, e := s.store.(InputStore).LoadTaskInputs(tx, t.TaskId)
+		if e != nil {
+			return nil, e
+		}
+		for _, input := range inputs.Inputs {
+			if input.InputVersion > t.InputVersion {
+				return nil, command.Fail("INVARIANT_VIOLATION")
+			}
+			p.Snapshot.InputRefs = append(p.Snapshot.InputRefs, input.InputRef)
+			if input.InputVersion > 1 {
+				p.Snapshot.ContentRefs = append(p.Snapshot.ContentRefs, input.ContentRef)
+			}
+		}
 		caps, e := s.store.CapabilityRefs(tx)
 		if e != nil {
 			return nil, e

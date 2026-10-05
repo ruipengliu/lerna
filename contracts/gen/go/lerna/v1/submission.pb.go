@@ -1301,16 +1301,23 @@ func (x *Task) GetResultRef() *Ref {
 }
 
 type SessionInput struct {
-	state           protoimpl.MessageState `protogen:"open.v1"`
-	InputId         *GlobalName            `protobuf:"bytes,1,opt,name=input_id,json=inputId,proto3" json:"input_id,omitempty"`
-	SessionSeq      uint64                 `protobuf:"varint,2,opt,name=session_seq,json=sessionSeq,proto3" json:"session_seq,omitempty"`
-	TaskId          *GlobalName            `protobuf:"bytes,3,opt,name=task_id,json=taskId,proto3" json:"task_id,omitempty"`
-	InputKind       string                 `protobuf:"bytes,4,opt,name=input_kind,json=inputKind,proto3" json:"input_kind,omitempty"`
-	ContentRef      *Ref                   `protobuf:"bytes,5,opt,name=content_ref,json=contentRef,proto3" json:"content_ref,omitempty"`
-	CommandIdentity *CommandIdentity       `protobuf:"bytes,6,opt,name=command_identity,json=commandIdentity,proto3" json:"command_identity,omitempty"`
-	RoutingStatus   string                 `protobuf:"bytes,7,opt,name=routing_status,json=routingStatus,proto3" json:"routing_status,omitempty"`
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
+	state                       protoimpl.MessageState `protogen:"open.v1"`
+	InputId                     *GlobalName            `protobuf:"bytes,1,opt,name=input_id,json=inputId,proto3" json:"input_id,omitempty"`
+	SessionSeq                  uint64                 `protobuf:"varint,2,opt,name=session_seq,json=sessionSeq,proto3" json:"session_seq,omitempty"`
+	TaskId                      *GlobalName            `protobuf:"bytes,3,opt,name=task_id,json=taskId,proto3" json:"task_id,omitempty"`
+	InputKind                   string                 `protobuf:"bytes,4,opt,name=input_kind,json=inputKind,proto3" json:"input_kind,omitempty"`
+	ContentRef                  *Ref                   `protobuf:"bytes,5,opt,name=content_ref,json=contentRef,proto3" json:"content_ref,omitempty"`
+	CommandIdentity             *CommandIdentity       `protobuf:"bytes,6,opt,name=command_identity,json=commandIdentity,proto3" json:"command_identity,omitempty"`
+	RoutingStatus               string                 `protobuf:"bytes,7,opt,name=routing_status,json=routingStatus,proto3" json:"routing_status,omitempty"`
+	RequestRef                  *Ref                   `protobuf:"bytes,8,opt,name=request_ref,json=requestRef,proto3" json:"request_ref,omitempty"`
+	ExpectedRequirementsVersion uint64                 `protobuf:"varint,9,opt,name=expected_requirements_version,json=expectedRequirementsVersion,proto3" json:"expected_requirements_version,omitempty"`
+	ExpectedInputVersion        uint64                 `protobuf:"varint,10,opt,name=expected_input_version,json=expectedInputVersion,proto3" json:"expected_input_version,omitempty"`
+	DependsOn                   []*CommandIdentity     `protobuf:"bytes,11,rep,name=depends_on,json=dependsOn,proto3" json:"depends_on,omitempty"`
+	ObservedSessionSeq          uint64                 `protobuf:"varint,12,opt,name=observed_session_seq,json=observedSessionSeq,proto3" json:"observed_session_seq,omitempty"`
+	TaskInputSeq                uint64                 `protobuf:"varint,13,opt,name=task_input_seq,json=taskInputSeq,proto3" json:"task_input_seq,omitempty"`
+	ConfirmationRef             *Ref                   `protobuf:"bytes,14,opt,name=confirmation_ref,json=confirmationRef,proto3" json:"confirmation_ref,omitempty"`
+	unknownFields               protoimpl.UnknownFields
+	sizeCache                   protoimpl.SizeCache
 }
 
 func (x *SessionInput) Reset() {
@@ -1390,6 +1397,55 @@ func (x *SessionInput) GetRoutingStatus() string {
 		return x.RoutingStatus
 	}
 	return ""
+}
+
+func (x *SessionInput) GetRequestRef() *Ref {
+	if x != nil {
+		return x.RequestRef
+	}
+	return nil
+}
+
+func (x *SessionInput) GetExpectedRequirementsVersion() uint64 {
+	if x != nil {
+		return x.ExpectedRequirementsVersion
+	}
+	return 0
+}
+
+func (x *SessionInput) GetExpectedInputVersion() uint64 {
+	if x != nil {
+		return x.ExpectedInputVersion
+	}
+	return 0
+}
+
+func (x *SessionInput) GetDependsOn() []*CommandIdentity {
+	if x != nil {
+		return x.DependsOn
+	}
+	return nil
+}
+
+func (x *SessionInput) GetObservedSessionSeq() uint64 {
+	if x != nil {
+		return x.ObservedSessionSeq
+	}
+	return 0
+}
+
+func (x *SessionInput) GetTaskInputSeq() uint64 {
+	if x != nil {
+		return x.TaskInputSeq
+	}
+	return 0
+}
+
+func (x *SessionInput) GetConfirmationRef() *Ref {
+	if x != nil {
+		return x.ConfirmationRef
+	}
+	return nil
 }
 
 type Session struct {
@@ -2057,7 +2113,7 @@ const file_lerna_v1_submission_proto_rawDesc = "" +
 	"\x13requirements_status\x18\x0e \x01(\x0e2\x1c.lerna.v1.RequirementsStatusR\x12requirementsStatus\x125\n" +
 	"\x0fparent_task_ref\x18\x0f \x01(\v2\r.lerna.v1.RefR\rparentTaskRef\x12,\n" +
 	"\n" +
-	"result_ref\x18\x10 \x01(\v2\r.lerna.v1.RefR\tresultRef\"\xcb\x02\n" +
+	"result_ref\x18\x10 \x01(\v2\r.lerna.v1.RefR\tresultRef\"\xc1\x05\n" +
 	"\fSessionInput\x12/\n" +
 	"\binput_id\x18\x01 \x01(\v2\x14.lerna.v1.GlobalNameR\ainputId\x12\x1f\n" +
 	"\vsession_seq\x18\x02 \x01(\x04R\n" +
@@ -2068,7 +2124,17 @@ const file_lerna_v1_submission_proto_rawDesc = "" +
 	"\vcontent_ref\x18\x05 \x01(\v2\r.lerna.v1.RefR\n" +
 	"contentRef\x12D\n" +
 	"\x10command_identity\x18\x06 \x01(\v2\x19.lerna.v1.CommandIdentityR\x0fcommandIdentity\x12%\n" +
-	"\x0erouting_status\x18\a \x01(\tR\rroutingStatus\"\xfc\x01\n" +
+	"\x0erouting_status\x18\a \x01(\tR\rroutingStatus\x12.\n" +
+	"\vrequest_ref\x18\b \x01(\v2\r.lerna.v1.RefR\n" +
+	"requestRef\x12B\n" +
+	"\x1dexpected_requirements_version\x18\t \x01(\x04R\x1bexpectedRequirementsVersion\x124\n" +
+	"\x16expected_input_version\x18\n" +
+	" \x01(\x04R\x14expectedInputVersion\x128\n" +
+	"\n" +
+	"depends_on\x18\v \x03(\v2\x19.lerna.v1.CommandIdentityR\tdependsOn\x120\n" +
+	"\x14observed_session_seq\x18\f \x01(\x04R\x12observedSessionSeq\x12$\n" +
+	"\x0etask_input_seq\x18\r \x01(\x04R\ftaskInputSeq\x128\n" +
+	"\x10confirmation_ref\x18\x0e \x01(\v2\r.lerna.v1.RefR\x0fconfirmationRef\"\xfc\x01\n" +
 	"\aSession\x123\n" +
 	"\n" +
 	"session_id\x18\x01 \x01(\v2\x14.lerna.v1.GlobalNameR\tsessionId\x12\x16\n" +
@@ -2250,27 +2316,30 @@ var file_lerna_v1_submission_proto_depIdxs = []int32{
 	23, // 29: lerna.v1.SessionInput.task_id:type_name -> lerna.v1.GlobalName
 	10, // 30: lerna.v1.SessionInput.content_ref:type_name -> lerna.v1.Ref
 	11, // 31: lerna.v1.SessionInput.command_identity:type_name -> lerna.v1.CommandIdentity
-	23, // 32: lerna.v1.Session.session_id:type_name -> lerna.v1.GlobalName
-	17, // 33: lerna.v1.Session.inputs:type_name -> lerna.v1.SessionInput
-	10, // 34: lerna.v1.Session.task_refs:type_name -> lerna.v1.Ref
-	10, // 35: lerna.v1.Content.ref:type_name -> lerna.v1.Ref
-	11, // 36: lerna.v1.Content.source:type_name -> lerna.v1.CommandIdentity
-	10, // 37: lerna.v1.Content.derived_from:type_name -> lerna.v1.Ref
-	12, // 38: lerna.v1.PendingGoal.command:type_name -> lerna.v1.SubmitGoalCommand
-	10, // 39: lerna.v1.PendingGoal.content_ref:type_name -> lerna.v1.Ref
-	10, // 40: lerna.v1.Job.ref:type_name -> lerna.v1.Ref
-	11, // 41: lerna.v1.Job.responsibility:type_name -> lerna.v1.CommandIdentity
-	20, // 42: lerna.v1.Job.goal:type_name -> lerna.v1.PendingGoal
-	10, // 43: lerna.v1.Job.specification_ref:type_name -> lerna.v1.Ref
-	11, // 44: lerna.v1.JobCommand.identity:type_name -> lerna.v1.CommandIdentity
-	10, // 45: lerna.v1.JobCommand.job_ref:type_name -> lerna.v1.Ref
-	10, // 46: lerna.v1.JobCommand.specification_ref:type_name -> lerna.v1.Ref
-	21, // 47: lerna.v1.JobCommand.job:type_name -> lerna.v1.Job
-	48, // [48:48] is the sub-list for method output_type
-	48, // [48:48] is the sub-list for method input_type
-	48, // [48:48] is the sub-list for extension type_name
-	48, // [48:48] is the sub-list for extension extendee
-	0,  // [0:48] is the sub-list for field type_name
+	10, // 32: lerna.v1.SessionInput.request_ref:type_name -> lerna.v1.Ref
+	11, // 33: lerna.v1.SessionInput.depends_on:type_name -> lerna.v1.CommandIdentity
+	10, // 34: lerna.v1.SessionInput.confirmation_ref:type_name -> lerna.v1.Ref
+	23, // 35: lerna.v1.Session.session_id:type_name -> lerna.v1.GlobalName
+	17, // 36: lerna.v1.Session.inputs:type_name -> lerna.v1.SessionInput
+	10, // 37: lerna.v1.Session.task_refs:type_name -> lerna.v1.Ref
+	10, // 38: lerna.v1.Content.ref:type_name -> lerna.v1.Ref
+	11, // 39: lerna.v1.Content.source:type_name -> lerna.v1.CommandIdentity
+	10, // 40: lerna.v1.Content.derived_from:type_name -> lerna.v1.Ref
+	12, // 41: lerna.v1.PendingGoal.command:type_name -> lerna.v1.SubmitGoalCommand
+	10, // 42: lerna.v1.PendingGoal.content_ref:type_name -> lerna.v1.Ref
+	10, // 43: lerna.v1.Job.ref:type_name -> lerna.v1.Ref
+	11, // 44: lerna.v1.Job.responsibility:type_name -> lerna.v1.CommandIdentity
+	20, // 45: lerna.v1.Job.goal:type_name -> lerna.v1.PendingGoal
+	10, // 46: lerna.v1.Job.specification_ref:type_name -> lerna.v1.Ref
+	11, // 47: lerna.v1.JobCommand.identity:type_name -> lerna.v1.CommandIdentity
+	10, // 48: lerna.v1.JobCommand.job_ref:type_name -> lerna.v1.Ref
+	10, // 49: lerna.v1.JobCommand.specification_ref:type_name -> lerna.v1.Ref
+	21, // 50: lerna.v1.JobCommand.job:type_name -> lerna.v1.Job
+	51, // [51:51] is the sub-list for method output_type
+	51, // [51:51] is the sub-list for method input_type
+	51, // [51:51] is the sub-list for extension type_name
+	51, // [51:51] is the sub-list for extension extendee
+	0,  // [0:51] is the sub-list for field type_name
 }
 
 func init() { file_lerna_v1_submission_proto_init() }
