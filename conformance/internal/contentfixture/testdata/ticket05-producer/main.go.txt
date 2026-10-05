@@ -1,0 +1,206 @@
+// Independent supervisor driver: build only against frozen 1a7 product packages.
+package main
+
+import (
+	"context"
+	"crypto/sha256"
+	"encoding/hex"
+	"encoding/json"
+	"errors"
+	"fmt"
+	"os"
+	"path/filepath"
+	"strconv"
+	"syscall"
+	"time"
+
+	objects "github.com/ruipengliu/lerna/adapters/objectstore/local"
+	pg "github.com/ruipengliu/lerna/adapters/postgres"
+	store "github.com/ruipengliu/lerna/adapters/postgres/content"
+	v "github.com/ruipengliu/lerna/contract/v1_2"
+	d "github.com/ruipengliu/lerna/domain/content"
+)
+
+const frozenSHA="1a7d910238eb74cddc712d92b0ba4014a72ff507"
+
+type observation struct {
+	ScopeID string `json:"scope_id"`
+	Schema string `json:"schema"`
+	WriterSHA string `json:"writer_sha"`
+	Binding string `json:"binding"`
+	Requests []v.ContentPutRequest `json:"requests"`
+	Receipts []v.CommandReceipt `json:"receipts"`
+	States []string `json:"states"`
+	Attempts map[string][]putEffect `json:"attempts"`
+	ObjectFDs []int `json:"object_fds"`
+	MigrationChecksum string `json:"migration_checksum"`
+}
+type putEffect struct {
+	Key string `json:"key"`
+	Attempt string `json:"attempt"`
+	Hash string `json:"hash"`
+	Length int64 `json:"length"`
+	InputSHA256 string `json:"input_sha256"`
+}
+type frame struct {
+	Phase string `json:"phase"`
+	Observation observation `json:"observation"`
+	ObjectCloseACK bool `json:"object_close_ack"`
+	StoreCloseACK bool `json:"store_close_ack"`
+	WitnessCloseACK bool `json:"witness_close_ack"`
+	StartGateCloseACK bool `json:"start_gate_close_ack"`
+	StopGateCloseACK bool `json:"stop_gate_close_ack"`
+	ObjectFDsClosed bool `json:"object_fds_closed"`
+	Failed bool `json:"failed"`
+}
+type capturedObjects struct {
+	*objects.Store
+	attempts map[string][]putEffect
+}
+func (p *capturedObjects) Put(ctx context.Context,key,attempt,hash string,length int64,body []byte) error {
+	// Capture every actual original call's full responsibility before delegation.
+	// No current epoch, directory name guess or newer product supplies this set.
+	digest:=sha256.Sum256(body)
+	p.attempts[key]=append(p.attempts[key],putEffect{key,attempt,hash,length,hex.EncodeToString(digest[:])})
+	return p.Store.Put(ctx,key,attempt,hash,length,body)
+}
+func gate(ctx context.Context,file *os.File) error {
+	fd:=int(file.Fd())
+	if err:=syscall.SetNonblock(fd,true); err!=nil { return err }
+	var token [1]byte
+	for ctx.Err()==nil {
+		n,err:=syscall.Read(fd,token[:])
+		if err==nil && n==1 { if token[0]!=1 { return errors.New("invalid effect gate") }; return nil }
+		if err==nil { return errors.New("effect gate EOF") }
+		if err!=syscall.EAGAIN && err!=syscall.EWOULDBLOCK && err!=syscall.EINTR { return err }
+		time.Sleep(time.Millisecond)
+	}
+	return ctx.Err()
+}
+func send(ctx context.Context,value frame) error {
+	body,err:=json.Marshal(value)
+	if err!=nil { return err }
+	body=append(body,'\n')
+	if len(body)>16384 { return errors.New("finite producer frame exceeded") }
+	fd:=int(os.Stdout.Fd())
+	if err=syscall.SetNonblock(fd,true); err!=nil { return err }
+	for len(body)>0 && ctx.Err()==nil {
+		n,err:=syscall.Write(fd,body)
+		if n>0 { body=body[n:] }
+		if err!=nil && err!=syscall.EAGAIN && err!=syscall.EWOULDBLOCK && err!=syscall.EINTR { return err }
+		if len(body)>0 { time.Sleep(time.Millisecond) }
+	}
+	if len(body)>0 { return ctx.Err() }
+	return nil
+}
+func matchingFDs(binding string)(result map[int]bool,err error){
+	file,err:=os.Open("/proc/self/fd")
+	if err!=nil { return nil,err }
+	names,readErr:=file.Readdirnames(64)
+	closeErr:=file.Close()
+	if readErr!=nil || closeErr!=nil || len(names)==64 { return nil,errors.Join(readErr,closeErr,errors.New("finite FD observation incomplete")) }
+	result=map[int]bool{}
+	for _,name:=range names {
+		fd,err:=strconv.Atoi(name)
+		if err!=nil { return nil,err }
+		info,err:=os.Stat(filepath.Join("/proc/self/fd",name))
+		if errors.Is(err,os.ErrNotExist) { continue } // The observer's own closed FD.
+		if err!=nil { return nil,err }
+		st,ok:=info.Sys().(*syscall.Stat_t)
+		if !ok { return nil,errors.New("native stat unavailable") }
+		if fmt.Sprintf("linux-directory:%d:%d",st.Dev,st.Ino)==binding { result[fd]=true }
+	}
+	return result,nil
+}
+func run(ctx context.Context)(status frame,err error){
+	status.Phase="stopped"
+	status.Observation=observation{ScopeID:os.Getenv("CONTENT_LEGACY_SCOPE_ID"),Schema:os.Getenv("CONTENT_LEGACY_SCHEMA"),WriterSHA:frozenSHA,Attempts:map[string][]putEffect{}}
+	start:=os.NewFile(3,"legacy-effect-gate")
+	stop:=os.NewFile(4,"legacy-stop-gate")
+	var witness *os.File
+	var originalObjects *objects.Store
+	var originalStore *store.Store
+	defer func(){
+		if originalObjects!=nil {
+			e:=originalObjects.Close()
+			status.ObjectCloseACK=e==nil
+			err=errors.Join(err,e)
+			status.ObjectFDsClosed=len(status.Observation.ObjectFDs)==2
+			for _,fd:=range status.Observation.ObjectFDs { var st syscall.Stat_t; status.ObjectFDsClosed=status.ObjectFDsClosed && syscall.Fstat(fd,&st)==syscall.EBADF }
+		}
+		if originalStore!=nil { e:=originalStore.Close(); status.StoreCloseACK=e==nil; err=errors.Join(err,e) }
+		if witness!=nil { e:=errors.Join(witness.Sync(),witness.Close()); status.WitnessCloseACK=e==nil; err=errors.Join(err,e) }
+		e:=start.Close(); status.StartGateCloseACK=e==nil; err=errors.Join(err,e)
+		e=stop.Close(); status.StopGateCloseACK=e==nil; err=errors.Join(err,e)
+		status.Failed=err!=nil
+	}()
+	if err=gate(ctx,start); err!=nil { return status,err }
+	root:=os.Getenv("CONTENT_LEGACY_ROOT")
+	witness,err=os.Open(root)
+	if err!=nil { return status,err }
+	info,err:=witness.Stat()
+	if err!=nil { return status,err }
+	st,ok:=info.Sys().(*syscall.Stat_t)
+	if !ok || !info.IsDir() { return status,errors.New("original root stat unavailable") }
+	status.Observation.Binding=fmt.Sprintf("linux-directory:%d:%d",st.Dev,st.Ino)
+	if status.Observation.Binding!=os.Getenv("CONTENT_LEGACY_BINDING") { return status,errors.New("original responsibility binding mismatch") }
+	before,err:=matchingFDs(status.Observation.Binding)
+	if err!=nil { return status,err }
+	originalObjects,err=objects.Open(root)
+	if err!=nil { return status,err }
+	after,err:=matchingFDs(status.Observation.Binding)
+	if err!=nil { return status,err }
+	for fd:=range after { if !before[fd] { status.Observation.ObjectFDs=append(status.Observation.ObjectFDs,fd) } }
+	if len(status.Observation.ObjectFDs)!=2 { return status,errors.New("actual original Object holder FDs unavailable") }
+	originalStore,err=store.Open(ctx,pg.Config{DSN:os.Getenv("LERNA_TEST_POSTGRES_DSN"),Schema:status.Observation.Schema,MaxOpenConnections:1,TransactionTimeout:3*time.Second,StatementTimeout:2*time.Second,LockTimeout:time.Second})
+	if err!=nil { return status,err }
+	if err=originalStore.Migrate(ctx); err!=nil { return status,err }
+	versions,err:=originalStore.MigrationVersions(ctx)
+	if err!=nil || len(versions)!=1 || versions[0].Version!=1 { return status,errors.Join(err,errors.New("not frozen 0001 namespace")) }
+	status.Observation.MigrationChecksum=versions[0].Checksum
+	if versions[0].Checksum!="sha256:00363b79dafb6eb1f373be9ef08e915fe23cc3db0fa55345e8ae6c051ce0c1ed" { return status,errors.New("frozen 0001 checksum mismatch") }
+	owner:=v.OwnerRef{TenantID:"content-tenant",OwnerID:"content-owner"}
+	subject:=v.SubjectBinding{TenantID:owner.TenantID,SubjectID:"verified-subject",DelegationChain:[]v.DelegatedSubject{}}
+	wide:=time.Now().Add(time.Hour).UTC().Truncate(time.Microsecond)
+	if err=originalStore.InstallFixtureCommandReader(ctx,owner,subject,wide); err!=nil { return status,err }
+	captured:=&capturedObjects{Store:originalObjects,attempts:status.Observation.Attempts}
+	service,err:=d.New(d.Config{Owner:owner,Store:originalStore,Objects:captured,Limits:d.Limits{MaxPreparingVersions:16,MaxStagingBytes:1048576,Lease:time.Minute,WorkTimeout:5*time.Second},PublishBudget:time.Minute,MaxPublicationAttempts:3,Worker:"ticket05-frozen-legacy"})
+	if err!=nil { return status,err }
+	for i:=0;i<2;i++ {
+		ref:=v.ContentRef{Owner:owner,ContentID:"stopped-legacy",Version:"1",Hash:"sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",MediaType:"text/plain",ByteLength:"6"}
+		body:="YWxwaGEK"
+		if i==1 { ref.Version="2"; ref.Hash="sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad"; ref.ByteLength="5"; body="YmV0YQo=" }
+		policy:=d.FixturePolicy{Ref:ref,Subject:subject,Purpose:"verification",Revision:1,ValidUntil:wide,RetainUntil:wide,Read:true,Process:true,Save:true,Sync:true,Disclose:true}
+		if err=originalStore.InstallFixturePolicy(ctx,policy,0); err!=nil { return status,err }
+		wire:=v.Time(wide.Format("2006-01-02T15:04:05.000000Z"))
+		request:=v.ContentPutRequest{ContractVersion:v.Version,Profile:"content",CommandID:v.ID(fmt.Sprintf("stopped-legacy-%d",i)),Target:v.ContentTarget{TenantID:owner.TenantID,OwnerID:owner.OwnerID,Kind:"content",ID:ref.ContentID},Method:"content.put",AcceptBefore:wire,Payload:v.ContentPutPayload{ContentRef:ref,Sources:[]v.ContentRef{},Purpose:"verification",BytesBase64:body,RetainUntil:wire}}
+		raw,err:=v.Encode(request)
+		if err!=nil { return status,err }
+		result,err:=service.Put(ctx,raw,&subject)
+		received,ok:=result.AsReceived()
+		if err!=nil || !ok { return status,errors.Join(err,errors.New("old normal admission did not persist receipt")) }
+		if _,ok=received.Receipt.AsAccepted(); !ok { return status,errors.New("old normal admission refused") }
+		if worked,err:=service.Step(ctx); err!=nil || !worked { return status,errors.Join(err,errors.New("old normal publication did not complete")) }
+		query,err:=v.Encode(v.ContentGetRequest{ContractVersion:v.Version,Profile:"content",CommandID:"old-normal-read",Target:request.Target,Method:"content.get",AcceptBefore:wire,Payload:v.ContentGetPayload{ContentRef:ref,Purpose:"verification"}})
+		if err!=nil { return status,err }
+		view,err:=service.Get(ctx,query,&subject)
+		published,ok:=view.AsPublished()
+		if err!=nil || !ok || published.ContentRef!=ref || published.BytesBase64!=body { return status,errors.Join(err,errors.New("old normal exact body differed")) }
+		status.Observation.Requests=append(status.Observation.Requests,request)
+		status.Observation.Receipts=append(status.Observation.Receipts,received.Receipt)
+		status.Observation.States=append(status.Observation.States,"published")
+	}
+	currentInfo,err:=os.Lstat(root)
+	if err!=nil || !os.SameFile(info,currentInfo) { return status,errors.Join(err,errors.New("original volume replaced during producer")) }
+	if err=send(ctx,frame{Phase:"published",Observation:status.Observation}); err!=nil { return status,err }
+	if err=gate(ctx,stop); err!=nil { return status,err }
+	return status,nil
+}
+func main(){
+	ctx,cancel:=context.WithTimeout(context.Background(),5*time.Second)
+	defer cancel()
+	status,err:=run(ctx)
+	if sendErr:=send(ctx,status); sendErr!=nil { err=errors.Join(err,sendErr) }
+	err=errors.Join(err,os.Stdout.Close())
+	if err!=nil { fmt.Fprintln(os.Stderr,"legacy producer or holder completion unconfirmed"); os.Exit(1) }
+}

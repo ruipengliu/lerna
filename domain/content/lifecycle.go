@@ -58,6 +58,7 @@ type BodyHolder struct {
 
 type LifecycleRepository interface {
 	ManagementRepository
+	BindLegacyPrimary(context.Context, runtime.Tx, Record, LegacyPrimaryQualification) (Record, error)
 	QualifyPolicyCleanupNotRequired(context.Context, runtime.Tx, CleanupResponsibility) error
 	CurrentSavingPolicy(context.Context, runtime.Tx, v.SubjectBinding, v.ContentRef, string) (*FixturePolicy, error)
 	BindPolicyCleanupSeal(context.Context, runtime.Tx, CleanupResponsibility, BodySeal) error
@@ -83,6 +84,7 @@ type BodyCleanupObservation struct {
 }
 
 type LifecycleConfig struct {
+	LegacyPrimary     *LegacyPrimaryQualification
 	SecondaryHolderID string
 	SecondaryObjects  ErasingObjects
 	ManagementConfig
@@ -112,6 +114,7 @@ func NewLifecycle(config LifecycleConfig) (*Lifecycle, error) {
 	if len(config.SecondaryHolderID) > 128 || config.SecondaryHolderID == config.PrimaryHolderID || config.SecondaryHolderID == "postgres-staging" || config.SecondaryObjects != nil && config.SecondaryHolderID == "" {
 		return nil, ErrUnavailable
 	}
+	config.LegacyPrimary = cloneLegacyPrimary(config.LegacyPrimary)
 	return &Lifecycle{config: config, manager: manager, store: store}, nil
 }
 

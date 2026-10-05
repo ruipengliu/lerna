@@ -641,3 +641,63 @@ unknown inode349441。责任、inode和owner移除均实际fsynced ledger记录�
 73523实际完成并明确RELEASE/no pending。测试运行时另有尚未执行 legacy
 binder 的WIP接线；本partial只固定本两资格源码及此准确边界，不把legacy
 CAS、旧producer重建入口或全部七AC当已green。原legacy firstred另行归档。
+
+
+### 原真实停止 legacy writer 的受信确切绑定（partial）
+
+采用根归档 `ticket-05-legacy-holder-binding/decision.md`（10358B，
+SHA785ac19e6e0737cafd554ddc281161e4c66a7d66d4634ad92cc17143b1037cc4）。
+`TestContentStoppedOriginalLegacyScopeBindsOnlyAfterPositiveWriterClose`
+先在新预登记 namespace/root 实际运行冻结1a7 writer。两个原版本真实
+published/read，捕获每次原 Put 的准确参数。原实际 PID/PGID/starttime ACK
+先于效果 gate；writer 尚在时无停止资格的绑定拒绝。原 Objects/Store/
+witness/gates 显式 Close ACK、原实际 FD 关闭、actual Wait/groupAbsent
+分别登记，然后才升级该准确 namespace 并打开当前对象介质。
+
+当前 unbound Get unavailable、原字节仍在、原 receipt 字节级 replay 与
+published history保持、unbound Seal拒绝均先执行。最初 binder stub 的
+真正 business red 位于以上正常/拒绝链之后。最小 dedicated whole-Record
+CAS仅从空 binding 变为该原介质 binding/资格ID/证据digest；两个短Tx夹
+原 media actual Read/hash/length 校验，原完整 attempts 同Tx登记，原 caps/
+receipt/费用/发布历史不变。普通 SaveVersion binding/provenance immutability
+保持，无新迁移。当前受信构造深复制固定资格；公开请求只有ref/purpose。
+同资格幂等、caller修改原DTO不改变实例、错空root/真实copyroot/namespace
+拒绝、实际 World.Reopen 后 provenance保持均已执行。之后真实新协议 Seal/
+清理全部原 effects/最小gone，独立 Version2 beta 与两个 receipt/history
+保持。未停止、未知旧scope或未知 logicalClose 不被自动采用。
+
+冻结入口随仓库重建，不依赖外部 absolute producer env。75原文件共466704B
+及固定manifest由有限 fixture校验/物化；独立driver只import冻结包，compiler
+15s clipped caller20、producer5s/supervisor6s、Go30/outer120保持。compiler
+使用实际 Process.Kill 取消并另核Wait/groupAbsent；不以复用数值PGID盲杀。
+根独立逐文件audit `/tmp/lerna-05-frozen1a7-source-audit.json` 为source provenance
+ONLY（75 files/0errors），不替执行证据。原one-off personal-path build脚本
+移至本目录 historical artifact，fixture不执行它。
+
+| `/tmp/lerna-04-ticket05-execution/` 日志 | 实际结果与范围 |
+| --- | --- |
+| `legacy-frozen-first-build.log` | 原one-off build成功，PID2991399/start12495385/exit0/absent。 |
+| `legacy-stopped-first-red.log` | 编译输入FAIL（named Purpose/string），2992181/start12498188/exit1/absent，未启动旧producer。 |
+| `legacy-stopped-first-red-compile-repair.log` | 真business red0.401s，2993176/start12501940/exit1/absent；旧producer2993333/start12502208/exit0/absent并原显式Close ACK。 |
+| `legacy-stopped-first-green.log` | portable入口调整后的unused import编译FAIL，3031363/start12664402/exit1/absent。 |
+| `legacy-stopped-first-green-compile-repair.log` | exactnormal实际PASS2.694s，3032216/start12667752/exit0/absent；旧producer3032524/start12668228、compiler3032369/start12668037均exit0/absent与显式Close ACK。 |
+| `legacy-stopped-race.log` | sameexact race实际PASS4.267s，3049877/start12746651/exit0/absent。 |
+| `legacy-related-wrong-root-race.log` | 原wrongroot exactrace PASS1.727s，3050875/start12749662/exit0/absent。 |
+| `legacy-related-first-seal-race.log` | 原firstSeal（真实Reopen）exactrace PASS1.846s，3051381/start12751576/exit0/absent。 |
+| `legacy-related-attempt-pages-race.log` | 原allattempt exactrace PASS2.496s，3051890/start12753457/exit0/absent；0001/2/3三冻结SHA均准确。 |
+
+调度核对保留：normal首轮明确root grant后root发相矛盾的03未release消息，
+05仅完成已运行有限operation，随后hold/release，未继续native或重跑掩盖。
+root确认其调度证据错误；后来完整tick/mtime核对明确首次compilerFAIL与03B
+shared，而正常2.694的start12667752在B finalmtime后，正常执行可独立资格。
+此结论来自root核对，不把文件mtime冒充tool/message completion timestamp。
+新四race由重新明确唯一LOCAL grant逐一串行执行，03明确hold；所有actual
+completion和显式RELEASE已报告。非verbose package PASS不宣称个别RUN输出。
+
+sameexact race原scope `lerna_test_3c85bd9055a3dbaf32e927e2` / objects4077323202
+(dev33/inode352357)，compiler3050180/start12747441和producer3050364/
+start12747648实际exit0/absent；gateClose ACK、原FD8/9关闭、原Objects/Store
+Close ACK分别成立。资格digest0c6745d38013112833f6119007adea9e1d475efa8aa03b20249ea490ebc01be0。
+完整原 frames/effects/资格在 `owned-scopes.log` 405–421行；不回填任何历史
+owner02或unknown root。本partial尚未执行legacy CAS竞争/原cutoff跨越/
+PG commit-reply-loss恢复；决定§5这些最小义务继续，七AC均未accept。

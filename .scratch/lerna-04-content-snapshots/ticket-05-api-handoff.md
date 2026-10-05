@@ -166,3 +166,23 @@ typed完整责任与primarygone/globalpending分开，两个World重开同原预
 产品不猜删；setup原owner确切移除后同原责任恢复allACK，V2/原receipt保持。
 这不是PGcommit_unknown或未知旧scope回收，legacy binding/可复现producer
 及真实跨锁/CAS拒绝仍独立未完成。
+
+
+受信 legacy 端口 `LifecycleConfig.LegacyPrimary` 固定原scope资格并深复制；
+`BindLegacyPrimary(ctx, trustedSubject, {Ref,Purpose})` 只绑定原介质责任，不是
+正文许可、发布、续cap或擦除。资格由host对新owned冻结writer原scope的
+prestart duty/PIDPGIDstart/effectgate与显式Objects/Store Close+actualWait/
+groupAbsent证据形成，不允许公开caller发停机bool或从empty/copyroot认领。
+当前只支持真实published且完整原actual attempts，未知/failed/preparing
+scope保守拒绝。独立PG dedicated whole-Record CAS从空binding→原binding并
+固化qualificationID/digest，原普通SaveVersion不能换绑或注入provenance；
+两短Tx夹实际原介质Read/hash/length，同资格幂等。无新迁移/重Put/receipt/
+费用/cap变化。portable frozen fixture无需外部producer路径，可由make/CI
+正常集成入口重建有限compiler+producer；historical one-off脚本不参与入口。
+
+正常2.694、独立sameexactrace4.267及错root/firstSeal/allattempt三旧controls
+真实通过；原两个版本receipt/history与剩余版本body保持。root核对首次
+compilerFAIL曾shared03B，normal start在B completion范围之后；调度chronology
+保留在evidence，不以重跑洗掉。此范围不替决定§5 CAS竞争/cutoff/commit-reply
+loss资格，不声称unknown历史scope升级、非协议旧writer仍活时防写或七AC
+已accept。后续真实资格/最终sourcequalification与root审查继续。
