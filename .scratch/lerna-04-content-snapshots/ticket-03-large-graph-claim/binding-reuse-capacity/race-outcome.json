@@ -1,0 +1,95 @@
+{
+  "source_pin": "28e3a468c86d4323d3b497836de23bb311a58952",
+  "native_identity": {
+    "pid": 3274419,
+    "pgid": 3274419,
+    "starttime": "13677185",
+    "started_ns": 1791168533510417351,
+    "args": [
+      "/workspace/lerna-content-03-137311247276/large-graph-binding-reuse-overlay/component-race.test",
+      "-test.v",
+      "-test.count=1",
+      "-test.timeout=120s",
+      "-test.run=^(TestContentContextReachableClosure64And65IncludesIntermediateVersions|TestContentContextStaticModeMaximumReachable62Materials|TestContentContextSingleContentBoundHasHonestLayerAndNoDispatch|TestContentContextDuplicateSelectorRoleRefusesBeforeOriginalInputReplacement)$"
+    ]
+  },
+  "session": 54896,
+  "actual_exit": 1,
+  "group_absent": true,
+  "current_killpg_zero_absent": true,
+  "log": "/workspace/lerna-content-03-137311247276/context-final-capacity-b-binding-reuse-race.log",
+  "log_sha256": "d27d6966cbcf63d9348b80d0ef216c3a2dbdebf34fc0a8a91de90b97136ee0e7",
+  "log_bytes": 26367,
+  "log_lines": 160,
+  "direct_binary_no_go_package_duration": true,
+  "binary_provenance": "/workspace/lerna-content-03-137311247276/large-graph-binding-reuse-overlay/binary-race-provenance.json",
+  "manifest_sha256": "f98350889216691304ef107a1a9f25fce25c5d9bb987ac61c3690e410c68cd04",
+  "run_once": true,
+  "outcomes": [
+    {
+      "status": "FAIL",
+      "test": "TestContentContextReachableClosure64And65IncludesIntermediateVersions",
+      "duration": "43.29s"
+    },
+    {
+      "status": "FAIL",
+      "test": "TestContentContextReachableClosure64And65IncludesIntermediateVersions/64",
+      "duration": "29.24s"
+    },
+    {
+      "status": "PASS",
+      "test": "TestContentContextReachableClosure64And65IncludesIntermediateVersions/65",
+      "duration": "14.05s"
+    },
+    {
+      "status": "FAIL",
+      "test": "TestContentContextStaticModeMaximumReachable62Materials",
+      "duration": "22.69s"
+    },
+    {
+      "status": "PASS",
+      "test": "TestContentContextSingleContentBoundHasHonestLayerAndNoDispatch",
+      "duration": "9.81s"
+    },
+    {
+      "status": "PASS",
+      "test": "TestContentContextSingleContentBoundHasHonestLayerAndNoDispatch/200000",
+      "duration": "8.51s"
+    },
+    {
+      "status": "PASS",
+      "test": "TestContentContextSingleContentBoundHasHonestLayerAndNoDispatch/262144",
+      "duration": "1.30s"
+    },
+    {
+      "status": "PASS",
+      "test": "TestContentContextDuplicateSelectorRoleRefusesBeforeOriginalInputReplacement",
+      "duration": "0.63s"
+    }
+  ],
+  "caller_seconds": 30,
+  "claim_seconds": 5,
+  "test_watchdog_seconds": 120,
+  "outer_seconds": 120,
+  "failed_capacity_not_accepted": true,
+  "collector_buffers": [
+    {
+      "events": 120,
+      "dropped": 0
+    },
+    {
+      "events": 15,
+      "dropped": 0
+    },
+    {
+      "events": 290,
+      "dropped": 0
+    }
+  ],
+  "first_errors": [
+    "    context_claim_diagnostics.go:118: CLAIM_DIAG first_error kind=content.ReadForProcessing at=29.171088833s duration=4.735768ms caller_remaining=828.88015ms cause=context.deadlineExceededError:context_deadline bytes=0 sources=0",
+    "    context_claim_diagnostics.go:118: CLAIM_DIAG first_error kind=phase.compile-and-bind-end at=13.829665497s duration=4.555788811s caller_remaining=16.17027866s cause=*errors.joinError:context_overflow ",
+    "    context_claim_diagnostics.go:118: CLAIM_DIAG first_error kind=access.PrepareContent at=22.618722623s duration=3.373526ms caller_remaining=7.381271016s cause=*pgconn.errTimeout:context_deadline "
+  ],
+  "no_source_fix_or_extra_run": true
+}
