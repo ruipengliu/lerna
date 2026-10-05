@@ -12,3 +12,23 @@ message GlobalName {
   // 域内唯一标识，使用 UUIDv7。
   string local_id = 4;
 }
+
+// 精确引用（核心契约 2.1）：全局名字 + revision + schema_id + digest。
+// 引用历史依据时必须固定到具体版本，不得自动替换成最新版本。
+message Ref {
+  GlobalName name = 1;
+  // 写入方签发，不透明，只能比较是否相等。
+  string revision = 2;
+  string schema_id = 3;
+  // 只证明内容完整，不授予访问权。
+  bytes digest = 4;
+}
+
+// 命令身份（核心契约 3.1）：提交、查询、回执、交接都引用这一类型。
+message CommandIdentity {
+  string user_id = 1;
+  // 由认证主体决定，不采信正文自报的值。
+  string issuer_id = 2;
+  string target_domain_id = 3;
+  string command_id = 4;
+}

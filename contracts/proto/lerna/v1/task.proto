@@ -1,0 +1,316 @@
+syntax = "proto3";
+
+package lerna.v1;
+
+import "google/protobuf/timestamp.proto";
+import "lerna/v1/ledger.proto";
+
+option go_package = "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1;lernav1";
+
+// 任务生命周期（核心契约 2.5）。
+enum TaskLifecycle {
+  TASK_LIFECYCLE_UNSPECIFIED = 0;
+  TASK_LIFECYCLE_OPEN = 1;
+  TASK_LIFECYCLE_CLOSED = 2;
+}
+
+// 任务控制（核心契约 2.5）。
+enum TaskControl {
+  TASK_CONTROL_UNSPECIFIED = 0;
+  TASK_CONTROL_ACTIVE = 1;
+  TASK_CONTROL_PAUSED = 2;
+  TASK_CONTROL_CANCELLING = 3;
+}
+
+// 任务推进（核心契约 2.5）。
+enum TaskProgress {
+  TASK_PROGRESS_UNSPECIFIED = 0;
+  TASK_PROGRESS_RUNNING = 1;
+  TASK_PROGRESS_WAITING = 2;
+}
+
+// 等待种类（任务编排 2.4）。
+enum WaitingKind {
+  WAITING_KIND_UNSPECIFIED = 0;
+  WAITING_KIND_USER = 1;
+  WAITING_KIND_RECONCILIATION = 2;
+  WAITING_KIND_SUBTASK = 3;
+  WAITING_KIND_EXTERNAL = 4;
+  WAITING_KIND_GRANT = 5;
+  WAITING_KIND_BUDGET = 6;
+}
+
+message WaitingOn {
+  WaitingKind kind = 1;
+  // 关联对象，例如输入请求、动作或确认。
+  string ref = 2;
+  // 具体缺口。
+  string gap = 3;
+}
+
+// 任务结果（核心契约 2.5）。
+enum TaskOutcome {
+  TASK_OUTCOME_UNSPECIFIED = 0;
+  TASK_OUTCOME_SUCCEEDED = 1;
+  TASK_OUTCOME_FAILED = 2;
+  TASK_OUTCOME_CANCELLED = 3;
+}
+
+// 任务（核心契约 2.3）。
+message Task {
+  string user_id = 1;
+  string task_id = 2;
+  string owner_domain_id = 3;
+  string goal_ref = 4;
+  int64 requirements_version = 5;
+  int64 input_version = 6;
+  TaskLifecycle lifecycle = 7;
+  TaskControl control = 8;
+  TaskProgress progress = 9;
+  repeated WaitingOn waiting_on = 10;
+  int64 planning_generation = 11;
+  int64 control_generation = 12;
+  string result_ref = 13;
+  int64 revision = 14;
+  string session_id = 15;
+  google.protobuf.Timestamp created_at = 16;
+}
+
+// 条件来源（任务编排 2.2）。
+enum RequirementSource {
+  REQUIREMENT_SOURCE_UNSPECIFIED = 0;
+  REQUIREMENT_SOURCE_USER = 1;
+  REQUIREMENT_SOURCE_TEMPLATE = 2;
+  REQUIREMENT_SOURCE_MODEL = 3;
+}
+
+// 核验规则的种类。规则固定版本；推理不得注册恒真的规则。
+enum VerificationRuleKind {
+  VERIFICATION_RULE_KIND_UNSPECIFIED = 0;
+  // 本任务中一个指定能力、指定参数的动作已生效，并有可信证据。
+  VERIFICATION_RULE_KIND_OPERATION_APPLIED = 1;
+  // 受管理目录中的文件读回内容摘要等于期望值。
+  VERIFICATION_RULE_KIND_FILE_CONTENT = 2;
+}
+
+message VerificationRule {
+  VerificationRuleKind kind = 1;
+  // 规则的语义版本。
+  string version = 2;
+  // OPERATION_APPLIED：能力标识。
+  string capability_id = 3;
+  // OPERATION_APPLIED：必须匹配的参数；FILE_CONTENT：path。
+  map<string, string> params = 4;
+  // FILE_CONTENT：期望内容的 SHA-256（十六进制）。
+  string expected_digest = 5;
+}
+
+// 条件（核心契约 2.3）。修改即新版本，不原地改写。
+message Requirement {
+  string requirement_id = 1;
+  string description = 2;
+  bool necessary = 3;
+  VerificationRule rule = 4;
+  RequirementSource source = 5;
+}
+
+// 条件集接纳状态（核心契约 2.5）。
+enum RequirementSetStatus {
+  REQUIREMENT_SET_STATUS_UNSPECIFIED = 0;
+  REQUIREMENT_SET_STATUS_DRAFT = 1;
+  REQUIREMENT_SET_STATUS_ACCEPTED = 2;
+}
+
+// 条件集接纳来源（任务编排 2.2）。
+enum AcceptanceSource {
+  ACCEPTANCE_SOURCE_UNSPECIFIED = 0;
+  ACCEPTANCE_SOURCE_TEMPLATE = 1;
+  ACCEPTANCE_SOURCE_USER_LIST = 2;
+  ACCEPTANCE_SOURCE_USER_CONFIRMED = 3;
+}
+
+// 条件集快照：不可变。
+message RequirementSet {
+  string task_id = 1;
+  int64 version = 2;
+  repeated Requirement requirements = 3;
+  RequirementSetStatus status = 4;
+  AcceptanceSource acceptance_source = 5;
+  int64 bound_input_version = 6;
+  // 模板标识（来源为模板时）。
+  string template_id = 7;
+}
+
+// 用户在目标里给出的完成条件：任务模板或显式条件列表。
+message RequirementSetDraft {
+  // 受信任务模板标识；与 explicit 二选一。
+  string template_id = 1;
+  map<string, string> template_params = 2;
+  repeated Requirement explicit = 3;
+}
+
+// 提议的种类（核心契约 2.3）。
+enum ProposalKind {
+  PROPOSAL_KIND_UNSPECIFIED = 0;
+  PROPOSAL_KIND_ACTION = 1;
+  PROPOSAL_KIND_MODIFY_REQUIREMENTS = 2;
+  PROPOSAL_KIND_ASK_USER = 3;
+  PROPOSAL_KIND_COMPLETION = 4;
+}
+
+// 有限计划中的一步（推理接口 2.4）。M1 计划长度上限为 1，参数只允许具体值。
+message PlanStep {
+  string step_id = 1;
+  string capability_id = 2;
+  string capability_version = 3;
+  map<string, string> arguments = 4;
+  repeated string depends_on = 5;
+  string expected_evidence = 6;
+}
+
+message ActionBody {
+  repeated PlanStep steps = 1;
+}
+
+message AskUserBody {
+  string question = 1;
+  bool changes_basis = 2;
+}
+
+message ModifyRequirementsBody {
+  int64 from_version = 1;
+  repeated Requirement requirements = 2;
+  string reason = 3;
+}
+
+// 完成判断中的一条：每条必要条件逐条对应证据。
+enum Verdict {
+  VERDICT_UNSPECIFIED = 0;
+  VERDICT_SATISFIED = 1;
+  VERDICT_UNSATISFIED = 2;
+  VERDICT_UNKNOWN = 3;
+}
+
+message RequirementJudgement {
+  string requirement_id = 1;
+  Verdict verdict = 2;
+  // 证据引用：动作标识或观察标识。
+  repeated string evidence_refs = 3;
+}
+
+message CompletionBody {
+  repeated RequirementJudgement judgements = 1;
+  string answer = 2;
+  repeated string uncertainties = 3;
+}
+
+// 提议（核心契约 2.3）：推理产生，任务编排接收后不可变。
+message Proposal {
+  string proposal_id = 1;
+  string request_id = 2;
+  string task_id = 3;
+  string context_snapshot_ref = 4;
+  int64 planning_generation = 5;
+  int64 requirements_version = 6;
+  int64 input_version = 7;
+  int64 control_generation = 8;
+  string reasoner_ref = 9;
+  ProposalKind kind = 10;
+  oneof body {
+    ActionBody action = 11;
+    AskUserBody ask_user = 12;
+    ModifyRequirementsBody modify_requirements = 13;
+    CompletionBody completion = 14;
+  }
+  repeated string basis_refs = 15;
+  repeated string gaps = 16;
+}
+
+// 动作在任务编排中的视图：来自执行管理的通知。
+message OperationView {
+  string operation_id = 1;
+  string capability_id = 2;
+  // 准入来源：提议步骤、模型调用或核心安排的工作。
+  string origin = 3;
+  // 交接状态：意图已记、执行管理已接纳。
+  bool ledger_accepted = 4;
+  EffectOutcome effect = 5;
+  LateEffect late_effect = 6;
+  bool settled = 7;
+  DispatchState dispatch = 8;
+  // 执行管理的修订；只接受更大的修订。
+  int64 ledger_revision = 9;
+  // 开始核验前是否已取得开始回执（准入-5）。
+  bool started = 10;
+  map<string, string> arguments = 11;
+  int64 admitted_control_generation = 12;
+}
+
+// 核验轮次状态（核心契约 2.5）。
+enum VerificationStatus {
+  VERIFICATION_STATUS_UNSPECIFIED = 0;
+  VERIFICATION_STATUS_VERIFYING = 1;
+  VERIFICATION_STATUS_PASSED = 2;
+  VERIFICATION_STATUS_REJECTED = 3;
+  VERIFICATION_STATUS_SUPERSEDED = 4;
+}
+
+message VerificationRound {
+  string task_id = 1;
+  int64 round_no = 2;
+  VerificationStatus status = 3;
+  int64 requirements_version = 4;
+  int64 input_version = 5;
+  int64 control_generation = 6;
+  repeated string operation_ids = 7;
+  repeated string gaps = 8;
+  string proposal_id = 9;
+}
+
+// Result 中逐条列出的条件结论（核心契约 2.3）。
+message RequirementEvaluation {
+  string requirement_id = 1;
+  string description = 2;
+  VerificationRule rule = 3;
+  RequirementSource source = 4;
+  Verdict verdict = 5;
+  repeated string evidence_refs = 6;
+}
+
+// 遗留的不确定项：原动作、负责方和恢复入口。
+message Uncertainty {
+  string operation_id = 1;
+  string ledger_domain_id = 2;
+  EffectOutcome effect = 3;
+  LateEffect late_effect = 4;
+  string note = 5;
+}
+
+// 结果（核心契约 2.3）：与任务关闭在同一事务写入，之后不再修改。
+message Result {
+  string user_id = 1;
+  string task_id = 2;
+  TaskOutcome outcome = 3;
+  string close_reason = 4;
+  int64 requirements_version = 5;
+  repeated RequirementEvaluation requirement_evaluations = 6;
+  repeated string operation_snapshot_refs = 7;
+  repeated Uncertainty uncertainties = 8;
+  repeated string pending_responsibility_refs = 9;
+  string answer = 10;
+  string usage_snapshot_ref = 11;
+  google.protobuf.Timestamp closed_at = 12;
+  int64 verification_round = 13;
+}
+
+// 任务视图：全量快照和明确的阶段。
+message TaskView {
+  Task task = 1;
+  RequirementSet requirements = 2;
+  repeated OperationView operations = 3;
+  repeated VerificationRound rounds = 4;
+  Result result = 5;
+  // 由维度组合得出的界面阶段（任务编排 2.4）。
+  string phase = 6;
+  repeated Proposal proposals = 7;
+}

@@ -10,6 +10,12 @@ linters:
   enable:
     - depguard
   settings:
+    errcheck:
+      # 命令行输出写失败时没有更好的处理方式。
+      exclude-functions:
+        - fmt.Fprint
+        - fmt.Fprintf
+        - fmt.Fprintln
     depguard:
       rules:
         contracts:

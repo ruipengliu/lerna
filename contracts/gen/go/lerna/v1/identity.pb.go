@@ -91,6 +91,148 @@ func (x *GlobalName) GetLocalId() string {
 	return ""
 }
 
+// 精确引用（核心契约 2.1）：全局名字 + revision + schema_id + digest。
+// 引用历史依据时必须固定到具体版本，不得自动替换成最新版本。
+type Ref struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	Name  *GlobalName            `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	// 写入方签发，不透明，只能比较是否相等。
+	Revision string `protobuf:"bytes,2,opt,name=revision,proto3" json:"revision,omitempty"`
+	SchemaId string `protobuf:"bytes,3,opt,name=schema_id,json=schemaId,proto3" json:"schema_id,omitempty"`
+	// 只证明内容完整，不授予访问权。
+	Digest        []byte `protobuf:"bytes,4,opt,name=digest,proto3" json:"digest,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Ref) Reset() {
+	*x = Ref{}
+	mi := &file_lerna_v1_identity_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Ref) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Ref) ProtoMessage() {}
+
+func (x *Ref) ProtoReflect() protoreflect.Message {
+	mi := &file_lerna_v1_identity_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Ref.ProtoReflect.Descriptor instead.
+func (*Ref) Descriptor() ([]byte, []int) {
+	return file_lerna_v1_identity_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *Ref) GetName() *GlobalName {
+	if x != nil {
+		return x.Name
+	}
+	return nil
+}
+
+func (x *Ref) GetRevision() string {
+	if x != nil {
+		return x.Revision
+	}
+	return ""
+}
+
+func (x *Ref) GetSchemaId() string {
+	if x != nil {
+		return x.SchemaId
+	}
+	return ""
+}
+
+func (x *Ref) GetDigest() []byte {
+	if x != nil {
+		return x.Digest
+	}
+	return nil
+}
+
+// 命令身份（核心契约 3.1）：提交、查询、回执、交接都引用这一类型。
+type CommandIdentity struct {
+	state  protoimpl.MessageState `protogen:"open.v1"`
+	UserId string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	// 由认证主体决定，不采信正文自报的值。
+	IssuerId       string `protobuf:"bytes,2,opt,name=issuer_id,json=issuerId,proto3" json:"issuer_id,omitempty"`
+	TargetDomainId string `protobuf:"bytes,3,opt,name=target_domain_id,json=targetDomainId,proto3" json:"target_domain_id,omitempty"`
+	CommandId      string `protobuf:"bytes,4,opt,name=command_id,json=commandId,proto3" json:"command_id,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *CommandIdentity) Reset() {
+	*x = CommandIdentity{}
+	mi := &file_lerna_v1_identity_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CommandIdentity) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CommandIdentity) ProtoMessage() {}
+
+func (x *CommandIdentity) ProtoReflect() protoreflect.Message {
+	mi := &file_lerna_v1_identity_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CommandIdentity.ProtoReflect.Descriptor instead.
+func (*CommandIdentity) Descriptor() ([]byte, []int) {
+	return file_lerna_v1_identity_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *CommandIdentity) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *CommandIdentity) GetIssuerId() string {
+	if x != nil {
+		return x.IssuerId
+	}
+	return ""
+}
+
+func (x *CommandIdentity) GetTargetDomainId() string {
+	if x != nil {
+		return x.TargetDomainId
+	}
+	return ""
+}
+
+func (x *CommandIdentity) GetCommandId() string {
+	if x != nil {
+		return x.CommandId
+	}
+	return ""
+}
+
 var File_lerna_v1_identity_proto protoreflect.FileDescriptor
 
 const file_lerna_v1_identity_proto_rawDesc = "" +
@@ -102,7 +244,18 @@ const file_lerna_v1_identity_proto_rawDesc = "" +
 	"\x13authority_domain_id\x18\x02 \x01(\tR\x11authorityDomainId\x12\x1f\n" +
 	"\vobject_kind\x18\x03 \x01(\tR\n" +
 	"objectKind\x12\x19\n" +
-	"\blocal_id\x18\x04 \x01(\tR\alocalIdB?Z=github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1;lernav1b\x06proto3"
+	"\blocal_id\x18\x04 \x01(\tR\alocalId\"\x80\x01\n" +
+	"\x03Ref\x12(\n" +
+	"\x04name\x18\x01 \x01(\v2\x14.lerna.v1.GlobalNameR\x04name\x12\x1a\n" +
+	"\brevision\x18\x02 \x01(\tR\brevision\x12\x1b\n" +
+	"\tschema_id\x18\x03 \x01(\tR\bschemaId\x12\x16\n" +
+	"\x06digest\x18\x04 \x01(\fR\x06digest\"\x90\x01\n" +
+	"\x0fCommandIdentity\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x1b\n" +
+	"\tissuer_id\x18\x02 \x01(\tR\bissuerId\x12(\n" +
+	"\x10target_domain_id\x18\x03 \x01(\tR\x0etargetDomainId\x12\x1d\n" +
+	"\n" +
+	"command_id\x18\x04 \x01(\tR\tcommandIdB?Z=github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1;lernav1b\x06proto3"
 
 var (
 	file_lerna_v1_identity_proto_rawDescOnce sync.Once
@@ -116,16 +269,19 @@ func file_lerna_v1_identity_proto_rawDescGZIP() []byte {
 	return file_lerna_v1_identity_proto_rawDescData
 }
 
-var file_lerna_v1_identity_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+var file_lerna_v1_identity_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_lerna_v1_identity_proto_goTypes = []any{
-	(*GlobalName)(nil), // 0: lerna.v1.GlobalName
+	(*GlobalName)(nil),      // 0: lerna.v1.GlobalName
+	(*Ref)(nil),             // 1: lerna.v1.Ref
+	(*CommandIdentity)(nil), // 2: lerna.v1.CommandIdentity
 }
 var file_lerna_v1_identity_proto_depIdxs = []int32{
-	0, // [0:0] is the sub-list for method output_type
-	0, // [0:0] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	0, // 0: lerna.v1.Ref.name:type_name -> lerna.v1.GlobalName
+	1, // [1:1] is the sub-list for method output_type
+	1, // [1:1] is the sub-list for method input_type
+	1, // [1:1] is the sub-list for extension type_name
+	1, // [1:1] is the sub-list for extension extendee
+	0, // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_lerna_v1_identity_proto_init() }
@@ -139,7 +295,7 @@ func file_lerna_v1_identity_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_lerna_v1_identity_proto_rawDesc), len(file_lerna_v1_identity_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   1,
+			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

@@ -1,0 +1,130 @@
+syntax = "proto3";
+
+package lerna.v1;
+
+import "google/protobuf/timestamp.proto";
+import "lerna/v1/task.proto";
+
+option go_package = "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1;lernav1";
+
+// 会话状态（会话 2.4）。
+enum SessionStatus {
+  SESSION_STATUS_UNSPECIFIED = 0;
+  SESSION_STATUS_ACTIVE = 1;
+  SESSION_STATUS_ARCHIVED = 2;
+}
+
+// 输入的类别（会话 2.3）。
+enum InputKind {
+  INPUT_KIND_UNSPECIFIED = 0;
+  INPUT_KIND_NEW_GOAL = 1;
+  INPUT_KIND_MODIFY_TASK = 2;
+  INPUT_KIND_ANSWER = 3;
+  INPUT_KIND_CONFIRMATION = 4;
+  INPUT_KIND_RECORD_ONLY = 5;
+  INPUT_KIND_CONTROL = 6;
+}
+
+// 输入投递状态（会话 2.4）："已记录"不等于"任务已接纳"。
+enum RoutingStatus {
+  ROUTING_STATUS_UNSPECIFIED = 0;
+  ROUTING_STATUS_RECORDED = 1;
+  ROUTING_STATUS_TASK_ACCEPTED = 2;
+  ROUTING_STATUS_PROCESSED = 3;
+  ROUTING_STATUS_REJECTED = 4;
+}
+
+// 会话（会话 2.2）。
+message Session {
+  string user_id = 1;
+  string session_id = 2;
+  SessionStatus status = 3;
+  int64 last_committed_seq = 4;
+  int64 revision = 5;
+  google.protobuf.Timestamp created_at = 6;
+}
+
+// 会话输入（核心契约 2.3）。
+message SessionInput {
+  string user_id = 1;
+  string session_id = 2;
+  int64 session_seq = 3;
+  string input_id = 4;
+  InputKind input_kind = 5;
+  // 关联的任务；新目标在任务建立之前为空。
+  string task_id = 6;
+  // 正文的内容引用（内容治理）。
+  string content_ref = 7;
+  RoutingStatus routing_status = 8;
+  // 回答或确认所针对的输入请求。
+  string request_id = 9;
+  google.protobuf.Timestamp recorded_at = 10;
+}
+
+// 确认的事项类型（核心契约 2.3）。
+enum ConfirmationSubjectKind {
+  CONFIRMATION_SUBJECT_KIND_UNSPECIFIED = 0;
+  CONFIRMATION_SUBJECT_KIND_GRANT_ISSUANCE = 1;
+  CONFIRMATION_SUBJECT_KIND_OPERATION_ADMISSION = 2;
+}
+
+// 确认状态（会话 2.4）。
+enum ConfirmationStatus {
+  CONFIRMATION_STATUS_UNSPECIFIED = 0;
+  CONFIRMATION_STATUS_PENDING = 1;
+  CONFIRMATION_STATUS_APPROVED = 2;
+  CONFIRMATION_STATUS_DENIED = 3;
+  CONFIRMATION_STATUS_CONSUMED = 4;
+  CONFIRMATION_STATUS_WITHDRAWN = 5;
+  CONFIRMATION_STATUS_EXPIRED = 6;
+  CONFIRMATION_STATUS_SUPERSEDED = 7;
+}
+
+// 确认（核心契约 2.3）。只能被与之匹配的那个事项消费一次。
+message Confirmation {
+  string user_id = 1;
+  string confirmation_id = 2;
+  string session_id = 3;
+  ConfirmationSubjectKind subject_kind = 4;
+  string task_id = 5;
+  // 核心生成的事项描述，确认的就是实际要执行的。
+  string description = 6;
+  // 只用于动作准入。
+  int64 requirements_version = 7;
+  int64 input_version = 8;
+  // 覆盖 subject_kind 的事项摘要。
+  bytes intent_fingerprint = 9;
+  google.protobuf.Timestamp expires_at = 10;
+  ConfirmationStatus status = 11;
+  // 消费目标：互斥的类型联合，类型必须与 subject_kind 一致。
+  oneof consumed_by {
+    string grant_issuance_ref = 12;
+    string admission_ref = 13;
+  }
+  // 被确认的事项：动作准入时为提议和步骤。
+  string proposal_id = 14;
+  string step_id = 15;
+}
+
+// 会话视图：全量快照。
+message SessionView {
+  Session session = 1;
+  repeated SessionInput inputs = 2;
+  repeated string task_ids = 3;
+  repeated Confirmation pending_confirmations = 4;
+  repeated InputRequest open_requests = 5;
+}
+
+// 输入请求（会话 2.2）：核心发布的提问。
+message InputRequest {
+  string user_id = 1;
+  string request_id = 2;
+  string session_id = 3;
+  string task_id = 4;
+  string question = 5;
+  // 答案是否会改变任务依据。
+  bool changes_basis = 6;
+  // 回答后要补充的内容。
+  RequirementSetDraft expected_requirements = 7;
+  bool open = 8;
+}

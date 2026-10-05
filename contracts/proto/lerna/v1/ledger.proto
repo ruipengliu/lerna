@@ -1,0 +1,177 @@
+syntax = "proto3";
+
+package lerna.v1;
+
+import "google/protobuf/timestamp.proto";
+import "lerna/v1/capability.proto";
+
+option go_package = "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1;lernav1";
+
+// 动作生命周期（核心契约 2.5）。
+enum OperationLifecycle {
+  OPERATION_LIFECYCLE_UNSPECIFIED = 0;
+  OPERATION_LIFECYCLE_ACCEPTED = 1;
+  OPERATION_LIFECYCLE_ACTIVE = 2;
+  OPERATION_LIFECYCLE_SETTLED = 3;
+}
+
+// 动作派发（核心契约 2.5）：OPEN → SEALED，不得重新打开。
+enum DispatchState {
+  DISPATCH_STATE_UNSPECIFIED = 0;
+  DISPATCH_STATE_OPEN = 1;
+  DISPATCH_STATE_SEALED = 2;
+}
+
+// 执行尝试阶段（核心契约 2.5）。
+enum AttemptPhase {
+  ATTEMPT_PHASE_UNSPECIFIED = 0;
+  ATTEMPT_PHASE_REGISTERED = 1;
+  ATTEMPT_PHASE_DISPATCH_POSSIBLE = 2;
+  ATTEMPT_PHASE_OBSERVED = 3;
+  ATTEMPT_PHASE_CLOSED = 4;
+}
+
+// 效果（核心契约 2.5）。UNSPECIFIED 不得兼作业务上的"未知"。
+enum EffectOutcome {
+  EFFECT_OUTCOME_UNSPECIFIED = 0;
+  EFFECT_OUTCOME_NOT_APPLIED = 1;
+  EFFECT_OUTCOME_UNKNOWN = 2;
+  EFFECT_OUTCOME_APPLIED = 3;
+}
+
+// 迟到可能性（核心契约 2.5）。
+enum LateEffect {
+  LATE_EFFECT_UNSPECIFIED = 0;
+  LATE_EFFECT_RULED_OUT = 1;
+  LATE_EFFECT_MAY_OCCUR = 2;
+}
+
+// 核对进度（执行管理 2.2）。
+enum ReconcileState {
+  RECONCILE_STATE_UNSPECIFIED = 0;
+  RECONCILE_STATE_NONE = 1;
+  RECONCILE_STATE_PENDING = 2;
+  RECONCILE_STATE_WAITING = 3;
+  RECONCILE_STATE_PAUSED = 4;
+  RECONCILE_STATE_DONE = 5;
+}
+
+// 发送目的：执行或核对查询。
+enum SendPurpose {
+  SEND_PURPOSE_UNSPECIFIED = 0;
+  SEND_PURPOSE_EXECUTE = 1;
+  SEND_PURPOSE_QUERY = 2;
+}
+
+// 动作（核心契约 2.3）：执行端点固定；取消不会把它变成另一个动作。
+message Operation {
+  string user_id = 1;
+  string operation_id = 2;
+  string task_id = 3;
+  string admission_ref = 4;
+  string ledger_domain_id = 5;
+  string executor_endpoint_id = 6;
+  string adapter_ref = 7;
+  string capability_id = 8;
+  map<string, string> parameters = 9;
+  bytes request_digest = 10;
+  CapabilityDeclaration capability_snapshot = 11;
+  OperationLifecycle lifecycle = 12;
+  DispatchState dispatch = 13;
+  EffectOutcome effect = 14;
+  LateEffect late_effect = 15;
+  ReconcileState reconcile_state = 16;
+  int64 ledger_revision = 17;
+  repeated string attempt_ids = 18;
+  repeated string closure_evidence_refs = 19;
+  // 已准入的发送额度与核对查询额度。
+  int32 send_quota = 20;
+  int32 query_quota = 21;
+  string seal_reason = 22;
+  bool evidence_conflict = 23;
+  string pause_reason = 24;
+  google.protobuf.Timestamp next_reconcile_at = 25;
+  int32 reconcile_checks = 26;
+  // 准入来源：提议步骤、模型调用或核心安排的工作。
+  string origin = 27;
+  // 原交接身份。
+  string handoff_id = 28;
+}
+
+// 执行尝试（核心契约 2.3）：结果未知时按原标识和原外部键重发，只增加发送计数。
+message Attempt {
+  string operation_id = 1;
+  string attempt_id = 2;
+  int32 attempt_no = 3;
+  string external_key = 4;
+  string external_key_scope = 5;
+  google.protobuf.Timestamp key_valid_until = 6;
+  AttemptPhase phase = 7;
+  int32 send_count = 8;
+  int64 claim_epoch = 9;
+  repeated string observation_refs = 10;
+  google.protobuf.Timestamp first_possible_send_at = 11;
+}
+
+// 一次物理发送的记录。
+message Send {
+  string attempt_id = 1;
+  int32 send_seq = 2;
+  SendPurpose purpose = 3;
+  int64 claim_epoch = 4;
+  // P4 开始回执的引用。
+  string start_receipt_ref = 5;
+  bool dispatch_possible = 6;
+  string provider_request_id = 7;
+  google.protobuf.Timestamp dispatch_possible_at = 8;
+}
+
+// 观察来源：可信出口固定的原始观察，或适配器提交的派生解释。
+enum ObservationSource {
+  OBSERVATION_SOURCE_UNSPECIFIED = 0;
+  OBSERVATION_SOURCE_RAW = 1;
+  OBSERVATION_SOURCE_INTERPRETATION = 2;
+  OBSERVATION_SOURCE_INTERNAL_CLOSURE = 3;
+}
+
+// 观察（执行管理 2.1 的效果证据）。
+message Observation {
+  string observation_id = 1;
+  string operation_id = 2;
+  string attempt_id = 3;
+  int32 send_seq = 4;
+  SendPurpose purpose = 5;
+  ObservationSource source = 6;
+  // 协议结果：例如状态码或适配器的执行情况。
+  string protocol_result = 7;
+  // 适配器的效果主张（不是裁决）。
+  EffectOutcome claimed_effect = 8;
+  // 适配器给出的终局依据候选。
+  bool claims_terminal = 9;
+  string evidence_ref = 10;
+  string resource_version = 11;
+  google.protobuf.Timestamp observed_at = 12;
+  string adapter_version = 13;
+  string interpretation_rule_ref = 14;
+  bytes body_digest = 15;
+  // 观察正文（M1 只保存结构化摘要，不保存正文副本时为空）。
+  map<string, string> fields = 16;
+}
+
+// 效果（核心契约 2.3）：必须注明证据覆盖了哪些尝试。
+message Effect {
+  string operation_id = 1;
+  repeated string covered_attempt_ids = 2;
+  EffectOutcome outcome = 3;
+  LateEffect late_effect = 4;
+  repeated string evidence_refs = 5;
+  google.protobuf.Timestamp next_reconcile_at = 6;
+}
+
+// 动作视图：执行管理的权威记录，供查询。
+message OperationRecord {
+  Operation operation = 1;
+  repeated Attempt attempts = 2;
+  repeated Send sends = 3;
+  repeated Observation observations = 4;
+}

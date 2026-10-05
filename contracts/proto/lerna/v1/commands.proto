@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package lerna.v1;
+
+import "lerna/v1/session.proto";
+import "lerna/v1/task.proto";
+
+option go_package = "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1;lernav1";
+
+// 交互适配器发给核心的公共契约命令正文。命令类型见 contracts/commands。
+
+// 创建会话：会话可以不关联任务。
+message CreateSessionCommand {}
+
+message CreateSessionResult {
+  string session_id = 1;
+}
+
+// 提交输入（会话 3）。
+message SubmitInputCommand {
+  // 为空时随输入新建会话。
+  string session_id = 1;
+  InputKind input_kind = 2;
+  // 用户输入的正文。
+  string text = 3;
+  // 新目标：任务模板或显式条件列表。
+  RequirementSetDraft requirements = 4;
+  // 修改、回答、控制：明确的任务。
+  string task_id = 5;
+  // 修改任务：提交时看到的版本。
+  int64 expected_requirements_version = 6;
+  int64 expected_input_version = 7;
+  // 回答或确认：输入请求或确认标识。
+  string request_id = 8;
+  // 确认：明确的批准或拒绝。
+  bool approve = 9;
+  // 确认：用户看到的事项摘要，必须与核心绑定一致。
+  bytes intent_fingerprint = 10;
+  // 控制：取消、暂停、恢复。
+  ControlKind control = 11;
+  // 分支与历史编辑：M1 不支持。
+  string fork_from_message_id = 12;
+  string edit_message_id = 13;
+}
+
+enum ControlKind {
+  CONTROL_KIND_UNSPECIFIED = 0;
+  CONTROL_KIND_CANCEL = 1;
+  CONTROL_KIND_PAUSE = 2;
+  CONTROL_KIND_RESUME = 3;
+}
+
+// 提交输入的结果：明确区分"已记录"和"任务已接纳"。
+message SubmitInputResult {
+  string session_id = 1;
+  string input_id = 2;
+  int64 session_seq = 3;
+  RoutingStatus routing_status = 4;
+  string task_id = 5;
+}

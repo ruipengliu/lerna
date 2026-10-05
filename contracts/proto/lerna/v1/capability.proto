@@ -1,0 +1,75 @@
+syntax = "proto3";
+
+package lerna.v1;
+
+option go_package = "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1;lernav1";
+
+// 外部效果（核心契约 2.4）。缺省：改变外部世界。
+enum ExternalEffect {
+  EXTERNAL_EFFECT_UNSPECIFIED = 0;
+  EXTERNAL_EFFECT_NONE = 1;
+  EXTERNAL_EFFECT_CHANGES_WORLD = 2;
+  EXTERNAL_EFFECT_UNDETERMINED = 3;
+}
+
+// 幂等（核心契约 2.4）。缺省：不支持。
+message Idempotency {
+  bool supported = 1;
+  // 幂等键的作用范围，例如目标账户或区域。
+  string key_scope = 2;
+  bool params_must_match = 3;
+  // 键的有效期（秒）；0 表示无法证明有效期，不得据此重发。
+  int64 key_validity_seconds = 4;
+}
+
+// 查询如何关联到尝试。
+enum QueryCorrelation {
+  QUERY_CORRELATION_UNSPECIFIED = 0;
+  QUERY_CORRELATION_BY_ATTEMPT_ID = 1;
+  QUERY_CORRELATION_BY_RECEIPT = 2;
+  QUERY_CORRELATION_RESOURCE_OBSERVATION = 3;
+}
+
+// 结果查询（核心契约 2.4）。缺省：不支持。
+message ResultQuery {
+  bool supported = 1;
+  QueryCorrelation correlation = 2;
+  int64 visibility_delay_ms = 3;
+  int64 retention_seconds = 4;
+}
+
+// 迟到终局（核心契约 2.4）。缺省：无法证明。
+message LateFinality {
+  bool provable = 1;
+  // 什么证据能证明原请求不会再生效。
+  string evidence = 2;
+}
+
+// 计费（核心契约 2.4）。缺省：计费且上界未知。
+message Billing {
+  bool billed = 1;
+  string billing_source = 2;
+  bool ceiling_known = 3;
+  // 单次费用上界（预算单位）。
+  int64 ceiling = 4;
+  string unit = 5;
+}
+
+// 能力声明（核心契约 2.4、执行适配器接口 2.1）：按具体能力提供，是待验证的主张。
+message CapabilityDeclaration {
+  string adapter_id = 1;
+  string implementation_version = 2;
+  string contract_version = 3;
+  string capability_id = 4;
+  string capability_version = 5;
+  ExternalEffect external_effect = 6;
+  Idempotency idempotency = 7;
+  ResultQuery query = 8;
+  LateFinality late_finality = 9;
+  Billing billing = 10;
+  // 验证依据：测试集版本、目标版本等。
+  repeated string verification_refs = 11;
+  // 参数约定：必须提供的参数名。
+  repeated string required_arguments = 12;
+  string description = 13;
+}
