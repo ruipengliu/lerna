@@ -213,3 +213,13 @@ Legacy实际已成功commit后一次RETURN reply loss已独立资格：原Within
 receipt/pub保持。exact2.316/race3.832、三SQLsha及原oldCloseWait/actualjoin
 均准确。此仅confirmedcommit返回replyloss，非PGcommit_unknown/native失败；
 初次shortcutoff整Tx回滚仍独立未运行。
+
+
+Legacy初次q700ms整Tx回滚已独立资格：host在任何binder开始前仅首次缩短
+并登记原资格，sameq Version2正常；Version1 realCAS和首原attempt真实写后
+原cutoff+20ms由真实freshDBtime expired/rollback。公开unavailable/Seal绑定
+拒绝、同已过期q不复活、实际重开/原bytesreceiptpub/V2正常；exact2.702/
+race4.133和三SQLsha准确。Helper仅本test首次调用，不声明函数有onceguard。
+attempt写调用实际成功与持久原子rollback的source证明分列，无私表count
+执行assert/擦除ACK。既有WorkBudget1min未扩大，q700ms严格clip。Legacy§5
+三个最小恢复前沿分别执行，不替全部unknown历史状态或七AC acceptance。

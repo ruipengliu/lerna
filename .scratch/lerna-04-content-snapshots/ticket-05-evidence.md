@@ -798,3 +798,41 @@ Go30/wrapper120不变，sessions79601/90319实际完成，显式RELEASE/no pendi
 这是已有协议直接failure/recovery qualification，无新业务red/product变更；
 cutoff两个静态WIP编译但未执行，初次700ms截止整Tx回滚仍未claim。未知旧
 scopes保留，七AC未accept。
+
+
+### Legacy 最初准确短资格跨界：真实CAS/attempt写的整Tx回滚（partial）
+
+`TestContentLegacyOriginalQualificationCutoffRollsBackBindingAndAttemptWrites`
+在新原scope冻结writer真实正常并positiveCloseWait之后、构造/开始任何
+binder之前，本case host首次一次调用FixInitialLegacyCutoff把原q仅缩短到
+700ms并fsync准确原namespace/ID/binding/digest/ref/attempts/cutoff事件。
+该函数校原ownedroot与strictlyshorterfuture；本case一次调用，不宣称通用
+onceguard能阻止所有二次授权，原失败后绝不续期。既有消费者WorkBudget1min
+未扩大，实际授权被原q700ms严格clipped。
+
+同一initialq700ms独立原Version2实际正常绑定/read，证明该短窗口正常路径
+可行。随后Version1真实dedicatedCAS成功、同Tx首条原SavePublicationAttempt
+真实写成功后，机械等待原q.ValidUntil+20ms；真实最终DBclock回报expired并
+实际整Tx rollback。公开Get unavailable/Seal ErrHolderBinding、同原已过期
+q重放expired、真实World.Reopen与两原独立bytes/receipt/pub、Version2正常
+执行。实际delegated write count=1仅为实际写入机制信号，**不是持久私表
+计数执行断言**。绑定回滚有独立公开refusal证据；attempt持久回滚关联原
+事务原子性为SOURCE资格，不冒公开attempt-table查询或擦除ACK。
+
+| `/tmp/lerna-04-ticket05-execution/` 日志 | 实际结果 |
+| --- | --- |
+| `legacy-initial-cutoff-first-run.log` | -v exactnormal PASS2.702s，3112680/start12985938/exit0/groupAbsent/noTimeout。 |
+| `legacy-initial-cutoff-race.log` | -v sameexactrace PASS4.133s（case3.09），3113881/start12990192/exit0/groupAbsent/noTimeout；三原SQLsha正确/组合exit0。 |
+
+normal scope `lerna_test_c110b63674a3362ed15e8fec` / objects2748550027
+(dev33/inode359821)，compiler3112846/start12986221、producer3113001/
+start12986386；initialq截止2026-10-05T00:53:46.421782Z。race scope
+`lerna_test_584ea31ec3f8817c127ad318` / objects443607912(dev33/inode360310)，
+compiler3114105/start12990687、producer3114282/start12990861；initialq截止
+2026-10-05T00:54:31.262132Z。各实际exit0/Wait/groupAbsent、compiler gateClose
+及原producer Objects/Store/witness/gates显式Close ACK/原FD关闭均分列成立。
+原caller20/15clip/5+6/Go30/wrapper120/q700ms/+20ms保持，sessions19338/70491
+actualcomplete、显式RELEASE/no pending。这是原保护直接qualification无新
+red/product修改；legacy§5最小CAS/已commitreplyloss/截止回滚分别已执行，
+不因此声明全部七AC接受或任意unknown旧scope可升级。剩余policywholepage
+CAS和准确祖先/AdmissionTarget清理因果前沿继续独立处理。
