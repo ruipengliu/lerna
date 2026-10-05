@@ -735,3 +735,36 @@ PG locker501334/501347分别登记。原caller20/Go30/wrapper120/join3及原cap/
 预算/期限保持，三个native无timeout/groupAbsent、consumer实际finished，
 所有操作actualcompleted与显式RELEASE/no pending已报告。此范围不替whole-page
 责任CAS、legacy决定§5回填CAS/cutoff/commitreplyloss或其它cap因果前沿。
+
+
+### Legacy 原 whole-Record 竞争拒绝与同资格恢复（partial）
+
+`TestContentLegacyWholeRecordRaceRefusesStaleBindingAndReplaysOriginalQualification`
+先新ownscope真实冻结writer两原版本正常/正向CloseWait后升级。新消费者Tx1
+已释放，真实原media Read（含FD Close）成功后有限3s返回gate。此时当前
+Manager合法InstallPolicy同原Version1 Rev2/RetainUntil30min，实际普通
+SaveVersion收紧原cap/递增Revision并提交；不是私表tuple改写或假的CAS故障。
+放行/actualbinderfinish后精确runtime.ErrClaim，当前unavailable/Seal
+ErrHolderBinding和两原实际bytes/固定receipt/出版历史保持。实际World.Reopen
+后同原固定qID/digest/binding/期限重新资格，正常绑定两个原版本并回读；再
+真实Reopen幂等provenance/原receipt/pub/V2正常。没有更新q或重Put尝试成功。
+
+| `/tmp/lerna-04-ticket05-execution/` 日志 | 实际结果 |
+| --- | --- |
+| `legacy-whole-record-race-first-run.log` | -v exactnormal actualPASS2.273s，3103592/start12950303/exit0/groupAbsent/noTimeout。 |
+| `legacy-whole-record-race-race.log` | -v sameexactrace actualPASS3.852s（case2.80），3104848/start12954675/exit0/groupAbsent/noTimeout；真实0001/2/3三原SHA保持，组合exit0。 |
+
+normal scope `lerna_test_34bbeac53b62a39bd159fac9` / objects3784529484
+(dev33/inode357702)，compiler3103736/start12950656，原producer3103910/
+start12950833；race scope `lerna_test_b99864442fb008a0baaecd16` /
+objects620974924(dev33/inode358192)，compiler3105055/start12955200，原producer
+3105230/start12955376。各compiler actualWait/groupAbsent/controlClose ACK，
+原producerexit0/Wait/groupAbsent与全部显式Objects/Store/witness/gate Close
+ACK/原FD关闭分列登记；binder release/actualfinished/join确认。原20/15clip/
+5+6/Go30/wrapper120/读gate3/join3保持，session52540/22750实际完成并显式
+RELEASE/no pending。旧unknowns不触，当前产品fixed bb6e1f2/35df18e未修改。
+
+此是已有wholeexpected保护的直接真实normal/refusal/recovery qualification，
+没有新产品red/green变更。运行时另外replyloss/cutoff三个静态WIP包编译但
+未执行；本partial只固定该case源码/evidence，不称另两例已qualification、
+PGcommit_unknown、原时钟cutoff回滚、七AC已accept。两后续最小义务继续。

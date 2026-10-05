@@ -196,3 +196,12 @@ loss资格，不声称unknown历史scope升级、非协议旧writer仍活时防�
 5.276及race测试6.552通过；race组合末错误sha path native1单列保留，独立
 真实三path hash修复native0，不用绿色测试重跑洗掉失败。其它CAS及legacy
 §5恢复资格仍待独立实际tracer，七AC未accept。
+
+
+Legacy wholeRecord失配已真实资格：原nativeRead结束后有限返回gate期间当前
+Manager合法收紧同原Record cap/Revision并提交；原expected binder ErrClaim，
+unavailable/SealBinding拒绝/原bytesreceiptpub保持。实际重开同fixedq原期限
+重新资格后正常绑定，再重开幂等，独立V2正常。exact2.273/race3.852及三原
+SQLsha准确，全部原CloseWait+actualjoin确认，现产品无改动。这不是PG原生
+CAS故障，也不替commitreturnedreplyloss或初始shortcutoff回滚；它们静态
+包编译但未执行，后续分别qualification。
