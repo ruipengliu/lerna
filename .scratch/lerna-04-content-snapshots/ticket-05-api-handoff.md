@@ -266,3 +266,11 @@ Consume原pendingfulltuple/noSeal/三准确body保持，port错误原样传播�
 独立durable cap原因语义保持。首包编译FAIL（旧oracle3个err声明）诚实保留，
 机械修复exact2.392/race3.893原期限通过，明确RELEASE。15baselineoracles
 只编译未执行，最终准确affected suites和reviews仍待，七AC未accept。
+
+旧15文件24test原目录总数/首entry oracle已静态改为exact originalRef->body
+literal或缺失，整目录只额外允许knownkey空regular .lock；任意temp/额外body/
+未知metadata仍失败，fault仅实际准确alpha key。复制legacy档案不因政策
+backfill获原media binding，因此原授权读为dependency_unavailable；body/
+receipt/history与65policypages核验保留，genuine stopped原scope正常升级另有
+已执行资格。不改原archive/SQL/fixture/产品/Close规则。24test只compiled尚未
+执行，需要final affected normal/race与格式/vet/全Go/reviews/resourceaudit。

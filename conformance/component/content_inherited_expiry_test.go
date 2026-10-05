@@ -8,8 +8,6 @@ import (
 	fixture "github.com/ruipengliu/lerna/conformance/internal/contentfixture"
 	v "github.com/ruipengliu/lerna/contract/v1_2"
 	"github.com/ruipengliu/lerna/domain/content"
-	"os"
-	"path/filepath"
 	"testing"
 	"time"
 )
@@ -100,16 +98,7 @@ func TestContentLaterAdmissionInheritsOriginalAncestorExpiry(t *testing.T) {
 	if err != nil || originalAfter.Change.Watermark != before.Change.Watermark {
 		t.Fatal("original propagation watermark widened", err, originalAfter)
 	}
-	entries, err := os.ReadDir(w.Directory)
-	if err != nil || len(entries) != 2 {
-		t.Fatal("holder bytes disappeared", err)
-	}
-	for _, entry := range entries {
-		bytes, e := os.ReadFile(filepath.Join(w.Directory, entry.Name()))
-		if e != nil || string(bytes) != "alpha\n" {
-			t.Fatal("independent bytes altered", e)
-		}
-	}
+	assertExactContentObjects(t, w.Directory, map[v.ContentRef]string{alphaRef: "alpha\n", target: "alpha\n"})
 	expiredReplay, _ := v.Encode(putContentRequest(t, ctx, service, req))
 	if string(expiredReplay) != string(replayBefore) {
 		t.Fatal("expired ancestor replaced fixed original receipt")

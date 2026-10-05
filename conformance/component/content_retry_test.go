@@ -10,7 +10,6 @@ import (
 	v "github.com/ruipengliu/lerna/contract/v1_2"
 	"github.com/ruipengliu/lerna/domain/content"
 	"github.com/ruipengliu/lerna/runtime"
-	"os"
 	"testing"
 	"time"
 )
@@ -84,10 +83,7 @@ func TestContentTemporaryFailureKeepsNarrowedRetentionAfterReopen(t *testing.T) 
 	if !ok || expired.Reason != "expired" {
 		t.Fatal("policy widening recovered a previously narrowed retention")
 	}
-	entries, err := os.ReadDir(w.Directory)
-	if err != nil || len(entries) != 0 {
-		t.Fatal("expired original still installed bytes", err)
-	}
+	assertExactContentObjects(t, w.Directory, nil, alphaRef)
 	original, err := service.GetCommand(ctx, contentCommandGetWire(t, request.CommandID), &contentPrincipal)
 	if err != nil {
 		t.Fatal(err)
@@ -155,10 +151,7 @@ func TestContentExpiredOriginalClaimCannotStartObjectIO(t *testing.T) {
 	if !errors.Is(err, runtime.ErrClaim) {
 		t.Fatal("expired native Claim not rejected", err)
 	}
-	entries, err := os.ReadDir(w.Directory)
-	if err != nil || len(entries) != 0 {
-		t.Fatal("expired Claim started real object installation", err)
-	}
+	assertExactContentObjects(t, w.Directory, nil, alphaRef)
 	service = withPublication(t, w, w.Store(), w.Objects, 400*time.Millisecond, 300*time.Millisecond)
 	if processed, err := service.Step(ctx); err != nil || !processed {
 		t.Fatal("fresh Claim could not resume original", err)

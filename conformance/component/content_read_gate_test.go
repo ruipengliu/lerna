@@ -7,7 +7,6 @@ import (
 	fixture "github.com/ruipengliu/lerna/conformance/internal/contentfixture"
 	v "github.com/ruipengliu/lerna/contract/v1_2"
 	"github.com/ruipengliu/lerna/domain/content"
-	"os"
 	"sync"
 	"testing"
 	"time"
@@ -117,10 +116,7 @@ func TestContentReturnedBytesRequireCurrentReadAndDisclose(t *testing.T) {
 			if !ok || progress.Publication != "published" {
 				t.Fatal("query denial changed publication history")
 			}
-			entries, err := os.ReadDir(w.Directory)
-			if err != nil || len(entries) != 1 {
-				t.Fatal("query changed native object responsibility", err)
-			}
+			assertExactContentObjects(t, w.Directory, map[v.ContentRef]string{alphaRef: "alpha\n"})
 			// A new permitted gate succeeds, then later revocation cannot retract that
 			// already returned observation. No global socket/peer atomicity is asserted.
 			policy.Revision = 3

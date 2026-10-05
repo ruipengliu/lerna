@@ -9,8 +9,6 @@ import (
 	v "github.com/ruipengliu/lerna/contract/v1_2"
 	"github.com/ruipengliu/lerna/domain/content"
 	"github.com/ruipengliu/lerna/runtime"
-	"os"
-	"path/filepath"
 	"sync"
 	"testing"
 	"time"
@@ -387,16 +385,7 @@ func TestContentPublicationFinalTransactionChecksHiddenAncestorAfterRealObjectWr
 				}
 				assertContentBody(t, ctx, service, refs[2], nil, "alpha\n")
 			}
-			entries, err := os.ReadDir(w.Directory)
-			if err != nil || len(entries) != 4 {
-				t.Fatal("real in-flight bytes falsely erased", err)
-			}
-			for _, entry := range entries {
-				body, err := os.ReadFile(filepath.Join(w.Directory, entry.Name()))
-				if err != nil || string(body) != "alpha\n" {
-					t.Fatal("independent real object changed", err)
-				}
-			}
+			assertExactContentObjects(t, w.Directory, map[v.ContentRef]string{refs[0]: "alpha\n", refs[1]: "alpha\n", refs[2]: "alpha\n", refs[3]: "alpha\n"})
 		})
 	}
 }

@@ -7,8 +7,6 @@ import (
 	fixture "github.com/ruipengliu/lerna/conformance/internal/contentfixture"
 	v "github.com/ruipengliu/lerna/contract/v1_2"
 	"github.com/ruipengliu/lerna/domain/content"
-	"os"
-	"path/filepath"
 	"sync"
 	"testing"
 	"time"
@@ -91,14 +89,7 @@ func TestContentTargetReadPoliciesBindExactPublishedDeclaration(t *testing.T) {
 				if err != nil || !ok || denied.Reason != "forbidden" {
 					t.Fatalf("%s target policy after %s disclosed exact target body: %+v %v", field, stage, view, err)
 				}
-				entries, err := os.ReadDir(w.Directory)
-				if err != nil || len(entries) != 1 {
-					t.Fatal("query changed native object count", err)
-				}
-				bytes, err := os.ReadFile(filepath.Join(w.Directory, entries[0].Name()))
-				if err != nil || string(bytes) != "alpha\n" {
-					t.Fatal("query repaired or changed independent original bytes", err)
-				}
+				assertExactContentObjects(t, w.Directory, map[v.ContentRef]string{alphaRef: "alpha\n"})
 				command, err := contentService(t, w).GetCommand(ctx, contentCommandGetWire(t, request.CommandID), &contentPrincipal)
 				found, ok := command.AsFound()
 				if err != nil || !ok {
@@ -172,13 +163,10 @@ func TestContentTargetAuthorizationPrecedesExistenceAndMismatchObservation(t *te
 			if err != nil || !ok || denied.Reason != "forbidden" {
 				t.Fatalf("wrong full policy disclosed %s existence/declaration observation: %+v %v", state, view, err)
 			}
-			entries, err := os.ReadDir(w.Directory)
-			expected := 1
 			if state == "absent" {
-				expected = 0
-			}
-			if err != nil || len(entries) != expected {
-				t.Fatal("unauthorized observation changed native objects", err)
+				assertExactContentObjects(t, w.Directory, nil, alphaRef)
+			} else {
+				assertExactContentObjects(t, w.Directory, map[v.ContentRef]string{alphaRef: "alpha\n"})
 			}
 			policy.Ref = alphaRef
 			policy.Revision = 3

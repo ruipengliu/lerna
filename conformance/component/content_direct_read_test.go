@@ -7,8 +7,6 @@ import (
 	fixture "github.com/ruipengliu/lerna/conformance/internal/contentfixture"
 	v "github.com/ruipengliu/lerna/contract/v1_2"
 	"github.com/ruipengliu/lerna/domain/content"
-	"os"
-	"path/filepath"
 	"sync"
 	"testing"
 	"time"
@@ -167,16 +165,7 @@ func TestContentDirectReadPermissionsAreCurrentAndSeparate(t *testing.T) {
 						t.Fatal("expired holder falsely erased", responsibility)
 					}
 				}
-				entries, err := os.ReadDir(w.Directory)
-				if err != nil || len(entries) != 3 {
-					t.Fatal("expired policy removed original object", err)
-				}
-				for _, entry := range entries {
-					body, err := os.ReadFile(filepath.Join(w.Directory, entry.Name()))
-					if err != nil || string(body) != "alpha\n" {
-						t.Fatal("original independent bytes changed", err)
-					}
-				}
+				assertExactContentObjects(t, w.Directory, map[v.ContentRef]string{alphaRef: "alpha\n", source: "alpha\n", request.Payload.ContentRef: "alpha\n"})
 				// Independently held input is submitted as new versions; expired
 				// bytes are never read to manufacture a replacement source.
 				freshSource := source

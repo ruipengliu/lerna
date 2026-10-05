@@ -8,8 +8,6 @@ import (
 	fixture "github.com/ruipengliu/lerna/conformance/internal/contentfixture"
 	v "github.com/ruipengliu/lerna/contract/v1_2"
 	"github.com/ruipengliu/lerna/domain/content"
-	"os"
-	"path/filepath"
 	"testing"
 	"time"
 )
@@ -63,16 +61,7 @@ func TestContentNewAssociationRequiresCurrentDirectSourceAdmission(t *testing.T)
 			if err != nil || !ok || !contentProgress || progress.Publication != "published" {
 				t.Fatal("association replaced original publication history", err, command)
 			}
-			entries, err := os.ReadDir(w.Directory)
-			if err != nil || len(entries) != 3 {
-				t.Fatal("association wrote extra native object", err)
-			}
-			for _, entry := range entries {
-				body, err := os.ReadFile(filepath.Join(w.Directory, entry.Name()))
-				if err != nil || string(body) != "alpha\n" {
-					t.Fatal("original independent object changed", err)
-				}
-			}
+			assertExactContentObjects(t, w.Directory, map[v.ContentRef]string{alphaRef: "alpha\n", source: "alpha\n", request.Payload.ContentRef: "alpha\n"})
 		})
 	}
 }
@@ -230,8 +219,5 @@ func TestContentAssociationKeepsPreparingCapacityAndFailedHistory(t *testing.T) 
 	if !ok || progress.Publication != "failed" {
 		t.Fatal("failed association changed historical publication")
 	}
-	entries, err := os.ReadDir(w.Directory)
-	if err != nil || len(entries) != 0 {
-		t.Fatal("failed association wrote bytes", err)
-	}
+	assertExactContentObjects(t, w.Directory, nil, alphaRef)
 }

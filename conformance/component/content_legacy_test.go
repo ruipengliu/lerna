@@ -8,8 +8,6 @@ import (
 	fixture "github.com/ruipengliu/lerna/conformance/internal/contentfixture"
 	v "github.com/ruipengliu/lerna/contract/v1_2"
 	"github.com/ruipengliu/lerna/domain/content"
-	"os"
-	"path/filepath"
 	"testing"
 	"time"
 )
@@ -74,9 +72,16 @@ func TestContentLegacyBackfillRestoresOriginalExpiryAndFailedHolderResponsibilit
 			t.Fatal("legacy publication history replaced", view)
 		}
 		if i < 2 {
-			assertContentBody(t, ctx, service, request.Payload.ContentRef, nil, "alpha\n")
+			// NewLegacy restores an archive into a different root. Complete policy
+			// backfill cannot invent original-media identity or writer Close ACK.
+			body, err := service.Get(ctx, contentGetWire(t, request.Payload.ContentRef, nil), &contentPrincipal)
+			unavailable, ok := body.AsUnavailable()
+			if err != nil || !ok || unavailable.Reason != "dependency_unavailable" {
+				t.Fatal("copied legacy archive adopted an unqualified holder", body, err)
+			}
 		}
 	}
+	assertExactContentObjects(t, w.Directory, map[v.ContentRef]string{old.Requests[0].Payload.ContentRef: "alpha\n", old.Requests[1].Payload.ContentRef: "alpha\n"}, old.Requests[2].Payload.ContentRef)
 }
 
 func TestContentLegacyPolicyPagesDoNotTruncateAt64OrResetOnReopen(t *testing.T) {
@@ -123,14 +128,19 @@ func TestContentLegacyPolicyPagesDoNotTruncateAt64OrResetOnReopen(t *testing.T) 
 		}
 	}
 	service := contentService(t, w)
-	assertContentBody(t, ctx, service, old.Requests[0].Payload.ContentRef, nil, "alpha\n")
+	view, err := service.Get(ctx, contentGetWire(t, old.Requests[0].Payload.ContentRef, nil), &contentPrincipal)
+	unavailable, ok := view.AsUnavailable()
+	if err != nil || !ok || unavailable.Reason != "dependency_unavailable" {
+		t.Fatal("policy backfill adopted a copied old root", view, err)
+	}
 	guest := contentPrincipal
 	guest.SubjectID = "legacy-guest-64"
-	view, err := service.Get(ctx, contentGetWire(t, old.Requests[0].Payload.ContentRef, nil), &guest)
-	published, ok := view.AsPublished()
-	if err != nil || !ok || published.BytesBase64 != "YWxwaGEK" {
-		t.Fatal("last real authorized policy not usable", err, view)
+	view, err = service.Get(ctx, contentGetWire(t, old.Requests[0].Payload.ContentRef, nil), &guest)
+	unavailable, ok = view.AsUnavailable()
+	if err != nil || !ok || unavailable.Reason != "dependency_unavailable" {
+		t.Fatal("last real authorized policy lost qualification or adopted copied media", err, view)
 	}
+	assertExactContentObjects(t, w.Directory, map[v.ContentRef]string{old.Requests[0].Payload.ContentRef: "alpha\n", old.Requests[1].Payload.ContentRef: "alpha\n"}, old.Requests[2].Payload.ContentRef)
 }
 
 func TestContentActualExpiredOldWriterArchiveRetainsAncestorResponsibilities(t *testing.T) {
@@ -200,16 +210,7 @@ func TestContentActualExpiredOldWriterArchiveRetainsAncestorResponsibilities(t *
 			}
 		}
 	}
-	entries, err := os.ReadDir(w.Directory)
-	if err != nil || len(entries) != 2 {
-		t.Fatal("original native objects changed", err)
-	}
-	for _, entry := range entries {
-		bytes, e := os.ReadFile(filepath.Join(w.Directory, entry.Name()))
-		if e != nil || string(bytes) != "alpha\n" {
-			t.Fatal("independent original object bytes changed", e)
-		}
-	}
+	assertExactContentObjects(t, w.Directory, map[v.ContentRef]string{old.Requests[0].Payload.ContentRef: "alpha\n", old.Requests[1].Payload.ContentRef: "alpha\n"}, old.Requests[2].Payload.ContentRef)
 	// A separate legitimate current chain controls the expired-history refusal.
 	source := alphaRef
 	source.ContentID = "fresh-after-expired-upgrade-source"
@@ -217,7 +218,7 @@ func TestContentActualExpiredOldWriterArchiveRetainsAncestorResponsibilities(t *
 	if _, ok := putContentRequest(t, ctx, service, contentPut(t, source, "fresh-after-upgrade-source", "YWxwaGEK")).AsAccepted(); !ok {
 		t.Fatal("new normal source refused")
 	}
-	if _, err = service.Step(ctx); err != nil {
+	if _, err := service.Step(ctx); err != nil {
 		t.Fatal(err)
 	}
 	target := alphaRef
@@ -228,7 +229,7 @@ func TestContentActualExpiredOldWriterArchiveRetainsAncestorResponsibilities(t *
 	if _, ok := putContentRequest(t, ctx, service, req).AsAccepted(); !ok {
 		t.Fatal("new normal derived refused")
 	}
-	if _, err = service.Step(ctx); err != nil {
+	if _, err := service.Step(ctx); err != nil {
 		t.Fatal(err)
 	}
 	assertContentBody(t, ctx, service, target, nil, "alpha\n")

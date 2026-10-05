@@ -8,7 +8,6 @@ import (
 	fixture "github.com/ruipengliu/lerna/conformance/internal/contentfixture"
 	v "github.com/ruipengliu/lerna/contract/v1_2"
 	"github.com/ruipengliu/lerna/domain/content"
-	"os"
 	"testing"
 	"time"
 )
@@ -185,10 +184,7 @@ func TestContentDirectSourcesRequireSeparateReadProcessSaveAndRetention(t *testi
 			if !ok || progress.Publication != "failed" {
 				t.Fatal("original source responsibility did not fail")
 			}
-			entries, err := os.ReadDir(w.Directory)
-			if err != nil || len(entries) != 2 {
-				t.Fatal("source refusal produced new native bytes", err)
-			}
+			assertExactContentObjects(t, w.Directory, map[v.ContentRef]string{alphaRef: "alpha\n", derived: "alpha\n"}, pending, denied)
 		})
 	}
 }

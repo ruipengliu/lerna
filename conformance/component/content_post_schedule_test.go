@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/ruipengliu/lerna/contract"
-	"os"
 	"testing"
 	"time"
 
@@ -142,13 +141,10 @@ func TestContentPostScheduleAdmissionRollsBackLateVersion(t *testing.T) {
 				if _, err = service.Step(ctx); err != nil {
 					t.Fatal(err)
 				}
-				entries, err := os.ReadDir(w.Directory)
-				expected := 0
 				if mode == "ancestor_policy" {
-					expected = 1
-				}
-				if err != nil || len(entries) != expected {
-					t.Fatal("late transaction published an object", err, len(entries))
+					assertExactContentObjects(t, w.Directory, map[v.ContentRef]string{source: "alpha\n"}, ref)
+				} else {
+					assertExactContentObjects(t, w.Directory, nil, ref)
 				}
 			})
 		}
@@ -284,14 +280,7 @@ func TestContentPostScheduleAliasPreservesOriginalCapOnRollback(t *testing.T) {
 					t.Fatal("normal alias cap was not durable", err, view)
 				}
 			}
-			entries, err := os.ReadDir(w.Directory)
-			if err != nil || len(entries) != 1 {
-				t.Fatal("alias changed exact original object scope", err)
-			}
-			body, err := os.ReadFile(w.Directory + "/" + entries[0].Name())
-			if err != nil || string(body) != "alpha\n" {
-				t.Fatal("alias erased or changed original bytes", err)
-			}
+			assertExactContentObjects(t, w.Directory, map[v.ContentRef]string{alphaRef: "alpha\n"})
 		})
 	}
 }

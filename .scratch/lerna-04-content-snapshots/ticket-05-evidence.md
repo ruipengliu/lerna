@@ -993,3 +993,22 @@ minuteDeadline固定，sessions93683/8128 actualcomplete、全部nativeactualWai
 groupAbsent、明确RELEASE/no pending。compileFAIL首log保留不是businessred，
 产品固定301be6d无改。15旧目录oracle文件同pkg已编译，但其case尚未执行，
 不借本exactpass声称baselines通过；需要独立finite affected suites/root审查。
+
+### 旧目录 oracle 对新永久锁协议的准确静态整改
+
+15旧test文件的24个实际test函数将目录总数/entries[0]换为原fullRef推导的
+准确body key及显式literal原bytes/缺失。独立helper逐个读原body、明确缺失
+ref的Lstat不存在，再核整个root目录：只允许这些knownkeys的空regular .lock
+文件，原body必须exact，任意tmp/额外body/未知metadata/symlink/目录均失败。
+这些旧scenario未发Seal，不忽略.sealed/.sealed.pending，也不宽化未知文件。
+损坏/缺失fault原先entries[0]操作现在只操作alphaRef的准确已核正文key。
+所有旧currentnormal/拒绝/receipt/history/Close路径保持；两个copy-archive
+legacy normal-body expectation精确改为dependency_unavailable，原因是原
+archive复制到新root无原media binding/原writerClose资格，政策回填不能认领。
+原copy bytes和全部receipt/history/65政策pages仍核；真实sameoriginalscope
+停writer后正向升级正常由独立已green frozenlegacy tracer承接。
+
+该整改仅test代码、没有产品或fixture/oldarchive/SQL修改。已在unknown-gates
+精确normal/race包编译，但这24个函数尚未执行，不能以包编译冒运行证据。
+其最终有限正向selectors normal/race与格式/vet/whole-Go及resource审计计划
+单列供rootFULL审查授槽。原3处err声明compileFAIL已留存，再局部:=修复。
