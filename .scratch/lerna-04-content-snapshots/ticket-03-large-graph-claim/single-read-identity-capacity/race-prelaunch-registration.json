@@ -1,0 +1,45 @@
+{
+  "status": "pre-effect original4B registered",
+  "registered_ns": 1791181577399277053,
+  "actual_argv": [
+    "/workspace/lerna-content-03-137311247276/large-graph-single-read-identity-overlay/component-race.test",
+    "-test.v",
+    "-test.run=^(TestContentContextReachableClosure64And65IncludesIntermediateVersions|TestContentContextStaticModeMaximumReachable62Materials|TestContentContextSingleContentBoundHasHonestLayerAndNoDispatch|TestContentContextDuplicateSelectorRoleRefusesBeforeOriginalInputReplacement)$",
+    "-test.count=1",
+    "-test.timeout=120s"
+  ],
+  "binary_pin": {
+    "path": "/workspace/lerna-content-03-137311247276/large-graph-single-read-identity-overlay/component-race.test",
+    "sha256": "223e8c7c3fbb1baedac6ad4998b65b74bf3edee69075e83cbf13bbba913453bd",
+    "bytes": 29097814,
+    "device": 27,
+    "inode": 560637,
+    "mode": "0o700",
+    "own_readFD_read_complete": true,
+    "own_readFD_fsync": "ACK",
+    "own_readFD_Close": "ACK"
+  },
+  "source7_sha256": {
+    "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_dispatch.go": "5c2b8d472fdbe458b9affb9a9543db3359c85c0dfa90d5357bea843995e624fb",
+    "/tmp/lerna-worktrees/content-snapshots-03/domain/content/closure.go": "8897d39b01c1872bf9a5ccf1bbdc9f6105e375e6418781c7ce9574c35b56bab5",
+    "/tmp/lerna-worktrees/content-snapshots-03/domain/content/processing.go": "4a4440cb921001d3edb3d2e829f49b5e684c60d31e0603bcfe9b76a8d6283c30",
+    "/tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_context_publication_cause_test.go": "e944e3439eabe84936eb166e1966b178166fd7e1f7b8a1972139b96b9b2768d0",
+    "/tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_processing_ancestor_read_gate_test.go": "3f21849ec87141726000b210e64cdc9562a0f85feeb78665fa27d02cbe5adcc4",
+    "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_publication_probe.go": "39051536517c23e30d1c80e919824d9c509e2d773a8e0568fe786fe82f9d5517",
+    "/tmp/lerna-worktrees/content-snapshots-03/domain/content/closure_identity_memo_test.go": "c8152b534e0f4d3b915c8d545f41068d3717a0cd4470f14da74586ca98e41283"
+  },
+  "manifest_sha256": "f9492989728dd437749023e766057d2a904c82637120b06233705ed30def89ec",
+  "map_sha256": "4e6e38ad53cf35f41f71b5706043b811cf13452e7cec2e15a23070c2309000f9",
+  "raw_path": "/workspace/lerna-content-03-137311247276/context-final-capacity-b-single-read-identity-race.log",
+  "original_budgets": {
+    "caller_seconds": 30,
+    "claim_seconds": 5,
+    "go_seconds": 120,
+    "outer_seconds": 120,
+    "run_count": 1
+  },
+  "original_fresh_scope_registration": "wrapper actualPID/tick gated before effects; each originalWorld registers exact new schema/object scope in own registry before native setup",
+  "no_profile_preheat_retry_renew_sourcechange": true,
+  "race_after_normal_failure": "explicit root grant for both independent original samples, not retry",
+  "original_CPU_profile_descriptor_Close": "UNKNOWN"
+}
