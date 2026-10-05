@@ -1,0 +1,19 @@
+{
+  "exact_original_files": 18,
+  "root_full_raw_lines": 44,
+  "independent_native_exit": 2,
+  "independent_child_exits": [
+    0,
+    0,
+    1
+  ],
+  "actual_wait_and_current_whole_group_absence_verified": true,
+  "same_original_whole_deadline_verified": true,
+  "missing_race_tails_preserved": true,
+  "historical_unknown_identity_preserved": [
+    33,
+    431541
+  ],
+  "postgres_catalog_observed": false,
+  "cleanup_performed": false
+}

@@ -1,0 +1,29 @@
+--- before-qualified/conformance/component/content_policy_actions_test.go
++++ candidate/conformance/component/content_policy_actions_test.go
+@@ -176,11 +176,7 @@
+ 	for _, actions := range [][]string{{"read", "process", "save"}, {"read", "disclose"}, nil, {}, {"read", "read"}, {"unknown"}, {"read", "process", "save", "sync", "disclose", "read"}} {
+ 		t.Run(fmt.Sprint(actions), func(t *testing.T) {
+ 			err := w.Store().Within(ctx, contract.OwnerRef{TenantID: contract.ID(contentOwner.TenantID), OwnerID: contract.ID(contentOwner.OwnerID)}, func(ctx context.Context, tx runtime.Tx) error {
+-				now, err := w.Store().Now(ctx, tx)
+-				if err != nil {
+-					return err
+-				}
+-				policy, err := w.Store().CheckPolicy(ctx, tx, contentPrincipal, alphaRef, "verification", actions, now)
++				policy, err := w.Store().CheckPolicy(ctx, tx, contentPrincipal, alphaRef, "verification", actions)
+ 				if err != nil {
+ 					return err
+ 				}
+@@ -304,11 +300,8 @@
+ 				defer close(finished)
+ 				var p *content.FixturePolicy
+ 				err := w.Store().Within(ctx, contract.OwnerRef{TenantID: contract.ID(contentOwner.TenantID), OwnerID: contract.ID(contentOwner.OwnerID)}, func(ctx context.Context, tx runtime.Tx) error {
+-					now, err := w.Store().Now(ctx, tx)
+-					if err != nil {
+-						return err
+-					}
+-					p, err = w.Store().CheckPolicy(ctx, tx, contentPrincipal, alphaRef, "verification", []string{"read", "process", "save"}, now)
++					var err error
++					p, err = w.Store().CheckPolicy(ctx, tx, contentPrincipal, alphaRef, "verification", []string{"read", "process", "save"})
+ 					return err
+ 				})
+ 				done <- struct {

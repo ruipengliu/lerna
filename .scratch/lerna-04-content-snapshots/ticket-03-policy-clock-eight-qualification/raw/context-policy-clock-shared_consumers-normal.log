@@ -1,0 +1,63 @@
+=== RUN   TestContentOriginalAdmissionCleanupDeadlineSurvivesCurrentTargetPolicyLockWait
+=== RUN   TestContentOriginalAdmissionCleanupDeadlineSurvivesCurrentTargetPolicyLockWait/release-within-original-admission-budget
+=== RUN   TestContentOriginalAdmissionCleanupDeadlineSurvivesCurrentTargetPolicyLockWait/release-after-original-admission-deadline
+--- PASS: TestContentOriginalAdmissionCleanupDeadlineSurvivesCurrentTargetPolicyLockWait (5.37s)
+    --- PASS: TestContentOriginalAdmissionCleanupDeadlineSurvivesCurrentTargetPolicyLockWait/release-within-original-admission-budget (2.44s)
+    --- PASS: TestContentOriginalAdmissionCleanupDeadlineSurvivesCurrentTargetPolicyLockWait/release-after-original-admission-deadline (2.93s)
+=== RUN   TestContentOriginalCleanupDeadlineCannotBeExtendedByCurrentPolicyLockWait
+=== RUN   TestContentOriginalCleanupDeadlineCannotBeExtendedByCurrentPolicyLockWait/release-within-original-budget
+=== RUN   TestContentOriginalCleanupDeadlineCannotBeExtendedByCurrentPolicyLockWait/release-after-original-deadline
+--- PASS: TestContentOriginalCleanupDeadlineCannotBeExtendedByCurrentPolicyLockWait (5.61s)
+    --- PASS: TestContentOriginalCleanupDeadlineCannotBeExtendedByCurrentPolicyLockWait/release-within-original-budget (2.67s)
+    --- PASS: TestContentOriginalCleanupDeadlineCannotBeExtendedByCurrentPolicyLockWait/release-after-original-deadline (2.94s)
+=== RUN   TestContentPublicationWaitCannotReuseExpiredPolicyClock
+--- PASS: TestContentPublicationWaitCannotReuseExpiredPolicyClock (0.66s)
+=== RUN   TestContentClosureDeduplicatesSharedAncestorAndRejectsForeignOwners
+--- PASS: TestContentClosureDeduplicatesSharedAncestorAndRejectsForeignOwners (0.38s)
+=== RUN   TestContentHiddenAncestorPurposeIntersectionAndOriginalCapSurviveFurtherDerivation
+--- PASS: TestContentHiddenAncestorPurposeIntersectionAndOriginalCapSurviveFurtherDerivation (0.47s)
+=== RUN   TestContentPublicationFinalTransactionChecksHiddenAncestorAfterRealObjectWrite
+=== RUN   TestContentPublicationFinalTransactionChecksHiddenAncestorAfterRealObjectWrite/permitted
+=== RUN   TestContentPublicationFinalTransactionChecksHiddenAncestorAfterRealObjectWrite/ancestor-process-revoked
+--- PASS: TestContentPublicationFinalTransactionChecksHiddenAncestorAfterRealObjectWrite (0.60s)
+    --- PASS: TestContentPublicationFinalTransactionChecksHiddenAncestorAfterRealObjectWrite/permitted (0.29s)
+    --- PASS: TestContentPublicationFinalTransactionChecksHiddenAncestorAfterRealObjectWrite/ancestor-process-revoked (0.31s)
+=== RUN   TestContentDerivedGoneRequiresCurrentExactMetadataForReaderAndEveryAncestor
+--- PASS: TestContentDerivedGoneRequiresCurrentExactMetadataForReaderAndEveryAncestor (1.22s)
+=== RUN   TestContentRestoredSaveBasisMakesOriginalCleanupNotRequiredWithoutSealing
+--- PASS: TestContentRestoredSaveBasisMakesOriginalCleanupNotRequiredWithoutSealing (0.27s)
+=== RUN   TestContentCurrentSaveWithdrawalStartsOriginalSealAndRealCleanupConsumer
+--- PASS: TestContentCurrentSaveWithdrawalStartsOriginalSealAndRealCleanupConsumer (0.39s)
+=== RUN   TestContentDirectSourcesRequireSeparateReadProcessSaveAndRetention
+=== RUN   TestContentDirectSourcesRequireSeparateReadProcessSaveAndRetention/read
+=== RUN   TestContentDirectSourcesRequireSeparateReadProcessSaveAndRetention/process
+=== RUN   TestContentDirectSourcesRequireSeparateReadProcessSaveAndRetention/save
+--- PASS: TestContentDirectSourcesRequireSeparateReadProcessSaveAndRetention (0.94s)
+    --- PASS: TestContentDirectSourcesRequireSeparateReadProcessSaveAndRetention/read (0.28s)
+    --- PASS: TestContentDirectSourcesRequireSeparateReadProcessSaveAndRetention/process (0.33s)
+    --- PASS: TestContentDirectSourcesRequireSeparateReadProcessSaveAndRetention/save (0.33s)
+=== RUN   TestContentPostScheduleAdmissionRollsBackLateVersion
+=== RUN   TestContentPostScheduleAdmissionRollsBackLateVersion/accept_before/late=false
+=== RUN   TestContentPostScheduleAdmissionRollsBackLateVersion/accept_before/late=true
+=== RUN   TestContentPostScheduleAdmissionRollsBackLateVersion/target_policy/late=false
+=== RUN   TestContentPostScheduleAdmissionRollsBackLateVersion/target_policy/late=true
+=== RUN   TestContentPostScheduleAdmissionRollsBackLateVersion/ancestor_policy/late=false
+=== RUN   TestContentPostScheduleAdmissionRollsBackLateVersion/ancestor_policy/late=true
+=== RUN   TestContentPostScheduleAdmissionRollsBackLateVersion/retention/late=false
+=== RUN   TestContentPostScheduleAdmissionRollsBackLateVersion/retention/late=true
+--- PASS: TestContentPostScheduleAdmissionRollsBackLateVersion (4.39s)
+    --- PASS: TestContentPostScheduleAdmissionRollsBackLateVersion/accept_before/late=false (0.13s)
+    --- PASS: TestContentPostScheduleAdmissionRollsBackLateVersion/accept_before/late=true (0.89s)
+    --- PASS: TestContentPostScheduleAdmissionRollsBackLateVersion/target_policy/late=false (0.17s)
+    --- PASS: TestContentPostScheduleAdmissionRollsBackLateVersion/target_policy/late=true (0.93s)
+    --- PASS: TestContentPostScheduleAdmissionRollsBackLateVersion/ancestor_policy/late=false (0.21s)
+    --- PASS: TestContentPostScheduleAdmissionRollsBackLateVersion/ancestor_policy/late=true (0.98s)
+    --- PASS: TestContentPostScheduleAdmissionRollsBackLateVersion/retention/late=false (0.16s)
+    --- PASS: TestContentPostScheduleAdmissionRollsBackLateVersion/retention/late=true (0.91s)
+=== RUN   TestContentCorrectBytesDurablyAccepted
+--- PASS: TestContentCorrectBytesDurablyAccepted (0.25s)
+=== RUN   TestContentIndependentSecondaryOfflineRetainsOriginalCleanupResponsibility
+--- PASS: TestContentIndependentSecondaryOfflineRetainsOriginalCleanupResponsibility (0.62s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/component	21.196s
+NATIVE_EXIT status=0 group_absent=True

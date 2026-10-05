@@ -1,0 +1,19 @@
+--- before-qualified/adapters/postgres/content/policy.go
++++ candidate/adapters/postgres/content/policy.go
+@@ -31,7 +31,7 @@
+ 	return contentdomain.InstallFixturePolicy(ctx, s, policy, expected)
+ }
+ 
+-func (s *Store) CheckPolicy(ctx context.Context, token runtime.Tx, subject v.SubjectBinding, ref v.ContentRef, purpose string, actions []string, now time.Time) (*contentdomain.FixturePolicy, error) {
++func (s *Store) CheckPolicy(ctx context.Context, token runtime.Tx, subject v.SubjectBinding, ref v.ContentRef, purpose string, actions []string) (*contentdomain.FixturePolicy, error) {
+ 	tx, err := s.core.SQL(ctx, token, commonOwner(ref.Owner))
+ 	if err != nil {
+ 		return nil, err
+@@ -41,6 +41,7 @@
+ 		return nil, err
+ 	}
+ 	var body []byte
++	var now time.Time
+ 	err = tx.QueryRowContext(ctx, `WITH locked_policy AS MATERIALIZED (SELECT body FROM `+s.core.Table("content_fixture_policies")+` WHERE tenant_id=$1 AND owner_id=$2 AND subject_key=$3 AND content_id=$4 AND version=$5 AND purpose=$6 FOR SHARE) SELECT body,clock_timestamp() FROM locked_policy`, ref.Owner.TenantID, ref.Owner.OwnerID, key, ref.ContentID, ref.Version, purpose).Scan(&body, &now)
+ 	if errors.Is(err, sql.ErrNoRows) {
+ 		return nil, nil

@@ -1,0 +1,131 @@
+{
+  "kind": "STATIC exact original failed race archive proposal, no acceptance or Done claim",
+  "fixed_source_head": "fa4ad6acfa58927000c830619da55598a0f9a506",
+  "whole_make_exit": 2,
+  "actual_go_statuses": [
+    0,
+    0,
+    1
+  ],
+  "failed_case": "TestPGPoolRunReservedLaneProgress",
+  "failed_case_seconds": 0.54,
+  "failed_assertion_file_line": "conformance/recovery/pool_test.go:931",
+  "actual_observed_error": "owned Run lifecycle: driver: bad connection",
+  "recovery_package_seconds": 90.418,
+  "not_package120_timeout": true,
+  "last_executed_stage": "Recovery race",
+  "missing_tail": [
+    "Component discovery",
+    "six Component race groups",
+    "three fixture/objectstore race packages"
+  ],
+  "full44_raw_human_read": true,
+  "raw_original_private_sha256": "1f2e4a2b67aa9fda8f9a42e8ed19414eedb988aafff1213ceade367c48668554",
+  "actual_only3_go_children_wait_absence": true,
+  "counter_next15": true,
+  "resource_interval_sidecar_sha256": "d2b844b2b5eafdf4cfe0140bb99b01714d02742f33120c2ce5f52a24583f03f7",
+  "normal_unknown_scope33_431541_sticky_retained": true,
+  "files": {
+    "go-child-0012-outcome.json": {
+      "sha256": "f967754a5e2202bb70154d853f340f0cf176d03c75bd60a0cb87736566304427",
+      "bytes": 419,
+      "byteequal_owned_original": true
+    },
+    "go-child-0012-prelaunch.json": {
+      "sha256": "deb307be89b98f6a7dbb9fc0bc935d19e605aef052b16de4a8fd2f99db73ddbf",
+      "bytes": 445,
+      "byteequal_owned_original": true
+    },
+    "go-child-0013-outcome.json": {
+      "sha256": "3ce8be9efea3a9345e1c56abd5cffb7a4dfe59e2c331139a90fb70238840e2b0",
+      "bytes": 419,
+      "byteequal_owned_original": true
+    },
+    "go-child-0013-prelaunch.json": {
+      "sha256": "52e08c44513becb2fcb8eccc01e5ce97000403e421f70e2d89037c0826d2c35c",
+      "bytes": 438,
+      "byteequal_owned_original": true
+    },
+    "go-child-0014-outcome.json": {
+      "sha256": "ba232eb02acb59a42efa05c308dfa465af3355fb3459a96c4d41694150df97b6",
+      "bytes": 419,
+      "byteequal_owned_original": true
+    },
+    "go-child-0014-prelaunch.json": {
+      "sha256": "f65904b20d4a53028bce42285b425f3efe0763a666fccaaa0cfc44add985fd86",
+      "bytes": 548,
+      "byteequal_owned_original": true
+    },
+    "manifest.json": {
+      "sha256": "91663bef03ae12f400e9aa3cc3ba6c385b320494f891d7c35581ab23cfeb6629",
+      "bytes": 5840,
+      "byteequal_owned_original": true
+    },
+    "module-go-source-inventory.json": {
+      "sha256": "643bcc0da9997cf91f38fb6e01dafbb44176d87dc4afd8339d6913bac9dd646e",
+      "bytes": 45995,
+      "byteequal_owned_original": true
+    },
+    "partition-shared-race-outcome.json": {
+      "sha256": "027a48b40e02e021bb02a6a2314c024bcbe959433a97fe3aa0b82310e76bb4db",
+      "bytes": 239,
+      "byteequal_owned_original": true
+    },
+    "partition-shared-race-prelaunch.json": {
+      "sha256": "623667a632743eb340c1780e70402c25a9cedae16e21d53a04a9012d68a8a5f8",
+      "bytes": 480,
+      "byteequal_owned_original": true
+    },
+    "partition-shared-race-sanitized.log": {
+      "sha256": "1f2e4a2b67aa9fda8f9a42e8ed19414eedb988aafff1213ceade367c48668554",
+      "bytes": 2747,
+      "byteequal_owned_original": true
+    },
+    "partition-shared-race.log": {
+      "sha256": "1f2e4a2b67aa9fda8f9a42e8ed19414eedb988aafff1213ceade367c48668554",
+      "bytes": 2747,
+      "byteequal_owned_original": true
+    },
+    "register-go-child.py": {
+      "sha256": "4f99e917e4abe29d9a091991a92c60105c50d1f9eb51092ad85320727af987fd",
+      "bytes": 5929,
+      "byteequal_owned_original": true
+    },
+    "run-shared.py": {
+      "sha256": "ecb27b5f69bd93219c07b04dd7f8a425b0609897fefc1d430bfcfb1a21ee0157",
+      "bytes": 5581,
+      "byteequal_owned_original": true
+    },
+    "shared-race-first-failure-owned-scope-sidecar.json": {
+      "sha256": "d2b844b2b5eafdf4cfe0140bb99b01714d02742f33120c2ce5f52a24583f03f7",
+      "bytes": 36574,
+      "byteequal_owned_original": true
+    },
+    "shared-race-first-failure-release.json": {
+      "sha256": "5e43f8659a16c01c69bef2211c1a5e31bb6517b88d8236a92a61af009e1245af",
+      "bytes": 5303,
+      "byteequal_owned_original": true
+    },
+    "shared-race-first-failure-scopes-sanitized.log": {
+      "sha256": "1f84a543f33c18e2a31065cb2d3ecc8bfa602404cd3b7696eb012b73aeba3c0d",
+      "bytes": 19152,
+      "byteequal_owned_original": true
+    },
+    "shared-race-ready-static.json": {
+      "sha256": "2a850129edb84da67adf157fb3a711a69e5c02ae8da5131616a74cc412ab9eda",
+      "bytes": 1681,
+      "byteequal_owned_original": true
+    }
+  },
+  "must_not_repeat_old_fa4_race": true,
+  "future_new_race_requires_formally_accepted_Run_delivery_normal_merge_and_fresh_hash_review": true,
+  "postgres_resource_catalog_check_static_proposal_only": {
+    "scope": "only registered exact unique schemas in this interval after separate root soleLOCAL read-only grant",
+    "deadline_seconds": 15,
+    "actions": "single read-only pg_namespace check against exact authorized schema list; no DROP/write/history cleanup",
+    "status": "STATIC not executed"
+  },
+  "resource_first_close_qualification_stays_separate_from_process_exit": true,
+  "current_worktree_unchanged_and_clean": true,
+  "no_observer_or_native_or_source_fix_or_merge": true
+}

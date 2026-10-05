@@ -1,0 +1,580 @@
+﻿2026-10-05T09:14:38.7061901Z Current runner version: '2.337.0'
+2026-10-05T09:14:38.7088620Z ##[group]Runner Image Provisioner
+2026-10-05T09:14:38.7089551Z Hosted Compute Agent
+2026-10-05T09:14:38.7090223Z Version: 20260901.588
+2026-10-05T09:14:38.7090899Z Commit: f88ec8081b781fac6c440065ac7ff9e710ce3d0b
+2026-10-05T09:14:38.7091750Z Build Date: 2026-09-01T19:56:44Z
+2026-10-05T09:14:38.7092521Z Worker ID: {e3bc2c79-ad2e-4765-a2ce-b122bb593f9d}
+2026-10-05T09:14:38.7093492Z Azure Region: northcentralus
+2026-10-05T09:14:38.7094185Z ##[endgroup]
+2026-10-05T09:14:38.7095571Z ##[group]Operating System
+2026-10-05T09:14:38.7096285Z Ubuntu
+2026-10-05T09:14:38.7096831Z 24.04.5
+2026-10-05T09:14:38.7097705Z LTS
+2026-10-05T09:14:38.7098365Z ##[endgroup]
+2026-10-05T09:14:38.7098948Z ##[group]Runner Image
+2026-10-05T09:14:38.7099665Z Image: ubuntu-24.04
+2026-10-05T09:14:38.7100289Z Version: 20260927.320.1
+2026-10-05T09:14:38.7101669Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260927.320/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-05T09:14:38.7103369Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260927.320
+2026-10-05T09:14:38.7104458Z ##[endgroup]
+2026-10-05T09:14:38.7105577Z ##[group]GITHUB_TOKEN Permissions
+2026-10-05T09:14:38.7107918Z Contents: read
+2026-10-05T09:14:38.7108552Z Metadata: read
+2026-10-05T09:14:38.7109126Z ##[endgroup]
+2026-10-05T09:14:38.7111301Z Secret source: Actions
+2026-10-05T09:14:38.7112283Z Cache mode: write
+2026-10-05T09:14:38.7113635Z Prepare workflow directory
+2026-10-05T09:14:38.7547893Z Prepare all required actions
+2026-10-05T09:14:38.7596078Z Getting action download info
+2026-10-05T09:14:38.9998160Z Download action repository 'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683' (SHA:11bd71901bbe5b1630ceea73d27597364c9af683)
+2026-10-05T09:14:39.1290363Z Download action repository 'actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5' (SHA:d35c59abb061a4a6fb18e82ac0862c26744d6ab5)
+2026-10-05T09:14:39.6040845Z Complete job name: durable-admission
+2026-10-05T09:14:39.6554787Z ##[group]Checking docker version
+2026-10-05T09:14:39.6567780Z ##[command]/usr/bin/docker version --format '{{.Server.APIVersion}}'
+2026-10-05T09:14:39.7259105Z '1.48'
+2026-10-05T09:14:39.7283774Z Docker daemon API version: '1.48'
+2026-10-05T09:14:39.7284905Z ##[command]/usr/bin/docker version --format '{{.Client.APIVersion}}'
+2026-10-05T09:14:39.7474404Z '1.48'
+2026-10-05T09:14:39.7489497Z Docker client API version: '1.48'
+2026-10-05T09:14:39.7494896Z ##[endgroup]
+2026-10-05T09:14:39.7498112Z ##[group]Clean up resources from previous jobs
+2026-10-05T09:14:39.7504018Z ##[command]/usr/bin/docker ps --all --quiet --no-trunc --filter "label=607bbf"
+2026-10-05T09:14:39.7676737Z ##[command]/usr/bin/docker network prune --force --filter "label=607bbf"
+2026-10-05T09:14:39.7831133Z ##[endgroup]
+2026-10-05T09:14:39.7831673Z ##[group]Create local container network
+2026-10-05T09:14:39.7845044Z ##[command]/usr/bin/docker network create --label 607bbf github_network_225b1608118d474280b27ad0a7ae77df
+2026-10-05T09:14:39.8380300Z 8ae72aedfb32602cded6e95e529f3870f15a77dbb53580cd3f094e16a4969d2c
+2026-10-05T09:14:39.8397858Z ##[endgroup]
+2026-10-05T09:14:39.8423163Z ##[group]Starting postgres service container
+2026-10-05T09:14:39.8445048Z ##[command]/usr/bin/docker pull postgres@sha256:3725f4e2499eef5134592b3b4ab79a543ed7f8e533b05b5b637af926630f6650
+2026-10-05T09:14:40.1456558Z docker.io/library/postgres@sha256:3725f4e2499eef5134592b3b4ab79a543ed7f8e533b05b5b637af926630f6650: Pulling from library/postgres
+2026-10-05T09:14:40.2521096Z 774043ccc8cc: Pulling fs layer
+2026-10-05T09:14:40.2524956Z 211cec8da20e: Pulling fs layer
+2026-10-05T09:14:40.2525838Z c56d732b49fe: Pulling fs layer
+2026-10-05T09:14:40.2526653Z a9bacfc8d232: Pulling fs layer
+2026-10-05T09:14:40.2527354Z c043c1caa591: Pulling fs layer
+2026-10-05T09:14:40.2527897Z 6bd876b3b38f: Pulling fs layer
+2026-10-05T09:14:40.2528434Z bdbb8057313b: Pulling fs layer
+2026-10-05T09:14:40.2528958Z d1c18bcbca3a: Pulling fs layer
+2026-10-05T09:14:40.2529549Z 0e6c3beb32b1: Pulling fs layer
+2026-10-05T09:14:40.2530420Z 980abddbe295: Pulling fs layer
+2026-10-05T09:14:40.2530970Z 5178c10d12ba: Pulling fs layer
+2026-10-05T09:14:40.2531512Z 9dd6e8795674: Pulling fs layer
+2026-10-05T09:14:40.2532061Z ddda533f81f8: Pulling fs layer
+2026-10-05T09:14:40.2532594Z d1c18bcbca3a: Waiting
+2026-10-05T09:14:40.2534046Z 0e6c3beb32b1: Waiting
+2026-10-05T09:14:40.2534792Z 980abddbe295: Waiting
+2026-10-05T09:14:40.2535523Z a9bacfc8d232: Waiting
+2026-10-05T09:14:40.2536235Z c043c1caa591: Waiting
+2026-10-05T09:14:40.2536864Z 6bd876b3b38f: Waiting
+2026-10-05T09:14:40.2537427Z bdbb8057313b: Waiting
+2026-10-05T09:14:40.2537911Z 5178c10d12ba: Waiting
+2026-10-05T09:14:40.2538518Z 9dd6e8795674: Waiting
+2026-10-05T09:14:40.2539073Z ddda533f81f8: Waiting
+2026-10-05T09:14:40.3382193Z 211cec8da20e: Verifying Checksum
+2026-10-05T09:14:40.3385654Z 211cec8da20e: Download complete
+2026-10-05T09:14:40.3581013Z c56d732b49fe: Verifying Checksum
+2026-10-05T09:14:40.3582013Z c56d732b49fe: Download complete
+2026-10-05T09:14:40.4280407Z a9bacfc8d232: Verifying Checksum
+2026-10-05T09:14:40.4282001Z a9bacfc8d232: Download complete
+2026-10-05T09:14:40.4719597Z c043c1caa591: Verifying Checksum
+2026-10-05T09:14:40.4720526Z c043c1caa591: Download complete
+2026-10-05T09:14:40.4871816Z 774043ccc8cc: Verifying Checksum
+2026-10-05T09:14:40.4873281Z 774043ccc8cc: Download complete
+2026-10-05T09:14:40.5306223Z 6bd876b3b38f: Verifying Checksum
+2026-10-05T09:14:40.5307725Z 6bd876b3b38f: Download complete
+2026-10-05T09:14:40.5444845Z bdbb8057313b: Download complete
+2026-10-05T09:14:40.5590363Z d1c18bcbca3a: Verifying Checksum
+2026-10-05T09:14:40.5591644Z d1c18bcbca3a: Download complete
+2026-10-05T09:14:40.6165959Z 980abddbe295: Download complete
+2026-10-05T09:14:40.6358489Z 5178c10d12ba: Verifying Checksum
+2026-10-05T09:14:40.6360091Z 5178c10d12ba: Download complete
+2026-10-05T09:14:40.6944050Z 9dd6e8795674: Verifying Checksum
+2026-10-05T09:14:40.6945395Z 9dd6e8795674: Download complete
+2026-10-05T09:14:40.7073152Z ddda533f81f8: Verifying Checksum
+2026-10-05T09:14:40.7079416Z ddda533f81f8: Download complete
+2026-10-05T09:14:40.9940093Z 0e6c3beb32b1: Verifying Checksum
+2026-10-05T09:14:40.9941482Z 0e6c3beb32b1: Download complete
+2026-10-05T09:14:41.6386521Z 774043ccc8cc: Pull complete
+2026-10-05T09:14:44.3402094Z 211cec8da20e: Pull complete
+2026-10-05T09:14:44.4687698Z c56d732b49fe: Pull complete
+2026-10-05T09:14:44.5046717Z a9bacfc8d232: Pull complete
+2026-10-05T09:14:44.7903851Z c043c1caa591: Pull complete
+2026-10-05T09:14:44.8588122Z 6bd876b3b38f: Pull complete
+2026-10-05T09:14:44.8650800Z bdbb8057313b: Pull complete
+2026-10-05T09:14:44.8735380Z d1c18bcbca3a: Pull complete
+2026-10-05T09:14:47.8893745Z 0e6c3beb32b1: Pull complete
+2026-10-05T09:14:47.8997513Z 980abddbe295: Pull complete
+2026-10-05T09:14:47.9090994Z 5178c10d12ba: Pull complete
+2026-10-05T09:14:47.9160833Z 9dd6e8795674: Pull complete
+2026-10-05T09:14:47.9244837Z ddda533f81f8: Pull complete
+2026-10-05T09:14:47.9278844Z Digest: sha256:3725f4e2499eef5134592b3b4ab79a543ed7f8e533b05b5b637af926630f6650
+2026-10-05T09:14:47.9284934Z Status: Downloaded newer image for postgres@sha256:3725f4e2499eef5134592b3b4ab79a543ed7f8e533b05b5b637af926630f6650
+2026-10-05T09:14:47.9294798Z docker.io/library/postgres@sha256:3725f4e2499eef5134592b3b4ab79a543ed7f8e533b05b5b637af926630f6650
+2026-10-05T09:14:47.9358738Z ##[command]/usr/bin/docker create --name 6904e09351bc4dbe93c8f5c9109d653e_postgressha2563725f4e2499eef5134592b3b4ab79a543ed7f8e533b05b5b637af926630f6650_720774 --label 607bbf --network github_network_225b1608118d474280b27ad0a7ae77df --network-alias postgres -p 5432:5432 --health-cmd "pg_isready -U lerna_test -d lerna_integration" --health-interval 5s --health-timeout 5s --health-retries 12 -e "POSTGRES_USER=lerna_test" -e "POSTGRES_PASSWORD=[REDACTED]" -e "POSTGRES_DB=lerna_integration" -e GITHUB_ACTIONS=true -e CI=true postgres@sha256:3725f4e2499eef5134592b3b4ab79a543ed7f8e533b05b5b637af926630f6650
+2026-10-05T09:14:47.9591037Z 374847c0255adc5c3d903560954dbf6f3612f24ff4c478d4f715b4cd2e47a658
+2026-10-05T09:14:47.9613180Z ##[command]/usr/bin/docker start 374847c0255adc5c3d903560954dbf6f3612f24ff4c478d4f715b4cd2e47a658
+2026-10-05T09:14:48.2590352Z 374847c0255adc5c3d903560954dbf6f3612f24ff4c478d4f715b4cd2e47a658
+2026-10-05T09:14:48.2611216Z ##[command]/usr/bin/docker ps --all --filter id=374847c0255adc5c3d903560954dbf6f3612f24ff4c478d4f715b4cd2e47a658 --filter status=running --no-trunc --format "{{.ID}} {{.Status}}"
+2026-10-05T09:14:48.2737958Z 374847c0255adc5c3d903560954dbf6f3612f24ff4c478d4f715b4cd2e47a658 Up Less than a second (health: starting)
+2026-10-05T09:14:48.2760846Z ##[command]/usr/bin/docker port 374847c0255adc5c3d903560954dbf6f3612f24ff4c478d4f715b4cd2e47a658
+2026-10-05T09:14:48.2898387Z 5432/tcp -> 0.0.0.0:5432
+2026-10-05T09:14:48.2910956Z 5432/tcp -> [::]:5432
+2026-10-05T09:14:48.2946445Z ##[endgroup]
+2026-10-05T09:14:48.2954919Z ##[group]Waiting for all services to be ready
+2026-10-05T09:14:48.2968153Z ##[command]/usr/bin/docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" 374847c0255adc5c3d903560954dbf6f3612f24ff4c478d4f715b4cd2e47a658
+2026-10-05T09:14:48.3167327Z starting
+2026-10-05T09:14:48.3204676Z postgres service is starting, waiting 2 seconds before checking again.
+2026-10-05T09:14:50.3210443Z ##[command]/usr/bin/docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" 374847c0255adc5c3d903560954dbf6f3612f24ff4c478d4f715b4cd2e47a658
+2026-10-05T09:14:50.3338761Z starting
+2026-10-05T09:14:50.3351546Z postgres service is starting, waiting 3 seconds before checking again.
+2026-10-05T09:14:54.0489380Z ##[command]/usr/bin/docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" 374847c0255adc5c3d903560954dbf6f3612f24ff4c478d4f715b4cd2e47a658
+2026-10-05T09:14:54.0616938Z healthy
+2026-10-05T09:14:54.0633901Z postgres service is healthy.
+2026-10-05T09:14:54.0634594Z ##[endgroup]
+2026-10-05T09:14:54.0909596Z ##[group]Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+2026-10-05T09:14:54.0910269Z with:
+2026-10-05T09:14:54.0910501Z   repository: ruipengliu/lerna
+2026-10-05T09:14:54.0913395Z   token: ***
+2026-10-05T09:14:54.0913622Z   ssh-strict: true
+2026-10-05T09:14:54.0913835Z   ssh-user: git
+2026-10-05T09:14:54.0914054Z   persist-credentials: true
+2026-10-05T09:14:54.0914307Z   clean: true
+2026-10-05T09:14:54.0914541Z   sparse-checkout-cone-mode: true
+2026-10-05T09:14:54.0914814Z   fetch-depth: 1
+2026-10-05T09:14:54.0915018Z   fetch-tags: false
+2026-10-05T09:14:54.0915244Z   show-progress: true
+2026-10-05T09:14:54.0915486Z   lfs: false
+2026-10-05T09:14:54.0915681Z   submodules: false
+2026-10-05T09:14:54.0915895Z   set-safe-directory: true
+2026-10-05T09:14:54.0916325Z ##[endgroup]
+2026-10-05T09:14:54.1999132Z Syncing repository: ruipengliu/lerna
+2026-10-05T09:14:54.2000885Z ##[group]Getting Git version info
+2026-10-05T09:14:54.2001520Z Working directory is '/home/runner/work/lerna/lerna'
+2026-10-05T09:14:54.2002351Z [command]/usr/bin/git version
+2026-10-05T09:14:54.2033236Z git version 2.55.0
+2026-10-05T09:14:54.2064591Z ##[endgroup]
+2026-10-05T09:14:54.2081872Z Temporarily overriding HOME='/home/runner/work/_temp/217e36fd-2874-46c1-ac34-6863e4a6fdb6' before making global git config changes
+2026-10-05T09:14:54.2083874Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-05T09:14:54.2085069Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/lerna/lerna
+2026-10-05T09:14:54.2126636Z Deleting the contents of '/home/runner/work/lerna/lerna'
+2026-10-05T09:14:54.2131591Z ##[group]Initializing the repository
+2026-10-05T09:14:54.2136819Z [command]/usr/bin/git init /home/runner/work/lerna/lerna
+2026-10-05T09:14:54.2225083Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-05T09:14:54.2225944Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-05T09:14:54.2226748Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-05T09:14:54.2227715Z hint: call:
+2026-10-05T09:14:54.2227999Z hint:
+2026-10-05T09:14:54.2228609Z hint: 	git config --global init.defaultBranch <name>
+2026-10-05T09:14:54.2229105Z hint:
+2026-10-05T09:14:54.2229549Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-05T09:14:54.2230329Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-05T09:14:54.2230721Z hint:
+2026-10-05T09:14:54.2230929Z hint: 	git branch -m <name>
+2026-10-05T09:14:54.2231169Z hint:
+2026-10-05T09:14:54.2231489Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-05T09:14:54.2231999Z Initialized empty Git repository in /home/runner/work/lerna/lerna/.git/
+2026-10-05T09:14:54.2234426Z [command]/usr/bin/git remote add origin https://github.com/ruipengliu/lerna
+2026-10-05T09:14:54.2280858Z ##[endgroup]
+2026-10-05T09:14:54.2285630Z ##[group]Disabling automatic garbage collection
+2026-10-05T09:14:54.2286042Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-05T09:14:54.2317210Z ##[endgroup]
+2026-10-05T09:14:54.2317754Z ##[group]Setting up auth
+2026-10-05T09:14:54.2325102Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-05T09:14:54.2359447Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-05T09:14:54.2713974Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-05T09:14:54.2742676Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-05T09:14:54.3010007Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-05T09:14:54.3055266Z ##[endgroup]
+2026-10-05T09:14:54.3056180Z ##[group]Fetching the repository
+2026-10-05T09:14:54.3066015Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +a9bc726338040d4bf59e6d324691012a0011e1db:refs/remotes/origin/codex/lerna-implementation
+2026-10-05T09:14:55.2523701Z From https://github.com/ruipengliu/lerna
+2026-10-05T09:14:55.2524517Z  * [new ref]         a9bc726338040d4bf59e6d324691012a0011e1db -> origin/codex/lerna-implementation
+2026-10-05T09:14:55.2529139Z ##[endgroup]
+2026-10-05T09:14:55.2529685Z ##[group]Determining the checkout info
+2026-10-05T09:14:55.2541825Z ##[endgroup]
+2026-10-05T09:14:55.2543302Z [command]/usr/bin/git sparse-checkout disable
+2026-10-05T09:14:55.2595750Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-05T09:14:55.2629246Z ##[group]Checking out the ref
+2026-10-05T09:14:55.2636081Z [command]/usr/bin/git checkout --progress --force -B codex/lerna-implementation refs/remotes/origin/codex/lerna-implementation
+2026-10-05T09:14:55.4331794Z Switched to a new branch 'codex/lerna-implementation'
+2026-10-05T09:14:55.4335194Z branch 'codex/lerna-implementation' set up to track 'origin/codex/lerna-implementation'.
+2026-10-05T09:14:55.4349526Z ##[endgroup]
+2026-10-05T09:14:55.4401652Z [command]/usr/bin/git log -1 --format=%H
+2026-10-05T09:14:55.4466976Z a9bc726338040d4bf59e6d324691012a0011e1db
+2026-10-05T09:14:55.4721667Z ##[group]Run actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5
+2026-10-05T09:14:55.4722061Z with:
+2026-10-05T09:14:55.4722264Z   go-version: 1.27.1
+2026-10-05T09:14:55.4722487Z   cache: true
+2026-10-05T09:14:55.4722686Z   check-latest: false
+2026-10-05T09:14:55.4725702Z   token: ***
+2026-10-05T09:14:55.4725915Z ##[endgroup]
+2026-10-05T09:14:55.5989893Z Setup go version spec 1.27.1
+2026-10-05T09:14:55.5998948Z Attempting to download 1.27.1...
+2026-10-05T09:14:55.6108970Z (node:2692) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-05T09:14:55.6109808Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-05T09:14:56.1955152Z matching 1.27.1...
+2026-10-05T09:14:56.1978741Z Acquiring 1.27.1 from https://github.com/actions/go-versions/releases/download/1.27.1-33583469715/go-1.27.1-linux-x64.tar.gz
+2026-10-05T09:14:56.6116094Z Extracting Go...
+2026-10-05T09:14:56.6233455Z [command]/usr/bin/tar xz --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/85074a7f-e256-4ae5-a5b9-6e65119b7ae3 -f /home/runner/work/_temp/cea4de7d-c67d-4a98-8453-de0b5251fab8
+2026-10-05T09:14:58.4608038Z Successfully extracted go to /home/runner/work/_temp/85074a7f-e256-4ae5-a5b9-6e65119b7ae3
+2026-10-05T09:14:58.4608784Z Adding to the cache ...
+2026-10-05T09:15:03.2076002Z Successfully cached go to /opt/hostedtoolcache/go/1.27.1/x64
+2026-10-05T09:15:03.2077184Z Added go to the path
+2026-10-05T09:15:03.2080016Z Successfully set up Go version 1.27.1
+2026-10-05T09:15:03.2316305Z [command]/opt/hostedtoolcache/go/1.27.1/x64/bin/go env GOMODCACHE
+2026-10-05T09:15:03.2358648Z [command]/opt/hostedtoolcache/go/1.27.1/x64/bin/go env GOCACHE
+2026-10-05T09:15:03.2404142Z /home/runner/go/pkg/mod
+2026-10-05T09:15:03.2423725Z /home/runner/.cache/go-build
+2026-10-05T09:15:03.3587098Z Cache hit for: setup-go-Linux-x64-ubuntu24-go-1.27.1-6e6ea99592014c407a9e5c547b56d6c5c633b25a0a4d5cd88a735c865fb89158
+2026-10-05T09:15:03.3718828Z (node:2692) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-05T09:15:03.9957705Z Received 59806887 of 59806887 (100.0%), 107.2 MBs/sec
+2026-10-05T09:15:03.9964085Z Cache Size: ~57 MB (59806887 B)
+2026-10-05T09:15:03.9993689Z [command]/usr/bin/tar -xf /home/runner/work/_temp/2c1582a2-c27d-46be-9842-490d72381904/cache.tzst -P -C /home/runner/work/lerna/lerna --use-compress-program unzstd
+2026-10-05T09:15:04.4382273Z Cache restored successfully
+2026-10-05T09:15:04.4420864Z Cache restored from key: setup-go-Linux-x64-ubuntu24-go-1.27.1-6e6ea99592014c407a9e5c547b56d6c5c633b25a0a4d5cd88a735c865fb89158
+2026-10-05T09:15:04.4449460Z go version go1.27.1 linux/amd64
+2026-10-05T09:15:04.4449698Z 
+2026-10-05T09:15:04.4450050Z ##[group]go env
+2026-10-05T09:15:04.5164592Z AR='ar'
+2026-10-05T09:15:04.5165013Z CC='gcc'
+2026-10-05T09:15:04.5165350Z CGO_CFLAGS='-O2 -g'
+2026-10-05T09:15:04.5165687Z CGO_CPPFLAGS=''
+2026-10-05T09:15:04.5166013Z CGO_CXXFLAGS='-O2 -g'
+2026-10-05T09:15:04.5166359Z CGO_ENABLED='1'
+2026-10-05T09:15:04.5166690Z CGO_FFLAGS='-O2 -g'
+2026-10-05T09:15:04.5167027Z CGO_LDFLAGS='-O2 -g'
+2026-10-05T09:15:04.5167338Z CXX='g++'
+2026-10-05T09:15:04.5167636Z GCCGO='gccgo'
+2026-10-05T09:15:04.5167945Z GO111MODULE=''
+2026-10-05T09:15:04.5168223Z GOAMD64='v1'
+2026-10-05T09:15:04.5168522Z GOARCH='amd64'
+2026-10-05T09:15:04.5168803Z GOAUTH='netrc'
+2026-10-05T09:15:04.5169110Z GOBIN='/home/runner/go/bin'
+2026-10-05T09:15:04.5169503Z GOCACHE='/home/runner/.cache/go-build'
+2026-10-05T09:15:04.5169915Z GOCACHEPROG=''
+2026-10-05T09:15:04.5170199Z GODEBUG=''
+2026-10-05T09:15:04.5170543Z GOENV='/home/runner/.config/go/env'
+2026-10-05T09:15:04.5170923Z GOEXE=''
+2026-10-05T09:15:04.5171198Z GOEXPERIMENT=''
+2026-10-05T09:15:04.5171489Z GOFIPS140='off'
+2026-10-05T09:15:04.5171765Z GOFLAGS=''
+2026-10-05T09:15:04.5173375Z GOGCCFLAGS='-fPIC -m64 -pthread -Wl,--no-gc-sections -fmessage-length=0 -ffile-prefix-map=/tmp/go-build728135984=/tmp/go-build -gno-record-gcc-switches'
+2026-10-05T09:15:04.5174397Z GOHOSTARCH='amd64'
+2026-10-05T09:15:04.5174720Z GOHOSTOS='linux'
+2026-10-05T09:15:04.5175019Z GOINSECURE=''
+2026-10-05T09:15:04.5175367Z GOMOD='/home/runner/work/lerna/lerna/go.mod'
+2026-10-05T09:15:04.5175831Z GOMODCACHE='/home/runner/go/pkg/mod'
+2026-10-05T09:15:04.5176240Z GONOPROXY=''
+2026-10-05T09:15:04.5176524Z GONOSUMDB=''
+2026-10-05T09:15:04.5176803Z GOOS='linux'
+2026-10-05T09:15:04.5177107Z GOPACKAGESDRIVER=''
+2026-10-05T09:15:04.5177435Z GOPATH='/home/runner/go'
+2026-10-05T09:15:04.5177764Z GOPRIVATE=''
+2026-10-05T09:15:04.5178383Z GOPROXY='https://proxy.golang.org,direct'
+2026-10-05T09:15:04.5178871Z GOROOT='/opt/hostedtoolcache/go/1.27.1/x64'
+2026-10-05T09:15:04.5179307Z GOSUMDB='sum.golang.org'
+2026-10-05T09:15:04.5179657Z GOTELEMETRY='local'
+2026-10-05T09:15:04.5180043Z GOTELEMETRYDIR='/home/runner/.config/go/telemetry'
+2026-10-05T09:15:04.5180523Z GOTMPDIR=''
+2026-10-05T09:15:04.5180818Z GOTOOLCHAIN='auto'
+2026-10-05T09:15:04.5181302Z GOTOOLDIR='/opt/hostedtoolcache/go/1.27.1/x64/pkg/tool/linux_amd64'
+2026-10-05T09:15:04.5181853Z GOVCS=''
+2026-10-05T09:15:04.5182149Z GOVERSION='go1.27.1'
+2026-10-05T09:15:04.5182495Z GOWORK=''
+2026-10-05T09:15:04.5182780Z PKG_CONFIG='pkg-config'
+2026-10-05T09:15:04.5183172Z 
+2026-10-05T09:15:04.5183612Z ##[endgroup]
+2026-10-05T09:15:04.5405641Z ##[group]Run mkdir -p "$RUNNER_TEMP/lerna-psql-bin" "$RUNNER_TEMP/lerna-integration-tmp"
+2026-10-05T09:15:04.5406374Z [36;1mmkdir -p "$RUNNER_TEMP/lerna-psql-bin" "$RUNNER_TEMP/lerna-integration-tmp"[0m
+2026-10-05T09:15:04.5406999Z [36;1mln -s "$GITHUB_WORKSPACE/scripts/ci-psql.sh" "$RUNNER_TEMP/lerna-psql-bin/psql"[0m
+2026-10-05T09:15:04.5407502Z [36;1mecho "$RUNNER_TEMP/lerna-psql-bin" >> "$GITHUB_PATH"[0m
+2026-10-05T09:15:04.5407963Z [36;1mecho "TMPDIR=$RUNNER_TEMP/lerna-integration-tmp" >> "$GITHUB_ENV"[0m
+2026-10-05T09:15:04.5408563Z [36;1mecho "LERNA_TEST_OWNED_SCOPE_REGISTRY=$RUNNER_TEMP/lerna-decision-owned-scopes" >> "$GITHUB_ENV"[0m
+2026-10-05T09:15:04.5409195Z [36;1mTMPDIR="$RUNNER_TEMP/lerna-integration-tmp" scripts/ci-psql.sh --version[0m
+2026-10-05T09:15:04.5603776Z shell: /usr/bin/bash -e {0}
+2026-10-05T09:15:04.5604069Z ##[endgroup]
+2026-10-05T09:15:05.2135526Z psql (PostgreSQL) 18.6 (Debian 18.6-1.pgdg12+2)
+2026-10-05T09:15:05.2881835Z ##[group]Run go test -race -count=1 -tags=integration,containerpsql -timeout=120s ./conformance/recovery -run '^TestContainerPsql'
+2026-10-05T09:15:05.2882731Z [36;1mgo test -race -count=1 -tags=integration,containerpsql -timeout=120s ./conformance/recovery -run '^TestContainerPsql'[0m
+2026-10-05T09:15:05.2955904Z shell: /usr/bin/bash -e {0}
+2026-10-05T09:15:05.2956172Z env:
+2026-10-05T09:15:05.2956453Z   TMPDIR: /home/runner/work/_temp/lerna-integration-tmp
+2026-10-05T09:15:05.2956930Z   LERNA_TEST_OWNED_SCOPE_REGISTRY: /home/runner/work/_temp/lerna-decision-owned-scopes
+2026-10-05T09:15:05.2957830Z   LERNA_TEST_POSTGRES_DSN: ***127.0.0.1:5432/lerna_integration?sslmode=disable
+2026-10-05T09:15:05.2958241Z ##[endgroup]
+2026-10-05T09:16:02.0133959Z ok  	github.com/ruipengliu/lerna/conformance/recovery	1.638s
+2026-10-05T09:16:02.1629619Z ##[group]Run make test-integration
+2026-10-05T09:16:02.1629965Z [36;1mmake test-integration[0m
+2026-10-05T09:16:02.1698656Z shell: /usr/bin/bash -e {0}
+2026-10-05T09:16:02.1698935Z env:
+2026-10-05T09:16:02.1699209Z   TMPDIR: /home/runner/work/_temp/lerna-integration-tmp
+2026-10-05T09:16:02.1699687Z   LERNA_TEST_OWNED_SCOPE_REGISTRY: /home/runner/work/_temp/lerna-decision-owned-scopes
+2026-10-05T09:16:02.1700574Z   LERNA_TEST_POSTGRES_DSN: ***127.0.0.1:5432/lerna_integration?sslmode=disable
+2026-10-05T09:16:02.1700994Z ##[endgroup]
+2026-10-05T09:16:02.2127089Z psql --version
+2026-10-05T09:16:02.3566165Z psql (PostgreSQL) 18.6 (Debian 18.6-1.pgdg12+2)
+2026-10-05T09:16:02.4192400Z cd conformance/fixtures/durable-work/pg-v1 && sha256sum -c SHA256SUMS
+2026-10-05T09:16:02.4271722Z 0001_admission.sql: OK
+2026-10-05T09:16:02.4272154Z commands.json: OK
+2026-10-05T09:16:02.4272511Z database.sql: OK
+2026-10-05T09:16:02.4273033Z writer-observation.json: OK
+2026-10-05T09:16:02.4273687Z writer-revision.txt: OK
+2026-10-05T09:16:02.4274724Z cd conformance/fixtures/durable-work/sqlite-v1 && sha256sum -c SHA256SUMS
+2026-10-05T09:16:02.4300817Z 0001_admission.sql: OK
+2026-10-05T09:16:02.4301215Z commands.json: OK
+2026-10-05T09:16:02.4325524Z database.sqlite: OK
+2026-10-05T09:16:02.4325938Z writer-observation.json: OK
+2026-10-05T09:16:02.4326367Z writer-revision.txt: OK
+2026-10-05T09:16:02.4326831Z cd conformance/fixtures/durable-work/pg-v2 && sha256sum -c SHA256SUMS
+2026-10-05T09:16:02.4330429Z 0001_admission.sql: OK
+2026-10-05T09:16:02.4330833Z 0002_claims.sql: OK
+2026-10-05T09:16:02.4331190Z README.md: OK
+2026-10-05T09:16:02.4331524Z database.sql: OK
+2026-10-05T09:16:02.4331876Z migrations.json: OK
+2026-10-05T09:16:02.4332250Z writer-observation.json: OK
+2026-10-05T09:16:02.4332670Z writer-revision.txt: OK
+2026-10-05T09:16:02.4333383Z writer-schema.txt: OK
+2026-10-05T09:16:02.4333770Z ../v2-writer.go.txt: OK
+2026-10-05T09:16:02.4334444Z cd conformance/fixtures/durable-work/sqlite-v2 && sha256sum -c SHA256SUMS
+2026-10-05T09:16:02.4359143Z 0001_admission.sql: OK
+2026-10-05T09:16:02.4359497Z 0002_claims.sql: OK
+2026-10-05T09:16:02.4359853Z README.md: OK
+2026-10-05T09:16:02.4360234Z database.sqlite: OK
+2026-10-05T09:16:02.4360562Z migrations.json: OK
+2026-10-05T09:16:02.4360821Z writer-observation.json: OK
+2026-10-05T09:16:02.4361094Z writer-revision.txt: OK
+2026-10-05T09:16:02.4361344Z ../v2-writer.go.txt: OK
+2026-10-05T09:16:02.4363785Z go test -count=1 -tags=integration -timeout=120s ./conformance/recovery/...
+2026-10-05T09:16:33.6343650Z ok  	github.com/ruipengliu/lerna/conformance/recovery	28.431s
+2026-10-05T09:16:33.6541454Z bash scripts/test-component-integration-race.sh --normal
+2026-10-05T09:16:37.1317246Z Component integration normal: 201 runnables (1 closure, 97 content, 60 durable, 43 other)
+2026-10-05T09:16:37.1323604Z Component integration normal: running closure (1 runnables)
+2026-10-05T09:16:51.4805773Z ok  	github.com/ruipengliu/lerna/conformance/component	13.813s
+2026-10-05T09:16:51.5211519Z Component integration normal: running content_a (49 runnables)
+2026-10-05T09:17:51.9745300Z ok  	github.com/ruipengliu/lerna/conformance/component	59.947s
+2026-10-05T09:17:52.0173200Z Component integration normal: running content_b (48 runnables)
+2026-10-05T09:19:26.6190307Z ok  	github.com/ruipengliu/lerna/conformance/component	94.093s
+2026-10-05T09:19:26.6656030Z Component integration normal: running durable (60 runnables)
+2026-10-05T09:20:13.4430861Z ok  	github.com/ruipengliu/lerna/conformance/component	46.244s
+2026-10-05T09:20:13.4743758Z Component integration normal: running other (43 runnables)
+2026-10-05T09:20:14.9444284Z ok  	github.com/ruipengliu/lerna/conformance/component	0.959s
+2026-10-05T09:20:14.9557271Z go test -p=1 -count=1 -tags=integration -timeout=120s ./conformance/internal/decisionfixture ./conformance/internal/contentfixture ./adapters/objectstore/local
+2026-10-05T09:20:32.1748180Z ok  	github.com/ruipengliu/lerna/conformance/internal/decisionfixture	16.114s
+2026-10-05T09:20:32.8343554Z ok  	github.com/ruipengliu/lerna/conformance/internal/contentfixture	0.089s
+2026-10-05T09:20:33.2379865Z ok  	github.com/ruipengliu/lerna/adapters/objectstore/local	0.111s
+2026-10-05T09:20:33.2555763Z ##[group]Run make test-integration-race
+2026-10-05T09:20:33.2556116Z [36;1mmake test-integration-race[0m
+2026-10-05T09:20:33.2627139Z shell: /usr/bin/bash -e {0}
+2026-10-05T09:20:33.2627406Z env:
+2026-10-05T09:20:33.2627682Z   TMPDIR: /home/runner/work/_temp/lerna-integration-tmp
+2026-10-05T09:20:33.2628183Z   LERNA_TEST_OWNED_SCOPE_REGISTRY: /home/runner/work/_temp/lerna-decision-owned-scopes
+2026-10-05T09:20:33.2629077Z   LERNA_TEST_POSTGRES_DSN: ***127.0.0.1:5432/lerna_integration?sslmode=disable
+2026-10-05T09:20:33.2629477Z ##[endgroup]
+2026-10-05T09:20:33.2855985Z psql --version
+2026-10-05T09:20:33.4745595Z psql (PostgreSQL) 18.6 (Debian 18.6-1.pgdg12+2)
+2026-10-05T09:20:33.5529897Z cd conformance/fixtures/durable-work/pg-v1 && sha256sum -c SHA256SUMS
+2026-10-05T09:20:33.5556236Z 0001_admission.sql: OK
+2026-10-05T09:20:33.5556683Z commands.json: OK
+2026-10-05T09:20:33.5557057Z database.sql: OK
+2026-10-05T09:20:33.5557445Z writer-observation.json: OK
+2026-10-05T09:20:33.5557958Z writer-revision.txt: OK
+2026-10-05T09:20:33.5558765Z cd conformance/fixtures/durable-work/sqlite-v1 && sha256sum -c SHA256SUMS
+2026-10-05T09:20:33.5583888Z 0001_admission.sql: OK
+2026-10-05T09:20:33.5584324Z commands.json: OK
+2026-10-05T09:20:33.5584705Z database.sqlite: OK
+2026-10-05T09:20:33.5585517Z writer-observation.json: OK
+2026-10-05T09:20:33.5585938Z writer-revision.txt: OK
+2026-10-05T09:20:33.5586955Z cd conformance/fixtures/durable-work/pg-v2 && sha256sum -c SHA256SUMS
+2026-10-05T09:20:33.5611652Z 0001_admission.sql: OK
+2026-10-05T09:20:33.5612065Z 0002_claims.sql: OK
+2026-10-05T09:20:33.5612417Z README.md: OK
+2026-10-05T09:20:33.5612750Z database.sql: OK
+2026-10-05T09:20:33.5613390Z migrations.json: OK
+2026-10-05T09:20:33.5613760Z writer-observation.json: OK
+2026-10-05T09:20:33.5614157Z writer-revision.txt: OK
+2026-10-05T09:20:33.5614530Z writer-schema.txt: OK
+2026-10-05T09:20:33.5614891Z ../v2-writer.go.txt: OK
+2026-10-05T09:20:33.5615501Z cd conformance/fixtures/durable-work/sqlite-v2 && sha256sum -c SHA256SUMS
+2026-10-05T09:20:33.5640247Z 0001_admission.sql: OK
+2026-10-05T09:20:33.5640663Z 0002_claims.sql: OK
+2026-10-05T09:20:33.5641014Z README.md: OK
+2026-10-05T09:20:33.5641355Z database.sqlite: OK
+2026-10-05T09:20:33.5641690Z migrations.json: OK
+2026-10-05T09:20:33.5642125Z writer-observation.json: OK
+2026-10-05T09:20:33.5642564Z writer-revision.txt: OK
+2026-10-05T09:20:33.5643180Z ../v2-writer.go.txt: OK
+2026-10-05T09:20:33.5644870Z go test -p=1 -count=1 -race -tags=integration -timeout=120s ./conformance/recovery/...
+2026-10-05T09:21:41.5544704Z ok  	github.com/ruipengliu/lerna/conformance/recovery	65.454s
+2026-10-05T09:21:41.5695520Z bash scripts/test-component-integration-race.sh
+2026-10-05T09:21:42.1183446Z Component integration race: 201 runnables (1 closure, 97 content, 60 durable, 43 other)
+2026-10-05T09:21:42.1188818Z Component integration race: running closure (1 runnables)
+2026-10-05T09:22:18.2159945Z ok  	github.com/ruipengliu/lerna/conformance/component	29.878s
+2026-10-05T09:22:18.2642260Z Component integration race: running content_a (49 runnables)
+2026-10-05T09:23:32.5947673Z ok  	github.com/ruipengliu/lerna/conformance/component	73.650s
+2026-10-05T09:23:32.6370606Z Component integration race: running content_b (48 runnables)
+2026-10-05T09:25:33.1881970Z ok  	github.com/ruipengliu/lerna/conformance/component	119.884s
+2026-10-05T09:25:33.2349504Z Component integration race: running durable (60 runnables)
+2026-10-05T09:26:50.1296618Z ok  	github.com/ruipengliu/lerna/conformance/component	76.223s
+2026-10-05T09:26:50.1606610Z Component integration race: running other (43 runnables)
+2026-10-05T09:27:00.7323705Z ok  	github.com/ruipengliu/lerna/conformance/component	9.893s
+2026-10-05T09:27:00.7438324Z go test -p=1 -count=1 -race -tags=integration -timeout=120s ./conformance/internal/decisionfixture ./conformance/internal/contentfixture ./adapters/objectstore/local
+2026-10-05T09:27:24.0774036Z ok  	github.com/ruipengliu/lerna/conformance/internal/decisionfixture	21.584s
+2026-10-05T09:27:26.1640109Z ok  	github.com/ruipengliu/lerna/conformance/internal/contentfixture	1.164s
+2026-10-05T09:27:29.9802189Z ok  	github.com/ruipengliu/lerna/adapters/objectstore/local	3.267s
+2026-10-05T09:27:30.0019739Z Post job cleanup.
+2026-10-05T09:27:30.1240612Z (node:19561) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-05T09:27:30.1241892Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-05T09:27:30.1309530Z [command]/opt/hostedtoolcache/go/1.27.1/x64/bin/go env GOMODCACHE
+2026-10-05T09:27:30.1354113Z [command]/opt/hostedtoolcache/go/1.27.1/x64/bin/go env GOCACHE
+2026-10-05T09:27:30.1389979Z /home/runner/go/pkg/mod
+2026-10-05T09:27:30.1407429Z /home/runner/.cache/go-build
+2026-10-05T09:27:30.1415297Z Cache hit occurred on the primary key setup-go-Linux-x64-ubuntu24-go-1.27.1-6e6ea99592014c407a9e5c547b56d6c5c633b25a0a4d5cd88a735c865fb89158, not saving cache.
+2026-10-05T09:27:30.1606201Z Post job cleanup.
+2026-10-05T09:27:30.2481910Z [command]/usr/bin/git version
+2026-10-05T09:27:30.2525159Z git version 2.55.0
+2026-10-05T09:27:30.2564619Z Temporarily overriding HOME='/home/runner/work/_temp/818a2adb-2076-4d4e-884a-8d23cb4ceb53' before making global git config changes
+2026-10-05T09:27:30.2565947Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-05T09:27:30.2570394Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/lerna/lerna
+2026-10-05T09:27:30.2609792Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-05T09:27:30.2646807Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-05T09:27:30.2914968Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-05T09:27:30.2945106Z http.https://github.com/.extraheader
+2026-10-05T09:27:30.2962004Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-10-05T09:27:30.3004597Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-05T09:27:30.3424352Z Print service container logs: 6904e09351bc4dbe93c8f5c9109d653e_postgressha2563725f4e2499eef5134592b3b4ab79a543ed7f8e533b05b5b637af926630f6650_720774
+2026-10-05T09:27:30.3431800Z ##[command]/usr/bin/docker logs --details 374847c0255adc5c3d903560954dbf6f3612f24ff4c478d4f715b4cd2e47a658
+2026-10-05T09:27:30.3632464Z  The files belonging to this database system will be owned by user "postgres".
+2026-10-05T09:27:30.3638799Z  initdb: warning: enabling "trust" authentication for local connections
+2026-10-05T09:27:30.3639498Z  This user must also own the server process.
+2026-10-05T09:27:30.3640652Z  initdb: hint: You can change this by editing pg_hba.conf or using the option -A, or --auth-local and --auth-host, the next time you run initdb.
+2026-10-05T09:27:30.3642355Z  2026-10-05 09:14:49.261 UTC [1] LOG:  starting PostgreSQL 18.6 (Debian 18.6-1.pgdg12+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14+deb12u1) 12.2.0, 64-bit
+2026-10-05T09:27:30.3644033Z  2026-10-05 09:14:49.262 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+2026-10-05T09:27:30.3644637Z  
+2026-10-05T09:27:30.3646799Z  2026-10-05 09:14:49.262 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+2026-10-05T09:27:30.3648023Z  2026-10-05 09:14:49.262 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+2026-10-05T09:27:30.3648893Z  The database cluster will be initialized with locale "en_US.utf8".
+2026-10-05T09:27:30.3651055Z  2026-10-05 09:14:49.266 UTC [75] LOG:  database system was shut down at 2026-10-05 09:14:49 UTC
+2026-10-05T09:27:30.3651900Z  The default database encoding has accordingly been set to "UTF8".
+2026-10-05T09:27:30.3653174Z  2026-10-05 09:14:49.270 UTC [1] LOG:  database system is ready to accept connections
+2026-10-05T09:27:30.3653935Z  The default text search configuration will be set to "english".
+2026-10-05T09:27:30.3656112Z  2026-10-05 09:16:06.876 UTC [273] ERROR:  new row for relation "durable_inputs" violates check constraint "durable_inputs_projection"
+2026-10-05T09:27:30.3657016Z  
+2026-10-05T09:27:30.3658307Z  2026-10-05 09:16:06.876 UTC [273] DETAIL:  Failing row contains (tenant-one, owner-one, input, 1, \x68656c6c6f, 2026-10-05 09:16:06.853743+00, 2026-10-05 09:16:06.853743+00, 1, sha256:invalid, f).
+2026-10-05T09:27:30.3659473Z  Data page checksums are enabled.
+2026-10-05T09:27:30.3661951Z  2026-10-05 09:16:06.876 UTC [273] STATEMENT:  UPDATE "lerna_test_64557f06493c70c312f5129e"."durable_inputs" SET projected_revision=$4,text_digest=$5 WHERE tenant_id=$1 AND owner_id=$2 AND object_id=$3 AND revision >= $4 AND (projected_revision IS NULL OR projected_revision < $4)
+2026-10-05T09:27:30.3663828Z  
+2026-10-05T09:27:30.3664335Z  fixing permissions on existing directory /var/lib/postgresql/18/docker ... ok
+2026-10-05T09:27:30.3665001Z  creating subdirectories ... ok
+2026-10-05T09:27:30.3665503Z  selecting dynamic shared memory implementation ... posix
+2026-10-05T09:27:30.3666074Z  selecting default "max_connections" ... 100
+2026-10-05T09:27:30.3666977Z  selecting default "shared_buffers" ... 128MB
+2026-10-05T09:27:30.3667526Z  selecting default time zone ... Etc/UTC
+2026-10-05T09:27:30.3667967Z  creating configuration files ... ok
+2026-10-05T09:27:30.3668389Z  running bootstrap script ... ok
+2026-10-05T09:27:30.3668851Z  performing post-bootstrap initialization ... ok
+2026-10-05T09:27:30.3669348Z  syncing data to disk ... ok
+2026-10-05T09:27:30.3669717Z  
+2026-10-05T09:27:30.3669992Z  
+2026-10-05T09:27:30.3670354Z  Success. You can now start the database server using:
+2026-10-05T09:27:30.3670823Z  
+2026-10-05T09:27:30.3671203Z      pg_ctl -D /var/lib/postgresql/18/docker -l logfile start
+2026-10-05T09:27:30.3671718Z  
+2026-10-05T09:27:30.3672796Z  waiting for server to start....2026-10-05 09:14:48.936 UTC [53] LOG:  starting PostgreSQL 18.6 (Debian 18.6-1.pgdg12+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14+deb12u1) 12.2.0, 64-bit
+2026-10-05T09:27:30.3675410Z  2026-10-05 09:16:09.152 UTC [333] LOG:  PID 332 in cancel request did not match any process
+2026-10-05T09:27:30.3676252Z  2026-10-05 09:16:10.621 UTC [337] ERROR:  canceling statement due to lock timeout
+2026-10-05T09:27:30.3677071Z  2026-10-05 09:16:10.621 UTC [337] STATEMENT:  SELECT pg_advisory_xact_lock(2,hashtext($1))
+2026-10-05T09:27:30.3677851Z  2026-10-05 09:16:11.960 UTC [352] ERROR:  canceling statement due to lock timeout
+2026-10-05T09:27:30.3678619Z  2026-10-05 09:16:11.960 UTC [352] STATEMENT:  SELECT pg_advisory_xact_lock(2,hashtext($1))
+2026-10-05T09:27:30.3679532Z  2026-10-05 09:16:11.962 UTC [354] LOG:  unexpected EOF on client connection with an open transaction
+2026-10-05T09:27:30.3680321Z  2026-10-05 09:16:15.746 UTC [412] ERROR:  lerna_test_refuse_v2
+2026-10-05T09:27:30.3681073Z  2026-10-05 09:16:15.746 UTC [412] CONTEXT:  PL/pgSQL function lerna_test_refuse_v2() line 1 at RAISE
+2026-10-05T09:27:30.3682074Z  2026-10-05 09:16:15.746 UTC [412] STATEMENT:  INSERT INTO schema_migrations(version,checksum)VALUES($1,$2)
+2026-10-05T09:27:30.3683561Z  2026-10-05 09:16:15.977 UTC [419] ERROR:  relation "lerna_test_d6edc4113439fe90ab7c9f97.durable_schedules" does not exist at character 106
+2026-10-05T09:27:30.3685767Z  2026-10-05 09:16:15.977 UTC [419] STATEMENT:  SELECT policy,binding_source,adopted_at,deadline,attempts,start_epoch,outcome,reason,due_at,stopped FROM "lerna_test_d6edc4113439fe90ab7c9f97"."durable_schedules" WHERE tenant_id=$1 AND owner_id=$2 AND object_id=$3 AND input_revision=$4
+2026-10-05T09:27:30.3687556Z  2026-10-05 09:16:17.047 UTC [449] ERROR:  lerna_test_refuse_v2
+2026-10-05T09:27:30.3688334Z  2026-10-05 09:16:17.047 UTC [449] CONTEXT:  PL/pgSQL function lerna_test_refuse_v2() line 1 at RAISE
+2026-10-05T09:27:30.3689333Z  2026-10-05 09:16:17.047 UTC [449] STATEMENT:  INSERT INTO schema_migrations(version,checksum)VALUES($1,$2)
+2026-10-05T09:27:30.3690312Z  2026-10-05 09:16:17.260 UTC [454] LOG:  unexpected EOF on client connection with an open transaction
+2026-10-05T09:27:30.3691249Z  2026-10-05 09:16:18.568 UTC [466] ERROR:  canceling statement due to lock timeout
+2026-10-05T09:27:30.3692095Z  2026-10-05 09:16:18.568 UTC [466] STATEMENT:  SELECT pg_advisory_xact_lock(1,hashtext($1))
+2026-10-05T09:27:30.3693086Z  2026-10-05 09:16:21.356 UTC [522] ERROR:  canceling statement due to user request
+2026-10-05T09:27:30.3693869Z  2026-10-05 09:16:21.356 UTC [522] STATEMENT:  SELECT pg_advisory_xact_lock(3,hashtext($1))
+2026-10-05T09:27:30.3694676Z  2026-10-05 09:16:21.357 UTC [524] ERROR:  canceling statement due to user request
+2026-10-05T09:27:30.3695507Z  2026-10-05 09:16:21.357 UTC [524] STATEMENT:  SELECT pg_advisory_xact_lock(3,hashtext($1))
+2026-10-05T09:27:30.3696407Z  2026-10-05 09:16:23.519 UTC [559] LOG:  unexpected EOF on client connection with an open transaction
+2026-10-05T09:27:30.3697514Z  2026-10-05 09:16:29.285 UTC [627] ERROR:  new row for relation "durable_inputs" violates check constraint "durable_inputs_check"
+2026-10-05T09:27:30.3699041Z  2026-10-05 09:16:29.285 UTC [627] DETAIL:  Failing row contains (tenant-one, owner-one, input, 1, \x68656c6c6f, 2026-10-05 09:16:29.262269+00, 2026-10-05 09:16:29.262269+00, null, null, t).
+2026-10-05T09:27:30.3702244Z  2026-10-05 09:16:29.285 UTC [627] STATEMENT:  INSERT INTO "lerna_test_2525c023a38784dbd808ce54"."durable_inputs" (tenant_id,owner_id,object_id,revision,text_value,created_at,updated_at,body_gone) VALUES($1,$2,$3,$4,$5,$6,$7,$8) ON CONFLICT(tenant_id,owner_id,object_id) DO UPDATE SET revision=EXCLUDED.revision,text_value=EXCLUDED.text_value,updated_at=EXCLUDED.updated_at,body_gone=EXCLUDED.body_gone
+2026-10-05T09:27:30.3704898Z  2026-10-05 09:16:30.704 UTC [642] ERROR:  canceling statement due to lock timeout
+2026-10-05T09:27:30.3705678Z  2026-10-05 09:16:30.704 UTC [642] STATEMENT:  SELECT pg_advisory_xact_lock(2,hashtext($1))
+2026-10-05T09:27:30.3706902Z  2026-10-05 09:17:32.561 UTC [923] ERROR:  new row for relation "content_cleanup_responsibilities" violates check constraint "test_refuse_responsibility"
+2026-10-05T09:27:30.3709625Z  2026-10-05 09:17:32.561 UTC [923] DETAIL:  Failing row contains (content-tenant, content-owner, pc-9ca03afdf7a35f7492420cbaa136c5c4c5973270486b2bba9a46b641c9d51..., cv-da73fc3f262e288d3fbf5bf06db2ebcfbb031f2a5cacbc4e8be74a516714a..., \x7b226368616e67655f6b6579223a2270632d39636130336166646637613335...).
+2026-10-05T09:27:30.3713094Z  2026-10-05 09:17:32.561 UTC [923] STATEMENT:  INSERT INTO "lerna_test_2cebb5e7d9b6cce29b993266"."content_cleanup_responsibilities"(tenant_id,owner_id,change_key,object_id,body)VALUES($1,$2,$3,$4,$5)ON CONFLICT(tenant_id,owner_id,change_key,object_id)DO UPDATE SET body=excluded.body
+2026-10-05T09:27:30.3714862Z  2026-10-05 09:19:49.875 UTC [73] LOG:  checkpoint starting: time
+2026-10-05T09:27:30.3715835Z  2026-10-05 09:20:39.017 UTC [2497] ERROR:  new row for relation "durable_inputs" violates check constraint "durable_inputs_projection"
+2026-10-05T09:27:30.3717437Z  2026-10-05 09:20:39.017 UTC [2497] DETAIL:  Failing row contains (tenant-one, owner-one, input, 1, \x68656c6c6f, 2026-10-05 09:20:38.982974+00, 2026-10-05 09:20:38.982974+00, 1, sha256:invalid, f).
+2026-10-05T09:27:30.3719760Z  2026-10-05 09:20:39.017 UTC [2497] STATEMENT:  UPDATE "lerna_test_c82c9b890ed1046cf3afacbd"."durable_inputs" SET projected_revision=$4,text_digest=$5 WHERE tenant_id=$1 AND owner_id=$2 AND object_id=$3 AND revision >= $4 AND (projected_revision IS NULL OR projected_revision < $4)
+2026-10-05T09:27:30.3721556Z  2026-10-05 09:20:42.911 UTC [2558] LOG:  PID 2557 in cancel request did not match any process
+2026-10-05T09:27:30.3722400Z  2026-10-05 09:20:45.611 UTC [2562] ERROR:  canceling statement due to lock timeout
+2026-10-05T09:27:30.3723384Z  2026-10-05 09:20:45.611 UTC [2562] STATEMENT:  SELECT pg_advisory_xact_lock(2,hashtext($1))
+2026-10-05T09:27:30.3724175Z  2026-10-05 09:20:48.645 UTC [2579] ERROR:  canceling statement due to lock timeout
+2026-10-05T09:27:30.3724967Z  2026-10-05 09:20:48.645 UTC [2579] STATEMENT:  SELECT pg_advisory_xact_lock(2,hashtext($1))
+2026-10-05T09:27:30.3725911Z  2026-10-05 09:20:48.649 UTC [2581] LOG:  unexpected EOF on client connection with an open transaction
+2026-10-05T09:27:30.3726716Z  2026-10-05 09:20:58.971 UTC [2656] ERROR:  lerna_test_refuse_v2
+2026-10-05T09:27:30.3727472Z  2026-10-05 09:20:58.971 UTC [2656] CONTEXT:  PL/pgSQL function lerna_test_refuse_v2() line 1 at RAISE
+2026-10-05T09:27:30.3728477Z  2026-10-05 09:20:58.971 UTC [2656] STATEMENT:  INSERT INTO schema_migrations(version,checksum)VALUES($1,$2)
+2026-10-05T09:27:30.3729709Z  2026-10-05 09:20:59.560 UTC [2664] ERROR:  relation "lerna_test_67248d4b844a0901999723ea.durable_schedules" does not exist at character 106
+2026-10-05T09:27:30.3731900Z  2026-10-05 09:20:59.560 UTC [2664] STATEMENT:  SELECT policy,binding_source,adopted_at,deadline,attempts,start_epoch,outcome,reason,due_at,stopped FROM "lerna_test_67248d4b844a0901999723ea"."durable_schedules" WHERE tenant_id=$1 AND owner_id=$2 AND object_id=$3 AND input_revision=$4
+2026-10-05T09:27:30.3734573Z  2026-10-05 09:21:01.016 UTC [2694] ERROR:  lerna_test_refuse_v2
+2026-10-05T09:27:30.3735608Z  2026-10-05 09:21:01.016 UTC [2694] CONTEXT:  PL/pgSQL function lerna_test_refuse_v2() line 1 at RAISE
+2026-10-05T09:27:30.3736613Z  2026-10-05 09:21:01.016 UTC [2694] STATEMENT:  INSERT INTO schema_migrations(version,checksum)VALUES($1,$2)
+2026-10-05T09:27:30.3737634Z  2026-10-05 09:21:01.417 UTC [2699] LOG:  unexpected EOF on client connection with an open transaction
+2026-10-05T09:27:30.3738526Z  2026-10-05 09:21:03.012 UTC [2711] ERROR:  canceling statement due to lock timeout
+2026-10-05T09:27:30.3739345Z  2026-10-05 09:21:03.012 UTC [2711] STATEMENT:  SELECT pg_advisory_xact_lock(1,hashtext($1))
+2026-10-05T09:27:30.3740167Z  2026-10-05 09:21:08.284 UTC [2768] ERROR:  canceling statement due to user request
+2026-10-05T09:27:30.3741002Z  2026-10-05 09:21:08.284 UTC [2768] STATEMENT:  SELECT pg_advisory_xact_lock(3,hashtext($1))
+2026-10-05T09:27:30.3741798Z  2026-10-05 09:21:08.285 UTC [2766] ERROR:  canceling statement due to user request
+2026-10-05T09:27:30.3743040Z  2026-10-05 09:21:08.285 UTC [2766] STATEMENT:  SELECT pg_advisory_xact_lock(3,hashtext($1))
+2026-10-05T09:27:30.3743973Z  2026-10-05 09:21:12.431 UTC [2812] LOG:  unexpected EOF on client connection with an open transaction
+2026-10-05T09:27:30.3745089Z  2026-10-05 09:21:29.720 UTC [2905] ERROR:  new row for relation "durable_inputs" violates check constraint "durable_inputs_check"
+2026-10-05T09:27:30.3746578Z  2026-10-05 09:21:29.720 UTC [2905] DETAIL:  Failing row contains (tenant-one, owner-one, input, 1, \x68656c6c6f, 2026-10-05 09:21:29.684622+00, 2026-10-05 09:21:29.684622+00, null, null, t).
+2026-10-05T09:27:30.3749509Z  2026-10-05 09:21:29.720 UTC [2905] STATEMENT:  INSERT INTO "lerna_test_f339a80589b2af646189630e"."durable_inputs" (tenant_id,owner_id,object_id,revision,text_value,created_at,updated_at,body_gone) VALUES($1,$2,$3,$4,$5,$6,$7,$8) ON CONFLICT(tenant_id,owner_id,object_id) DO UPDATE SET revision=EXCLUDED.revision,text_value=EXCLUDED.text_value,updated_at=EXCLUDED.updated_at,body_gone=EXCLUDED.body_gone
+2026-10-05T09:27:30.3751955Z  2026-10-05 09:21:31.499 UTC [2920] ERROR:  canceling statement due to lock timeout
+2026-10-05T09:27:30.3752755Z  2026-10-05 09:21:31.499 UTC [2920] STATEMENT:  SELECT pg_advisory_xact_lock(2,hashtext($1))
+2026-10-05T09:27:30.3754189Z  2026-10-05 09:23:08.427 UTC [3252] ERROR:  new row for relation "content_cleanup_responsibilities" violates check constraint "test_refuse_responsibility"
+2026-10-05T09:27:30.3756685Z  2026-10-05 09:23:08.427 UTC [3252] DETAIL:  Failing row contains (content-tenant, content-owner, pc-9ca03afdf7a35f7492420cbaa136c5c4c5973270486b2bba9a46b641c9d51..., cv-da73fc3f262e288d3fbf5bf06db2ebcfbb031f2a5cacbc4e8be74a516714a..., \x7b226368616e67655f6b6579223a2270632d39636130336166646637613335...).
+2026-10-05T09:27:30.3759832Z  2026-10-05 09:23:08.427 UTC [3252] STATEMENT:  INSERT INTO "lerna_test_4fc6aa606d7034462e770253"."content_cleanup_responsibilities"(tenant_id,owner_id,change_key,object_id,body)VALUES($1,$2,$3,$4,$5)ON CONFLICT(tenant_id,owner_id,change_key,object_id)DO UPDATE SET body=excluded.body
+2026-10-05T09:27:30.3763067Z  2026-10-05 09:24:19.673 UTC [73] LOG:  checkpoint complete: wrote 3862 buffers (23.6%), wrote 8 SLRU buffers; 0 WAL file(s) added, 0 removed, 14 recycled; write=269.142 s, sync=0.300 s, total=269.798 s; sync files=40958, longest=0.002 s, average=0.001 s; distance=217600 kB, estimate=217600 kB; lsn=0/1B28D560, redo lsn=0/F015268
+2026-10-05T09:27:30.3764947Z  2026-10-05 09:24:49.707 UTC [73] LOG:  checkpoint starting: time
+2026-10-05T09:27:30.3765754Z  2026-10-05 09:14:48.936 UTC [53] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+2026-10-05T09:27:30.3766758Z  2026-10-05 09:14:48.940 UTC [59] LOG:  database system was shut down at 2026-10-05 09:14:48 UTC
+2026-10-05T09:27:30.3767599Z  2026-10-05 09:14:48.942 UTC [53] LOG:  database system is ready to accept connections
+2026-10-05T09:27:30.3768190Z   done
+2026-10-05T09:27:30.3768475Z  server started
+2026-10-05T09:27:30.3768786Z  CREATE DATABASE
+2026-10-05T09:27:30.3769329Z  
+2026-10-05T09:27:30.3769604Z  
+2026-10-05T09:27:30.3770114Z  /usr/local/bin/docker-entrypoint.sh: ignoring /docker-entrypoint-initdb.d/*
+2026-10-05T09:27:30.3770722Z  
+2026-10-05T09:27:30.3771272Z  waiting for server to shut down...2026-10-05 09:14:49.133 UTC [53] LOG:  received fast shutdown request
+2026-10-05T09:27:30.3772117Z  .2026-10-05 09:14:49.134 UTC [53] LOG:  aborting any active transactions
+2026-10-05T09:27:30.3773255Z  2026-10-05 09:14:49.136 UTC [53] LOG:  background worker "logical replication launcher" (PID 62) exited with exit code 1
+2026-10-05T09:27:30.3774097Z  2026-10-05 09:14:49.137 UTC [57] LOG:  shutting down
+2026-10-05T09:27:30.3774701Z  2026-10-05 09:14:49.137 UTC [57] LOG:  checkpoint starting: shutdown immediate
+2026-10-05T09:27:30.3776766Z  2026-10-05 09:14:49.151 UTC [57] LOG:  checkpoint complete: wrote 941 buffers (5.7%), wrote 3 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.012 s, sync=0.002 s, total=0.015 s; sync files=303, longest=0.001 s, average=0.001 s; distance=4334 kB, estimate=4334 kB; lsn=0/1B94F78, redo lsn=0/1B94F78
+2026-10-05T09:27:30.3778526Z  2026-10-05 09:14:49.162 UTC [53] LOG:  database system is shut down
+2026-10-05T09:27:30.3779047Z   done
+2026-10-05T09:27:30.3779337Z  server stopped
+2026-10-05T09:27:30.3779653Z  
+2026-10-05T09:27:30.3780022Z  PostgreSQL init process complete; ready for start up.
+2026-10-05T09:27:30.3780501Z  
+2026-10-05T09:27:30.3790299Z Stop and remove container: 6904e09351bc4dbe93c8f5c9109d653e_postgressha2563725f4e2499eef5134592b3b4ab79a543ed7f8e533b05b5b637af926630f6650_720774
+2026-10-05T09:27:30.3798203Z ##[command]/usr/bin/docker rm --force 374847c0255adc5c3d903560954dbf6f3612f24ff4c478d4f715b4cd2e47a658
+2026-10-05T09:27:30.5570429Z 374847c0255adc5c3d903560954dbf6f3612f24ff4c478d4f715b4cd2e47a658
+2026-10-05T09:27:30.5597966Z Remove container network: github_network_225b1608118d474280b27ad0a7ae77df
+2026-10-05T09:27:30.5602224Z ##[command]/usr/bin/docker network rm github_network_225b1608118d474280b27ad0a7ae77df
+2026-10-05T09:27:30.6669556Z github_network_225b1608118d474280b27ad0a7ae77df
+2026-10-05T09:27:30.6746874Z Cleaning up orphan processes
+2026-10-05T09:27:30.7098890Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683, actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

@@ -1,0 +1,56 @@
+{
+  "separate_future_capacity_business_not_executed": true,
+  "references_only_not_compact_semantic_acceptance": [
+    {
+      "path": "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/manifest-static.json",
+      "sha256": "60f92164e164cfe64658f176e5967755370c72aa31a52c39ba44e038965ca3ac",
+      "bytes": 70351
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/commands-static.json",
+      "sha256": "d45302767f7719b99fb89ef33ed00e1a9df0a15845415d8bb0998f1ec5978bc0",
+      "bytes": 3601
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/overlay.json",
+      "sha256": "a909dbbaf3248c152da48dd2e04e599ccc0b2ec564ecb418f469798a9ddbd521",
+      "bytes": 1132
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/original5-byteidentity-proof.json",
+      "sha256": "8f32dcca0a12fe8164cbde8fbe8b91da7dcfa1e5ed6ace21ab6e777698f4e1bd",
+      "bytes": 2515
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/static-generation-first-partial-failure.json",
+      "sha256": "c905c2cd5f61a2ab50845ec92b2a20e7efb29a8b9269b2b30769957336c1b3f5",
+      "bytes": 472
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/fresh-normal_build-prelaunch.json",
+      "sha256": "098e8e99f908f209db8bbb79717ca85186b1d268e2d1ecf955939af355a00f95",
+      "bytes": 72470
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/fresh-normal_build-actual-provenance.json",
+      "sha256": "525bc73583506c55e6211d5f10d78a722533d636f496313e415ad05542dc8b05",
+      "bytes": 148917
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/fresh-race_build-prelaunch.json",
+      "sha256": "5f410fe4532d50438968c1a8da4b930aaf26979e3ab4f58a189473185cde005a",
+      "bytes": 72475
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/fresh-race_build-actual-provenance.json",
+      "sha256": "26c83f82f77fc5add9c51100edcb998bd9c3515f38a065c4f73f75213be4631b",
+      "bytes": 148933
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/fresh-builds-actual-outcome.json",
+      "sha256": "2b314e6fc0d59dd9b0beca31c7ac313aeebbee0e10daa164692ffab300e73c5a",
+      "bytes": 395709
+    }
+  ],
+  "first_STATIC_KeyError_preserved": true
+}

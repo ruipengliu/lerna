@@ -1,0 +1,57 @@
+=== RUN   TestContentContextDecodedBindingPreservesCurrentPolicyAndWorkerControl
+=== RUN   TestContentContextDecodedBindingPreservesCurrentPolicyAndWorkerControl/normal
+=== RUN   TestContentContextDecodedBindingPreservesCurrentPolicyAndWorkerControl/process
+=== RUN   TestContentContextDecodedBindingPreservesCurrentPolicyAndWorkerControl/worker-control
+--- PASS: TestContentContextDecodedBindingPreservesCurrentPolicyAndWorkerControl (8.58s)
+    --- PASS: TestContentContextDecodedBindingPreservesCurrentPolicyAndWorkerControl/normal (4.30s)
+    --- PASS: TestContentContextDecodedBindingPreservesCurrentPolicyAndWorkerControl/process (2.07s)
+    --- PASS: TestContentContextDecodedBindingPreservesCurrentPolicyAndWorkerControl/worker-control (2.20s)
+=== RUN   TestContentContextBudgetLockWaitRejectsOriginalDeadlineAfterRealLock
+=== RUN   TestContentContextBudgetLockWaitRejectsOriginalDeadlineAfterRealLock/normal
+=== NAME  TestContentContextBudgetLockWaitRejectsOriginalDeadlineAfterRealLock
+    content_context_budget_concurrency_test.go:141: real native waiter backend=628410 expired original deadline=2026-10-05T09:18:31.595195Z rounds=0 reserved=0
+--- PASS: TestContentContextBudgetLockWaitRejectsOriginalDeadlineAfterRealLock (5.46s)
+    --- PASS: TestContentContextBudgetLockWaitRejectsOriginalDeadlineAfterRealLock/normal (2.94s)
+=== RUN   TestContentContextInputRevisionKeepsOriginalRoundsAndRejectsWiderTuple
+    content_context_compile_budget_test.go:362: same Snapshot input revision rounds=3 reserved=27926 confirmed=27926 unknown=0 reads=18 original_limit=65536
+--- PASS: TestContentContextInputRevisionKeepsOriginalRoundsAndRejectsWiderTuple (4.74s)
+=== RUN   TestContentContextProcessingUsesIndependentReadProcessGate
+--- PASS: TestContentContextProcessingUsesIndependentReadProcessGate (0.27s)
+=== RUN   TestContentProcessingRechecksHiddenAncestorAfterRealObjectRead
+=== RUN   TestContentProcessingRechecksHiddenAncestorAfterRealObjectRead/permitted
+=== RUN   TestContentProcessingRechecksHiddenAncestorAfterRealObjectRead/ancestor-process-withdrawn
+--- PASS: TestContentProcessingRechecksHiddenAncestorAfterRealObjectRead (1.40s)
+    --- PASS: TestContentProcessingRechecksHiddenAncestorAfterRealObjectRead/permitted (0.68s)
+    --- PASS: TestContentProcessingRechecksHiddenAncestorAfterRealObjectRead/ancestor-process-withdrawn (0.72s)
+=== RUN   TestContentProcessingSealedAncestorAfterRealObjectRead
+    content_processing_ancestor_seal_test.go:184: actual ancestor Seal processing post-I/O cause=*errors.joinError:content processing forbidden
+        forbidden zero=true; reopened cause=*errors.joinError:content processing forbidden
+        forbidden zero=true
+--- PASS: TestContentProcessingSealedAncestorAfterRealObjectRead (1.03s)
+=== RUN   TestContentProcessingRejectsTargetBodySeal
+=== RUN   TestContentProcessingRejectsTargetBodySeal/seal-before-read
+    content_processing_body_seal_test.go:191: actual sealed processing before-reopen cause=*errors.errorString:content processing forbidden zero=true; reopened cause=*errors.errorString:content processing forbidden zero=true
+=== RUN   TestContentProcessingRejectsTargetBodySeal/seal-after-real-object-read
+    content_processing_body_seal_test.go:191: actual sealed processing before-reopen cause=*errors.errorString:content processing forbidden zero=true; reopened cause=*errors.errorString:content processing forbidden zero=true
+--- PASS: TestContentProcessingRejectsTargetBodySeal (0.90s)
+    --- PASS: TestContentProcessingRejectsTargetBodySeal/seal-before-read (0.48s)
+    --- PASS: TestContentProcessingRejectsTargetBodySeal/seal-after-real-object-read (0.42s)
+=== RUN   TestContentReadPolicyWaitRespectsAdmissionForEveryObservation
+=== RUN   TestContentReadPolicyWaitRespectsAdmissionForEveryObservation/not_found
+=== RUN   TestContentReadPolicyWaitRespectsAdmissionForEveryObservation/preparing
+=== RUN   TestContentReadPolicyWaitRespectsAdmissionForEveryObservation/failed
+=== RUN   TestContentReadPolicyWaitRespectsAdmissionForEveryObservation/published
+=== RUN   TestContentReadPolicyWaitRespectsAdmissionForEveryObservation/mismatched
+--- PASS: TestContentReadPolicyWaitRespectsAdmissionForEveryObservation (3.57s)
+    --- PASS: TestContentReadPolicyWaitRespectsAdmissionForEveryObservation/not_found (0.65s)
+    --- PASS: TestContentReadPolicyWaitRespectsAdmissionForEveryObservation/preparing (0.68s)
+    --- PASS: TestContentReadPolicyWaitRespectsAdmissionForEveryObservation/failed (0.78s)
+    --- PASS: TestContentReadPolicyWaitRespectsAdmissionForEveryObservation/published (0.72s)
+    --- PASS: TestContentReadPolicyWaitRespectsAdmissionForEveryObservation/mismatched (0.73s)
+=== RUN   TestContentReadVersionWaitCannotReuseAdmissionClock
+--- PASS: TestContentReadVersionWaitCannotReuseAdmissionClock (0.79s)
+=== RUN   TestContentLastDirectSourceWaitCannotReuseReadAdmission
+--- PASS: TestContentLastDirectSourceWaitCannotReuseReadAdmission (1.14s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/component	28.951s
+NATIVE_EXIT status=0 group_absent=True

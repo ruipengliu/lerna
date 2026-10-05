@@ -1,0 +1,14 @@
+--- before-qualified/domain/content/ports.go
++++ candidate/domain/content/ports.go
+@@ -92,7 +92,10 @@
+ 	// not a deferred qualification. Decorators must forward them unchanged.
+ 	ScheduleRetention(context.Context, runtime.Tx, *FixturePolicy, Record, []Record, time.Duration) error
+ 	AdvancePolicyJob(context.Context, runtime.Tx, runtime.Job, Record, string, time.Duration, time.Duration) (bool, error)
+-	CheckPolicy(context.Context, runtime.Tx, v.SubjectBinding, v.ContentRef, string, []string, time.Time) (*FixturePolicy, error)
++	// CheckPolicy locks the current policy and evaluates its actions using the
++	// owner's current clock sampled after that lock. Query or clock errors must
++	// propagate; absence or denial returns nil without reusable authority.
++	CheckPolicy(context.Context, runtime.Tx, v.SubjectBinding, v.ContentRef, string, []string) (*FixturePolicy, error)
+ 	CheckMetadataPolicy(context.Context, runtime.Tx, v.SubjectBinding, v.ContentRef, string, time.Time) (*MetadataPolicy, error)
+ 	CheckCommandReader(context.Context, runtime.Tx, v.SubjectBinding, time.Time) (bool, error)
+ 	CheckCapacity(context.Context, runtime.Tx, Limits, int64) (bool, error)

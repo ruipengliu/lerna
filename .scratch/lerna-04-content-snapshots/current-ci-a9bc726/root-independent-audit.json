@@ -1,0 +1,9 @@
+{
+  "head": "a9bc726338040d4bf59e6d324691012a0011e1db",
+  "jobs_actual": 2,
+  "steps_actual": 23,
+  "both_actual_success": true,
+  "full_finite_package_results_and_selection_scope_read": true,
+  "all_setup_and_service_lines_human_read": false,
+  "candidate_wips_not_in_head": true
+}

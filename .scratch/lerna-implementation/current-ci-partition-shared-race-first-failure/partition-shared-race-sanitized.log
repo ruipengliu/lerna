@@ -1,0 +1,44 @@
+OWNED_GO_CHILD_COMPLETION_ACK {"actual_wait_confirmed": true, "event": "owned_go_child_completion_ack", "exit": 0, "operation": "go-child-0012", "original_pid_generation_absent": true, "original_whole_deadline_monotonic": 162144.659992109, "parent_operation": "partition-shared-race", "pgid": 3829696, "pid": 3829699, "shared_group_absence_checked_only_after_whole_wait": true, "starttime": "16069972", "timed_out": false}
+OWNED_GO_CHILD_COMPLETION_ACK {"actual_wait_confirmed": true, "event": "owned_go_child_completion_ack", "exit": 0, "operation": "go-child-0013", "original_pid_generation_absent": true, "original_whole_deadline_monotonic": 162144.659992109, "parent_operation": "partition-shared-race", "pgid": 3829696, "pid": 3829705, "shared_group_absence_checked_only_after_whole_wait": true, "starttime": "16069981", "timed_out": false}
+psql --version
+psql (PostgreSQL) 17.11 (Debian 17.11-0+deb13u1)
+cd conformance/fixtures/durable-work/pg-v1 && sha256sum -c SHA256SUMS
+0001_admission.sql: OK
+commands.json: OK
+database.sql: OK
+writer-observation.json: OK
+writer-revision.txt: OK
+cd conformance/fixtures/durable-work/sqlite-v1 && sha256sum -c SHA256SUMS
+0001_admission.sql: OK
+commands.json: OK
+database.sqlite: OK
+writer-observation.json: OK
+writer-revision.txt: OK
+cd conformance/fixtures/durable-work/pg-v2 && sha256sum -c SHA256SUMS
+0001_admission.sql: OK
+0002_claims.sql: OK
+README.md: OK
+database.sql: OK
+migrations.json: OK
+writer-observation.json: OK
+writer-revision.txt: OK
+writer-schema.txt: OK
+../v2-writer.go.txt: OK
+cd conformance/fixtures/durable-work/sqlite-v2 && sha256sum -c SHA256SUMS
+0001_admission.sql: OK
+0002_claims.sql: OK
+README.md: OK
+database.sqlite: OK
+migrations.json: OK
+writer-observation.json: OK
+writer-revision.txt: OK
+../v2-writer.go.txt: OK
+go test -p=1 -count=1 -race -tags=integration -timeout=120s ./conformance/recovery/...
+--- FAIL: TestPGPoolRunReservedLaneProgress (0.54s)
+    pool_test.go:931: owned Run lifecycle: driver: bad connection
+FAIL
+FAIL	github.com/ruipengliu/lerna/conformance/recovery	90.418s
+FAIL
+OWNED_GO_CHILD_COMPLETION_ACK {"actual_wait_confirmed": true, "event": "owned_go_child_completion_ack", "exit": 1, "operation": "go-child-0014", "original_pid_generation_absent": true, "original_whole_deadline_monotonic": 162144.659992109, "parent_operation": "partition-shared-race", "pgid": 3829696, "pid": 3829718, "shared_group_absence_checked_only_after_whole_wait": true, "starttime": "16069994", "timed_out": false}
+make: *** [Makefile:41: test-integration-race] Error 1
+NATIVE_COMPLETION_ACK {"event": "native_completion_ack", "exit": 2, "group_absent": true, "operation": "partition-shared-race", "pgid": 3829696, "pid": 3829696, "starttime": "16069966", "timed_out": false}

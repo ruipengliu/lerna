@@ -1,0 +1,43 @@
+{
+  "kind": "STATIC shared-race ready facts; waiting explicit soleLOCAL grant; no launch",
+  "fixed_head": "fa4ad6acfa58927000c830619da55598a0f9a506",
+  "worktree_clean": true,
+  "qualified5_pins_match": true,
+  "module283_source_pins_match": true,
+  "immutable4_controller_pins_match": true,
+  "counter_next": 12,
+  "counter_bytes": 13,
+  "counter_sha256": "f11d5aebca527464aa951e37e01d3d3155c2bb767f850d7c0619c74e2ab9ea42",
+  "expected_go_child_operations": [
+    "go-child-0012",
+    "go-child-0013",
+    "go-child-0014",
+    "go-child-0015",
+    "go-child-0016",
+    "go-child-0017",
+    "go-child-0018",
+    "go-child-0019",
+    "go-child-0020",
+    "go-child-0021",
+    "go-child-0022"
+  ],
+  "expected_count": 11,
+  "registry_pre_race_byte_offset": 146940,
+  "registry_pre_race_lines": 1166,
+  "registry_pre_race_sha256": "f5c2201147dda5fb560a6d2bd0e1472c0d35f83b82bf248849f826ff7ea3d53b",
+  "known_normal_killed_holder_unknown": {
+    "root": "/tmp/lerna-current-ci-partition-execution/lerna-local-lifetime-4236457110",
+    "device": 33,
+    "inode": 431541,
+    "current_exists": true,
+    "cleanup_allowed": false,
+    "logical_first_close_unknown": true
+  },
+  "race_command": "set -e; set -o pipefail; source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; export GOFLAGS=-mod=readonly; export PATH=/tmp/lerna-current-ci-partition-execution/go-shim:$PATH; make test-integration-race",
+  "supervisor": "/tmp/lerna-current-ci-partition-execution/run-shared.py",
+  "whole_seconds": 1445,
+  "go_package_seconds_unchanged": 120,
+  "no_initial_effect_or_merge_db_format_run": true,
+  "race_native_started": false,
+  "wait_for_explicit_grant_03_current_local": true
+}

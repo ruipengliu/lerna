@@ -1,0 +1,29 @@
+--- before-qualified/domain/content/service.go
++++ candidate/domain/content/service.go
+@@ -163,7 +163,7 @@
+ 		if !now.Before(cutoff(request.AcceptBefore)) {
+ 			return reject("expired")
+ 		}
+-		policy, err := s.config.Store.CheckPolicy(ctx, tx, principal, request.Payload.ContentRef, string(request.Payload.Purpose), []string{"save"}, now)
++		policy, err := s.config.Store.CheckPolicy(ctx, tx, principal, request.Payload.ContentRef, string(request.Payload.Purpose), []string{"save"})
+ 		if err != nil {
+ 			return err
+ 		}
+@@ -545,7 +545,7 @@
+ 		}
+ 		var targetPolicyRefs [2]v.ContentRef
+ 		for index, action := range []string{"read", "disclose"} {
+-			policy, err := s.config.Store.CheckPolicy(ctx, tx, principal, ref, string(request.Payload.Purpose), []string{action}, now)
++			policy, err := s.config.Store.CheckPolicy(ctx, tx, principal, ref, string(request.Payload.Purpose), []string{action})
+ 			if err != nil {
+ 				return err
+ 			}
+@@ -969,7 +969,7 @@
+ func (s *Service) publicationPolicy(ctx context.Context, tx runtime.Tx, record Record, now time.Time) (time.Time, time.Time, v.ErrorCode, error) {
+ 	current := cutoff(record.CurrentRetainUntil)
+ 	ioBefore := earlier(current, cutoff(record.PublishDeadline))
+-	policy, err := s.config.Store.CheckPolicy(ctx, tx, record.Subject, record.Ref, record.Purpose, []string{"save"}, now)
++	policy, err := s.config.Store.CheckPolicy(ctx, tx, record.Subject, record.Ref, record.Purpose, []string{"save"})
+ 	if err != nil {
+ 		return current, ioBefore, "", err
+ 	}

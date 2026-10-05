@@ -1,0 +1,676 @@
+{
+  "status": "Old raw failures and current8PASS are separate evidence; no done/capacityacceptance",
+  "all_existing_owned_direct_failure_raw_markers_preserved": [
+    {
+      "path": "/workspace/lerna-content-03-137311247276/canonical-green.log",
+      "sha256": "200378e9e71904dfe8b61772ff2cbfe5ab52534ded2b138587e49c979fc5de93",
+      "bytes": 234,
+      "native_footer_markers": [
+        {
+          "status": "1",
+          "group_absent": "True"
+        }
+      ],
+      "classification_limit": "Failure markers only, preserved raw byteexact; not invented business/setup/compile classification or evidence of rollback/Close.",
+      "existing_repository_archive_matches": [],
+      "no_duplicate_raw_copy_in_this_compact_proposal": true
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/canonical-red.log",
+      "sha256": "e60134bf6ccf7696294ec227cbe94941c566d5bed815d3f45878674775d3f3fa",
+      "bytes": 238,
+      "native_footer_markers": [
+        {
+          "status": "1",
+          "group_absent": "True"
+        }
+      ],
+      "classification_limit": "Failure markers only, preserved raw byteexact; not invented business/setup/compile classification or evidence of rollback/Close.",
+      "existing_repository_archive_matches": [],
+      "no_duplicate_raw_copy_in_this_compact_proposal": true
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/capacity-red.log",
+      "sha256": "5541d536ca6f5fd030fa6960dd0976216e42183e3a840b62f4a246e5c372b224",
+      "bytes": 269,
+      "native_footer_markers": [
+        {
+          "status": "1",
+          "group_absent": "True"
+        }
+      ],
+      "classification_limit": "Failure markers only, preserved raw byteexact; not invented business/setup/compile classification or evidence of rollback/Close.",
+      "existing_repository_archive_matches": [],
+      "no_duplicate_raw_copy_in_this_compact_proposal": true
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/closed-projection-red.log",
+      "sha256": "3610a0174cb59ff2385ff7b5ef2e8c9067575fac2108614001c032bc59707e2f",
+      "bytes": 262,
+      "native_footer_markers": [
+        {
+          "status": "1",
+          "group_absent": "True"
+        }
+      ],
+      "classification_limit": "Failure markers only, preserved raw byteexact; not invented business/setup/compile classification or evidence of rollback/Close.",
+      "existing_repository_archive_matches": [],
+      "no_duplicate_raw_copy_in_this_compact_proposal": true
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/context-binding-current-normal.log",
+      "sha256": "d09833d176fb0eac96ddbff059ee5aa420482a39dade4f4a65843febd67c070c",
+      "bytes": 1019,
+      "native_footer_markers": [
+        {
+          "status": "1",
+          "group_absent": "True"
+        }
+      ],
+      "classification_limit": "Failure markers only, preserved raw byteexact; not invented business/setup/compile classification or evidence of rollback/Close.",
+      "existing_repository_archive_matches": [
+        {
+          "path": "/workspace/lerna/.scratch/lerna-04-content-snapshots/ticket-03-large-graph-claim/binding-decode-qualification/context-binding-current-normal.log",
+          "bytes": 1019,
+          "sha256": "d09833d176fb0eac96ddbff059ee5aa420482a39dade4f4a65843febd67c070c"
+        }
+      ],
+      "no_duplicate_raw_copy_in_this_compact_proposal": true
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/context-binding-current-repair-normal.log",
+      "sha256": "421242a0b2ee0e26dd6725f618b0c6b450d4f7183da29e1f155c1b2c7c259e8a",
+      "bytes": 921,
+      "native_footer_markers": [
+        {
+          "status": "1",
+          "group_absent": "True"
+        }
+      ],
+      "classification_limit": "Failure markers only, preserved raw byteexact; not invented business/setup/compile classification or evidence of rollback/Close.",
+      "existing_repository_archive_matches": [
+        {
+          "path": "/workspace/lerna/.scratch/lerna-04-content-snapshots/ticket-03-large-graph-claim/binding-decode-qualification/context-binding-current-repair-normal.log",
+          "bytes": 921,
+          "sha256": "421242a0b2ee0e26dd6725f618b0c6b450d4f7183da29e1f155c1b2c7c259e8a"
+        }
+      ],
+      "no_duplicate_raw_copy_in_this_compact_proposal": true
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/context-binding-decode-reuse-red.log",
+      "sha256": "2377acef79849e64f1278d2b3a0e708d3f37e814cd56d44b4f2197a6c4f40cfc",
+      "bytes": 294,
+      "native_footer_markers": [
+        {
+          "status": "1",
+          "group_absent": "True"
+        }
+      ],
+      "classification_limit": "Failure markers only, preserved raw byteexact; not invented business/setup/compile classification or evidence of rollback/Close.",
+      "existing_repository_archive_matches": [
+        {
+          "path": "/workspace/lerna/.scratch/lerna-04-content-snapshots/ticket-03-large-graph-claim/binding-decode-qualification/first-mechanical-red.log",
+          "bytes": 294,
+          "sha256": "2377acef79849e64f1278d2b3a0e708d3f37e814cd56d44b4f2197a6c4f40cfc"
+        }
+      ],
+      "no_duplicate_raw_copy_in_this_compact_proposal": true
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/context-canonical-order-red.log",
+      "sha256": "925dbe44d85f1af3bd28656aabdea43f05486c900cc8f9b084a3155375b09a81",
+      "bytes": 929,
+      "native_footer_markers": [
+        {
+          "status": "1",
+          "group_absent": "True"
+        }
+      ],
+      "classification_limit": "Failure markers only, preserved raw byteexact; not invented business/setup/compile classification or evidence of rollback/Close.",
+      "existing_repository_archive_matches": [],
+      "no_duplicate_raw_copy_in_this_compact_proposal": true
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/context-closure-quantity-red.log",
+      "sha256": "7c2f3a13ae7d433a3e426c8e14df1ad71d0a5db688d1a8d729ba26215798dbc1",
+      "bytes": 265,
+      "native_footer_markers": [
+        {
+          "status": "1",
+          "group_absent": "True"
+        }
+      ],
+      "classification_limit": "Failure markers only, preserved raw byteexact; not invented business/setup/compile classification or evidence of rollback/Close.",
+      "existing_repository_archive_matches": [],
+      "no_duplicate_raw_copy_in_this_compact_proposal": true
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/context-compile-overflow-rounds-qual.log",
+      "sha256": "081f1657d90fc3665f7ebceb1ccb5ad440ffef295c987850c813a2edf0986964",
+      "bytes": 661,
+      "native_footer_markers": [
+        {
+          "status": "1",
+          "group_absent": "True"
+        }
+      ],
+      "classification_limit": "Failure markers only, preserved raw byteexact; not invented business/setup/compile classification or evidence of rollback/Close.",
+      "existing_repository_archive_matches": [],
+      "no_duplicate_raw_copy_in_this_compact_proposal": true
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/context-compile-round-green.log",
+      "sha256": "e78d3958084a35bfb036ad5b70e8f931e3111a144cf40b545a018980a6671209",
+      "bytes": 460,
+      "native_footer_markers": [
+        {
+          "status": "1",
+          "group_absent": "True"
+        }
+      ],
+      "classification_limit": "Failure markers only, preserved raw byteexact; not invented business/setup/compile classification or evidence of rollback/Close.",
+      "existing_repository_archive_matches": [],
+      "no_duplicate_raw_copy_in_this_compact_proposal": true
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/context-compile-round-red.log",
+      "sha256": "1f84bd76b50fdcf04c8d1705a6f81d37a1161577a66e73b854e5797e5d61729d",
+      "bytes": 302,
+      "native_footer_markers": [
+        {
+          "status": "1",
+          "group_absent": "True"
+        }
+      ],
+      "classification_limit": "Failure markers only, preserved raw byteexact; not invented business/setup/compile classification or evidence of rollback/Close.",
+      "existing_repository_archive_matches": [],
+      "no_duplicate_raw_copy_in_this_compact_proposal": true
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/context-condition-quantity-red.log",
+      "sha256": "2ca285a6f1e557f23c0c8804a32c93064b3f189db3c2336ff67696723fdc37fd",
+      "bytes": 246,
+      "native_footer_markers": [
+        {
+          "status": "1",
+          "group_absent": "True"
+        }
+      ],
+      "classification_limit": "Failure markers only, preserved raw byteexact; not invented business/setup/compile classification or evidence of rollback/Close.",
+      "existing_repository_archive_matches": [],
+      "no_duplicate_raw_copy_in_this_compact_proposal": true
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/context-e2e-green.log",
+      "sha256": "b5a15676c5355350de35a4b38cd5aa2721bae436cce6109d5226cc027f255b94",
+      "bytes": 310,
+      "native_footer_markers": [
+        {
+          "status": "1",
+          "group_absent": "True"
+        }
+      ],
+      "classification_limit": "Failure markers only, preserved raw byteexact; not invented business/setup/compile classification or evidence of rollback/Close.",
+      "existing_repository_archive_matches": [],
+      "no_duplicate_raw_copy_in_this_compact_proposal": true
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/context-e2e-red-repair.log",
+      "sha256": "151816ef01d984580a72b151ac6c6629650bcfb0e91868fbb32ac663d6129b9d",
+      "bytes": 267,
+      "native_footer_markers": [
+        {
+          "status": "1",
+          "group_absent": "True"
+        }
+      ],
+      "classification_limit": "Failure markers only, preserved raw byteexact; not invented business/setup/compile classification or evidence of rollback/Close.",
+      "existing_repository_archive_matches": [],
+      "no_duplicate_raw_copy_in_this_compact_proposal": true
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/context-e2e-red.log",
+      "sha256": "d48c491c33a0a7d4152b696fe9d1923b185375ace622a833fdb660ba343d15af",
+      "bytes": 393,
+      "native_footer_markers": [
+        {
+          "status": "1",
+          "group_absent": "True"
+        }
+      ],
+      "classification_limit": "Failure markers only, preserved raw byteexact; not invented business/setup/compile classification or evidence of rollback/Close.",
+      "existing_repository_archive_matches": [],
+      "no_duplicate_raw_copy_in_this_compact_proposal": true
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/context-entry-presence-red.log",
+      "sha256": "5af35caad69e3521f5b1392386299f933be705d5a234b7b1a00f2bad105eb015",
+      "bytes": 399,
+      "native_footer_markers": [
+        {
+          "status": "1",
+          "group_absent": "True"
+        }
+      ],
+      "classification_limit": "Failure markers only, preserved raw byteexact; not invented business/setup/compile classification or evidence of rollback/Close.",
+      "existing_repository_archive_matches": [],
+      "no_duplicate_raw_copy_in_this_compact_proposal": true
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/context-final-capacity-b-binding-reuse-race.log",
+      "sha256": "d27d6966cbcf63d9348b80d0ef216c3a2dbdebf34fc0a8a91de90b97136ee0e7",
+      "bytes": 26367,
+      "native_footer_markers": [
+        {
+          "status": "1",
+          "group_absent": "True"
+        }
+      ],
+      "classification_limit": "Failure markers only, preserved raw byteexact; not invented business/setup/compile classification or evidence of rollback/Close.",
+      "existing_repository_archive_matches": [
+        {
+          "path": "/workspace/lerna/.scratch/lerna-04-content-snapshots/ticket-03-large-graph-claim/binding-reuse-capacity/context-final-capacity-b-binding-reuse-race.log",
+          "bytes": 26367,
+          "sha256": "d27d6966cbcf63d9348b80d0ef216c3a2dbdebf34fc0a8a91de90b97136ee0e7"
+        }
+      ],
+      "no_duplicate_raw_copy_in_this_compact_proposal": true
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/context-final-capacity-b-claim-diagnostic-race.log",
+      "sha256": "2fb91f4253f27031cec845245e852194882955ceae5c6d9c69edf842876cb033",
+      "bytes": 25466,
+      "native_footer_markers": [
+        {
+          "status": "1",
+          "group_absent": "True"
+        }
+      ],
+      "classification_limit": "Failure markers only, preserved raw byteexact; not invented business/setup/compile classification or evidence of rollback/Close.",
+      "existing_repository_archive_matches": [
+        {
+          "path": "/workspace/lerna/.scratch/lerna-04-content-snapshots/ticket-03-large-graph-claim/diagnostic/original-race.log",
+          "bytes": 25466,
+          "sha256": "2fb91f4253f27031cec845245e852194882955ceae5c6d9c69edf842876cb033"
+        }
+      ],
+      "no_duplicate_raw_copy_in_this_compact_proposal": true
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/context-final-capacity-b-closure-identity-normal.log",
+      "sha256": "4d40b79faf796680faa5eabb5c4832980b08b2b734feefc36e7abce201d4645c",
+      "bytes": 26803,
+      "native_footer_markers": [
+        {
+          "status": "1",
+          "group_absent": "True"
+        }
+      ],
+      "classification_limit": "Failure markers only, preserved raw byteexact; not invented business/setup/compile classification or evidence of rollback/Close.",
+      "existing_repository_archive_matches": [
+        {
+          "path": "/workspace/lerna/.scratch/lerna-04-content-snapshots/ticket-03-large-graph-claim/closure-identity-capacity/context-final-capacity-b-closure-identity-normal.log",
+          "bytes": 26803,
+          "sha256": "4d40b79faf796680faa5eabb5c4832980b08b2b734feefc36e7abce201d4645c"
+        }
+      ],
+      "no_duplicate_raw_copy_in_this_compact_proposal": true
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/context-final-capacity-b-closure-identity-race.log",
+      "sha256": "7b48cbb7e9e0a8900f6fa9b514791d21f35538c85d17a9fd369fbe171bfefe6b",
+      "bytes": 26401,
+      "native_footer_markers": [
+        {
+          "status": "1",
+          "group_absent": "True"
+        }
+      ],
+      "classification_limit": "Failure markers only, preserved raw byteexact; not invented business/setup/compile classification or evidence of rollback/Close.",
+      "existing_repository_archive_matches": [
+        {
+          "path": "/workspace/lerna/.scratch/lerna-04-content-snapshots/ticket-03-large-graph-claim/closure-identity-capacity/context-final-capacity-b-closure-identity-race.log",
+          "bytes": 26401,
+          "sha256": "7b48cbb7e9e0a8900f6fa9b514791d21f35538c85d17a9fd369fbe171bfefe6b"
+        }
+      ],
+      "no_duplicate_raw_copy_in_this_compact_proposal": true
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/context-final-capacity-b-race.log",
+      "sha256": "4cfb78790b6252021f7f21c4b06b7a076ade4c9d7d8fc91258b90d9d1f891778",
+      "bytes": 1767,
+      "native_footer_markers": [
+        {
+          "status": "1",
+          "group_absent": "True"
+        }
+      ],
+      "classification_limit": "Failure markers only, preserved raw byteexact; not invented business/setup/compile classification or evidence of rollback/Close.",
+      "existing_repository_archive_matches": [],
+      "no_duplicate_raw_copy_in_this_compact_proposal": true
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/context-final-capacity-b-single-read-identity-race.log",
+      "sha256": "f4f8681e6c57e9d84153f0f82e819df5de757dd20ca6c662c4bd160689b12352",
+      "bytes": 25329,
+      "native_footer_markers": [
+        {
+          "status": "1",
+          "group_absent": "True"
+        }
+      ],
+      "classification_limit": "Failure markers only, preserved raw byteexact; not invented business/setup/compile classification or evidence of rollback/Close.",
+      "existing_repository_archive_matches": [
+        {
+          "path": "/workspace/lerna/.scratch/lerna-04-content-snapshots/ticket-03-large-graph-claim/single-read-identity-capacity/context-final-capacity-b-single-read-identity-race.log",
+          "bytes": 25329,
+          "sha256": "f4f8681e6c57e9d84153f0f82e819df5de757dd20ca6c662c4bd160689b12352"
+        }
+      ],
+      "no_duplicate_raw_copy_in_this_compact_proposal": true
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/context-final-capacity-b-subcost-diagnostic-race.log",
+      "sha256": "8f50183586e7746a787833e65ade7defb2335d5ecd0f6206bfad948bd928033c",
+      "bytes": 141247,
+      "native_footer_markers": [
+        {
+          "status": "1",
+          "group_absent": "True"
+        }
+      ],
+      "classification_limit": "Failure markers only, preserved raw byteexact; not invented business/setup/compile classification or evidence of rollback/Close.",
+      "existing_repository_archive_matches": [
+        {
+          "path": "/workspace/lerna/.scratch/lerna-04-content-snapshots/ticket-03-large-graph-claim/subcost/original-race.log",
+          "bytes": 141247,
+          "sha256": "8f50183586e7746a787833e65ade7defb2335d5ecd0f6206bfad948bd928033c"
+        }
+      ],
+      "no_duplicate_raw_copy_in_this_compact_proposal": true
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/context-final-capacity-b-worker-cpu-race.log",
+      "sha256": "2a94676ffe50254ec4aa333a4de0230f07d1c76711529cc255428fdacf0794a9",
+      "bytes": 26000,
+      "native_footer_markers": [
+        {
+          "status": "1",
+          "group_absent": "True"
+        }
+      ],
+      "classification_limit": "Failure markers only, preserved raw byteexact; not invented business/setup/compile classification or evidence of rollback/Close.",
+      "existing_repository_archive_matches": [
+        {
+          "path": "/workspace/lerna/.scratch/lerna-04-content-snapshots/ticket-03-large-graph-claim/worker-cpu-measurement/context-final-capacity-b-worker-cpu-race.log",
+          "bytes": 26000,
+          "sha256": "2a94676ffe50254ec4aa333a4de0230f07d1c76711529cc255428fdacf0794a9"
+        }
+      ],
+      "no_duplicate_raw_copy_in_this_compact_proposal": true
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/context-final-locked-01.log",
+      "sha256": "80067813a9c29702c1673dd695ea6646b86cea94d109fe1e04e15d02c07a871d",
+      "bytes": 595,
+      "native_footer_markers": [
+        {
+          "status": "1",
+          "group_absent": "True"
+        }
+      ],
+      "classification_limit": "Failure markers only, preserved raw byteexact; not invented business/setup/compile classification or evidence of rollback/Close.",
+      "existing_repository_archive_matches": [],
+      "no_duplicate_raw_copy_in_this_compact_proposal": true
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/context-integrated-qualification-sql-original4b-race.log",
+      "sha256": "4056da40ced0f8c23c4eb7ca66130d521bdbf7549588e206edbc396724e4a439",
+      "bytes": 94488,
+      "native_footer_markers": [
+        {
+          "status": "1",
+          "group_absent": "True"
+        }
+      ],
+      "classification_limit": "Failure markers only, preserved raw byteexact; not invented business/setup/compile classification or evidence of rollback/Close.",
+      "existing_repository_archive_matches": [
+        {
+          "path": "/workspace/lerna/.scratch/lerna-04-content-snapshots/ticket-03-current-cost-measurement/context-integrated-qualification-sql-original4b-race.log",
+          "bytes": 94488,
+          "sha256": "4056da40ced0f8c23c4eb7ca66130d521bdbf7549588e206edbc396724e4a439"
+        }
+      ],
+      "no_duplicate_raw_copy_in_this_compact_proposal": true
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/context-material-quantity-red.log",
+      "sha256": "f8cd386e859ac1f651119b1ab71c7746975da7e966d10c3ac5c193ed5ad1049d",
+      "bytes": 299,
+      "native_footer_markers": [
+        {
+          "status": "1",
+          "group_absent": "True"
+        }
+      ],
+      "classification_limit": "Failure markers only, preserved raw byteexact; not invented business/setup/compile classification or evidence of rollback/Close.",
+      "existing_repository_archive_matches": [],
+      "no_duplicate_raw_copy_in_this_compact_proposal": true
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/context-original-input-red.log",
+      "sha256": "8013210d0f7544372b80a7d75c20619baa97e6a295e10d0335211d9e94ef723a",
+      "bytes": 273,
+      "native_footer_markers": [
+        {
+          "status": "1",
+          "group_absent": "True"
+        }
+      ],
+      "classification_limit": "Failure markers only, preserved raw byteexact; not invented business/setup/compile classification or evidence of rollback/Close.",
+      "existing_repository_archive_matches": [],
+      "no_duplicate_raw_copy_in_this_compact_proposal": true
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/context-original-output-red.log",
+      "sha256": "5b917aa5bd2883c51bc951c1da03b138eda456a4b185e24739ed400162f8b887",
+      "bytes": 275,
+      "native_footer_markers": [
+        {
+          "status": "1",
+          "group_absent": "True"
+        }
+      ],
+      "classification_limit": "Failure markers only, preserved raw byteexact; not invented business/setup/compile classification or evidence of rollback/Close.",
+      "existing_repository_archive_matches": [],
+      "no_duplicate_raw_copy_in_this_compact_proposal": true
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/context-overflow-diagnostic-red.log",
+      "sha256": "e4aab09d8968badf3d0e8424eeb7e887827d6c0c17af7df13fcd91c2959939ab",
+      "bytes": 292,
+      "native_footer_markers": [
+        {
+          "status": "1",
+          "group_absent": "True"
+        }
+      ],
+      "classification_limit": "Failure markers only, preserved raw byteexact; not invented business/setup/compile classification or evidence of rollback/Close.",
+      "existing_repository_archive_matches": [],
+      "no_duplicate_raw_copy_in_this_compact_proposal": true
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/context-selected-projection-red.log",
+      "sha256": "d8d8430d6e1b20d4fe0c1a614cc80a8efb81cc3b7a19d2c35d7b42fae73324b4",
+      "bytes": 660,
+      "native_footer_markers": [
+        {
+          "status": "1",
+          "group_absent": "True"
+        }
+      ],
+      "classification_limit": "Failure markers only, preserved raw byteexact; not invented business/setup/compile classification or evidence of rollback/Close.",
+      "existing_repository_archive_matches": [],
+      "no_duplicate_raw_copy_in_this_compact_proposal": true
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/context-selection-omit-mismatch-red.log",
+      "sha256": "aa1362e3abdbfc4b309f9b2febf941c5f1db7d2e32ca6f02df6df46343d75fd0",
+      "bytes": 302,
+      "native_footer_markers": [
+        {
+          "status": "1",
+          "group_absent": "True"
+        }
+      ],
+      "classification_limit": "Failure markers only, preserved raw byteexact; not invented business/setup/compile classification or evidence of rollback/Close.",
+      "existing_repository_archive_matches": [],
+      "no_duplicate_raw_copy_in_this_compact_proposal": true
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/context-single-content-e2e.log",
+      "sha256": "c430c98feb53b420ce1b6ea1b6cc112dcc3ce4622cfbecb13fc529cc4b01e249",
+      "bytes": 1553,
+      "native_footer_markers": [
+        {
+          "status": "1",
+          "group_absent": "True"
+        }
+      ],
+      "classification_limit": "Failure markers only, preserved raw byteexact; not invented business/setup/compile classification or evidence of rollback/Close.",
+      "existing_repository_archive_matches": [],
+      "no_duplicate_raw_copy_in_this_compact_proposal": true
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/context-single-content-red.log",
+      "sha256": "498216e23bfa0f0ce72dc6ea1d53c588ecdaba7ecb4d88275ed8d679d485bfc0",
+      "bytes": 247,
+      "native_footer_markers": [
+        {
+          "status": "1",
+          "group_absent": "True"
+        }
+      ],
+      "classification_limit": "Failure markers only, preserved raw byteexact; not invented business/setup/compile classification or evidence of rollback/Close.",
+      "existing_repository_archive_matches": [],
+      "no_duplicate_raw_copy_in_this_compact_proposal": true
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/context-stage-publication-cause-first-red.log",
+      "sha256": "49436a59c202385259bbc280ae3f0eb3d59910c753de71b4a6c6e8fcccee4be7",
+      "bytes": 672,
+      "native_footer_markers": [
+        {
+          "status": "1",
+          "group_absent": "True"
+        }
+      ],
+      "classification_limit": "Failure markers only, preserved raw byteexact; not invented business/setup/compile classification or evidence of rollback/Close.",
+      "existing_repository_archive_matches": [
+        {
+          "path": "/workspace/lerna/.scratch/lerna-04-content-snapshots/ticket-03-stage-publication-cause/context-stage-publication-cause-first-red.log",
+          "bytes": 672,
+          "sha256": "49436a59c202385259bbc280ae3f0eb3d59910c753de71b4a6c6e8fcccee4be7"
+        }
+      ],
+      "no_duplicate_raw_copy_in_this_compact_proposal": true
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/context-target-body-seal-first-red-normal.log",
+      "sha256": "869b7afbe0a93eb9c1421183f2a1dca89637a03fb0841f958d9092d0f0b3e769",
+      "bytes": 2055,
+      "native_footer_markers": [
+        {
+          "status": "1",
+          "group_absent": "True"
+        }
+      ],
+      "classification_limit": "Failure markers only, preserved raw byteexact; not invented business/setup/compile classification or evidence of rollback/Close.",
+      "existing_repository_archive_matches": [
+        {
+          "path": "/workspace/lerna/.scratch/lerna-04-content-snapshots/ticket-03-processing-body-seal/context-target-body-seal-first-red-normal.log",
+          "bytes": 2055,
+          "sha256": "869b7afbe0a93eb9c1421183f2a1dca89637a03fb0841f958d9092d0f0b3e769"
+        }
+      ],
+      "no_duplicate_raw_copy_in_this_compact_proposal": true
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/context-wire-red.log",
+      "sha256": "e2126bad00d5c60495f91900005e580725f0792f2144748ae79d1939e5ec4cb6",
+      "bytes": 454,
+      "native_footer_markers": [
+        {
+          "status": "1",
+          "group_absent": "True"
+        }
+      ],
+      "classification_limit": "Failure markers only, preserved raw byteexact; not invented business/setup/compile classification or evidence of rollback/Close.",
+      "existing_repository_archive_matches": [],
+      "no_duplicate_raw_copy_in_this_compact_proposal": true
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/echo-overflow-red-repair.log",
+      "sha256": "12cb872f6778f9112146fe7d5700aee744497278b2b6866d9cd8daf904224257",
+      "bytes": 256,
+      "native_footer_markers": [
+        {
+          "status": "1",
+          "group_absent": "True"
+        }
+      ],
+      "classification_limit": "Failure markers only, preserved raw byteexact; not invented business/setup/compile classification or evidence of rollback/Close.",
+      "existing_repository_archive_matches": [],
+      "no_duplicate_raw_copy_in_this_compact_proposal": true
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/echo-overflow-red.log",
+      "sha256": "6d9c169cd562d448bbf00358b4b7b3fe2961b7ba47880479f43170067cc5fe8a",
+      "bytes": 419,
+      "native_footer_markers": [
+        {
+          "status": "1",
+          "group_absent": "True"
+        }
+      ],
+      "classification_limit": "Failure markers only, preserved raw byteexact; not invented business/setup/compile classification or evidence of rollback/Close.",
+      "existing_repository_archive_matches": [],
+      "no_duplicate_raw_copy_in_this_compact_proposal": true
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/processing-red.log",
+      "sha256": "1711e4a97ddbee6230739d537c5d0874c536a253e6260829cb5ad32eff2249f0",
+      "bytes": 1026,
+      "native_footer_markers": [
+        {
+          "status": "1",
+          "group_absent": "True"
+        }
+      ],
+      "classification_limit": "Failure markers only, preserved raw byteexact; not invented business/setup/compile classification or evidence of rollback/Close.",
+      "existing_repository_archive_matches": [],
+      "no_duplicate_raw_copy_in_this_compact_proposal": true
+    }
+  ],
+  "profile_original_descriptor": {
+    "path": "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/worker-cpu.pprof",
+    "sha256": "427bbc672bad5cf520934ed2e31116f75eca4991572fd5ecd0c3f7c3a4ff31e6",
+    "bytes": 144298,
+    "original_testing_descriptor_logicalClose": "UNKNOWN",
+    "new_archive_copy_or_stat_read_does_not_ack_original_Close": true,
+    "not_resampled_or_analyzed": true
+  },
+  "explicit_boundaries": [
+    "Originalcapacity27.74/22.60 remain actual failed Claim5 evidence on their oldsource binding.",
+    "Current integrated SQL measured29.57/23.32 remain failed positive cases; observed Accepted/Running and absent Prepared/pubs/readback/Completed tails remain.",
+    "Old measured/staticPrepared and possible publication effects UNKNOWN remain; a new green semantic control does not prove rollback/no effect.",
+    "Original StagePublication cancellation RED and direct targetBodySeal real RED remain necessary history; currentfix qualifications are separate.",
+    "Original CPU standardtesting FDlogicalClose UNKNOWN forever; nativeprocessabsence or laterownFDfsync/Close cannot retroactively acknowledge it.",
+    "Failed early setup/oracle/compile raw stays byteexact with its actual typed stage; not recast as a new businessRED.",
+    "Original heldactor/fixture resourceClose/retainedscope UNKNOWN remains local to each oldactual attempt."
+  ],
+  "reference_only_historical_raws": true,
+  "scope": "All original 41 failure/UNKNOWN artifacts remain in ownedroot and prior archives unchanged. References can be missing from repository for some old diagnostic raw; do not pretend archived or business-classified. No history deletion, rewriting, or copying."
+}

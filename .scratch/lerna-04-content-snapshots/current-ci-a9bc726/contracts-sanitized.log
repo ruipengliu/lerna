@@ -1,0 +1,537 @@
+﻿2026-10-05T09:14:38.5586091Z Current runner version: '2.337.0'
+2026-10-05T09:14:38.5612623Z ##[group]Runner Image Provisioner
+2026-10-05T09:14:38.5613507Z Hosted Compute Agent
+2026-10-05T09:14:38.5614097Z Version: 20260901.588
+2026-10-05T09:14:38.5614779Z Commit: f88ec8081b781fac6c440065ac7ff9e710ce3d0b
+2026-10-05T09:14:38.5616043Z Build Date: 2026-09-01T19:56:44Z
+2026-10-05T09:14:38.5617154Z Worker ID: {90d45ffb-36e5-45f5-adbe-fa1d75b1884b}
+2026-10-05T09:14:38.5618466Z Azure Region: eastus2
+2026-10-05T09:14:38.5619374Z ##[endgroup]
+2026-10-05T09:14:38.5621285Z ##[group]Operating System
+2026-10-05T09:14:38.5622005Z Ubuntu
+2026-10-05T09:14:38.5622517Z 24.04.5
+2026-10-05T09:14:38.5623121Z LTS
+2026-10-05T09:14:38.5623676Z ##[endgroup]
+2026-10-05T09:14:38.5624325Z ##[group]Runner Image
+2026-10-05T09:14:38.5624963Z Image: ubuntu-24.04
+2026-10-05T09:14:38.5625742Z Version: 20260927.320.1
+2026-10-05T09:14:38.5627120Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260927.320/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-05T09:14:38.5629043Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260927.320
+2026-10-05T09:14:38.5630066Z ##[endgroup]
+2026-10-05T09:14:38.5631239Z ##[group]GITHUB_TOKEN Permissions
+2026-10-05T09:14:38.5633387Z Contents: read
+2026-10-05T09:14:38.5634335Z Metadata: read
+2026-10-05T09:14:38.5635001Z ##[endgroup]
+2026-10-05T09:14:38.5637366Z Secret source: Actions
+2026-10-05T09:14:38.5638400Z Cache mode: write
+2026-10-05T09:14:38.5639394Z Prepare workflow directory
+2026-10-05T09:14:38.5967408Z Prepare all required actions
+2026-10-05T09:14:38.6020195Z Getting action download info
+2026-10-05T09:14:38.8547153Z Download action repository 'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683' (SHA:11bd71901bbe5b1630ceea73d27597364c9af683)
+2026-10-05T09:14:38.9913075Z Download action repository 'actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5' (SHA:d35c59abb061a4a6fb18e82ac0862c26744d6ab5)
+2026-10-05T09:14:39.2137930Z Download action repository 'actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+2026-10-05T09:14:39.4062625Z Complete job name: contracts
+2026-10-05T09:14:39.4824502Z ##[group]Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+2026-10-05T09:14:39.4825809Z with:
+2026-10-05T09:14:39.4826261Z   repository: ruipengliu/lerna
+2026-10-05T09:14:39.4830231Z   token: ***
+2026-10-05T09:14:39.4830665Z   ssh-strict: true
+2026-10-05T09:14:39.4831138Z   ssh-user: git
+2026-10-05T09:14:39.4831575Z   persist-credentials: true
+2026-10-05T09:14:39.4832053Z   clean: true
+2026-10-05T09:14:39.4832538Z   sparse-checkout-cone-mode: true
+2026-10-05T09:14:39.4833054Z   fetch-depth: 1
+2026-10-05T09:14:39.4833477Z   fetch-tags: false
+2026-10-05T09:14:39.4833918Z   show-progress: true
+2026-10-05T09:14:39.4834366Z   lfs: false
+2026-10-05T09:14:39.4834771Z   submodules: false
+2026-10-05T09:14:39.4835432Z   set-safe-directory: true
+2026-10-05T09:14:39.4836223Z ##[endgroup]
+2026-10-05T09:14:39.6036149Z Syncing repository: ruipengliu/lerna
+2026-10-05T09:14:39.6038635Z ##[group]Getting Git version info
+2026-10-05T09:14:39.6039768Z Working directory is '/home/runner/work/lerna/lerna'
+2026-10-05T09:14:39.6042816Z [command]/usr/bin/git version
+2026-10-05T09:14:39.6183986Z git version 2.55.0
+2026-10-05T09:14:39.6208102Z ##[endgroup]
+2026-10-05T09:14:39.6231854Z Temporarily overriding HOME='/home/runner/work/_temp/da4b776c-6d5f-4011-ae34-25e011a8a824' before making global git config changes
+2026-10-05T09:14:39.6236652Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-05T09:14:39.6240348Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/lerna/lerna
+2026-10-05T09:14:39.6307980Z Deleting the contents of '/home/runner/work/lerna/lerna'
+2026-10-05T09:14:39.6316423Z ##[group]Initializing the repository
+2026-10-05T09:14:39.6322149Z [command]/usr/bin/git init /home/runner/work/lerna/lerna
+2026-10-05T09:14:39.6467491Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-05T09:14:39.6471861Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-05T09:14:39.6473673Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-05T09:14:39.6478099Z hint: call:
+2026-10-05T09:14:39.6493777Z hint:
+2026-10-05T09:14:39.6494400Z hint: 	git config --global init.defaultBranch <name>
+2026-10-05T09:14:39.6495019Z hint:
+2026-10-05T09:14:39.6495997Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-05T09:14:39.6496966Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-05T09:14:39.6497688Z hint:
+2026-10-05T09:14:39.6498098Z hint: 	git branch -m <name>
+2026-10-05T09:14:39.6498566Z hint:
+2026-10-05T09:14:39.6499181Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-05T09:14:39.6500143Z Initialized empty Git repository in /home/runner/work/lerna/lerna/.git/
+2026-10-05T09:14:39.6501813Z [command]/usr/bin/git remote add origin https://github.com/ruipengliu/lerna
+2026-10-05T09:14:39.6562533Z ##[endgroup]
+2026-10-05T09:14:39.6564125Z ##[group]Disabling automatic garbage collection
+2026-10-05T09:14:39.6568755Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-05T09:14:39.6609102Z ##[endgroup]
+2026-10-05T09:14:39.6610456Z ##[group]Setting up auth
+2026-10-05T09:14:39.6622516Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-05T09:14:39.6662210Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-05T09:14:39.7071576Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-05T09:14:39.7121996Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-05T09:14:39.7368506Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-05T09:14:39.7412533Z ##[endgroup]
+2026-10-05T09:14:39.7413411Z ##[group]Fetching the repository
+2026-10-05T09:14:39.7423577Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +a9bc726338040d4bf59e6d324691012a0011e1db:refs/remotes/origin/codex/lerna-implementation
+2026-10-05T09:14:40.4473655Z From https://github.com/ruipengliu/lerna
+2026-10-05T09:14:40.4487400Z  * [new ref]         a9bc726338040d4bf59e6d324691012a0011e1db -> origin/codex/lerna-implementation
+2026-10-05T09:14:40.4489938Z ##[endgroup]
+2026-10-05T09:14:40.4490696Z ##[group]Determining the checkout info
+2026-10-05T09:14:40.4491695Z ##[endgroup]
+2026-10-05T09:14:40.4497869Z [command]/usr/bin/git sparse-checkout disable
+2026-10-05T09:14:40.4557897Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-05T09:14:40.4594360Z ##[group]Checking out the ref
+2026-10-05T09:14:40.4601878Z [command]/usr/bin/git checkout --progress --force -B codex/lerna-implementation refs/remotes/origin/codex/lerna-implementation
+2026-10-05T09:14:40.6326520Z Switched to a new branch 'codex/lerna-implementation'
+2026-10-05T09:14:40.6332229Z branch 'codex/lerna-implementation' set up to track 'origin/codex/lerna-implementation'.
+2026-10-05T09:14:40.6346808Z ##[endgroup]
+2026-10-05T09:14:40.6397374Z [command]/usr/bin/git log -1 --format=%H
+2026-10-05T09:14:40.6426385Z a9bc726338040d4bf59e6d324691012a0011e1db
+2026-10-05T09:14:40.6782748Z ##[group]Run actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5
+2026-10-05T09:14:40.6784511Z with:
+2026-10-05T09:14:40.6785673Z   go-version: 1.27.1
+2026-10-05T09:14:40.6786737Z   cache: true
+2026-10-05T09:14:40.6787746Z   check-latest: false
+2026-10-05T09:14:40.6797884Z   token: ***
+2026-10-05T09:14:40.6798893Z ##[endgroup]
+2026-10-05T09:14:40.8122712Z Setup go version spec 1.27.1
+2026-10-05T09:14:40.8135876Z Attempting to download 1.27.1...
+2026-10-05T09:14:40.8246155Z (node:2306) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-05T09:14:40.8248955Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-05T09:14:41.5631748Z matching 1.27.1...
+2026-10-05T09:14:41.5636441Z Acquiring 1.27.1 from https://github.com/actions/go-versions/releases/download/1.27.1-33583469715/go-1.27.1-linux-x64.tar.gz
+2026-10-05T09:14:42.0486582Z Extracting Go...
+2026-10-05T09:14:42.0607799Z [command]/usr/bin/tar xz --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/26ccb6c1-5a98-40d8-b1fa-442679d7ee39 -f /home/runner/work/_temp/ba7f5a94-57b4-4cbc-8d8c-cb273d1e0773
+2026-10-05T09:14:43.7676067Z Successfully extracted go to /home/runner/work/_temp/26ccb6c1-5a98-40d8-b1fa-442679d7ee39
+2026-10-05T09:14:43.7677176Z Adding to the cache ...
+2026-10-05T09:14:49.7000454Z Successfully cached go to /opt/hostedtoolcache/go/1.27.1/x64
+2026-10-05T09:14:49.7003126Z Added go to the path
+2026-10-05T09:14:49.7006171Z Successfully set up Go version 1.27.1
+2026-10-05T09:14:49.7271689Z [command]/opt/hostedtoolcache/go/1.27.1/x64/bin/go env GOMODCACHE
+2026-10-05T09:14:49.7315029Z [command]/opt/hostedtoolcache/go/1.27.1/x64/bin/go env GOCACHE
+2026-10-05T09:14:49.7358783Z /home/runner/go/pkg/mod
+2026-10-05T09:14:49.7378991Z /home/runner/.cache/go-build
+2026-10-05T09:14:49.8299551Z Cache hit for: setup-go-Linux-x64-ubuntu24-go-1.27.1-6e6ea99592014c407a9e5c547b56d6c5c633b25a0a4d5cd88a735c865fb89158
+2026-10-05T09:14:49.8410115Z (node:2306) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-05T09:14:50.2404560Z Received 59806887 of 59806887 (100.0%), 158.4 MBs/sec
+2026-10-05T09:14:50.2405481Z Cache Size: ~57 MB (59806887 B)
+2026-10-05T09:14:50.2445838Z [command]/usr/bin/tar -xf /home/runner/work/_temp/3d82f0fd-af3a-4921-b257-0c15e4f86e8d/cache.tzst -P -C /home/runner/work/lerna/lerna --use-compress-program unzstd
+2026-10-05T09:14:50.7468853Z Cache restored successfully
+2026-10-05T09:14:50.7505508Z Cache restored from key: setup-go-Linux-x64-ubuntu24-go-1.27.1-6e6ea99592014c407a9e5c547b56d6c5c633b25a0a4d5cd88a735c865fb89158
+2026-10-05T09:14:50.7529446Z go version go1.27.1 linux/amd64
+2026-10-05T09:14:50.7529754Z 
+2026-10-05T09:14:50.7530248Z ##[group]go env
+2026-10-05T09:14:50.7694263Z AR='ar'
+2026-10-05T09:14:50.7694727Z CC='gcc'
+2026-10-05T09:14:50.7695432Z CGO_CFLAGS='-O2 -g'
+2026-10-05T09:14:50.7695970Z CGO_CPPFLAGS=''
+2026-10-05T09:14:50.7696487Z CGO_CXXFLAGS='-O2 -g'
+2026-10-05T09:14:50.7696998Z CGO_ENABLED='1'
+2026-10-05T09:14:50.7697475Z CGO_FFLAGS='-O2 -g'
+2026-10-05T09:14:50.7698004Z CGO_LDFLAGS='-O2 -g'
+2026-10-05T09:14:50.7698522Z CXX='g++'
+2026-10-05T09:14:50.7698966Z GCCGO='gccgo'
+2026-10-05T09:14:50.7699430Z GO111MODULE=''
+2026-10-05T09:14:50.7699891Z GOAMD64='v1'
+2026-10-05T09:14:50.7700402Z GOARCH='amd64'
+2026-10-05T09:14:50.7700867Z GOAUTH='netrc'
+2026-10-05T09:14:50.7701394Z GOBIN='/home/runner/go/bin'
+2026-10-05T09:14:50.7701831Z GOCACHE='/home/runner/.cache/go-build'
+2026-10-05T09:14:50.7702236Z GOCACHEPROG=''
+2026-10-05T09:14:50.7702523Z GODEBUG=''
+2026-10-05T09:14:50.7702846Z GOENV='/home/runner/.config/go/env'
+2026-10-05T09:14:50.7703219Z GOEXE=''
+2026-10-05T09:14:50.7703499Z GOEXPERIMENT=''
+2026-10-05T09:14:50.7703803Z GOFIPS140='off'
+2026-10-05T09:14:50.7704088Z GOFLAGS=''
+2026-10-05T09:14:50.7705697Z GOGCCFLAGS='-fPIC -m64 -pthread -Wl,--no-gc-sections -fmessage-length=0 -ffile-prefix-map=/tmp/go-build4013611454=/tmp/go-build -gno-record-gcc-switches'
+2026-10-05T09:14:50.7706794Z GOHOSTARCH='amd64'
+2026-10-05T09:14:50.7707121Z GOHOSTOS='linux'
+2026-10-05T09:14:50.7707424Z GOINSECURE=''
+2026-10-05T09:14:50.7707773Z GOMOD='/home/runner/work/lerna/lerna/go.mod'
+2026-10-05T09:14:50.7708259Z GOMODCACHE='/home/runner/go/pkg/mod'
+2026-10-05T09:14:50.7708817Z GONOPROXY=''
+2026-10-05T09:14:50.7709064Z GONOSUMDB=''
+2026-10-05T09:14:50.7709257Z GOOS='linux'
+2026-10-05T09:14:50.7709471Z GOPACKAGESDRIVER=''
+2026-10-05T09:14:50.7709715Z GOPATH='/home/runner/go'
+2026-10-05T09:14:50.7709950Z GOPRIVATE=''
+2026-10-05T09:14:50.7710254Z GOPROXY='https://proxy.golang.org,direct'
+2026-10-05T09:14:50.7710617Z GOROOT='/opt/hostedtoolcache/go/1.27.1/x64'
+2026-10-05T09:14:50.7710973Z GOSUMDB='sum.golang.org'
+2026-10-05T09:14:50.7711214Z GOTELEMETRY='local'
+2026-10-05T09:14:50.7711490Z GOTELEMETRYDIR='/home/runner/.config/go/telemetry'
+2026-10-05T09:14:50.7711800Z GOTMPDIR=''
+2026-10-05T09:14:50.7712008Z GOTOOLCHAIN='auto'
+2026-10-05T09:14:50.7712330Z GOTOOLDIR='/opt/hostedtoolcache/go/1.27.1/x64/pkg/tool/linux_amd64'
+2026-10-05T09:14:50.7712688Z GOVCS=''
+2026-10-05T09:14:50.7712883Z GOVERSION='go1.27.1'
+2026-10-05T09:14:50.7713094Z GOWORK=''
+2026-10-05T09:14:50.7713309Z PKG_CONFIG='pkg-config'
+2026-10-05T09:14:50.7713453Z 
+2026-10-05T09:14:50.7713761Z ##[endgroup]
+2026-10-05T09:14:50.7956458Z ##[group]Run actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+2026-10-05T09:14:50.7956889Z with:
+2026-10-05T09:14:50.7957103Z   node-version: 24.19.0
+2026-10-05T09:14:50.7957343Z   always-auth: false
+2026-10-05T09:14:50.7957561Z   check-latest: false
+2026-10-05T09:14:50.7960284Z   token: ***
+2026-10-05T09:14:50.7960491Z ##[endgroup]
+2026-10-05T09:14:50.9357992Z Attempting to download 24.19.0...
+2026-10-05T09:14:50.9464968Z (node:2366) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-05T09:14:50.9466186Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-05T09:14:51.4376354Z Acquiring 24.19.0 - x64 from https://github.com/actions/node-versions/releases/download/24.19.0-30872449280/node-24.19.0-linux-x64.tar.gz
+2026-10-05T09:14:51.8448534Z Extracting ...
+2026-10-05T09:14:51.8578580Z [command]/usr/bin/tar xz --strip 1 --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/e22ad736-f350-41dc-892d-e296616da3d1 -f /home/runner/work/_temp/a23e395a-4e27-4edb-9157-8c93f3b54365
+2026-10-05T09:14:53.1149356Z Adding to the cache ...
+2026-10-05T09:14:55.0926511Z ##[group]Environment details
+2026-10-05T09:14:55.3284519Z node: v24.19.0
+2026-10-05T09:14:55.3284957Z npm: 11.17.0
+2026-10-05T09:14:55.3285499Z yarn: 1.22.22
+2026-10-05T09:14:55.3286200Z ##[endgroup]
+2026-10-05T09:14:55.3451970Z ##[group]Run npm install --global pnpm@12.8.1
+2026-10-05T09:14:55.3452422Z [36;1mnpm install --global pnpm@12.8.1[0m
+2026-10-05T09:14:55.3754789Z shell: /usr/bin/bash -e {0}
+2026-10-05T09:14:55.3755151Z ##[endgroup]
+2026-10-05T09:14:57.2544216Z 
+2026-10-05T09:14:57.2550459Z added 2 packages in 2s
+2026-10-05T09:14:57.2564131Z npm warn allow-scripts 1 package has install scripts not yet covered by allowScripts:
+2026-10-05T09:14:57.2565149Z npm warn allow-scripts   pnpm@12.8.1 (preinstall: node install.js; postinstall: node install.js)
+2026-10-05T09:14:57.2566141Z npm warn allow-scripts
+2026-10-05T09:14:57.2567484Z npm warn allow-scripts Run `npm install -g --allow-scripts=pnpm` to allow these scripts once, or `npm config set allow-scripts=pnpm --location=user` to allow them for all global installs.
+2026-10-05T09:14:57.3040181Z ##[group]Run make bootstrap
+2026-10-05T09:14:57.3040519Z [36;1mmake bootstrap[0m
+2026-10-05T09:14:57.3107634Z shell: /usr/bin/bash -e {0}
+2026-10-05T09:14:57.3107943Z ##[endgroup]
+2026-10-05T09:14:57.3229942Z node scripts/bootstrap.mjs
+2026-10-05T09:14:57.6514919Z all modules verified
+2026-10-05T09:14:57.6686796Z Scope: all 2 workspace projects
+2026-10-05T09:14:57.6813060Z ? Verifying lockfile against supply-chain policies (29 entries)...
+2026-10-05T09:14:57.8284506Z Downloading @typescript/typescript-linux-x64@7.0.2: 0.00 B/9.66 MB
+2026-10-05T09:14:58.1887623Z Packages are hard linked from the content-addressable store to the virtual store.
+2026-10-05T09:14:58.1893493Z   Content-addressable store is at: /home/runner/.local/share/pnpm/store/v11
+2026-10-05T09:14:58.1895465Z   Virtual store is at:             node_modules/.pnpm
+2026-10-05T09:14:58.3690304Z ✓ Lockfile passes supply-chain policies (29 entries in 687ms)
+2026-10-05T09:14:58.3691123Z Lockfile is up to date, resolution step is skipped
+2026-10-05T09:14:58.3696921Z Packages: +10
+2026-10-05T09:14:58.3697283Z ++++++++++
+2026-10-05T09:14:58.3715500Z Progress: resolved 10, reused 0, downloaded 10, added 10, done
+2026-10-05T09:14:58.3770421Z 
+2026-10-05T09:14:58.3770715Z devDependencies:
+2026-10-05T09:14:58.3771237Z + @types/node 24.10.1
+2026-10-05T09:14:58.3771682Z + prettier 3.6.2
+2026-10-05T09:14:58.3772105Z + typescript 7.0.2
+2026-10-05T09:14:58.3795913Z 
+2026-10-05T09:14:58.3796702Z Done in 713ms using pnpm v12.8.1
+2026-10-05T09:14:58.4454229Z Locked toolchains and dependencies verified.
+2026-10-05T09:14:58.4526459Z ##[group]Run make check
+2026-10-05T09:14:58.4526765Z [36;1mmake check[0m
+2026-10-05T09:14:58.4591864Z shell: /usr/bin/bash -e {0}
+2026-10-05T09:14:58.4592165Z ##[endgroup]
+2026-10-05T09:14:58.4693749Z node scripts/check-go-format.mjs
+2026-10-05T09:14:58.6745630Z pnpm exec prettier --check scripts/*.mjs sdk/typescript/src/**/*.ts sdk/typescript/src/*.ts sdk/typescript/*.json contract/schema/**/*.json internal/**/*.json conformance/fixtures/**/*.json package.json pnpm-workspace.yaml .prettierrc.json .github/workflows/*.yaml
+2026-10-05T09:14:58.7736486Z Checking formatting...
+2026-10-05T09:15:00.1713063Z All matched files use Prettier code style!
+2026-10-05T09:15:00.2070930Z go vet ./...
+2026-10-05T09:15:02.7800884Z pnpm lint
+2026-10-05T09:15:02.7945751Z $ pnpm --filter @lerna/contract typecheck
+2026-10-05T09:15:02.8133405Z $ tsc --noEmit
+2026-10-05T09:15:03.4586382Z pnpm check:generated
+2026-10-05T09:15:03.4724326Z $ node scripts/generate.mjs --check
+2026-10-05T09:15:04.3971113Z make test test-contract build
+2026-10-05T09:15:04.3998370Z make[1]: Entering directory '/home/runner/work/lerna/lerna'
+2026-10-05T09:15:04.4000288Z node --test scripts/conformance-ownership.test.mjs scripts/contract-runner.test.mjs scripts/bounded-build.test.mjs scripts/component-integration-race.test.mjs
+2026-10-05T09:15:04.5518492Z ✔ a successful finite build confirms its owned process group exited (60.764504ms)
+2026-10-05T09:15:04.6568389Z ✔ a timed command preserves failure while confirming finite child termination (105.581234ms)
+2026-10-05T09:15:04.6901175Z ✔ nonzero tool failure remains an aggregate cause and deadline is mandatory (32.539766ms)
+2026-10-05T09:15:05.7874710Z ✔ deadline kills a descendant that holds inherited pipes before waiting for close (1100.7892ms)
+2026-10-05T09:15:05.7979038Z ✔ native Go discovery failure preserves its exit status (67.379919ms)
+2026-10-05T09:15:05.7980429Z ✔ positive partition includes future tests, Unicode, Examples and Fuzz seeds (170.316227ms)
+2026-10-05T09:15:05.7981813Z ✔ absent durable group never becomes an empty selector that runs all tests (87.508198ms)
+2026-10-05T09:15:05.7983108Z ✔ duplicate, empty and ambiguous inventories fail closed (134.953776ms)
+2026-10-05T09:15:05.7984166Z ✔ a native race-group failure remains a failure (77.242764ms)
+2026-10-05T09:15:05.7986137Z ✔ normal entry uses the same complete positive partition without race (160.768788ms)
+2026-10-05T09:15:05.7987039Z ✔ Content partitions remain finite and include every discovered case once (117.053179ms)
+2026-10-05T09:15:05.7987922Z ✔ normal exact scope and native exit clean up; primary failure survives confirmed cleanup (83.272931ms)
+2026-10-05T09:15:05.7988833Z ✔ primary plus native Close diagnostic remain inspectable and ACK unknown is sticky (35.369403ms)
+2026-10-05T09:15:05.7989603Z ✔ failed write ACK cannot be washed away by a real later child exit (14.935798ms)
+2026-10-05T09:15:05.7990299Z ✔ failed fsync ACK cannot be washed away by a real later child exit (14.568442ms)
+2026-10-05T09:15:05.7991051Z ✔ failed parentSync ACK cannot be washed away by a real later child exit (17.246263ms)
+2026-10-05T09:15:05.7992363Z ✔ one missing original exit observation is not replaced by a different confirmed entity (79.375713ms)
+2026-10-05T09:15:05.7994499Z ✔ changed exact identity prevents deletion and preserves primary (47.044747ms)
+2026-10-05T09:15:05.7998511Z ✔ initialization failure identifies and retains original scope and both action/Close causes (2.232905ms)
+2026-10-05T09:15:05.8000396Z ✔ physical deletion plus failed external removed ACK reports deletion truth and original failure (37.218677ms)
+2026-10-05T09:15:05.8002108Z ✔ physical removal failure aggregates original operation and keeps exact scope (34.396194ms)
+2026-10-05T09:15:06.6297811Z ✔ one runner continues after a classified refusal and repeats exact bytes (43.651678ms)
+2026-10-05T09:15:06.6298743Z ✔ actual typed Go and TS runners retain exact values after a public refusal (1655.769684ms)
+2026-10-05T09:15:06.8343842Z ✔ infrastructure timeout fails finitely and cannot pass as a negative fixture (204.902947ms)
+2026-10-05T09:15:06.8628217Z ✔ infrastructure crash fails finitely and cannot pass as a negative fixture (28.260723ms)
+2026-10-05T09:15:06.8928158Z ✔ infrastructure wrong id fails finitely and cannot pass as a negative fixture (30.494916ms)
+2026-10-05T09:15:06.9212985Z ✔ infrastructure illegal frame fails finitely and cannot pass as a negative fixture (28.19034ms)
+2026-10-05T09:15:06.9499232Z ✔ infrastructure BOM stdout fails finitely and cannot pass as a negative fixture (28.521781ms)
+2026-10-05T09:15:06.9779120Z ✔ infrastructure wrong shape fails finitely and cannot pass as a negative fixture (27.540578ms)
+2026-10-05T09:15:07.0068702Z ✔ infrastructure polluted stdout fails finitely and cannot pass as a negative fixture (29.037041ms)
+2026-10-05T09:15:07.0348359Z ✔ infrastructure bad base64 fails finitely and cannot pass as a negative fixture (27.998306ms)
+2026-10-05T09:15:07.2820611Z ✔ infrastructure oversized stdout fails finitely and cannot pass as a negative fixture (245.610526ms)
+2026-10-05T09:15:07.3108953Z ✔ infrastructure oversized stderr fails finitely and cannot pass as a negative fixture (28.915202ms)
+2026-10-05T09:15:07.3128513Z ✔ cancellation observes the rejection and reaps the child (3.063251ms)
+2026-10-05T09:15:07.3449848Z ✔ only one request is in flight and assertion failure still closes the process (31.880948ms)
+2026-10-05T09:15:07.8787715Z ✔ stdin shutdown has a finite fallback for an uncooperative child (532.868393ms)
+2026-10-05T09:15:07.8789266Z ✔ oversized input is an infrastructure failure without sending a truncated wire (2.861425ms)
+2026-10-05T09:15:07.8865483Z ℹ tests 37
+2026-10-05T09:15:07.8866023Z ℹ suites 0
+2026-10-05T09:15:07.8866481Z ℹ pass 37
+2026-10-05T09:15:07.8866907Z ℹ fail 0
+2026-10-05T09:15:07.8894245Z ℹ cancelled 0
+2026-10-05T09:15:07.8894924Z ℹ skipped 0
+2026-10-05T09:15:07.8895603Z ℹ todo 0
+2026-10-05T09:15:07.8896179Z ℹ duration_ms 3454.282608
+2026-10-05T09:15:07.8921040Z node scripts/test-generator.mjs
+2026-10-05T09:15:08.5759847Z 13 generation refusal probes passed.
+2026-10-05T09:15:16.2968994Z 8 schema generation golden/change scenarios passed.
+2026-10-05T09:15:23.9490153Z 1.1.0: 6 generation refusals, 4 reachable digest changes, independent goldens, explicit advertisement and frozen 1.0 outputs passed.
+2026-10-05T09:15:23.9666080Z go test ./...
+2026-10-05T09:15:24.3536637Z ?   	github.com/ruipengliu/lerna/adapters/objectstore/local	[no test files]
+2026-10-05T09:15:24.3730053Z ?   	github.com/ruipengliu/lerna/adapters/postgres	[no test files]
+2026-10-05T09:15:25.0972365Z ok  	github.com/ruipengliu/lerna/adapters/postgres/content	0.028s
+2026-10-05T09:15:25.0974362Z ?   	github.com/ruipengliu/lerna/adapters/postgres/decision_engine	[no test files]
+2026-10-05T09:15:25.1796974Z ok  	github.com/ruipengliu/lerna/adapters/postgres/internal/pgstore	0.071s
+2026-10-05T09:15:25.7400724Z ok  	github.com/ruipengliu/lerna/adapters/sqlite	0.022s
+2026-10-05T09:15:25.7516780Z ?   	github.com/ruipengliu/lerna/cmd/durable-work-fixture	[no test files]
+2026-10-05T09:15:25.7546496Z ?   	github.com/ruipengliu/lerna/cmd/sqlite-durable-work-fixture	[no test files]
+2026-10-05T09:15:25.7548029Z ?   	github.com/ruipengliu/lerna/components/decision_engine	[no test files]
+2026-10-05T09:15:27.8712562Z ok  	github.com/ruipengliu/lerna/conformance/component	2.109s
+2026-10-05T09:15:27.8713879Z ?   	github.com/ruipengliu/lerna/conformance/component/valuerunner	[no test files]
+2026-10-05T09:15:27.8715623Z ?   	github.com/ruipengliu/lerna/conformance/component/valuerunner_v1_1	[no test files]
+2026-10-05T09:15:27.8717054Z ?   	github.com/ruipengliu/lerna/conformance/component/valuerunner_v1_2	[no test files]
+2026-10-05T09:15:27.8718385Z ?   	github.com/ruipengliu/lerna/conformance/internal/contentfixture	[no test files]
+2026-10-05T09:15:27.8719714Z ok  	github.com/ruipengliu/lerna/conformance/internal/decisionfixture	0.076s
+2026-10-05T09:15:27.8720967Z ok  	github.com/ruipengliu/lerna/conformance/internal/testkit/process	0.049s
+2026-10-05T09:15:28.7792167Z ok  	github.com/ruipengliu/lerna/conformance/internal/testkit/target	1.394s
+2026-10-05T09:15:28.7793232Z ?   	github.com/ruipengliu/lerna/contract	[no test files]
+2026-10-05T09:15:28.7794151Z ?   	github.com/ruipengliu/lerna/contract/gen/go	[no test files]
+2026-10-05T09:15:28.7795154Z ?   	github.com/ruipengliu/lerna/contract/gen/go/v1_1	[no test files]
+2026-10-05T09:15:28.7796496Z ?   	github.com/ruipengliu/lerna/contract/gen/go/v1_2	[no test files]
+2026-10-05T09:15:28.7797453Z ?   	github.com/ruipengliu/lerna/contract/v1_1	[no test files]
+2026-10-05T09:15:28.7798290Z ok  	github.com/ruipengliu/lerna/contract/v1_2	0.143s
+2026-10-05T09:15:28.7799118Z ok  	github.com/ruipengliu/lerna/domain/content	0.018s
+2026-10-05T09:15:28.7800032Z ?   	github.com/ruipengliu/lerna/host/durablework	[no test files]
+2026-10-05T09:15:28.7800995Z ok  	github.com/ruipengliu/lerna/internal/durableworkdemo	0.049s
+2026-10-05T09:15:28.7802007Z ?   	github.com/ruipengliu/lerna/internal/sqlclosetest	[no test files]
+2026-10-05T09:15:28.7802939Z ?   	github.com/ruipengliu/lerna/runtime	[no test files]
+2026-10-05T09:15:28.7803733Z ok  	github.com/ruipengliu/lerna/runtime/workpool	0.011s
+2026-10-05T09:15:28.7966210Z pnpm test
+2026-10-05T09:15:28.8108638Z $ pnpm --filter @lerna/contract test
+2026-10-05T09:15:28.8272410Z $ node --experimental-strip-types --test src/*.test.ts src/v1_1/*.test.ts src/v1_2/*.test.ts
+2026-10-05T09:15:30.7737762Z ✔ compact body at 1 MiB retains Unicode through Go and TS in both directions (1564.139513ms)
+2026-10-05T09:15:30.8063062Z ✔ public command errors use a closed code instead of string matching (5.786368ms)
+2026-10-05T09:15:30.8087234Z ✔ common envelope retains a future method without offering execution (15.919365ms)
+2026-10-05T09:15:30.8108338Z ✔ common envelope rejects undeclared fields before interpreting a payload (0.656472ms)
+2026-10-05T09:15:30.8109907Z ✔ SDK checks original identity and method-specific read preconditions (14.147057ms)
+2026-10-05T09:15:30.8137315Z ✔ programmable payloads cannot be silently repaired by JSON.stringify (0.627427ms)
+2026-10-05T09:15:30.8194079Z ✔ public error projection excludes local cause and Error metadata (0.281684ms)
+2026-10-05T09:15:30.8197559Z ✔ SDK accepts and classifies the common command conformance corpus (114.579174ms)
+2026-10-05T09:15:30.8199408Z ✔ machine tokens and UTC strings cannot include a trailing line terminator (3.122531ms)
+2026-10-05T09:15:30.8201356Z ✔ Application digest matches the independently hashed UTF-8 literal (176.878098ms)
+2026-10-05T09:15:30.8202968Z ✔ digest fixture success never registers its future method for execution (1.078187ms)
+2026-10-05T09:15:30.8204516Z ✔ negotiation advertises only the exact completed command.get contract (9.196775ms)
+2026-10-05T09:15:30.8206284Z ✔ negotiation consumes the same exact-version refusal fixtures (29.942612ms)
+2026-10-05T09:15:30.8207904Z ✔ negotiation then trusted query preserves fixed receipt and current progress (89.061458ms)
+2026-10-05T09:15:30.8209629Z ✔ embedded input and output schemas independently match published digest goldens (6.037295ms)
+2026-10-05T09:15:30.8214185Z ✔ designed business methods never enter the authenticated query path (2.940743ms)
+2026-10-05T09:15:30.8216008Z ✔ authenticated query has opaque denials paired with allowed controls (92.059557ms)
+2026-10-05T09:15:30.8218137Z ✔ authenticated query snapshots mutable wire and host binding across callbacks (9.719217ms)
+2026-10-05T09:15:30.8219823Z ✔ authenticated command.get consumes common isolation fixtures (50.488204ms)
+2026-10-05T09:15:30.8221678Z ✔ fixed owner permits process replacement and remains read-only after default changes (3.637839ms)
+2026-10-05T09:15:30.8223546Z ✔ read cutoff gates start, cancellation and finite resource bounds cover every provider (5.292629ms)
+2026-10-05T09:15:30.8225657Z ✔ host read timer bounds an uncooperative asynchronous provider and observes late rejection (3.47054ms)
+2026-10-05T09:15:30.8227641Z ✔ fact seam keeps receipt fixed across current task outcomes and remains read-only (104.433634ms)
+2026-10-05T09:15:30.8229835Z ✔ fact seam separates absence, retention, faults and untrusted bindings (10.364959ms)
+2026-10-05T09:15:30.8231555Z ✔ returned observation cannot mutate facts retained by an injected reader (1.292235ms)
+2026-10-05T09:15:30.8233271Z ✔ reader cannot rewrite the original reference by mutating its input (0.548962ms)
+2026-10-05T09:15:30.8234627Z ✔ shared closed responses and exact bindings (97.43821ms)
+2026-10-05T09:15:30.8236185Z ✔ bound result encoding and decoding reject another original command (7.601245ms)
+2026-10-05T09:15:30.8237770Z ✔ published schema cannot broaden the contract before its first validation (38.116522ms)
+2026-10-05T09:15:31.0317492Z ✔ fixed input has independent command and decision digest goldens (78.911023ms)
+2026-10-05T09:15:31.0347456Z ✔ complete declared digests and schemas remain isolated (3.10038ms)
+2026-10-05T09:15:31.0376599Z ✔ cancelled before Input has exact zero observations from shared bytes (150.04086ms)
+2026-10-05T09:15:31.1717705Z ✔ all four completed methods negotiate their exact profile and both goldens (19.536927ms)
+2026-10-05T09:15:31.1747164Z ✔ completed negotiation refuses inexact version, profile, either digest and absent methods (3.784462ms)
+2026-10-05T09:15:31.3452654Z ✔ 1.1 authenticated command.get reads exact new receipts and rejects common isolation failures (135.093666ms)
+2026-10-05T09:15:31.4937917Z ✔ canonical body bound keeps exact input_over_limit classification (68.80636ms)
+2026-10-05T09:15:31.4964285Z ✔ version1.2 declares only Content and Command and does not advertise a partial profile (0.993468ms)
+2026-10-05T09:15:31.5222644Z ✔ independent canonical digest golden preserves trace and binds purpose (11.878074ms)
+2026-10-05T09:15:31.5228260Z ✔ response binds original full ref and exact same-size range (25.211086ms)
+2026-10-05T09:15:31.6421878Z ✔ SDK retains an exact revision beyond JS safe integer range (3.383787ms)
+2026-10-05T09:15:31.6427375Z ✔ raw boundary preserves valid Unicode, rejects duplicate names and invalid UTF-8 (1.503706ms)
+2026-10-05T09:15:31.6433788Z ✔ SDK passes common schema acceptance and exact-value fixtures (76.994598ms)
+2026-10-05T09:15:31.6437369Z ✔ SDK encoding rejects isolated surrogate rather than replacing it (0.363156ms)
+2026-10-05T09:15:31.6444569Z ✔ raw wire accepts exact bounds and rejects byte and nesting overflow (27.918929ms)
+2026-10-05T09:15:31.6547753Z ℹ tests 44
+2026-10-05T09:15:31.6548167Z ℹ suites 0
+2026-10-05T09:15:31.6548550Z ℹ pass 44
+2026-10-05T09:15:31.6548920Z ℹ fail 0
+2026-10-05T09:15:31.6549290Z ℹ cancelled 0
+2026-10-05T09:15:31.6549670Z ℹ skipped 0
+2026-10-05T09:15:31.6550021Z ℹ todo 0
+2026-10-05T09:15:31.6550288Z ℹ duration_ms 2797.124348
+2026-10-05T09:15:31.6647935Z node scripts/test-contract.mjs
+2026-10-05T09:15:32.8485497Z ok  	github.com/ruipengliu/lerna/conformance/component	0.072s
+2026-10-05T09:15:33.1644082Z ✔ Application digest matches the independently hashed UTF-8 literal (74.199908ms)
+2026-10-05T09:15:33.1648776Z ✔ digest fixture success never registers its future method for execution (0.63938ms)
+2026-10-05T09:15:33.1774097Z ℹ tests 2
+2026-10-05T09:15:33.1774582Z ℹ suites 0
+2026-10-05T09:15:33.1775015Z ℹ pass 2
+2026-10-05T09:15:33.1778134Z ℹ fail 0
+2026-10-05T09:15:33.1778902Z ℹ cancelled 0
+2026-10-05T09:15:33.1779333Z ℹ skipped 0
+2026-10-05T09:15:33.1780140Z ℹ todo 0
+2026-10-05T09:15:33.1780586Z ℹ duration_ms 290.313658
+2026-10-05T09:15:33.4653635Z ok  	github.com/ruipengliu/lerna/conformance/component	0.092s
+2026-10-05T09:15:33.7696666Z ✔ authenticated query has opaque denials paired with allowed controls (43.507453ms)
+2026-10-05T09:15:33.7719478Z ✔ authenticated query snapshots mutable wire and host binding across callbacks (2.011282ms)
+2026-10-05T09:15:33.7906828Z ✔ authenticated command.get consumes common isolation fixtures (20.074101ms)
+2026-10-05T09:15:33.7908745Z ✔ fixed owner permits process replacement and remains read-only after default changes (2.709351ms)
+2026-10-05T09:15:33.7917380Z ✔ read cutoff gates start, cancellation and finite resource bounds cover every provider (3.270485ms)
+2026-10-05T09:15:33.7923412Z ✔ host read timer bounds an uncooperative asynchronous provider and observes late rejection (1.936654ms)
+2026-10-05T09:15:33.8038444Z ℹ tests 6
+2026-10-05T09:15:33.8038937Z ℹ suites 0
+2026-10-05T09:15:33.8040958Z ℹ pass 6
+2026-10-05T09:15:33.8041197Z ℹ fail 0
+2026-10-05T09:15:33.8041415Z ℹ cancelled 0
+2026-10-05T09:15:33.8041655Z ℹ skipped 0
+2026-10-05T09:15:33.8041873Z ℹ todo 0
+2026-10-05T09:15:33.8042124Z ℹ duration_ms 299.295851
+2026-10-05T09:15:34.0439212Z ok  	github.com/ruipengliu/lerna/conformance/component	0.039s
+2026-10-05T09:15:34.3147283Z ✔ negotiation advertises only the exact completed command.get contract (5.249788ms)
+2026-10-05T09:15:34.3610626Z ✔ negotiation consumes the same exact-version refusal fixtures (11.491221ms)
+2026-10-05T09:15:34.3617516Z ✔ negotiation then trusted query preserves fixed receipt and current progress (41.277274ms)
+2026-10-05T09:15:34.3649240Z ✔ embedded input and output schemas independently match published digest goldens (2.862827ms)
+2026-10-05T09:15:34.3651811Z ✔ designed business methods never enter the authenticated query path (1.276956ms)
+2026-10-05T09:15:34.3780540Z ℹ tests 5
+2026-10-05T09:15:34.3781076Z ℹ suites 0
+2026-10-05T09:15:34.3781539Z ℹ pass 5
+2026-10-05T09:15:34.3782898Z ℹ fail 0
+2026-10-05T09:15:34.3783242Z ℹ cancelled 0
+2026-10-05T09:15:34.3783575Z ℹ skipped 0
+2026-10-05T09:15:34.3783865Z ℹ todo 0
+2026-10-05T09:15:34.3784216Z ℹ duration_ms 287.762206
+2026-10-05T09:15:35.9379726Z ok  	github.com/ruipengliu/lerna/conformance/component	0.077s
+2026-10-05T09:15:36.4987063Z ✔ fixed input has independent command and decision digest goldens (75.914542ms)
+2026-10-05T09:15:36.4988315Z ✔ complete declared digests and schemas remain isolated (1.81691ms)
+2026-10-05T09:15:36.4989572Z ✔ cancelled before Input has exact zero observations from shared bytes (55.866651ms)
+2026-10-05T09:15:36.5096519Z ✔ 1.1 authenticated command.get reads exact new receipts and rejects common isolation failures (116.105155ms)
+2026-10-05T09:15:36.5100134Z ℹ tests 4
+2026-10-05T09:15:36.5100598Z ℹ suites 0
+2026-10-05T09:15:36.5100980Z ℹ pass 4
+2026-10-05T09:15:36.5101340Z ℹ fail 0
+2026-10-05T09:15:36.5101721Z ℹ cancelled 0
+2026-10-05T09:15:36.5102110Z ℹ skipped 0
+2026-10-05T09:15:36.5102474Z ℹ todo 0
+2026-10-05T09:15:36.5102940Z ℹ duration_ms 527.741591
+2026-10-05T09:15:36.5232438Z 89 shared fixtures (forward order) passed; all positive values completed real Go→TS and TS→Go roundtrips.
+2026-10-05T09:15:36.5349183Z 158 shared fixtures (forward order) passed; all positive values completed real Go→TS and TS→Go roundtrips.
+2026-10-05T09:15:36.5434863Z node scripts/test-contract.mjs --reverse
+2026-10-05T09:15:37.5429961Z ok  	github.com/ruipengliu/lerna/conformance/component	(cached)
+2026-10-05T09:15:37.8868962Z ✔ Application digest matches the independently hashed UTF-8 literal (86.693128ms)
+2026-10-05T09:15:37.8874608Z ✔ digest fixture success never registers its future method for execution (0.621987ms)
+2026-10-05T09:15:37.9004346Z ℹ tests 2
+2026-10-05T09:15:37.9004851Z ℹ suites 0
+2026-10-05T09:15:37.9005552Z ℹ pass 2
+2026-10-05T09:15:37.9006024Z ℹ fail 0
+2026-10-05T09:15:37.9006480Z ℹ cancelled 0
+2026-10-05T09:15:37.9006957Z ℹ skipped 0
+2026-10-05T09:15:37.9007597Z ℹ todo 0
+2026-10-05T09:15:37.9008287Z ℹ duration_ms 308.042584
+2026-10-05T09:15:37.9846308Z ok  	github.com/ruipengliu/lerna/conformance/component	(cached)
+2026-10-05T09:15:38.2880341Z ✔ authenticated query has opaque denials paired with allowed controls (44.535676ms)
+2026-10-05T09:15:38.2894079Z ✔ authenticated query snapshots mutable wire and host binding across callbacks (2.060264ms)
+2026-10-05T09:15:38.3084958Z ✔ authenticated command.get consumes common isolation fixtures (19.062175ms)
+2026-10-05T09:15:38.3087514Z ✔ fixed owner permits process replacement and remains read-only after default changes (2.826038ms)
+2026-10-05T09:15:38.3090700Z ✔ read cutoff gates start, cancellation and finite resource bounds cover every provider (3.269543ms)
+2026-10-05T09:15:38.3103403Z ✔ host read timer bounds an uncooperative asynchronous provider and observes late rejection (2.114895ms)
+2026-10-05T09:15:38.3220087Z ℹ tests 6
+2026-10-05T09:15:38.3220566Z ℹ suites 0
+2026-10-05T09:15:38.3221440Z ℹ pass 6
+2026-10-05T09:15:38.3221841Z ℹ fail 0
+2026-10-05T09:15:38.3222271Z ℹ cancelled 0
+2026-10-05T09:15:38.3222530Z ℹ skipped 0
+2026-10-05T09:15:38.3222763Z ℹ todo 0
+2026-10-05T09:15:38.3223035Z ℹ duration_ms 296.029842
+2026-10-05T09:15:38.4207034Z ok  	github.com/ruipengliu/lerna/conformance/component	(cached)
+2026-10-05T09:15:38.6692784Z ✔ negotiation advertises only the exact completed command.get contract (5.113455ms)
+2026-10-05T09:15:38.7334216Z ✔ negotiation consumes the same exact-version refusal fixtures (9.141609ms)
+2026-10-05T09:15:38.7338762Z ✔ negotiation then trusted query preserves fixed receipt and current progress (57.829993ms)
+2026-10-05T09:15:38.7372356Z ✔ embedded input and output schemas independently match published digest goldens (2.957974ms)
+2026-10-05T09:15:38.7376170Z ✔ designed business methods never enter the authenticated query path (1.207206ms)
+2026-10-05T09:15:38.7521008Z ℹ tests 5
+2026-10-05T09:15:38.7523061Z ℹ suites 0
+2026-10-05T09:15:38.7523464Z ℹ pass 5
+2026-10-05T09:15:38.7523828Z ℹ fail 0
+2026-10-05T09:15:38.7524117Z ℹ cancelled 0
+2026-10-05T09:15:38.7524416Z ℹ skipped 0
+2026-10-05T09:15:38.7524658Z ℹ todo 0
+2026-10-05T09:15:38.7524940Z ℹ duration_ms 295.928294
+2026-10-05T09:15:39.9439878Z ok  	github.com/ruipengliu/lerna/conformance/component	0.074s
+2026-10-05T09:15:40.4946372Z ✔ fixed input has independent command and decision digest goldens (51.268041ms)
+2026-10-05T09:15:40.4952435Z ✔ complete declared digests and schemas remain isolated (1.968663ms)
+2026-10-05T09:15:40.4954066Z ✔ cancelled before Input has exact zero observations from shared bytes (56.585988ms)
+2026-10-05T09:15:40.5077125Z ✔ 1.1 authenticated command.get reads exact new receipts and rejects common isolation failures (95.347033ms)
+2026-10-05T09:15:40.5080273Z ℹ tests 4
+2026-10-05T09:15:40.5080677Z ℹ suites 0
+2026-10-05T09:15:40.5081117Z ℹ pass 4
+2026-10-05T09:15:40.5081551Z ℹ fail 0
+2026-10-05T09:15:40.5081965Z ℹ cancelled 0
+2026-10-05T09:15:40.5082372Z ℹ skipped 0
+2026-10-05T09:15:40.5082740Z ℹ todo 0
+2026-10-05T09:15:40.5083165Z ℹ duration_ms 524.980413
+2026-10-05T09:15:40.5165008Z 89 shared fixtures (reverse order) passed; all positive values completed real Go→TS and TS→Go roundtrips.
+2026-10-05T09:15:40.5312996Z 158 shared fixtures (reverse order) passed; all positive values completed real Go→TS and TS→Go roundtrips.
+2026-10-05T09:15:40.5404359Z node scripts/test-contract-1_2.mjs
+2026-10-05T09:15:41.7973390Z 101 exact 1.2 shared fixtures forward: real Go↔TS canonical roundtrips
+2026-10-05T09:15:41.8167915Z node scripts/test-contract-1_2.mjs --reverse
+2026-10-05T09:15:42.8157297Z 101 exact 1.2 shared fixtures reverse: real Go↔TS canonical roundtrips
+2026-10-05T09:15:42.8362007Z go build ./...
+2026-10-05T09:15:44.4101846Z pnpm build
+2026-10-05T09:15:44.4243769Z $ pnpm --filter @lerna/contract build
+2026-10-05T09:15:44.4404164Z $ tsc
+2026-10-05T09:15:45.1514364Z make[1]: Leaving directory '/home/runner/work/lerna/lerna'
+2026-10-05T09:15:45.1608220Z Post job cleanup.
+2026-10-05T09:15:45.2980913Z (node:7051) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-05T09:15:45.2982644Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-05T09:15:45.3172019Z Post job cleanup.
+2026-10-05T09:15:45.4769329Z (node:7059) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-05T09:15:45.4771133Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-05T09:15:45.4894592Z [command]/opt/hostedtoolcache/go/1.27.1/x64/bin/go env GOMODCACHE
+2026-10-05T09:15:45.4937596Z [command]/opt/hostedtoolcache/go/1.27.1/x64/bin/go env GOCACHE
+2026-10-05T09:15:45.4975008Z /home/runner/go/pkg/mod
+2026-10-05T09:15:45.5006011Z /home/runner/.cache/go-build
+2026-10-05T09:15:45.5015156Z Cache hit occurred on the primary key setup-go-Linux-x64-ubuntu24-go-1.27.1-6e6ea99592014c407a9e5c547b56d6c5c633b25a0a4d5cd88a735c865fb89158, not saving cache.
+2026-10-05T09:15:45.5243932Z Post job cleanup.
+2026-10-05T09:15:45.6167559Z [command]/usr/bin/git version
+2026-10-05T09:15:45.6214318Z git version 2.55.0
+2026-10-05T09:15:45.6261925Z Temporarily overriding HOME='/home/runner/work/_temp/8ffafcc8-8a14-40cd-9428-550bdc626a96' before making global git config changes
+2026-10-05T09:15:45.6263643Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-05T09:15:45.6268250Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/lerna/lerna
+2026-10-05T09:15:45.6321185Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-05T09:15:45.6350182Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-05T09:15:45.6608495Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-05T09:15:45.6634557Z http.https://github.com/.extraheader
+2026-10-05T09:15:45.6649275Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-10-05T09:15:45.6696564Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-05T09:15:45.7155126Z Cleaning up orphan processes
+2026-10-05T09:15:45.7484904Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683, actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5, actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

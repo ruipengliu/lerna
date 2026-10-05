@@ -1,0 +1,11 @@
+--- before-qualified/domain/content/secondary.go
++++ candidate/domain/content/secondary.go
+@@ -44,7 +44,7 @@
+ 	if err != nil {
+ 		return nil, time.Time{}, err
+ 	}
+-	policy, err := l.store.CheckPolicy(ctx, tx, l.config.TrustedSubject, request.Ref, request.Purpose, []string{"read", "save", "sync"}, now)
++	policy, err := l.store.CheckPolicy(ctx, tx, l.config.TrustedSubject, request.Ref, request.Purpose, []string{"read", "save", "sync"})
+ 	if err != nil {
+ 		return nil, time.Time{}, err
+ 	}
