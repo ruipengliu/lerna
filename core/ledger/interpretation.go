@@ -61,6 +61,14 @@ func (s *Service) InterpretObservation(ctx context.Context, caller *v1.Caller, c
 		finding := interpretSimulator(raw, body.RawBody, op.Execution.Attempt)
 		if op.QuerySubject != nil {
 			finding = interpretQuery(raw, body.RawBody, op)
+		} else if op.Execution.Attempt.GetCapabilities().GetProtocolVersion() == "lerna-model-v1" {
+			_, _, terminal := command.ReferenceModelOutput(raw, body.RawBody, op.Execution.Attempt)
+			finding = &v1.EffectInterpretation{ObservationRef: raw.Ref, Rule: "reference-model-v1", Outcome: "UNKNOWN", LateEffect: "MAY_OCCUR", Reason: "INSUFFICIENT_EVIDENCE"}
+			if terminal {
+				finding.Outcome = "APPLIED"
+				finding.LateEffect = "RULED_OUT"
+				finding.Reason = "TERMINAL_PROTOCOL_EVIDENCE"
+			}
 		}
 		finding.Ref = ref
 		if e = s.store.(interpretationStore).SaveInterpretation(tx, finding); e != nil {

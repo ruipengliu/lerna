@@ -122,25 +122,26 @@ func (x *Effect) GetEvidenceConflict() bool {
 }
 
 type Operation struct {
-	state                protoimpl.MessageState `protogen:"open.v1"`
-	Ref                  *Ref                   `protobuf:"bytes,1,opt,name=ref,proto3" json:"ref,omitempty"`
-	AdmissionRef         *Ref                   `protobuf:"bytes,2,opt,name=admission_ref,json=admissionRef,proto3" json:"admission_ref,omitempty"`
-	ExecutorEndpointId   string                 `protobuf:"bytes,3,opt,name=executor_endpoint_id,json=executorEndpointId,proto3" json:"executor_endpoint_id,omitempty"`
-	AdapterRef           *Ref                   `protobuf:"bytes,4,opt,name=adapter_ref,json=adapterRef,proto3" json:"adapter_ref,omitempty"`
-	ParametersRef        *Ref                   `protobuf:"bytes,5,opt,name=parameters_ref,json=parametersRef,proto3" json:"parameters_ref,omitempty"`
-	CapabilitySnapshot   *Capability            `protobuf:"bytes,6,opt,name=capability_snapshot,json=capabilitySnapshot,proto3" json:"capability_snapshot,omitempty"`
-	Lifecycle            string                 `protobuf:"bytes,7,opt,name=lifecycle,proto3" json:"lifecycle,omitempty"`
-	Dispatch             string                 `protobuf:"bytes,8,opt,name=dispatch,proto3" json:"dispatch,omitempty"`
-	AttemptRefs          []*Ref                 `protobuf:"bytes,9,rep,name=attempt_refs,json=attemptRefs,proto3" json:"attempt_refs,omitempty"`
-	EffectRef            *Ref                   `protobuf:"bytes,10,opt,name=effect_ref,json=effectRef,proto3" json:"effect_ref,omitempty"`
-	ClosureEvidenceRefs  []*Ref                 `protobuf:"bytes,11,rep,name=closure_evidence_refs,json=closureEvidenceRefs,proto3" json:"closure_evidence_refs,omitempty"`
-	Effect               *Effect                `protobuf:"bytes,12,opt,name=effect,proto3" json:"effect,omitempty"`
-	StartReceiptObtained bool                   `protobuf:"varint,13,opt,name=start_receipt_obtained,json=startReceiptObtained,proto3" json:"start_receipt_obtained,omitempty"`
-	Execution            *Execution             `protobuf:"bytes,14,opt,name=execution,proto3" json:"execution,omitempty"`
-	ClosureWorkRef       *Ref                   `protobuf:"bytes,15,opt,name=closure_work_ref,json=closureWorkRef,proto3" json:"closure_work_ref,omitempty"`
-	QuerySubject         *QuerySubject          `protobuf:"bytes,16,opt,name=query_subject,json=querySubject,proto3" json:"query_subject,omitempty"`
-	unknownFields        protoimpl.UnknownFields
-	sizeCache            protoimpl.SizeCache
+	state                 protoimpl.MessageState `protogen:"open.v1"`
+	Ref                   *Ref                   `protobuf:"bytes,1,opt,name=ref,proto3" json:"ref,omitempty"`
+	AdmissionRef          *Ref                   `protobuf:"bytes,2,opt,name=admission_ref,json=admissionRef,proto3" json:"admission_ref,omitempty"`
+	ExecutorEndpointId    string                 `protobuf:"bytes,3,opt,name=executor_endpoint_id,json=executorEndpointId,proto3" json:"executor_endpoint_id,omitempty"`
+	AdapterRef            *Ref                   `protobuf:"bytes,4,opt,name=adapter_ref,json=adapterRef,proto3" json:"adapter_ref,omitempty"`
+	ParametersRef         *Ref                   `protobuf:"bytes,5,opt,name=parameters_ref,json=parametersRef,proto3" json:"parameters_ref,omitempty"`
+	CapabilitySnapshot    *Capability            `protobuf:"bytes,6,opt,name=capability_snapshot,json=capabilitySnapshot,proto3" json:"capability_snapshot,omitempty"`
+	Lifecycle             string                 `protobuf:"bytes,7,opt,name=lifecycle,proto3" json:"lifecycle,omitempty"`
+	Dispatch              string                 `protobuf:"bytes,8,opt,name=dispatch,proto3" json:"dispatch,omitempty"`
+	AttemptRefs           []*Ref                 `protobuf:"bytes,9,rep,name=attempt_refs,json=attemptRefs,proto3" json:"attempt_refs,omitempty"`
+	EffectRef             *Ref                   `protobuf:"bytes,10,opt,name=effect_ref,json=effectRef,proto3" json:"effect_ref,omitempty"`
+	ClosureEvidenceRefs   []*Ref                 `protobuf:"bytes,11,rep,name=closure_evidence_refs,json=closureEvidenceRefs,proto3" json:"closure_evidence_refs,omitempty"`
+	Effect                *Effect                `protobuf:"bytes,12,opt,name=effect,proto3" json:"effect,omitempty"`
+	StartReceiptObtained  bool                   `protobuf:"varint,13,opt,name=start_receipt_obtained,json=startReceiptObtained,proto3" json:"start_receipt_obtained,omitempty"`
+	Execution             *Execution             `protobuf:"bytes,14,opt,name=execution,proto3" json:"execution,omitempty"`
+	ClosureWorkRef        *Ref                   `protobuf:"bytes,15,opt,name=closure_work_ref,json=closureWorkRef,proto3" json:"closure_work_ref,omitempty"`
+	QuerySubject          *QuerySubject          `protobuf:"bytes,16,opt,name=query_subject,json=querySubject,proto3" json:"query_subject,omitempty"`
+	ModelDescriptorDigest string                 `protobuf:"bytes,17,opt,name=model_descriptor_digest,json=modelDescriptorDigest,proto3" json:"model_descriptor_digest,omitempty"`
+	unknownFields         protoimpl.UnknownFields
+	sizeCache             protoimpl.SizeCache
 }
 
 func (x *Operation) Reset() {
@@ -285,6 +286,13 @@ func (x *Operation) GetQuerySubject() *QuerySubject {
 	return nil
 }
 
+func (x *Operation) GetModelDescriptorDigest() string {
+	if x != nil {
+		return x.ModelDescriptorDigest
+	}
+	return ""
+}
+
 type AcceptOperationCommand struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Header        *CommandHeader         `protobuf:"bytes,1,opt,name=header,proto3" json:"header,omitempty"`
@@ -347,6 +355,7 @@ type CallDescriptor struct {
 	ExternalKey   string                 `protobuf:"bytes,6,opt,name=external_key,json=externalKey,proto3" json:"external_key,omitempty"`
 	Digest        string                 `protobuf:"bytes,7,opt,name=digest,proto3" json:"digest,omitempty"`
 	QuerySubject  *QuerySubject          `protobuf:"bytes,8,opt,name=query_subject,json=querySubject,proto3" json:"query_subject,omitempty"`
+	BodyDigest    string                 `protobuf:"bytes,9,opt,name=body_digest,json=bodyDigest,proto3" json:"body_digest,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -435,6 +444,13 @@ func (x *CallDescriptor) GetQuerySubject() *QuerySubject {
 		return x.QuerySubject
 	}
 	return nil
+}
+
+func (x *CallDescriptor) GetBodyDigest() string {
+	if x != nil {
+		return x.BodyDigest
+	}
+	return ""
 }
 
 type ExecutionAttempt struct {
@@ -888,7 +904,7 @@ const file_lerna_v1_ledger_proto_rawDesc = "" +
 	"\revidence_refs\x18\x06 \x03(\v2\r.lerna.v1.RefR\fevidenceRefs\x12=\n" +
 	"\x19next_reconcile_at_unix_ms\x18\a \x01(\x03H\x00R\x15nextReconcileAtUnixMs\x88\x01\x01\x12+\n" +
 	"\x11evidence_conflict\x18\b \x01(\bR\x10evidenceConflictB\x1c\n" +
-	"\x1a_next_reconcile_at_unix_ms\"\xa5\x06\n" +
+	"\x1a_next_reconcile_at_unix_ms\"\xdd\x06\n" +
 	"\tOperation\x12\x1f\n" +
 	"\x03ref\x18\x01 \x01(\v2\r.lerna.v1.RefR\x03ref\x122\n" +
 	"\radmission_ref\x18\x02 \x01(\v2\r.lerna.v1.RefR\fadmissionRef\x120\n" +
@@ -908,10 +924,11 @@ const file_lerna_v1_ledger_proto_rawDesc = "" +
 	"\x16start_receipt_obtained\x18\r \x01(\bR\x14startReceiptObtained\x121\n" +
 	"\texecution\x18\x0e \x01(\v2\x13.lerna.v1.ExecutionR\texecution\x127\n" +
 	"\x10closure_work_ref\x18\x0f \x01(\v2\r.lerna.v1.RefR\x0eclosureWorkRef\x12;\n" +
-	"\rquery_subject\x18\x10 \x01(\v2\x16.lerna.v1.QuerySubjectR\fquerySubject\"|\n" +
+	"\rquery_subject\x18\x10 \x01(\v2\x16.lerna.v1.QuerySubjectR\fquerySubject\x126\n" +
+	"\x17model_descriptor_digest\x18\x11 \x01(\tR\x15modelDescriptorDigest\"|\n" +
 	"\x16AcceptOperationCommand\x12/\n" +
 	"\x06header\x18\x01 \x01(\v2\x17.lerna.v1.CommandHeaderR\x06header\x121\n" +
-	"\tadmission\x18\x02 \x01(\v2\x13.lerna.v1.AdmissionR\tadmission\"\xc0\x02\n" +
+	"\tadmission\x18\x02 \x01(\v2\x13.lerna.v1.AdmissionR\tadmission\"\xe1\x02\n" +
 	"\x0eCallDescriptor\x12\x1a\n" +
 	"\bprotocol\x18\x01 \x01(\tR\bprotocol\x12\x16\n" +
 	"\x06method\x18\x02 \x01(\tR\x06method\x12\x16\n" +
@@ -920,7 +937,9 @@ const file_lerna_v1_ledger_proto_rawDesc = "" +
 	"\x0ecapability_ref\x18\x05 \x01(\v2\r.lerna.v1.RefR\rcapabilityRef\x12!\n" +
 	"\fexternal_key\x18\x06 \x01(\tR\vexternalKey\x12\x16\n" +
 	"\x06digest\x18\a \x01(\tR\x06digest\x12;\n" +
-	"\rquery_subject\x18\b \x01(\v2\x16.lerna.v1.QuerySubjectR\fquerySubject\"\xfa\x02\n" +
+	"\rquery_subject\x18\b \x01(\v2\x16.lerna.v1.QuerySubjectR\fquerySubject\x12\x1f\n" +
+	"\vbody_digest\x18\t \x01(\tR\n" +
+	"bodyDigest\"\xfa\x02\n" +
 	"\x10ExecutionAttempt\x12\x1f\n" +
 	"\x03ref\x18\x01 \x01(\v2\r.lerna.v1.RefR\x03ref\x127\n" +
 	"\foperation_id\x18\x02 \x01(\v2\x14.lerna.v1.GlobalNameR\voperationId\x12\x1d\n" +

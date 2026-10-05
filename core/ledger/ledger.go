@@ -88,7 +88,7 @@ func (s *Service) Accept(ctx context.Context, caller *v1.Caller, c *v1.AcceptOpe
 			return reject("OPERATION_IDENTITY_CONFLICT")
 		}
 		effect := &v1.Effect{Ref: command.NewRef(s.user, s.domain, "effect", "lerna.v1.Effect"), OperationId: a.OperationId, Outcome: "NOT_APPLIED", LateEffect: "RULED_OUT"}
-		op := &v1.Operation{Ref: &v1.Ref{Name: a.OperationId, Revision: 1, SchemaId: "lerna.v1.Operation"}, AdmissionRef: a.Ref, ExecutorEndpointId: a.ExecutorEndpointId, AdapterRef: a.CapabilitySnapshot.AdapterRef, ParametersRef: a.ParametersRef, CapabilitySnapshot: a.CapabilitySnapshot, Lifecycle: "ACCEPTED", Dispatch: "OPEN", EffectRef: effect.Ref, Effect: effect}
+		op := &v1.Operation{Ref: &v1.Ref{Name: a.OperationId, Revision: 1, SchemaId: "lerna.v1.Operation"}, AdmissionRef: a.Ref, ExecutorEndpointId: a.ExecutorEndpointId, AdapterRef: a.CapabilitySnapshot.AdapterRef, ParametersRef: a.ParametersRef, CapabilitySnapshot: a.CapabilitySnapshot, ModelDescriptorDigest: a.ModelDescriptorDigest, Lifecycle: "ACCEPTED", Dispatch: "OPEN", EffectRef: effect.Ref, Effect: effect}
 		if a.WorkCategory == "CLOSURE" {
 			op.ClosureWorkRef = a.Origin
 			op.QuerySubject = a.QuerySubject

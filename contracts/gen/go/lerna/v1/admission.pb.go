@@ -214,32 +214,33 @@ func (x *ConfigureCapabilityCommand) GetCapability() *Capability {
 }
 
 type Admission struct {
-	state               protoimpl.MessageState `protogen:"open.v1"`
-	Ref                 *Ref                   `protobuf:"bytes,1,opt,name=ref,proto3" json:"ref,omitempty"`
-	Origin              *Ref                   `protobuf:"bytes,2,opt,name=origin,proto3" json:"origin,omitempty"`
-	StepId              string                 `protobuf:"bytes,3,opt,name=step_id,json=stepId,proto3" json:"step_id,omitempty"`
-	TaskId              *GlobalName            `protobuf:"bytes,4,opt,name=task_id,json=taskId,proto3" json:"task_id,omitempty"`
-	RequirementsVersion uint64                 `protobuf:"varint,5,opt,name=requirements_version,json=requirementsVersion,proto3" json:"requirements_version,omitempty"`
-	InputVersion        uint64                 `protobuf:"varint,6,opt,name=input_version,json=inputVersion,proto3" json:"input_version,omitempty"`
-	ControlGeneration   uint64                 `protobuf:"varint,7,opt,name=control_generation,json=controlGeneration,proto3" json:"control_generation,omitempty"`
-	AncestorControls    []*AncestorControl     `protobuf:"bytes,8,rep,name=ancestor_controls,json=ancestorControls,proto3" json:"ancestor_controls,omitempty"`
-	MemoryDependencies  []*MemoryDependency    `protobuf:"bytes,9,rep,name=memory_dependencies,json=memoryDependencies,proto3" json:"memory_dependencies,omitempty"`
-	OperationId         *GlobalName            `protobuf:"bytes,10,opt,name=operation_id,json=operationId,proto3" json:"operation_id,omitempty"`
-	LedgerDomainId      string                 `protobuf:"bytes,11,opt,name=ledger_domain_id,json=ledgerDomainId,proto3" json:"ledger_domain_id,omitempty"`
-	ExecutorEndpointId  string                 `protobuf:"bytes,12,opt,name=executor_endpoint_id,json=executorEndpointId,proto3" json:"executor_endpoint_id,omitempty"`
-	GrantRefs           []*Ref                 `protobuf:"bytes,13,rep,name=grant_refs,json=grantRefs,proto3" json:"grant_refs,omitempty"`
-	BudgetBasis         *BudgetBasis           `protobuf:"bytes,14,opt,name=budget_basis,json=budgetBasis,proto3" json:"budget_basis,omitempty"`
-	ConfirmationRef     *Ref                   `protobuf:"bytes,15,opt,name=confirmation_ref,json=confirmationRef,proto3" json:"confirmation_ref,omitempty"`
-	ParametersRef       *Ref                   `protobuf:"bytes,16,opt,name=parameters_ref,json=parametersRef,proto3" json:"parameters_ref,omitempty"`
-	CapabilityRef       *Ref                   `protobuf:"bytes,17,opt,name=capability_ref,json=capabilityRef,proto3" json:"capability_ref,omitempty"`
-	GrantUseRef         *Ref                   `protobuf:"bytes,18,opt,name=grant_use_ref,json=grantUseRef,proto3" json:"grant_use_ref,omitempty"`
-	WorkCategory        string                 `protobuf:"bytes,19,opt,name=work_category,json=workCategory,proto3" json:"work_category,omitempty"`
-	HandoffIdentity     *CommandIdentity       `protobuf:"bytes,20,opt,name=handoff_identity,json=handoffIdentity,proto3" json:"handoff_identity,omitempty"`
-	CapabilitySnapshot  *Capability            `protobuf:"bytes,21,opt,name=capability_snapshot,json=capabilitySnapshot,proto3" json:"capability_snapshot,omitempty"`
-	ContentRefs         []*Ref                 `protobuf:"bytes,22,rep,name=content_refs,json=contentRefs,proto3" json:"content_refs,omitempty"`
-	QuerySubject        *QuerySubject          `protobuf:"bytes,23,opt,name=query_subject,json=querySubject,proto3" json:"query_subject,omitempty"`
-	unknownFields       protoimpl.UnknownFields
-	sizeCache           protoimpl.SizeCache
+	state                 protoimpl.MessageState `protogen:"open.v1"`
+	Ref                   *Ref                   `protobuf:"bytes,1,opt,name=ref,proto3" json:"ref,omitempty"`
+	Origin                *Ref                   `protobuf:"bytes,2,opt,name=origin,proto3" json:"origin,omitempty"`
+	StepId                string                 `protobuf:"bytes,3,opt,name=step_id,json=stepId,proto3" json:"step_id,omitempty"`
+	TaskId                *GlobalName            `protobuf:"bytes,4,opt,name=task_id,json=taskId,proto3" json:"task_id,omitempty"`
+	RequirementsVersion   uint64                 `protobuf:"varint,5,opt,name=requirements_version,json=requirementsVersion,proto3" json:"requirements_version,omitempty"`
+	InputVersion          uint64                 `protobuf:"varint,6,opt,name=input_version,json=inputVersion,proto3" json:"input_version,omitempty"`
+	ControlGeneration     uint64                 `protobuf:"varint,7,opt,name=control_generation,json=controlGeneration,proto3" json:"control_generation,omitempty"`
+	AncestorControls      []*AncestorControl     `protobuf:"bytes,8,rep,name=ancestor_controls,json=ancestorControls,proto3" json:"ancestor_controls,omitempty"`
+	MemoryDependencies    []*MemoryDependency    `protobuf:"bytes,9,rep,name=memory_dependencies,json=memoryDependencies,proto3" json:"memory_dependencies,omitempty"`
+	OperationId           *GlobalName            `protobuf:"bytes,10,opt,name=operation_id,json=operationId,proto3" json:"operation_id,omitempty"`
+	LedgerDomainId        string                 `protobuf:"bytes,11,opt,name=ledger_domain_id,json=ledgerDomainId,proto3" json:"ledger_domain_id,omitempty"`
+	ExecutorEndpointId    string                 `protobuf:"bytes,12,opt,name=executor_endpoint_id,json=executorEndpointId,proto3" json:"executor_endpoint_id,omitempty"`
+	GrantRefs             []*Ref                 `protobuf:"bytes,13,rep,name=grant_refs,json=grantRefs,proto3" json:"grant_refs,omitempty"`
+	BudgetBasis           *BudgetBasis           `protobuf:"bytes,14,opt,name=budget_basis,json=budgetBasis,proto3" json:"budget_basis,omitempty"`
+	ConfirmationRef       *Ref                   `protobuf:"bytes,15,opt,name=confirmation_ref,json=confirmationRef,proto3" json:"confirmation_ref,omitempty"`
+	ParametersRef         *Ref                   `protobuf:"bytes,16,opt,name=parameters_ref,json=parametersRef,proto3" json:"parameters_ref,omitempty"`
+	CapabilityRef         *Ref                   `protobuf:"bytes,17,opt,name=capability_ref,json=capabilityRef,proto3" json:"capability_ref,omitempty"`
+	GrantUseRef           *Ref                   `protobuf:"bytes,18,opt,name=grant_use_ref,json=grantUseRef,proto3" json:"grant_use_ref,omitempty"`
+	WorkCategory          string                 `protobuf:"bytes,19,opt,name=work_category,json=workCategory,proto3" json:"work_category,omitempty"`
+	HandoffIdentity       *CommandIdentity       `protobuf:"bytes,20,opt,name=handoff_identity,json=handoffIdentity,proto3" json:"handoff_identity,omitempty"`
+	CapabilitySnapshot    *Capability            `protobuf:"bytes,21,opt,name=capability_snapshot,json=capabilitySnapshot,proto3" json:"capability_snapshot,omitempty"`
+	ContentRefs           []*Ref                 `protobuf:"bytes,22,rep,name=content_refs,json=contentRefs,proto3" json:"content_refs,omitempty"`
+	QuerySubject          *QuerySubject          `protobuf:"bytes,23,opt,name=query_subject,json=querySubject,proto3" json:"query_subject,omitempty"`
+	ModelDescriptorDigest string                 `protobuf:"bytes,24,opt,name=model_descriptor_digest,json=modelDescriptorDigest,proto3" json:"model_descriptor_digest,omitempty"`
+	unknownFields         protoimpl.UnknownFields
+	sizeCache             protoimpl.SizeCache
 }
 
 func (x *Admission) Reset() {
@@ -433,6 +434,13 @@ func (x *Admission) GetQuerySubject() *QuerySubject {
 	return nil
 }
 
+func (x *Admission) GetModelDescriptorDigest() string {
+	if x != nil {
+		return x.ModelDescriptorDigest
+	}
+	return ""
+}
+
 type AdmitCommand struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
 	Header          *CommandHeader         `protobuf:"bytes,1,opt,name=header,proto3" json:"header,omitempty"`
@@ -622,7 +630,7 @@ const file_lerna_v1_admission_proto_rawDesc = "" +
 	"\x06header\x18\x01 \x01(\v2\x17.lerna.v1.CommandHeaderR\x06header\x124\n" +
 	"\n" +
 	"capability\x18\x02 \x01(\v2\x14.lerna.v1.CapabilityR\n" +
-	"capability\"\xae\t\n" +
+	"capability\"\xe6\t\n" +
 	"\tAdmission\x12\x1f\n" +
 	"\x03ref\x18\x01 \x01(\v2\r.lerna.v1.RefR\x03ref\x12%\n" +
 	"\x06origin\x18\x02 \x01(\v2\r.lerna.v1.RefR\x06origin\x12\x17\n" +
@@ -648,7 +656,8 @@ const file_lerna_v1_admission_proto_rawDesc = "" +
 	"\x10handoff_identity\x18\x14 \x01(\v2\x19.lerna.v1.CommandIdentityR\x0fhandoffIdentity\x12E\n" +
 	"\x13capability_snapshot\x18\x15 \x01(\v2\x14.lerna.v1.CapabilityR\x12capabilitySnapshot\x120\n" +
 	"\fcontent_refs\x18\x16 \x03(\v2\r.lerna.v1.RefR\vcontentRefs\x12;\n" +
-	"\rquery_subject\x18\x17 \x01(\v2\x16.lerna.v1.QuerySubjectR\fquerySubject\"\x86\x02\n" +
+	"\rquery_subject\x18\x17 \x01(\v2\x16.lerna.v1.QuerySubjectR\fquerySubject\x126\n" +
+	"\x17model_descriptor_digest\x18\x18 \x01(\tR\x15modelDescriptorDigest\"\x86\x02\n" +
 	"\fAdmitCommand\x12/\n" +
 	"\x06header\x18\x01 \x01(\v2\x17.lerna.v1.CommandHeaderR\x06header\x12-\n" +
 	"\atask_id\x18\x02 \x01(\v2\x14.lerna.v1.GlobalNameR\x06taskId\x120\n" +

@@ -125,9 +125,12 @@ func (s *Service) RequestProposal(ctx context.Context, caller *v1.Caller, c *v1.
 		if e != nil {
 			return nil, e
 		}
+		if e = s.supersedeProposalRequest(tx, p.Snapshot); e != nil {
+			return nil, e
+		}
 		t.PlanningGeneration++
 		t.Revision++
-		p.Snapshot = &v1.ContextSnapshot{Ref: command.NewRef(s.user, s.domain, "snapshot", "lerna.v1.ContextSnapshot"), TaskRef: &v1.Ref{Name: t.TaskId, Revision: t.Revision, SchemaId: "lerna.v1.Task"}, RequirementsVersion: t.RequirementsVersion, InputVersion: t.InputVersion, ControlGeneration: t.ControlGeneration, PlanningGeneration: t.PlanningGeneration, RequestRef: command.NewRef(s.user, s.domain, "proposal-request", "lerna.v1.ContextSnapshot"), ExpiresAtUnixMs: now + 300000, ContentRefs: []*v1.Ref{t.GoalRef}}
+		p.Snapshot = &v1.ContextSnapshot{Ref: command.NewRef(s.user, s.domain, "snapshot", "lerna.v1.ContextSnapshot"), TaskRef: &v1.Ref{Name: t.TaskId, Revision: t.Revision, SchemaId: "lerna.v1.Task"}, RequirementsVersion: t.RequirementsVersion, InputVersion: t.InputVersion, ControlGeneration: t.ControlGeneration, PlanningGeneration: t.PlanningGeneration, RequestRef: command.NewRef(s.user, s.domain, "proposal-request", "lerna.v1.ProposalRequest"), ExpiresAtUnixMs: now + 300000, ContentRefs: []*v1.Ref{t.GoalRef}}
 		inputs, e := s.store.(InputStore).LoadTaskInputs(tx, t.TaskId)
 		if e != nil {
 			return nil, e
@@ -153,6 +156,12 @@ func (s *Service) RequestProposal(ctx context.Context, caller *v1.Caller, c *v1.
 		p.Proposal = nil
 		p.ProposalConsumed = false
 		if e = s.store.SaveTask(tx, t); e != nil {
+			return nil, e
+		}
+		if e = s.completeModelSnapshot(tx, caller, p.Snapshot, t, inputs); e != nil {
+			return nil, e
+		}
+		if e = s.saveProposalRequest(tx, p.Snapshot, t, c.Header.Identity); e != nil {
 			return nil, e
 		}
 		if e = s.store.SaveSnapshot(tx, p.Snapshot); e != nil {
@@ -186,6 +195,9 @@ func (s *Service) ReceiveProposal(ctx context.Context, caller *v1.Caller, c *v1.
 		}
 		if p.Snapshot == nil || p.Proposal != nil || !proto.Equal(q.ContextSnapshotRef, p.Snapshot.Ref) || !proto.Equal(q.RequestRef, p.Snapshot.RequestRef) {
 			return nil, command.Fail("STALE_PROPOSAL")
+		}
+		if e = s.finishScriptedRequest(tx, q.RequestRef); e != nil {
+			return nil, e
 		}
 		p.Proposal = proto.Clone(q).(*v1.Proposal)
 		p.Proposal.Ref = command.NewRef(s.user, s.domain, "proposal", "lerna.v1.Proposal")

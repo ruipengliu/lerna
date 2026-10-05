@@ -25,6 +25,9 @@ func (s *Service) RequestAdmissionConfirmation(ctx context.Context, caller *v1.C
 	if e := command.ValidateHeader(c.GetHeader(), c); e != nil {
 		return nil, e
 	}
+	if c.ProposalRef.GetName().GetObjectKind() == "model-call" {
+		return s.requestModelConfirmation(ctx, caller, c)
+	}
 	return s.decisions.Execute(ctx, caller, c.Header, command.SemanticFingerprint("request-admission-confirmation", c.TaskId, c.ProposalRef, c.GrantRef, c.SessionId), "tasks.confirmation", func(tx context.Context) (*v1.Ref, error) {
 		t, e := s.QueryTask(tx, caller, c.TaskId)
 		if e != nil {
@@ -91,6 +94,9 @@ func (s *Service) CheckConfirmationMatter(ctx context.Context, c *v1.Confirmatio
 	}
 	if m.ProposalRef.GetSchemaId() == "lerna.v1.ClosureWorkRequest" {
 		return s.checkClosureConfirmationMatter(ctx, c)
+	}
+	if m.ProposalRef.GetName().GetObjectKind() == "model-call" {
+		return s.checkModelConfirmationMatter(ctx, c)
 	}
 	caller := &v1.Caller{UserId: s.user, IssuerId: "host"}
 	t, e := s.QueryTask(ctx, caller, m.TaskId)

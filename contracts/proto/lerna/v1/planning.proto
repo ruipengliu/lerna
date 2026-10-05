@@ -52,6 +52,13 @@ message ContextSnapshot {
   repeated Ref progress_refs = 11;
   Ref requirements_ref = 12;
   repeated Ref input_refs = 13;
+  repeated SnapshotProgress progress_facts = 14;
+  repeated SnapshotInput unprocessed_inputs = 15;
+  uint64 bound_input_version = 16;
+  RequirementsStatus requirements_status = 17;
+  repeated string allowed_purposes = 18;
+  uint32 max_model_positions = 19;
+  uint32 max_model_sends = 20;
 }
 message AncestorControl {
   Ref task_ref = 1;
@@ -111,4 +118,26 @@ message RequestProposalCommand {
 message ReceiveProposalCommand {
   CommandHeader header = 1;
   Proposal proposal = 2;
+}
+
+message SnapshotProgress {
+  Ref admission_ref = 1;
+  Ref operation_ref = 2;
+  Ref capability_ref = 3;
+  Ref parameters_ref = 4;
+  Ref effect_ref = 5;
+  string effect_outcome = 6;
+  string late_effect = 7;
+  bool evidence_conflict = 8;
+  string dispatch = 9;
+  string lifecycle = 10;
+  repeated Ref evidence_refs = 11;
+  bool execution_report_pending = 12;
+}
+message SnapshotInput {
+  Ref input_ref = 1;
+  Ref content_ref = 2;
+  uint64 input_version = 3;
+  string processing_status = 4;
+  bool changes_basis = 5;
 }

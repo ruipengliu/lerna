@@ -63,10 +63,14 @@ func (s *Service) StartExecution(ctx context.Context, caller *v1.Caller, c *v1.S
 		if task == nil || task.ControlGeneration != a.ControlGeneration {
 			return nil, command.Fail("STALE_GENERATION")
 		}
-		if a.WorkCategory != "CLOSURE" && task.BoundInputVersion != task.InputVersion {
+		preparation, e := s.checkModelAdmission(tx, caller, a)
+		if e != nil {
+			return nil, e
+		}
+		if a.WorkCategory != "CLOSURE" && !preparation && task.BoundInputVersion != task.InputVersion {
 			return nil, command.Fail("STALE_INPUT")
 		}
-		if a.WorkCategory != "CLOSURE" && (task.RequirementsVersion != a.RequirementsVersion || task.RequirementsStatus != v1.RequirementsStatus_REQUIREMENTS_STATUS_ACCEPTED) {
+		if a.WorkCategory != "CLOSURE" && (task.RequirementsVersion != a.RequirementsVersion || (!preparation && task.RequirementsStatus != v1.RequirementsStatus_REQUIREMENTS_STATUS_ACCEPTED)) {
 			return nil, command.Fail("STALE_REQUIREMENT")
 		}
 		if task.ParentTaskRef != nil || len(a.AncestorControls) > 0 {

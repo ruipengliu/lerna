@@ -3,6 +3,8 @@ package egress
 
 import (
 	"context"
+	"crypto/sha256"
+	"encoding/hex"
 
 	"github.com/ruipengliu/lerna/contracts/command"
 	v1 "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1"
@@ -71,6 +73,12 @@ func (s *Service) Invoke(ctx context.Context, caller *v1.Caller, c *v1.StartExec
 	}
 	if body == nil {
 		return nil, command.Fail("CONTENT_UNUSABLE")
+	}
+	if c.CallDescriptor.BodyDigest != "" {
+		sum := sha256.Sum256(command.ContentBytes(body))
+		if hex.EncodeToString(sum[:]) != c.CallDescriptor.BodyDigest {
+			return nil, command.Fail("PREPARATION_UNRECOVERABLE")
+		}
 	}
 	x, e := s.ledger.QueryExecution(ctx, caller, c.Binding.OperationId)
 	if e != nil {

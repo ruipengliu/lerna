@@ -32,6 +32,11 @@ type Store interface {
 	LoadTask(context.Context, *v1.GlobalName) (*v1.Task, error)
 }
 type Service struct {
+	modelLedger           ModelLedger
+	modelWork             ModelWork
+	modelCredentials      ModelCredentials
+	modelEgress           ModelEgress
+	modelContent          ModelContent
 	completionJobs        CompletionJobs
 	completionCloser      CompletionCloser
 	completionFacts       CompletionFacts

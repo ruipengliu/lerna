@@ -400,6 +400,13 @@ type ContextSnapshot struct {
 	ProgressRefs        []*Ref                 `protobuf:"bytes,11,rep,name=progress_refs,json=progressRefs,proto3" json:"progress_refs,omitempty"`
 	RequirementsRef     *Ref                   `protobuf:"bytes,12,opt,name=requirements_ref,json=requirementsRef,proto3" json:"requirements_ref,omitempty"`
 	InputRefs           []*Ref                 `protobuf:"bytes,13,rep,name=input_refs,json=inputRefs,proto3" json:"input_refs,omitempty"`
+	ProgressFacts       []*SnapshotProgress    `protobuf:"bytes,14,rep,name=progress_facts,json=progressFacts,proto3" json:"progress_facts,omitempty"`
+	UnprocessedInputs   []*SnapshotInput       `protobuf:"bytes,15,rep,name=unprocessed_inputs,json=unprocessedInputs,proto3" json:"unprocessed_inputs,omitempty"`
+	BoundInputVersion   uint64                 `protobuf:"varint,16,opt,name=bound_input_version,json=boundInputVersion,proto3" json:"bound_input_version,omitempty"`
+	RequirementsStatus  RequirementsStatus     `protobuf:"varint,17,opt,name=requirements_status,json=requirementsStatus,proto3,enum=lerna.v1.RequirementsStatus" json:"requirements_status,omitempty"`
+	AllowedPurposes     []string               `protobuf:"bytes,18,rep,name=allowed_purposes,json=allowedPurposes,proto3" json:"allowed_purposes,omitempty"`
+	MaxModelPositions   uint32                 `protobuf:"varint,19,opt,name=max_model_positions,json=maxModelPositions,proto3" json:"max_model_positions,omitempty"`
+	MaxModelSends       uint32                 `protobuf:"varint,20,opt,name=max_model_sends,json=maxModelSends,proto3" json:"max_model_sends,omitempty"`
 	unknownFields       protoimpl.UnknownFields
 	sizeCache           protoimpl.SizeCache
 }
@@ -523,6 +530,55 @@ func (x *ContextSnapshot) GetInputRefs() []*Ref {
 		return x.InputRefs
 	}
 	return nil
+}
+
+func (x *ContextSnapshot) GetProgressFacts() []*SnapshotProgress {
+	if x != nil {
+		return x.ProgressFacts
+	}
+	return nil
+}
+
+func (x *ContextSnapshot) GetUnprocessedInputs() []*SnapshotInput {
+	if x != nil {
+		return x.UnprocessedInputs
+	}
+	return nil
+}
+
+func (x *ContextSnapshot) GetBoundInputVersion() uint64 {
+	if x != nil {
+		return x.BoundInputVersion
+	}
+	return 0
+}
+
+func (x *ContextSnapshot) GetRequirementsStatus() RequirementsStatus {
+	if x != nil {
+		return x.RequirementsStatus
+	}
+	return RequirementsStatus_REQUIREMENTS_STATUS_UNSPECIFIED
+}
+
+func (x *ContextSnapshot) GetAllowedPurposes() []string {
+	if x != nil {
+		return x.AllowedPurposes
+	}
+	return nil
+}
+
+func (x *ContextSnapshot) GetMaxModelPositions() uint32 {
+	if x != nil {
+		return x.MaxModelPositions
+	}
+	return 0
+}
+
+func (x *ContextSnapshot) GetMaxModelSends() uint32 {
+	if x != nil {
+		return x.MaxModelSends
+	}
+	return 0
 }
 
 type AncestorControl struct {
@@ -1157,6 +1213,214 @@ func (x *ReceiveProposalCommand) GetProposal() *Proposal {
 	return nil
 }
 
+type SnapshotProgress struct {
+	state                  protoimpl.MessageState `protogen:"open.v1"`
+	AdmissionRef           *Ref                   `protobuf:"bytes,1,opt,name=admission_ref,json=admissionRef,proto3" json:"admission_ref,omitempty"`
+	OperationRef           *Ref                   `protobuf:"bytes,2,opt,name=operation_ref,json=operationRef,proto3" json:"operation_ref,omitempty"`
+	CapabilityRef          *Ref                   `protobuf:"bytes,3,opt,name=capability_ref,json=capabilityRef,proto3" json:"capability_ref,omitempty"`
+	ParametersRef          *Ref                   `protobuf:"bytes,4,opt,name=parameters_ref,json=parametersRef,proto3" json:"parameters_ref,omitempty"`
+	EffectRef              *Ref                   `protobuf:"bytes,5,opt,name=effect_ref,json=effectRef,proto3" json:"effect_ref,omitempty"`
+	EffectOutcome          string                 `protobuf:"bytes,6,opt,name=effect_outcome,json=effectOutcome,proto3" json:"effect_outcome,omitempty"`
+	LateEffect             string                 `protobuf:"bytes,7,opt,name=late_effect,json=lateEffect,proto3" json:"late_effect,omitempty"`
+	EvidenceConflict       bool                   `protobuf:"varint,8,opt,name=evidence_conflict,json=evidenceConflict,proto3" json:"evidence_conflict,omitempty"`
+	Dispatch               string                 `protobuf:"bytes,9,opt,name=dispatch,proto3" json:"dispatch,omitempty"`
+	Lifecycle              string                 `protobuf:"bytes,10,opt,name=lifecycle,proto3" json:"lifecycle,omitempty"`
+	EvidenceRefs           []*Ref                 `protobuf:"bytes,11,rep,name=evidence_refs,json=evidenceRefs,proto3" json:"evidence_refs,omitempty"`
+	ExecutionReportPending bool                   `protobuf:"varint,12,opt,name=execution_report_pending,json=executionReportPending,proto3" json:"execution_report_pending,omitempty"`
+	unknownFields          protoimpl.UnknownFields
+	sizeCache              protoimpl.SizeCache
+}
+
+func (x *SnapshotProgress) Reset() {
+	*x = SnapshotProgress{}
+	mi := &file_lerna_v1_planning_proto_msgTypes[14]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SnapshotProgress) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SnapshotProgress) ProtoMessage() {}
+
+func (x *SnapshotProgress) ProtoReflect() protoreflect.Message {
+	mi := &file_lerna_v1_planning_proto_msgTypes[14]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SnapshotProgress.ProtoReflect.Descriptor instead.
+func (*SnapshotProgress) Descriptor() ([]byte, []int) {
+	return file_lerna_v1_planning_proto_rawDescGZIP(), []int{14}
+}
+
+func (x *SnapshotProgress) GetAdmissionRef() *Ref {
+	if x != nil {
+		return x.AdmissionRef
+	}
+	return nil
+}
+
+func (x *SnapshotProgress) GetOperationRef() *Ref {
+	if x != nil {
+		return x.OperationRef
+	}
+	return nil
+}
+
+func (x *SnapshotProgress) GetCapabilityRef() *Ref {
+	if x != nil {
+		return x.CapabilityRef
+	}
+	return nil
+}
+
+func (x *SnapshotProgress) GetParametersRef() *Ref {
+	if x != nil {
+		return x.ParametersRef
+	}
+	return nil
+}
+
+func (x *SnapshotProgress) GetEffectRef() *Ref {
+	if x != nil {
+		return x.EffectRef
+	}
+	return nil
+}
+
+func (x *SnapshotProgress) GetEffectOutcome() string {
+	if x != nil {
+		return x.EffectOutcome
+	}
+	return ""
+}
+
+func (x *SnapshotProgress) GetLateEffect() string {
+	if x != nil {
+		return x.LateEffect
+	}
+	return ""
+}
+
+func (x *SnapshotProgress) GetEvidenceConflict() bool {
+	if x != nil {
+		return x.EvidenceConflict
+	}
+	return false
+}
+
+func (x *SnapshotProgress) GetDispatch() string {
+	if x != nil {
+		return x.Dispatch
+	}
+	return ""
+}
+
+func (x *SnapshotProgress) GetLifecycle() string {
+	if x != nil {
+		return x.Lifecycle
+	}
+	return ""
+}
+
+func (x *SnapshotProgress) GetEvidenceRefs() []*Ref {
+	if x != nil {
+		return x.EvidenceRefs
+	}
+	return nil
+}
+
+func (x *SnapshotProgress) GetExecutionReportPending() bool {
+	if x != nil {
+		return x.ExecutionReportPending
+	}
+	return false
+}
+
+type SnapshotInput struct {
+	state            protoimpl.MessageState `protogen:"open.v1"`
+	InputRef         *Ref                   `protobuf:"bytes,1,opt,name=input_ref,json=inputRef,proto3" json:"input_ref,omitempty"`
+	ContentRef       *Ref                   `protobuf:"bytes,2,opt,name=content_ref,json=contentRef,proto3" json:"content_ref,omitempty"`
+	InputVersion     uint64                 `protobuf:"varint,3,opt,name=input_version,json=inputVersion,proto3" json:"input_version,omitempty"`
+	ProcessingStatus string                 `protobuf:"bytes,4,opt,name=processing_status,json=processingStatus,proto3" json:"processing_status,omitempty"`
+	ChangesBasis     bool                   `protobuf:"varint,5,opt,name=changes_basis,json=changesBasis,proto3" json:"changes_basis,omitempty"`
+	unknownFields    protoimpl.UnknownFields
+	sizeCache        protoimpl.SizeCache
+}
+
+func (x *SnapshotInput) Reset() {
+	*x = SnapshotInput{}
+	mi := &file_lerna_v1_planning_proto_msgTypes[15]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SnapshotInput) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SnapshotInput) ProtoMessage() {}
+
+func (x *SnapshotInput) ProtoReflect() protoreflect.Message {
+	mi := &file_lerna_v1_planning_proto_msgTypes[15]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SnapshotInput.ProtoReflect.Descriptor instead.
+func (*SnapshotInput) Descriptor() ([]byte, []int) {
+	return file_lerna_v1_planning_proto_rawDescGZIP(), []int{15}
+}
+
+func (x *SnapshotInput) GetInputRef() *Ref {
+	if x != nil {
+		return x.InputRef
+	}
+	return nil
+}
+
+func (x *SnapshotInput) GetContentRef() *Ref {
+	if x != nil {
+		return x.ContentRef
+	}
+	return nil
+}
+
+func (x *SnapshotInput) GetInputVersion() uint64 {
+	if x != nil {
+		return x.InputVersion
+	}
+	return 0
+}
+
+func (x *SnapshotInput) GetProcessingStatus() string {
+	if x != nil {
+		return x.ProcessingStatus
+	}
+	return ""
+}
+
+func (x *SnapshotInput) GetChangesBasis() bool {
+	if x != nil {
+		return x.ChangesBasis
+	}
+	return false
+}
+
 var File_lerna_v1_planning_proto protoreflect.FileDescriptor
 
 const file_lerna_v1_planning_proto_rawDesc = "" +
@@ -1192,7 +1456,7 @@ const file_lerna_v1_planning_proto_rawDesc = "" +
 	"conditions\x12:\n" +
 	"\vaccepted_by\x18\a \x01(\v2\x19.lerna.v1.CommandIdentityR\n" +
 	"acceptedBy\x127\n" +
-	"\x10source_input_ref\x18\b \x01(\v2\r.lerna.v1.RefR\x0esourceInputRef\"\xf7\x04\n" +
+	"\x10source_input_ref\x18\b \x01(\v2\r.lerna.v1.RefR\x0esourceInputRef\"\x84\b\n" +
 	"\x0fContextSnapshot\x12\x1f\n" +
 	"\x03ref\x18\x01 \x01(\v2\r.lerna.v1.RefR\x03ref\x12(\n" +
 	"\btask_ref\x18\x02 \x01(\v2\r.lerna.v1.RefR\ataskRef\x121\n" +
@@ -1209,7 +1473,14 @@ const file_lerna_v1_planning_proto_rawDesc = "" +
 	"\rprogress_refs\x18\v \x03(\v2\r.lerna.v1.RefR\fprogressRefs\x128\n" +
 	"\x10requirements_ref\x18\f \x01(\v2\r.lerna.v1.RefR\x0frequirementsRef\x12,\n" +
 	"\n" +
-	"input_refs\x18\r \x03(\v2\r.lerna.v1.RefR\tinputRefs\"j\n" +
+	"input_refs\x18\r \x03(\v2\r.lerna.v1.RefR\tinputRefs\x12A\n" +
+	"\x0eprogress_facts\x18\x0e \x03(\v2\x1a.lerna.v1.SnapshotProgressR\rprogressFacts\x12F\n" +
+	"\x12unprocessed_inputs\x18\x0f \x03(\v2\x17.lerna.v1.SnapshotInputR\x11unprocessedInputs\x12.\n" +
+	"\x13bound_input_version\x18\x10 \x01(\x04R\x11boundInputVersion\x12M\n" +
+	"\x13requirements_status\x18\x11 \x01(\x0e2\x1c.lerna.v1.RequirementsStatusR\x12requirementsStatus\x12)\n" +
+	"\x10allowed_purposes\x18\x12 \x03(\tR\x0fallowedPurposes\x12.\n" +
+	"\x13max_model_positions\x18\x13 \x01(\rR\x11maxModelPositions\x12&\n" +
+	"\x0fmax_model_sends\x18\x14 \x01(\rR\rmaxModelSends\"j\n" +
 	"\x0fAncestorControl\x12(\n" +
 	"\btask_ref\x18\x01 \x01(\v2\r.lerna.v1.RefR\ataskRef\x12-\n" +
 	"\x12control_generation\x18\x02 \x01(\x04R\x11controlGeneration\"V\n" +
@@ -1267,7 +1538,30 @@ const file_lerna_v1_planning_proto_rawDesc = "" +
 	"\atask_id\x18\x02 \x01(\v2\x14.lerna.v1.GlobalNameR\x06taskId\"y\n" +
 	"\x16ReceiveProposalCommand\x12/\n" +
 	"\x06header\x18\x01 \x01(\v2\x17.lerna.v1.CommandHeaderR\x06header\x12.\n" +
-	"\bproposal\x18\x02 \x01(\v2\x12.lerna.v1.ProposalR\bproposalB?Z=github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1;lernav1b\x06proto3"
+	"\bproposal\x18\x02 \x01(\v2\x12.lerna.v1.ProposalR\bproposal\"\xb1\x04\n" +
+	"\x10SnapshotProgress\x122\n" +
+	"\radmission_ref\x18\x01 \x01(\v2\r.lerna.v1.RefR\fadmissionRef\x122\n" +
+	"\roperation_ref\x18\x02 \x01(\v2\r.lerna.v1.RefR\foperationRef\x124\n" +
+	"\x0ecapability_ref\x18\x03 \x01(\v2\r.lerna.v1.RefR\rcapabilityRef\x124\n" +
+	"\x0eparameters_ref\x18\x04 \x01(\v2\r.lerna.v1.RefR\rparametersRef\x12,\n" +
+	"\n" +
+	"effect_ref\x18\x05 \x01(\v2\r.lerna.v1.RefR\teffectRef\x12%\n" +
+	"\x0eeffect_outcome\x18\x06 \x01(\tR\reffectOutcome\x12\x1f\n" +
+	"\vlate_effect\x18\a \x01(\tR\n" +
+	"lateEffect\x12+\n" +
+	"\x11evidence_conflict\x18\b \x01(\bR\x10evidenceConflict\x12\x1a\n" +
+	"\bdispatch\x18\t \x01(\tR\bdispatch\x12\x1c\n" +
+	"\tlifecycle\x18\n" +
+	" \x01(\tR\tlifecycle\x122\n" +
+	"\revidence_refs\x18\v \x03(\v2\r.lerna.v1.RefR\fevidenceRefs\x128\n" +
+	"\x18execution_report_pending\x18\f \x01(\bR\x16executionReportPending\"\xe2\x01\n" +
+	"\rSnapshotInput\x12*\n" +
+	"\tinput_ref\x18\x01 \x01(\v2\r.lerna.v1.RefR\binputRef\x12.\n" +
+	"\vcontent_ref\x18\x02 \x01(\v2\r.lerna.v1.RefR\n" +
+	"contentRef\x12#\n" +
+	"\rinput_version\x18\x03 \x01(\x04R\finputVersion\x12+\n" +
+	"\x11processing_status\x18\x04 \x01(\tR\x10processingStatus\x12#\n" +
+	"\rchanges_basis\x18\x05 \x01(\bR\fchangesBasisB?Z=github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1;lernav1b\x06proto3"
 
 var (
 	file_lerna_v1_planning_proto_rawDescOnce sync.Once
@@ -1281,7 +1575,7 @@ func file_lerna_v1_planning_proto_rawDescGZIP() []byte {
 	return file_lerna_v1_planning_proto_rawDescData
 }
 
-var file_lerna_v1_planning_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
+var file_lerna_v1_planning_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
 var file_lerna_v1_planning_proto_goTypes = []any{
 	(*CommandHeader)(nil),             // 0: lerna.v1.CommandHeader
 	(*TargetRecordAssertion)(nil),     // 1: lerna.v1.TargetRecordAssertion
@@ -1297,63 +1591,77 @@ var file_lerna_v1_planning_proto_goTypes = []any{
 	(*AcceptRequirementsCommand)(nil), // 11: lerna.v1.AcceptRequirementsCommand
 	(*RequestProposalCommand)(nil),    // 12: lerna.v1.RequestProposalCommand
 	(*ReceiveProposalCommand)(nil),    // 13: lerna.v1.ReceiveProposalCommand
-	(*CommandIdentity)(nil),           // 14: lerna.v1.CommandIdentity
-	(*Ref)(nil),                       // 15: lerna.v1.Ref
-	(*GlobalName)(nil),                // 16: lerna.v1.GlobalName
+	(*SnapshotProgress)(nil),          // 14: lerna.v1.SnapshotProgress
+	(*SnapshotInput)(nil),             // 15: lerna.v1.SnapshotInput
+	(*CommandIdentity)(nil),           // 16: lerna.v1.CommandIdentity
+	(*Ref)(nil),                       // 17: lerna.v1.Ref
+	(*GlobalName)(nil),                // 18: lerna.v1.GlobalName
+	(RequirementsStatus)(0),           // 19: lerna.v1.RequirementsStatus
 }
 var file_lerna_v1_planning_proto_depIdxs = []int32{
-	14, // 0: lerna.v1.CommandHeader.identity:type_name -> lerna.v1.CommandIdentity
-	15, // 1: lerna.v1.TargetRecordAssertion.capability_ref:type_name -> lerna.v1.Ref
-	15, // 2: lerna.v1.TargetRecordAssertion.parameters_ref:type_name -> lerna.v1.Ref
-	16, // 3: lerna.v1.CompletionEvidence.operation_id:type_name -> lerna.v1.GlobalName
-	15, // 4: lerna.v1.Requirement.description_ref:type_name -> lerna.v1.Ref
+	16, // 0: lerna.v1.CommandHeader.identity:type_name -> lerna.v1.CommandIdentity
+	17, // 1: lerna.v1.TargetRecordAssertion.capability_ref:type_name -> lerna.v1.Ref
+	17, // 2: lerna.v1.TargetRecordAssertion.parameters_ref:type_name -> lerna.v1.Ref
+	18, // 3: lerna.v1.CompletionEvidence.operation_id:type_name -> lerna.v1.GlobalName
+	17, // 4: lerna.v1.Requirement.description_ref:type_name -> lerna.v1.Ref
 	1,  // 5: lerna.v1.Requirement.target_record:type_name -> lerna.v1.TargetRecordAssertion
-	15, // 6: lerna.v1.Requirements.ref:type_name -> lerna.v1.Ref
-	16, // 7: lerna.v1.Requirements.task_id:type_name -> lerna.v1.GlobalName
+	17, // 6: lerna.v1.Requirements.ref:type_name -> lerna.v1.Ref
+	18, // 7: lerna.v1.Requirements.task_id:type_name -> lerna.v1.GlobalName
 	3,  // 8: lerna.v1.Requirements.conditions:type_name -> lerna.v1.Requirement
-	14, // 9: lerna.v1.Requirements.accepted_by:type_name -> lerna.v1.CommandIdentity
-	15, // 10: lerna.v1.Requirements.source_input_ref:type_name -> lerna.v1.Ref
-	15, // 11: lerna.v1.ContextSnapshot.ref:type_name -> lerna.v1.Ref
-	15, // 12: lerna.v1.ContextSnapshot.task_ref:type_name -> lerna.v1.Ref
-	15, // 13: lerna.v1.ContextSnapshot.request_ref:type_name -> lerna.v1.Ref
-	15, // 14: lerna.v1.ContextSnapshot.content_refs:type_name -> lerna.v1.Ref
-	15, // 15: lerna.v1.ContextSnapshot.capability_refs:type_name -> lerna.v1.Ref
-	15, // 16: lerna.v1.ContextSnapshot.progress_refs:type_name -> lerna.v1.Ref
-	15, // 17: lerna.v1.ContextSnapshot.requirements_ref:type_name -> lerna.v1.Ref
-	15, // 18: lerna.v1.ContextSnapshot.input_refs:type_name -> lerna.v1.Ref
-	15, // 19: lerna.v1.AncestorControl.task_ref:type_name -> lerna.v1.Ref
-	15, // 20: lerna.v1.MemoryDependency.memory_ref:type_name -> lerna.v1.Ref
-	15, // 21: lerna.v1.ActionStep.capability_ref:type_name -> lerna.v1.Ref
-	15, // 22: lerna.v1.ActionStep.parameters_ref:type_name -> lerna.v1.Ref
-	15, // 23: lerna.v1.ActionStep.dependencies:type_name -> lerna.v1.Ref
-	7,  // 24: lerna.v1.ActionStep.memory_dependencies:type_name -> lerna.v1.MemoryDependency
-	15, // 25: lerna.v1.ActionStep.content_refs:type_name -> lerna.v1.Ref
-	15, // 26: lerna.v1.Proposal.ref:type_name -> lerna.v1.Ref
-	16, // 27: lerna.v1.Proposal.task_id:type_name -> lerna.v1.GlobalName
-	15, // 28: lerna.v1.Proposal.context_snapshot_ref:type_name -> lerna.v1.Ref
-	15, // 29: lerna.v1.Proposal.request_ref:type_name -> lerna.v1.Ref
-	15, // 30: lerna.v1.Proposal.reasoner_ref:type_name -> lerna.v1.Ref
-	8,  // 31: lerna.v1.Proposal.step:type_name -> lerna.v1.ActionStep
-	2,  // 32: lerna.v1.Proposal.completion_evidence:type_name -> lerna.v1.CompletionEvidence
-	16, // 33: lerna.v1.PlanningState.task_id:type_name -> lerna.v1.GlobalName
-	4,  // 34: lerna.v1.PlanningState.requirements:type_name -> lerna.v1.Requirements
-	5,  // 35: lerna.v1.PlanningState.snapshot:type_name -> lerna.v1.ContextSnapshot
-	9,  // 36: lerna.v1.PlanningState.proposal:type_name -> lerna.v1.Proposal
-	15, // 37: lerna.v1.PlanningState.admission_refs:type_name -> lerna.v1.Ref
-	15, // 38: lerna.v1.PlanningState.rejected_verification_operations:type_name -> lerna.v1.Ref
-	15, // 39: lerna.v1.PlanningState.verification_ref:type_name -> lerna.v1.Ref
-	0,  // 40: lerna.v1.AcceptRequirementsCommand.header:type_name -> lerna.v1.CommandHeader
-	15, // 41: lerna.v1.AcceptRequirementsCommand.task_ref:type_name -> lerna.v1.Ref
-	3,  // 42: lerna.v1.AcceptRequirementsCommand.conditions:type_name -> lerna.v1.Requirement
-	0,  // 43: lerna.v1.RequestProposalCommand.header:type_name -> lerna.v1.CommandHeader
-	16, // 44: lerna.v1.RequestProposalCommand.task_id:type_name -> lerna.v1.GlobalName
-	0,  // 45: lerna.v1.ReceiveProposalCommand.header:type_name -> lerna.v1.CommandHeader
-	9,  // 46: lerna.v1.ReceiveProposalCommand.proposal:type_name -> lerna.v1.Proposal
-	47, // [47:47] is the sub-list for method output_type
-	47, // [47:47] is the sub-list for method input_type
-	47, // [47:47] is the sub-list for extension type_name
-	47, // [47:47] is the sub-list for extension extendee
-	0,  // [0:47] is the sub-list for field type_name
+	16, // 9: lerna.v1.Requirements.accepted_by:type_name -> lerna.v1.CommandIdentity
+	17, // 10: lerna.v1.Requirements.source_input_ref:type_name -> lerna.v1.Ref
+	17, // 11: lerna.v1.ContextSnapshot.ref:type_name -> lerna.v1.Ref
+	17, // 12: lerna.v1.ContextSnapshot.task_ref:type_name -> lerna.v1.Ref
+	17, // 13: lerna.v1.ContextSnapshot.request_ref:type_name -> lerna.v1.Ref
+	17, // 14: lerna.v1.ContextSnapshot.content_refs:type_name -> lerna.v1.Ref
+	17, // 15: lerna.v1.ContextSnapshot.capability_refs:type_name -> lerna.v1.Ref
+	17, // 16: lerna.v1.ContextSnapshot.progress_refs:type_name -> lerna.v1.Ref
+	17, // 17: lerna.v1.ContextSnapshot.requirements_ref:type_name -> lerna.v1.Ref
+	17, // 18: lerna.v1.ContextSnapshot.input_refs:type_name -> lerna.v1.Ref
+	14, // 19: lerna.v1.ContextSnapshot.progress_facts:type_name -> lerna.v1.SnapshotProgress
+	15, // 20: lerna.v1.ContextSnapshot.unprocessed_inputs:type_name -> lerna.v1.SnapshotInput
+	19, // 21: lerna.v1.ContextSnapshot.requirements_status:type_name -> lerna.v1.RequirementsStatus
+	17, // 22: lerna.v1.AncestorControl.task_ref:type_name -> lerna.v1.Ref
+	17, // 23: lerna.v1.MemoryDependency.memory_ref:type_name -> lerna.v1.Ref
+	17, // 24: lerna.v1.ActionStep.capability_ref:type_name -> lerna.v1.Ref
+	17, // 25: lerna.v1.ActionStep.parameters_ref:type_name -> lerna.v1.Ref
+	17, // 26: lerna.v1.ActionStep.dependencies:type_name -> lerna.v1.Ref
+	7,  // 27: lerna.v1.ActionStep.memory_dependencies:type_name -> lerna.v1.MemoryDependency
+	17, // 28: lerna.v1.ActionStep.content_refs:type_name -> lerna.v1.Ref
+	17, // 29: lerna.v1.Proposal.ref:type_name -> lerna.v1.Ref
+	18, // 30: lerna.v1.Proposal.task_id:type_name -> lerna.v1.GlobalName
+	17, // 31: lerna.v1.Proposal.context_snapshot_ref:type_name -> lerna.v1.Ref
+	17, // 32: lerna.v1.Proposal.request_ref:type_name -> lerna.v1.Ref
+	17, // 33: lerna.v1.Proposal.reasoner_ref:type_name -> lerna.v1.Ref
+	8,  // 34: lerna.v1.Proposal.step:type_name -> lerna.v1.ActionStep
+	2,  // 35: lerna.v1.Proposal.completion_evidence:type_name -> lerna.v1.CompletionEvidence
+	18, // 36: lerna.v1.PlanningState.task_id:type_name -> lerna.v1.GlobalName
+	4,  // 37: lerna.v1.PlanningState.requirements:type_name -> lerna.v1.Requirements
+	5,  // 38: lerna.v1.PlanningState.snapshot:type_name -> lerna.v1.ContextSnapshot
+	9,  // 39: lerna.v1.PlanningState.proposal:type_name -> lerna.v1.Proposal
+	17, // 40: lerna.v1.PlanningState.admission_refs:type_name -> lerna.v1.Ref
+	17, // 41: lerna.v1.PlanningState.rejected_verification_operations:type_name -> lerna.v1.Ref
+	17, // 42: lerna.v1.PlanningState.verification_ref:type_name -> lerna.v1.Ref
+	0,  // 43: lerna.v1.AcceptRequirementsCommand.header:type_name -> lerna.v1.CommandHeader
+	17, // 44: lerna.v1.AcceptRequirementsCommand.task_ref:type_name -> lerna.v1.Ref
+	3,  // 45: lerna.v1.AcceptRequirementsCommand.conditions:type_name -> lerna.v1.Requirement
+	0,  // 46: lerna.v1.RequestProposalCommand.header:type_name -> lerna.v1.CommandHeader
+	18, // 47: lerna.v1.RequestProposalCommand.task_id:type_name -> lerna.v1.GlobalName
+	0,  // 48: lerna.v1.ReceiveProposalCommand.header:type_name -> lerna.v1.CommandHeader
+	9,  // 49: lerna.v1.ReceiveProposalCommand.proposal:type_name -> lerna.v1.Proposal
+	17, // 50: lerna.v1.SnapshotProgress.admission_ref:type_name -> lerna.v1.Ref
+	17, // 51: lerna.v1.SnapshotProgress.operation_ref:type_name -> lerna.v1.Ref
+	17, // 52: lerna.v1.SnapshotProgress.capability_ref:type_name -> lerna.v1.Ref
+	17, // 53: lerna.v1.SnapshotProgress.parameters_ref:type_name -> lerna.v1.Ref
+	17, // 54: lerna.v1.SnapshotProgress.effect_ref:type_name -> lerna.v1.Ref
+	17, // 55: lerna.v1.SnapshotProgress.evidence_refs:type_name -> lerna.v1.Ref
+	17, // 56: lerna.v1.SnapshotInput.input_ref:type_name -> lerna.v1.Ref
+	17, // 57: lerna.v1.SnapshotInput.content_ref:type_name -> lerna.v1.Ref
+	58, // [58:58] is the sub-list for method output_type
+	58, // [58:58] is the sub-list for method input_type
+	58, // [58:58] is the sub-list for extension type_name
+	58, // [58:58] is the sub-list for extension extendee
+	0,  // [0:58] is the sub-list for field type_name
 }
 
 func init() { file_lerna_v1_planning_proto_init() }
@@ -1369,7 +1677,7 @@ func file_lerna_v1_planning_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_lerna_v1_planning_proto_rawDesc), len(file_lerna_v1_planning_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   14,
+			NumMessages:   16,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
