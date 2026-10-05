@@ -58,6 +58,8 @@ type BodyHolder struct {
 
 type LifecycleRepository interface {
 	ManagementRepository
+	// Selection only; the locked original identity, clock and Claim remain authority.
+	ScanBodyCleanup(context.Context, runtime.Tx, time.Time, v.SubjectBinding, string, int) ([]runtime.Job, error)
 	BindLegacyPrimary(context.Context, runtime.Tx, Record, LegacyPrimaryQualification) (Record, error)
 	QualifyPolicyCleanupNotRequired(context.Context, runtime.Tx, CleanupResponsibility) error
 	CurrentSavingPolicy(context.Context, runtime.Tx, v.SubjectBinding, v.ContentRef, string) (*FixturePolicy, error)
@@ -310,7 +312,7 @@ func (l *Lifecycle) Step(ctx context.Context, subject *v.SubjectBinding) (bool, 
 		if err != nil {
 			return err
 		}
-		jobs, err := l.store.Scan(ctx, tx, now, 64)
+		jobs, err := l.store.ScanBodyCleanup(ctx, tx, now, l.config.TrustedSubject, l.config.PrimaryHolderID, 64)
 		if err != nil {
 			return err
 		}

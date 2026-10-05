@@ -1049,3 +1049,87 @@ ONE samecount1 normal actualPASS15.464s（case15.45），3287994/start13731941/e
 root另授ONE full64 sameexact60f817源；执行前fresh源与命令plan独立保存/fsync并目录fsync，原90/共同seal15/live45/4Steps/Go120/outer120保持。真实64准确refs顺序published/公开正常与独立alpha，额外live控制ref预先published；64原Seal登记共同初始deadline与两holder完整页，过原deadline+20ms后trueReopen全部完整公共Observation/原alpha均保持。真实独立V2 beta随后accepted；4次原Service.Step无error后准确原Command仍publication=preparing/exactRef=true，独立V2key Lstat NotExist（明确检查key与非不存在错误）。此为实际目标调度business red，不是准备/编译失败。
 
 `expired-backlog-full-page-first-red.log` actualFAIL18.131s（case18.12），PID/PGID3290594/start13743233/exit1/groupAbsent/noTimeout，session60810完成，STOP/RELEASE。ownschema8750735b58e5560d1a0a33b1/root1248967092 dev33/inode377785，outside完整结果 `/tmp/lerna-05-expired-backlog-full64-first-red-outcome.json`。首publication断言FAIL，后续live45s/globalACK/第二history尾未执行；不能称另一live/policy red已发生。产品仍1a4e1d2、没有fix/race/retry；须root FULL-read采用实际red与窄候选扫描决定后才实施。
+
+
+### 窄候选扫描修正后原64业务正常完整尾通过
+
+root采用原3b16扫描职责决定、58f54固定原Record解码资格与5a796 stored BodySeal规范识别补充。新增两Content-owned窄扫描口：普通publish/policy分别LIMIT前、Service最多两页publish优先、Manager仅policy；Lifecycle原完整Subject/PrimaryHolder/原可执行seal窗口LIMIT前预选。原runtime Scan/migrations与expired64责任/字节/期限不写不改，锁后原身份/freshclock/Claim/fence/全holderACK仍独立authority。
+
+原text unique keys、实际Go全Record类型/原整数token和范围、Sources nestedRef、ShadowBodyGone与storedSeal固定Go canonical识别均为“能否排除”资格。JSONB相等不冒Go Marshal字节证明；当前stored识别支持完整固定编码，Record内结构空白/顺序不要求canonical。特殊Unicode/escape/time及机械坏row资格尚未执行，不把这次正常scope当这些case证据。
+
+root授仅fmt6→ONE original full64normal。fmt3429147/start14360495实际0/absent/noTimeout；formatted6产品源+60f原test与三旧SQL静态hash/explicitHEAD85a1067-WIP副本，prelaunch/fsync在 `/tmp/lerna-04-ticket05-execution/expired-backlog-scan-fix-first-normal-source/manifest.json`。原caller90/seal15/live45/Steps4/Go120/outer120保持，GOTOOLCHAINlocal/modreadonly/p1/integration。
+
+`expired-backlog-scan-fix-first-normal.log` actualPASS20.418s（case20.41），3429161/start14360507/exit0/groupAbsent/noTimeout，session5593完成，STOP/RELEASE。scope73c2ee2ae74c7a750cc030b8/root1033797676 dev33/inode384078。真实原64prestate→新V2beta published/exactbody→后续live原seal全部holderACK/物理absence→第二trueReopen64旧duty/alpha/固定receipt/pubhistory保持全部尾执行；旧首red18.131及准备两FAIL原证据保留。尚未race/lowcontrol新源码/第三policyconsumer与其他Subject/机械负向编码/资源审核/新审查或接受七AC。
+
+
+### 相同产品源与原64业务竞态完整尾通过
+
+root独立FULL normal5line与全部10个source/SQL hash、7个原源副本后另授ONE original full64 race。执行前重新核same6产品源（work.go f690a261、stored canonical helper7286fe4f）/原test60f817及三SQL hash，fresh prelaunch/fsync在 `/tmp/lerna-04-ticket05-execution/expired-backlog-scan-fix-race-prelaunch.json`；explicit HEAD85a1067-WIP。未fmt、未改源或原caller90/seal15/live45/Steps4/Go120/outer120。
+
+`expired-backlog-scan-fix-race.log` actualPASS26.476s（case25.41），PID/PGID3433733/start14380509/exit0/groupAbsent/noTimeout，session81472完成，STOP/RELEASE。own schema adc1a12fd7197b1fc6b272b3/root2968571310 dev33/inode384711；actual outcome `/tmp/lerna-05-expired-backlog-scan-fix-race-outcome.json`。原64prestate、新V2 published/exactbeta、后续live全两holderACK/物理absence、第二trueReopen旧64完整duty/alpha/固定receipt/pubhistory及V2正常全部尾真实执行。该竞态资格与normal同源；未运行新源低积压control、第三policy consumer/其他完整Subject、机械坏row/特殊编码、其他suite/资源审计或新review，不称七AC已接受或本票交付。
+
+
+### ONE Host实际PG坏deadline保原因与真实合法特殊字符seal正常尾
+
+root FULL采用v2两源/plan，另授仅fmt2→ONE exactnormal。Host tracer通过真实Store.Within/Now/ScanBodyCleanup观察consumer-owned port，正常两个真实published ref/原Seal与有界第一页；Host专属fixture只注入准确首candidate双deadline字面`not-a-time`并保存原bytes供恢复，私表读不是业务oracle。原caller20、fault child3/statement2/lock1、restoration fresh5/statement2/lock1/rowsAffected1、最多8 total真实Lifecycle.Step、Go120/outer120保持。
+
+正常counterpart用接口原允许的非ASCII/quote/backslash/space/HTML/U2028实际PrimaryHolderID与两SealID≤128bytes；原 Objects.Binding、Subject/ref/holder身份固定，真实Go Marshal/PG存储shadow由产品入口完成。fmt2 PID3467224/start14522702实际0/absent/noTimeout，formatted两源SHA7c57d9bf/7f12df34与10旧源/SQL pin在独立prelaunch fsynced `/tmp/lerna-04-ticket05-execution/scan-deadline-mechanical-first-normal-source/manifest.json`，6产品源f690/7286及原60f业务test未改。
+
+`scan-deadline-mechanical-first-normal.log` actualPASS0.671s（case0.66），PID/PGID3467904/start14525665/exit0/groupAbsent/noTimeout、toolsession25126完成，STOP/RELEASE。实际错误明确Go time.ParseError，不是PG cast error、不是nil/静默空页/无cause ErrScope，也不是新business red；本normal实际无需CASE产品改动。own schema cd55ac0aa1641873a0b4ccf4/root2084815391 dev33/inode386516、Host fault PG PID568204，完整outcome `/tmp/lerna-05-scan-deadline-mechanical-first-normal-outcome.json`。
+
+exact原bytes restoration+originalfirstClose后整原job页/全部公共Observation/独立alpha保持；随后真实两ref全holder原完整Identity/Kind/deadline ACK、CleanupComplete及独立准确body LstatNotExist，真实reopen完整最终Observation、fixed receipt/published history与当前授权gone metadata全部尾已执行。只证明这一个真实字段组合与原deadline错误cause；未验证ByteLength计算顺序/任意坏row或编码矩阵，未race、新Manager/fullSubject缺口、其他suite/最新reviews/正式AC接受。
+
+
+### 同源ONE Host坏deadline/合法原seal身份竞态完整尾
+
+root FULL normal原6raw/outcome/prelaunch及12SHA/flatcopy后，另授same7c57/7f12 ONE exact -race，未fmt/sourcefix/改bounds。新Manager2b364只包compiled dependency，不是本selector RUN或业务资格；13source/SQL pins预启动核真保存 `scan-deadline-mechanical-race-prelaunch.json`，执行期间源写冻结。
+
+`scan-deadline-mechanical-race.log` actualPASS2.182s（case1.14），PID/PGID3481197/start14584530/exit0/groupAbsent/noTimeout、session11866完成，STOP/RELEASE。actual仍Go time.ParseError；正常合法UTF8/quote/backslash/space/HTML/U2028原primary/seal、exactfaultrestore/firstClose/原整job页/Observation/alpha、真实全holderACK/独立准确bodyabsence、实际reopen/immutable receipt/pubhistory/当前gone metadata全部尾执行。own schema398ac6ceb182431638a1317b/root1463348232 dev33/inode387376、fault PG570554；outcome `/tmp/lerna-05-scan-deadline-mechanical-race-outcome.json`。未借本case声称Manager/delegated边界已运行，不需要为了可接受GoParse原因改CASE。其余consumer/affectedsuite/review/AC等闭合仍待。
+
+
+### 第三真实Manager消费者通过64旧到期责任：ONE正常完整尾
+
+root FULL采用新公共Manager source/plan后，另授仅fmt1→ONE exactnormal。原60f测试与6产品/3SQL/2mechanical source均保持；新独立helpers仅组织该case真实64public publication/Seal15s/expiry+20ms/reopen，不以私Job表做反例或业务oracle。caller90、共同Seal15/+20ms、原Manager Page2/WorkBudget60/≤4 Step、Go120/outer120不变。
+
+fmt3495146/start14648084实际0/absent/noTimeout，preformat2b364原字节保留；actualformatdiff仅注释连续第二行加一个tab，无语义修改；postformat81bc5d898d4c0275fd0a1aa9b7047716fe633cd9ee4fabc669cd46d92f1b8ed6。formatted源及12依赖pin/explicitWIP、formatdiff/ACK/fsyncedprelaunch在 `/tmp/lerna-04-ticket05-execution/manager-expired-first-normal-source/manifest.json`。
+
+`manager-expired-first-normal.log` actualPASS19.681s（case19.67），PID/PGID3495830/start14651192/exit0/groupAbsent/noTimeout、session11514完成，STOP/RELEASE。own schemaa0e085fa52383284ea333314/root3158398028 dev33/inode388291；outcome `/tmp/lerna-05-manager-expired-first-normal-outcome.json`。真实64完整旧职责/holder/alpha/receipt/history预态→已有独立later source/realderivedchild正常save/body→InstallPolicy rev2 savefalse原CAS/即时原SaveForbidden→≤4 actualManagerStep传播source+child两完整原责任/wholeChange原key/watermark及5项合法scheduled/naturalExpiry转移→第二trueReopen wholePropagation+旧64全Observation/alpha/immutable receipt/pubhistory与later原body/history、SaveForbidden全尾通过。责任仍pending/holder_unconfirmed/原policyDeadline/Save-only，source整原责任不变，政策传播不是物理ACK。未对later责任执行ConsumePolicyCleanup/Seal/erasure/allACK；本结果不冒新policycleanup红或任何旧Close复原。
+
+该normal提供真实第三Managerconsumer behindfull64expired资格，当前已有扫描修正，因此没有伪造第二pre-fixred。没有race、delegated第二tracer源码/执行、CASE/sourcefix/其他selectors、受影响suite/最新review或7AC接受。
+
+
+### 合法完整委派Subject在64其他live责任前页后仅清自己的原责任：ONE正常完整尾
+
+root FULL adopted新单一publicscope/v2plan；completedholders oracle精化为原完整Identity+Kind+deadline一一原index匹配，明确duplicate/omission拒绝，原2holder全部ACK而非仅len2。现source85d995/11121B，fmt1 PID3510349/start14714811实际0/absent/noTimeout且actualformatdiff空；preformat与formatted源/13依赖pin/初始bounds/ACK/fsyncedprelaunch在 `/tmp/lerna-04-ticket05-execution/delegated-cleanup-first-normal-source/manifest.json`。原60f/81bc/6产品/3SQL不改。caller90、初始common liveSeal45、原固定trusted1h/work60/page2/≤4 secondLifecycleStep、Goouter120不变；这是新scope最初live窗，不是原15s expiredscope续期/raise，准备与最终proof均明确原64deadline仍live。
+
+`delegated-cleanup-first-normal.log` actualPASS6.510s（case6.50），PID/PGID3511127/start14718304/exit0/groupAbsent/noTimeout、session89539结束，STOP/RELEASE。own schemac0035b7fa47a0d4c294453b6/root1169068078 dev33/inode389360；outcome `/tmp/lerna-05-delegated-cleanup-first-normal-outcome.json`。两实际合法完整Subject同tenant/leaf、不同非空delegationchain分别保存真实Manager policy/CommandReader/publicPut/Savepermission与原Seal；同primary/binding；first64 live原责任先于second ownSeal。firsttrueReopen wholeObs/alpha/固定receipt/history完整预态→≤4 second真实Step仅原ownDuty、两原holder一一全ACK/独立准确bodyabsence→secondtrueReopen first64 wholeObs/alpha/receipt/history保原仍live、own完整Seal/ACK/immutable receipt/pubhistory/currentauthorizedgone metadata全部尾执行。合法第一Subject无Step/Claim/续期/ACK/停车/原字节改写，不伪造privatetablejob或错误主体oracle。
+
+这是完整保存主体preLIMIT实际正行为资格；没有race/Managerselector/其他suite/sourcefix/CASE/反例重试，不泛化多机生产或7AC正式接受。当前source已窄scanfix，未制造新增pre-fixred。
+
+
+### 新Manager与合法完整委派Subject同源两串行竞态完整尾
+
+root另授仅两个精确race序列，先Manager、实际Join/PGIDabsence后才delegated；不fmt/sourcechange/合并selectors或其他native。14源/SQL预启动再核，同81bc/85d995与原所有bounds保持，各独立freshprelaunch。Manager race `manager-expired-race.log` actualPASS27.528s（case26.47），PID/PGID3514791/start14733329/exit0/groupAbsent/noTimeout、session40254实际结束；schema7ad72f42ca7949a32c007daa/root3657138946 dev33/inode389919，outcome `/tmp/lerna-05-manager-expired-race-outcome.json`。old64完整prestate→later源/子原save撤权与实际传播two-duty→whole原key/watermark/合法naturalExpiry转移/第二reopen旧64Observation/alpha/receipt/history/laterread正常SaveForbidden全部尾执行。
+
+delegated race `delegated-cleanup-race.log` actualPASS13.953s（case12.90），PID/PGID3517014/start14742643/exit0/groupAbsent/noTimeout、session26786完成；schemae09fffb3e39c50636d4824f7/root19833061 dev33/inode390411，outcome `/tmp/lerna-05-delegated-cleanup-race-outcome.json`。同tenant/leaf不同实际合法完整chain且同primary/binding；first64原责任在最终仍live，secondown全2原holder一一独立ACK/准确absence、第二reopen first64完整duty/alpha/receipt/history与own原Seal/ACK/immutable receipt/pubhistory/currentmetadata全部尾执行。两个race最终STOP/RELEASE事实另 `/tmp/lerna-05-two-qualification-races-release.json`，firstoutcome保“中间slot continuation”字节而不是伪写早已RELEASE。
+
+Manager race copied旧false delegated-written标签精确sidecar `/tmp/lerna-05-manager-expired-race-metadata-sidecar.json`：当时delegated85d995已写且normal6.510qualified、包compileddependency，但该Manager race没有delegatedselector RUN。原outcome字节永留不改；不由该false声称当时test未写。本记录依实际独立后序delegatedrace资格，不合并具名执行。freshlowcontrol/actualLinuxpositive/正确3migration/受影响groups+module/两轴+resource/rootAC仍待；旧SIGKILL原unknown不重新认领。
+
+### 静态发现并纠正原迁移test过期两版本oracle（未运行）
+
+旧integration migration_test两处len2未适配已冻结0003；原final17非integrationmodule/vet只是编译该test而未RUN，不称其曾green。root FULL实际test与Migrate3个embeddedSQL采用最小test-only纠正：repeat及restoredreopen都核实际3编号与ALL原固定SQL SHA。原10s caller/checksum1真实corrupt-refusal/restore/firstClose/ownedcleanup不改，SQL/runtime/14已资格源保持。新test staticSHAb8c9c471 source/diff与27个currentcandidate受影响checks提案在 `/tmp/lerna-05-final-affected-static/`；尚未fmt/Go/DB/native，不造businessred。旧17准确原manifest/字节原标签永留；当前plan不是actualpass或最终接受。
+
+
+### 同一冻结候选15源的受影响27项真实串行检查全部通过
+
+root FULL采用27项原命令/selector及test-only三版本oracle后，授仅fmt该migration test再顺序检查，未重跑此前已经fresh-qualified的full64/Host mechanical/Manager/delegated四业务selector。fmt PID3535304/start14824359实际0/absence/noTimeout，formatdiff空，migration test仍SHAb8c9c471；原3SQL与六产品、60f/7c57/7f12/81bc/85d995全部14既有pin不改。完整一次formatted15源副本与actualformat/prelaunch manifest保留 `/tmp/lerna-04-ticket05-execution/scan-current-final-checks/formatted-base-manifest.json`。原静态plan/manifest标签不修改、不冒执行事实。
+
+实际toolsession31037已完成exit0，27精确operations串行、每个原ownedwrapper120/原Go120/read-only/p1/count1与原case所有caller/claim/seal/cap/restoration窗口保持。每项预启动重新核15源pin并fsync小型provenance，实际PID/PGID/starttick先于effects登记，实际Wait/ACK/groupabsence后才下一项。format、integration vet、非integration全module normal/race各472 RUN/PASS；四baseline groups分别60全部深度RUN/PASS、24原顶层selectors；两consumer groups分别11全部深度RUN/PASS、7原顶层selectors；三冻结SQL SHA全部核真。非integrationmodule不代表实际Linux或PG tagged qualifiers。
+
+五个必要既有实际integration selectors各normal/race完整通过：原60f低积压control16.370/18.411s；Linux跨进程Put→原erasure0.706/3.186s；冻结原writer正向Close后升级3.753/6.695s；真实三版本迁移/全部原SHA与corrupt1拒绝/恢复1.238/2.669s；原政策/holder多页与其他保存basis2.315/4.625s。每项原raw `scan-current-<name>.log` 与各独立prelaunch/outcome在同executionroot及 `scan-current-final-checks/`；完整汇总 `batch-complete.json`。27项实际全部exit0/groupAbsent/noTimeout；最后PID3551930/start14886240，actualSTOP/RELEASE，无FAIL重试或自动source修复。
+
+原逐项outcome `pass_count` 为未缩进顶层PASS，并未计嵌套子例；`resource_records`未收非JSON的scope行。原outcome与raw字节保持，统一 `counts-scopes-release-sidecar.json` SHA37e5d78e5bb68e62f17fb9dcc0de1c880bfc9a2a42f8b3560c261d65692e6666精确补全部层RUN/PASS、原台账各actualnative START→completion行间scope/child记录；独立当前27PGIDabsence、postexecution15源pin全部未变。此静态澄清不补logicalClose，不做数据库/对象删除。
+
+未重复SIGKILL原holder case/未知原Close，仅保留旧真实killedcase资格与永久unknown3977538271 dev33/inode315225、4116685529 dev33/inode326495。actualLinux正向新资格不把旧unknown变成closed。此前全17原日志/原manifest不覆盖，新27不以旧green代替。当前最新源码必要验证已完成，尚待exactqualification commit后双轴审查、owner-only实际资源审核、root正式7AC接受/merge及准确CI；whole04仍15/41/profile1.2OFF。
+
+root归档上述current actual27与静态原plan/source至 `ticket-05-expired-job-scan/final-affected-checks/`；STATIC owner-only当前资源输入与有界只读审核计划另 `/tmp/lerna-05-own-resource-audit-current-inputs.json` / `/tmp/lerna-05-own-resource-audit-plan.md`，未实际运行PG/catalog/root审计。

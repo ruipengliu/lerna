@@ -8,7 +8,6 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
-	"sort"
 	"strconv"
 	"time"
 
@@ -814,77 +813,73 @@ func (s *Service) Step(ctx context.Context) (bool, error) {
 		if err != nil {
 			return err
 		}
-		jobs, err := s.config.Store.Scan(ctx, tx, now, 64)
-		if err != nil {
-			return err
-		}
-		// Publication gets a bounded first pass, preserving the existing Step seam.
-		sort.SliceStable(jobs, func(i, j int) bool { return jobs[i].Phase == "publish" && jobs[j].Phase != "publish" })
-		for _, job := range jobs {
-			record, err := s.config.Store.LockObject(ctx, tx, string(job.Object.ID))
+		// At most two bounded pages: publication first, then policy maintenance.
+		for _, phase := range []string{"publish", "policy_propagation"} {
+			jobs, err := s.config.Store.ScanContentPhase(ctx, tx, now, phase, 64)
 			if err != nil {
 				return err
 			}
-			if record == nil || record.ValidateIdentity() != nil || record.ObjectID != string(job.Object.ID) || job.Object.Kind != "content" || (job.Phase != "publish" && job.Phase != "policy_propagation" && job.Phase != "body_cleanup") {
-				return runtime.ErrScope
-			}
-			if job.Phase == "body_cleanup" {
-				// Lifecycle owns the physical holder work. This consumer neither
-				// claims nor completes its original cleanup responsibility.
-				continue
-			}
-			if job.Phase == "policy_propagation" {
-				worked, err := s.config.Store.AdvancePolicyJob(ctx, tx, job, *record, s.config.Worker, s.config.Limits.Lease, s.config.PublishBudget)
-				if worked {
-					maintenance = true
-					return err
-				}
+			for _, job := range jobs {
+				record, err := s.config.Store.LockObject(ctx, tx, string(job.Object.ID))
 				if err != nil {
 					return err
 				}
-				continue
+				if record == nil || record.ValidateIdentity() != nil || record.ObjectID != string(job.Object.ID) || job.Object.Kind != "content" || job.Phase != phase {
+					return runtime.ErrScope
+				}
+				if job.Phase == "policy_propagation" {
+					worked, err := s.config.Store.AdvancePolicyJob(ctx, tx, job, *record, s.config.Worker, s.config.Limits.Lease, s.config.PublishBudget)
+					if worked {
+						maintenance = true
+						return err
+					}
+					if err != nil {
+						return err
+					}
+					continue
+				}
+				current, ioBefore, failure, err := s.publicationPolicy(ctx, tx, *record, now)
+				if err != nil {
+					return err
+				}
+				now, err = s.config.Store.Now(ctx, tx)
+				if err != nil {
+					return err
+				}
+				if record.Attempts >= record.MaxPublicationAttempts && failure == "" {
+					failure = "dependency_unavailable"
+				}
+				until := earlier(now.Add(s.config.Limits.Lease), ioBefore)
+				if failure != "" {
+					until = now.Add(s.config.Limits.Lease)
+				}
+				claim, err = s.config.Store.Claim(ctx, tx, job, s.config.Worker, now, until)
+				if err != nil {
+					return err
+				}
+				if claim == nil {
+					continue
+				}
+				record.CurrentRetainUntil = wireTime(current)
+				record.IODeadline = wireTime(ioBefore)
+				if failure != "" {
+					record.Publication = "failed"
+					record.Failure = failure
+					record.CleanupPending = true
+				} else {
+					record.Attempts++
+				}
+				record.AttemptKey = fmt.Sprintf("%s.%d.tmp", record.ObjectKey, claim.Epoch)
+				record.Revision++
+				if err = s.config.Store.SaveVersion(ctx, tx, *record); err != nil {
+					return err
+				}
+				if err = s.config.Store.SavePublicationAttempt(ctx, tx, *record); err != nil {
+					return err
+				}
+				selected = record
+				return nil
 			}
-			current, ioBefore, failure, err := s.publicationPolicy(ctx, tx, *record, now)
-			if err != nil {
-				return err
-			}
-			now, err = s.config.Store.Now(ctx, tx)
-			if err != nil {
-				return err
-			}
-			if record.Attempts >= record.MaxPublicationAttempts && failure == "" {
-				failure = "dependency_unavailable"
-			}
-			until := earlier(now.Add(s.config.Limits.Lease), ioBefore)
-			if failure != "" {
-				until = now.Add(s.config.Limits.Lease)
-			}
-			claim, err = s.config.Store.Claim(ctx, tx, job, s.config.Worker, now, until)
-			if err != nil {
-				return err
-			}
-			if claim == nil {
-				continue
-			}
-			record.CurrentRetainUntil = wireTime(current)
-			record.IODeadline = wireTime(ioBefore)
-			if failure != "" {
-				record.Publication = "failed"
-				record.Failure = failure
-				record.CleanupPending = true
-			} else {
-				record.Attempts++
-			}
-			record.AttemptKey = fmt.Sprintf("%s.%d.tmp", record.ObjectKey, claim.Epoch)
-			record.Revision++
-			if err = s.config.Store.SaveVersion(ctx, tx, *record); err != nil {
-				return err
-			}
-			if err = s.config.Store.SavePublicationAttempt(ctx, tx, *record); err != nil {
-				return err
-			}
-			selected = record
-			break
 		}
 		return nil
 	})

@@ -1,276 +1,49 @@
-# 04票05进行中的内部API（未交付）
+# 04票05当前内部API与资格（未交付）
 
-仅当前已执行资格边界；整票七AC未完成，1.2合同冻结且不增加delete方法。
+原候选 `1a4e1d2d704261a59491dfc6e0c5d26b80ec5107` 已完成历史 final17。当前为 `85a1067` 后的窄扫描修正候选，原64及补充消费者已正常/竞态资格，受影响27项检查亦已实际全部通过；本票七AC仍 claimed，whole04 为15/41、profile1.2 OFF。此处说明当前行为与剩余资格；历史red、setup失败、预算、Close事实和推进次序保留在 [evidence](ticket-05-evidence.md)。不新增公开 delete 方法。
 
-`Lifecycle.Seal`目前是有限受信管理配置授权的原完整保存主体自愿封闭：
-准确ref、原purpose、固定SealID、原有限Deadline。同Tx保存单调seal、两
-holder责任和原Job。重传必须完全匹配原seal/deadline，观察不创Job。
-`Lifecycle.Observe`只读有限holder页，CleanupComplete来自全部原holder
-状态，不由首个空页推断。seal本身没有物理ACK，仍pending；之后真实
-Lifecycle.Step独立确认才能置对应holder erased。
+## 封闭与真实清理
 
-这与消费旧policy cleanup责任不同。旧change启动实际封闭之前，必须按
-02原完整保存主体/用途在同Tx重新检查当前准确basis与单调cap；短暂save
-撤销已恢复且cap有效、尚未sealed时可记录not_required并保持历史原因。
-已经sealed/过期cap不会取消或重新计时。普通query和所有CleanupPending
-不隐式触发Seal；read/process/disclose-only变化不授权删除正文。
+`Lifecycle.Seal`按有限受信配置核准确ref、原完整保存Subject/Purpose、固定SealID及初始Deadline。同一PG事务保存单调seal、原两holder责任与原Job。重传必须完全匹配原seal/deadline，查询不创建工作。`SealOrphan`共享原Version锁，published活引用拒绝；只选择实际preparing/failed原记录，不遍历其他scope。真实迟到Put/Finish不能发布sealed版本、重建已gone正文或恢复当前ObjectHolder。独立Version2仍正常。
 
-`Lifecycle.ConsumePolicyCleanup(ctx, subject, changeKey, cursor)`消费原政策
-有限责任页。已确认临时save撤销后当前原保存basis完全恢复可not_required。
-当前确切published原保存policy仍Save=false可同Tx启动原Deadline封闭。
-候选Observe
-短Tx先结束，新Tx整页policy/Version与全部祖先save资格完成后，再锁责任
-完整CAS，最后fresh时间门；输出重新Observe。原保存basis是Record.Subject
-完整delegation/Purpose，历史change窗口不充当前授权。已seal/unknown等
-保持pending；原维护deadline过期也不续旧Job或改原deadline。
-独立QualifyPolicyCleanupNotRequired只改已存在原责任的not_required/residual，
-保留Actions/Reason/Deadline/holders/attempt/publication，不粗清Record pending。
-恢复分支normal/race及实际两次重开已通过；当前savefalse正常封闭→真实
-Lifecycle全ACK→原责任erased也通过。拒绝竞争/其他触发窗口仍待
-独立资格，不将此入口存在视为所有policy cleanup已实现。
+`Lifecycle.Observe`返回有限holder页；CleanupComplete基于全部原holders，首个空页、Claim或seal不是物理ACK。`Lifecycle.Step`在原Claim、准确Seal与原Deadline内，先实际清PG staging并独立事务ObserveStaging，再执行primary文件删除与独立受锁ObserveErasure。原身份ACK与完成/有限Defer在同owner新Tx提交。deadline不因重开续期。BodyGone只表明权威staging+primary独立确认不可回读；secondary pending时全holder cleanup仍不complete。
 
-原target持久accepted cap到期是已单独验证的保存失效因果，不依赖历史
-Save true→false。只有原pending/holder_unconfirmed/accepted_retention_expired
-候选，在同Tx全原身份/结构资格与严格有效非zero持久cap解析、fresh DB
-now>=cap、原执行Deadline仍live及原管理窗口后，复用同原seal/key/Deadline。
-当前宽Save政策不能raise旧cap；policy缺失不解释为false，policy/结构错误
-照常返回。最后责任锁等待后再核cap/deadlineclock，整页rollback保持。
-原target2s真实到期normal/race已经完成真实擦除/原责任erased/reopen/V2
-正常/固定回执；malformed cap纯unit资格不冒PG私row故障。祖先/目标化
-AdmissionTarget/缺policy组合/过执行窗与锁等待竞争仍待必要资格。
+`Lifecycle.CopyToSecondary`固定真实不同root binding、原CopyID、完整保存主体/用途、原attempt与effectDeadline。当前全部祖先read/save/sync均适用；Tx外primaryRead→secondaryPut→独立Read后新Tx重核资格。seal分页包含原pending及confirmed复制，不以当前配置发明旧holder。真实离线/ENOTEMPTY与恢复、独立两页2+1 holder、全部原publicationattempt页已资格；未知准确key临时文件继续residual，产品不猜删。
 
-原policy seal增加immutable PolicyChangeKey（voluntary/旧缺字段为空），与
-完整ref/Subject/Purpose/原责任Deadline/稳定sealID核准firstkey关联。PG
-CurrentSavingPolicy真实原行FOR SHARE返回完整flags，不把CheckPolicy=nil
-当savefalse；无权/错完整声明/unknown不强删。共享sealLocked接现三个入口，
-整页资格先于责任锁，建立原全部holders/Job后责任全字段精确比较；任一
-失配同Tx全部rollback。Step两个完成出口在所有原holder独立ACK后准确
-原责任CAS为erased，再fresh时钟/Claim/原Deadline后Complete，同Tx提交。
-新责任与别既有seal不自动挂接，secondary pending不global ACK；其他原
-触发需后续独立tracer，不改普通保守SaveResponsibility语义或历史union。
+## 原政策责任与期限
 
-same原政策责任后续真实natural phase不得撤销已有erased。普通写只保已
-存在准确tuple的终态/空residual及原Reason/AttemptKey/Publication（含空）、
-historical holderOR；Actions仍union、Deadline仍取较早。主动ordinary
-erased输入拒绝，唯一起源仍实际Lifecycle ALLACK port。pending旧保守
-分支保持。真实原2s到期/Manager.Step及重开normal/race已通过；其他key/
-scope/缺行不得借同objectID继承ACK，分别拒绝仍待必要qualification。
+`ConsumePolicyCleanup(ctx, subject, originalKey, cursor)`只消费原有限责任页。短candidate Tx结束后，新Tx完成全页policy/Version与全部祖先保存basis资格，再锁完整责任CAS，最后fresh时间门；任一失配全部rollback。暂时save撤销已恢复且cap仍live、尚未sealed时可NotRequired，保留历史原因/actions/deadline/attempt/pub事实。read/process/disclose-only撤销不授权删除。nil/错误policy不解释为Save=false。query及CleanupPending不隐式Seal。
 
-Record.BodySeal是所有正文路径的同一个门。原Command当前reader获准时
-固定receipt照旧，sealed版本的新association不能创建publish或复制责任。
-Service.Step只处理原publish/policy_propagation，不消费body_cleanup。
-Lifecycle.Step是实际消费者：原Claim/Seal/Deadline约束，PG staging短Tx
-清除后独立事务ObserveStaging确认；primary文件删除后另一次受锁独立
-ObserveErasure确认，再同owner新Tx匹配原身份保存ACK及完成/有限Defer。
-deadline不会重启，真实失败保留residual及原负责方。
+原持久accepted cap真正到期是独立保存失效原因，当前宽Save续期不能提高旧cap。目标化AdmissionTarget复用原admissionKey(fulltarget, originalpolicy, originalExpiryDue)，核完整原shape/owner/Subject/Purpose/Revision、natural阶段、nil Previous、原due/deadline及有限expirybudget。仅exacttarget的accepted_retention_expired pending/holder_unconfirmed候选可接现有cap支路；全部结构/原保存basis/currentpolicy读与原responsibilitydeadline<=原ExpiryDeadline、末fresh clock保持。普通changeKey不变。实际missing结构/currentpolicy port错误保原pending、无Seal/原bytes，原错误传播。
 
-BodyGone仅代表staging+primary的权威正文已物理独立确认不可回读，全holder
-cleanupComplete另算。MetadataPolicy是独立准确ref/完整subject/具体purpose/
-revision/ValidUntil的受信fixture许可，只披露ref/evidence_available，不是
-第六正文动作或Grant。Get锁后核实际fullRef及新鲜时间，再核完整祖先当前
-metadata许可；查询不创建工作。未gone的metadata-only视图不返回正文。
+policy seal的immutable PolicyChangeKey连原完整ref/Subject/Purpose、原责任Deadline与稳定sealID。所有原holder独立ACK后准确原责任CAS为erased，再fresh时间/Claim/原Deadline完成。已erased责任的自然到期登记保终态与原Reason/AttemptKey/Publication、historical holder OR；Actions union、Deadline取较早。当前ObjectHolder在权威真实ACK后false；历史holder责任不抹除。
 
-`ErasingObjects`承担Tx外实际对象效果；固定ErasureIdentity绑定完整ref、
-原ObjectKey、具体HolderID、SealID及原物理介质Binding。FenceAndErase仅删准确finalkey及
-显式登记attempt；ObserveErasure独立受锁重开正文事实并分页报告未知残留。
-flock inode永久保留，sealed/pending marker不含正文；nativebodyClose未知
-保留lockFD和holder责任。当前本机Linux协议不防未升级的旧二进制writer；
-必须真实停旧writer后升级，再允许新协议writer。
+普通与目标化700ms原deadline真实policy锁等待分别已有normal/race资格：deadline内实际rollback/连接Close后allACK；原deadline+20ms后放行保持完整pending、无seal/activecleanup与原bytes。整页真实CAS竞争保持first原pending与second contender已提交结果，证明早写整Tx rollback。原预算未扩大。
 
-`Objects.Binding()`是Open实际FD Stat取得的稳定设备号/inode纯访问器，
-不是用户输入、不是CloseACK，也不证明删除。最初preparing接纳同时持久
-Record.PrimaryHolderBinding与PG独立列，既有记录不能换binding；原publication
-attempt同时携带原binding。publish startup/final、实际Put/Get Read核同原
-介质。Seal只消费原版本的已登记binding，不能从当前空root认领历史正文。
-primary holder保存同一原binding；原cleanup claim前和adapter的实际
-Fence/Observe前分别核对。wrong-after-seal独立root拒绝且原root同deadline
-恢复已实际通过；first-Seal错root独立正常/拒绝对照actual0.339s
-原路径没有Store.Reopen；增加真实w.Reopen后的独立qualification0.342s通过。
+## 原物理介质与legacy升级
 
-未binding legacy保持未知、不会自动用当前config修复；受信回填必须另有
-准确原ref/key/原介质责任与独立原字节对照，真实停止旧writer后才升级。
-目前未实施该回填资格；跨进程晚写/孤儿竞争的已执行范围见后文。全部
-拒绝窗口与升级scope仍无完成声明，当前partial资格不代表整票七AC。
+`Objects.Binding()`来自Open实际目录FD设备号/inode，纯访问器不是用户输入或CloseACK。最初preparing接纳持久原PrimaryHolderBinding与独立PG列，原publication attempts同绑定；既有记录不能换root。publish startup/final、Put/Read、Seal/Claim与Fence/Observe各实际入口核原介质。wrongroot与first-Seal、真实重开拒绝已有资格。
 
-`Lifecycle.CopyToSecondary`仅受信内部有限原CopyRequest。配置固定一真实
-secondary holder，复制前同原Content version锁固定copy ID、完整保存主体/
-用途、实际不同root binding、原attempt及effectdeadline。目标/全部祖先
-当前read/save/sync必须适用。Tx外primaryRead→secondaryPut→独立Read，
-新Tx重新核当前全部资格后才Confirmed。既有copy事实不可换root/ID/预算；
-sealed版本不能新注册或复活复制，pending复制仍入seal清理集合。
+Linux适配器的固定原key `.lock` inode永久保留；flock包围实际Put/Read/Erase/Observe，sealed/pending marker不含正文。FenceAndErase只删准确finalkey和明确登记attempt，另一次ObserveErasure确认。body nativeClose未知保留lockFD/holder责任。真实跨进程Put→Erase及Seal→latePut拒绝两序已分别资格；SIGKILL原eraser的logicalClose仍unknown，独立重开Truth不能补它的Close。非协议旧writer必须先真实停机才能升级。
 
-Seal从原已登记复制事实分页建secondary清理责任，不能凭当前配置发明旧
-holder。BodyHolder保留CopyID、原effectdeadline与准确AttemptKeys，清理
-Deadline仍为同原seal截止。离线（真实原holder.Close且无活动port）保留
-responsible/residual与原deadline，staging+primary ACK可gone但全global
-不complete。真实两World重开原责任恢复已通过normal及race；真实删除失败已有独立qualification：owned exact-key非空目录造成native
-ENOTEMPTY，实际原copy inode/字节保留，原责任不ACK；恢复同own准确文件，
-两个World真实重开同原预算擦除。原Binding/CopyID/effectDeadline跨页独立
-断言亦补真实运行。ACKloss/迟到copy竞争仍待各自资格控制。
+`LifecycleConfig.LegacyPrimary`已实施有限host原scope资格并深复制。`BindLegacyPrimary(ctx, trustedSubject, {Ref,Purpose})`只绑定原介质责任，不授正文权限、不发布、不续cap、不擦除。host根据冻结原writer的prestart duty/PID/PGID/start、effectgate与显式Objects/Store Close、actualWait/groupAbsent形成资格；公开caller不得传停机bool或认领empty/copyroot。仅真实published、完整原actual attempts可绑定；未知/failed/preparing保守拒绝。
 
-权威staging+primary真实ACK同Tx置BodyGone并清当前ObjectHolder；原政策
-责任历史union/原attempt/pubhistory不清，secondary pending仍不global ACK。
-独立normal/race验证真实擦除后新policy责任ObjectHolder=false，旧责任true/
-erased保持及metadata gone。迟到成功nativePut后的失败Finish另有独立真实
-gate/allACK/reopen tracer：`ioErr==nil && !BodyGone`不再重建当前holdertrue，
-新责任false、原receipt/failed progress/旧seal期限与独立absence保持。
-原caller20/publish5/join3/test30/wrapper120 normal/race通过；same原责任
-natural phase的erased/历史union已另有独立2s真实到期normal/race资格，
-不把bool修正当该资格的替代。
+binder两短Tx之间真实原介质Read/hash/length；PG专用wholeRecord CAS从空binding固定qualificationID/digest。普通SaveVersion不能换绑或注入provenance。同fixedq幂等且仍核原qDeadline。portable75资产与producer可在fixture/CI有限重建，历史one-off脚本不参与入口。normal2.694/race4.267、wrongroot/firstSeal/allattempt控制，以及wholeRecord失配2.273/3.852、已确认commit返回replyloss2.316/3.832、首次q700ms整Tx回滚2.702/4.133分别真实资格。replyloss不是PG commit_unknown；unknown历史scope不获升级。
 
-实际Linux跨进程两序已分别qualification：temp真实Sync返回后SIGSTOP，
-另一进程Erase有限等待flock；CONT之后actualPut/Close，再擦除。反序实际
-Fence完成后SIGSTOP，另一latePut进程拒绝；原eraser SIGKILL后独立重开
-确认closed-body Truth。所有child原deadline/prestart duty/PIDPGIDstart ACK
-和effectgate持久登记，positive Store.Close与kernel completion分列。
-被杀root holder的logicalClose未知仍保准确scope，不cleanup；新holder
-独立Truth不替原Close。旧非协议writer仍需真实停止升级，未claim该升级。
+## 有界候选扫描（候选已通过业务与受影响检查）
 
-`Lifecycle.SealOrphan`是受信准确原ref/原保存主体/用途/有限请求的条件入口，
-共享Seal的同原LockVersion Tx；published活引用ErrOrphanReferenced，只有
-preparing/failed原记录进入原seal/holder/attempt责任，绝不遍历其他scope。
-实际nativePut完成但PG Finish前孤儿先赢，迟到Finish不能publish或重建body，
-原receipt不变且新独立Version2正常。publish先赢的独立正常/拒绝/重开控制
-亦实际通过，无新seal或active cleanup；更早crossprocess物理fence仍独立
-负责迟到介质效果，不用PG前态/Claim代替。当前单attempt资格不证明完整
-旧attempt回填或未知归属，剩余全部AC继续实施。
+Repository新增 `ScanContentPhase` 仅publish/policy_propagation，SQL phase限定先于LIMIT，Service最多两页各64候选、publication优先，Manager仅policy页。LifecycleRepository新增 `ScanBodyCleanup` 根据原完整保存Subject、primaryHolderID与尚可执行原seal窗口在LIMIT前选择。合法不同Subject/holder与原已到期候选排除；missing/非法JSON/形状/原record与seal不一致保解析错误或明确scope错误，不假空页。时间预选有1µs保守容差，锁后Go原fresh clock/Claim与完整身份仍决定资格，原Version→Job锁序/fence/allACK保持。runtime Core.Scan/迁移/Job状态与64旧责任/原bytes/deadline/history无修改。相同六个产品源已格式化，原64 public business case 正常20.418s/竞态26.476s完整尾真实通过；ONE Host坏deadline actualGo ParseError及合法特殊字符原primary/seal正常全ACK/独立absence/reopen尾另normal0.671s/race2.182s完整尾；不泛化为所有坏row/编码；第三Manager与合法完整委派Subject另有下述独立资格。
 
-真实擦除返回ACK丢失已有独立normal/race资格：委托原native效果成功后
-机械丢首条返回，独立缺失/fence不直接补PG责任ACK；原holder residual、
-policy pending与原seal/deadline保持。实际Step已提交原100ms DeferClaim，
-真实World.Reopen后同原责任重试独立观察，才ALLACK/policy erased/gone。
-该资格是reply loss，不是PG commit_unknown。公开测试核准确原identity/
-deadline与最终恢复，不声明直接观测私有Claim epoch。
+## 可披露最小元数据
 
-MetadataPolicy接受合法纳秒ValidUntil；CheckMetadataPolicy仅以截到微秒的
-值核PG列编码一致性，当前许可到期仍严格核原JSON纳秒deadline。原纳秒
-输入已真实normal/race验证；中间fixture truncate的日志保留且不称原输入
-资格。派生正文metadata完整scope已有三层真实独立normal/race：
-target-only/direct-source-only许可拒绝，传递全部祖先当前许可才最小gone，
-root许可真实700ms到期后拒绝；两ancestor原正文保留，查询无新清理work。
-完整delegation/purpose错误与错声明permit拒绝，已准确授权后wrongquery
-遵既有integrity顺序，不把该顺序改成forbidden；真实锁等待/CAS等仍另查。
+MetadataPolicy固定准确ref、完整Subject、Purpose、Revision及ValidUntil，仅授权ref/evidence_available视图，不是第六正文动作或Grant。Get锁后核准确fullRef与fresh时间，全部传递祖先当前metadata许可适用，query不创工作。未gone的metadata-only不返回正文。PG列比较采用微秒编码一致性，当前许可仍按原JSON纳秒deadline精确判断。三层祖先/错delegation与purpose/真实700ms到期、原body保持已有normal/race资格。
 
-原policy/holder有限页已另有PageSize2真实qualification：root+3后代与
-另一完整delegated保存主体后代共5责任，原partial cursor实际重开继续，
-全部原责任页消费；实际独立secondary先Close/nilport，3holders两页2+1
-typed完整责任与primarygone/globalpending分开，两个World重开同原预算
-最终allACK。另一主体撤回后/封闭前当前合法；来源BodySeal后其新read
-正确forbidden，但其原独立body不被别保存主体误删/not_required保持，
-独立V2仍normal。原watermark/cleanup deadlines/copyID/binding/effectDeadline
-不刷新；此资格不替all publication attempts页或legacy升级。
+## 当前验证与尚未闭合范围
 
-原全部 publicationattempt 页已实际资格：三次真实原Put参数、前两次成功
-后机械replyloss、原defer后第三次normal；PageSize2 primary公开cursor跨页
-且重开继续，独立setup-owned未登记 `.999.tmp` 保原inode/bytes/residual，
-产品不猜删；setup原owner确切移除后同原责任恢复allACK，V2/原receipt保持。
-这不是PGcommit_unknown或未知旧scope回收，legacy binding/可复现producer
-及真实跨锁/CAS拒绝仍独立未完成。
+final17的准确命令、原日志、SHA与actual native ACK见 [原候选检查](ticket-05-final-checks-1a4e1d2/README.md)：format、integration vet、非integration全Go normal/race各472 RUN/PASS，24 baseline与7 policy consumers分别normal/race，三冻结SQL hash，全部native exit0/groupAbsent/noTimeout。非integration全Go不执行Linux integration holder测试；这些结果不是新增scan源码的资格或whole04 CI。
 
+[固定候选双轴](ticket-05-review-1a4e1d2/README.md)的Standards文档状态矛盾由本次当前状态整合处理，可选legacy replay重复保持。Spec唯一P2为64个原到期body Job遮挡后续publish/livecleanup/policy work；root已采用窄Content consumer候选扫描决定，已完成真实64 public首red（新V2 preparing/独立key缺失）；最小产品修正已格式化，原60f817测试在相同初始finite bounds正常20.418s/竞态26.476s完整尾真实通过，全部64旧责任/字节与历史保持。ONE Host坏deadline保Go ParseError与合法特殊字符原seal正常全ACK/独立absence/reopen/receipt/metadata已normal0.671s/race2.182s完整尾通过；第三Managerconsumer behind64expired normal19.681s完整传播/reopen旧职责尾另通过；合法同tenant/leaf不同完整委派Subject在64原live责任后只清own duty另normal6.510s完整尾通过；Manager/委派同源竞态27.528s/13.953s完整尾亦通过；同一冻结15源的新源低control、actual Linux正向进程、冻结原writer升级、固定3版本迁移test、原policy/holder pages及受影响suite正常/竞态已实际通过；新pin双轴审查、资源审核与root正式接受仍待，不称finding正式闭合或七AC已接受。
 
-受信 legacy 端口 `LifecycleConfig.LegacyPrimary` 固定原scope资格并深复制；
-`BindLegacyPrimary(ctx, trustedSubject, {Ref,Purpose})` 只绑定原介质责任，不是
-正文许可、发布、续cap或擦除。资格由host对新owned冻结writer原scope的
-prestart duty/PIDPGIDstart/effectgate与显式Objects/Store Close+actualWait/
-groupAbsent证据形成，不允许公开caller发停机bool或从empty/copyroot认领。
-当前只支持真实published且完整原actual attempts，未知/failed/preparing
-scope保守拒绝。独立PG dedicated whole-Record CAS从空binding→原binding并
-固化qualificationID/digest，原普通SaveVersion不能换绑或注入provenance；
-两短Tx夹实际原介质Read/hash/length，同资格幂等。无新迁移/重Put/receipt/
-费用/cap变化。portable frozen fixture无需外部producer路径，可由make/CI
-正常集成入口重建有限compiler+producer；historical one-off脚本不参与入口。
+当前受影响27项实际检查与15源pin验证已完成：format、integration vet、非integration module normal/race各472 RUN/PASS，原24 baseline与7 policy consumers各normal/race、三SQL hash及五个必要实际integration selector各normal/race，全部native exit0/groupAbsent/noTimeout。原初始finite bounds未提高；迁移test仅纠正实际三编号/全部原SQL SHA的过期oracle。完整原raw、预启动pin和实际ACK归档在 [新候选受影响检查](ticket-05-expired-job-scan/final-affected-checks/README.md)，实际汇总为 `scan-current-final-checks/batch-complete.json`；计数/原scope区间/独立groupabsence的澄清sidecar保留原outcome字节。Linux killed原unknown case未重复，不称其已在新候选fresh RUN。
 
-正常2.694、独立sameexactrace4.267及错root/firstSeal/allattempt三旧controls
-真实通过；原两个版本receipt/history与剩余版本body保持。root核对首次
-compilerFAIL曾shared03B，normal start在B completion范围之后；调度chronology
-保留在evidence，不以重跑洗掉。此范围不替决定§5 CAS竞争/cutoff/commit-reply
-loss资格，不声称unknown历史scope升级、非协议旧writer仍活时防写或七AC
-已accept。后续真实资格/最终sourcequalification与root审查继续。
-
-
-原cleanup执行截止已有真实当前policy锁等待qualification：相同首次700ms
-预算/2s acceptedcap两fresh scopes，normal blocked后即时原rollback/Close
-在原期限内真实allACK；cross原责任deadline+20ms后放行保持exactpending、
-无seal/activecleanup与原bytes，真实重开/V2/receipt保持。consumer实际join
-和locker连接Close均确认，不改due/SQLclock/lease或为失败扩大预算。正常
-5.276及race测试6.552通过；race组合末错误sha path native1单列保留，独立
-真实三path hash修复native0，不用绿色测试重跑洗掉失败。其它CAS及legacy
-§5恢复资格仍待独立实际tracer，七AC未accept。
-
-
-Legacy wholeRecord失配已真实资格：原nativeRead结束后有限返回gate期间当前
-Manager合法收紧同原Record cap/Revision并提交；原expected binder ErrClaim，
-unavailable/SealBinding拒绝/原bytesreceiptpub保持。实际重开同fixedq原期限
-重新资格后正常绑定，再重开幂等，独立V2正常。exact2.273/race3.852及三原
-SQLsha准确，全部原CloseWait+actualjoin确认，现产品无改动。这不是PG原生
-CAS故障，也不替commitreturnedreplyloss或初始shortcutoff回滚；它们静态
-包编译但未执行，后续分别qualification。
-
-
-Legacy实际已成功commit后一次RETURN reply loss已独立资格：原Within nil之后
-机械丢回执，实际重开同fixedq observe原binding/provenance、两个原版本正常，
-随后真实全holder/全部原actualattempt清理/独立缺失/再Reopen allACK与V2/
-receipt/pub保持。exact2.316/race3.832、三SQLsha及原oldCloseWait/actualjoin
-均准确。此仅confirmedcommit返回replyloss，非PGcommit_unknown/native失败；
-初次shortcutoff整Tx回滚仍独立未运行。
-
-
-Legacy初次q700ms整Tx回滚已独立资格：host在任何binder开始前仅首次缩短
-并登记原资格，sameq Version2正常；Version1 realCAS和首原attempt真实写后
-原cutoff+20ms由真实freshDBtime expired/rollback。公开unavailable/Seal绑定
-拒绝、同已过期q不复活、实际重开/原bytesreceiptpub/V2正常；exact2.702/
-race4.133和三SQLsha准确。Helper仅本test首次调用，不声明函数有onceguard。
-attempt写调用实际成功与持久原子rollback的source证明分列，无私表count
-执行assert/擦除ACK。既有WorkBudget1min未扩大，q700ms严格clip。Legacy§5
-三个最小恢复前沿分别执行，不替全部unknown历史状态或七AC acceptance。
-
-
-原政策whole-page责任CAS已有实际竞争资格：public分页确定实际first/second
-Ref/cursor；candidate Tx真实释放后freshconsumer只second合法NotRequired
-提交。旧页first实际PG写成功后second typed ManagementConflict，公开first
-exactpending保持证明wholeTx rollback，second已提交事实保持。plainfresh
-同原页全部NotRequired/reopen完整原deadline/history/bytesReceipt/V2保持，
-无Seal/activebodycleanup。exact0.555/race2.272、三SQLsha及actualjoin准确；
-门限3/join3/caller20/Go30/wrapper120不改。这不替祖先/AdmissionTarget原
-清理原因的后续真实red/决策；当前旧target-only因果边界继续保守。
-
-继承accepted-cap的准确AdmissionTarget已按root正式采用b42d94d决定最小接通：
-私有原key资格复用原admissionKey(fulltarget,originalpolicy,originalExpiryDue)，
-完整原shape/owner/Subject/Purpose/Revision和原有限natural窗口必须匹配；
-只消费exacttarget的accepted_retention_expired pending/holder_unconfirmed。
-持久targetcap实际过期、全部结构/原保存basis/currentpolicy读、原due已到和
-原responsibilitydeadline<=原ExpiryDeadline/finalfreshclock均守住。nilpolicy
-不解释为savefalse，当前祖先宽续期不能复活原targetcap。原普通changekey、
-PG Bind/ACK/旧migration/首次seal关联规则均保持，无多trigger扩展。
-
-真实sameadmission cap前无seal/全normal和不同Subject公开forbidden对照，
-原红后的target-onlyseal/allholderACK/reopen/exactoriginalduty erased/独立
-物理absence、A/B未误删、B/V2正常、三个固定receipt逐字/pubhistory均实际
-完成。exact2.422/race3.913原20/30/120/2s+20ms范围，明确RELEASE。新增
-targeted锁等待deadline回滚仍pending独立资格，旧普通key等待/CAS不代替。
-七AC均未accept，不把本次normal声明成whole04出口或未知历史scope权限。
-
-新targeted原deadline锁wait已有独立实际资格：两fresh初次700ms预算/2s cap
-真实source续宽和target继承、公开准确AdmissionTarget原due/deadline；实际
-HoldPolicy(target) blocked后正常立即release在原700ms内全ACK，原deadline
-+20ms放行则全原pendingobservation/bytes保留、无seal/activecleanup。真实
-join/World.Reopen/sourcebytes/noSeal/V2/原source与target receipt/pub保持。
-exact两scope5.325/race6.905，原20/30/120/join3不改。该case准确覆盖新支路，
-没有借旧ordinarykey等待或源码存在冒执行；产品301be6d不改。最小unknown
-结构/currentpolicy错误资格、typedFS旧oracle整改与最终两轴审查/suite仍待。
-
-新targeted cap支路最小missing-structure/current-policy-error门已实际资格：
-原PG操作后明确机械nil-source观察或固定ancestor policy-read error，公开
-Consume原pendingfulltuple/noSeal/三准确body保持，port错误原样传播，plain
-原consumer随后全部normal尾部成功。不是私表合法政策事实，不把nil当false；
-独立durable cap原因语义保持。首包编译FAIL（旧oracle3个err声明）诚实保留，
-机械修复exact2.392/race3.893原期限通过，明确RELEASE。15baselineoracles
-只编译未执行，最终准确affected suites和reviews仍待，七AC未accept。
-
-旧15文件24test原目录总数/首entry oracle已静态改为exact originalRef->body
-literal或缺失，整目录只额外允许knownkey空regular .lock；任意temp/额外body/
-未知metadata仍失败，fault仅实际准确alpha key。复制legacy档案不因政策
-backfill获原media binding，因此原授权读为dependency_unavailable；body/
-receipt/history与65policypages核验保留，genuine stopped原scope正常升级另有
-已执行资格。不改原archive/SQL/fixture/产品/Close规则。24test只compiled尚未
-执行，需要final affected normal/race与格式/vet/全Go/reviews/resourceaudit。
+owned资源实际审核、新pin双轴审查、root正式七AC接受/合入与准确新CI仍待。此前旧unknown roots永久保留：`lerna-local-lifetime-3977538271` dev33/inode315225与`lerna-local-lifetime-4116685529` dev33/inode326495；kernel/group absence或独立Truth不替原logicalClose。旧02未知scope继续受原台账保护。不声明WAL/备份法证擦除、已披露字节撤回、生产多机保证。

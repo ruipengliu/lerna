@@ -96,6 +96,8 @@ type Repository interface {
 	CheckMetadataPolicy(context.Context, runtime.Tx, v.SubjectBinding, v.ContentRef, string, time.Time) (*MetadataPolicy, error)
 	CheckCommandReader(context.Context, runtime.Tx, v.SubjectBinding, time.Time) (bool, error)
 	CheckCapacity(context.Context, runtime.Tx, Limits, int64) (bool, error)
+	// Consumer phase selection is bounded before LIMIT; runtime Scan remains unchanged.
+	ScanContentPhase(context.Context, runtime.Tx, time.Time, string, int) ([]runtime.Job, error)
 	runtime.JobStore
 	runtime.ClaimStore
 	ValidateClaim(context.Context, runtime.Tx, runtime.Claim, time.Time) error
