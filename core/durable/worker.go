@@ -38,6 +38,10 @@ func (w *Worker) RunOne(ctx context.Context) (bool, error) {
 	w.n++
 	claimID := fmt.Sprintf("%s/%d", w.instance, w.n)
 	claims, err := w.d.ClaimJobs(ctx, claimID, w.instance, 1)
+	for i := 0; i < 3 && errs.IsIndeterminate(err); i++ {
+		// 领取回执丢失：用原领取标识重试，拿回原清单；原事务未提交时本次成为首次领取。
+		claims, err = w.d.ClaimJobs(ctx, claimID, w.instance, 1)
+	}
 	if err != nil {
 		return false, err
 	}
