@@ -6,6 +6,10 @@
 
 ## 当前状态
 
+2026-10-05 00:15 UTC，03容量最终分组普通A11.726s／B34.271s及race A30.122s通过；race B74.336s失败，64祖先和62直接材料的真实Decision.Step分别返回原claim失效，其余65拒绝、Content边界和重复角色通过。原caller30s、worker lease5s、原Snapshot预算均未放宽；失败保留，正由已授权Astra复核最小闭合路径，不能称容量race已通过。root执行授权前后不一致，05首次compileFAIL在03 race B后段真实重叠，故该组不声称独占负载；64祖先失败发生在05启动前，62材料的末段可能重叠，不能仅凭重叠解释失败。日志没有更细的RunClaim阶段观察，不将静态期限上界当成实际因果证明。
+
+05旧正文升级首green辅助unused import导致compileFAIL已保留；仅修正import后，准确原测试2.694s通过。冻结1a7编译器与旧producer的实际Wait、group absence和所有原逻辑Close ACK已核，完整原scope的两版本绑定、重开、错误介质拒绝、新fence清理及原回执／历史保持已执行。该正常运行发生在03组结束后；当前明确唯一执行槽授05相同测试race及相关原holder控制，尚未声称race、竞争CAS、期限越界或本票退出。两票仍claimed，whole04仍15/41，完整1.2不广告；全部22切片授权继续，所有历史unknown scope保留。
+
 2026-10-04 23:50 UTC，03真实旧0003升级资格普通9.810s／当前consumer race11.874s通过。144个生产文件共1,419,513B逐项与冻结33811016原git对象相等；独立driver在原进程身份fsync后才放行，真实三次旧编译和原排队绑定完成，所有原holder CloseACK及actualWait／group absence先于当前0004追加。旧0001–0003校验和、完整输入及排队映射不变；新编译精确HistoricalUnknown且无新Content读取，旧scope不补零账、不换Snapshot洗掉未知。独立当前scope正常Completed；旧生产者为普通冻结构建，不声称旧代码race资格。05真实三attempt的2＋1分页资格partial `864399c` 普通0.857s／race2.305s通过：原未登记setup临时文件保留inode／字节／residual，原owner确切移除后沿原Defer全ACK，独立V2与原回执不变。以上仍为各WT的partial资格，两票尚待最终受影响检查、独立评审和正式合并；15/41与完整1.2关闭保持。
 
 2026-10-04 23:35 UTC，03原Prepared资格partial `d41785c`：普通2.335s／race7.011s通过。原三轮18次真实编译读取27840字节耗尽后，真实Content.put已accepted，再触发20ms响应等待截止；三个owner重开按原WakeAt恢复两份原Prepared，无再编译、再规划或再读取Source，原artifact raw／回执、完整M、refs／sources／绝对界、规则start1／cost1和原预算全保持。该故障不声称物理Put未提交。05真实冻结1a7构建成功；首轮辅助类型比较compileFAIL保留，修正后0.401s真正business red发生在最后受信绑定stub。此前旧V1／V2真实正常发布、未停止拒绝、所有旧逻辑Close ACK及actualWait／group absence、当前unbound读取／seal拒绝、原字节／回执／published历史均已执行。正按既定决定静态实施窄CAS回填与可复现冻结构建，尚无green或本票退出；当前15/41与完整1.2不广告状态不变。
