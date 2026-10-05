@@ -1,0 +1,10 @@
+# buf 配置：公共契约的唯一结构来源在 contracts/proto/。
+version: v2
+modules:
+  - path: contracts/proto
+lint:
+  use:
+    - STANDARD
+breaking:
+  use:
+    - FILE

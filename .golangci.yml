@@ -1,0 +1,67 @@
+# 静态检查与依赖方向规则（开发规范第 3 节、分层与模块 R6）。
+version: "2"
+
+run:
+  build-tags:
+    - fault
+
+linters:
+  default: standard
+  enable:
+    - depguard
+  settings:
+    depguard:
+      rules:
+        contracts:
+          list-mode: strict
+          files:
+            - "**/contracts/**/*.go"
+          allow:
+            - $gostd
+            - google.golang.org/protobuf
+            - github.com/ruipengliu/lerna/contracts
+        core:
+          list-mode: strict
+          files:
+            - "**/core/**/*.go"
+            - "!$test"
+          allow:
+            - $gostd
+            - google.golang.org/protobuf
+            - github.com/ruipengliu/lerna/contracts
+            - github.com/ruipengliu/lerna/core
+          deny:
+            - pkg: net/http
+              desc: 网络框架只能出现在 infra/、adapters/、cmd/（R6）
+            - pkg: database/sql/driver
+              desc: 数据库驱动只能出现在 infra/（R6）
+        infra:
+          list-mode: lax
+          files:
+            - "**/infra/**/*.go"
+          deny:
+            - pkg: github.com/ruipengliu/lerna/adapters
+              desc: infra 不得依赖 adapters（开发规范第 3 节）
+            - pkg: github.com/ruipengliu/lerna/defaults
+              desc: infra 不得依赖 defaults（开发规范第 3 节）
+            - pkg: github.com/ruipengliu/lerna/platform
+              desc: infra 不得依赖 platform（开发规范第 3 节）
+        replaceable:
+          list-mode: strict
+          files:
+            - "**/defaults/**/*.go"
+            - "**/adapters/**/*.go"
+            - "!$test"
+          allow:
+            - $gostd
+            - google.golang.org/protobuf
+            - github.com/ruipengliu/lerna/contracts
+            - github.com/ruipengliu/lerna/adapters
+            - github.com/ruipengliu/lerna/defaults
+        platform:
+          list-mode: lax
+          files:
+            - "**/platform/**/*.go"
+          deny:
+            - pkg: github.com/ruipengliu/lerna/infra
+              desc: platform 只用 contracts 和 core 的公开接口（开发规范第 3 节）

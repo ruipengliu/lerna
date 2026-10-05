@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package lerna.v1;
+
+option go_package = "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1;lernav1";
+
+// 全局名字（核心契约 2.1）：{ user_id, authority_domain_id, object_kind, local_id }。
+message GlobalName {
+  string user_id = 1;
+  string authority_domain_id = 2;
+  string object_kind = 3;
+  // 域内唯一标识，使用 UUIDv7。
+  string local_id = 4;
+}
