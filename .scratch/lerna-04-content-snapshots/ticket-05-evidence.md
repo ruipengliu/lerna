@@ -1012,3 +1012,40 @@ archive复制到新root无原media binding/原writerClose资格，政策回填�
 精确normal/race包编译，但这24个函数尚未执行，不能以包编译冒运行证据。
 其最终有限正向selectors normal/race与格式/vet/whole-Go及resource审计计划
 单列供rootFULL审查授槽。原3处err声明compileFAIL已留存，再局部:=修复。
+
+
+### 固定1a4e1d2候选final17实际完成与恢复
+
+原worker在全部17实际native完成后退出协调列表；root逐原log检查completion ACK与当前原PGID absence，并保存 [准确检查归档](ticket-05-final-checks-1a4e1d2/README.md)。原STATIC command manifest保持原字节/标签，实际结果另列outcomes.json。17操作均exit0/groupAbsent/noTimeout；非integration全Go每模式472 RUN/PASS，24旧baseline+7 consumer分别normal/race真实完成。consumer2race为15.042s、PID/PGID3232377/start13491003，不猜toolsession。非integration全Go未执行linux integration holder测试，不制造新未知Close也不代替它们原资格。没有因协调worker消失重跑17。
+
+当前handoff整合为实际现状，已实施legacy、三恢复资格、targeted lockwait与unknown gates不再列未实施或pending；历史推进仍保本台账。整合前handoff原字节留于 `/tmp/lerna-05-api-handoff-pre-consolidation-1a4e1d2.md`，其SHA256：83b6942cc019af7c560e6bbb69e529eb6ed38f4fdb692715ac84c3f2bfe8bd7b。此文档修正不改变产品。
+
+固定双轴Spec唯一P2mixed Scan64 starvation由Astra窄决定采用，当前没有新business red或源码fix。新测试仅STATIC写入，候选的此前绿色结果不覆盖未来产品差量。七AC仍claimed、15/41、profile OFF，旧两个unknown roots原Close与inode事实保持，不清理。
+
+
+### 新调度反例的独立低积压准备观察失败（非business red）
+
+root审原公共seam/初始caller90、共同seal15s、live45s、Step4、Go/outer120后授fmt与ONE count1 normal。fmt actual0/absent/noTimeout，PID3279394/start13696897；test格式化源SHA28eb405c20056cd284a20c39c1cea13199b195b25453a0672ada964d84fa4935。lowcount1实际FAIL15.339s（case15.33），PID/PGID3279876/start13698741/exit1/groupAbsent/noTimeout、session40596完成，STOP/RELEASE。原log `/tmp/lerna-04-ticket05-execution/expired-backlog-low-control.log` 与failed源/JSON保存；真实owned schema d5d70f509f6d4351cc2147ee/root2823625114 dev33/inode376497。
+
+失败在真实旧seal截止+20ms/reopen后原publicObservation reflect.DeepEqual不等、err nil；V2尚未接纳，目标调度/后续livecleanup尾部未执行。原raw没有逐字段差异，不声明cause已确认。静态Core.Now直接clock_timestamp返回time.Time、Seal观察direct BodySeal而重开从JSON解码，StartedAt location结构有候选差异；只增加公开tuple/时间Equal+Location诊断，原断言及bounds不改，待另grant一次samecontrol诊断。未跑64、无native重试或产品fix。
+
+
+### same低积压一次诊断：实际确认StartedAt时区结构差异
+
+root另授仅fmt+ONE samecount1 diagnostic；fmt3285260/start13720463实际0/absent/noTimeout，prelaunch诊断源SHA6f7ab31c35aaa38af0ed06359257bf623c34793db9c1be86799c9eb2f2143c62另存，不改旧源/原log。actualFAIL15.408s（case15.39），3285295/start13720476/exit1/groupAbsent/noTimeout，session91471完成，STOP/RELEASE。公开before/after整个Observation JSON逐字相等；原StartedAt.Equal=true但Location Local/UTC，Deadline.Equal=true且均UTC，holders reflect.DeepEqual=true。原seal/ref/deadline/holders没有业务变化，仅非公共时间表示结构使reflect失配；该确认来自实际诊断而非先前静态假说。
+
+own schema d2e8ba97c90849253932fd5e/root18610967 dev33/inode376996；raw `/tmp/lerna-04-ticket05-execution/expired-backlog-low-control-diagnostic.log`、独立prelaunch源+JSON与outside诊断结果JSON留存。V2未接纳，后续live tail未运行，仍非调度business red。没有删除断言/改产品/扩大预算/自动重试64。建议完整公共编码等值校验替代wholeObservation反射结构等值，须root先采用才局部修正/另grant正常control。
+
+
+### 独立低积压正常control完整尾已真实通过
+
+root FULL actualdiagnostic确认时间Local/UTC仅结构差异后，采用仅test完整JSON Marshal错误fail+公共全字节等值，替两处wholeObservation反射比较。所有fields/array shape/原refs、时间瞬时、holders/deadline/history仍比较，不改产品时钟/BodySeal/预算。fmt3287983/start13731933实际0/absent/noTimeout，prelaunch源SHA60f817d14355d1565f744be850f9309d1ae0c2d0f7190be0e204929d0823823b独立保存。
+
+ONE samecount1 normal actualPASS15.464s（case15.45），3287994/start13731941/exit0/groupAbsent/noTimeout，session27474完成，STOP/RELEASE；schema ae060348e9859d84008298f4/root490049524 dev33/inode377394。`expired-backlog-low-control-green.log`保存。实际新V2 beta published/准确独立bytes；后续45s原live seal全部两个holder ACK/物理absence；第二trueReopen旧完整duty/原alpha/固定byteReceipt/publication history保持、V2正常。旧两准备FAIL/raw/source仍保留不是businessred，64新首red尚未运行。
+
+
+### 64原到期body Job实际阻挡后续真实V2：首business red
+
+root另授ONE full64 sameexact60f817源；执行前fresh源与命令plan独立保存/fsync并目录fsync，原90/共同seal15/live45/4Steps/Go120/outer120保持。真实64准确refs顺序published/公开正常与独立alpha，额外live控制ref预先published；64原Seal登记共同初始deadline与两holder完整页，过原deadline+20ms后trueReopen全部完整公共Observation/原alpha均保持。真实独立V2 beta随后accepted；4次原Service.Step无error后准确原Command仍publication=preparing/exactRef=true，独立V2key Lstat NotExist（明确检查key与非不存在错误）。此为实际目标调度business red，不是准备/编译失败。
+
+`expired-backlog-full-page-first-red.log` actualFAIL18.131s（case18.12），PID/PGID3290594/start13743233/exit1/groupAbsent/noTimeout，session60810完成，STOP/RELEASE。ownschema8750735b58e5560d1a0a33b1/root1248967092 dev33/inode377785，outside完整结果 `/tmp/lerna-05-expired-backlog-full64-first-red-outcome.json`。首publication断言FAIL，后续live45s/globalACK/第二history尾未执行；不能称另一live/policy red已发生。产品仍1a4e1d2、没有fix/race/retry；须root FULL-read采用实际red与窄候选扫描决定后才实施。
