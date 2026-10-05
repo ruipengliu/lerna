@@ -1,0 +1,8 @@
+{
+  "operation": "pg-blocked-run-format",
+  "source_manifest": "/tmp/lerna-current-ci-cancellation-blocked-sql-static/manifest-v3.json",
+  "source_manifest_sha256": "1c4f7021e2e13950c19ec0c96624b57c7ea02eabae73bdd6fb7816d3255a8134",
+  "all22pins_verified": true,
+  "before_sha256": "fcb20f18b724f0ce428ff9f35795b66ea314dd2edc25349687557fe4c9c43c2c",
+  "format_only": "conformance/recovery/pool_run_blocked_sql_test.go"
+}

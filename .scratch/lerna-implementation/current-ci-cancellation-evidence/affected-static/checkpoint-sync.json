@@ -1,0 +1,12 @@
+{
+  "checkpoint": "0c1f9247b290958ff1e38e93a83c86462bd524d6",
+  "merge": "2f961a0db43c61e36ee45fa756fb3f9b73e1d56d",
+  "parents": [
+    "0c1f9247b290958ff1e38e93a83c86462bd524d6",
+    "7f656d964a1f73aeb333ac1e1217be1ed405e4b8"
+  ],
+  "all7_qualified_pins_match": true,
+  "both_original_archive_bytehashes_preserved": true,
+  "products_and_tests_unchanged_by_sync": true,
+  "no_native_run": true
+}

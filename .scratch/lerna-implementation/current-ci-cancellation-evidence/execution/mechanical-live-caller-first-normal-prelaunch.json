@@ -1,0 +1,14 @@
+{
+  "event": "native_start_ack",
+  "operation": "mechanical-live-caller-first-normal",
+  "pid": 3693574,
+  "pgid": 3693574,
+  "starttime": "15501639",
+  "root": "/tmp/lerna-current-ci-cancellation-execution",
+  "argv": [
+    "bash",
+    "-c",
+    "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; go test -v -mod=readonly -p=1 ./host/durablework -run \"^TestPoolRunFirstFaultKeepsCallerLiveAndRetainsJoinedDiagnostics$\" -count=1 -timeout=120s"
+  ],
+  "deadline_seconds": 120
+}

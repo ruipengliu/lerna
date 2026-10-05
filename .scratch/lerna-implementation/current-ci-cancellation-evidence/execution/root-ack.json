@@ -1,0 +1,12 @@
+{
+  "event": "owned_root_registered",
+  "root": "/tmp/lerna-current-ci-cancellation-execution",
+  "device": 33,
+  "inode": 410551,
+  "mode": "0700",
+  "base": "dadd801cfd11ca038f0496872941097f10ebe507",
+  "branch": "codex/current-ci-cancellation",
+  "owner": "current-ci-cancellation implementer",
+  "native_launched": false,
+  "no_cleanup_or_old05_touch": true
+}

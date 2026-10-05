@@ -1,0 +1,7 @@
+{
+  "operation": "mechanical-live-caller-format",
+  "source_manifest": "/tmp/lerna-current-ci-cancellation-live-static/manifest.json",
+  "all7pins_verified": true,
+  "before_sha256": "17a5e350e305105c5802c045a2cfa47b7e397be1be942b29f924cf52a1834565",
+  "format_only": "host/durablework/pool_run_live_fault_test.go"
+}

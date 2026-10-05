@@ -1,0 +1,22 @@
+{
+  "kind": "formatted7frozen sources before caller-live normal/race",
+  "base": "dadd801cfd11ca038f0496872941097f10ebe507",
+  "files": {
+    "host/durablework/pool_run_test.go": "6e6eacbc17679dc1d8cf99cb03afbaf2d39978d9c179f6467548f5fea36ad4f7",
+    "internal/durableworkdemo/pool_worker.go": "65e16f218a9fda70240a8e01b42ee7b85404c586214fb4089ddcd129ec223a60",
+    "host/durablework/pool.go": "f3d2ac781246e837e683b86cdbfbcb7824471740c1638989d86696a13c239375",
+    "internal/durableworkdemo/maintenance.go": "3d0d13089ac8cf76372a28155f0896757ec8990d034dacefa94956d87ad97800",
+    "runtime/admission.go": "9f6136f51196814bdaacd2065b038371d1a1827e9d4c0e0d496cf80c161bad21",
+    "runtime/schedule.go": "d1d72e6cd41bafeb792cca905cf107ef7be5571b54656b32027bce58045a836f",
+    "host/durablework/pool_run_live_fault_test.go": "e3a8aa6f8cc5b2f74c56310db3d602cfb9760dc57f96465ec7b5eb56e21ef868"
+  },
+  "selector": "^TestPoolRunFirstFaultKeepsCallerLiveAndRetainsJoinedDiagnostics$",
+  "package": "./host/durablework",
+  "guard_caller_seconds": 5,
+  "cleanup_join_seconds": 1,
+  "lease": "1m",
+  "fallback": "10ms",
+  "Go_outer_seconds": 120,
+  "product_wip": true,
+  "first_caller_cancel_source_unchanged": true
+}

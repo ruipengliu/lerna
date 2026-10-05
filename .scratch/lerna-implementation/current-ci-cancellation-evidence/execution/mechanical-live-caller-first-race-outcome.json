@@ -1,0 +1,11 @@
+{
+  "event": "native_completion_ack",
+  "operation": "mechanical-live-caller-first-race",
+  "pid": 3694299,
+  "pgid": 3694299,
+  "starttime": "15504552",
+  "exit": 0,
+  "group_absent": true,
+  "timed_out": false,
+  "owned_raw_fsync_close_ack": true
+}

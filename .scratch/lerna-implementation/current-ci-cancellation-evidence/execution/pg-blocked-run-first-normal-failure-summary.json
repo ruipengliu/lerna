@@ -1,0 +1,93 @@
+{
+  "kind": "first actual PG normal counterpart failure STOP RELEASE",
+  "source_manifest": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-source/manifest.json",
+  "all22_postpins_match": true,
+  "operations": [
+    {
+      "operation": "pg-blocked-run-format",
+      "outcome": {
+        "event": "native_completion_ack",
+        "operation": "pg-blocked-run-format",
+        "pid": 3723428,
+        "pgid": 3723428,
+        "starttime": "15629876",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false,
+        "owned_raw_fsync_close_ack": true
+      },
+      "actual_wait_confirmed": true,
+      "current_group_absent": true,
+      "raw": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-format.log",
+      "raw_sha256": "685302feb906ddcf7c2153a339690da4f0c0190a8606fcbd384b929850b46b55"
+    },
+    {
+      "operation": "pg-blocked-run-first-normal-release",
+      "outcome": {
+        "event": "native_completion_ack",
+        "operation": "pg-blocked-run-first-normal-release",
+        "pid": 3724192,
+        "pgid": 3724192,
+        "starttime": "15633398",
+        "exit": 1,
+        "group_absent": true,
+        "timed_out": false,
+        "owned_raw_fsync_close_ack": true
+      },
+      "actual_wait_confirmed": true,
+      "current_group_absent": true,
+      "raw": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-first-normal-release.log",
+      "raw_sha256": "a33f88219aa254bc530cde42aafa31b89072d220b6920eaba4ffc0b5fef3d827"
+    }
+  ],
+  "stage": "after actual three-SQL-wait proof and successful holder release; normal public progress stopped on PostgreSQL scope configuration rejected",
+  "actual_original_SQL_blocking_observed": true,
+  "normal_projection_reservation_receipt_tail_not_completed": true,
+  "caller_cancel_selector_not_executed": true,
+  "no_retry_race_sourcefix_or_other_suite": true,
+  "native_CI_unknown_statement_not_reproduced": true,
+  "observer_first_close_raw_confirmed": true,
+  "registered_resources": [
+    {
+      "backend": "postgres",
+      "schema": "lerna_test_40f0bd3bcd6e945eaca0445b"
+    },
+    {
+      "Event": "run_pg_connection_ack",
+      "Schema": "lerna_test_40f0bd3bcd6e945eaca0445b",
+      "Role": "run",
+      "PID": 611551
+    },
+    {
+      "Event": "run_pg_connection_ack",
+      "Schema": "lerna_test_40f0bd3bcd6e945eaca0445b",
+      "Role": "blocker",
+      "PID": 611552
+    },
+    {
+      "Event": "run_pg_connection_ack",
+      "Schema": "lerna_test_40f0bd3bcd6e945eaca0445b",
+      "Role": "observer",
+      "PID": 611553
+    },
+    {
+      "Event": "run_pg_connection_ack",
+      "Schema": "lerna_test_40f0bd3bcd6e945eaca0445b",
+      "Role": "run",
+      "PID": 611554
+    },
+    {
+      "Event": "run_pg_connection_ack",
+      "Schema": "lerna_test_40f0bd3bcd6e945eaca0445b",
+      "Role": "run",
+      "PID": 611555
+    },
+    {
+      "Event": "run_pg_connection_ack",
+      "Schema": "lerna_test_40f0bd3bcd6e945eaca0445b",
+      "Role": "run",
+      "PID": 611556
+    }
+  ],
+  "local_released": true
+}

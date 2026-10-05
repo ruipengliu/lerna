@@ -1,0 +1,8 @@
+{
+  "operation": "pg-blocked-run-corrected-format",
+  "source_manifest": "/tmp/lerna-current-ci-cancellation-blocked-sql-static/fixture-correction-v2/manifest.json",
+  "source_manifest_sha256": "02b988f7f7e8114c6157e8705e3047b644b36913b7f500f6c6bd51cd71774870",
+  "all22pins_verified": true,
+  "before_sha256": "9c3e2afb147f199d1937fb5a027e84f2bc72f9568b74a76f82616ff181f3faa9",
+  "format_only": "conformance/recovery/pool_run_blocked_sql_test.go"
+}

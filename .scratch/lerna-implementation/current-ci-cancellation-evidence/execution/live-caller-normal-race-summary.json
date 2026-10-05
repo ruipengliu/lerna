@@ -1,0 +1,58 @@
+{
+  "kind": "actual soleLOCAL caller-live qualification completed STOP RELEASE",
+  "base": "dadd801cfd11ca038f0496872941097f10ebe507",
+  "source_manifest": "/tmp/lerna-current-ci-cancellation-execution/live-caller-source/manifest.json",
+  "source_manifest_sha256": "3044c10f1a413f5af1f1c7e4f154a3c3cca56f8740d664198ac1e952d24f6bc3",
+  "all7_postpins_match": true,
+  "format_only_new_test": true,
+  "caller_live_actual_child_cancel_and_all3_join_qualified_normal_and_race": true,
+  "all4_actual_noncontext_injected_causes_retained": true,
+  "no_fabricated_caller_canceled": true,
+  "no_native_pg_cause_reproduction_claim": true,
+  "no_other_testselectors_or_productchanges": true,
+  "operations": [
+    {
+      "operation": "mechanical-live-caller-format",
+      "pid": 3692719,
+      "pgid": 3692719,
+      "starttime": "15497914",
+      "exit": 0,
+      "actual_wait_confirmed": true,
+      "current_group_absent": true,
+      "timed_out": false,
+      "raw": "/tmp/lerna-current-ci-cancellation-execution/mechanical-live-caller-format.log",
+      "raw_sha256": "4d791fef4aec998ce2e0f4b8f10109d9c6b1ad94b8db7d5d5a73fde3c75654b6",
+      "outcome": "/tmp/lerna-current-ci-cancellation-execution/mechanical-live-caller-format-outcome.json",
+      "owned_raw_fsync_close_ack": true
+    },
+    {
+      "operation": "mechanical-live-caller-first-normal",
+      "pid": 3693574,
+      "pgid": 3693574,
+      "starttime": "15501639",
+      "exit": 0,
+      "actual_wait_confirmed": true,
+      "current_group_absent": true,
+      "timed_out": false,
+      "raw": "/tmp/lerna-current-ci-cancellation-execution/mechanical-live-caller-first-normal.log",
+      "raw_sha256": "1c885148cbbd29254a68b9bc1e753c826eb2b84591f17381cde2eb76de838d7a",
+      "outcome": "/tmp/lerna-current-ci-cancellation-execution/mechanical-live-caller-first-normal-outcome.json",
+      "owned_raw_fsync_close_ack": true
+    },
+    {
+      "operation": "mechanical-live-caller-first-race",
+      "pid": 3694299,
+      "pgid": 3694299,
+      "starttime": "15504552",
+      "exit": 0,
+      "actual_wait_confirmed": true,
+      "current_group_absent": true,
+      "timed_out": false,
+      "raw": "/tmp/lerna-current-ci-cancellation-execution/mechanical-live-caller-first-race.log",
+      "raw_sha256": "504fb24a7396b3ec45dfdd6e9d9be2a74e3c086d4f45b26e1a2ed7a93fd98b6a",
+      "outcome": "/tmp/lerna-current-ci-cancellation-execution/mechanical-live-caller-first-race-outcome.json",
+      "owned_raw_fsync_close_ack": true
+    }
+  ],
+  "local_released": true
+}

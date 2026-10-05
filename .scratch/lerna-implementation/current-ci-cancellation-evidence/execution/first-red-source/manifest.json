@@ -1,0 +1,54 @@
+{
+  "kind": "actual formatted firstmechanical causeRED prelaunch",
+  "git_head": "dadd801cfd11ca038f0496872941097f10ebe507",
+  "product_wip": false,
+  "new_mechanical_test_untracked": true,
+  "files": {
+    "host/durablework/pool_run_test.go": {
+      "sha256": "6e6eacbc17679dc1d8cf99cb03afbaf2d39978d9c179f6467548f5fea36ad4f7",
+      "bytes": 4373
+    },
+    "internal/durableworkdemo/pool_worker.go": {
+      "sha256": "0f28cd85fdb8b1137d2fcfb0014fc2eac5442e31b4af687eb793d4d64da47684",
+      "bytes": 5930
+    },
+    "host/durablework/pool.go": {
+      "sha256": "f3d2ac781246e837e683b86cdbfbcb7824471740c1638989d86696a13c239375",
+      "bytes": 271
+    },
+    "internal/durableworkdemo/maintenance.go": {
+      "sha256": "3d0d13089ac8cf76372a28155f0896757ec8990d034dacefa94956d87ad97800",
+      "bytes": 4190
+    },
+    "runtime/admission.go": {
+      "sha256": "9f6136f51196814bdaacd2065b038371d1a1827e9d4c0e0d496cf80c161bad21",
+      "bytes": 4419
+    },
+    "runtime/schedule.go": {
+      "sha256": "d1d72e6cd41bafeb792cca905cf107ef7be5571b54656b32027bce58045a836f",
+      "bytes": 1213
+    }
+  },
+  "before_test_sha": "3ce05a522f81c440580d8d9b523af68520f7ccefed16ca34d6890eee294f9027",
+  "formatted_test_sha": "6e6eacbc17679dc1d8cf99cb03afbaf2d39978d9c179f6467548f5fea36ad4f7",
+  "actual_format_ack": {
+    "event": "native_completion_ack",
+    "operation": "mechanical-cancellation-format",
+    "pid": 3642278,
+    "pgid": 3642278,
+    "starttime": "15277195",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false,
+    "owned_raw_fsync_close_ack": true
+  },
+  "original_static_manifest": "/tmp/lerna-current-ci-cancellation-static/manifest.json",
+  "strict_supervisor_sha256": "90a808a0e3cf3a3a62441818dd0f87392a763b5ebdeef9ec2d5f2b5abc3e8d6d",
+  "caller_guard_seconds": 5,
+  "cleanup_join_seconds": 1,
+  "lease": "1m",
+  "fallback": "10ms",
+  "go_outer_seconds": 120,
+  "test": "TestPoolRunCallerCancellationRetainsEveryIndependentLaneCause",
+  "injected_not_native_ci_reproduction": true
+}

@@ -1,0 +1,14 @@
+{
+  "event": "native_start_ack",
+  "operation": "mechanical-cancellation-product-format",
+  "pid": 3654162,
+  "pgid": 3654162,
+  "starttime": "15327003",
+  "root": "/tmp/lerna-current-ci-cancellation-execution",
+  "argv": [
+    "bash",
+    "-c",
+    "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; gofmt -w internal/durableworkdemo/pool_worker.go"
+  ],
+  "deadline_seconds": 120
+}

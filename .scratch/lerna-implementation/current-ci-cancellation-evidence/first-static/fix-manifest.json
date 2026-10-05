@@ -1,0 +1,37 @@
+{
+  "kind": "STATIC minimal Run cause aggregation after actual mechanical RED, not formatted/compiled/tested",
+  "base": "dadd801cfd11ca038f0496872941097f10ebe507",
+  "before_product_sha256": "0f28cd85fdb8b1137d2fcfb0014fc2eac5442e31b4af687eb793d4d64da47684",
+  "candidate_product_sha256": "65e16f218a9fda70240a8e01b42ee7b85404c586214fb4089ddcd129ec223a60",
+  "same_first_red_test_sha256": "6e6eacbc17679dc1d8cf99cb03afbaf2d39978d9c179f6467548f5fea36ad4f7",
+  "actual_red_raw": "/tmp/lerna-current-ci-cancellation-execution/mechanical-cancellation-first-red.log",
+  "actual_red_raw_sha256": "aa77c4a3e28b9105b7a1087c8d91fa4085b1254d7833b631dacee3b687331cd5",
+  "files": {
+    "host/durablework/pool_run_test.go": "6e6eacbc17679dc1d8cf99cb03afbaf2d39978d9c179f6467548f5fea36ad4f7",
+    "internal/durableworkdemo/pool_worker.go": "65e16f218a9fda70240a8e01b42ee7b85404c586214fb4089ddcd129ec223a60",
+    "host/durablework/pool.go": "f3d2ac781246e837e683b86cdbfbcb7824471740c1638989d86696a13c239375",
+    "internal/durableworkdemo/maintenance.go": "3d0d13089ac8cf76372a28155f0896757ec8990d034dacefa94956d87ad97800",
+    "runtime/admission.go": "9f6136f51196814bdaacd2065b038371d1a1827e9d4c0e0d496cf80c161bad21",
+    "runtime/schedule.go": "d1d72e6cd41bafeb792cca905cf107ef7be5571b54656b32027bce58045a836f"
+  },
+  "only_product_file_changed": "internal/durableworkdemo/pool_worker.go",
+  "product_behavior": "original caller unchanged; separate child context; actual named lane outcomes; first outcome childCancel; all goroutines wgWait; channel close then bounded remaining outcomes; errors.Join all original diagnostics plus labeled original caller.Err if actually nonnil",
+  "next_granted_checks_pending": [
+    "fmt only product",
+    "same exact mechanical selector normal once",
+    "same exact mechanical selector race once under separate rootgrant"
+  ],
+  "source_ownership": [
+    "02 durable-work Run/pool lifecycle",
+    "03 deterministic-harness finite fault rules"
+  ],
+  "next_vertical_caller_live_not_written": true,
+  "native_run": false,
+  "budgets_unchanged": {
+    "caller_guard_seconds": 5,
+    "cleanup_join_seconds": 1,
+    "lease": "1m",
+    "fallback": "10ms",
+    "Go_outer_seconds": 120
+  }
+}

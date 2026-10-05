@@ -1,0 +1,43 @@
+{
+  "kind": "STATIC firstcause red; nofmt/Go/native/PG run",
+  "base": "dadd801cfd11ca038f0496872941097f10ebe507",
+  "worktree": "/tmp/lerna-worktrees/current-ci-cancellation",
+  "branch": "codex/current-ci-cancellation",
+  "skill_locators": [
+    ".agents/skills/implement-spec/SKILL.md",
+    ".agents/skills/tdd/SKILL.md"
+  ],
+  "root_adopted_decision": "/tmp/lerna-current-ci-cancellation-decision.md",
+  "root_adopted_decision_sha256": "1b097620c9ac70e9b3a57469a74f48cb91515e41797c5370083cd6f30d0a9d4d",
+  "files": {
+    "host/durablework/pool_run_test.go": "3ce05a522f81c440580d8d9b523af68520f7ccefed16ca34d6890eee294f9027",
+    "internal/durableworkdemo/pool_worker.go": "0f28cd85fdb8b1137d2fcfb0014fc2eac5442e31b4af687eb793d4d64da47684",
+    "host/durablework/pool.go": "f3d2ac781246e837e683b86cdbfbcb7824471740c1638989d86696a13c239375",
+    "internal/durableworkdemo/maintenance.go": "3d0d13089ac8cf76372a28155f0896757ec8990d034dacefa94956d87ad97800",
+    "runtime/admission.go": "9f6136f51196814bdaacd2065b038371d1a1827e9d4c0e0d496cf80c161bad21",
+    "runtime/schedule.go": "d1d72e6cd41bafeb792cca905cf107ef7be5571b54656b32027bce58045a836f"
+  },
+  "selector": "^TestPoolRunCallerCancellationRetainsEveryIndependentLaneCause$",
+  "package": "./host/durablework",
+  "guard_caller_seconds": 5,
+  "cleanup_join_seconds": 1,
+  "lease": "1m",
+  "fallback": "10ms",
+  "go_outer_seconds": 120,
+  "first_expected_failure": "missing callerCanceled and dropped independently injected causes after valid barrier and actualalljoin",
+  "native_run": false,
+  "product_changed": false,
+  "first_root_path": "/tmp/lerna-current-ci-cancellation-execution",
+  "owned_root_ack": "/tmp/lerna-current-ci-cancellation-execution/root-ack.json",
+  "owned_root_device": 33,
+  "owned_root_inode": 410551,
+  "owned_root_mode": "0700",
+  "registry": "/tmp/lerna-current-ci-cancellation-execution/owned-scopes.log",
+  "strict_supervisor": "/tmp/lerna-current-ci-cancellation-execution/run-native.py",
+  "strict_supervisor_sha256": "90a808a0e3cf3a3a62441818dd0f87392a763b5ebdeef9ec2d5f2b5abc3e8d6d",
+  "supervisor_byte_equal_source": "/tmp/lerna-04-ticket06-execution/run-native.py",
+  "supervisor_gate": "read success AND exact ack AND exec; EOF/malformed cannot exec",
+  "safe_first_red_command": "python3 /tmp/lerna-current-ci-cancellation-execution/run-native.py mechanical-cancellation-first-red bash -c 'source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; go test -v -mod=readonly -p=1 ./host/durablework -run \"^TestPoolRunCallerCancellationRetainsEveryIndependentLaneCause$\" -count=1 -timeout=120s'",
+  "repair_issue_pointer": "/workspace/lerna/.scratch/lerna-implementation/issues/current-ci-cancellation.md",
+  "source_ownership": "02 durable-work Run/pool lifecycle; 03 deterministic-harness finite mechanical fault rules"
+}

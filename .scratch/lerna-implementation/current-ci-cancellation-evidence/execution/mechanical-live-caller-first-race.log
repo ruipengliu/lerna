@@ -1,0 +1,5 @@
+=== RUN   TestPoolRunFirstFaultKeepsCallerLiveAndRetainsJoinedDiagnostics
+--- PASS: TestPoolRunFirstFaultKeepsCallerLiveAndRetainsJoinedDiagnostics (0.00s)
+PASS
+ok  	github.com/ruipengliu/lerna/host/durablework	1.056s
+NATIVE_COMPLETION_ACK {"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "mechanical-live-caller-first-race", "pgid": 3694299, "pid": 3694299, "starttime": "15504552", "timed_out": false}

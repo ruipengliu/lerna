@@ -1,0 +1,50 @@
+{
+  "kind": "actual fixed mechanical N/R formatted prelaunch sources",
+  "base": "dadd801cfd11ca038f0496872941097f10ebe507",
+  "product_wip": true,
+  "files": {
+    "host/durablework/pool_run_test.go": {
+      "sha256": "6e6eacbc17679dc1d8cf99cb03afbaf2d39978d9c179f6467548f5fea36ad4f7",
+      "bytes": 4373
+    },
+    "internal/durableworkdemo/pool_worker.go": {
+      "sha256": "65e16f218a9fda70240a8e01b42ee7b85404c586214fb4089ddcd129ec223a60",
+      "bytes": 6252
+    },
+    "host/durablework/pool.go": {
+      "sha256": "f3d2ac781246e837e683b86cdbfbcb7824471740c1638989d86696a13c239375",
+      "bytes": 271
+    },
+    "internal/durableworkdemo/maintenance.go": {
+      "sha256": "3d0d13089ac8cf76372a28155f0896757ec8990d034dacefa94956d87ad97800",
+      "bytes": 4190
+    },
+    "runtime/admission.go": {
+      "sha256": "9f6136f51196814bdaacd2065b038371d1a1827e9d4c0e0d496cf80c161bad21",
+      "bytes": 4419
+    },
+    "runtime/schedule.go": {
+      "sha256": "d1d72e6cd41bafeb792cca905cf107ef7be5571b54656b32027bce58045a836f",
+      "bytes": 1213
+    }
+  },
+  "product_before_format": "65e16f218a9fda70240a8e01b42ee7b85404c586214fb4089ddcd129ec223a60",
+  "format_ack": {
+    "event": "native_completion_ack",
+    "operation": "mechanical-cancellation-product-format",
+    "pid": 3654162,
+    "pgid": 3654162,
+    "starttime": "15327003",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false,
+    "owned_raw_fsync_close_ack": true
+  },
+  "format_diff_empty": true,
+  "caller_guard_seconds": 5,
+  "cleanup_join_seconds": 1,
+  "lease": "1m",
+  "fallback": "10ms",
+  "Go_outer_seconds": 120,
+  "injected_not_native_ci_reproduction": true
+}

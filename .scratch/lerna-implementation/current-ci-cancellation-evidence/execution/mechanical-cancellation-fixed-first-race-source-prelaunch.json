@@ -1,0 +1,9 @@
+{
+  "operation": "mechanical-cancellation-fixed-first-race",
+  "source_manifest": "/tmp/lerna-current-ci-cancellation-execution/fixed-mechanical-source/manifest.json",
+  "source_manifest_sha256": "38303dc7fed81f5d0258c4e99ad89e573484c1a57f169c47f08b013cf3ce25be",
+  "all6pins_verified": true,
+  "product_wip": true,
+  "mode": "race",
+  "no_source_writes": true
+}

@@ -1,0 +1,11 @@
+{
+  "event": "native_completion_ack",
+  "operation": "mechanical-cancellation-fixed-first-race",
+  "pid": 3655013,
+  "pgid": 3655013,
+  "starttime": "15330528",
+  "exit": 0,
+  "group_absent": true,
+  "timed_out": false,
+  "owned_raw_fsync_close_ack": true
+}

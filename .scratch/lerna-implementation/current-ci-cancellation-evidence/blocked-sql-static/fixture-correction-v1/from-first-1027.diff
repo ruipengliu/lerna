@@ -1,0 +1,298 @@
+--- actual-first-normal1027
++++ STATIC-faithful-fixture
+@@ -8,14 +8,14 @@
+ 	"errors"
+ 	"fmt"
+ 	"os"
++ "net/url"
++ "strings"
+ 	"sync"
+ 	"sync/atomic"
+ 	"testing"
+ 	"time"
+ 
+ 	"github.com/jackc/pgx/v5"
+-	"github.com/jackc/pgx/v5/pgconn"
+-	"github.com/jackc/pgx/v5/stdlib"
+ 	"github.com/ruipengliu/lerna/adapters/postgres"
+ 	"github.com/ruipengliu/lerna/contract"
+ 	"github.com/ruipengliu/lerna/host/durablework"
+@@ -29,33 +29,21 @@
+ // The only fault is an actual PG pool-coordination lock. No returned driver
+ // error is injected, and this does not reproduce CI's unknown SQL statement.
+ func poolRunBlockedSQL(t *testing.T, cancelAtBlock bool) {
+-	fixture := database(t)
+-	ctx := contextFor(t)
+-	runPIDs := &poolRunPGPIDs{schema: fixture.pg.Schema, role: "run"}
+-	blockerPIDs := &poolRunPGPIDs{schema: fixture.pg.Schema, role: "blocker"}
+-	openPeer := func(pids *poolRunPGPIDs) *poolRunPGEntry {
+-		config, err := pgx.ParseConfig(fixture.pg.DSN)
+-		if err != nil {
+-			t.Fatalf("PG configuration failed: %T", err)
+-		}
+-		config.RuntimeParams["application_name"] = fixture.pg.Schema + "-" + pids.role
+-		originalAfter := config.AfterConnect
+-		config.AfterConnect = func(ctx context.Context, connection *pgconn.PgConn) error {
+-			if err := pids.register(connection.PID()); err != nil {
+-				return err
+-			}
+-			if originalAfter != nil {
+-				return originalAfter(ctx, connection)
+-			}
+-			return nil
+-		}
+-		connectionName := stdlib.RegisterConnConfig(config)
+-		t.Cleanup(func() { stdlib.UnregisterConnConfig(connectionName) })
+-		cfg := fixture.pg
+-		cfg.DSN = connectionName
+-		actual := fixture.openPGPeer(t, cfg)
+-		return &poolRunPGEntry{actual: actual, ready: make(chan struct{}, 3)}
+-	}
++ ctx := contextFor(t)
++ fixture, err := createOwnedFixture(ctx, "postgres", true)
++ if err != nil { t.Fatal(err) }
++ t.Cleanup(func() { if err := fixture.Cleanup(); err != nil { t.Error(err) } })
++ runPIDs := &poolRunPGPIDs{schema: fixture.pg.Schema, role: "run"}
++ blockerPIDs := &poolRunPGPIDs{schema: fixture.pg.Schema, role: "blocker"}
++ openPeer := func(pids *poolRunPGPIDs) *poolRunPGEntry {
++  cfg := fixture.pg
++  cfg.DSN = poolRunPGTaggedDSN(t, cfg.DSN, pids.tag())
++  if err := pids.intent(); err != nil { t.Fatal(err) }
++  actual, err := postgres.Open(ctx, cfg)
++  if actual != nil { fixture.peers=append(fixture.peers,actual) }
++  if err != nil { t.Fatal(err) }
++  return &poolRunPGEntry{actual:actual, ready:make(chan struct{},3)}
++ }
+ 	entries := openPeer(runPIDs)
+ 	blocker := openPeer(blockerPIDs)
+ 	// Repository, Clock and callback all retain the actual same-Store token.
+@@ -69,7 +57,6 @@
+ 	}
+ 	control, reconciliation := demo.DefaultPolicy(), demo.DefaultPolicy()
+ 	control.Lane, reconciliation.Lane = "control", "reconciliation"
+-	var err error
+ 	h.Policies, err = demo.NewPolicies([]demo.PolicyBinding{{Owner: owner, ObjectID: "control", Policy: control}, {Owner: owner, ObjectID: "reconcile", Policy: reconciliation}})
+ 	if err != nil {
+ 		t.Fatal(err)
+@@ -93,30 +80,63 @@
+ 	}
+ 
+ 	// The observer is administrative provenance, never a private business oracle.
+-	observer, err := pgx.Connect(ctx, fixture.pg.DSN)
+-	if err != nil {
+-		t.Fatalf("observer connection failed: %T", err)
+-	}
+-	observerPIDs := &poolRunPGPIDs{schema: fixture.pg.Schema, role: "observer"}
+-	if err = observerPIDs.register(observer.PgConn().PID()); err != nil {
+-		t.Fatal(errors.Join(err, observer.Close(ctx)))
+-	}
+-	t.Cleanup(func() {
+-		closeErr := observer.Close(ctx)
+-		t.Logf("observer first Close confirmed=%t", closeErr == nil)
+-		if closeErr != nil {
+-			t.Errorf("observer first Close: %T", closeErr)
+-		}
+-	})
+-
+-	held := fixture.holdPGTransaction(t, blocker.actual, func(ctx context.Context, tx runtime.Tx) error {
+-		_, err := blocker.actual.LockPool(ctx, tx)
+-		return err
+-	})
+-	blockerIDs := blockerPIDs.snapshot()
+-	if len(blockerIDs) != 1 {
+-		t.Fatal("fault holder must have one registered actual backend")
+-	}
++ observerPIDs := &poolRunPGPIDs{schema:fixture.pg.Schema,role:"observer"}
++ observerDSN := poolRunPGTaggedDSN(t,fixture.pg.DSN,observerPIDs.tag())
++ if err := observerPIDs.intent(); err != nil { t.Fatal(err) }
++ observer, err := pgx.Connect(ctx,observerDSN)
++ if err != nil { t.Fatalf("observer connection failed: %T",err) }
++ t.Cleanup(func() {
++  closeErr:=observer.Close(ctx)
++  t.Logf("observer first Close confirmed=%t",closeErr==nil)
++  if closeErr!=nil { t.Errorf("observer first Close: %T",closeErr) }
++ })
++ observedObserver,err:=poolRunPGCatalog(ctx,observer,observerPIDs.tag())
++ if err!=nil { t.Fatal(err) }
++ if len(observedObserver)!=1 || observedObserver[0].PID!=int32(observer.PgConn().PID()) { t.Fatal("observer identity differs from actual protocol PID") }
++ if err:=observerPIDs.register(observedObserver[0]);err!=nil { t.Fatal(err) }
++
++ // These are ordinary preparation transactions, not the alleged SQL fault.
++ // Original fixture holders own their actual release/join before scope cleanup.
++ preparations:=make([]*pgTransactionHold,3)
++ for i:=range preparations {
++  preparations[i]=fixture.startPGTransaction(ctx,entries.actual,func(context.Context,runtime.Tx) error { return nil })
++ }
++ for _, preparation:=range preparations {
++  select {
++  case <-preparation.acquired:
++  case result:=<-preparation.done:
++   preparation.joined,preparation.result=true,result
++   t.Fatalf("ordinary connection preparation stopped before barrier: %v",result)
++  case <-ctx.Done():t.Fatal("connection preparation barrier exceeded original caller",ctx.Err())
++  }
++ }
++ observedRun,err:=poolRunPGCatalog(ctx,observer,runPIDs.tag())
++ if err!=nil { t.Fatal(err) }
++ if len(observedRun)!=3 { t.Fatal("ordinary preparation did not identify exactly three actual backends") }
++ for _, identity:=range observedRun {
++  if identity.State!="idle in transaction" { t.Fatal("preparation backend is not at actual ordinary callback barrier") }
++  if err:=runPIDs.register(identity);err!=nil { t.Fatal(err) }
++ }
++ for _, preparation:=range preparations {
++  if err:=preparation.releaseAndJoin(ctx);err!=nil { t.Fatal(err) }
++ }
++ idleRun,err:=poolRunPGCatalog(ctx,observer,runPIDs.tag())
++ if err!=nil { t.Fatal(err) }
++ if !poolRunPGSameIdle(runPIDs.snapshot(),idleRun) { t.Fatal("prepared connections changed identity or failed to become idle before Run") }
++ observedBlocker,err:=poolRunPGCatalog(ctx,observer,blockerPIDs.tag())
++ if err!=nil { t.Fatal(err) }
++ if len(observedBlocker)!=1 || observedBlocker[0].State!="idle" { t.Fatal("fault holder must have one original idle backend") }
++ if err:=blockerPIDs.register(observedBlocker[0]);err!=nil { t.Fatal(err) }
++ held:=fixture.startPGTransaction(ctx,blocker.actual,func(ctx context.Context,tx runtime.Tx) error {
++  _,err:=blocker.actual.LockPool(ctx,tx)
++  return err
++ })
++ select {
++ case <-held.acquired:
++ case result:=<-held.done:held.joined,held.result=true,result;t.Fatalf("original pool lock acquisition failed: %v",result)
++ case <-ctx.Done():t.Fatal("original holder missed caller bound",ctx.Err())
++ }
++ blockerIDs:=blockerPIDs.snapshot()
+ 	h.Runner = entries
+ 	running, cancel := context.WithCancel(ctx)
+ 	finished := make(chan error, 1)
+@@ -162,16 +182,15 @@
+ 	defer ticker.Stop()
+ 	for {
+ 		ids := runPIDs.snapshot()
+-		boundIDs := make([]int64, len(ids))
+-		for i, pid := range ids {
+-			boundIDs[i] = int64(pid)
+-		}
++ boundIDs:=make([]int32,len(ids))
++ starts:=make([]time.Time,len(ids))
++ for i,identity:=range ids { boundIDs[i]=identity.PID; starts[i]=identity.Started }
+ 		var blocked int
+ 		// Refresh backend activity within this one bounded observer transaction.
+ 		if _, err = observation.Exec(probe, "SELECT pg_stat_clear_snapshot()"); err != nil {
+ 			t.Fatal(err)
+ 		}
+-		err = observation.QueryRow(probe, "SELECT count(*) FROM pg_stat_activity WHERE pid=ANY($1::bigint[]) AND state='active' AND wait_event_type='Lock' AND wait_event='advisory' AND query='SELECT pg_advisory_xact_lock(3,hashtext($1))' AND $2::integer=ANY(pg_blocking_pids(pid))", boundIDs, int32(blockerIDs[0])).Scan(&blocked)
++		err = observation.QueryRow(probe, "SELECT count(*) FROM pg_stat_activity a JOIN unnest($1::integer[],$2::timestamptz[]) expected(pid,started) ON a.pid=expected.pid AND a.backend_start=expected.started WHERE a.state='active' AND a.wait_event_type='Lock' AND a.wait_event='advisory' AND a.query='SELECT pg_advisory_xact_lock(3,hashtext($1))' AND $3::integer=ANY(pg_blocking_pids(a.pid)) AND EXISTS(SELECT 1 FROM pg_stat_activity b WHERE b.pid=$3 AND b.backend_start=$4)", boundIDs, starts, blockerIDs[0].PID, blockerIDs[0].Started).Scan(&blocked)
+ 		if err != nil {
+ 			t.Fatal(err)
+ 		}
+@@ -320,40 +339,76 @@
+ 	return append([]error(nil), e.errors...)
+ }
+ 
++type poolRunPGBackend struct {
++ PID int32
++ Started time.Time
++ Database, User, Application, State string
++}
+ type poolRunPGPIDs struct {
+-	schema, role string
+-	mu           sync.Mutex
+-	values       []uint32
+-}
+-
+-func (p *poolRunPGPIDs) register(pid uint32) error {
+-	p.mu.Lock()
+-	defer p.mu.Unlock()
+-	record := struct {
+-		Event, Schema, Role string
+-		PID                 uint32
+-	}{"run_pg_connection_ack", p.schema, p.role, pid}
+-	data, err := json.Marshal(record)
+-	if err != nil {
+-		return err
+-	}
+-	path := os.Getenv("LERNA_TEST_OWNED_SCOPE_REGISTRY")
+-	if path == "" {
+-		return errors.New("Run PG connection registration requires owned ledger")
+-	}
+-	file, err := os.OpenFile(path, os.O_APPEND|os.O_WRONLY, 0600)
+-	if err != nil {
+-		return fmt.Errorf("Run PG connection registry: %w", err)
+-	}
+-	_, writeErr := file.Write(append(data, '\n'))
+-	if err = errors.Join(writeErr, file.Sync(), file.Close()); err != nil {
+-		return err
+-	}
+-	p.values = append(p.values, pid)
+-	return nil
+-}
+-func (p *poolRunPGPIDs) snapshot() []uint32 {
+-	p.mu.Lock()
+-	defer p.mu.Unlock()
+-	return append([]uint32(nil), p.values...)
+-}
++ schema, role string
++ values []poolRunPGBackend
++}
++func (p *poolRunPGPIDs) tag() string { return p.schema+"-"+p.role }
++func (p *poolRunPGPIDs) intent() error {
++ return poolRunPGRegister(struct { Event,Schema,Role,Application string }{"run_pg_role_intent",p.schema,p.role,p.tag()})
++}
++func (p *poolRunPGPIDs) register(identity poolRunPGBackend) error {
++ if identity.PID<=0 || identity.Started.IsZero() || identity.Application!=p.tag() { return errors.New("invalid observed PG backend identity") }
++ record:=struct { Event,Schema,Role string; Backend poolRunPGBackend }{"run_pg_backend_observed_after_startup_pre_run",p.schema,p.role,identity}
++ if err:=poolRunPGRegister(record);err!=nil { return err }
++ p.values=append(p.values,identity)
++ return nil
++}
++func (p *poolRunPGPIDs) snapshot() []poolRunPGBackend { return append([]poolRunPGBackend(nil),p.values...) }
++func poolRunPGRegister(record any) error {
++ data,err:=json.Marshal(record)
++ if err!=nil { return err }
++ path:=os.Getenv("LERNA_TEST_OWNED_SCOPE_REGISTRY")
++ if path=="" { return errors.New("Run PG registration requires owned ledger") }
++ file,err:=os.OpenFile(path,os.O_APPEND|os.O_WRONLY,0600)
++ if err!=nil { return fmt.Errorf("Run PG registry: %w",err) }
++ _,writeErr:=file.Write(append(data,'\n'))
++ return errors.Join(writeErr,file.Sync(),file.Close())
++}
++func poolRunPGTaggedDSN(t *testing.T,original,tag string) string {
++ t.Helper()
++ if len(tag)==0 || len(tag)>=63 || strings.ContainsAny(tag,"'\\ ") { t.Fatal("PG role application tag exceeds exact encoding bounds") }
++ parsed,err:=pgx.ParseConfig(original)
++ if err!=nil { t.Fatalf("original PG configuration failed: %T",err) }
++ dsn:=original+" application_name='"+tag+"'"
++ if strings.HasPrefix(original,"postgres://") || strings.HasPrefix(original,"postgresql://") {
++  uri,err:=url.Parse(original)
++  if err!=nil { t.Fatalf("PG URI encoding failed: %T",err) }
++  values:=uri.Query();values.Set("application_name",tag);uri.RawQuery=values.Encode();dsn=uri.String()
++ }
++ tagged,err:=pgx.ParseConfig(dsn)
++ if err!=nil { t.Fatalf("tagged PG configuration failed: %T",err) }
++ if tagged.RuntimeParams["application_name"]!=tag || tagged.Host!=parsed.Host || tagged.Port!=parsed.Port || tagged.Database!=parsed.Database || tagged.User!=parsed.User { t.Fatal("role tag changed parsed physical PG scope identity") }
++ return dsn
++}
++func poolRunPGCatalog(ctx context.Context,observer *pgx.Conn,tag string) (identities []poolRunPGBackend,err error) {
++ bounded,cancel:=context.WithTimeout(ctx,3*time.Second)
++ defer cancel()
++ tx,err:=observer.BeginTx(bounded,pgx.TxOptions{AccessMode:pgx.ReadOnly})
++ if err!=nil { return nil,err }
++ defer func() { rollbackErr:=tx.Rollback(bounded);if !errors.Is(rollbackErr,pgx.ErrTxClosed) { err=errors.Join(err,rollbackErr) } }()
++ if _,err=tx.Exec(bounded,"SELECT set_config('statement_timeout','2s',true),set_config('lock_timeout','1s',true)");err!=nil { return nil,err }
++ rows,err:=tx.Query(bounded,"SELECT pid,backend_start,datname,usename,application_name,state FROM pg_stat_activity WHERE application_name=$1 AND backend_type='client backend' ORDER BY pid",tag)
++ if err!=nil { return nil,err }
++ for rows.Next() {
++  var identity poolRunPGBackend
++  if err=rows.Scan(&identity.PID,&identity.Started,&identity.Database,&identity.User,&identity.Application,&identity.State);err!=nil { break }
++  identities=append(identities,identity)
++ }
++ rows.Close()
++ err=errors.Join(err,rows.Err())
++ return identities,err
++}
++func poolRunPGSameIdle(expected,actual []poolRunPGBackend) bool {
++ if len(expected)!=len(actual) { return false }
++ for i,identity:=range expected {
++  current:=actual[i]
++  if current.State!="idle" || current.PID!=identity.PID || !current.Started.Equal(identity.Started) || current.Database!=identity.Database || current.User!=identity.User || current.Application!=identity.Application { return false }
++ }
++ return true
++}

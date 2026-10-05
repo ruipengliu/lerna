@@ -1,0 +1,9 @@
+{
+  "operation": "pg-blocked-run-corrected-caller-cancellation",
+  "source_manifest": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-source/manifest.json",
+  "source_manifest_sha256": "16f323a2851883703b355f959f62a64c8b449dcb1529668975ae215860a75689",
+  "all22pins_verified": true,
+  "normal_actual_pass_join_group_absent": true,
+  "no_source_writes": true,
+  "ledger_prelaunch_line_count": 43
+}

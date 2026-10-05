@@ -1,0 +1,998 @@
+{
+  "kind": "partial checkpoint immutable original execution/static source evidence; no formal acceptance",
+  "all_copies_byteexact": true,
+  "archived_go_suffix_go_txt": true,
+  "original_paths_and_manifests_not_rewritten": true,
+  "entries": [
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/first-red-classification.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/first-red-classification.json",
+      "bytes": 1162,
+      "sha256": "023800c0ac61d131c1554ec616472975f5400278cc4aee7bc9f34e972d9ea112"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/fixed-mechanical-normal-race-summary.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/fixed-mechanical-normal-race-summary.json",
+      "bytes": 1934,
+      "sha256": "25f2ac1bdb114050a66cd1ce913fa2f420246f2515eead5e52f39da0fe7e0abb"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/live-caller-normal-race-summary.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/live-caller-normal-race-summary.json",
+      "bytes": 2523,
+      "sha256": "08c40920dddc1617709f1ae5691189e3e73f22ecedcd8fea1713b2023dcc6967"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/mechanical-cancellation-first-red-outcome.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/mechanical-cancellation-first-red-outcome.json",
+      "bytes": 251,
+      "sha256": "accfabce5b5146d7aea599ac5b4b2785f13434c252915c431b2082c6d2a52d47"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/mechanical-cancellation-first-red-prelaunch.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/mechanical-cancellation-first-red-prelaunch.json",
+      "bytes": 488,
+      "sha256": "9ce1633182c2e512eb103d9892de60b5416cafd8b7087ffe1455ca0c9df316ea"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/mechanical-cancellation-first-red.log",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/mechanical-cancellation-first-red.log",
+      "bytes": 871,
+      "sha256": "aa77c4a3e28b9105b7a1087c8d91fa4085b1254d7833b631dacee3b687331cd5"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/mechanical-cancellation-fixed-first-normal-outcome.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/mechanical-cancellation-fixed-first-normal-outcome.json",
+      "bytes": 260,
+      "sha256": "0c4c6ae159663a8167568aac602a917a12d863d4b3a31746e0a716c0d1f9fa0f"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/mechanical-cancellation-fixed-first-normal-prelaunch.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/mechanical-cancellation-fixed-first-normal-prelaunch.json",
+      "bytes": 497,
+      "sha256": "cc7870ee8156f61ac73502c4aeecf749aee5d9815cf38a33c5a50e7a525b1f6d"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/mechanical-cancellation-fixed-first-normal-source-prelaunch.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/mechanical-cancellation-fixed-first-normal-source-prelaunch.json",
+      "bytes": 367,
+      "sha256": "b004e84239ab735bdb6874accc0b8312fd76a16884df8ed6d37b259f7791ae8a"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/mechanical-cancellation-fixed-first-normal.log",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/mechanical-cancellation-fixed-first-normal.log",
+      "bytes": 441,
+      "sha256": "a30c4dd4ff920cb80cac6bf5fd0d78ee512b3f6101116b5a578d482e16d98d5f"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/mechanical-cancellation-fixed-first-race-outcome.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/mechanical-cancellation-fixed-first-race-outcome.json",
+      "bytes": 258,
+      "sha256": "8b6d22e26ab04c21763b64cdde70047f3da8f62af4bc3cf51b4ae975c1b53987"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/mechanical-cancellation-fixed-first-race-prelaunch.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/mechanical-cancellation-fixed-first-race-prelaunch.json",
+      "bytes": 501,
+      "sha256": "a148ab35978e8b2364b55ce3cd0dcb2e9e2308e1c7258cd6649252ab3c123fb0"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/mechanical-cancellation-fixed-first-race-source-prelaunch.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/mechanical-cancellation-fixed-first-race-source-prelaunch.json",
+      "bytes": 363,
+      "sha256": "fa5061c3926274dac151d95319b1f020987edee563a856923862cd1a68cb74e6"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/mechanical-cancellation-fixed-first-race.log",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/mechanical-cancellation-fixed-first-race.log",
+      "bytes": 439,
+      "sha256": "82a46485629f3d356407f324047509d9b0d7d9e65458385dcacc420247fbbd28"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/mechanical-cancellation-format-outcome.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/mechanical-cancellation-format-outcome.json",
+      "bytes": 248,
+      "sha256": "720ada2c4b07f2193573239aff64b23f0fb9a92eb59d801d198662665632a94a"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/mechanical-cancellation-format-prelaunch.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/mechanical-cancellation-format-prelaunch.json",
+      "bytes": 383,
+      "sha256": "f16f3c285277a7506f4b891f178ef8a6f3ec07f9a7dd75421336c52ad1f1d30a"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/mechanical-cancellation-format.diff",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/mechanical-cancellation-format.diff",
+      "bytes": 8594,
+      "sha256": "b219c25a4b533dc53ce8775cfd358697690661d22e9869b16bba2db6e05f0dfd"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/mechanical-cancellation-format.log",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/mechanical-cancellation-format.log",
+      "bytes": 215,
+      "sha256": "7a104ffb162add8f81c9d473623c27fe5b1095b96672e4d6f61a3e55b7bd6398"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/mechanical-cancellation-product-format-outcome.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/mechanical-cancellation-product-format-outcome.json",
+      "bytes": 256,
+      "sha256": "fc6d7775526b5894a35eab9758fd460ddbfcffbb360144b0959e9ad640009d0f"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/mechanical-cancellation-product-format-prelaunch.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/mechanical-cancellation-product-format-prelaunch.json",
+      "bytes": 397,
+      "sha256": "27f000bbd74dd940207247b5e54fffdfa3e756adc698f452139c5fcc0ba9169c"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/mechanical-cancellation-product-format.diff",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/mechanical-cancellation-product-format.diff",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/mechanical-cancellation-product-format.log",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/mechanical-cancellation-product-format.log",
+      "bytes": 223,
+      "sha256": "097d30c85a40cd76960d17296b7c7b17acb76919eb87bba1407e83dc8fd92a6d"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/mechanical-live-caller-first-normal-outcome.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/mechanical-live-caller-first-normal-outcome.json",
+      "bytes": 253,
+      "sha256": "22492c5fc557faf9c0f6aef83722a36a1d6948f086b07c9a683cc56885f5f0bb"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/mechanical-live-caller-first-normal-prelaunch.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/mechanical-live-caller-first-normal-prelaunch.json",
+      "bytes": 492,
+      "sha256": "80e0a2ecd1617ed68972d818a7a0abea372308b887d3c75d96a7a5fd37842d10"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/mechanical-live-caller-first-normal-source-prelaunch.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/mechanical-live-caller-first-normal-source-prelaunch.json",
+      "bytes": 355,
+      "sha256": "457bdd55fdca8fd5f8226b7053f22a3639910fb270efcca8626498b22b3f85cd"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/mechanical-live-caller-first-normal.log",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/mechanical-live-caller-first-normal.log",
+      "bytes": 438,
+      "sha256": "1c885148cbbd29254a68b9bc1e753c826eb2b84591f17381cde2eb76de838d7a"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/mechanical-live-caller-first-race-outcome.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/mechanical-live-caller-first-race-outcome.json",
+      "bytes": 251,
+      "sha256": "95cd25cc64d778b1b9e3a9420af164fa00e80a3985de0d2c0f25cbf83bcecc24"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/mechanical-live-caller-first-race-prelaunch.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/mechanical-live-caller-first-race-prelaunch.json",
+      "bytes": 496,
+      "sha256": "6db1e9315c732bbab56ade50a2e016324b2c685829f6ffd7fcb8d2754b1f8f01"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/mechanical-live-caller-first-race-source-prelaunch.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/mechanical-live-caller-first-race-source-prelaunch.json",
+      "bytes": 399,
+      "sha256": "f4b5cec8a6e80a72070c6924c3b0ce7303367a101fa592f0bc94fd1e3fe0d1f9"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/mechanical-live-caller-first-race.log",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/mechanical-live-caller-first-race.log",
+      "bytes": 436,
+      "sha256": "504fb24a7396b3ec45dfdd6e9d9be2a74e3c086d4f45b26e1a2ed7a93fd98b6a"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/mechanical-live-caller-format-outcome.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/mechanical-live-caller-format-outcome.json",
+      "bytes": 247,
+      "sha256": "6fb0dcfe2f42f409991647ecafc0080dd1a5998e6633652c72430f61f35154c3"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/mechanical-live-caller-format-prelaunch.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/mechanical-live-caller-format-prelaunch.json",
+      "bytes": 393,
+      "sha256": "d02fbc445b040f4b13384029d40d32bf562d9be8daf08ebb91ecb5cbe96bf5a6"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/mechanical-live-caller-format-source-prelaunch.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/mechanical-live-caller-format-source-prelaunch.json",
+      "bytes": 317,
+      "sha256": "75a106f499009da5b84cd9c980347d82bfdfdbb22a583d2253eadfca49fa222a"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/mechanical-live-caller-format.diff",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/mechanical-live-caller-format.diff",
+      "bytes": 9361,
+      "sha256": "43984da2b0456646a37f878c03599fc615fda545b4805f18dbf337c0374d22e8"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/mechanical-live-caller-format.log",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/mechanical-live-caller-format.log",
+      "bytes": 214,
+      "sha256": "4d791fef4aec998ce2e0f4b8f10109d9c6b1ad94b8db7d5d5a73fde3c75654b6"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/owned-scopes.log",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/owned-scopes.log",
+      "bytes": 14600,
+      "sha256": "929c52b92edd8eb5c7f8850c2295e3dd21d0776415e384e18f3a44044dad1de8"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-caller-cancellation-outcome.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-corrected-caller-cancellation-outcome.json",
+      "bytes": 262,
+      "sha256": "765f176db5648826d43ceabbb2b51860e294a6358e55895ac1765c212fa96f96"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-caller-cancellation-prelaunch.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-corrected-caller-cancellation-prelaunch.json",
+      "bytes": 501,
+      "sha256": "88c68fbd5e1f4a033ef57e969f4e32e738b94ef442abbca0e42ab968e289403e"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-caller-cancellation-source-prelaunch.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-corrected-caller-cancellation-source-prelaunch.json",
+      "bytes": 420,
+      "sha256": "0e7a69d5c0519021e5f91f5371d95110c9ff06337711c48078256c7d22c45221"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-caller-cancellation.log",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-corrected-caller-cancellation.log",
+      "bytes": 740,
+      "sha256": "75424bb26a980d7036138dca5edb03ff981955ea1f4c39f0a76edaf5becf3d1b"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-format-outcome.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-corrected-format-outcome.json",
+      "bytes": 249,
+      "sha256": "7312b70b974b8e7bd87eccb2ad9f959d5a73bacc7261f70fede7f73cb67f02c8"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-format-prelaunch.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-corrected-format-prelaunch.json",
+      "bytes": 400,
+      "sha256": "0bee7f47d26658716d7165807ade3b9680cb7bfb5ae212bf0e149892c87dd08d"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-format-source-prelaunch.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-corrected-format-source-prelaunch.json",
+      "bytes": 450,
+      "sha256": "dbb435e14ef1be12664d96ea4753e2a0255b1c45d48cf014dd2dbfff98d781a2"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-format.diff",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-corrected-format.diff",
+      "bytes": 18431,
+      "sha256": "c6cce5b08d01e0b0ba39002d707b6c1df10c5e3247b9b7474b73a9e8139a5357"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-format.log",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-corrected-format.log",
+      "bytes": 216,
+      "sha256": "04198485a681427be9a422da40cf86b6282203b07f46d84192826dddb345bf72"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-normal-pair-summary.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-corrected-normal-pair-summary.json",
+      "bytes": 9135,
+      "sha256": "d52ae3812c88f763739767bce7f3fca10d2c61c8a3e3becb8ade6f72ecf4c25f"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-normal-release-outcome.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-corrected-normal-release-outcome.json",
+      "bytes": 257,
+      "sha256": "6ef6703691edbe39551d2f45db3c4fd1c56c093ed3447dc2dccae4343638d3b8"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-normal-release-prelaunch.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-corrected-normal-release-prelaunch.json",
+      "bytes": 491,
+      "sha256": "5a438b631dae260f94d592c7b5c3a506fa04fac7fa486eb01a474b625c24854d"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-normal-release-source-prelaunch.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-corrected-normal-release-source-prelaunch.json",
+      "bytes": 472,
+      "sha256": "e3b4ca91cb5058ac8553041b58ec93e45c6328377c8b43d0cb68acd3b92ff99f"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-normal-release.log",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-corrected-normal-release.log",
+      "bytes": 725,
+      "sha256": "1603f883fb976ec7d051d229482ddb885735b2a8a229748c38e3efb147bc9545"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-first-normal-failure-summary.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-first-normal-failure-summary.json",
+      "bytes": 3039,
+      "sha256": "84e83751859350ab85d904553df3a3350ee1857c67dab688c59278f3c466c519"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-first-normal-release-outcome.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-first-normal-release-outcome.json",
+      "bytes": 253,
+      "sha256": "4bbd69585880aa66b22179ffe2cffe357cb39bd775304d92eba7c8aa3ed60c94"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-first-normal-release-prelaunch.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-first-normal-release-prelaunch.json",
+      "bytes": 487,
+      "sha256": "0dd6606902bdff3848c14018ae3543c8de7ecc4eeb0e41bffd849b58d4b44796"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-first-normal-release-source-prelaunch.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-first-normal-release-source-prelaunch.json",
+      "bytes": 405,
+      "sha256": "7df7b9c86a2e6155ea5ffde0e8614c7c06b869a7891f6820b0b215c58b0248b7"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-first-normal-release.log",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-first-normal-release.log",
+      "bytes": 817,
+      "sha256": "a33f88219aa254bc530cde42aafa31b89072d220b6920eaba4ffc0b5fef3d827"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-format-outcome.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-format-outcome.json",
+      "bytes": 239,
+      "sha256": "30a59d0b7a8611eccbfe995126a86353390e89e1cc39f1883adde081d482bdb8"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-format-prelaunch.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-format-prelaunch.json",
+      "bytes": 390,
+      "sha256": "5c9fdd70957b8346b551dfca97ca20be7e6eedbc69e5cff63b3cd893b83c0726"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-format-source-prelaunch.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-format-source-prelaunch.json",
+      "bytes": 421,
+      "sha256": "cb55d59e71d7854e90b4937559f476bf028d9254b6046b4dcb83f075d16bed13"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-format.diff",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-format.diff",
+      "bytes": 22965,
+      "sha256": "179c988f764db9ab2b1c60395e7c891a61ae7f7fbceddb1b125f90c9ff903f79"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-format.log",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-format.log",
+      "bytes": 206,
+      "sha256": "685302feb906ddcf7c2153a339690da4f0c0190a8606fcbd384b929850b46b55"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/preformat-corrected-pool_run_blocked_sql_test.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/preformat-corrected-pool_run_blocked_sql_test.go.txt",
+      "bytes": 17195,
+      "sha256": "9c3e2afb147f199d1937fb5a027e84f2bc72f9568b74a76f82616ff181f3faa9"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/preformat-fixed-pool_worker.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/preformat-fixed-pool_worker.go.txt",
+      "bytes": 6252,
+      "sha256": "65e16f218a9fda70240a8e01b42ee7b85404c586214fb4089ddcd129ec223a60"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/preformat-pool_run_blocked_sql_test.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/preformat-pool_run_blocked_sql_test.go.txt",
+      "bytes": 11381,
+      "sha256": "fcb20f18b724f0ce428ff9f35795b66ea314dd2edc25349687557fe4c9c43c2c"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/preformat-pool_run_live_fault_test.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/preformat-pool_run_live_fault_test.go.txt",
+      "bytes": 4612,
+      "sha256": "17a5e350e305105c5802c045a2cfa47b7e397be1be942b29f924cf52a1834565"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/preformat-pool_run_test.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/preformat-pool_run_test.go.txt",
+      "bytes": 4305,
+      "sha256": "3ce05a522f81c440580d8d9b523af68520f7ccefed16ca34d6890eee294f9027"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/root-ack.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/root-ack.json",
+      "bytes": 364,
+      "sha256": "6789ed5e297e2bd2bf86da3e76ce6409dc893daa1ceb07172005b261cacd0ab3"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/run-native.py",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/run-native.py",
+      "bytes": 5324,
+      "sha256": "90a808a0e3cf3a3a62441818dd0f87392a763b5ebdeef9ec2d5f2b5abc3e8d6d"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/first-red-source/host/durablework/pool.go",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/first-red-source/host/durablework/pool.go.txt",
+      "bytes": 271,
+      "sha256": "f3d2ac781246e837e683b86cdbfbcb7824471740c1638989d86696a13c239375"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/first-red-source/host/durablework/pool_run_test.go",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/first-red-source/host/durablework/pool_run_test.go.txt",
+      "bytes": 4373,
+      "sha256": "6e6eacbc17679dc1d8cf99cb03afbaf2d39978d9c179f6467548f5fea36ad4f7"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/first-red-source/internal/durableworkdemo/maintenance.go",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/first-red-source/internal/durableworkdemo/maintenance.go.txt",
+      "bytes": 4190,
+      "sha256": "3d0d13089ac8cf76372a28155f0896757ec8990d034dacefa94956d87ad97800"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/first-red-source/internal/durableworkdemo/pool_worker.go",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/first-red-source/internal/durableworkdemo/pool_worker.go.txt",
+      "bytes": 5930,
+      "sha256": "0f28cd85fdb8b1137d2fcfb0014fc2eac5442e31b4af687eb793d4d64da47684"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/first-red-source/manifest.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/first-red-source/manifest.json",
+      "bytes": 2013,
+      "sha256": "ec05bc6d3e6ef9bcfcdf00a7750f7023558671618ceb9fe87ba8616e5fad9085"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/first-red-source/runtime/admission.go",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/first-red-source/runtime/admission.go.txt",
+      "bytes": 4419,
+      "sha256": "9f6136f51196814bdaacd2065b038371d1a1827e9d4c0e0d496cf80c161bad21"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/first-red-source/runtime/schedule.go",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/first-red-source/runtime/schedule.go.txt",
+      "bytes": 1213,
+      "sha256": "d1d72e6cd41bafeb792cca905cf107ef7be5571b54656b32027bce58045a836f"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/fixed-mechanical-source/host/durablework/pool.go",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/fixed-mechanical-source/host/durablework/pool.go.txt",
+      "bytes": 271,
+      "sha256": "f3d2ac781246e837e683b86cdbfbcb7824471740c1638989d86696a13c239375"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/fixed-mechanical-source/host/durablework/pool_run_test.go",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/fixed-mechanical-source/host/durablework/pool_run_test.go.txt",
+      "bytes": 4373,
+      "sha256": "6e6eacbc17679dc1d8cf99cb03afbaf2d39978d9c179f6467548f5fea36ad4f7"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/fixed-mechanical-source/internal/durableworkdemo/maintenance.go",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/fixed-mechanical-source/internal/durableworkdemo/maintenance.go.txt",
+      "bytes": 4190,
+      "sha256": "3d0d13089ac8cf76372a28155f0896757ec8990d034dacefa94956d87ad97800"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/fixed-mechanical-source/internal/durableworkdemo/pool_worker.go",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/fixed-mechanical-source/internal/durableworkdemo/pool_worker.go.txt",
+      "bytes": 6252,
+      "sha256": "65e16f218a9fda70240a8e01b42ee7b85404c586214fb4089ddcd129ec223a60"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/fixed-mechanical-source/manifest.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/fixed-mechanical-source/manifest.json",
+      "bytes": 1653,
+      "sha256": "38303dc7fed81f5d0258c4e99ad89e573484c1a57f169c47f08b013cf3ce25be"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/fixed-mechanical-source/runtime/admission.go",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/fixed-mechanical-source/runtime/admission.go.txt",
+      "bytes": 4419,
+      "sha256": "9f6136f51196814bdaacd2065b038371d1a1827e9d4c0e0d496cf80c161bad21"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/fixed-mechanical-source/runtime/schedule.go",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/fixed-mechanical-source/runtime/schedule.go.txt",
+      "bytes": 1213,
+      "sha256": "d1d72e6cd41bafeb792cca905cf107ef7be5571b54656b32027bce58045a836f"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/live-caller-source/host/durablework/pool.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/live-caller-source/host/durablework/pool.go.txt",
+      "bytes": 271,
+      "sha256": "f3d2ac781246e837e683b86cdbfbcb7824471740c1638989d86696a13c239375"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/live-caller-source/host/durablework/pool_run_live_fault_test.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/live-caller-source/host/durablework/pool_run_live_fault_test.go.txt",
+      "bytes": 4740,
+      "sha256": "e3a8aa6f8cc5b2f74c56310db3d602cfb9760dc57f96465ec7b5eb56e21ef868"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/live-caller-source/host/durablework/pool_run_test.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/live-caller-source/host/durablework/pool_run_test.go.txt",
+      "bytes": 4373,
+      "sha256": "6e6eacbc17679dc1d8cf99cb03afbaf2d39978d9c179f6467548f5fea36ad4f7"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/live-caller-source/internal/durableworkdemo/maintenance.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/live-caller-source/internal/durableworkdemo/maintenance.go.txt",
+      "bytes": 4190,
+      "sha256": "3d0d13089ac8cf76372a28155f0896757ec8990d034dacefa94956d87ad97800"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/live-caller-source/internal/durableworkdemo/pool_worker.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/live-caller-source/internal/durableworkdemo/pool_worker.go.txt",
+      "bytes": 6252,
+      "sha256": "65e16f218a9fda70240a8e01b42ee7b85404c586214fb4089ddcd129ec223a60"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/live-caller-source/manifest.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/live-caller-source/manifest.json",
+      "bytes": 1206,
+      "sha256": "3044c10f1a413f5af1f1c7e4f154a3c3cca56f8740d664198ac1e952d24f6bc3"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/live-caller-source/runtime/admission.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/live-caller-source/runtime/admission.go.txt",
+      "bytes": 4419,
+      "sha256": "9f6136f51196814bdaacd2065b038371d1a1827e9d4c0e0d496cf80c161bad21"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/live-caller-source/runtime/schedule.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/live-caller-source/runtime/schedule.go.txt",
+      "bytes": 1213,
+      "sha256": "d1d72e6cd41bafeb792cca905cf107ef7be5571b54656b32027bce58045a836f"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-source/adapters/postgres/internal/pgstore/core.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-source/adapters/postgres/internal/pgstore/core.go.txt",
+      "bytes": 6886,
+      "sha256": "6a7a494bcb33bb03e0b3844b33829f2bd4a3954326a3f05d4737e5ba75c19499"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-source/adapters/postgres/internal/pgstore/pool.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-source/adapters/postgres/internal/pgstore/pool.go.txt",
+      "bytes": 15154,
+      "sha256": "ca3e395b06d2cda0d995f325b27663782e5c06359d3dde7495ff1574531099f1"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-source/adapters/postgres/pool.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-source/adapters/postgres/pool.go.txt",
+      "bytes": 8135,
+      "sha256": "4b88ee97ec80a7b7f51c0c45a1199192106ff0d84b0421fa926404cd705a5609"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-source/adapters/postgres/store.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-source/adapters/postgres/store.go.txt",
+      "bytes": 1840,
+      "sha256": "1be157b5ab0938e04915eebdbcaa4d957f904db88c14d594a2efd155e420c3f0"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-source/conformance/recovery/admission_test.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-source/conformance/recovery/admission_test.go.txt",
+      "bytes": 5550,
+      "sha256": "99186d71bc37541e3c94e6941b5f506bf655b42d04fe6ac5c8f2d7b4994c6cd1"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-source/conformance/recovery/owned_cleanup_failure_test.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-source/conformance/recovery/owned_cleanup_failure_test.go.txt",
+      "bytes": 6210,
+      "sha256": "cc174d06876ed558abe205cda4fcb646c7b9398258a6ee77713670d38fe52551"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-source/conformance/recovery/owned_fixture_test.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-source/conformance/recovery/owned_fixture_test.go.txt",
+      "bytes": 8905,
+      "sha256": "571401f59a2568f89a5d5bf8a3ee2c26fde69c6c1dbec6f796067790f043daea"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-source/conformance/recovery/owned_pg_fault_test.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-source/conformance/recovery/owned_pg_fault_test.go.txt",
+      "bytes": 3138,
+      "sha256": "487ab1a7a4a0365a1d386eaaa0cb96200329dbeda3082b14c4ebf33276285a05"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-source/conformance/recovery/pg_lock_scope_test.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-source/conformance/recovery/pg_lock_scope_test.go.txt",
+      "bytes": 7829,
+      "sha256": "345bcd5d8a1bf296d87e4b2aeae5b750063f99b034f21db23e81f2604afbd382"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-source/conformance/recovery/pool_run_blocked_sql_test.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-source/conformance/recovery/pool_run_blocked_sql_test.go.txt",
+      "bytes": 11675,
+      "sha256": "1027c6a1ce151fe34e3cfea549ba4d1629d69e1e0c8efe4f8a668c4e91a1cec6"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-source/conformance/recovery/pool_test.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-source/conformance/recovery/pool_test.go.txt",
+      "bytes": 50049,
+      "sha256": "64d27653cad585e809c2c96eab28c7285c46918909a12e320c1bb0d81af8a740"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-source/conformance/recovery/pool_wake_test.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-source/conformance/recovery/pool_wake_test.go.txt",
+      "bytes": 14245,
+      "sha256": "2c3eae4de7adc78c50cca03a1b7cd951577e016847bfdc376ddb54273350a3f1"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-source/conformance/recovery/sqlite_test.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-source/conformance/recovery/sqlite_test.go.txt",
+      "bytes": 24512,
+      "sha256": "7210687fb15c5e6aba88a6abdc24a6942ba55a583512f01667133e00eb9536d8"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-source/conformance/recovery/wait_test.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-source/conformance/recovery/wait_test.go.txt",
+      "bytes": 33780,
+      "sha256": "3b0223eb04234635a0ea3815ddd1e9e63b935aa63f8130539485fc7c3b8490d3"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-source/host/durablework/pool.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-source/host/durablework/pool.go.txt",
+      "bytes": 271,
+      "sha256": "f3d2ac781246e837e683b86cdbfbcb7824471740c1638989d86696a13c239375"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-source/host/durablework/pool_run_live_fault_test.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-source/host/durablework/pool_run_live_fault_test.go.txt",
+      "bytes": 4740,
+      "sha256": "e3a8aa6f8cc5b2f74c56310db3d602cfb9760dc57f96465ec7b5eb56e21ef868"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-source/host/durablework/pool_run_test.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-source/host/durablework/pool_run_test.go.txt",
+      "bytes": 4373,
+      "sha256": "6e6eacbc17679dc1d8cf99cb03afbaf2d39978d9c179f6467548f5fea36ad4f7"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-source/internal/durableworkdemo/maintenance.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-source/internal/durableworkdemo/maintenance.go.txt",
+      "bytes": 4190,
+      "sha256": "3d0d13089ac8cf76372a28155f0896757ec8990d034dacefa94956d87ad97800"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-source/internal/durableworkdemo/pool.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-source/internal/durableworkdemo/pool.go.txt",
+      "bytes": 4143,
+      "sha256": "9fe6056767bb2deba551ad88c5a85e16e8b2fa72b5945f22f02fd805d3d37ab6"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-source/internal/durableworkdemo/pool_worker.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-source/internal/durableworkdemo/pool_worker.go.txt",
+      "bytes": 6252,
+      "sha256": "65e16f218a9fda70240a8e01b42ee7b85404c586214fb4089ddcd129ec223a60"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-source/manifest.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-source/manifest.json",
+      "bytes": 4489,
+      "sha256": "7a3fd64c2e5ffa465ec6cae51d0e86e4e0b04fe4818f9dbfc94e932bd82b72a9"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-source/runtime/admission.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-source/runtime/admission.go.txt",
+      "bytes": 4419,
+      "sha256": "9f6136f51196814bdaacd2065b038371d1a1827e9d4c0e0d496cf80c161bad21"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-source/runtime/schedule.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-source/runtime/schedule.go.txt",
+      "bytes": 1213,
+      "sha256": "d1d72e6cd41bafeb792cca905cf107ef7be5571b54656b32027bce58045a836f"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-source/adapters/postgres/internal/pgstore/core.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-corrected-source/adapters/postgres/internal/pgstore/core.go.txt",
+      "bytes": 6886,
+      "sha256": "6a7a494bcb33bb03e0b3844b33829f2bd4a3954326a3f05d4737e5ba75c19499"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-source/adapters/postgres/internal/pgstore/pool.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-corrected-source/adapters/postgres/internal/pgstore/pool.go.txt",
+      "bytes": 15154,
+      "sha256": "ca3e395b06d2cda0d995f325b27663782e5c06359d3dde7495ff1574531099f1"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-source/adapters/postgres/pool.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-corrected-source/adapters/postgres/pool.go.txt",
+      "bytes": 8135,
+      "sha256": "4b88ee97ec80a7b7f51c0c45a1199192106ff0d84b0421fa926404cd705a5609"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-source/adapters/postgres/store.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-corrected-source/adapters/postgres/store.go.txt",
+      "bytes": 1840,
+      "sha256": "1be157b5ab0938e04915eebdbcaa4d957f904db88c14d594a2efd155e420c3f0"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-source/conformance/recovery/admission_test.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-corrected-source/conformance/recovery/admission_test.go.txt",
+      "bytes": 5550,
+      "sha256": "99186d71bc37541e3c94e6941b5f506bf655b42d04fe6ac5c8f2d7b4994c6cd1"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-source/conformance/recovery/owned_cleanup_failure_test.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-corrected-source/conformance/recovery/owned_cleanup_failure_test.go.txt",
+      "bytes": 6210,
+      "sha256": "cc174d06876ed558abe205cda4fcb646c7b9398258a6ee77713670d38fe52551"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-source/conformance/recovery/owned_fixture_test.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-corrected-source/conformance/recovery/owned_fixture_test.go.txt",
+      "bytes": 8905,
+      "sha256": "571401f59a2568f89a5d5bf8a3ee2c26fde69c6c1dbec6f796067790f043daea"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-source/conformance/recovery/owned_pg_fault_test.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-corrected-source/conformance/recovery/owned_pg_fault_test.go.txt",
+      "bytes": 3138,
+      "sha256": "487ab1a7a4a0365a1d386eaaa0cb96200329dbeda3082b14c4ebf33276285a05"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-source/conformance/recovery/pg_lock_scope_test.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-corrected-source/conformance/recovery/pg_lock_scope_test.go.txt",
+      "bytes": 7829,
+      "sha256": "345bcd5d8a1bf296d87e4b2aeae5b750063f99b034f21db23e81f2604afbd382"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-source/conformance/recovery/pool_run_blocked_sql_test.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-corrected-source/conformance/recovery/pool_run_blocked_sql_test.go.txt",
+      "bytes": 17791,
+      "sha256": "fcfe38b40601798e8928847d123e3923d758fa674141079682d2f233599a06f2"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-source/conformance/recovery/pool_test.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-corrected-source/conformance/recovery/pool_test.go.txt",
+      "bytes": 50049,
+      "sha256": "64d27653cad585e809c2c96eab28c7285c46918909a12e320c1bb0d81af8a740"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-source/conformance/recovery/pool_wake_test.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-corrected-source/conformance/recovery/pool_wake_test.go.txt",
+      "bytes": 14245,
+      "sha256": "2c3eae4de7adc78c50cca03a1b7cd951577e016847bfdc376ddb54273350a3f1"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-source/conformance/recovery/sqlite_test.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-corrected-source/conformance/recovery/sqlite_test.go.txt",
+      "bytes": 24512,
+      "sha256": "7210687fb15c5e6aba88a6abdc24a6942ba55a583512f01667133e00eb9536d8"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-source/conformance/recovery/wait_test.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-corrected-source/conformance/recovery/wait_test.go.txt",
+      "bytes": 33780,
+      "sha256": "3b0223eb04234635a0ea3815ddd1e9e63b935aa63f8130539485fc7c3b8490d3"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-source/host/durablework/pool.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-corrected-source/host/durablework/pool.go.txt",
+      "bytes": 271,
+      "sha256": "f3d2ac781246e837e683b86cdbfbcb7824471740c1638989d86696a13c239375"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-source/host/durablework/pool_run_live_fault_test.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-corrected-source/host/durablework/pool_run_live_fault_test.go.txt",
+      "bytes": 4740,
+      "sha256": "e3a8aa6f8cc5b2f74c56310db3d602cfb9760dc57f96465ec7b5eb56e21ef868"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-source/host/durablework/pool_run_test.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-corrected-source/host/durablework/pool_run_test.go.txt",
+      "bytes": 4373,
+      "sha256": "6e6eacbc17679dc1d8cf99cb03afbaf2d39978d9c179f6467548f5fea36ad4f7"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-source/internal/durableworkdemo/maintenance.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-corrected-source/internal/durableworkdemo/maintenance.go.txt",
+      "bytes": 4190,
+      "sha256": "3d0d13089ac8cf76372a28155f0896757ec8990d034dacefa94956d87ad97800"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-source/internal/durableworkdemo/pool.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-corrected-source/internal/durableworkdemo/pool.go.txt",
+      "bytes": 4143,
+      "sha256": "9fe6056767bb2deba551ad88c5a85e16e8b2fa72b5945f22f02fd805d3d37ab6"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-source/internal/durableworkdemo/pool_worker.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-corrected-source/internal/durableworkdemo/pool_worker.go.txt",
+      "bytes": 6252,
+      "sha256": "65e16f218a9fda70240a8e01b42ee7b85404c586214fb4089ddcd129ec223a60"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-source/manifest.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-corrected-source/manifest.json",
+      "bytes": 5440,
+      "sha256": "16f323a2851883703b355f959f62a64c8b449dcb1529668975ae215860a75689"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-source/runtime/admission.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-corrected-source/runtime/admission.go.txt",
+      "bytes": 4419,
+      "sha256": "9f6136f51196814bdaacd2065b038371d1a1827e9d4c0e0d496cf80c161bad21"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-source/runtime/schedule.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-corrected-source/runtime/schedule.go.txt",
+      "bytes": 1213,
+      "sha256": "d1d72e6cd41bafeb792cca905cf107ef7be5571b54656b32027bce58045a836f"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-static/before-pool_worker.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/first-static/before-pool_worker.go.txt",
+      "bytes": 5930,
+      "sha256": "0f28cd85fdb8b1137d2fcfb0014fc2eac5442e31b4af687eb793d4d64da47684"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-static/candidate-pool_worker.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/first-static/candidate-pool_worker.go.txt",
+      "bytes": 6252,
+      "sha256": "65e16f218a9fda70240a8e01b42ee7b85404c586214fb4089ddcd129ec223a60"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-static/fix-manifest.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/first-static/fix-manifest.json",
+      "bytes": 2213,
+      "sha256": "bf128f2178f5223393e230cc3bc392fff75299d30230b44d78d2ac6d702b078c"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-static/manifest.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/first-static/manifest.json",
+      "bytes": 2827,
+      "sha256": "ade7629c748b4fb1c9d3804c91ee27671eaa67d1f5681c4d9cf81e85a1e9cbaa"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-static/plan.md",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/first-static/plan.md",
+      "bytes": 4534,
+      "sha256": "de139c2e3272fa3ccd70535101a23013505c0371131592cf6cc13120fc4bdbc1"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-static/pool_run_test.go",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/first-static/pool_run_test.go.txt",
+      "bytes": 4305,
+      "sha256": "3ce05a522f81c440580d8d9b523af68520f7ccefed16ca34d6890eee294f9027"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-static/product-fix.diff",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/first-static/product-fix.diff",
+      "bytes": 2140,
+      "sha256": "48c67b5295bb50dee74407acc2c1a89af87e14ec4a27383e7117ec80b4b7d45d"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-live-static/manifest.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/live-static/manifest.json",
+      "bytes": 1694,
+      "sha256": "bab29e8af718224c9aefed8c7e8efa165637b72f9f7ee033ce2b04d951532792"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-live-static/plan.md",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/live-static/plan.md",
+      "bytes": 2751,
+      "sha256": "ad85639b667c01253605293511511701ade2f09e99589dc4c6a6d2b0d3d77d92"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-live-static/pool_run_live_fault_test.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/live-static/pool_run_live_fault_test.go.txt",
+      "bytes": 4612,
+      "sha256": "17a5e350e305105c5802c045a2cfa47b7e397be1be942b29f924cf52a1834565"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-blocked-sql-static/fixture-correction-v1/from-first-1027.diff",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/blocked-sql-static/fixture-correction-v1/from-first-1027.diff",
+      "bytes": 13719,
+      "sha256": "79ca845ea323fb424dfcd815ebb748330b309e8bd384ee87167adfc14e4a95e3"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-blocked-sql-static/fixture-correction-v1/manifest.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/blocked-sql-static/fixture-correction-v1/manifest.json",
+      "bytes": 5302,
+      "sha256": "e55ccd77e77c073d18e7d17ec7736d724e5143c4c732b0a82644277fddb25816"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-blocked-sql-static/fixture-correction-v1/plan.md",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/blocked-sql-static/fixture-correction-v1/plan.md",
+      "bytes": 4115,
+      "sha256": "19700223dd179a5a1e747cae6c334050ee508e5f574d2aa6c1d3fdbf28d07aad"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-blocked-sql-static/fixture-correction-v1/source.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/blocked-sql-static/fixture-correction-v1/source.go.txt",
+      "bytes": 16838,
+      "sha256": "6ca74f1bbdf9c4f907f9bc74d25c02fcb336087708ce4acd53a8c7d4e57ec34a"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-blocked-sql-static/fixture-correction-v2/manifest.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/blocked-sql-static/fixture-correction-v2/manifest.json",
+      "bytes": 5440,
+      "sha256": "02b988f7f7e8114c6157e8705e3047b644b36913b7f500f6c6bd51cd71774870"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-blocked-sql-static/fixture-correction-v2/source.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/blocked-sql-static/fixture-correction-v2/source.go.txt",
+      "bytes": 17195,
+      "sha256": "9c3e2afb147f199d1937fb5a027e84f2bc72f9568b74a76f82616ff181f3faa9"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-blocked-sql-static/fixture-correction-v2/v1-v2.diff",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/blocked-sql-static/fixture-correction-v2/v1-v2.diff",
+      "bytes": 2141,
+      "sha256": "24846c6f175fd0004e22e27226141bb293e3e5a21c3c67010977fcb3b0f2b8fd"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-blocked-sql-static/manifest-v2.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/blocked-sql-static/manifest-v2.json",
+      "bytes": 4347,
+      "sha256": "27dbc95836ebd731e1474d497fc3c326221d77756eec888fe1ec65fd58472e03"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-blocked-sql-static/manifest-v3.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/blocked-sql-static/manifest-v3.json",
+      "bytes": 4451,
+      "sha256": "1c4f7021e2e13950c19ec0c96624b57c7ea02eabae73bdd6fb7816d3255a8134"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-blocked-sql-static/manifest.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/blocked-sql-static/manifest.json",
+      "bytes": 4122,
+      "sha256": "92fc318f4bae0171e680c2aa1b3982ad07afff169e014945b1582224bbee17d5"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-blocked-sql-static/plan.md",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/blocked-sql-static/plan.md",
+      "bytes": 5797,
+      "sha256": "eb51c96a98d51071c16a12cfeaf0a1e6b264e036ef4f0559dd7f68ae05e4eb21"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-blocked-sql-static/pool_run_blocked_sql_test-v2.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/blocked-sql-static/pool_run_blocked_sql_test-v2.go.txt",
+      "bytes": 11332,
+      "sha256": "7b442019809804b08ace605934b701480c0d7d1a48539f530afc0f480f79e416"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-blocked-sql-static/pool_run_blocked_sql_test-v3.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/blocked-sql-static/pool_run_blocked_sql_test-v3.go.txt",
+      "bytes": 11381,
+      "sha256": "fcb20f18b724f0ce428ff9f35795b66ea314dd2edc25349687557fe4c9c43c2c"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-blocked-sql-static/pool_run_blocked_sql_test.go.txt",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/blocked-sql-static/pool_run_blocked_sql_test.go.txt",
+      "bytes": 11244,
+      "sha256": "a406b5d2f8175843b846e595618cae4f403af686506b1f295b2e96ccaf55c0c4"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-blocked-sql-static/public-fixture-investigation.md",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/blocked-sql-static/public-fixture-investigation.md",
+      "bytes": 3331,
+      "sha256": "df32d2d4ecfba204731a271ab7f404b0df85836d1b473d11dfc1c22e7599d8a3"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-blocked-sql-static/v2-v3.diff",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/blocked-sql-static/v2-v3.diff",
+      "bytes": 804,
+      "sha256": "8bf4a8ca70bf3b886d03e980ee5fa344731a9b981aa68916c50a61c0e28be3f1"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-affected-static/checkpoint-sync.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/affected-static/checkpoint-sync.json",
+      "bytes": 397,
+      "sha256": "2f0c3e36ed1388b516f40fb5cde6a351883087c8317b6ec6a718b5b11bded76c"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-affected-static/manifest.json",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/affected-static/manifest.json",
+      "bytes": 11732,
+      "sha256": "2ccc66dcafe2cd8bbaf7be2f5837ec5e72835f9df7684af2ed07f759aa5699ef"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-affected-static/plan.md",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/affected-static/plan.md",
+      "bytes": 5789,
+      "sha256": "d5dda960dd7b2b089e9e13423214c19f77fddf6352213a159af7c8080b5474cf"
+    },
+    {
+      "original": "/tmp/lerna-ci-run-blocked-sql-fixture-decision.md",
+      "archive": ".scratch/lerna-implementation/current-ci-cancellation-evidence/adopted-faithful-pg-fixture-decision.md",
+      "bytes": 4399,
+      "sha256": "851a9e895b819473b9fda60a33d20e09292c5f11ade5e91c2227555f235b53b7"
+    }
+  ]
+}

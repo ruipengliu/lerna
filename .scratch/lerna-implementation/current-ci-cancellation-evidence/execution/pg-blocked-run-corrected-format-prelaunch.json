@@ -1,0 +1,14 @@
+{
+  "event": "native_start_ack",
+  "operation": "pg-blocked-run-corrected-format",
+  "pid": 3763190,
+  "pgid": 3763190,
+  "starttime": "15804862",
+  "root": "/tmp/lerna-current-ci-cancellation-execution",
+  "argv": [
+    "bash",
+    "-c",
+    "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; gofmt -w conformance/recovery/pool_run_blocked_sql_test.go"
+  ],
+  "deadline_seconds": 120
+}

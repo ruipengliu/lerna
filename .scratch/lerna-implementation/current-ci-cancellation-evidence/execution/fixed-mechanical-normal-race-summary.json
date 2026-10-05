@@ -1,0 +1,50 @@
+{
+  "kind": "same mechanical caller cancellation error aggregation normal/race green",
+  "source_manifest": "/tmp/lerna-current-ci-cancellation-execution/fixed-mechanical-source/manifest.json",
+  "formatted_product_sha256": "65e16f218a9fda70240a8e01b42ee7b85404c586214fb4089ddcd129ec223a60",
+  "same_formatted_first_red_test_sha256": "6e6eacbc17679dc1d8cf99cb03afbaf2d39978d9c179f6467548f5fea36ad4f7",
+  "format_diff_empty": true,
+  "results": [
+    {
+      "mode": "normal",
+      "raw": "/tmp/lerna-current-ci-cancellation-execution/mechanical-cancellation-fixed-first-normal.log",
+      "raw_sha256": "a30c4dd4ff920cb80cac6bf5fd0d78ee512b3f6101116b5a578d482e16d98d5f",
+      "native_ack": {
+        "event": "native_completion_ack",
+        "operation": "mechanical-cancellation-fixed-first-normal",
+        "pid": 3654879,
+        "pgid": 3654879,
+        "starttime": "15330380",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false,
+        "owned_raw_fsync_close_ack": true
+      },
+      "independently_group_absent": true
+    },
+    {
+      "mode": "race",
+      "raw": "/tmp/lerna-current-ci-cancellation-execution/mechanical-cancellation-fixed-first-race.log",
+      "raw_sha256": "82a46485629f3d356407f324047509d9b0d7d9e65458385dcacc420247fbbd28",
+      "native_ack": {
+        "event": "native_completion_ack",
+        "operation": "mechanical-cancellation-fixed-first-race",
+        "pid": 3655013,
+        "pgid": 3655013,
+        "starttime": "15330528",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false,
+        "owned_raw_fsync_close_ack": true
+      },
+      "independently_group_absent": true
+    }
+  ],
+  "tool_session": 88445,
+  "actual_tool_exit": 0,
+  "all6_postpins_unchanged": true,
+  "stop_release": true,
+  "no_caller_live_control_or_actual_pg_sqlite_selected_yet": true,
+  "mechanical_not_native_ci_reproduction": true,
+  "no_full_ci_green_claim": true
+}

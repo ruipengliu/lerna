@@ -1,0 +1,239 @@
+--- /tmp/lerna-current-ci-cancellation-execution/preformat-pool_run_test.go.txt	2026-10-05 07:15:33.530141897 +0000
++++ /tmp/lerna-worktrees/current-ci-cancellation/host/durablework/pool_run_test.go	2026-10-05 07:15:33.614810312 +0000
+@@ -1,113 +1,141 @@
+ package durablework_test
+ 
+ import (
+- "context"
+- "database/sql/driver"
+- "errors"
+- "sync"
+- "sync/atomic"
+- "testing"
+- "time"
+-
+- "github.com/ruipengliu/lerna/contract"
+- "github.com/ruipengliu/lerna/host/durablework"
+- demo "github.com/ruipengliu/lerna/internal/durableworkdemo"
+- "github.com/ruipengliu/lerna/runtime"
++	"context"
++	"database/sql/driver"
++	"errors"
++	"sync"
++	"sync/atomic"
++	"testing"
++	"time"
++
++	"github.com/ruipengliu/lerna/contract"
++	"github.com/ruipengliu/lerna/host/durablework"
++	demo "github.com/ruipengliu/lerna/internal/durableworkdemo"
++	"github.com/ruipengliu/lerna/runtime"
+ )
+ 
+ // This is an explicitly injected transaction-entry diagnostic, not a native
+ // reproduction of the CI bad-connection cause or a business/storage fixture.
+ func TestPoolRunCallerCancellationRetainsEveryIndependentLaneCause(t *testing.T) {
+- guard, stopGuard := context.WithTimeout(context.Background(), 5*time.Second)
+- defer stopGuard()
+- caller, cancelCaller := context.WithCancel(guard)
+- secondCause := errors.New("mechanical transaction diagnostic two")
+- thirdCause := errors.New("mechanical transaction diagnostic three")
+- runner := &poolRunDiagnosticRunner{
+-  guard: guard,
+-  ready: make(chan int, 3),
+-  exited: make(chan int, 3),
+-  release: make(chan struct{}),
+-  causes: []error{driver.ErrBadConn, secondCause, errors.Join(thirdCause, runtime.ErrCommitUnknown)},
+- }
+- owner := contract.OwnerRef{TenantID: "mechanical-run", OwnerID: "owner"}
+- permissions, err := demo.NewWorkerPermissions([]string{"worker-a"})
+- if err != nil { t.Fatal(err) }
+- // Within deliberately fails before any Tx callback. These unused storage
+- // ports only satisfy host assembly; no database facts or callback are faked.
+- anchor := &durablework.Host{Owner: owner, Runner: runner, Clock: poolRunUnusedClock{}, Repository: &poolRunUnusedRepository{}, PoolControl: true}
+- worker := &durablework.Worker{Owner: owner, Permissions: permissions}
+- pool, err := durablework.NewPoolWorker(anchor, []*durablework.Worker{worker})
+- if err != nil { t.Fatal(err) }
+- done := make(chan error, 1)
+- joined := false
+- var releaseOnce sync.Once
+- release := func() { releaseOnce.Do(func() { close(runner.release) }) }
+- t.Cleanup(func() {
+-  cancelCaller()
+-  release()
+-  if joined { return }
+-  join, stopJoin := context.WithTimeout(context.Background(), time.Second)
+-  defer stopJoin()
+-  select {
+-  case <-done: joined = true
+-  case <-join.Done(): t.Error("mechanical Run did not join within original cleanup bound")
+-  }
+- })
+- go func() { done <- pool.Run(caller, "worker-a", time.Minute, 10*time.Millisecond) }()
+- registered := map[int]bool{}
+- for range 3 {
+-  select {
+-  case index := <-runner.ready:
+-   if registered[index] { t.Fatal("diagnostic registration repeated") }
+-   registered[index] = true
+-  case <-guard.Done(): t.Fatal("three owned loops did not reach finite diagnostic barrier", guard.Err())
+-  }
+- }
+- // All three transaction entries are live before actual caller cancellation.
+- // Release independently supplied errors only after the original caller stops.
+- cancelCaller()
+- release()
+- select {
+- case err = <-done: joined = true
+- case <-guard.Done(): t.Fatal("Run failed to join all diagnostic lanes", guard.Err())
+- }
+- for range 3 {
+-  select {
+-  case <-runner.exited:
+-  default: t.Fatal("Run returned before every registered transaction entry exited")
+-  }
+- }
+- for _, cause := range []error{context.Canceled, driver.ErrBadConn, secondCause, thirdCause, runtime.ErrCommitUnknown} {
+-  if !errors.Is(err, cause) { t.Errorf("Run lost independent cause %v: %v", cause, err) }
+- }
++	guard, stopGuard := context.WithTimeout(context.Background(), 5*time.Second)
++	defer stopGuard()
++	caller, cancelCaller := context.WithCancel(guard)
++	secondCause := errors.New("mechanical transaction diagnostic two")
++	thirdCause := errors.New("mechanical transaction diagnostic three")
++	runner := &poolRunDiagnosticRunner{
++		guard:   guard,
++		ready:   make(chan int, 3),
++		exited:  make(chan int, 3),
++		release: make(chan struct{}),
++		causes:  []error{driver.ErrBadConn, secondCause, errors.Join(thirdCause, runtime.ErrCommitUnknown)},
++	}
++	owner := contract.OwnerRef{TenantID: "mechanical-run", OwnerID: "owner"}
++	permissions, err := demo.NewWorkerPermissions([]string{"worker-a"})
++	if err != nil {
++		t.Fatal(err)
++	}
++	// Within deliberately fails before any Tx callback. These unused storage
++	// ports only satisfy host assembly; no database facts or callback are faked.
++	anchor := &durablework.Host{Owner: owner, Runner: runner, Clock: poolRunUnusedClock{}, Repository: &poolRunUnusedRepository{}, PoolControl: true}
++	worker := &durablework.Worker{Owner: owner, Permissions: permissions}
++	pool, err := durablework.NewPoolWorker(anchor, []*durablework.Worker{worker})
++	if err != nil {
++		t.Fatal(err)
++	}
++	done := make(chan error, 1)
++	joined := false
++	var releaseOnce sync.Once
++	release := func() { releaseOnce.Do(func() { close(runner.release) }) }
++	t.Cleanup(func() {
++		cancelCaller()
++		release()
++		if joined {
++			return
++		}
++		join, stopJoin := context.WithTimeout(context.Background(), time.Second)
++		defer stopJoin()
++		select {
++		case <-done:
++			joined = true
++		case <-join.Done():
++			t.Error("mechanical Run did not join within original cleanup bound")
++		}
++	})
++	go func() { done <- pool.Run(caller, "worker-a", time.Minute, 10*time.Millisecond) }()
++	registered := map[int]bool{}
++	for range 3 {
++		select {
++		case index := <-runner.ready:
++			if registered[index] {
++				t.Fatal("diagnostic registration repeated")
++			}
++			registered[index] = true
++		case <-guard.Done():
++			t.Fatal("three owned loops did not reach finite diagnostic barrier", guard.Err())
++		}
++	}
++	// All three transaction entries are live before actual caller cancellation.
++	// Release independently supplied errors only after the original caller stops.
++	cancelCaller()
++	release()
++	select {
++	case err = <-done:
++		joined = true
++	case <-guard.Done():
++		t.Fatal("Run failed to join all diagnostic lanes", guard.Err())
++	}
++	for range 3 {
++		select {
++		case <-runner.exited:
++		default:
++			t.Fatal("Run returned before every registered transaction entry exited")
++		}
++	}
++	for _, cause := range []error{context.Canceled, driver.ErrBadConn, secondCause, thirdCause, runtime.ErrCommitUnknown} {
++		if !errors.Is(err, cause) {
++			t.Errorf("Run lost independent cause %v: %v", cause, err)
++		}
++	}
+ }
+ 
+ type poolRunDiagnosticRunner struct {
+- guard context.Context
+- ready chan int
+- exited chan int
+- release chan struct{}
+- causes []error
+- started atomic.Int32
++	guard   context.Context
++	ready   chan int
++	exited  chan int
++	release chan struct{}
++	causes  []error
++	started atomic.Int32
+ }
++
+ func (r *poolRunDiagnosticRunner) Within(ctx context.Context, owner contract.OwnerRef, _ func(context.Context, runtime.Tx) error) error {
+- if _, finite := ctx.Deadline(); !finite { return errors.New("mechanical caller lacks finite deadline") }
+- index := int(r.started.Add(1))-1
+- if index < 0 || index >= len(r.causes) { return errors.New("unexpected extra diagnostic entry") }
+- defer func() { r.exited <- index }()
+- select {
+- case r.ready <- index:
+- case <-r.guard.Done(): return r.guard.Err()
+- }
+- select {
+- case <-r.release: return r.causes[index]
+- case <-r.guard.Done(): return r.guard.Err()
+- }
++	if _, finite := ctx.Deadline(); !finite {
++		return errors.New("mechanical caller lacks finite deadline")
++	}
++	index := int(r.started.Add(1)) - 1
++	if index < 0 || index >= len(r.causes) {
++		return errors.New("unexpected extra diagnostic entry")
++	}
++	defer func() { r.exited <- index }()
++	select {
++	case r.ready <- index:
++	case <-r.guard.Done():
++		return r.guard.Err()
++	}
++	select {
++	case <-r.release:
++		return r.causes[index]
++	case <-r.guard.Done():
++		return r.guard.Err()
++	}
+ }
+ 
+-type poolRunUnusedRepository struct { demo.Repository; demo.PoolRepository }
++type poolRunUnusedRepository struct {
++	demo.Repository
++	demo.PoolRepository
++}
+ type poolRunUnusedClock struct{}
++
+ func (poolRunUnusedClock) Now(context.Context, runtime.Tx) (time.Time, error) {
+- return time.Time{}, errors.New("unexpected clock call before mechanical transaction-entry failure")
++	return time.Time{}, errors.New("unexpected clock call before mechanical transaction-entry failure")
+ }

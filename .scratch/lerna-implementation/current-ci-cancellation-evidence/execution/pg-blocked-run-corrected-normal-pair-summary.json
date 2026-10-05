@@ -1,0 +1,240 @@
+{
+  "kind": "actual corrected PG SQL normalrelease and callercancel normal qualification STOP RELEASE",
+  "source_manifest": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-source/manifest.json",
+  "source_manifest_sha256": "16f323a2851883703b355f959f62a64c8b449dcb1529668975ae215860a75689",
+  "all22_postpins_match": true,
+  "formatted_source_sha256": "fcfe38b40601798e8928847d123e3923d758fa674141079682d2f233599a06f2",
+  "operations": [
+    {
+      "operation": "pg-blocked-run-corrected-format",
+      "pid": 3763190,
+      "pgid": 3763190,
+      "starttime": "15804862",
+      "exit": 0,
+      "actual_wait_confirmed": true,
+      "current_group_absent": true,
+      "timed_out": false,
+      "raw": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-format.log",
+      "raw_sha256": "04198485a681427be9a422da40cf86b6282203b07f46d84192826dddb345bf72",
+      "outcome": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-format-outcome.json",
+      "raw_first_fsync_close_ack": true
+    },
+    {
+      "operation": "pg-blocked-run-corrected-normal-release",
+      "pid": 3764961,
+      "pgid": 3764961,
+      "starttime": "15812793",
+      "exit": 0,
+      "actual_wait_confirmed": true,
+      "current_group_absent": true,
+      "timed_out": false,
+      "raw": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-normal-release.log",
+      "raw_sha256": "1603f883fb976ec7d051d229482ddb885735b2a8a229748c38e3efb147bc9545",
+      "outcome": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-normal-release-outcome.json",
+      "raw_first_fsync_close_ack": true
+    },
+    {
+      "operation": "pg-blocked-run-corrected-caller-cancellation",
+      "pid": 3765851,
+      "pgid": 3765851,
+      "starttime": "15816383",
+      "exit": 0,
+      "actual_wait_confirmed": true,
+      "current_group_absent": true,
+      "timed_out": false,
+      "raw": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-caller-cancellation.log",
+      "raw_sha256": "75424bb26a980d7036138dca5edb03ff981955ea1f4c39f0a76edaf5becf3d1b",
+      "outcome": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-caller-cancellation-outcome.json",
+      "raw_first_fsync_close_ack": true
+    }
+  ],
+  "registered_resource_intervals": {
+    "pg-blocked-run-corrected-normal-release": [
+      {
+        "backend": "postgres",
+        "schema": "lerna_test_e1df8c195a3a4dc35d4423b1"
+      },
+      {
+        "Event": "run_pg_role_intent",
+        "Schema": "lerna_test_e1df8c195a3a4dc35d4423b1",
+        "Role": "run",
+        "Application": "lerna_test_e1df8c195a3a4dc35d4423b1-run"
+      },
+      {
+        "Event": "run_pg_role_intent",
+        "Schema": "lerna_test_e1df8c195a3a4dc35d4423b1",
+        "Role": "blocker",
+        "Application": "lerna_test_e1df8c195a3a4dc35d4423b1-blocker"
+      },
+      {
+        "Event": "run_pg_role_intent",
+        "Schema": "lerna_test_e1df8c195a3a4dc35d4423b1",
+        "Role": "observer",
+        "Application": "lerna_test_e1df8c195a3a4dc35d4423b1-observer"
+      },
+      {
+        "Event": "run_pg_backend_observed_after_startup_pre_run",
+        "Schema": "lerna_test_e1df8c195a3a4dc35d4423b1",
+        "Role": "observer",
+        "Backend": {
+          "PID": 618532,
+          "Started": "2026-10-05T08:44:53.592452Z",
+          "Database": "lerna_durable_work_01_20261003",
+          "User": "lerna",
+          "Application": "lerna_test_e1df8c195a3a4dc35d4423b1-observer",
+          "State": "active"
+        }
+      },
+      {
+        "Event": "run_pg_backend_observed_after_startup_pre_run",
+        "Schema": "lerna_test_e1df8c195a3a4dc35d4423b1",
+        "Role": "run",
+        "Backend": {
+          "PID": 618530,
+          "Started": "2026-10-05T08:44:53.429344Z",
+          "Database": "lerna_durable_work_01_20261003",
+          "User": "lerna",
+          "Application": "lerna_test_e1df8c195a3a4dc35d4423b1-run",
+          "State": "idle in transaction"
+        }
+      },
+      {
+        "Event": "run_pg_backend_observed_after_startup_pre_run",
+        "Schema": "lerna_test_e1df8c195a3a4dc35d4423b1",
+        "Role": "run",
+        "Backend": {
+          "PID": 618533,
+          "Started": "2026-10-05T08:44:53.602229Z",
+          "Database": "lerna_durable_work_01_20261003",
+          "User": "lerna",
+          "Application": "lerna_test_e1df8c195a3a4dc35d4423b1-run",
+          "State": "idle in transaction"
+        }
+      },
+      {
+        "Event": "run_pg_backend_observed_after_startup_pre_run",
+        "Schema": "lerna_test_e1df8c195a3a4dc35d4423b1",
+        "Role": "run",
+        "Backend": {
+          "PID": 618534,
+          "Started": "2026-10-05T08:44:53.602716Z",
+          "Database": "lerna_durable_work_01_20261003",
+          "User": "lerna",
+          "Application": "lerna_test_e1df8c195a3a4dc35d4423b1-run",
+          "State": "idle in transaction"
+        }
+      },
+      {
+        "Event": "run_pg_backend_observed_after_startup_pre_run",
+        "Schema": "lerna_test_e1df8c195a3a4dc35d4423b1",
+        "Role": "blocker",
+        "Backend": {
+          "PID": 618531,
+          "Started": "2026-10-05T08:44:53.437499Z",
+          "Database": "lerna_durable_work_01_20261003",
+          "User": "lerna",
+          "Application": "lerna_test_e1df8c195a3a4dc35d4423b1-blocker",
+          "State": "idle"
+        }
+      }
+    ],
+    "pg-blocked-run-corrected-caller-cancellation": [
+      {
+        "backend": "postgres",
+        "schema": "lerna_test_4e7f9b2f917bee25413fbcc9"
+      },
+      {
+        "Event": "run_pg_role_intent",
+        "Schema": "lerna_test_4e7f9b2f917bee25413fbcc9",
+        "Role": "run",
+        "Application": "lerna_test_4e7f9b2f917bee25413fbcc9-run"
+      },
+      {
+        "Event": "run_pg_role_intent",
+        "Schema": "lerna_test_4e7f9b2f917bee25413fbcc9",
+        "Role": "blocker",
+        "Application": "lerna_test_4e7f9b2f917bee25413fbcc9-blocker"
+      },
+      {
+        "Event": "run_pg_role_intent",
+        "Schema": "lerna_test_4e7f9b2f917bee25413fbcc9",
+        "Role": "observer",
+        "Application": "lerna_test_4e7f9b2f917bee25413fbcc9-observer"
+      },
+      {
+        "Event": "run_pg_backend_observed_after_startup_pre_run",
+        "Schema": "lerna_test_4e7f9b2f917bee25413fbcc9",
+        "Role": "observer",
+        "Backend": {
+          "PID": 618672,
+          "Started": "2026-10-05T08:45:27.314685Z",
+          "Database": "lerna_durable_work_01_20261003",
+          "User": "lerna",
+          "Application": "lerna_test_4e7f9b2f917bee25413fbcc9-observer",
+          "State": "active"
+        }
+      },
+      {
+        "Event": "run_pg_backend_observed_after_startup_pre_run",
+        "Schema": "lerna_test_4e7f9b2f917bee25413fbcc9",
+        "Role": "run",
+        "Backend": {
+          "PID": 618670,
+          "Started": "2026-10-05T08:45:27.132274Z",
+          "Database": "lerna_durable_work_01_20261003",
+          "User": "lerna",
+          "Application": "lerna_test_4e7f9b2f917bee25413fbcc9-run",
+          "State": "idle in transaction"
+        }
+      },
+      {
+        "Event": "run_pg_backend_observed_after_startup_pre_run",
+        "Schema": "lerna_test_4e7f9b2f917bee25413fbcc9",
+        "Role": "run",
+        "Backend": {
+          "PID": 618673,
+          "Started": "2026-10-05T08:45:27.346848Z",
+          "Database": "lerna_durable_work_01_20261003",
+          "User": "lerna",
+          "Application": "lerna_test_4e7f9b2f917bee25413fbcc9-run",
+          "State": "idle in transaction"
+        }
+      },
+      {
+        "Event": "run_pg_backend_observed_after_startup_pre_run",
+        "Schema": "lerna_test_4e7f9b2f917bee25413fbcc9",
+        "Role": "run",
+        "Backend": {
+          "PID": 618674,
+          "Started": "2026-10-05T08:45:27.346328Z",
+          "Database": "lerna_durable_work_01_20261003",
+          "User": "lerna",
+          "Application": "lerna_test_4e7f9b2f917bee25413fbcc9-run",
+          "State": "idle in transaction"
+        }
+      },
+      {
+        "Event": "run_pg_backend_observed_after_startup_pre_run",
+        "Schema": "lerna_test_4e7f9b2f917bee25413fbcc9",
+        "Role": "blocker",
+        "Backend": {
+          "PID": 618671,
+          "Started": "2026-10-05T08:45:27.141703Z",
+          "Database": "lerna_durable_work_01_20261003",
+          "User": "lerna",
+          "Application": "lerna_test_4e7f9b2f917bee25413fbcc9-blocker",
+          "State": "idle"
+        }
+      }
+    ]
+  },
+  "each_actual_three_original_SQL_waiters_with_PID_backend_start": true,
+  "each_actual_public_projection_reservation_later_ordinary_completion_and_receipts_tail_pass": true,
+  "observer_first_close_confirmed_in_both_raws": true,
+  "real_caller_cancellation_all_actual_transaction_causes_preserved": true,
+  "pid_provenance": "after startup/preRun; role intent before Open; not handshake-beforefirstSQL",
+  "original_1027_fixture_failure_preserved": true,
+  "no_native_CI_failed_statement_reproduction_claim": true,
+  "no_race_affectedmatrix_product_or_other_source_change": true,
+  "local_released": true
+}

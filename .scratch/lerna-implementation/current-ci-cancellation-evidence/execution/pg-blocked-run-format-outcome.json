@@ -1,0 +1,11 @@
+{
+  "event": "native_completion_ack",
+  "operation": "pg-blocked-run-format",
+  "pid": 3723428,
+  "pgid": 3723428,
+  "starttime": "15629876",
+  "exit": 0,
+  "group_absent": true,
+  "timed_out": false,
+  "owned_raw_fsync_close_ack": true
+}

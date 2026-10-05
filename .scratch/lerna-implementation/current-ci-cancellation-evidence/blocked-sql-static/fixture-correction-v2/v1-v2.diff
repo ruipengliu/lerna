@@ -1,0 +1,43 @@
+--- fixture-v1-6ca74f1b
++++ fixture-v2-exact-original-database-user
+@@ -33,8 +33,13 @@
+  fixture, err := createOwnedFixture(ctx, "postgres", true)
+  if err != nil { t.Fatal(err) }
+  t.Cleanup(func() { if err := fixture.Cleanup(); err != nil { t.Error(err) } })
+- runPIDs := &poolRunPGPIDs{schema: fixture.pg.Schema, role: "run"}
+- blockerPIDs := &poolRunPGPIDs{schema: fixture.pg.Schema, role: "blocker"}
++ originalScope,err:=pgx.ParseConfig(fixture.pg.DSN)
++ if err!=nil { t.Fatalf("original PG scope configuration failed: %T",err) }
++ identities:=func(role string) *poolRunPGPIDs {
++  return &poolRunPGPIDs{schema:fixture.pg.Schema,role:role,database:originalScope.Database,user:originalScope.User}
++ }
++ runPIDs := identities("run")
++ blockerPIDs := identities("blocker")
+  openPeer := func(pids *poolRunPGPIDs) *poolRunPGEntry {
+   cfg := fixture.pg
+   cfg.DSN = poolRunPGTaggedDSN(t, cfg.DSN, pids.tag())
+@@ -80,7 +85,7 @@
+ 	}
+ 
+ 	// The observer is administrative provenance, never a private business oracle.
+- observerPIDs := &poolRunPGPIDs{schema:fixture.pg.Schema,role:"observer"}
++ observerPIDs := identities("observer")
+  observerDSN := poolRunPGTaggedDSN(t,fixture.pg.DSN,observerPIDs.tag())
+  if err := observerPIDs.intent(); err != nil { t.Fatal(err) }
+  observer, err := pgx.Connect(ctx,observerDSN)
+@@ -346,6 +351,7 @@
+ }
+ type poolRunPGPIDs struct {
+  schema, role string
++ database, user string
+  values []poolRunPGBackend
+ }
+ func (p *poolRunPGPIDs) tag() string { return p.schema+"-"+p.role }
+@@ -354,6 +360,7 @@
+ }
+ func (p *poolRunPGPIDs) register(identity poolRunPGBackend) error {
+  if identity.PID<=0 || identity.Started.IsZero() || identity.Application!=p.tag() { return errors.New("invalid observed PG backend identity") }
++ if identity.Database!=p.database || identity.User!=p.user { return errors.New("observed PG backend differs from parsed original database/user") }
+  record:=struct { Event,Schema,Role string; Backend poolRunPGBackend }{"run_pg_backend_observed_after_startup_pre_run",p.schema,p.role,identity}
+  if err:=poolRunPGRegister(record);err!=nil { return err }
+  p.values=append(p.values,identity)

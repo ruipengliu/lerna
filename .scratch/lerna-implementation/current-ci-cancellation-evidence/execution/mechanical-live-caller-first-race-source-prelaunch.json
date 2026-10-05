@@ -1,0 +1,10 @@
+{
+  "operation": "mechanical-live-caller-first-race",
+  "source_manifest": "/tmp/lerna-current-ci-cancellation-execution/live-caller-source/manifest.json",
+  "source_manifest_sha256": "3044c10f1a413f5af1f1c7e4f154a3c3cca56f8740d664198ac1e952d24f6bc3",
+  "all7pins_verified": true,
+  "normal_pass_actual_join_group_absent": true,
+  "product_wip": true,
+  "mode": "race",
+  "no_source_writes": true
+}

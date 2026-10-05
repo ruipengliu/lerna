@@ -1,0 +1,14 @@
+{
+  "event": "native_start_ack",
+  "operation": "mechanical-live-caller-format",
+  "pid": 3692719,
+  "pgid": 3692719,
+  "starttime": "15497914",
+  "root": "/tmp/lerna-current-ci-cancellation-execution",
+  "argv": [
+    "bash",
+    "-c",
+    "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; gofmt -w host/durablework/pool_run_live_fault_test.go"
+  ],
+  "deadline_seconds": 120
+}

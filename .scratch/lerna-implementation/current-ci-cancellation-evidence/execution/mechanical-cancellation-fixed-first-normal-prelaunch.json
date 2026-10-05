@@ -1,0 +1,14 @@
+{
+  "event": "native_start_ack",
+  "operation": "mechanical-cancellation-fixed-first-normal",
+  "pid": 3654879,
+  "pgid": 3654879,
+  "starttime": "15330380",
+  "root": "/tmp/lerna-current-ci-cancellation-execution",
+  "argv": [
+    "bash",
+    "-c",
+    "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; go test -v -mod=readonly -p=1 ./host/durablework -run \"^TestPoolRunCallerCancellationRetainsEveryIndependentLaneCause$\" -count=1 -timeout=120s"
+  ],
+  "deadline_seconds": 120
+}

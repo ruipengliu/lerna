@@ -1,0 +1,27 @@
+{
+  "kind": "first actual mechanical causeRED after valid barrier and joined publicRun",
+  "raw": "/tmp/lerna-current-ci-cancellation-execution/mechanical-cancellation-first-red.log",
+  "raw_sha256": "aa77c4a3e28b9105b7a1087c8d91fa4085b1254d7833b631dacee3b687331cd5",
+  "source_manifest": "/tmp/lerna-current-ci-cancellation-execution/first-red-source/manifest.json",
+  "formatted_test_sha256": "6e6eacbc17679dc1d8cf99cb03afbaf2d39978d9c179f6467548f5fea36ad4f7",
+  "native_ack": {
+    "event": "native_completion_ack",
+    "operation": "mechanical-cancellation-first-red",
+    "pid": 3643325,
+    "pgid": 3643325,
+    "starttime": "15280339",
+    "exit": 1,
+    "group_absent": true,
+    "timed_out": false,
+    "owned_raw_fsync_close_ack": true
+  },
+  "tool_session": 97985,
+  "tool_actual_exit": 1,
+  "group_independently_absent": true,
+  "source_pins_after_run_unchanged": true,
+  "mechanical_injected_causes_not_native_ci_reproduction": true,
+  "product_changed": false,
+  "first_failure_classification": "cause assertion after realcallerCancel and allthree externalentry exits, not compile/setup",
+  "native_stop_release": true,
+  "no_fix_or_retry": true
+}

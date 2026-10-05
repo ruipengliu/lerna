@@ -1,0 +1,152 @@
+package durablework_test
+
+import (
+	"context"
+	"database/sql/driver"
+	"errors"
+	"sync"
+	"sync/atomic"
+	"testing"
+	"time"
+
+	"github.com/ruipengliu/lerna/contract"
+	"github.com/ruipengliu/lerna/host/durablework"
+	demo "github.com/ruipengliu/lerna/internal/durableworkdemo"
+	"github.com/ruipengliu/lerna/runtime"
+)
+
+func TestPoolRunFirstFaultKeepsCallerLiveAndRetainsJoinedDiagnostics(t *testing.T) {
+	guard, stopGuard := context.WithTimeout(context.Background(), 5*time.Second)
+	defer stopGuard()
+	caller, cancelCaller := context.WithCancel(guard)
+	secondCause := errors.New("mechanical live-caller diagnostic two")
+	thirdCause := errors.New("mechanical live-caller diagnostic three")
+	runner := &poolRunLiveFaultRunner{
+		guard: guard, ready: make(chan int, 3), exited: make(chan int, 3),
+		release: make(chan struct{}), stoppedChildren: make(chan error, 2),
+		causes: []error{driver.ErrBadConn, secondCause, errors.Join(thirdCause, runtime.ErrCommitUnknown)},
+	}
+	owner := contract.OwnerRef{TenantID: "mechanical-run", OwnerID: "owner"}
+	permissions, err := demo.NewWorkerPermissions([]string{"worker-a"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	anchor := &durablework.Host{Owner: owner, Runner: runner, Clock: poolRunUnusedClock{}, Repository: &poolRunUnusedRepository{}, PoolControl: true}
+	worker := &durablework.Worker{Owner: owner, Permissions: permissions}
+	pool, err := durablework.NewPoolWorker(anchor, []*durablework.Worker{worker})
+	if err != nil {
+		t.Fatal(err)
+	}
+	done := make(chan error, 1)
+	joined := false
+	var releaseOnce sync.Once
+	release := func() { releaseOnce.Do(func() { close(runner.release) }) }
+	t.Cleanup(func() {
+		cancelCaller()
+		release()
+		if joined {
+			return
+		}
+		join, stopJoin := context.WithTimeout(context.Background(), time.Second)
+		defer stopJoin()
+		select {
+		case <-done:
+			joined = true
+		case <-join.Done():
+			t.Error("live-caller mechanical Run exceeded original cleanup join")
+		}
+	})
+	go func() { done <- pool.Run(caller, "worker-a", time.Minute, 10*time.Millisecond) }()
+	registered := map[int]bool{}
+	for range 3 {
+		select {
+		case index := <-runner.ready:
+			if registered[index] {
+				t.Fatal("live-caller diagnostic registration repeated")
+			}
+			registered[index] = true
+		case <-guard.Done():
+			t.Fatal("three live-caller loops missed finite barrier", guard.Err())
+		}
+	}
+	// One original release produces a first non-context fault. The two remaining
+	// external entries wait for their real child contexts to stop, then return
+	// their independent diagnostics. The original caller is never canceled here.
+	release()
+	select {
+	case err = <-done:
+		joined = true
+	case <-guard.Done():
+		t.Fatal("first-fault Run failed to join", guard.Err())
+	}
+	for range 3 {
+		select {
+		case <-runner.exited:
+		default:
+			t.Fatal("first-fault Run returned before every entry exited")
+		}
+	}
+	for range 2 {
+		select {
+		case childErr := <-runner.stoppedChildren:
+			if !errors.Is(childErr, context.Canceled) {
+				t.Fatal("actual sibling context did not stop by cancellation", childErr)
+			}
+		default:
+			t.Fatal("first fault did not actually stop a sibling context")
+		}
+	}
+	if caller.Err() != nil {
+		t.Fatal("fault control canceled or expired original caller", caller.Err())
+	}
+	for _, cause := range []error{driver.ErrBadConn, secondCause, thirdCause, runtime.ErrCommitUnknown} {
+		if !errors.Is(err, cause) {
+			t.Errorf("live-caller Run lost original diagnostic %v: %v", cause, err)
+		}
+	}
+	// These explicitly injected outcomes contain no cancellation cause. A Run
+	// result must not add its internally canceled child as a caller cancellation.
+	if errors.Is(err, context.Canceled) {
+		t.Error("Run fabricated cancellation despite live caller and non-context outcomes", err)
+	}
+}
+
+type poolRunLiveFaultRunner struct {
+	guard           context.Context
+	ready           chan int
+	exited          chan int
+	release         chan struct{}
+	stoppedChildren chan error
+	causes          []error
+	started         atomic.Int32
+}
+
+func (r *poolRunLiveFaultRunner) Within(ctx context.Context, _ contract.OwnerRef, _ func(context.Context, runtime.Tx) error) error {
+	if _, finite := ctx.Deadline(); !finite {
+		return errors.New("live-caller diagnostic lacks original finite deadline")
+	}
+	index := int(r.started.Add(1)) - 1
+	if index < 0 || index >= len(r.causes) {
+		return errors.New("unexpected additional live-caller entry")
+	}
+	defer func() { r.exited <- index }()
+	select {
+	case r.ready <- index:
+	case <-r.guard.Done():
+		return r.guard.Err()
+	}
+	select {
+	case <-r.release:
+	case <-r.guard.Done():
+		return r.guard.Err()
+	}
+	if index > 0 {
+		select {
+		case <-ctx.Done():
+			r.stoppedChildren <- ctx.Err()
+		case <-r.guard.Done():
+			return r.guard.Err()
+		}
+	}
+	return r.causes[index]
+}

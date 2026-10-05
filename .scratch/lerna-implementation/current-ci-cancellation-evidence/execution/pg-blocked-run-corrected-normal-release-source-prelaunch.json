@@ -1,0 +1,10 @@
+{
+  "operation": "pg-blocked-run-corrected-normal-release",
+  "source_manifest": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-source/manifest.json",
+  "source_manifest_sha256": "16f323a2851883703b355f959f62a64c8b449dcb1529668975ae215860a75689",
+  "all22pins_verified": true,
+  "no_source_writes": true,
+  "phase": "first actual corrected normal counterpart",
+  "original_first_1027_failure_preserved": true,
+  "ledger_prelaunch_line_count": 32
+}

@@ -1,0 +1,11 @@
+{
+  "event": "native_completion_ack",
+  "operation": "mechanical-live-caller-first-normal",
+  "pid": 3693574,
+  "pgid": 3693574,
+  "starttime": "15501639",
+  "exit": 0,
+  "group_absent": true,
+  "timed_out": false,
+  "owned_raw_fsync_close_ack": true
+}
