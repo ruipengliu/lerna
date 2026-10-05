@@ -6,6 +6,10 @@
 
 ## 当前状态
 
+2026-10-05 05:31 UTC：03原五映射竞态已实际失败，closure64 27.87s/static62 21.64s，原Claim5先到而caller仍有余量。static Prepared已提交、Content.Put接纳未知；完整原日志/最终outcome归档，旧normal失败和出版测量normal通过各自保留。采用准确74既有CPU样本Source有限离线分析，无新产品猜测或采样。05坏deadline及合法特殊字符身份机械normal0.671/race2.182完整尾通过，原Go解析原因保持；当前唯一LOCAL授已静态审查的Manager真实64积压正常资格。两票未接受或合入，whole04仍15/41、完整1.2关闭。
+
+2026-10-05 05:11 UTC：[一次原发布阶段测量](../lerna-04-content-snapshots/ticket-03-large-graph-claim/publication-phase-measurement/README.md)四项normal均通过；两positive实际完成两Publish、两独立ReadPublished及Completed/全部公开尾，原5秒Claim末检查余1.903148/1.756678s。373行原raw和准确七映射/四WIP/最终outcome已保存，原normal失败仍独立保留，不推确定性能收益。Astra准确f630建议不再猜测优化，采用已建未运行0514原五映射竞态二进制的一次独立资格。05坏deadline机械验证normal0.671s返回原Go time.ParseError，真实合法特殊字符holder身份完成全ACK/独立缺失/重开原回执和元数据；该新机械资格尚待root归档及race。03/05均未接受，whole04仍15/41，完整1.2广告关闭。
+
 2026-10-05 04:58 UTC：切片01–03已完整退出；切片04仍15/41AC，票03/05在独立工作树修正，尚未接受或合入，完整1.2 profile关闭。03独立真实锁等待的StagePublication原因测试normal1.801s/race5.731s通过，源码修正与原red已保存推送；局部闭包成功身份复用后原容量normal仍在第二ReadPublished触及原Claim5（caller尚余17.410s），Prepared已提交而Completed未成立，race业务未运行。依据实测采用一次原边界下发布阶段细分测量，静态全源及逆变换核准后仅开始fmt/build。05同原64过期积压完整反例normal20.418s/race26.476s通过，两真实完整尾与七源副本已归档；异常记录、其他consumer、当前全检查与两轴资格仍待。05–22依真实整片退出推进，全部授权持续有效。下面逐条保留历史检查点，不用旧通过替代新源码资格。
 
 2026-10-05 02:01 UTC，05[最小未知资格门](../lerna-04-content-snapshots/ticket-05-expired-accepted-cap/unknown-source-gates/README.md)普通2.392s／race3.893s通过；原真实PG操作后机械missing source／currentpolicy sentinel使完整原pending／无seal／三正文保持，plain原consumer同正常尾段成功。首包compileFAIL由旧目录oracle三声明遗漏，原日志保留，仅声明修复。资格partial4735abc与15文件24case精确正文／缺失及knownempty lock整改partial1a4e1d2分别clean固定；24case只编译，最终执行待授，static coverage24unique／26callsite／缺漏0。

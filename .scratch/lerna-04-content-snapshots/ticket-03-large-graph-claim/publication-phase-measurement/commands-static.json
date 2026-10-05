@@ -1,0 +1,38 @@
+{
+  "status": "STATIC only, no fmt/build/business authorization implied; soleLOCAL root grants sequentially",
+  "format": [
+    "/workspace/lerna-content-03-137311247276/run-native.py",
+    "bash",
+    "-c",
+    "set -e; . /workspace/.lerna-env/env.sh; GOTOOLCHAIN=local GOFLAGS=-mod=readonly gofmt -w /workspace/lerna-content-03-137311247276/large-graph-publication-phase-overlay/context_world.go /workspace/lerna-content-03-137311247276/large-graph-publication-phase-overlay/context_claim_diagnostics.go /workspace/lerna-content-03-137311247276/large-graph-publication-phase-overlay/content_context_closure_test.go /workspace/lerna-content-03-137311247276/large-graph-publication-phase-overlay/content_context_material_reachable_test.go /workspace/lerna-content-03-137311247276/large-graph-publication-phase-overlay/content_context_test.go /workspace/lerna-content-03-137311247276/large-graph-publication-phase-overlay/publisher.go /workspace/lerna-content-03-137311247276/large-graph-publication-phase-overlay/processing.go"
+  ],
+  "normal_build": [
+    "/workspace/lerna-content-03-137311247276/run-native.py",
+    "bash",
+    "-c",
+    "set -e; . /workspace/.lerna-env/env.sh; GOTOOLCHAIN=local GOFLAGS=-mod=readonly go test -c -p 1 -tags=integration -overlay=/workspace/lerna-content-03-137311247276/large-graph-publication-phase-overlay/overlay.json -o /workspace/lerna-content-03-137311247276/large-graph-publication-phase-overlay/component-normal.test ./conformance/component"
+  ],
+  "normal_business": [
+    "/workspace/lerna-content-03-137311247276/run-native.py",
+    "/workspace/lerna-content-03-137311247276/large-graph-publication-phase-overlay/component-normal.test",
+    "-test.v",
+    "-test.run=^(TestContentContextReachableClosure64And65IncludesIntermediateVersions|TestContentContextStaticModeMaximumReachable62Materials|TestContentContextSingleContentBoundHasHonestLayerAndNoDispatch|TestContentContextDuplicateSelectorRoleRefusesBeforeOriginalInputReplacement)$",
+    "-test.count=1",
+    "-test.timeout=120s"
+  ],
+  "proposed_logs": {
+    "format": "/workspace/lerna-content-03-137311247276/context-final-capacity-b-publication-phase-format.log",
+    "normal_build": "/workspace/lerna-content-03-137311247276/context-final-capacity-b-publication-phase-build-normal.log",
+    "normal_business": "/workspace/lerna-content-03-137311247276/context-final-capacity-b-publication-phase-normal.log"
+  },
+  "go_outer_seconds": [
+    120,
+    120
+  ],
+  "caller_lease_seconds": [
+    30,
+    5
+  ],
+  "run_count": 1,
+  "sampling_race_extra_matrix": false
+}

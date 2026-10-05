@@ -1,0 +1,62 @@
+[
+  {
+    "label": "temporary helper wiring",
+    "before": "var ErrProcessingLimit",
+    "after": "// Temporary diagnostic overlay: context values select recording only.\n// These helpers do not carry authority, deadlines, policy or business results.\ntype PublicationPhaseObserver interface {\n\tRecordPublicationPhase(string, time.Time, error)\n}\ntype publicationPhaseObserverKey struct{}\n\nfunc WithPublicationPhaseObserver(ctx context.Context, observer PublicationPhaseObserver) context.Context {\n\treturn context.WithValue(ctx, publicationPhaseObserverKey{}, observer)\n}\nfunc BeginPublicationPhase(ctx context.Context) time.Time {\n\tif _, ok := ctx.Value(publicationPhaseObserverKey{}).(PublicationPhaseObserver); ok {\n\t\treturn time.Now()\n\t}\n\treturn time.Time{}\n}\nfunc EndPublicationPhase(ctx context.Context, stage string, start time.Time, err error) {\n\tif start.IsZero() {\n\t\treturn\n\t}\n\tif observer, ok := ctx.Value(publicationPhaseObserverKey{}).(PublicationPhaseObserver); ok {\n\t\tobserver.RecordPublicationPhase(stage, start, err)\n\t}\n}\n\nvar ErrProcessingLimit"
+  },
+  {
+    "label": "callback measurement only",
+    "before": "\tobserve := func(ctx context.Context, tx runtime.Tx) error {",
+    "after": "\tobservationPhase := \"pre\"\n\tobserve := func(ctx context.Context, tx runtime.Tx) (observeErr error) {\n\t\tcallbackPhase := \"processing.\" + observationPhase\n\t\tcallbackStart := BeginPublicationPhase(ctx)\n\t\tdefer func() { EndPublicationPhase(ctx, callbackPhase+\".callback\", callbackStart, observeErr) }()\n\t\ttargetStart := BeginPublicationPhase(ctx)\n\t\ttargetFinished := false\n\t\tdefer func() {\n\t\t\tif !targetFinished { EndPublicationPhase(ctx, callbackPhase+\".target\", targetStart, observeErr) }\n\t\t}()"
+  },
+  {
+    "label": "existing initial Now",
+    "before": "\t\tnow, err := s.config.Store.Now(ctx, tx)",
+    "after": "\t\tnowStart := BeginPublicationPhase(ctx)\n\t\tnow, err := s.config.Store.Now(ctx, tx)\n\t\tEndPublicationPhase(ctx, callbackPhase+\".target.now\", nowStart, err)"
+  },
+  {
+    "label": "existing CheckPolicy",
+    "before": "\t\tp, err := s.config.Store.CheckPolicy(ctx, tx, principal, ref, purpose, []string{\"read\", \"process\"}, now)",
+    "after": "\t\tpolicyStart := BeginPublicationPhase(ctx)\n\t\tp, err := s.config.Store.CheckPolicy(ctx, tx, principal, ref, purpose, []string{\"read\", \"process\"}, now)\n\t\tEndPublicationPhase(ctx, callbackPhase+\".target.policy\", policyStart, err)"
+  },
+  {
+    "label": "existing target LockVersion",
+    "before": "\t\tr, err := s.config.Store.LockVersion(ctx, tx, ref)",
+    "after": "\t\tlockStart := BeginPublicationPhase(ctx)\n\t\tr, err := s.config.Store.LockVersion(ctx, tx, ref)\n\t\tEndPublicationPhase(ctx, callbackPhase+\".target.lock\", lockStart, err)"
+  },
+  {
+    "label": "existing target post Now",
+    "before": "\t\tnow, err = s.config.Store.Now(ctx, tx)\n\t\tif err != nil {\n\t\t\treturn err\n\t\t}\n\t\tif !now.Before(p.ValidUntil)",
+    "after": "\t\tpostNowStart := BeginPublicationPhase(ctx)\n\t\tnow, err = s.config.Store.Now(ctx, tx)\n\t\tEndPublicationPhase(ctx, callbackPhase+\".target.post_now\", postNowStart, err)\n\t\tif err != nil {\n\t\t\treturn err\n\t\t}\n\t\tif !now.Before(p.ValidUntil)"
+  },
+  {
+    "label": "existing closure call",
+    "before": "\t\tclosure, err := s.registeredClosure(ctx, tx, ref, r.Sources, principal, purpose, []string{\"read\", \"process\"})",
+    "after": "\t\tEndPublicationPhase(ctx, callbackPhase+\".target\", targetStart, nil)\n\t\ttargetFinished = true\n\t\tclosureStart := BeginPublicationPhase(ctx)\n\t\tclosure, err := s.registeredClosure(ctx, tx, ref, r.Sources, principal, purpose, []string{\"read\", \"process\"})\n\t\tEndPublicationPhase(ctx, callbackPhase+\".closure\", closureStart, err)"
+  },
+  {
+    "label": "existing final Now",
+    "before": "\t\tnow, err = s.config.Store.Now(ctx, tx)\n\t\tif err != nil {\n\t\t\treturn err\n\t\t}\n\t\tif !now.Before(bound)",
+    "after": "\t\tlastNowStart := BeginPublicationPhase(ctx)\n\t\tnow, err = s.config.Store.Now(ctx, tx)\n\t\tEndPublicationPhase(ctx, callbackPhase+\".last_now\", lastNowStart, err)\n\t\tif err != nil {\n\t\t\treturn err\n\t\t}\n\t\tif !now.Before(bound)"
+  },
+  {
+    "label": "pre existing Within",
+    "before": "\tif err = s.config.Store.Within(ctx, owner(s.config.Owner), observe); err != nil {\n\t\treturn ProcessingRead{}, err\n\t}",
+    "after": "\tpreWithinStart := BeginPublicationPhase(ctx)\n\terr = s.config.Store.Within(ctx, owner(s.config.Owner), observe)\n\tEndPublicationPhase(ctx, \"processing.pre.within\", preWithinStart, err)\n\tif err != nil {\n\t\treturn ProcessingRead{}, err\n\t}"
+  },
+  {
+    "label": "post existing Within",
+    "before": "\tif err = s.config.Store.Within(ctx, owner(s.config.Owner), observe); err != nil {\n\t\treturn ProcessingRead{}, err\n\t}",
+    "after": "\tobservationPhase = \"post\"\n\tpostWithinStart := BeginPublicationPhase(ctx)\n\terr = s.config.Store.Within(ctx, owner(s.config.Owner), observe)\n\tEndPublicationPhase(ctx, \"processing.post.within\", postWithinStart, err)\n\tif err != nil {\n\t\treturn ProcessingRead{}, err\n\t}"
+  },
+  {
+    "label": "existing physical Read",
+    "before": "\tbody, err := s.config.Objects.Read(bounded, objectKey, ref.Hash, length)",
+    "after": "\tobjectsStart := BeginPublicationPhase(ctx)\n\tbody, err := s.config.Objects.Read(bounded, objectKey, ref.Hash, length)\n\tEndPublicationPhase(ctx, \"processing.objects\", objectsStart, err)"
+  },
+  {
+    "label": "existing bounded.Err hash and length section",
+    "before": "\tif err = bounded.Err(); err != nil {\n\t\treturn ProcessingRead{}, err\n\t}\n\tif int64(len(body)) != length || processingHash(body) != ref.Hash {\n\t\treturn ProcessingRead{}, ErrObjectIntegrity\n\t}",
+    "after": "\tintegrityStart := BeginPublicationPhase(ctx)\n\tif err = bounded.Err(); err != nil {\n\t\tEndPublicationPhase(ctx, \"processing.integrity\", integrityStart, err)\n\t\treturn ProcessingRead{}, err\n\t}\n\tif int64(len(body)) != length || processingHash(body) != ref.Hash {\n\t\tEndPublicationPhase(ctx, \"processing.integrity\", integrityStart, ErrObjectIntegrity)\n\t\treturn ProcessingRead{}, ErrObjectIntegrity\n\t}\n\tEndPublicationPhase(ctx, \"processing.integrity\", integrityStart, nil)"
+  }
+]

@@ -1,0 +1,140 @@
+{
+  "status": "race effect registered before native; business unrun at this cutoff",
+  "binary_identity": {
+    "binary": "/workspace/lerna-content-03-137311247276/large-graph-closure-identity-overlay/component-race.test",
+    "sha256": "0514d380b88d3bbc3c2985afbe946e9d5bc23be19a11c0826251b84421725d02",
+    "bytes": 29058870,
+    "dev": 27,
+    "inode": 560808,
+    "mode": "0o700",
+    "binary_own_descriptor_fsync_close": true,
+    "source_scope": {
+      "tracked_head": "28e3a468c86d4323d3b497836de23bb311a58952",
+      "tracked_diff": [
+        "conformance/internal/decisionfixture/context_dispatch.go",
+        "domain/content/closure.go"
+      ],
+      "untracked": [
+        "conformance/component/content_context_publication_cause_test.go",
+        "conformance/internal/decisionfixture/context_publication_probe.go"
+      ],
+      "identity": "HEAD plus explicitly identified WIP source, not pristine HEAD28e binary"
+    },
+    "source_hashes": [
+      {
+        "path": "/tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_context_binding_decode_test.go",
+        "sha256": "be01bd66705d9baef855fbdb77aaab704757f99cbabbc8050bdbd0d855bda75a",
+        "bytes": 9009,
+        "overlay_replaced": false
+      },
+      {
+        "path": "/tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_context_publication_cause_test.go",
+        "sha256": "e944e3439eabe84936eb166e1966b178166fd7e1f7b8a1972139b96b9b2768d0",
+        "bytes": 7278,
+        "overlay_replaced": false
+      },
+      {
+        "path": "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_binding_decode.go",
+        "sha256": "457b065fb760a264f0c687f82275c1dd73af3414191cccee1bba80b527f04779",
+        "bytes": 3570,
+        "overlay_replaced": false
+      },
+      {
+        "path": "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_budget_probe.go",
+        "sha256": "d600be93226932cdad26fa81a35ed44d383de37bf5e984a23b67f643502ade2e",
+        "bytes": 5125,
+        "overlay_replaced": false
+      },
+      {
+        "path": "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_dispatch.go",
+        "sha256": "5c2b8d472fdbe458b9affb9a9543db3359c85c0dfa90d5357bea843995e624fb",
+        "bytes": 23388,
+        "overlay_replaced": false
+      },
+      {
+        "path": "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_publication_probe.go",
+        "sha256": "39051536517c23e30d1c80e919824d9c509e2d773a8e0568fe786fe82f9d5517",
+        "bytes": 2457,
+        "overlay_replaced": false
+      },
+      {
+        "path": "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/source.go",
+        "sha256": "2698e49c206097583867ababbeba87a8c20942ed58b4606b6a8fc98fefbc7684",
+        "bytes": 19753,
+        "overlay_replaced": false
+      },
+      {
+        "path": "/tmp/lerna-worktrees/content-snapshots-03/domain/content/closure.go",
+        "sha256": "8542696150191da3fafd6b0df90e38f272fd934de807317442933c536fb1331c",
+        "bytes": 6914,
+        "overlay_replaced": false
+      },
+      {
+        "path": "/tmp/lerna-worktrees/content-snapshots-03/domain/content/identity.go",
+        "sha256": "e093a7918be9af0aeaec08c62b472de1141314812a71e3da386583237bbf60f0",
+        "bytes": 1533,
+        "overlay_replaced": false
+      }
+    ],
+    "manifest_sha256": "57a357247462e2d5650a55922c020fc1b63541f6f5634d0e1231b49856022e86",
+    "map_sha256": "ba168a3cb3984727791c9c16e2f88060dc7d235db9d9e6d75ae047dcf4558a67",
+    "build_identity": {
+      "pid": 3416568,
+      "pgid": 3416568,
+      "starttime": "14304638",
+      "started_ns": 1791174808039960639,
+      "args": [
+        "bash",
+        "-c",
+        "set -e; . /workspace/.lerna-env/env.sh; GOTOOLCHAIN=local GOFLAGS=-mod=readonly go test -race -c -p 1 -tags=integration -overlay=/workspace/lerna-content-03-137311247276/large-graph-closure-identity-overlay/overlay.json -o /workspace/lerna-content-03-137311247276/large-graph-closure-identity-overlay/component-race.test ./conformance/component"
+      ]
+    },
+    "actual_exit": 0,
+    "group_absent": true,
+    "tool_session": 60750,
+    "log": "/workspace/lerna-content-03-137311247276/context-final-capacity-b-closure-identity-build-race.log",
+    "log_sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+    "business_unrun": true
+  },
+  "manifest_sha256": "57a357247462e2d5650a55922c020fc1b63541f6f5634d0e1231b49856022e86",
+  "source_scope": {
+    "tracked_head": "28e3a468c86d4323d3b497836de23bb311a58952",
+    "tracked_diff": [
+      "conformance/internal/decisionfixture/context_dispatch.go",
+      "domain/content/closure.go"
+    ],
+    "untracked": [
+      "conformance/component/content_context_publication_cause_test.go",
+      "conformance/internal/decisionfixture/context_publication_probe.go"
+    ],
+    "identity": "HEAD plus explicitly identified WIP source, not pristine HEAD28e binary"
+  },
+  "frozen_worker": {
+    "path": "/tmp/lerna-worktrees/content-snapshots-03/components/decision_engine/worker.go",
+    "sha256": "663d0c96eae83a4175c66f2ceaf3b87688d9a8199d3998e647eff4868eb0ff27",
+    "bytes": 31783,
+    "overlay_replaced": false,
+    "frozen_worker": true
+  },
+  "argv": [
+    "/workspace/lerna-content-03-137311247276/run-native.py",
+    "/workspace/lerna-content-03-137311247276/large-graph-closure-identity-overlay/component-race.test",
+    "-test.v",
+    "-test.run=^(TestContentContextReachableClosure64And65IncludesIntermediateVersions|TestContentContextStaticModeMaximumReachable62Materials|TestContentContextSingleContentBoundHasHonestLayerAndNoDispatch|TestContentContextDuplicateSelectorRoleRefusesBeforeOriginalInputReplacement)$",
+    "-test.count=1",
+    "-test.timeout=120s"
+  ],
+  "log": "/workspace/lerna-content-03-137311247276/context-final-capacity-b-closure-identity-race.log",
+  "caller_lease_go_outer_seconds": [
+    30,
+    5,
+    120,
+    120
+  ],
+  "count": 1,
+  "scope_registry": "/workspace/lerna-content-03-137311247276/owned-scopes.log",
+  "five_nonprofile_replacements": true,
+  "publication_detail_seven_overlay_used": false,
+  "preheat_retry_renew": false,
+  "no_fmt_rebuild_sampling_extra_suite_or_source_fix": true
+}

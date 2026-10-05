@@ -1,0 +1,16 @@
+{
+  "FULL_read": "2source/plan/prelaunch/outcome/actualnormal+fmt raw",
+  "independent12currentSHA_and2sourcecopies": true,
+  "actual2processgroups_absent": true,
+  "new_manager_tracer_STATIC_only": true,
+  "initial_archive_script_path_lookup_failed_before_copy": "flat prepared sources, corrected after rg --files; no native effect",
+  "files": {
+    "adopted-static-plan.md": "a4eb3a8b7b4ce9dedd7019d1af649bc9a8f028e0839755f8fca0226f93e58597",
+    "format.log": "ea6b9f38d1e85d64e4cefbf6bafd959d63ca89b48cddab833a418e21e5bae152",
+    "normal-outcome.json": "22af4e37d0a9c13cf8f9d27f47156df07d1591e62a4103f9ed13c536dbf387fe",
+    "normal-prelaunch.json": "e517e1f882595ea0d8901fc774fbf92075b7ea33df2799efd267e421fb2e6d7e",
+    "normal.log": "449ca29a7a9d6dbcb7b8dce3eafc3b098b7932bcf08d474673c20af74ae2ca4b",
+    "source/conformance/component/content_scan_deadline_test.go": "7f12df34684283e4e69c5bacff08f5d75a3d46643315beaa5130809190b68461",
+    "source/conformance/internal/contentfixture/scan_deadline_fault.go": "7c57d9bffcb17c49daab3536b68284af3c24dce4ed08035f2fe3f74a0b22afa0"
+  }
+}

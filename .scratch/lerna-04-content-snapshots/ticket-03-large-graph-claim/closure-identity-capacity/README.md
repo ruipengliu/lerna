@@ -1,3 +1,9 @@
+# 单次闭包身份复用：原容量正常与竞态资格
+
+2026-10-05 当前事实：原五映射竞态已实际执行并失败，native3470884/start14538660/session28924，exit1、Wait/group absence、无超时；owner明确释放。closure64 FAIL27.87s、static62 FAIL21.64s，仍为原Claim5期限，caller尚余2.180/8.432s。static已Prepared COMMIT，实际Content.Put超时，接纳与提交结果未知；不改身份、不回填未提交。65拒绝与单内容/重复对照通过，无DATA RACE报告不能代替正常业务成功。root全文160行原日志、最终outcome、prelaunch、结果及准确74决定，并独立核SHA与原组缺失。
+
+唯一下一方向见[已有样本Source离线分析决定](adopted-existing-profile-source-analysis-decision.md)：读取原427bbc样本和原963905二进制，有限分离Source纯表示分支与Content子树；不新增采样、业务重跑或猜测产品修正。原profile逻辑Close UNKNOWN继续保留。两票与whole04尚未接受。下面保留先前normal检查点，其中“race业务UNRUN”仅为当时历史事实。
+
 # 单次闭包身份复用：原容量正常模式的实际失败
 
 采用准确bb031的[下一次必要发布阶段测量](adopted-next-measurement-decision.md)：仅一个原4B normal样本，保原30/5/120/count1。当前最后ReadPublished的超时不足以选择下一产品优化；新测量区分Publish内部验证与worker独立ReadPublished的前Tx/对象/后Tx成本。无新产品优化、race业务或第二CPU采样授权。

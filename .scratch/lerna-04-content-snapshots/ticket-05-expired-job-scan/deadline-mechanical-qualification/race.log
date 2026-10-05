@@ -1,0 +1,6 @@
+=== RUN   TestContentCleanupScanKeepsMalformedDeadlineParseCauseBeforePage
+    content_scan_deadline_test.go:113: actual malformed-deadline cause: Go time.ParseError
+--- PASS: TestContentCleanupScanKeepsMalformedDeadlineParseCauseBeforePage (1.14s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/component	2.182s
+NATIVE_COMPLETION_ACK {"pid": 3481197, "pgid": 3481197, "starttime": "14584530", "exit": 0, "group_absent": true, "timed_out": false}

@@ -1,0 +1,149 @@
+--- /workspace/lerna-content-03-137311247276/large-graph-closure-identity-overlay/context_claim_diagnostics.go
++++ /workspace/lerna-content-03-137311247276/large-graph-publication-phase-overlay/context_claim_diagnostics.go
+@@ -41,6 +41,9 @@
+ 	first      *claimDiagnosticEvent
+ 	totals     map[string]claimDiagnosticAggregate
+ 	lastGate   map[string]claimDiagnosticEvent
++	publicationScopes [4]publicationDiagnosticScope
++	publicationCalls [2]int
++	publicationDropped int
+ }
+ 
+ func NewContextClaimDiagnostics(t *testing.T, ctx context.Context) *ContextClaimDiagnostics {
+@@ -145,6 +148,7 @@
+ 	for _, k := range keys {
+ 		print("last_gate", d.lastGate[k])
+ 	}
++	d.publicationSummary(t)
+ }
+ func (w *ContextWorld) DiagnosticStage(ctx context.Context, kind string, start time.Time, err error) {
+ 	if w.diagnostics != nil {
+@@ -279,12 +283,14 @@
+ }
+ func (s claimDiagnosticPublisher) Publish(ctx context.Context, key string, b []byte, refs []v.ContentRef, p engine.Permission) (v.ContentRef, error) {
+ 	start := time.Now()
++	ctx = s.d.publicationContext(ctx, 0)
+ 	out, err := s.Publisher.Publish(ctx, key, b, refs, p)
+ 	s.d.observe("publisher.Publish", start, err, fmt.Sprintf("bytes=%d sources=%d", len(b), len(refs)))
+ 	return out, err
+ }
+ func (s claimDiagnosticPublisher) ReadPublished(ctx context.Context, ref v.ContentRef, p engine.Permission) ([]byte, error) {
+ 	start := time.Now()
++	ctx = s.d.publicationContext(ctx, 1)
+ 	out, err := s.Publisher.ReadPublished(ctx, ref, p)
+ 	s.d.observe("publisher.ReadPublished", start, err, fmt.Sprintf("bytes=%d", len(out)))
+ 	return out, err
+@@ -349,3 +355,113 @@
+ 	s.d.observe("access.PrepareContent", start, err, "")
+ 	return err
+ }
++
++// Publication diagnostics own exactly the frozen worker's two Publish and two
++// ReadPublished calls. Compiler calls use the adapter directly and have no
++// recording context. This temporary context value carries labels only.
++var publicationDiagnosticStages = [31]string{
++	"adapter.plan.current",
++	"adapter.publish.plan",
++	"adapter.publish.current",
++	"adapter.stage",
++	"adapter.prepare",
++	"adapter.put",
++	"adapter.get_command",
++	"adapter.step",
++	"adapter.verification",
++	"adapter.read.current",
++	"adapter.read.processing",
++	"processing.pre.within",
++	"processing.pre.callback",
++	"processing.pre.target",
++	"processing.pre.target.now",
++	"processing.pre.target.policy",
++	"processing.pre.target.lock",
++	"processing.pre.target.post_now",
++	"processing.pre.closure",
++	"processing.pre.last_now",
++	"processing.post.within",
++	"processing.post.callback",
++	"processing.post.target",
++	"processing.post.target.now",
++	"processing.post.target.policy",
++	"processing.post.target.lock",
++	"processing.post.target.post_now",
++	"processing.post.closure",
++	"processing.post.last_now",
++	"processing.objects",
++	"processing.integrity",
++}
++type publicationDiagnosticStage struct {
++	Count int
++	Total, Max time.Duration
++	FirstStart, FirstEnd, LastStart, LastEnd time.Duration
++	FirstErrorAt time.Duration
++	FirstError string
++}
++type publicationDiagnosticScope struct {
++	parent *ContextClaimDiagnostics
++	role, ordinal int
++	stages [32]publicationDiagnosticStage
++	firstErrorStage string
++	firstErrorCause string
++	firstErrorAt time.Duration
++}
++func (d *ContextClaimDiagnostics) publicationContext(ctx context.Context, role int) context.Context {
++	d.mu.Lock()
++	d.publicationCalls[role]++
++	ordinal := d.publicationCalls[role]
++	if ordinal > 2 {
++		d.publicationDropped++
++		d.mu.Unlock()
++		return ctx
++	}
++	scope := &d.publicationScopes[role*2+ordinal-1]
++	scope.parent, scope.role, scope.ordinal = d, role, ordinal
++	d.mu.Unlock()
++	return content.WithPublicationPhaseObserver(ctx, scope)
++}
++func (s *publicationDiagnosticScope) RecordPublicationPhase(stage string, start time.Time, err error) {
++	now := time.Now()
++	d := s.parent
++	d.mu.Lock()
++	defer d.mu.Unlock()
++	index := -1
++	for i, name := range publicationDiagnosticStages {
++		if name == stage { index = i; break }
++	}
++	if index < 0 {
++		d.publicationDropped++
++		return
++	}
++	a := &s.stages[index]
++	duration := now.Sub(start)
++	a.Count++
++	a.Total += duration
++	if duration > a.Max { a.Max = duration }
++	if a.Count == 1 {
++		a.FirstStart, a.FirstEnd = start.Sub(d.start), now.Sub(d.start)
++	}
++	a.LastStart, a.LastEnd = start.Sub(d.start), now.Sub(d.start)
++	if err != nil && a.FirstError == "" {
++		a.FirstError, a.FirstErrorAt = claimCause(err), now.Sub(d.start)
++	}
++	if err != nil && s.firstErrorStage == "" {
++		s.firstErrorStage, s.firstErrorCause, s.firstErrorAt = stage, claimCause(err), now.Sub(d.start)
++	}
++}
++// Called while summary already holds d.mu, after the original test finishes.
++func (d *ContextClaimDiagnostics) publicationSummary(t *testing.T) {
++	t.Logf("PUBLICATION_DIAG fixed_scopes=4 slots_per_scope=32 publish_calls=%d read_published_calls=%d dropped=%d monotonic_elapsed_only=true inclusive_totals_do_not_sum=true", d.publicationCalls[0], d.publicationCalls[1], d.publicationDropped)
++	for _, s := range d.publicationScopes {
++		if s.parent == nil { continue }
++		role, processingOwner := "worker.Publish", "publish_internal_verification"
++		if s.role == 1 { role, processingOwner = "worker.ReadPublished", "outer_worker_read" }
++		t.Logf("PUBLICATION_DIAG scope=%s ordinal=%d processing_owner=%s first_error_stage=%s first_error_at=%s cause=%s", role, s.ordinal, processingOwner, s.firstErrorStage, s.firstErrorAt, s.firstErrorCause)
++		for i, name := range publicationDiagnosticStages {
++			a := s.stages[i]
++			if a.Count == 0 { continue }
++			t.Logf("PUBLICATION_DIAG scope=%s ordinal=%d stage=%s count=%d inclusive_total=%s max=%s first_start=%s first_end=%s last_start=%s last_end=%s first_error_at=%s cause=%s", role, s.ordinal, name, a.Count, a.Total, a.Max, a.FirstStart, a.FirstEnd, a.LastStart, a.LastEnd, a.FirstErrorAt, a.FirstError)
++		}
++	}
++}

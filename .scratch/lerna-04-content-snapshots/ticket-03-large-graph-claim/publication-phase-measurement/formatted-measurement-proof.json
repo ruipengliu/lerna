@@ -1,0 +1,97 @@
+{
+  "status": "actual gofmt seven replacements0/absence; preformat inverse proof retained; postformat normalized token preservation only, Go compile not yet run",
+  "format_identity": {
+    "pid": 3449859,
+    "pgid": 3449859,
+    "starttime": "14449970",
+    "started_ns": 1791176261353934451,
+    "args": [
+      "bash",
+      "-c",
+      "set -e; . /workspace/.lerna-env/env.sh; GOTOOLCHAIN=local GOFLAGS=-mod=readonly gofmt -w /workspace/lerna-content-03-137311247276/large-graph-publication-phase-overlay/context_world.go /workspace/lerna-content-03-137311247276/large-graph-publication-phase-overlay/context_claim_diagnostics.go /workspace/lerna-content-03-137311247276/large-graph-publication-phase-overlay/content_context_closure_test.go /workspace/lerna-content-03-137311247276/large-graph-publication-phase-overlay/content_context_material_reachable_test.go /workspace/lerna-content-03-137311247276/large-graph-publication-phase-overlay/content_context_test.go /workspace/lerna-content-03-137311247276/large-graph-publication-phase-overlay/publisher.go /workspace/lerna-content-03-137311247276/large-graph-publication-phase-overlay/processing.go"
+    ]
+  },
+  "go_format_log": "/workspace/lerna-content-03-137311247276/context-final-capacity-b-publication-phase-format.log",
+  "files": [
+    {
+      "path": "/workspace/lerna-content-03-137311247276/large-graph-publication-phase-overlay/context_world.go",
+      "before_sha256": "e37d876a734b2639a044ae931e8066b9844a8c88e8a213f6d3a32c2db0421612",
+      "after_sha256": "e37d876a734b2639a044ae931e8066b9844a8c88e8a213f6d3a32c2db0421612",
+      "non_comment_tokens_preserved_ignoring_whitespace_and_statement_semicolons": true,
+      "explicit_semicolons_before_after": [
+        7,
+        7
+      ],
+      "bytes": 11298
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/large-graph-publication-phase-overlay/context_claim_diagnostics.go",
+      "before_sha256": "daa03a41c196ea7fe32f4a847a21104b60359a03d9d5e8d83e1801f07abe7458",
+      "after_sha256": "fe1ba3c85626d11cdf5e2cba649c3005ef5c5c13ef2c88461252785f90d85f3a",
+      "non_comment_tokens_preserved_ignoring_whitespace_and_statement_semicolons": true,
+      "explicit_semicolons_before_after": [
+        3,
+        2
+      ],
+      "bytes": 17780
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/large-graph-publication-phase-overlay/content_context_closure_test.go",
+      "before_sha256": "c668eacce37c9363cccaa243e2c484951582a872652d1a875c1281362a5c4e43",
+      "after_sha256": "c668eacce37c9363cccaa243e2c484951582a872652d1a875c1281362a5c4e43",
+      "non_comment_tokens_preserved_ignoring_whitespace_and_statement_semicolons": true,
+      "explicit_semicolons_before_after": [
+        6,
+        6
+      ],
+      "bytes": 4558
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/large-graph-publication-phase-overlay/content_context_material_reachable_test.go",
+      "before_sha256": "4223c74583ac7ecace18402ec114708e7a43bbf1593da47bbc675e3a6617e7f2",
+      "after_sha256": "4223c74583ac7ecace18402ec114708e7a43bbf1593da47bbc675e3a6617e7f2",
+      "non_comment_tokens_preserved_ignoring_whitespace_and_statement_semicolons": true,
+      "explicit_semicolons_before_after": [
+        3,
+        3
+      ],
+      "bytes": 3369
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/large-graph-publication-phase-overlay/content_context_test.go",
+      "before_sha256": "9f1bdc9e8757057ed09836a9d8aee213825e3fe1484c1a86966a4cce2911189f",
+      "after_sha256": "9f1bdc9e8757057ed09836a9d8aee213825e3fe1484c1a86966a4cce2911189f",
+      "non_comment_tokens_preserved_ignoring_whitespace_and_statement_semicolons": true,
+      "explicit_semicolons_before_after": [
+        8,
+        8
+      ],
+      "bytes": 18517
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/large-graph-publication-phase-overlay/publisher.go",
+      "before_sha256": "a8dd8c7ed68d875a361dec998e9f5965acb02fd16868bd465922459b002e38b3",
+      "after_sha256": "a8dd8c7ed68d875a361dec998e9f5965acb02fd16868bd465922459b002e38b3",
+      "non_comment_tokens_preserved_ignoring_whitespace_and_statement_semicolons": true,
+      "explicit_semicolons_before_after": [
+        9,
+        9
+      ],
+      "bytes": 7596
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/large-graph-publication-phase-overlay/processing.go",
+      "before_sha256": "4ab88ead1fc53406f821f6a25ebd16843024cb9b79e1286414185aef1d8a03c0",
+      "after_sha256": "cd6b930c6ac890b354fd99e9d80590666f6080a3e4cc550f8b018b7ecec2e734",
+      "non_comment_tokens_preserved_ignoring_whitespace_and_statement_semicolons": true,
+      "explicit_semicolons_before_after": [
+        5,
+        5
+      ],
+      "bytes": 6985
+    }
+  ],
+  "normalization_fact": "gofmt removed one explicit statement semicolon in recorder index=i; break by inserting a line break/automatic Go semicolon; all other normalized noncomment tokens stable",
+  "initial_static_proof_script_failure": "naive lexer compared explicit semicolon against implicit Go newline terminator; corrected without native retry or source edit",
+  "current_product_sources_unchanged": true
+}

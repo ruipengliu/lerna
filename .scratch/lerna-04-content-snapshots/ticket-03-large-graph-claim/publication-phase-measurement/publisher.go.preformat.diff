@@ -1,0 +1,105 @@
+--- /tmp/lerna-worktrees/content-snapshots-03/adapters/content/decision/publisher.go
++++ /workspace/lerna-content-03-137311247276/large-graph-publication-phase-overlay/publisher.go
+@@ -26,7 +26,10 @@
+ 	if key == "" || len(key) > 1024 || len(body) > 262144 || len(sources) > 64 {
+ 		return v.ContentRef{}, engine.ErrInputLimit
+ 	}
+-	if _, err := a.config.Access.Current(ctx, p, "publish"); err != nil {
++	planCurrentStart := content.BeginPublicationPhase(ctx)
++	_, planCurrentErr := a.config.Access.Current(ctx, p, "publish")
++	content.EndPublicationPhase(ctx, "adapter.plan.current", planCurrentStart, planCurrentErr)
++	if err := planCurrentErr; err != nil {
+ 		return v.ContentRef{}, err
+ 	}
+ 	for _, source := range sources {
+@@ -39,11 +42,15 @@
+ 	return ref, err
+ }
+ func (a *Adapter) Publish(ctx context.Context, key string, body []byte, sources []v.ContentRef, p engine.Permission) (v.ContentRef, error) {
++	planStart := content.BeginPublicationPhase(ctx)
+ 	ref, err := a.PlanPublication(ctx, key, body, sources, p)
++	content.EndPublicationPhase(ctx, "adapter.publish.plan", planStart, err)
+ 	if err != nil {
+ 		return ref, err
+ 	}
++	currentStart := content.BeginPublicationPhase(ctx)
+ 	binding, err := a.config.Access.Current(ctx, p, "publish")
++	content.EndPublicationPhase(ctx, "adapter.publish.current", currentStart, err)
+ 	if err != nil {
+ 		return ref, err
+ 	}
+@@ -75,14 +82,21 @@
+ 	request := c.ContentPutRequest{ContractVersion: c.Version, Profile: "content", CommandID: c.ID("context-put-" + identity(o.Key)), Target: c.ContentTarget{TenantID: o.Ref.Owner.TenantID, OwnerID: o.Ref.Owner.OwnerID, Kind: "content", ID: o.Ref.ContentID}, Method: "content.put", AcceptBefore: deadline, Payload: c.ContentPutPayload{ContentRef: o.Ref, Sources: o.Sources, Purpose: c.Purpose(a.config.Purpose), RetainUntil: c.Time(in.RetainUntil), BytesBase64: base64.StdEncoding.EncodeToString(o.Bytes)}}
+ 	// The owner journal saves this exact request before any Content send. Replay
+ 	// returns the original bytes and cannot substitute a renewed absolute cutoff.
++	stageStart := content.BeginPublicationPhase(ctx)
+ 	raw, err := a.config.Access.StagePublication(ctx, in, request)
++	content.EndPublicationPhase(ctx, "adapter.stage", stageStart, err)
+ 	if err != nil {
+ 		return o.Ref, err
+ 	}
+-	if err = a.config.Access.PrepareContent(ctx, in, o.Ref); err != nil {
++	prepareStart := content.BeginPublicationPhase(ctx)
++	err = a.config.Access.PrepareContent(ctx, in, o.Ref)
++	content.EndPublicationPhase(ctx, "adapter.prepare", prepareStart, err)
++	if err != nil {
+ 		return o.Ref, err
+ 	}
++	putStart := content.BeginPublicationPhase(ctx)
+ 	response, err := a.config.Content.Put(ctx, raw, &a.config.Subject)
++	content.EndPublicationPhase(ctx, "adapter.put", putStart, err)
+ 	if err != nil {
+ 		return o.Ref, err
+ 	}
+@@ -102,7 +116,9 @@
+ 		if err = ctx.Err(); err != nil {
+ 			return o.Ref, err
+ 		}
++		getStart := content.BeginPublicationPhase(ctx)
+ 		current, e := a.config.Content.GetCommand(ctx, query, &a.config.Subject)
++		content.EndPublicationPhase(ctx, "adapter.get_command", getStart, e)
+ 		if e != nil {
+ 			return o.Ref, e
+ 		}
+@@ -115,7 +131,9 @@
+ 			return o.Ref, engine.ErrUnavailable
+ 		}
+ 		if progress.Publication == "published" {
++			verificationStart := content.BeginPublicationPhase(ctx)
+ 			read, e := verification.ReadForProcessing(ctx, &a.config.Subject, o.Ref, a.config.Purpose, int64(len(o.Bytes)))
++			content.EndPublicationPhase(ctx, "adapter.verification", verificationStart, e)
+ 			if e != nil {
+ 				return o.Ref, mapContentError(e)
+ 			}
+@@ -127,21 +145,29 @@
+ 		if progress.Publication != "preparing" {
+ 			return o.Ref, engine.ErrForbidden
+ 		}
+-		if _, err = a.config.Content.Step(ctx); err != nil {
++		stepStart := content.BeginPublicationPhase(ctx)
++		_, err = a.config.Content.Step(ctx)
++		content.EndPublicationPhase(ctx, "adapter.step", stepStart, err)
++		if err != nil {
+ 			return o.Ref, err
+ 		}
+ 	}
+ 	return o.Ref, engine.ErrUnavailable
+ }
+ func (a *Adapter) ReadPublished(ctx context.Context, ref v.ContentRef, p engine.Permission) ([]byte, error) {
+-	if _, err := a.config.Access.Current(ctx, p, "publish"); err != nil {
++	readCurrentStart := content.BeginPublicationPhase(ctx)
++	_, readCurrentErr := a.config.Access.Current(ctx, p, "publish")
++	content.EndPublicationPhase(ctx, "adapter.read.current", readCurrentStart, readCurrentErr)
++	if err := readCurrentErr; err != nil {
+ 		return nil, err
+ 	}
+ 	exact, err := ToContent(ref)
+ 	if err != nil {
+ 		return nil, err
+ 	}
++	readStart := content.BeginPublicationPhase(ctx)
+ 	read, err := a.config.Content.ReadForProcessing(ctx, &a.config.Subject, exact, a.config.Purpose, 262144)
++	content.EndPublicationPhase(ctx, "adapter.read.processing", readStart, err)
+ 	return read.Bytes, mapContentError(err)
+ }
+ func mapContentError(err error) error {

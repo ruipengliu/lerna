@@ -1,0 +1,160 @@
+=== RUN   TestContentContextReachableClosure64And65IncludesIntermediateVersions
+=== RUN   TestContentContextReachableClosure64And65IncludesIntermediateVersions/64
+    content_context_closure_test.go:109: normal real rule step failed {0 0001-01-01 00:00:00 +0000 UTC 0s} claim is invalid, expired or replaced
+    context_claim_diagnostics.go:116: CLAIM_DIAG bounded_events=135 dropped=0 inclusive_totals_do_not_sum=true
+    context_claim_diagnostics.go:118: CLAIM_DIAG first_error kind=content.ReadForProcessing at=27.819811411s duration=13.764372ms caller_remaining=2.18014478s cause=*pgconn.errTimeout:context_deadline bytes=0 sources=0
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.testcase-start at=39.024µs duration=437ns caller_remaining=29.999917167s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.owners-established at=775.443573ms duration=363ns caller_remaining=29.224512618s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.original-bounds at=825.523347ms duration=27.39µs caller_remaining=29.174432844s cause=nil payload_sha256=09a88df5c446a36baf19d198bc9ed5ebff958b16dcafab02608679f6215f2102 caller=30s lease=5s input=262144 output=131072 capacity=524288 reserve=131072 read=262160 original_deadline=2026-10-05T05:14:29.102658Z
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.initial-primary-selector-published at=1.283145965s duration=271ns caller_remaining=28.716810226s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.all-upstream-sources-published at=8.639953546s duration=350ns caller_remaining=21.360002645s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.compile-start at=8.669197072s duration=627ns caller_remaining=21.330759119s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.compile-published-pre-bind at=21.678600051s duration=880ns caller_remaining=8.32135614s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.compile-and-bind-end at=21.725435082s duration=13.056238637s caller_remaining=8.274521109s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.independent-lock-observation-start at=21.72544208s duration=115ns caller_remaining=8.274514111s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.independent-lock-observation-end at=22.372907698s duration=647.465916ms caller_remaining=7.627048493s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.dispatch-start at=22.374240484s duration=481ns caller_remaining=7.625715707s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=store.SaveDecision at=22.590634323s duration=53.564647ms caller_remaining=7.409321868s cause=nil status=accepted prepared=false sequence=0 input_digest=sha256:6c83c25b9800034c0b2867826bb4b38a653c7ee020392ba024ab4421eb2a4833 callback_only=true
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=store.WithinSave at=22.72842738s duration=200.300363ms caller_remaining=7.271528811s cause=nil callback_cause=nil final_cause=nil committed=true save_cause=nil status=accepted prepared=false sequence=0 input_digest=sha256:6c83c25b9800034c0b2867826bb4b38a653c7ee020392ba024ab4421eb2a4833
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.dispatch-end at=22.732750028s duration=358.510025ms caller_remaining=7.267206163s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.decision-step-start at=22.732762924s duration=280ns caller_remaining=7.267193267s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=store.Claim at=22.823411584s duration=3.604106ms caller_remaining=7.176544607s cause=nil job=job-3acaffc1457b696d2f8d0d9a9ea5f419 epoch=1 revision=1 phase=decide lease_until=2026-10-05T05:12:56.146826Z supplied_now=2026-10-05T05:12:51.146826Z lease_delta=5s
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=store.SaveDecision at=22.89630654s duration=3.865451ms caller_remaining=7.103649651s cause=nil status=running prepared=false sequence=1 input_digest=sha256:6c83c25b9800034c0b2867826bb4b38a653c7ee020392ba024ab4421eb2a4833 callback_only=true
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=store.WithinSave at=22.900747953s duration=31.972275ms caller_remaining=7.099208238s cause=nil callback_cause=nil final_cause=nil committed=true save_cause=nil status=running prepared=false sequence=1 input_digest=sha256:6c83c25b9800034c0b2867826bb4b38a653c7ee020392ba024ab4421eb2a4833
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.decision-step-end at=27.830914838s duration=5.098152194s caller_remaining=2.169041353s cause=*errors.errorString:claim 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=content.ReadForProcessing at=27.819811411s duration=13.764372ms caller_remaining=2.18014478s cause=*pgconn.errTimeout:context_deadline bytes=0 sources=0
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=source.Material at=27.819835353s duration=45.372851ms caller_remaining=2.180120838s cause=*errors.joinError:context_deadline:dependency_unavailable bytes=0
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=store.ValidateClaim at=27.830502064s duration=655.363µs caller_remaining=2.169454127s cause=*errors.errorString:claim job=job-3acaffc1457b696d2f8d0d9a9ea5f419 epoch=1 revision=1 phase=decide lease_until=2026-10-05T05:12:56.146826Z supplied_now=2026-10-05T05:12:56.156868Z lease_delta=-10.042ms
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=store.Within at=27.830904691s duration=11.044163ms caller_remaining=2.1690515s cause=*errors.errorString:claim 
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=access.Binding count=1 inclusive_total=112.656781ms max=112.656781ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=access.Current count=19 inclusive_total=671.258499ms max=80.961242ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=access.PrepareContent count=4 inclusive_total=56.16144ms max=16.11685ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=access.StagePublication count=4 inclusive_total=301.152481ms max=157.03936ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=content.GetCommand count=8 inclusive_total=191.226338ms max=35.638049ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=content.Put count=4 inclusive_total=4.143108684s max=1.260393151s
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=content.ReadForProcessing count=22 inclusive_total=3.992430568s max=820.072149ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=content.Step count=4 inclusive_total=2.051149404s max=797.801398ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.all-upstream-sources-published count=1 inclusive_total=350ns max=350ns
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.compile-and-bind-end count=1 inclusive_total=13.056238637s max=13.056238637s
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.compile-published-pre-bind count=1 inclusive_total=880ns max=880ns
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.compile-start count=1 inclusive_total=627ns max=627ns
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.decision-step-end count=1 inclusive_total=5.098152194s max=5.098152194s
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.decision-step-start count=1 inclusive_total=280ns max=280ns
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.dispatch-end count=1 inclusive_total=358.510025ms max=358.510025ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.dispatch-start count=1 inclusive_total=481ns max=481ns
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.independent-lock-observation-end count=1 inclusive_total=647.465916ms max=647.465916ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.independent-lock-observation-start count=1 inclusive_total=115ns max=115ns
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.initial-primary-selector-published count=1 inclusive_total=271ns max=271ns
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.original-bounds count=1 inclusive_total=27.39µs max=27.39µs
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.owners-established count=1 inclusive_total=363ns max=363ns
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.testcase-start count=1 inclusive_total=437ns max=437ns
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=source.Lock count=1 inclusive_total=1.486464546s max=1.486464546s
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=source.Material count=18 inclusive_total=1.964014445s max=849.146487ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=source.Snapshot count=1 inclusive_total=1.465439545s max=1.465439545s
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=store.Claim count=1 inclusive_total=3.604106ms max=3.604106ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=store.Now count=14 inclusive_total=13.004705ms max=4.111911ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=store.SaveDecision count=2 inclusive_total=57.430098ms max=53.564647ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=store.ValidateClaim count=4 inclusive_total=6.075461ms max=4.269093ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=store.ValidatePoolClaim count=2 inclusive_total=7.942022ms max=4.250461ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=store.Within count=10 inclusive_total=312.201914ms max=200.280848ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=store.WithinSave count=2 inclusive_total=232.272638ms max=200.300363ms
+    context_claim_diagnostics.go:118: CLAIM_DIAG last_gate kind=store.ValidateClaim at=27.830502064s duration=655.363µs caller_remaining=2.169454127s cause=*errors.errorString:claim job=job-3acaffc1457b696d2f8d0d9a9ea5f419 epoch=1 revision=1 phase=decide lease_until=2026-10-05T05:12:56.146826Z supplied_now=2026-10-05T05:12:56.156868Z lease_delta=-10.042ms
+    context_claim_diagnostics.go:118: CLAIM_DIAG last_gate kind=store.ValidatePoolClaim at=22.892395695s duration=4.250461ms caller_remaining=7.107560496s cause=nil job=job-3acaffc1457b696d2f8d0d9a9ea5f419 epoch=1 revision=1 phase=decide lease_until=2026-10-05T05:12:56.146826Z supplied_now=2026-10-05T05:12:51.211595Z lease_delta=4.935231s
+=== RUN   TestContentContextReachableClosure64And65IncludesIntermediateVersions/65
+    context_claim_diagnostics.go:116: CLAIM_DIAG bounded_events=15 dropped=0 inclusive_totals_do_not_sum=true
+    context_claim_diagnostics.go:118: CLAIM_DIAG first_error kind=phase.compile-and-bind-end at=11.790112694s duration=3.903579849s caller_remaining=18.209856471s cause=*errors.joinError:context_overflow 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.testcase-start at=19.185µs duration=276ns caller_remaining=29.99994998s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.owners-established at=259.62303ms duration=349ns caller_remaining=29.740346135s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.original-bounds at=261.235469ms duration=20.354µs caller_remaining=29.738733696s cause=nil payload_sha256=7a5f2a0b887e1feb21b572f9f67a5b9c28189ad5a33c26d5d57819ad0ebdb4d2 caller=30s lease=5s input=262144 output=131072 capacity=524288 reserve=131072 read=262160 original_deadline=2026-10-05T05:14:56.455335Z
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.initial-primary-selector-published at=442.854337ms duration=272ns caller_remaining=29.557114828s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.all-upstream-sources-published at=7.868424422s duration=288ns caller_remaining=22.131544743s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.compile-start at=7.886533341s duration=496ns caller_remaining=22.113435824s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.compile-and-bind-end at=11.790112694s duration=3.903579849s caller_remaining=18.209856471s cause=*errors.joinError:context_overflow 
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.all-upstream-sources-published count=1 inclusive_total=288ns max=288ns
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.compile-and-bind-end count=1 inclusive_total=3.903579849s max=3.903579849s
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.compile-start count=1 inclusive_total=496ns max=496ns
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.initial-primary-selector-published count=1 inclusive_total=272ns max=272ns
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.original-bounds count=1 inclusive_total=20.354µs max=20.354µs
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.owners-established count=1 inclusive_total=349ns max=349ns
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.testcase-start count=1 inclusive_total=276ns max=276ns
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=store.Now count=4 inclusive_total=1.878462ms max=923.269µs
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=store.Within count=4 inclusive_total=14.13794ms max=6.157794ms
+--- FAIL: TestContentContextReachableClosure64And65IncludesIntermediateVersions (39.87s)
+    --- FAIL: TestContentContextReachableClosure64And65IncludesIntermediateVersions/64 (27.87s)
+    --- PASS: TestContentContextReachableClosure64And65IncludesIntermediateVersions/65 (12.00s)
+=== RUN   TestContentContextStaticModeMaximumReachable62Materials
+    content_context_material_reachable_test.go:69: normal real rule step failed {0 0001-01-01 00:00:00 +0000 UTC 0s} claim is invalid, expired or replaced
+    context_claim_diagnostics.go:116: CLAIM_DIAG bounded_events=291 dropped=0 inclusive_totals_do_not_sum=true
+    context_claim_diagnostics.go:118: CLAIM_DIAG first_error kind=content.Put at=21.567753768s duration=683.881928ms caller_remaining=8.432241939s cause=context.deadlineExceededError:context_deadline request_bytes=97488
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.testcase-start at=18.401µs duration=283ns caller_remaining=29.999977306s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.owners-established at=212.208615ms duration=440ns caller_remaining=29.787787092s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.original-bounds at=213.438155ms duration=17.44µs caller_remaining=29.786557552s cause=nil payload_sha256=4913d1d264b567f960bd78104be2edc98a191f028fb0aa5a7ba5afc2fad4e767 caller=30s lease=5s input=262144 output=131072 capacity=524288 reserve=131072 read=262144 original_deadline=2026-10-05T05:15:08.411640Z
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.initial-primary-selector-published at=381.67095ms duration=405ns caller_remaining=29.618324757s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.all-upstream-sources-published at=4.736262045s duration=271ns caller_remaining=25.263733662s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.compile-start at=4.753858728s duration=391ns caller_remaining=25.246136979s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.compile-published-pre-bind at=15.982030821s duration=503ns caller_remaining=14.017964886s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.compile-and-bind-end at=16.009628548s duration=11.255770211s caller_remaining=13.990367159s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.independent-lock-observation-start at=16.009634328s duration=123ns caller_remaining=13.990361379s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.independent-lock-observation-end at=16.371370394s duration=361.736373ms caller_remaining=13.628625313s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.dispatch-start at=16.372950858s duration=383ns caller_remaining=13.627044849s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=store.SaveDecision at=16.501543443s duration=3.173749ms caller_remaining=13.498452264s cause=nil status=accepted prepared=false sequence=0 input_digest=sha256:cebd9ad8e888407a602a225c309eba1759340c1f44d1a17cdb085cd99eba484b callback_only=true
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=store.WithinSave at=16.5152104s duration=25.73958ms caller_remaining=13.484785307s cause=nil callback_cause=nil final_cause=nil committed=true save_cause=nil status=accepted prepared=false sequence=0 input_digest=sha256:cebd9ad8e888407a602a225c309eba1759340c1f44d1a17cdb085cd99eba484b
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.dispatch-end at=16.519932542s duration=146.982067ms caller_remaining=13.480063165s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.decision-step-start at=16.519936431s duration=190ns caller_remaining=13.480059276s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=store.Claim at=16.568735187s duration=1.317047ms caller_remaining=13.43126052s cause=nil job=job-1fcfba5baa18e8c78fcf011411541256 epoch=1 revision=1 phase=decide lease_until=2026-10-05T05:13:29.766628Z supplied_now=2026-10-05T05:13:24.766628Z lease_delta=5s
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=store.SaveDecision at=16.604661238s duration=2.33437ms caller_remaining=13.395334469s cause=nil status=running prepared=false sequence=1 input_digest=sha256:cebd9ad8e888407a602a225c309eba1759340c1f44d1a17cdb085cd99eba484b callback_only=true
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=store.WithinSave at=16.606195862s duration=11.934096ms caller_remaining=13.393799845s cause=nil callback_cause=nil final_cause=nil committed=true save_cause=nil status=running prepared=false sequence=1 input_digest=sha256:cebd9ad8e888407a602a225c309eba1759340c1f44d1a17cdb085cd99eba484b
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=store.SaveDecision at=20.55546627s duration=17.538138ms caller_remaining=9.444529437s cause=nil status=running prepared=true sequence=1 input_digest=sha256:cebd9ad8e888407a602a225c309eba1759340c1f44d1a17cdb085cd99eba484b callback_only=true
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=store.WithinSave at=20.557477913s duration=51.324319ms caller_remaining=9.442517794s cause=nil callback_cause=nil final_cause=nil committed=true save_cause=nil status=running prepared=true sequence=1 input_digest=sha256:cebd9ad8e888407a602a225c309eba1759340c1f44d1a17cdb085cd99eba484b
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.decision-step-end at=21.596179164s duration=5.076242923s caller_remaining=8.403816543s cause=*errors.errorString:claim 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=content.Put at=21.567753768s duration=683.881928ms caller_remaining=8.432241939s cause=context.deadlineExceededError:context_deadline request_bytes=97488
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=publisher.Publish at=21.567825974s duration=931.438515ms caller_remaining=8.432169733s cause=context.deadlineExceededError:context_deadline bytes=61120 sources=63
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=store.ValidateClaim at=21.595854462s duration=354.626µs caller_remaining=8.404141245s cause=*errors.errorString:claim job=job-1fcfba5baa18e8c78fcf011411541256 epoch=1 revision=1 phase=decide lease_until=2026-10-05T05:13:29.766628Z supplied_now=2026-10-05T05:13:29.794711Z lease_delta=-28.083ms
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=store.Within at=21.596163729s duration=28.29436ms caller_remaining=8.403831978s cause=*errors.errorString:claim 
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=access.Binding count=1 inclusive_total=51.551285ms max=51.551285ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=access.Current count=67 inclusive_total=1.01562576s max=49.417214ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=access.PrepareContent count=5 inclusive_total=90.620895ms max=35.773873ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=access.StagePublication count=5 inclusive_total=394.375716ms max=144.040957ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=content.GetCommand count=8 inclusive_total=177.547817ms max=45.901165ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=content.Put count=5 inclusive_total=4.606111917s max=1.23515232s
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=content.ReadForProcessing count=66 inclusive_total=2.60176922s max=406.214979ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=content.Step count=4 inclusive_total=1.919480604s max=593.721303ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.all-upstream-sources-published count=1 inclusive_total=271ns max=271ns
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.compile-and-bind-end count=1 inclusive_total=11.255770211s max=11.255770211s
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.compile-published-pre-bind count=1 inclusive_total=503ns max=503ns
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.compile-start count=1 inclusive_total=391ns max=391ns
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.decision-step-end count=1 inclusive_total=5.076242923s max=5.076242923s
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.decision-step-start count=1 inclusive_total=190ns max=190ns
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.dispatch-end count=1 inclusive_total=146.982067ms max=146.982067ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.dispatch-start count=1 inclusive_total=383ns max=383ns
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.independent-lock-observation-end count=1 inclusive_total=361.736373ms max=361.736373ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.independent-lock-observation-start count=1 inclusive_total=123ns max=123ns
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.initial-primary-selector-published count=1 inclusive_total=405ns max=405ns
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.original-bounds count=1 inclusive_total=17.44µs max=17.44µs
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.owners-established count=1 inclusive_total=440ns max=440ns
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.testcase-start count=1 inclusive_total=283ns max=283ns
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=publisher.Plan count=2 inclusive_total=84.985557ms max=42.656962ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=publisher.Publish count=1 inclusive_total=931.438515ms max=931.438515ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=source.Lock count=1 inclusive_total=858.75714ms max=858.75714ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=source.Material count=62 inclusive_total=2.041162777s max=396.190629ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=source.Snapshot count=1 inclusive_total=852.464498ms max=852.464498ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=store.Claim count=1 inclusive_total=1.317047ms max=1.317047ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=store.Now count=18 inclusive_total=6.420423ms max=647.693µs
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=store.SaveDecision count=3 inclusive_total=23.046257ms max=17.538138ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=store.ValidateClaim count=8 inclusive_total=4.201006ms max=795.911µs
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=store.ValidatePoolClaim count=4 inclusive_total=4.383007ms max=1.667771ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=store.Within count=12 inclusive_total=213.626782ms max=58.695234ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=store.WithinSave count=3 inclusive_total=88.997995ms max=51.324319ms
+    context_claim_diagnostics.go:118: CLAIM_DIAG last_gate kind=store.ValidateClaim at=21.595854462s duration=354.626µs caller_remaining=8.404141245s cause=*errors.errorString:claim job=job-1fcfba5baa18e8c78fcf011411541256 epoch=1 revision=1 phase=decide lease_until=2026-10-05T05:13:29.766628Z supplied_now=2026-10-05T05:13:29.794711Z lease_delta=-28.083ms
+    context_claim_diagnostics.go:118: CLAIM_DIAG last_gate kind=store.ValidatePoolClaim at=20.602221092s duration=663.44µs caller_remaining=9.397774615s cause=nil job=job-1fcfba5baa18e8c78fcf011411541256 epoch=1 revision=1 phase=decide lease_until=2026-10-05T05:13:29.766628Z supplied_now=2026-10-05T05:13:28.800393Z lease_delta=966.235ms
+--- FAIL: TestContentContextStaticModeMaximumReachable62Materials (21.64s)
+=== RUN   TestContentContextSingleContentBoundHasHonestLayerAndNoDispatch
+=== RUN   TestContentContextSingleContentBoundHasHonestLayerAndNoDispatch/200000
+=== RUN   TestContentContextSingleContentBoundHasHonestLayerAndNoDispatch/262144
+--- PASS: TestContentContextSingleContentBoundHasHonestLayerAndNoDispatch (9.35s)
+    --- PASS: TestContentContextSingleContentBoundHasHonestLayerAndNoDispatch/200000 (8.14s)
+    --- PASS: TestContentContextSingleContentBoundHasHonestLayerAndNoDispatch/262144 (1.22s)
+=== RUN   TestContentContextDuplicateSelectorRoleRefusesBeforeOriginalInputReplacement
+--- PASS: TestContentContextDuplicateSelectorRoleRefusesBeforeOriginalInputReplacement (0.64s)
+FAIL
+NATIVE_EXIT status=1 group_absent=True

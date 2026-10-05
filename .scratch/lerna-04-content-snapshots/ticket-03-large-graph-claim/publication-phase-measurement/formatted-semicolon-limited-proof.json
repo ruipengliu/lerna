@@ -1,0 +1,42 @@
+{
+  "status": "narrow formatter proof; no general product semicolon/token stripping",
+  "checks": [
+    {
+      "file": "/workspace/lerna-content-03-137311247276/large-graph-publication-phase-overlay/context_world.go",
+      "check": "exact noncomment tokens including all original semicolons",
+      "allowed_adjustment": "none; exact noncomment token equality including all semicolons"
+    },
+    {
+      "file": "/workspace/lerna-content-03-137311247276/large-graph-publication-phase-overlay/context_claim_diagnostics.go",
+      "check": "exact noncomment tokens including all original semicolons",
+      "allowed_adjustment": "only added RecordPublicationPhase helper index=i;break explicit statement semicolon normalized to newline; no original product tokens changed"
+    },
+    {
+      "file": "/workspace/lerna-content-03-137311247276/large-graph-publication-phase-overlay/content_context_closure_test.go",
+      "check": "exact noncomment tokens including all original semicolons",
+      "allowed_adjustment": "none; exact noncomment token equality including all semicolons"
+    },
+    {
+      "file": "/workspace/lerna-content-03-137311247276/large-graph-publication-phase-overlay/content_context_material_reachable_test.go",
+      "check": "exact noncomment tokens including all original semicolons",
+      "allowed_adjustment": "none; exact noncomment token equality including all semicolons"
+    },
+    {
+      "file": "/workspace/lerna-content-03-137311247276/large-graph-publication-phase-overlay/content_context_test.go",
+      "check": "exact noncomment tokens including all original semicolons",
+      "allowed_adjustment": "none; exact noncomment token equality including all semicolons"
+    },
+    {
+      "file": "/workspace/lerna-content-03-137311247276/large-graph-publication-phase-overlay/publisher.go",
+      "check": "exact noncomment tokens including all original semicolons",
+      "allowed_adjustment": "none; exact noncomment token equality including all semicolons"
+    },
+    {
+      "file": "/workspace/lerna-content-03-137311247276/large-graph-publication-phase-overlay/processing.go",
+      "check": "exact noncomment tokens including all original semicolons",
+      "allowed_adjustment": "none; exact noncomment token equality including all semicolons"
+    }
+  ],
+  "earlier_global_semicolon_script_is_limited_evidence_only": "formatted-measurement-proof.json retained as historical script/output; this narrower proof supplies corrected qualification",
+  "native_build_actual_success": true
+}

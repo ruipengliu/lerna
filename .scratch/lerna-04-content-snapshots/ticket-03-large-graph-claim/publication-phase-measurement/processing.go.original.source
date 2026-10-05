@@ -1,0 +1,140 @@
+package content
+
+import (
+	"context"
+	"crypto/sha256"
+	"encoding/hex"
+	"errors"
+	"strconv"
+	"time"
+
+	v "github.com/ruipengliu/lerna/contract/v1_2"
+	"github.com/ruipengliu/lerna/runtime"
+)
+
+var ErrProcessingLimit = errors.New("content processing exceeds remaining byte limit")
+var ErrProcessingForbidden = errors.New("content processing forbidden")
+
+// ProcessingRead is an observation of one completed current read. Sources and
+// RetainUntil describe that read; they confer no future publication permission.
+type ProcessingRead struct {
+	Ref         v.ContentRef
+	Bytes       []byte
+	Sources     []v.ContentRef
+	RetainUntil time.Time
+}
+
+// ReadForProcessing is an internal consumer seam, separate from public
+// disclosure. Both short transactions qualify current read/process for the
+// exact target and its complete registered closure; I/O holds no database Tx.
+func (s *Service) ReadForProcessing(ctx context.Context, subject *v.SubjectBinding, ref v.ContentRef, purpose string, remaining int64) (ProcessingRead, error) {
+	var out ProcessingRead
+	principal, ok := trustedSubject(subject, s.config.Owner)
+	if !ok || ref.Owner != s.config.Owner || purpose == "" {
+		return out, ErrProcessingForbidden
+	}
+	if !finite(ctx) {
+		return out, ErrUnavailable
+	}
+	if _, err := v.Encode(ref); err != nil {
+		return out, err
+	}
+	length, err := strconv.ParseInt(string(ref.ByteLength), 10, 64)
+	if err != nil || length < 0 || length > 262144 || remaining < length {
+		return out, ErrProcessingLimit
+	}
+	var objectKey string
+	var before time.Time
+	observe := func(ctx context.Context, tx runtime.Tx) error {
+		// Each observation rebuilds its closure. No private records or permission
+		// from the first transaction are used as authority by the second one.
+		now, err := s.config.Store.Now(ctx, tx)
+		if err != nil {
+			return err
+		}
+		p, err := s.config.Store.CheckPolicy(ctx, tx, principal, ref, purpose, []string{"read", "process"}, now)
+		if err != nil {
+			return err
+		}
+		if p == nil {
+			return ErrProcessingForbidden
+		}
+		r, err := s.config.Store.LockVersion(ctx, tx, ref)
+		if err != nil {
+			return err
+		}
+		now, err = s.config.Store.Now(ctx, tx)
+		if err != nil {
+			return err
+		}
+		if !now.Before(p.ValidUntil) || !now.Before(p.RetainUntil) {
+			return ErrProcessingForbidden
+		}
+		actual := ref
+		if r != nil {
+			actual = r.Ref
+		}
+		if p.Ref != actual {
+			return ErrProcessingForbidden
+		}
+		if r == nil || r.Ref != ref || r.Publication != "published" {
+			return ErrUnavailable
+		}
+		bound := earlier(earlier(p.ValidUntil, p.RetainUntil), cutoff(r.CurrentRetainUntil))
+		if !now.Before(bound) {
+			return ErrProcessingForbidden
+		}
+		closure, err := s.registeredClosure(ctx, tx, ref, r.Sources, principal, purpose, []string{"read", "process"})
+		if err != nil {
+			if _, ok := qualificationCode(err); ok {
+				return errors.Join(ErrProcessingForbidden, err)
+			}
+			return err
+		}
+		if len(closure.refs) > 0 {
+			bound = earlier(bound, earlier(closure.validBefore, closure.retainBefore))
+		}
+		now, err = s.config.Store.Now(ctx, tx)
+		if err != nil {
+			return err
+		}
+		if !now.Before(bound) {
+			return ErrProcessingForbidden
+		}
+		if before.IsZero() {
+			before = bound
+		} else {
+			before = earlier(before, bound)
+		}
+		objectKey = r.ObjectKey
+		out.Sources = append([]v.ContentRef{}, closure.refs...)
+		out.RetainUntil = bound
+		return nil
+	}
+	if err = s.config.Store.Within(ctx, owner(s.config.Owner), observe); err != nil {
+		return ProcessingRead{}, err
+	}
+	bounded, cancel := context.WithDeadline(ctx, before)
+	defer cancel()
+	body, err := s.config.Objects.Read(bounded, objectKey, ref.Hash, length)
+	if err != nil {
+		return ProcessingRead{}, err
+	}
+	if err = bounded.Err(); err != nil {
+		return ProcessingRead{}, err
+	}
+	if int64(len(body)) != length || processingHash(body) != ref.Hash {
+		return ProcessingRead{}, ErrObjectIntegrity
+	}
+	if err = s.config.Store.Within(ctx, owner(s.config.Owner), observe); err != nil {
+		return ProcessingRead{}, err
+	}
+	out.Ref = ref
+	out.Bytes = body
+	return out, nil
+}
+
+func processingHash(body []byte) string {
+	sum := sha256.Sum256(body)
+	return "sha256:" + hex.EncodeToString(sum[:])
+}
