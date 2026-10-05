@@ -1,0 +1,15 @@
+CREATE TABLE IF NOT EXISTS planning (user_id TEXT NOT NULL, domain_id TEXT NOT NULL, id TEXT NOT NULL, record BLOB NOT NULL, PRIMARY KEY(user_id,domain_id,id));
+CREATE TABLE IF NOT EXISTS snapshots (user_id TEXT NOT NULL, domain_id TEXT NOT NULL, id TEXT NOT NULL, record BLOB NOT NULL, PRIMARY KEY(user_id,domain_id,id));
+CREATE TABLE IF NOT EXISTS grants (user_id TEXT NOT NULL, domain_id TEXT NOT NULL, id TEXT NOT NULL, record BLOB NOT NULL, PRIMARY KEY(user_id,domain_id,id));
+CREATE TABLE IF NOT EXISTS grant_uses (user_id TEXT NOT NULL, domain_id TEXT NOT NULL, id TEXT NOT NULL, pool_id TEXT NOT NULL, operation_id TEXT NOT NULL, record BLOB NOT NULL, PRIMARY KEY(user_id,domain_id,id), UNIQUE(user_id,pool_id,operation_id));
+CREATE TABLE IF NOT EXISTS budgets (user_id TEXT NOT NULL, domain_id TEXT NOT NULL, scope_id TEXT NOT NULL, record BLOB NOT NULL, PRIMARY KEY(user_id,domain_id,scope_id));
+CREATE TABLE IF NOT EXISTS reservations (user_id TEXT NOT NULL, domain_id TEXT NOT NULL, id TEXT NOT NULL, operation_id TEXT NOT NULL, record BLOB NOT NULL, PRIMARY KEY(user_id,domain_id,id), UNIQUE(user_id,operation_id));
+CREATE TABLE IF NOT EXISTS capabilities (user_id TEXT NOT NULL, domain_id TEXT NOT NULL, id TEXT NOT NULL, record BLOB NOT NULL, PRIMARY KEY(user_id,domain_id,id));
+CREATE TABLE IF NOT EXISTS admissions (user_id TEXT NOT NULL, domain_id TEXT NOT NULL, id TEXT NOT NULL, record BLOB NOT NULL, PRIMARY KEY(user_id,domain_id,id));
+CREATE TABLE IF NOT EXISTS handoffs (user_id TEXT NOT NULL, domain_id TEXT NOT NULL, id TEXT NOT NULL, admission_id TEXT NOT NULL, record BLOB NOT NULL, PRIMARY KEY(user_id,domain_id,id), UNIQUE(user_id,domain_id,admission_id));
+CREATE TABLE IF NOT EXISTS ledger_commit_clock (singleton INTEGER PRIMARY KEY CHECK(singleton=1), position INTEGER NOT NULL);
+INSERT OR IGNORE INTO ledger_commit_clock VALUES(1,0);
+CREATE TABLE IF NOT EXISTS operations (user_id TEXT NOT NULL, domain_id TEXT NOT NULL, id TEXT NOT NULL, record BLOB NOT NULL, PRIMARY KEY(user_id,domain_id,id));
+CREATE TABLE IF NOT EXISTS ledger_jobs (user_id TEXT NOT NULL, domain_id TEXT NOT NULL, id TEXT NOT NULL, operation_id TEXT NOT NULL, record BLOB NOT NULL, PRIMARY KEY(user_id,domain_id,id), UNIQUE(user_id,domain_id,operation_id));
+CREATE TABLE IF NOT EXISTS requirements (user_id TEXT NOT NULL, domain_id TEXT NOT NULL, id TEXT NOT NULL, record BLOB NOT NULL, PRIMARY KEY(user_id,domain_id,id));
+CREATE TABLE IF NOT EXISTS proposals (user_id TEXT NOT NULL, domain_id TEXT NOT NULL, id TEXT NOT NULL, record BLOB NOT NULL, PRIMARY KEY(user_id,domain_id,id));

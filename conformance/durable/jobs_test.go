@@ -132,15 +132,12 @@ func controlInvalidatesWorker(t *testing.T, factory factory) {
 	c.JobRef = r.Jobs[0].Ref
 	c.NextState = "CLOSED"
 	r, e = b.ExecuteJob(ctx, caller, c)
-	if e != nil || r.Decision != v1.Decision_DECISION_ACCEPTED {
-		t.Fatalf("close %v %v", r, e)
+	if e != nil || r.Decision != v1.Decision_DECISION_REJECTED || r.Error.Code != "UNSUPPORTED_FEATURE" {
+		t.Fatalf("close discarded undecided responsibility: %v %v", r, e)
 	}
-	c.Identity.CommandId = "reopen"
-	c.JobRef = r.Jobs[0].Ref
-	c.NextState = "READY"
-	r, e = b.ExecuteJob(ctx, caller, c)
-	if e != nil || r.Decision != v1.Decision_DECISION_REJECTED {
-		t.Fatalf("reopen %v %v", r, e)
+	current, e := b.QueryJob(ctx, caller, c.JobRef.Name)
+	if e != nil || current.State != "READY" {
+		t.Fatalf("close changed pending work: %v %v", current, e)
 	}
 	again, e := b.ExecuteJob(ctx, caller, stale)
 	if e != nil || !proto.Equal(again, rejected) {
@@ -226,6 +223,15 @@ func takeoverKeepsFixedEndpoint(t *testing.T, factory factory) {
 	r, e = b.ExecuteJob(ctx, caller, c)
 	if e != nil || r.Decision != v1.Decision_DECISION_ACCEPTED {
 		t.Fatalf("current worker failed %v %v", r, e)
+	}
+	c = jobCommand("reopen-completed")
+	c.Action = "CONTROL"
+	c.Module = "ledger"
+	c.JobRef = r.Jobs[0].Ref
+	c.NextState = "READY"
+	r, e = b.ExecuteJob(ctx, caller, c)
+	if e != nil || r.Decision != v1.Decision_DECISION_REJECTED || r.Error.Code != "TERMINAL_JOB" {
+		t.Fatalf("reopened terminal job: %v %v", r, e)
 	}
 }
 

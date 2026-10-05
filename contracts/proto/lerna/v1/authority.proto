@@ -1,0 +1,76 @@
+syntax = "proto3";
+package lerna.v1;
+
+import "lerna/v1/identity.proto";
+import "lerna/v1/planning.proto";
+import "lerna/v1/submission.proto";
+
+option go_package = "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1;lernav1";
+message PermissionClause {
+  string action = 1;
+  string resource = 2;
+  string use_right = 3;
+  string processing_purpose = 4;
+  string executor_endpoint_id = 5;
+}
+message Grant {
+  Ref ref = 1;
+  GlobalName subject = 2;
+  repeated PermissionClause permissions = 3;
+  int64 valid_from_unix_ms = 4;
+  int64 valid_until_unix_ms = 5;
+  string use_mode = 6;
+  string use_pool_id = 7;
+  string status = 8;
+  uint64 revocation_epoch = 9;
+  bool confirmation_required = 10;
+  CommandIdentity issuer = 11;
+  uint32 semantic_version = 12;
+}
+message GrantUse {
+  Ref ref = 1;
+  Ref grant_ref = 2;
+  string use_pool_id = 3;
+  GlobalName operation_id = 4;
+  Ref admission_ref = 5;
+  GlobalName task_id = 6;
+}
+message ConfigureGrantCommand {
+  CommandHeader header = 1;
+  Grant grant = 2;
+}
+message Budget {
+  Ref ref = 1;
+  GlobalName task_id = 2;
+  string unit = 3;
+  int64 limit = 4;
+  int64 reserved = 5;
+  int64 settled = 6;
+  string status = 7;
+}
+message ConfigureBudgetCommand {
+  CommandHeader header = 1;
+  GlobalName task_id = 2;
+  string unit = 3;
+  int64 limit = 4;
+}
+message Reservation {
+  Ref ref = 1;
+  Ref admission_ref = 2;
+  GlobalName operation_id = 3;
+  repeated Ref budget_refs = 4;
+  string unit = 5;
+  int64 ceiling = 6;
+  uint32 send_ceiling = 7;
+  uint32 consumed_sends = 8;
+  string status = 9;
+  GlobalName task_id = 10;
+}
+message BudgetBasis {
+  Ref budget_ref = 1;
+  string unit = 2;
+  int64 ceiling = 3;
+  Ref rate_basis_ref = 4;
+  Ref reservation_ref = 5;
+  repeated Ref budget_chain_refs = 6;
+}

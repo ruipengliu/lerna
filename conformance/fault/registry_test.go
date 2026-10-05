@@ -52,6 +52,9 @@ func TestEveryPersistencePointIsRegistered(t *testing.T) {
 				if selector.Sel.Name == "Transaction" {
 					index = 1
 				}
+				if selector.Sel.Name == "Execute" {
+					index = 4
+				}
 				if selector.Sel.Name == "transact" {
 					index = 2
 				}
@@ -59,7 +62,7 @@ func TestEveryPersistencePointIsRegistered(t *testing.T) {
 					return true
 				}
 				// 受信存储的转发保留原标签；模块入口必须传字面名称。
-				if id, ok := call.Args[index].(*ast.Ident); ok && id.Name == "point" && strings.HasSuffix(path, "infra/sqlite/sqlite.go") {
+				if id, ok := call.Args[index].(*ast.Ident); ok && id.Name == "point" && (strings.HasSuffix(path, "infra/sqlite/sqlite.go") || strings.HasSuffix(path, "core/durable/commands.go")) {
 					return true
 				}
 				literal, ok := call.Args[index].(*ast.BasicLit)

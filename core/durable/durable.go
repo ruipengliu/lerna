@@ -12,6 +12,7 @@ import (
 )
 
 type Store interface {
+	BusinessScope(context.Context, func(context.Context) error) error
 	Transaction(context.Context, string, func(context.Context) error) error
 	LoadReceipt(context.Context, *v1.CommandIdentity) (*v1.CommandReceipt, error)
 	SaveReceipt(context.Context, *v1.CommandReceipt) error

@@ -1,0 +1,38 @@
+syntax = "proto3";
+package lerna.v1;
+
+import "lerna/v1/admission.proto";
+import "lerna/v1/identity.proto";
+import "lerna/v1/planning.proto";
+import "lerna/v1/submission.proto";
+
+option go_package = "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1;lernav1";
+message Effect {
+  Ref ref = 1;
+  GlobalName operation_id = 2;
+  repeated GlobalName covered_attempt_ids = 3;
+  string outcome = 4;
+  string late_effect = 5;
+  repeated Ref evidence_refs = 6;
+  optional int64 next_reconcile_at_unix_ms = 7;
+  bool evidence_conflict = 8;
+}
+message Operation {
+  Ref ref = 1;
+  Ref admission_ref = 2;
+  string executor_endpoint_id = 3;
+  Ref adapter_ref = 4;
+  Ref parameters_ref = 5;
+  Capability capability_snapshot = 6;
+  string lifecycle = 7;
+  string dispatch = 8;
+  repeated Ref attempt_refs = 9;
+  Ref effect_ref = 10;
+  repeated Ref closure_evidence_refs = 11;
+  Effect effect = 12;
+  bool start_receipt_obtained = 13;
+}
+message AcceptOperationCommand {
+  CommandHeader header = 1;
+  Admission admission = 2;
+}

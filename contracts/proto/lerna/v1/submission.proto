@@ -92,6 +92,7 @@ message CommandReceipt {
   ContractError error = 14;
   Ref input_ref = 15;
   repeated Job jobs = 16;
+  Ref result_ref = 17;
 }
 message ReceiptQuery {
   ReceiptQueryState state = 1;
@@ -163,6 +164,8 @@ message Content {
   int64 acquired_at_unix_ms = 4;
   repeated Ref derived_from = 5;
   string media_type = 6;
+  string status = 7;
+  repeated string processing_purposes = 8;
 }
 message PendingGoal {
   SubmitGoalCommand command = 1;
