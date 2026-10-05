@@ -21,7 +21,7 @@ type reconciliationStore interface {
 	LoadReconciliationFinding(context.Context, *v1.Ref) (*v1.ReconciliationFinding, error)
 }
 type ReconciliationTasks interface {
-	QueryCapability(context.Context, *v1.Caller, *v1.Ref) (*v1.Capability, error)
+	QueryCurrentCapability(context.Context, *v1.Caller, *v1.Ref) (*v1.Capability, error)
 	AdmitClosure(context.Context, *v1.Caller, *v1.AdmitClosureCommand) (*v1.CommandReceipt, error)
 	QueryClosureReceipt(context.Context, *v1.Caller, *v1.CommandIdentity) (*v1.ReceiptQuery, error)
 	ProcessHandoffs(context.Context, *v1.Caller) error
@@ -116,11 +116,11 @@ func (s *Service) RequestReconciliation(ctx context.Context, caller *v1.Caller, 
 		if s.reconciliationTasks == nil {
 			return nil, command.Fail("DEPENDENCY_UNAVAILABLE")
 		}
-		cap, e := s.reconciliationTasks.QueryCapability(tx, caller, c.QueryCapabilityRef)
+		cap, e := s.reconciliationTasks.QueryCurrentCapability(tx, caller, c.QueryCapabilityRef)
 		if e != nil {
 			return nil, e
 		}
-		if !queryCapability(op, cap) {
+		if !queryCapability(op, cap) || !proto.Equal(cap.Ref, c.QueryCapabilityRef) {
 			return nil, command.Fail("CAPABILITY_INVALID")
 		}
 		a, e := s.starts.QueryAdmission(tx, caller, op.AdmissionRef)
@@ -251,7 +251,7 @@ func (s *Service) ProcessReconciliationClaim(ctx context.Context, caller *v1.Cal
 		if e != nil {
 			return nil, e
 		}
-		cap, e := s.reconciliationTasks.QueryCapability(tx, caller, p.QueryCapabilityRef)
+		cap, e := s.reconciliationTasks.QueryCurrentCapability(tx, caller, p.QueryCapabilityRef)
 		if e != nil {
 			return nil, e
 		}

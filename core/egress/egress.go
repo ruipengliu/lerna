@@ -11,9 +11,11 @@ import (
 )
 
 type Starts interface {
+	QueryStart(context.Context, *v1.Caller, *v1.Ref) (*v1.StartRecord, error)
 	StartExecution(context.Context, *v1.Caller, *v1.StartExecutionCommand) (*v1.CommandReceipt, error)
 }
 type Ledger interface {
+	QuerySendExecution(context.Context, *v1.Caller, *v1.GlobalName, *v1.Ref) (*v1.Execution, error)
 	CloseForCompletion(context.Context, *v1.Caller, *v1.CloseCompletionCommand) (*v1.CommandReceipt, error)
 	CloseForGrantRevocation(context.Context, *v1.Caller, *v1.CloseGrantExitCommand) (*v1.CommandReceipt, error)
 	ProcessInterpretations(context.Context, *v1.Caller) error
@@ -67,6 +69,24 @@ func (s *Service) Invoke(ctx context.Context, caller *v1.Caller, c *v1.StartExec
 	if start.Decision != v1.Decision_DECISION_ACCEPTED {
 		return start, nil
 	}
+	startRecord, e := s.starts.QueryStart(ctx, caller, start.ResultRef)
+	if e != nil {
+		return nil, e
+	}
+	if startRecord == nil {
+		return nil, command.Fail("START_RECEIPT_INVALID")
+	}
+	header := &v1.CommandHeader{Identity: &v1.CommandIdentity{UserId: caller.UserId, IssuerId: caller.IssuerId, TargetDomainId: c.Binding.OperationId.AuthorityDomainId, CommandId: "dispatch:" + startRecord.SendRef.Name.LocalId}, ContractVersion: 1, FingerprintVersion: 1, SchemaId: "lerna.v1.AdmissionCommands"}
+	previous, e := s.ledger.QueryReceipt(ctx, caller, header.Identity)
+	if e != nil {
+		return nil, e
+	}
+	if previous.State == v1.ReceiptQueryState_RECEIPT_QUERY_STATE_DECIDED {
+		return previous.Receipt, nil
+	}
+	if previous.State != v1.ReceiptQueryState_RECEIPT_QUERY_STATE_NOT_FOUND {
+		return nil, command.Fail("DEPENDENCY_UNAVAILABLE")
+	}
 	body, e := s.content.Read(ctx, caller, c.CallDescriptor.ParametersRef)
 	if e != nil {
 		return nil, e
@@ -80,14 +100,6 @@ func (s *Service) Invoke(ctx context.Context, caller *v1.Caller, c *v1.StartExec
 			return nil, command.Fail("PREPARATION_UNRECOVERABLE")
 		}
 	}
-	x, e := s.ledger.QueryExecution(ctx, caller, c.Binding.OperationId)
-	if e != nil {
-		return nil, e
-	}
-	if x == nil {
-		return nil, command.Fail("NOT_FOUND")
-	}
-	header := &v1.CommandHeader{Identity: &v1.CommandIdentity{UserId: caller.UserId, IssuerId: caller.IssuerId, TargetDomainId: c.Binding.OperationId.AuthorityDomainId, CommandId: "dispatch:" + x.Send.Ref.Name.LocalId}, ContractVersion: 1, FingerprintVersion: 1, SchemaId: "lerna.v1.AdmissionCommands"}
 	receipt, fresh, e := s.ledger.RecordDispatch(ctx, caller, &v1.DispatchCommand{Header: header, OperationId: c.Binding.OperationId, StartReceipt: start, Claim: c.Claim})
 	if e != nil {
 		return nil, e
@@ -95,9 +107,12 @@ func (s *Service) Invoke(ctx context.Context, caller *v1.Caller, c *v1.StartExec
 	if !fresh {
 		return receipt, nil
 	}
-	x, e = s.ledger.QueryExecution(ctx, caller, c.Binding.OperationId)
+	x, e := s.ledger.QuerySendExecution(ctx, caller, c.Binding.OperationId, receipt.ResultRef)
 	if e != nil {
 		return nil, e
+	}
+	if x == nil {
+		return nil, command.Fail("NOT_FOUND")
 	}
 	payload := command.ContentBytes(body)
 	result, e := s.io.Perform(ctx, &v1.PhysicalIORequest{TaskId: c.Binding.TaskId, OperationId: c.Binding.OperationId, ExecutorEndpointId: c.Binding.ExecutorEndpointId, Attempt: x.Attempt, Send: x.Send, CallDescriptor: x.CallDescriptor, Body: payload})

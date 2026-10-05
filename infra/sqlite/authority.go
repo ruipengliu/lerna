@@ -74,7 +74,7 @@ func (s *Store) SaveReservation(ctx context.Context, r *v1.Reservation) error {
 	if e = s.saveReservationVersion(ctx, r); e != nil {
 		return e
 	}
-	return s.saveRecord(ctx, "adjudication", "INSERT INTO reservations VALUES(?,?,?,?,?) ON CONFLICT(user_id,domain_id,id) DO UPDATE SET record=excluded.record", r, r.Ref.Name.UserId, r.Ref.Name.AuthorityDomainId, r.Ref.Name.LocalId, r.OperationId.LocalId)
+	return s.saveRecord(ctx, "adjudication", "INSERT INTO send_reservations VALUES(?,?,?,?,?) ON CONFLICT(user_id,domain_id,id) DO UPDATE SET record=excluded.record", r, r.Ref.Name.UserId, r.Ref.Name.AuthorityDomainId, r.Ref.Name.LocalId, r.OperationId.LocalId)
 }
 func (s *Store) LoadReservation(ctx context.Context, r *v1.Ref) (*v1.Reservation, error) {
 	v, e := s.LoadReservationVersion(ctx, r)
@@ -126,7 +126,7 @@ func (s *Store) GrantUses(ctx context.Context, id *v1.GlobalName) ([]*v1.GrantUs
 func (s *Store) Reservations(ctx context.Context, id *v1.GlobalName) ([]*v1.Reservation, error) {
 	var result []*v1.Reservation
 	e := s.read(ctx, func(q querier) error {
-		rows, e := q.QueryContext(ctx, "SELECT record FROM reservations WHERE user_id=? AND domain_id=?", id.UserId, id.AuthorityDomainId)
+		rows, e := q.QueryContext(ctx, "SELECT record FROM send_reservations WHERE user_id=? AND domain_id=?", id.UserId, id.AuthorityDomainId)
 		if e != nil {
 			return e
 		}

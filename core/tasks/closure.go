@@ -51,11 +51,11 @@ func (s *Service) AdmitClosure(ctx context.Context, caller *v1.Caller, c *v1.Adm
 		if p == nil {
 			return nil, command.Fail("INVARIANT_VIOLATION")
 		}
-		cap, e := s.QueryCapability(tx, caller, w.CapabilityRef)
+		cap, e := s.QueryCurrentCapability(tx, caller, w.CapabilityRef)
 		if e != nil {
 			return nil, e
 		}
-		if cap == nil || cap.Action != "QUERY" || cap.UseRight != "READ" || cap.Resource != w.QuerySubject.TargetScope || cap.ExecutorEndpointId != w.QuerySubject.ExecutorEndpointId {
+		if cap == nil || !proto.Equal(cap.Ref, w.CapabilityRef) || cap.Action != "QUERY" || cap.UseRight != "READ" || cap.Resource != w.QuerySubject.TargetScope || cap.ExecutorEndpointId != w.QuerySubject.ExecutorEndpointId {
 			return nil, command.Fail("CAPABILITY_INVALID")
 		}
 		ref := command.NewRef(s.user, s.domain, "admission", "lerna.v1.Admission")

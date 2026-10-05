@@ -23,19 +23,39 @@ func (Adapter) Compile(op *v1.Operation, attempt *v1.ExecutionAttempt) (*v1.Call
 			return nil, nil, command.Fail("UNSUPPORTED_CAPABILITY")
 		}
 		declaration = &v1.ExecutionCapabilities{Effect: "MODEL_INFERENCE", ProtocolVersion: "lerna-model-v1", DeclarationVersion: "1", VerificationBasis: "reference-model-v1", IdempotencyScope: cap.Resource}
-	case "simulator-idempotent":
+	case "simulator-idempotent", "simulator-idempotent-expiring", "simulator-idempotent-evicting":
 		declaration.Idempotent = true
+	case "simulator-idempotent-queryable":
+		declaration.Idempotent = true
+		declaration.Queryable = true
 	case "simulator-queryable":
 		declaration.Queryable = true
 	case "simulator-opaque":
 	default:
 		return nil, nil, command.Fail("UNSUPPORTED_CAPABILITY")
 	}
+	if declaration.Idempotent {
+		declaration.IdempotencyMechanism = "NATIVE_KEY"
+		declaration.ConcurrencyGuarantee = "SAME_KEY_ALL_SENDS"
+		declaration.ParameterBinding = "EXACT_REQUEST"
+		declaration.AccountScope = cap.AdapterRef.Name.UserId
+		if cap.AdapterRef.Name.LocalId == "simulator-idempotent-expiring" || cap.AdapterRef.Name.LocalId == "simulator-idempotent-evicting" {
+			if cap.IdempotencyRetentionMs <= 0 || attempt.KeyValidUntilUnixMs == nil {
+				return nil, nil, command.Fail("UNSUPPORTED_CAPABILITY")
+			}
+			declaration.RetentionMs = cap.IdempotencyRetentionMs
+			declaration.RejectsExpiredKeys = cap.AdapterRef.Name.LocalId == "simulator-idempotent-expiring"
+		} else if cap.IdempotencyRetentionMs != 0 {
+			return nil, nil, command.Fail("UNSUPPORTED_CAPABILITY")
+		}
+	} else if cap.IdempotencyRetentionMs != 0 {
+		return nil, nil, command.Fail("UNSUPPORTED_CAPABILITY")
+	}
 	target, e := url.Parse(cap.Resource)
 	if e != nil || target.Scheme != "http" || target.User != nil || target.Fragment != "" || net.ParseIP(target.Hostname()) == nil || !net.ParseIP(target.Hostname()).IsLoopback() {
 		return nil, nil, command.Fail("TARGET_SCOPE_MISMATCH")
 	}
-	d := &v1.CallDescriptor{Protocol: "HTTP", Method: "POST", Target: cap.Resource, ParametersRef: op.ParametersRef, CapabilityRef: cap.Ref, ExternalKey: attempt.ExternalKey}
+	d := &v1.CallDescriptor{Protocol: "HTTP", Method: "POST", Target: cap.Resource, ParametersRef: op.ParametersRef, CapabilityRef: cap.Ref, ExternalKey: attempt.ExternalKey, KeyValidUntilUnixMs: attempt.KeyValidUntilUnixMs}
 	if cap.Action == "QUERY" {
 		if cap.AdapterRef.Name.LocalId != "simulator-queryable" || cap.UseRight != "READ" || op.QuerySubject == nil || op.ClosureWorkRef == nil || op.QuerySubject.TargetScope != cap.Resource || op.QuerySubject.ExecutorEndpointId != cap.ExecutorEndpointId {
 			return nil, nil, command.Fail("UNSUPPORTED_CAPABILITY")

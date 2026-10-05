@@ -708,6 +708,7 @@ type CompletionSeal struct {
 	NoSendProven            bool                   `protobuf:"varint,7,opt,name=no_send_proven,json=noSendProven,proto3" json:"no_send_proven,omitempty"`
 	OperationRef            *Ref                   `protobuf:"bytes,8,opt,name=operation_ref,json=operationRef,proto3" json:"operation_ref,omitempty"`
 	PhysicalSendWasPossible bool                   `protobuf:"varint,9,opt,name=physical_send_was_possible,json=physicalSendWasPossible,proto3" json:"physical_send_was_possible,omitempty"`
+	ClosedSendRefs          []*Ref                 `protobuf:"bytes,10,rep,name=closed_send_refs,json=closedSendRefs,proto3" json:"closed_send_refs,omitempty"`
 	unknownFields           protoimpl.UnknownFields
 	sizeCache               protoimpl.SizeCache
 }
@@ -805,6 +806,13 @@ func (x *CompletionSeal) GetPhysicalSendWasPossible() bool {
 	return false
 }
 
+func (x *CompletionSeal) GetClosedSendRefs() []*Ref {
+	if x != nil {
+		return x.ClosedSendRefs
+	}
+	return nil
+}
+
 var File_lerna_v1_completion_proto protoreflect.FileDescriptor
 
 const file_lerna_v1_completion_proto_rawDesc = "" +
@@ -880,7 +888,7 @@ const file_lerna_v1_completion_proto_rawDesc = "" +
 	"\atask_id\x18\x02 \x01(\v2\x14.lerna.v1.GlobalNameR\x06taskId\x12:\n" +
 	"\acommand\x18\x03 \x01(\v2 .lerna.v1.CloseCompletionCommandR\acommand\x12&\n" +
 	"\ajob_ref\x18\x04 \x01(\v2\r.lerna.v1.RefR\x06jobRef\x12E\n" +
-	"\x11recipient_receipt\x18\x05 \x01(\v2\x18.lerna.v1.CommandReceiptR\x10recipientReceipt\"\xcf\x03\n" +
+	"\x11recipient_receipt\x18\x05 \x01(\v2\x18.lerna.v1.CommandReceiptR\x10recipientReceipt\"\x88\x04\n" +
 	"\x0eCompletionSeal\x12\x1f\n" +
 	"\x03ref\x18\x01 \x01(\v2\r.lerna.v1.RefR\x03ref\x12,\n" +
 	"\n" +
@@ -891,7 +899,9 @@ const file_lerna_v1_completion_proto_rawDesc = "" +
 	"\x14executor_endpoint_id\x18\x06 \x01(\tR\x12executorEndpointId\x12$\n" +
 	"\x0eno_send_proven\x18\a \x01(\bR\fnoSendProven\x122\n" +
 	"\roperation_ref\x18\b \x01(\v2\r.lerna.v1.RefR\foperationRef\x12;\n" +
-	"\x1aphysical_send_was_possible\x18\t \x01(\bR\x17physicalSendWasPossibleB?Z=github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1;lernav1b\x06proto3"
+	"\x1aphysical_send_was_possible\x18\t \x01(\bR\x17physicalSendWasPossible\x127\n" +
+	"\x10closed_send_refs\x18\n" +
+	" \x03(\v2\r.lerna.v1.RefR\x0eclosedSendRefsB?Z=github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1;lernav1b\x06proto3"
 
 var (
 	file_lerna_v1_completion_proto_rawDescOnce sync.Once
@@ -967,11 +977,12 @@ var file_lerna_v1_completion_proto_depIdxs = []int32{
 	9,  // 40: lerna.v1.CompletionSeal.admission_ref:type_name -> lerna.v1.Ref
 	10, // 41: lerna.v1.CompletionSeal.operation_id:type_name -> lerna.v1.GlobalName
 	9,  // 42: lerna.v1.CompletionSeal.operation_ref:type_name -> lerna.v1.Ref
-	43, // [43:43] is the sub-list for method output_type
-	43, // [43:43] is the sub-list for method input_type
-	43, // [43:43] is the sub-list for extension type_name
-	43, // [43:43] is the sub-list for extension extendee
-	0,  // [0:43] is the sub-list for field type_name
+	9,  // 43: lerna.v1.CompletionSeal.closed_send_refs:type_name -> lerna.v1.Ref
+	44, // [44:44] is the sub-list for method output_type
+	44, // [44:44] is the sub-list for method input_type
+	44, // [44:44] is the sub-list for extension type_name
+	44, // [44:44] is the sub-list for extension extendee
+	0,  // [0:44] is the sub-list for field type_name
 }
 
 func init() { file_lerna_v1_completion_proto_init() }

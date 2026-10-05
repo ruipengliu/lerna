@@ -66,6 +66,9 @@ func (HTTP) Perform(ctx context.Context, c *v1.PhysicalIORequest) (*v1.PhysicalI
 	}
 	request.Close = true
 	request.Header.Set("Idempotency-Key", d.ExternalKey)
+	if d.KeyValidUntilUnixMs != nil {
+		request.Header.Set("Lerna-Key-Valid-Until", strconv.FormatInt(d.GetKeyValidUntilUnixMs(), 10))
+	}
 	request.Header.Set("Lerna-Attempt", c.Attempt.Ref.Name.LocalId)
 	request.Header.Set("Lerna-Send-Id", c.Send.Ref.Name.LocalId)
 	request.Header.Set("Lerna-Send", strconv.FormatUint(uint64(c.Send.SendSeq), 10))

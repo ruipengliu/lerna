@@ -14,6 +14,12 @@ uint64_t model_native_successes(void);
 uint64_t model_native_failures(void);
 uint64_t model_directory_failures(void);
 const char *model_source_id(void);
+uint64_t model_ephemeral_opens(void);
+uint64_t model_ephemeral_reads(void);
+uint64_t model_ephemeral_writes(void);
+uint64_t model_ephemeral_closes(void);
+uint64_t model_ephemeral_failures(void);
+void model_ephemeral_write_error(int enabled);
 */
 import "C"
 
@@ -51,3 +57,17 @@ func ModeAfter(mode, skip int) { C.model_mode(C.int(mode), C.int(skip)) }
 
 // DirectoryFailures 返回实际生产目录同步路径被注入的失败次数。
 func DirectoryFailures() uint64 { return uint64(C.model_directory_failures()) }
+
+// EphemeralStats 仅统计保存点临时日志的真实 I/O，不增加持久模型文件或切点。
+func EphemeralStats() (opens, reads, writes, closes, failures uint64) {
+	return uint64(C.model_ephemeral_opens()), uint64(C.model_ephemeral_reads()), uint64(C.model_ephemeral_writes()), uint64(C.model_ephemeral_closes()), uint64(C.model_ephemeral_failures())
+}
+
+// FailEphemeralWrites 注入临时日志写失败，独立于持久文件同步故障计数。
+func FailEphemeralWrites(enabled bool) {
+	value := C.int(0)
+	if enabled {
+		value = 1
+	}
+	C.model_ephemeral_write_error(value)
+}

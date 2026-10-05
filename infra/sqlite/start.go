@@ -21,7 +21,7 @@ func (s *Store) LoadStart(ctx context.Context, r *v1.Ref) (*v1.StartRecord, erro
 }
 func (s *Store) LoadCurrentReservation(ctx context.Context, r *v1.Ref) (*v1.Reservation, error) {
 	v := new(v1.Reservation)
-	ok, e := s.load(ctx, v, "SELECT record FROM reservations WHERE user_id=? AND domain_id=? AND id=?", r.Name.UserId, r.Name.AuthorityDomainId, r.Name.LocalId)
+	ok, e := s.load(ctx, v, "SELECT record FROM send_reservations WHERE user_id=? AND domain_id=? AND id=?", r.Name.UserId, r.Name.AuthorityDomainId, r.Name.LocalId)
 	if !ok {
 		return nil, e
 	}

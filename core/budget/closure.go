@@ -112,7 +112,7 @@ func (s *Service) ProcessClosures(ctx context.Context) error {
 		if e != nil {
 			return e
 		}
-		if op == nil || op.Dispatch != "SEALED" || op.Lifecycle != "SETTLED" || op.GetEffect().GetOutcome() != "NOT_APPLIED" || op.GetEffect().GetLateEffect() != "RULED_OUT" {
+		if op == nil || op.Dispatch != "SEALED" {
 			continue
 		}
 		for _, ref := range op.ClosureEvidenceRefs {
@@ -166,7 +166,7 @@ func (s *Service) validateNoSend(ctx context.Context, caller *v1.Caller, r *v1.R
 		return nil, e
 	}
 	if op != nil {
-		if !proto.Equal(op.AdmissionRef, r.AdmissionRef) || op.Dispatch != "SEALED" || op.Lifecycle != "SETTLED" || op.GetEffect().GetOutcome() != "NOT_APPLIED" || op.GetEffect().GetLateEffect() != "RULED_OUT" {
+		if !proto.Equal(op.AdmissionRef, r.AdmissionRef) || op.Dispatch != "SEALED" {
 			return nil, command.Fail("NO_SEND_UNPROVEN")
 		}
 		found := false
@@ -185,7 +185,18 @@ func (s *Service) validateNoSend(ctx context.Context, caller *v1.Caller, r *v1.R
 		if e != nil {
 			return nil, e
 		}
-		if proof == nil || proof.PhysicalSendWasPossible || !proto.Equal(proof.OperationId, r.OperationId) || op == nil || op.Execution == nil || !proto.Equal(proof.SendRef.Name, op.Execution.Send.Ref.Name) || op.Execution.Send.Phase != "CLOSED" {
+		if proof == nil || proof.PhysicalSendWasPossible || !proto.Equal(proof.OperationId, r.OperationId) || op == nil || op.Execution == nil {
+			return nil, command.Fail("NO_SEND_UNPROVEN")
+		}
+		x, e := s.usageSource.(BillingExecution).QuerySendExecution(ctx, caller, r.OperationId, proof.SendRef)
+		if e != nil {
+			return nil, e
+		}
+		source, e := s.store.(billingStore).LoadBillingSource(ctx, proof.SendRef)
+		if e != nil {
+			return nil, e
+		}
+		if x == nil || x.Send.Phase != "CLOSED" || source == nil || !proto.Equal(source.ReservationRef.Name, r.Ref.Name) {
 			return nil, command.Fail("NO_SEND_UNPROVEN")
 		}
 		return proof.SendRef, nil
@@ -194,7 +205,7 @@ func (s *Service) validateNoSend(ctx context.Context, caller *v1.Caller, r *v1.R
 		if e != nil {
 			return nil, e
 		}
-		if seal == nil || !seal.NoSendProven || seal.PhysicalSendWasPossible || !proto.Equal(seal.OperationId, r.OperationId) || !proto.Equal(seal.AdmissionRef, r.AdmissionRef) {
+		if seal == nil || !proto.Equal(seal.OperationId, r.OperationId) || !proto.Equal(seal.AdmissionRef, r.AdmissionRef) {
 			return nil, command.Fail("NO_SEND_UNPROVEN")
 		}
 		intent, e := s.completionAuthority.QueryCompletionIntent(ctx, caller, seal.IntentRef)
@@ -224,14 +235,37 @@ func (s *Service) validateNoSend(ctx context.Context, caller *v1.Caller, r *v1.R
 		if e != nil {
 			return nil, e
 		}
-		if !listed || a == nil || !proto.Equal(a.TaskId, r.TaskId) || !proto.Equal(a.OperationId, r.OperationId) || a.ExecutorEndpointId != seal.ExecutorEndpointId || !proto.Equal(a.BudgetBasis.ReservationRef.Name, r.Ref.Name) {
+		if !listed || a == nil || !proto.Equal(a.TaskId, r.TaskId) || !proto.Equal(a.OperationId, r.OperationId) || a.ExecutorEndpointId != seal.ExecutorEndpointId {
 			return nil, command.Fail("INVALID_CLOSURE_PROOF")
 		}
 		if op != nil && op.Execution != nil {
-			if op.Execution.Send.Phase != "CLOSED" {
-				return nil, command.Fail("NO_SEND_UNPROVEN")
+			closed := seal.ClosedSendRefs
+			if len(closed) == 0 && seal.NoSendProven && !seal.PhysicalSendWasPossible {
+				closed = []*v1.Ref{op.Execution.Send.Ref}
 			}
-			return op.Execution.Send.Ref, nil
+			for _, ref := range closed {
+				x, e := s.usageSource.(BillingExecution).QuerySendExecution(ctx, caller, r.OperationId, ref)
+				if e != nil {
+					return nil, e
+				}
+				if x == nil || x.Send.Phase != "CLOSED" {
+					continue
+				}
+				source, e := s.store.(billingStore).LoadBillingSource(ctx, ref)
+				if e != nil {
+					return nil, e
+				}
+				if source != nil && proto.Equal(source.ReservationRef.Name, r.Ref.Name) {
+					return ref, nil
+				}
+				if source == nil && r.ConsumedSends == 0 && proto.Equal(a.BudgetBasis.ReservationRef.Name, r.Ref.Name) {
+					return ref, nil
+				}
+			}
+			return nil, command.Fail("NO_SEND_UNPROVEN")
+		}
+		if !seal.NoSendProven || seal.PhysicalSendWasPossible || !proto.Equal(a.BudgetBasis.ReservationRef.Name, r.Ref.Name) {
+			return nil, command.Fail("NO_SEND_UNPROVEN")
 		}
 		return nil, nil
 	default:

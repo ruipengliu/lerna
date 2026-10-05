@@ -52,6 +52,7 @@ message CallDescriptor {
   string digest = 7;
   QuerySubject query_subject = 8;
   string body_digest = 9;
+  optional int64 key_valid_until_unix_ms = 10;
 }
 message ExecutionAttempt {
   Ref ref = 1;
@@ -62,6 +63,7 @@ message ExecutionAttempt {
   string external_key_scope = 6;
   int64 first_possible_send_at_unix_ms = 7;
   ExecutionCapabilities capabilities = 8;
+  optional int64 key_valid_until_unix_ms = 9;
 }
 message PhysicalSend {
   Ref ref = 1;
@@ -74,11 +76,13 @@ message PhysicalSend {
   CommandReceipt start_receipt = 8;
   Ref observation_ref = 9;
   Ref credential_ref = 10;
+  Ref resend_query_observation_ref = 11;
 }
 message Execution {
   ExecutionAttempt attempt = 1;
   PhysicalSend send = 2;
   CallDescriptor call_descriptor = 3;
+  repeated PhysicalSend previous_sends = 4;
 }
 message PrepareExecutionCommand {
   CommandHeader header = 1;
@@ -94,4 +98,18 @@ message ExecutionCapabilities {
   string declaration_version = 5;
   string verification_basis = 6;
   string idempotency_scope = 7;
+  int64 retention_ms = 8;
+  bool rejects_expired_keys = 9;
+  string idempotency_mechanism = 10;
+  string concurrency_guarantee = 11;
+  string parameter_binding = 12;
+  bool repeat_read_safe = 13;
+  string account_scope = 14;
+}
+
+message PrepareResendCommand {
+  CommandHeader header = 1;
+  GlobalName operation_id = 2;
+  Ref previous_send_ref = 3;
+  Job claim = 4;
 }

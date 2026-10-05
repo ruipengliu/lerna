@@ -62,7 +62,7 @@ func (s *Service) Configure(ctx context.Context, caller *v1.Caller, c *v1.Config
 
 // ReserveInTransaction 同时检查用户总额度与任务额度；未知费用绝不折算为零。
 func (s *Service) ReserveInTransaction(ctx context.Context, task, operation *v1.GlobalName, admission *v1.Ref, cap *v1.Capability) (*v1.BudgetBasis, error) {
-	if cap.FeeCeiling == nil || cap.GetFeeCeiling() < 0 || cap.RateBasisRef == nil || cap.MaxSends == 0 || cap.MaxSends > 1 || cap.Unit != "USD_MICRO" || (cap.GetFeeCeiling() == 0 && !cap.Nonbillable) {
+	if cap.FeeCeiling == nil || cap.GetFeeCeiling() < 0 || cap.RateBasisRef == nil || cap.MaxSends == 0 || (cap.MaxSends > 1 && cap.Action != "CREATE" && cap.Action != "QUERY") || cap.Unit != "USD_MICRO" || (cap.GetFeeCeiling() == 0 && !cap.Nonbillable) {
 		return nil, command.Fail("COST_CEILING_UNKNOWN")
 	}
 	amount := cap.GetFeeCeiling()
@@ -95,7 +95,7 @@ func (s *Service) ReserveInTransaction(ctx context.Context, task, operation *v1.
 		}
 		refs = append(refs, b.Ref)
 	}
-	r := &v1.Reservation{Ref: command.NewRef(s.user, s.domain, "reservation", "lerna.v1.Reservation"), AdmissionRef: admission, OperationId: operation, BudgetRefs: refs, Unit: cap.Unit, Ceiling: amount, SendCeiling: cap.MaxSends, Status: "RESERVED", TaskId: task}
+	r := &v1.Reservation{Ref: command.NewRef(s.user, s.domain, "reservation", "lerna.v1.Reservation"), AdmissionRef: admission, OperationId: operation, BudgetRefs: refs, Unit: cap.Unit, Ceiling: amount, SendCeiling: 1, Status: "RESERVED", TaskId: task}
 	if e := s.store.SaveReservation(ctx, r); e != nil {
 		return nil, e
 	}

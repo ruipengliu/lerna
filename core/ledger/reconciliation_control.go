@@ -111,7 +111,7 @@ func reconciliationLimitReason(p *v1.Reconciliation, now int64, cap *v1.Capabili
 	if now >= p.Limits.DeadlineUnixMs {
 		return "TIME_LIMIT"
 	}
-	if cap == nil {
+	if cap == nil || !proto.Equal(cap.Ref, p.QueryCapabilityRef) {
 		return "CAPABILITY_UNAVAILABLE"
 	}
 	if cap.FeeCeiling == nil || *cap.FeeCeiling < 0 {

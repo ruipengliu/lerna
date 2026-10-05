@@ -174,7 +174,7 @@ func admissionHeader(id string) *v1.CommandHeader {
 func prepareAdmission(t *testing.T, h *assembly.Harness, target string) *v1.AdmitCommand {
 	return prepareAdmissionAdapter(t, h, target, "simulator-idempotent")
 }
-func prepareAdmissionAdapter(t *testing.T, h *assembly.Harness, target, adapter string) *v1.AdmitCommand {
+func prepareAdmissionAdapter(t *testing.T, h *assembly.Harness, target, adapter string, maxSends ...uint32) *v1.AdmitCommand {
 	t.Helper()
 	ctx := context.Background()
 	caller := &v1.Caller{UserId: "u", IssuerId: "host"}
@@ -193,7 +193,11 @@ func prepareAdmissionAdapter(t *testing.T, h *assembly.Harness, target, adapter 
 	r, e = h.Tasks.AcceptRequirements(ctx, caller, &v1.AcceptRequirementsCommand{Header: admissionHeader("requirements"), TaskRef: task, InputVersion: 1, Source: "TRUSTED_TEMPLATE", Conditions: []*v1.Requirement{{ConditionId: "created", DescriptionRef: parameters, Necessary: true, VerificationRule: "TARGET_RECORD", RuleVersion: 1}}})
 	requireAccepted(t, r, e)
 	ceiling := int64(30)
-	r, e = h.Tasks.ConfigureCapability(ctx, caller, &v1.ConfigureCapabilityCommand{Header: admissionHeader("cap"), Capability: &v1.Capability{Action: "CREATE", Resource: target, UseRight: "INVOKE", ProcessingPurpose: "CURRENT_TASK", ExecutorEndpointId: "local-api", AdapterRef: &v1.Ref{Name: &v1.GlobalName{UserId: "u", AuthorityDomainId: "adapter", ObjectKind: "adapter", LocalId: adapter}, Revision: 1, SchemaId: "lerna.v1.Adapter"}, Unit: "USD_MICRO", FeeCeiling: &ceiling, RateBasisRef: parameters, MaxSends: 1}})
+	sends := uint32(1)
+	if len(maxSends) > 0 {
+		sends = maxSends[0]
+	}
+	r, e = h.Tasks.ConfigureCapability(ctx, caller, &v1.ConfigureCapabilityCommand{Header: admissionHeader("cap"), Capability: &v1.Capability{Action: "CREATE", Resource: target, UseRight: "INVOKE", ProcessingPurpose: "CURRENT_TASK", ExecutorEndpointId: "local-api", AdapterRef: &v1.Ref{Name: &v1.GlobalName{UserId: "u", AuthorityDomainId: "adapter", ObjectKind: "adapter", LocalId: adapter}, Revision: 1, SchemaId: "lerna.v1.Adapter"}, Unit: "USD_MICRO", FeeCeiling: &ceiling, RateBasisRef: parameters, MaxSends: sends}})
 	requireAccepted(t, r, e)
 	capability := r.ResultRef
 	for _, c := range []*v1.ConfigureBudgetCommand{{Header: admissionHeader("user-budget"), Unit: "USD_MICRO", Limit: 100}, {Header: admissionHeader("task-budget"), TaskId: task.Name, Unit: "USD_MICRO", Limit: 80}} {

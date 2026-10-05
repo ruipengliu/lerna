@@ -238,7 +238,7 @@ func (s *Service) applyReconciliationObservation(ctx context.Context, caller *v1
 			return e
 		}
 		p.NextReconcileAtUnixMs = now + delay
-		cap, e := s.reconciliationTasks.QueryCapability(ctx, caller, p.QueryCapabilityRef)
+		cap, e := s.reconciliationTasks.QueryCurrentCapability(ctx, caller, p.QueryCapabilityRef)
 		if e != nil {
 			return e
 		}

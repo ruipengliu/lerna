@@ -2,6 +2,7 @@ package ledger
 
 import (
 	"context"
+	"math"
 
 	"github.com/ruipengliu/lerna/contracts/command"
 	v1 "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1"
@@ -72,6 +73,17 @@ func (s *Service) Prepare(ctx context.Context, caller *v1.Caller, c *v1.PrepareE
 		}
 		attempt := &v1.ExecutionAttempt{Ref: command.NewRef(s.user, s.domain, "attempt", "lerna.v1.ExecutionAttempt"), OperationId: c.OperationId, AttemptNo: 1, Phase: "REGISTERED", ExternalKeyScope: cap.Resource}
 		attempt.ExternalKey = attempt.Ref.Name.LocalId
+		if cap.IdempotencyRetentionMs != 0 {
+			_, now, e := s.store.LedgerPosition(tx)
+			if e != nil {
+				return nil, e
+			}
+			if cap.IdempotencyRetentionMs < 0 || now > math.MaxInt64-cap.IdempotencyRetentionMs {
+				return nil, command.Fail("INVALID_CAPABILITY")
+			}
+			until := now + cap.IdempotencyRetentionMs
+			attempt.KeyValidUntilUnixMs = &until
+		}
 		if s.adapter == nil {
 			return nil, command.Fail("UNSUPPORTED_CAPABILITY")
 		}
@@ -115,6 +127,11 @@ func (s *Service) ValidateStart(ctx context.Context, c *v1.Caller, b *v1.ExitCre
 	x := op.Execution
 	if !proto.Equal(job.SpecificationRef.Name, b.OperationId) || x.Send.Phase != "REGISTERED" || !proto.Equal(x.Attempt.Ref.Name, b.AttemptId) || x.Send.SendSeq != b.SendSeq || !proto.Equal(x.CallDescriptor, d) || x.CallDescriptor.Digest != b.DescriptorDigest || op.ExecutorEndpointId != b.ExecutorEndpointId || !proto.Equal(op.AdmissionRef, b.AdmissionRef) || x.Send.ProcessInstance != b.ExecutorInstance || job.ProcessInstance != b.ExecutorInstance || job.ClaimEpoch != x.Send.ClaimEpoch {
 		return nil, command.Fail("CREDENTIAL_BINDING_MISMATCH")
+	}
+	if x.Send.SendSeq > 1 {
+		if e = s.validateResend(ctx, c, op, now); e != nil {
+			return nil, e
+		}
 	}
 	return x.Send.Ref, nil
 }

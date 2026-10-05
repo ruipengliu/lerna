@@ -84,4 +84,5 @@ message CompletionSeal {
   bool no_send_proven = 7;
   Ref operation_ref = 8;
   bool physical_send_was_possible = 9;
+  repeated Ref closed_send_refs = 10;
 }

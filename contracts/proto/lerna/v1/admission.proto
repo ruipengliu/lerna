@@ -22,10 +22,12 @@ message Capability {
   uint32 max_sends = 11;
   bool nonbillable = 12;
   CommandIdentity approved_by = 13;
+  int64 idempotency_retention_ms = 20;
 }
 message ConfigureCapabilityCommand {
   CommandHeader header = 1;
   Capability capability = 2;
+  Ref replaces = 3;
 }
 message Admission {
   Ref ref = 1;

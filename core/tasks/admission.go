@@ -40,7 +40,11 @@ func (s *Service) ConfigureCapability(ctx context.Context, caller *v1.Caller, c 
 	if e := command.ValidateHeader(c.GetHeader(), c); e != nil {
 		return nil, e
 	}
-	return s.decisions.Execute(ctx, caller, c.Header, command.SemanticFingerprint("configure-capability", c.Capability), "tasks.planning", func(tx context.Context) (*v1.Ref, error) {
+	fingerprint := command.SemanticFingerprint("configure-capability", c.Capability)
+	if c.Replaces != nil {
+		fingerprint = command.SemanticFingerprint("replace-capability", c.Capability, c.Replaces)
+	}
+	return s.decisions.Execute(ctx, caller, c.Header, fingerprint, "tasks.planning", func(tx context.Context) (*v1.Ref, error) {
 		cap := c.Capability
 		if caller.IssuerId != "host" {
 			return nil, command.Fail("PERMISSION_DENIED")
@@ -51,6 +55,17 @@ func (s *Service) ConfigureCapability(ctx context.Context, caller *v1.Caller, c 
 		cap = proto.Clone(cap).(*v1.Capability)
 		cap.ApprovedBy = c.Header.Identity
 		cap.Ref = command.NewRef(s.user, s.domain, "capability", "lerna.v1.Capability")
+		if c.Replaces != nil {
+			current, e := s.QueryCurrentCapability(tx, caller, c.Replaces)
+			if e != nil {
+				return nil, e
+			}
+			if current == nil || !proto.Equal(current.Ref, c.Replaces) {
+				return nil, command.Fail("STALE_REFERENCE")
+			}
+			cap.Ref = proto.Clone(current.Ref).(*v1.Ref)
+			cap.Ref.Revision++
+		}
 		return cap.Ref, s.store.SaveCapability(tx, cap)
 	})
 }
@@ -222,9 +237,22 @@ func (s *Service) QueryCapability(ctx context.Context, c *v1.Caller, r *v1.Ref) 
 	if e := command.CheckName(c, r.Name, s.user, s.domain, "capability"); e != nil {
 		return nil, e
 	}
-	cap, e := s.store.LoadCapability(ctx, r)
+	cap, e := s.store.(interface {
+		LoadCapabilityVersion(context.Context, *v1.Ref) (*v1.Capability, error)
+	}).LoadCapabilityVersion(ctx, r)
 	if e == nil && cap != nil && !proto.Equal(cap.Ref, r) {
 		return nil, command.Fail("STALE_REFERENCE")
 	}
 	return cap, e
+}
+
+// QueryCurrentCapability 返回当前登记声明，历史准入仍保留自己的不可变版本。
+func (s *Service) QueryCurrentCapability(ctx context.Context, c *v1.Caller, r *v1.Ref) (*v1.Capability, error) {
+	if r == nil || r.SchemaId != "lerna.v1.Capability" || r.Revision == 0 {
+		return nil, command.Fail("INVALID_REFERENCE")
+	}
+	if e := command.CheckName(c, r.Name, s.user, s.domain, "capability"); e != nil {
+		return nil, e
+	}
+	return s.store.LoadCapability(ctx, r)
 }

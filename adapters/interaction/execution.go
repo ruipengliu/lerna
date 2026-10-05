@@ -28,6 +28,22 @@ func (c CLI) execution(ctx context.Context, args []string) (proto.Message, error
 		return nil, command.Fail("INVALID_INPUT")
 	}
 	switch args[0] {
+	case "prepare-resend":
+		owner, ok := c.Ledger.(interface {
+			PrepareResend(context.Context, *v1.Caller, *v1.PrepareResendCommand) (*v1.CommandReceipt, error)
+		})
+		if !ok {
+			return nil, command.Fail("UNSUPPORTED_FEATURE")
+		}
+		b, e := os.ReadFile(args[1])
+		if e != nil {
+			return nil, e
+		}
+		request := new(v1.PrepareResendCommand)
+		if e = protojson.Unmarshal(b, request); e != nil {
+			return nil, e
+		}
+		return owner.PrepareResend(ctx, c.Caller, request)
 	case "execute":
 		if c.Egress == nil {
 			return nil, command.Fail("UNSUPPORTED_FEATURE")

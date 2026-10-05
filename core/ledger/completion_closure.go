@@ -48,9 +48,17 @@ func (s *Service) CloseForCompletion(ctx context.Context, caller *v1.Caller, c *
 		seal := &v1.CompletionSeal{Ref: command.NewRef(s.user, s.domain, "completion-seal", "lerna.v1.CompletionSeal"), IntentRef: c.IntentRef, VerificationRef: c.VerificationRef, AdmissionRef: a.Ref, OperationId: a.OperationId, ExecutorEndpointId: a.ExecutorEndpointId, NoSendProven: true}
 		if op != nil {
 			if op.Execution != nil {
-				phase := op.Execution.Send.GetPhase()
-				seal.PhysicalSendWasPossible = phase != "REGISTERED" && phase != "CLOSED"
+				seal.PhysicalSendWasPossible = executionMayHaveSent(op.Execution)
 				seal.NoSendProven = !seal.PhysicalSendWasPossible
+				for _, send := range append([]*v1.PhysicalSend{op.Execution.Send}, op.Execution.PreviousSends...) {
+					if send.Phase == "REGISTERED" {
+						send.Ref.Revision++
+						send.Phase = "CLOSED"
+					}
+					if send.Phase == "CLOSED" {
+						seal.ClosedSendRefs = append(seal.ClosedSendRefs, proto.Clone(send.Ref).(*v1.Ref))
+					}
+				}
 			}
 			// 有尝试引用却无完整执行记录时，不具备内部未发送证明。
 			if op.Execution == nil && len(op.AttemptRefs) > 0 {
@@ -98,8 +106,10 @@ func applyCompletionNoSend(op *v1.Operation) {
 	op.Effect.LateEffect = "RULED_OUT"
 	op.EffectRef = op.Effect.Ref
 	if op.Execution != nil {
-		op.Execution.Send.Ref.Revision++
-		op.Execution.Send.Phase = "CLOSED"
+		if op.Execution.Send.Phase != "CLOSED" {
+			op.Execution.Send.Ref.Revision++
+			op.Execution.Send.Phase = "CLOSED"
+		}
 		op.Execution.Attempt.Ref.Revision++
 		op.Execution.Attempt.Phase = "CLOSED"
 		op.AttemptRefs = []*v1.Ref{op.Execution.Attempt.Ref}

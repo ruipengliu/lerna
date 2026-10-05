@@ -13,6 +13,7 @@ type ObservationWork interface {
 	Execute(context.Context, *v1.Caller, *v1.CommandHeader, string, string, func(context.Context) (*v1.Ref, error)) (*v1.CommandReceipt, error)
 }
 type ObservationLedger interface {
+	QuerySendExecution(context.Context, *v1.Caller, *v1.GlobalName, *v1.Ref) (*v1.Execution, error)
 	QueryOperation(context.Context, *v1.Caller, *v1.GlobalName) (*v1.Operation, error)
 	QueryExecution(context.Context, *v1.Caller, *v1.GlobalName) (*v1.Execution, error)
 	AcceptObservation(context.Context, *v1.Caller, *v1.AcceptObservationCommand) (*v1.CommandReceipt, error)
@@ -41,7 +42,7 @@ func (s *Service) RegisterObservation(ctx context.Context, caller *v1.Caller, c 
 		if o == nil || o.Ref == nil || o.Ref.Name == nil || o.UserId != s.user || o.Ref.Name.UserId != s.user || o.Ref.Revision != 1 || o.Ref.SchemaId != "lerna.v1.RawObservation" || o.Source != "TRUSTED_IO" || o.BodyRef != nil || o.OperationId == nil {
 			return nil, command.Fail("INVALID_OBSERVATION")
 		}
-		x, e := s.ledger.QueryExecution(tx, caller, o.OperationId)
+		x, e := s.ledger.QuerySendExecution(tx, caller, o.OperationId, o.SendRef)
 		if e != nil {
 			return nil, e
 		}

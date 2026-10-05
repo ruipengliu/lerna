@@ -30,6 +30,11 @@ func (s *Store) saveExecutionVersions(ctx context.Context, op *v1.Operation) err
 		return e
 	}
 	if op.Execution != nil {
+		for _, send := range op.Execution.PreviousSends {
+			if e := s.saveExecutionVersion(ctx, send.Ref, send); e != nil {
+				return e
+			}
+		}
 		if e := s.saveExecutionVersion(ctx, op.Execution.Attempt.Ref, op.Execution.Attempt); e != nil {
 			return e
 		}
