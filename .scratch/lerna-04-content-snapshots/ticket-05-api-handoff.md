@@ -223,3 +223,13 @@ race4.133和三SQLsha准确。Helper仅本test首次调用，不声明函数有o
 attempt写调用实际成功与持久原子rollback的source证明分列，无私表count
 执行assert/擦除ACK。既有WorkBudget1min未扩大，q700ms严格clip。Legacy§5
 三个最小恢复前沿分别执行，不替全部unknown历史状态或七AC acceptance。
+
+
+原政策whole-page责任CAS已有实际竞争资格：public分页确定实际first/second
+Ref/cursor；candidate Tx真实释放后freshconsumer只second合法NotRequired
+提交。旧页first实际PG写成功后second typed ManagementConflict，公开first
+exactpending保持证明wholeTx rollback，second已提交事实保持。plainfresh
+同原页全部NotRequired/reopen完整原deadline/history/bytesReceipt/V2保持，
+无Seal/activebodycleanup。exact0.555/race2.272、三SQLsha及actualjoin准确；
+门限3/join3/caller20/Go30/wrapper120不改。这不替祖先/AdmissionTarget原
+清理原因的后续真实red/决策；当前旧target-only因果边界继续保守。

@@ -836,3 +836,37 @@ actualcomplete、显式RELEASE/no pending。这是原保护直接qualification�
 red/product修改；legacy§5最小CAS/已commitreplyloss/截止回滚分别已执行，
 不因此声明全部七AC接受或任意unknown旧scope可升级。剩余policywholepage
 CAS和准确祖先/AdmissionTarget清理因果前沿继续独立处理。
+
+
+### 同原政策责任整页实际CAS竞争的早写回滚（partial）
+
+`TestContentOriginalCleanupPageCASRollsBackEarlierQualificationsAfterConcurrentConsumer`
+原root+两derived真实published/read与V2正常；原Save撤回传播有限页创建
+三完整pending holder责任后当前Save恢复/完整当前closure合法。公开limit2
+确定实际first/second Ref，独立limit1核同first且获取真实NextCursor；不猜
+hashed VersionIdentity按ContentID排序或root先。旧candidate真实Observe Tx
+实际commit/releases后有限3s返回gate。plain PageSize1 contender只处理该
+公开cursor后的second原责任，实际NotRequired提交；first完整原tuple未改。
+
+放行旧PageSize2 consumer，原PG first实际资格写成功后second全expected
+真实ManagementConflict（errors.As准确类型）。实际整Tx回滚；公开first
+exact原pendingtuple未改、second仍contender提交结果，证明早写回滚。成功
+写调用Ref记录只机械信号，公开完整责任状态为独立业务oracle。无私表值
+改写、错误ErrClaim期待、source断言冒执行或新产品修改。全部原实际alpha
+bytes保留/无Seal/Lifecycle.Step false，fresh plain同原candidate有限页正常
+全部NotRequired，真实World.Reopen保三原fulltuple/history/deadline（只合法
+state/residual变化）与原body/byteReceipt/V2正常。没有刷新watermark/cap/
+Deadline或切另一policykey。
+
+| `/tmp/lerna-04-ticket05-execution/` 日志 | 实际结果 |
+| --- | --- |
+| `cleanup-whole-page-cas-first-run.log` | -v exactnormal actualPASS0.555s，3124586/start13036591/exit0/groupAbsent/noTimeout。 |
+| `cleanup-whole-page-cas-race.log` | -v sameexactrace PASS2.272s（case1.22），3125777/start13041513/exit0/groupAbsent/noTimeout；三原SQLsha全准/组合exit0。 |
+
+normal ownscope `lerna_test_f50217ad2bd635ac357fb951` / objects1578290075
+(dev33/inode361190)；race `lerna_test_1dea3e2b73a7f1a8370c9564` /
+objects860950023(dev33/inode361528)。原caller20/Go30/wrapper120/3s gate/
+join3/WorkBudget1min保持，actualstale consumerfinished、candidate Tx释放、
+contendercommit与rollback/freshreplay确认，sessions37167/17530实际完成、
+显式RELEASE/no pending。现协议直接资格，无虚构businessred。此wholepage
+竞争不替ancestor/AdmissionTarget清理原因、缺结构/未知权限，七AC未accept。
