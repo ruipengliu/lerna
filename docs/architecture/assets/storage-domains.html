@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>事务共置，事实分别写入</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&family=Noto+Serif:ital@0;1&family=Noto+Sans+KR:wght@400;500;600&family=Noto+Serif+KR:wght@400&family=Noto+Sans+TC:wght@400;500;600&family=Noto+Serif+TC:wght@400&display=swap" rel="stylesheet">
+<style>* {box-sizing:border-box} body {margin:0;padding:24px;background:#f5f5f5;color:#2d3142;font-family:'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif} .frame {width:100%;max-width:1328px;min-width:0;margin:auto} .diagram-container {width:100%;overflow-x:auto} h1 {font-family:'Instrument Serif', 'Noto Serif SC', 'Songti SC', serif;font-size:28px;font-weight:400} svg {width:100%;height:auto;min-width:1280px;display:block} @media print {.diagram-container {overflow-x:visible} svg {min-width:0}}</style>
+</head>
+<!-- Architecture; doc-wide; balanced; engineer. Source: topics/data-and-storage.md §1.1–1.2. Business facts and local durable work are grouped into one atomic unit; trace projection routes are kept in prose. -->
+<body>
+<main class="frame">
+<div class="diagram-container">
+<svg width="1280" height="720" viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="storage-domains-title storage-domains-desc">
+<title id="storage-domains-title">事务共置，事实分别写入</title>
+<desc id="storage-domains-desc">裁决事实与持久工作原子提交，内容控制元数据共用事务设施，云端和端侧执行管理保留独立事务，正文与索引另行存储。</desc>
+<defs>
+<marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto-start-reverse">
+<polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/>
+</marker>
+<marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto-start-reverse">
+<polygon points="0 0, 8 3, 0 6" fill="#eb6c36"/>
+</marker>
+<marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto-start-reverse">
+<polygon points="0 0, 8 3, 0 6" fill="#2e5aa8"/>
+</marker>
+</defs>
+<rect width="1280" height="720" fill="#f5f5f5"/>
+<text x="48" y="56" font-family="'Instrument Serif', 'Noto Serif SC', 'Songti SC', serif" font-size="28" font-weight="400" fill="#2d3142" text-anchor="start">事务共置，事实分别写入</text>
+<text x="48" y="88" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="start">存储归属 · 共库不合并事务域，共事务不共享私有表写权限</text>
+<g data-zone="true">
+<rect x="64" y="136" width="584" height="488" rx="8" fill="rgba(45,49,66,0.02)" stroke="#bfc0c0" stroke-dasharray="4,4"/>
+<text x="80" y="160" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="14" font-weight="600" fill="#4f5d75" text-anchor="start">按用户共置的事务设施 · 首选 PostgreSQL</text>
+</g>
+<path data-connector="true" d="M 600,228 L 728,228 Q 736,228 736,220 L 736,212 Q 736,204 744,204 L 880,204" fill="none" stroke="#4f5d75" stroke-width="1.5" marker-end="url(#arrow)"/>
+<path data-connector="true" d="M 600,276 L 792,276 Q 800,276 800,284 L 800,324 Q 800,332 808,332 L 880,332" fill="none" stroke="#4f5d75" stroke-width="1.5" marker-end="url(#arrow)"/>
+<path data-connector="true" d="M 600,452 L 880,452" fill="none" stroke="#4f5d75" stroke-width="1.5" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+<path data-connector="true" d="M 600,504 L 736,504 Q 744,504 744,512 L 744,572 Q 744,580 752,580 L 880,580" fill="none" stroke="#4f5d75" stroke-width="1.5" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+<g data-edge-label="true">
+<rect x="758.0" y="176" width="100" height="20" rx="2" fill="#f5f5f5"/>
+<text x="808.0" y="190" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="middle">交付并确认接纳</text>
+</g>
+<g data-edge-label="true">
+<rect x="650.0" y="248" width="100" height="20" rx="2" fill="#f5f5f5"/>
+<text x="700.0" y="262" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="middle">交付并确认接纳</text>
+</g>
+<g data-edge-label="true">
+<rect x="690.0" y="424" width="100" height="20" rx="2" fill="#f5f5f5"/>
+<text x="740" y="438" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="middle">载荷引用与交接</text>
+</g>
+<g data-edge-label="true">
+<rect x="758.0" y="552" width="100" height="20" rx="2" fill="#f5f5f5"/>
+<text x="808" y="566" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="middle">派生登记与交接</text>
+</g>
+<g data-node="facts" data-kind="focal">
+<rect x="96" y="184" width="504" height="160" rx="6" fill="#f5f5f5"/>
+<rect class="node-surface" x="96" y="184" width="504" height="160" rx="6" fill="rgba(235,108,54,0.08)" stroke="#eb6c36"/>
+<rect x="108" y="196" width="52" height="16" rx="2" fill="#f5f5f5" stroke="#eb6c36" stroke-width="0.8"/>
+<text x="134.0" y="207" font-family="'Geist Mono', monospace" font-size="8" font-weight="400" fill="#4f5d75" text-anchor="middle">ATOMIC</text>
+<text x="112" y="232" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="start">裁决事实 + 本域持久工作</text>
+<text x="112" y="256" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="start">任务、条件、输入、确认、授权、预算</text>
+<text x="112" y="276" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="start">业务修改、决定回执、待办与交接记录</text>
+<text x="112" y="296" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="start">在同一个数据库事务里提交</text>
+</g>
+<g data-node="governance" data-kind="store">
+<rect x="96" y="416" width="504" height="160" rx="6" fill="#f5f5f5"/>
+<rect class="node-surface" x="96" y="416" width="504" height="160" rx="6" fill="rgba(45,49,66,0.05)" stroke="#4f5d75"/>
+<rect x="108" y="428" width="40" height="16" rx="2" fill="#f5f5f5" stroke="#4f5d75" stroke-width="0.8"/>
+<text x="128.0" y="439" font-family="'Geist Mono', monospace" font-size="8" font-weight="400" fill="#4f5d75" text-anchor="middle">CORE</text>
+<text x="112" y="464" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="start">内容治理与记忆权威记录</text>
+<text x="112" y="488" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="start">来源、用途上限、派生关系与撤回状态</text>
+<text x="112" y="508" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="start">当前采纳修订、冲突、替代与需复查状态</text>
+<text x="112" y="528" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="start">参与同一事务；仍由内容模块写入</text>
+</g>
+<g data-node="cloud-ledger" data-kind="store">
+<rect x="880" y="160" width="288" height="96" rx="6" fill="#f5f5f5"/>
+<rect class="node-surface" x="880" y="160" width="288" height="96" rx="6" fill="rgba(45,49,66,0.05)" stroke="#4f5d75"/>
+<rect x="892" y="172" width="52" height="16" rx="2" fill="#f5f5f5" stroke="#4f5d75" stroke-width="0.8"/>
+<text x="918.0" y="183" font-family="'Geist Mono', monospace" font-size="8" font-weight="400" fill="#4f5d75" text-anchor="middle">CORE</text>
+<text x="896" y="208" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="start">云端执行管理域</text>
+<text x="896" y="232" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="start">可共库；保留独立事务与持久工作</text>
+</g>
+<g data-node="local-ledger" data-kind="store">
+<rect x="880" y="288" width="288" height="96" rx="6" fill="#f5f5f5"/>
+<rect class="node-surface" x="880" y="288" width="288" height="96" rx="6" fill="rgba(45,49,66,0.05)" stroke="#4f5d75"/>
+<rect x="892" y="300" width="52" height="16" rx="2" fill="#f5f5f5" stroke="#4f5d75" stroke-width="0.8"/>
+<text x="918.0" y="311" font-family="'Geist Mono', monospace" font-size="8" font-weight="400" fill="#4f5d75" text-anchor="middle">CORE</text>
+<text x="896" y="336" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="start">端侧执行管理域</text>
+<text x="896" y="360" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="start">本机 SQLite；本机效果的写入方</text>
+</g>
+<g data-node="object-store" data-kind="external">
+<rect x="880" y="408" width="288" height="96" rx="6" fill="#f5f5f5"/>
+<rect class="node-surface" x="880" y="408" width="288" height="96" rx="6" fill="rgba(45,49,66,0.03)" stroke="#bfc0c0"/>
+<rect x="892" y="420" width="60" height="16" rx="2" fill="#f5f5f5" stroke="#bfc0c0" stroke-width="0.8"/>
+<text x="922.0" y="431" font-family="'Geist Mono', monospace" font-size="8" font-weight="400" fill="#4f5d75" text-anchor="middle">CONTENT</text>
+<text x="896" y="456" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="start">对象存储</text>
+<text x="896" y="480" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="start">内容载荷；不在裁决事务内</text>
+</g>
+<g data-node="derived-store" data-kind="external">
+<rect x="880" y="536" width="288" height="96" rx="6" fill="#f5f5f5"/>
+<rect class="node-surface" x="880" y="536" width="288" height="96" rx="6" fill="rgba(45,49,66,0.03)" stroke="#bfc0c0"/>
+<rect x="892" y="548" width="60" height="16" rx="2" fill="#f5f5f5" stroke="#bfc0c0" stroke-width="0.8"/>
+<text x="922.0" y="559" font-family="'Geist Mono', monospace" font-size="8" font-weight="400" fill="#4f5d75" text-anchor="middle">DERIVED</text>
+<text x="896" y="584" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="start">派生存储</text>
+<text x="896" y="608" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="start">索引与策略数据；交付前核验修订</text>
+</g>
+<line x1="48" y1="660" x2="1232" y2="660" stroke="#bfc0c0"/>
+<rect x="48" y="676" width="16" height="16" rx="2" fill="#f5f5f5" stroke="#eb6c36"/>
+<text x="92" y="688" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="start">原子提交范围</text>
+<line x1="328" y1="684" x2="360" y2="684" stroke="#4f5d75" stroke-width="1.5"/>
+<text x="372" y="688" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="start">交接 / 内容存储关联</text>
+<rect x="752" y="676" width="16" height="16" rx="2" fill="#f5f5f5" stroke="#2d3142"/>
+<text x="796" y="688" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="start">独立事实写入方</text>
+</svg>
+</div>
+</main>
+</body>
+</html>

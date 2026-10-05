@@ -1,0 +1,67 @@
+Generation mode: built-in image_gen
+Generated for: docs/architecture/overview.md
+Date: 2026-10-05
+
+Current version: modules renamed to 执行管理 (Execution Manager) and 执行网关 (Execution Gateway); the R7 label is replaced with 交付动作并确认接纳.
+Final edit mode: built-in image_gen, using the panorama from the previous edit as the edit target.
+
+Final edit prompt (verbatim):
+Use case: text-localization
+Asset type: Existing Lerna technical panorama in a Chinese architecture document.
+Input image: Image 1 is the edit target. Preserve this exact finished diagram.
+Primary request: Rename the operation-management module with ONLY these three text replacements:
+1. In the core module titled “动作账本”, change that title to exactly “执行管理”.
+2. In the “行动主线” ribbon, change the “动作账本” box label to exactly “执行管理”.
+3. In the bottom “端侧设备” group, replace “本机账本 · 本机出口” with exactly “本机执行管理 · 本机出口”.
+Constraints: Keep all other wording and elements unchanged, especially the two-line label “交付动作 / 并确认接纳”, both “执行网关” labels, “独立事务域”, and “尝试 · 效果 · 核对 · 收尾”. Preserve all icons, font styles and weights, positions, node sizes, borders, arrows, colors, margins, background and landscape aspect ratio. Keep the two new four-character module titles at the same font size and in the same position as the old four-character titles. Fit the slightly longer device caption comfortably within its existing group without moving other elements. This is only a label edit, not a redesign. No transparency.
+
+Previous handoff-readability edit prompt (verbatim; retained as provenance):
+Use case: text-localization
+Asset type: Existing Lerna technical panorama in a Chinese architecture document.
+Input image: Image 1 is the edit target. Preserve this exact finished diagram.
+Primary request: Change ONLY the label in the third rounded box in the “行动主线” ribbon. Replace “R7 交接” with the exact phrase “交付动作并确认接纳”, laid out on two centered lines: first line “交付动作”, second line “并确认接纳”.
+Constraints: Keep the existing box position, border, width, height, arrows, and the entire rest of the image unchanged. Match the dark ink Chinese sans-serif style, using a slightly smaller font for these two lines only so the complete phrase fits clearly with comfortable padding. Preserve ALL other labels verbatim, especially “动作账本” and “执行网关”. Do not rename any module. No layout redesign, no added elements, no transparency. Keep the same landscape aspect ratio.
+
+Previous module-rename edit prompt (verbatim; retained as provenance):
+Use case: text-localization
+Asset type: Existing Lerna architecture panorama embedded in a Chinese technical document.
+Input image: Image 1 is the edit target. Preserve the existing finished diagram.
+Primary request: Rename one module throughout this image. Make ONLY the following three text replacements:
+1. In the orange core module at the upper right, replace “出口闸门” with exactly “执行网关”.
+2. In the orange step of the “行动主线” ribbon, replace “出口闸门” with exactly “执行网关”.
+3. Under the action ribbon, replace the sentence “所有实际出口均经闸门；结果未知先核对” with exactly “所有实际出口均经执行网关；结果未知先核对”.
+Constraints: Keep all other Chinese and English text, labels, font styles and weights, icons, layout, node positions, arrows, colors, proportions, margins, background and image aspect ratio unchanged. This is a precise label edit, not a redesign. Do not add anything. Keep the new four-character module name in the same type style and size as the original four-character label. The longer sentence should remain centered and fully legible within the existing ribbon. Preserve “出口” elsewhere, including “本机出口”; it remains a valid domain concept. No transparency.
+
+Initial generation prompt (verbatim; retained as provenance, with the old labels superseded by the final edit above):
+
+Use case: infographic-diagram
+Asset type: A finished technical architecture panorama to embed in the Chinese Markdown architecture overview for Lerna.
+Primary request: Create ONE exceptionally clear, polished, high-resolution landscape 16:9 architecture infographic, preferably 3840 × 2160. All labels in accurate Simplified Chinese, with only the technical names shown below in Latin. This is a component panorama plus one simple execution flow, not a deployment wiring diagram.
+Style: Flat editorial technical illustration. Cool light gray paper #f5f5f5, dark ink #2d3142, slate #4f5d75, fine gray rules, restrained orange #eb6c36 only for the adjudication domain and egress gate. Clear modern Chinese sans-serif labels, elegant title, generous whitespace. Small clean line illustrations of cloud/server and laptop/phone are appropriate only in the deployment band. No dark background, neon, gradients, 3D, shadows, mascots, or decorative circuitry. Chinese text must be sharp and correctly spelled.
+
+Exact title: "Lerna 技术全景"
+Exact subtitle: "个人 Agent Harness · 以可靠性契约为核心"
+
+Composition and exact content:
+1. A clearly delimited top band titled "可替换部分", containing four compact, equally legible modules:
+   "交互适配器" with "输入 · 确认 · 取消"
+   "推理" with "只提议，不裁决"
+   "记忆策略" with "候选 · 索引 · 检索"
+   "执行适配器" with "API · 文件 · GUI · 外部 Agent"
+2. A dominant central area titled "核心", containing these four groups with unmistakable boundaries:
+   - Highlight the large group "裁决域" in subtle orange. Subtitle "同一用户分片 · 一个事务". Four clearly named modules within: "任务编排", "会话", "授权", "预算". A small attached note inside this domain: "内容控制元数据参与同一事务". Do NOT place the action ledger inside this transaction domain.
+   - Separate group "动作账本", subtitle "独立事务域", text "尝试 · 效果 · 核对 · 收尾".
+   - Separate group "内容治理", text "来源 · 用途 · 派生 · 删除", second line "记忆权威记录".
+   - Highlight the separate group "出口闸门" in subtle orange, text "开始复查 · 受控 I/O".
+   Within the core area, a subordinate shared-foundation strip: "核心契约" | "持久工作：嵌入各域" | "运行记录". Do not depict durable work as a separate centralized queue.
+3. A quiet supporting band outside the core boundary titled "平台服务", with three named functions: "网关与 SDK" | "扩展管理" | "评测与进化". Short note "不参与任务裁决".
+4. A single clear horizontal process ribbon titled "行动主线". Use only these arrows in the entire infographic, all orthogonal and visually separated from labels:
+   "输入与提议" → "单事务准入" → "R7 交接" → "动作账本" → "执行适配器" → "出口闸门" → "外部系统".
+   The arrows are illustrative logical order, not unmediated network connections. No extra arrows between the component inventory boxes. Under this ribbon, the short rule: "所有实际出口均经闸门；结果未知先核对".
+5. A bottom deployment band titled "端云位置", with two balanced illustrated groups:
+   "云端默认" — "持有任务与裁决"
+   "端侧设备" — "本机账本 · 本机出口"
+   Across the bottom, a short rule "责任归属固定；断网无法证明当前资格时等待".
+Small footer: "目标架构 · 细节以正文契约为准"
+
+Constraints: Keep all text concise and verbatim. Component names must remain separate and readable; no duplicated accidental labels. Do not add products, database technologies, features, performance numbers, guarantees, or unlabeled arrows. Do not imply memory strategies can modify authoritative memory records, that third-party code can adjudicate, that the ledger shares the adjudication transaction, or that a disconnected device automatically takes over a cloud task. This is the project's technical panorama, not a marketing poster. No watermark.

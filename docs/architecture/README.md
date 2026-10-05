@@ -12,6 +12,8 @@
 | 2026-10-04 | 索引登记 ADR 0003（来自[第二轮评审处理记录](../review/archive/round-2/disposition.md)）。 |
 | 2026-10-05 | 首段的状态概括改为"以索引为准"。 |
 | 2026-10-05 | 索引登记新的流程文档"模型调用"。 |
+| 2026-10-05 | 模块名称统一为“执行网关”，职责与契约不变。 |
+| 2026-10-05 | 模块名称统一为“执行管理”，同步模块简称与图示；存储和连续性语境中的“账本”指其持久执行记录。职责与契约不变。 |
 
 本目录存放 Lerna 的现行架构设计：一个面向个人用户、以可靠性契约为核心的 Agent Harness。目前只有设计，尚未实现；各文档的状态以第 2 节索引为准。
 
@@ -40,14 +42,14 @@
 | [ADR 0003 替换资格分三类，公共契约与内部接口分开](../adr/0003-replacement-classes-and-assembly.md) | 2 决定 | 已采纳 |
 | [核心契约](core/contracts/README.md) | 3 设计 | 草稿 |
 | [持久工作](core/durable/README.md) | 3 设计 | 草稿 |
-| [动作账本](core/ledger/README.md) | 3 设计 | 草稿 |
+| [执行管理](core/ledger/README.md) | 3 设计 | 草稿 |
 | [任务编排](core/tasks/README.md) | 3 设计 | 草稿 |
 | [授权](core/grants/README.md) | 3 设计 | 草稿 |
 | [预算](core/budget/README.md) | 3 设计 | 草稿 |
 | [会话](core/sessions/README.md) | 3 设计 | 草稿 |
 | [内容治理](core/content/README.md) | 3 设计 | 草稿 |
 | [运行记录](core/trace/README.md) | 3 设计 | 草稿 |
-| [出口闸门](core/egress/README.md) | 3 设计 | 草稿 |
+| [执行网关](core/egress/README.md) | 3 设计 | 草稿 |
 | [推理：接口](ports/reasoner/README.md) | 3 设计 | 草稿 |
 | [推理：默认实现](ports/reasoner/default.md) | 3 设计 | 草稿 |
 | [记忆策略：接口](ports/memory/README.md) | 3 设计 | 草稿 |
