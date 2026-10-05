@@ -1,0 +1,18 @@
+{
+  "observed_utc": "2026-10-05T13:29:12.041292+00:00",
+  "root_FULL_raw_lines": [
+    1,
+    1,
+    158,
+    128
+  ],
+  "copied_files": 37,
+  "copied_original_bytes": 346101,
+  "reference_files_verified": 14,
+  "finite_scalar_argv_identity_raw_Wait_Close_vs_originals": true,
+  "all_four_exact_owned_and_identity_intervals_vs_original_ledger": true,
+  "current332_and_both_binary_hash_devino_independently_verified": true,
+  "native_original_descriptor_Close_UNKNOWN_retained": true,
+  "catalog_audit_executed": false,
+  "capacity_race_accepted": false
+}

@@ -1,0 +1,362 @@
+{
+  "STATIC_only_no_repository_mutation_or_native": true,
+  "proposed_repository_directory": ".scratch/lerna-04-content-snapshots/ticket-03-input-syntax-memo-original4b",
+  "copy_entries": [
+    {
+      "payload_path": "candidate/README.md",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/README.md",
+      "sha256": "b0b519d6e9bce0fb0b1e40cc3087bd8736ce08cc9a1bd4974f8081efa8d14a00",
+      "bytes": 2759,
+      "scope": "byteexact_original"
+    },
+    {
+      "payload_path": "candidate/manifest-static.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/manifest-static.json",
+      "sha256": "1ffc94cc8ca57bbf2537d75984f02a78ff7682cda2d76fdde1504446501485ad",
+      "bytes": 71485,
+      "scope": "byteexact_original"
+    },
+    {
+      "payload_path": "candidate/commands-static.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/commands-static.json",
+      "sha256": "0493f08255c96db4ffc9e4adb266212b446cbe8a272eab7094a9467b16f02abe",
+      "bytes": 3728,
+      "scope": "byteexact_original"
+    },
+    {
+      "payload_path": "candidate/overlay.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/overlay.json",
+      "sha256": "709c02712b2e49c8daa45ec8977282fad4e63ed7fa8d0901369179586ea8c5d6",
+      "bytes": 1142,
+      "scope": "byteexact_original"
+    },
+    {
+      "payload_path": "candidate/original5-byteidentity-proof.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/original5-byteidentity-proof.json",
+      "sha256": "859673cd32d09fd93b2ac7c85d78596deb7b693b8bed9ada229ef74d9c1253a0",
+      "bytes": 4311,
+      "scope": "byteexact_original"
+    },
+    {
+      "payload_path": "candidate/qualified-source-minimal-input-syntax.diff",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/qualified-source-minimal-input-syntax.diff",
+      "sha256": "2d685aefa61eb35eb388850af464a586b4f4acc2d651297708f3f001b53b51ff",
+      "bytes": 5133,
+      "scope": "byteexact_original"
+    },
+    {
+      "payload_path": "candidate/source-delta-wholebyte-inverse-proof.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/source-delta-wholebyte-inverse-proof.json",
+      "sha256": "52f3d6e5ca53e4203c17acf10d0fb8ad0394c7bdc189e0712878e05192fb3c20",
+      "bytes": 43188,
+      "scope": "byteexact_original"
+    },
+    {
+      "payload_path": "original-five/context_world.go.txt",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/context_world.go",
+      "sha256": "e37d876a734b2639a044ae931e8066b9844a8c88e8a213f6d3a32c2db0421612",
+      "bytes": 11298,
+      "scope": "byteexact_original"
+    },
+    {
+      "payload_path": "original-five/context_claim_diagnostics.go.txt",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/context_claim_diagnostics.go",
+      "sha256": "573ae56fe178fb5f1cfa8898575ab5ca141f22077383173b383635e4a7b743e9",
+      "bytes": 13261,
+      "scope": "byteexact_original"
+    },
+    {
+      "payload_path": "original-five/content_context_closure_test.go.txt",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/content_context_closure_test.go",
+      "sha256": "c668eacce37c9363cccaa243e2c484951582a872652d1a875c1281362a5c4e43",
+      "bytes": 4558,
+      "scope": "byteexact_original"
+    },
+    {
+      "payload_path": "original-five/content_context_material_reachable_test.go.txt",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/content_context_material_reachable_test.go",
+      "sha256": "4223c74583ac7ecace18402ec114708e7a43bbf1593da47bbc675e3a6617e7f2",
+      "bytes": 3369,
+      "scope": "byteexact_original"
+    },
+    {
+      "payload_path": "original-five/content_context_test.go.txt",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/content_context_test.go",
+      "sha256": "9f1bdc9e8757057ed09836a9d8aee213825e3fe1484c1a86966a4cce2911189f",
+      "bytes": 18517,
+      "scope": "byteexact_original"
+    },
+    {
+      "payload_path": "supervisor/run-native.py.txt",
+      "original_path": "/workspace/lerna-content-03-137311247276/run-native.py",
+      "sha256": "82c4e6a19e1aaabbd4a2412f89eb54c0b1690221f92d3ea826b05ca455a2042e",
+      "bytes": 2304,
+      "scope": "byteexact_original"
+    },
+    {
+      "payload_path": "supervisor/root-ack.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/root-ack.json",
+      "sha256": "aaeb140f7460811096413c6e846532c06bf0c42e90e8a5f6b03cc8da0484dd6c",
+      "bytes": 83,
+      "scope": "byteexact_original"
+    },
+    {
+      "payload_path": "results/fresh-builds-results.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/fresh-builds-results.json",
+      "sha256": "7ccf62796e34be653185b76981e6e474e2f80f615f7994166a8bfd2d2d357446",
+      "bytes": 4213,
+      "scope": "byteexact_original"
+    },
+    {
+      "payload_path": "results/original4b-normal-results.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/original4b-normal-results.json",
+      "sha256": "ae8759ef7587bc06a5c063dadf5295d0e09fac09dd0a191af4aa88942dbea652",
+      "bytes": 3404,
+      "scope": "byteexact_original"
+    },
+    {
+      "payload_path": "results/original4b-normal-results.md",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/original4b-normal-results.md",
+      "sha256": "4845cf0991a670f4444212f0bc98f8b7b92d61b88d2c283309ca2a169c91369b",
+      "bytes": 1660,
+      "scope": "byteexact_original"
+    },
+    {
+      "payload_path": "results/original4b-race-results.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/original4b-race-results.json",
+      "sha256": "2a73d34eb0f31332905f34c4a6c5f6fb3a490347f26558c446539ec78774a4da",
+      "bytes": 4678,
+      "scope": "byteexact_original"
+    },
+    {
+      "payload_path": "results/original4b-race-results.md",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/original4b-race-results.md",
+      "sha256": "3c2783d20401ab1f57f3b0ba38083ed42107bfba22f4c74789a50bb9aab78efd",
+      "bytes": 2292,
+      "scope": "byteexact_original"
+    },
+    {
+      "payload_path": "intervals/normal_build-native-identities.jsonl",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-memo-original4b-compact-archive-proposal/captured-exact-intervals/normal_build-native-identities.jsonl",
+      "sha256": "1f437c720619fe3a45bb4c6328d4eec1dc61b3b4cd776953179d494e7c7454b5",
+      "bytes": 422,
+      "scope": "immutable_exact_original_interval"
+    },
+    {
+      "payload_path": "intervals/normal_build-owned-scopes.log",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-memo-original4b-compact-archive-proposal/captured-exact-intervals/normal_build-owned-scopes.log",
+      "sha256": "7c8744bdc6cdab5c9638c745dc9472f14687df02ee2fb1c8b92bed0bfe56d9f6",
+      "bytes": 126,
+      "scope": "immutable_exact_original_interval"
+    },
+    {
+      "payload_path": "raw/context-input-memo-original4b-build-normal.log",
+      "original_path": "/workspace/lerna-content-03-137311247276/context-input-memo-original4b-build-normal.log",
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+      "bytes": 39,
+      "scope": "byteexact_original"
+    },
+    {
+      "payload_path": "outcomes/normal_build-finite-pre-and-outcome.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-memo-original4b-compact-archive-proposal/authored-finite-extracts/normal_build-finite-pre-and-outcome.json",
+      "sha256": "2c0a00d6707c5dbb2eee74e30a930e2542e7af499ce6f6c89a7d6e56e0b4a810",
+      "bytes": 17625,
+      "scope": "authored_finite_extract_with_exact_original_SHA_reference"
+    },
+    {
+      "payload_path": "intervals/race_build-native-identities.jsonl",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-memo-original4b-compact-archive-proposal/captured-exact-intervals/race_build-native-identities.jsonl",
+      "sha256": "23f4b1d4e93ea4caaf28f00695c6b567638c68d6e7952e6638023f05ca9f8f75",
+      "bytes": 429,
+      "scope": "immutable_exact_original_interval"
+    },
+    {
+      "payload_path": "intervals/race_build-owned-scopes.log",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-memo-original4b-compact-archive-proposal/captured-exact-intervals/race_build-owned-scopes.log",
+      "sha256": "def26c02ca1a289b5de1e58d142b8bc370feef3c92419577273e20283e8870d8",
+      "bytes": 126,
+      "scope": "immutable_exact_original_interval"
+    },
+    {
+      "payload_path": "raw/context-input-memo-original4b-build-race.log",
+      "original_path": "/workspace/lerna-content-03-137311247276/context-input-memo-original4b-build-race.log",
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+      "bytes": 39,
+      "scope": "byteexact_original"
+    },
+    {
+      "payload_path": "outcomes/race_build-finite-pre-and-outcome.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-memo-original4b-compact-archive-proposal/authored-finite-extracts/race_build-finite-pre-and-outcome.json",
+      "sha256": "48b7f591999394e863bba6da8b8871ae444e6feeed471ee9af77a1ad2f92287f",
+      "bytes": 17631,
+      "scope": "authored_finite_extract_with_exact_original_SHA_reference"
+    },
+    {
+      "payload_path": "intervals/normal_business-native-identities.jsonl",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-memo-original4b-compact-archive-proposal/captured-exact-intervals/normal_business-native-identities.jsonl",
+      "sha256": "ff40d4ca11970e5f68324f4e0a3be20e9a1d331f9e2f454285e2aefd01227d88",
+      "bytes": 560,
+      "scope": "immutable_exact_original_interval"
+    },
+    {
+      "payload_path": "intervals/normal_business-owned-scopes.log",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-memo-original4b-compact-archive-proposal/captured-exact-intervals/normal_business-owned-scopes.log",
+      "sha256": "8f8971e08608e798a169aa01f564a8dd2a095fd3012eb7e683ba73f1b5d4543e",
+      "bytes": 1491,
+      "scope": "immutable_exact_original_interval"
+    },
+    {
+      "payload_path": "raw/context-input-memo-original4b-normal.log",
+      "original_path": "/workspace/lerna-content-03-137311247276/context-input-memo-original4b-normal.log",
+      "sha256": "dd12dbe11648ecb094267c8fb995c241b870ae2dccda1dd698476e0d56c12e9b",
+      "bytes": 26113,
+      "scope": "byteexact_original"
+    },
+    {
+      "payload_path": "outcomes/normal_business-finite-pre-and-outcome.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-memo-original4b-compact-archive-proposal/authored-finite-extracts/normal_business-finite-pre-and-outcome.json",
+      "sha256": "84c38a2d7f471331bfe0a2bd6e953b090e149588a4d197af32be5df0b1d538e3",
+      "bytes": 18782,
+      "scope": "authored_finite_extract_with_exact_original_SHA_reference"
+    },
+    {
+      "payload_path": "intervals/race_business-native-identities.jsonl",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-memo-original4b-compact-archive-proposal/captured-exact-intervals/race_business-native-identities.jsonl",
+      "sha256": "8dced76632cfac2fe982bbd2d100a1d6518e208419b0d76e101e870713b9d469",
+      "bytes": 558,
+      "scope": "immutable_exact_original_interval"
+    },
+    {
+      "payload_path": "intervals/race_business-owned-scopes.log",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-memo-original4b-compact-archive-proposal/captured-exact-intervals/race_business-owned-scopes.log",
+      "sha256": "3bb9db7d32be21a35d882d3a9891c2e6b3f25aeaf7123ab2a1cee383b3516b86",
+      "bytes": 1492,
+      "scope": "immutable_exact_original_interval"
+    },
+    {
+      "payload_path": "raw/context-input-memo-original4b-race.log",
+      "original_path": "/workspace/lerna-content-03-137311247276/context-input-memo-original4b-race.log",
+      "sha256": "95d15f6d7ce1ae2a0955fede6f5525c482b6481d2af1ef211244e96c92a89cba",
+      "bytes": 20202,
+      "scope": "byteexact_original"
+    },
+    {
+      "payload_path": "outcomes/race_business-finite-pre-and-outcome.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-memo-original4b-compact-archive-proposal/authored-finite-extracts/race_business-finite-pre-and-outcome.json",
+      "sha256": "26b461c99812da50d7ea00e61746eb6754b61899665452aed2abb1718216274a",
+      "bytes": 18758,
+      "scope": "authored_finite_extract_with_exact_original_SHA_reference"
+    },
+    {
+      "payload_path": "outcomes/four-native-and-resource-facts.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-memo-original4b-compact-archive-proposal/authored-finite-extracts/four-native-and-resource-facts.json",
+      "sha256": "714108d2f9a961154ac7046f5cb5a4479737972a7ff204afeb245e2132dce6af",
+      "bytes": 15226,
+      "scope": "authored_finite_facts"
+    },
+    {
+      "payload_path": "intervals/exact-interval-provenance.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/input-memo-original4b-compact-archive-proposal/authored-finite-extracts/exact-interval-provenance.json",
+      "sha256": "46d9ce77ebcd6a200edd5db3433711cb2a947c38d5e833135fda7de638fabdda",
+      "bytes": 5099,
+      "scope": "authored_exact_interval_proof"
+    }
+  ],
+  "reference_entries": [
+    {
+      "path": "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/manifest-static.json",
+      "sha256": "1ffc94cc8ca57bbf2537d75984f02a78ff7682cda2d76fdde1504446501485ad",
+      "bytes": 71485,
+      "reason": "Copied once canonical current332/13+extra2/excluded2/original5/critical/root source binding"
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/fresh-normal_build-actual-provenance.json",
+      "sha256": "e1828e18c2330cc781c7ff8677e3217595f21ea1f0848c488e69e8d7776f7439",
+      "bytes": 148607,
+      "reason": "Original full outcome remains exact immutable reference; finite authored extract removes repeated332 only"
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/fresh-normal_build-prelaunch.json",
+      "sha256": "0b3332427ccedc52dbec04d110fcad78e263611c029af81a51f0242d58f087e3",
+      "bytes": 72281,
+      "reason": "Exact original prelaunch embedded in full outcome; finite extract records argv/root/raw/gates+canonical current332 reference"
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/fresh-race_build-actual-provenance.json",
+      "sha256": "93aac44b6806d9452dad2acadc870f5248817129313ce552a2b381203dd64e06",
+      "bytes": 148623,
+      "reason": "Original full outcome remains exact immutable reference; finite authored extract removes repeated332 only"
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/fresh-race_build-prelaunch.json",
+      "sha256": "9696fd81af45a13933f19b75b4a18d48b500adc6bf430a92f2c32af57d6b1cd7",
+      "bytes": 72286,
+      "reason": "Exact original prelaunch embedded in full outcome; finite extract records argv/root/raw/gates+canonical current332 reference"
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/original4b-normal-actual-outcome.json",
+      "sha256": "2770f063f55a716c14e089d30eb859f8364804be67785cd11343dc22118a1a36",
+      "bytes": 151148,
+      "reason": "Original full outcome remains exact immutable reference; finite authored extract removes repeated332 only"
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/original4b-normal-prelaunch.json",
+      "sha256": "98ca0185510b162e3850df1eedba027fe42c269c5523884021a3c550903bb0f3",
+      "bytes": 72976,
+      "reason": "Exact original prelaunch embedded in full outcome; finite extract records argv/root/raw/gates+canonical current332 reference"
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/original4b-race-actual-outcome.json",
+      "sha256": "c39be7d3dae12a0880cc19a3302914428f1ba5fd9c3bb650ed58b5d72e97e4f4",
+      "bytes": 151135,
+      "reason": "Original full outcome remains exact immutable reference; finite authored extract removes repeated332 only"
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/original4b-race-prelaunch.json",
+      "sha256": "5fcea6cb816e9523fb290159cc41ec4afa56e115e945907de1a8ebb5ac7a337e",
+      "bytes": 72969,
+      "reason": "Exact original prelaunch embedded in full outcome; finite extract records argv/root/raw/gates+canonical current332 reference"
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/fresh-builds-actual-outcome.json",
+      "sha256": "66f7a5642d131c37d91dcfd6fc4ee15bf44707f4bfd0e66eb994d29980979685",
+      "bytes": 394836,
+      "reason": "Standalone aggregate/sourcepre pins contain repeated inventories and original phase objects already represented; no duplicatedlarge payload"
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/fresh-builds-before-effects-source-pins.json",
+      "sha256": "9ed9ff1fc03fc87751c6fc98935befe02506f1147591e90f890c6815b8f19b19",
+      "bytes": 67957,
+      "reason": "Standalone aggregate/sourcepre pins contain repeated inventories and original phase objects already represented; no duplicatedlarge payload"
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-semantic-qualification-static/semantic-qualification-actual-outcome.json",
+      "sha256": "7ba81569ce457b27ced5fa8a2a65d491a413d38239624871251e908821defe3b",
+      "bytes": 533374,
+      "reason": "Prior actual semantic qualification preserved unchanged outside this CAP compact scope"
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-semantic-qualification-static/formatted-source-manifest.json",
+      "sha256": "e41a06b03367d045fc777d582b525e44838cd45c34dfe02350ee74a175e82897",
+      "bytes": 57077,
+      "reason": "Prior actual semantic qualification preserved unchanged outside this CAP compact scope"
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-semantic-qualification-static/semantic-results.json",
+      "sha256": "2a8d6e3f20400b09e7fdcdafa74152351836a1063afb3b13df141fc3d7956d63",
+      "bytes": 7921,
+      "reason": "Prior actual semantic qualification preserved unchanged outside this CAP compact scope"
+    }
+  ],
+  "payload_files": 37,
+  "payload_bytes": 346101,
+  "raw_files": 4,
+  "raw_lines": 288,
+  "no_binaries_or_whole_source_copies": true,
+  "canonical332_named_sourcepins_copied_once": true,
+  "source3_wholebefore_after_reversible_ndiff_copied_once": true,
+  "original_fresh_GooutputFD_UNKNOWN_distinct_from_ownReadFD_ACK": true,
+  "global_mutable_ledgers_never_copy_sources": true,
+  "all_original_semantic_archives_FAIL_and_UNKNOWN_untouched": true,
+  "verification": "Each copyentry original↔payload wholebytes+SHA/len independentlychecked;4exactintervals beforecurrentappends vs preoffset/originaloutcome matches; minimal3 inverse restores both oldbytes and current332 subset; canonical332 currentallmatch; derived outcome keeps original fileSHA/len references and exact argv/actual native/binary fields. No metadata source rewritten."
+}

@@ -1,0 +1,84 @@
+{
+  "only_original5": true,
+  "exact_replacements": [
+    {
+      "original": "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_world.go",
+      "original_current": {
+        "sha256": "6a8b7860a40ba8b784248f181f7abd4e6b069360dc68c33deff7f0f1c79f4f69",
+        "bytes": 9039
+      },
+      "replacement": "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/context_world.go",
+      "sha256": "e37d876a734b2639a044ae931e8066b9844a8c88e8a213f6d3a32c2db0421612",
+      "bytes": 11298,
+      "copied_original_qualified5_from": "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/context_world.go",
+      "copy_source_pin": {
+        "sha256": "e37d876a734b2639a044ae931e8066b9844a8c88e8a213f6d3a32c2db0421612",
+        "bytes": 11298
+      },
+      "whole_byteequal": true
+    },
+    {
+      "original": "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_claim_diagnostics.go",
+      "original_current": "ABSENT virtual bounded observer",
+      "replacement": "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/context_claim_diagnostics.go",
+      "sha256": "573ae56fe178fb5f1cfa8898575ab5ca141f22077383173b383635e4a7b743e9",
+      "bytes": 13261,
+      "copied_original_qualified5_from": "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/context_claim_diagnostics.go",
+      "copy_source_pin": {
+        "sha256": "573ae56fe178fb5f1cfa8898575ab5ca141f22077383173b383635e4a7b743e9",
+        "bytes": 13261
+      },
+      "whole_byteequal": true
+    },
+    {
+      "original": "/tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_context_closure_test.go",
+      "original_current": {
+        "sha256": "f81d009ee03ce5d359b61e007b7b77ffbf6b7331254cb3e1b524c30fdf984f7f",
+        "bytes": 4269
+      },
+      "replacement": "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/content_context_closure_test.go",
+      "sha256": "c668eacce37c9363cccaa243e2c484951582a872652d1a875c1281362a5c4e43",
+      "bytes": 4558,
+      "copied_original_qualified5_from": "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/content_context_closure_test.go",
+      "copy_source_pin": {
+        "sha256": "c668eacce37c9363cccaa243e2c484951582a872652d1a875c1281362a5c4e43",
+        "bytes": 4558
+      },
+      "whole_byteequal": true
+    },
+    {
+      "original": "/tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_context_material_reachable_test.go",
+      "original_current": {
+        "sha256": "588abece65e26259626dabc885b399c98d26f1855e17e94f010df223d3ae1d43",
+        "bytes": 3090
+      },
+      "replacement": "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/content_context_material_reachable_test.go",
+      "sha256": "4223c74583ac7ecace18402ec114708e7a43bbf1593da47bbc675e3a6617e7f2",
+      "bytes": 3369,
+      "copied_original_qualified5_from": "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/content_context_material_reachable_test.go",
+      "copy_source_pin": {
+        "sha256": "4223c74583ac7ecace18402ec114708e7a43bbf1593da47bbc675e3a6617e7f2",
+        "bytes": 3369
+      },
+      "whole_byteequal": true
+    },
+    {
+      "original": "/tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_context_test.go",
+      "original_current": {
+        "sha256": "25b705aeda43e55b923710d621f39eb7298d214bce9101c18fd523777504698b",
+        "bytes": 18161
+      },
+      "replacement": "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/content_context_test.go",
+      "sha256": "9f1bdc9e8757057ed09836a9d8aee213825e3fe1484c1a86966a4cce2911189f",
+      "bytes": 18517,
+      "copied_original_qualified5_from": "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/content_context_test.go",
+      "copy_source_pin": {
+        "sha256": "9f1bdc9e8757057ed09836a9d8aee213825e3fe1484c1a86966a4cce2911189f",
+        "bytes": 18517
+      },
+      "whole_byteequal": true
+    }
+  ],
+  "no_new_observer": true,
+  "source332_direct_unmapped": true
+}

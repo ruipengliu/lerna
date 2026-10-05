@@ -1,0 +1,107 @@
+{
+  "status": "STOP_RELEASE; exactlytwo builds complete no business executed",
+  "actual_phases": [
+    {
+      "phase": "normal_build",
+      "actual_supervisor_exit": 0,
+      "actual_native_identities": [
+        {
+          "pid": 4140424,
+          "pgid": 4140424,
+          "starttime": "17365314",
+          "started_ns": 1791205414797986334,
+          "args": [
+            "go",
+            "test",
+            "-c",
+            "-p",
+            "1",
+            "-tags=integration",
+            "-overlay=/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/overlay.json",
+            "-o",
+            "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/component-input-memo-normal.test",
+            "./conformance/component"
+          ]
+        }
+      ],
+      "actual_native_Wait_exit_groupabsence_ACK": true,
+      "original_group_current_members": [],
+      "raw": {
+        "path": "/workspace/lerna-content-03-137311247276/context-input-memo-original4b-build-normal.log",
+        "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+        "bytes": 39,
+        "lines": 1
+      },
+      "fresh_binary_identity": {
+        "path": "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/component-input-memo-normal.test",
+        "independent_owned_read_FD_only": true,
+        "original_Go_output_descriptor_Close": "UNKNOWN; not inferred from own FD",
+        "sha256": "81c27604ceb2bcd74d4b0437d1fb86df77be9f1efce243934ad06d7f4fcfc781",
+        "bytes": 24784026,
+        "device": 27,
+        "inode": 1180641,
+        "mode": "0o700",
+        "complete_read_ACK": true,
+        "own_FD_fsync_ACK": true,
+        "own_FD_first_Close_ACK": true
+      },
+      "own_raw_writer_fsync_ACK": true,
+      "own_raw_writer_firstClose_ACK": true
+    },
+    {
+      "phase": "race_build",
+      "actual_supervisor_exit": 0,
+      "actual_native_identities": [
+        {
+          "pid": 4140771,
+          "pgid": 4140771,
+          "starttime": "17366722",
+          "started_ns": 1791205428876566527,
+          "args": [
+            "go",
+            "test",
+            "-race",
+            "-c",
+            "-p",
+            "1",
+            "-tags=integration",
+            "-overlay=/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/overlay.json",
+            "-o",
+            "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/component-input-memo-race.test",
+            "./conformance/component"
+          ]
+        }
+      ],
+      "actual_native_Wait_exit_groupabsence_ACK": true,
+      "original_group_current_members": [],
+      "raw": {
+        "path": "/workspace/lerna-content-03-137311247276/context-input-memo-original4b-build-race.log",
+        "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+        "bytes": 39,
+        "lines": 1
+      },
+      "fresh_binary_identity": {
+        "path": "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/component-input-memo-race.test",
+        "independent_owned_read_FD_only": true,
+        "original_Go_output_descriptor_Close": "UNKNOWN; not inferred from own FD",
+        "sha256": "bc3fd7898b0c665ce9c1fbd7bbcbe551d845a9766fe17b1011c4522b00baa0c0",
+        "bytes": 32204424,
+        "device": 27,
+        "inode": 1180931,
+        "mode": "0o700",
+        "complete_read_ACK": true,
+        "own_FD_fsync_ACK": true,
+        "own_FD_first_Close_ACK": true
+      },
+      "own_raw_writer_fsync_ACK": true,
+      "own_raw_writer_firstClose_ACK": true
+    }
+  ],
+  "all332_source_pre_post_equal": true,
+  "original_ready_prefix_and_formed3_kept": true,
+  "builds_outcome": {
+    "path": "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/fresh-builds-actual-outcome.json",
+    "sha256": "66f7a5642d131c37d91dcfd6fc4ee15bf44707f4bfd0e66eb994d29980979685"
+  },
+  "scope": "Own independent binary ReadFD fsync/firstClose ACK is not originalGooutputFD logicalClose ACK, which stays UNKNOWN. No selected business or extra native executed."
+}

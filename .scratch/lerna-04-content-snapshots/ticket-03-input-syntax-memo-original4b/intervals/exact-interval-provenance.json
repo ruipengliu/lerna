@@ -1,0 +1,122 @@
+[
+  {
+    "phase": "normal_build",
+    "identities_original_byte_range": [
+      85562,
+      85984
+    ],
+    "scopes_original_byte_range": [
+      162410,
+      162536
+    ],
+    "appendable_originals": [
+      "/workspace/lerna-content-03-137311247276/native-identities.jsonl",
+      "/workspace/lerna-content-03-137311247276/owned-scopes.log"
+    ],
+    "immutable_captures": {
+      "identities": {
+        "path": "/workspace/lerna-content-03-137311247276/input-memo-original4b-compact-archive-proposal/captured-exact-intervals/normal_build-native-identities.jsonl",
+        "sha256": "1f437c720619fe3a45bb4c6328d4eec1dc61b3b4cd776953179d494e7c7454b5",
+        "bytes": 422
+      },
+      "scopes": {
+        "path": "/workspace/lerna-content-03-137311247276/input-memo-original4b-compact-archive-proposal/captured-exact-intervals/normal_build-owned-scopes.log",
+        "sha256": "7c8744bdc6cdab5c9638c745dc9472f14687df02ee2fb1c8b92bed0bfe56d9f6",
+        "bytes": 126
+      }
+    },
+    "actualidentity_matches_original_outcome": true,
+    "exactscopebyte_matches_original_outcome": true,
+    "scope_limit": "Captured only exact original interval; no pretend current global fullfile SHA, no later appends discarded/rewritten, nativeabsence not allholderClose."
+  },
+  {
+    "phase": "race_build",
+    "identities_original_byte_range": [
+      85984,
+      86413
+    ],
+    "scopes_original_byte_range": [
+      162536,
+      162662
+    ],
+    "appendable_originals": [
+      "/workspace/lerna-content-03-137311247276/native-identities.jsonl",
+      "/workspace/lerna-content-03-137311247276/owned-scopes.log"
+    ],
+    "immutable_captures": {
+      "identities": {
+        "path": "/workspace/lerna-content-03-137311247276/input-memo-original4b-compact-archive-proposal/captured-exact-intervals/race_build-native-identities.jsonl",
+        "sha256": "23f4b1d4e93ea4caaf28f00695c6b567638c68d6e7952e6638023f05ca9f8f75",
+        "bytes": 429
+      },
+      "scopes": {
+        "path": "/workspace/lerna-content-03-137311247276/input-memo-original4b-compact-archive-proposal/captured-exact-intervals/race_build-owned-scopes.log",
+        "sha256": "def26c02ca1a289b5de1e58d142b8bc370feef3c92419577273e20283e8870d8",
+        "bytes": 126
+      }
+    },
+    "actualidentity_matches_original_outcome": true,
+    "exactscopebyte_matches_original_outcome": true,
+    "scope_limit": "Captured only exact original interval; no pretend current global fullfile SHA, no later appends discarded/rewritten, nativeabsence not allholderClose."
+  },
+  {
+    "phase": "normal_business",
+    "identities_original_byte_range": [
+      86413,
+      86973
+    ],
+    "scopes_original_byte_range": [
+      162662,
+      164153
+    ],
+    "appendable_originals": [
+      "/workspace/lerna-content-03-137311247276/native-identities.jsonl",
+      "/workspace/lerna-content-03-137311247276/owned-scopes.log"
+    ],
+    "immutable_captures": {
+      "identities": {
+        "path": "/workspace/lerna-content-03-137311247276/input-memo-original4b-compact-archive-proposal/captured-exact-intervals/normal_business-native-identities.jsonl",
+        "sha256": "ff40d4ca11970e5f68324f4e0a3be20e9a1d331f9e2f454285e2aefd01227d88",
+        "bytes": 560
+      },
+      "scopes": {
+        "path": "/workspace/lerna-content-03-137311247276/input-memo-original4b-compact-archive-proposal/captured-exact-intervals/normal_business-owned-scopes.log",
+        "sha256": "8f8971e08608e798a169aa01f564a8dd2a095fd3012eb7e683ba73f1b5d4543e",
+        "bytes": 1491
+      }
+    },
+    "actualidentity_matches_original_outcome": true,
+    "exactscopebyte_matches_original_outcome": true,
+    "scope_limit": "Captured only exact original interval; no pretend current global fullfile SHA, no later appends discarded/rewritten, nativeabsence not allholderClose."
+  },
+  {
+    "phase": "race_business",
+    "identities_original_byte_range": [
+      86973,
+      87531
+    ],
+    "scopes_original_byte_range": [
+      164153,
+      165645
+    ],
+    "appendable_originals": [
+      "/workspace/lerna-content-03-137311247276/native-identities.jsonl",
+      "/workspace/lerna-content-03-137311247276/owned-scopes.log"
+    ],
+    "immutable_captures": {
+      "identities": {
+        "path": "/workspace/lerna-content-03-137311247276/input-memo-original4b-compact-archive-proposal/captured-exact-intervals/race_business-native-identities.jsonl",
+        "sha256": "8dced76632cfac2fe982bbd2d100a1d6518e208419b0d76e101e870713b9d469",
+        "bytes": 558
+      },
+      "scopes": {
+        "path": "/workspace/lerna-content-03-137311247276/input-memo-original4b-compact-archive-proposal/captured-exact-intervals/race_business-owned-scopes.log",
+        "sha256": "3bb9db7d32be21a35d882d3a9891c2e6b3f25aeaf7123ab2a1cee383b3516b86",
+        "bytes": 1492
+      }
+    },
+    "actualidentity_matches_original_outcome": true,
+    "exactscopebyte_matches_original_outcome": true,
+    "scope_limit": "Captured only exact original interval; no pretend current global fullfile SHA, no later appends discarded/rewritten, nativeabsence not allholderClose."
+  }
+]

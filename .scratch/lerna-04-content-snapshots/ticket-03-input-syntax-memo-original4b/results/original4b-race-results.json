@@ -1,0 +1,104 @@
+{
+  "status": "STOP_RELEASE; original4B race actualexit1, no additional native or fixes",
+  "raw": {
+    "path": "/workspace/lerna-content-03-137311247276/context-input-memo-original4b-race.log",
+    "sha256": "95d15f6d7ce1ae2a0955fede6f5525c482b6481d2af1ef211244e96c92a89cba",
+    "bytes": 20202,
+    "lines": 128
+  },
+  "full128_finite_human_read": true,
+  "actual_outcome_sha256": "c39be7d3dae12a0880cc19a3302914428f1ba5fd9c3bb650ed58b5d72e97e4f4",
+  "native": [
+    {
+      "pid": 4162965,
+      "pgid": 4162965,
+      "starttime": "17467188",
+      "started_ns": 1791206433541614321,
+      "args": [
+        "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/component-input-memo-race.test",
+        "-test.v",
+        "-test.run=^(TestContentContextReachableClosure64And65IncludesIntermediateVersions|TestContentContextStaticModeMaximumReachable62Materials|TestContentContextSingleContentBoundHasHonestLayerAndNoDispatch|TestContentContextDuplicateSelectorRoleRefusesBeforeOriginalInputReplacement)$",
+        "-test.count=1",
+        "-test.timeout=120s"
+      ]
+    }
+  ],
+  "actual_native_Wait_ACK": true,
+  "current_originalgroup": [],
+  "normal_pass_does_not_replace_race_failure": true,
+  "all_current332_pre_post_same": true,
+  "binary": {
+    "path": "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/component-input-memo-race.test",
+    "independent_owned_read_FD_only": true,
+    "original_Go_output_descriptor_Close": "UNKNOWN; not inferred from own FD",
+    "sha256": "bc3fd7898b0c665ce9c1fbd7bbcbe551d845a9766fe17b1011c4522b00baa0c0",
+    "bytes": 32204424,
+    "device": 27,
+    "inode": 1180931,
+    "mode": "0o700",
+    "complete_read_ACK": true,
+    "own_FD_fsync_ACK": true,
+    "own_FD_first_Close_ACK": true
+  },
+  "closure64": {
+    "result": "FAIL30.09s",
+    "setup_to_allupstream": "12.978534192s",
+    "compile_bind": "16.859145068s",
+    "compile_bind_finished_at": "29.867749051s",
+    "caller_left_then": "132.197572ms",
+    "compiler_publications": 4,
+    "bind_success": true,
+    "first_actual_error_gate": "phase.independent-lock-observation-end",
+    "first_typed_cause": "context.deadlineExceededError:context_deadline",
+    "first_at": "30.000776307s",
+    "lock_read_wall": "133.019574ms",
+    "sources_returned": 0,
+    "caller_remaining": "-829.684\u00b5s",
+    "missing_tails": [
+      "dispatch",
+      "Decision Claim",
+      "Prepared",
+      "worker Plan/Publish",
+      "worker ReadPublished",
+      "Completed",
+      "normal publicGet/candidate/artifact"
+    ]
+  },
+  "static62": {
+    "result": "FAIL24.20s",
+    "compile_bind": "11.576284418s",
+    "independent_lock_success": "500.01451ms",
+    "Accepted_COMMIT": "19.067641419s",
+    "Running_COMMIT": "19.168571422s",
+    "Prepared_COMMIT": "24.027724221s",
+    "first_actual_error_gate": "access.Current within publisher.Publish",
+    "first_at": "24.12105861s",
+    "first_wall": "4.219544ms",
+    "first_typed_cause": "context.deadlineExceededError:context_deadline",
+    "caller_remaining": "5.878936116s",
+    "worker_publish_attempts": 1,
+    "worker_publish_error_wall": "4.257021ms",
+    "compiler_contentPut_count": 4,
+    "worker_contentPut_count": 0,
+    "worker_contentPut_inference": "Current error returns before publishObject/Content.Put in unchanged Adapter.Publish; no dropped coarseevents and only original4 compile Stage/Prepare/Put/Step calls. Not a new unknown Put attempt. Existing historic actualPut UNKNOWN unchanged.",
+    "Step_return_cause": "*errors.errorString:claim",
+    "Step_wall": "5.079506162s",
+    "last_ValidateClaim_delta": "-31.326ms",
+    "last_ValidateClaim_caller_remaining": "5.847881438s",
+    "last_ValidatePoolClaim_delta": "34.604ms",
+    "missing_tails": [
+      "worker publication ACK",
+      "worker ReadPublished",
+      "Completed",
+      "normal publicGet/candidate/artifact",
+      "static full worker projection/Usage byte-tail"
+    ]
+  },
+  "remaining_controls": {
+    "closure65": "PASS23.34s; actual ErrOverflow+original noDispatch/reopen",
+    "content200000": "PASS9.30s completed/exactpublicartifact original counterpart",
+    "content262144": "PASS1.34s original bodylimit/noDispatch/reopen",
+    "duplicate": "PASS1.05s unchanged original Input/refusal/noDispatch/reopen"
+  },
+  "diagnostic_limits": "Original 3 coarse scopes drop0. No new observer/profile/SQLprobe/rerun. Wallinclusive parent/child notadditive and no productbenefit/sourceCPU/environment attribution asserted. Caller30 vs lease-bounded IO ctx distinction preserved; static caller still live. Original Go output/profile FD UNKNOWN and history Put UNKNOWN remain."
+}

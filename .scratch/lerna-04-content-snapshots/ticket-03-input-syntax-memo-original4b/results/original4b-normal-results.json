@@ -1,0 +1,78 @@
+{
+  "status": "STOP_RELEASE; original4B normal actualPASS, no race executed",
+  "raw": {
+    "path": "/workspace/lerna-content-03-137311247276/context-input-memo-original4b-normal.log",
+    "sha256": "dd12dbe11648ecb094267c8fb995c241b870ae2dccda1dd698476e0d56c12e9b",
+    "bytes": 26113,
+    "lines": 158
+  },
+  "full_raw158_human_read": true,
+  "outcome_sha256": "2770f063f55a716c14e089d30eb859f8364804be67785cd11343dc22118a1a36",
+  "actual_native": [
+    {
+      "pid": 4147966,
+      "pgid": 4147966,
+      "starttime": "17398195",
+      "started_ns": 1791205743608965375,
+      "args": [
+        "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/component-input-memo-normal.test",
+        "-test.v",
+        "-test.run=^(TestContentContextReachableClosure64And65IncludesIntermediateVersions|TestContentContextStaticModeMaximumReachable62Materials|TestContentContextSingleContentBoundHasHonestLayerAndNoDispatch|TestContentContextDuplicateSelectorRoleRefusesBeforeOriginalInputReplacement)$",
+        "-test.count=1",
+        "-test.timeout=120s"
+      ]
+    }
+  ],
+  "actualexit": 0,
+  "Wait_groupabsence_ACK": true,
+  "originalgroup_current": [],
+  "normal_binary": {
+    "path": "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/component-input-memo-normal.test",
+    "independent_owned_read_FD_only": true,
+    "original_Go_output_descriptor_Close": "UNKNOWN; not inferred from own FD",
+    "sha256": "81c27604ceb2bcd74d4b0437d1fb86df77be9f1efce243934ad06d7f4fcfc781",
+    "bytes": 24784026,
+    "device": 27,
+    "inode": 1180641,
+    "mode": "0o700",
+    "complete_read_ACK": true,
+    "own_FD_fsync_ACK": true,
+    "own_FD_first_Close_ACK": true
+  },
+  "all_current332_pre_post_same": true,
+  "exact_controls": {
+    "closure64": {
+      "top_sub": "PASS",
+      "compile_bind": "5.723919103s",
+      "Step": "4.647808571s",
+      "Prepared_COMMIT": "14.857265626s",
+      "Completed_COMMIT": "16.761908339s",
+      "worker_Publish": 2,
+      "worker_ReadPublished": 2,
+      "last_ValidateClaim_caller_remaining": "13.273514321s",
+      "last_ValidateClaim_lease_delta": "443.891ms",
+      "exact_ancestor_versions": 64,
+      "bundle_materials": 61
+    },
+    "static62": {
+      "top": "PASS",
+      "compile_bind": "3.71529053s",
+      "Step": "3.233264987s",
+      "Prepared_COMMIT": "8.867804288s",
+      "Completed_COMMIT": "10.616874127s",
+      "worker_Publish": 2,
+      "worker_ReadPublished": 2,
+      "last_ValidateClaim_caller_remaining": "19.40287496s",
+      "last_ValidateClaim_lease_delta": "1.811142s",
+      "exact_lock_ancestors": 64,
+      "bundle_materials": 62,
+      "actual_processed": 61,
+      "worker_full_processed_projection": 63
+    },
+    "closure65": "original ErrOverflow refusal/noDispatch/reopen PASS",
+    "content200000": "original completed/public exactartifact normal PASS",
+    "content262144": "original honest bodylimit/refusal/noDispatch/reopen PASS",
+    "duplicate_role": "original refusal beforeInputReplacement/noDispatch/reopen PASS"
+  },
+  "scope": "Only original existing exact public Get/Completed/candidate/fullartifact and static actualbyte+sourceprojection assertions; no new fee or positive-reopen claim. Parent inclusivetimings notadditive. drop0 eachcoarse scope. No netgain guarantee/capacityrace acceptance; original failures and FD/Put UNKNOWN preserved."
+}

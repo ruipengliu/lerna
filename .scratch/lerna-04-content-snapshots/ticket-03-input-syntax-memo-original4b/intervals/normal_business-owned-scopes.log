@@ -1,0 +1,26 @@
+process_group 4147966 4147966 /workspace/lerna-content-03-137311247276
+postgres lerna_test_3beb862a18cc0d4f7a9414c1
+postgres lerna_test_5b886036911fe4027aada60f
+postgres lerna_test_bccb1b558da630e9ed4585e4
+objects /workspace/lerna-content-03-137311247276/lerna-content-objects-137024143 27 1180277
+postgres lerna_test_c6be6354153770c23ec9e05d
+postgres lerna_test_8e99acee89c640c7c61fb7fd
+postgres lerna_test_6969eda0f416a2393fb10a7e
+objects /workspace/lerna-content-03-137311247276/lerna-content-objects-3665006444 27 1180277
+postgres lerna_test_e0ae8b3f506f732032703a85
+postgres lerna_test_385bc372c551050bb813efc7
+postgres lerna_test_eb560993dfcead2e4f1dc13d
+objects /workspace/lerna-content-03-137311247276/lerna-content-objects-125523592 27 1181087
+postgres lerna_test_5c7011027347d2378651dfea
+postgres lerna_test_8b50f3278df2a3647ad85c80
+postgres lerna_test_593499a7ebb94d9705190999
+objects /workspace/lerna-content-03-137311247276/lerna-content-objects-3993996796 27 1181087
+postgres lerna_test_fddccdfe8ab1eb09de3546b6
+postgres lerna_test_4592ca9cc74a649d3465122e
+postgres lerna_test_9221171fd8be27bd456cd8b9
+objects /workspace/lerna-content-03-137311247276/lerna-content-objects-664810618 27 1181087
+postgres lerna_test_c26e54c53507b159d4682c9b
+postgres lerna_test_2abad3dd8d126aff98b2d88d
+postgres lerna_test_2d22cdf3c2a6e0528216cd27
+objects /workspace/lerna-content-03-137311247276/lerna-content-objects-4052524413 27 1181087
+native_exit 4147966 4147966 status=0 group_absent=True

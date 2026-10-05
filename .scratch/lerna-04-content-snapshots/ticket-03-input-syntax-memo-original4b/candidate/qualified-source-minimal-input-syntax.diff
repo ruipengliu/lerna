@@ -1,0 +1,124 @@
+--- qualified-clock-before/conformance/internal/decisionfixture/context_binding_decode.go
++++ qualified-input-memo-current/conformance/internal/decisionfixture/context_binding_decode.go
+@@ -53,25 +53,43 @@
+ 	copy(out, in)
+ 	return out
+ }
++
++// cloneInput owns every mutable field in the current typed Input, including
++// optional Revision pointers nested in responsibility and request references.
++func cloneInput(in compiler.Input) compiler.Input {
++	out := in
++	out.Constraints = copyBindingSlice(in.Constraints)
++	out.Conditions = copyBindingSlice(in.Conditions)
++	for i := range out.Conditions {
++		out.Conditions[i].Gaps = copyBindingSlice(in.Conditions[i].Gaps)
++	}
++	out.Control.Restrictions = copyBindingSlice(in.Control.Restrictions)
++	out.Budget.Unknown = copyBindingSlice(in.Budget.Unknown)
++	out.Unresolved = copyBindingSlice(in.Unresolved)
++	for i := range out.Unresolved {
++		if in.Unresolved[i].OperationRef.Revision != nil {
++			revision := *in.Unresolved[i].OperationRef.Revision
++			out.Unresolved[i].OperationRef.Revision = &revision
++		}
++	}
++	out.Progress = copyBindingSlice(in.Progress)
++	out.Materials = copyBindingSlice(in.Materials)
++	out.Omitted = copyBindingSlice(in.Omitted)
++	out.Gaps = copyBindingSlice(in.Gaps)
++	out.Request.Payload.UseRefs = copyBindingSlice(in.Request.Payload.UseRefs)
++	if in.Request.Payload.TaskRef.Revision != nil {
++		revision := *in.Request.Payload.TaskRef.Revision
++		out.Request.Payload.TaskRef.Revision = &revision
++	}
++	if in.Request.TraceContext != nil {
++		trace := *in.Request.TraceContext
++		out.Request.TraceContext = &trace
++	}
++	return out
++}
+ func cloneBinding(in adapter.Binding) adapter.Binding {
+ 	out := in
+-	out.Input.Constraints = copyBindingSlice(in.Input.Constraints)
+-	out.Input.Conditions = copyBindingSlice(in.Input.Conditions)
+-	for i := range out.Input.Conditions {
+-		out.Input.Conditions[i].Gaps = copyBindingSlice(in.Input.Conditions[i].Gaps)
+-	}
+-	out.Input.Control.Restrictions = copyBindingSlice(in.Input.Control.Restrictions)
+-	out.Input.Budget.Unknown = copyBindingSlice(in.Input.Budget.Unknown)
+-	out.Input.Unresolved = copyBindingSlice(in.Input.Unresolved)
+-	out.Input.Progress = copyBindingSlice(in.Input.Progress)
+-	out.Input.Materials = copyBindingSlice(in.Input.Materials)
+-	out.Input.Omitted = copyBindingSlice(in.Input.Omitted)
+-	out.Input.Gaps = copyBindingSlice(in.Input.Gaps)
+-	out.Input.Request.Payload.UseRefs = copyBindingSlice(in.Input.Request.Payload.UseRefs)
+-	if in.Input.Request.TraceContext != nil {
+-		trace := *in.Input.Request.TraceContext
+-		out.Input.Request.TraceContext = &trace
+-	}
++	out.Input = cloneInput(in.Input)
+ 	out.Bundle.Mandatory = cloneBindingObject(in.Bundle.Mandatory)
+ 	out.Bundle.Shell = cloneBindingObject(in.Bundle.Shell)
+ 	out.Bundle.Manifest = cloneBindingObject(in.Bundle.Manifest)
+--- qualified-clock-before/conformance/internal/decisionfixture/context_dispatch.go
++++ qualified-input-memo-current/conformance/internal/decisionfixture/context_dispatch.go
+@@ -59,6 +59,7 @@
+ }
+ type ContextDispatcher struct {
+ 	bindingDecode  bindingDecodeMemo
++	inputDecode    inputDecodeMemo
+ 	Store          *Store
+ 	TrustedSubject v.SubjectBinding
+ 	TrustedUntil   time.Time
+@@ -165,8 +166,7 @@
+ 	if err != nil {
+ 		return in, err
+ 	}
+-	err = closedJSON(body, &in)
+-	return in, err
++	return d.inputDecode.decode(bindingDecodeScope{store: d.Store, owner: d.Store.owner, schema: d.Store.cfg.Schema}, id, body, closedJSON)
+ }
+ func (d *ContextDispatcher) ObserveInput(ctx context.Context, id string) (compiler.Input, error) {
+ 	var out compiler.Input
+--- qualified-clock-before/conformance/internal/decisionfixture/context_input_decode.go
++++ qualified-input-memo-current/conformance/internal/decisionfixture/context_input_decode.go
+@@ -0,0 +1,38 @@
++package decisionfixture
++
++import (
++	"bytes"
++	"sync/atomic"
++
++	v "github.com/ruipengliu/lerna/contract/v1_1"
++	compiler "github.com/ruipengliu/lerna/domain/task/context"
++)
++
++// inputDecodeMemo owns one successful syntactic representation only. The
++// consumer must first read the complete current row in its original transaction;
++// current permissions, clocks, budget and transaction completion are not cached.
++type inputDecodeEntry struct {
++	scope   bindingDecodeScope
++	inputID string
++	body    []byte
++	input   compiler.Input
++}
++type inputDecodeMemo struct {
++	entry atomic.Pointer[inputDecodeEntry]
++}
++
++func (m *inputDecodeMemo) decode(scope bindingDecodeScope, inputID string, body []byte, decode func([]byte, any) error) (compiler.Input, error) {
++	if entry := m.entry.Load(); entry != nil && entry.scope == scope && entry.inputID == inputID && bytes.Equal(body, entry.body) {
++		return cloneInput(entry.input), nil
++	}
++	var out compiler.Input
++	if err := decode(body, &out); err != nil {
++		return out, err
++	}
++	if len(body) <= v.MaxBodyBytes {
++		// The cold result and the immutable stored value own separate mutable
++		// fields. Caller changes to the original row cannot change the key.
++		m.entry.Store(&inputDecodeEntry{scope: scope, inputID: inputID, body: copyBindingSlice(body), input: cloneInput(out)})
++	}
++	return out, nil
++}

@@ -1,0 +1,304 @@
+{
+  "status": "actualcomplete STOP / RELEASE LOCAL; full human publictail interpretation pending",
+  "actual_supervisor_exit": 1,
+  "actual_native_identities": [
+    {
+      "pid": 4162965,
+      "pgid": 4162965,
+      "starttime": "17467188",
+      "started_ns": 1791206433541614321,
+      "args": [
+        "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/component-input-memo-race.test",
+        "-test.v",
+        "-test.run=^(TestContentContextReachableClosure64And65IncludesIntermediateVersions|TestContentContextStaticModeMaximumReachable62Materials|TestContentContextSingleContentBoundHasHonestLayerAndNoDispatch|TestContentContextDuplicateSelectorRoleRefusesBeforeOriginalInputReplacement)$",
+        "-test.count=1",
+        "-test.timeout=120s"
+      ]
+    }
+  ],
+  "actual_native_Wait_exit_groupabsence_ACK": true,
+  "original_group_current_members": [],
+  "raw": {
+    "path": "/workspace/lerna-content-03-137311247276/context-input-memo-original4b-race.log",
+    "sha256": "95d15f6d7ce1ae2a0955fede6f5525c482b6481d2af1ef211244e96c92a89cba",
+    "bytes": 20202,
+    "lines": 128
+  },
+  "own_raw_writer_fsync_ACK": true,
+  "own_raw_writer_firstClose_ACK": true,
+  "actual_binary_aftereffects": {
+    "path": "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/component-input-memo-race.test",
+    "independent_owned_read_FD_only": true,
+    "original_Go_output_descriptor_Close": "UNKNOWN; not inferred from own FD",
+    "sha256": "bc3fd7898b0c665ce9c1fbd7bbcbe551d845a9766fe17b1011c4522b00baa0c0",
+    "bytes": 32204424,
+    "device": 27,
+    "inode": 1180931,
+    "mode": "0o700",
+    "complete_read_ACK": true,
+    "own_FD_fsync_ACK": true,
+    "own_FD_first_Close_ACK": true
+  },
+  "completed_ns": 1791206523174527089,
+  "race_business_executed": true,
+  "first_failure_stop_no_repair_retry": true,
+  "scope_limit": "Actual Wait/groupabsence and own raw/binary FD Close ACK do not retroqualify any old native descriptor or holder. Original fixture resource ACKs remain scoped; possibleeffects and missing tails require actual raw facts.",
+  "embedded_prelaunch_fact": {
+    "status": "preeffect exact one race_business only; no other grant",
+    "registered_ns": 1791206433491042503,
+    "argv": [
+      "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/component-input-memo-race.test",
+      "-test.v",
+      "-test.run=^(TestContentContextReachableClosure64And65IncludesIntermediateVersions|TestContentContextStaticModeMaximumReachable62Materials|TestContentContextSingleContentBoundHasHonestLayerAndNoDispatch|TestContentContextDuplicateSelectorRoleRefusesBeforeOriginalInputReplacement)$",
+      "-test.count=1",
+      "-test.timeout=120s"
+    ],
+    "source_pins": {
+      "manifest_sha256": "1ffc94cc8ca57bbf2537d75984f02a78ff7682cda2d76fdde1504446501485ad",
+      "commands_sha256": "0493f08255c96db4ffc9e4adb266212b446cbe8a272eab7094a9467b16f02abe",
+      "overlay": {
+        "sha256": "709c02712b2e49c8daa45ec8977282fad4e63ed7fa8d0901369179586ea8c5d6",
+        "bytes": 1142
+      },
+      "strict_supervisor_sha256": "82c4e6a19e1aaabbd4a2412f89eb54c0b1690221f92d3ea826b05ca455a2042e",
+      "head": "b28b2e3182d97156c5fe203baf5cf2183631b7f2",
+      "explicit_WIP": " M adapters/postgres/content/policy.go\n M conformance/component/content_closure_test.go\n M conformance/component/content_policy_actions_test.go\n M conformance/internal/decisionfixture/context_binding_decode.go\n M conformance/internal/decisionfixture/context_dispatch.go\n M domain/content/closure.go\n M domain/content/policy_cleanup.go\n M domain/content/ports.go\n M domain/content/processing.go\n M domain/content/secondary.go\n M domain/content/service.go\n?? conformance/component/content_processing_ancestor_seal_test.go\n?? conformance/component/content_processing_body_seal_test.go\n?? conformance/internal/decisionfixture/context_input_decode.go\n",
+      "current3_semantic_formatted": {
+        "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-semantic-qualification-static/content_context_compile_budget_test.go.txt": {
+          "sha256": "bb3bbb6ba5ffdf6d7d132e3e13d28ec6822ef15e6e50d9b5fd88fdf5e0d81646",
+          "bytes": 25773
+        },
+        "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-semantic-qualification-static/content_context_budget_concurrency_test.go.txt": {
+          "sha256": "f8e5a5bf1b3c7866a6dd3d70aac21cb77e185f2e40572067cf8cf7b9264a0cec",
+          "bytes": 11435
+        },
+        "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-semantic-qualification-static/content_processing_policy_lock_timeout_test.go.txt": {
+          "sha256": "044d15bfd6f724f01da6df04d5cb405d745b72bcbf57e32e67cd00bedf34bd44",
+          "bytes": 6336
+        }
+      },
+      "original_ready_prefixes_byteequal": true,
+      "locked_env": {
+        "GOTOOLCHAIN": "local",
+        "GOFLAGS": "-mod=readonly"
+      },
+      "inventory_limit": "Not actual Go-list or full compiler inventory",
+      "omitted_exact_inventory_values": {
+        "current332": {
+          "canonical_JSON_value_sha256": "614d70e7a7ce649f33fbbdfc89a8d0c5e2a1462a1a93b32c9a7e17a5daff02f6",
+          "entries": 332,
+          "copied_once_parent_manifest": {
+            "path": "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/manifest-static.json",
+            "sha256": "1ffc94cc8ca57bbf2537d75984f02a78ff7682cda2d76fdde1504446501485ad",
+            "bytes": 71485,
+            "reason": "Copied once canonical current332/13+extra2/excluded2/original5/critical/root source binding"
+          },
+          "reason": "Exact original object omitted from authored extract to avoid repeated332 or named inventory; can independently reconstruct and compare original SHA referenced."
+        },
+        "copied5": {
+          "canonical_JSON_value_sha256": "94c8eb6cca3fa7393746b25e38d6ca3f9b28d1c493f6229e98f6f736557825af",
+          "entries": 5,
+          "copied_once_parent_manifest": {
+            "path": "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/manifest-static.json",
+            "sha256": "1ffc94cc8ca57bbf2537d75984f02a78ff7682cda2d76fdde1504446501485ad",
+            "bytes": 71485,
+            "reason": "Copied once canonical current332/13+extra2/excluded2/original5/critical/root source binding"
+          },
+          "reason": "Exact original object omitted from authored extract to avoid repeated332 or named inventory; can independently reconstruct and compare original SHA referenced."
+        },
+        "named_compiled13": {
+          "canonical_JSON_value_sha256": "11e37ebcbfcb045bd2453f729afa200c43ddfb18aa3588e79a00e8b1928be429",
+          "entries": 13,
+          "copied_once_parent_manifest": {
+            "path": "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/manifest-static.json",
+            "sha256": "1ffc94cc8ca57bbf2537d75984f02a78ff7682cda2d76fdde1504446501485ad",
+            "bytes": 71485,
+            "reason": "Copied once canonical current332/13+extra2/excluded2/original5/critical/root source binding"
+          },
+          "reason": "Exact original object omitted from authored extract to avoid repeated332 or named inventory; can independently reconstruct and compare original SHA referenced."
+        },
+        "additional_tests2": {
+          "canonical_JSON_value_sha256": "b8196c0ecbd40b80b5c06314729a3f379e253cd3689083ef3502d25c863b61b7",
+          "entries": 2,
+          "copied_once_parent_manifest": {
+            "path": "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/manifest-static.json",
+            "sha256": "1ffc94cc8ca57bbf2537d75984f02a78ff7682cda2d76fdde1504446501485ad",
+            "bytes": 71485,
+            "reason": "Copied once canonical current332/13+extra2/excluded2/original5/critical/root source binding"
+          },
+          "reason": "Exact original object omitted from authored extract to avoid repeated332 or named inventory; can independently reconstruct and compare original SHA referenced."
+        },
+        "excluded_tests2": {
+          "canonical_JSON_value_sha256": "aef505b86fe9517f798026e43db615c980155bdeb66440184c6f1a4f67f3916f",
+          "entries": 2,
+          "copied_once_parent_manifest": {
+            "path": "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/manifest-static.json",
+            "sha256": "1ffc94cc8ca57bbf2537d75984f02a78ff7682cda2d76fdde1504446501485ad",
+            "bytes": 71485,
+            "reason": "Copied once canonical current332/13+extra2/excluded2/original5/critical/root source binding"
+          },
+          "reason": "Exact original object omitted from authored extract to avoid repeated332 or named inventory; can independently reconstruct and compare original SHA referenced."
+        }
+      },
+      "current332_byteequal_canonical_once": true
+    },
+    "actual_binary_beforeeffects": {
+      "path": "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/component-input-memo-race.test",
+      "independent_owned_read_FD_only": true,
+      "original_Go_output_descriptor_Close": "UNKNOWN; not inferred from own FD",
+      "sha256": "bc3fd7898b0c665ce9c1fbd7bbcbe551d845a9766fe17b1011c4522b00baa0c0",
+      "bytes": 32204424,
+      "device": 27,
+      "inode": 1180931,
+      "mode": "0o700",
+      "complete_read_ACK": true,
+      "own_FD_fsync_ACK": true,
+      "own_FD_first_Close_ACK": true
+    },
+    "native_identity_offset": 86973,
+    "owned_scope_offset": 164153,
+    "raw_path": "/workspace/lerna-content-03-137311247276/context-input-memo-original4b-race.log",
+    "original_budgets": {
+      "caller_seconds": 30,
+      "claim_seconds": 5,
+      "go_seconds": 120,
+      "outer_seconds": 120,
+      "run_count": 1
+    },
+    "ownership": "Original fresh fixtures/schema/object devino registered by original5 helper before effects; strict82 actualPID/PGID/tick fsync before ACK. No new probes, SQL, observer or inputs.",
+    "scope_limit": "This owned read FD Close is separate from old descriptor/holder UNKNOWN; originalprofileUNKNOWN remains."
+  },
+  "post_effect_source_pins": {
+    "manifest_sha256": "1ffc94cc8ca57bbf2537d75984f02a78ff7682cda2d76fdde1504446501485ad",
+    "commands_sha256": "0493f08255c96db4ffc9e4adb266212b446cbe8a272eab7094a9467b16f02abe",
+    "overlay": {
+      "sha256": "709c02712b2e49c8daa45ec8977282fad4e63ed7fa8d0901369179586ea8c5d6",
+      "bytes": 1142
+    },
+    "strict_supervisor_sha256": "82c4e6a19e1aaabbd4a2412f89eb54c0b1690221f92d3ea826b05ca455a2042e",
+    "head": "b28b2e3182d97156c5fe203baf5cf2183631b7f2",
+    "explicit_WIP": " M adapters/postgres/content/policy.go\n M conformance/component/content_closure_test.go\n M conformance/component/content_policy_actions_test.go\n M conformance/internal/decisionfixture/context_binding_decode.go\n M conformance/internal/decisionfixture/context_dispatch.go\n M domain/content/closure.go\n M domain/content/policy_cleanup.go\n M domain/content/ports.go\n M domain/content/processing.go\n M domain/content/secondary.go\n M domain/content/service.go\n?? conformance/component/content_processing_ancestor_seal_test.go\n?? conformance/component/content_processing_body_seal_test.go\n?? conformance/internal/decisionfixture/context_input_decode.go\n",
+    "current3_semantic_formatted": {
+      "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-semantic-qualification-static/content_context_compile_budget_test.go.txt": {
+        "sha256": "bb3bbb6ba5ffdf6d7d132e3e13d28ec6822ef15e6e50d9b5fd88fdf5e0d81646",
+        "bytes": 25773
+      },
+      "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-semantic-qualification-static/content_context_budget_concurrency_test.go.txt": {
+        "sha256": "f8e5a5bf1b3c7866a6dd3d70aac21cb77e185f2e40572067cf8cf7b9264a0cec",
+        "bytes": 11435
+      },
+      "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-semantic-qualification-static/content_processing_policy_lock_timeout_test.go.txt": {
+        "sha256": "044d15bfd6f724f01da6df04d5cb405d745b72bcbf57e32e67cd00bedf34bd44",
+        "bytes": 6336
+      }
+    },
+    "original_ready_prefixes_byteequal": true,
+    "locked_env": {
+      "GOTOOLCHAIN": "local",
+      "GOFLAGS": "-mod=readonly"
+    },
+    "inventory_limit": "Not actual Go-list or full compiler inventory",
+    "omitted_exact_inventory_values": {
+      "current332": {
+        "canonical_JSON_value_sha256": "614d70e7a7ce649f33fbbdfc89a8d0c5e2a1462a1a93b32c9a7e17a5daff02f6",
+        "entries": 332,
+        "copied_once_parent_manifest": {
+          "path": "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/manifest-static.json",
+          "sha256": "1ffc94cc8ca57bbf2537d75984f02a78ff7682cda2d76fdde1504446501485ad",
+          "bytes": 71485,
+          "reason": "Copied once canonical current332/13+extra2/excluded2/original5/critical/root source binding"
+        },
+        "reason": "Exact original object omitted from authored extract to avoid repeated332 or named inventory; can independently reconstruct and compare original SHA referenced."
+      },
+      "copied5": {
+        "canonical_JSON_value_sha256": "94c8eb6cca3fa7393746b25e38d6ca3f9b28d1c493f6229e98f6f736557825af",
+        "entries": 5,
+        "copied_once_parent_manifest": {
+          "path": "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/manifest-static.json",
+          "sha256": "1ffc94cc8ca57bbf2537d75984f02a78ff7682cda2d76fdde1504446501485ad",
+          "bytes": 71485,
+          "reason": "Copied once canonical current332/13+extra2/excluded2/original5/critical/root source binding"
+        },
+        "reason": "Exact original object omitted from authored extract to avoid repeated332 or named inventory; can independently reconstruct and compare original SHA referenced."
+      },
+      "named_compiled13": {
+        "canonical_JSON_value_sha256": "11e37ebcbfcb045bd2453f729afa200c43ddfb18aa3588e79a00e8b1928be429",
+        "entries": 13,
+        "copied_once_parent_manifest": {
+          "path": "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/manifest-static.json",
+          "sha256": "1ffc94cc8ca57bbf2537d75984f02a78ff7682cda2d76fdde1504446501485ad",
+          "bytes": 71485,
+          "reason": "Copied once canonical current332/13+extra2/excluded2/original5/critical/root source binding"
+        },
+        "reason": "Exact original object omitted from authored extract to avoid repeated332 or named inventory; can independently reconstruct and compare original SHA referenced."
+      },
+      "additional_tests2": {
+        "canonical_JSON_value_sha256": "b8196c0ecbd40b80b5c06314729a3f379e253cd3689083ef3502d25c863b61b7",
+        "entries": 2,
+        "copied_once_parent_manifest": {
+          "path": "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/manifest-static.json",
+          "sha256": "1ffc94cc8ca57bbf2537d75984f02a78ff7682cda2d76fdde1504446501485ad",
+          "bytes": 71485,
+          "reason": "Copied once canonical current332/13+extra2/excluded2/original5/critical/root source binding"
+        },
+        "reason": "Exact original object omitted from authored extract to avoid repeated332 or named inventory; can independently reconstruct and compare original SHA referenced."
+      },
+      "excluded_tests2": {
+        "canonical_JSON_value_sha256": "aef505b86fe9517f798026e43db615c980155bdeb66440184c6f1a4f67f3916f",
+        "entries": 2,
+        "copied_once_parent_manifest": {
+          "path": "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/manifest-static.json",
+          "sha256": "1ffc94cc8ca57bbf2537d75984f02a78ff7682cda2d76fdde1504446501485ad",
+          "bytes": 71485,
+          "reason": "Copied once canonical current332/13+extra2/excluded2/original5/critical/root source binding"
+        },
+        "reason": "Exact original object omitted from authored extract to avoid repeated332 or named inventory; can independently reconstruct and compare original SHA referenced."
+      }
+    },
+    "current332_byteequal_canonical_once": true
+  },
+  "owned_scope_interval_exact_capture": {
+    "phase": "race_business",
+    "identities_original_byte_range": [
+      86973,
+      87531
+    ],
+    "scopes_original_byte_range": [
+      164153,
+      165645
+    ],
+    "appendable_originals": [
+      "/workspace/lerna-content-03-137311247276/native-identities.jsonl",
+      "/workspace/lerna-content-03-137311247276/owned-scopes.log"
+    ],
+    "immutable_captures": {
+      "identities": {
+        "path": "/workspace/lerna-content-03-137311247276/input-memo-original4b-compact-archive-proposal/captured-exact-intervals/race_business-native-identities.jsonl",
+        "sha256": "8dced76632cfac2fe982bbd2d100a1d6518e208419b0d76e101e870713b9d469",
+        "bytes": 558
+      },
+      "scopes": {
+        "path": "/workspace/lerna-content-03-137311247276/input-memo-original4b-compact-archive-proposal/captured-exact-intervals/race_business-owned-scopes.log",
+        "sha256": "3bb9db7d32be21a35d882d3a9891c2e6b3f25aeaf7123ab2a1cee383b3516b86",
+        "bytes": 1492
+      }
+    },
+    "actualidentity_matches_original_outcome": true,
+    "exactscopebyte_matches_original_outcome": true,
+    "scope_limit": "Captured only exact original interval; no pretend current global fullfile SHA, no later appends discarded/rewritten, nativeabsence not allholderClose."
+  },
+  "original_full_outcome": {
+    "path": "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/original4b-race-actual-outcome.json",
+    "sha256": "c39be7d3dae12a0880cc19a3302914428f1ba5fd9c3bb650ed58b5d72e97e4f4",
+    "bytes": 151135,
+    "reason": "Original full outcome remains exact immutable reference; finite authored extract removes repeated332 only"
+  },
+  "original_full_prelaunch": {
+    "path": "/workspace/lerna-content-03-137311247276/large-graph-input-memo-qualification-overlay/original4b-race-prelaunch.json",
+    "sha256": "5fcea6cb816e9523fb290159cc41ec4afa56e115e945907de1a8ebb5ac7a337e",
+    "bytes": 72969,
+    "reason": "Exact original prelaunch embedded in full outcome; finite extract records argv/root/raw/gates+canonical current332 reference"
+  },
+  "authored_extract_not_original_fulloutcome": true,
+  "no_native_or_source_mutation_for_archival": true
+}
