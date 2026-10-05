@@ -126,10 +126,10 @@ func (s *Store) Close() error {
 	defer s.mu.Unlock()
 	return errors.Join(s.conn.Close(), s.db.Close())
 }
-func (s *Store) Transaction(ctx context.Context, fn func(context.Context) error) error {
-	return s.transact(ctx, "adjudication", fn)
+func (s *Store) Transaction(ctx context.Context, point string, fn func(context.Context) error) error {
+	return s.transact(ctx, "adjudication", point, fn)
 }
-func (s *Store) transact(ctx context.Context, domain string, fn func(context.Context) error) error {
+func (s *Store) transact(ctx context.Context, domain, point string, fn func(context.Context) error) error {
 	if ctx.Value(txKey{}) != nil {
 		return command.Fail("INVARIANT_VIOLATION")
 	}
@@ -144,10 +144,13 @@ func (s *Store) transact(ctx context.Context, domain string, fn func(context.Con
 	if err := fn(txctx); err != nil {
 		return err
 	}
+	if err := persistenceBoundary(ctx, point, false); err != nil {
+		return err
+	}
 	if err := tx.Commit(); err != nil {
 		return storageError(err, true)
 	}
-	return nil
+	return persistenceBoundary(ctx, point, true)
 }
 func storageError(err error, commit bool) error {
 	if err == nil {
@@ -300,7 +303,7 @@ func (s *Store) LoadSession(ctx context.Context, n *v1.GlobalName) (*v1.Session,
 // StageContent 使用独立内容事务，不能参加裁决事务。
 func (s *Store) StageContent(ctx context.Context, c *v1.Content, fingerprint string) (*v1.Ref, error) {
 	var ref *v1.Ref
-	err := s.transact(ctx, "content", func(ctx context.Context) error {
+	err := s.transact(ctx, "content", "content.stage", func(ctx context.Context) error {
 		old := new(v1.Content)
 		found, err := s.load(ctx, old, "SELECT record FROM content WHERE user_id=? AND domain_id=? AND source_issuer=? AND source_command=? AND fingerprint=?", c.Ref.Name.UserId, c.Ref.Name.AuthorityDomainId, c.Source.IssuerId, c.Source.CommandId, fingerprint)
 		if err != nil {
@@ -325,7 +328,10 @@ func (s *Store) StageContent(ctx context.Context, c *v1.Content, fingerprint str
 		ref = c.Ref
 		return storageError(err, false)
 	})
-	return ref, err
+	if err != nil {
+		return nil, err
+	}
+	return ref, nil
 }
 func (s *Store) ReadContent(ctx context.Context, r *v1.Ref) (*v1.Content, error) {
 	c := new(v1.Content)

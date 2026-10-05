@@ -121,6 +121,24 @@ func TestSafeResendSkipsAdmissionGeneration(t *testing.T) { ... }
 
 **测试的判据。**涉及外部效果的测试，检查持久记录和模拟目标实际收到的调用次数，不只看函数返回值。验收只认运行证据。
 
+### 5.1 持久化故障测试
+
+`cmd/assembly.Open` 在返回前恢复当前已可处理的待办命令。命令行每次启动共用此流程，因此启动可能推进先前受理的命令；`QueryReceipt` 本身仍为只读。
+
+故障构建通过 `sqlite.WithFault(ctx, point, mode)` 给单次调用链配置一次性故障。`CrashBeforeCommit` 在提交前直接退出子进程，`CrashAfterCommit` 在提交成功、回执返回前直接退出，`LoseReceipt` 提交后返回提交结果未知。两种崩溃均跳过 `defer` 和存储关闭，父进程以同一 SQLite 文件重启。
+
+当前持久化点在 `infra/sqlite/hooks_fault.go` 的 `FaultPoints` 登记：
+
+| 名称 | 原子保存的责任 |
+| --- | --- |
+| `content.stage` | 输入正文与来源；尚未承诺任务受理 |
+| `durable.submit` | SUBMITTED 回执、正文引用与决定待办 |
+| `durable.decide` | 会话输入、会话头、任务关联、任务、原决定与工作完成 |
+
+新增事务必须传入固定名称、登记到同一表，并补充对应故障用例。故障套件检查未登记的事务和无调用点的登记项，普通构建只编译空边界，不包含故障计划、登记表或配置 API。`make test-fault` 仅运行 `conformance/fault/` 中带 `fault` 标签的测试。
+
+这些用例验证进程崩溃恢复，不等于通过掉电或存储故障验证。本地档的掉电资格仍由 ADR 0001 的独立验收决定。
+
 ## 6 代码风格
 
 - 标识符用英文。公共对象的字段名、状态名和错误码沿用[核心契约](architecture/core/contracts/README.md)，不另起名字；
