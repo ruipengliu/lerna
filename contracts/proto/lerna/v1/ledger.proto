@@ -226,3 +226,44 @@ message OperationUpdate {
   string output_ref = 14;
   string output = 15;
 }
+
+// 开始门禁（出口 P4，核心契约 2.6）：执行管理在每次开始发送前请求裁决域核验。
+message StartSendCommand {
+  string user_id = 1;
+  string task_id = 2;
+  string operation_id = 3;
+  string attempt_id = 4;
+  int32 send_seq = 5;
+  SendPurpose purpose = 6;
+  string credential_ref = 7;
+  bytes request_digest = 8;
+  string executor_endpoint_id = 9;
+  string capability_id = 10;
+  // 安全重发：沿用原动作和原尝试标识，不比较准入时的控制代次，改为检查当前控制状态。
+  bool safe_resend = 11;
+}
+
+// 开始回执的正文：只表示"允许开始"，不证明请求已经发出。
+message StartSendResult {
+  string start_receipt_ref = 1;
+  int64 control_generation = 2;
+}
+
+// 封闭尚未开始的派发（执行管理 3）。封闭回执不得用来断言原动作未生效。
+message SealDispatchCommand {
+  string user_id = 1;
+  string task_id = 2;
+  // 准确的动作清单；为空时封闭本任务全部尚未开始的动作。
+  repeated string operation_ids = 3;
+  string reason = 4;
+  int64 control_generation = 5;
+}
+
+message SealDispatchResult {
+  // 封闭先于出口开放、出具了内部封闭证明的动作。
+  repeated string sealed_before_dispatch = 1;
+  // 已经可能发出、仍需核对的动作。
+  repeated string dispatch_possible = 2;
+  // 封闭先于意图被接纳：迟到的意图会被接纳为"禁止执行"。
+  repeated string sealed_ahead_of_intent = 3;
+}

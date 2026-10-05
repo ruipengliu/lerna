@@ -57,8 +57,14 @@ type Option func(*host.Config)
 // New 在临时目录中装配宿主。
 func New(t testing.TB, opts ...Option) *Harness {
 	t.Helper()
+	return NewWithAPI(t, mockapi.Idempotent, opts...)
+}
+
+// NewWithAPI 与 New 相同，但默认模拟 API 使用指定的能力类别。
+func NewWithAPI(t testing.TB, class mockapi.Class, opts ...Option) *Harness {
+	t.Helper()
 	h := &Harness{T: t, Dir: t.TempDir(), Clock: NewClock(), options: opts}
-	h.API = mockapi.NewTarget(mockapi.Idempotent, h.Clock.Now)
+	h.API = mockapi.NewTarget(class, h.Clock.Now)
 	h.Reasoner = scripted.New(nil)
 	h.start()
 	h.SetUserBudget(1_000_000)

@@ -67,3 +67,8 @@ func (m *Module) awaitConfirmation(tx *durable.Tx, t *lernav1.Task, p *lernav1.P
 
 // verificationFrozen 报告是否有完成核验轮次持有目标推进冻结。
 func verificationFrozen(*durable.Tx, *lernav1.Task) (bool, error) { return false, nil }
+
+// onCoreWorkUpdate 处理核心安排的工作（模型调用、核对查询）的进展。
+func (m *Module) onCoreWorkUpdate(*durable.Tx, *lernav1.Task, *lernav1.OperationView, *lernav1.OperationUpdate) error {
+	return nil
+}

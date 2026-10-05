@@ -9,12 +9,14 @@ import (
 	"database/sql"
 	"fmt"
 	"path/filepath"
+	"time"
 
 	"github.com/ruipengliu/lerna/contracts/errs"
 	lernav1 "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1"
 	"github.com/ruipengliu/lerna/contracts/ports"
 	"github.com/ruipengliu/lerna/core/budget"
 	"github.com/ruipengliu/lerna/core/durable"
+	"github.com/ruipengliu/lerna/core/egress"
 	"github.com/ruipengliu/lerna/core/grants"
 	"github.com/ruipengliu/lerna/core/ledger"
 	"github.com/ruipengliu/lerna/core/sessions"
@@ -89,7 +91,12 @@ func Open(cfg Config) (*Host, error) {
 	h.Sessions = &sessions.Module{Domain: adj, Tasks: h.Tasks}
 	h.Grants = &grants.Module{Domain: adj}
 	h.Budget = &budget.Module{Domain: adj}
-	h.LedgerModule = &ledger.Module{Domain: led, Endpoint: EndpointLocal}
+	h.LedgerModule = &ledger.Module{
+		Domain:             led,
+		Endpoint:           EndpointLocal,
+		AdjudicationDomain: DomainAdjudication,
+		Gate:               &egress.Gate{Router: h.router, Executor: h.Catalog.Executor, Timeout: 20 * time.Second},
+	}
 	h.Tasks.Register()
 	h.Sessions.Register()
 	h.Grants.Register()

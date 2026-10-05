@@ -39,6 +39,10 @@ func (m *Module) Register() {
 	m.Domain.HandleJob(JobAdjudicate, m.adjudicate)
 	m.Domain.HandleCommand(ports.CommandAdmit,
 		func() proto.Message { return &lernav1.AdmitProposalCommand{} }, m.handleAdmit)
+	m.Domain.HandleCommand(ports.CommandStartSend,
+		func() proto.Message { return &lernav1.StartSendCommand{} }, m.handleStartSend)
+	m.Domain.HandleCommand(ports.CommandOperationUpdate,
+		func() proto.Message { return &lernav1.OperationUpdate{} }, m.handleOperationUpdate)
 	m.Domain.OnHandoffReceipt(ports.CommandAcceptIntent, m.onIntentReceipt)
 }
 

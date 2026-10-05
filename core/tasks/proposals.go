@@ -64,6 +64,10 @@ func (m *Module) requestProposal(tx *durable.Tx, t *lernav1.Task) error {
 		requestSuperseded, t.GetUserId(), t.GetTaskId(), requestPending); err != nil {
 		return err
 	}
+	// 新一轮提议开始：此前推理失败留下的等待不再适用。
+	if err := clearWaiting(tx, t, lernav1.WaitingKind_WAITING_KIND_EXTERNAL); err != nil {
+		return err
+	}
 	t.PlanningGeneration++
 	if _, err := tx.Exec(`UPDATE tasks SET planning_generation = ?, revision = revision + 1 WHERE user_id = ? AND task_id = ?`,
 		t.GetPlanningGeneration(), t.GetUserId(), t.GetTaskId()); err != nil {

@@ -15,6 +15,7 @@ import (
 	lernav1 "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1"
 	"github.com/ruipengliu/lerna/contracts/ports"
 	"github.com/ruipengliu/lerna/core/durable"
+	"github.com/ruipengliu/lerna/core/egress"
 )
 
 // Module 是执行管理模块，绑定执行管理域和固定的执行端点。
@@ -22,12 +23,17 @@ type Module struct {
 	Domain *durable.Domain
 	// Endpoint 是本执行管理负责的执行端点；接纳后固定，工作者替换不得改派。
 	Endpoint string
+	// AdjudicationDomain 是动作的准入负责方：开始门禁和变化通知的接收域。
+	AdjudicationDomain string
+	// Gate 是出口闸门。
+	Gate *egress.Gate
 }
 
-// Register 登记执行管理接受的命令。
+// Register 登记执行管理接受的命令和工作。
 func (m *Module) Register() {
 	m.Domain.HandleCommand(ports.CommandAcceptIntent,
 		func() proto.Message { return &lernav1.OperationIntent{} }, m.handleAcceptIntent)
+	m.Domain.HandleJob(JobExecute, m.execute)
 }
 
 // handleAcceptIntent 是 R7 第二步（持久点 6b、出口 P2）：执行管理持久承担该动作的执行和核对责任。
@@ -110,9 +116,6 @@ func loadOperation(tx *durable.Tx, user, opID string) (*lernav1.Operation, error
 	op := &lernav1.Operation{}
 	return op, proto.Unmarshal(blob, op)
 }
-
-// afterAccept 在接纳事务中登记后续工作。
-func (m *Module) afterAccept(*durable.Tx, *lernav1.Operation) error { return nil }
 
 // Record 返回动作的权威记录。
 func (m *Module) Record(ctx context.Context, user, opID string) (*lernav1.OperationRecord, error) {
