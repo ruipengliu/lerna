@@ -6,6 +6,10 @@
 
 ## 当前状态
 
+2026-10-05 00:46 UTC，原界独占大图B诊断race实际74.623s失败，native3086554／start12876878／exit1及group absence、session完成后明确释放。完整[原日志与结果](../lerna-04-content-snapshots/ticket-03-large-graph-claim/diagnostic/results.md)保留：64祖先和62材料都在calculate中由Access.Current先返回deadline，随后真实ValidateClaim的新DB时间分别晚原5s lease21.425／24.545ms；caller30s仍余1.161／6.921s。running／start1已经真实commit，尚无Prepared提交或worker publication；Material25／31次包括末次失败，成功24／30次。该新独占scope不解释历史共享负载失败。嵌套Current与Content读取成本不可相加，SQL／decode／对象读取子成本未知；已请求原Astra high审查下一次必要有限拆分，不预选缓存／索引、不扩期限或盲重试。原生产／测试字节仍等于5e8cad7，诊断overlay五文件／原文件身份及SHA全部重新机械核准，未进入集成产品。
+
+05旧holder升级三条最小故障恢复测试已静态全文审查；当前唯一LOCAL授记录竞争的准确normal及同例race，另两条提交后丢返回／原资格700ms越界尚未执行。原writer停止与所有Close／Wait资格、原qualification身份和截止保持；两票仍未接受／合入，whole04仍15/41，完整1.2广告关闭。
+
 2026-10-05 00:28 UTC，03其余23个Context控制普通三组7.061s／10.917s／15.902s及race17.093s／26.246s／36.470s全部通过。格式检查首失败为一个测试文件尾部多余空行，保留原日志；仅删除该空行的固定源 `5e8cad7e9d77162fda9773bde747235f8937c9ce` 随后17项锁定检查全通过，包括Go普通／race、vet、生成／构建、44项TS、37项执行工具、生成探针及158／89／101共同合同正反序。合同脚本部分旧Go测试显示cached，照实保留；大图race仍未通过，有限overlay诊断正在静态准备。
 
 05旧正文绑定完整partial源码固定 `bb6e1f2ef05e49d88e2e4fb94ca04b0449981c52`。新原截止真实锁等待资格普通5.276s、测试race6.552s通过：两独立首次700ms WorkBudget／2s cap装配均观察真实policy阻塞；正常及时释放后原seal及实际全holder ACK／独立缺失／重开成立，跨原截止20ms释放后完整原pending／字节保持，无seal及可执行cleanup。原回执、新V2和deadline不变。race后校验和命令写错旧迁移路径，组合native exit1如实保留；单独正确三路径校验native exit0，未重跑已green测试。无产品修复或预算扩大；竞争CAS等剩余资格、最终受影响检查及两轴／架构审查仍待，两票未接受或合入，15/41与完整1.2关闭保持。

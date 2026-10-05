@@ -1,0 +1,58 @@
+{
+  "tracked_pin": "f11b98b",
+  "tested_production_pin": "5e8cad7e9d77162fda9773bde747235f8937c9ce",
+  "selector": "^(TestContentContextReachableClosure64And65IncludesIntermediateVersions|TestContentContextStaticModeMaximumReachable62Materials|TestContentContextSingleContentBoundHasHonestLayerAndNoDispatch|TestContentContextDuplicateSelectorRoleRefusesBeforeOriginalInputReplacement)$",
+  "caller_seconds": 30,
+  "lease_seconds": 5,
+  "go_watchdog_seconds": 120,
+  "outer_seconds": 120,
+  "run_count": 1,
+  "race": true,
+  "files": [
+    {
+      "original": "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_world.go",
+      "replacement": "/workspace/lerna-content-03-137311247276/large-graph-overlay/context_world.go",
+      "original_sha256": "6a8b7860a40ba8b784248f181f7abd4e6b069360dc68c33deff7f0f1c79f4f69",
+      "replacement_sha256": "e37d876a734b2639a044ae931e8066b9844a8c88e8a213f6d3a32c2db0421612",
+      "bytes": 11298
+    },
+    {
+      "original": "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_claim_diagnostics.go",
+      "replacement": "/workspace/lerna-content-03-137311247276/large-graph-overlay/context_claim_diagnostics.go",
+      "original_sha256": null,
+      "replacement_sha256": "573ae56fe178fb5f1cfa8898575ab5ca141f22077383173b383635e4a7b743e9",
+      "bytes": 13261
+    },
+    {
+      "original": "/tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_context_closure_test.go",
+      "replacement": "/workspace/lerna-content-03-137311247276/large-graph-overlay/content_context_closure_test.go",
+      "original_sha256": "f81d009ee03ce5d359b61e007b7b77ffbf6b7331254cb3e1b524c30fdf984f7f",
+      "replacement_sha256": "c668eacce37c9363cccaa243e2c484951582a872652d1a875c1281362a5c4e43",
+      "bytes": 4558
+    },
+    {
+      "original": "/tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_context_material_reachable_test.go",
+      "replacement": "/workspace/lerna-content-03-137311247276/large-graph-overlay/content_context_material_reachable_test.go",
+      "original_sha256": "588abece65e26259626dabc885b399c98d26f1855e17e94f010df223d3ae1d43",
+      "replacement_sha256": "4223c74583ac7ecace18402ec114708e7a43bbf1593da47bbc675e3a6617e7f2",
+      "bytes": 3369
+    },
+    {
+      "original": "/tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_context_test.go",
+      "replacement": "/workspace/lerna-content-03-137311247276/large-graph-overlay/content_context_test.go",
+      "original_sha256": "25b705aeda43e55b923710d621f39eb7298d214bce9101c18fd523777504698b",
+      "replacement_sha256": "9f1bdc9e8757057ed09836a9d8aee213825e3fe1484c1a86966a4cce2911189f",
+      "bytes": 18517
+    }
+  ],
+  "overlay_root": {
+    "path": "/workspace/lerna-content-03-137311247276/large-graph-overlay",
+    "mode": "0700",
+    "dev": 27,
+    "inode": 560008,
+    "root_and_parent_fsync": true
+  },
+  "map_sha256": "14d11ea59db97548877ffee5e41a10cb3f1372d054ba9f4b9bf860daf6a770ad",
+  "label_remaining": "original_caller_remaining_only",
+  "mechanical_gofmt_completed": true
+}
