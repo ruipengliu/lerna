@@ -45,7 +45,7 @@ func (s *Service) RegisterObservation(ctx context.Context, caller *v1.Caller, c 
 		if e != nil {
 			return nil, e
 		}
-		if x == nil || !proto.Equal(x.Send.ObservationRef, o.Ref) || !proto.Equal(x.Send.Ref, o.SendRef) || !proto.Equal(x.Attempt.Ref.Name, o.AttemptId) || x.Send.SendSeq != o.SendSeq || x.Send.Phase != "DISPATCH_POSSIBLE" || x.Attempt.ExternalKey != o.ExternalKey || x.CallDescriptor.Target != o.Target || c.Header.Identity.CommandId != "observe:"+o.Ref.Name.LocalId {
+		if x == nil || !proto.Equal(x.Send.ObservationRef, o.Ref) || !proto.Equal(x.Send.Ref, o.SendRef) || !proto.Equal(x.Attempt.Ref.Name, o.AttemptId) || x.Send.SendSeq != o.SendSeq || x.Send.Phase != "DISPATCH_POSSIBLE" || x.Attempt.ExternalKey != o.ExternalKey || x.CallDescriptor.Target != o.Target || !proto.Equal(x.CallDescriptor.QuerySubject, o.QuerySubject) || c.Header.Identity.CommandId != "observe:"+o.Ref.Name.LocalId {
 			return nil, command.Fail("INVALID_OBSERVATION")
 		}
 		if e = s.checkAssociation(tx, caller, o.TaskId, o.OperationId, o.AttemptId); e != nil {

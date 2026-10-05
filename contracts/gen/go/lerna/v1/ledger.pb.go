@@ -137,6 +137,8 @@ type Operation struct {
 	Effect               *Effect                `protobuf:"bytes,12,opt,name=effect,proto3" json:"effect,omitempty"`
 	StartReceiptObtained bool                   `protobuf:"varint,13,opt,name=start_receipt_obtained,json=startReceiptObtained,proto3" json:"start_receipt_obtained,omitempty"`
 	Execution            *Execution             `protobuf:"bytes,14,opt,name=execution,proto3" json:"execution,omitempty"`
+	ClosureWorkRef       *Ref                   `protobuf:"bytes,15,opt,name=closure_work_ref,json=closureWorkRef,proto3" json:"closure_work_ref,omitempty"`
+	QuerySubject         *QuerySubject          `protobuf:"bytes,16,opt,name=query_subject,json=querySubject,proto3" json:"query_subject,omitempty"`
 	unknownFields        protoimpl.UnknownFields
 	sizeCache            protoimpl.SizeCache
 }
@@ -269,6 +271,20 @@ func (x *Operation) GetExecution() *Execution {
 	return nil
 }
 
+func (x *Operation) GetClosureWorkRef() *Ref {
+	if x != nil {
+		return x.ClosureWorkRef
+	}
+	return nil
+}
+
+func (x *Operation) GetQuerySubject() *QuerySubject {
+	if x != nil {
+		return x.QuerySubject
+	}
+	return nil
+}
+
 type AcceptOperationCommand struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Header        *CommandHeader         `protobuf:"bytes,1,opt,name=header,proto3" json:"header,omitempty"`
@@ -330,6 +346,7 @@ type CallDescriptor struct {
 	CapabilityRef *Ref                   `protobuf:"bytes,5,opt,name=capability_ref,json=capabilityRef,proto3" json:"capability_ref,omitempty"`
 	ExternalKey   string                 `protobuf:"bytes,6,opt,name=external_key,json=externalKey,proto3" json:"external_key,omitempty"`
 	Digest        string                 `protobuf:"bytes,7,opt,name=digest,proto3" json:"digest,omitempty"`
+	QuerySubject  *QuerySubject          `protobuf:"bytes,8,opt,name=query_subject,json=querySubject,proto3" json:"query_subject,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -411,6 +428,13 @@ func (x *CallDescriptor) GetDigest() string {
 		return x.Digest
 	}
 	return ""
+}
+
+func (x *CallDescriptor) GetQuerySubject() *QuerySubject {
+	if x != nil {
+		return x.QuerySubject
+	}
+	return nil
 }
 
 type ExecutionAttempt struct {
@@ -853,7 +877,7 @@ var File_lerna_v1_ledger_proto protoreflect.FileDescriptor
 
 const file_lerna_v1_ledger_proto_rawDesc = "" +
 	"\n" +
-	"\x15lerna/v1/ledger.proto\x12\blerna.v1\x1a\x18lerna/v1/admission.proto\x1a\x17lerna/v1/identity.proto\x1a\x17lerna/v1/planning.proto\x1a\x19lerna/v1/submission.proto\"\xa1\x03\n" +
+	"\x15lerna/v1/ledger.proto\x12\blerna.v1\x1a\x18lerna/v1/admission.proto\x1a\x16lerna/v1/closure.proto\x1a\x17lerna/v1/identity.proto\x1a\x17lerna/v1/planning.proto\x1a\x19lerna/v1/submission.proto\"\xa1\x03\n" +
 	"\x06Effect\x12\x1f\n" +
 	"\x03ref\x18\x01 \x01(\v2\r.lerna.v1.RefR\x03ref\x127\n" +
 	"\foperation_id\x18\x02 \x01(\v2\x14.lerna.v1.GlobalNameR\voperationId\x12D\n" +
@@ -864,7 +888,7 @@ const file_lerna_v1_ledger_proto_rawDesc = "" +
 	"\revidence_refs\x18\x06 \x03(\v2\r.lerna.v1.RefR\fevidenceRefs\x12=\n" +
 	"\x19next_reconcile_at_unix_ms\x18\a \x01(\x03H\x00R\x15nextReconcileAtUnixMs\x88\x01\x01\x12+\n" +
 	"\x11evidence_conflict\x18\b \x01(\bR\x10evidenceConflictB\x1c\n" +
-	"\x1a_next_reconcile_at_unix_ms\"\xaf\x05\n" +
+	"\x1a_next_reconcile_at_unix_ms\"\xa5\x06\n" +
 	"\tOperation\x12\x1f\n" +
 	"\x03ref\x18\x01 \x01(\v2\r.lerna.v1.RefR\x03ref\x122\n" +
 	"\radmission_ref\x18\x02 \x01(\v2\r.lerna.v1.RefR\fadmissionRef\x120\n" +
@@ -882,10 +906,12 @@ const file_lerna_v1_ledger_proto_rawDesc = "" +
 	"\x15closure_evidence_refs\x18\v \x03(\v2\r.lerna.v1.RefR\x13closureEvidenceRefs\x12(\n" +
 	"\x06effect\x18\f \x01(\v2\x10.lerna.v1.EffectR\x06effect\x124\n" +
 	"\x16start_receipt_obtained\x18\r \x01(\bR\x14startReceiptObtained\x121\n" +
-	"\texecution\x18\x0e \x01(\v2\x13.lerna.v1.ExecutionR\texecution\"|\n" +
+	"\texecution\x18\x0e \x01(\v2\x13.lerna.v1.ExecutionR\texecution\x127\n" +
+	"\x10closure_work_ref\x18\x0f \x01(\v2\r.lerna.v1.RefR\x0eclosureWorkRef\x12;\n" +
+	"\rquery_subject\x18\x10 \x01(\v2\x16.lerna.v1.QuerySubjectR\fquerySubject\"|\n" +
 	"\x16AcceptOperationCommand\x12/\n" +
 	"\x06header\x18\x01 \x01(\v2\x17.lerna.v1.CommandHeaderR\x06header\x121\n" +
-	"\tadmission\x18\x02 \x01(\v2\x13.lerna.v1.AdmissionR\tadmission\"\x83\x02\n" +
+	"\tadmission\x18\x02 \x01(\v2\x13.lerna.v1.AdmissionR\tadmission\"\xc0\x02\n" +
 	"\x0eCallDescriptor\x12\x1a\n" +
 	"\bprotocol\x18\x01 \x01(\tR\bprotocol\x12\x16\n" +
 	"\x06method\x18\x02 \x01(\tR\x06method\x12\x16\n" +
@@ -893,7 +919,8 @@ const file_lerna_v1_ledger_proto_rawDesc = "" +
 	"\x0eparameters_ref\x18\x04 \x01(\v2\r.lerna.v1.RefR\rparametersRef\x124\n" +
 	"\x0ecapability_ref\x18\x05 \x01(\v2\r.lerna.v1.RefR\rcapabilityRef\x12!\n" +
 	"\fexternal_key\x18\x06 \x01(\tR\vexternalKey\x12\x16\n" +
-	"\x06digest\x18\a \x01(\tR\x06digest\"\xfa\x02\n" +
+	"\x06digest\x18\a \x01(\tR\x06digest\x12;\n" +
+	"\rquery_subject\x18\b \x01(\v2\x16.lerna.v1.QuerySubjectR\fquerySubject\"\xfa\x02\n" +
 	"\x10ExecutionAttempt\x12\x1f\n" +
 	"\x03ref\x18\x01 \x01(\v2\r.lerna.v1.RefR\x03ref\x127\n" +
 	"\foperation_id\x18\x02 \x01(\v2\x14.lerna.v1.GlobalNameR\voperationId\x12\x1d\n" +
@@ -964,10 +991,11 @@ var file_lerna_v1_ledger_proto_goTypes = []any{
 	(*Ref)(nil),                     // 9: lerna.v1.Ref
 	(*GlobalName)(nil),              // 10: lerna.v1.GlobalName
 	(*Capability)(nil),              // 11: lerna.v1.Capability
-	(*CommandHeader)(nil),           // 12: lerna.v1.CommandHeader
-	(*Admission)(nil),               // 13: lerna.v1.Admission
-	(*CommandReceipt)(nil),          // 14: lerna.v1.CommandReceipt
-	(*Job)(nil),                     // 15: lerna.v1.Job
+	(*QuerySubject)(nil),            // 12: lerna.v1.QuerySubject
+	(*CommandHeader)(nil),           // 13: lerna.v1.CommandHeader
+	(*Admission)(nil),               // 14: lerna.v1.Admission
+	(*CommandReceipt)(nil),          // 15: lerna.v1.CommandReceipt
+	(*Job)(nil),                     // 16: lerna.v1.Job
 }
 var file_lerna_v1_ledger_proto_depIdxs = []int32{
 	9,  // 0: lerna.v1.Effect.ref:type_name -> lerna.v1.Ref
@@ -984,29 +1012,32 @@ var file_lerna_v1_ledger_proto_depIdxs = []int32{
 	9,  // 11: lerna.v1.Operation.closure_evidence_refs:type_name -> lerna.v1.Ref
 	0,  // 12: lerna.v1.Operation.effect:type_name -> lerna.v1.Effect
 	6,  // 13: lerna.v1.Operation.execution:type_name -> lerna.v1.Execution
-	12, // 14: lerna.v1.AcceptOperationCommand.header:type_name -> lerna.v1.CommandHeader
-	13, // 15: lerna.v1.AcceptOperationCommand.admission:type_name -> lerna.v1.Admission
-	9,  // 16: lerna.v1.CallDescriptor.parameters_ref:type_name -> lerna.v1.Ref
-	9,  // 17: lerna.v1.CallDescriptor.capability_ref:type_name -> lerna.v1.Ref
-	9,  // 18: lerna.v1.ExecutionAttempt.ref:type_name -> lerna.v1.Ref
-	10, // 19: lerna.v1.ExecutionAttempt.operation_id:type_name -> lerna.v1.GlobalName
-	8,  // 20: lerna.v1.ExecutionAttempt.capabilities:type_name -> lerna.v1.ExecutionCapabilities
-	9,  // 21: lerna.v1.PhysicalSend.ref:type_name -> lerna.v1.Ref
-	10, // 22: lerna.v1.PhysicalSend.attempt_id:type_name -> lerna.v1.GlobalName
-	14, // 23: lerna.v1.PhysicalSend.start_receipt:type_name -> lerna.v1.CommandReceipt
-	9,  // 24: lerna.v1.PhysicalSend.observation_ref:type_name -> lerna.v1.Ref
-	9,  // 25: lerna.v1.PhysicalSend.credential_ref:type_name -> lerna.v1.Ref
-	4,  // 26: lerna.v1.Execution.attempt:type_name -> lerna.v1.ExecutionAttempt
-	5,  // 27: lerna.v1.Execution.send:type_name -> lerna.v1.PhysicalSend
-	3,  // 28: lerna.v1.Execution.call_descriptor:type_name -> lerna.v1.CallDescriptor
-	12, // 29: lerna.v1.PrepareExecutionCommand.header:type_name -> lerna.v1.CommandHeader
-	10, // 30: lerna.v1.PrepareExecutionCommand.operation_id:type_name -> lerna.v1.GlobalName
-	15, // 31: lerna.v1.PrepareExecutionCommand.claim:type_name -> lerna.v1.Job
-	32, // [32:32] is the sub-list for method output_type
-	32, // [32:32] is the sub-list for method input_type
-	32, // [32:32] is the sub-list for extension type_name
-	32, // [32:32] is the sub-list for extension extendee
-	0,  // [0:32] is the sub-list for field type_name
+	9,  // 14: lerna.v1.Operation.closure_work_ref:type_name -> lerna.v1.Ref
+	12, // 15: lerna.v1.Operation.query_subject:type_name -> lerna.v1.QuerySubject
+	13, // 16: lerna.v1.AcceptOperationCommand.header:type_name -> lerna.v1.CommandHeader
+	14, // 17: lerna.v1.AcceptOperationCommand.admission:type_name -> lerna.v1.Admission
+	9,  // 18: lerna.v1.CallDescriptor.parameters_ref:type_name -> lerna.v1.Ref
+	9,  // 19: lerna.v1.CallDescriptor.capability_ref:type_name -> lerna.v1.Ref
+	12, // 20: lerna.v1.CallDescriptor.query_subject:type_name -> lerna.v1.QuerySubject
+	9,  // 21: lerna.v1.ExecutionAttempt.ref:type_name -> lerna.v1.Ref
+	10, // 22: lerna.v1.ExecutionAttempt.operation_id:type_name -> lerna.v1.GlobalName
+	8,  // 23: lerna.v1.ExecutionAttempt.capabilities:type_name -> lerna.v1.ExecutionCapabilities
+	9,  // 24: lerna.v1.PhysicalSend.ref:type_name -> lerna.v1.Ref
+	10, // 25: lerna.v1.PhysicalSend.attempt_id:type_name -> lerna.v1.GlobalName
+	15, // 26: lerna.v1.PhysicalSend.start_receipt:type_name -> lerna.v1.CommandReceipt
+	9,  // 27: lerna.v1.PhysicalSend.observation_ref:type_name -> lerna.v1.Ref
+	9,  // 28: lerna.v1.PhysicalSend.credential_ref:type_name -> lerna.v1.Ref
+	4,  // 29: lerna.v1.Execution.attempt:type_name -> lerna.v1.ExecutionAttempt
+	5,  // 30: lerna.v1.Execution.send:type_name -> lerna.v1.PhysicalSend
+	3,  // 31: lerna.v1.Execution.call_descriptor:type_name -> lerna.v1.CallDescriptor
+	13, // 32: lerna.v1.PrepareExecutionCommand.header:type_name -> lerna.v1.CommandHeader
+	10, // 33: lerna.v1.PrepareExecutionCommand.operation_id:type_name -> lerna.v1.GlobalName
+	16, // 34: lerna.v1.PrepareExecutionCommand.claim:type_name -> lerna.v1.Job
+	35, // [35:35] is the sub-list for method output_type
+	35, // [35:35] is the sub-list for method input_type
+	35, // [35:35] is the sub-list for extension type_name
+	35, // [35:35] is the sub-list for extension extendee
+	0,  // [0:35] is the sub-list for field type_name
 }
 
 func init() { file_lerna_v1_ledger_proto_init() }
@@ -1015,6 +1046,7 @@ func file_lerna_v1_ledger_proto_init() {
 		return
 	}
 	file_lerna_v1_admission_proto_init()
+	file_lerna_v1_closure_proto_init()
 	file_lerna_v1_identity_proto_init()
 	file_lerna_v1_planning_proto_init()
 	file_lerna_v1_submission_proto_init()

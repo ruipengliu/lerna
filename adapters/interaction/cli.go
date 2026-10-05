@@ -42,7 +42,7 @@ type CLI struct {
 
 func (c CLI) Run(ctx context.Context, args []string, out io.Writer) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: submit --command ID --goal TEXT [--session ID] | receipt ID | task ID | session ID | recover | execute START_JSON | operation ID | observation ID | session-create --command ID | input --command ID --session ID --kind KIND [--text TEXT] | question --json FILE | process-input --json FILE | accept-requirements --json FILE | task-inputs ID | complete --json FILE | result TASK_ID | verification --json REF_FILE | recheck-completion --json FILE | request-proposal --json FILE | receive-proposal --json FILE")
+		return fmt.Errorf("usage: submit --command ID --goal TEXT [--session ID] | receipt ID | task ID | session ID | recover | execute START_JSON | operation ID | observation ID | session-create --command ID | input --command ID --session ID --kind KIND [--text TEXT] | question --json FILE | process-input --json FILE | accept-requirements --json FILE | task-inputs ID | complete --json FILE | result TASK_ID | verification --json REF_FILE | recheck-completion --json FILE | request-proposal --json FILE | receive-proposal --json FILE | request-reconciliation --json FILE | control-reconciliation --json FILE | reconciliation OPERATION_ID | reconciliation-query --json REF_FILE | reconciliation-finding --json REF_FILE | closure-confirmation --json FILE")
 	}
 	identity := func(id string) *v1.CommandIdentity {
 		return &v1.CommandIdentity{UserId: c.Caller.UserId, IssuerId: c.Caller.IssuerId, TargetDomainId: c.Domain, CommandId: id}
@@ -58,6 +58,8 @@ func (c CLI) Run(ctx context.Context, args []string, out io.Writer) error {
 		value, err = c.runTaskInputCommand(ctx, args)
 	case "session-create", "input", "question", "route-input", "query-input", "query-question":
 		value, err = c.runSessionCommand(ctx, args)
+	case "request-reconciliation", "control-reconciliation", "reconciliation", "reconciliation-query", "reconciliation-finding", "closure-confirmation":
+		value, err = c.reconciliationCommand(ctx, args)
 	case "execute", "operation", "observation":
 		value, err = c.execution(ctx, args)
 	case "grant-request", "admission-confirmation", "grant-issue", "confirmation", "confirm", "withdraw-confirmation", "grant", "revoke-grant", "revocation":
@@ -132,6 +134,14 @@ func (c CLI) Run(ctx context.Context, args []string, out io.Writer) error {
 		}
 		if tasks, ok := c.Tasks.(CompletionCommands); ok {
 			if e := tasks.ProcessCompletions(ctx, c.Caller); e != nil {
+				return e
+			}
+		}
+		if ledger, ok := c.Ledger.(ReconciliationLedger); ok {
+			if e := ledger.RecoverReconciliations(ctx, c.Caller); e != nil {
+				return e
+			}
+			if e := ledger.ProcessOperationProgress(ctx, c.Caller); e != nil {
 				return e
 			}
 		}

@@ -1,0 +1,45 @@
+syntax = "proto3";
+package lerna.v1;
+
+import "lerna/v1/identity.proto";
+import "lerna/v1/planning.proto";
+import "lerna/v1/submission.proto";
+
+option go_package = "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1;lernav1";
+
+// QuerySubject 固定被查责任，不替代查询自身的动作和发送身份。
+message QuerySubject {
+  GlobalName operation_id = 1;
+  GlobalName attempt_id = 2;
+  string external_key = 3;
+  string target_scope = 4;
+  string executor_endpoint_id = 5;
+  Ref capability_ref = 6;
+}
+// ClosureWorkRequest 只能由核心负责方的持久记录授予用途。
+message ClosureWorkRequest {
+  Ref ref = 1;
+  Ref owner_ref = 2;
+  Ref source_ref = 3;
+  CommandIdentity source_identity = 4;
+  CommandIdentity admission_identity = 5;
+  GlobalName task_id = 6;
+  string purpose = 7;
+  Ref capability_ref = 8;
+  Ref parameters_ref = 9;
+  QuerySubject query_subject = 10;
+  Ref grant_ref = 11;
+  reserved 12;
+}
+message AdmitClosureCommand {
+  CommandHeader header = 1;
+  Ref work_ref = 2;
+  Ref confirmation_ref = 3;
+}
+
+message RequestClosureConfirmationCommand {
+  CommandHeader header = 1;
+  Ref work_ref = 2;
+  GlobalName session_id = 3;
+  int64 expires_at_unix_ms = 4;
+}

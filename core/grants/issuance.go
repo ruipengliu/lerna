@@ -85,7 +85,7 @@ func (s *Service) confirmableGrant(caller *v1.Caller, g *v1.Grant) (*v1.Grant, e
 		return nil, e
 	}
 	for _, p := range g.Permissions {
-		if p == nil || p.Action == "" || p.Resource == "" || p.ExecutorEndpointId == "" || p.UseRight != "INVOKE" || p.ProcessingPurpose != "CURRENT_TASK" {
+		if p == nil || p.Action == "" || p.Resource == "" || p.ExecutorEndpointId == "" || !supportedPermission(p) || p.ProcessingPurpose != "CURRENT_TASK" {
 			return nil, command.Fail("UNSUPPORTED_FEATURE")
 		}
 		if (p.ParameterMode != "ANY" && p.ParameterMode != "EXACT") || (p.ParameterMode == "EXACT" && p.ParametersRef == nil) || (p.ParameterMode == "ANY" && p.ParametersRef != nil) || (g.UseMode == "SINGLE" && p.ParameterMode != "EXACT") {

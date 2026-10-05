@@ -22,6 +22,8 @@ type CompletionFacts interface {
 	QueryCompletionSeal(context.Context, *v1.Caller, *v1.Ref) (*v1.CompletionSeal, error)
 	QueryObservation(context.Context, *v1.Caller, *v1.Ref) (*v1.RawObservation, error)
 	QueryInterpretation(context.Context, *v1.Caller, *v1.Ref) (*v1.EffectInterpretation, error)
+	QueryReconciliationFinding(context.Context, *v1.Caller, *v1.Ref) (*v1.ReconciliationFinding, error)
+	QueryReconciliationQuery(context.Context, *v1.Caller, *v1.Ref) (*v1.ReconciliationQuery, error)
 }
 type CompletionBudget interface {
 	QueryBudget(context.Context, *v1.Caller, *v1.GlobalName) (*v1.Budget, error)
@@ -383,22 +385,35 @@ func (s *Service) checkCondition(ctx context.Context, c *v1.Caller, r *v1.Requir
 			if e != nil {
 				return nil, e
 			}
-			if proof == nil || proof.Rule != "reference-target-v1" || (proof.Outcome != "APPLIED" && proof.Outcome != "NOT_APPLIED") || raw.Source != "TRUSTED_IO" || !proto.Equal(raw.OperationId, op.Ref.Name) || !proto.Equal(raw.TaskId, r.TaskId) || !proto.Equal(proof.ObservationRef, raw.Ref) {
-				continue
+			outcome := proof.GetOutcome()
+			var evidence []*v1.Ref
+			if raw.QuerySubject != nil {
+				outcome, evidence, e = s.queryConditionEvidence(ctx, c, r, raw, proof, op, admissions, ops)
+				if e != nil {
+					return nil, e
+				}
+				if outcome == "" {
+					continue
+				}
+			} else {
+				if proof == nil || proof.Rule != "reference-target-v1" || (proof.Outcome != "APPLIED" && proof.Outcome != "NOT_APPLIED") || raw.Source != "TRUSTED_IO" || !proto.Equal(raw.OperationId, op.Ref.Name) || !proto.Equal(raw.TaskId, r.TaskId) || !proto.Equal(proof.ObservationRef, raw.Ref) {
+					continue
+				}
+				evidence = []*v1.Ref{proof.Ref, raw.Ref, raw.BodyRef}
 			}
 			if e = s.content.CheckUsable(ctx, c, raw.BodyRef); e != nil {
 				return nil, e
 			}
-			if proof.Outcome == "NOT_APPLIED" && (proof.LateEffect != "RULED_OUT" || !allScopedActionsNotApplied(r, scope, admissions, ops)) {
+			if outcome == "NOT_APPLIED" && (proof.LateEffect != "RULED_OUT" || !allScopedActionsNotApplied(r, scope, admissions, ops)) {
 				continue
 			}
 			f.Conclusion = "SATISFIED"
 			f.Gap = ""
-			if proof.Outcome == "NOT_APPLIED" {
+			if outcome == "NOT_APPLIED" {
 				f.Conclusion = "UNSATISFIED"
 				f.Gap = "REQUIRED_ACTION_NOT_APPLIED"
 			}
-			f.EvidenceRefs = []*v1.Ref{proof.Ref, raw.Ref, raw.BodyRef}
+			f.EvidenceRefs = evidence
 			f.OperationRef = op.Ref
 			return f, nil
 		}

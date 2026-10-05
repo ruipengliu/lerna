@@ -67,7 +67,7 @@ func (s *Service) Configure(ctx context.Context, caller *v1.Caller, c *v1.Config
 			return nil, e
 		}
 		for _, p := range g.Permissions {
-			if p == nil || p.Action == "" || p.Resource == "" || p.ExecutorEndpointId == "" || p.UseRight != "INVOKE" || p.ProcessingPurpose != "CURRENT_TASK" {
+			if p == nil || p.Action == "" || p.Resource == "" || p.ExecutorEndpointId == "" || !supportedPermission(p) || p.ProcessingPurpose != "CURRENT_TASK" {
 				return nil, command.Fail("UNSUPPORTED_FEATURE")
 			}
 		}
@@ -111,13 +111,7 @@ func (s *Service) OccupyInTransaction(ctx context.Context, grant *v1.Ref, task, 
 	if g == nil || !proto.Equal(g.Ref, grant) || g.Status != "ACTIVE" || g.SemanticVersion != 1 || g.Issuer == nil || (g.Issuer.IssuerId != s.trustedIssuer && g.Issuer.IssuerId != "local-cli") || (g.UseMode != "CONTINUOUS" && g.UseMode != "SINGLE") || !proto.Equal(g.Subject, task) || now < g.ValidFromUnixMs || now >= g.ValidUntilUnixMs {
 		return nil, false, command.Fail("GRANT_INVALID")
 	}
-	matched := false
-	for _, p := range g.Permissions {
-		if p.Action == cap.Action && p.Resource == cap.Resource && p.UseRight == cap.UseRight && p.ProcessingPurpose == cap.ProcessingPurpose && p.ExecutorEndpointId == cap.ExecutorEndpointId && (p.ParameterMode == "ANY" || (p.ParameterMode == "EXACT" && proto.Equal(p.ParametersRef, parameters))) {
-			matched = true
-		}
-	}
-	if !matched {
+	if !coversCapability(g, cap, parameters) {
 		return nil, false, command.Fail("GRANT_SCOPE_MISMATCH")
 	}
 	count, e := s.store.GrantUseCount(ctx, g.UsePoolId)

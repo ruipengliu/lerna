@@ -2,6 +2,7 @@ syntax = "proto3";
 package lerna.v1;
 
 import "lerna/v1/admission.proto";
+import "lerna/v1/closure.proto";
 import "lerna/v1/identity.proto";
 import "lerna/v1/planning.proto";
 import "lerna/v1/submission.proto";
@@ -32,6 +33,8 @@ message Operation {
   Effect effect = 12;
   bool start_receipt_obtained = 13;
   Execution execution = 14;
+  Ref closure_work_ref = 15;
+  QuerySubject query_subject = 16;
 }
 message AcceptOperationCommand {
   CommandHeader header = 1;
@@ -46,6 +49,7 @@ message CallDescriptor {
   Ref capability_ref = 5;
   string external_key = 6;
   string digest = 7;
+  QuerySubject query_subject = 8;
 }
 message ExecutionAttempt {
   Ref ref = 1;

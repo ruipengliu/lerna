@@ -63,10 +63,10 @@ func (s *Service) StartExecution(ctx context.Context, caller *v1.Caller, c *v1.S
 		if task == nil || task.ControlGeneration != a.ControlGeneration {
 			return nil, command.Fail("STALE_GENERATION")
 		}
-		if task.BoundInputVersion != task.InputVersion {
+		if a.WorkCategory != "CLOSURE" && task.BoundInputVersion != task.InputVersion {
 			return nil, command.Fail("STALE_INPUT")
 		}
-		if task.RequirementsVersion != a.RequirementsVersion || task.RequirementsStatus != v1.RequirementsStatus_REQUIREMENTS_STATUS_ACCEPTED {
+		if a.WorkCategory != "CLOSURE" && (task.RequirementsVersion != a.RequirementsVersion || task.RequirementsStatus != v1.RequirementsStatus_REQUIREMENTS_STATUS_ACCEPTED) {
 			return nil, command.Fail("STALE_REQUIREMENT")
 		}
 		if task.ParentTaskRef != nil || len(a.AncestorControls) > 0 {
@@ -76,8 +76,13 @@ func (s *Service) StartExecution(ctx context.Context, caller *v1.Caller, c *v1.S
 		if e != nil {
 			return nil, e
 		}
-		if task.Lifecycle != v1.TaskLifecycle_TASK_LIFECYCLE_OPEN || task.Control != v1.TaskControl_TASK_CONTROL_ACTIVE || planning.VerificationFreeze != 0 {
+		if a.WorkCategory != "CLOSURE" && (task.Lifecycle != v1.TaskLifecycle_TASK_LIFECYCLE_OPEN || task.Control != v1.TaskControl_TASK_CONTROL_ACTIVE || planning.VerificationFreeze != 0) {
 			return nil, command.Fail("TASK_NOT_ACTIVE")
+		}
+		if a.WorkCategory == "CLOSURE" {
+			if e = s.validateClosureAdmission(tx, caller, a); e != nil {
+				return nil, e
+			}
 		}
 		if e = s.startGrants.ConsumeCredentialInTransaction(tx, caller, c.CredentialRef, c.Binding, a); e != nil {
 			return nil, e

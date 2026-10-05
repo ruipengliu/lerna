@@ -3,6 +3,7 @@ package lerna.v1;
 
 import "lerna/v1/admission.proto";
 import "lerna/v1/authority.proto";
+import "lerna/v1/closure.proto";
 import "lerna/v1/identity.proto";
 import "lerna/v1/planning.proto";
 import "lerna/v1/submission.proto";
@@ -19,6 +20,7 @@ message OperationConfirmationMatter {
   Capability capability = 8;
   Ref parameters_ref = 9;
   repeated Ref content_refs = 10;
+  QuerySubject query_subject = 11;
 }
 message GrantConfirmationMatter {
   Ref issuance_ref = 1;

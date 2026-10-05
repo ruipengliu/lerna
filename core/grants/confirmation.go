@@ -45,10 +45,8 @@ func (s *Service) CheckConfirmationMatter(ctx context.Context, c *v1.Confirmatio
 	if g == nil || !proto.Equal(g.Ref, m.GrantRef) || g.Status != "ACTIVE" || now < g.ValidFromUnixMs || now >= g.ValidUntilUnixMs || !proto.Equal(g.Subject, m.TaskId) || m.Capability == nil {
 		return command.Fail("GRANT_INVALID")
 	}
-	for _, p := range g.Permissions {
-		if p.Action == m.Capability.Action && p.Resource == m.Capability.Resource && p.UseRight == m.Capability.UseRight && p.ProcessingPurpose == m.Capability.ProcessingPurpose && p.ExecutorEndpointId == m.Capability.ExecutorEndpointId && (p.ParameterMode == "ANY" || (p.ParameterMode == "EXACT" && proto.Equal(p.ParametersRef, m.ParametersRef))) {
-			return nil
-		}
+	if coversCapability(g, m.Capability, m.ParametersRef) {
+		return nil
 	}
 	return command.Fail("GRANT_SCOPE_MISMATCH")
 }
