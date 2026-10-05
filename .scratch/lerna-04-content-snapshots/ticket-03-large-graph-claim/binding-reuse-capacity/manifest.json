@@ -1,0 +1,129 @@
+{
+  "tracked_pin": "28e3a468c86d4323d3b497836de23bb311a58952",
+  "previous_product_pin": "5e8cad7e9d77162fda9773bde747235f8937c9ce",
+  "adopted_decision": "/tmp/lerna-04-ticket-03-binding-decode-reuse-decision.md",
+  "decision_sha256": "4606ef42de8baf8916ea704bf4cb079c844cdbfbf6073b9a9dc6e7e36371a2d3",
+  "old_first_overlay_manifest_sha256": "1a2e8593f6692dfbf28b252faae1c1dce66094a26a5c1ee812c73b8ba8e7decf",
+  "old_subcost_overlay_manifest_sha256": "3b0dead588bd381c0b6cae4e5abdf874b4ca372b22a1ceae88365e3a61c4e0d0",
+  "old_overlays_unchanged": true,
+  "selector": "^(TestContentContextReachableClosure64And65IncludesIntermediateVersions|TestContentContextStaticModeMaximumReachable62Materials|TestContentContextSingleContentBoundHasHonestLayerAndNoDispatch|TestContentContextDuplicateSelectorRoleRefusesBeforeOriginalInputReplacement)$",
+  "files": [
+    {
+      "original": "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_world.go",
+      "replacement": "/workspace/lerna-content-03-137311247276/large-graph-binding-reuse-overlay/context_world.go",
+      "original_sha256": "6a8b7860a40ba8b784248f181f7abd4e6b069360dc68c33deff7f0f1c79f4f69",
+      "replacement_sha256": "e37d876a734b2639a044ae931e8066b9844a8c88e8a213f6d3a32c2db0421612",
+      "bytes": 11298,
+      "copied_from_immutable_first_overlay_sha256": "e37d876a734b2639a044ae931e8066b9844a8c88e8a213f6d3a32c2db0421612"
+    },
+    {
+      "original": "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_claim_diagnostics.go",
+      "replacement": "/workspace/lerna-content-03-137311247276/large-graph-binding-reuse-overlay/context_claim_diagnostics.go",
+      "original_sha256": null,
+      "replacement_sha256": "573ae56fe178fb5f1cfa8898575ab5ca141f22077383173b383635e4a7b743e9",
+      "bytes": 13261,
+      "copied_from_immutable_first_overlay_sha256": "573ae56fe178fb5f1cfa8898575ab5ca141f22077383173b383635e4a7b743e9"
+    },
+    {
+      "original": "/tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_context_closure_test.go",
+      "replacement": "/workspace/lerna-content-03-137311247276/large-graph-binding-reuse-overlay/content_context_closure_test.go",
+      "original_sha256": "f81d009ee03ce5d359b61e007b7b77ffbf6b7331254cb3e1b524c30fdf984f7f",
+      "replacement_sha256": "c668eacce37c9363cccaa243e2c484951582a872652d1a875c1281362a5c4e43",
+      "bytes": 4558,
+      "copied_from_immutable_first_overlay_sha256": "c668eacce37c9363cccaa243e2c484951582a872652d1a875c1281362a5c4e43"
+    },
+    {
+      "original": "/tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_context_material_reachable_test.go",
+      "replacement": "/workspace/lerna-content-03-137311247276/large-graph-binding-reuse-overlay/content_context_material_reachable_test.go",
+      "original_sha256": "588abece65e26259626dabc885b399c98d26f1855e17e94f010df223d3ae1d43",
+      "replacement_sha256": "4223c74583ac7ecace18402ec114708e7a43bbf1593da47bbc675e3a6617e7f2",
+      "bytes": 3369,
+      "copied_from_immutable_first_overlay_sha256": "4223c74583ac7ecace18402ec114708e7a43bbf1593da47bbc675e3a6617e7f2"
+    },
+    {
+      "original": "/tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_context_test.go",
+      "replacement": "/workspace/lerna-content-03-137311247276/large-graph-binding-reuse-overlay/content_context_test.go",
+      "original_sha256": "25b705aeda43e55b923710d621f39eb7298d214bce9101c18fd523777504698b",
+      "replacement_sha256": "9f1bdc9e8757057ed09836a9d8aee213825e3fe1484c1a86966a4cce2911189f",
+      "bytes": 18517,
+      "copied_from_immutable_first_overlay_sha256": "9f1bdc9e8757057ed09836a9d8aee213825e3fe1484c1a86966a4cce2911189f"
+    }
+  ],
+  "original_compiled_dependencies": [
+    {
+      "path": "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_dispatch.go",
+      "source_sha256": "e33eb8229be5345488dda61cc273d184303f516ea436b13304dc8284931a1fce",
+      "bytes": 23333,
+      "overlay_replaced": false,
+      "actual_compilation": "original current optimized tracked file, no replacement mapping"
+    },
+    {
+      "path": "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_binding_decode.go",
+      "source_sha256": "457b065fb760a264f0c687f82275c1dd73af3414191cccee1bba80b527f04779",
+      "bytes": 3570,
+      "overlay_replaced": false,
+      "actual_compilation": "original current optimized tracked file, no replacement mapping"
+    },
+    {
+      "path": "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_budget_probe.go",
+      "source_sha256": "d600be93226932cdad26fa81a35ed44d383de37bf5e984a23b67f643502ade2e",
+      "bytes": 5125,
+      "overlay_replaced": false,
+      "actual_compilation": "original current optimized tracked file, no replacement mapping"
+    },
+    {
+      "path": "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/source.go",
+      "source_sha256": "2698e49c206097583867ababbeba87a8c20942ed58b4606b6a8fc98fefbc7684",
+      "bytes": 19753,
+      "overlay_replaced": false,
+      "actual_compilation": "original current optimized tracked file, no replacement mapping"
+    },
+    {
+      "path": "/tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_context_binding_decode_test.go",
+      "source_sha256": "be01bd66705d9baef855fbdb77aaab704757f99cbabbc8050bdbd0d855bda75a",
+      "bytes": 9009,
+      "overlay_replaced": false,
+      "actual_compilation": "original current optimized tracked file, no replacement mapping"
+    }
+  ],
+  "root": {
+    "path": "/workspace/lerna-content-03-137311247276/large-graph-binding-reuse-overlay",
+    "mode": "0700",
+    "dev": 27,
+    "inode": 560076,
+    "root_and_parent_fsync": true
+  },
+  "map_sha256": "88dd305579a619a7897b191e7f0532542784e578f1b2d378630ff96f54cb8a41",
+  "caller_seconds": 30,
+  "lease_seconds": 5,
+  "go_watchdog_seconds": 120,
+  "outer_seconds": 120,
+  "run_count_per_normal_or_race": 1,
+  "observation_event_limit": 512,
+  "ordinary_events": 448,
+  "critical_events": 64,
+  "standalone_subcost_counters": false,
+  "static_only": false,
+  "native_pending": false,
+  "no_preheat_retry_renew_or_budget_change": true,
+  "related_qualified_unit_sources": [
+    {
+      "path": "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_binding_decode_test.go",
+      "source_sha256": "2333886aa9349e9c1e13d0c8b3a87165ba4742287b21f25fa240fc092ed00f8d",
+      "bytes": 10116,
+      "overlay_replaced": false,
+      "exclude_from_component_binary": true,
+      "qualification": "separate five mechanical fixture tests, normal .028 and race1.209; dependency-package _test.go not included by go test -c ./conformance/component"
+    }
+  ],
+  "format_qualification": {
+    "pid": 3264852,
+    "pgid": 3264852,
+    "starttime": "13636284",
+    "actual_exit": 0,
+    "group_absent": true,
+    "before_manifest_sha256": "4661bf44767bd0629edac36e498ec09411ff585bc2f46778b19c54ac1f06ba05",
+    "all_five_replacements_identical_to_first_overlay": true,
+    "log": "/workspace/lerna-content-03-137311247276/context-final-capacity-b-binding-reuse-format.log"
+  }
+}

@@ -317,3 +317,5 @@ root全文读取[Astra六票复核](../lerna-04-content-snapshots/published-tick
 2026-10-05，05固定1a4e1d2的17原检查全部实际完成0/absent/noTimeout，root保存[准确命令、原日志与逐项结果](../lerna-04-content-snapshots/ticket-05-final-checks-1a4e1d2/README.md)。整仓Go每模式472具名RUN/PASS，24基线与7消费者每模式匹配；不带integration的整仓检查不证明Linux holder进程协议。原worker协调路径丢失后，以实际完成ACK与17原组当前absence恢复LOCAL空闲，不伪称原owner明确release；历史unknown Close仍保护。
 
 [独立双轴](../lerna-04-content-snapshots/ticket-05-review-1a4e1d2/README.md)发现文档P3及过期mixedScan64遮挡P2。root全文采用Astra准确扫描决定，先准备真实64积压red，再做最小Content消费者候选修正；当前无新业务red。03 clean28e的memo五单元及三公开资格已normal/race通过，新原四容量B仍未运行。03/05恢复implementers只静态准备，native逐段独占授权；15/41、whole04 in-progress、完整1.2广告OFF、所有22切片授权继续。
+
+2026-10-05，03准确28e的原四容量B正常模式ONE实际0/absence，root全文核[独立二进制与原日志](../lerna-04-content-snapshots/ticket-03-large-graph-claim/binding-reuse-capacity/README.md)。两大图均真实Prepared/Completed COMMIT和两次产物publish/readback，原5sClaim内结束；caller30/lease5/120不变。当前只授独立race编译，race业务及当前受影响peer/整票/资源/CI尚待；不能据normal接受七AC。
