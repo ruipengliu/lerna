@@ -8,6 +8,8 @@ import (
 	"errors"
 	"slices"
 
+	"google.golang.org/protobuf/proto"
+
 	"github.com/ruipengliu/lerna/contracts/command"
 	v1 "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1"
 )
@@ -20,10 +22,13 @@ func (s *Service) ExecuteJob(ctx context.Context, caller *v1.Caller, c *v1.JobCo
 	if e := command.CheckIdentity(caller, c.Identity, s.user, s.domain); e != nil {
 		return nil, e
 	}
+	if len(c.ProtoReflect().GetUnknown()) > 0 || len(c.Identity.ProtoReflect().GetUnknown()) > 0 {
+		return nil, command.Fail("UNSUPPORTED_FEATURE")
+	}
 	if c.ContractVersion != 1 {
 		return nil, command.Fail("UNSUPPORTED_CONTRACT")
 	}
-	b, _ := json.Marshal([]any{"JOB_V1", c.Action, c.ContractVersion, c.ProcessInstance, c.AllowedTypes, c.Limit, c.LeaseMs, c.JobRef, c.ClaimEpoch, c.Module, c.NextState, c.ReadyAtUnixMs, c.WaitingReason, c.SpecificationRef})
+	b, _ := json.Marshal([]any{"JOB_V1", c.Action, c.ContractVersion, c.ProcessInstance, c.AllowedTypes, c.Limit, c.LeaseMs, c.JobRef, c.ClaimEpoch, c.Module, c.NextState, c.ReadyAtUnixMs, c.WaitingReason, c.SpecificationRef, jobProjection(c.Job)})
 	h := sha256.Sum256(b)
 	fingerprint := hex.EncodeToString(h[:])
 	var result *v1.CommandReceipt
@@ -58,7 +63,10 @@ func (s *Service) ExecuteJob(ctx context.Context, caller *v1.Caller, c *v1.JobCo
 		}
 		return s.store.SaveReceipt(tx, result)
 	})
-	return result, err
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
 }
 
 func (s *Service) QueryJob(ctx context.Context, caller *v1.Caller, n *v1.GlobalName) (*v1.Job, error) {
@@ -68,6 +76,39 @@ func (s *Service) QueryJob(ctx context.Context, caller *v1.Caller, n *v1.GlobalN
 	return s.store.LoadJob(ctx, n)
 }
 func (s *Service) applyJob(ctx context.Context, c *v1.JobCommand, now int64) ([]*v1.Job, error) {
+	if c.Action == "ENQUEUE" {
+		j := c.Job
+		if j == nil || j.Module != "ledger" || j.JobType != "DELIVER_HANDOFF" || j.ContractVersion != 1 || j.Responsibility == nil || j.SpecificationRef == nil || j.PurposeKey == "" || j.ExecutorEndpointId == "" || j.LedgerDomainId == "" {
+			return nil, command.Fail("UNSUPPORTED_FEATURE")
+		}
+		if j.Responsibility.UserId != s.user || j.Responsibility.TargetDomainId != s.domain {
+			return nil, command.Fail("PERMISSION_DENIED")
+		}
+		purpose, _ := json.Marshal([]any{j.Module, j.Responsibility.UserId, j.Responsibility.IssuerId, j.Responsibility.TargetDomainId, j.Responsibility.CommandId, j.PurposeKey})
+		old, err := s.store.FindJobPurpose(ctx, s.user, string(purpose))
+		if err != nil {
+			return nil, err
+		}
+		if old != nil {
+			if old.ExecutorEndpointId != j.ExecutorEndpointId || old.LedgerDomainId != j.LedgerDomainId || !proto.Equal(old.SpecificationRef, j.SpecificationRef) {
+				return nil, command.Fail("IDEMPOTENCY_CONFLICT")
+			}
+			return []*v1.Job{old}, nil
+		}
+		j = &v1.Job{Module: j.Module, JobType: j.JobType, ContractVersion: j.ContractVersion, Responsibility: j.Responsibility, SpecificationRef: j.SpecificationRef, ExecutorEndpointId: j.ExecutorEndpointId, LedgerDomainId: j.LedgerDomainId, ReadyAtUnixMs: j.ReadyAtUnixMs, Priority: j.Priority}
+		j.Ref = command.NewRef(s.user, s.domain, "job", "lerna.v1.Job")
+		j.State = "READY"
+		j.ClaimEpoch = 0
+		j.ProcessInstance = ""
+		j.LeaseUntilUnixMs = 0
+		j.Attempts = 0
+		j.PurposeKey = string(purpose)
+		if err := s.store.SaveJob(ctx, j); err != nil {
+			return nil, err
+		}
+		return []*v1.Job{j}, nil
+	}
+
 	if c.Action == "CLAIM" {
 		if c.ProcessInstance == "" || c.Limit == 0 || c.Limit > 100 || c.LeaseMs <= 0 || c.LeaseMs > 60000 || len(c.AllowedTypes) == 0 {
 			return nil, command.Fail("INVALID_INPUT")
@@ -87,7 +128,7 @@ func (s *Service) applyJob(ctx context.Context, c *v1.JobCommand, now int64) ([]
 			return 0
 		})
 		for _, j := range jobs {
-			if !slices.Contains(c.AllowedTypes, j.JobType) || j.ReadyAtUnixMs > now || (j.State == "CLAIMED" && j.LeaseUntilUnixMs > now) {
+			if (c.Module != "" && c.Module != j.Module) || !slices.Contains(c.AllowedTypes, j.JobType) || j.ReadyAtUnixMs > now || (j.State == "CLAIMED" && j.LeaseUntilUnixMs > now) {
 				continue
 			}
 			j.State = "CLAIMED"
@@ -175,4 +216,12 @@ func validClaim(j *v1.Job, instance string, epoch, revision uint64, now int64) e
 		return command.Fail("STALE_CLAIM")
 	}
 	return nil
+}
+
+// jobProjection 仅包含调度语义，领取和工作修订号由持久工作分配。
+func jobProjection(j *v1.Job) any {
+	if j == nil {
+		return nil
+	}
+	return []any{j.Module, j.JobType, j.ContractVersion, j.Responsibility, j.PurposeKey, j.ExecutorEndpointId, j.LedgerDomainId, j.SpecificationRef, j.ReadyAtUnixMs, j.Priority}
 }

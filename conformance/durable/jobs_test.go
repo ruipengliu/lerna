@@ -4,6 +4,7 @@ import (
 	"context"
 	"path/filepath"
 	"testing"
+	"time"
 
 	"github.com/ruipengliu/lerna/cmd/assembly"
 	"github.com/ruipengliu/lerna/contracts/command"
@@ -43,6 +44,10 @@ func seed(t *testing.T, b backend) {
 	}
 }
 func runSemantics(t *testing.T, newBackend factory) {
+	t.Run("control invalidates worker", func(t *testing.T) { controlInvalidatesWorker(t, newBackend) })
+	t.Run("takeover keeps endpoint", func(t *testing.T) { takeoverKeepsFixedEndpoint(t, newBackend) })
+	t.Run("bounds and conflicts", func(t *testing.T) { boundsAndConflicts(t, newBackend) })
+	t.Run("concurrent claims", func(t *testing.T) { concurrentClaims(t, newBackend) })
 	t.Run("claim and renewal preserve original lease", func(t *testing.T) {
 		b := newBackend(t)
 		seed(t, b)
@@ -84,8 +89,8 @@ func runSemantics(t *testing.T, newBackend factory) {
 }
 
 // 规则：G3、G11
-func TestControlInvalidatesWorker(t *testing.T) {
-	b := sqliteBackend(t)
+func controlInvalidatesWorker(t *testing.T, factory factory) {
+	b := factory(t)
 	seed(t, b)
 	ctx := context.Background()
 	r, e := b.ExecuteJob(ctx, caller, jobCommand("claim"))
@@ -169,5 +174,129 @@ func TestPendingDecisionRejectsUnclaimedSnapshot(t *testing.T) {
 	q, e = h.Durable.QueryReceipt(context.Background(), caller, jobCommand("goal").Identity)
 	if e != nil || q.State != v1.ReceiptQueryState_RECEIPT_QUERY_STATE_DECIDED {
 		t.Fatalf("worker failed %v %v", q, e)
+	}
+}
+
+// 规则：G3、G11
+func takeoverKeepsFixedEndpoint(t *testing.T, factory factory) {
+	b := factory(t)
+	ctx := context.Background()
+	c := jobCommand("schedule")
+	c.Action = "ENQUEUE"
+	c.Job = &v1.Job{Module: "ledger", JobType: "DELIVER_HANDOFF", ContractVersion: 1, Responsibility: jobCommand("responsibility").Identity, PurposeKey: "deliver", ExecutorEndpointId: "endpoint-original", LedgerDomainId: "ledger-original", SpecificationRef: command.NewRef("alice", "local/content", "content", "lerna.v1.Content")}
+	r, e := b.ExecuteJob(ctx, caller, c)
+	if e != nil || r.Decision != v1.Decision_DECISION_ACCEPTED {
+		t.Fatalf("enqueue %v %v", r, e)
+	}
+	c = jobCommand("first")
+	c.AllowedTypes = []string{"DELIVER_HANDOFF"}
+	c.LeaseMs = 10
+	r, e = b.ExecuteJob(ctx, caller, c)
+	if e != nil || len(r.Jobs) != 1 {
+		t.Fatalf("claim %v %v", r, e)
+	}
+	old := r.Jobs[0]
+	time.Sleep(20 * time.Millisecond)
+	c = jobCommand("second")
+	c.ProcessInstance = "process-b"
+	c.AllowedTypes = []string{"DELIVER_HANDOFF"}
+	r, e = b.ExecuteJob(ctx, caller, c)
+	if e != nil || len(r.Jobs) != 1 {
+		t.Fatalf("takeover %v %v", r, e)
+	}
+	j := r.Jobs[0]
+	if j.ClaimEpoch != 2 || j.Ref.Revision != 1 || j.ExecutorEndpointId != "endpoint-original" || j.LedgerDomainId != "ledger-original" || !proto.Equal(j.Responsibility, old.Responsibility) {
+		t.Fatalf("responsibility changed %v", j)
+	}
+	c = jobCommand("old-progress")
+	c.Action = "PROGRESS"
+	c.JobRef = old.Ref
+	c.ClaimEpoch = old.ClaimEpoch
+	c.NextState = "COMPLETED"
+	r, e = b.ExecuteJob(ctx, caller, c)
+	if e != nil || r.Decision != v1.Decision_DECISION_REJECTED {
+		t.Fatalf("old worker advanced %v %v", r, e)
+	}
+	c = jobCommand("new-progress")
+	c.ProcessInstance = "process-b"
+	c.Action = "PROGRESS"
+	c.JobRef = j.Ref
+	c.ClaimEpoch = j.ClaimEpoch
+	c.NextState = "COMPLETED"
+	r, e = b.ExecuteJob(ctx, caller, c)
+	if e != nil || r.Decision != v1.Decision_DECISION_ACCEPTED {
+		t.Fatalf("current worker failed %v %v", r, e)
+	}
+}
+
+func boundsAndConflicts(t *testing.T, factory factory) {
+	b := factory(t)
+	ctx := context.Background()
+	c := jobCommand("bound")
+	c.LeaseMs = 60001
+	r, e := b.ExecuteJob(ctx, caller, c)
+	if e != nil || r.Decision != v1.Decision_DECISION_REJECTED {
+		t.Fatalf("unbounded lease %v %v", r, e)
+	}
+	c.LeaseMs = 1000
+	if _, e = b.ExecuteJob(ctx, caller, c); e == nil {
+		t.Fatal("changed command accepted")
+	}
+	c = jobCommand("empty-before-job")
+	empty, e := b.ExecuteJob(ctx, caller, c)
+	if e != nil {
+		t.Fatal(e)
+	}
+	seed(t, b)
+	r, e = b.ExecuteJob(ctx, caller, c)
+	if e != nil || !proto.Equal(r, empty) {
+		t.Fatalf("empty replay acquired new work %v %v", r, e)
+	}
+	c = jobCommand("claim")
+	r, e = b.ExecuteJob(ctx, caller, c)
+	if e != nil || len(r.Jobs) != 1 {
+		t.Fatalf("claim %v %v", r, e)
+	}
+	j := r.Jobs[0]
+	c = jobCommand("wait")
+	c.Action = "PROGRESS"
+	c.JobRef = j.Ref
+	c.ClaimEpoch = j.ClaimEpoch
+	c.NextState = "WAITING"
+	c.ReadyAtUnixMs = r.DecidedAtUnixMs + 60000
+	c.WaitingReason = "backoff"
+	r, e = b.ExecuteJob(ctx, caller, c)
+	if e != nil || r.Decision != v1.Decision_DECISION_ACCEPTED {
+		t.Fatalf("wait %v %v", r, e)
+	}
+	r, e = b.ExecuteJob(ctx, caller, jobCommand("early"))
+	if e != nil || len(r.Jobs) != 0 {
+		t.Fatalf("ignored ready time %v %v", r, e)
+	}
+}
+func concurrentClaims(t *testing.T, factory factory) {
+	b := factory(t)
+	seed(t, b)
+	results := make(chan *v1.CommandReceipt, 2)
+	errs := make(chan error, 2)
+	for _, id := range []string{"a", "b"} {
+		go func(id string) {
+			c := jobCommand(id)
+			c.ProcessInstance = id
+			r, e := b.ExecuteJob(context.Background(), caller, c)
+			results <- r
+			errs <- e
+		}(id)
+	}
+	total := 0
+	for range 2 {
+		r := <-results
+		if e := <-errs; e != nil {
+			t.Fatal(e)
+		}
+		total += len(r.Jobs)
+	}
+	if total != 1 {
+		t.Fatalf("granted %d claims", total)
 	}
 }

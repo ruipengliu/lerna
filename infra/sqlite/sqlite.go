@@ -350,3 +350,12 @@ func (s *Store) LoadJob(ctx context.Context, n *v1.GlobalName) (*v1.Job, error) 
 	}
 	return j, err
 }
+
+func (s *Store) FindJobPurpose(ctx context.Context, user, purpose string) (*v1.Job, error) {
+	j := new(v1.Job)
+	found, err := s.load(ctx, j, "SELECT record FROM jobs WHERE user_id=? AND domain_id=? AND purpose_key=?", user, s.domain, purpose)
+	if !found {
+		return nil, err
+	}
+	return j, err
+}

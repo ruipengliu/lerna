@@ -21,7 +21,7 @@ func goal() (*v1.Caller, *v1.SubmitGoalCommand) {
 
 // 规则：G3、G11
 func TestAbruptCrashAtEverySubmissionCommit(t *testing.T) {
-	for _, point := range []string{"content.stage", "durable.submit", "durable.decide"} {
+	for _, point := range []string{"content.stage", "durable.submit", "durable.decide", "durable.jobs"} {
 		for _, mode := range []sqlite.FaultMode{sqlite.CrashBeforeCommit, sqlite.CrashAfterCommit} {
 			t.Run(point+"/"+string(mode), func(t *testing.T) {
 				path := filepath.Join(t.TempDir(), "crash.db")
@@ -42,7 +42,7 @@ func TestAbruptCrashAtEverySubmissionCommit(t *testing.T) {
 				if err != nil {
 					t.Fatal(err)
 				}
-				committed := point == "durable.decide" || (point == "durable.submit" && mode == sqlite.CrashAfterCommit)
+				committed := point == "durable.jobs" || point == "durable.decide" || (point == "durable.submit" && mode == sqlite.CrashAfterCommit)
 				if committed && q.State != v1.ReceiptQueryState_RECEIPT_QUERY_STATE_DECIDED {
 					t.Fatalf("saved responsibility not automatically recovered: %v", q)
 				}

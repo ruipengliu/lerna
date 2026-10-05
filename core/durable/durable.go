@@ -17,6 +17,7 @@ type Store interface {
 	SaveReceipt(context.Context, *v1.CommandReceipt) error
 	SaveJob(context.Context, *v1.Job) error
 	LoadJob(context.Context, *v1.GlobalName) (*v1.Job, error)
+	FindJobPurpose(context.Context, string, string) (*v1.Job, error)
 	PendingJobs(context.Context, string) ([]*v1.Job, error)
 	Position(context.Context) (uint64, int64, error)
 }
@@ -56,7 +57,7 @@ func (s *Service) Submit(ctx context.Context, caller *v1.Caller, c *v1.SubmitGoa
 		pending.Credential = ""
 		pending.TraceId = ""
 		identityKey, _ := json.Marshal([]string{c.Identity.UserId, c.Identity.IssuerId, c.Identity.TargetDomainId, c.Identity.CommandId})
-		job := &v1.Job{Ref: jobRef, Module: "sessions", JobType: "DECIDE_GOAL", ContractVersion: 1, Responsibility: c.Identity, State: "READY", PurposeKey: "decide:" + string(identityKey), Goal: &v1.PendingGoal{Command: pending, ContentRef: content}}
+		job := &v1.Job{Ref: jobRef, Module: "sessions", JobType: "DECIDE_GOAL", ContractVersion: 1, Responsibility: c.Identity, State: "READY", SpecificationRef: content, PurposeKey: "decide:" + string(identityKey), Goal: &v1.PendingGoal{Command: pending, ContentRef: content}}
 		receipt = &v1.CommandReceipt{Identity: c.Identity, FingerprintVersion: 1, Fingerprint: fingerprint, Phase: v1.ReceiptPhase_RECEIPT_PHASE_SUBMITTED, JobRef: jobRef, ResponsibleDomainId: s.domain, CommitPosition: position, DurabilityProfile: "LOCAL", InputRef: content}
 		if err := s.store.SaveJob(tx, job); err != nil {
 			return err

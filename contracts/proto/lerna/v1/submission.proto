@@ -205,4 +205,5 @@ message JobCommand {
   int64 ready_at_unix_ms = 12;
   string waiting_reason = 13;
   Ref specification_ref = 14;
+  Job job = 15;
 }

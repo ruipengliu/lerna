@@ -1801,6 +1801,7 @@ type JobCommand struct {
 	ReadyAtUnixMs    int64                  `protobuf:"varint,12,opt,name=ready_at_unix_ms,json=readyAtUnixMs,proto3" json:"ready_at_unix_ms,omitempty"`
 	WaitingReason    string                 `protobuf:"bytes,13,opt,name=waiting_reason,json=waitingReason,proto3" json:"waiting_reason,omitempty"`
 	SpecificationRef *Ref                   `protobuf:"bytes,14,opt,name=specification_ref,json=specificationRef,proto3" json:"specification_ref,omitempty"`
+	Job              *Job                   `protobuf:"bytes,15,opt,name=job,proto3" json:"job,omitempty"`
 	unknownFields    protoimpl.UnknownFields
 	sizeCache        protoimpl.SizeCache
 }
@@ -1929,6 +1930,13 @@ func (x *JobCommand) GetWaitingReason() string {
 func (x *JobCommand) GetSpecificationRef() *Ref {
 	if x != nil {
 		return x.SpecificationRef
+	}
+	return nil
+}
+
+func (x *JobCommand) GetJob() *Job {
+	if x != nil {
+		return x.Job
 	}
 	return nil
 }
@@ -2076,7 +2084,7 @@ const file_lerna_v1_submission_proto_rawDesc = "" +
 	"\x14executor_endpoint_id\x18\x0f \x01(\tR\x12executorEndpointId\x12(\n" +
 	"\x10ledger_domain_id\x18\x10 \x01(\tR\x0eledgerDomainId\x12:\n" +
 	"\x11specification_ref\x18\x11 \x01(\v2\r.lerna.v1.RefR\x10specificationRef\x12%\n" +
-	"\x0ewaiting_reason\x18\x12 \x01(\tR\rwaitingReason\"\x93\x04\n" +
+	"\x0ewaiting_reason\x18\x12 \x01(\tR\rwaitingReason\"\xb4\x04\n" +
 	"\n" +
 	"JobCommand\x125\n" +
 	"\bidentity\x18\x01 \x01(\v2\x19.lerna.v1.CommandIdentityR\bidentity\x12)\n" +
@@ -2095,7 +2103,8 @@ const file_lerna_v1_submission_proto_rawDesc = "" +
 	"next_state\x18\v \x01(\tR\tnextState\x12'\n" +
 	"\x10ready_at_unix_ms\x18\f \x01(\x03R\rreadyAtUnixMs\x12%\n" +
 	"\x0ewaiting_reason\x18\r \x01(\tR\rwaitingReason\x12:\n" +
-	"\x11specification_ref\x18\x0e \x01(\v2\r.lerna.v1.RefR\x10specificationRef*e\n" +
+	"\x11specification_ref\x18\x0e \x01(\v2\r.lerna.v1.RefR\x10specificationRef\x12\x1f\n" +
+	"\x03job\x18\x0f \x01(\v2\r.lerna.v1.JobR\x03job*e\n" +
 	"\fReceiptPhase\x12\x1d\n" +
 	"\x19RECEIPT_PHASE_UNSPECIFIED\x10\x00\x12\x1b\n" +
 	"\x17RECEIPT_PHASE_SUBMITTED\x10\x01\x12\x19\n" +
@@ -2227,11 +2236,12 @@ var file_lerna_v1_submission_proto_depIdxs = []int32{
 	11, // 43: lerna.v1.JobCommand.identity:type_name -> lerna.v1.CommandIdentity
 	10, // 44: lerna.v1.JobCommand.job_ref:type_name -> lerna.v1.Ref
 	10, // 45: lerna.v1.JobCommand.specification_ref:type_name -> lerna.v1.Ref
-	46, // [46:46] is the sub-list for method output_type
-	46, // [46:46] is the sub-list for method input_type
-	46, // [46:46] is the sub-list for extension type_name
-	46, // [46:46] is the sub-list for extension extendee
-	0,  // [0:46] is the sub-list for field type_name
+	21, // 46: lerna.v1.JobCommand.job:type_name -> lerna.v1.Job
+	47, // [47:47] is the sub-list for method output_type
+	47, // [47:47] is the sub-list for method input_type
+	47, // [47:47] is the sub-list for extension type_name
+	47, // [47:47] is the sub-list for extension extendee
+	0,  // [0:47] is the sub-list for field type_name
 }
 
 func init() { file_lerna_v1_submission_proto_init() }
