@@ -870,3 +870,69 @@ join3/WorkBudget1min保持，actualstale consumerfinished、candidate Tx释放�
 contendercommit与rollback/freshreplay确认，sessions37167/17530实际完成、
 显式RELEASE/no pending。现协议直接资格，无虚构businessred。此wholepage
 竞争不替ancestor/AdmissionTarget清理原因、缺结构/未知权限，七AC未accept。
+
+
+### 两祖先实际继承 cap 的准确 AdmissionTarget 清理：首业务red
+
+`TestContentInheritedExpiredCapConsumesItsExactAdmissionTargetWithoutDeletingLiveAncestor`
+真实A原acceptedcap2s后published/read、当前Rev2宽Save续期；独立B原alpha
+仍live正常。target Sources[A,B]真实接纳后的effective receipt cap精确等于
+A原cap，实际published/read/save完整closure正常，独立V2 beta正常。公开
+全部finiteAdmission pages准确选择A/full保存subject/purpose/currentRev2/
+AdmissionTargettarget、原capDue/cap+1minDeadline及watermark，不取首行冒充
+该责任。原receipt编码已检查error，但samekey字节级replay在红后tail尚未执行。
+
+actual World.Reopen、原cap+20ms，实际Manager.Step按exactoriginalkey Observe
+至真实target pending/holder_unconfirmed/accepted_retention_expired、原完整
+Ref/subject/purpose/objectholder/publication/liveDeadline；A/target公开body
+expired而三原介质准确alpha仍在，B/V2公开正常均先执行。然后仅首
+ConsumePolicyCleanup(originalAdmissionKey)在源码190行返回runtime.ErrScope
+(transaction scope mismatch or expired)，已有目标化identity被排除的真实
+business red，不是setup/compile失败。红后seal/allACK/原责任erased/再次
+Reopen/no误删A或B/原receiptreplay与历史断言均未执行，不能当green。
+
+`/tmp/lerna-04-ticket05-execution/inherited-cap-admission-first-red.log`:
+-v exact实际FAIL2.223s（case2.21），PID/PGID3136486/start13089058/nativeexit1/
+groupAbsent=true/noTimeout，session4680 actualcomplete。原ownscope
+`lerna_test_e23759e204671bb26c33bd60` / objects812158325(dev33/inode362268)，
+原caller20/Go30/wrapper120/initialcap2s/+20ms/原minuteDeadline固定，所有
+native实际结束且明确RELEASE/no pending。产品未改；沿adopted target-only
+cap决定，准确AdmissionTarget/祖先因果必须由此实际red交root/Astra窄决定，
+不自行放宽changeKey/authority/nilPolicy或采用未正式§7多policy关联。
+
+### 原 AdmissionTarget 的继承 cap：采用最小身份门并完成原 red 尾部
+
+root正式采用 `/tmp/lerna-04-ticket-05-inherited-cap-admission-decision.md`
+（SHA b42d94d141b470ba5fa879c809ee2f7f3d73d2a18b7e84c2ed685d233d03888e）。
+最小产品变化仅 policy_cleanup.go：ordinary原key/旧支路保持；targeted完整
+target/source ref、owner、原完整subject/purpose/revision、known natural阶段、
+nil Previous、原Due/Deadline shape及正且<=24h expirybudget资格后复用原
+admissionKey。每个原责任精确target，仅accepted_retention_expired/pending/
+holder_unconfirmed进入现有cap支路，原due已到/原deadline不晚于原expiry
+deadline；末freshDBclock仍查due/cap/原责任deadline。原fullsavingbasis、
+completeclosure/全部当前policy读、全页expected CAS、原sealkey/PG ACK不变。
+nilpolicy不是Save=false；真实目标持久cap过期是独立因果，无新schema/port/
+迁移/Management调度或多trigger关联。
+
+同actual Admission在cap前Consume observation完全相等、无seal、A/B/target
+三alpha与V2 beta公开正常；实际到期pending时另一valid同owner SubjectBinding
+通过真实公开Consume得到精确forbidden，独立原完整observation未改。然后
+原red尾部完整执行：target-only seal绑定原key/deadline，真实originalholder
+allACK、World.Reopen原责任erased/原reason/deadline/watermark保持；独立target
+准确文件不存在。A/B实际原alpha仍在且未生成seal，B/V2正常；原三个命令
+samekey receipt逐字相等与published history保持。不是重Put新版本代替回放。
+
+| `/tmp/lerna-04-ticket05-execution/` 日志 | 实际结果 |
+| --- | --- |
+| `inherited-cap-admission-first-green.log` | -v exact PASS2.422s（case2.41），3166051/start13220479/exit0/groupAbsent/noTimeout。 |
+| `inherited-cap-admission-race.log` | -v sameexact-race PASS3.913s（case2.85），3166937/start13224041/exit0/groupAbsent/noTimeout。 |
+
+normal ownscope `lerna_test_6f1d2b5dc25033eda18a488d` / objects1428731090
+(dev33/inode363826)；race `lerna_test_a924b880ef1a8e36f20f3678` /
+objects610752923(dev33/inode364173)。原caller20/Go30/wrapper120/initial2s
+cap/+20ms/WorkBudget1min不变；sessions70358/1545实际complete，全部native
+actualWait/groupAbsent，明确RELEASE/no pending。首红2.223原log/失败边界
+保留，不以green抹掉；三原migration源未修改，本轮未声称额外hash命令执行。
+targeted policy lock-wait截止仍是单独pending最小tracer，旧ordinary wait及
+旧NotRequired whole-page CAS不冒称新targeted支路执行。不同creator、未知
+sourcepolicy或任意深图/副本等未由本case全部覆盖；七AC仍claimed未accept。

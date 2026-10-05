@@ -233,3 +233,19 @@ exactpending保持证明wholeTx rollback，second已提交事实保持。plainfr
 无Seal/activebodycleanup。exact0.555/race2.272、三SQLsha及actualjoin准确；
 门限3/join3/caller20/Go30/wrapper120不改。这不替祖先/AdmissionTarget原
 清理原因的后续真实red/决策；当前旧target-only因果边界继续保守。
+
+继承accepted-cap的准确AdmissionTarget已按root正式采用b42d94d决定最小接通：
+私有原key资格复用原admissionKey(fulltarget,originalpolicy,originalExpiryDue)，
+完整原shape/owner/Subject/Purpose/Revision和原有限natural窗口必须匹配；
+只消费exacttarget的accepted_retention_expired pending/holder_unconfirmed。
+持久targetcap实际过期、全部结构/原保存basis/currentpolicy读、原due已到和
+原responsibilitydeadline<=原ExpiryDeadline/finalfreshclock均守住。nilpolicy
+不解释为savefalse，当前祖先宽续期不能复活原targetcap。原普通changekey、
+PG Bind/ACK/旧migration/首次seal关联规则均保持，无多trigger扩展。
+
+真实sameadmission cap前无seal/全normal和不同Subject公开forbidden对照，
+原红后的target-onlyseal/allholderACK/reopen/exactoriginalduty erased/独立
+物理absence、A/B未误删、B/V2正常、三个固定receipt逐字/pubhistory均实际
+完成。exact2.422/race3.913原20/30/120/2s+20ms范围，明确RELEASE。新增
+targeted锁等待deadline回滚仍pending独立资格，旧普通key等待/CAS不代替。
+七AC均未accept，不把本次normal声明成whole04出口或未知历史scope权限。
