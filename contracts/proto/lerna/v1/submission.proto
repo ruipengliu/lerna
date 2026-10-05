@@ -91,6 +91,7 @@ message CommandReceipt {
   string durability_profile = 13;
   ContractError error = 14;
   Ref input_ref = 15;
+  repeated Job jobs = 16;
 }
 message ReceiptQuery {
   ReceiptQueryState state = 1;
@@ -176,4 +177,32 @@ message Job {
   string state = 6;
   string purpose_key = 7;
   PendingGoal goal = 8;
+  string process_instance = 9;
+  uint64 claim_epoch = 10;
+  int64 lease_until_unix_ms = 11;
+  int64 ready_at_unix_ms = 12;
+  int32 priority = 13;
+  uint64 attempts = 14;
+  string executor_endpoint_id = 15;
+  string ledger_domain_id = 16;
+  Ref specification_ref = 17;
+  string waiting_reason = 18;
+}
+
+// JobCommand 只由受信模块与宿主调用，模块控制命令必须匹配所属模块。
+message JobCommand {
+  CommandIdentity identity = 1;
+  uint32 contract_version = 2;
+  string action = 3;
+  string process_instance = 4;
+  repeated string allowed_types = 5;
+  uint32 limit = 6;
+  int64 lease_ms = 7;
+  Ref job_ref = 8;
+  uint64 claim_epoch = 9;
+  string module = 10;
+  string next_state = 11;
+  int64 ready_at_unix_ms = 12;
+  string waiting_reason = 13;
+  Ref specification_ref = 14;
 }

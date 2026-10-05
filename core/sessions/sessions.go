@@ -15,7 +15,7 @@ type Store interface {
 }
 type Durable interface {
 	Submit(context.Context, *v1.Caller, *v1.SubmitGoalCommand, *v1.Ref) (*v1.CommandReceipt, error)
-	Pending(context.Context, *v1.Caller) ([]*v1.Job, error)
+	ExecuteJob(context.Context, *v1.Caller, *v1.JobCommand) (*v1.CommandReceipt, error)
 	Decide(context.Context, *v1.Job, func(context.Context, *v1.PendingGoal) (*v1.Ref, *v1.Ref, error)) error
 }
 type Tasks interface {
@@ -25,15 +25,16 @@ type Content interface {
 	Stage(context.Context, *v1.Caller, *v1.SubmitGoalCommand) (*v1.Ref, error)
 }
 type Service struct {
-	store        Store
-	durable      Durable
-	tasks        Tasks
-	content      Content
-	user, domain string
+	store           Store
+	durable         Durable
+	tasks           Tasks
+	content         Content
+	user, domain    string
+	processInstance string
 }
 
 func New(s Store, d Durable, t Tasks, c Content, user, domain string) *Service {
-	return &Service{s, d, t, c, user, domain}
+	return &Service{s, d, t, c, user, domain, command.NewRef(user, domain, "worker", "worker").Name.LocalId}
 }
 func (s *Service) SubmitGoal(ctx context.Context, caller *v1.Caller, c *v1.SubmitGoalCommand) (*v1.CommandReceipt, error) {
 	if err := command.ValidateGoal(c); err != nil {
@@ -54,19 +55,31 @@ func (s *Service) SubmitGoal(ctx context.Context, caller *v1.Caller, c *v1.Submi
 	return s.durable.Submit(ctx, caller, c, ref)
 }
 
-// ProcessPending 由单进程宿主驱动；每次决定仍在独立裁决事务内恢复。
+// ProcessPending 原子领取可运行的目标工作；新宿主使用新实例身份。
 func (s *Service) ProcessPending(ctx context.Context, caller *v1.Caller) error {
-	jobs, err := s.durable.Pending(ctx, caller)
-	if err != nil {
-		return err
-	}
-	for _, job := range jobs {
-		if err := s.durable.Decide(ctx, job, s.accept); err != nil {
+	for {
+		id := command.NewRef(s.user, s.domain, "command", "command").Name.LocalId
+		r, err := s.durable.ExecuteJob(ctx, caller, &v1.JobCommand{Identity: &v1.CommandIdentity{UserId: s.user, IssuerId: caller.GetIssuerId(), TargetDomainId: s.domain, CommandId: id}, ContractVersion: 1, Action: "CLAIM", ProcessInstance: s.processInstance, AllowedTypes: []string{"DECIDE_GOAL"}, Limit: 1, LeaseMs: 30000})
+		if err != nil {
+			return err
+		}
+		if r.Decision != v1.Decision_DECISION_ACCEPTED {
+			return &command.Failure{Detail: r.Error}
+		}
+		if len(r.Jobs) == 0 {
+			return nil
+		}
+		if err := s.ProcessClaim(ctx, r.Jobs[0]); err != nil {
 			return err
 		}
 	}
-	return nil
 }
+
+// ProcessClaim 供受信宿主恢复固定目标处理，不允许调用方注册处理函数。
+func (s *Service) ProcessClaim(ctx context.Context, job *v1.Job) error {
+	return s.durable.Decide(ctx, job, s.accept)
+}
+
 func (s *Service) accept(ctx context.Context, pending *v1.PendingGoal) (*v1.Ref, *v1.Ref, error) {
 	c := pending.Command
 	_, now, err := s.store.Position(ctx)

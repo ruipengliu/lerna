@@ -16,6 +16,7 @@ type Store interface {
 	LoadReceipt(context.Context, *v1.CommandIdentity) (*v1.CommandReceipt, error)
 	SaveReceipt(context.Context, *v1.CommandReceipt) error
 	SaveJob(context.Context, *v1.Job) error
+	LoadJob(context.Context, *v1.GlobalName) (*v1.Job, error)
 	PendingJobs(context.Context, string) ([]*v1.Job, error)
 	Position(context.Context) (uint64, int64, error)
 }
@@ -70,6 +71,21 @@ func (s *Service) Submit(ctx context.Context, caller *v1.Caller, c *v1.SubmitGoa
 // 多参与者需要写入后裁决时，必须先扩展事务保存点，不能直接复用此约定。
 func (s *Service) Decide(ctx context.Context, job *v1.Job, handler func(context.Context, *v1.PendingGoal) (*v1.Ref, *v1.Ref, error)) error {
 	return s.store.Transaction(ctx, func(tx context.Context) error {
+		if job == nil || job.Ref == nil || job.Ref.Name == nil || job.Ref.Name.UserId != s.user || job.Ref.Name.AuthorityDomainId != s.domain {
+			return command.Fail("STALE_CLAIM")
+		}
+		current, err := s.store.LoadJob(tx, job.Ref.Name)
+		if err != nil {
+			return err
+		}
+		_, now, err := s.store.Position(tx)
+		if err != nil {
+			return err
+		}
+		if err := validClaim(current, job.ProcessInstance, job.ClaimEpoch, job.Ref.Revision, now); err != nil {
+			return err
+		}
+		job = current
 		r, err := s.store.LoadReceipt(tx, job.Responsibility)
 		if err != nil {
 			return err

@@ -4,7 +4,7 @@
 
 **Blocked by:** 02（提交目标与创建任务）
 
-**Status:** ready-for-agent
+**Status:** claimed
 
 - [ ] 原子领取、有界租约、续租、领取代次、工作修订号、受阻和封闭
 - [ ] 旧领取者在接替后提交的写入被拒绝（fencing），用故障测试证明（标注 G11）
