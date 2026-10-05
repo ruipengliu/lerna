@@ -89,7 +89,7 @@ func Open(cfg Config) (*Host, error) {
 	}
 	h.Tasks = &tasks.Module{Domain: adj, Reasoner: cfg.Reasoner, Catalog: h.Catalog}
 	h.Sessions = &sessions.Module{Domain: adj, Tasks: h.Tasks}
-	h.Grants = &grants.Module{Domain: adj}
+	h.Grants = &grants.Module{Domain: adj, LedgerDomain: DomainLedger}
 	h.Budget = &budget.Module{Domain: adj}
 	h.LedgerModule = &ledger.Module{
 		Domain:             led,
@@ -209,4 +209,18 @@ func (c *client) Task(ctx context.Context, user, taskID string) (*lernav1.TaskVi
 		return nil, errs.New(lernav1.ErrorCode_ERROR_CODE_PERMISSION_DENIED, "user %q is not served by this host", user)
 	}
 	return c.h.Tasks.View(ctx, user, taskID)
+}
+
+func (c *client) Grant(ctx context.Context, user, grantID string) (*lernav1.GrantView, error) {
+	if user != c.user {
+		return nil, errs.New(lernav1.ErrorCode_ERROR_CODE_PERMISSION_DENIED, "user %q is not served by this host", user)
+	}
+	return c.h.Grants.View(ctx, user, grantID)
+}
+
+func (c *client) Budget(ctx context.Context, user string) (*lernav1.BudgetView, error) {
+	if user != c.user {
+		return nil, errs.New(lernav1.ErrorCode_ERROR_CODE_PERMISSION_DENIED, "user %q is not served by this host", user)
+	}
+	return c.h.Budget.View(ctx, user)
 }

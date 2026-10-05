@@ -876,6 +876,119 @@ func (x *GrantView) GetRevocation() *RevocationProgress {
 	return nil
 }
 
+// 请求签发授权：核心生成授权表达的可读描述和摘要，建立 GRANT_ISSUANCE 确认，等待用户明确批准。
+type RequestGrantCommand struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	SessionId     string                 `protobuf:"bytes,1,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
+	Grant         *IssueGrantCommand     `protobuf:"bytes,2,opt,name=grant,proto3" json:"grant,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RequestGrantCommand) Reset() {
+	*x = RequestGrantCommand{}
+	mi := &file_lerna_v1_grant_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RequestGrantCommand) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RequestGrantCommand) ProtoMessage() {}
+
+func (x *RequestGrantCommand) ProtoReflect() protoreflect.Message {
+	mi := &file_lerna_v1_grant_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RequestGrantCommand.ProtoReflect.Descriptor instead.
+func (*RequestGrantCommand) Descriptor() ([]byte, []int) {
+	return file_lerna_v1_grant_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *RequestGrantCommand) GetSessionId() string {
+	if x != nil {
+		return x.SessionId
+	}
+	return ""
+}
+
+func (x *RequestGrantCommand) GetGrant() *IssueGrantCommand {
+	if x != nil {
+		return x.Grant
+	}
+	return nil
+}
+
+type RequestGrantResult struct {
+	state             protoimpl.MessageState `protogen:"open.v1"`
+	ConfirmationId    string                 `protobuf:"bytes,1,opt,name=confirmation_id,json=confirmationId,proto3" json:"confirmation_id,omitempty"`
+	Description       string                 `protobuf:"bytes,2,opt,name=description,proto3" json:"description,omitempty"`
+	IntentFingerprint []byte                 `protobuf:"bytes,3,opt,name=intent_fingerprint,json=intentFingerprint,proto3" json:"intent_fingerprint,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
+}
+
+func (x *RequestGrantResult) Reset() {
+	*x = RequestGrantResult{}
+	mi := &file_lerna_v1_grant_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RequestGrantResult) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RequestGrantResult) ProtoMessage() {}
+
+func (x *RequestGrantResult) ProtoReflect() protoreflect.Message {
+	mi := &file_lerna_v1_grant_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RequestGrantResult.ProtoReflect.Descriptor instead.
+func (*RequestGrantResult) Descriptor() ([]byte, []int) {
+	return file_lerna_v1_grant_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *RequestGrantResult) GetConfirmationId() string {
+	if x != nil {
+		return x.ConfirmationId
+	}
+	return ""
+}
+
+func (x *RequestGrantResult) GetDescription() string {
+	if x != nil {
+		return x.Description
+	}
+	return ""
+}
+
+func (x *RequestGrantResult) GetIntentFingerprint() []byte {
+	if x != nil {
+		return x.IntentFingerprint
+	}
+	return nil
+}
+
 var File_lerna_v1_grant_proto protoreflect.FileDescriptor
 
 const file_lerna_v1_grant_proto_rawDesc = "" +
@@ -942,7 +1055,15 @@ const file_lerna_v1_grant_proto_rawDesc = "" +
 	"\x05grant\x18\x01 \x01(\v2\x0f.lerna.v1.GrantR\x05grant\x12<\n" +
 	"\n" +
 	"revocation\x18\x02 \x01(\v2\x1c.lerna.v1.RevocationProgressR\n" +
-	"revocation*t\n" +
+	"revocation\"g\n" +
+	"\x13RequestGrantCommand\x12\x1d\n" +
+	"\n" +
+	"session_id\x18\x01 \x01(\tR\tsessionId\x121\n" +
+	"\x05grant\x18\x02 \x01(\v2\x1b.lerna.v1.IssueGrantCommandR\x05grant\"\x8e\x01\n" +
+	"\x12RequestGrantResult\x12'\n" +
+	"\x0fconfirmation_id\x18\x01 \x01(\tR\x0econfirmationId\x12 \n" +
+	"\vdescription\x18\x02 \x01(\tR\vdescription\x12-\n" +
+	"\x12intent_fingerprint\x18\x03 \x01(\fR\x11intentFingerprint*t\n" +
 	"\bUseRight\x12\x19\n" +
 	"\x15USE_RIGHT_UNSPECIFIED\x10\x00\x12\x12\n" +
 	"\x0eUSE_RIGHT_READ\x10\x01\x12\x12\n" +
@@ -982,7 +1103,7 @@ func file_lerna_v1_grant_proto_rawDescGZIP() []byte {
 }
 
 var file_lerna_v1_grant_proto_enumTypes = make([]protoimpl.EnumInfo, 5)
-var file_lerna_v1_grant_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
+var file_lerna_v1_grant_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
 var file_lerna_v1_grant_proto_goTypes = []any{
 	(UseRight)(0),                 // 0: lerna.v1.UseRight
 	(ProcessingPurpose)(0),        // 1: lerna.v1.ProcessingPurpose
@@ -996,32 +1117,35 @@ var file_lerna_v1_grant_proto_goTypes = []any{
 	(*RevokeGrantCommand)(nil),    // 9: lerna.v1.RevokeGrantCommand
 	(*RevocationProgress)(nil),    // 10: lerna.v1.RevocationProgress
 	(*GrantView)(nil),             // 11: lerna.v1.GrantView
-	nil,                           // 12: lerna.v1.GrantClause.ParamEqualsEntry
-	(*timestamppb.Timestamp)(nil), // 13: google.protobuf.Timestamp
+	(*RequestGrantCommand)(nil),   // 12: lerna.v1.RequestGrantCommand
+	(*RequestGrantResult)(nil),    // 13: lerna.v1.RequestGrantResult
+	nil,                           // 14: lerna.v1.GrantClause.ParamEqualsEntry
+	(*timestamppb.Timestamp)(nil), // 15: google.protobuf.Timestamp
 }
 var file_lerna_v1_grant_proto_depIdxs = []int32{
 	0,  // 0: lerna.v1.GrantClause.use_rights:type_name -> lerna.v1.UseRight
 	1,  // 1: lerna.v1.GrantClause.processing_purposes:type_name -> lerna.v1.ProcessingPurpose
-	12, // 2: lerna.v1.GrantClause.param_equals:type_name -> lerna.v1.GrantClause.ParamEqualsEntry
+	14, // 2: lerna.v1.GrantClause.param_equals:type_name -> lerna.v1.GrantClause.ParamEqualsEntry
 	5,  // 3: lerna.v1.Grant.clauses:type_name -> lerna.v1.GrantClause
-	13, // 4: lerna.v1.Grant.valid_from:type_name -> google.protobuf.Timestamp
-	13, // 5: lerna.v1.Grant.valid_until:type_name -> google.protobuf.Timestamp
+	15, // 4: lerna.v1.Grant.valid_from:type_name -> google.protobuf.Timestamp
+	15, // 5: lerna.v1.Grant.valid_until:type_name -> google.protobuf.Timestamp
 	4,  // 6: lerna.v1.Grant.use_mode:type_name -> lerna.v1.UseMode
 	2,  // 7: lerna.v1.Grant.status:type_name -> lerna.v1.GrantStatus
 	3,  // 8: lerna.v1.Grant.revocation_completion:type_name -> lerna.v1.RevocationCompletion
 	5,  // 9: lerna.v1.IssueGrantCommand.clauses:type_name -> lerna.v1.GrantClause
 	4,  // 10: lerna.v1.IssueGrantCommand.use_mode:type_name -> lerna.v1.UseMode
-	13, // 11: lerna.v1.IssueGrantCommand.valid_from:type_name -> google.protobuf.Timestamp
-	13, // 12: lerna.v1.IssueGrantCommand.valid_until:type_name -> google.protobuf.Timestamp
+	15, // 11: lerna.v1.IssueGrantCommand.valid_from:type_name -> google.protobuf.Timestamp
+	15, // 12: lerna.v1.IssueGrantCommand.valid_until:type_name -> google.protobuf.Timestamp
 	2,  // 13: lerna.v1.RevocationProgress.status:type_name -> lerna.v1.GrantStatus
 	3,  // 14: lerna.v1.RevocationProgress.completion:type_name -> lerna.v1.RevocationCompletion
 	6,  // 15: lerna.v1.GrantView.grant:type_name -> lerna.v1.Grant
 	10, // 16: lerna.v1.GrantView.revocation:type_name -> lerna.v1.RevocationProgress
-	17, // [17:17] is the sub-list for method output_type
-	17, // [17:17] is the sub-list for method input_type
-	17, // [17:17] is the sub-list for extension type_name
-	17, // [17:17] is the sub-list for extension extendee
-	0,  // [0:17] is the sub-list for field type_name
+	7,  // 17: lerna.v1.RequestGrantCommand.grant:type_name -> lerna.v1.IssueGrantCommand
+	18, // [18:18] is the sub-list for method output_type
+	18, // [18:18] is the sub-list for method input_type
+	18, // [18:18] is the sub-list for extension type_name
+	18, // [18:18] is the sub-list for extension extendee
+	0,  // [0:18] is the sub-list for field type_name
 }
 
 func init() { file_lerna_v1_grant_proto_init() }
@@ -1035,7 +1159,7 @@ func file_lerna_v1_grant_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_lerna_v1_grant_proto_rawDesc), len(file_lerna_v1_grant_proto_rawDesc)),
 			NumEnums:      5,
-			NumMessages:   8,
+			NumMessages:   10,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

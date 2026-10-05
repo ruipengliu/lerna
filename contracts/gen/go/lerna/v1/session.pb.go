@@ -535,8 +535,10 @@ type Confirmation struct {
 	//	*Confirmation_AdmissionRef
 	ConsumedBy isConfirmation_ConsumedBy `protobuf_oneof:"consumed_by"`
 	// 被确认的事项：动作准入时为提议和步骤。
-	ProposalId    string `protobuf:"bytes,14,opt,name=proposal_id,json=proposalId,proto3" json:"proposal_id,omitempty"`
-	StepId        string `protobuf:"bytes,15,opt,name=step_id,json=stepId,proto3" json:"step_id,omitempty"`
+	ProposalId string `protobuf:"bytes,14,opt,name=proposal_id,json=proposalId,proto3" json:"proposal_id,omitempty"`
+	StepId     string `protobuf:"bytes,15,opt,name=step_id,json=stepId,proto3" json:"step_id,omitempty"`
+	// 用户回应的时间；显示、已读、回显都不改变状态。
+	RespondedAt   *timestamppb.Timestamp `protobuf:"bytes,16,opt,name=responded_at,json=respondedAt,proto3" json:"responded_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -685,6 +687,13 @@ func (x *Confirmation) GetStepId() string {
 		return x.StepId
 	}
 	return ""
+}
+
+func (x *Confirmation) GetRespondedAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.RespondedAt
+	}
+	return nil
 }
 
 type isConfirmation_ConsumedBy interface {
@@ -914,7 +923,7 @@ const file_lerna_v1_session_proto_rawDesc = "" +
 	"request_id\x18\t \x01(\tR\trequestId\x12;\n" +
 	"\vrecorded_at\x18\n" +
 	" \x01(\v2\x1a.google.protobuf.TimestampR\n" +
-	"recordedAt\"\x88\x05\n" +
+	"recordedAt\"\xc7\x05\n" +
 	"\fConfirmation\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\x12'\n" +
 	"\x0fconfirmation_id\x18\x02 \x01(\tR\x0econfirmationId\x12\x1d\n" +
@@ -934,7 +943,8 @@ const file_lerna_v1_session_proto_rawDesc = "" +
 	"\radmission_ref\x18\r \x01(\tH\x00R\fadmissionRef\x12\x1f\n" +
 	"\vproposal_id\x18\x0e \x01(\tR\n" +
 	"proposalId\x12\x17\n" +
-	"\astep_id\x18\x0f \x01(\tR\x06stepIdB\r\n" +
+	"\astep_id\x18\x0f \x01(\tR\x06stepId\x12=\n" +
+	"\fresponded_at\x18\x10 \x01(\v2\x1a.google.protobuf.TimestampR\vrespondedAtB\r\n" +
 	"\vconsumed_by\"\x8f\x02\n" +
 	"\vSessionView\x12+\n" +
 	"\asession\x18\x01 \x01(\v2\x11.lerna.v1.SessionR\asession\x12.\n" +
@@ -1022,16 +1032,17 @@ var file_lerna_v1_session_proto_depIdxs = []int32{
 	3,  // 5: lerna.v1.Confirmation.subject_kind:type_name -> lerna.v1.ConfirmationSubjectKind
 	10, // 6: lerna.v1.Confirmation.expires_at:type_name -> google.protobuf.Timestamp
 	4,  // 7: lerna.v1.Confirmation.status:type_name -> lerna.v1.ConfirmationStatus
-	5,  // 8: lerna.v1.SessionView.session:type_name -> lerna.v1.Session
-	6,  // 9: lerna.v1.SessionView.inputs:type_name -> lerna.v1.SessionInput
-	7,  // 10: lerna.v1.SessionView.pending_confirmations:type_name -> lerna.v1.Confirmation
-	9,  // 11: lerna.v1.SessionView.open_requests:type_name -> lerna.v1.InputRequest
-	11, // 12: lerna.v1.InputRequest.expected_requirements:type_name -> lerna.v1.RequirementSetDraft
-	13, // [13:13] is the sub-list for method output_type
-	13, // [13:13] is the sub-list for method input_type
-	13, // [13:13] is the sub-list for extension type_name
-	13, // [13:13] is the sub-list for extension extendee
-	0,  // [0:13] is the sub-list for field type_name
+	10, // 8: lerna.v1.Confirmation.responded_at:type_name -> google.protobuf.Timestamp
+	5,  // 9: lerna.v1.SessionView.session:type_name -> lerna.v1.Session
+	6,  // 10: lerna.v1.SessionView.inputs:type_name -> lerna.v1.SessionInput
+	7,  // 11: lerna.v1.SessionView.pending_confirmations:type_name -> lerna.v1.Confirmation
+	9,  // 12: lerna.v1.SessionView.open_requests:type_name -> lerna.v1.InputRequest
+	11, // 13: lerna.v1.InputRequest.expected_requirements:type_name -> lerna.v1.RequirementSetDraft
+	14, // [14:14] is the sub-list for method output_type
+	14, // [14:14] is the sub-list for method input_type
+	14, // [14:14] is the sub-list for extension type_name
+	14, // [14:14] is the sub-list for extension extendee
+	0,  // [0:14] is the sub-list for field type_name
 }
 
 func init() { file_lerna_v1_session_proto_init() }

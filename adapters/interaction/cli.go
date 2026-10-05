@@ -49,6 +49,14 @@ func (c *CLI) Run(ctx context.Context, args []string) error {
 		return c.task(ctx, args[1:])
 	case "receipt":
 		return c.receipt(ctx, args[1:])
+	case "grant":
+		return c.grant(ctx, args[1:])
+	case "revoke":
+		return c.revoke(ctx, args[1:])
+	case "confirm":
+		return c.confirm(ctx, args[1:])
+	case "budget":
+		return c.budget(ctx, args[1:])
 	case "run":
 		return c.settle(ctx)
 	case "help", "-h", "--help":
@@ -69,6 +77,14 @@ func (c *CLI) usage() {
   session show <会话>             查看会话的全量快照
   task show <任务>                查看任务的全量快照和当前阶段
   receipt <命令标识>              用原命令标识查询决定
+  grant --capability 能力 [--days N] [--single] [--task 任务] [--param k=v ...]
+                                 签发授权（处理目的：当前任务）
+  grant show <授权>               查看授权和撤销进度
+  revoke <授权>                   撤销授权：新准入立即被拒绝，出口封闭后才算完成
+  confirm --session 会话 [--deny] <确认标识>
+                                 回应核心生成的确认事项
+  budget [set --limit N [--version V]]
+                                 查看或设定用户级费用上限
   run                            推进待办工作
 `)
 }
@@ -222,6 +238,9 @@ func (c *CLI) showSession(ctx context.Context, sid string) error {
 	}
 	for _, r := range v.GetOpenRequests() {
 		fmt.Fprintf(c.Out, "  待回答 %s：%s\n", r.GetRequestId(), r.GetQuestion())
+	}
+	for _, cf := range v.GetPendingConfirmations() {
+		fmt.Fprintf(c.Out, "  待确认 %s：%s\n", cf.GetConfirmationId(), cf.GetDescription())
 	}
 	for _, t := range v.GetTaskIds() {
 		if err := c.showTask(ctx, t); err != nil {

@@ -19,6 +19,7 @@ import (
 	"github.com/ruipengliu/lerna/contracts/ids"
 	"github.com/ruipengliu/lerna/contracts/ports"
 	"github.com/ruipengliu/lerna/core/durable"
+	"github.com/ruipengliu/lerna/core/sessions"
 )
 
 // SemanticVersion 是 M1 授权表达的语义版本：动作、操作权利、处理目的和资源范围的解释规则。
@@ -33,14 +34,22 @@ const (
 // Module 是授权模块，绑定裁决域。
 type Module struct {
 	Domain *durable.Domain
+	// LedgerDomain 是撤销时封闭请求的接收域。
+	LedgerDomain string
 }
 
 // Register 登记授权接受的公共命令。
 func (m *Module) Register() {
 	m.Domain.HandleCommand(ports.CommandIssueGrant,
 		func() proto.Message { return &lernav1.IssueGrantCommand{} }, m.handleIssue)
+	m.Domain.HandleCommand(ports.CommandRequestGrant,
+		func() proto.Message { return &lernav1.RequestGrantCommand{} }, m.handleRequest)
+	m.Domain.HandleCommand(ports.CommandRevokeGrant,
+		func() proto.Message { return &lernav1.RevokeGrantCommand{} }, m.handleRevoke)
 }
 
+// handleIssue 签发授权：许可、回执在裁决域中原子提交。带 GRANT_ISSUANCE 确认时，
+// 在签发事务里调用会话的消费逻辑；没有确认时，经过认证的命令本身就是用户事件。
 func (m *Module) handleIssue(_ context.Context, tx *durable.Tx, in durable.Incoming) (durable.Outcome, error) {
 	cmd := in.Payload.(*lernav1.IssueGrantCommand)
 	g, err := validateIssue(tx, in.UserID(), cmd)
@@ -48,6 +57,12 @@ func (m *Module) handleIssue(_ context.Context, tx *durable.Tx, in durable.Incom
 		return durable.Outcome{}, err
 	}
 	g.IssuerRef = "command/" + in.Identity().GetIssuerId() + "/" + in.Identity().GetCommandId()
+	if cmd.GetConfirmationId() != "" {
+		if err := sessions.ConsumeForGrant(tx, in.UserID(), cmd.GetConfirmationId(), IssuanceFingerprint(cmd), g.GetGrantId()); err != nil {
+			return durable.Outcome{}, err
+		}
+		g.IssuerRef = "confirmation/" + cmd.GetConfirmationId()
+	}
 	if err := Insert(tx, g); err != nil {
 		return durable.Outcome{}, err
 	}

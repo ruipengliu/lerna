@@ -123,8 +123,8 @@ func TestProposalWithoutGrantProducesNoExecution(t *testing.T) {
 	if n := h.Count(host.DomainAdjudication, `SELECT COUNT(*) FROM reservations`); n != 0 {
 		t.Fatal("a rejected admission must not leave a budget reservation")
 	}
-	if tv := taskOf(t, h, res); !waitingOn(tv, lernav1.WaitingKind_WAITING_KIND_GRANT) {
-		t.Fatalf("task must wait for a grant: %v", tv.GetTask().GetWaitingOn())
+	if tv := taskOf(t, h, res); !waitingOn(tv, lernav1.WaitingKind_WAITING_KIND_USER) {
+		t.Fatalf("without a standing grant the task must wait for the user's confirmation: %v", tv.GetTask().GetWaitingOn())
 	}
 }
 

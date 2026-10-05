@@ -104,6 +104,8 @@ message Confirmation {
   // 被确认的事项：动作准入时为提议和步骤。
   string proposal_id = 14;
   string step_id = 15;
+  // 用户回应的时间；显示、已读、回显都不改变状态。
+  google.protobuf.Timestamp responded_at = 16;
 }
 
 // 会话视图：全量快照。

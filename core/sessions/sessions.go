@@ -22,6 +22,8 @@ import (
 type TaskPort interface {
 	// NewGoal 登记"为新目标建立任务和初始条件"的工作。
 	NewGoal(tx *durable.Tx, in GoalInput) error
+	// ConfirmationResponded 通知任务编排：用户回应了一个动作确认。
+	ConfirmationResponded(tx *durable.Tx, c *lernav1.Confirmation) error
 }
 
 // GoalInput 是已持久保存的新目标输入。
@@ -70,6 +72,16 @@ func (m *Module) handleSubmitInput(_ context.Context, tx *durable.Tx, in durable
 		return durable.Outcome{}, errs.New(lernav1.ErrorCode_ERROR_CODE_UNSUPPORTED_FEATURE, "session branching and history editing are not supported in M1")
 	}
 	sid := cmd.GetSessionId()
+	if sid == "" && cmd.GetInputKind() == lernav1.InputKind_INPUT_KIND_CONFIRMATION {
+		c, err := LoadConfirmation(tx, user, cmd.GetRequestId())
+		if err != nil {
+			return durable.Outcome{}, err
+		}
+		if c == nil {
+			return durable.Outcome{}, errs.New(lernav1.ErrorCode_ERROR_CODE_CONFIRMATION_INVALID, "confirmation %s not found", cmd.GetRequestId())
+		}
+		sid = c.GetSessionId()
+	}
 	if sid == "" {
 		sid = ids.New()
 		if err := createSession(tx, user, sid); err != nil {
@@ -96,6 +108,29 @@ func (m *Module) handleSubmitInput(_ context.Context, tx *durable.Tx, in durable
 			User: user, SessionID: sid, InputID: rec.GetInputId(), Text: cmd.GetText(), Requirements: cmd.GetRequirements(),
 		}); err != nil {
 			return durable.Outcome{}, err
+		}
+		return outcome(rec), nil
+	case lernav1.InputKind_INPUT_KIND_CONFIRMATION:
+		// 确认回应：只更新确认事实，不递增输入版本或控制代次（会话 2.5）。
+		if cmd.GetRequestId() == "" {
+			return durable.Outcome{}, errs.New(lernav1.ErrorCode_ERROR_CODE_INVALID_INPUT, "confirmation needs request_id")
+		}
+		c, err := respond(tx, user, cmd.GetRequestId(), cmd.GetApprove(), cmd.GetIntentFingerprint())
+		if err != nil {
+			return durable.Outcome{}, err
+		}
+		if c.GetSessionId() != sid {
+			return durable.Outcome{}, errs.New(lernav1.ErrorCode_ERROR_CODE_INVALID_INPUT, "confirmation %s belongs to another session", c.GetConfirmationId())
+		}
+		cmd.TaskId = c.GetTaskId()
+		rec, err := appendInput(tx, user, sid, cmd)
+		if err != nil {
+			return durable.Outcome{}, err
+		}
+		if c.GetSubjectKind() == lernav1.ConfirmationSubjectKind_CONFIRMATION_SUBJECT_KIND_OPERATION_ADMISSION {
+			if err := m.Tasks.ConfirmationResponded(tx, c); err != nil {
+				return durable.Outcome{}, err
+			}
 		}
 		return outcome(rec), nil
 	case lernav1.InputKind_INPUT_KIND_RECORD_ONLY:
@@ -250,6 +285,9 @@ func (m *Module) View(ctx context.Context, user, sid string) (*lernav1.SessionVi
 			v.TaskIds = append(v.TaskIds, t)
 		}
 		if err := rows.Close(); err != nil {
+			return err
+		}
+		if v.PendingConfirmations, err = pendingConfirmations(tx, user, sid); err != nil {
 			return err
 		}
 		rows, err = tx.Query(`SELECT request_id, task_id, question, changes_basis FROM input_requests

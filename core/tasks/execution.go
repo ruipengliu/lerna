@@ -13,6 +13,7 @@ import (
 	"github.com/ruipengliu/lerna/core/budget"
 	"github.com/ruipengliu/lerna/core/durable"
 	"github.com/ruipengliu/lerna/core/grants"
+	"github.com/ruipengliu/lerna/core/sessions"
 )
 
 func loadAdmissionByOperation(tx *durable.Tx, user, opID string) (*lernav1.AdmissionRecord, error) {
@@ -129,6 +130,9 @@ func (m *Module) handleOperationUpdate(_ context.Context, tx *durable.Tx, in dur
 	if err := saveOperationView(tx, user, taskID, v); err != nil {
 		return durable.Outcome{}, err
 	}
+	if err := grants.RefreshRevocations(tx, user); err != nil {
+		return durable.Outcome{}, err
+	}
 	t, err := loadTask(tx, user, taskID)
 	if err != nil {
 		return durable.Outcome{}, err
@@ -171,6 +175,9 @@ func (m *Module) onOperationProgress(tx *durable.Tx, t *lernav1.Task, v *lernav1
 	}
 	for _, id := range stale {
 		if err := setProposalStatus(tx, t.GetUserId(), id, proposalStale); err != nil {
+			return err
+		}
+		if err := sessions.SupersedeForProposal(tx, t.GetUserId(), id); err != nil {
 			return err
 		}
 		if err := tx.SealJob(t.GetUserId(), "adjudicate:"+id); err != nil {

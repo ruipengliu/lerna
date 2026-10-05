@@ -123,3 +123,15 @@ message GrantView {
   Grant grant = 1;
   RevocationProgress revocation = 2;
 }
+
+// 请求签发授权：核心生成授权表达的可读描述和摘要，建立 GRANT_ISSUANCE 确认，等待用户明确批准。
+message RequestGrantCommand {
+  string session_id = 1;
+  IssueGrantCommand grant = 2;
+}
+
+message RequestGrantResult {
+  string confirmation_id = 1;
+  string description = 2;
+  bytes intent_fingerprint = 3;
+}

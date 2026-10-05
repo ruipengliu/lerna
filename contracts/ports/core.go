@@ -15,6 +15,7 @@ const (
 	CommandSubmitInput   = "sessions.submit_input"
 	CommandIssueGrant    = "grants.issue_grant"
 	CommandRevokeGrant   = "grants.revoke_grant"
+	CommandRequestGrant  = "grants.request_grant"
 	CommandSetBudget     = "budget.set_budget"
 )
 
@@ -49,4 +50,8 @@ type Core interface {
 	Session(ctx context.Context, userID, sessionID string) (*lernav1.SessionView, error)
 	// Task 返回任务的全量快照和当前阶段。
 	Task(ctx context.Context, userID, taskID string) (*lernav1.TaskView, error)
+	// Grant 返回授权及撤销进度（被接纳 ≠ 完全生效）。
+	Grant(ctx context.Context, userID, grantID string) (*lernav1.GrantView, error)
+	// Budget 返回用户和任务的预算、未知或未结清的费用。
+	Budget(ctx context.Context, userID string) (*lernav1.BudgetView, error)
 }

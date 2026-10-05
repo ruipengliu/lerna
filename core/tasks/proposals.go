@@ -537,6 +537,9 @@ func (m *Module) afterRejection(tx *durable.Tx, c *durable.Claim, t *lernav1.Tas
 		if err := setProposalStatus(tx, c.User, p.GetProposalId(), proposalStale); err != nil {
 			return durable.Transition{}, err
 		}
+		if err := sessions.SupersedeForProposal(tx, c.User, p.GetProposalId()); err != nil {
+			return durable.Transition{}, err
+		}
 		return durable.Done(), m.maybeRequestProposal(tx, t)
 	case lernav1.ErrorCode_ERROR_CODE_PERMISSION_DENIED, lernav1.ErrorCode_ERROR_CODE_GRANT_REVOKED:
 		return durable.WaitWake("waiting for a grant"), setWaiting(tx, t, &lernav1.WaitingOn{Kind: lernav1.WaitingKind_WAITING_KIND_GRANT,

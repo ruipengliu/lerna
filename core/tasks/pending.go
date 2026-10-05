@@ -8,18 +8,8 @@ import (
 	"github.com/ruipengliu/lerna/contracts/ids"
 	"github.com/ruipengliu/lerna/contracts/ports"
 	"github.com/ruipengliu/lerna/core/durable"
-	"github.com/ruipengliu/lerna/core/grants"
 	"github.com/ruipengliu/lerna/core/sessions"
 )
-
-// occupyGrant 是准入-7（以及需要时的准入-9）：占用一份覆盖动作的当前授权。
-func (m *Module) occupyGrant(tx *durable.Tx, t *lernav1.Task, s admitSpec, opID, admissionID string, digest []byte) (grantID, useID, confirmationRef string, err error) {
-	grantID, useID, err = grants.OccupyForAdmission(tx, grants.UseRequest{
-		User: t.GetUserId(), TaskID: t.GetTaskId(), OperationID: opID, AdmissionID: admissionID,
-		Resource: s.capability, Action: grants.ActionInvoke, Params: s.args, RequestDigest: digest,
-	})
-	return grantID, useID, "", err
-}
 
 // modelCaller 返回推理使用的模型调用请求接口。
 func (m *Module) modelCaller(string, *requestRow) ports.ModelCaller { return noModels{} }
@@ -50,12 +40,6 @@ func (m *Module) adjudicateAsk(ctx context.Context, c *durable.Claim, p *lernav1
 		return durable.Done(), setWaiting(tx, t, &lernav1.WaitingOn{Kind: lernav1.WaitingKind_WAITING_KIND_USER, Ref: reqID,
 			Gap: "等待用户回答：" + p.GetAskUser().GetQuestion()})
 	})
-}
-
-// awaitConfirmation 在需要用户确认时登记等待。
-func (m *Module) awaitConfirmation(tx *durable.Tx, t *lernav1.Task, p *lernav1.Proposal, _ *lernav1.PlanStep, rej *lernav1.Error) (durable.Transition, error) {
-	return durable.WaitWake("waiting for confirmation"), setWaiting(tx, t, &lernav1.WaitingOn{Kind: lernav1.WaitingKind_WAITING_KIND_USER,
-		Ref: p.GetProposalId(), Gap: rej.GetDiagnostic()})
 }
 
 // onCoreWorkUpdate 处理核心安排的工作（模型调用、核对查询）的进展。
