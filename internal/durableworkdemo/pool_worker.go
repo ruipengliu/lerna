@@ -2,6 +2,8 @@ package durableworkdemo
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"github.com/ruipengliu/lerna/contract"
 	"github.com/ruipengliu/lerna/runtime"
 	"sync"
@@ -161,16 +163,16 @@ func (p *PoolWorker) Run(ctx context.Context, worker string, lease, fallback tim
 	if p.Timer == nil || fallback < time.Millisecond || fallback > time.Second {
 		return runtime.ErrWorkBounds
 	}
-	ctx, cancel := context.WithCancel(ctx)
+	running, cancel := context.WithCancel(ctx)
 	defer cancel()
-	errors := make(chan error, 3)
+	outcomes := make(chan error, 3)
 	var wg sync.WaitGroup
 	for _, lane := range []string{"ordinary", "control", "reconciliation"} {
 		wg.Add(1)
 		go func(lane string) {
 			defer wg.Done()
 			for {
-				processed, err := p.StepLane(ctx, lane, worker, lease)
+				processed, err := p.StepLane(running, lane, worker, lease)
 				// A completed/deferred dispatch is bounded real progress. Drain
 				// another opportunity before parking; an empty/blocked step parks.
 				if err == nil && processed {
@@ -178,20 +180,27 @@ func (p *PoolWorker) Run(ctx context.Context, worker string, lease, fallback tim
 				}
 				if err == nil {
 					var result runtime.StepResult
-					result, err = p.NextWake(ctx, lane, fallback)
+					result, err = p.NextWake(running, lane, fallback)
 					if err == nil {
-						err = p.Timer.Wait(ctx, result.WaitFor)
+						err = p.Timer.Wait(running, result.WaitFor)
 					}
 				}
 				if err != nil {
-					errors <- err
+					outcomes <- fmt.Errorf("pool %s lane: %w", lane, err)
 					return
 				}
 			}
 		}(lane)
 	}
-	err := <-errors
+	joined := []error{<-outcomes}
 	cancel()
 	wg.Wait()
-	return err
+	close(outcomes)
+	for outcome := range outcomes {
+		joined = append(joined, outcome)
+	}
+	if callerErr := ctx.Err(); callerErr != nil {
+		joined = append(joined, fmt.Errorf("pool caller context: %w", callerErr))
+	}
+	return errors.Join(joined...)
 }
