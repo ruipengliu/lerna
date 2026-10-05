@@ -1,0 +1,75 @@
+--- domain/content/closure.go.before
++++ domain/content/closure.go
+@@ -27,29 +27,37 @@
+ 	}
+ }
+ 
++// closureIdentityMemo retains only successful pure full-ref identities. Its
++// lifetime may span the two observations of one processing read, never another
++// read. Records, permissions, closure facts, and clocks are not stored here.
++type closureIdentityMemo map[v.ContentRef]string
++
++func (m closureIdentityMemo) identityID(ref v.ContentRef) (string, error) {
++	if id, ok := m[ref]; ok {
++		return id, nil
++	}
++	id, _, err := VersionIdentity(ref)
++	if err != nil {
++		return "", err
++	}
++	if len(m) < 65 {
++		m[ref] = id
++	}
++	return id, nil
++}
++
+ // registeredClosure preserves exact intermediate versions. Declarations remain
+ // unchanged: this traversal is current qualification, never generation evidence.
+ func (s *Service) registeredClosure(ctx context.Context, tx runtime.Tx, target v.ContentRef, roots []v.ContentRef, subject v.SubjectBinding, purpose string, actions []string) (closureObservation, error) {
++	return s.registeredClosureWithIdentities(ctx, tx, target, roots, subject, purpose, actions, make(closureIdentityMemo, 65))
++}
++
++func (s *Service) registeredClosureWithIdentities(ctx context.Context, tx runtime.Tx, target v.ContentRef, roots []v.ContentRef, subject v.SubjectBinding, purpose string, actions []string, identities closureIdentityMemo) (closureObservation, error) {
+ 	var observed closureObservation
+ 	refs := map[string]v.ContentRef{}
+ 	records := map[string]Record{}
+ 	active := map[string]bool{}
+-	// Reuse only successful pure identity conversions within this traversal.
+-	// Full refs include declaration metadata; no current repository fact is saved.
+-	identities := make(map[v.ContentRef]string, 65)
+-	identityID := func(ref v.ContentRef) (string, error) {
+-		if id, ok := identities[ref]; ok {
+-			return id, nil
+-		}
+-		id, _, err := VersionIdentity(ref)
+-		if err != nil {
+-			return "", err
+-		}
+-		if len(identities) < 65 {
+-			identities[ref] = id
+-		}
+-		return id, nil
+-	}
++	identityID := identities.identityID
+ 	targetID, err := identityID(target)
+ 	if err != nil {
+ 		return observed, err
+--- domain/content/processing.go.before
++++ domain/content/processing.go
+@@ -45,6 +45,7 @@
+ 	}
+ 	var objectKey string
+ 	var before time.Time
++	identities := make(closureIdentityMemo, 65)
+ 	observe := func(ctx context.Context, tx runtime.Tx) error {
+ 		// Each observation rebuilds its closure. No private records or permission
+ 		// from the first transaction are used as authority by the second one.
+@@ -84,7 +85,7 @@
+ 		if !now.Before(bound) {
+ 			return ErrProcessingForbidden
+ 		}
+-		closure, err := s.registeredClosure(ctx, tx, ref, r.Sources, principal, purpose, []string{"read", "process"})
++		closure, err := s.registeredClosureWithIdentities(ctx, tx, ref, r.Sources, principal, purpose, []string{"read", "process"}, identities)
+ 		if err != nil {
+ 			if _, ok := qualificationCode(err); ok {
+ 				return errors.Join(ErrProcessingForbidden, err)

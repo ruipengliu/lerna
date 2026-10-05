@@ -1,0 +1,23 @@
+{
+  "STATIC_only_no_Go_fmt_native_DB": true,
+  "head": "28e3a468c86d4323d3b497836de23bb311a58952",
+  "adopted_decision_path": "/tmp/lerna-03-source-stack-next-decision.md",
+  "adopted_decision_sha256": "3807311cb6dcc72a47cdfc922180002ba737bf07dfbdfccc335fa0bfd075bf05",
+  "explicit_lifespan_revision": "2adc originally allocated another post-I/O memo;380731 now shares ONLY successful pure full ContentRef\u2192ID within one ReadForProcessing. Both current qualification observations remain independent. Original2adc decision/artifacts preserved.",
+  "two_product_files": [
+    {
+      "path": "domain/content/closure.go",
+      "before_sha256": "8542696150191da3fafd6b0df90e38f272fd934de807317442933c536fb1331c",
+      "candidate_sha256": "8897d39b01c1872bf9a5ccf1bbdc9f6105e375e6418781c7ce9574c35b56bab5",
+      "before_artifact": "/workspace/lerna-content-03-137311247276/single-read-identity-reuse/closure.go.before"
+    },
+    {
+      "path": "domain/content/processing.go",
+      "before_sha256": "32f14cd27d48a55069eed5a89aab39a3465f03d6b05189875be9d8382d9a6f32",
+      "candidate_sha256": "4a4440cb921001d3edb3d2e829f49b5e684c60d31e0603bcfe9b76a8d6283c30",
+      "before_artifact": "/workspace/lerna-content-03-137311247276/single-read-identity-reuse/processing.go.before"
+    }
+  ],
+  "qualification_status": "NOT EXECUTED; originalrace7b48 is existing businessRED, no repeated unchanged RED",
+  "old_cpu_profile_original_descriptor_Close": "UNKNOWN"
+}

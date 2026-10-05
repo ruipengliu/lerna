@@ -6,6 +6,8 @@
 
 ## 当前状态
 
+2026-10-05 05:50 UTC：05新增Manager normal19.681/race27.528、不同合法完整委派Subject normal6.510/race13.953完整尾均通过。所有原期限/页/步数不变，首主体64live责任重开全量保持；完整证据已归档，最终当前源套件和两轴审查待做。03采用准确380731单项修订：一次ReadForProcessing前后观察只共享≤65项成功fullRef纯ID，所有记录/权限/来源/时钟和PG自主验证仍真实重读；只静态实现，暂无新资格。两票仍未接受或合入，whole04 15/41、完整1.2关闭。
+
 2026-10-05 05:43 UTC：03已有样本单次Source展开实际0/Wait/absence，189条原加权路径共1.890CPU：旧Content子树1.740、Access.060、纯Source.090秒；不将旧closure成本当当前可省、不新增采样，原profile逻辑Close UNKNOWN保持。准确原raw及逐条权重/栈、独立root完整机器核验已归档，Astra正选下一项必要决定。05Manager真实64过期积压normal19.681s完整传播/重开尾通过；当前仅授合法不同委派完整Subject的64条live前页正常验证，原live初始45s/四步/有限预算保持。两票未接受或合入，whole04仍15/41、完整1.2关闭。
 
 2026-10-05 05:31 UTC：03原五映射竞态已实际失败，closure64 27.87s/static62 21.64s，原Claim5先到而caller仍有余量。static Prepared已提交、Content.Put接纳未知；完整原日志/最终outcome归档，旧normal失败和出版测量normal通过各自保留。采用准确74既有CPU样本Source有限离线分析，无新产品猜测或采样。05坏deadline及合法特殊字符身份机械normal0.671/race2.182完整尾通过，原Go解析原因保持；当前唯一LOCAL授已静态审查的Manager真实64积压正常资格。两票未接受或合入，whole04仍15/41、完整1.2关闭。

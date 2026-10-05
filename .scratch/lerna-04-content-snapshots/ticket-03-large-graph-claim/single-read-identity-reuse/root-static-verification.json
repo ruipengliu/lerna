@@ -1,0 +1,42 @@
+{
+  "FULL_diff_manifest_and_current_authority_paths_read": true,
+  "exact_two_domain_files_before_candidate_SHA_independently_checked": true,
+  "candidate_only_no_fmt_native_semantic_or_capacity_qualification": true,
+  "files": [
+    {
+      "path": "candidate.diff",
+      "sha256": "11bd9025d2c19352e6f86e29bc34db6170ffa5eb6af8a41afea4293e97b4e518",
+      "bytes": 4455
+    },
+    {
+      "path": "closure_identity_memo_test.go.proposed",
+      "sha256": "cf7dfe2bb7f355f46b35db9fef54fbd44e6a641c9623adbdd4c3ecd0f573d977",
+      "bytes": 3099
+    },
+    {
+      "path": "lifespan-only.diff",
+      "sha256": "a320da24f6ea12b2e7dfa4f5138bd1e86c5ba47757ce67ccd00104288f60e85c",
+      "bytes": 2996
+    },
+    {
+      "path": "content_processing_ancestor_read_gate_test.go.proposed",
+      "sha256": "0e7029e9a503a1c40ec91db776647a31db94beed60f7933fe133fd8d8f9b1885",
+      "bytes": 4699
+    },
+    {
+      "path": "closure.go.before",
+      "sha256": "8542696150191da3fafd6b0df90e38f272fd934de807317442933c536fb1331c",
+      "bytes": 6914
+    },
+    {
+      "path": "manifest-static.json",
+      "sha256": "4ebbf387333cf2e1c0ee3d758449b113fa8389a94f05a14a4eddbc4dbb8b5cfc",
+      "bytes": 1462
+    },
+    {
+      "path": "processing.go.before",
+      "sha256": "32f14cd27d48a55069eed5a89aab39a3465f03d6b05189875be9d8382d9a6f32",
+      "bytes": 4153
+    }
+  ]
+}

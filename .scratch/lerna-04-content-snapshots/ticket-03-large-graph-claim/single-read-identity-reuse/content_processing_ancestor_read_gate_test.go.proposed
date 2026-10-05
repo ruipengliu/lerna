@@ -1,0 +1,99 @@
+//go:build integration
+
+package component_test
+
+import (
+	"context"
+	"errors"
+	"reflect"
+	"slices"
+	"sync"
+	"testing"
+	"time"
+	fixture "github.com/ruipengliu/lerna/conformance/internal/contentfixture"
+	v "github.com/ruipengliu/lerna/contract/v1_2"
+	"github.com/ruipengliu/lerna/domain/content"
+)
+
+func TestContentProcessingRechecksHiddenAncestorAfterRealObjectRead(t *testing.T) {
+	for _, withdraw := range []bool{false, true} {
+		name := "permitted"
+		if withdraw { name = "ancestor-process-withdrawn" }
+		t.Run(name, func(t *testing.T) {
+			ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+			defer cancel()
+			w := fixture.New(t, ctx)
+			service := contentService(t, w)
+			refs := []v.ContentRef{alphaRef, alphaRef, alphaRef}
+			refs[1].ContentID = "processing-middle"
+			refs[2].ContentID = "processing-target"
+			var request v.ContentPutRequest
+			var original v.ContentPutResponse
+			for i, ref := range refs {
+				installContentPolicy(t, ctx, w, ref)
+				request = contentPut(t, ref, string(ref.ContentID), "YWxwaGEK")
+				if i > 0 { request.Payload.Sources = []v.ContentRef{refs[i-1]} }
+				original = putContentRequest(t, ctx, service, request)
+				if _, ok := original.AsAccepted(); !ok { t.Fatal("normal chain admission", original) }
+				if _, err := service.Step(ctx); err != nil { t.Fatal(err) }
+				assertContentBody(t, ctx, service, ref, nil, "alpha\n")
+			}
+			objects := &heldContentRead{Objects: w.Objects, entered: make(chan struct{}), release: make(chan struct{})}
+			reader := withPublication(t, w, w.Store(), objects, time.Minute, 5*time.Second)
+			var once sync.Once
+			release := func() error { once.Do(func() { close(objects.release) }); return nil }
+			finished := make(chan struct{})
+			type result struct { read content.ProcessingRead; err error }
+			done := make(chan result, 1)
+			go func() {
+				defer close(finished)
+				read, err := reader.ReadForProcessing(ctx, &contentPrincipal, refs[2], "verification", 6)
+				done <- result{read, err}
+			}()
+			joinContentRead(t, w, release, finished)
+			select {
+			case <-objects.entered:
+			case <-ctx.Done(): t.Fatal(ctx.Err())
+			}
+			// Native object read has really returned, and pre qualification has
+			// committed. Only the I/O barrier is mechanical. Trusted policy change
+			// commits independently while no Content observation Tx is held.
+			if withdraw {
+				wide := time.Now().Add(time.Hour)
+				p := content.FixturePolicy{Ref: refs[0], Subject: contentPrincipal, Purpose: "verification", Revision: 2, ValidUntil: wide, RetainUntil: wide, Read: true, Process: false, Save: true, Disclose: true}
+				if _, err := trustedContentManager(t, w, 2).InstallPolicy(ctx, &contentPrincipal, p, 1); err != nil { t.Fatal(err) }
+			}
+			if err := release(); err != nil { t.Fatal(err) }
+			var got result
+			select {
+			case got = <-done:
+			case <-ctx.Done(): t.Fatal(ctx.Err())
+			}
+			select {
+			case <-finished:
+			case <-ctx.Done(): t.Fatal(ctx.Err())
+			}
+			if withdraw {
+				if !errors.Is(got.err, content.ErrProcessingForbidden) || !reflect.DeepEqual(got.read, content.ProcessingRead{}) { t.Fatal("pure identity hit reused hidden ancestor permission", got.err, got.read) }
+			} else if got.err != nil || got.read.Ref != refs[2] || string(got.read.Bytes) != "alpha\n" || len(got.read.Sources) != 2 || !slices.Contains(got.read.Sources, refs[0]) || !slices.Contains(got.read.Sources, refs[1]) {
+				t.Fatal("normal post-I/O full closure failed", got.err, got.read)
+			}
+			// Process-only withdrawal does not revoke current public read/disclose
+			// or rewrite the original accepted receipt/publication history.
+			service = contentService(t, w)
+			assertContentBody(t, ctx, service, refs[2], nil, "alpha\n")
+			after := putContentRequest(t, ctx, service, request)
+			if !reflect.DeepEqual(after, original) { t.Fatal("processing refusal changed fixed original receipt") }
+			command, err := service.GetCommand(ctx, contentCommandGetWire(t, request.CommandID), &contentPrincipal)
+			found, ok := command.AsFound()
+			progress, contentOK := found.Progress.AsContent()
+			if err != nil || !ok || !contentOK || progress.Publication != "published" { t.Fatal("original publication lost", err, command) }
+			w.Reopen(ctx)
+			service = contentService(t, w)
+			again, err := service.ReadForProcessing(ctx, &contentPrincipal, refs[2], "verification", 6)
+			if withdraw {
+				if !errors.Is(err, content.ErrProcessingForbidden) || !reflect.DeepEqual(again, content.ProcessingRead{}) { t.Fatal("new read/reopen inherited stale authority", err, again) }
+			} else if err != nil || string(again.Bytes) != "alpha\n" || again.Ref != refs[2] { t.Fatal("normal fresh read after reopen", err, again) }
+		})
+	}
+}

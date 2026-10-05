@@ -1,0 +1,37 @@
+{
+  "FULL_read_raw_outcome_prelaunch_release": true,
+  "same14currentpins": true,
+  "root_independently_absent_groups": [
+    3514791,
+    3517014
+  ],
+  "Manager_prelaunch_dependency_delegated_written_normalqualified_compiled_not_selected_RUN": true,
+  "copied_original_Manager_field_delegated_written_false_is_inaccurate_global_claim_scopeclarified_here": true,
+  "nativegroupabsence_not_resource_Close": true,
+  "files": [
+    {
+      "source": "/tmp/lerna-04-ticket05-execution/manager-expired-race.log",
+      "archive": "race.log",
+      "sha256": "9a79ce757da44455d6e4c53e43f39d3d86039b958d179e0a773f8f659511fa3e",
+      "bytes": 395
+    },
+    {
+      "source": "/tmp/lerna-04-ticket05-execution/manager-expired-race-prelaunch.json",
+      "archive": "race-prelaunch.json",
+      "sha256": "38e8a4b6f02849d11fd2c6404b15e581c1aba0e6d1d990d5879294ab975313a3",
+      "bytes": 3726
+    },
+    {
+      "source": "/tmp/lerna-05-manager-expired-race-outcome.json",
+      "archive": "race-outcome.json",
+      "sha256": "906e3f6f84b932c480e38647b9fb6a2bd7b48f42adefe5118b9a7b294ffff6b3",
+      "bytes": 1928
+    },
+    {
+      "source": "/tmp/lerna-05-two-qualification-races-release.json",
+      "archive": "two-races-final-release.json",
+      "sha256": "ec46b54f3d179f9718b959bae0eb4b77a33ae5b405cdbe9d27822e0e23bc5d2b",
+      "bytes": 545
+    }
+  ]
+}

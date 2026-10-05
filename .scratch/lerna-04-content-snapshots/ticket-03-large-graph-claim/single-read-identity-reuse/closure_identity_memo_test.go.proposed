@@ -1,0 +1,69 @@
+package content
+
+import (
+	"encoding/json"
+	"fmt"
+	"os"
+	"testing"
+	v "github.com/ruipengliu/lerna/contract/v1_2"
+)
+
+// Mechanical pure-value controls, not a public authorization oracle.
+func TestClosureIdentityMemoPreservesFullRefValidationAndFiniteSuccess(t *testing.T) {
+	data, err := os.ReadFile("../../conformance/fixtures/1.2.0/digests.json")
+	if err != nil { t.Fatal(err) }
+	var fixture struct { VersionIdentity struct { Ref v.ContentRef } `json:"version_identity"` }
+	if err = json.Unmarshal(data, &fixture); err != nil { t.Fatal(err) }
+	base := fixture.VersionIdentity.Ref
+	memo := make(closureIdentityMemo, 65)
+	id, _, err := VersionIdentity(base)
+	if err != nil { t.Fatal(err) }
+	for i := 0; i < 2; i++ {
+		got, err := memo.identityID(base)
+		if err != nil || got != id || len(memo) != 1 { t.Fatal("same full-ref success changed", got, err, len(memo)) }
+	}
+	// Identity's positional tuple stays the same; valid declaration metadata
+	// must nevertheless occupy distinct keys and undergo original validation.
+	for _, change := range []func(*v.ContentRef){
+		func(r *v.ContentRef) { r.MediaType = "application/json" },
+		func(r *v.ContentRef) { r.ByteLength = "7" },
+		func(r *v.ContentRef) { r.Hash = "sha256:0000000000000000000000000000000000000000000000000000000000000000" },
+	} {
+		ref := base; change(&ref)
+		got, err := memo.identityID(ref)
+		if err != nil || got != id { t.Fatal("valid metadata changed pure tuple identity", got, err) }
+		if _, ok := memo[ref]; !ok { t.Fatal("full declaration was collapsed into tuple key") }
+	}
+	if len(memo) != 4 { t.Fatal("full-ref keys collapsed", len(memo)) }
+	for _, change := range []func(*v.ContentRef){
+		func(r *v.ContentRef) { r.MediaType = "" },
+		func(r *v.ContentRef) { r.ByteLength = "-1" },
+		func(r *v.ContentRef) { r.Hash = "invalid" },
+	} {
+		ref := base; change(&ref)
+		_, _, originalErr := VersionIdentity(ref)
+		if originalErr == nil { t.Fatal("invalid fixture was accepted by original codec") }
+		for i := 0; i < 2; i++ {
+			got, err := memo.identityID(ref)
+			if err == nil || got != "" || err.Error() != originalErr.Error() { t.Fatal("invalid same-tuple ref bypassed original error", got, err) }
+			if _, ok := memo[ref]; ok { t.Fatal("failed identity was cached") }
+		}
+	}
+	// Fill the pure table, then an otherwise valid 66th full ref must continue
+	// through original identity calculation without a new business rejection.
+	memo = make(closureIdentityMemo, 65)
+	for i := 0; i < 65; i++ {
+		ref := base; ref.ContentID = v.ID(fmt.Sprintf("memo-ref-%d", i))
+		if _, err := memo.identityID(ref); err != nil { t.Fatal(err) }
+	}
+	last := base; last.ContentID = "memo-ref-65"
+	expected, _, err := VersionIdentity(last)
+	if err != nil { t.Fatal(err) }
+	for i := 0; i < 2; i++ {
+		got, err := memo.identityID(last)
+		if err != nil || got != expected || len(memo) != 65 { t.Fatal("pure memo capacity became business limit", got, err, len(memo)) }
+		if _, ok := memo[last]; ok { t.Fatal("pure memo exceeded65") }
+	}
+	fresh := make(closureIdentityMemo, 65)
+	if len(fresh) != 0 { t.Fatal("new invocation inherited old pure map") }
+}

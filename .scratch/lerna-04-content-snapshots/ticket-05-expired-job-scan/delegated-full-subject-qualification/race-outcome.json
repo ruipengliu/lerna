@@ -1,0 +1,37 @@
+{
+  "kind": "actual same-source ONE delegated full64 other-live-subject cleanup race complete tail",
+  "prelaunch_manifest": "/tmp/lerna-04-ticket05-execution/delegated-cleanup-race-prelaunch.json",
+  "test_sha256": "85d9951fd44c08b374730f8c95d464e8e8efb5726cfb5ec1df20977689bf6995",
+  "pid": 3517014,
+  "pgid": 3517014,
+  "starttime": "14742643",
+  "exit": 0,
+  "group_absent": true,
+  "timed_out": false,
+  "tool_session": 26786,
+  "go_seconds": 13.953,
+  "case_seconds": 12.9,
+  "log": "/tmp/lerna-04-ticket05-execution/delegated-cleanup-race.log",
+  "log_sha256": "8e9251eb09397007cb2de67f933000881622fb228d5b2cd7c21235f13e00063a",
+  "schema": "lerna_test_e09fffb3e39c50636d4824f7",
+  "object_root": {
+    "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-19833061",
+    "device": 33,
+    "inode": 390411
+  },
+  "actual_tail": {
+    "same_tenant_leaf_with_real_distinct_complete_delegation_policies_and_authenticated_publications": true,
+    "same_original_primary_id_and_original_opened_medium_binding": true,
+    "full64_first_subject_original_live_Seals_before_later_second_subject_Seal": true,
+    "common_initial45s_not_renewed_live_at_prestate_and_final_proof": true,
+    "first_reopen_complete_original_observations_alpha_receipts_history": true,
+    "within4_second_subject_actual_Lifecycle_Steps_only_own_duty_cleanup": true,
+    "unique_one_to_one_all_original_holder_identity_Kind_deadline_ACK_complete_and_independent_exact_absence": true,
+    "second_true_reopen_full64_other_subject_observations_alpha_receipts_history_unchanged_and_still_live": true,
+    "own_full_original_Seal_ACK_fixed_receipt_pubhistory_current_authorized_gone_metadata": true
+  },
+  "race_executed": true,
+  "Manager_RUN_executed": false,
+  "sourcefix_applied": false,
+  "native_released": true
+}

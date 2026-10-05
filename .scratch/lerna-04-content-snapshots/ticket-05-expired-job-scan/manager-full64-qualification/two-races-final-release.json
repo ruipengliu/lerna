@@ -1,0 +1,15 @@
+{
+  "kind": "actual completion / RELEASE of the two explicitly granted sequential qualification runs",
+  "Manager_first_completion_outcome": "/tmp/lerna-05-manager-expired-race-outcome.json",
+  "Manager_then_delegated_launch_after_real_Wait_and_absence": true,
+  "delegated_second_completion_outcome": "/tmp/lerna-05-delegated-cleanup-race-outcome.json",
+  "last_actual_ack": {
+    "pid": 3517014,
+    "pgid": 3517014,
+    "starttime": "14742643",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false
+  },
+  "native_released": true
+}
