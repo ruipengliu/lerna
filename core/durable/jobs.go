@@ -128,6 +128,9 @@ func (s *Service) applyJob(ctx context.Context, c *v1.JobCommand, now int64) ([]
 			return 0
 		})
 		for _, j := range jobs {
+			if c.JobRef != nil && !proto.Equal(c.JobRef.Name, j.Ref.Name) {
+				continue
+			}
 			if (c.Module != "" && c.Module != j.Module) || !slices.Contains(c.AllowedTypes, j.JobType) || j.ReadyAtUnixMs > now || (j.State == "CLAIMED" && j.LeaseUntilUnixMs > now) {
 				continue
 			}
@@ -158,6 +161,9 @@ func (s *Service) applyJob(ctx context.Context, c *v1.JobCommand, now int64) ([]
 	}
 	if j == nil {
 		return nil, command.Fail("INVALID_INPUT")
+	}
+	if j.JobType == "RECONCILE_OPERATION" && (c.Action == "PROGRESS" || c.Action == "CONTROL") {
+		return nil, command.Fail("UNSUPPORTED_FEATURE")
 	}
 	switch c.Action {
 	case "RENEW", "PROGRESS":

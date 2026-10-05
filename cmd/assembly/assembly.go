@@ -69,6 +69,9 @@ func Open(path, user, domain string) (*Harness, error) {
 	h.Grants.WithRevocationExits(h.Egress)
 	h.Ledger.WithCompletionClosures(t)
 	t.WithCompletionClosures(d, h.Egress)
+	h.Ledger.WithReconciliation(t, h.Grants, h.Egress)
+	t.WithClosureSource(h.Ledger).WithOperationProgress(h.Ledger)
+	h.Ledger.WithOperationProgress(t)
 	t.WithAdmission(h.Grants, h.Budget, c, h.Sessions, d, h.Ledger).WithHandoffs(d, h.Ledger)
 	// 固定受信宿主身份仅驱动已保存的责任，不替换原命令身份。
 	ctx, cancel := context.WithTimeout(context.Background(), 65*time.Second)
@@ -102,6 +105,18 @@ func Open(path, user, domain string) (*Harness, error) {
 		return nil, err
 	}
 	if err := h.Tasks.RecoverCompletions(ctx, &v1.Caller{UserId: user, IssuerId: "host-recovery"}); err != nil {
+		s.Close()
+		return nil, err
+	}
+	if err := h.Ledger.ProcessOperationProgress(ctx, &v1.Caller{UserId: user, IssuerId: "host-recovery"}); err != nil {
+		s.Close()
+		return nil, err
+	}
+	if err := h.Ledger.RecoverReconciliations(ctx, &v1.Caller{UserId: user, IssuerId: "host-recovery"}); err != nil {
+		s.Close()
+		return nil, err
+	}
+	if err := h.Ledger.ProcessOperationProgress(ctx, &v1.Caller{UserId: user, IssuerId: "host-recovery"}); err != nil {
 		s.Close()
 		return nil, err
 	}

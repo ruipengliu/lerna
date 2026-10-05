@@ -33,6 +33,7 @@ type OperationConfirmationMatter struct {
 	Capability          *Capability            `protobuf:"bytes,8,opt,name=capability,proto3" json:"capability,omitempty"`
 	ParametersRef       *Ref                   `protobuf:"bytes,9,opt,name=parameters_ref,json=parametersRef,proto3" json:"parameters_ref,omitempty"`
 	ContentRefs         []*Ref                 `protobuf:"bytes,10,rep,name=content_refs,json=contentRefs,proto3" json:"content_refs,omitempty"`
+	QuerySubject        *QuerySubject          `protobuf:"bytes,11,opt,name=query_subject,json=querySubject,proto3" json:"query_subject,omitempty"`
 	unknownFields       protoimpl.UnknownFields
 	sizeCache           protoimpl.SizeCache
 }
@@ -133,6 +134,13 @@ func (x *OperationConfirmationMatter) GetParametersRef() *Ref {
 func (x *OperationConfirmationMatter) GetContentRefs() []*Ref {
 	if x != nil {
 		return x.ContentRefs
+	}
+	return nil
+}
+
+func (x *OperationConfirmationMatter) GetQuerySubject() *QuerySubject {
+	if x != nil {
+		return x.QuerySubject
 	}
 	return nil
 }
@@ -769,7 +777,7 @@ var File_lerna_v1_confirmation_proto protoreflect.FileDescriptor
 
 const file_lerna_v1_confirmation_proto_rawDesc = "" +
 	"\n" +
-	"\x1blerna/v1/confirmation.proto\x12\blerna.v1\x1a\x18lerna/v1/admission.proto\x1a\x18lerna/v1/authority.proto\x1a\x17lerna/v1/identity.proto\x1a\x17lerna/v1/planning.proto\x1a\x19lerna/v1/submission.proto\"\xe8\x03\n" +
+	"\x1blerna/v1/confirmation.proto\x12\blerna.v1\x1a\x18lerna/v1/admission.proto\x1a\x18lerna/v1/authority.proto\x1a\x16lerna/v1/closure.proto\x1a\x17lerna/v1/identity.proto\x1a\x17lerna/v1/planning.proto\x1a\x19lerna/v1/submission.proto\"\xa5\x04\n" +
 	"\x1bOperationConfirmationMatter\x12-\n" +
 	"\atask_id\x18\x01 \x01(\v2\x14.lerna.v1.GlobalNameR\x06taskId\x120\n" +
 	"\fproposal_ref\x18\x02 \x01(\v2\r.lerna.v1.RefR\vproposalRef\x12*\n" +
@@ -783,7 +791,8 @@ const file_lerna_v1_confirmation_proto_rawDesc = "" +
 	"capability\x124\n" +
 	"\x0eparameters_ref\x18\t \x01(\v2\r.lerna.v1.RefR\rparametersRef\x120\n" +
 	"\fcontent_refs\x18\n" +
-	" \x03(\v2\r.lerna.v1.RefR\vcontentRefs\"r\n" +
+	" \x03(\v2\r.lerna.v1.RefR\vcontentRefs\x12;\n" +
+	"\rquery_subject\x18\v \x01(\v2\x16.lerna.v1.QuerySubjectR\fquerySubject\"r\n" +
 	"\x17GrantConfirmationMatter\x120\n" +
 	"\fissuance_ref\x18\x01 \x01(\v2\r.lerna.v1.RefR\vissuanceRef\x12%\n" +
 	"\x05grant\x18\x02 \x01(\v2\x0f.lerna.v1.GrantR\x05grant\"\xe3\x05\n" +
@@ -861,9 +870,10 @@ var file_lerna_v1_confirmation_proto_goTypes = []any{
 	(*GlobalName)(nil),                          // 9: lerna.v1.GlobalName
 	(*Ref)(nil),                                 // 10: lerna.v1.Ref
 	(*Capability)(nil),                          // 11: lerna.v1.Capability
-	(*Grant)(nil),                               // 12: lerna.v1.Grant
-	(*CommandIdentity)(nil),                     // 13: lerna.v1.CommandIdentity
-	(*CommandHeader)(nil),                       // 14: lerna.v1.CommandHeader
+	(*QuerySubject)(nil),                        // 12: lerna.v1.QuerySubject
+	(*Grant)(nil),                               // 13: lerna.v1.Grant
+	(*CommandIdentity)(nil),                     // 14: lerna.v1.CommandIdentity
+	(*CommandHeader)(nil),                       // 15: lerna.v1.CommandHeader
 }
 var file_lerna_v1_confirmation_proto_depIdxs = []int32{
 	9,  // 0: lerna.v1.OperationConfirmationMatter.task_id:type_name -> lerna.v1.GlobalName
@@ -872,38 +882,39 @@ var file_lerna_v1_confirmation_proto_depIdxs = []int32{
 	11, // 3: lerna.v1.OperationConfirmationMatter.capability:type_name -> lerna.v1.Capability
 	10, // 4: lerna.v1.OperationConfirmationMatter.parameters_ref:type_name -> lerna.v1.Ref
 	10, // 5: lerna.v1.OperationConfirmationMatter.content_refs:type_name -> lerna.v1.Ref
-	10, // 6: lerna.v1.GrantConfirmationMatter.issuance_ref:type_name -> lerna.v1.Ref
-	12, // 7: lerna.v1.GrantConfirmationMatter.grant:type_name -> lerna.v1.Grant
-	10, // 8: lerna.v1.Confirmation.ref:type_name -> lerna.v1.Ref
-	9,  // 9: lerna.v1.Confirmation.session_id:type_name -> lerna.v1.GlobalName
-	0,  // 10: lerna.v1.Confirmation.operation_admission:type_name -> lerna.v1.OperationConfirmationMatter
-	1,  // 11: lerna.v1.Confirmation.grant_issuance:type_name -> lerna.v1.GrantConfirmationMatter
-	13, // 12: lerna.v1.Confirmation.responded_by:type_name -> lerna.v1.CommandIdentity
-	13, // 13: lerna.v1.Confirmation.withdrawn_by:type_name -> lerna.v1.CommandIdentity
-	10, // 14: lerna.v1.Confirmation.consumed_admission_ref:type_name -> lerna.v1.Ref
-	10, // 15: lerna.v1.Confirmation.consumed_grant_issuance_ref:type_name -> lerna.v1.Ref
-	14, // 16: lerna.v1.RequestAdmissionConfirmationCommand.header:type_name -> lerna.v1.CommandHeader
-	9,  // 17: lerna.v1.RequestAdmissionConfirmationCommand.task_id:type_name -> lerna.v1.GlobalName
-	10, // 18: lerna.v1.RequestAdmissionConfirmationCommand.proposal_ref:type_name -> lerna.v1.Ref
-	10, // 19: lerna.v1.RequestAdmissionConfirmationCommand.grant_ref:type_name -> lerna.v1.Ref
-	9,  // 20: lerna.v1.RequestAdmissionConfirmationCommand.session_id:type_name -> lerna.v1.GlobalName
-	14, // 21: lerna.v1.RespondConfirmationCommand.header:type_name -> lerna.v1.CommandHeader
-	10, // 22: lerna.v1.RespondConfirmationCommand.confirmation_ref:type_name -> lerna.v1.Ref
-	10, // 23: lerna.v1.GrantIssuance.ref:type_name -> lerna.v1.Ref
-	12, // 24: lerna.v1.GrantIssuance.grant:type_name -> lerna.v1.Grant
-	10, // 25: lerna.v1.GrantIssuance.grant_ref:type_name -> lerna.v1.Ref
-	14, // 26: lerna.v1.RequestGrantConfirmationCommand.header:type_name -> lerna.v1.CommandHeader
-	12, // 27: lerna.v1.RequestGrantConfirmationCommand.grant:type_name -> lerna.v1.Grant
-	9,  // 28: lerna.v1.RequestGrantConfirmationCommand.session_id:type_name -> lerna.v1.GlobalName
-	14, // 29: lerna.v1.IssueGrantCommand.header:type_name -> lerna.v1.CommandHeader
-	10, // 30: lerna.v1.IssueGrantCommand.confirmation_ref:type_name -> lerna.v1.Ref
-	14, // 31: lerna.v1.WithdrawConfirmationCommand.header:type_name -> lerna.v1.CommandHeader
-	10, // 32: lerna.v1.WithdrawConfirmationCommand.confirmation_ref:type_name -> lerna.v1.Ref
-	33, // [33:33] is the sub-list for method output_type
-	33, // [33:33] is the sub-list for method input_type
-	33, // [33:33] is the sub-list for extension type_name
-	33, // [33:33] is the sub-list for extension extendee
-	0,  // [0:33] is the sub-list for field type_name
+	12, // 6: lerna.v1.OperationConfirmationMatter.query_subject:type_name -> lerna.v1.QuerySubject
+	10, // 7: lerna.v1.GrantConfirmationMatter.issuance_ref:type_name -> lerna.v1.Ref
+	13, // 8: lerna.v1.GrantConfirmationMatter.grant:type_name -> lerna.v1.Grant
+	10, // 9: lerna.v1.Confirmation.ref:type_name -> lerna.v1.Ref
+	9,  // 10: lerna.v1.Confirmation.session_id:type_name -> lerna.v1.GlobalName
+	0,  // 11: lerna.v1.Confirmation.operation_admission:type_name -> lerna.v1.OperationConfirmationMatter
+	1,  // 12: lerna.v1.Confirmation.grant_issuance:type_name -> lerna.v1.GrantConfirmationMatter
+	14, // 13: lerna.v1.Confirmation.responded_by:type_name -> lerna.v1.CommandIdentity
+	14, // 14: lerna.v1.Confirmation.withdrawn_by:type_name -> lerna.v1.CommandIdentity
+	10, // 15: lerna.v1.Confirmation.consumed_admission_ref:type_name -> lerna.v1.Ref
+	10, // 16: lerna.v1.Confirmation.consumed_grant_issuance_ref:type_name -> lerna.v1.Ref
+	15, // 17: lerna.v1.RequestAdmissionConfirmationCommand.header:type_name -> lerna.v1.CommandHeader
+	9,  // 18: lerna.v1.RequestAdmissionConfirmationCommand.task_id:type_name -> lerna.v1.GlobalName
+	10, // 19: lerna.v1.RequestAdmissionConfirmationCommand.proposal_ref:type_name -> lerna.v1.Ref
+	10, // 20: lerna.v1.RequestAdmissionConfirmationCommand.grant_ref:type_name -> lerna.v1.Ref
+	9,  // 21: lerna.v1.RequestAdmissionConfirmationCommand.session_id:type_name -> lerna.v1.GlobalName
+	15, // 22: lerna.v1.RespondConfirmationCommand.header:type_name -> lerna.v1.CommandHeader
+	10, // 23: lerna.v1.RespondConfirmationCommand.confirmation_ref:type_name -> lerna.v1.Ref
+	10, // 24: lerna.v1.GrantIssuance.ref:type_name -> lerna.v1.Ref
+	13, // 25: lerna.v1.GrantIssuance.grant:type_name -> lerna.v1.Grant
+	10, // 26: lerna.v1.GrantIssuance.grant_ref:type_name -> lerna.v1.Ref
+	15, // 27: lerna.v1.RequestGrantConfirmationCommand.header:type_name -> lerna.v1.CommandHeader
+	13, // 28: lerna.v1.RequestGrantConfirmationCommand.grant:type_name -> lerna.v1.Grant
+	9,  // 29: lerna.v1.RequestGrantConfirmationCommand.session_id:type_name -> lerna.v1.GlobalName
+	15, // 30: lerna.v1.IssueGrantCommand.header:type_name -> lerna.v1.CommandHeader
+	10, // 31: lerna.v1.IssueGrantCommand.confirmation_ref:type_name -> lerna.v1.Ref
+	15, // 32: lerna.v1.WithdrawConfirmationCommand.header:type_name -> lerna.v1.CommandHeader
+	10, // 33: lerna.v1.WithdrawConfirmationCommand.confirmation_ref:type_name -> lerna.v1.Ref
+	34, // [34:34] is the sub-list for method output_type
+	34, // [34:34] is the sub-list for method input_type
+	34, // [34:34] is the sub-list for extension type_name
+	34, // [34:34] is the sub-list for extension extendee
+	0,  // [0:34] is the sub-list for field type_name
 }
 
 func init() { file_lerna_v1_confirmation_proto_init() }
@@ -913,6 +924,7 @@ func file_lerna_v1_confirmation_proto_init() {
 	}
 	file_lerna_v1_admission_proto_init()
 	file_lerna_v1_authority_proto_init()
+	file_lerna_v1_closure_proto_init()
 	file_lerna_v1_identity_proto_init()
 	file_lerna_v1_planning_proto_init()
 	file_lerna_v1_submission_proto_init()

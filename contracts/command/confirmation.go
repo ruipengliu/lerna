@@ -8,7 +8,7 @@ func OperationMatter(a *v1.Admission) *v1.OperationConfirmationMatter {
 	if len(a.GetGrantRefs()) == 1 {
 		grant = a.GrantRefs[0]
 	}
-	return &v1.OperationConfirmationMatter{TaskId: a.TaskId, ProposalRef: a.Origin, GrantRef: grant, RequirementsVersion: a.RequirementsVersion, InputVersion: a.InputVersion, ControlGeneration: a.ControlGeneration, StepId: a.StepId, Capability: a.CapabilitySnapshot, ParametersRef: a.ParametersRef, ContentRefs: a.ContentRefs}
+	return &v1.OperationConfirmationMatter{TaskId: a.TaskId, ProposalRef: a.Origin, GrantRef: grant, RequirementsVersion: a.RequirementsVersion, InputVersion: a.InputVersion, ControlGeneration: a.ControlGeneration, StepId: a.StepId, Capability: a.CapabilitySnapshot, ParametersRef: a.ParametersRef, ContentRefs: a.ContentRefs, QuerySubject: a.QuerySubject}
 }
 
 // ConfirmationDigest 同时绑定事项类型、会话、内容版本和有效期。

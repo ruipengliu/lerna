@@ -26,7 +26,7 @@ func (w *LedgerWork) SaveReceipt(ctx context.Context, r *v1.CommandReceipt) erro
 func (w *LedgerWork) SaveJob(ctx context.Context, j *v1.Job) error { return w.SaveLedgerJob(ctx, j) }
 func (w *LedgerWork) LoadJob(ctx context.Context, n *v1.GlobalName) (*v1.Job, error) {
 	j := new(v1.Job)
-	ok, e := w.load(ctx, j, "SELECT record FROM ledger_jobs WHERE user_id=? AND domain_id=? AND id=?", n.UserId, n.AuthorityDomainId, n.LocalId)
+	ok, e := w.load(ctx, j, "SELECT record FROM ledger_jobs WHERE user_id=? AND domain_id=? AND id=? UNION ALL SELECT record FROM reconciliation_jobs WHERE user_id=? AND domain_id=? AND id=?", n.UserId, n.AuthorityDomainId, n.LocalId, n.UserId, n.AuthorityDomainId, n.LocalId)
 	if !ok {
 		return nil, e
 	}
@@ -35,7 +35,7 @@ func (w *LedgerWork) LoadJob(ctx context.Context, n *v1.GlobalName) (*v1.Job, er
 func (w *LedgerWork) allJobs(ctx context.Context, user string) ([]*v1.Job, error) {
 	var jobs []*v1.Job
 	e := w.read(ctx, func(q querier) error {
-		rows, e := q.QueryContext(ctx, "SELECT record FROM ledger_jobs WHERE user_id=? AND domain_id=? ORDER BY id", user, w.domain+"/ledger")
+		rows, e := q.QueryContext(ctx, "SELECT record FROM (SELECT id,record FROM ledger_jobs WHERE user_id=? AND domain_id=? UNION ALL SELECT id,record FROM reconciliation_jobs WHERE user_id=? AND domain_id=?) ORDER BY id", user, w.domain+"/ledger", user, w.domain+"/ledger")
 		if e != nil {
 			return e
 		}

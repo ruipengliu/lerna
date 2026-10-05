@@ -36,6 +36,8 @@ type Service struct {
 	completionCloser      CompletionCloser
 	completionFacts       CompletionFacts
 	completionBudget      CompletionBudget
+	progressSource        OperationProgressSource
+	closureSource         ClosureSource
 	confirmationPublisher ConfirmationPublisher
 	confirmationContent   ConfirmationContent
 	startGrants           StartGrants

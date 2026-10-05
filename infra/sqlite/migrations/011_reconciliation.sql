@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS reconciliations (user_id TEXT NOT NULL, domain_id TEXT NOT NULL, operation_id TEXT NOT NULL, record BLOB NOT NULL, PRIMARY KEY(user_id,domain_id,operation_id));
+CREATE TABLE IF NOT EXISTS reconciliation_queries (user_id TEXT NOT NULL, domain_id TEXT NOT NULL, id TEXT NOT NULL, work_id TEXT NOT NULL, record BLOB NOT NULL, PRIMARY KEY(user_id,domain_id,id), UNIQUE(user_id,domain_id,work_id));
+CREATE TABLE IF NOT EXISTS reconciliation_jobs (user_id TEXT NOT NULL, domain_id TEXT NOT NULL, id TEXT NOT NULL, operation_id TEXT NOT NULL, record BLOB NOT NULL, PRIMARY KEY(user_id,domain_id,id), UNIQUE(user_id,domain_id,operation_id));
+CREATE TABLE IF NOT EXISTS operation_progress_handoffs (user_id TEXT NOT NULL, domain_id TEXT NOT NULL, id TEXT NOT NULL, operation_id TEXT NOT NULL, record BLOB NOT NULL, PRIMARY KEY(user_id,domain_id,id));
+CREATE TABLE IF NOT EXISTS task_operation_progress (user_id TEXT NOT NULL, domain_id TEXT NOT NULL, id TEXT NOT NULL, record BLOB NOT NULL, PRIMARY KEY(user_id,domain_id,id));

@@ -59,6 +59,9 @@ func (s *Service) InterpretObservation(ctx context.Context, caller *v1.Caller, c
 			return nil, command.Fail("CONTENT_UNUSABLE")
 		}
 		finding := interpretSimulator(raw, body.RawBody, op.Execution.Attempt)
+		if op.QuerySubject != nil {
+			finding = interpretQuery(raw, body.RawBody, op)
+		}
 		finding.Ref = ref
 		if e = s.store.(interpretationStore).SaveInterpretation(tx, finding); e != nil {
 			return nil, e
@@ -106,7 +109,17 @@ func (s *Service) InterpretObservation(ctx context.Context, caller *v1.Caller, c
 				return nil, e
 			}
 		}
-		return ref, s.store.SaveOperation(tx, op)
+		if e = s.store.SaveOperation(tx, op); e != nil {
+			return nil, e
+		}
+		if op.QuerySubject != nil {
+			if e = s.applyReconciliationObservation(tx, caller, op, raw, body.RawBody); e != nil {
+				return nil, e
+			}
+		} else if e = s.applyOriginalReconciliationFact(tx, caller, op); e != nil {
+			return nil, e
+		}
+		return ref, nil
 	})
 }
 func interpretSimulator(raw *v1.RawObservation, body []byte, attempt *v1.ExecutionAttempt) *v1.EffectInterpretation {

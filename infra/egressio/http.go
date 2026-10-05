@@ -21,14 +21,14 @@ type HTTP struct{}
 
 func (HTTP) Perform(ctx context.Context, c *v1.PhysicalIORequest) (*v1.PhysicalIOResult, error) {
 	d := c.GetCallDescriptor()
-	if d == nil || d.Protocol != "HTTP" || d.Method != "POST" || c.Send == nil || c.Send.Phase != "DISPATCH_POSSIBLE" || c.Attempt == nil {
+	if d == nil || d.Protocol != "HTTP" || (d.Method != "POST" && (d.Method != "GET" || d.QuerySubject == nil)) || c.Send == nil || c.Send.Phase != "DISPATCH_POSSIBLE" || c.Attempt == nil {
 		return nil, command.Fail("INVALID_IO_INTENT")
 	}
 	target, e := url.Parse(d.Target)
 	if e != nil || target.Scheme != "http" || target.User != nil || net.ParseIP(target.Hostname()) == nil || !net.ParseIP(target.Hostname()).IsLoopback() {
 		return nil, command.Fail("TARGET_SCOPE_MISMATCH")
 	}
-	observation := &v1.RawObservation{Ref: c.Send.ObservationRef, UserId: c.OperationId.UserId, TaskId: c.TaskId, OperationId: c.OperationId, AttemptId: c.Attempt.Ref.Name, SendRef: c.Send.Ref, SendSeq: c.Send.SendSeq, Target: d.Target, ExecutorEndpointId: c.ExecutorEndpointId, Protocol: "HTTP", StartedAtUnixMs: time.Now().UnixMilli(), ExternalKey: c.Attempt.ExternalKey, Source: "TRUSTED_IO"}
+	observation := &v1.RawObservation{Ref: c.Send.ObservationRef, UserId: c.OperationId.UserId, TaskId: c.TaskId, OperationId: c.OperationId, AttemptId: c.Attempt.Ref.Name, SendRef: c.Send.Ref, SendSeq: c.Send.SendSeq, Target: d.Target, ExecutorEndpointId: c.ExecutorEndpointId, Protocol: "HTTP", StartedAtUnixMs: time.Now().UnixMilli(), ExternalKey: c.Attempt.ExternalKey, Source: "TRUSTED_IO", QuerySubject: d.QuerySubject}
 	result := &v1.PhysicalIOResult{Observation: observation}
 	finish := func(err error) (*v1.PhysicalIOResult, error) {
 		observation.FinishedAtUnixMs = time.Now().UnixMilli()
@@ -56,7 +56,11 @@ func (HTTP) Perform(ctx context.Context, c *v1.PhysicalIORequest) (*v1.PhysicalI
 	}
 	stop := context.AfterFunc(ctx, func() { _ = conn.Close() })
 	defer stop()
-	request, e := http.NewRequestWithContext(ctx, "POST", d.Target, bytes.NewReader(c.Body))
+	payload := c.Body
+	if d.Method == "GET" {
+		payload = nil
+	}
+	request, e := http.NewRequestWithContext(ctx, d.Method, d.Target, bytes.NewReader(payload))
 	if e != nil {
 		return finish(e)
 	}
@@ -67,6 +71,12 @@ func (HTTP) Perform(ctx context.Context, c *v1.PhysicalIORequest) (*v1.PhysicalI
 	request.Header.Set("Lerna-Send", strconv.FormatUint(uint64(c.Send.SendSeq), 10))
 	request.Header.Set("Lerna-User", c.OperationId.UserId)
 	request.Header.Set("Lerna-Operation", c.OperationId.LocalId)
+	if d.QuerySubject != nil {
+		request.Header.Set("Lerna-Query-Operation", d.QuerySubject.OperationId.LocalId)
+		request.Header.Set("Lerna-Query-Attempt", d.QuerySubject.AttemptId.LocalId)
+		request.Header.Set("Lerna-Query-Key", d.QuerySubject.ExternalKey)
+		request.Header.Set("Lerna-Query-Scope", d.QuerySubject.TargetScope)
+	}
 	// 不使用 Client/Transport；不提供重定向、连接池、重放或回退路径。
 	if e = request.Write(conn); e != nil {
 		return finish(e)

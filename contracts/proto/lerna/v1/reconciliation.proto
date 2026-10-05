@@ -1,0 +1,101 @@
+syntax = "proto3";
+package lerna.v1;
+
+import "lerna/v1/closure.proto";
+import "lerna/v1/identity.proto";
+import "lerna/v1/planning.proto";
+import "lerna/v1/submission.proto";
+
+option go_package = "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1;lernav1";
+
+message ReconciliationLimits {
+  uint32 max_checks = 1;
+  int64 deadline_unix_ms = 2;
+  int64 max_fee = 3;
+  int64 initial_delay_ms = 4;
+  int64 max_delay_ms = 5;
+}
+message Reconciliation {
+  Ref ref = 1;
+  GlobalName operation_id = 2;
+  GlobalName task_id = 3;
+  Ref original_attempt_ref = 4;
+  Ref query_capability_ref = 5;
+  Ref parameters_ref = 6;
+  Ref grant_ref = 7;
+  Ref confirmation_ref = 8;
+  uint32 policy_version = 9;
+  ReconciliationLimits limits = 10;
+  string state = 11;
+  int64 next_reconcile_at_unix_ms = 12;
+  uint32 check_count = 13;
+  uint32 no_progress_count = 14;
+  string pause_reason = 15;
+  Ref active_query_ref = 16;
+  repeated Ref query_refs = 17;
+  Ref last_observation_ref = 18;
+  Ref job_ref = 19;
+  int64 reserved_fee = 20;
+  CommandIdentity requested_by = 21;
+}
+message RequestReconciliationCommand {
+  CommandHeader header = 1;
+  GlobalName operation_id = 2;
+  Ref query_capability_ref = 3;
+  Ref parameters_ref = 4;
+  Ref grant_ref = 5;
+  Ref confirmation_ref = 6;
+  uint32 policy_version = 7;
+  ReconciliationLimits limits = 8;
+}
+message ReconciliationQuery {
+  Ref ref = 1;
+  ClosureWorkRequest work = 2;
+  CommandReceipt admission_receipt = 3;
+  Ref observation_ref = 4;
+  Ref interpretation_ref = 5;
+  Ref query_operation_ref = 6;
+  string state = 7;
+  string reason = 8;
+  int64 retry_after_ms = 9;
+  AdmitClosureCommand admission_command = 10;
+}
+message ReconciliationFinding {
+  Ref ref = 1;
+  Ref query_ref = 2;
+  GlobalName operation_id = 3;
+  Ref observation_ref = 4;
+  string rule = 5;
+  string outcome = 6;
+  string late_effect = 7;
+  string reason = 8;
+}
+message ControlReconciliationCommand {
+  CommandHeader header = 1;
+  GlobalName operation_id = 2;
+  uint64 expected_revision = 3;
+  string action = 4;
+  ReconciliationLimits limits = 5;
+  Ref grant_ref = 6;
+  Ref confirmation_ref = 7;
+}
+message OperationProgressNotice {
+  Ref ref = 1;
+  GlobalName task_id = 2;
+  Ref operation_ref = 3;
+  Ref reconciliation_ref = 4;
+  Ref effect_ref = 5;
+  CommandIdentity identity = 6;
+  string state = 7;
+  string pause_reason = 8;
+  Ref last_observation_ref = 9;
+}
+message AcceptOperationProgressCommand {
+  CommandHeader header = 1;
+  OperationProgressNotice notice = 2;
+}
+message OperationProgressHandoff {
+  OperationProgressNotice notice = 1;
+  AcceptOperationProgressCommand command = 2;
+  CommandReceipt recipient_receipt = 3;
+}

@@ -89,6 +89,9 @@ func (s *Service) CheckConfirmationMatter(ctx context.Context, c *v1.Confirmatio
 	if c.MatterType != "OPERATION_ADMISSION" || m == nil {
 		return command.Fail("CONFIRMATION_INVALID")
 	}
+	if m.ProposalRef.GetSchemaId() == "lerna.v1.ClosureWorkRequest" {
+		return s.checkClosureConfirmationMatter(ctx, c)
+	}
 	caller := &v1.Caller{UserId: s.user, IssuerId: "host"}
 	t, e := s.QueryTask(ctx, caller, m.TaskId)
 	if e != nil {

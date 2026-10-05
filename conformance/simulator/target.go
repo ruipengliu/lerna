@@ -21,14 +21,22 @@ type Effect struct {
 	AppliedAtUnixNano       int64
 }
 type Target struct {
-	mu       sync.Mutex
-	mode     string
-	behavior string
-	requests []Request
-	effects  []Effect
+	mu              sync.Mutex
+	mode            string
+	behavior        string
+	requests        []Request
+	effects         []Effect
+	pending         []Effect
+	queryRetryAfter int64
+	queryBehavior   string
+	rejected        map[string]bool
+	writeEntered    chan<- struct{}
+	writeRelease    <-chan struct{}
+	queryEntered    chan<- struct{}
+	queryRelease    <-chan struct{}
 }
 
-func New(mode string) *Target { return &Target{mode: mode} }
+func New(mode string) *Target { return &Target{mode: mode, rejected: map[string]bool{}} }
 func (t *Target) SetBehavior(behavior string) {
 	t.mu.Lock()
 	defer t.mu.Unlock()
@@ -39,7 +47,45 @@ func (t *Target) Snapshot() ([]Request, []Effect) {
 	defer t.mu.Unlock()
 	return append([]Request(nil), t.requests...), append([]Effect(nil), t.effects...)
 }
+func (t *Target) SetQueryBehavior(b string) { t.mu.Lock(); defer t.mu.Unlock(); t.queryBehavior = b }
+func (t *Target) SetQueryRetryAfter(ms int64) {
+	t.mu.Lock()
+	defer t.mu.Unlock()
+	t.queryRetryAfter = ms
+}
+func (t *Target) ReleasePending() {
+	t.mu.Lock()
+	defer t.mu.Unlock()
+	for _, e := range t.pending {
+		e.AppliedAtUnixNano = time.Now().UnixNano()
+		t.effects = append(t.effects, e)
+	}
+	t.pending = nil
+}
+func (t *Target) SetWriteResponseGate(entered chan<- struct{}, release <-chan struct{}) {
+	t.mu.Lock()
+	defer t.mu.Unlock()
+	t.writeEntered = entered
+	t.writeRelease = release
+}
+func (t *Target) SetQueryGate(entered chan<- struct{}, release <-chan struct{}) {
+	t.mu.Lock()
+	defer t.mu.Unlock()
+	t.queryEntered = entered
+	t.queryRelease = release
+}
 func (t *Target) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "GET" {
+		t.mu.Lock()
+		entered, release := t.queryEntered, t.queryRelease
+		t.mu.Unlock()
+		if entered != nil {
+			entered <- struct{}{}
+		}
+		if release != nil {
+			<-release
+		}
+	}
 	body, e := io.ReadAll(io.LimitReader(r.Body, 1<<20))
 	if e != nil {
 		http.Error(w, "body unavailable", 400)
@@ -52,20 +98,72 @@ func (t *Target) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	defer t.mu.Unlock()
 	t.requests = append(t.requests, Request{Method: r.Method, ExternalKey: key, Attempt: r.Header.Get("Lerna-Attempt"), Send: r.Header.Get("Lerna-Send"), User: r.Header.Get("Lerna-User"), Operation: r.Header.Get("Lerna-Operation"), BodyDigest: digest, ReceivedAtUnixNano: time.Now().UnixNano()})
 	if r.Method == "GET" && t.mode == "queryable" {
+		if t.queryBehavior == "drop" {
+			if h, ok := w.(http.Hijacker); ok {
+				conn, _, e := h.Hijack()
+				if e == nil {
+					_ = conn.Close()
+				}
+			}
+			return
+		}
+		if t.queryBehavior == "malformed" {
+			_, _ = w.Write([]byte("{broken"))
+			return
+		}
+		subject := r.Header.Get("Lerna-Query-Key")
+		applied := false
 		for _, effect := range t.effects {
-			if effect.ExternalKey == key {
-				t.respond(w, key, effect.AppliedAtUnixNano)
-				return
+			if effect.ExternalKey == subject {
+				applied = true
 			}
 		}
-		_ = json.NewEncoder(w).Encode(map[string]any{"protocol": "lerna-simulator-v1", "external_key": key, "attempt_id": key, "applied": false, "terminal": false})
+		terminal := applied
+		negative := false
+		switch t.queryBehavior {
+		case "weak":
+			applied = false
+			terminal = false
+		case "absent-terminal-weak":
+			applied = false
+			terminal = true
+		case "strong-negative":
+			if !applied {
+				t.rejected[subject] = true
+				remaining := t.pending[:0]
+				for _, pending := range t.pending {
+					if pending.ExternalKey != subject {
+						remaining = append(remaining, pending)
+					}
+				}
+				t.pending = remaining
+				terminal = true
+				negative = true
+			}
+		}
+		queryStatus := "AVAILABLE"
+		if t.queryBehavior == "retention-expired" {
+			queryStatus = "RETENTION_EXPIRED"
+			applied = false
+			terminal = false
+		}
+		if t.queryBehavior == "temporarily-unavailable" {
+			queryStatus = "TEMPORARILY_UNAVAILABLE"
+			applied = false
+			terminal = false
+		}
+		readTerminal := t.queryBehavior != "no-read-terminal"
+		if t.queryBehavior == "wrong-subject" {
+			subject = "foreign-subject"
+		}
+		_ = json.NewEncoder(w).Encode(map[string]any{"query_status": queryStatus, "protocol": "lerna-simulator-query-v1", "query_external_key": key, "query_attempt_id": r.Header.Get("Lerna-Attempt"), "query_operation_id": r.Header.Get("Lerna-Operation"), "read_terminal": readTerminal, "subject_external_key": subject, "subject_attempt_id": r.Header.Get("Lerna-Query-Attempt"), "subject_operation_id": r.Header.Get("Lerna-Query-Operation"), "subject_scope": r.Header.Get("Lerna-Query-Scope"), "applied": applied, "terminal": terminal, "negative_proof": negative, "retry_after_ms": t.queryRetryAfter})
 		return
 	}
 	if r.Method != "POST" {
 		http.Error(w, "unsupported", http.StatusMethodNotAllowed)
 		return
 	}
-	if t.behavior == "reject" {
+	if t.behavior == "reject" || t.rejected[key] {
 		_ = json.NewEncoder(w).Encode(map[string]any{"protocol": "lerna-simulator-v1", "external_key": key, "attempt_id": key, "applied": false, "terminal": true})
 		return
 	}
@@ -79,11 +177,32 @@ func (t *Target) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
+	if t.behavior == "accept-and-delay" {
+		t.pending = append(t.pending, Effect{ExternalKey: key, BodyDigest: digest})
+		if hijack, ok := w.(http.Hijacker); ok {
+			conn, _, e := hijack.Hijack()
+			if e == nil {
+				_ = conn.Close()
+			}
+		}
+		return
+	}
 	effect := Effect{ExternalKey: key, BodyDigest: digest, AppliedAtUnixNano: time.Now().UnixNano()}
 	t.effects = append(t.effects, effect)
 	t.respond(w, key, effect.AppliedAtUnixNano)
 }
 func (t *Target) respond(w http.ResponseWriter, key string, at int64) {
+	if t.writeEntered != nil || t.writeRelease != nil {
+		entered, release := t.writeEntered, t.writeRelease
+		t.mu.Unlock()
+		if entered != nil {
+			entered <- struct{}{}
+		}
+		if release != nil {
+			<-release
+		}
+		t.mu.Lock()
+	}
 	switch t.behavior {
 	case "drop-after-apply":
 		if hijack, ok := w.(http.Hijacker); ok {

@@ -21,6 +21,10 @@ type Store interface {
 }
 type Service struct {
 	completionClosures         CompletionClosureSource
+	progressReceiver           OperationProgressReceiver
+	reconciliationTasks        ReconciliationTasks
+	reconciliationGrants       ReconciliationGrants
+	reconciliationEgress       ReconciliationEgress
 	store                      Store
 	user, domain, sourceDomain string
 	work                       ExecutionWork
@@ -85,6 +89,10 @@ func (s *Service) Accept(ctx context.Context, caller *v1.Caller, c *v1.AcceptOpe
 		}
 		effect := &v1.Effect{Ref: command.NewRef(s.user, s.domain, "effect", "lerna.v1.Effect"), OperationId: a.OperationId, Outcome: "NOT_APPLIED", LateEffect: "RULED_OUT"}
 		op := &v1.Operation{Ref: &v1.Ref{Name: a.OperationId, Revision: 1, SchemaId: "lerna.v1.Operation"}, AdmissionRef: a.Ref, ExecutorEndpointId: a.ExecutorEndpointId, AdapterRef: a.CapabilitySnapshot.AdapterRef, ParametersRef: a.ParametersRef, CapabilitySnapshot: a.CapabilitySnapshot, Lifecycle: "ACCEPTED", Dispatch: "OPEN", EffectRef: effect.Ref, Effect: effect}
+		if a.WorkCategory == "CLOSURE" {
+			op.ClosureWorkRef = a.Origin
+			op.QuerySubject = a.QuerySubject
+		}
 		job := &v1.Job{Ref: command.NewRef(s.user, s.domain, "job", "lerna.v1.Job"), Module: "ledger", JobType: "EXECUTE_OPERATION", ContractVersion: 1, Responsibility: c.Header.Identity, State: "READY", PurposeKey: "execute:" + a.OperationId.LocalId, SpecificationRef: op.Ref, ExecutorEndpointId: a.ExecutorEndpointId, LedgerDomainId: s.domain}
 		seal, e := s.store.(completionSealStore).CompletionSealForOperation(tx, a.OperationId)
 		if e != nil {

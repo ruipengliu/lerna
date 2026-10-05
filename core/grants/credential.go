@@ -60,7 +60,7 @@ func (s *Service) QueryCredential(ctx context.Context, caller *v1.Caller, r *v1.
 	return c, e
 }
 func (s *Service) checkExit(ctx context.Context, b *v1.ExitCredentialBinding, a *v1.Admission) (*v1.Grant, error) {
-	if b == nil || a == nil || b.UserId != s.user || b.Audience != "egress" || b.CallerIssuerId != "egress" || b.ExecutorInstance == "" || b.DescriptorDigest == "" || b.SendSeq == 0 || b.AttemptId == nil || b.AttemptId.UserId != s.user || b.AttemptId.AuthorityDomainId != a.LedgerDomainId || b.AttemptId.ObjectKind != "attempt" || b.AttemptId.LocalId == "" || !proto.Equal(b.TaskId, a.TaskId) || !proto.Equal(b.SubjectId, a.TaskId) || !proto.Equal(b.OperationId, a.OperationId) || !proto.Equal(b.AdmissionRef, a.Ref) || !proto.Equal(b.GrantUseRef, a.GrantUseRef) || b.ExecutorEndpointId != a.ExecutorEndpointId || b.RequirementsVersion != a.RequirementsVersion || b.InputVersion != a.InputVersion || b.ControlGeneration != a.ControlGeneration || a.BudgetBasis == nil || !proto.Equal(b.BudgetReservationRef, a.BudgetBasis.ReservationRef) || a.CapabilitySnapshot == nil || b.UseRight != a.CapabilitySnapshot.UseRight || b.ProcessingPurpose != a.CapabilitySnapshot.ProcessingPurpose || b.UseRight != "INVOKE" || b.ProcessingPurpose != "CURRENT_TASK" {
+	if b == nil || a == nil || b.UserId != s.user || b.Audience != "egress" || b.CallerIssuerId != "egress" || b.ExecutorInstance == "" || b.DescriptorDigest == "" || b.SendSeq == 0 || b.AttemptId == nil || b.AttemptId.UserId != s.user || b.AttemptId.AuthorityDomainId != a.LedgerDomainId || b.AttemptId.ObjectKind != "attempt" || b.AttemptId.LocalId == "" || !proto.Equal(b.TaskId, a.TaskId) || !proto.Equal(b.SubjectId, a.TaskId) || !proto.Equal(b.OperationId, a.OperationId) || !proto.Equal(b.AdmissionRef, a.Ref) || !proto.Equal(b.GrantUseRef, a.GrantUseRef) || b.ExecutorEndpointId != a.ExecutorEndpointId || b.RequirementsVersion != a.RequirementsVersion || b.InputVersion != a.InputVersion || b.ControlGeneration != a.ControlGeneration || a.BudgetBasis == nil || !proto.Equal(b.BudgetReservationRef, a.BudgetBasis.ReservationRef) || a.CapabilitySnapshot == nil || b.UseRight != a.CapabilitySnapshot.UseRight || b.ProcessingPurpose != a.CapabilitySnapshot.ProcessingPurpose || (b.UseRight != "INVOKE" && (a.CapabilitySnapshot.Action != "QUERY" || b.UseRight != "READ")) || b.ProcessingPurpose != "CURRENT_TASK" {
 		return nil, command.Fail("CREDENTIAL_BINDING_MISMATCH")
 	}
 	u, e := s.store.LoadGrantUse(ctx, a.OperationId)
@@ -80,6 +80,9 @@ func (s *Service) checkExit(ctx context.Context, b *v1.ExitCredentialBinding, a 
 	}
 	if g == nil || g.Status != "ACTIVE" || now < g.ValidFromUnixMs || now >= g.ValidUntilUnixMs || g.SemanticVersion != 1 || !proto.Equal(g.Subject, a.TaskId) || g.UsePoolId != u.UsePoolId {
 		return nil, command.Fail("GRANT_INVALID")
+	}
+	if !coversCapability(g, a.CapabilitySnapshot, a.ParametersRef) {
+		return nil, command.Fail("GRANT_SCOPE_MISMATCH")
 	}
 	return g, nil
 }

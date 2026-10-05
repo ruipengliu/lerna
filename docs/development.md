@@ -142,6 +142,11 @@ func TestSafeResendSkipsAdmissionGeneration(t *testing.T) { ... }
 | `grants.credential` | 不透明出口凭据与原决定 |
 | `grants.revoke`、`grants.revocation_receipt` | 撤销受理与原出口封闭责任，或保存对方原回执后的完成状态 |
 | `tasks.admit` | 使用记录、两级预留、提议消费、准入意图、交接 outbox、待办与原决定 |
+| `ledger.reconcile_request`、`ledger.reconcile_prepare` | 核对责任与持久调度，或单次查询的核心意图、固定身份与额度上限计数 |
+| `ledger.reconcile_confirmation`、`tasks.closure_confirmation` | 查询准入命令的确定确认绑定，或用户可核验的核心查询事项 |
+| `tasks.closure_admit`、`ledger.reconcile_admission_ack` | 查询使用与预留、完整准入清单及交接，或保存负责方原准入回执 |
+| `ledger.reconcile_control`、`ledger.reconcile_pause` | 修订围栏下暂停、恢复与限制，或失败后保留的查询责任 |
+| `tasks.operation_progress`、`ledger.progress_ack` | 按当前原动作状态唤醒任务，或原进度通知的接收回执 |
 | `ledger.accept` | 独立执行管理域的原交接回执、动作与执行待办 |
 | `tasks.handoff_receipt` | 源域保存对方原回执并在领取围栏下完成待办 |
 | `tasks.verification` | 本轮冻结、完整准入清单、准确封闭 outbox、工作与原决定 |
@@ -220,3 +225,10 @@ func TestSafeResendSkipsAdmissionGeneration(t *testing.T) { ... }
 派生宿主依次调用 `PrepareDerivation`、`ReadDerivationInput`、`SealDerivation`、`CommitDerivation` 和 `ProcessRegistrations`。输入字节必须从 `ReadDerivationInput` 返回值取得；封闭集合必须覆盖全部实际输入，额外报告的来源也必须是可用版本。准备返回的责任可用 `QueryDerivation` 查询，其实例标识和代次绑定后续调用；`TakeoverDerivation` 保留原责任并隔离旧实例。模型和适配器不能登记可信原始观察，外部调用仍须经过准入和出口闸门。结构化的上下文快照保存引用；将它们编成提示、摘要或其他正文时，宿主必须使用派生入口。
 
 正文后端在独立 `body` 事务持久保存接纳回执。`assembly.Harness.Bodies.QueryReceipt` 是持有方的只读回执查询，可与内容源域的交接状态独立比较，不返回未发布正文。新增故障点为 `content.register`、`body.accept`、`content.publish`、`content.derivation`、`content.derivation_input`、`content.derivation_takeover`、`content.derivation_seal`、`content.derivation_commit`。原有 `content.stage` 和 `content.observation` 现在保存登记意图；正文持有责任和发布另有独立提交，原始观察发布完成后才交给执行管理。
+### M1 可查询目标的结果核对
+
+`request-reconciliation --json FILE` 接收 `RequestReconciliationCommand`，指定原动作、查询能力、参数、同一份 READ 与 SAVE 授权和核对策略。`reconciliation OPERATION_ID` 查询当前责任；`reconciliation-query --json REF_FILE` 与 `reconciliation-finding --json REF_FILE` 读取不可变查询及结论。`control-reconciliation --json FILE` 按当前修订号暂停或恢复，可显式更新上限与授权。启动和 `recover` 恢复到期工作；未来的等待时间保留在待办中，下次推进时再次检查。普通工作控制不能替代核对控制。
+
+查询是独立的 CLOSURE 动作，进入同一任务的完整准入清单，单独使用授权、预留费用并经过 P4/P5 出口。目标的 GET 回报同时携带查询本身身份与原动作身份；只有可信的读取终态证明才能结清查询的效果责任，原动作的未生效结论还要求原请求再无迟到生效可能。查询自己丢失终态回报时保持 `QUERY_RESULT_UNKNOWN` 暂停，不递归生成查询。原写请求始终不会因此重发。查询与原写各自按独立发送核验账单；效果已确定也不代表费用为零，缺少最终计费证据时继续保留对应预留。
+
+确认型查询授权会先持久保存核心查询意图并暂停。`closure-confirmation --json FILE` 使用该意图的 `workRef` 创建精确事项，随后沿 `confirmation` / `confirm` 可信回应链批准；恢复命令附带批准引用，准入仍重查并原子消费。缺失或无效的初始确认不会消耗准入身份。弱证据保留未知及迟到可能性；全抖动退避与目标 Retry-After 下限、检查次数、时间和费用上限均持久。原始迟到回报独立接纳，更新原动作并以可恢复通知推进任务完成核验。

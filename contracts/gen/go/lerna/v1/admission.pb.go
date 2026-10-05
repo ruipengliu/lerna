@@ -237,6 +237,7 @@ type Admission struct {
 	HandoffIdentity     *CommandIdentity       `protobuf:"bytes,20,opt,name=handoff_identity,json=handoffIdentity,proto3" json:"handoff_identity,omitempty"`
 	CapabilitySnapshot  *Capability            `protobuf:"bytes,21,opt,name=capability_snapshot,json=capabilitySnapshot,proto3" json:"capability_snapshot,omitempty"`
 	ContentRefs         []*Ref                 `protobuf:"bytes,22,rep,name=content_refs,json=contentRefs,proto3" json:"content_refs,omitempty"`
+	QuerySubject        *QuerySubject          `protobuf:"bytes,23,opt,name=query_subject,json=querySubject,proto3" json:"query_subject,omitempty"`
 	unknownFields       protoimpl.UnknownFields
 	sizeCache           protoimpl.SizeCache
 }
@@ -425,6 +426,13 @@ func (x *Admission) GetContentRefs() []*Ref {
 	return nil
 }
 
+func (x *Admission) GetQuerySubject() *QuerySubject {
+	if x != nil {
+		return x.QuerySubject
+	}
+	return nil
+}
+
 type AdmitCommand struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
 	Header          *CommandHeader         `protobuf:"bytes,1,opt,name=header,proto3" json:"header,omitempty"`
@@ -589,7 +597,7 @@ var File_lerna_v1_admission_proto protoreflect.FileDescriptor
 
 const file_lerna_v1_admission_proto_rawDesc = "" +
 	"\n" +
-	"\x18lerna/v1/admission.proto\x12\blerna.v1\x1a\x18lerna/v1/authority.proto\x1a\x17lerna/v1/identity.proto\x1a\x17lerna/v1/planning.proto\x1a\x19lerna/v1/submission.proto\"\x89\x04\n" +
+	"\x18lerna/v1/admission.proto\x12\blerna.v1\x1a\x18lerna/v1/authority.proto\x1a\x16lerna/v1/closure.proto\x1a\x17lerna/v1/identity.proto\x1a\x17lerna/v1/planning.proto\x1a\x19lerna/v1/submission.proto\"\x89\x04\n" +
 	"\n" +
 	"Capability\x12\x1f\n" +
 	"\x03ref\x18\x01 \x01(\v2\r.lerna.v1.RefR\x03ref\x12\x16\n" +
@@ -614,7 +622,7 @@ const file_lerna_v1_admission_proto_rawDesc = "" +
 	"\x06header\x18\x01 \x01(\v2\x17.lerna.v1.CommandHeaderR\x06header\x124\n" +
 	"\n" +
 	"capability\x18\x02 \x01(\v2\x14.lerna.v1.CapabilityR\n" +
-	"capability\"\xf1\b\n" +
+	"capability\"\xae\t\n" +
 	"\tAdmission\x12\x1f\n" +
 	"\x03ref\x18\x01 \x01(\v2\r.lerna.v1.RefR\x03ref\x12%\n" +
 	"\x06origin\x18\x02 \x01(\v2\r.lerna.v1.RefR\x06origin\x12\x17\n" +
@@ -639,7 +647,8 @@ const file_lerna_v1_admission_proto_rawDesc = "" +
 	"\rwork_category\x18\x13 \x01(\tR\fworkCategory\x12D\n" +
 	"\x10handoff_identity\x18\x14 \x01(\v2\x19.lerna.v1.CommandIdentityR\x0fhandoffIdentity\x12E\n" +
 	"\x13capability_snapshot\x18\x15 \x01(\v2\x14.lerna.v1.CapabilityR\x12capabilitySnapshot\x120\n" +
-	"\fcontent_refs\x18\x16 \x03(\v2\r.lerna.v1.RefR\vcontentRefs\"\x86\x02\n" +
+	"\fcontent_refs\x18\x16 \x03(\v2\r.lerna.v1.RefR\vcontentRefs\x12;\n" +
+	"\rquery_subject\x18\x17 \x01(\v2\x16.lerna.v1.QuerySubjectR\fquerySubject\"\x86\x02\n" +
 	"\fAdmitCommand\x12/\n" +
 	"\x06header\x18\x01 \x01(\v2\x17.lerna.v1.CommandHeaderR\x06header\x12-\n" +
 	"\atask_id\x18\x02 \x01(\v2\x14.lerna.v1.GlobalNameR\x06taskId\x120\n" +
@@ -680,7 +689,8 @@ var file_lerna_v1_admission_proto_goTypes = []any{
 	(*AncestorControl)(nil),            // 9: lerna.v1.AncestorControl
 	(*MemoryDependency)(nil),           // 10: lerna.v1.MemoryDependency
 	(*BudgetBasis)(nil),                // 11: lerna.v1.BudgetBasis
-	(*CommandReceipt)(nil),             // 12: lerna.v1.CommandReceipt
+	(*QuerySubject)(nil),               // 12: lerna.v1.QuerySubject
+	(*CommandReceipt)(nil),             // 13: lerna.v1.CommandReceipt
 }
 var file_lerna_v1_admission_proto_depIdxs = []int32{
 	5,  // 0: lerna.v1.Capability.ref:type_name -> lerna.v1.Ref
@@ -704,21 +714,22 @@ var file_lerna_v1_admission_proto_depIdxs = []int32{
 	6,  // 18: lerna.v1.Admission.handoff_identity:type_name -> lerna.v1.CommandIdentity
 	0,  // 19: lerna.v1.Admission.capability_snapshot:type_name -> lerna.v1.Capability
 	5,  // 20: lerna.v1.Admission.content_refs:type_name -> lerna.v1.Ref
-	7,  // 21: lerna.v1.AdmitCommand.header:type_name -> lerna.v1.CommandHeader
-	8,  // 22: lerna.v1.AdmitCommand.task_id:type_name -> lerna.v1.GlobalName
-	5,  // 23: lerna.v1.AdmitCommand.proposal_ref:type_name -> lerna.v1.Ref
-	5,  // 24: lerna.v1.AdmitCommand.grant_ref:type_name -> lerna.v1.Ref
-	5,  // 25: lerna.v1.AdmitCommand.confirmation_ref:type_name -> lerna.v1.Ref
-	5,  // 26: lerna.v1.Handoff.ref:type_name -> lerna.v1.Ref
-	5,  // 27: lerna.v1.Handoff.admission_ref:type_name -> lerna.v1.Ref
-	6,  // 28: lerna.v1.Handoff.identity:type_name -> lerna.v1.CommandIdentity
-	5,  // 29: lerna.v1.Handoff.job_ref:type_name -> lerna.v1.Ref
-	12, // 30: lerna.v1.Handoff.recipient_receipt:type_name -> lerna.v1.CommandReceipt
-	31, // [31:31] is the sub-list for method output_type
-	31, // [31:31] is the sub-list for method input_type
-	31, // [31:31] is the sub-list for extension type_name
-	31, // [31:31] is the sub-list for extension extendee
-	0,  // [0:31] is the sub-list for field type_name
+	12, // 21: lerna.v1.Admission.query_subject:type_name -> lerna.v1.QuerySubject
+	7,  // 22: lerna.v1.AdmitCommand.header:type_name -> lerna.v1.CommandHeader
+	8,  // 23: lerna.v1.AdmitCommand.task_id:type_name -> lerna.v1.GlobalName
+	5,  // 24: lerna.v1.AdmitCommand.proposal_ref:type_name -> lerna.v1.Ref
+	5,  // 25: lerna.v1.AdmitCommand.grant_ref:type_name -> lerna.v1.Ref
+	5,  // 26: lerna.v1.AdmitCommand.confirmation_ref:type_name -> lerna.v1.Ref
+	5,  // 27: lerna.v1.Handoff.ref:type_name -> lerna.v1.Ref
+	5,  // 28: lerna.v1.Handoff.admission_ref:type_name -> lerna.v1.Ref
+	6,  // 29: lerna.v1.Handoff.identity:type_name -> lerna.v1.CommandIdentity
+	5,  // 30: lerna.v1.Handoff.job_ref:type_name -> lerna.v1.Ref
+	13, // 31: lerna.v1.Handoff.recipient_receipt:type_name -> lerna.v1.CommandReceipt
+	32, // [32:32] is the sub-list for method output_type
+	32, // [32:32] is the sub-list for method input_type
+	32, // [32:32] is the sub-list for extension type_name
+	32, // [32:32] is the sub-list for extension extendee
+	0,  // [0:32] is the sub-list for field type_name
 }
 
 func init() { file_lerna_v1_admission_proto_init() }
@@ -727,6 +738,7 @@ func file_lerna_v1_admission_proto_init() {
 		return
 	}
 	file_lerna_v1_authority_proto_init()
+	file_lerna_v1_closure_proto_init()
 	file_lerna_v1_identity_proto_init()
 	file_lerna_v1_planning_proto_init()
 	file_lerna_v1_submission_proto_init()

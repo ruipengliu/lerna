@@ -2,6 +2,7 @@ syntax = "proto3";
 package lerna.v1;
 
 import "lerna/v1/authority.proto";
+import "lerna/v1/closure.proto";
 import "lerna/v1/identity.proto";
 import "lerna/v1/planning.proto";
 import "lerna/v1/submission.proto";
@@ -49,6 +50,7 @@ message Admission {
   CommandIdentity handoff_identity = 20;
   Capability capability_snapshot = 21;
   repeated Ref content_refs = 22;
+  QuerySubject query_subject = 23;
 }
 message AdmitCommand {
   CommandHeader header = 1;
