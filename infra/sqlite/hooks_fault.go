@@ -22,7 +22,7 @@ const (
 
 // FaultPoints 是持久化点的统一登记表；新增事务必须在此登记。
 func FaultPoints() []string {
-	return []string{"tasks.completion_receipt", "ledger.completion_seal", "tasks.verification", "tasks.completion", "tasks.confirmation", "grants.confirmation", "grants.revoke", "grants.revocation_receipt", "sessions.confirmation", "sessions.input", "tasks.input", "content.stage", "ledger.grant_closure", "ledger.interpret", "budget.usage", "trace.accept", "ledger.usage_ack", "ledger.trace_ack", "content.observation", "ledger.observation", "content.observation_ack", "durable.submit", "durable.decide", "durable.jobs", "tasks.planning", "grants.configure", "grants.credential", "budget.configure", "tasks.admit", "tasks.start", "ledger.accept", "ledger.prepare", "ledger.dispatch", "tasks.handoff_receipt"}
+	return []string{"budget.limit", "budget.import", "budget.release", "tasks.completion_receipt", "ledger.completion_seal", "tasks.verification", "tasks.completion", "tasks.confirmation", "grants.confirmation", "grants.revoke", "grants.revocation_receipt", "sessions.confirmation", "sessions.input", "tasks.input", "content.stage", "ledger.grant_closure", "ledger.interpret", "budget.usage", "trace.accept", "ledger.usage_ack", "ledger.trace_ack", "content.observation", "ledger.observation", "content.observation_ack", "durable.submit", "durable.decide", "durable.jobs", "tasks.planning", "grants.configure", "grants.credential", "budget.configure", "tasks.admit", "tasks.start", "ledger.accept", "ledger.prepare", "ledger.dispatch", "tasks.handoff_receipt"}
 
 }
 func registered(point string) bool {

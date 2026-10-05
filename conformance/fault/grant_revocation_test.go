@@ -132,9 +132,31 @@ func TestGrantRevocationRecoversOriginalClosureAcrossEveryCommit(t *testing.T) {
 					if op.Effect.Outcome != expectedOutcome || op.Effect.LateEffect != expectedLate {
 						t.Fatalf("invented effect certainty: %v", op.Effect)
 					}
+					if e = h.Budget.ProcessClosures(ctx); e != nil {
+						t.Fatal(e)
+					}
+					expectedHold := int64(0)
+					if sent {
+						expectedHold = 30
+					}
 					budget, e := h.Budget.QueryBudget(ctx, host, nil)
-					if e != nil || budget.Reserved != 30 {
+					if e != nil || budget.Reserved != expectedHold || budget.Settled != 0 {
 						t.Fatalf("budget responsibility lost: %v %v", budget, e)
+					}
+					release, e := h.Budget.QueryReservationRelease(ctx, host, a.BudgetBasis.ReservationRef)
+					if e != nil {
+						t.Fatal(e)
+					}
+					if sent {
+						if release != nil {
+							t.Fatal("released post-P5 uncertainty")
+						}
+					} else if release == nil || !proto.Equal(release.ClosureRef, proof.Ref) || release.Released != 30 {
+						t.Fatalf("missing authoritative unused release %v", release)
+					}
+					historical, e := h.Budget.QueryReservation(ctx, host, a.BudgetBasis.ReservationRef)
+					if e != nil || historical.Status != "RESERVED" || historical.Ceiling != 30 {
+						t.Fatalf("reservation history rewritten %v %v", historical, e)
 					}
 					reservations, e := h.Budget.QueryReservations(ctx, host, a.TaskId)
 					if e != nil || len(reservations) != 1 || reservations[0].ConsumedSends != 1 {

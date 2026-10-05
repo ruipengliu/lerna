@@ -55,6 +55,10 @@ message Budget {
   int64 reserved = 5;
   int64 settled = 6;
   string status = 7;
+  int64 available = 8;
+  int64 deficit = 9;
+  bool billing_blocked = 10;
+  bool ceiling_violation = 11;
 }
 message ConfigureBudgetCommand {
   CommandHeader header = 1;

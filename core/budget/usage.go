@@ -35,8 +35,21 @@ func (s *Service) AcceptUsage(ctx context.Context, caller *v1.Caller, c *v1.Acce
 		if e != nil {
 			return nil, e
 		}
-		if source == nil || !proto.Equal(source.Usage, c) {
+		if source == nil || !proto.Equal(source.Usage.GetUsage(), c.Usage) {
 			return nil, command.Fail("INVALID_USAGE_SOURCE")
+		}
+		old, e := s.store.(usageStore).LoadUsage(tx, u.Ref)
+		if e != nil {
+			return nil, e
+		}
+		if old != nil {
+			if !proto.Equal(old, u) {
+				return nil, command.Fail("USAGE_CONFLICT")
+			}
+			return old.Ref, nil
+		}
+		if e = s.settleReport(tx, caller, u); e != nil {
+			return nil, e
 		}
 		return u.Ref, s.store.(usageStore).SaveUsage(tx, u)
 	})

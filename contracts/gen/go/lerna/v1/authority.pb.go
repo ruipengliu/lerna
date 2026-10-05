@@ -430,16 +430,20 @@ func (x *ConfigureGrantCommand) GetGrant() *Grant {
 }
 
 type Budget struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Ref           *Ref                   `protobuf:"bytes,1,opt,name=ref,proto3" json:"ref,omitempty"`
-	TaskId        *GlobalName            `protobuf:"bytes,2,opt,name=task_id,json=taskId,proto3" json:"task_id,omitempty"`
-	Unit          string                 `protobuf:"bytes,3,opt,name=unit,proto3" json:"unit,omitempty"`
-	Limit         int64                  `protobuf:"varint,4,opt,name=limit,proto3" json:"limit,omitempty"`
-	Reserved      int64                  `protobuf:"varint,5,opt,name=reserved,proto3" json:"reserved,omitempty"`
-	Settled       int64                  `protobuf:"varint,6,opt,name=settled,proto3" json:"settled,omitempty"`
-	Status        string                 `protobuf:"bytes,7,opt,name=status,proto3" json:"status,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state            protoimpl.MessageState `protogen:"open.v1"`
+	Ref              *Ref                   `protobuf:"bytes,1,opt,name=ref,proto3" json:"ref,omitempty"`
+	TaskId           *GlobalName            `protobuf:"bytes,2,opt,name=task_id,json=taskId,proto3" json:"task_id,omitempty"`
+	Unit             string                 `protobuf:"bytes,3,opt,name=unit,proto3" json:"unit,omitempty"`
+	Limit            int64                  `protobuf:"varint,4,opt,name=limit,proto3" json:"limit,omitempty"`
+	Reserved         int64                  `protobuf:"varint,5,opt,name=reserved,proto3" json:"reserved,omitempty"`
+	Settled          int64                  `protobuf:"varint,6,opt,name=settled,proto3" json:"settled,omitempty"`
+	Status           string                 `protobuf:"bytes,7,opt,name=status,proto3" json:"status,omitempty"`
+	Available        int64                  `protobuf:"varint,8,opt,name=available,proto3" json:"available,omitempty"`
+	Deficit          int64                  `protobuf:"varint,9,opt,name=deficit,proto3" json:"deficit,omitempty"`
+	BillingBlocked   bool                   `protobuf:"varint,10,opt,name=billing_blocked,json=billingBlocked,proto3" json:"billing_blocked,omitempty"`
+	CeilingViolation bool                   `protobuf:"varint,11,opt,name=ceiling_violation,json=ceilingViolation,proto3" json:"ceiling_violation,omitempty"`
+	unknownFields    protoimpl.UnknownFields
+	sizeCache        protoimpl.SizeCache
 }
 
 func (x *Budget) Reset() {
@@ -519,6 +523,34 @@ func (x *Budget) GetStatus() string {
 		return x.Status
 	}
 	return ""
+}
+
+func (x *Budget) GetAvailable() int64 {
+	if x != nil {
+		return x.Available
+	}
+	return 0
+}
+
+func (x *Budget) GetDeficit() int64 {
+	if x != nil {
+		return x.Deficit
+	}
+	return 0
+}
+
+func (x *Budget) GetBillingBlocked() bool {
+	if x != nil {
+		return x.BillingBlocked
+	}
+	return false
+}
+
+func (x *Budget) GetCeilingViolation() bool {
+	if x != nil {
+		return x.CeilingViolation
+	}
+	return false
 }
 
 type ConfigureBudgetCommand struct {
@@ -831,7 +863,7 @@ const file_lerna_v1_authority_proto_rawDesc = "" +
 	"\atask_id\x18\x06 \x01(\v2\x14.lerna.v1.GlobalNameR\x06taskId\"o\n" +
 	"\x15ConfigureGrantCommand\x12/\n" +
 	"\x06header\x18\x01 \x01(\v2\x17.lerna.v1.CommandHeaderR\x06header\x12%\n" +
-	"\x05grant\x18\x02 \x01(\v2\x0f.lerna.v1.GrantR\x05grant\"\xd0\x01\n" +
+	"\x05grant\x18\x02 \x01(\v2\x0f.lerna.v1.GrantR\x05grant\"\xde\x02\n" +
 	"\x06Budget\x12\x1f\n" +
 	"\x03ref\x18\x01 \x01(\v2\r.lerna.v1.RefR\x03ref\x12-\n" +
 	"\atask_id\x18\x02 \x01(\v2\x14.lerna.v1.GlobalNameR\x06taskId\x12\x12\n" +
@@ -839,7 +871,12 @@ const file_lerna_v1_authority_proto_rawDesc = "" +
 	"\x05limit\x18\x04 \x01(\x03R\x05limit\x12\x1a\n" +
 	"\breserved\x18\x05 \x01(\x03R\breserved\x12\x18\n" +
 	"\asettled\x18\x06 \x01(\x03R\asettled\x12\x16\n" +
-	"\x06status\x18\a \x01(\tR\x06status\"\xa2\x01\n" +
+	"\x06status\x18\a \x01(\tR\x06status\x12\x1c\n" +
+	"\tavailable\x18\b \x01(\x03R\tavailable\x12\x18\n" +
+	"\adeficit\x18\t \x01(\x03R\adeficit\x12'\n" +
+	"\x0fbilling_blocked\x18\n" +
+	" \x01(\bR\x0ebillingBlocked\x12+\n" +
+	"\x11ceiling_violation\x18\v \x01(\bR\x10ceilingViolation\"\xa2\x01\n" +
 	"\x16ConfigureBudgetCommand\x12/\n" +
 	"\x06header\x18\x01 \x01(\v2\x17.lerna.v1.CommandHeaderR\x06header\x12-\n" +
 	"\atask_id\x18\x02 \x01(\v2\x14.lerna.v1.GlobalNameR\x06taskId\x12\x12\n" +

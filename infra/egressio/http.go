@@ -63,6 +63,7 @@ func (HTTP) Perform(ctx context.Context, c *v1.PhysicalIORequest) (*v1.PhysicalI
 	request.Close = true
 	request.Header.Set("Idempotency-Key", d.ExternalKey)
 	request.Header.Set("Lerna-Attempt", c.Attempt.Ref.Name.LocalId)
+	request.Header.Set("Lerna-Send-Id", c.Send.Ref.Name.LocalId)
 	request.Header.Set("Lerna-Send", strconv.FormatUint(uint64(c.Send.SendSeq), 10))
 	request.Header.Set("Lerna-User", c.OperationId.UserId)
 	request.Header.Set("Lerna-Operation", c.OperationId.LocalId)

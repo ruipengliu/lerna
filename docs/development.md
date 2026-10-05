@@ -149,7 +149,7 @@ func TestSafeResendSkipsAdmissionGeneration(t *testing.T) { ... }
 | `tasks.completion_receipt` | 源域封闭回执与领取围栏下的工作完成 |
 | `tasks.completion` | 核验裁决、冻结释放、成功 Result 与任务终态 |
 
-新增事务必须传入固定名称、登记到同一表，并补充对应故障用例。故障套件检查未登记的事务和无调用点的登记项，普通构建只编译空边界，不包含故障计划、登记表或配置 API。`make test-fault` 仅运行 `conformance/fault/` 中带 `fault` 标签的测试。
+新增事务必须传入固定名称、登记到同一表，并补充对应故障用例。故障套件检查未登记的事务和无调用点的登记项，普通构建只编译空边界，不包含故障计划、登记表或配置 API。`make test-fault` 仅运行 `conformance/fault/` 中带 `fault` 标签的测试。完整套件保留 race 检测和全部存储切点；随着 M1 schema 增加，包级超时上限设为 60 分钟，不能用缩减切点规避运行时间。
 
 这些用例验证进程崩溃恢复，不等于通过掉电或存储故障验证。本地档的掉电资格仍由 ADR 0001 的独立验收决定。
 
@@ -203,3 +203,12 @@ func TestSafeResendSkipsAdmissionGeneration(t *testing.T) { ... }
 这些命令使用宿主认证后的 `host` 或 `local-cli` 身份回应；普通输入与模型输出不会被转换为可信批准。CLI 只呈现公共查询结果和转发结构化命令。
 
 启动恢复与 `recover` 会查询并继续原撤销交接，先读取出口原回执，再保存源端确认。所有宿主实例共用数据库对应的出口文件锁；撤销完成必须等待原实际使用退出。发送前封闭保存未发送证明，发送后封闭保留已有结果与迟到可能性，不会重发。封闭证明与仍待结算的预算预留都保留，后续结算不得依赖并不存在的原始发送证据。
+
+
+### M1 预算与账单命令
+
+`budget` 查询用户预算，`budget TASK_ID` 查询任务预算；两者是包含关系，不能相加作为总费用。输出包含 `limit`、`settled`、`reserved`、`available`、`deficit` 、`billingBlocked` 和 `ceilingViolation`。`budget-configure COMMAND_JSON` 建立额度；`budget-limit COMMAND_JSON` 使用 `AdjustBudgetLimitCommand` 的精确 `expectedRef` 调整额度，保留旧费用和预留。固定身份 `host` 与 `local-cli` 可提交这两类命令。
+
+`budget-version REF_JSON` 查询不可变预算版本。`billing-source SEND_REF_JSON` 查询该物理发送的当前计费来源；`billing-entry REF_JSON` 和 `billing-conflict REF_JSON` 查询原分录或待核对证据。即时费用在 P7 接收时按受信证据结算，原用量回报与回执不会改写。`bill-import COMMAND_JSON` 接受 `ImportBillCommand`，引用由受信宿主登记的原账单内容；外部身份、原发送和请求键必须一致。重复账单不再计费，矛盾的同版账单进入冲突；退款、贷记和不同版本的更正明确不支持。
+
+`budget-release COMMAND_JSON` 转发 `ReleaseReservationCommand`，需要原预留引用与不可变封闭证明。启动恢复和 `recover` 会继续释放已证明从未发送的预留；取消、关闭、超时及 P5 后的封闭都不证明零费用。实际费用超过原上界仍记录，预算显示缺口和上界失效，并拒绝相关的新准入；显式增额不会清除上界失效。费用更新不会改写已经固定的 Result。

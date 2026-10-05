@@ -1,0 +1,78 @@
+syntax = "proto3";
+package lerna.v1;
+
+import "lerna/v1/identity.proto";
+import "lerna/v1/planning.proto";
+import "lerna/v1/submission.proto";
+
+option go_package = "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1;lernav1";
+message AdjustBudgetLimitCommand {
+  CommandHeader header = 1;
+  Ref expected_ref = 2;
+  int64 limit = 3;
+  string reason = 4;
+}
+message BillingSource {
+  Ref ref = 1;
+  Ref send_ref = 2;
+  Ref reservation_ref = 3;
+  Ref admission_ref = 4;
+  GlobalName task_id = 5;
+  GlobalName operation_id = 6;
+  string unit = 7;
+  string status = 8;
+  optional int64 amount = 9;
+  uint64 source_version = 10;
+  Ref price_rule_ref = 11;
+  Ref entry_ref = 12;
+  string alias = 13;
+  Ref conflict_ref = 14;
+  BillingIdentity identity = 15;
+}
+message BillingEntry {
+  Ref ref = 1;
+  Ref source_ref = 2;
+  Ref evidence_ref = 3;
+  uint64 source_version = 4;
+  int64 amount = 5;
+  int64 released = 6;
+  string kind = 7;
+  string measurement_rule = 8;
+  string price_version = 9;
+  string alias = 10;
+  string semantic_fingerprint = 11;
+  BillingIdentity identity = 12;
+  bool ceiling_exceeded = 13;
+}
+message ImportBillCommand {
+  CommandHeader header = 1;
+  Ref send_ref = 2;
+  Ref evidence_ref = 3;
+  string operation = 4;
+}
+message ReleaseReservationCommand {
+  CommandHeader header = 1;
+  Ref reservation_ref = 2;
+  Ref closure_ref = 3;
+}
+message ReservationRelease {
+  Ref ref = 1;
+  Ref reservation_ref = 2;
+  Ref closure_ref = 3;
+  int64 released = 4;
+}
+
+message BillingConflict {
+  Ref ref = 1;
+  Ref source_ref = 2;
+  Ref evidence_ref = 3;
+  string reason = 4;
+  string alias = 5;
+}
+
+message BillingIdentity {
+  string namespace = 1;
+  string account = 2;
+  string native_instance = 3;
+  string component = 4;
+}
