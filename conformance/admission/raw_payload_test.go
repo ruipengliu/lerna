@@ -48,6 +48,10 @@ func TestRawObservationCanBeReusedWithoutChangingItsBytes(t *testing.T) {
 			if e != nil || !bytes.Equal(content.RawBody, tc.payload) {
 				t.Fatalf("stored bytes %v %v", content, e)
 			}
+			registration, e := f.h.Content.QueryRegistration(f.ctx, f.caller, raw.BodyRef)
+			if e != nil || registration == nil || registration.BodyReceipt == nil || content.SourceDescriptor.GetKind() != "TRUSTED_IO" || !proto.Equal(content.SourceDescriptor.ObservationRef, raw.Ref) || !proto.Equal(content.OperationId, a.OperationId) {
+				t.Fatalf("raw body provenance %v %v", registration, e)
+			}
 			r, e = f.h.Sessions.SubmitGoal(f.ctx, f.caller, &v1.SubmitGoalCommand{Identity: header("raw-goal").Identity, ContractVersion: 1, SchemaId: "lerna.v1.SubmitGoal", FingerprintVersion: 1, Goal: "reuse observed bytes"})
 			if e != nil {
 				t.Fatal(e)

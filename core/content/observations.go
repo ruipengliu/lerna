@@ -9,15 +9,16 @@ import (
 )
 
 type ObservationWork interface {
+	QueryReceipt(context.Context, *v1.Caller, *v1.CommandIdentity) (*v1.ReceiptQuery, error)
 	Execute(context.Context, *v1.Caller, *v1.CommandHeader, string, string, func(context.Context) (*v1.Ref, error)) (*v1.CommandReceipt, error)
 }
 type ObservationLedger interface {
+	QueryOperation(context.Context, *v1.Caller, *v1.GlobalName) (*v1.Operation, error)
 	QueryExecution(context.Context, *v1.Caller, *v1.GlobalName) (*v1.Execution, error)
 	AcceptObservation(context.Context, *v1.Caller, *v1.AcceptObservationCommand) (*v1.CommandReceipt, error)
 	QueryReceipt(context.Context, *v1.Caller, *v1.CommandIdentity) (*v1.ReceiptQuery, error)
 }
 type observationStore interface {
-	SaveObservationContent(context.Context, *v1.Content) error
 	SaveObservationHandoff(context.Context, *v1.ObservationHandoff) error
 	LoadObservationHandoff(context.Context, *v1.Ref) (*v1.ObservationHandoff, error)
 	PendingObservations(context.Context) ([]*v1.ObservationHandoff, error)
@@ -35,7 +36,7 @@ func (s *Service) RegisterObservation(ctx context.Context, caller *v1.Caller, c 
 	if caller.GetIssuerId() != "egress-io" {
 		return nil, command.Fail("PERMISSION_DENIED")
 	}
-	return s.work.Execute(ctx, caller, c.Header, command.SemanticFingerprint("register-observation", c.Observation, c.Body), "content.observation", func(tx context.Context) (*v1.Ref, error) {
+	return s.work.Execute(ctx, caller, c.Header, command.SemanticFingerprint("register-observation", c.Observation, append([]byte{}, c.Body...)), "content.observation", func(tx context.Context) (*v1.Ref, error) {
 		o := c.Observation
 		if o == nil || o.Ref == nil || o.Ref.Name == nil || o.UserId != s.user || o.Ref.Name.UserId != s.user || o.Ref.Revision != 1 || o.Ref.SchemaId != "lerna.v1.RawObservation" || o.Source != "TRUSTED_IO" || o.BodyRef != nil || o.OperationId == nil {
 			return nil, command.Fail("INVALID_OBSERVATION")
@@ -47,12 +48,16 @@ func (s *Service) RegisterObservation(ctx context.Context, caller *v1.Caller, c 
 		if x == nil || !proto.Equal(x.Send.ObservationRef, o.Ref) || !proto.Equal(x.Send.Ref, o.SendRef) || !proto.Equal(x.Attempt.Ref.Name, o.AttemptId) || x.Send.SendSeq != o.SendSeq || x.Send.Phase != "DISPATCH_POSSIBLE" || x.Attempt.ExternalKey != o.ExternalKey || x.CallDescriptor.Target != o.Target || c.Header.Identity.CommandId != "observe:"+o.Ref.Name.LocalId {
 			return nil, command.Fail("INVALID_OBSERVATION")
 		}
+		if e = s.checkAssociation(tx, caller, o.TaskId, o.OperationId, o.AttemptId); e != nil {
+			return nil, e
+		}
 		o = proto.Clone(o).(*v1.RawObservation)
-		body := &v1.Content{Ref: command.NewRef(s.user, s.domain, "content", "lerna.v1.Content"), RawBody: c.Body, Source: c.Header.Identity, AcquiredAtUnixMs: o.FinishedAtUnixMs, MediaType: "application/octet-stream", Status: "AVAILABLE", ProcessingPurposes: []string{"CURRENT_TASK", "EFFECT_EVIDENCE"}}
+		body := &v1.Content{Ref: command.NewRef(s.user, s.domain, "content", "lerna.v1.Content"), Source: c.Header.Identity, MediaType: "application/octet-stream", ProcessingPurposes: []string{"CURRENT_TASK", "EFFECT_EVIDENCE"}, ContentVersion: 1, Kind: "RAW_OBSERVATION", TaskId: o.TaskId, OperationId: o.OperationId, AttemptId: o.AttemptId, SourceDescriptor: &v1.ContentSourceDescriptor{Kind: "TRUSTED_IO", Locator: o.Target, AcquisitionMethod: "EGRESS", ProviderVersion: "egress-v1", SourceTimeUnixMs: o.FinishedAtUnixMs, ObservationRef: o.Ref}}
+		body.ContentId = body.Ref.Name.LocalId
 		o.BodyRef = body.Ref
 		h := &v1.ObservationHandoff{Observation: o, Command: &v1.AcceptObservationCommand{Header: observationHeader(s.user, "content-observation", o.OperationId.AuthorityDomainId, "observe:"+o.Ref.Name.LocalId), Observation: o}}
 		store := s.store.(observationStore)
-		if e = store.SaveObservationContent(tx, body); e != nil {
+		if e = s.prepareRegistration(tx, body, c.Body, c.Header.Identity); e != nil {
 			return nil, e
 		}
 		return o.Ref, store.SaveObservationHandoff(tx, h)
@@ -79,6 +84,9 @@ func (s *Service) QueryObservation(ctx context.Context, caller *v1.Caller, r *v1
 func (s *Service) ProcessObservations(ctx context.Context, caller *v1.Caller) error {
 	if caller.GetUserId() != s.user {
 		return command.Fail("PERMISSION_DENIED")
+	}
+	if e := s.ProcessRegistrations(ctx, caller); e != nil {
+		return e
 	}
 	all, e := s.store.(observationStore).PendingObservations(ctx)
 	if e != nil {

@@ -22,6 +22,7 @@ import (
 )
 
 type Harness struct {
+	Bodies     *sqlite.BodyReceipts
 	Egress     *egress.Service
 	Trace      *trace.Service
 	Ledger     *ledger.Service
@@ -42,8 +43,8 @@ func Open(path, user, domain string) (*Harness, error) {
 	}
 	d := durable.New(s, user, domain)
 	t := tasks.New(s, user, domain).WithDecisions(d)
-	c := content.New(s, user, domain+"/content")
-	h := &Harness{Sessions: sessions.New(s, d, t, c, user, domain), Tasks: t, Durable: d, Content: c, store: s}
+	c := content.New(s, user, domain+"/content").WithAssociations(t)
+	h := &Harness{Bodies: s.BodyReceipts(), Sessions: sessions.New(s, d, t, c, user, domain), Tasks: t, Durable: d, Content: c, store: s}
 	h.Grants = grants.New(s, d, user, domain, "host").WithAdmissions(t)
 	h.Grants.WithConfirmations(h.Sessions).WithConfirmationContent(c)
 	h.Sessions.WithConfirmations(s, d, t, h.Grants)
@@ -77,6 +78,10 @@ func Open(path, user, domain string) (*Harness, error) {
 		return nil, err
 	}
 	if err := h.Tasks.RecoverHandoffs(ctx, &v1.Caller{UserId: user, IssuerId: "host-recovery"}); err != nil {
+		s.Close()
+		return nil, err
+	}
+	if err := c.ProcessRegistrations(ctx, &v1.Caller{UserId: user, IssuerId: "host-recovery"}); err != nil {
 		s.Close()
 		return nil, err
 	}

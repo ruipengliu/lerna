@@ -42,6 +42,9 @@ var budgetMigration string
 //go:embed migrations/004_grants_confirmation.sql
 var grantsMigration string
 
+//go:embed migrations/019_content_governance.sql
+var contentGovernanceMigration string
+
 type Settings struct {
 	Platform                 string
 	SQLiteVersion            string
@@ -153,7 +156,7 @@ func (s *Store) configure(ctx context.Context) error {
 	if !s.settings.PowerLossQualified {
 		return fmt.Errorf("unqualified local durability platform: %+v", s.settings)
 	}
-	if _, err := s.conn.ExecContext(ctx, migration+admissionMigration+sessionInputMigration+grantsMigration+egressMigration+completionMigration+budgetMigration); err != nil {
+	if _, err := s.conn.ExecContext(ctx, migration+admissionMigration+sessionInputMigration+grantsMigration+egressMigration+completionMigration+budgetMigration+contentGovernanceMigration); err != nil {
 		return err
 	}
 	if _, err := s.conn.ExecContext(ctx, "INSERT OR IGNORE INTO domain_config VALUES(1,?,?,?)", s.user, s.domain, "LOCAL"); err != nil {
@@ -349,39 +352,6 @@ func (s *Store) LoadSession(ctx context.Context, n *v1.GlobalName) (*v1.Session,
 	return t, err
 }
 
-// StageContent 使用独立内容事务，不能参加裁决事务。
-func (s *Store) StageContent(ctx context.Context, c *v1.Content, fingerprint string) (*v1.Ref, error) {
-	var ref *v1.Ref
-	err := s.transact(ctx, "content", "content.stage", func(ctx context.Context) error {
-		old := new(v1.Content)
-		found, err := s.load(ctx, old, "SELECT record FROM content WHERE user_id=? AND domain_id=? AND source_issuer=? AND source_command=? AND fingerprint=?", c.Ref.Name.UserId, c.Ref.Name.AuthorityDomainId, c.Source.IssuerId, c.Source.CommandId, fingerprint)
-		if err != nil {
-			return err
-		}
-		if found {
-			ref = old.Ref
-			return nil
-		}
-		tx, err := s.writer(ctx, "content")
-		if err != nil {
-			return err
-		}
-		if err := tx.QueryRowContext(ctx, "SELECT CAST(unixepoch('subsec')*1000 AS INTEGER)").Scan(&c.AcquiredAtUnixMs); err != nil {
-			return err
-		}
-		b, err := proto.Marshal(c)
-		if err != nil {
-			return err
-		}
-		_, err = tx.ExecContext(ctx, "INSERT INTO content VALUES(?,?,?,?,?,?,?)", c.Ref.Name.UserId, c.Ref.Name.AuthorityDomainId, c.Ref.Name.LocalId, c.Source.IssuerId, c.Source.CommandId, fingerprint, b)
-		ref = c.Ref
-		return storageError(err, false)
-	})
-	if err != nil {
-		return nil, err
-	}
-	return ref, nil
-}
 func (s *Store) ReadContent(ctx context.Context, r *v1.Ref) (*v1.Content, error) {
 	if e := contentReadBoundary(ctx); e != nil {
 		return nil, e

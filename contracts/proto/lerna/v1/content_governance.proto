@@ -1,0 +1,100 @@
+syntax = "proto3";
+package lerna.v1;
+
+import "lerna/v1/identity.proto";
+import "lerna/v1/planning.proto";
+import "lerna/v1/submission.proto";
+
+option go_package = "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1;lernav1";
+
+message RegisterContentCommand {
+  CommandHeader header = 1;
+  bytes body = 2;
+  string media_type = 3;
+  ContentSourceDescriptor source_descriptor = 4;
+  Ref previous_version_ref = 5;
+  GlobalName task_id = 6;
+  GlobalName operation_id = 7;
+  GlobalName attempt_id = 8;
+}
+message ContentRegistration {
+  Content content = 1;
+  CommandIdentity identity = 2;
+  bytes staged_body = 3;
+  BodyDeposit deposit = 4;
+  BodyReceipt body_receipt = 5;
+  string state = 6;
+  Ref staging_location_ref = 7;
+}
+message BodyDeposit {
+  CommandIdentity identity = 1;
+  Ref content_ref = 2;
+  Ref location_ref = 3;
+  string digest = 4;
+  uint64 byte_size = 5;
+}
+message BodyReceipt {
+  BodyDeposit deposit = 1;
+  string fingerprint = 2;
+  int64 accepted_at_unix_ms = 3;
+  string durability_profile = 4;
+}
+message PrepareDerivationCommand {
+  CommandHeader header = 1;
+  GlobalName task_id = 2;
+  GlobalName operation_id = 3;
+  GlobalName attempt_id = 4;
+  string generator_version = 5;
+  string output_kind = 6;
+  string media_type = 7;
+  Ref previous_version_ref = 8;
+}
+message ContentDerivation {
+  Ref ref = 1;
+  CommandIdentity responsibility = 2;
+  GlobalName task_id = 3;
+  GlobalName operation_id = 4;
+  GlobalName attempt_id = 5;
+  string generator_version = 6;
+  string output_kind = 7;
+  string media_type = 8;
+  string host_instance_id = 9;
+  uint64 generation = 10;
+  Ref output_ref = 11;
+  Ref location_ref = 12;
+  repeated Ref actual_input_refs = 13;
+  repeated Ref sealed_input_refs = 14;
+  string state = 15;
+  Ref previous_version_ref = 16;
+  BodyReceipt body_receipt = 17;
+}
+message ReadDerivationInputCommand {
+  CommandHeader header = 1;
+  Ref derivation_ref = 2;
+  string host_instance_id = 3;
+  uint64 generation = 4;
+  Ref input_ref = 5;
+}
+message SealDerivationCommand {
+  CommandHeader header = 1;
+  Ref derivation_ref = 2;
+  string host_instance_id = 3;
+  uint64 generation = 4;
+  repeated Ref input_refs = 5;
+}
+message CommitDerivationCommand {
+  CommandHeader header = 1;
+  Ref derivation_ref = 2;
+  string host_instance_id = 3;
+  uint64 generation = 4;
+  bytes body = 5;
+}
+message DeleteContentCommand {
+  CommandHeader header = 1;
+  Ref content_ref = 2;
+}
+message TakeoverDerivationCommand {
+  CommandHeader header = 1;
+  Ref derivation_ref = 2;
+  uint64 expected_generation = 3;
+}

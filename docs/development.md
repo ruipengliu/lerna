@@ -212,3 +212,11 @@ func TestSafeResendSkipsAdmissionGeneration(t *testing.T) { ... }
 `budget-version REF_JSON` 查询不可变预算版本。`billing-source SEND_REF_JSON` 查询该物理发送的当前计费来源；`billing-entry REF_JSON` 和 `billing-conflict REF_JSON` 查询原分录或待核对证据。即时费用在 P7 接收时按受信证据结算，原用量回报与回执不会改写。`bill-import COMMAND_JSON` 接受 `ImportBillCommand`，引用由受信宿主登记的原账单内容；外部身份、原发送和请求键必须一致。重复账单不再计费，矛盾的同版账单进入冲突；退款、贷记和不同版本的更正明确不支持。
 
 `budget-release COMMAND_JSON` 转发 `ReleaseReservationCommand`，需要原预留引用与不可变封闭证明。启动恢复和 `recover` 会继续释放已证明从未发送的预留；取消、关闭、超时及 P5 后的封闭都不证明零费用。实际费用超过原上界仍记录，预算显示缺口和上界失效，并拒绝相关的新准入；显式增额不会清除上界失效。费用更新不会改写已经固定的 Result。
+
+### M1 内容登记与宿主派生
+
+`Content.Register` 保存结构化来源、实际取得时间、可选的任务／动作／尝试关联和暂存责任。`ProcessRegistrations` 查询正文持有方的原接纳回执，再核验实际字节并发布；`QueryRegistration` 只返回责任元数据，暂存载荷不随查询泄露。`Content.Read` 返回已发布版本的精确字节，`command.ContentBytes` 同时供确认展示与出口使用。原目标 `Stage` 入口在完成正文交接后才返回，来源命令保持不变。`Delete` 明确返回 `UNSUPPORTED`。
+
+派生宿主依次调用 `PrepareDerivation`、`ReadDerivationInput`、`SealDerivation`、`CommitDerivation` 和 `ProcessRegistrations`。输入字节必须从 `ReadDerivationInput` 返回值取得；封闭集合必须覆盖全部实际输入，额外报告的来源也必须是可用版本。准备返回的责任可用 `QueryDerivation` 查询，其实例标识和代次绑定后续调用；`TakeoverDerivation` 保留原责任并隔离旧实例。模型和适配器不能登记可信原始观察，外部调用仍须经过准入和出口闸门。结构化的上下文快照保存引用；将它们编成提示、摘要或其他正文时，宿主必须使用派生入口。
+
+正文后端在独立 `body` 事务持久保存接纳回执。`assembly.Harness.Bodies.QueryReceipt` 是持有方的只读回执查询，可与内容源域的交接状态独立比较，不返回未发布正文。新增故障点为 `content.register`、`body.accept`、`content.publish`、`content.derivation`、`content.derivation_input`、`content.derivation_takeover`、`content.derivation_seal`、`content.derivation_commit`。原有 `content.stage` 和 `content.observation` 现在保存登记意图；正文持有责任和发布另有独立提交，原始观察发布完成后才交给执行管理。
