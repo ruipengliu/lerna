@@ -1,0 +1,108 @@
+{
+  "STATIC_ONLY_no_execution_grant": true,
+  "decision_sha256": "74b3eeb54aaa8d00b968cd21965542b6a37f8c66c4dcb61219e87d89b2a88d82",
+  "one_analysis_argv": [
+    "go",
+    "tool",
+    "pprof",
+    "-traces",
+    "-sample_index=cpu",
+    "-unit=ns",
+    "-tagfocus=phase=^decision_step$",
+    "-focus=^github\\.com/ruipengliu/lerna/adapters/content/decision\\.\\(\\*Adapter\\)\\.(ReadSnapshot|ReadFixtureLock)$",
+    "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/component-profile-race.test",
+    "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/worker-cpu.pprof"
+  ],
+  "workdir": "/tmp/lerna-worktrees/content-snapshots-03",
+  "locked_environment": "source /workspace/.lerna-env/env.sh; GOTOOLCHAIN=local GOFLAGS=-mod=readonly",
+  "supervisor": "/workspace/lerna-content-03-137311247276/run-native.py",
+  "outer_seconds": 120,
+  "raw_log": "/workspace/lerna-content-03-137311247276/context-final-capacity-b-worker-cpu-source-traces.log",
+  "prelaunch_registration": "/workspace/lerna-content-03-137311247276/source-stack-weighted-analysis/prelaunch-registration.json",
+  "actual_outcome": "/workspace/lerna-content-03-137311247276/source-stack-weighted-analysis/analysis-outcome.json",
+  "parser_argv": [
+    "python3",
+    "/workspace/lerna-content-03-137311247276/source-stack-weighted-analysis/classify-traces.py",
+    "/workspace/lerna-content-03-137311247276/context-final-capacity-b-worker-cpu-source-traces.log"
+  ],
+  "parser_stdout_destination": "/workspace/lerna-content-03-137311247276/source-stack-weighted-analysis/weighted-source-stacks.json",
+  "parser_sha256": "7c19198e194d1ec9580014c0b6fab9cbad82556075546ae674c682b48b9c3f29",
+  "bounds": {
+    "raw_complete_bytes_max": 16777216,
+    "profile_sample_rows_max": 10000,
+    "frames_per_row_max": 256,
+    "weight_ns_max": 9007199254740992,
+    "failure": "preserve complete raw; STOP; no partial totals/no retry"
+  },
+  "artifacts": [
+    {
+      "path": "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/component-profile-race.test",
+      "sha256": "963905c078cebcbe55e4c64765d8f75aa4dcf1f88ec1d1d4452b889b64615cf3",
+      "bytes": 29010781,
+      "device": 27,
+      "inode": 560459,
+      "mode": "0o700"
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/worker-cpu.pprof",
+      "sha256": "427bbc672bad5cf520934ed2e31116f75eca4991572fd5ecd0c3f7c3a4ff31e6",
+      "bytes": 144298,
+      "device": 27,
+      "inode": 560161,
+      "mode": "0o600"
+    }
+  ],
+  "source_equivalence": [
+    {
+      "path": "adapters/content/decision/source.go",
+      "old_sha256": "f3342f0bfefabd1adeb59d8fa8566e4af70dfb64ea41185aa721386a04a3df27",
+      "current_sha256": "f3342f0bfefabd1adeb59d8fa8566e4af70dfb64ea41185aa721386a04a3df27",
+      "byte_equal": true
+    },
+    {
+      "path": "adapters/content/decision/assembly.go",
+      "old_sha256": "81159617d649cead0c3ac2a6d7dd745753db3c07365d4eb8c99b3ee25ec62036",
+      "current_sha256": "81159617d649cead0c3ac2a6d7dd745753db3c07365d4eb8c99b3ee25ec62036",
+      "byte_equal": true
+    },
+    {
+      "path": "adapters/content/decision/ports.go",
+      "old_sha256": "edfc9faf253e3d16959ed37242b587ade9973a572d246d539c04e6094a75782c",
+      "current_sha256": "edfc9faf253e3d16959ed37242b587ade9973a572d246d539c04e6094a75782c",
+      "byte_equal": true
+    },
+    {
+      "path": "domain/task/context/canonical.go",
+      "old_sha256": "1350ffdc90bafc5b07a38ac96c9cdbad4020974eac4946d6785bd53fb19f0c63",
+      "current_sha256": "1350ffdc90bafc5b07a38ac96c9cdbad4020974eac4946d6785bd53fb19f0c63",
+      "byte_equal": true
+    },
+    {
+      "path": "domain/task/context/types.go",
+      "old_sha256": "afea8dc64d9754ae67e157c5393b9ebbe03c10035ebd264c5a1ef852246f8be2",
+      "current_sha256": "afea8dc64d9754ae67e157c5393b9ebbe03c10035ebd264c5a1ef852246f8be2",
+      "byte_equal": true
+    },
+    {
+      "path": "contract/v1_1/codec.go",
+      "old_sha256": "53ba6cf9a5bb9d70d77632cc154be07ef5e5171c0832fc50488fbdd210981167",
+      "current_sha256": "53ba6cf9a5bb9d70d77632cc154be07ef5e5171c0832fc50488fbdd210981167",
+      "byte_equal": true
+    },
+    {
+      "path": "contract/v1_1/json.go",
+      "old_sha256": "9c6c14729d3ea6c9ea464ef1a234aa3eea106f1c0478e8b1b9a2ee78ffb8f06a",
+      "current_sha256": "9c6c14729d3ea6c9ea464ef1a234aa3eea106f1c0478e8b1b9a2ee78ffb8f06a",
+      "byte_equal": true
+    },
+    {
+      "path": "contract/v1_2/codec.go",
+      "old_sha256": "9075a2645dac383b01877c693dc344e24d4aeb3b7aa502c14c2ca0ff123bf5cb",
+      "current_sha256": "9075a2645dac383b01877c693dc344e24d4aeb3b7aa502c14c2ca0ff123bf5cb",
+      "byte_equal": true
+    }
+  ],
+  "original_profile_descriptor_logicalClose": "UNKNOWN",
+  "new_analysis_original_binary": "963905, never 0514",
+  "prelaunch_rule": "After explicit root grant, hash artifacts/parser/source again and write new registration; wrapper captures PID/tick before native effects. Record Wait/groupabsence/native raw hash; separate own later FD Close/fsync from original unknown."
+}

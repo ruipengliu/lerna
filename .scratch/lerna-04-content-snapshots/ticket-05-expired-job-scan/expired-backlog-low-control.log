@@ -1,0 +1,7 @@
+=== RUN   TestContentLaterWorkPassesOneExpiredCleanupResponsibility
+    content_expired_backlog_test.go:22: backlog preparation: reopen changed original unconfirmed duty 0 <nil>
+--- FAIL: TestContentLaterWorkPassesOneExpiredCleanupResponsibility (15.33s)
+FAIL
+FAIL	github.com/ruipengliu/lerna/conformance/component	15.339s
+FAIL
+NATIVE_COMPLETION_ACK {"pid": 3279876, "pgid": 3279876, "starttime": "13698741", "exit": 1, "group_absent": true, "timed_out": false}

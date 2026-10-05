@@ -1,0 +1,9 @@
+{
+  "source": "/tmp/lerna-04-ticket-03-overflow-diagnostic-decision.md",
+  "bytes": 7046,
+  "sha256": "ecc3d834424948c34165141518f4511b8dd54ed694ef34513394d69daf505370",
+  "decision_source_head": "e3cee59b27492df398f58c2684ec017e7dd49cf7",
+  "adoption_parent": "0e3fbfa812a55300050270826bfdb5eec94e759e",
+  "adopted_at": "2026-10-04T20:49:00Z",
+  "qualification": "Root read the complete original decision. This decision is not execution evidence or acceptance of ticket 03."
+}

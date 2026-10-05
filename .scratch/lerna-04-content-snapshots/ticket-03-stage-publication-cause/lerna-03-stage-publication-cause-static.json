@@ -1,0 +1,26 @@
+{
+  "original_product_pin": "28e3a468c86d4323d3b497836de23bb311a58952",
+  "status": "two untracked new sources, static/unformatted/uncompiled/unrun, existing StagePublication cause bug untouched",
+  "files": [
+    {
+      "path": "/tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_context_publication_cause_test.go",
+      "bytes": 7278,
+      "sha256": "e944e3439eabe84936eb166e1966b178166fd7e1f7b8a1972139b96b9b2768d0"
+    },
+    {
+      "path": "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_publication_probe.go",
+      "bytes": 2444,
+      "sha256": "8105fa70a711f53fb38cc2b3006f93887fab01c78c31ef9dde8d07e92fd0865b"
+    }
+  ],
+  "caller_seconds": 30,
+  "transaction_seconds": 3,
+  "statement_seconds": 2,
+  "lock_seconds": 1,
+  "go_timeout_seconds": 120,
+  "outer_seconds": 120,
+  "command_shell": "set -e; . /workspace/.lerna-env/env.sh; GOTOOLCHAIN=local GOFLAGS=-mod=readonly go test -v -p 1 -count=1 -tags=integration -timeout=120s ./conformance/component -run \"^TestContentContextStagePublicationPreservesCanceledInputLockCause$\"",
+  "no_grant_implied": true,
+  "normal_control": "actual Adapter Publish/ReadPublished literal bytes and reopen",
+  "fault": "actual input row lock wait with known peer backend/blocker PG ACK, cancel same publisher childctx; public original command not_found before/after reopen after joins and peerClose"
+}

@@ -1,0 +1,10 @@
+{
+  "kind": "actual one read-only audit prelaunch",
+  "manifest": "/tmp/lerna-05-own-resource-audit-static/execution-manifest.json",
+  "manifest_sha256": "9e54c88aec41265b3befa9f122defbbe4eb8129a0198356bf8c57a6826c78a8f",
+  "qualification_commit": "8db74e3dfd2677adb37fbdd13bd93e76b61b5eb7",
+  "source_15_unchanged_clean": true,
+  "safe_command": "python3 /tmp/lerna-04-ticket05-execution/run-native.py bash -c 'source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; go run -mod=readonly -p=1 /tmp/lerna-05-own-resource-audit-static/audit.go'",
+  "utc": "2026-10-05T06:34:26Z",
+  "ledger_offset_before_launch": 309888
+}

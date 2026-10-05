@@ -1,0 +1,13 @@
+=== RUN   TestContextBindingDecodeReusesOnlyExactFreshRowBytes
+--- PASS: TestContextBindingDecodeReusesOnlyExactFreshRowBytes (0.01s)
+=== RUN   TestContextBindingClonePreservesAllMutableFieldsAndNilEmpty
+--- PASS: TestContextBindingClonePreservesAllMutableFieldsAndNilEmpty (0.01s)
+=== RUN   TestContextBindingDecodeScopeLocatorAndBodyChangesRequireDecode
+--- PASS: TestContextBindingDecodeScopeLocatorAndBodyChangesRequireDecode (0.02s)
+=== RUN   TestContextBindingDecodeStrictFailuresAndNonMetadataRemainOriginal
+--- PASS: TestContextBindingDecodeStrictFailuresAndNonMetadataRemainOriginal (0.02s)
+=== RUN   TestContextBindingDecodeConcurrentIndependentResults
+--- PASS: TestContextBindingDecodeConcurrentIndependentResults (0.07s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/internal/decisionfixture	1.209s
+NATIVE_EXIT status=0 group_absent=True

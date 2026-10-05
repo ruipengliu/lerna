@@ -1,0 +1,18 @@
+{
+  "source_log": "/tmp/lerna-04-ticket05-execution/inherited-cap-admission-first-red.log",
+  "archive": "original.log",
+  "bytes": 575,
+  "sha256": "2250efe9139b754a39dab41c33b8b4f9af1d535d0542887bb0b22f5a1dd273da",
+  "source_test": "/tmp/lerna-worktrees/content-snapshots-05/conformance/component/content_inherited_cap_cleanup_test.go",
+  "source_test_sha256": "76adc1decaac818b73aa4f091fb0bac9c687072c5a2db63dc3e426ff42833e3d",
+  "product_pin": "1a52d24a051442cd8ccdd3c3ef01ff7707cc84a7",
+  "native": {
+    "pid": 3136486,
+    "pgid": 3136486,
+    "starttime": "13089058",
+    "exit": 1,
+    "group_absent": true,
+    "timed_out": false
+  },
+  "scope": "genuine first business failure at original AdmissionTarget cleanup consume; post-failure seal/erase/reopen/receipt replay assertions not executed"
+}

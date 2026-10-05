@@ -1,0 +1,42 @@
+File: component-profile-race.test
+Build ID: 806ee56983405ac712e9bc3da0d9c152c518a73f
+Type: cpu
+Time: 2026-10-05 03:06:19 UTC
+Duration: 78.40s, Total samples = 62.18s (79.31%)
+Active filters:
+   tagfocus=case=static62
+Showing nodes accounting for 3.11s, 5.00% of 62.18s total
+Dropped 127 nodes (cum <= 0.31s)
+Showing top 30 nodes out of 255
+      flat  flat%   sum%        cum   cum%
+     0.73s  1.17%  1.17%      0.73s  1.17%  __tsan_read
+     0.71s  1.14%  2.32%      0.71s  1.14%  racecall
+     0.27s  0.43%  2.75%      0.27s  0.43%  __tsan::MemoryAccessRangeT
+     0.16s  0.26%  3.01%      0.16s  0.26%  runtime.futex
+     0.14s  0.23%  3.23%      0.14s  0.23%  racecalladdr
+     0.13s  0.21%  3.44%      0.13s  0.21%  __tsan_write
+     0.12s  0.19%  3.63%      0.12s  0.19%  runtime.raceread
+     0.08s  0.13%  3.76%      0.08s  0.13%  internal/runtime/syscall/linux.Syscall6
+     0.07s  0.11%  3.88%      0.12s  0.19%  runtime.checkptrBase
+     0.05s  0.08%  3.96%      0.05s  0.08%  __tsan::MetaMap::GetSync
+     0.05s  0.08%  4.04%      0.05s  0.08%  __tsan_go_atomic64_load
+     0.05s  0.08%  4.12%      0.18s  0.29%  encoding/json/jsontext.(*decoderState).consumeObject
+     0.05s  0.08%  4.20%      0.05s  0.08%  runtime.findObject
+     0.05s  0.08%  4.28%      0.05s  0.08%  runtime.write1
+     0.04s 0.064%  4.34%      0.20s  0.32%  encoding/json/jsontext.(*decoderState).consumeValue
+     0.04s 0.064%  4.41%      0.04s 0.064%  runtime.mallocgcTiny
+     0.04s 0.064%  4.47%      0.04s 0.064%  runtime.memclrNoHeapPointers
+     0.03s 0.048%  4.52%      0.03s 0.048%  __tsan::VectorClock::ReleaseAcquire
+     0.03s 0.048%  4.57%      0.03s 0.048%  __tsan_func_enter
+     0.03s 0.048%  4.62%      0.03s 0.048%  __tsan_read_pc
+     0.03s 0.048%  4.66%      0.05s  0.08%  encoding/json/jsontext.Token.string
+     0.03s 0.048%  4.71%      0.24s  0.39%  github.com/santhosh-tekuri/jsonschema/v6.(*validator).validate
+     0.03s 0.048%  4.76%      0.03s 0.048%  runtime.(*mspan).writeHeapBitsSmall
+     0.03s 0.048%  4.81%      0.10s  0.16%  runtime.mallocgcSmallScanNoHeader
+     0.02s 0.032%  4.84%      0.02s 0.032%  __tsan::ShadowSet
+     0.02s 0.032%  4.87%      0.02s 0.032%  __tsan::SlotUnlock
+     0.02s 0.032%  4.91%      0.02s 0.032%  __tsan::VectorClock::Acquire
+     0.02s 0.032%  4.94%      0.02s 0.032%  __tsan_go_atomic32_compare_exchange
+     0.02s 0.032%  4.97%      0.02s 0.032%  context.(*cancelCtx).propagateCancel
+     0.02s 0.032%  5.00%      0.03s 0.048%  github.com/jackc/pgx/v5/pgtype.(*Map).planScan
+NATIVE_EXIT status=0 group_absent=True

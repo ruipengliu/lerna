@@ -1,0 +1,115 @@
+{
+  "full_read_actual_raw_162_lines": true,
+  "root_current_original_group_absent": true,
+  "race_business": "UNRUN; normal failed and owner stopped",
+  "records": [
+    {
+      "source": "/workspace/lerna-content-03-137311247276/large-graph-closure-identity-overlay/manifest.json",
+      "artifact": "manifest.json",
+      "bytes": 9257,
+      "sha256": "57a357247462e2d5650a55922c020fc1b63541f6f5634d0e1231b49856022e86"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/large-graph-closure-identity-overlay/commands-static.json",
+      "artifact": "commands-static.json",
+      "bytes": 2086,
+      "sha256": "b99c9fdd9ec672b83f857d85d19f1e09015d75c054428f6ec232d3a0c2e30497"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/large-graph-closure-identity-overlay/overlay.json",
+      "artifact": "overlay.json",
+      "bytes": 1102,
+      "sha256": "ba168a3cb3984727791c9c16e2f88060dc7d235db9d9e6d75ae047dcf4558a67"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/large-graph-closure-identity-overlay/candidate.diff",
+      "artifact": "candidate.diff",
+      "bytes": 3254,
+      "sha256": "0ac98cd2a14eca1543843fe0f135e279265d9582a990a5a6aa2f056a134367cd"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/large-graph-closure-identity-overlay/binary-normal-provenance.json",
+      "artifact": "binary-normal-provenance.json",
+      "bytes": 4171,
+      "sha256": "f458532aa3ee7a20c08f02c5fdd12a62b489b7ec6e1b011ea94e9a9683fcef00"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/large-graph-closure-identity-overlay/binary-race-provenance.json",
+      "artifact": "binary-race-provenance.json",
+      "bytes": 4171,
+      "sha256": "005c2fb7fe1f2b712af8380fb2b4ab2782cc154ea2c7358bf9a32c7548c85147"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/large-graph-closure-identity-overlay/normal-outcome.json",
+      "artifact": "normal-outcome.json",
+      "bytes": 11250,
+      "sha256": "fd443884f6d1b395638bfe69d45613c5264bcd58a9c9c8cb80ce8d753725c5f1"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/large-graph-closure-identity-overlay/README.md",
+      "artifact": "input-readme.md",
+      "bytes": 4258,
+      "sha256": "849191b2ee5cbb6f167e47f373f84862dd51cea3bf9965c3bb15b594aea2ca84"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/context-final-capacity-b-closure-identity-format.log",
+      "artifact": "context-final-capacity-b-closure-identity-format.log",
+      "bytes": 39,
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/context-final-capacity-b-closure-identity-build-normal.log",
+      "artifact": "context-final-capacity-b-closure-identity-build-normal.log",
+      "bytes": 39,
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/context-final-capacity-b-closure-identity-build-race.log",
+      "artifact": "context-final-capacity-b-closure-identity-build-race.log",
+      "bytes": 39,
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/context-final-capacity-b-closure-identity-normal.log",
+      "artifact": "context-final-capacity-b-closure-identity-normal.log",
+      "bytes": 26803,
+      "sha256": "4d40b79faf796680faa5eabb5c4832980b08b2b734feefc36e7abce201d4645c"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/large-graph-closure-identity-results.md",
+      "artifact": "large-graph-closure-identity-results.md",
+      "bytes": 3447,
+      "sha256": "a351c05bda52f2b8f3e3b59d16ae773733fd19b68d0f0711c6af8af663151122"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/large-graph-closure-identity-overlay/context_world.go",
+      "artifact": "context_world.go",
+      "bytes": 11298,
+      "sha256": "e37d876a734b2639a044ae931e8066b9844a8c88e8a213f6d3a32c2db0421612"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/large-graph-closure-identity-overlay/context_claim_diagnostics.go",
+      "artifact": "context_claim_diagnostics.go",
+      "bytes": 13261,
+      "sha256": "573ae56fe178fb5f1cfa8898575ab5ca141f22077383173b383635e4a7b743e9"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/large-graph-closure-identity-overlay/content_context_closure_test.go",
+      "artifact": "content_context_closure_test.go",
+      "bytes": 4558,
+      "sha256": "c668eacce37c9363cccaa243e2c484951582a872652d1a875c1281362a5c4e43"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/large-graph-closure-identity-overlay/content_context_material_reachable_test.go",
+      "artifact": "content_context_material_reachable_test.go",
+      "bytes": 3369,
+      "sha256": "4223c74583ac7ecace18402ec114708e7a43bbf1593da47bbc675e3a6617e7f2"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/large-graph-closure-identity-overlay/content_context_test.go",
+      "artifact": "content_context_test.go",
+      "bytes": 18517,
+      "sha256": "9f1bdc9e8757057ed09836a9d8aee213825e3fe1484c1a86966a4cce2911189f"
+    }
+  ]
+}

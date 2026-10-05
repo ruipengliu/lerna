@@ -1,0 +1,10 @@
+=== RUN   TestContentContextStagePublicationPreservesCanceledInputLockCause
+=== RUN   TestContentContextStagePublicationPreservesCanceledInputLockCause/normal
+=== NAME  TestContentContextStagePublicationPreservesCanceledInputLockCause
+    content_context_publication_cause_test.go:201: real canceled StagePublication input read lost its original cause decision authorization denied
+--- FAIL: TestContentContextStagePublicationPreservesCanceledInputLockCause (1.93s)
+    --- PASS: TestContentContextStagePublicationPreservesCanceledInputLockCause/normal (1.16s)
+FAIL
+FAIL	github.com/ruipengliu/lerna/conformance/component	1.940s
+FAIL
+NATIVE_EXIT status=1 group_absent=True

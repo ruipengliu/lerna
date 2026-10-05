@@ -1,0 +1,27 @@
+{
+  "root_verified_original_group_absent": 3481197,
+  "root_verified_current_dependencies": 12,
+  "FULL_read_raw_outcome_prelaunch": true,
+  "Manager_compiled_not_selected_RUN": true,
+  "not_individual_resource_Close_proof": true,
+  "files": [
+    {
+      "source": "/tmp/lerna-04-ticket05-execution/scan-deadline-mechanical-race.log",
+      "archive": ".scratch/lerna-04-content-snapshots/ticket-05-expired-job-scan/deadline-mechanical-qualification/race.log",
+      "sha256": "e97b9195db7763e64b1534f1b35c2ca0ad06b5b5462f3d255f1e30ae24a6370f",
+      "bytes": 450
+    },
+    {
+      "source": "/tmp/lerna-04-ticket05-execution/scan-deadline-mechanical-race-prelaunch.json",
+      "archive": ".scratch/lerna-04-content-snapshots/ticket-05-expired-job-scan/deadline-mechanical-qualification/race-prelaunch.json",
+      "sha256": "3e4f9ee6d15da995d59232843c4cf75c0ec1a79800c50f7862a53310c762e1ff",
+      "bytes": 3964
+    },
+    {
+      "source": "/tmp/lerna-05-scan-deadline-mechanical-race-outcome.json",
+      "archive": ".scratch/lerna-04-content-snapshots/ticket-05-expired-job-scan/deadline-mechanical-qualification/race-outcome.json",
+      "sha256": "2f8159d365d5e828fe1fe1e06dddbb8784994e3617ccc981666e7182cef36145",
+      "bytes": 2226
+    }
+  ]
+}

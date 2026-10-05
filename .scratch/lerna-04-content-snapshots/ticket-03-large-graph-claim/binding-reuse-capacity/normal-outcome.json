@@ -1,0 +1,83 @@
+{
+  "source_pin": "28e3a468c86d4323d3b497836de23bb311a58952",
+  "native_identity": {
+    "pid": 3268325,
+    "pgid": 3268325,
+    "starttime": "13650986",
+    "started_ns": 1791168271516707357,
+    "args": [
+      "/workspace/lerna-content-03-137311247276/large-graph-binding-reuse-overlay/component-normal.test",
+      "-test.v",
+      "-test.count=1",
+      "-test.timeout=120s",
+      "-test.run=^(TestContentContextReachableClosure64And65IncludesIntermediateVersions|TestContentContextStaticModeMaximumReachable62Materials|TestContentContextSingleContentBoundHasHonestLayerAndNoDispatch|TestContentContextDuplicateSelectorRoleRefusesBeforeOriginalInputReplacement)$"
+    ]
+  },
+  "session": 42946,
+  "actual_exit": 0,
+  "group_absent": true,
+  "current_killpg_zero_absent": true,
+  "log": "/workspace/lerna-content-03-137311247276/context-final-capacity-b-binding-reuse-normal.log",
+  "log_sha256": "467d17c0f591f74b1adbcbaf99bea3cd3d0ca51c483609a325cc39622924a624",
+  "log_bytes": 26082,
+  "log_lines": 158,
+  "direct_binary_no_go_package_duration": true,
+  "binary_provenance": "/workspace/lerna-content-03-137311247276/large-graph-binding-reuse-overlay/binary-normal-provenance.json",
+  "manifest_sha256": "f98350889216691304ef107a1a9f25fce25c5d9bb987ac61c3690e410c68cd04",
+  "run_once": true,
+  "all_exact_four_and_subtests_pass": true,
+  "passes": [
+    {
+      "test": "TestContentContextReachableClosure64And65IncludesIntermediateVersions",
+      "duration": "17.61s"
+    },
+    {
+      "test": "TestContentContextReachableClosure64And65IncludesIntermediateVersions/64",
+      "duration": "12.62s"
+    },
+    {
+      "test": "TestContentContextReachableClosure64And65IncludesIntermediateVersions/65",
+      "duration": "4.98s"
+    },
+    {
+      "test": "TestContentContextStaticModeMaximumReachable62Materials",
+      "duration": "11.21s"
+    },
+    {
+      "test": "TestContentContextSingleContentBoundHasHonestLayerAndNoDispatch",
+      "duration": "2.11s"
+    },
+    {
+      "test": "TestContentContextSingleContentBoundHasHonestLayerAndNoDispatch/200000",
+      "duration": "1.68s"
+    },
+    {
+      "test": "TestContentContextSingleContentBoundHasHonestLayerAndNoDispatch/262144",
+      "duration": "0.43s"
+    },
+    {
+      "test": "TestContentContextDuplicateSelectorRoleRefusesBeforeOriginalInputReplacement",
+      "duration": "0.35s"
+    }
+  ],
+  "caller_seconds": 30,
+  "claim_seconds": 5,
+  "test_watchdog_seconds": 120,
+  "outer_seconds": 120,
+  "race_unrun": true,
+  "acceptance_not_implied": true,
+  "collector_buffers": [
+    {
+      "events": 324,
+      "dropped": 0
+    },
+    {
+      "events": 15,
+      "dropped": 0
+    },
+    {
+      "events": 327,
+      "dropped": 0
+    }
+  ]
+}

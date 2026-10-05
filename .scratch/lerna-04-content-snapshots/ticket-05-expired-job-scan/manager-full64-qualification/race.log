@@ -1,0 +1,5 @@
+=== RUN   TestContentManagerPolicyPassesFullExpiredCleanupPageWithoutChangingOriginalDuties
+--- PASS: TestContentManagerPolicyPassesFullExpiredCleanupPageWithoutChangingOriginalDuties (26.47s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/component	27.528s
+NATIVE_COMPLETION_ACK {"pid": 3514791, "pgid": 3514791, "starttime": "14733329", "exit": 0, "group_absent": true, "timed_out": false}

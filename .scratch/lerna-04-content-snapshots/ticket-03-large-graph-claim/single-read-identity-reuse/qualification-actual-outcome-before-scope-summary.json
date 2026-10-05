@@ -1,0 +1,138 @@
+{
+  "status": "format and exact3 qualification phases actualPASS",
+  "phases": [
+    {
+      "phase": "format",
+      "identity": {
+        "pid": 3554930,
+        "pgid": 3554930,
+        "starttime": "14899552",
+        "started_ns": 1791180757174703346,
+        "args": [
+          "gofmt",
+          "-w",
+          "/tmp/lerna-worktrees/content-snapshots-03/domain/content/closure.go",
+          "/tmp/lerna-worktrees/content-snapshots-03/domain/content/processing.go",
+          "/tmp/lerna-worktrees/content-snapshots-03/domain/content/closure_identity_memo_test.go",
+          "/tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_processing_ancestor_read_gate_test.go"
+        ]
+      },
+      "actual_exit": 0,
+      "actual_wait": true,
+      "group_absent_rechecked": true,
+      "raw_log": "/workspace/lerna-content-03-137311247276/context-single-read-identity-format.log",
+      "raw_bytes": 39,
+      "raw_lines": 1,
+      "raw_sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+      "raw_output_ownFD_flush_fsync_Close": "ACK",
+      "noTimeout": true,
+      "original_profile_descriptor_Close": "UNKNOWN"
+    },
+    {
+      "phase": "pure_normal",
+      "identity": {
+        "pid": 3554937,
+        "pgid": 3554937,
+        "starttime": "14899558",
+        "started_ns": 1791180757243055557,
+        "args": [
+          "go",
+          "test",
+          "-v",
+          "-count=1",
+          "-p",
+          "1",
+          "-timeout=120s",
+          "-run=^(TestIndependentVersionIdentityGolden|TestClosureIdentityMemoPreservesFullRefValidationAndFiniteSuccess)$",
+          "./domain/content"
+        ]
+      },
+      "actual_exit": 0,
+      "actual_wait": true,
+      "group_absent_rechecked": true,
+      "raw_log": "/workspace/lerna-content-03-137311247276/context-single-read-identity-pure-normal.log",
+      "raw_bytes": 361,
+      "raw_lines": 7,
+      "raw_sha256": "f918a6a5f5adce289da0c523a980094da28dec57fd45e3fbfd6ba4041aa966a7",
+      "raw_output_ownFD_flush_fsync_Close": "ACK",
+      "noTimeout": true,
+      "original_profile_descriptor_Close": "UNKNOWN"
+    },
+    {
+      "phase": "public_normal",
+      "identity": {
+        "pid": 3555011,
+        "pgid": 3555011,
+        "starttime": "14899641",
+        "started_ns": 1791180758066494186,
+        "args": [
+          "go",
+          "test",
+          "-v",
+          "-tags=integration",
+          "-p",
+          "1",
+          "-count=1",
+          "-timeout=120s",
+          "-run=^TestContentProcessingRechecksHiddenAncestorAfterRealObjectRead$",
+          "./conformance/component"
+        ]
+      },
+      "actual_exit": 0,
+      "actual_wait": true,
+      "group_absent_rechecked": true,
+      "raw_log": "/workspace/lerna-content-03-137311247276/context-single-read-identity-public-normal.log",
+      "raw_bytes": 650,
+      "raw_lines": 9,
+      "raw_sha256": "1bfc6d8bdbad1eab022ba47e17bc9cb5092803d4d139c23ba23584bc24941d84",
+      "raw_output_ownFD_flush_fsync_Close": "ACK",
+      "noTimeout": true,
+      "original_profile_descriptor_Close": "UNKNOWN"
+    },
+    {
+      "phase": "public_race",
+      "identity": {
+        "pid": 3555294,
+        "pgid": 3555294,
+        "starttime": "14900173",
+        "started_ns": 1791180763385958975,
+        "args": [
+          "go",
+          "test",
+          "-v",
+          "-race",
+          "-tags=integration",
+          "-p",
+          "1",
+          "-count=1",
+          "-timeout=120s",
+          "-run=^TestContentProcessingRechecksHiddenAncestorAfterRealObjectRead$",
+          "./conformance/component"
+        ]
+      },
+      "actual_exit": 0,
+      "actual_wait": true,
+      "group_absent_rechecked": true,
+      "raw_log": "/workspace/lerna-content-03-137311247276/context-single-read-identity-public-race.log",
+      "raw_bytes": 650,
+      "raw_lines": 9,
+      "raw_sha256": "0c8019b609ada29bb6169b6588a3fc5f6386641c44877dc51bf02a070ab3e00e",
+      "raw_output_ownFD_flush_fsync_Close": "ACK",
+      "noTimeout": true,
+      "original_profile_descriptor_Close": "UNKNOWN"
+    }
+  ],
+  "source7_frozen_sha256": {
+    "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_dispatch.go": "5c2b8d472fdbe458b9affb9a9543db3359c85c0dfa90d5357bea843995e624fb",
+    "/tmp/lerna-worktrees/content-snapshots-03/domain/content/closure.go": "8897d39b01c1872bf9a5ccf1bbdc9f6105e375e6418781c7ce9574c35b56bab5",
+    "/tmp/lerna-worktrees/content-snapshots-03/domain/content/processing.go": "4a4440cb921001d3edb3d2e829f49b5e684c60d31e0603bcfe9b76a8d6283c30",
+    "/tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_context_publication_cause_test.go": "e944e3439eabe84936eb166e1966b178166fd7e1f7b8a1972139b96b9b2768d0",
+    "/tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_processing_ancestor_read_gate_test.go": "3f21849ec87141726000b210e64cdc9562a0f85feeb78665fa27d02cbe5adcc4",
+    "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_publication_probe.go": "39051536517c23e30d1c80e919824d9c509e2d773a8e0568fe786fe82f9d5517",
+    "/tmp/lerna-worktrees/content-snapshots-03/domain/content/closure_identity_memo_test.go": "c8152b534e0f4d3b915c8d545f41068d3717a0cd4470f14da74586ca98e41283"
+  },
+  "all_actual_wait_and_group_absence": true,
+  "sole_LOCAL": "STOP / RELEASE",
+  "capacity_build_business": "NOT GRANTED / NOT EXECUTED",
+  "original_profile_descriptor_Close": "UNKNOWN"
+}

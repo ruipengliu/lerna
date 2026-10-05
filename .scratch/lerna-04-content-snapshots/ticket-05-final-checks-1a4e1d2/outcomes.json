@@ -1,0 +1,351 @@
+{
+  "source_sha": "1a4e1d2d704261a59491dfc6e0c5d26b80ec5107",
+  "root_audit_utc": "2026-10-05T02:41:31.535978+00:00",
+  "commands": "command-manifest.json",
+  "operations": [
+    {
+      "name": "format",
+      "log": "final-format.log",
+      "bytes": 134,
+      "sha256": "c313672e6c91f0a5ce7c741553345703f90ecff0af8a1f806c72c1e9172c9180",
+      "completion": {
+        "pid": 3212613,
+        "pgid": 3212613,
+        "starttime": "13418596",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false
+      },
+      "named_runs": 0,
+      "named_passes": 0,
+      "package_durations": []
+    },
+    {
+      "name": "vet",
+      "log": "final-vet.log",
+      "bytes": 134,
+      "sha256": "86945584cb9630d469cc6a26cba8427af3662183d3f064dbb7632800d3dbffa7",
+      "completion": {
+        "pid": 3213254,
+        "pgid": 3213254,
+        "starttime": "13421285",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false
+      },
+      "named_runs": 0,
+      "named_passes": 0,
+      "package_durations": []
+    },
+    {
+      "name": "go-normal",
+      "log": "final-go-normal.log",
+      "bytes": 81124,
+      "sha256": "5ca269e5795587ae010faacc6baff352c56342ea48eb9d4dfe5208209decee8e",
+      "completion": {
+        "pid": 3214408,
+        "pgid": 3214408,
+        "starttime": "13424553",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false
+      },
+      "named_runs": 472,
+      "named_passes": 472,
+      "package_durations": [
+        "0.047s",
+        "0.066s",
+        "0.077s",
+        "2.840s",
+        "0.109s",
+        "0.047s",
+        "1.737s",
+        "0.145s",
+        "0.042s",
+        "0.067s",
+        "0.010s"
+      ]
+    },
+    {
+      "name": "go-race",
+      "log": "final-go-race.log",
+      "bytes": 81120,
+      "sha256": "c9d0df4454aaf786cdb33ff89d16749c6e0439aad5cf99fefcbe131c7da61d13",
+      "completion": {
+        "pid": 3215670,
+        "pgid": 3215670,
+        "starttime": "13427085",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false
+      },
+      "named_runs": 472,
+      "named_passes": 472,
+      "package_durations": [
+        "1.125s",
+        "1.124s",
+        "1.059s",
+        "12.617s",
+        "1.236s",
+        "1.076s",
+        "15.861s",
+        "1.735s",
+        "1.077s",
+        "1.264s",
+        "1.040s"
+      ]
+    },
+    {
+      "name": "baseline-1-normal",
+      "log": "final-baseline-1-normal.log",
+      "bytes": 1275,
+      "sha256": "5470042984da1ff68ee934f4308de8fe38378300a2359f4940730b11ee771249",
+      "completion": {
+        "pid": 3218160,
+        "pgid": 3218160,
+        "starttime": "13434248",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false
+      },
+      "named_runs": 8,
+      "named_passes": 8,
+      "package_durations": [
+        "1.653s"
+      ]
+    },
+    {
+      "name": "baseline-2-normal",
+      "log": "final-baseline-2-normal.log",
+      "bytes": 5039,
+      "sha256": "59ce9a949dc56e6466c16f38054e3cc1547719f9b4efa0657787fb2e3db5e5a4",
+      "completion": {
+        "pid": 3219025,
+        "pgid": 3219025,
+        "starttime": "13437514",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false
+      },
+      "named_runs": 28,
+      "named_passes": 28,
+      "package_durations": [
+        "5.458s"
+      ]
+    },
+    {
+      "name": "baseline-3-normal",
+      "log": "final-baseline-3-normal.log",
+      "bytes": 2864,
+      "sha256": "c25b867c5e5bef7412400045f9aa21e169541a1bfa1d0ae621f59be0eb265e06",
+      "completion": {
+        "pid": 3220326,
+        "pgid": 3220326,
+        "starttime": "13442495",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false
+      },
+      "named_runs": 16,
+      "named_passes": 16,
+      "package_durations": [
+        "10.537s"
+      ]
+    },
+    {
+      "name": "baseline-4-normal",
+      "log": "final-baseline-4-normal.log",
+      "bytes": 1635,
+      "sha256": "5a8eedeb544e404d0386ac6e112e59e1a549e63becd08a737bb48b4436fe17f6",
+      "completion": {
+        "pid": 3221902,
+        "pgid": 3221902,
+        "starttime": "13448052",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false
+      },
+      "named_runs": 8,
+      "named_passes": 8,
+      "package_durations": [
+        "5.111s"
+      ]
+    },
+    {
+      "name": "baseline-1-race",
+      "log": "final-baseline-1-race.log",
+      "bytes": 1275,
+      "sha256": "65af15401efb389fd23509338d7348cb6d964c1f934d482a5fb437c8b2e95e69",
+      "completion": {
+        "pid": 3223393,
+        "pgid": 3223393,
+        "starttime": "13453811",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false
+      },
+      "named_runs": 8,
+      "named_passes": 8,
+      "package_durations": [
+        "7.653s"
+      ]
+    },
+    {
+      "name": "baseline-2-race",
+      "log": "final-baseline-2-race.log",
+      "bytes": 5040,
+      "sha256": "c30cc2bcdf4ee13cea78c5939d1c0cf484256bde655e56efc3dad52fa7a1f7c3",
+      "completion": {
+        "pid": 3223946,
+        "pgid": 3223946,
+        "starttime": "13455932",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false
+      },
+      "named_runs": 28,
+      "named_passes": 28,
+      "package_durations": [
+        "11.418s"
+      ]
+    },
+    {
+      "name": "baseline-3-race",
+      "log": "final-baseline-3-race.log",
+      "bytes": 2864,
+      "sha256": "46eefb6a458536b575d696071393bde822d1ea6ad601581578ebb8726a081152",
+      "completion": {
+        "pid": 3225245,
+        "pgid": 3225245,
+        "starttime": "13461076",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false
+      },
+      "named_runs": 16,
+      "named_passes": 16,
+      "package_durations": [
+        "12.829s"
+      ]
+    },
+    {
+      "name": "baseline-4-race",
+      "log": "final-baseline-4-race.log",
+      "bytes": 1635,
+      "sha256": "9abd52ab0788604c30210aa96de31df66a424b1ff1028d72b1c158c4cfa3bf40",
+      "completion": {
+        "pid": 3226571,
+        "pgid": 3226571,
+        "starttime": "13466589",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false
+      },
+      "named_runs": 8,
+      "named_passes": 8,
+      "package_durations": [
+        "8.289s"
+      ]
+    },
+    {
+      "name": "consumer-1-normal",
+      "log": "final-consumer-1-normal.log",
+      "bytes": 933,
+      "sha256": "af4d4715de4b0996a582eb14b9a3aa3cbf833177bb5d8e4a145d9d10d419e2c1",
+      "completion": {
+        "pid": 3228190,
+        "pgid": 3228190,
+        "starttime": "13472885",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false
+      },
+      "named_runs": 4,
+      "named_passes": 4,
+      "package_durations": [
+        "3.289s"
+      ]
+    },
+    {
+      "name": "consumer-2-normal",
+      "log": "final-consumer-2-normal.log",
+      "bytes": 1802,
+      "sha256": "f07af09790ee05b0796cddfdf6115f1fa228b1b8159bbba4da65edae3aacb016",
+      "completion": {
+        "pid": 3229475,
+        "pgid": 3229475,
+        "starttime": "13478377",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false
+      },
+      "named_runs": 7,
+      "named_passes": 7,
+      "package_durations": [
+        "13.278s"
+      ]
+    },
+    {
+      "name": "consumer-1-race",
+      "log": "final-consumer-1-race.log",
+      "bytes": 933,
+      "sha256": "4ffc81b6273deb4eb586d790113cefc2ca4c52b43cc5bd8e7f95115a22a9b0dd",
+      "completion": {
+        "pid": 3231013,
+        "pgid": 3231013,
+        "starttime": "13485064",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false
+      },
+      "named_runs": 4,
+      "named_passes": 4,
+      "package_durations": [
+        "5.619s"
+      ]
+    },
+    {
+      "name": "consumer-2-race",
+      "log": "final-consumer-2-race.log",
+      "bytes": 1802,
+      "sha256": "c2d17946412ea5b7f7e2ecceebd6f6a2ab39db24838c90f5969eb90f95cd55f4",
+      "completion": {
+        "pid": 3232377,
+        "pgid": 3232377,
+        "starttime": "13491003",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false
+      },
+      "named_runs": 7,
+      "named_passes": 7,
+      "package_durations": [
+        "15.042s"
+      ]
+    },
+    {
+      "name": "frozen-sql-hashes",
+      "log": "final-frozen-sql-hashes.log",
+      "bytes": 507,
+      "sha256": "8d04622cfa73a6d54abadc7502b12c92cfeb1ecbdea0a076013fc90b79195ea2",
+      "completion": {
+        "pid": 3233572,
+        "pgid": 3233572,
+        "starttime": "13496071",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false
+      },
+      "named_runs": 0,
+      "named_passes": 0,
+      "package_durations": []
+    }
+  ],
+  "current_original_pgid_members": [],
+  "limits": [
+    "Not original worker explicit RELEASE; recovery established actual completion plus current original group absence.",
+    "Kernel absence does not qualify logical Close or erase historical unknown roots.",
+    "Whole Go normal/race excludes integration tags and does not execute Linux integration local holder protocols.",
+    "No source acceptance, fresh product CI or scan-starvation fix claim."
+  ]
+}

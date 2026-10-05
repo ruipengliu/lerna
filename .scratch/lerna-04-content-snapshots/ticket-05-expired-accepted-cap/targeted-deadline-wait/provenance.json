@@ -1,0 +1,40 @@
+{
+  "product_pin": "301be6d6e0e176ad10cd94012baa5c87d9debd14",
+  "test": "TestContentOriginalAdmissionCleanupDeadlineSurvivesCurrentTargetPolicyLockWait",
+  "scope": "two independently owned fresh real admission scopes with same initial700ms responsibility budget; normal current target policy lock release and original deadline+20ms cutoff",
+  "bounds": "caller20/Go30/outer120/acceptedcap2s/join3; no renewed due or deadline",
+  "root_review": "FULL original test and both actual completed original logs read; explicit owner RELEASE",
+  "files": [
+    {
+      "source": "/tmp/lerna-04-ticket05-execution/admission-cleanup-deadline-first-run.log",
+      "archive": "admission-cleanup-deadline-first-run.log",
+      "bytes": 933,
+      "sha256": "8c5362ce590beab4bbe07a0579d1982f13f3ea535a54141443ab8c951e1a0d66",
+      "native": {
+        "pid": 3175419,
+        "pgid": 3175419,
+        "starttime": "13260429",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false
+      },
+      "go_package_seconds": 5.325
+    },
+    {
+      "source": "/tmp/lerna-04-ticket05-execution/admission-cleanup-deadline-race.log",
+      "archive": "admission-cleanup-deadline-race.log",
+      "bytes": 933,
+      "sha256": "c29a41abcdec3c8b37908eef533fd43d39af962156cd53e5865c2a97369b7fb1",
+      "native": {
+        "pid": 3176452,
+        "pgid": 3176452,
+        "starttime": "13264854",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false
+      },
+      "go_package_seconds": 6.905
+    }
+  ],
+  "fixed_test_and_evidence_pin": "c01b4c3fd64a971499be93495e54722c07a2f5b7"
+}

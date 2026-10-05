@@ -1,0 +1,32 @@
+{
+  "kind": "actual affected-check result",
+  "operation_index": 2,
+  "name": "scan-current-go-normal",
+  "log": "/tmp/lerna-04-ticket05-execution/scan-current-go-normal.log",
+  "raw_sha256": "8ee30287c54f03cc345b0d7574432ccaf141a7fd198253bf823be7aea34e9604",
+  "wrapper_exit": 0,
+  "elapsed_seconds": 6.921,
+  "start_ack": [
+    {
+      "event": "native_start_ack",
+      "pid": 3544157,
+      "pgid": 3544157,
+      "starttime": "14863571",
+      "deadline_seconds": 120
+    }
+  ],
+  "completion_ack": {
+    "pid": 3544157,
+    "pgid": 3544157,
+    "starttime": "14863571",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false
+  },
+  "resource_records": [],
+  "run_count": 472,
+  "pass_count": 97,
+  "fail_lines": [],
+  "package_results": [],
+  "prelaunch": "/tmp/lerna-04-ticket05-execution/scan-current-final-checks/scan-current-go-normal-prelaunch.json"
+}

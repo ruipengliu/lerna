@@ -1,0 +1,37 @@
+{
+  "FULL_read_raw_outcome_prelaunch_release": true,
+  "same14currentpins": true,
+  "root_independently_absent_groups": [
+    3514791,
+    3517014
+  ],
+  "Manager_prelaunch_dependency_delegated_written_normalqualified_compiled_not_selected_RUN": true,
+  "copied_original_Manager_field_delegated_written_false_is_inaccurate_global_claim_scopeclarified_here": false,
+  "nativegroupabsence_not_resource_Close": true,
+  "files": [
+    {
+      "source": "/tmp/lerna-04-ticket05-execution/delegated-cleanup-race.log",
+      "archive": "race.log",
+      "sha256": "8e9251eb09397007cb2de67f933000881622fb228d5b2cd7c21235f13e00063a",
+      "bytes": 413
+    },
+    {
+      "source": "/tmp/lerna-04-ticket05-execution/delegated-cleanup-race-prelaunch.json",
+      "archive": "race-prelaunch.json",
+      "sha256": "4f3c13557d4871798607b0263fde490905a49e53eee14dfd96b56927abf2bb60",
+      "bytes": 3936
+    },
+    {
+      "source": "/tmp/lerna-05-delegated-cleanup-race-outcome.json",
+      "archive": "race-outcome.json",
+      "sha256": "faf24dff99f226b82d730c9a7e6cd2cc894c9a0831eb600ea826a74b2d90afbd",
+      "bytes": 1802
+    },
+    {
+      "source": "/tmp/lerna-05-two-qualification-races-release.json",
+      "archive": "two-races-final-release.json",
+      "sha256": "ec46b54f3d179f9718b959bae0eb4b77a33ae5b405cdbe9d27822e0e23bc5d2b",
+      "bytes": 545
+    }
+  ]
+}

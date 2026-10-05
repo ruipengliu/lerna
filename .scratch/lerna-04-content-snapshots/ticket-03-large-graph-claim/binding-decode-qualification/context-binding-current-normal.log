@@ -1,0 +1,14 @@
+=== RUN   TestContentContextDecodedBindingStillRejectsCurrentInputChanges
+=== RUN   TestContentContextDecodedBindingStillRejectsCurrentInputChanges/normal
+=== RUN   TestContentContextDecodedBindingStillRejectsCurrentInputChanges/goal
+    content_context_binding_decode_test.go:59: trusted current revision change failed context current input changed
+=== RUN   TestContentContextDecodedBindingStillRejectsCurrentInputChanges/control
+    content_context_binding_decode_test.go:59: trusted current revision change failed context current input changed
+--- FAIL: TestContentContextDecodedBindingStillRejectsCurrentInputChanges (3.41s)
+    --- PASS: TestContentContextDecodedBindingStillRejectsCurrentInputChanges/normal (1.71s)
+    --- FAIL: TestContentContextDecodedBindingStillRejectsCurrentInputChanges/goal (0.75s)
+    --- FAIL: TestContentContextDecodedBindingStillRejectsCurrentInputChanges/control (0.95s)
+FAIL
+FAIL	github.com/ruipengliu/lerna/conformance/component	3.426s
+FAIL
+NATIVE_EXIT status=1 group_absent=True

@@ -1,0 +1,11 @@
+# 原发布阶段的一次普通测量
+
+当前HEAD28e加四项明确WIP不变；七份临时测量映射仅记录现有调用。root全文审查三份diff、原版本和格式后的manifest/provenance，逆变换恢复原产品源码逐字相同。格式化只改变排版与新增记录helper的一处显式分号；原有语句不改。原五份低开销测量中四份逐字保持，记录器有界新增四个scope、每scope32个slot，区分Publish内部验证与worker外层独立ReadPublished。临时观察接口不进入产品。
+
+原373行日志及准确源码、格式前副本、变换、两个有限proof、编译及最终outcome均保存。native3458066/start14483911/session69469实际exit0/group absent/no timeout。root全文读373行且独立核源、二进制及日志SHA、三原native组不存在；可执行二进制不提交。
+
+原caller30/Claim5/Go与外界120/count1不变。closure64 PASS10.93s、65拒绝PASS5.54s；static62 PASS15.72s、单Content正常/拒绝及duplicate通过。两个允许场景均完成两Publish、两独立ReadPublished、Completed提交和原公开正文/回执/RuleStarts/reopen尾。原Step分别3.136634s/3.288252s，最后fresh Claim观察尚余1.903148s/1.756678s；这不是未来最小余量保证。四次processing读的前后closure约50–129ms，真实Objects80–236µs，详细归属与inclusive重叠限制见结果表。
+
+这次测量未重现原normal失败；不能用通过倒推此前超时子门或确定身份memo的收益。先前失败4d40、Prepared及历史unknown仍保留，原CPU文件描述符Close UNKNOWN不变。进程组不存在不能补造资源CloseACK；26条原资源登记按实际outcome保存，未主动清理未知资源。
+
+采用[Astra下一决定](adopted-next-race-decision.md)准确f630：保持产品源码，核准后运行此前已构建而业务未运行的0514原五映射非profiling竞态二进制一次。该竞态不含本次七映射细分，不能称临时观察接口已通过竞态。当前受影响检查、审阅、正式合并与CI仍待，未接受票03/整片04。

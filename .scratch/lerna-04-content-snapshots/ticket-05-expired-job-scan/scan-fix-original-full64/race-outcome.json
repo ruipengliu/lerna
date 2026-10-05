@@ -1,0 +1,29 @@
+{
+  "kind": "actual original full64 race after minimal scan fix and qualification guards",
+  "source_manifest": "/tmp/lerna-04-ticket05-execution/expired-backlog-scan-fix-race-prelaunch.json",
+  "normal_source_copy_manifest": "/tmp/lerna-04-ticket05-execution/expired-backlog-scan-fix-first-normal-source/manifest.json",
+  "test_sha256": "60f817d14355d1565f744be850f9309d1ae0c2d0f7190be0e204929d0823823b",
+  "pid": 3433733,
+  "pgid": 3433733,
+  "starttime": "14380509",
+  "exit": 0,
+  "group_absent": true,
+  "timed_out": false,
+  "go_seconds": 26.476,
+  "case_seconds": 25.41,
+  "tool_session": 81472,
+  "log_sha256": "d282371db1205e4b93187ac3aaa0796537b4349c6272e1052dba71562acef197",
+  "schema": "lerna_test_adc1a12fd7197b1fc6b272b3",
+  "object_root": {
+    "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-2968571310",
+    "device": 33,
+    "inode": 384711
+  },
+  "new_v2_published_and_exact_beta_bytes": true,
+  "later_live_seal_all_holders_ACK_and_independent_absence": true,
+  "second_reopen_64_original_complete_duties_bodies_fixed_receipts_and_published_history_preserved": true,
+  "mechanical_fault_vectors_executed": false,
+  "policy_third_consumer_executed": false,
+  "new_source_low_control_executed": false,
+  "native_released": true
+}

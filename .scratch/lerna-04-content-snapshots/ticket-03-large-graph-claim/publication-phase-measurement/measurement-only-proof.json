@@ -1,0 +1,37 @@
+{
+  "status": "STATIC reconstruction only, no Go parser/build/runtime qualification claimed",
+  "publisher_current_source_sha256": "aaee89f0653a4172062f32a0305a59867f35a77938125147dda73ca9e54d55d0",
+  "processing_current_source_sha256": "32f14cd27d48a55069eed5a89aab39a3465f03d6b05189875be9d8382d9a6f32",
+  "processing_and_publisher_reversed_transform_byte_equal": true,
+  "original_helpers_pure_diagnostics_only": [
+    "WithPublicationPhaseObserver context.WithValue stores label observer only",
+    "BeginPublicationPhase time.Now only with owned observer, no trusted DBNow",
+    "EndPublicationPhase fixed memory counter callback only"
+  ],
+  "processing_original_store_call_tokens": {
+    "Now": 3,
+    "CheckPolicy": 1,
+    "LockVersion": 1,
+    "Within": 2,
+    "Objects.Read": 1,
+    "registeredClosure": 1
+  },
+  "publisher_original_poll_bound": 16,
+  "none_added": [
+    "SQL queries",
+    "Store calls",
+    "Objects reads",
+    "cryptographic hash/length business evaluation",
+    "trusted clock calls",
+    "business error wrapping",
+    "deadline/timeout/lease/budget changes",
+    "worker source or input/oracles changes"
+  ],
+  "measurement_files": [
+    "processing.go",
+    "publisher.go",
+    "context_claim_diagnostics.go"
+  ],
+  "unattributed_policy": "no observer on compiler/setup/material reads; only existing broad recorder totals retained, no ownership guessed from counts",
+  "processing_ownership": "observer attached by decision Publisher decorator per frozen worker call. Actual only Publish verification and ReadPublished processing calls within these scopes; observed direct read totals distinguish both. Not the compiler assembly Adapter path."
+}

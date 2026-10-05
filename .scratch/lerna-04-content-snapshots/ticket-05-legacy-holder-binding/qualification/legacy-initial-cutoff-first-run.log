@@ -1,0 +1,5 @@
+=== RUN   TestContentLegacyOriginalQualificationCutoffRollsBackBindingAndAttemptWrites
+--- PASS: TestContentLegacyOriginalQualificationCutoffRollsBackBindingAndAttemptWrites (2.69s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/component	2.702s
+NATIVE_COMPLETION_ACK {"pid": 3112680, "pgid": 3112680, "starttime": "12985938", "exit": 0, "group_absent": true, "timed_out": false}

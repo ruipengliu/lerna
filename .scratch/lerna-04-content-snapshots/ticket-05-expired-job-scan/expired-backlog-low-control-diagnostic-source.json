@@ -1,0 +1,11 @@
+{
+  "kind": "prelaunch formatted diagnostic source",
+  "sha256": "6f7ab31c35aaa38af0ed06359257bf623c34793db9c1be86799c9eb2f2143c62",
+  "caller_seconds": 90,
+  "seal_seconds": 15,
+  "live_seconds": 45,
+  "step_limit": 4,
+  "go_seconds": 120,
+  "outer_seconds": 120,
+  "original_failed_source_unchanged": true
+}

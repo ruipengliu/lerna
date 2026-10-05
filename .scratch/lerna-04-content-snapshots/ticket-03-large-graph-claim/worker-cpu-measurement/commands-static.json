@@ -1,0 +1,100 @@
+{
+  "source_pin": "28e3a468c86d4323d3b497836de23bb311a58952",
+  "STATIC_no_grant_implied": true,
+  "format_shell": "set -e; . /workspace/.lerna-env/env.sh; gofmt -w /workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/context_world.go /workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/context_claim_diagnostics.go /workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/content_context_closure_test.go /workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/content_context_material_reachable_test.go /workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/content_context_test.go",
+  "build_shell": "set -e; . /workspace/.lerna-env/env.sh; GOTOOLCHAIN=local GOFLAGS=-mod=readonly go test -c -race -p 1 -tags=integration -overlay=/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/overlay.json -o=/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/component-profile-race.test ./conformance/component",
+  "business_argv": [
+    "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/component-profile-race.test",
+    "-test.v",
+    "-test.count=1",
+    "-test.timeout=120s",
+    "-test.cpuprofile=/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/worker-cpu.pprof",
+    "-test.run=^(TestContentContextReachableClosure64And65IncludesIntermediateVersions|TestContentContextStaticModeMaximumReachable62Materials|TestContentContextSingleContentBoundHasHonestLayerAndNoDispatch|TestContentContextDuplicateSelectorRoleRefusesBeforeOriginalInputReplacement)$"
+  ],
+  "format_refresh_before_build": true,
+  "separate_root_grant_before_binary_business": true,
+  "analysis_separate_root_grants": [
+    [
+      "go",
+      "tool",
+      "pprof",
+      "-tags",
+      "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/component-profile-race.test",
+      "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/worker-cpu.pprof"
+    ],
+    [
+      "go",
+      "tool",
+      "pprof",
+      "-top",
+      "-nodecount=30",
+      "-sample_index=cpu",
+      "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/component-profile-race.test",
+      "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/worker-cpu.pprof"
+    ],
+    [
+      "go",
+      "tool",
+      "pprof",
+      "-top",
+      "-nodecount=30",
+      "-sample_index=cpu",
+      "-cum",
+      "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/component-profile-race.test",
+      "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/worker-cpu.pprof"
+    ],
+    [
+      "go",
+      "tool",
+      "pprof",
+      "-top",
+      "-nodecount=30",
+      "-sample_index=cpu",
+      "-tagfocus=case=closure64",
+      "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/component-profile-race.test",
+      "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/worker-cpu.pprof"
+    ],
+    [
+      "go",
+      "tool",
+      "pprof",
+      "-top",
+      "-nodecount=30",
+      "-sample_index=cpu",
+      "-cum",
+      "-tagfocus=case=closure64",
+      "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/component-profile-race.test",
+      "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/worker-cpu.pprof"
+    ],
+    [
+      "go",
+      "tool",
+      "pprof",
+      "-top",
+      "-nodecount=30",
+      "-sample_index=cpu",
+      "-tagfocus=case=static62",
+      "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/component-profile-race.test",
+      "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/worker-cpu.pprof"
+    ],
+    [
+      "go",
+      "tool",
+      "pprof",
+      "-top",
+      "-nodecount=30",
+      "-sample_index=cpu",
+      "-cum",
+      "-tagfocus=case=static62",
+      "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/component-profile-race.test",
+      "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/worker-cpu.pprof"
+    ]
+  ],
+  "original_watchdogs": {
+    "caller": 30,
+    "lease": 5,
+    "test": 120,
+    "outer": 120
+  },
+  "artifact_missing_before_business": true
+}

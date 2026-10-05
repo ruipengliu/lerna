@@ -1,0 +1,78 @@
+{
+  "kind": "STATIC ONE public Manager policy behind full64 expired duties; no delegated tracer or sourcefix",
+  "git_head": "85a10674f0073875e12701332b2edf94312f09e3",
+  "product_wip": true,
+  "new_test": {
+    "path": "conformance/component/content_manager_expired_backlog_test.go",
+    "sha256": "2b36441f2245057e3cffdc5365d61891eb8f358a9ef6b29a22c0f5d50edb044f",
+    "bytes": 10292,
+    "formatted_compiled_executed": false
+  },
+  "existing_12_source_and_SQL_pins_unchanged": {
+    "adapters/postgres/content/work.go": {
+      "sha256": "f690a261112ec1e37b7a51fc1d54f4637a987d348b4f912e57856a481c4fbbc0",
+      "bytes": 12249
+    },
+    "adapters/postgres/content/work_seal_encoding.go": {
+      "sha256": "7286fe4f59db9dcfa22405341bffd45d5b914d18d41bd0ecbcf31e382ab21c8b",
+      "bytes": 1695
+    },
+    "domain/content/ports.go": {
+      "sha256": "51066cd99f2c79e8a5fc3f7b336cb0706f161899361681c99f8e6feff5454f90",
+      "bytes": 5618
+    },
+    "domain/content/service.go": {
+      "sha256": "ffefc916fa8e08e2a39f2264a12090eb7aa2ecf020b7da63e270aff3e925a477",
+      "bytes": 33783
+    },
+    "domain/content/management.go": {
+      "sha256": "c6fa3aa3dfee98ab82b873aa9d37e4c4725133390147e2d0aff04be49e3606ad",
+      "bytes": 37419
+    },
+    "domain/content/lifecycle.go": {
+      "sha256": "0708c4eb51e28ab9b7a3210981e408ae2310511e9728ee2bf46ba87fc0802699",
+      "bytes": 23932
+    },
+    "conformance/component/content_expired_backlog_test.go": {
+      "sha256": "60f817d14355d1565f744be850f9309d1ae0c2d0f7190be0e204929d0823823b",
+      "bytes": 8657
+    },
+    "adapters/postgres/content/migrations/0001_content.sql": {
+      "sha256": "00363b79dafb6eb1f373be9ef08e915fe23cc3db0fa55345e8ae6c051ce0c1ed",
+      "role": "unchanged SQL, static hash only"
+    },
+    "adapters/postgres/content/migrations/0002_source_policies.sql": {
+      "sha256": "99519565ff1146d7cfc468413b449538c6ba71335e86edc8fd447a3bbff922a8",
+      "role": "unchanged SQL, static hash only"
+    },
+    "adapters/postgres/content/migrations/0003_body_cleanup.sql": {
+      "sha256": "92739b464b8661e26befe092028f20802b586e42bf1578bd9811dcf240c5b58f",
+      "role": "unchanged SQL, static hash only"
+    },
+    "conformance/internal/contentfixture/scan_deadline_fault.go": {
+      "sha256": "7c57d9bffcb17c49daab3536b68284af3c24dce4ed08035f2fe3f74a0b22afa0",
+      "bytes": 3748,
+      "status": "formatted prelaunch, native test not launched"
+    },
+    "conformance/component/content_scan_deadline_test.go": {
+      "sha256": "7f12df34684283e4e69c5bacff08f5d75a3d46643315beaa5130809190b68461",
+      "bytes": 8835,
+      "status": "formatted prelaunch, native test not launched"
+    }
+  },
+  "bounds": {
+    "caller_seconds": 90,
+    "common_original_seal_seconds": 15,
+    "original_deadline_wait_margin_milliseconds": 20,
+    "manager_page_size": 2,
+    "manager_actual_steps_max": 4,
+    "manager_original_work_budget_seconds": 60,
+    "original_trusted_capability_seconds": 3600,
+    "Go_seconds": 120,
+    "outer_seconds": 120
+  },
+  "command_proposal": "GOTOOLCHAIN=local go test -v -mod=readonly -p=1 -tags=integration ./conformance/component -run ^TestContentManagerPolicyPassesFullExpiredCleanupPageWithoutChangingOriginalDuties$ -count=1 -timeout=120s",
+  "native_executed": false,
+  "original60f_source_changed": false,
+  "product_source_changed": false
+}

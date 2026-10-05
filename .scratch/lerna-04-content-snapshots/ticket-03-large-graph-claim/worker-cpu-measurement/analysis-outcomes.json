@@ -1,0 +1,291 @@
+{
+  "source_pin": "28e3a468c86d4323d3b497836de23bb311a58952",
+  "profile_sha256": "427bbc672bad5cf520934ed2e31116f75eca4991572fd5ecd0c3f7c3a4ff31e6",
+  "original_profile_descriptor_logical_close": "UNKNOWN",
+  "one_profile_only": true,
+  "results": [
+    {
+      "view": 1,
+      "argv": [
+        "go",
+        "tool",
+        "pprof",
+        "-tags",
+        "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/component-profile-race.test",
+        "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/worker-cpu.pprof"
+      ],
+      "native_identity": {
+        "pid": 3386493,
+        "pgid": 3386493,
+        "starttime": "14174844",
+        "started_ns": 1791173510102526427,
+        "args": [
+          "bash",
+          "-c",
+          "set -e; . /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local GOFLAGS=-mod=readonly; exec \"$@\"",
+          "cpu-profile-analysis",
+          "go",
+          "tool",
+          "pprof",
+          "-tags",
+          "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/component-profile-race.test",
+          "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/worker-cpu.pprof"
+        ]
+      },
+      "actual_exit": 0,
+      "group_absent": true,
+      "log": "/workspace/lerna-content-03-137311247276/context-final-capacity-b-worker-cpu-analysis-01.log",
+      "log_sha256": "663f240dba2669455e00a71cd34999b774e5f7099fa697f9a0dca98ce812ca76",
+      "log_bytes": 221,
+      "log_lines": 8
+    },
+    {
+      "view": 2,
+      "argv": [
+        "go",
+        "tool",
+        "pprof",
+        "-top",
+        "-nodecount=30",
+        "-sample_index=cpu",
+        "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/component-profile-race.test",
+        "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/worker-cpu.pprof"
+      ],
+      "native_identity": {
+        "pid": 3386554,
+        "pgid": 3386554,
+        "starttime": "14174880",
+        "started_ns": 1791173510462915838,
+        "args": [
+          "bash",
+          "-c",
+          "set -e; . /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local GOFLAGS=-mod=readonly; exec \"$@\"",
+          "cpu-profile-analysis",
+          "go",
+          "tool",
+          "pprof",
+          "-top",
+          "-nodecount=30",
+          "-sample_index=cpu",
+          "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/component-profile-race.test",
+          "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/worker-cpu.pprof"
+        ]
+      },
+      "actual_exit": 0,
+      "group_absent": true,
+      "log": "/workspace/lerna-content-03-137311247276/context-final-capacity-b-worker-cpu-analysis-02.log",
+      "log_sha256": "7bb8d41ce12176f23b2fd849bc8a06fc5f8aa136588edfde454d6c4cb7864962",
+      "log_bytes": 2522,
+      "log_lines": 40
+    },
+    {
+      "view": 3,
+      "argv": [
+        "go",
+        "tool",
+        "pprof",
+        "-top",
+        "-nodecount=30",
+        "-sample_index=cpu",
+        "-cum",
+        "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/component-profile-race.test",
+        "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/worker-cpu.pprof"
+      ],
+      "native_identity": {
+        "pid": 3386594,
+        "pgid": 3386594,
+        "starttime": "14174906",
+        "started_ns": 1791173510719816079,
+        "args": [
+          "bash",
+          "-c",
+          "set -e; . /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local GOFLAGS=-mod=readonly; exec \"$@\"",
+          "cpu-profile-analysis",
+          "go",
+          "tool",
+          "pprof",
+          "-top",
+          "-nodecount=30",
+          "-sample_index=cpu",
+          "-cum",
+          "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/component-profile-race.test",
+          "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/worker-cpu.pprof"
+        ]
+      },
+      "actual_exit": 0,
+      "group_absent": true,
+      "log": "/workspace/lerna-content-03-137311247276/context-final-capacity-b-worker-cpu-analysis-03.log",
+      "log_sha256": "5b1805a84f9ff822e5ee7de8d8c7815077709f2ab2b31d01a517b0d34dda45eb",
+      "log_bytes": 3917,
+      "log_lines": 40
+    },
+    {
+      "view": 4,
+      "argv": [
+        "go",
+        "tool",
+        "pprof",
+        "-top",
+        "-nodecount=30",
+        "-sample_index=cpu",
+        "-tagfocus=case=closure64",
+        "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/component-profile-race.test",
+        "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/worker-cpu.pprof"
+      ],
+      "native_identity": {
+        "pid": 3386633,
+        "pgid": 3386633,
+        "starttime": "14174927",
+        "started_ns": 1791173510927832135,
+        "args": [
+          "bash",
+          "-c",
+          "set -e; . /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local GOFLAGS=-mod=readonly; exec \"$@\"",
+          "cpu-profile-analysis",
+          "go",
+          "tool",
+          "pprof",
+          "-top",
+          "-nodecount=30",
+          "-sample_index=cpu",
+          "-tagfocus=case=closure64",
+          "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/component-profile-race.test",
+          "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/worker-cpu.pprof"
+        ]
+      },
+      "actual_exit": 0,
+      "group_absent": true,
+      "log": "/workspace/lerna-content-03-137311247276/context-final-capacity-b-worker-cpu-analysis-04.log",
+      "log_sha256": "a4393889b7d1eb01852327dfb3949705da3c28f042e636d60845a448395fc1d3",
+      "log_bytes": 2577,
+      "log_lines": 42
+    },
+    {
+      "view": 5,
+      "argv": [
+        "go",
+        "tool",
+        "pprof",
+        "-top",
+        "-nodecount=30",
+        "-sample_index=cpu",
+        "-cum",
+        "-tagfocus=case=closure64",
+        "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/component-profile-race.test",
+        "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/worker-cpu.pprof"
+      ],
+      "native_identity": {
+        "pid": 3386674,
+        "pgid": 3386674,
+        "starttime": "14174948",
+        "started_ns": 1791173511136864357,
+        "args": [
+          "bash",
+          "-c",
+          "set -e; . /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local GOFLAGS=-mod=readonly; exec \"$@\"",
+          "cpu-profile-analysis",
+          "go",
+          "tool",
+          "pprof",
+          "-top",
+          "-nodecount=30",
+          "-sample_index=cpu",
+          "-cum",
+          "-tagfocus=case=closure64",
+          "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/component-profile-race.test",
+          "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/worker-cpu.pprof"
+        ]
+      },
+      "actual_exit": 0,
+      "group_absent": true,
+      "log": "/workspace/lerna-content-03-137311247276/context-final-capacity-b-worker-cpu-analysis-05.log",
+      "log_sha256": "0904b6e5eff19d4a52edb8ea8c4bc49cc31a3c71747ce72705513fadb5b0085e",
+      "log_bytes": 4045,
+      "log_lines": 42
+    },
+    {
+      "view": 6,
+      "argv": [
+        "go",
+        "tool",
+        "pprof",
+        "-top",
+        "-nodecount=30",
+        "-sample_index=cpu",
+        "-tagfocus=case=static62",
+        "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/component-profile-race.test",
+        "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/worker-cpu.pprof"
+      ],
+      "native_identity": {
+        "pid": 3386740,
+        "pgid": 3386740,
+        "starttime": "14174973",
+        "started_ns": 1791173511392863672,
+        "args": [
+          "bash",
+          "-c",
+          "set -e; . /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local GOFLAGS=-mod=readonly; exec \"$@\"",
+          "cpu-profile-analysis",
+          "go",
+          "tool",
+          "pprof",
+          "-top",
+          "-nodecount=30",
+          "-sample_index=cpu",
+          "-tagfocus=case=static62",
+          "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/component-profile-race.test",
+          "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/worker-cpu.pprof"
+        ]
+      },
+      "actual_exit": 0,
+      "group_absent": true,
+      "log": "/workspace/lerna-content-03-137311247276/context-final-capacity-b-worker-cpu-analysis-06.log",
+      "log_sha256": "f1c5ee545b17020131929eee6e0f65f470e23f5a484993b510171e441270463d",
+      "log_bytes": 2570,
+      "log_lines": 42
+    },
+    {
+      "view": 7,
+      "argv": [
+        "go",
+        "tool",
+        "pprof",
+        "-top",
+        "-nodecount=30",
+        "-sample_index=cpu",
+        "-cum",
+        "-tagfocus=case=static62",
+        "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/component-profile-race.test",
+        "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/worker-cpu.pprof"
+      ],
+      "native_identity": {
+        "pid": 3386779,
+        "pgid": 3386779,
+        "starttime": "14174995",
+        "started_ns": 1791173511603323678,
+        "args": [
+          "bash",
+          "-c",
+          "set -e; . /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local GOFLAGS=-mod=readonly; exec \"$@\"",
+          "cpu-profile-analysis",
+          "go",
+          "tool",
+          "pprof",
+          "-top",
+          "-nodecount=30",
+          "-sample_index=cpu",
+          "-cum",
+          "-tagfocus=case=static62",
+          "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/component-profile-race.test",
+          "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/worker-cpu.pprof"
+        ]
+      },
+      "actual_exit": 0,
+      "group_absent": true,
+      "log": "/workspace/lerna-content-03-137311247276/context-final-capacity-b-worker-cpu-analysis-07.log",
+      "log_sha256": "000d3ecc03531da6a349c4ac4fb40247f8868b54672809d559ba55ec32ae132f",
+      "log_bytes": 4156,
+      "log_lines": 42
+    }
+  ]
+}

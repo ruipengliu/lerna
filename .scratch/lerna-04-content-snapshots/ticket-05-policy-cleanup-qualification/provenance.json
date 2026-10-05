@@ -1,0 +1,9 @@
+{
+  "source": "/tmp/lerna-04-ticket-05-policy-cleanup-qualification-decision.md",
+  "bytes": 10396,
+  "sha256": "a59918ea977e3c81aff6856bbf1ac5438c6516a440ec350a7278d7c37efcd026",
+  "decision_source_head": "3aa948db98e1ab309a9479f74a8c1090bc59838d",
+  "adoption_parent": "ca4451a1c8b4a40d6c26891a6923fd26b28062c9",
+  "adopted_at": "2026-10-04T21:18:00Z",
+  "qualification": "Original static decision preserved. Root separately read actual first restored-save business red (.246 s); qualification implementation and independent ObjectHolder correction remain pending."
+}

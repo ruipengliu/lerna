@@ -1,0 +1,110 @@
+{
+  "source_pin": "28e3a468c86d4323d3b497836de23bb311a58952",
+  "native_identity": {
+    "pid": 3299533,
+    "pgid": 3299533,
+    "starttime": "13781792",
+    "started_ns": 1791169579577145883,
+    "args": [
+      "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/component-profile-race.test",
+      "-test.v",
+      "-test.count=1",
+      "-test.timeout=120s",
+      "-test.cpuprofile=/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/worker-cpu.pprof",
+      "-test.run=^(TestContentContextReachableClosure64And65IncludesIntermediateVersions|TestContentContextStaticModeMaximumReachable62Materials|TestContentContextSingleContentBoundHasHonestLayerAndNoDispatch|TestContentContextDuplicateSelectorRoleRefusesBeforeOriginalInputReplacement)$"
+    ]
+  },
+  "session": 30305,
+  "actual_exit": 1,
+  "group_absent": true,
+  "current_killpg_zero_absent": true,
+  "log": "/workspace/lerna-content-03-137311247276/context-final-capacity-b-worker-cpu-race.log",
+  "log_sha256": "2a94676ffe50254ec4aa333a4de0230f07d1c76711529cc255428fdacf0794a9",
+  "log_bytes": 26000,
+  "log_lines": 159,
+  "direct_binary_no_go_package_duration": true,
+  "profile": {
+    "path": "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/worker-cpu.pprof",
+    "bytes": 144298,
+    "dev": 27,
+    "inode": 560161,
+    "mode": "0o600",
+    "sha256": "427bbc672bad5cf520934ed2e31116f75eca4991572fd5ecd0c3f7c3a4ff31e6",
+    "standard_testing_original_descriptor_logical_close": "UNKNOWN",
+    "separate_qualification_descriptor_fsync": true,
+    "separate_qualification_descriptor_close": true,
+    "native_wait_not_original_close_ack": true,
+    "retain_no_cleanup": true,
+    "pprof_parsing_analysis_unrun": true
+  },
+  "binary_provenance": "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/binary-profile-provenance.json",
+  "manifest_sha256": "9ba78cb0a0f40351a98cf44e54b0a8cdc6755462a851513a514bf85ada1fb8e1",
+  "run_once": true,
+  "outcomes": [
+    {
+      "status": "FAIL",
+      "test": "TestContentContextReachableClosure64And65IncludesIntermediateVersions",
+      "duration": "42.76s"
+    },
+    {
+      "status": "FAIL",
+      "test": "TestContentContextReachableClosure64And65IncludesIntermediateVersions/64",
+      "duration": "30.05s"
+    },
+    {
+      "status": "PASS",
+      "test": "TestContentContextReachableClosure64And65IncludesIntermediateVersions/65",
+      "duration": "12.71s"
+    },
+    {
+      "status": "FAIL",
+      "test": "TestContentContextStaticModeMaximumReachable62Materials",
+      "duration": "25.20s"
+    },
+    {
+      "status": "PASS",
+      "test": "TestContentContextSingleContentBoundHasHonestLayerAndNoDispatch",
+      "duration": "9.81s"
+    },
+    {
+      "status": "PASS",
+      "test": "TestContentContextSingleContentBoundHasHonestLayerAndNoDispatch/200000",
+      "duration": "8.60s"
+    },
+    {
+      "status": "PASS",
+      "test": "TestContentContextSingleContentBoundHasHonestLayerAndNoDispatch/262144",
+      "duration": "1.21s"
+    },
+    {
+      "status": "PASS",
+      "test": "TestContentContextDuplicateSelectorRoleRefusesBeforeOriginalInputReplacement",
+      "duration": "0.63s"
+    }
+  ],
+  "caller_seconds": 30,
+  "claim_seconds": 5,
+  "test_watchdog_seconds": 120,
+  "outer_seconds": 120,
+  "failed_capacity_not_accepted": true,
+  "collector_buffers": [
+    {
+      "events": 82,
+      "dropped": 0
+    },
+    {
+      "events": 15,
+      "dropped": 0
+    },
+    {
+      "events": 290,
+      "dropped": 0
+    }
+  ],
+  "first_errors": [
+    "    context_claim_diagnostics.go:118: CLAIM_DIAG first_error kind=content.ReadForProcessing at=30.001427422s duration=252.353929ms caller_remaining=-1.467548ms cause=context.deadlineExceededError:context_deadline bytes=0 sources=0",
+    "    context_claim_diagnostics.go:118: CLAIM_DIAG first_error kind=phase.compile-and-bind-end at=12.460370566s duration=4.418789729s caller_remaining=17.539603296s cause=*errors.joinError:context_overflow ",
+    "    context_claim_diagnostics.go:118: CLAIM_DIAG first_error kind=access.PrepareContent at=25.127246326s duration=1.470676ms caller_remaining=4.872746283s cause=*pgconn.errTimeout:context_deadline "
+  ],
+  "no_source_fix_or_extra_run": true
+}

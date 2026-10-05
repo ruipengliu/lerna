@@ -1,0 +1,46 @@
+{
+  "kind": "actual ONE legitimate complete delegated Subject cleanup normal after full64 live other-subject duties",
+  "prelaunch_manifest": "/tmp/lerna-04-ticket05-execution/delegated-cleanup-first-normal-source/manifest.json",
+  "test_sha256": "85d9951fd44c08b374730f8c95d464e8e8efb5726cfb5ec1df20977689bf6995",
+  "format_difference": "empty; exact preformat bytes preserved",
+  "format": {
+    "pid": 3510349,
+    "pgid": 3510349,
+    "starttime": "14714811",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false
+  },
+  "pid": 3511127,
+  "pgid": 3511127,
+  "starttime": "14718304",
+  "exit": 0,
+  "group_absent": true,
+  "timed_out": false,
+  "tool_session": 89539,
+  "go_seconds": 6.51,
+  "case_seconds": 6.5,
+  "log": "/tmp/lerna-04-ticket05-execution/delegated-cleanup-first-normal.log",
+  "log_sha256": "09200072e0f1c5acbedf72244392590b9a5ffc2653a5be879b5df0b41a10bfbd",
+  "schema": "lerna_test_c0035b7fa47a0d4c294453b6",
+  "object_root": {
+    "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-1169068078",
+    "device": 33,
+    "inode": 389360
+  },
+  "actual_tail": {
+    "same_tenant_leaf_with_real_distinct_complete_delegation_policies_and_authenticated_publications": true,
+    "same_original_primary_id_and_original_opened_medium_binding": true,
+    "full64_first_subject_original_live_Seals_before_later_second_subject_Seal": true,
+    "common_initial45s_not_renewed_live_at_prestate_and_final_proof": true,
+    "first_reopen_complete_original_observations_alpha_receipts_history": true,
+    "within4_second_subject_actual_Lifecycle_Steps_only_own_duty_cleanup": true,
+    "unique_one_to_one_all_original_holder_identity_Kind_deadline_ACK_complete_and_independent_exact_absence": true,
+    "second_true_reopen_full64_other_subject_observations_alpha_receipts_history_unchanged_and_still_live": true,
+    "own_full_original_Seal_ACK_fixed_receipt_pubhistory_current_authorized_gone_metadata": true
+  },
+  "race_executed": false,
+  "Manager_RUN_executed": false,
+  "sourcefix_applied": false,
+  "native_released": true
+}

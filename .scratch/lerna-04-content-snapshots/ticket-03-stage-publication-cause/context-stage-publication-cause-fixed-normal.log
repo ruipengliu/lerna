@@ -1,0 +1,9 @@
+=== RUN   TestContentContextStagePublicationPreservesCanceledInputLockCause
+=== RUN   TestContentContextStagePublicationPreservesCanceledInputLockCause/normal
+=== NAME  TestContentContextStagePublicationPreservesCanceledInputLockCause
+    content_context_publication_cause_test.go:203: actual original input row canceled after native wait: publisher=557855 blocker=557856
+--- PASS: TestContentContextStagePublicationPreservesCanceledInputLockCause (1.79s)
+    --- PASS: TestContentContextStagePublicationPreservesCanceledInputLockCause/normal (1.09s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/component	1.801s
+NATIVE_EXIT status=0 group_absent=True

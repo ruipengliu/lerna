@@ -1,0 +1,7 @@
+=== RUN   TestContentLaterWorkPassesFullExpiredCleanupPageWithoutChangingOriginalDuties
+    content_expired_backlog_test.go:26: later accepted version blocked by 64 expired original cleanup jobs: publication="preparing" exact_ref=true independent_body_missing=true command_error=<nil>
+--- FAIL: TestContentLaterWorkPassesFullExpiredCleanupPageWithoutChangingOriginalDuties (18.12s)
+FAIL
+FAIL	github.com/ruipengliu/lerna/conformance/component	18.131s
+FAIL
+NATIVE_COMPLETION_ACK {"pid": 3290594, "pgid": 3290594, "starttime": "13743233", "exit": 1, "group_absent": true, "timed_out": false}

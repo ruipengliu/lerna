@@ -1,0 +1,46 @@
+{
+  "scope": "three stopped-original legacy qualification cases; partial ticket, unmerged production",
+  "source_pins": {
+    "record_race": "2402fd79d5093e0a29605f4e28f2da0c1cac8cac",
+    "committed_reply_loss": "ca9ac8110c091bacfdda492d64185c9e496a0582",
+    "initial_cutoff": "331154b132c5fd631fb8f663e05a12642cd014cd"
+  },
+  "files": [
+    {
+      "source": "/tmp/lerna-04-ticket05-execution/legacy-whole-record-race-first-run.log",
+      "archive": "legacy-whole-record-race-first-run.log",
+      "bytes": 395,
+      "sha256": "c99663d4068348bae23af9a5fea85c0e70aa9d2c6566ea51225d678962e75485"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket05-execution/legacy-whole-record-race-race.log",
+      "archive": "legacy-whole-record-race-race.log",
+      "bytes": 768,
+      "sha256": "42c65be36c8d460998168c46e645d3b6d349b69803d32cd8ff0a7fd1ac6a9712"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket05-execution/legacy-committed-reply-loss-first-run.log",
+      "archive": "legacy-committed-reply-loss-first-run.log",
+      "bytes": 385,
+      "sha256": "c8c8edf099a916098c15a2b6c3175d874b897d20ea801f6f73ce4d54a35a5ebe"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket05-execution/legacy-committed-reply-loss-race.log",
+      "archive": "legacy-committed-reply-loss-race.log",
+      "bytes": 758,
+      "sha256": "4c7e073e2d41a72cecd86e3498e40d029e764465018030521aa2ac637fa7b99e"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket05-execution/legacy-initial-cutoff-first-run.log",
+      "archive": "legacy-initial-cutoff-first-run.log",
+      "bytes": 383,
+      "sha256": "70e3a86c2cfbaff09ae94ba5c8a131f28a0081f813f983c90aac5eefbca639fe"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket05-execution/legacy-initial-cutoff-race.log",
+      "archive": "legacy-initial-cutoff-race.log",
+      "bytes": 756,
+      "sha256": "a17bc03f72afc67b57a037222125818bc81bf47f221e0ed8f2717468e29e3463"
+    }
+  ]
+}

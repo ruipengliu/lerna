@@ -1,0 +1,34 @@
+{
+  "kind": "actual readonlyaudit ledger sequence and postpins",
+  "events": [
+    {
+      "deadline_seconds": 120,
+      "event": "native_start_ack",
+      "pgid": 3584995,
+      "pid": 3584995,
+      "root": "/tmp/lerna-04-ticket05-execution",
+      "starttime": "15030462"
+    },
+    {
+      "backend_pid": 588251,
+      "event": "audit_pg_connection_registered",
+      "prelaunch_sha256": "6230a0a7b2a6b06819160ac9a02bde5f296d2a9353161240193caf2005ef1c9a",
+      "qualification_commit": "8db74e3dfd2677adb37fbdd13bd93e76b61b5eb7"
+    },
+    {
+      "event": "native_completion_ack",
+      "exit": 0,
+      "group_absent": true,
+      "pgid": 3584995,
+      "pid": 3584995,
+      "starttime": "15030462",
+      "timed_out": false
+    }
+  ],
+  "all_15_postpins_unchanged": true,
+  "commit": "8db74e3dfd2677adb37fbdd13bd93e76b61b5eb7",
+  "worktree_clean": true,
+  "no_extra_audit_query": "one namespace array query plus one backend array query only",
+  "audit_own_backend_current_presence_not_separately_queried": "first Close actual returned nil, no extraquery authorized",
+  "stop_release": true
+}

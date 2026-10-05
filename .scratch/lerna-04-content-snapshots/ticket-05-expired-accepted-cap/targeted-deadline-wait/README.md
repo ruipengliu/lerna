@@ -1,0 +1,5 @@
+# Exact AdmissionTarget original-deadline lock wait
+
+The real target-policy lock blocks the public exact-admission consumer in two fresh scopes with the same initial 700ms responsibility budget. Immediate release completed the original target-only seal and actual full-holder ACK; release at the original deadline +20ms preserved the entire original pending observation, no seal or executable cleanup, and original target bytes. Both branches really reopened, retained source bytes/no source seal, kept Version2 normal and the original byte-encoded receipts/published history.
+
+[Normal](admission-cleanup-deadline-first-run.log) passed in 5.325s and [race](admission-cleanup-deadline-race.log) in 6.905s. Both original native processes actually exited 0 with group absence and no timeout; [provenance](provenance.json) preserves identity and exact log bytes. Product source remained `301be6d6e0e176ad10cd94012baa5c87d9debd14`. This qualifies the targeted branch time seam; the older ordinary-key wait was separate. It does not demonstrate commit_unknown, all authority refusals, or whole-ticket completion.

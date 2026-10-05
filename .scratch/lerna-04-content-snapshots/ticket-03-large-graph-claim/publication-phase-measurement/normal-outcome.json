@@ -1,0 +1,322 @@
+{
+  "status": "actual measurement normal allPASS; STOP / RELEASE; no further native or product fix",
+  "manifest_sha256": "0d5455a89252da54ccb404640022f411eab5d67bf19233e3fab9e5f2cca5895b",
+  "source_scope": {
+    "tracked_head": "28e3a468c86d4323d3b497836de23bb311a58952",
+    "tracked_diff": [
+      "conformance/internal/decisionfixture/context_dispatch.go",
+      "domain/content/closure.go"
+    ],
+    "untracked": [
+      "conformance/component/content_context_publication_cause_test.go",
+      "conformance/internal/decisionfixture/context_publication_probe.go"
+    ],
+    "identity": "HEAD plus explicitly identified WIP source, not pristine HEAD28e binary"
+  },
+  "argv": [
+    "/workspace/lerna-content-03-137311247276/run-native.py",
+    "/workspace/lerna-content-03-137311247276/large-graph-publication-phase-overlay/component-normal.test",
+    "-test.v",
+    "-test.run=^(TestContentContextReachableClosure64And65IncludesIntermediateVersions|TestContentContextStaticModeMaximumReachable62Materials|TestContentContextSingleContentBoundHasHonestLayerAndNoDispatch|TestContentContextDuplicateSelectorRoleRefusesBeforeOriginalInputReplacement)$",
+    "-test.count=1",
+    "-test.timeout=120s"
+  ],
+  "log": "/workspace/lerna-content-03-137311247276/context-final-capacity-b-publication-phase-normal.log",
+  "caller_lease_go_outer_seconds": [
+    30,
+    5,
+    120,
+    120
+  ],
+  "count": 1,
+  "owned_scope_registry": "/workspace/lerna-content-03-137311247276/owned-scopes.log",
+  "scope_registration": "wrapper PID/PGID/starttick fsynced before gate; original fixture resource scopes registered before effect",
+  "no_extra_sql_source_changes_retries_sampling_race": true,
+  "native_identity": {
+    "pid": 3458066,
+    "pgid": 3458066,
+    "starttime": "14483911",
+    "started_ns": 1791176600771027792,
+    "args": [
+      "/workspace/lerna-content-03-137311247276/large-graph-publication-phase-overlay/component-normal.test",
+      "-test.v",
+      "-test.run=^(TestContentContextReachableClosure64And65IncludesIntermediateVersions|TestContentContextStaticModeMaximumReachable62Materials|TestContentContextSingleContentBoundHasHonestLayerAndNoDispatch|TestContentContextDuplicateSelectorRoleRefusesBeforeOriginalInputReplacement)$",
+      "-test.count=1",
+      "-test.timeout=120s"
+    ]
+  },
+  "tool_session": 69469,
+  "actual_exit": 0,
+  "group_absent": true,
+  "current_original_group_absent": true,
+  "no_timeout": true,
+  "log_lines": 373,
+  "log_bytes": 87334,
+  "log_sha256": "3fb9d0e75bcc66c7aff0baca0c8a45849baac62d0edc1b6d0378cd63db412b82",
+  "test_results": {
+    "closure64_seconds": 10.93,
+    "closure65_seconds": 5.54,
+    "closure_parent_seconds": 16.46,
+    "static62_seconds": 15.72,
+    "content_normal_seconds": 1.74,
+    "content_refusal_seconds": 0.51,
+    "content_parent_seconds": 2.25,
+    "duplicate_seconds": 0.36
+  },
+  "all_source_replacement_binary_hashes_still_exact": true,
+  "owned_scope_interval": [
+    "process_group 3458066 3458066 /workspace/lerna-content-03-137311247276",
+    "postgres lerna_test_4897065d1fbd44da020dc07b",
+    "postgres lerna_test_c3eaf770a5d2634311fde5b0",
+    "postgres lerna_test_cac2a77fed03c928428d704a",
+    "objects /workspace/lerna-content-03-137311247276/lerna-content-objects-1026748112 27 560226",
+    "postgres lerna_test_0274d26a7ccd5e07987444b8",
+    "postgres lerna_test_dededcadc83c0e7915700e91",
+    "postgres lerna_test_382ea984446e8197a6e673cc",
+    "objects /workspace/lerna-content-03-137311247276/lerna-content-objects-403715999 27 560226",
+    "postgres lerna_test_d3aa9c129c74fd81d90c7675",
+    "postgres lerna_test_135d5e680d8f01c722d71b58",
+    "postgres lerna_test_50a7e3e5136654a44a1107d4",
+    "objects /workspace/lerna-content-03-137311247276/lerna-content-objects-1908327000 27 560226",
+    "postgres lerna_test_4965e3057fa9d60cd4aa0594",
+    "postgres lerna_test_dca68987c043501147b8a48b",
+    "postgres lerna_test_e1134d99cee4f31289dc15c9",
+    "objects /workspace/lerna-content-03-137311247276/lerna-content-objects-2277210281 27 560748",
+    "postgres lerna_test_f917814d94c74f8d6e7ab683",
+    "postgres lerna_test_c747b9b761420707215448d9",
+    "postgres lerna_test_c05a9f03a3757709d4f4b1b2",
+    "objects /workspace/lerna-content-03-137311247276/lerna-content-objects-1891861248 27 560748",
+    "postgres lerna_test_dcd2e1c636845aa59b06427f",
+    "postgres lerna_test_888421aeb5af5eb5b2db1284",
+    "postgres lerna_test_a05ab15f3951bdbda8a54c7a",
+    "objects /workspace/lerna-content-03-137311247276/lerna-content-objects-3465231919 27 560748",
+    "native_exit 3458066 3458066 status=0 group_absent=True"
+  ],
+  "per_resource_close_fact_limit": "native Wait/group absence is not resource-specific logical Close ACK; original fixture scope/unknown responsibilities retained, no cleanup or synthetic Close supplied",
+  "measurement_hook_overhead": "unknown, this sample is not deterministic performance benefit/green; no failure childgate reproduced in positive cases, prior normal162line failure stays independent",
+  "callback_residual_limit": "mixed business/runtime/SQL/encoding/diagnostic elapsed; not CPU or SQLwait, no per-node closure drilldown",
+  "original_cpu_profile_descriptor_logical_close": "UNKNOWN retained",
+  "race_business_unrun": true,
+  "additional_native_unrun": true,
+  "no_next_product_fix_authorized": true,
+  "prelaunch_registration_fact": {
+    "status_before_effect": "registered before effect; no outcome yet",
+    "binary_business_unrun_at_registration": true,
+    "cutoff": "effect registration before native3458066; final actual completion is separate",
+    "preservation_note": "prior status literal and retained registration fields recorded separately during reconciliation; no claim that original prelaunch file bytes were independently archived"
+  },
+  "binary_identity": {
+    "binary": "/workspace/lerna-content-03-137311247276/large-graph-publication-phase-overlay/component-normal.test",
+    "sha256": "c421c12ceee557fa59cc44620ca8196bbe7c9649c83b33285b473a988cb420fd",
+    "bytes": 22469063,
+    "dev": 27,
+    "inode": 560558,
+    "mode": "0o700",
+    "manifest_sha256": "0d5455a89252da54ccb404640022f411eab5d67bf19233e3fab9e5f2cca5895b",
+    "map_sha256": "54b72b9485df8c63e5460b964e503d070f473aac303deada124ad4b81a590fd3",
+    "business_unrun": true,
+    "business_unrun_field_cutoff": "pre-business compile provenance, not latest native outcome"
+  },
+  "source_pins_provenance": {
+    "manifest": "/workspace/lerna-content-03-137311247276/large-graph-publication-phase-overlay/manifest.json",
+    "binary_provenance": "/workspace/lerna-content-03-137311247276/large-graph-publication-phase-overlay/binary-normal-provenance.json",
+    "binary_provenance_sha256": "950d9342783dc6aa4dacd12a5f59124882b621843fc901e52543ffa686211a76",
+    "full_costs_cutoff": "/workspace/lerna-content-03-137311247276/large-graph-publication-phase-overlay/normal-outcome-full-costs-cutoff.json",
+    "full_costs_cutoff_sha256": "318efea7e0e9f26266a3956810c5288ec0e3c9db26700c49e06bda5badce3776"
+  },
+  "publication_costs_artifact": {
+    "path": "/workspace/lerna-content-03-137311247276/large-graph-publication-phase-overlay/publication-phase-costs.json",
+    "sha256": "e55524324ef2121668f8bf0fa5712050da784068da20305fcc85f6d51b9149b2",
+    "no_failure_childgate_reproduced": true
+  },
+  "positive_cases": {
+    "closure64": {
+      "actual_result": "PASS",
+      "step_duration": "3.13663384s",
+      "prepared_commit": {
+        "kind": "store.WithinSave",
+        "at": "8.996331446s",
+        "duration": "11.611542ms",
+        "caller_remaining": "21.003652725s",
+        "cause": "nil",
+        "callback_cause": "nil",
+        "final_cause": "nil",
+        "committed": "true",
+        "save_cause": "nil",
+        "status": "running",
+        "prepared": "true",
+        "sequence": "1",
+        "input_digest": "sha256:da29fe9d9b520e8d6a7237b310f8f1d10e0cfd04bce58cc304fdb4d0be081581"
+      },
+      "completed_commit": {
+        "kind": "store.WithinSave",
+        "at": "10.538033785s",
+        "duration": "20.495647ms",
+        "caller_remaining": "19.461950386s",
+        "cause": "nil",
+        "callback_cause": "nil",
+        "final_cause": "nil",
+        "committed": "true",
+        "save_cause": "nil",
+        "status": "completed",
+        "prepared": "true",
+        "sequence": "1",
+        "input_digest": "sha256:da29fe9d9b520e8d6a7237b310f8f1d10e0cfd04bce58cc304fdb4d0be081581"
+      },
+      "last_fresh_claim": {
+        "kind": "store.ValidateClaim",
+        "at": "10.520899009s",
+        "duration": "111.139\u00b5s",
+        "caller_remaining": "19.479085162s",
+        "cause": "nil",
+        "job": "job-8d19b1cc972a47b96d116d2c12115115",
+        "epoch": "1",
+        "revision": "1",
+        "phase": "decide",
+        "lease_until": "2026-10-05T05:03:33.205491Z",
+        "supplied_now": "2026-10-05T05:03:31.302343Z",
+        "lease_delta": "1.903148s"
+      },
+      "material_count": 61,
+      "publish_count": 2,
+      "read_published_count": 2,
+      "all_four_processing_reads": {
+        "pre_callback": true,
+        "objects_read": true,
+        "post_callback": true,
+        "first_error": null
+      },
+      "original_public_receipt_exact_body_rule_starts_reopen_tail": true,
+      "event_buffer": {
+        "count": 324,
+        "dropped": 0
+      },
+      "publication_buffer": {
+        "scopes": 4,
+        "slots": 32,
+        "publish_calls": 2,
+        "read_published_calls": 2,
+        "dropped": 0
+      },
+      "scope_first_errors": {
+        "worker.Publish#1": null,
+        "worker.Publish#2": null,
+        "worker.ReadPublished#1": null,
+        "worker.ReadPublished#2": null
+      },
+      "current_access_calls": {
+        "count": 70,
+        "inclusive_total": "283.71071ms"
+      },
+      "whole_publication_wrapper_totals": {
+        "publisher.Publish": "1.247662765s",
+        "publisher.ReadPublished": "255.677946ms"
+      }
+    },
+    "static62": {
+      "actual_result": "PASS",
+      "step_duration": "3.288252381s",
+      "prepared_commit": {
+        "kind": "store.WithinSave",
+        "at": "12.178478255s",
+        "duration": "14.809249ms",
+        "caller_remaining": "17.821519588s",
+        "cause": "nil",
+        "callback_cause": "nil",
+        "final_cause": "nil",
+        "committed": "true",
+        "save_cause": "nil",
+        "status": "running",
+        "prepared": "true",
+        "sequence": "1",
+        "input_digest": "sha256:dddbe21fded77b7914d423aa4c57c4f500f6afc4ab7954761ed9125742d83380"
+      },
+      "completed_commit": {
+        "kind": "store.WithinSave",
+        "at": "13.907291718s",
+        "duration": "21.202923ms",
+        "caller_remaining": "16.092706125s",
+        "cause": "nil",
+        "callback_cause": "nil",
+        "final_cause": "nil",
+        "committed": "true",
+        "save_cause": "nil",
+        "status": "completed",
+        "prepared": "true",
+        "sequence": "1",
+        "input_digest": "sha256:dddbe21fded77b7914d423aa4c57c4f500f6afc4ab7954761ed9125742d83380"
+      },
+      "last_fresh_claim": {
+        "kind": "store.ValidateClaim",
+        "at": "13.889828531s",
+        "duration": "104.575\u00b5s",
+        "caller_remaining": "16.110169312s",
+        "cause": "nil",
+        "job": "job-cbbf61b4f260ea2e02f0c5e5db0805f5",
+        "epoch": "1",
+        "revision": "1",
+        "phase": "decide",
+        "lease_until": "2026-10-05T05:03:52.889948Z",
+        "supplied_now": "2026-10-05T05:03:51.13327Z",
+        "lease_delta": "1.756678s"
+      },
+      "material_count": 62,
+      "publish_count": 2,
+      "read_published_count": 2,
+      "all_four_processing_reads": {
+        "pre_callback": true,
+        "objects_read": true,
+        "post_callback": true,
+        "first_error": null
+      },
+      "original_public_receipt_exact_body_rule_starts_reopen_tail": true,
+      "event_buffer": {
+        "count": 327,
+        "dropped": 0
+      },
+      "publication_buffer": {
+        "scopes": 4,
+        "slots": 32,
+        "publish_calls": 2,
+        "read_published_calls": 2,
+        "dropped": 0
+      },
+      "scope_first_errors": {
+        "worker.Publish#1": null,
+        "worker.Publish#2": null,
+        "worker.ReadPublished#1": null,
+        "worker.ReadPublished#2": null
+      },
+      "current_access_calls": {
+        "count": 71,
+        "inclusive_total": "300.466093ms"
+      },
+      "whole_publication_wrapper_totals": {
+        "publisher.Publish": "1.397701663s",
+        "publisher.ReadPublished": "289.47321ms"
+      }
+    }
+  },
+  "overflow_case": {
+    "result": "PASS",
+    "original_overflow_first_cause": {
+      "kind": "phase.compile-and-bind-end",
+      "at": "5.364125976s",
+      "duration": "1.355045171s",
+      "caller_remaining": "24.635872008s",
+      "cause": "*errors.joinError:context_overflow"
+    },
+    "event_buffer": {
+      "count": 15,
+      "dropped": 0
+    },
+    "publication_buffer": {
+      "scopes": 4,
+      "slots": 32,
+      "publish_calls": 0,
+      "read_published_calls": 0,
+      "dropped": 0
+    },
+    "original_reopen_tail_pass": true
+  }
+}

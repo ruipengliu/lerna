@@ -1,0 +1,22 @@
+{
+  "binary": "/workspace/lerna-content-03-137311247276/large-graph-binding-reuse-overlay/component-race.test",
+  "sha256": "ad814ad72be02f423d81b8789323b653f13cda1c694a82e817f34f8220584260",
+  "bytes": 28988922,
+  "dev": 27,
+  "inode": 560867,
+  "mode": "0o700",
+  "source_pin": "28e3a468c86d4323d3b497836de23bb311a58952",
+  "manifest_sha256": "f98350889216691304ef107a1a9f25fce25c5d9bb987ac61c3690e410c68cd04",
+  "map_sha256": "88dd305579a619a7897b191e7f0532542784e578f1b2d378630ff96f54cb8a41",
+  "build_pid": 3271597,
+  "build_pgid": 3271597,
+  "build_starttime": "13665074",
+  "build_started_ns": 1791168412394772061,
+  "build_actual_exit": 0,
+  "build_group_absent": true,
+  "current_killpg_zero_absent": true,
+  "build_race": true,
+  "build_actual_session": 16436,
+  "business_unrun": true,
+  "build_log": "/workspace/lerna-content-03-137311247276/context-final-capacity-b-binding-reuse-build-race.log"
+}

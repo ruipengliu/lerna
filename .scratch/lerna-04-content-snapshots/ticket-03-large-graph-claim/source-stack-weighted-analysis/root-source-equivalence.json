@@ -1,0 +1,48 @@
+{
+  "profile_source_pin": "28e3a468c86d4323d3b497836de23bb311a58952",
+  "checked": [
+    {
+      "path": "adapters/content/decision/source.go",
+      "sha256": "f3342f0bfefabd1adeb59d8fa8566e4af70dfb64ea41185aa721386a04a3df27",
+      "bytes": 5461,
+      "byteequal_old_profile_commit": true
+    },
+    {
+      "path": "adapters/content/decision/assembly.go",
+      "sha256": "81159617d649cead0c3ac2a6d7dd745753db3c07365d4eb8c99b3ee25ec62036",
+      "bytes": 11123,
+      "byteequal_old_profile_commit": true
+    },
+    {
+      "path": "domain/task/context/canonical.go",
+      "sha256": "1350ffdc90bafc5b07a38ac96c9cdbad4020974eac4946d6785bd53fb19f0c63",
+      "bytes": 8743,
+      "byteequal_old_profile_commit": true
+    },
+    {
+      "path": "domain/task/context/types.go",
+      "sha256": "afea8dc64d9754ae67e157c5393b9ebbe03c10035ebd264c5a1ef852246f8be2",
+      "bytes": 4942,
+      "byteequal_old_profile_commit": true
+    },
+    {
+      "path": "contract/v1_1/codec.go",
+      "sha256": "53ba6cf9a5bb9d70d77632cc154be07ef5e5171c0832fc50488fbdd210981167",
+      "bytes": 5578,
+      "byteequal_old_profile_commit": true
+    },
+    {
+      "path": "contract/v1_1/json.go",
+      "sha256": "9c6c14729d3ea6c9ea464ef1a234aa3eea106f1c0478e8b1b9a2ee78ffb8f06a",
+      "bytes": 3647,
+      "byteequal_old_profile_commit": true
+    },
+    {
+      "path": "contract/v1_2/json.go",
+      "sha256": "c485c8eccd24a57a7347f4096969548bfff1cb34a6dde4f7e0c00232e9ee3afd",
+      "bytes": 3647,
+      "byteequal_old_profile_commit": true
+    }
+  ],
+  "Content_closure_changed_old_subtree_not_current_performance": true
+}

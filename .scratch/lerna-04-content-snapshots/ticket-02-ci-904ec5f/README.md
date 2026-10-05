@@ -1,0 +1,3 @@
+# 票02准确904ec5f CI材料
+
+Run37227467190/head904ec5f，两job全部steps completed success。root已读取全部过滤日志，实际资格见上级ci-verification.md。logs来自GitHub connector，整行过滤凭据相关关键词；不是原始日志逐字归档。metadata为相关结果字段的投影，capture-provenance记录当前捕获文件的真实bytes/SHA。局部attributes仅保留日志原有空白，不放宽产品格式。

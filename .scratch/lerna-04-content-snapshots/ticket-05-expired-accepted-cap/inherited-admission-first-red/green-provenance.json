@@ -1,0 +1,37 @@
+{
+  "scope": "same exact AdmissionTarget normal and race after minimal product fix; no targeted deadline-wait coverage",
+  "files": [
+    {
+      "source": "/tmp/lerna-04-ticket05-execution/inherited-cap-admission-first-green.log",
+      "archive": "inherited-cap-admission-first-green.log",
+      "bytes": 407,
+      "sha256": "ea6471093e133f1744b7d31416b4e7015b95a39a3ca95508603a7f7c05674751",
+      "native": {
+        "pid": 3166051,
+        "pgid": 3166051,
+        "starttime": "13220479",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false
+      },
+      "go_package_seconds": 2.422
+    },
+    {
+      "source": "/tmp/lerna-04-ticket05-execution/inherited-cap-admission-race.log",
+      "archive": "inherited-cap-admission-race.log",
+      "bytes": 407,
+      "sha256": "bc26cbae7bc1486c8f65c521c4390477a9fcf42139f3d1ea5491dd4c4d2f5c2a",
+      "native": {
+        "pid": 3166937,
+        "pgid": 3166937,
+        "starttime": "13224041",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false
+      },
+      "go_package_seconds": 3.913
+    }
+  ],
+  "fixed_partial_source": "301be6d6e0e176ad10cd94012baa5c87d9debd14",
+  "root_review": "FULL product diff, full original test plus public controls and both original completed logs read; owner explicitly released LOCAL"
+}

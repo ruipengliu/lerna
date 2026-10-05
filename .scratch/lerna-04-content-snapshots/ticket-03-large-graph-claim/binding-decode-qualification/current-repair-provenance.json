@@ -1,0 +1,17 @@
+{
+  "source": "/workspace/lerna-content-03-137311247276/context-binding-current-repair-normal.log",
+  "archive": "context-binding-current-repair-normal.log",
+  "bytes": 921,
+  "sha256": "421242a0b2ee0e26dd6725f618b0c6b450d4f7183da29e1f155c1b2c7c259e8a",
+  "native": {
+    "pid": 3200052,
+    "pgid": 3200052,
+    "starttime": "13365083",
+    "exit": 1,
+    "group_absent": true
+  },
+  "go_package_seconds": 3.272,
+  "scope": "normal Completed and real B Process withdrawal passed; original Cancel Applied, actual Decide rejected decision_cancelled, Step0/Cancelled RuleStarts0/Inputnil and reopen stop checks passed; last repeat-Cancel assertion failed; no race launched",
+  "cause": "original ContextWorld.Reopen/build reseeds decision-specific get-only access; Cancel purpose access refuses before replay/VerifyControl. Earlier owner VerifyControl hypothesis retracted after full actual path read.",
+  "next": "test-only exact ErrForbidden plus real owner command.get original Applied receipt; no new cancel grant or frozen source mutation"
+}

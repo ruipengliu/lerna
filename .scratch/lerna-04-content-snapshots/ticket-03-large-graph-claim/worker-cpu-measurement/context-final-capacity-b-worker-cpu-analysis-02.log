@@ -1,0 +1,40 @@
+File: component-profile-race.test
+Build ID: 806ee56983405ac712e9bc3da0d9c152c518a73f
+Type: cpu
+Time: 2026-10-05 03:06:19 UTC
+Duration: 78.40s, Total samples = 62.18s (79.31%)
+Showing nodes accounting for 44.64s, 71.79% of 62.18s total
+Dropped 993 nodes (cum <= 0.31s)
+Showing top 30 nodes out of 257
+      flat  flat%   sum%        cum   cum%
+    11.65s 18.74% 18.74%     11.65s 18.74%  racecall
+    11.26s 18.11% 36.84%     11.26s 18.11%  __tsan_read
+     3.27s  5.26% 42.10%      3.27s  5.26%  __tsan::MemoryAccessRangeT
+     2.52s  4.05% 46.16%      2.52s  4.05%  internal/runtime/syscall/linux.Syscall6
+     2.49s  4.00% 50.16%      2.49s  4.00%  runtime.futex
+     1.86s  2.99% 53.15%      1.86s  2.99%  racecalladdr
+     1.84s  2.96% 56.11%      1.84s  2.96%  __tsan_write
+     1.54s  2.48% 58.59%      1.54s  2.48%  runtime.raceread
+     0.77s  1.24% 59.83%      1.30s  2.09%  runtime.checkptrBase
+     0.70s  1.13% 60.95%      0.70s  1.13%  __tsan_func_enter
+     0.62s     1% 61.95%      0.62s     1%  runtime.findObject
+     0.59s  0.95% 62.90%      0.59s  0.95%  runtime.write1
+     0.53s  0.85% 63.75%      0.53s  0.85%  __tsan::MetaMap::GetSync
+     0.48s  0.77% 64.52%      0.48s  0.77%  __tsan::ShadowSet
+     0.42s  0.68% 65.20%      1.05s  1.69%  runtime.mallocgcSmallScanNoHeader
+     0.41s  0.66% 65.86%      1.25s  2.01%  encoding/json/jsontext.(*decoderState).ReadToken
+     0.37s   0.6% 66.45%      1.30s  2.09%  encoding/json/jsontext.(*decoderState).consumeValue
+     0.34s  0.55% 67.00%      0.34s  0.55%  runtime.memmove
+     0.33s  0.53% 67.53%      0.33s  0.53%  __tsan::MetaMap::FreeRange
+     0.33s  0.53% 68.06%      0.67s  1.08%  runtime.scanObject
+     0.33s  0.53% 68.59%      0.36s  0.58%  runtime.tryDeferToSpanScan
+     0.29s  0.47% 69.06%      1.63s  2.62%  runtime.checkptrAlignment
+     0.26s  0.42% 69.48%      0.48s  0.77%  encoding/json/jsontext.Token.string
+     0.25s   0.4% 69.88%      0.47s  0.76%  regexp/syntax.(*Inst).MatchRunePos
+     0.23s  0.37% 70.25%      0.35s  0.56%  runtime.(*sweepLocked).sweep
+     0.21s  0.34% 70.59%      0.38s  0.61%  encoding/json/jsontext.(*decoderState).PeekKind
+     0.20s  0.32% 70.91%      1.02s  1.64%  encoding/json/jsontext.(*decoderState).consumeObject
+     0.19s  0.31% 71.21%      0.34s  0.55%  runtime.stealWork
+     0.18s  0.29% 71.50%      3.38s  5.44%  github.com/santhosh-tekuri/jsonschema/v6.(*validator).validate
+     0.18s  0.29% 71.79%      0.79s  1.27%  regexp.(*Regexp).doOnePass
+NATIVE_EXIT status=0 group_absent=True

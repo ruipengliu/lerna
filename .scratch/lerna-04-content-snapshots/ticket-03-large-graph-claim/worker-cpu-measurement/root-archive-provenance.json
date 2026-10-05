@@ -1,0 +1,175 @@
+{
+  "original_profile_descriptor_logical_close": "UNKNOWN; retained",
+  "native_wait_not_logical_close": true,
+  "root_full_read_raw159_and_allseven_analysis": true,
+  "records": [
+    {
+      "source": "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/worker-cpu.pprof",
+      "artifact": "worker-cpu.pprof",
+      "bytes": 144298,
+      "sha256": "427bbc672bad5cf520934ed2e31116f75eca4991572fd5ecd0c3f7c3a4ff31e6"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/manifest.json",
+      "artifact": "manifest.json",
+      "bytes": 9737,
+      "sha256": "9ba78cb0a0f40351a98cf44e54b0a8cdc6755462a851513a514bf85ada1fb8e1"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/profile-outcome.json",
+      "artifact": "profile-outcome.json",
+      "bytes": 4256,
+      "sha256": "bdac95e49f4409dbbc95e95fc9e19387caac34e6edc8c8beb3cb90179ae7583f"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/analysis-outcomes.json",
+      "artifact": "analysis-outcomes.json",
+      "bytes": 10275,
+      "sha256": "17581db0c71434fb6b9d9f33b340cf4e8c74f47abdf3cc7ba4b02351740db5d5"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/binary-profile-provenance.json",
+      "artifact": "binary-profile-provenance.json",
+      "bytes": 1147,
+      "sha256": "037dacef901a95ba9937d460698e85dfececb6e57f655bb2a8072c1c492e59c4"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/commands-static.json",
+      "artifact": "commands-static.json",
+      "bytes": 4301,
+      "sha256": "9fb45449ceb0fec0f9204238b5c99072bbfdabdcfb310bebe01d0465232129be"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/overlay.json",
+      "artifact": "overlay.json",
+      "bytes": 1072,
+      "sha256": "0cbdc156f189223fc4aca13397533f72bbfc4c3c44f68b5590ebde789b56d3b8"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/profile-labels-only.diff",
+      "artifact": "profile-labels-only.diff",
+      "bytes": 1337,
+      "sha256": "3e0cbe0f7a6d3487ab425b9310b029e8028118e3b6742d211a7b155840bd469a"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/context-final-capacity-b-worker-cpu-format.log",
+      "artifact": "context-final-capacity-b-worker-cpu-format.log",
+      "bytes": 39,
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/context-final-capacity-b-worker-cpu-build-race.log",
+      "artifact": "context-final-capacity-b-worker-cpu-build-race.log",
+      "bytes": 39,
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/context-final-capacity-b-worker-cpu-race.log",
+      "artifact": "context-final-capacity-b-worker-cpu-race.log",
+      "bytes": 26000,
+      "sha256": "2a94676ffe50254ec4aa333a4de0230f07d1c76711529cc255428fdacf0794a9"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/context-final-capacity-b-worker-cpu-analysis-01.log",
+      "artifact": "context-final-capacity-b-worker-cpu-analysis-01.log",
+      "bytes": 221,
+      "sha256": "663f240dba2669455e00a71cd34999b774e5f7099fa697f9a0dca98ce812ca76"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/context-final-capacity-b-worker-cpu-analysis-02.log",
+      "artifact": "context-final-capacity-b-worker-cpu-analysis-02.log",
+      "bytes": 2522,
+      "sha256": "7bb8d41ce12176f23b2fd849bc8a06fc5f8aa136588edfde454d6c4cb7864962"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/context-final-capacity-b-worker-cpu-analysis-03.log",
+      "artifact": "context-final-capacity-b-worker-cpu-analysis-03.log",
+      "bytes": 3917,
+      "sha256": "5b1805a84f9ff822e5ee7de8d8c7815077709f2ab2b31d01a517b0d34dda45eb"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/context-final-capacity-b-worker-cpu-analysis-04.log",
+      "artifact": "context-final-capacity-b-worker-cpu-analysis-04.log",
+      "bytes": 2577,
+      "sha256": "a4393889b7d1eb01852327dfb3949705da3c28f042e636d60845a448395fc1d3"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/context-final-capacity-b-worker-cpu-analysis-05.log",
+      "artifact": "context-final-capacity-b-worker-cpu-analysis-05.log",
+      "bytes": 4045,
+      "sha256": "0904b6e5eff19d4a52edb8ea8c4bc49cc31a3c71747ce72705513fadb5b0085e"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/context-final-capacity-b-worker-cpu-analysis-06.log",
+      "artifact": "context-final-capacity-b-worker-cpu-analysis-06.log",
+      "bytes": 2570,
+      "sha256": "f1c5ee545b17020131929eee6e0f65f470e23f5a484993b510171e441270463d"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/context-final-capacity-b-worker-cpu-analysis-07.log",
+      "artifact": "context-final-capacity-b-worker-cpu-analysis-07.log",
+      "bytes": 4156,
+      "sha256": "000d3ecc03531da6a349c4ac4fb40247f8868b54672809d559ba55ec32ae132f"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/context_world.go",
+      "artifact": "context_world.go",
+      "bytes": 11298,
+      "sha256": "e37d876a734b2639a044ae931e8066b9844a8c88e8a213f6d3a32c2db0421612"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/context_claim_diagnostics.go",
+      "artifact": "context_claim_diagnostics.go",
+      "bytes": 13261,
+      "sha256": "573ae56fe178fb5f1cfa8898575ab5ca141f22077383173b383635e4a7b743e9"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/content_context_closure_test.go",
+      "artifact": "content_context_closure_test.go",
+      "bytes": 4558,
+      "sha256": "c668eacce37c9363cccaa243e2c484951582a872652d1a875c1281362a5c4e43"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/content_context_material_reachable_test.go",
+      "artifact": "content_context_material_reachable_test.go",
+      "bytes": 3369,
+      "sha256": "4223c74583ac7ecace18402ec114708e7a43bbf1593da47bbc675e3a6617e7f2"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/content_context_test.go",
+      "artifact": "content_context_test.go",
+      "bytes": 19055,
+      "sha256": "34305886212c62e14b4f8ade39e97f21dd49032b0980d3cc351a0c5ef997ce38"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/context_world.go.diff",
+      "artifact": "context_world.go.diff",
+      "bytes": 6138,
+      "sha256": "96b30d77a7a06330f3998f42d2c27a333d951e2254530dfe9cce37170c782233"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/context_claim_diagnostics.go.diff",
+      "artifact": "context_claim_diagnostics.go.diff",
+      "bytes": 13847,
+      "sha256": "882dd441ce14dd84c21ab1dae3346e7c75a1683a18cdc9c6b66ac936705b94ec"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/content_context_closure_test.go.diff",
+      "artifact": "content_context_closure_test.go.diff",
+      "bytes": 2003,
+      "sha256": "1b535ff8be9c7608e4b7755e4ff80cb39ee6c5cfd952dc0a8695b2f71c1b8f87"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/content_context_test.go.diff",
+      "artifact": "content_context_test.go.diff",
+      "bytes": 1950,
+      "sha256": "734380a7e5632abfc23af15b12d0e8b6a612b17defe6d2ae2d18bfd35a738069"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/content_context_material_reachable_test.go.diff",
+      "artifact": "content_context_material_reachable_test.go.diff",
+      "bytes": 2080,
+      "sha256": "9bdcc345ded104dd6fbadb0b4ddf24800e69e30db85bc1ee27d763de2afc3729"
+    }
+  ]
+}

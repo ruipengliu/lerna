@@ -1,0 +1,31 @@
+{
+  "status": "STATIC argv only; separate root grant required per build/business",
+  "normal_build": [
+    "/workspace/lerna-content-03-137311247276/run-native.py",
+    "bash",
+    "-c",
+    "set -e; . /workspace/.lerna-env/env.sh; GOTOOLCHAIN=local GOFLAGS=-mod=readonly go test -c -p 1 -tags=integration -overlay=/workspace/lerna-content-03-137311247276/large-graph-closure-identity-overlay/overlay.json -o /workspace/lerna-content-03-137311247276/large-graph-closure-identity-overlay/component-normal.test ./conformance/component"
+  ],
+  "race_build": [
+    "/workspace/lerna-content-03-137311247276/run-native.py",
+    "bash",
+    "-c",
+    "set -e; . /workspace/.lerna-env/env.sh; GOTOOLCHAIN=local GOFLAGS=-mod=readonly go test -race -c -p 1 -tags=integration -overlay=/workspace/lerna-content-03-137311247276/large-graph-closure-identity-overlay/overlay.json -o /workspace/lerna-content-03-137311247276/large-graph-closure-identity-overlay/component-race.test ./conformance/component"
+  ],
+  "normal_business": [
+    "/workspace/lerna-content-03-137311247276/run-native.py",
+    "/workspace/lerna-content-03-137311247276/large-graph-closure-identity-overlay/component-normal.test",
+    "-test.v",
+    "-test.run=^(TestContentContextReachableClosure64And65IncludesIntermediateVersions|TestContentContextStaticModeMaximumReachable62Materials|TestContentContextSingleContentBoundHasHonestLayerAndNoDispatch|TestContentContextDuplicateSelectorRoleRefusesBeforeOriginalInputReplacement)$",
+    "-test.count=1",
+    "-test.timeout=120s"
+  ],
+  "race_business": [
+    "/workspace/lerna-content-03-137311247276/run-native.py",
+    "/workspace/lerna-content-03-137311247276/large-graph-closure-identity-overlay/component-race.test",
+    "-test.v",
+    "-test.run=^(TestContentContextReachableClosure64And65IncludesIntermediateVersions|TestContentContextStaticModeMaximumReachable62Materials|TestContentContextSingleContentBoundHasHonestLayerAndNoDispatch|TestContentContextDuplicateSelectorRoleRefusesBeforeOriginalInputReplacement)$",
+    "-test.count=1",
+    "-test.timeout=120s"
+  ]
+}

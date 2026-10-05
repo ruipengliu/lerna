@@ -1,0 +1,21 @@
+{
+  "kind": "actual sequential affected-check prelaunch",
+  "operation_index": 1,
+  "operation": {
+    "name": "scan-current-vet",
+    "shell": "set -e; set -o pipefail; source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; go vet -mod=readonly -p=1 -tags=integration ./...",
+    "log": "/tmp/lerna-04-ticket05-execution/scan-current-vet.log",
+    "outer_seconds": 120,
+    "status": "STATIC not launched",
+    "requires_parent_review_and_explicit_soleLOCAL_grant": true,
+    "original_operation_name": "vet",
+    "original_manifest_immutable": "/tmp/lerna-05-final-command-manifest.json"
+  },
+  "formatted_base_manifest": "/tmp/lerna-04-ticket05-execution/scan-current-final-checks/formatted-base-manifest.json",
+  "formatted_base_sha256": "6462b2e7fd384dab3bddaa711b04d0a123d19d077d2db50c0d042b57a2743ef0",
+  "all_15_pins_verified": true,
+  "source_snapshot": "/tmp/lerna-04-ticket05-execution/scan-current-final-checks/source",
+  "git_head": "85a10674f0073875e12701332b2edf94312f09e3",
+  "product_wip": true,
+  "utc": "2026-10-05T06:06:35Z"
+}

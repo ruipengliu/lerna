@@ -1,0 +1,10 @@
+{
+  "source_sha256": "28eb405c20056cd284a20c39c1cea13199b195b25453a0672ada964d84fa4935",
+  "native_pid": 3279876,
+  "starttime": "13698741",
+  "exit": 1,
+  "group_absent": true,
+  "timed_out": false,
+  "failure_class": "preparation observation equality; target publication not reached",
+  "captured": "after actual failure; original prelaunch SHA already in command plan"
+}

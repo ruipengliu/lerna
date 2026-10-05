@@ -1,0 +1,874 @@
+{
+  "results": [
+    {
+      "kind": "actual affected-check result",
+      "operation_index": 0,
+      "name": "scan-current-format",
+      "log": "/tmp/lerna-04-ticket05-execution/scan-current-format.log",
+      "raw_sha256": "0d0c179bd530915336472b9dcf64087e194a8bf7d166c97fc0402b4e15e6a64d",
+      "wrapper_exit": 0,
+      "elapsed_seconds": 0.251,
+      "start_ack": [
+        {
+          "event": "native_start_ack",
+          "pid": 3543955,
+          "pgid": 3543955,
+          "starttime": "14863364",
+          "deadline_seconds": 120
+        }
+      ],
+      "completion_ack": {
+        "pid": 3543955,
+        "pgid": 3543955,
+        "starttime": "14863364",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false
+      },
+      "resource_records": [],
+      "run_count": 0,
+      "pass_count": 0,
+      "fail_lines": [],
+      "package_results": [],
+      "prelaunch": "/tmp/lerna-04-ticket05-execution/scan-current-final-checks/scan-current-format-prelaunch.json"
+    },
+    {
+      "kind": "actual affected-check result",
+      "operation_index": 1,
+      "name": "scan-current-vet",
+      "log": "/tmp/lerna-04-ticket05-execution/scan-current-vet.log",
+      "raw_sha256": "06915656369e79bd0d89cee1462872a793932442f8a138dd2d49b29866884791",
+      "wrapper_exit": 0,
+      "elapsed_seconds": 1.815,
+      "start_ack": [
+        {
+          "event": "native_start_ack",
+          "pid": 3544000,
+          "pgid": 3544000,
+          "starttime": "14863389",
+          "deadline_seconds": 120
+        }
+      ],
+      "completion_ack": {
+        "pid": 3544000,
+        "pgid": 3544000,
+        "starttime": "14863389",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false
+      },
+      "resource_records": [],
+      "run_count": 0,
+      "pass_count": 0,
+      "fail_lines": [],
+      "package_results": [],
+      "prelaunch": "/tmp/lerna-04-ticket05-execution/scan-current-final-checks/scan-current-vet-prelaunch.json"
+    },
+    {
+      "kind": "actual affected-check result",
+      "operation_index": 2,
+      "name": "scan-current-go-normal",
+      "log": "/tmp/lerna-04-ticket05-execution/scan-current-go-normal.log",
+      "raw_sha256": "8ee30287c54f03cc345b0d7574432ccaf141a7fd198253bf823be7aea34e9604",
+      "wrapper_exit": 0,
+      "elapsed_seconds": 6.921,
+      "start_ack": [
+        {
+          "event": "native_start_ack",
+          "pid": 3544157,
+          "pgid": 3544157,
+          "starttime": "14863571",
+          "deadline_seconds": 120
+        }
+      ],
+      "completion_ack": {
+        "pid": 3544157,
+        "pgid": 3544157,
+        "starttime": "14863571",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false
+      },
+      "resource_records": [],
+      "run_count": 472,
+      "pass_count": 97,
+      "fail_lines": [],
+      "package_results": [],
+      "prelaunch": "/tmp/lerna-04-ticket05-execution/scan-current-final-checks/scan-current-go-normal-prelaunch.json"
+    },
+    {
+      "kind": "actual affected-check result",
+      "operation_index": 3,
+      "name": "scan-current-go-race",
+      "log": "/tmp/lerna-04-ticket05-execution/scan-current-go-race.log",
+      "raw_sha256": "d6f4f47e91b102c079d845537741c1aa699730bd3ed695ee23d151019fe284ce",
+      "wrapper_exit": 0,
+      "elapsed_seconds": 44.285,
+      "start_ack": [
+        {
+          "event": "native_start_ack",
+          "pid": 3544761,
+          "pgid": 3544761,
+          "starttime": "14864264",
+          "deadline_seconds": 120
+        }
+      ],
+      "completion_ack": {
+        "pid": 3544761,
+        "pgid": 3544761,
+        "starttime": "14864264",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false
+      },
+      "resource_records": [],
+      "run_count": 472,
+      "pass_count": 97,
+      "fail_lines": [],
+      "package_results": [],
+      "prelaunch": "/tmp/lerna-04-ticket05-execution/scan-current-final-checks/scan-current-go-race-prelaunch.json"
+    },
+    {
+      "kind": "actual affected-check result",
+      "operation_index": 4,
+      "name": "scan-current-baseline-1-normal",
+      "log": "/tmp/lerna-04-ticket05-execution/scan-current-baseline-1-normal.log",
+      "raw_sha256": "8c2f901dcedbe36ad071b4b53fe577df99d723f38077b2975544ce16df2424c8",
+      "wrapper_exit": 0,
+      "elapsed_seconds": 2.459,
+      "start_ack": [
+        {
+          "event": "native_start_ack",
+          "pid": 3546259,
+          "pgid": 3546259,
+          "starttime": "14868692",
+          "deadline_seconds": 120
+        }
+      ],
+      "completion_ack": {
+        "pid": 3546259,
+        "pgid": 3546259,
+        "starttime": "14868692",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false
+      },
+      "resource_records": [],
+      "run_count": 8,
+      "pass_count": 6,
+      "fail_lines": [],
+      "package_results": [],
+      "prelaunch": "/tmp/lerna-04-ticket05-execution/scan-current-final-checks/scan-current-baseline-1-normal-prelaunch.json"
+    },
+    {
+      "kind": "actual affected-check result",
+      "operation_index": 5,
+      "name": "scan-current-baseline-2-normal",
+      "log": "/tmp/lerna-04-ticket05-execution/scan-current-baseline-2-normal.log",
+      "raw_sha256": "d8fe3a2ec71f2638265fcce8a0397a2ca13b375b0d62b2bbef05075390240d1f",
+      "wrapper_exit": 0,
+      "elapsed_seconds": 5.881,
+      "start_ack": [
+        {
+          "event": "native_start_ack",
+          "pid": 3546380,
+          "pgid": 3546380,
+          "starttime": "14868938",
+          "deadline_seconds": 120
+        }
+      ],
+      "completion_ack": {
+        "pid": 3546380,
+        "pgid": 3546380,
+        "starttime": "14868938",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false
+      },
+      "resource_records": [],
+      "run_count": 28,
+      "pass_count": 6,
+      "fail_lines": [],
+      "package_results": [],
+      "prelaunch": "/tmp/lerna-04-ticket05-execution/scan-current-final-checks/scan-current-baseline-2-normal-prelaunch.json"
+    },
+    {
+      "kind": "actual affected-check result",
+      "operation_index": 6,
+      "name": "scan-current-baseline-3-normal",
+      "log": "/tmp/lerna-04-ticket05-execution/scan-current-baseline-3-normal.log",
+      "raw_sha256": "bf8f6e33ecb47f2dd6f3d768659752af12751a903daa17dff29efa3c72f1ec16",
+      "wrapper_exit": 0,
+      "elapsed_seconds": 11.818,
+      "start_ack": [
+        {
+          "event": "native_start_ack",
+          "pid": 3546616,
+          "pgid": 3546616,
+          "starttime": "14869526",
+          "deadline_seconds": 120
+        }
+      ],
+      "completion_ack": {
+        "pid": 3546616,
+        "pgid": 3546616,
+        "starttime": "14869526",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false
+      },
+      "resource_records": [],
+      "run_count": 16,
+      "pass_count": 6,
+      "fail_lines": [],
+      "package_results": [],
+      "prelaunch": "/tmp/lerna-04-ticket05-execution/scan-current-final-checks/scan-current-baseline-3-normal-prelaunch.json"
+    },
+    {
+      "kind": "actual affected-check result",
+      "operation_index": 7,
+      "name": "scan-current-baseline-4-normal",
+      "log": "/tmp/lerna-04-ticket05-execution/scan-current-baseline-4-normal.log",
+      "raw_sha256": "dffd9fde004aacd90d8faa292b8690a36313d7fdc38c80417eba33dc41b58d2b",
+      "wrapper_exit": 0,
+      "elapsed_seconds": 5.418,
+      "start_ack": [
+        {
+          "event": "native_start_ack",
+          "pid": 3546942,
+          "pgid": 3546942,
+          "starttime": "14870708",
+          "deadline_seconds": 120
+        }
+      ],
+      "completion_ack": {
+        "pid": 3546942,
+        "pgid": 3546942,
+        "starttime": "14870708",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false
+      },
+      "resource_records": [],
+      "run_count": 8,
+      "pass_count": 6,
+      "fail_lines": [],
+      "package_results": [],
+      "prelaunch": "/tmp/lerna-04-ticket05-execution/scan-current-final-checks/scan-current-baseline-4-normal-prelaunch.json"
+    },
+    {
+      "kind": "actual affected-check result",
+      "operation_index": 8,
+      "name": "scan-current-baseline-1-race",
+      "log": "/tmp/lerna-04-ticket05-execution/scan-current-baseline-1-race.log",
+      "raw_sha256": "c5d9ca1d02f84d2737fc2833ede3e5a622173424e00c1b9464a2793c1f0cebbc",
+      "wrapper_exit": 0,
+      "elapsed_seconds": 8.779,
+      "start_ack": [
+        {
+          "event": "native_start_ack",
+          "pid": 3547159,
+          "pgid": 3547159,
+          "starttime": "14871250",
+          "deadline_seconds": 120
+        }
+      ],
+      "completion_ack": {
+        "pid": 3547159,
+        "pgid": 3547159,
+        "starttime": "14871250",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false
+      },
+      "resource_records": [],
+      "run_count": 8,
+      "pass_count": 6,
+      "fail_lines": [],
+      "package_results": [],
+      "prelaunch": "/tmp/lerna-04-ticket05-execution/scan-current-final-checks/scan-current-baseline-1-race-prelaunch.json"
+    },
+    {
+      "kind": "actual affected-check result",
+      "operation_index": 9,
+      "name": "scan-current-baseline-2-race",
+      "log": "/tmp/lerna-04-ticket05-execution/scan-current-baseline-2-race.log",
+      "raw_sha256": "3272261535865726fc995f0e1092777514482b2111c40f282b57af8017c50220",
+      "wrapper_exit": 0,
+      "elapsed_seconds": 17.07,
+      "start_ack": [
+        {
+          "event": "native_start_ack",
+          "pid": 3547420,
+          "pgid": 3547420,
+          "starttime": "14872129",
+          "deadline_seconds": 120
+        }
+      ],
+      "completion_ack": {
+        "pid": 3547420,
+        "pgid": 3547420,
+        "starttime": "14872129",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false
+      },
+      "resource_records": [],
+      "run_count": 28,
+      "pass_count": 6,
+      "fail_lines": [],
+      "package_results": [],
+      "prelaunch": "/tmp/lerna-04-ticket05-execution/scan-current-final-checks/scan-current-baseline-2-race-prelaunch.json"
+    },
+    {
+      "kind": "actual affected-check result",
+      "operation_index": 10,
+      "name": "scan-current-baseline-3-race",
+      "log": "/tmp/lerna-04-ticket05-execution/scan-current-baseline-3-race.log",
+      "raw_sha256": "ab2348f89d86c52d591ca169395d3290c03b40083da41049338e5857546392ae",
+      "wrapper_exit": 0,
+      "elapsed_seconds": 13.821,
+      "start_ack": [
+        {
+          "event": "native_start_ack",
+          "pid": 3547905,
+          "pgid": 3547905,
+          "starttime": "14873836",
+          "deadline_seconds": 120
+        }
+      ],
+      "completion_ack": {
+        "pid": 3547905,
+        "pgid": 3547905,
+        "starttime": "14873836",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false
+      },
+      "resource_records": [],
+      "run_count": 16,
+      "pass_count": 6,
+      "fail_lines": [],
+      "package_results": [],
+      "prelaunch": "/tmp/lerna-04-ticket05-execution/scan-current-final-checks/scan-current-baseline-3-race-prelaunch.json"
+    },
+    {
+      "kind": "actual affected-check result",
+      "operation_index": 11,
+      "name": "scan-current-baseline-4-race",
+      "log": "/tmp/lerna-04-ticket05-execution/scan-current-baseline-4-race.log",
+      "raw_sha256": "ce6f1609227d59ecd9e94c4f48f9323ea8c0727d34d00864fc5166e0ece00810",
+      "wrapper_exit": 0,
+      "elapsed_seconds": 10.333,
+      "start_ack": [
+        {
+          "event": "native_start_ack",
+          "pid": 3548332,
+          "pgid": 3548332,
+          "starttime": "14875218",
+          "deadline_seconds": 120
+        }
+      ],
+      "completion_ack": {
+        "pid": 3548332,
+        "pgid": 3548332,
+        "starttime": "14875218",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false
+      },
+      "resource_records": [],
+      "run_count": 8,
+      "pass_count": 6,
+      "fail_lines": [],
+      "package_results": [],
+      "prelaunch": "/tmp/lerna-04-ticket05-execution/scan-current-final-checks/scan-current-baseline-4-race-prelaunch.json"
+    },
+    {
+      "kind": "actual affected-check result",
+      "operation_index": 12,
+      "name": "scan-current-consumer-1-normal",
+      "log": "/tmp/lerna-04-ticket05-execution/scan-current-consumer-1-normal.log",
+      "raw_sha256": "73d9a0ae8e5a87daa9eb72a9c7f87c6b10a73e0360be5e0a1467300aa5979862",
+      "wrapper_exit": 0,
+      "elapsed_seconds": 6.467,
+      "start_ack": [
+        {
+          "event": "native_start_ack",
+          "pid": 3548619,
+          "pgid": 3548619,
+          "starttime": "14876252",
+          "deadline_seconds": 120
+        }
+      ],
+      "completion_ack": {
+        "pid": 3548619,
+        "pgid": 3548619,
+        "starttime": "14876252",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false
+      },
+      "resource_records": [],
+      "run_count": 4,
+      "pass_count": 4,
+      "fail_lines": [],
+      "package_results": [],
+      "prelaunch": "/tmp/lerna-04-ticket05-execution/scan-current-final-checks/scan-current-consumer-1-normal-prelaunch.json"
+    },
+    {
+      "kind": "actual affected-check result",
+      "operation_index": 13,
+      "name": "scan-current-consumer-2-normal",
+      "log": "/tmp/lerna-04-ticket05-execution/scan-current-consumer-2-normal.log",
+      "raw_sha256": "04449b47f744656b63faf860d7f2d2a6d7480523a39ff56af94c9b066c664bfc",
+      "wrapper_exit": 0,
+      "elapsed_seconds": 14.391,
+      "start_ack": [
+        {
+          "event": "native_start_ack",
+          "pid": 3548802,
+          "pgid": 3548802,
+          "starttime": "14876904",
+          "deadline_seconds": 120
+        }
+      ],
+      "completion_ack": {
+        "pid": 3548802,
+        "pgid": 3548802,
+        "starttime": "14876904",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false
+      },
+      "resource_records": [],
+      "run_count": 7,
+      "pass_count": 3,
+      "fail_lines": [],
+      "package_results": [],
+      "prelaunch": "/tmp/lerna-04-ticket05-execution/scan-current-final-checks/scan-current-consumer-2-normal-prelaunch.json"
+    },
+    {
+      "kind": "actual affected-check result",
+      "operation_index": 14,
+      "name": "scan-current-consumer-1-race",
+      "log": "/tmp/lerna-04-ticket05-execution/scan-current-consumer-1-race.log",
+      "raw_sha256": "3ce3634615e8f2ba7e5e2e7fa2ec3c381b869cf28b469f9cb229cdead0714520",
+      "wrapper_exit": 0,
+      "elapsed_seconds": 7.318,
+      "start_ack": [
+        {
+          "event": "native_start_ack",
+          "pid": 3549204,
+          "pgid": 3549204,
+          "starttime": "14878338",
+          "deadline_seconds": 120
+        }
+      ],
+      "completion_ack": {
+        "pid": 3549204,
+        "pgid": 3549204,
+        "starttime": "14878338",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false
+      },
+      "resource_records": [],
+      "run_count": 4,
+      "pass_count": 4,
+      "fail_lines": [],
+      "package_results": [],
+      "prelaunch": "/tmp/lerna-04-ticket05-execution/scan-current-final-checks/scan-current-consumer-1-race-prelaunch.json"
+    },
+    {
+      "kind": "actual affected-check result",
+      "operation_index": 15,
+      "name": "scan-current-consumer-2-race",
+      "log": "/tmp/lerna-04-ticket05-execution/scan-current-consumer-2-race.log",
+      "raw_sha256": "11f6fbdebbadcf0b53388a4b83b7f0ed3eab592587dfe5536dfdacdc8a533f0f",
+      "wrapper_exit": 0,
+      "elapsed_seconds": 16.275,
+      "start_ack": [
+        {
+          "event": "native_start_ack",
+          "pid": 3549415,
+          "pgid": 3549415,
+          "starttime": "14879070",
+          "deadline_seconds": 120
+        }
+      ],
+      "completion_ack": {
+        "pid": 3549415,
+        "pgid": 3549415,
+        "starttime": "14879070",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false
+      },
+      "resource_records": [],
+      "run_count": 7,
+      "pass_count": 3,
+      "fail_lines": [],
+      "package_results": [],
+      "prelaunch": "/tmp/lerna-04-ticket05-execution/scan-current-final-checks/scan-current-consumer-2-race-prelaunch.json"
+    },
+    {
+      "kind": "actual affected-check result",
+      "operation_index": 16,
+      "name": "scan-current-frozen-sql-hashes",
+      "log": "/tmp/lerna-04-ticket05-execution/scan-current-frozen-sql-hashes.log",
+      "raw_sha256": "dc7217c80a4412feb797ef31d8898f8a4f7d5a703e8ef63eb52c639012ba9d85",
+      "wrapper_exit": 0,
+      "elapsed_seconds": 0.052,
+      "start_ack": [
+        {
+          "event": "native_start_ack",
+          "pid": 3549860,
+          "pgid": 3549860,
+          "starttime": "14880698",
+          "deadline_seconds": 120
+        }
+      ],
+      "completion_ack": {
+        "pid": 3549860,
+        "pgid": 3549860,
+        "starttime": "14880698",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false
+      },
+      "resource_records": [],
+      "run_count": 0,
+      "pass_count": 0,
+      "fail_lines": [],
+      "package_results": [],
+      "prelaunch": "/tmp/lerna-04-ticket05-execution/scan-current-final-checks/scan-current-frozen-sql-hashes-prelaunch.json"
+    },
+    {
+      "kind": "actual affected-check result",
+      "operation_index": 17,
+      "name": "scan-current-fresh-low-control-normal",
+      "log": "/tmp/lerna-04-ticket05-execution/scan-current-fresh-low-control-normal.log",
+      "raw_sha256": "e5f2cbf44830a71c7e8fb52c611e32fb5f91a0281f02933d5e7ccab89c899464",
+      "wrapper_exit": 0,
+      "elapsed_seconds": 16.37,
+      "start_ack": [
+        {
+          "event": "native_start_ack",
+          "pid": 3549862,
+          "pgid": 3549862,
+          "starttime": "14880703",
+          "deadline_seconds": 120
+        }
+      ],
+      "completion_ack": {
+        "pid": 3549862,
+        "pgid": 3549862,
+        "starttime": "14880703",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false
+      },
+      "resource_records": [],
+      "run_count": 1,
+      "pass_count": 1,
+      "fail_lines": [],
+      "package_results": [],
+      "prelaunch": "/tmp/lerna-04-ticket05-execution/scan-current-final-checks/scan-current-fresh-low-control-normal-prelaunch.json"
+    },
+    {
+      "kind": "actual affected-check result",
+      "operation_index": 18,
+      "name": "scan-current-fresh-low-control-race",
+      "log": "/tmp/lerna-04-ticket05-execution/scan-current-fresh-low-control-race.log",
+      "raw_sha256": "8356f9f8b1ff154bedb7905f45528ad21c6e83ab81b5597bbbe4cff2812d396b",
+      "wrapper_exit": 0,
+      "elapsed_seconds": 18.411,
+      "start_ack": [
+        {
+          "event": "native_start_ack",
+          "pid": 3550262,
+          "pgid": 3550262,
+          "starttime": "14882342",
+          "deadline_seconds": 120
+        }
+      ],
+      "completion_ack": {
+        "pid": 3550262,
+        "pgid": 3550262,
+        "starttime": "14882342",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false
+      },
+      "resource_records": [],
+      "run_count": 1,
+      "pass_count": 1,
+      "fail_lines": [],
+      "package_results": [],
+      "prelaunch": "/tmp/lerna-04-ticket05-execution/scan-current-final-checks/scan-current-fresh-low-control-race-prelaunch.json"
+    },
+    {
+      "kind": "actual affected-check result",
+      "operation_index": 19,
+      "name": "scan-current-linux-process-put-erasure-normal",
+      "log": "/tmp/lerna-04-ticket05-execution/scan-current-linux-process-put-erasure-normal.log",
+      "raw_sha256": "1662f77870a5bcc235a20fd0d31d4743d239d0ad5acbaadb59014b5866f1ebd9",
+      "wrapper_exit": 0,
+      "elapsed_seconds": 0.706,
+      "start_ack": [
+        {
+          "event": "native_start_ack",
+          "pid": 3550742,
+          "pgid": 3550742,
+          "starttime": "14884182",
+          "deadline_seconds": 120
+        }
+      ],
+      "completion_ack": {
+        "pid": 3550742,
+        "pgid": 3550742,
+        "starttime": "14884182",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false
+      },
+      "resource_records": [],
+      "run_count": 1,
+      "pass_count": 1,
+      "fail_lines": [],
+      "package_results": [],
+      "prelaunch": "/tmp/lerna-04-ticket05-execution/scan-current-final-checks/scan-current-linux-process-put-erasure-normal-prelaunch.json"
+    },
+    {
+      "kind": "actual affected-check result",
+      "operation_index": 20,
+      "name": "scan-current-linux-process-put-erasure-race",
+      "log": "/tmp/lerna-04-ticket05-execution/scan-current-linux-process-put-erasure-race.log",
+      "raw_sha256": "d665b1e52899ae1bdaa64aa4b0e797452ea5a0780bfa924cf99d9718ed61ac02",
+      "wrapper_exit": 0,
+      "elapsed_seconds": 3.186,
+      "start_ack": [
+        {
+          "event": "native_start_ack",
+          "pid": 3550810,
+          "pgid": 3550810,
+          "starttime": "14884254",
+          "deadline_seconds": 120
+        }
+      ],
+      "completion_ack": {
+        "pid": 3550810,
+        "pgid": 3550810,
+        "starttime": "14884254",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false
+      },
+      "resource_records": [],
+      "run_count": 1,
+      "pass_count": 1,
+      "fail_lines": [],
+      "package_results": [],
+      "prelaunch": "/tmp/lerna-04-ticket05-execution/scan-current-final-checks/scan-current-linux-process-put-erasure-race-prelaunch.json"
+    },
+    {
+      "kind": "actual affected-check result",
+      "operation_index": 21,
+      "name": "scan-current-frozen-original-writer-normal",
+      "log": "/tmp/lerna-04-ticket05-execution/scan-current-frozen-original-writer-normal.log",
+      "raw_sha256": "0be48f41f4070e4672051b2de3edd59f40af745cfc680c3d0299aac28d56c589",
+      "wrapper_exit": 0,
+      "elapsed_seconds": 3.753,
+      "start_ack": [
+        {
+          "event": "native_start_ack",
+          "pid": 3550983,
+          "pgid": 3550983,
+          "starttime": "14884572",
+          "deadline_seconds": 120
+        }
+      ],
+      "completion_ack": {
+        "pid": 3550983,
+        "pgid": 3550983,
+        "starttime": "14884572",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false
+      },
+      "resource_records": [],
+      "run_count": 1,
+      "pass_count": 1,
+      "fail_lines": [],
+      "package_results": [],
+      "prelaunch": "/tmp/lerna-04-ticket05-execution/scan-current-final-checks/scan-current-frozen-original-writer-normal-prelaunch.json"
+    },
+    {
+      "kind": "actual affected-check result",
+      "operation_index": 22,
+      "name": "scan-current-frozen-original-writer-race",
+      "log": "/tmp/lerna-04-ticket05-execution/scan-current-frozen-original-writer-race.log",
+      "raw_sha256": "73da5413d019b23f321becc6b51fe60682656d2883d86c70d6be42b66eae9645",
+      "wrapper_exit": 0,
+      "elapsed_seconds": 6.695,
+      "start_ack": [
+        {
+          "event": "native_start_ack",
+          "pid": 3551225,
+          "pgid": 3551225,
+          "starttime": "14884951",
+          "deadline_seconds": 120
+        }
+      ],
+      "completion_ack": {
+        "pid": 3551225,
+        "pgid": 3551225,
+        "starttime": "14884951",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false
+      },
+      "resource_records": [],
+      "run_count": 1,
+      "pass_count": 1,
+      "fail_lines": [],
+      "package_results": [],
+      "prelaunch": "/tmp/lerna-04-ticket05-execution/scan-current-final-checks/scan-current-frozen-original-writer-race-prelaunch.json"
+    },
+    {
+      "kind": "actual affected-check result",
+      "operation_index": 23,
+      "name": "scan-current-three-original-migrations-normal",
+      "log": "/tmp/lerna-04-ticket05-execution/scan-current-three-original-migrations-normal.log",
+      "raw_sha256": "ac8efa0f676de199e119fa51f5e1f2b6f007853077d469414753cb16835c369d",
+      "wrapper_exit": 0,
+      "elapsed_seconds": 1.238,
+      "start_ack": [
+        {
+          "event": "native_start_ack",
+          "pid": 3551584,
+          "pgid": 3551584,
+          "starttime": "14885617",
+          "deadline_seconds": 120
+        }
+      ],
+      "completion_ack": {
+        "pid": 3551584,
+        "pgid": 3551584,
+        "starttime": "14885617",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false
+      },
+      "resource_records": [],
+      "run_count": 1,
+      "pass_count": 1,
+      "fail_lines": [],
+      "package_results": [],
+      "prelaunch": "/tmp/lerna-04-ticket05-execution/scan-current-final-checks/scan-current-three-original-migrations-normal-prelaunch.json"
+    },
+    {
+      "kind": "actual affected-check result",
+      "operation_index": 24,
+      "name": "scan-current-three-original-migrations-race",
+      "log": "/tmp/lerna-04-ticket05-execution/scan-current-three-original-migrations-race.log",
+      "raw_sha256": "2e56d9836f2ea83f4b97e004ca9a71d3a8945a5c635cd52024997b51535e172d",
+      "wrapper_exit": 0,
+      "elapsed_seconds": 2.669,
+      "start_ack": [
+        {
+          "event": "native_start_ack",
+          "pid": 3551683,
+          "pgid": 3551683,
+          "starttime": "14885741",
+          "deadline_seconds": 120
+        }
+      ],
+      "completion_ack": {
+        "pid": 3551683,
+        "pgid": 3551683,
+        "starttime": "14885741",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false
+      },
+      "resource_records": [],
+      "run_count": 1,
+      "pass_count": 1,
+      "fail_lines": [],
+      "package_results": [],
+      "prelaunch": "/tmp/lerna-04-ticket05-execution/scan-current-final-checks/scan-current-three-original-migrations-race-prelaunch.json"
+    },
+    {
+      "kind": "actual affected-check result",
+      "operation_index": 25,
+      "name": "scan-current-original-policy-holder-pages-normal",
+      "log": "/tmp/lerna-04-ticket05-execution/scan-current-original-policy-holder-pages-normal.log",
+      "raw_sha256": "8964fe39b8698477a91ca3a0ff0c1e190c48e0c323a34a83352dddef1be703d6",
+      "wrapper_exit": 0,
+      "elapsed_seconds": 2.315,
+      "start_ack": [
+        {
+          "event": "native_start_ack",
+          "pid": 3551807,
+          "pgid": 3551807,
+          "starttime": "14886008",
+          "deadline_seconds": 120
+        }
+      ],
+      "completion_ack": {
+        "pid": 3551807,
+        "pgid": 3551807,
+        "starttime": "14886008",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false
+      },
+      "resource_records": [],
+      "run_count": 1,
+      "pass_count": 1,
+      "fail_lines": [],
+      "package_results": [],
+      "prelaunch": "/tmp/lerna-04-ticket05-execution/scan-current-final-checks/scan-current-original-policy-holder-pages-normal-prelaunch.json"
+    },
+    {
+      "kind": "actual affected-check result",
+      "operation_index": 26,
+      "name": "scan-current-original-policy-holder-pages-race",
+      "log": "/tmp/lerna-04-ticket05-execution/scan-current-original-policy-holder-pages-race.log",
+      "raw_sha256": "88ea343472e1df3948518f1338e09f6ce3f1929619a6214ec34034056539c200",
+      "wrapper_exit": 0,
+      "elapsed_seconds": 4.625,
+      "start_ack": [
+        {
+          "event": "native_start_ack",
+          "pid": 3551930,
+          "pgid": 3551930,
+          "starttime": "14886240",
+          "deadline_seconds": 120
+        }
+      ],
+      "completion_ack": {
+        "pid": 3551930,
+        "pgid": 3551930,
+        "starttime": "14886240",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false
+      },
+      "resource_records": [],
+      "run_count": 1,
+      "pass_count": 1,
+      "fail_lines": [],
+      "package_results": [],
+      "prelaunch": "/tmp/lerna-04-ticket05-execution/scan-current-final-checks/scan-current-original-policy-holder-pages-race-prelaunch.json"
+    }
+  ],
+  "executed": 27,
+  "expected": 27,
+  "all_actual_exit_zero": true,
+  "all_groups_absent": true,
+  "all_no_timeout": true,
+  "native_released": true
+}

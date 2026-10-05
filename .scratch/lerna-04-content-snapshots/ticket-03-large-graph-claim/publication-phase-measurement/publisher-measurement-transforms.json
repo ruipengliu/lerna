@@ -1,0 +1,62 @@
+[
+  {
+    "label": "identity import anchor",
+    "before": "\t\"strconv\"",
+    "after": "\t\"strconv\""
+  },
+  {
+    "label": "adapter.plan.current",
+    "before": "\tif _, err := a.config.Access.Current(ctx, p, \"publish\"); err != nil {",
+    "after": "\tplanCurrentStart := content.BeginPublicationPhase(ctx)\n\t_, planCurrentErr := a.config.Access.Current(ctx, p, \"publish\")\n\tcontent.EndPublicationPhase(ctx, \"adapter.plan.current\", planCurrentStart, planCurrentErr)\n\tif err := planCurrentErr; err != nil {"
+  },
+  {
+    "label": "adapter.publish.plan",
+    "before": "\tref, err := a.PlanPublication(ctx, key, body, sources, p)",
+    "after": "\tplanStart := content.BeginPublicationPhase(ctx)\n\tref, err := a.PlanPublication(ctx, key, body, sources, p)\n\tcontent.EndPublicationPhase(ctx, \"adapter.publish.plan\", planStart, err)"
+  },
+  {
+    "label": "adapter.publish.current",
+    "before": "\tbinding, err := a.config.Access.Current(ctx, p, \"publish\")",
+    "after": "\tcurrentStart := content.BeginPublicationPhase(ctx)\n\tbinding, err := a.config.Access.Current(ctx, p, \"publish\")\n\tcontent.EndPublicationPhase(ctx, \"adapter.publish.current\", currentStart, err)"
+  },
+  {
+    "label": "adapter.stage",
+    "before": "\traw, err := a.config.Access.StagePublication(ctx, in, request)",
+    "after": "\tstageStart := content.BeginPublicationPhase(ctx)\n\traw, err := a.config.Access.StagePublication(ctx, in, request)\n\tcontent.EndPublicationPhase(ctx, \"adapter.stage\", stageStart, err)"
+  },
+  {
+    "label": "adapter.prepare",
+    "before": "\tif err = a.config.Access.PrepareContent(ctx, in, o.Ref); err != nil {",
+    "after": "\tprepareStart := content.BeginPublicationPhase(ctx)\n\terr = a.config.Access.PrepareContent(ctx, in, o.Ref)\n\tcontent.EndPublicationPhase(ctx, \"adapter.prepare\", prepareStart, err)\n\tif err != nil {"
+  },
+  {
+    "label": "adapter.put",
+    "before": "\tresponse, err := a.config.Content.Put(ctx, raw, &a.config.Subject)",
+    "after": "\tputStart := content.BeginPublicationPhase(ctx)\n\tresponse, err := a.config.Content.Put(ctx, raw, &a.config.Subject)\n\tcontent.EndPublicationPhase(ctx, \"adapter.put\", putStart, err)"
+  },
+  {
+    "label": "adapter.get_command",
+    "before": "\t\tcurrent, e := a.config.Content.GetCommand(ctx, query, &a.config.Subject)",
+    "after": "\t\tgetStart := content.BeginPublicationPhase(ctx)\n\t\tcurrent, e := a.config.Content.GetCommand(ctx, query, &a.config.Subject)\n\t\tcontent.EndPublicationPhase(ctx, \"adapter.get_command\", getStart, e)"
+  },
+  {
+    "label": "adapter.verification",
+    "before": "\t\t\tread, e := verification.ReadForProcessing(ctx, &a.config.Subject, o.Ref, a.config.Purpose, int64(len(o.Bytes)))",
+    "after": "\t\t\tverificationStart := content.BeginPublicationPhase(ctx)\n\t\t\tread, e := verification.ReadForProcessing(ctx, &a.config.Subject, o.Ref, a.config.Purpose, int64(len(o.Bytes)))\n\t\t\tcontent.EndPublicationPhase(ctx, \"adapter.verification\", verificationStart, e)"
+  },
+  {
+    "label": "adapter.step",
+    "before": "\t\tif _, err = a.config.Content.Step(ctx); err != nil {",
+    "after": "\t\tstepStart := content.BeginPublicationPhase(ctx)\n\t\t_, err = a.config.Content.Step(ctx)\n\t\tcontent.EndPublicationPhase(ctx, \"adapter.step\", stepStart, err)\n\t\tif err != nil {"
+  },
+  {
+    "label": "adapter.read.current",
+    "before": "\tif _, err := a.config.Access.Current(ctx, p, \"publish\"); err != nil {",
+    "after": "\treadCurrentStart := content.BeginPublicationPhase(ctx)\n\t_, readCurrentErr := a.config.Access.Current(ctx, p, \"publish\")\n\tcontent.EndPublicationPhase(ctx, \"adapter.read.current\", readCurrentStart, readCurrentErr)\n\tif err := readCurrentErr; err != nil {"
+  },
+  {
+    "label": "adapter.read.processing",
+    "before": "\tread, err := a.config.Content.ReadForProcessing(ctx, &a.config.Subject, exact, a.config.Purpose, 262144)",
+    "after": "\treadStart := content.BeginPublicationPhase(ctx)\n\tread, err := a.config.Content.ReadForProcessing(ctx, &a.config.Subject, exact, a.config.Purpose, 262144)\n\tcontent.EndPublicationPhase(ctx, \"adapter.read.processing\", readStart, err)"
+  }
+]

@@ -1,0 +1,25 @@
+{
+  "kind": "actual lowcount1 normal control after adopted public equality correction",
+  "test_source_sha256": "60f817d14355d1565f744be850f9309d1ae0c2d0f7190be0e204929d0823823b",
+  "pid": 3287994,
+  "pgid": 3287994,
+  "starttime": "13731941",
+  "exit": 0,
+  "group_absent": true,
+  "timed_out": false,
+  "go_seconds": 15.464,
+  "tool_session": 27474,
+  "schema": "lerna_test_ae060348e9859d84008298f4",
+  "object_root": {
+    "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-490049524",
+    "device": 33,
+    "inode": 377394
+  },
+  "v2_publication_and_exact_beta_bytes": true,
+  "live_original_seal_all_holder_ACK_and_physical_absence": true,
+  "second_real_reopen_old_full_duty_body_receipt_and_publication_history_preserved": true,
+  "full64_executed": false,
+  "product_fix": false,
+  "released": true,
+  "log_sha256": "88e8c3196b99bbe7c3fd6a6e9f386e15f5f0b5b085e45bd7ec6aabd5b9c30338"
+}

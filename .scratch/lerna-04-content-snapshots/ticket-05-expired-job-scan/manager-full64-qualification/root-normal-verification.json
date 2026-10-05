@@ -1,0 +1,66 @@
+{
+  "verified_current_pins": 13,
+  "normal_raw_and_outcome_FULL_read": true,
+  "format_actual_comment_indent_only": true,
+  "original_process_groups_independently_absent": [
+    3495146,
+    3495830
+  ],
+  "not_individual_Close_proof": true,
+  "files": [
+    {
+      "source": "/tmp/lerna-04-ticket05-execution/manager-expired-first-normal-source/manifest.json",
+      "archive": "source-manifest.json",
+      "sha256": "fd82ba155465a7ebf855471393577bc5f5cedd959932723321f90de81a95bba7",
+      "bytes": 3727
+    },
+    {
+      "source": "/tmp/lerna-04-ticket05-execution/manager-expired-first-normal-source/content_manager_expired_backlog_test.go",
+      "archive": "source-content_manager_expired_backlog_test.go",
+      "sha256": "81bc5d898d4c0275fd0a1aa9b7047716fe633cd9ee4fabc669cd46d92f1b8ed6",
+      "bytes": 10293
+    },
+    {
+      "source": "/tmp/lerna-04-ticket05-execution/manager-expired-first-normal-source/format.diff",
+      "archive": "source-format.diff",
+      "sha256": "451611112408421fd3ee41c83d6aad12fa826d95b3171ee9450095599d458a23",
+      "bytes": 397
+    },
+    {
+      "source": "/tmp/lerna-04-ticket05-execution/manager-expired-first-normal-source/preformat-manifest.json",
+      "archive": "source-preformat-manifest.json",
+      "sha256": "121376f49177810edb02207aa45abb7228c7d4d6f2434a6ddbe80628ca9cbebc",
+      "bytes": 3350
+    },
+    {
+      "source": "/tmp/lerna-04-ticket05-execution/manager-expired-first-normal-source/preformat-content_manager_expired_backlog_test.go",
+      "archive": "source-preformat-content_manager_expired_backlog_test.go",
+      "sha256": "2b36441f2245057e3cffdc5365d61891eb8f358a9ef6b29a22c0f5d50edb044f",
+      "bytes": 10292
+    },
+    {
+      "source": "/tmp/lerna-04-ticket05-execution/manager-expired-first-normal.log",
+      "archive": "normal.log",
+      "sha256": "1dd4eec199a9536964ada036ceed3da69fbfc7ea9b8ee07421d4bf7075510b2c",
+      "bytes": 395
+    },
+    {
+      "source": "/tmp/lerna-04-ticket05-execution/manager-expired-first-format.log",
+      "archive": "format.log",
+      "sha256": "ba810880050f96f10c61bd8e441874f3e73b92df61ed7319592000ce07a819e5",
+      "bytes": 134
+    },
+    {
+      "source": "/tmp/lerna-05-manager-expired-first-normal-outcome.json",
+      "archive": "normal-outcome.json",
+      "sha256": "1e451f431dcda1faf596536db023bb747c4f6757fa3bd1b31a0ae6abedbc7ff5",
+      "bytes": 2129
+    },
+    {
+      "source": "/tmp/lerna-05-manager-expired-static/plan.md",
+      "archive": "adopted-static-plan.md",
+      "sha256": "610615b7a955cad7423c21408565d78dccd8c816153e8630a82911b4bf65e2f3",
+      "bytes": 5299
+    }
+  ]
+}

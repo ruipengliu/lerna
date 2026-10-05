@@ -1,0 +1,12 @@
+{
+  "all313_actual_raw_lines_human_FULL_read": "normal1\u201380/81\u2013158;race1\u201380/81\u2013155 untruncated",
+  "normal_actual_exit": 0,
+  "race_actual_exit": 1,
+  "both_actualWait_groupAbsent_independent_current_recheck": true,
+  "binary_prelaunch_source7_pins_independently_verified": true,
+  "normal_bothlarge_full_public_tails_pass": true,
+  "race_bothlarge_final_public_success_tails_not_reached": true,
+  "no_capacity_acceptance": true,
+  "original_CPU_Close_unknown_retained": true,
+  "next_decision_sha256": "0261497975228d47d703ca59d8565af54f78c8aefea9e99bb33babaec417b21a"
+}

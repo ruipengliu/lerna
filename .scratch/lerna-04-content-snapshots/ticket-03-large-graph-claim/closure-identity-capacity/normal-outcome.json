@@ -1,0 +1,254 @@
+{
+  "status": "actual normal failed; STOP / RELEASE; race business unrun",
+  "source_scope": {
+    "tracked_head": "28e3a468c86d4323d3b497836de23bb311a58952",
+    "tracked_diff": [
+      "conformance/internal/decisionfixture/context_dispatch.go",
+      "domain/content/closure.go"
+    ],
+    "untracked": [
+      "conformance/component/content_context_publication_cause_test.go",
+      "conformance/internal/decisionfixture/context_publication_probe.go"
+    ],
+    "identity": "HEAD plus explicitly identified WIP source, not pristine HEAD28e binary"
+  },
+  "manifest_sha256": "57a357247462e2d5650a55922c020fc1b63541f6f5634d0e1231b49856022e86",
+  "binary": {
+    "binary": "/workspace/lerna-content-03-137311247276/large-graph-closure-identity-overlay/component-normal.test",
+    "sha256": "9d26cd68407c8a438b7e8ef56a6c38d7a00e5fe2f55e8acb9e68547968e98891",
+    "bytes": 22447782,
+    "dev": 27,
+    "inode": 560496,
+    "mode": "0o700",
+    "binary_own_descriptor_fsync_close": true,
+    "source_scope": {
+      "tracked_head": "28e3a468c86d4323d3b497836de23bb311a58952",
+      "tracked_diff": [
+        "conformance/internal/decisionfixture/context_dispatch.go",
+        "domain/content/closure.go"
+      ],
+      "untracked": [
+        "conformance/component/content_context_publication_cause_test.go",
+        "conformance/internal/decisionfixture/context_publication_probe.go"
+      ],
+      "identity": "HEAD plus explicitly identified WIP source, not pristine HEAD28e binary"
+    },
+    "source_hashes": [
+      {
+        "path": "/tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_context_binding_decode_test.go",
+        "sha256": "be01bd66705d9baef855fbdb77aaab704757f99cbabbc8050bdbd0d855bda75a",
+        "bytes": 9009,
+        "overlay_replaced": false
+      },
+      {
+        "path": "/tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_context_publication_cause_test.go",
+        "sha256": "e944e3439eabe84936eb166e1966b178166fd7e1f7b8a1972139b96b9b2768d0",
+        "bytes": 7278,
+        "overlay_replaced": false
+      },
+      {
+        "path": "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_binding_decode.go",
+        "sha256": "457b065fb760a264f0c687f82275c1dd73af3414191cccee1bba80b527f04779",
+        "bytes": 3570,
+        "overlay_replaced": false
+      },
+      {
+        "path": "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_budget_probe.go",
+        "sha256": "d600be93226932cdad26fa81a35ed44d383de37bf5e984a23b67f643502ade2e",
+        "bytes": 5125,
+        "overlay_replaced": false
+      },
+      {
+        "path": "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_dispatch.go",
+        "sha256": "5c2b8d472fdbe458b9affb9a9543db3359c85c0dfa90d5357bea843995e624fb",
+        "bytes": 23388,
+        "overlay_replaced": false
+      },
+      {
+        "path": "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_publication_probe.go",
+        "sha256": "39051536517c23e30d1c80e919824d9c509e2d773a8e0568fe786fe82f9d5517",
+        "bytes": 2457,
+        "overlay_replaced": false
+      },
+      {
+        "path": "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/source.go",
+        "sha256": "2698e49c206097583867ababbeba87a8c20942ed58b4606b6a8fc98fefbc7684",
+        "bytes": 19753,
+        "overlay_replaced": false
+      },
+      {
+        "path": "/tmp/lerna-worktrees/content-snapshots-03/domain/content/closure.go",
+        "sha256": "8542696150191da3fafd6b0df90e38f272fd934de807317442933c536fb1331c",
+        "bytes": 6914,
+        "overlay_replaced": false
+      },
+      {
+        "path": "/tmp/lerna-worktrees/content-snapshots-03/domain/content/identity.go",
+        "sha256": "e093a7918be9af0aeaec08c62b472de1141314812a71e3da386583237bbf60f0",
+        "bytes": 1533,
+        "overlay_replaced": false
+      }
+    ],
+    "manifest_sha256": "57a357247462e2d5650a55922c020fc1b63541f6f5634d0e1231b49856022e86",
+    "map_sha256": "ba168a3cb3984727791c9c16e2f88060dc7d235db9d9e6d75ae047dcf4558a67",
+    "build_identity": {
+      "pid": 3415398,
+      "pgid": 3415398,
+      "starttime": "14299562",
+      "started_ns": 1791174757274200544,
+      "args": [
+        "bash",
+        "-c",
+        "set -e; . /workspace/.lerna-env/env.sh; GOTOOLCHAIN=local GOFLAGS=-mod=readonly go test -c -p 1 -tags=integration -overlay=/workspace/lerna-content-03-137311247276/large-graph-closure-identity-overlay/overlay.json -o /workspace/lerna-content-03-137311247276/large-graph-closure-identity-overlay/component-normal.test ./conformance/component"
+      ]
+    },
+    "actual_exit": 0,
+    "group_absent": true,
+    "tool_session": 41589,
+    "log": "/workspace/lerna-content-03-137311247276/context-final-capacity-b-closure-identity-build-normal.log",
+    "log_sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+    "business_unrun": true
+  },
+  "argv": [
+    "/workspace/lerna-content-03-137311247276/run-native.py",
+    "/workspace/lerna-content-03-137311247276/large-graph-closure-identity-overlay/component-normal.test",
+    "-test.v",
+    "-test.run=^(TestContentContextReachableClosure64And65IncludesIntermediateVersions|TestContentContextStaticModeMaximumReachable62Materials|TestContentContextSingleContentBoundHasHonestLayerAndNoDispatch|TestContentContextDuplicateSelectorRoleRefusesBeforeOriginalInputReplacement)$",
+    "-test.count=1",
+    "-test.timeout=120s"
+  ],
+  "log": "/workspace/lerna-content-03-137311247276/context-final-capacity-b-closure-identity-normal.log",
+  "owned_scope_registry": "/workspace/lerna-content-03-137311247276/owned-scopes.log",
+  "mechanical_registration": "supervised wrapper records PID/PGID/tick before gate; Store fixture records fresh scopes before owned effect",
+  "caller_lease_go_outer_seconds": [
+    30,
+    5,
+    120,
+    120
+  ],
+  "count": 1,
+  "preheat_retry_renew": false,
+  "native_identity": {
+    "pid": 3420931,
+    "pgid": 3420931,
+    "starttime": "14323934",
+    "started_ns": 1791175001002179387,
+    "args": [
+      "/workspace/lerna-content-03-137311247276/large-graph-closure-identity-overlay/component-normal.test",
+      "-test.v",
+      "-test.run=^(TestContentContextReachableClosure64And65IncludesIntermediateVersions|TestContentContextStaticModeMaximumReachable62Materials|TestContentContextSingleContentBoundHasHonestLayerAndNoDispatch|TestContentContextDuplicateSelectorRoleRefusesBeforeOriginalInputReplacement)$",
+      "-test.count=1",
+      "-test.timeout=120s"
+    ]
+  },
+  "tool_session": 74589,
+  "actual_exit": 1,
+  "group_absent": true,
+  "current_original_group_absent": true,
+  "no_timeout": true,
+  "data_race_reported": false,
+  "log_sha256": "4d40b79faf796680faa5eabb5c4832980b08b2b734feefc36e7abce201d4645c",
+  "log_bytes": 26803,
+  "log_lines": 162,
+  "all_source_and_replacement_hashes_still_exact": true,
+  "owned_scope_interval": [
+    "process_group 3420931 3420931 /workspace/lerna-content-03-137311247276",
+    "postgres lerna_test_971b38ed5f8dbe558ee9da9d",
+    "postgres lerna_test_e1ccf76b78636cfb2f2eb42a",
+    "postgres lerna_test_ec88ca6b974e92080a30fe01",
+    "objects /workspace/lerna-content-03-137311247276/lerna-content-objects-2380386565 27 560178",
+    "postgres lerna_test_4a09473af43faa2ab35592ee",
+    "postgres lerna_test_f45cb531801f76652925667f",
+    "postgres lerna_test_986aeb5384f6a478a895e94e",
+    "objects /workspace/lerna-content-03-137311247276/lerna-content-objects-4129603086 27 560178",
+    "postgres lerna_test_4b44553f68f837ef56910ded",
+    "postgres lerna_test_1fd0389cf43016db24e2daa0",
+    "postgres lerna_test_107a7c85ed86220af640029e",
+    "objects /workspace/lerna-content-03-137311247276/lerna-content-objects-490883527 27 560178",
+    "postgres lerna_test_10474ccbcfc803f3a8dbda49",
+    "postgres lerna_test_3292daf3c85f8b86cbce1b7e",
+    "postgres lerna_test_e78b1b310ac9d5bcab7d16c6",
+    "objects /workspace/lerna-content-03-137311247276/lerna-content-objects-1604520988 27 560965",
+    "postgres lerna_test_d3aff4987f9064a288481923",
+    "postgres lerna_test_47147ac2848e1cc36771d86a",
+    "postgres lerna_test_81a655ce036676ee1f35da3e",
+    "objects /workspace/lerna-content-03-137311247276/lerna-content-objects-2175312921 27 560965",
+    "postgres lerna_test_04f2ab099d0bdfb1125c9350",
+    "postgres lerna_test_8c389ac866596fca139aa3a8",
+    "postgres lerna_test_780aef751f33ee9025983aab",
+    "objects /workspace/lerna-content-03-137311247276/lerna-content-objects-2832708553 27 560965",
+    "native_exit 3420931 3420931 status=1 group_absent=True"
+  ],
+  "cases": {
+    "closure64": {
+      "result": "FAIL",
+      "seconds": 12.64,
+      "buffered_events": 314,
+      "dropped": 0,
+      "compile_bind_seconds": 3.667911245,
+      "decision_step_seconds": 5.024561962,
+      "running_sequence_1_commit_at_seconds": 7.606859325,
+      "prepared_sequence_1_commit_at_seconds": 10.733288045,
+      "actual_material_count": 61,
+      "material_errors_recorded": 0,
+      "plan_count": 2,
+      "publish_count": 2,
+      "publish_errors_recorded": 0,
+      "read_published_count": 2,
+      "read_published_errors_recorded": 1,
+      "first_error": {
+        "kind": "content.ReadForProcessing",
+        "at_seconds": 12.589605205,
+        "duration_seconds": 0.111574925,
+        "caller_remaining_seconds": 17.410365587,
+        "cause": "*pgconn.errTimeout:context_deadline"
+      },
+      "read_published_error_at_seconds": 12.589613598,
+      "read_published_error_duration_seconds": 0.115842613,
+      "last_claim": {
+        "at_seconds": 12.5933492,
+        "cause": "claim is invalid, expired or replaced",
+        "lease_delta_seconds": -0.003586,
+        "caller_remaining_seconds": 17.406621592
+      },
+      "completed_commit": false,
+      "not_executed": "completeContextDecision post-Step successful receipt/body/RuleStarts/reopen assertions; final public 64 output qualification not completed",
+      "internal_subphase_limit": "coarse ReadForProcessing timeout does not locate admission vs actual Objects vs post-I/O transaction; no new subcost data"
+    },
+    "closure65": {
+      "result": "PASS",
+      "seconds": 4.52,
+      "buffered_events": 15,
+      "dropped": 0,
+      "original_overflow_and_reopen_tail": true
+    },
+    "static62": {
+      "result": "PASS",
+      "seconds": 9.77,
+      "buffered_events": 327,
+      "dropped": 0,
+      "decision_step_seconds": 2.497347856,
+      "running_sequence_1_commit_at_seconds": 5.720938653,
+      "prepared_sequence_1_commit_at_seconds": 6.869493042,
+      "completed_sequence_1_commit_at_seconds": 8.185956122,
+      "material_count": 62,
+      "plan_count": 2,
+      "publish_count": 2,
+      "read_published_count": 2,
+      "last_successful_claim_lease_remaining_seconds": 2.540424,
+      "original_complete_public_tail": true
+    },
+    "content_bound": {
+      "result": "PASS",
+      "seconds": 2.12,
+      "normal_seconds": 1.57,
+      "refusal_seconds": 0.55
+    },
+    "duplicate_selector": {
+      "result": "PASS",
+      "seconds": 0.36
+    }
+  },
+  "preserved_failure_and_prepared_responsibility": true,
+  "no_profile_or_extra_native": true
+}

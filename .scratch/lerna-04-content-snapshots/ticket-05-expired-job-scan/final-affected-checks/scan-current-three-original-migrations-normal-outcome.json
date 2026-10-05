@@ -1,0 +1,32 @@
+{
+  "kind": "actual affected-check result",
+  "operation_index": 23,
+  "name": "scan-current-three-original-migrations-normal",
+  "log": "/tmp/lerna-04-ticket05-execution/scan-current-three-original-migrations-normal.log",
+  "raw_sha256": "ac8efa0f676de199e119fa51f5e1f2b6f007853077d469414753cb16835c369d",
+  "wrapper_exit": 0,
+  "elapsed_seconds": 1.238,
+  "start_ack": [
+    {
+      "event": "native_start_ack",
+      "pid": 3551584,
+      "pgid": 3551584,
+      "starttime": "14885617",
+      "deadline_seconds": 120
+    }
+  ],
+  "completion_ack": {
+    "pid": 3551584,
+    "pgid": 3551584,
+    "starttime": "14885617",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false
+  },
+  "resource_records": [],
+  "run_count": 1,
+  "pass_count": 1,
+  "fail_lines": [],
+  "package_results": [],
+  "prelaunch": "/tmp/lerna-04-ticket05-execution/scan-current-final-checks/scan-current-three-original-migrations-normal-prelaunch.json"
+}

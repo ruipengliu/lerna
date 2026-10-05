@@ -1,0 +1,5 @@
+=== RUN   TestContentLaterWorkPassesOneExpiredCleanupResponsibility
+--- PASS: TestContentLaterWorkPassesOneExpiredCleanupResponsibility (16.21s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/component	17.299s
+NATIVE_COMPLETION_ACK {"pid": 3550262, "pgid": 3550262, "starttime": "14882342", "exit": 0, "group_absent": true, "timed_out": false}

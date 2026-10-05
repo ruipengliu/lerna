@@ -1,0 +1,110 @@
+diff --git a/domain/content/closure.go b/domain/content/closure.go
+index f78c51e..36cbd72 100644
+--- a/domain/content/closure.go
++++ b/domain/content/closure.go
+@@ -27,14 +27,38 @@ func (o *closureObservation) bound(valid, retain time.Time) {
+ 	}
+ }
+ 
++// closureIdentityMemo retains only successful pure full-ref identities. Its
++// lifetime may span the two observations of one processing read, never another
++// read. Records, permissions, closure facts, and clocks are not stored here.
++type closureIdentityMemo map[v.ContentRef]string
++
++func (m closureIdentityMemo) identityID(ref v.ContentRef) (string, error) {
++	if id, ok := m[ref]; ok {
++		return id, nil
++	}
++	id, _, err := VersionIdentity(ref)
++	if err != nil {
++		return "", err
++	}
++	if len(m) < 65 {
++		m[ref] = id
++	}
++	return id, nil
++}
++
+ // registeredClosure preserves exact intermediate versions. Declarations remain
+ // unchanged: this traversal is current qualification, never generation evidence.
+ func (s *Service) registeredClosure(ctx context.Context, tx runtime.Tx, target v.ContentRef, roots []v.ContentRef, subject v.SubjectBinding, purpose string, actions []string) (closureObservation, error) {
++	return s.registeredClosureWithIdentities(ctx, tx, target, roots, subject, purpose, actions, make(closureIdentityMemo, 65))
++}
++
++func (s *Service) registeredClosureWithIdentities(ctx context.Context, tx runtime.Tx, target v.ContentRef, roots []v.ContentRef, subject v.SubjectBinding, purpose string, actions []string, identities closureIdentityMemo) (closureObservation, error) {
+ 	var observed closureObservation
+ 	refs := map[string]v.ContentRef{}
+ 	records := map[string]Record{}
+ 	active := map[string]bool{}
+-	targetID, _, err := VersionIdentity(target)
++	identityID := identities.identityID
++	targetID, err := identityID(target)
+ 	if err != nil {
+ 		return observed, err
+ 	}
+@@ -46,7 +70,7 @@ func (s *Service) registeredClosure(ctx context.Context, tx runtime.Tx, target v
+ 		if ref.Owner != s.config.Owner {
+ 			return refusal("unsupported")
+ 		}
+-		id, _, err := VersionIdentity(ref)
++		id, err := identityID(ref)
+ 		if err != nil {
+ 			return err
+ 		}
+@@ -112,7 +136,7 @@ func (s *Service) registeredClosure(ctx context.Context, tx runtime.Tx, target v
+ 		}
+ 		active[id] = true
+ 		children := append([]v.ContentRef{}, record.Sources...)
+-		if err := sortRefs(children); err != nil {
++		if err := sortRefs(children, identityID); err != nil {
+ 			return err
+ 		}
+ 		for _, child := range children {
+@@ -124,7 +148,7 @@ func (s *Service) registeredClosure(ctx context.Context, tx runtime.Tx, target v
+ 		return nil
+ 	}
+ 	roots = append([]v.ContentRef{}, roots...)
+-	if err := sortRefs(roots); err != nil {
++	if err := sortRefs(roots, identityID); err != nil {
+ 		return observed, err
+ 	}
+ 	for _, root := range roots {
+@@ -145,7 +169,7 @@ func (s *Service) registeredClosure(ctx context.Context, tx runtime.Tx, target v
+ 	}
+ 	return observed, nil
+ }
+-func sortRefs(refs []v.ContentRef) error {
++func sortRefs(refs []v.ContentRef, identityID func(v.ContentRef) (string, error)) error {
+ 	if len(refs) < 2 {
+ 		return nil
+ 	}
+@@ -154,7 +178,7 @@ func sortRefs(refs []v.ContentRef) error {
+ 		id  string
+ 	}, len(refs))
+ 	for i, ref := range refs {
+-		id, _, err := VersionIdentity(ref)
++		id, err := identityID(ref)
+ 		if err != nil {
+ 			return err
+ 		}
+diff --git a/domain/content/processing.go b/domain/content/processing.go
+index dfcddfe..b27903d 100644
+--- a/domain/content/processing.go
++++ b/domain/content/processing.go
+@@ -45,6 +45,7 @@ func (s *Service) ReadForProcessing(ctx context.Context, subject *v.SubjectBindi
+ 	}
+ 	var objectKey string
+ 	var before time.Time
++	identities := make(closureIdentityMemo, 65)
+ 	observe := func(ctx context.Context, tx runtime.Tx) error {
+ 		// Each observation rebuilds its closure. No private records or permission
+ 		// from the first transaction are used as authority by the second one.
+@@ -84,7 +85,7 @@ func (s *Service) ReadForProcessing(ctx context.Context, subject *v.SubjectBindi
+ 		if !now.Before(bound) {
+ 			return ErrProcessingForbidden
+ 		}
+-		closure, err := s.registeredClosure(ctx, tx, ref, r.Sources, principal, purpose, []string{"read", "process"})
++		closure, err := s.registeredClosureWithIdentities(ctx, tx, ref, r.Sources, principal, purpose, []string{"read", "process"}, identities)
+ 		if err != nil {
+ 			if _, ok := qualificationCode(err); ok {
+ 				return errors.Join(ErrProcessingForbidden, err)

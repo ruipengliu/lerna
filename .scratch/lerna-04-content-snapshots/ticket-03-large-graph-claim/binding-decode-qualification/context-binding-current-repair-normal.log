@@ -1,0 +1,13 @@
+=== RUN   TestContentContextDecodedBindingPreservesCurrentPolicyAndWorkerControl
+=== RUN   TestContentContextDecodedBindingPreservesCurrentPolicyAndWorkerControl/normal
+=== RUN   TestContentContextDecodedBindingPreservesCurrentPolicyAndWorkerControl/process
+=== RUN   TestContentContextDecodedBindingPreservesCurrentPolicyAndWorkerControl/worker-control
+    content_context_binding_decode_test.go:169: forbidden
+--- FAIL: TestContentContextDecodedBindingPreservesCurrentPolicyAndWorkerControl (3.26s)
+    --- PASS: TestContentContextDecodedBindingPreservesCurrentPolicyAndWorkerControl/normal (1.56s)
+    --- PASS: TestContentContextDecodedBindingPreservesCurrentPolicyAndWorkerControl/process (0.82s)
+    --- FAIL: TestContentContextDecodedBindingPreservesCurrentPolicyAndWorkerControl/worker-control (0.88s)
+FAIL
+FAIL	github.com/ruipengliu/lerna/conformance/component	3.272s
+FAIL
+NATIVE_EXIT status=1 group_absent=True

@@ -1,0 +1,9 @@
+{
+  "source": "/tmp/lerna-04-ticket-03-no-dispatch-oracle-decision.md",
+  "sha256": "000e62bb018c1d2b7b21799d515edfe63af75046bc3435963923adcc8a304882",
+  "bytes": 7107,
+  "adopted_at": "2026-10-04T19:53:20Z",
+  "integration_base": "eae357c996a40f601604c39d75ecda9684f1651e",
+  "partial_source": "9bb61d42c98b5b8b2557a6949e49b30b767bd74d",
+  "execution": "read-only decision; no tests executed by decision agent"
+}

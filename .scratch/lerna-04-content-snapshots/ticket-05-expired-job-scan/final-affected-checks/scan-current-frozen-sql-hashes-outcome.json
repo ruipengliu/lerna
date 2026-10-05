@@ -1,0 +1,32 @@
+{
+  "kind": "actual affected-check result",
+  "operation_index": 16,
+  "name": "scan-current-frozen-sql-hashes",
+  "log": "/tmp/lerna-04-ticket05-execution/scan-current-frozen-sql-hashes.log",
+  "raw_sha256": "dc7217c80a4412feb797ef31d8898f8a4f7d5a703e8ef63eb52c639012ba9d85",
+  "wrapper_exit": 0,
+  "elapsed_seconds": 0.052,
+  "start_ack": [
+    {
+      "event": "native_start_ack",
+      "pid": 3549860,
+      "pgid": 3549860,
+      "starttime": "14880698",
+      "deadline_seconds": 120
+    }
+  ],
+  "completion_ack": {
+    "pid": 3549860,
+    "pgid": 3549860,
+    "starttime": "14880698",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false
+  },
+  "resource_records": [],
+  "run_count": 0,
+  "pass_count": 0,
+  "fail_lines": [],
+  "package_results": [],
+  "prelaunch": "/tmp/lerna-04-ticket05-execution/scan-current-final-checks/scan-current-frozen-sql-hashes-prelaunch.json"
+}

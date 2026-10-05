@@ -1,0 +1,36 @@
+{
+  "scope": "one original-bounds original B race binary subcost measurement; failed before Prepared and worker publication",
+  "native": {
+    "pid": 3142143,
+    "pgid": 3142143,
+    "starttime": "13113594",
+    "exit": 1,
+    "group_absent": true
+  },
+  "files": [
+    {
+      "source": "/workspace/lerna-content-03-137311247276/context-final-capacity-b-subcost-diagnostic-race.log",
+      "archive": "original-race.log",
+      "bytes": 141247,
+      "sha256": "8f50183586e7746a787833e65ade7defb2335d5ecd0f6206bfad948bd928033c"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/large-graph-subcost-results.md",
+      "archive": "results.md",
+      "bytes": 6963,
+      "sha256": "32ed1e755c5f34b83d92ecd6cb070e64c9932f4349292805fb40a352e6fee947"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/large-graph-subcost-overlay/manifest.json",
+      "archive": "overlay-manifest.json",
+      "bytes": 5601,
+      "sha256": "3b0dead588bd381c0b6cae4e5abdf874b4ca372b22a1ceae88365e3a61c4e0d0"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/large-graph-subcost-overlay/binary-provenance.json",
+      "archive": "binary-provenance.json",
+      "bytes": 683,
+      "sha256": "1afd23b760013e8482c05df094d367f3fb6e7a9f7518a412897bbd75a2bc752e"
+    }
+  ]
+}

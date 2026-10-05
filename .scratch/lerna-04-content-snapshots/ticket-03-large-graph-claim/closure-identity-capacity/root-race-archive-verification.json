@@ -1,0 +1,37 @@
+{
+  "root_verified_original_group_absent": 3470884,
+  "FULL_read_raw_160_outcome_prelaunch_decision": true,
+  "not_individual_resource_Close_proof": true,
+  "files": [
+    {
+      "source": "/workspace/lerna-content-03-137311247276/context-final-capacity-b-closure-identity-race.log",
+      "archive": ".scratch/lerna-04-content-snapshots/ticket-03-large-graph-claim/closure-identity-capacity/context-final-capacity-b-closure-identity-race.log",
+      "sha256": "7b48cbb7e9e0a8900f6fa9b514791d21f35538c85d17a9fd369fbe171bfefe6b",
+      "bytes": 26401
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/large-graph-closure-identity-overlay/race-outcome.json",
+      "archive": ".scratch/lerna-04-content-snapshots/ticket-03-large-graph-claim/closure-identity-capacity/race-outcome.json",
+      "sha256": "d203d58547f01e7ca31c8cd3790195b8f1f00dd49c8edab7ef8723409033ffa6",
+      "bytes": 13889
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/large-graph-closure-identity-overlay/race-prelaunch-registration.json",
+      "archive": ".scratch/lerna-04-content-snapshots/ticket-03-large-graph-claim/closure-identity-capacity/race-prelaunch-registration.json",
+      "sha256": "6f8820486e99a8ccf5dd5a258a4d3fd4a31a2843383501a6d92e4fd293108bc7",
+      "bytes": 6307
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/large-graph-closure-identity-race-results.md",
+      "archive": ".scratch/lerna-04-content-snapshots/ticket-03-large-graph-claim/closure-identity-capacity/large-graph-closure-identity-race-results.md",
+      "sha256": "370bfd77237e5ae959dab9599acd0956b63bf6c40640aeb550ba7cdd5d5fe9db",
+      "bytes": 3996
+    },
+    {
+      "source": "/tmp/lerna-03-closure-identity-race-next-decision.md",
+      "archive": ".scratch/lerna-04-content-snapshots/ticket-03-large-graph-claim/closure-identity-capacity/adopted-existing-profile-source-analysis-decision.md",
+      "sha256": "74b3eeb54aaa8d00b968cd21965542b6a37f8c66c4dcb61219e87d89b2a88d82",
+      "bytes": 10324
+    }
+  ]
+}

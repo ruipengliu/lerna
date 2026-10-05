@@ -1,0 +1,7 @@
+{
+  "source": "/tmp/lerna-04-ticket-05-inherited-cap-admission-decision.md",
+  "bytes": 11260,
+  "sha256": "b42d94d141b470ba5fa879c809ee2f7f3d73d2a18b7e84c2ed685d233d03888e",
+  "authority": "existing gpt-6-astra high; root full-read and adopted",
+  "scope": "narrow existing exact AdmissionTarget accepted-expired-cap branch; static, not green"
+}

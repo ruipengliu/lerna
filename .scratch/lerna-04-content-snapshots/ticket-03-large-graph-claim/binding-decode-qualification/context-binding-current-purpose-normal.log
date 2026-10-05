@@ -1,0 +1,11 @@
+=== RUN   TestContentContextDecodedBindingPreservesCurrentPolicyAndWorkerControl
+=== RUN   TestContentContextDecodedBindingPreservesCurrentPolicyAndWorkerControl/normal
+=== RUN   TestContentContextDecodedBindingPreservesCurrentPolicyAndWorkerControl/process
+=== RUN   TestContentContextDecodedBindingPreservesCurrentPolicyAndWorkerControl/worker-control
+--- PASS: TestContentContextDecodedBindingPreservesCurrentPolicyAndWorkerControl (3.28s)
+    --- PASS: TestContentContextDecodedBindingPreservesCurrentPolicyAndWorkerControl/normal (1.58s)
+    --- PASS: TestContentContextDecodedBindingPreservesCurrentPolicyAndWorkerControl/process (0.75s)
+    --- PASS: TestContentContextDecodedBindingPreservesCurrentPolicyAndWorkerControl/worker-control (0.95s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/component	3.294s
+NATIVE_EXIT status=0 group_absent=True

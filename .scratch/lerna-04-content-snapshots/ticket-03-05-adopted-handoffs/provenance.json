@@ -1,0 +1,25 @@
+{
+  "adopted_at": "2026-10-04",
+  "accepted_delivery": "6510364763f60c7efdf8ff10dde590f3fd607cb8",
+  "integration_claim": "1373112472761d32c22ed6d7603d806d8ef9a3c7",
+  "originals": [
+    {
+      "original": "/tmp/lerna-04-ticket-03-conditional-implementation-handoff.md",
+      "path": "lerna-04-ticket-03-conditional-implementation-handoff.md",
+      "sha256": "f72aeaf11509124471152260b556d15944143e16a796d254dc3c469496c50882",
+      "bytes": 16643
+    },
+    {
+      "original": "/tmp/lerna-04-ticket-05-conditional-implementation-handoff.md",
+      "path": "lerna-04-ticket-05-conditional-implementation-handoff.md",
+      "sha256": "9a175b7e76ecc22d857f928250ac7b07b5b654b5be8b5da092d3ee60c032d525",
+      "bytes": 16275
+    },
+    {
+      "original": "/tmp/lerna-04-after-02-final-port-delta.md",
+      "path": "lerna-04-after-02-final-port-delta.md",
+      "sha256": "c4dbbc17a1318084212dff8f7321e9bd9fc3df582124232011267f19f1f0ea66",
+      "bytes": 10128
+    }
+  ]
+}

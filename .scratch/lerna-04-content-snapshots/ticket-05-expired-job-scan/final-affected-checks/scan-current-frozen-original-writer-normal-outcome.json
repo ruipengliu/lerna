@@ -1,0 +1,32 @@
+{
+  "kind": "actual affected-check result",
+  "operation_index": 21,
+  "name": "scan-current-frozen-original-writer-normal",
+  "log": "/tmp/lerna-04-ticket05-execution/scan-current-frozen-original-writer-normal.log",
+  "raw_sha256": "0be48f41f4070e4672051b2de3edd59f40af745cfc680c3d0299aac28d56c589",
+  "wrapper_exit": 0,
+  "elapsed_seconds": 3.753,
+  "start_ack": [
+    {
+      "event": "native_start_ack",
+      "pid": 3550983,
+      "pgid": 3550983,
+      "starttime": "14884572",
+      "deadline_seconds": 120
+    }
+  ],
+  "completion_ack": {
+    "pid": 3550983,
+    "pgid": 3550983,
+    "starttime": "14884572",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false
+  },
+  "resource_records": [],
+  "run_count": 1,
+  "pass_count": 1,
+  "fail_lines": [],
+  "package_results": [],
+  "prelaunch": "/tmp/lerna-04-ticket05-execution/scan-current-final-checks/scan-current-frozen-original-writer-normal-prelaunch.json"
+}

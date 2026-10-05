@@ -1,0 +1,30 @@
+{
+  "FULL_plan_diff_manifest368_andsidecar_reviewed": true,
+  "independently_checked15pins_andmigrationcopy": true,
+  "all27operations120s": true,
+  "selector_census_instances": 72,
+  "selector_census_unique": 36,
+  "actual27result_NOTassertedbythisstaticreview": true,
+  "files": [
+    {
+      "archive": "plan.md",
+      "sha256": "d7e4232c619815f0dbb8e9c931875fd4ea060ad0c3bb1753370735811ef88eae",
+      "bytes": 6638
+    },
+    {
+      "archive": "manifest.json",
+      "sha256": "c20fb52bdfa2ada1e8c5892e06c7986335e6017ab0f47ef2fb60c077e995bec5",
+      "bytes": 25639
+    },
+    {
+      "archive": "migration-test-only.diff",
+      "sha256": "ef15a6831a0a33c2ea99cad0cb5adb4431b7a6d480687d3c6a59209ab4f81b63",
+      "bytes": 2021
+    },
+    {
+      "archive": "migration_test.go",
+      "sha256": "b8c9c471a9ed30bbaf8a2e6c89ed5a5a84e54b6b09cafc63ae6f01cf48a03e3a",
+      "bytes": 2642
+    }
+  ]
+}

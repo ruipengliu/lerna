@@ -1,0 +1,93 @@
+{
+  "tracked_pin": "d0ccc114f1255f6118fb94b794a1342c93050fc4",
+  "product_pin": "5e8cad7e9d77162fda9773bde747235f8937c9ce",
+  "adopted_decision": "/tmp/lerna-04-ticket-03-source-phase-cost-decision.md",
+  "decision_sha256": "2fd1bbec21428652caf21ab4817bffef7c5f0d432552826b727ba2266aa5bc5f",
+  "old_tested_overlay_manifest_sha256": "1a2e8593f6692dfbf28b252faae1c1dce66094a26a5c1ee812c73b8ba8e7decf",
+  "old_tested_five_files_unchanged": true,
+  "selector": "^(TestContentContextReachableClosure64And65IncludesIntermediateVersions|TestContentContextStaticModeMaximumReachable62Materials|TestContentContextSingleContentBoundHasHonestLayerAndNoDispatch|TestContentContextDuplicateSelectorRoleRefusesBeforeOriginalInputReplacement)$",
+  "caller_seconds": 30,
+  "lease_seconds": 5,
+  "go_watchdog_seconds": 120,
+  "outer_seconds": 120,
+  "run_count": 1,
+  "race": true,
+  "static_only": false,
+  "native_pending": false,
+  "files": [
+    {
+      "original": "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_world.go",
+      "replacement": "/workspace/lerna-content-03-137311247276/large-graph-subcost-overlay/context_world.go",
+      "original_sha256": "6a8b7860a40ba8b784248f181f7abd4e6b069360dc68c33deff7f0f1c79f4f69",
+      "replacement_sha256": "67b913a0831768d9c7e3813d4000fb3b5c497a5df4c9ec1e5ee553868e2952ee",
+      "bytes": 11909
+    },
+    {
+      "original": "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_claim_diagnostics.go",
+      "replacement": "/workspace/lerna-content-03-137311247276/large-graph-subcost-overlay/context_claim_diagnostics.go",
+      "original_sha256": null,
+      "replacement_sha256": "44c8a8c3fddc1c6e2226c21a182e8e7f79e2023fee096b7ed4c6e8a72b5706e8",
+      "bytes": 13708
+    },
+    {
+      "original": "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_subcost_diagnostics.go",
+      "replacement": "/workspace/lerna-content-03-137311247276/large-graph-subcost-overlay/context_subcost_diagnostics.go",
+      "original_sha256": null,
+      "replacement_sha256": "94e047b44dd763dbb52a2c0777d8b8aa9fd4f1e756e15857f015f26e83155d9f",
+      "bytes": 9750
+    },
+    {
+      "original": "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_dispatch.go",
+      "replacement": "/workspace/lerna-content-03-137311247276/large-graph-subcost-overlay/context_dispatch.go",
+      "original_sha256": "049bc9fd9bba5a4fe7c383f8fc5125d4d75188dc1fa4bc23daa6607a6eb8c32b",
+      "replacement_sha256": "ee055a6e8b3f2e66f8ff13de2b99da381d4e66e85686263155537d354799e5ea",
+      "bytes": 24923
+    },
+    {
+      "original": "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/store.go",
+      "replacement": "/workspace/lerna-content-03-137311247276/large-graph-subcost-overlay/store.go",
+      "original_sha256": "f7a17acfd9ec159b40381798d7fd46092de1804aca875afb1d56d8d4c2702767",
+      "replacement_sha256": "8941d49494d3bf965cb6ea7a22dc86fed3fa3048d8c85eae1f54df55a3e63570",
+      "bytes": 8358
+    },
+    {
+      "original": "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/source.go",
+      "replacement": "/workspace/lerna-content-03-137311247276/large-graph-subcost-overlay/source.go",
+      "original_sha256": "2698e49c206097583867ababbeba87a8c20942ed58b4606b6a8fc98fefbc7684",
+      "replacement_sha256": "9ddbe686c4ea8db9fa10b6e949041321d4fccfdbcc67ae6ccaf79f017ee65dc2",
+      "bytes": 20202
+    },
+    {
+      "original": "/tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_context_closure_test.go",
+      "replacement": "/workspace/lerna-content-03-137311247276/large-graph-subcost-overlay/content_context_closure_test.go",
+      "original_sha256": "f81d009ee03ce5d359b61e007b7b77ffbf6b7331254cb3e1b524c30fdf984f7f",
+      "replacement_sha256": "61051b1d9ee0ee6c13847ed0995faa5f9cc09a9e2254332911404e1dc9a3d219",
+      "bytes": 4558
+    },
+    {
+      "original": "/tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_context_material_reachable_test.go",
+      "replacement": "/workspace/lerna-content-03-137311247276/large-graph-subcost-overlay/content_context_material_reachable_test.go",
+      "original_sha256": "588abece65e26259626dabc885b399c98d26f1855e17e94f010df223d3ae1d43",
+      "replacement_sha256": "b7d236c6a17ac0de517da139c036292006a183a8dcea7b6d24c093b9827e8d3f",
+      "bytes": 3369
+    },
+    {
+      "original": "/tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_context_test.go",
+      "replacement": "/workspace/lerna-content-03-137311247276/large-graph-subcost-overlay/content_context_test.go",
+      "original_sha256": "25b705aeda43e55b923710d621f39eb7298d214bce9101c18fd523777504698b",
+      "replacement_sha256": "9f1bdc9e8757057ed09836a9d8aee213825e3fe1484c1a86966a4cce2911189f",
+      "bytes": 18517
+    }
+  ],
+  "build_plan": "one separately bounded go test -c -race -p1 -tags=integration -overlay=<map> -o=<owned binary> ./conformance/component; record original source+actual binary sha256 before one bounded original B binary run",
+  "root": {
+    "path": "/workspace/lerna-content-03-137311247276/large-graph-subcost-overlay",
+    "mode": "0700",
+    "dev": 27,
+    "inode": 560037,
+    "root_and_parent_fsync": true
+  },
+  "map_sha256": "a5a5df470d9670a84ddf853b0aaea808de2791d566bbe49d861dbbcd4804ebf9",
+  "attribution": "phaseLabel + operationLabel; sticky ambiguous invalidates entire attribution table; facade processing uses actual phase",
+  "format_complete": true
+}

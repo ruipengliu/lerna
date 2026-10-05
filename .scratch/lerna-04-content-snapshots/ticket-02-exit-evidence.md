@@ -21,3 +21,5 @@
 正式merge：`6f88740a737d8b4ef184495661de59f797bda38a`，parents为`70f69e524592491a5ad37754cf0793ee131acec6`与`6510364763f60c7efdf8ff10dde590f3fd607cb8`；全tree`f19ca823c1b9e0b8a905e82d2dcb9ff1714fb854`等于worker。root独立核验10个root-exclusive commits/347 paths；352 paths是f05审查baseline范围，二者不混用。
 
 [完整执行](ticket-02-evidence.md) · [API](ticket-02-api-handoff.md) · [最终审查及合并原文](ticket-02-final-reviews/README.md)。新检查点push/准确CI待核。
+
+2026-10-04，前述新push CI待核为历史：准确904ec5f/run37227467190两job全部steps success，完整170动态normal/race、共享Recovery与fixtures及locked check已root读取实际日志，见[准确CI](ci-verification.md#票02准确904ec5f的ci)。03/05 WIP不在该范围，原unknown限制不变。

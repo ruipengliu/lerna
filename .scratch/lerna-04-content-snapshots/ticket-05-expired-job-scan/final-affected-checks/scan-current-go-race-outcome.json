@@ -1,0 +1,32 @@
+{
+  "kind": "actual affected-check result",
+  "operation_index": 3,
+  "name": "scan-current-go-race",
+  "log": "/tmp/lerna-04-ticket05-execution/scan-current-go-race.log",
+  "raw_sha256": "d6f4f47e91b102c079d845537741c1aa699730bd3ed695ee23d151019fe284ce",
+  "wrapper_exit": 0,
+  "elapsed_seconds": 44.285,
+  "start_ack": [
+    {
+      "event": "native_start_ack",
+      "pid": 3544761,
+      "pgid": 3544761,
+      "starttime": "14864264",
+      "deadline_seconds": 120
+    }
+  ],
+  "completion_ack": {
+    "pid": 3544761,
+    "pgid": 3544761,
+    "starttime": "14864264",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false
+  },
+  "resource_records": [],
+  "run_count": 472,
+  "pass_count": 97,
+  "fail_lines": [],
+  "package_results": [],
+  "prelaunch": "/tmp/lerna-04-ticket05-execution/scan-current-final-checks/scan-current-go-race-prelaunch.json"
+}

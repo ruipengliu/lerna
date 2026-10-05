@@ -1,0 +1,8 @@
+{
+  "source_path": "/tmp/lerna-04-ticket-03-large-graph-claim-decision.md",
+  "sha256": "1eb1db4b00460f5cbc9b6f51e159e4b8b4d692152786f9fcd4699ef2ed6703cf",
+  "bytes": 10553,
+  "authority": "user-authorized gpt-6-astra high decision",
+  "adopted_at": "2026-10-05 UTC",
+  "scope": "static decision only; original failed executions retained; original 5s claim, 30s caller, 120s outer unchanged"
+}

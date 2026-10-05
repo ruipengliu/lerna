@@ -1,0 +1,32 @@
+{
+  "kind": "actual affected-check result",
+  "operation_index": 15,
+  "name": "scan-current-consumer-2-race",
+  "log": "/tmp/lerna-04-ticket05-execution/scan-current-consumer-2-race.log",
+  "raw_sha256": "11f6fbdebbadcf0b53388a4b83b7f0ed3eab592587dfe5536dfdacdc8a533f0f",
+  "wrapper_exit": 0,
+  "elapsed_seconds": 16.275,
+  "start_ack": [
+    {
+      "event": "native_start_ack",
+      "pid": 3549415,
+      "pgid": 3549415,
+      "starttime": "14879070",
+      "deadline_seconds": 120
+    }
+  ],
+  "completion_ack": {
+    "pid": 3549415,
+    "pgid": 3549415,
+    "starttime": "14879070",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false
+  },
+  "resource_records": [],
+  "run_count": 7,
+  "pass_count": 3,
+  "fail_lines": [],
+  "package_results": [],
+  "prelaunch": "/tmp/lerna-04-ticket05-execution/scan-current-final-checks/scan-current-consumer-2-race-prelaunch.json"
+}

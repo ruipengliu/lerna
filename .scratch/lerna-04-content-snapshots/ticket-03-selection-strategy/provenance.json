@@ -1,0 +1,9 @@
+{
+  "source": "/tmp/lerna-04-ticket-03-selection-strategy-decision.md",
+  "sha256": "85f7be69f4807c18d61b87d838f5cc6da99f761914ae69f003022cf10640b646",
+  "bytes": 8160,
+  "adopted_at": "2026-10-04T20:09:57Z",
+  "integration_base": "d225b79f881a2a6ec034918117db5017306318c7",
+  "partial_source": "db4920892d4f70a858768497396e9e37b87e25ba",
+  "execution": "read-only decision; no native tests"
+}

@@ -1,0 +1,49 @@
+--- /tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_context_test.go
++++ /workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/content_context_test.go
+@@ -11,7 +11,9 @@
+ 	v "github.com/ruipengliu/lerna/contract/v1_1"
+ 	c "github.com/ruipengliu/lerna/contract/v1_2"
+ 	compiler "github.com/ruipengliu/lerna/domain/task/context"
++	work "github.com/ruipengliu/lerna/runtime"
+ 	"reflect"
++	"runtime/pprof"
+ 	"strconv"
+ 	"strings"
+ 	"testing"
+@@ -179,10 +181,32 @@
+ 
+ func completeContextDecision(t *testing.T, ctx context.Context, w *fixture.ContextWorld, b compiler.Bundle) v.DecisionCompleted {
+ 	t.Helper()
+-	if sent, err := w.Dispatcher.Step(ctx, w.Boundary); err != nil || !sent {
+-		t.Fatal("normal real Component send failed", sent, err)
+-	}
+-	step, err := w.Decision.Step(ctx)
++	dispatchStart := time.Now()
++	w.DiagnosticStage(ctx, "phase.dispatch-start", dispatchStart, nil)
++	sent, dispatchErr := w.Dispatcher.Step(ctx, w.Boundary)
++	w.DiagnosticStage(ctx, "phase.dispatch-end", dispatchStart, dispatchErr)
++	if dispatchErr != nil || !sent {
++		t.Fatal("normal real Component send failed", sent, dispatchErr)
++	}
++	stepStart := time.Now()
++	w.DiagnosticStage(ctx, "phase.decision-step-start", stepStart, nil)
++	var step work.StepResult
++	var err error
++	profileCase := ""
++	switch t.Name() {
++	case "TestContentContextReachableClosure64And65IncludesIntermediateVersions/64":
++		profileCase = "closure64"
++	case "TestContentContextStaticModeMaximumReachable62Materials":
++		profileCase = "static62"
++	}
++	if profileCase == "" {
++		step, err = w.Decision.Step(ctx)
++	} else {
++		pprof.Do(ctx, pprof.Labels("case", profileCase, "phase", "decision_step"), func(labelled context.Context) {
++			step, err = w.Decision.Step(labelled)
++		})
++	}
++	w.DiagnosticStage(ctx, "phase.decision-step-end", stepStart, err)
+ 	if err != nil || step.Processed != 1 {
+ 		t.Fatal("normal real rule step failed", step, err)
+ 	}

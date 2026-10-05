@@ -6,10 +6,94 @@
 
 ## 当前状态
 
+2026-10-05 05:50 UTC：05新增Manager normal19.681/race27.528、不同合法完整委派Subject normal6.510/race13.953完整尾均通过。所有原期限/页/步数不变，首主体64live责任重开全量保持；完整证据已归档，最终当前源套件和两轴审查待做。03采用准确380731单项修订：一次ReadForProcessing前后观察只共享≤65项成功fullRef纯ID，所有记录/权限/来源/时钟和PG自主验证仍真实重读；只静态实现，暂无新资格。两票仍未接受或合入，whole04 15/41、完整1.2关闭。
+
+2026-10-05 05:43 UTC：03已有样本单次Source展开实际0/Wait/absence，189条原加权路径共1.890CPU：旧Content子树1.740、Access.060、纯Source.090秒；不将旧closure成本当当前可省、不新增采样，原profile逻辑Close UNKNOWN保持。准确原raw及逐条权重/栈、独立root完整机器核验已归档，Astra正选下一项必要决定。05Manager真实64过期积压normal19.681s完整传播/重开尾通过；当前仅授合法不同委派完整Subject的64条live前页正常验证，原live初始45s/四步/有限预算保持。两票未接受或合入，whole04仍15/41、完整1.2关闭。
+
+2026-10-05 05:31 UTC：03原五映射竞态已实际失败，closure64 27.87s/static62 21.64s，原Claim5先到而caller仍有余量。static Prepared已提交、Content.Put接纳未知；完整原日志/最终outcome归档，旧normal失败和出版测量normal通过各自保留。采用准确74既有CPU样本Source有限离线分析，无新产品猜测或采样。05坏deadline及合法特殊字符身份机械normal0.671/race2.182完整尾通过，原Go解析原因保持；当前唯一LOCAL授已静态审查的Manager真实64积压正常资格。两票未接受或合入，whole04仍15/41、完整1.2关闭。
+
+2026-10-05 05:11 UTC：[一次原发布阶段测量](../lerna-04-content-snapshots/ticket-03-large-graph-claim/publication-phase-measurement/README.md)四项normal均通过；两positive实际完成两Publish、两独立ReadPublished及Completed/全部公开尾，原5秒Claim末检查余1.903148/1.756678s。373行原raw和准确七映射/四WIP/最终outcome已保存，原normal失败仍独立保留，不推确定性能收益。Astra准确f630建议不再猜测优化，采用已建未运行0514原五映射竞态二进制的一次独立资格。05坏deadline机械验证normal0.671s返回原Go time.ParseError，真实合法特殊字符holder身份完成全ACK/独立缺失/重开原回执和元数据；该新机械资格尚待root归档及race。03/05均未接受，whole04仍15/41，完整1.2广告关闭。
+
+2026-10-05 04:58 UTC：切片01–03已完整退出；切片04仍15/41AC，票03/05在独立工作树修正，尚未接受或合入，完整1.2 profile关闭。03独立真实锁等待的StagePublication原因测试normal1.801s/race5.731s通过，源码修正与原red已保存推送；局部闭包成功身份复用后原容量normal仍在第二ReadPublished触及原Claim5（caller尚余17.410s），Prepared已提交而Completed未成立，race业务未运行。依据实测采用一次原边界下发布阶段细分测量，静态全源及逆变换核准后仅开始fmt/build。05同原64过期积压完整反例normal20.418s/race26.476s通过，两真实完整尾与七源副本已归档；异常记录、其他consumer、当前全检查与两轴资格仍待。05–22依真实整片退出推进，全部授权持续有效。下面逐条保留历史检查点，不用旧通过替代新源码资格。
+
+2026-10-05 02:01 UTC，05[最小未知资格门](../lerna-04-content-snapshots/ticket-05-expired-accepted-cap/unknown-source-gates/README.md)普通2.392s／race3.893s通过；原真实PG操作后机械missing source／currentpolicy sentinel使完整原pending／无seal／三正文保持，plain原consumer同正常尾段成功。首包compileFAIL由旧目录oracle三声明遗漏，原日志保留，仅声明修复。资格partial4735abc与15文件24case精确正文／缺失及knownempty lock整改partial1a4e1d2分别clean固定；24case只编译，最终执行待授，static coverage24unique／26callsite／缺漏0。
+
+03合法政策／控制反例普通3.272s末尾失败：normalCompleted、B Process当前撤权拒绝／公开读正常／重开与取消原Applied、实际一次Decide拒／RuleStarts0／Inputnil及重开保持均已执行。再次Cancel实际被Reopen get-only当前目的权限拒绝；此前VerifyControl假设已撤回，实际原因经冻结顺序和build全文核准。原[失败日志及因果](../lerna-04-content-snapshots/ticket-03-large-graph-claim/binding-decode-qualification/current-repair-provenance.json)保留，race未跑；只修测试为精确当前forbidden和真实command.get历史Applied字节查询，不恢复Cancel权限。当前SOLE LOCAL仅授该test修正正常→race，05仅准备已审最终检查；whole04仍15/41、完整1.2关闭。
+
+2026-10-05 01:47 UTC，03 Binding单条表示复用五项机械资格普通0.028s／race1.209s通过，包含冷热原值、完整深拷贝／nil-empty、scope／locator／字节变更、原strict错误／非metadata和并发独立返回。实际Current反例普通3.426s装配失败：独立正常Completed1.71s，goal／control在原bound Snapshot的InstallInput ErrChanged，尚未到撤权Current／重开断言；race未运行。原[日志与范围](../lerna-04-content-snapshots/ticket-03-large-graph-claim/binding-decode-qualification/unit-and-setup-provenance.json)保留，root先前静态审查也漏掉原禁止；不放宽bound guard、不把setup失败称业务red。03仅静态改用合法当前控制／权限反例。
+
+三native实际Wait／absence后释放，唯一LOCAL现授05最小missing结构／currentpolicy错误机械观察的准确原AdmissionTarget测试普通→race，原身份／期限／正文及正常尾段保持。whole04仍15/41，完整1.2关闭，两票未正式接受／合并。
+
+2026-10-05 01:42 UTC，新targeted [原deadline真实锁等待](../lerna-04-content-snapshots/ticket-05-expired-accepted-cap/targeted-deadline-wait/README.md)普通5.325s／race6.905s两scope都通过，产品301be6d不改，test／证据partial `c01b4c3fd64a971499be93495e54722c07a2f5b7` clean。两fresh初次700ms责任窗分别及时释放全ACK和越原deadline20ms释放完整pending／字节保持，无seal／执行清理；真实join／重开／source字节／V2／原回执历史保持。全部native actual0／absence／noTimeout并释放；本票剩最小未知资格门、旧目录oracle和最终受影响suite／审查。
+
+随后03 [Binding 复用机械首red](../lerna-04-content-snapshots/ticket-03-large-graph-claim/binding-decode-qualification/first-mechanical-red.log)实际0.009s失败，native3177697／start13270091／exit1／absence并释放：冷／热完整值与返回修改隔离先通过，相同完整字节重复strict decode的真实次数2≠1。只为CPU seam，非业务red；03仅静态最小entry green准备，无容量新green或whole04接受。
+
+2026-10-05 01:35 UTC，05继承上限修复partial `301be6d6e0e176ad10cd94012baa5c87d9debd14` clean，准确测试[普通2.422s／race3.913s](../lerna-04-content-snapshots/ticket-05-expired-accepted-cap/inherited-admission-first-red/README.md)均actual exit0／group absence／no timeout并明确释放。原red尾段全执行：准确target-only seal和全部holder ACK、真实重开、target独立缺失、两祖先原正文保持／无误封、V2正常与三原回执逐字／发布历史保持；同原admission到期前无效果和实际不同完整Subject forbidden对照通过。新targeted原deadline锁等待及最终受影响检查／评审仍待，本票与whole04不提前接受。诊断及两项窄决定已提交推送 `5eed627`；LOCAL当前空，03／05均只静态准备下一有限范围。
+
+2026-10-05 01:34 UTC，全文采用[单项 Binding 表示复用决定](../lerna-04-content-snapshots/ticket-03-large-graph-claim/binding-decode-reuse-decision.md)：每次仍真实锁定读取完整 Binding 行，仅同范围／input_id／locator／完整字节一致时复用成功严格解码值，所有可变字段深拷贝；当前 Input 全量新读／比较、Permission、祖先资格和时钟保持。03仅静态实现及首红准备，不同时优化 Content 两 Tx、不预热或扩大原5s期限，尚无新产品 green。
+
+05最小 AdmissionTarget 修复与完整原测试、真实到期前无效果／不同 Subject 拒绝对照已全文审查；SOLE LOCAL仅授该准确测试普通、通过后同例race，保持原20／30／120、2s cap及原一分钟责任窗。新targeted deadline锁等待仍待独立测试，旧普通分支等待不借称新分支覆盖。whole04仍15/41、两票未正式接受或合并、完整1.2关闭，全部22切片继续。
+
+2026-10-05 01:19 UTC，原B[子成本实验](../lerna-04-content-snapshots/ticket-03-large-graph-claim/subcost/results.md)actual native3142143／start13113594／exit1／group absence，完整工具完成并释放。两正常分支178固定stage／drop0／ambiguous0；64祖先29.52s、62材料21.98s失败，尚未Prepared或worker发布。新第一错误分别为Content读前CheckPolicy deadline、Current.InputRowScan deadline，终ValidateClaim晚原5s lease11.808／8.655ms。Current内全Binding严格解码0.697／1.325s、完整Input解码0.161／0.293s；对象实际读0.003／0.005s，Content两Tx fullancestor资格仍占主要成本。嵌套计时不相加，剩余材料和发布未执行，不线性外推或预言某一优化够5s；原Astra high正选单项等价改动，未修产品。
+
+采用[准确AdmissionTarget原cap窄决定](../lerna-04-content-snapshots/ticket-05-expired-accepted-cap/inherited-cap-admission-decision.md)：exact existing admissionKey／fulltarget与原SubjectPurpose，限accepted_retention_expired、当前持久targetcap真实到期、完整祖先、原due／Deadline及全页CAS／最后fresh clock；不续预算、nilpolicy不冒false、普通key／PG ACK／迁移保持。05只静态最小修复与真实拒绝对照准备，LOCAL当前空；没有green、本票接受或产品合并，whole04仍15/41／完整1.2关闭。
+
+2026-10-05 01:12 UTC，05整页原责任CAS资格partial `1a52d24a051442cd8ccdd3c3ef01ff7707cc84a7` 普通0.555s／race2.272s通过：公开页固定实际first／second，另一消费者提交second的not_required后，旧页第一条真实写入、第二条真实ManagementConflict，公开完整状态确认整页回滚；fresh同原页恢复／重开、三正文／固定回执／V2保持。随后[祖先上限／准确AdmissionTarget首red](../lerna-04-content-snapshots/ticket-05-expired-accepted-cap/inherited-admission-first-red/README.md)真实2.223s失败：两祖先与target正常、原2s cap续宽仍expired、原责任deadline live及独立原字节保持后，首Consume原admissionKey被拒绝。封存／擦除及红后回执重放尾段未执行；产品未修，Astra high正作最小身份与因果决定。
+
+03新九文件子成本overlay已全文审查，编译期／worker Current混合计时归属在运行前修正；全部原文件及SHA、dev／inode／mode核准，原已运行五文件overlay保持不变。当前唯一LOCAL归03机械格式／独立race二进制编译及一次原B实验，原5s Claim／30s caller／120s外界／业务tuple保持，暂无新测量结论。whole04仍15/41，两票未接受或合并、完整1.2关闭。
+
+2026-10-05 00:56 UTC，旧holder升级[三条故障恢复](../lerna-04-content-snapshots/ticket-05-legacy-holder-binding/qualification/README.md)已分别真实通过普通／race：记录竞争2.273／3.852s；已commit后机械丢返回2.316／3.832s；初次固定700ms资格跨界整Tx回滚2.702／4.133s。完整源码partial `331154b132c5fd631fb8f663e05a12642cd014cd` clean；原qualification、字节、回执／历史和V2保持。六native均实际exit0及group absence，无原界扩大；原producer全部逻辑Close与actualWait先于消费者。最后释放后LOCAL为空，05仅静态准备整页责任真实竞争测试，03仅静态准备已采用子成本新overlay。尚不接受／合并两票或广告完整1.2，仍15/41。
+
+2026-10-05 00:50 UTC，05记录竞争测试partial `2402fd79d5093e0a29605f4e28f2da0c1cac8cac` 普通2.273s／race3.852s通过：真实旧Read后合法Rev2收紧原保存期，旧完整前态CAS精确拒绝；同原qualification与deadline在两次真实重开后恢复绑定，V2／固定回执／发布历史／字节保持。不是新产品修复或伪造业务red；当前继续唯一槽执行提交成功后机械丢返回测试，原截止越界仍待。采用[子阶段成本决定](../lerna-04-content-snapshots/ticket-03-large-graph-claim/source-phase-cost-decision.md)，03仅静态准备新有限overlay，未优化／运行。
+
+2026-10-05 00:46 UTC，原界独占大图B诊断race实际74.623s失败，native3086554／start12876878／exit1及group absence、session完成后明确释放。完整[原日志与结果](../lerna-04-content-snapshots/ticket-03-large-graph-claim/diagnostic/results.md)保留：64祖先和62材料都在calculate中由Access.Current先返回deadline，随后真实ValidateClaim的新DB时间分别晚原5s lease21.425／24.545ms；caller30s仍余1.161／6.921s。running／start1已经真实commit，尚无Prepared提交或worker publication；Material25／31次包括末次失败，成功24／30次。该新独占scope不解释历史共享负载失败。嵌套Current与Content读取成本不可相加，SQL／decode／对象读取子成本未知；已请求原Astra high审查下一次必要有限拆分，不预选缓存／索引、不扩期限或盲重试。原生产／测试字节仍等于5e8cad7，诊断overlay五文件／原文件身份及SHA全部重新机械核准，未进入集成产品。
+
+05旧holder升级三条最小故障恢复测试已静态全文审查；当前唯一LOCAL授记录竞争的准确normal及同例race，另两条提交后丢返回／原资格700ms越界尚未执行。原writer停止与所有Close／Wait资格、原qualification身份和截止保持；两票仍未接受／合入，whole04仍15/41，完整1.2广告关闭。
+
+2026-10-05 00:28 UTC，03其余23个Context控制普通三组7.061s／10.917s／15.902s及race17.093s／26.246s／36.470s全部通过。格式检查首失败为一个测试文件尾部多余空行，保留原日志；仅删除该空行的固定源 `5e8cad7e9d77162fda9773bde747235f8937c9ce` 随后17项锁定检查全通过，包括Go普通／race、vet、生成／构建、44项TS、37项执行工具、生成探针及158／89／101共同合同正反序。合同脚本部分旧Go测试显示cached，照实保留；大图race仍未通过，有限overlay诊断正在静态准备。
+
+05旧正文绑定完整partial源码固定 `bb6e1f2ef05e49d88e2e4fb94ca04b0449981c52`。新原截止真实锁等待资格普通5.276s、测试race6.552s通过：两独立首次700ms WorkBudget／2s cap装配均观察真实policy阻塞；正常及时释放后原seal及实际全holder ACK／独立缺失／重开成立，跨原截止20ms释放后完整原pending／字节保持，无seal及可执行cleanup。原回执、新V2和deadline不变。race后校验和命令写错旧迁移路径，组合native exit1如实保留；单独正确三路径校验native exit0，未重跑已green测试。无产品修复或预算扩大；竞争CAS等剩余资格、最终受影响检查及两轴／架构审查仍待，两票未接受或合入，15/41与完整1.2关闭保持。
+
+2026-10-05，采用[大图claim复核决定](../lerna-04-content-snapshots/ticket-03-large-graph-claim/README.md)：保持原5s claim／30s caller／120s外界，一次独占完整B race加有限阶段诊断，保留第一错误、原Claim及Prepared实际提交范围；不盲重试、不预选性能补丁或扩大setup期限。05旧正文同准确测试独占race4.267s通过，错误介质／首次seal及原attempt页三个相关race1.727s／1.846s／2.496s通过。冻结旧producer所有原CloseACK、actualWait及group absence先于当前消费者，旧SQL三项校验和保持；竞争CAS、丢提交回执及截止越界仍待资格。03其余23个Context控制正按三组执行普通及race；两票未接受或正式合并，15/41与完整1.2关闭保持。
+
+2026-10-05 00:15 UTC，03容量最终分组普通A11.726s／B34.271s及race A30.122s通过；race B74.336s失败，64祖先和62直接材料的真实Decision.Step分别返回原claim失效，其余65拒绝、Content边界和重复角色通过。原caller30s、worker lease5s、原Snapshot预算均未放宽；失败保留，正由已授权Astra复核最小闭合路径，不能称容量race已通过。root执行授权前后不一致，05首次compileFAIL在03 race B后段真实重叠，故该组不声称独占负载；64祖先失败发生在05启动前，62材料的末段可能重叠，不能仅凭重叠解释失败。日志没有更细的RunClaim阶段观察，不将静态期限上界当成实际因果证明。
+
+05旧正文升级首green辅助unused import导致compileFAIL已保留；仅修正import后，准确原测试2.694s通过。冻结1a7编译器与旧producer的实际Wait、group absence和所有原逻辑Close ACK已核，完整原scope的两版本绑定、重开、错误介质拒绝、新fence清理及原回执／历史保持已执行。该正常运行发生在03组结束后；当前明确唯一执行槽授05相同测试race及相关原holder控制，尚未声称race、竞争CAS、期限越界或本票退出。两票仍claimed，whole04仍15/41，完整1.2不广告；全部22切片授权继续，所有历史unknown scope保留。
+
+2026-10-04 23:50 UTC，03真实旧0003升级资格普通9.810s／当前consumer race11.874s通过。144个生产文件共1,419,513B逐项与冻结33811016原git对象相等；独立driver在原进程身份fsync后才放行，真实三次旧编译和原排队绑定完成，所有原holder CloseACK及actualWait／group absence先于当前0004追加。旧0001–0003校验和、完整输入及排队映射不变；新编译精确HistoricalUnknown且无新Content读取，旧scope不补零账、不换Snapshot洗掉未知。独立当前scope正常Completed；旧生产者为普通冻结构建，不声称旧代码race资格。05真实三attempt的2＋1分页资格partial `864399c` 普通0.857s／race2.305s通过：原未登记setup临时文件保留inode／字节／residual，原owner确切移除后沿原Defer全ACK，独立V2与原回执不变。以上仍为各WT的partial资格，两票尚待最终受影响检查、独立评审和正式合并；15/41与完整1.2关闭保持。
+
+2026-10-04 23:35 UTC，03原Prepared资格partial `d41785c`：普通2.335s／race7.011s通过。原三轮18次真实编译读取27840字节耗尽后，真实Content.put已accepted，再触发20ms响应等待截止；三个owner重开按原WakeAt恢复两份原Prepared，无再编译、再规划或再读取Source，原artifact raw／回执、完整M、refs／sources／绝对界、规则start1／cost1和原预算全保持。该故障不声称物理Put未提交。05真实冻结1a7构建成功；首轮辅助类型比较compileFAIL保留，修正后0.401s真正business red发生在最后受信绑定stub。此前旧V1／V2真实正常发布、未停止拒绝、所有旧逻辑Close ACK及actualWait／group absence、当前unbound读取／seal拒绝、原字节／回执／published历史均已执行。正按既定决定静态实施窄CAS回填与可复现冻结构建，尚无green或本票退出；当前15/41与完整1.2不广告状态不变。
+
+2026-10-04 23:29 UTC，03原预算真实锁等待及并发资格partial `554fe04`：三个准确测试普通4.503s／race8.818s通过。真实PG等待跨过原deadline后拒绝，原轮数与读取预约仍0；两客户端竞争原最后一轮仅一方取得第三轮；两客户端竞争原6字节仅一方进入真实读取，Reserved／Confirmed6、实际读取1次。每轮五个实际peer均有原native CloseACK，进程退出与group absence已核。原65536／三轮／绝对deadline不变。Prepared原命令恢复正在独立资格验证；真实旧0003上下文升级及旧0001正文holder升级已静态准备，尚未宣称通过。两票仍claimed、未正式合入，whole04仍15/41、完整1.2不广告；全部22切片授权继续，所有旧unknown scope保留。
+
+2026-10-04 23:10 UTC，05真实跨页资格partial `1af6593ae290266357e28aab390b71747943565c`：PageSize2的原政策责任partial后重开，完整5条责任保持；4个原保存主体版本清理、另一保存主体的独立字节不误删。实际secondary关闭／nilport下，3个holder的2＋1页保留准确副本责任；两个World重开恢复后才全ACK。正常0.962s及该case＋原offline两项race3.607s通过，原水位／期限／copy绑定不变。03三次原数量溢出资格partial `6f6d97d`，修正过严测试诊断断言后2.039s通过：原三轮均消耗次数、读取预约仍0、第四轮精确次数拒绝及重开未派发。仍待真实原期限／并发／Prepared／旧源及清理attempt／升级／时钟CAS边界和最终审查，两票均未接受或正式合入。
+
+2026-10-04 22:53 UTC，原cap清理partial `d849b7a1`：非法持久时间拒绝unit0.010s、真实清理链2.469s、cap／当前撤save／恢复save／自然phase四项race6.864s通过；原seal key／责任Deadline、独立物理缺失、重开ACK、新version与固定回执均核准，旧0001／0002校验和保持。03完整材料投影修复partial `d427c49`，正常2.609s及投影＋include／omit相关race14.541s通过。原三次早期数量溢出计数资格首次1.853s因额外要求诊断维度而失败，真实正常对照已完成、原返回准确context_overflow；仅收紧测试断言后复验，未宣称三轮已通过。采用[旧holder绑定升级决定](../lerna-04-content-snapshots/ticket-05-legacy-holder-binding/README.md)，只支持可完整核准的原scope，真实旧writer／停止／原介质／完整attempts及CAS仍待实施；不操作任何历史unknown scope。两票依然claimed、whole04仍15/41。
+
+2026-10-04 22:44 UTC，采用[原接受保留期限清理决定](../lerna-04-content-snapshots/ticket-05-expired-accepted-cap/README.md)：严格解析并重新核对原持久cap到期，完整保存主体／用途／准确ref和结构闭包不变，原清理执行期限不续期，复用原seal及全holder ACK；最小修复正在静态实施。03独立正常Completed对照1.63s后，真实出版的坏shell／manifest／lock一致遗漏原Selected A，Source却接受，实际2.580s业务失败已保留；将共享核对M＋全部原selected材料的完整投影，后续Lock／重开尚未执行。两项均不构成新票退出或整片完成。
+
+2026-10-04 22:40 UTC，03读取响应丢失资格 `963b463` 实际2.320s通过：真实6字节读取后响应丢失，原预约重开仍占6字节，重放预约不获新读取许可；第二轮真实编译后Reserved9286／Confirmed9280／Unknown6保持。输入修订资格1.799s通过：同原Snapshot合法更新goal后，原65536额度及三轮上限保持，18次真实回读累计27926字节；扩额到65537准确拒绝且当前输入和计数不变，第四轮准确拒绝。05 metadata资格固定 `e5b38a57`，实际最终测试已核完整三层来源和准确授权，仍为既有协议的独立资格。
+
+05原接受保留期限的真实2.216s业务失败已保留：原2秒cap自然到期、原清理执行期限仍live、当前宽策略续期不能复活旧cap；旧读取返回expired且独立旧字节仍在，新准确version正常。消费者未建立原seal，后续erase／ACK未执行，不称已通过；最小因果分支正由已授权Astra审定。两票仍claimed、独立WT未正式合入，仍15/41AC、完整1.2不广告。进度提交 `1a5d71f0d8cd8e7529bd26440d52859aa1ee5610` 已实际push；所有历史未知scope保持保留。
+
+2026-10-04 22:27 UTC，03原Snapshot预算partial `9534d2c`：原三轮跨重开真实出版／第四精确次数拒绝1.624s通过，后续关闭错误保留及verbose资格1.521s证明原65536内18次材料／四产物回读共27840字节、每轮9280。首次固定20000的累计额度资格1.373s通过：两轮正常，第三A／B后18582字节，M验证预约不足且未到达真实Content，重开不重置。首次compileFAIL保留，原red实际Go watchdog120s、本green30s，caller30s不变。05同原责任自然phase保erased正常2.293s／race5.570s已通过；真实删除后单次replyloss沿确认Defer100ms及原seal／期限恢复，原合法纳秒metadata列编码修复正常0.437s／race1.793s通过，早期失败与fixture截断对照单列。metadata三层完整来源／delegation／用途／绑定及实际祖先许可到期正常1.229s／相关race4.035s通过。两票仍在独立WT未接受或正式合入，剩余unknown／修订／期限／Prepared、过期cap／完整分页／真实升级继续，仍15/41AC及完整1.2不广告，全部22切片授权有效。
+
+2026-10-04，采用[原擦除结论保持决定](../lerna-04-content-snapshots/ticket-05-terminal-erasure-history/README.md)：同原责任真实全ACK后，普通自然phase须保留erased和完整历史，仍执行动作union及原期限min；其他change独立，普通入口不制造新ACK。真实自然到期2.309s失败已复现结论倒退及旧holder历史丢失，修复待验证。迟到真实成功Put的Finish已修正当前holder不复活，正常0.282s及四项相关race2.990s通过。03合法长度但错误正文选材拒绝0.753s通过；原快照预算正在静态实现，尚无green。全部22切片继续，当前仍15/41项AC、两票未接受及完整1.2不广告。
+
+2026-10-04，采用[原Snapshot耐久编译预算决定](../lerna-04-content-snapshots/ticket-03-original-budget/README.md)：原完整SnapshotRef固定三轮、累计真实读取和绝对期限，显式consumer-owned端口及追加fixture0004，编译材料与四份产物验证回读共用原预算，worker保留原Prepared／费用。原三轮完整出版及第三前重开后第四轮仍成功的真实1.974s失败已保留；预算实现与独立字节／期限／未知验证待完成。05权威擦除后新责任ObjectHolder标记修复正常0.365s及四项相关race3.649s通过，旧责任历史union保持；迟到Finish仍待独立验证。03反向include冲突0.611s通过。两票仍未接受，15/41项AC及全22授权不变。
+
+2026-10-04 21:46 UTC，05原政策seal／全holder ACK的真实正常链路0.465s、五个受影响控制的race3.659s通过；初次0.249s列时间精度拒绝保留，修正只比较pgx可表达的微秒值，不改原policy或deadline。准确partial `641020d` 仍在独立WT，尚未正式合入或接受。03 B-disclose在include／omit两种真实Completed对照之后，仅撤披露，立即及三个owner重开后M和实际artifact均准确拒绝，内部完整M处理与原回执／历史保持；实际2.923s通过，partial `1148a1f`。05权威擦除后新责任仍误记ObjectHolder=true的真实0.335s失败已复现，最小修复正在验证。原Snapshot三轮／累计字节／绝对期限的耐久门和其他清理边界继续实施；两票未接受，仍15/41项AC，完整1.2不广告，全部22切片授权继续。
+
+2026-10-04 21:35 UTC，采用[原政策责任与全holder ACK决定](../lerna-04-content-snapshots/ticket-05-policy-seal-ack/README.md)：原准确policy key和deadline同Tx绑定seal、holder、Job及责任，真实全holder确认后才将原责任记erased；已过期预算不续期、不同seal不改身份。正常恢复save的消费0.366s及race1.745s已通过；save仍撤销时无seal的真实0.406s失败保留，最小绿色链路在实施。03正文选材mismatch修复0.775／canonical0.087、include／omit正常5.187通过；B-process1.806、B-save1.832证明各自独立权限门与真实原拒绝回执。初始及更新policy的Sync均false，没有附带Sync变化。B-disclose、原Snapshot累积预算／恢复及其余票据边界尚待验证，两票未接受或合入，当前仍15/41项AC，全部22切片继续。
+
+2026-10-04 21:18 UTC，采用[政策清理资格决定](../lerna-04-content-snapshots/ticket-05-policy-cleanup-qualification/README.md)：原责任完整比较和当前save／cap资格允许无物理效果的 `not_required` 核对，普通pending规则、历史期限与其他holder责任不变；全页版本／policy资格先于责任锁，最后采新鲜DB时间。真实首red0.246s已复现消费stub缺失，green与ObjectHolder相邻修正分别待验证。03部分真实metadata主因2.160、Proposal主因2.217、UTF8必要约束2.131、62直接材料完整Lock64链路11.540、完整当前Found回复1.474均通过；1MiB边界有独立red→green，不声称真实装配能达到所有单独上限。B正文要求omit但原A仍selected的真实0.904s失败已保留，正文选材最小修复正在实施。两票尚未正式接受或整合，全部22切片授权继续。
+
+2026-10-04，采用[票03内部溢出诊断决定](../lerna-04-content-snapshots/ticket-03-overflow-diagnostic/README.md)：实际拒绝维度与可选完整测量沿原错误链返回，保留独立 Content 限制及缺测量，不新增公共合同、数据库或成功 Bundle。真实 metadata／Proposal 主因测试仍待实施。03部分单Content边界已真实unit red→green，合法原Decision限额的真实链路2.314s通过：20万字目标完整回显，262144字目标加完整metadata由Content层拒绝且无派发。第一次非法2MiB限额被schema挡住的失败保留，不算业务red。05跨进程第一顺序0.050s实际通过，写者关闭有独立ACK；反序与第一对照0.081s通过，真实fence后第二进程迟到Put拒绝，原eraser SIGKILL／Wait后重开确认正文缺失。被杀holder无逻辑Close ACK，其准确root4116685529（dev33/inode326495）保持unknown并保留，kernel退出及后续观察不推逻辑关闭。其余AC仍待验证，两票尚未正式合入或接受，全部22切片继续按依赖实施。
+
 - 切片 01：**completed**。原任务 01–06 与后置架构任务 07 均 resolved；正确性修复、独立架构优化和 CI portability 已合入。受测实现提交 `23bac17ba0909c7a4d49d846eb08bc63391b99f0` 的真实远端 CI success，全部退出证据见[spec](../lerna-01-command-contracts/spec.md#切片退出证据2026-10-03)。
 - 切片 02：**completed**。10票68项AC resolved；最终源码f56d930、整合5548744。本地完整顺序count1集成50.431s/race93.834s，独立两轴全部原发现关闭/新增0，fixture架构收益复核闭合；准确CI37162569420 success，完整退出及旧未知schema/CID限制见[证据](../lerna-02-durable-work/exit-evidence.md)。
 - 切片 03：**completed**。六票42/42AC及原六项验收完成；受测882e97b/6bf5750、交付1aa21fc、整合391b4d8，完整profile/共享104项race及两轴/架构闭合。准确47ebce1 CI37194868564 success；10worktrees清理/分支保留。完整[退出](../lerna-03-deterministic-harness/exit-evidence.md)保留失败和未知资源。A阶段01–03完整退出，下一frontier04。
-- 切片 04：**in-progress**。03完整退出5fbb1a0后实际API复核相等，采用具体Content-backed mandatory-context映射，发布六票41AC；首票01已resolved，8/41AC完成，受测14ead、交付1a7、正式合并eba167d；完整1.2 profile仍不广告，其余五票依图推进。
+- 切片 04：**in-progress**。03完整退出5fbb1a0后实际API复核相等，采用具体Content-backed mandatory-context映射，发布六票41AC；01/02已resolved，15/41AC完成；02交付651036/正式合并6f88740/验收904ec5f已push，准确CI37227467190已success。03/05已claimed并在独立WT实施；完整1.2 profile仍不广告，其余票依图推进。
 - 切片 05–22：**not-started**。仅条件准备，依赖未满足，不代表实现或验收。
 
 ## 切片 01 过程检查点（历史记录）
@@ -225,3 +309,43 @@ root全文读取[Astra六票复核](../lerna-04-content-snapshots/published-tick
 ## 切片04来源政策票接受并整合
 
 2026-10-04，票02七AC resolved，交付651036/产品4c621/工具5c024，正式merge6f88740双parents及完整tree等于worker；[逐AC证据](../lerna-04-content-snapshots/ticket-02-exit-evidence.md)保留所有实际测试/审查与unknown范围。完整170 normal/race每模式一次，fixture/Decision/base race/locked check/module verify通过；最终双轴0hard/1可选P3 KEEP、Spec a0b0c0、架构0necessary。5 schemas/8 roots、旧Z与空selector per-Close unknown保留，未cleanup。当前15/41，whole04 in-progress、完整1.2广告OFF；03/05直接前置已满足。新准确push CI待核，旧首票7c CI不替代新源。
+
+2026-10-04，02接受push904ec5f的准确CI37227467190两job/全部steps success；root读取37Node/44TS/158+89+101两序、完整170 normal/race五组、Recovery25.988/61.392及fixture各包，见[CI](../lerna-04-content-snapshots/ci-verification.md#票02准确904ec5f的ci)。早期pending保留历史，03/05已独立claimed，LOCAL按自然TDD边界串行交接；旧unknown不动，whole04仍15/41。
+
+## 切片04上下文未派发观察差量
+
+2026-10-04 19:53 UTC，采用[窄oracle决定](../lerna-04-content-snapshots/ticket-03-no-dispatch-oracle/README.md)：冻结1.1 Decision.Get没有not_found，仅把其result_unavailable作辅助，以当前授权原Command not_found、可信fixture准确无binding/dispatch和真实Decide入口有限观察共同证明。原handoff字节不改、七AC不减。03部分9bb61d4真实完整上下文三owner重开/规则全文回显normal1.561，echo reserve拒绝与正常对照1.902通过；入口完整观察及其余容量/恢复/竞态尚未完成，不标resolved。05部分8986829正文封闭normal/race通过，实际删除和剩余holder/并发/孤儿出口仍在实施。当前15/41AC，所有22切片授权继续。
+
+## 切片04选择依据与实际holder绑定检查点
+
+2026-10-04 20:11 UTC，采用[确定性选择决定](../lerna-04-content-snapshots/ticket-03-selection-strategy/README.md)：单独版本固定选择材料正文语法，实际计算并核对可信Selected；include/omit均保留compiler实际处理及完整来源。原rule/2、字节策略和五动作权限不变，撤权分别验证。该决定无执行声明。
+
+03部分45eb007已在独立WT固定反序集合完整投影修复，真实反序与原normal3.979通过；未完成全部容量/恢复/来源出口。05部分70d746e固定原发布介质FD身份至准确version、seal与清理责任，错误root不能代原holder ACK；exactnormal0.382通过，相关race Component2.758/Local1.116两个测试命令通过。该组合末尾错误迁移文件名导致原native exit1并永久保留，单独正确哈希命令exit0；不把组合改称exit0。首次Seal错root、真实第二holder、跨进程、孤儿竞争及旧版本升级尚待验证。双方部分提交尚未合入主集成；15/41AC与完整profile不广告状态不变。
+
+## 切片04固定检查与调度审阅恢复
+
+2026-10-05，05固定1a4e1d2的17原检查全部实际完成0/absent/noTimeout，root保存[准确命令、原日志与逐项结果](../lerna-04-content-snapshots/ticket-05-final-checks-1a4e1d2/README.md)。整仓Go每模式472具名RUN/PASS，24基线与7消费者每模式匹配；不带integration的整仓检查不证明Linux holder进程协议。原worker协调路径丢失后，以实际完成ACK与17原组当前absence恢复LOCAL空闲，不伪称原owner明确release；历史unknown Close仍保护。
+
+[独立双轴](../lerna-04-content-snapshots/ticket-05-review-1a4e1d2/README.md)发现文档P3及过期mixedScan64遮挡P2。root全文采用Astra准确扫描决定，先准备真实64积压red，再做最小Content消费者候选修正；当前无新业务red。03 clean28e的memo五单元及三公开资格已normal/race通过，新原四容量B仍未运行。03/05恢复implementers只静态准备，native逐段独占授权；15/41、whole04 in-progress、完整1.2广告OFF、所有22切片授权继续。
+
+2026-10-05，03准确28e的原四容量B正常模式ONE实际0/absence，root全文核[独立二进制与原日志](../lerna-04-content-snapshots/ticket-03-large-graph-claim/binding-reuse-capacity/README.md)。两大图均真实Prepared/Completed COMMIT和两次产物publish/readback，原5sClaim内结束；caller30/lease5/120不变。当前只授独立race编译，race业务及当前受影响peer/整票/资源/CI尚待；不能据normal接受七AC。
+
+2026-10-05，03同原四B竞态ONE实际exit1/absence：closure64在实际processing失败无Prepared，static62已首次真实Prepared COMMIT却在首次Publish的PrepareContent失败，无completed/readback；[原日志与准确身份](../lerna-04-content-snapshots/ticket-03-large-graph-claim/binding-reuse-capacity/README.md)均保存。原30/5/120不改，单语法memo不足。root FULL读新阶段后交Astra只读评估下一最小等价修正；03未accept。LOCAL明确释放后只授05fmt与独立低积压正常对照，64积压首red尚未执行。
+
+2026-10-05，03固定28e[独立两轴](../lerna-04-content-snapshots/ticket-03-review-28e3a46/README.md)：Standards一P2错误cause丢失、零可选；Spec a0b0c0。root全文采用必要cause修正方向与Astra下一只读决定：只一次当前原完整B阶段标签CPU采样，粗wall不能断言SQL根因，尚无第二产品优化或七AC接受。05低积压初次count1失败在准备阶段重开观察DeepEqual；V2未接纳，不能当调度red。原log/源码保留，只授公开tuple诊断一次，原bounds不改。
+
+2026-10-05，05低积压count1正常15.464s实际0/absence，完整V2/live全holderACK/独立物理缺失/旧expired职责正文与固定回执history尾均执行，[原源与原日志](../lerna-04-content-snapshots/ticket-05-expired-job-scan/README.md)保存。只有test-only公开编码等值修正，产品未改。root只授独立64首red（初始15s seal、caller90、四Step、120不变），未授权产品fix或race。
+
+2026-10-05，05真实64积压首businessred18.131s/1/absence已成立：[原源码、预登记计划及实际日志](../lerna-04-content-snapshots/ticket-05-expired-job-scan/README.md)。64原合法封闭到期并重开后，新准确版本已accepted、四推进仍preparing、独立bodymissing；live/policy尾未执行。root全文采用后只授Content-own两窄扫描口/三消费者的静态最小修正，冻结runtime/schema/旧expired职责字节期限不改，新green/race/边界及审查待。03CPU新5overlay静态准备中，未native采样，whole04仍15/41。
+
+2026-10-05，03一次原B CPU采样实际exit1/absence，七个只读pprof视图均实际0/absence；root全文原159行和全部视图并核对profile/log哈希，见[准确测量](../lerna-04-content-snapshots/ticket-03-large-graph-claim/worker-cpu-measurement/README.md)。两个大图仍失败，本次closure caller截止、static原Prepared后首次Publish领取截止，阶段与未采样失败分列；标签6.80/总62.18CPU、offCPU未知、不相加cum。原profileFD Close UNKNOWN保留。Astra只读决定下一等价优化，未授权第二产品fix或重跑；05窄扫描静态核对损坏记录不隐去，whole04仍15/41/profile OFF。
+
+2026-10-05，root全文采用[Astra实测后唯一局部优化](../lerna-04-content-snapshots/ticket-03-large-graph-claim/worker-cpu-measurement/adopted-next-decision.md)：只单次registeredClosure内fullRef成功纯身份计算复用<=65项，满不缓存而不新增拒绝；排序/visit原顺序和所有PG权限/锁/clock/两Tx保持。03只静态实施，新非profile原B正常/race尚未跑；独立causeP2反例分列。whole04仍15/41。
+
+2026-10-05，03[StagePublication真实cause首red](../lerna-04-content-snapshots/ticket-03-stage-publication-cause/README.md)actual3397277/start14220903/1/absence、Go1.940；正常Publish/readback/reopen1.16通过，原真实row wait取消、双join/双peer Close、publicNotFound及重开尾全执行，最后cause断言得到ErrForbidden。root全文采用仅NoRows拒绝、其他cause保留的静态修正；green/race待，原边界不改，性能资格另列。
+
+2026-10-05，03同原[真实cause出口](../lerna-04-content-snapshots/ticket-03-stage-publication-cause/README.md)修正普通1.801/race5.731均actual0/absence，双join/peerClose/公开NotFound及重开尾全执行；root全文原log/provenance并核源hash。source是28e+显式两productWIP和两new tracer，closure容量待，不能据此接受票。05原red tests/evidence已commit85a1067（产品仍1a4加WIP），root采用固定Record/rawJSON类型必要资格，仅静态补足。15/41/profile OFF/all22授权持续。
+
+2026-10-05，root全文采用05固定stored BodySeal规范编码必要补充，仅静态实施，不从JSONB语义相等推断原Go Marshal字节资格。03两独立nonprofile新binary已actual0/absence并独立hash/devino核验，source28e+明确WIP；只授原四B普通ONE，当前新业务未结束，race待单独资格，30/5/120不变。
+
+2026-10-05，03[闭包身份新原B普通ONE](../lerna-04-content-snapshots/ticket-03-large-graph-claim/closure-identity-capacity/README.md)actual3420931/1/absence；root全文162原行。closure64真实Prepared/两Publish成功、第二readback deadline，Claim末晚3.586ms无Completed/成功公开尾；static62全Completed/readbacks/原公开尾通过，正常拒绝用例保持。race仅构建未跑，原30/5/120不改，不依据单wall归因回归或宣布收益。Astra只读下一必要阶段决定，05完整扫描候选仅授fmt+原64正常ONE，尚无新green。

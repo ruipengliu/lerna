@@ -1,0 +1,32 @@
+{
+  "kind": "actual affected-check result",
+  "operation_index": 0,
+  "name": "scan-current-format",
+  "log": "/tmp/lerna-04-ticket05-execution/scan-current-format.log",
+  "raw_sha256": "0d0c179bd530915336472b9dcf64087e194a8bf7d166c97fc0402b4e15e6a64d",
+  "wrapper_exit": 0,
+  "elapsed_seconds": 0.251,
+  "start_ack": [
+    {
+      "event": "native_start_ack",
+      "pid": 3543955,
+      "pgid": 3543955,
+      "starttime": "14863364",
+      "deadline_seconds": 120
+    }
+  ],
+  "completion_ack": {
+    "pid": 3543955,
+    "pgid": 3543955,
+    "starttime": "14863364",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false
+  },
+  "resource_records": [],
+  "run_count": 0,
+  "pass_count": 0,
+  "fail_lines": [],
+  "package_results": [],
+  "prelaunch": "/tmp/lerna-04-ticket05-execution/scan-current-final-checks/scan-current-format-prelaunch.json"
+}

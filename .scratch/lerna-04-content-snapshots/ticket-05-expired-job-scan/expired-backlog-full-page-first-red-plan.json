@@ -1,0 +1,18 @@
+{
+  "kind": "STATIC full64 first-red plan; not executed",
+  "test_source_sha256": "60f817d14355d1565f744be850f9309d1ae0c2d0f7190be0e204929d0823823b",
+  "fixed_product_head": "1a4e1d2d704261a59491dfc6e0c5d26b80ec5107",
+  "lowcount1_control_actual": "/tmp/lerna-05-expired-backlog-low-control-green-outcome.json",
+  "caller_seconds": 90,
+  "original_seal_seconds": 15,
+  "later_live_seal_seconds": 45,
+  "max_consumer_steps": 4,
+  "go_seconds": 120,
+  "outer_seconds": 120,
+  "cwd": "/tmp/lerna-worktrees/content-snapshots-05",
+  "requires_root_separate_grant": true,
+  "wrapper": "/tmp/lerna-04-ticket05-execution/run-native.py",
+  "shell": "set -e; set -o pipefail; source /workspace/.lerna-env/env.sh; go test -v -tags=integration ./conformance/component -run '^TestContentLaterWorkPassesFullExpiredCleanupPageWithoutChangingOriginalDuties$' -count=1 -timeout=120s",
+  "log": "/tmp/lerna-04-ticket05-execution/expired-backlog-full-page-first-red.log",
+  "post_result": "STOP/RELEASE; no fix/retry/race; report first actual phase and retained original scopes"
+}

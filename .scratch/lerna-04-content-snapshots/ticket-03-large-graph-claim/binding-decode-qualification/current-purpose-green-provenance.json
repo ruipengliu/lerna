@@ -1,0 +1,34 @@
+{
+  "source_sha": "28e3a468c86d4323d3b497836de23bb311a58952",
+  "normal": {
+    "duration": "3.294s",
+    "native_pid": 3207665,
+    "starttime": "13397828",
+    "actual_tool_session": 55003,
+    "exit": 0,
+    "group_absent": true
+  },
+  "race": {
+    "duration": "9.757s",
+    "native_pid": 3208485,
+    "starttime": "13400872",
+    "actual_tool_session": 48518,
+    "exit": 0,
+    "group_absent": true
+  },
+  "logs": [
+    {
+      "log": "context-binding-current-purpose-normal.log",
+      "bytes": 858,
+      "sha256": "54b641b0de8b62f9ad02be6af822b8254af896c42bd364530cd7d98ece5bfb34"
+    },
+    {
+      "log": "context-binding-current-purpose-race.log",
+      "bytes": 858,
+      "sha256": "177da290cc1be786eef2031569b05e4426f9cdad12a1b788e2c489aff387e061"
+    }
+  ],
+  "boundary": "Three cases: actual normal completion, current Process withdrawal through Content adapter with read preserved, actual worker control rejected Decide with original command.get receipt after three-owner reopen. Not post-Bind mutable input update or capacity qualification.",
+  "historical_failures": "3.426 original immutable boundSnapshot rejects setup. 3.272 final repeated Cancel expected receipt but actual Reopen reseeds get-only purpose access; actual controlAccess rejects Forbidden before priorreceipt/VerifyControl. Original VerifyControl hypothesis retracted. Both logs preserved.",
+  "root_archive": "Exact original bytes; latest B independent verification pending."
+}

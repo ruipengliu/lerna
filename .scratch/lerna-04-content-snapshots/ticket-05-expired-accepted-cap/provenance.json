@@ -1,0 +1,11 @@
+{
+  "source": "/tmp/lerna-04-ticket-05-expired-accepted-cap-decision.md",
+  "bytes": 8172,
+  "sha256": "134530eb6f9a43f8ca339b3341a05645813d23f155c80fe599f9d816bff34fd8",
+  "agent": "/root/results_08_decisions",
+  "model": "gpt-6-astra",
+  "reasoning_effort": "high",
+  "source_partial": "e5b38a57dab458be56574237052f1ad7465bf321",
+  "integration_before_adoption": "1a5d71f0d8cd8e7529bd26440d52859aa1ee5610",
+  "qualification": "Static minimal expired accepted-cap decision after actual target-cap first red 2.216s/native1/group_absent. No green, ancestor expiry or whole-ticket acceptance claimed."
+}

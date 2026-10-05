@@ -1,0 +1,146 @@
+--- /tmp/lerna-worktrees/content-snapshots-03/domain/content/processing.go
++++ /workspace/lerna-content-03-137311247276/large-graph-publication-phase-overlay/processing.go
+@@ -11,6 +11,31 @@
+ 	v "github.com/ruipengliu/lerna/contract/v1_2"
+ 	"github.com/ruipengliu/lerna/runtime"
+ )
++
++// Temporary diagnostic overlay: context values select recording only.
++// These helpers do not carry authority, deadlines, policy or business results.
++type PublicationPhaseObserver interface {
++	RecordPublicationPhase(string, time.Time, error)
++}
++type publicationPhaseObserverKey struct{}
++
++func WithPublicationPhaseObserver(ctx context.Context, observer PublicationPhaseObserver) context.Context {
++	return context.WithValue(ctx, publicationPhaseObserverKey{}, observer)
++}
++func BeginPublicationPhase(ctx context.Context) time.Time {
++	if _, ok := ctx.Value(publicationPhaseObserverKey{}).(PublicationPhaseObserver); ok {
++		return time.Now()
++	}
++	return time.Time{}
++}
++func EndPublicationPhase(ctx context.Context, stage string, start time.Time, err error) {
++	if start.IsZero() {
++		return
++	}
++	if observer, ok := ctx.Value(publicationPhaseObserverKey{}).(PublicationPhaseObserver); ok {
++		observer.RecordPublicationPhase(stage, start, err)
++	}
++}
+ 
+ var ErrProcessingLimit = errors.New("content processing exceeds remaining byte limit")
+ var ErrProcessingForbidden = errors.New("content processing forbidden")
+@@ -45,25 +70,44 @@
+ 	}
+ 	var objectKey string
+ 	var before time.Time
+-	observe := func(ctx context.Context, tx runtime.Tx) error {
++	observationPhase := "pre"
++	observe := func(ctx context.Context, tx runtime.Tx) (observeErr error) {
++		callbackPhase := "processing." + observationPhase
++		callbackStart := BeginPublicationPhase(ctx)
++		defer func() { EndPublicationPhase(ctx, callbackPhase+".callback", callbackStart, observeErr) }()
++		targetStart := BeginPublicationPhase(ctx)
++		targetFinished := false
++		defer func() {
++			if !targetFinished {
++				EndPublicationPhase(ctx, callbackPhase+".target", targetStart, observeErr)
++			}
++		}()
+ 		// Each observation rebuilds its closure. No private records or permission
+ 		// from the first transaction are used as authority by the second one.
++		nowStart := BeginPublicationPhase(ctx)
+ 		now, err := s.config.Store.Now(ctx, tx)
+-		if err != nil {
+-			return err
+-		}
++		EndPublicationPhase(ctx, callbackPhase+".target.now", nowStart, err)
++		if err != nil {
++			return err
++		}
++		policyStart := BeginPublicationPhase(ctx)
+ 		p, err := s.config.Store.CheckPolicy(ctx, tx, principal, ref, purpose, []string{"read", "process"}, now)
++		EndPublicationPhase(ctx, callbackPhase+".target.policy", policyStart, err)
+ 		if err != nil {
+ 			return err
+ 		}
+ 		if p == nil {
+ 			return ErrProcessingForbidden
+ 		}
++		lockStart := BeginPublicationPhase(ctx)
+ 		r, err := s.config.Store.LockVersion(ctx, tx, ref)
+-		if err != nil {
+-			return err
+-		}
++		EndPublicationPhase(ctx, callbackPhase+".target.lock", lockStart, err)
++		if err != nil {
++			return err
++		}
++		postNowStart := BeginPublicationPhase(ctx)
+ 		now, err = s.config.Store.Now(ctx, tx)
++		EndPublicationPhase(ctx, callbackPhase+".target.post_now", postNowStart, err)
+ 		if err != nil {
+ 			return err
+ 		}
+@@ -84,7 +128,11 @@
+ 		if !now.Before(bound) {
+ 			return ErrProcessingForbidden
+ 		}
++		EndPublicationPhase(ctx, callbackPhase+".target", targetStart, nil)
++		targetFinished = true
++		closureStart := BeginPublicationPhase(ctx)
+ 		closure, err := s.registeredClosure(ctx, tx, ref, r.Sources, principal, purpose, []string{"read", "process"})
++		EndPublicationPhase(ctx, callbackPhase+".closure", closureStart, err)
+ 		if err != nil {
+ 			if _, ok := qualificationCode(err); ok {
+ 				return errors.Join(ErrProcessingForbidden, err)
+@@ -94,7 +142,9 @@
+ 		if len(closure.refs) > 0 {
+ 			bound = earlier(bound, earlier(closure.validBefore, closure.retainBefore))
+ 		}
++		lastNowStart := BeginPublicationPhase(ctx)
+ 		now, err = s.config.Store.Now(ctx, tx)
++		EndPublicationPhase(ctx, callbackPhase+".last_now", lastNowStart, err)
+ 		if err != nil {
+ 			return err
+ 		}
+@@ -111,22 +161,35 @@
+ 		out.RetainUntil = bound
+ 		return nil
+ 	}
+-	if err = s.config.Store.Within(ctx, owner(s.config.Owner), observe); err != nil {
++	preWithinStart := BeginPublicationPhase(ctx)
++	err = s.config.Store.Within(ctx, owner(s.config.Owner), observe)
++	EndPublicationPhase(ctx, "processing.pre.within", preWithinStart, err)
++	if err != nil {
+ 		return ProcessingRead{}, err
+ 	}
+ 	bounded, cancel := context.WithDeadline(ctx, before)
+ 	defer cancel()
++	objectsStart := BeginPublicationPhase(ctx)
+ 	body, err := s.config.Objects.Read(bounded, objectKey, ref.Hash, length)
++	EndPublicationPhase(ctx, "processing.objects", objectsStart, err)
+ 	if err != nil {
+ 		return ProcessingRead{}, err
+ 	}
++	integrityStart := BeginPublicationPhase(ctx)
+ 	if err = bounded.Err(); err != nil {
++		EndPublicationPhase(ctx, "processing.integrity", integrityStart, err)
+ 		return ProcessingRead{}, err
+ 	}
+ 	if int64(len(body)) != length || processingHash(body) != ref.Hash {
++		EndPublicationPhase(ctx, "processing.integrity", integrityStart, ErrObjectIntegrity)
+ 		return ProcessingRead{}, ErrObjectIntegrity
+ 	}
+-	if err = s.config.Store.Within(ctx, owner(s.config.Owner), observe); err != nil {
++	EndPublicationPhase(ctx, "processing.integrity", integrityStart, nil)
++	observationPhase = "post"
++	postWithinStart := BeginPublicationPhase(ctx)
++	err = s.config.Store.Within(ctx, owner(s.config.Owner), observe)
++	EndPublicationPhase(ctx, "processing.post.within", postWithinStart, err)
++	if err != nil {
+ 		return ProcessingRead{}, err
+ 	}
+ 	out.Ref = ref

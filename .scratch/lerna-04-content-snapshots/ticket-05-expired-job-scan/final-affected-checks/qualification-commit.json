@@ -1,0 +1,12 @@
+{
+  "kind": "qualification checkpoint, not formal ticket acceptance",
+  "qualification_commit": "8db74e3dfd2677adb37fbdd13bd93e76b61b5eb7",
+  "review_baseline": "1a4e1d2d704261a59491dfc6e0c5d26b80ec5107",
+  "branch": "codex/content-snapshots-ticket-05",
+  "clean_status": true,
+  "all_15_commit_blobs_match_actual_prelaunch_and_postexecution_pins": true,
+  "actual_batch_complete": "/tmp/lerna-04-ticket05-execution/scan-current-final-checks/batch-complete.json",
+  "counts_scopes_sidecar": "/tmp/lerna-04-ticket05-execution/scan-current-final-checks/counts-scopes-release-sidecar.json",
+  "no_merge_push_or_7ac_acceptance": true,
+  "own_read_only_resource_audit": "STATIC only separate soleLOCAL grant pending"
+}

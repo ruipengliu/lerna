@@ -1,0 +1,63 @@
+{
+  "STATIC_only_no_native_grant": true,
+  "workdir": "/tmp/lerna-worktrees/content-snapshots-03",
+  "locked_environment": "source /workspace/.lerna-env/env.sh; GOTOOLCHAIN=local GOFLAGS=-mod=readonly",
+  "supervised_outer_seconds": 120,
+  "supervisor": "/workspace/lerna-content-03-137311247276/run-native.py",
+  "format": [
+    "gofmt",
+    "-w",
+    "/tmp/lerna-worktrees/content-snapshots-03/domain/content/closure.go",
+    "/tmp/lerna-worktrees/content-snapshots-03/domain/content/processing.go",
+    "/tmp/lerna-worktrees/content-snapshots-03/domain/content/closure_identity_memo_test.go",
+    "/tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_processing_ancestor_read_gate_test.go"
+  ],
+  "pure_normal": [
+    "go",
+    "test",
+    "-v",
+    "-count=1",
+    "-p",
+    "1",
+    "-timeout=120s",
+    "-run=^(TestIndependentVersionIdentityGolden|TestClosureIdentityMemoPreservesFullRefValidationAndFiniteSuccess)$",
+    "./domain/content"
+  ],
+  "public_normal": [
+    "go",
+    "test",
+    "-v",
+    "-tags=integration",
+    "-p",
+    "1",
+    "-count=1",
+    "-timeout=120s",
+    "-run=^TestContentProcessingRechecksHiddenAncestorAfterRealObjectRead$",
+    "./conformance/component"
+  ],
+  "public_race": [
+    "go",
+    "test",
+    "-v",
+    "-race",
+    "-tags=integration",
+    "-p",
+    "1",
+    "-count=1",
+    "-timeout=120s",
+    "-run=^TestContentProcessingRechecksHiddenAncestorAfterRealObjectRead$",
+    "./conformance/component"
+  ],
+  "original_test_budgets": {
+    "caller": 20,
+    "actor_join": 3,
+    "publication_work": 5
+  },
+  "log_paths": {
+    "format": "/workspace/lerna-content-03-137311247276/context-single-read-identity-format.log",
+    "pure_normal": "/workspace/lerna-content-03-137311247276/context-single-read-identity-pure-normal.log",
+    "public_normal": "/workspace/lerna-content-03-137311247276/context-single-read-identity-public-normal.log",
+    "public_race": "/workspace/lerna-content-03-137311247276/context-single-read-identity-public-race.log"
+  },
+  "pending_status": "Only copied approved tests. No format/native/Go/DB executed; run only after explicit soleLOCAL grant. Stop on first failed phase; no rerun/fix/capacity automatic."
+}

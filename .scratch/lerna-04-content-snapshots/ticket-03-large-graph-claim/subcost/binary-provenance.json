@@ -1,0 +1,17 @@
+{
+  "binary": "/workspace/lerna-content-03-137311247276/large-graph-subcost-overlay/component.test",
+  "sha256": "c6449bc1e478266e06db0dff82a25ec2e5215d167617ec399c36f3061b376425",
+  "bytes": 29013766,
+  "dev": 27,
+  "inode": 560380,
+  "mode": "0o700",
+  "source_pin": "d0ccc114f1255f6118fb94b794a1342c93050fc4",
+  "product_pin": "5e8cad7e9d77162fda9773bde747235f8937c9ce",
+  "manifest_sha256": "3b0dead588bd381c0b6cae4e5abdf874b4ca372b22a1ceae88365e3a61c4e0d0",
+  "map_sha256": "a5a5df470d9670a84ddf853b0aaea808de2791d566bbe49d861dbbcd4804ebf9",
+  "build_pid": 3140674,
+  "build_starttime": "13107291",
+  "build_actual_exit": 0,
+  "build_group_absent": true,
+  "build_race": true
+}

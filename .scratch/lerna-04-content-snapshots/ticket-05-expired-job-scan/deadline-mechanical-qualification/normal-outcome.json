@@ -1,0 +1,57 @@
+{
+  "kind": "actual ONE Host / real PostgreSQL malformed deadline cause + legitimate canonical identity normal complete tail",
+  "prelaunch_manifest": "/tmp/lerna-04-ticket05-execution/scan-deadline-mechanical-first-normal-source/manifest.json",
+  "source_pins": {
+    "conformance/internal/contentfixture/scan_deadline_fault.go": {
+      "sha256": "7c57d9bffcb17c49daab3536b68284af3c24dce4ed08035f2fe3f74a0b22afa0",
+      "bytes": 3748,
+      "status": "formatted prelaunch, native test not launched"
+    },
+    "conformance/component/content_scan_deadline_test.go": {
+      "sha256": "7f12df34684283e4e69c5bacff08f5d75a3d46643315beaa5130809190b68461",
+      "bytes": 8835,
+      "status": "formatted prelaunch, native test not launched"
+    }
+  },
+  "pid": 3467904,
+  "pgid": 3467904,
+  "starttime": "14525665",
+  "exit": 0,
+  "group_absent": true,
+  "timed_out": false,
+  "tool_session": 25126,
+  "go_seconds": 0.671,
+  "case_seconds": 0.66,
+  "actual_cause": "errors.As(*time.ParseError), actual raw log line2; not PG parse error",
+  "business_red": false,
+  "log": "/tmp/lerna-04-ticket05-execution/scan-deadline-mechanical-first-normal.log",
+  "log_sha256": "449ca29a7a9d6dbcb7b8dce3eafc3b098b7932bcf08d474673c20af74ae2ca4b",
+  "schema": "lerna_test_cd55ac0aa1641873a0b4ccf4",
+  "object_root": {
+    "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-2084815391",
+    "device": 33,
+    "inode": 386516
+  },
+  "fixture_pg_pid": 568204,
+  "format": {
+    "pid": 3467224,
+    "pgid": 3467224,
+    "starttime": "14522702",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false
+  },
+  "actual_tail": {
+    "normal_two_refs_real_publication_seals_and_first_page": true,
+    "malformed_first_candidate_kept_original_Go_time_ParseError": true,
+    "exact_fault_restore_and_original_connection_first_Close": true,
+    "full_original_job_page_and_public_observations_alpha": true,
+    "original_legal_utf8_quote_backslash_space_HTML_U2028_primary_and_seal_ids_through_product": true,
+    "original_all_holder_ACK_complete_and_independent_LstatNotExist": true,
+    "actual_reopen_complete_observation_fixed_receipt_publication_history_and_authorized_gone_metadata": true
+  },
+  "source_fix_applied": false,
+  "race_executed": false,
+  "extra_consumer_tests_executed": false,
+  "native_released": true
+}

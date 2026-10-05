@@ -1,0 +1,55 @@
+{
+  "product_pin": "301be6d6e0e176ad10cd94012baa5c87d9debd14",
+  "scope": "real original PG source operation then mechanical nil structural observation or one sentinel current-policy port error; original exact AdmissionTarget public Consume preserved pending/noSeal/three bodies; plain consumer original full normal tail afterward",
+  "failure": "first package compile failed at three local err declarations in separate directory-oracle test edits; declaration-only repair; not business red; fifteen changed directory cases compiled but not executed by this selector",
+  "root_review": "FULL49line gate diff,15 directory diff/helper,all3 original completed logs read; owner explicitly RELEASED",
+  "files": [
+    {
+      "source": "/tmp/lerna-04-ticket05-execution/inherited-cap-unknown-gates-first-run.log",
+      "archive": "inherited-cap-unknown-gates-first-run.log",
+      "bytes": 726,
+      "sha256": "49a461affb8bcd3403f02a3d2f85697088c3908c6cf3c366067a411816f0ece2",
+      "native": {
+        "pid": 3187323,
+        "pgid": 3187323,
+        "starttime": "13310616",
+        "exit": 1,
+        "group_absent": true,
+        "timed_out": false
+      },
+      "go_package_seconds": null
+    },
+    {
+      "source": "/tmp/lerna-04-ticket05-execution/inherited-cap-unknown-gates-compile-repair.log",
+      "archive": "inherited-cap-unknown-gates-compile-repair.log",
+      "bytes": 407,
+      "sha256": "02b48480e43671c1e879738339c26fbcc545164839d45bcced59a8808ad6fe3f",
+      "native": {
+        "pid": 3190444,
+        "pgid": 3190444,
+        "starttime": "13324294",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false
+      },
+      "go_package_seconds": 2.392
+    },
+    {
+      "source": "/tmp/lerna-04-ticket05-execution/inherited-cap-unknown-gates-race.log",
+      "archive": "inherited-cap-unknown-gates-race.log",
+      "bytes": 407,
+      "sha256": "dee9987df49ec9e361eee7573eeea3b2ddba1996116f0c7434945e84c56af881",
+      "native": {
+        "pid": 3191680,
+        "pgid": 3191680,
+        "starttime": "13329410",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false
+      },
+      "go_package_seconds": 3.893
+    }
+  ],
+  "fixed_gate_test_evidence_pin": "4735abc27d171965cbe4847a25be904a238db7c2",
+  "fixed_directory_test_evidence_pin": "1a4e1d2d704261a59491dfc6e0c5d26b80ec5107"
+}

@@ -1,0 +1,30 @@
+{
+  "scope": "exclusive original-bounds B race; failed, partial before Prepared",
+  "native": {
+    "pid": 3086554,
+    "pgid": 3086554,
+    "starttime": "12876878",
+    "exit": 1,
+    "group_absent": true
+  },
+  "files": [
+    {
+      "source": "/workspace/lerna-content-03-137311247276/context-final-capacity-b-claim-diagnostic-race.log",
+      "archive": "original-race.log",
+      "bytes": 25466,
+      "sha256": "2fb91f4253f27031cec845245e852194882955ceae5c6d9c69edf842876cb033"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/large-graph-claim-diagnostic-results.md",
+      "archive": "results.md",
+      "bytes": 4577,
+      "sha256": "d6e818a7072dbddc80e09980a62a08c3d858530bb5692d429b8a7cce31e1f08b"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/large-graph-overlay/manifest.json",
+      "archive": "overlay-manifest.json",
+      "bytes": 3130,
+      "sha256": "1a2e8593f6692dfbf28b252faae1c1dce66094a26a5c1ee812c73b8ba8e7decf"
+    }
+  ]
+}

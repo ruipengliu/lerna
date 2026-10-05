@@ -1,0 +1,19 @@
+=== RUN   TestContentDecodedByteBoundHasRealNormalPublication
+--- PASS: TestContentDecodedByteBoundHasRealNormalPublication (0.55s)
+=== RUN   TestContentPublishedDamageAndMissingNeverRepairOnQuery
+=== RUN   TestContentPublishedDamageAndMissingNeverRepairOnQuery/damage
+=== RUN   TestContentPublishedDamageAndMissingNeverRepairOnQuery/missing
+--- PASS: TestContentPublishedDamageAndMissingNeverRepairOnQuery (0.41s)
+    --- PASS: TestContentPublishedDamageAndMissingNeverRepairOnQuery/damage (0.22s)
+    --- PASS: TestContentPublishedDamageAndMissingNeverRepairOnQuery/missing (0.19s)
+=== RUN   TestContentFailedStagingStillConsumesExplicitByteLimit
+--- PASS: TestContentFailedStagingStillConsumesExplicitByteLimit (0.15s)
+=== RUN   TestContentCommandReplayAndExactVersionIdentities
+--- PASS: TestContentCommandReplayAndExactVersionIdentities (0.21s)
+=== RUN   TestContentCorrectBytesDurablyAccepted
+--- PASS: TestContentCorrectBytesDurablyAccepted (0.18s)
+=== RUN   TestContentCurrentSavePolicyStopsObjectWrite
+--- PASS: TestContentCurrentSavePolicyStopsObjectWrite (0.14s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/component	1.653s
+NATIVE_COMPLETION_ACK {"pid": 3218160, "pgid": 3218160, "starttime": "13434248", "exit": 0, "group_absent": true, "timed_out": false}

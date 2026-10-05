@@ -1,0 +1,11 @@
+{
+  "source": "/tmp/lerna-04-ticket-05-legacy-holder-binding-decision.md",
+  "bytes": 10358,
+  "sha256": "785ac19e6e0737cafd554ddc281161e4c66a7d66d4634ad92cc17143b1037cc4",
+  "agent": "/root/results_08_decisions",
+  "model": "gpt-6-astra",
+  "reasoning_effort": "high",
+  "source_partial": "e5b38a57dab458be56574237052f1ad7465bf321",
+  "integration_before_adoption": "62cd9f40c352b03d012c97e0fd65e87e493d362b",
+  "qualification": "Static narrow trusted original-volume upgrade decision; no actual legacy tracer, source modification or cleanup authority."
+}
