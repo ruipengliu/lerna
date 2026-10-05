@@ -1,0 +1,33 @@
+{
+  "format": {
+    "actual_schemas": [],
+    "actual_objectroots": [],
+    "actual_scope_interval": "process_group 3673428 3673428 /workspace/lerna-content-03-137311247276\nnative_exit 3673428 3673428 status=0 group_absent=True\n"
+  },
+  "normal": {
+    "actual_schemas": [
+      "lerna_test_ae4b98e6fe77c024a55a712d"
+    ],
+    "actual_objectroots": [
+      {
+        "path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-2504841858",
+        "device": 27,
+        "inode": 560778
+      }
+    ],
+    "actual_scope_interval": "process_group 3673446 3673446 /workspace/lerna-content-03-137311247276\npostgres lerna_test_ae4b98e6fe77c024a55a712d\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-2504841858 27 560778\nnative_exit 3673446 3673446 status=0 group_absent=True\n"
+  },
+  "race": {
+    "actual_schemas": [
+      "lerna_test_2216fec8aaeb23a1fd782075"
+    ],
+    "actual_objectroots": [
+      {
+        "path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-927955848",
+        "device": 27,
+        "inode": 560794
+      }
+    ],
+    "actual_scope_interval": "process_group 3673680 3673680 /workspace/lerna-content-03-137311247276\npostgres lerna_test_2216fec8aaeb23a1fd782075\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-927955848 27 560794\nnative_exit 3673680 3673680 status=0 group_absent=True\n"
+  }
+}

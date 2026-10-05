@@ -1,0 +1,74 @@
+{
+  "format": {
+    "schemas": [],
+    "objects": [],
+    "actual_ledger_rows": 2
+  },
+  "pure-normal": {
+    "schemas": [],
+    "objects": [],
+    "actual_ledger_rows": 2
+  },
+  "public-normal": {
+    "schemas": [
+      "lerna_test_18f14bf849ce1d105d3042c7",
+      "lerna_test_19c20f7db74a1e6086e2eb25",
+      "lerna_test_1a88e1f8eab289df963e274d",
+      "lerna_test_c7888c40e67768c3956d4efd"
+    ],
+    "objects": [
+      {
+        "path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-251235514",
+        "device": 27,
+        "inode": 560980
+      },
+      {
+        "path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-257407285",
+        "device": 27,
+        "inode": 560980
+      },
+      {
+        "path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-3175453944",
+        "device": 27,
+        "inode": 560980
+      },
+      {
+        "path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-3815107579",
+        "device": 27,
+        "inode": 560980
+      }
+    ],
+    "actual_ledger_rows": 10
+  },
+  "public-race": {
+    "schemas": [
+      "lerna_test_b8510b988dfc02b2b096c7fe",
+      "lerna_test_e9599b5deeba88b99dffa71a",
+      "lerna_test_beadde920829676599f579fc",
+      "lerna_test_2befea2b2191091be4b85bcc"
+    ],
+    "objects": [
+      {
+        "path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-2937685861",
+        "device": 27,
+        "inode": 561056
+      },
+      {
+        "path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-3194265616",
+        "device": 27,
+        "inode": 561056
+      },
+      {
+        "path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-1457986183",
+        "device": 27,
+        "inode": 561056
+      },
+      {
+        "path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-3032136156",
+        "device": 27,
+        "inode": 561056
+      }
+    ],
+    "actual_ledger_rows": 10
+  }
+}

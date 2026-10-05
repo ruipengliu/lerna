@@ -1,0 +1,273 @@
+[
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/root-ack.json",
+    "archive": "root-ack.json",
+    "bytes": 295,
+    "sha256": "0294921dfa0de519652ab3caede98299d5b4641d417aff81a6bed50c5ec3af62"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/run-native.py",
+    "archive": "run-native.py",
+    "bytes": 5324,
+    "sha256": "90a808a0e3cf3a3a62441818dd0f87392a763b5ebdeef9ec2d5f2b5abc3e8d6d"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/prelaunch-source-manifest.json",
+    "archive": "prelaunch-source-manifest.json",
+    "bytes": 3341,
+    "sha256": "7d737474ea2f93f632294309072cbed17550fcae8d6a06d89ef426461b1e3ed5"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/prelaunch-commands.json",
+    "archive": "prelaunch-commands.json",
+    "bytes": 574,
+    "sha256": "4c06be89c76b0404a34b4c7f5560f2acdcd9c22dab600fdf48fef8784acb4889"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/first-format.log",
+    "archive": "first-format.log",
+    "bytes": 197,
+    "sha256": "3134f0485e0bd173a85d0b42862fe2dfcdb65bef11947a1b5b276337e3c18a6d"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/first-format-prelaunch.json",
+    "archive": "first-format-prelaunch.json",
+    "bytes": 557,
+    "sha256": "564f56bec8a6beaf91d730fa704dd7f2d5215edf5037c7c6217fad05eb15cb9b"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/first-format-outcome.json",
+    "archive": "first-format-outcome.json",
+    "bytes": 230,
+    "sha256": "bb5e8e59a8f45242bea716d2421c95bb37501d639271b434f73459389e262319"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/first-format-only.diff",
+    "archive": "first-format-only.diff",
+    "bytes": 39241,
+    "sha256": "1dc158a11a388ede0b0eb73623a7d6bf2b389a81408c5d19d7dcd1180a88a359"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/formatted-source-manifest.json",
+    "archive": "formatted-source-manifest.json",
+    "bytes": 3373,
+    "sha256": "3ee4cba86cfc0fccfbc99b584a3e63d98b44ee71ac572af3d95bcf78887312ea"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/durable-normal-control.log",
+    "archive": "durable-normal-control.log",
+    "bytes": 740,
+    "sha256": "40270fa7e74eb7adbfd31aa0d128575d1b707d3e157c3931187fc5bb91622646"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/durable-normal-control-prelaunch.json",
+    "archive": "durable-normal-control-prelaunch.json",
+    "bytes": 630,
+    "sha256": "bf60275bac348703b1f02ebe1fd29ea41a756ac36f936fe707a2130518f450a7"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/durable-normal-control-outcome.json",
+    "archive": "durable-normal-control-outcome.json",
+    "bytes": 240,
+    "sha256": "639c89f2647bf15d12473d2e34f14720e4bd9417c1c346ff22a1c37657e9f714"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/first-normal-release.json",
+    "archive": "first-normal-release.json",
+    "bytes": 916,
+    "sha256": "0f266e395a85cb24aa3b704d3bd916621b3f0f8e10560f2587eedb3490597c9c"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/source-before-format/conformance/component/content_process_recovery_test.go",
+    "archive": "source-before-format/conformance/component/content_process_recovery_test.go.txt",
+    "bytes": 14099,
+    "sha256": "16ba8775c646a3021be45cb5f3493705e33f2394f2fe04368a509b4e87333cd6"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/source-before-format/conformance/internal/contentfixture/process_borrow.go",
+    "archive": "source-before-format/conformance/internal/contentfixture/process_borrow.go.txt",
+    "bytes": 4855,
+    "sha256": "5f6bdb53ffb218711f39783f077475f6245f4a28ae0dddeb95e9d45e9d62118a"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/source-before-format/conformance/internal/contentfixture/world.go",
+    "archive": "source-before-format/conformance/internal/contentfixture/world.go.txt",
+    "bytes": 6587,
+    "sha256": "d185ca3ffe673c9bd92692c377256ebc12994514cd44d6cd6c37e2237db64e7c"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/source-formatted/adapters/postgres/content/facts.go",
+    "archive": "source-formatted/adapters/postgres/content/facts.go.txt",
+    "bytes": 10970,
+    "sha256": "e56785902e481eafdaa7904f44fabc44770d77f3d605da93906df827fe8a42d5"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/source-formatted/adapters/postgres/content/store.go",
+    "archive": "source-formatted/adapters/postgres/content/store.go.txt",
+    "bytes": 777,
+    "sha256": "e1da8da60b48d85c5d668ac88a0d33da3c824603b93bc01e5dd821def34fa69d"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/source-formatted/adapters/postgres/content/migrations/0003_body_cleanup.sql",
+    "archive": "source-formatted/adapters/postgres/content/migrations/0003_body_cleanup.sql",
+    "bytes": 2497,
+    "sha256": "92739b464b8661e26befe092028f20802b586e42bf1578bd9811dcf240c5b58f"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/source-formatted/adapters/postgres/content/migrations/0002_source_policies.sql",
+    "archive": "source-formatted/adapters/postgres/content/migrations/0002_source_policies.sql",
+    "bytes": 2585,
+    "sha256": "99519565ff1146d7cfc468413b449538c6ba71335e86edc8fd447a3bbff922a8"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/source-formatted/adapters/postgres/content/migrations/0001_content.sql",
+    "archive": "source-formatted/adapters/postgres/content/migrations/0001_content.sql",
+    "bytes": 3682,
+    "sha256": "00363b79dafb6eb1f373be9ef08e915fe23cc3db0fa55345e8ae6c051ce0c1ed"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/source-formatted/adapters/objectstore/local/store_linux.go",
+    "archive": "source-formatted/adapters/objectstore/local/store_linux.go.txt",
+    "bytes": 10790,
+    "sha256": "ea678add4d594d5cdd8dbfa50d29684ba998686cf649c58c19313391da298fe0"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/source-formatted/domain/content/identity.go",
+    "archive": "source-formatted/domain/content/identity.go.txt",
+    "bytes": 1533,
+    "sha256": "e093a7918be9af0aeaec08c62b472de1141314812a71e3da386583237bbf60f0"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/source-formatted/domain/content/lifecycle.go",
+    "archive": "source-formatted/domain/content/lifecycle.go.txt",
+    "bytes": 23932,
+    "sha256": "0708c4eb51e28ab9b7a3210981e408ae2310511e9728ee2bf46ba87fc0802699"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/source-formatted/domain/content/ports.go",
+    "archive": "source-formatted/domain/content/ports.go.txt",
+    "bytes": 5618,
+    "sha256": "51066cd99f2c79e8a5fc3f7b336cb0706f161899361681c99f8e6feff5454f90"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/source-formatted/domain/content/service.go",
+    "archive": "source-formatted/domain/content/service.go.txt",
+    "bytes": 33783,
+    "sha256": "ffefc916fa8e08e2a39f2264a12090eb7aa2ecf020b7da63e270aff3e925a477"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/source-formatted/conformance/component/content_orphan_test.go",
+    "archive": "source-formatted/conformance/component/content_orphan_test.go.txt",
+    "bytes": 6789,
+    "sha256": "1732b6f28a4f83c698035b33e6da09b6dc8ae779a8f6895a4953b24086e2ba9f"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/source-formatted/conformance/component/content_publication_test.go",
+    "archive": "source-formatted/conformance/component/content_publication_test.go.txt",
+    "bytes": 8105,
+    "sha256": "8f762b685f7df3470e13b2e3d7c1a89026bb8d90e3bf6b9efb44257e400430e9"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/source-formatted/conformance/component/content_process_recovery_test.go",
+    "archive": "source-formatted/conformance/component/content_process_recovery_test.go.txt",
+    "bytes": 15519,
+    "sha256": "be77ab4df4b53afd1c2543291a258488231b769db64c57d6d3f77c7319a44d44"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/source-formatted/conformance/internal/contentfixture/process_borrow.go",
+    "archive": "source-formatted/conformance/internal/contentfixture/process_borrow.go.txt",
+    "bytes": 4979,
+    "sha256": "ed46b35916b9e1577e4ca1e0ddaf411e3de9407b51cb6ed38f8425406766e972"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/source-formatted/conformance/internal/contentfixture/world.go",
+    "archive": "source-formatted/conformance/internal/contentfixture/world.go.txt",
+    "bytes": 6607,
+    "sha256": "3e38d89f988422eacfa1b6e22e25905cec1db246d418177e34eaf5758b6fc14d"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/source-formatted/conformance/internal/testkit/process/pipes.go",
+    "archive": "source-formatted/conformance/internal/testkit/process/pipes.go.txt",
+    "bytes": 3022,
+    "sha256": "93cc1bd3b23817e453817abc18988c39e4300fa252d74890531650f53096401d"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/source-formatted/conformance/internal/testkit/process/child.go",
+    "archive": "source-formatted/conformance/internal/testkit/process/child.go.txt",
+    "bytes": 10242,
+    "sha256": "edf4cdce78c92c0150d7075cecc02e742b84a55fd910b3cb25adec6079a3be25"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/durable-sigkill-fault.log",
+    "archive": "durable-sigkill-fault.log",
+    "bytes": 1012,
+    "sha256": "25e11ba1532255d1b26ae18aa9e9e01da51a25665ec662d8935e3111630c335c"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/durable-sigkill-fault-prelaunch.json",
+    "archive": "durable-sigkill-fault-prelaunch.json",
+    "bytes": 649,
+    "sha256": "b5a6d6a344b454182236d8394de202b7eddc3c83faf0f76a8cc8068eedb01247"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/durable-sigkill-fault-outcome.json",
+    "archive": "durable-sigkill-fault-outcome.json",
+    "bytes": 239,
+    "sha256": "c85433b789b22ebb5123c1aff8e2988168d072de86084bf4c176d77445ee8084"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/first-fault-release.json",
+    "archive": "first-fault-release.json",
+    "bytes": 867,
+    "sha256": "281cbff267df3545bdd1acf69a3439969311047adde42a8808e4fa4af5e35386"
+  },
+  {
+    "archive": "durable-paired-race-outcome.json",
+    "bytes": 237,
+    "sha256": "8be7774ce6b1c1b6556f62e71699215b84db541434af6983c1a650bbde6ce9aa",
+    "added_root_utc": "2026-10-05T08:02:04Z",
+    "provenance": "Original outside path retained in embedded outcome/manifest where present; added evidence preserved byte-exact."
+  },
+  {
+    "archive": "durable-paired-race-prelaunch.json",
+    "bytes": 623,
+    "sha256": "2a4945be9912d24183042c22a1c8d14ba30ee9c063f22134cb6c20093417f301",
+    "added_root_utc": "2026-10-05T08:02:04Z",
+    "provenance": "Original outside path retained in embedded outcome/manifest where present; added evidence preserved byte-exact."
+  },
+  {
+    "archive": "durable-paired-race.log",
+    "bytes": 1318,
+    "sha256": "b6f7ae37ed907bbce417b88ac36e97973027633876d528cc3bd9ae1ea318f9ad",
+    "added_root_utc": "2026-10-05T08:02:04Z",
+    "provenance": "Original outside path retained in embedded outcome/manifest where present; added evidence preserved byte-exact."
+  },
+  {
+    "archive": "fault-ledger-interval.txt",
+    "bytes": 1521,
+    "sha256": "7ec6eaf7ad85e66fefbf0ba8fb3e64933cde53171ca887b5fde6e30e43b68dc6",
+    "added_root_utc": "2026-10-05T08:02:04Z",
+    "provenance": "Original outside path retained in embedded outcome/manifest where present; added evidence preserved byte-exact."
+  },
+  {
+    "archive": "first-race-release.json",
+    "bytes": 710,
+    "sha256": "52229f5ab8fa9b49ccfbad9c44a43a4a76493d9b56d980406420e66493b16460",
+    "added_root_utc": "2026-10-05T08:02:04Z",
+    "provenance": "Original outside path retained in embedded outcome/manifest where present; added evidence preserved byte-exact."
+  },
+  {
+    "archive": "normal-ledger-interval.txt",
+    "bytes": 1188,
+    "sha256": "dcad241e9e6e4658e756121c2aceaa7a2d6469bfab71da557945aaecc5785490",
+    "added_root_utc": "2026-10-05T08:02:04Z",
+    "provenance": "Original outside path retained in embedded outcome/manifest where present; added evidence preserved byte-exact."
+  },
+  {
+    "archive": "race-ledger-interval.txt",
+    "bytes": 1909,
+    "sha256": "4efbce33bf133fce79d083d0539bc03f37b299607ff365e77c7e1e95334d568d",
+    "added_root_utc": "2026-10-05T08:02:04Z",
+    "provenance": "Original outside path retained in embedded outcome/manifest where present; added evidence preserved byte-exact."
+  }
+]

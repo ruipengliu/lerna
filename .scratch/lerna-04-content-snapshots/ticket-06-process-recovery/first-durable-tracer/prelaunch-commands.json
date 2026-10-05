@@ -1,0 +1,24 @@
+{
+  "gofmt": [
+    "gofmt",
+    "-w",
+    "conformance/internal/contentfixture/world.go",
+    "conformance/internal/contentfixture/process_borrow.go",
+    "conformance/component/content_process_recovery_test.go"
+  ],
+  "normal_control": [
+    "go",
+    "test",
+    "-tags=integration",
+    "-v",
+    "-count=1",
+    "-p=1",
+    "-mod=readonly",
+    "-timeout=120s",
+    "./conformance/component",
+    "-run",
+    "^TestContentSIGKILLAfterDurableObjectsRecoversOriginalPublication$/^normal_release$"
+  ],
+  "outer_timeout_seconds": 120,
+  "stop_after_normal_control": true
+}

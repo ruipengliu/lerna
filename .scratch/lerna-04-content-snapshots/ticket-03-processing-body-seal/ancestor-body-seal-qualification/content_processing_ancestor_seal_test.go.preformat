@@ -1,0 +1,141 @@
+//go:build integration
+
+package component_test
+
+import (
+ "context"
+ "errors"
+ "os"
+ "path/filepath"
+ "reflect"
+ "slices"
+ "sync"
+ "testing"
+ "time"
+
+ fixture "github.com/ruipengliu/lerna/conformance/internal/contentfixture"
+ v "github.com/ruipengliu/lerna/contract/v1_2"
+ "github.com/ruipengliu/lerna/domain/content"
+)
+
+func TestContentProcessingSealedAncestorAfterRealObjectRead(t *testing.T) {
+ ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+ defer cancel()
+ w := fixture.New(t, ctx)
+ wide := time.Now().UTC().Add(time.Hour)
+ management := content.ManagementConfig{Owner: contentOwner, Store: w.Store(), TrustedSubject: contentPrincipal, TrustedUntil: wide, PageSize: 2, WorkBudget: time.Minute}
+ manager, err := content.NewManager(management)
+ if err != nil { t.Fatal(err) }
+ if err = w.Store().InstallFixtureCommandReader(ctx, contentOwner, contentPrincipal, wide); err != nil { t.Fatal(err) }
+ service := contentService(t, w)
+ refs := []v.ContentRef{alphaRef, alphaRef, alphaRef}
+ refs[1].ContentID = "ancestor-seal-hidden"
+ refs[2].ContentID = "ancestor-seal-target"
+ requests := make([]v.ContentPutRequest, len(refs))
+ receipts := make([][]byte, len(refs))
+ keys := make([]string, len(refs))
+ for i, ref := range refs {
+  policy := content.FixturePolicy{Ref: ref, Subject: contentPrincipal, Purpose: "verification", Revision: 1, ValidUntil: wide, RetainUntil: wide, Read: true, Process: true, Save: true, Disclose: true}
+  if _, err = manager.InstallPolicy(ctx, &contentPrincipal, policy, 0); err != nil { t.Fatal(err) }
+  requests[i] = contentPut(t, ref, string(ref.ContentID), "YWxwaGEK")
+  if i > 0 { requests[i].Payload.Sources = []v.ContentRef{refs[i-1]} }
+  receipt := putContentRequest(t, ctx, service, requests[i])
+  if _, ok := receipt.AsAccepted(); !ok { t.Fatal("normal chain admission refused", receipt) }
+  receipts[i], err = v.Encode(receipt)
+  if err != nil { t.Fatal(err) }
+  if _, err = service.Step(ctx); err != nil { t.Fatal(err) }
+  assertContentBody(t, ctx, service, ref, nil, "alpha\n")
+  _, keys[i], err = content.VersionIdentity(ref)
+  if err != nil { t.Fatal(err) }
+ }
+ normal, err := service.ReadForProcessing(ctx, &contentPrincipal, refs[2], "verification", 6)
+ if err != nil || normal.Ref != refs[2] || string(normal.Bytes) != "alpha\n" || len(normal.Sources) != 2 || !slices.Contains(normal.Sources, refs[0]) || !slices.Contains(normal.Sources, refs[1]) {
+  t.Fatal("normal target/full hidden closure processing counterpart", err, normal)
+ }
+ // No source policy or initial trusted window changes. Seal A uses A's exact
+ // original saving subject, purpose, full ref and actual primary holder basis.
+ seal := content.SealRequest{Ref: refs[0], Purpose: "verification", SealID: "processing-oldest-ancestor-seal", Deadline: time.Now().UTC().Add(time.Minute).Truncate(time.Microsecond)}
+ physicalBinding := w.Objects.Binding()
+ lifecycleConfig := content.LifecycleConfig{ManagementConfig: management, PrimaryHolderID: "primary", Objects: w.Objects, Worker: "content-ancestor-seal-control"}
+ lifecycle, err := content.NewLifecycle(lifecycleConfig)
+ if err != nil { t.Fatal(err) }
+ objects := &heldContentRead{Objects: w.Objects, entered: make(chan struct{}), release: make(chan struct{})}
+ reader := withPublication(t, w, w.Store(), objects, time.Minute, 5*time.Second)
+ var once sync.Once
+ release := func() error { once.Do(func() { close(objects.release) }); return nil }
+ finished := make(chan struct{})
+ type result struct { read content.ProcessingRead; err error }
+ done := make(chan result, 1)
+ joinContentRead(t, w, release, finished)
+ go func() {
+  defer close(finished)
+  read, readErr := reader.ReadForProcessing(ctx, &contentPrincipal, refs[2], "verification", 6)
+  done <- result{read, readErr}
+ }()
+ select { case <-objects.entered: case <-ctx.Done(): t.Fatal(ctx.Err()) }
+ // Original target native Objects.Read really finished. The trusted ancestor
+ // Seal commits while neither original Content observation Tx spans the gate.
+ sealed, err := lifecycle.Seal(ctx, &contentPrincipal, seal)
+ if err != nil || sealed.Seal.Ref != refs[0] || sealed.Seal.ID != seal.SealID || !sealed.Seal.Deadline.Equal(seal.Deadline) || sealed.CleanupComplete {
+  t.Fatal("real oldest ancestor Seal", err, sealed)
+ }
+ if err = release(); err != nil { t.Fatal(err) }
+ var got result
+ select { case got = <-done: case <-ctx.Done(): t.Fatal(ctx.Err()) }
+ select { case <-finished: case <-ctx.Done(): t.Fatal(ctx.Err()) }
+ // Record all public/holder/reopen facts before the final processing assertion.
+ // No body cleanup Step/fence/erase is performed, and B/C are never sealed.
+ assertOriginalFacts := func() {
+  t.Helper()
+  observation, observeErr := lifecycle.Observe(ctx, &contentPrincipal, refs[0], "")
+  if observeErr != nil || observation.Seal.Ref != refs[0] || observation.Seal.ID != seal.SealID || !observation.Seal.Deadline.Equal(seal.Deadline) || observation.Seal.PrimaryHolderBinding != physicalBinding || !reflect.DeepEqual(observation.Seal.Subject, contentPrincipal) || observation.Seal.Purpose != "verification" || observation.CleanupComplete || observation.NextCursor != "" || len(observation.Holders) != 2 {
+   t.Fatal("original ancestor Seal/holder saving basis changed", observeErr, observation)
+  }
+  primary, staging := false, false
+  for _, holder := range observation.Holders {
+   if holder.Identity.Ref != refs[0] || holder.Identity.ObjectKey != keys[0] || holder.Identity.SealID != seal.SealID || !holder.Deadline.Equal(seal.Deadline) || holder.State != "pending" {
+    t.Fatal("original pending ancestor holder changed", holder)
+   }
+   switch holder.Kind {
+   case "primary": primary = holder.Identity.HolderID == "primary" && holder.Identity.Binding == physicalBinding
+   case "pg-staging": staging = holder.Identity.HolderID == "postgres-staging"
+   default: t.Fatal("unexpected ancestor holder", holder)
+   }
+  }
+  if !primary || !staging { t.Fatal("original ancestor primary/staging responsibility missing", observation) }
+  for i, ref := range refs {
+   bytes, nativeErr := os.ReadFile(filepath.Join(w.Directory, keys[i]))
+   if nativeErr != nil || string(bytes) != "alpha\n" { t.Fatal("independent chain body changed by Seal-only", ref, nativeErr) }
+   replay, encodeErr := v.Encode(putContentRequest(t, ctx, service, requests[i]))
+   if encodeErr != nil || string(replay) != string(receipts[i]) { t.Fatal("ancestor Seal changed fixed original receipt", ref, encodeErr) }
+   command, commandErr := service.GetCommand(ctx, contentCommandGetWire(t, requests[i].CommandID), &contentPrincipal)
+   found, ok := command.AsFound()
+   progress, hasContent := found.Progress.AsContent()
+   if commandErr != nil || !ok || !hasContent || progress.Publication != "published" { t.Fatal("ancestor Seal rewrote published history", ref, commandErr, command) }
+   if i > 0 {
+    noSeal, noSealErr := lifecycle.Observe(ctx, &contentPrincipal, ref, "")
+    if !errors.Is(noSealErr, content.ErrUnavailable) || !reflect.DeepEqual(noSeal, content.BodyCleanupObservation{}) {
+     t.Fatal("unsealed published intermediate/target acquired a Seal", ref, noSealErr, noSeal)
+    }
+   }
+  }
+  view, getErr := service.Get(ctx, contentGetWire(t, refs[2], nil), &contentPrincipal)
+  denied, ok := view.AsRejected()
+  if getErr != nil || !ok || denied.Reason != "forbidden" { t.Fatal("unsealed target body did not requalify sealed ancestor", getErr, view) }
+ }
+ assertOriginalFacts()
+ w.Reopen(ctx)
+ service = contentService(t, w)
+ lifecycleConfig.Store, lifecycleConfig.Objects = w.Store(), w.Objects
+ lifecycle, err = content.NewLifecycle(lifecycleConfig)
+ if err != nil { t.Fatal(err) }
+ again, againErr := service.ReadForProcessing(ctx, &contentPrincipal, refs[2], "verification", 6)
+ assertOriginalFacts()
+ t.Logf("actual ancestor Seal processing post-I/O cause=%T:%v zero=%v; reopened cause=%T:%v zero=%v", got.err, got.err, reflect.DeepEqual(got.read, content.ProcessingRead{}), againErr, againErr, reflect.DeepEqual(again, content.ProcessingRead{}))
+ if !errors.Is(got.err, content.ErrProcessingForbidden) || !reflect.DeepEqual(got.read, content.ProcessingRead{}) {
+  t.Error("current ancestor BodySeal did not close post-I/O processing", got.err, got.read)
+ }
+ if !errors.Is(againErr, content.ErrProcessingForbidden) || !reflect.DeepEqual(again, content.ProcessingRead{}) {
+  t.Error("reopened read inherited pre-Seal ancestor authority", againErr, again)
+ }
+}

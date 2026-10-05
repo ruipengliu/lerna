@@ -1,0 +1,102 @@
+{
+  "kind": "root independent full-machine verification; large JSON not human FULL-read",
+  "checked_utc": "2026-10-05T07:53:29Z",
+  "records": [
+    {
+      "folder": "target-body-seal-fix",
+      "source_count": 330,
+      "all_current_pins_match": true,
+      "outcome_sha256": "77e7f79d9a5ef1243278ec333c8e0c6426af17cdbfd494a63e115900165d5acd",
+      "phases": [
+        {
+          "phase": "format",
+          "pid": 3648181,
+          "pgid": 3648181,
+          "starttime": "15301726",
+          "actual_wait_ack": true,
+          "current_group_absent": true,
+          "raw_sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+          "raw_lines": 1,
+          "pre_to_post_changes": []
+        },
+        {
+          "phase": "pure-normal",
+          "pid": 3648199,
+          "pgid": 3648199,
+          "starttime": "15301742",
+          "actual_wait_ack": true,
+          "current_group_absent": true,
+          "raw_sha256": "f65a0dd67df5a4bd17365d113418dd07da1e6a6135dc7b166371be9863a02961",
+          "raw_lines": 7,
+          "pre_to_post_changes": []
+        },
+        {
+          "phase": "public-normal",
+          "pid": 3648331,
+          "pgid": 3648331,
+          "starttime": "15301928",
+          "actual_wait_ack": true,
+          "current_group_absent": true,
+          "raw_sha256": "076c734c57ba3d4d9a50015c964aa2e6ab0200692dba1d5dd4e9cd685ab366ff",
+          "raw_lines": 17,
+          "pre_to_post_changes": []
+        },
+        {
+          "phase": "public-race",
+          "pid": 3648746,
+          "pgid": 3648746,
+          "starttime": "15303067",
+          "actual_wait_ack": true,
+          "current_group_absent": true,
+          "raw_sha256": "948148b1967a8622697f79e03a2a9310cbd994fabd057896993b926011193975",
+          "raw_lines": 17,
+          "pre_to_post_changes": []
+        }
+      ]
+    },
+    {
+      "folder": "ancestor-body-seal-qualification",
+      "source_count": 331,
+      "all_current_pins_match": true,
+      "outcome_sha256": "8c3716453df27be419c56214490f281eb5ba29c16c5a199521be0c7e58cac277",
+      "phases": [
+        {
+          "phase": "format",
+          "pid": 3673428,
+          "pgid": 3673428,
+          "starttime": "15411215",
+          "actual_wait_ack": true,
+          "current_group_absent": true,
+          "raw_sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+          "raw_lines": 1,
+          "pre_to_post_changes": [
+            "conformance/component/content_processing_ancestor_seal_test.go"
+          ]
+        },
+        {
+          "phase": "normal",
+          "pid": 3673446,
+          "pgid": 3673446,
+          "starttime": "15411237",
+          "actual_wait_ack": true,
+          "current_group_absent": true,
+          "raw_sha256": "6df197c88fc45f01e582ed951704aebdd2d7691ed4fd75ca6c7686bced8c6223",
+          "raw_lines": 8,
+          "pre_to_post_changes": []
+        },
+        {
+          "phase": "race",
+          "pid": 3673680,
+          "pgid": 3673680,
+          "starttime": "15411884",
+          "actual_wait_ack": true,
+          "current_group_absent": true,
+          "raw_sha256": "dd18accfc499505890a742e0021d04dccd4b7b9f67aadd857d8fdf4e88ff11ac",
+          "raw_lines": 8,
+          "pre_to_post_changes": []
+        }
+      ]
+    }
+  ],
+  "limits": "No PG catalog audit, no historical Close recertification, no new capacity/race claim. Raw target42 and ancestor17 lines reviewed by root across turns."
+}

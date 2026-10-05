@@ -1,0 +1,8 @@
+=== RUN   TestContentSIGKILLAfterDurableObjectsRecoversOriginalPublication
+=== RUN   TestContentSIGKILLAfterDurableObjectsRecoversOriginalPublication/normal_release
+    content_process_recovery_test.go:328: Content child native pid=3630925 pgid=3630391 start=15228824 generation=1
+--- PASS: TestContentSIGKILLAfterDurableObjectsRecoversOriginalPublication (0.36s)
+    --- PASS: TestContentSIGKILLAfterDurableObjectsRecoversOriginalPublication/normal_release (0.36s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/component	0.374s
+NATIVE_COMPLETION_ACK {"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "durable-normal-control", "pgid": 3630391, "pid": 3630391, "starttime": "15227863", "timed_out": false}

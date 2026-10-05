@@ -1,0 +1,27 @@
+{
+  "head": "7f656d964a1f73aeb333ac1e1217be1ed405e4b8",
+  "run": 37275970295,
+  "conclusion": "failure",
+  "contracts_job": 111652945985,
+  "contracts_conclusion": "success",
+  "durable_job": 111652945574,
+  "normal_integration": "success",
+  "race_integration": "failure",
+  "race_component_content_b_timeout_seconds": 120.039,
+  "normal_census": {
+    "closure": 1,
+    "content": 97,
+    "durable": 60,
+    "other": 43
+  },
+  "normal_groups": {
+    "content_a": 49,
+    "content_b": 48
+  },
+  "race_tails_not_executed": [
+    "durable",
+    "other",
+    "fixtures"
+  ],
+  "root_log_review": "Relevant failure and package summaries read; complete sanitized originals preserved; not claiming human FULL setup/container logs."
+}

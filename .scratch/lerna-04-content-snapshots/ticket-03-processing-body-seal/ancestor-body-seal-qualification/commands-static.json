@@ -1,0 +1,54 @@
+{
+  "STATIC_only_no_native_grant": true,
+  "workdir": "/tmp/lerna-worktrees/content-snapshots-03",
+  "supervisor": "/workspace/lerna-content-03-137311247276/run-native.py",
+  "supervisor_sha256": "82c4e6a19e1aaabbd4a2412f89eb54c0b1690221f92d3ea826b05ca455a2042e",
+  "locked_environment": "source /workspace/.lerna-env/env.sh; GOTOOLCHAIN=local GOFLAGS=-mod=readonly",
+  "outer_seconds": 120,
+  "format_only_new_test_pending_grant": [
+    "gofmt",
+    "-w",
+    "/tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_processing_ancestor_seal_test.go"
+  ],
+  "normal_pending_grant": [
+    "go",
+    "test",
+    "-v",
+    "-tags=integration",
+    "-p",
+    "1",
+    "-count=1",
+    "-timeout=120s",
+    "-run=^TestContentProcessingSealedAncestorAfterRealObjectRead$",
+    "./conformance/component"
+  ],
+  "race_if_normal_pass_pending_grant": [
+    "go",
+    "test",
+    "-v",
+    "-race",
+    "-tags=integration",
+    "-p",
+    "1",
+    "-count=1",
+    "-timeout=120s",
+    "-run=^TestContentProcessingSealedAncestorAfterRealObjectRead$",
+    "./conformance/component"
+  ],
+  "order": "ONE newtest fmt; rebind actual331 formattedpins; ONE normal; only ifPASS ONE same race. Parent explicit soleLOCALgrant required. StopFIRSTfailure; no productfix/retry/matrix automatically.",
+  "finite_windows": {
+    "caller_seconds": 20,
+    "cleanup_actor_join_seconds": 3,
+    "publication_work_seconds": 5,
+    "maintenance_seconds": 60,
+    "initial_hour_policy_trusted_bound_once": true,
+    "SealDeadline": "once now+minute UTC/us before held read, no reopen refresh",
+    "capacity30_Claim5_120_unchanged": true
+  },
+  "future_log_paths": {
+    "format": "/workspace/lerna-content-03-137311247276/context-ancestor-body-seal-format.log",
+    "normal": "/workspace/lerna-content-03-137311247276/context-ancestor-body-seal-normal.log",
+    "race": "/workspace/lerna-content-03-137311247276/context-ancestor-body-seal-race.log"
+  },
+  "existing_permitted_control_reused": "current productb5caf/closure974474 unchanged from actual target-fixed combined publicN2.681/publicR4.625; same trusted chain and actual held native seam permitted/fulltwoSources test already qualified. New scenario first proves additional directnormal exacttargetbody/2fullrefs, then only one genuine ancestorSeal exposure."
+}

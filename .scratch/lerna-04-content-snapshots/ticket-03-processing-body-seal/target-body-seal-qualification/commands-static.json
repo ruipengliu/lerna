@@ -1,0 +1,71 @@
+{
+  "STATIC_only_no_native_grant": true,
+  "head": "b28b2e3182d97156c5fe203baf5cf2183631b7f2",
+  "workdir": "/tmp/lerna-worktrees/content-snapshots-03",
+  "supervisor": "/workspace/lerna-content-03-137311247276/run-native.py",
+  "locked_environment": "source /workspace/.lerna-env/env.sh; GOTOOLCHAIN=local GOFLAGS=-mod=readonly",
+  "format_pending_root_grant": [
+    "gofmt",
+    "-w",
+    "/tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_processing_body_seal_test.go"
+  ],
+  "first_real_red_normal_pending_root_grant": [
+    "go",
+    "test",
+    "-v",
+    "-tags=integration",
+    "-p",
+    "1",
+    "-count=1",
+    "-timeout=120s",
+    "-run=^TestContentProcessingRejectsTargetBodySeal$",
+    "./conformance/component"
+  ],
+  "affected_green_normal_later_separate_grant": [
+    "go",
+    "test",
+    "-v",
+    "-tags=integration",
+    "-p",
+    "1",
+    "-count=1",
+    "-timeout=120s",
+    "-run=^TestContentProcessingRejectsTargetBodySeal$",
+    "./conformance/component"
+  ],
+  "affected_green_race_later_separate_grant": [
+    "go",
+    "test",
+    "-v",
+    "-race",
+    "-tags=integration",
+    "-p",
+    "1",
+    "-count=1",
+    "-timeout=120s",
+    "-run=^TestContentProcessingRejectsTargetBodySeal$",
+    "./conformance/component"
+  ],
+  "supervised_outer_seconds": 120,
+  "source_write_freeze": "Before first red target processing4a44 must remain unchanged. Only exact one new test may be formatted after grant; preserve preformat/hash/diff; repin formatted test and all current authority before effect. No automatic product fix, rerun or race after first actual red.",
+  "original_windows": {
+    "each_independent_case_caller_seconds": 20,
+    "actor_cleanup_join_seconds": 3,
+    "publication_work_seconds": 5,
+    "maintenance_WorkBudget_seconds": 60,
+    "policy_trusted_initial_hour": true,
+    "SealDeadline_fixed_once_before_read": "UTC now+minute truncated microsecond, not reset after reopen",
+    "capacity_caller_Claim_Go_outer": "original30/5/120 preserved; no capacity execution here"
+  },
+  "log_paths_future": {
+    "format": "/workspace/lerna-content-03-137311247276/context-target-body-seal-format.log",
+    "first_red_normal": "/workspace/lerna-content-03-137311247276/context-target-body-seal-first-red-normal.log"
+  },
+  "existing_post_sync_pure_and_ancestor_controls": "accepted05-source-sync/post-sync-qualification-commands-static.json separate pending grant, no implicit extra selectors",
+  "supervisor_pin": {
+    "path": "/workspace/lerna-content-03-137311247276/run-native.py",
+    "sha256": "82c4e6a19e1aaabbd4a2412f89eb54c0b1690221f92d3ea826b05ca455a2042e",
+    "gate_provenance_path": "/workspace/lerna-content-03-137311247276/target-body-seal-qualification/supervisor-strict-gate-provenance.json",
+    "no_native_invoked": true
+  }
+}

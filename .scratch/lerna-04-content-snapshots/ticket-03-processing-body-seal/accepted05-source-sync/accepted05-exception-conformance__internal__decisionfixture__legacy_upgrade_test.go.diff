@@ -1,0 +1,61 @@
+diff --git a/conformance/internal/decisionfixture/legacy_upgrade_test.go b/conformance/internal/decisionfixture/legacy_upgrade_test.go
+index b7910ec..b9bfa67 100644
+--- a/conformance/internal/decisionfixture/legacy_upgrade_test.go
++++ b/conformance/internal/decisionfixture/legacy_upgrade_test.go
+@@ -78,7 +78,16 @@ func buildFrozenWriter(t *testing.T, dir string) *upgradeOutput {
+ 	t.Helper()
+ 	ctx, cancel := context.WithTimeout(context.Background(), 40*time.Second)
+ 	defer cancel()
+-	command := exec.CommandContext(ctx, "go", "test", "-c", "-o", filepath.Join(dir, "legacy.test"), "./conformance/internal/decisionfixture")
++	return buildFrozenWriterContext(t, ctx, dir)
++}
++
++// Current context0003 upgrade uses its original caller deadline for this exact
++// bounded compiler too. Existing historical consumers retain their own bounds.
++func buildFrozenWriterContext(t *testing.T, ctx context.Context, dir string) *upgradeOutput {
++	t.Helper()
++	ctx, cancel := context.WithCancel(ctx)
++	defer cancel()
++	command := exec.CommandContext(ctx, "go", "test", "-p", "1", "-c", "-o", filepath.Join(dir, "legacy.test"), "./conformance/internal/decisionfixture")
+ 	command.Dir = dir
+ 	setUpgradeProcessBounds(command)
+ 	// A compiler timeout cancels only the actual child holder. Once Wait has
+@@ -181,6 +190,9 @@ func buildFrozenWriter(t *testing.T, dir string) *upgradeOutput {
+ 	if waitErr != nil {
+ 		t.Fatal(upgradeCause("frozen writer build", waitErr))
+ 	}
++	if err := registerUpgradeNativeExit(command.Process.Pid, pgid); err != nil {
++		t.Fatal(upgradeCause("frozen compiler exit acknowledgement", err))
++	}
+ 	succeeded = true
+ 	return diagnostics
+ }
+@@ -776,6 +788,28 @@ func registerUpgradeProcessGroup(pid, pgid int, dir string) error {
+ 		return upgradeCause("process registration open", err)
+ 	}
+ 	_, writeErr := fmt.Fprintf(ledger, "process_group %d %d %s\n", pid, pgid, dir)
++	stat, readErr := os.ReadFile(fmt.Sprintf("/proc/%d/stat", pid))
++	var identityErr error
++	if readErr == nil {
++		end := strings.LastIndex(string(stat), ")")
++		if end < 0 || len(strings.Fields(string(stat)[end+1:])) < 20 {
++			identityErr = errors.New("historical actual process starttime unavailable")
++		} else {
++			starttime := strings.Fields(string(stat)[end+1:])[19]
++			_, identityErr = fmt.Fprintf(ledger, "historical_process_start %d %d %s %s\n", pid, pgid, starttime, dir)
++		}
++	}
++	return errors.Join(writeErr, readErr, identityErr, ledger.Sync(), ledger.Close())
++}
++
++// The caller has already joined this actual native handle and confirmed its
++// observed group absent. This ledger acknowledges that fact, not signal power.
++func registerUpgradeNativeExit(pid, pgid int) error {
++	ledger, err := os.OpenFile(os.Getenv("LERNA_TEST_OWNED_SCOPE_REGISTRY"), os.O_APPEND|os.O_WRONLY, 0600)
++	if err != nil {
++		return err
++	}
++	_, writeErr := fmt.Fprintf(ledger, "historical_process_exit %d %d normal_wait_confirmed group_absent\n", pid, pgid)
+ 	return errors.Join(writeErr, ledger.Sync(), ledger.Close())
+ }
+ 

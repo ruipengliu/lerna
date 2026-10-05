@@ -1,0 +1,41 @@
+--- run-native.py.before-strict-gate
++++ run-native.py
+@@ -5,13 +5,31 @@
+ os.environ['TMPDIR']=root;os.environ['LERNA_TEST_OWNED_SCOPE_REGISTRY']=root+'/owned-scopes.log'
+ with open('/tmp/lerna-work-01-dsn') as f:os.environ['LERNA_TEST_POSTGRES_DSN']=f.read().strip()
+ r,w=os.pipe()
+-p=subprocess.Popen(['bash','-c','read -r gate <&'+str(r)+'; exec "$@"','owned-native',*sys.argv[1:]],pass_fds=(r,),start_new_session=True)
+-os.close(r);pgid=os.getpgid(p.pid);assert pgid==p.pid
+-with open('/proc/'+str(p.pid)+'/stat') as f:stat=f.read().rsplit(')',1)[1].split()
+-record={'pid':p.pid,'pgid':pgid,'starttime':stat[19],'started_ns':time.time_ns(),'args':sys.argv[1:]}
+-with open(root+'/native-identities.jsonl','a') as f:f.write(json.dumps(record)+'\n');f.flush();os.fsync(f.fileno())
+-with open(root+'/owned-scopes.log','a') as f:f.write(f'process_group {p.pid} {pgid} {root}\n');f.flush();os.fsync(f.fileno())
+-os.write(w,b'ack\n');os.close(w)
++p=subprocess.Popen(['bash','-c','read -r gate <&'+str(r)+' && [ "$gate" = ack ] && exec "$@"','owned-native',*sys.argv[1:]],pass_fds=(r,),start_new_session=True)
++try:
++ os.close(r);pgid=os.getpgid(p.pid);assert pgid==p.pid
++ with open('/proc/'+str(p.pid)+'/stat') as f:stat=f.read().rsplit(')',1)[1].split()
++ record={'pid':p.pid,'pgid':pgid,'starttime':stat[19],'started_ns':time.time_ns(),'args':sys.argv[1:]}
++ with open(root+'/native-identities.jsonl','a') as f:f.write(json.dumps(record)+'\n');f.flush();os.fsync(f.fileno())
++ with open(root+'/owned-scopes.log','a') as f:f.write(f'process_group {p.pid} {pgid} {root}\n');f.flush();os.fsync(f.fileno())
++ written=os.write(w,b'ack\n')
++ if written != 4:raise OSError('native gate ack write incomplete')
++except BaseException as registration_error:
++ # Strict gate receives EOF without ack: no native argv can execute. Preserve
++ # the registration failure even if bounded joining has its own failure.
++ try:
++  os.close(w)
++  try:status=p.wait(timeout=5)
++  except subprocess.TimeoutExpired:
++   p.kill();status=p.wait(timeout=5)
++  try:os.killpg(p.pid,0);absent=False
++  except ProcessLookupError:absent=True
++  print(f'NATIVE_REGISTRATION_FAILED pid={p.pid} status={status} group_absent={absent}',flush=True)
++ except BaseException as cleanup_error:
++  registration_error.add_note(f'pre-effect gate close/join also failed: {type(cleanup_error).__name__}: {cleanup_error}')
++ raise
++else:
++ os.close(w)
+ try:status=p.wait(timeout=120)
+ except subprocess.TimeoutExpired:
+  os.killpg(pgid,signal.SIGKILL);status=p.wait(timeout=5)

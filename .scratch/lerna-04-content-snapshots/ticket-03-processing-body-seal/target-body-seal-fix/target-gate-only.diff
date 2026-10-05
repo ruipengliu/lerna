@@ -1,0 +1,12 @@
+--- processing.go.before-target-gate
++++ domain/content/processing.go
+@@ -81,6 +81,9 @@
+ 		if r == nil || r.Ref != ref || r.Publication != "published" {
+ 			return ErrUnavailable
+ 		}
++		if r.BodySeal != nil {
++			return ErrProcessingForbidden
++		}
+ 		bound := earlier(earlier(p.ValidUntil, p.RetainUntil), cutoff(r.CurrentRetainUntil))
+ 		if !now.Before(bound) {
+ 			return ErrProcessingForbidden

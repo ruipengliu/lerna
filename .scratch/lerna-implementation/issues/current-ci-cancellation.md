@@ -7,7 +7,7 @@ labels: [ready-for-agent]
 
 当前准确集成提交 `dadd801cfd11ca038f0496872941097f10ebe507` 的 CI [37274041977](https://github.com/ruipengliu/lerna/actions/runs/37274041977) 在 `TestPGPoolRunReservedLaneProgress` 正常取消后返回 `driver: bad connection`，Recovery 实际失败；后续 Component 与 race 未执行。[记录](../../lerna-04-content-snapshots/current-ci-dadd801/README.md) 保存原失败，不能称 native 根因已重现。
 
-此必要修复落实切片 03 的有限 Run 生命周期和 AGENTS 的错误原因保留要求，不改变 PG 全局错误、期限、Claim 或配额。已授权 Timer/Runner 机械 seam 与原真实 PG/SQLite 恢复 seam。
+此必要修复落实切片 02 的 Run 生命周期、切片 03 的有限故障规则和 AGENTS 的错误原因保留要求，不改变 PG 全局错误、期限、Claim 或配额。已授权 Timer/Runner 机械 seam 与原真实 PG/SQLite 恢复 seam。
 
 - [ ] 最先用有限三 lane barrier 证明实际 caller 取消、所有独立 lane 原因必须保留；注入 driver 原因明确为机械诊断。
 - [ ] Run 保存原 caller context，内部停止后 join 全部 lane，聚合实际 lane 错误和 caller 的真实 Err；caller-live 第一故障控制保留原因。

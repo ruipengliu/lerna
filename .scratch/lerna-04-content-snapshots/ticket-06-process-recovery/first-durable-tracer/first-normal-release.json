@@ -1,0 +1,31 @@
+{
+  "status": "STOP_RELEASED",
+  "actual_normal_only_pass": true,
+  "native_actual": {
+    "event": "native_completion_ack",
+    "operation": "durable-normal-control",
+    "pid": 3630391,
+    "pgid": 3630391,
+    "starttime": "15227863",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false,
+    "owned_raw_fsync_close_ack": true
+  },
+  "formatted_source_pins_17_unchanged": true,
+  "manifest_sha256": "3ee4cba86cfc0fccfbc99b584a3e63d98b44ee71ac572af3d95bcf78887312ea",
+  "raw_log_sha256": "40270fa7e74eb7adbfd31aa0d128575d1b707d3e157c3931187fc5bb91622646",
+  "scope_lines": 10,
+  "fault_race_other_tracer_not_executed": true,
+  "format_native_actual": {
+    "event": "native_completion_ack",
+    "operation": "first-format",
+    "pid": 3629434,
+    "pgid": 3629434,
+    "starttime": "15223562",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false,
+    "owned_raw_fsync_close_ack": true
+  }
+}

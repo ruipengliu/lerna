@@ -1,0 +1,465 @@
+[
+  {
+    "original": "/workspace/lerna-content-03-137311247276/accepted05-source-sync/README.md",
+    "archive": "accepted05-source-sync/README.md",
+    "bytes": 2531,
+    "sha256": "db5e28601f340093e4a02d5c8635d00bc10ea030d83c11fb00579f819a6fc30d"
+  },
+  {
+    "original": "/workspace/lerna-content-03-137311247276/accepted05-source-sync/merge-source-proof.json",
+    "archive": "accepted05-source-sync/merge-source-proof.json",
+    "bytes": 59202,
+    "sha256": "82385a665f4f99884ff0eb0f60441d5baebad4940a56eb608a5762f7cad3d6fc"
+  },
+  {
+    "original": "/workspace/lerna-content-03-137311247276/accepted05-source-sync/measurement-draft-cutoff.json",
+    "archive": "accepted05-source-sync/measurement-draft-cutoff.json",
+    "bytes": 5668,
+    "sha256": "d05c4014ce57740e61c1f6ea0cb7ed9a4edc2c306145fd2f4a10798222282ea0"
+  },
+  {
+    "original": "/workspace/lerna-content-03-137311247276/accepted05-source-sync/accepted05-exception-domain__content__closure.go.diff",
+    "archive": "accepted05-source-sync/accepted05-exception-domain__content__closure.go.diff",
+    "bytes": 3339,
+    "sha256": "4c632ece2d81690f6eeda750d42067253723e49cf4ce2ab6712641e119a1ae0b"
+  },
+  {
+    "original": "/workspace/lerna-content-03-137311247276/accepted05-source-sync/accepted05-exception-conformance__internal__decisionfixture__legacy_upgrade_test.go.diff",
+    "archive": "accepted05-source-sync/accepted05-exception-conformance__internal__decisionfixture__legacy_upgrade_test.go.diff",
+    "bytes": 3011,
+    "sha256": "e2de15a8699be6f145ab540708c916212bbb0d44f856b8c449d217aec6e6dbbb"
+  },
+  {
+    "original": "/workspace/lerna-content-03-137311247276/accepted05-source-sync/accepted05-exception-conformance__internal__decisionfixture__store.go.diff",
+    "archive": "accepted05-source-sync/accepted05-exception-conformance__internal__decisionfixture__store.go.diff",
+    "bytes": 755,
+    "sha256": "57d3cf241bcfad08aae143576661767bba58dc0b21e2a8f40146e5522b9c341f"
+  },
+  {
+    "original": "/workspace/lerna-content-03-137311247276/target-body-seal-qualification/README.md",
+    "archive": "target-body-seal-qualification/README.md",
+    "bytes": 4269,
+    "sha256": "f8044b9b446027daac8024a6792d44d4032e7de1809a8627afa51564bf1df04f"
+  },
+  {
+    "original": "/workspace/lerna-content-03-137311247276/target-body-seal-qualification/commands-static.json",
+    "archive": "target-body-seal-qualification/commands-static.json",
+    "bytes": 2804,
+    "sha256": "bd507d7e07a5f840e281c95a150d51c7e74ecd843810adae6c868eb84bf030a8"
+  },
+  {
+    "original": "/workspace/lerna-content-03-137311247276/target-body-seal-qualification/source-manifest-static.json",
+    "archive": "target-body-seal-qualification/source-manifest-static.json",
+    "bytes": 56959,
+    "sha256": "211ef23169596c697074376240b114a230519f7cbe71d646e363a96ce7d7b1ff"
+  },
+  {
+    "original": "/workspace/lerna-content-03-137311247276/target-body-seal-qualification/first-red-normal-prelaunch-registration.json",
+    "archive": "target-body-seal-qualification/first-red-normal-prelaunch-registration.json",
+    "bytes": 54711,
+    "sha256": "33f2e459ed65a3bed109afc808729f7c56adaa6d705cbd8fda8ecb95aaf9dfb1"
+  },
+  {
+    "original": "/workspace/lerna-content-03-137311247276/target-body-seal-qualification/first-red-normal-actual-outcome.json",
+    "archive": "target-body-seal-qualification/first-red-normal-actual-outcome.json",
+    "bytes": 115041,
+    "sha256": "f8e19591a5cc7511ceb25828f10dfc382b76677a741e18434a25ccc5dae37a7e"
+  },
+  {
+    "original": "/workspace/lerna-content-03-137311247276/target-body-seal-qualification/format-actual-outcome.json",
+    "archive": "target-body-seal-qualification/format-actual-outcome.json",
+    "bytes": 166277,
+    "sha256": "849c97d73d7103f6f7de66daa689fdb2a26fb53243caaadd254923e0ad390047"
+  },
+  {
+    "original": "/workspace/lerna-content-03-137311247276/target-body-seal-qualification/actual-format-only.diff",
+    "archive": "target-body-seal-qualification/actual-format-only.diff",
+    "bytes": 17921,
+    "sha256": "6b210d38539de9f8485078d91786d7785ceb2f0ea7dba920003a93b6fffc98e8"
+  },
+  {
+    "original": "/workspace/lerna-content-03-137311247276/target-body-seal-qualification/actual-outcome.json",
+    "archive": "target-body-seal-qualification/actual-outcome.json",
+    "bytes": 349118,
+    "sha256": "1b1971dd2d6342feaf543db5cec0c0d3001aa431d22f7a40250856f428380297"
+  },
+  {
+    "original": "/workspace/lerna-content-03-137311247276/target-body-seal-qualification/supervisor-strict-gate-only.diff",
+    "archive": "target-body-seal-qualification/supervisor-strict-gate-only.diff",
+    "bytes": 2528,
+    "sha256": "1f613019a4bd6de62c302987bca1816212c7d7634f5053cf2ecde5c5f7e7bf51"
+  },
+  {
+    "original": "/workspace/lerna-content-03-137311247276/target-body-seal-qualification/supervisor-strict-gate-provenance.json",
+    "archive": "target-body-seal-qualification/supervisor-strict-gate-provenance.json",
+    "bytes": 1566,
+    "sha256": "4d3d6c4bb700f50d3f6f7266a9bb942c5163b28836c6a87c9b3694e2af63140f"
+  },
+  {
+    "original": "/workspace/lerna-content-03-137311247276/target-body-seal-qualification/run-native.py.before-strict-gate",
+    "archive": "target-body-seal-qualification/run-native.py.before-strict-gate",
+    "bytes": 1522,
+    "sha256": "dade74a1036a3be928b2930bc826f3ac5d6d2a60805ef98b47b601ad9ce6857f"
+  },
+  {
+    "original": "/workspace/lerna-content-03-137311247276/target-body-seal-qualification/content_processing_body_seal_test.go.preformat",
+    "archive": "target-body-seal-qualification/content_processing_body_seal_test.go.preformat",
+    "bytes": 8724,
+    "sha256": "fea6183e20b621a5093bbdcb4afedf628513efd07ef99a144e00c31bf1e89538"
+  },
+  {
+    "original": "/workspace/lerna-content-03-137311247276/context-target-body-seal-format.log",
+    "archive": "context-target-body-seal-format.log",
+    "bytes": 39,
+    "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2"
+  },
+  {
+    "original": "/workspace/lerna-content-03-137311247276/context-target-body-seal-first-red-normal.log",
+    "archive": "context-target-body-seal-first-red-normal.log",
+    "bytes": 2055,
+    "sha256": "869b7afbe0a93eb9c1421183f2a1dca89637a03fb0841f958d9092d0f0b3e769"
+  },
+  {
+    "original": "/workspace/lerna-content-03-137311247276/target-body-seal-fix/README.md",
+    "archive": "target-body-seal-fix/README.md",
+    "bytes": 2431,
+    "sha256": "6302cc0bb1e35380dfb8f59c814cd57b95bbb95ee608a7f31686ef719acd8fbe"
+  },
+  {
+    "original": "/workspace/lerna-content-03-137311247276/target-body-seal-fix/target-gate-only.diff",
+    "archive": "target-body-seal-fix/target-gate-only.diff",
+    "bytes": 398,
+    "sha256": "31363afe7c41bab54ee788e30227b5958ae4af55960b0de02cbf344cb9ed2ac6"
+  },
+  {
+    "original": "/workspace/lerna-content-03-137311247276/target-body-seal-fix/processing.go.before-target-gate",
+    "archive": "target-body-seal-fix/processing.go.before-target-gate",
+    "bytes": 4224,
+    "sha256": "4a4440cb921001d3edb3d2e829f49b5e684c60d31e0603bcfe9b76a8d6283c30"
+  },
+  {
+    "original": "/workspace/lerna-content-03-137311247276/target-body-seal-fix/source-manifest-static.json",
+    "archive": "target-body-seal-fix/source-manifest-static.json",
+    "bytes": 55734,
+    "sha256": "a635532cb45b9c7c206cc8873a75b1b47985950803b15a7519497ec6985474a1"
+  },
+  {
+    "original": "/workspace/lerna-content-03-137311247276/target-body-seal-fix/commands-static.json",
+    "archive": "target-body-seal-fix/commands-static.json",
+    "bytes": 2169,
+    "sha256": "8c3441a30fb39d0d7d929c30d2b748660313848fa824e2310b3ccec0be6625b6"
+  },
+  {
+    "original": "/tmp/lerna-root-target-body-seal-red-audit.json",
+    "archive": "root-independent-red-audit.json",
+    "bytes": 483,
+    "sha256": "f6c6cb018ba752f8b2f263d98defc07b58609cbb558fe31d274143e65bc17e89"
+  },
+  {
+    "original": "/tmp/lerna-03-body-seal-processing-sync-decision.md",
+    "archive": "adopted-body-seal-decision.md",
+    "bytes": 4425,
+    "sha256": "531757b728b4a1bbbf34002868e519d71436a48e00ad63319edc29c0f73bde8a"
+  },
+  {
+    "archive": "ancestor-body-seal-qualification/README.md",
+    "bytes": 2998,
+    "sha256": "70877b8777d4ac51b0943db342920e4cf66582e4ec919c39b6f1e1b6b683d4d3",
+    "added_root_utc": "2026-10-05T08:02:04Z",
+    "provenance": "Original outside path retained in embedded outcome/manifest where present; added evidence preserved byte-exact."
+  },
+  {
+    "archive": "ancestor-body-seal-qualification/actual-format-only.diff",
+    "bytes": 17195,
+    "sha256": "0241729cce7fabcf0a424c3973d7241b772bebdbf3a795e6cb6375f29372c884",
+    "added_root_utc": "2026-10-05T08:02:04Z",
+    "provenance": "Original outside path retained in embedded outcome/manifest where present; added evidence preserved byte-exact."
+  },
+  {
+    "archive": "ancestor-body-seal-qualification/actual-grant-prelaunch.json",
+    "bytes": 54309,
+    "sha256": "de6a92aca7ee6bf834981bb26536c2e1b2cd88467cd4f76564e994c0efef151c",
+    "added_root_utc": "2026-10-05T08:02:04Z",
+    "provenance": "Original outside path retained in embedded outcome/manifest where present; added evidence preserved byte-exact."
+  },
+  {
+    "archive": "ancestor-body-seal-qualification/actual-outcome-before-human-review.json",
+    "bytes": 425178,
+    "sha256": "ffb51cf1b94dd6e915f63bf78fe8265e0dcce735321ac74f17db7596c2e064db",
+    "added_root_utc": "2026-10-05T08:02:04Z",
+    "provenance": "Original outside path retained in embedded outcome/manifest where present; added evidence preserved byte-exact."
+  },
+  {
+    "archive": "ancestor-body-seal-qualification/actual-outcome.json",
+    "bytes": 429741,
+    "sha256": "8c3716453df27be419c56214490f281eb5ba29c16c5a199521be0c7e58cac277",
+    "added_root_utc": "2026-10-05T08:02:04Z",
+    "provenance": "Original outside path retained in embedded outcome/manifest where present; added evidence preserved byte-exact."
+  },
+  {
+    "archive": "ancestor-body-seal-qualification/actual-scope-facts.json",
+    "bytes": 1400,
+    "sha256": "574f45a4bea8c9f24e2308f736856151d1734274b18c467c2bf65369d45057b0",
+    "added_root_utc": "2026-10-05T08:02:04Z",
+    "provenance": "Original outside path retained in embedded outcome/manifest where present; added evidence preserved byte-exact."
+  },
+  {
+    "archive": "ancestor-body-seal-qualification/commands-static.json",
+    "bytes": 2305,
+    "sha256": "4e117b1d2f21d0eedd30a9a42dd78686cfc8b810f10d5152f7d403831cb5b365",
+    "added_root_utc": "2026-10-05T08:02:04Z",
+    "provenance": "Original outside path retained in embedded outcome/manifest where present; added evidence preserved byte-exact."
+  },
+  {
+    "archive": "ancestor-body-seal-qualification/content_processing_ancestor_seal_test.go.preformat",
+    "bytes": 8421,
+    "sha256": "c9b48cb4f3b486113ddbc9324f29d8795d7510c4cb2a123db64257dd5c48d78a",
+    "added_root_utc": "2026-10-05T08:02:04Z",
+    "provenance": "Original outside path retained in embedded outcome/manifest where present; added evidence preserved byte-exact."
+  },
+  {
+    "archive": "ancestor-body-seal-qualification/format-actual-outcome.json",
+    "bytes": 112701,
+    "sha256": "1abb55dfc8a93ffc449f193e7b09ce315fa0dad29ddbc5ee5fb45418377dd6fe",
+    "added_root_utc": "2026-10-05T08:02:04Z",
+    "provenance": "Original outside path retained in embedded outcome/manifest where present; added evidence preserved byte-exact."
+  },
+  {
+    "archive": "ancestor-body-seal-qualification/format-prelaunch-registration.json",
+    "bytes": 54876,
+    "sha256": "d0af8914de7811fd93070ed98d2b25ca37684b9d0b95e9c05f90456bc5af791d",
+    "added_root_utc": "2026-10-05T08:02:04Z",
+    "provenance": "Original outside path retained in embedded outcome/manifest where present; added evidence preserved byte-exact."
+  },
+  {
+    "archive": "ancestor-body-seal-qualification/formatted-source-pins.json",
+    "bytes": 54755,
+    "sha256": "c9fa1b83e327b661b64e8aba24cf53d9ea12953adaa93a5c66fbd35079ffa2d0",
+    "added_root_utc": "2026-10-05T08:02:04Z",
+    "provenance": "Original outside path retained in embedded outcome/manifest where present; added evidence preserved byte-exact."
+  },
+  {
+    "archive": "ancestor-body-seal-qualification/new-test-only.diff",
+    "bytes": 8971,
+    "sha256": "6fefe8d9e4ef0ba0ec52c8ec4ddcac5f0e8494a1cb86a4f88179698ac509caaa",
+    "added_root_utc": "2026-10-05T08:02:04Z",
+    "provenance": "Original outside path retained in embedded outcome/manifest where present; added evidence preserved byte-exact."
+  },
+  {
+    "archive": "ancestor-body-seal-qualification/normal-actual-outcome.json",
+    "bytes": 113962,
+    "sha256": "9a0db0561719036186b7ffb3187668119464c2e80dcfd0026486e6fc67bb556a",
+    "added_root_utc": "2026-10-05T08:02:04Z",
+    "provenance": "Original outside path retained in embedded outcome/manifest where present; added evidence preserved byte-exact."
+  },
+  {
+    "archive": "ancestor-body-seal-qualification/normal-prelaunch-registration.json",
+    "bytes": 54954,
+    "sha256": "2c99435a6c25087bbbe605cb4755300462564e7f22a23fe271331fd99eda50be",
+    "added_root_utc": "2026-10-05T08:02:04Z",
+    "provenance": "Original outside path retained in embedded outcome/manifest where present; added evidence preserved byte-exact."
+  },
+  {
+    "archive": "ancestor-body-seal-qualification/race-actual-outcome.json",
+    "bytes": 113985,
+    "sha256": "f5a3d9a75bacd7b00b4d59e5c1ca71cba51a517c2e59e52b7aef80c9cb62414b",
+    "added_root_utc": "2026-10-05T08:02:04Z",
+    "provenance": "Original outside path retained in embedded outcome/manifest where present; added evidence preserved byte-exact."
+  },
+  {
+    "archive": "ancestor-body-seal-qualification/race-prelaunch-registration.json",
+    "bytes": 54965,
+    "sha256": "f24092e42d52228ec4d44ef435ef4cde86dd30e01fd857cc1373b12ba5a255b3",
+    "added_root_utc": "2026-10-05T08:02:04Z",
+    "provenance": "Original outside path retained in embedded outcome/manifest where present; added evidence preserved byte-exact."
+  },
+  {
+    "archive": "ancestor-body-seal-qualification/results.md",
+    "bytes": 2602,
+    "sha256": "12783543ab3f793f4ed22ab6cfbecc4a4a747d67e808a72bd2e56d23667a045d",
+    "added_root_utc": "2026-10-05T08:02:04Z",
+    "provenance": "Original outside path retained in embedded outcome/manifest where present; added evidence preserved byte-exact."
+  },
+  {
+    "archive": "ancestor-body-seal-qualification/source-manifest-static.json",
+    "bytes": 57205,
+    "sha256": "a45e0828e183d6e15129e2cb663e0d018af080ba9fbf1eaabde0c748e325f7e8",
+    "added_root_utc": "2026-10-05T08:02:04Z",
+    "provenance": "Original outside path retained in embedded outcome/manifest where present; added evidence preserved byte-exact."
+  },
+  {
+    "archive": "context-ancestor-body-seal-format.log",
+    "bytes": 39,
+    "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+    "added_root_utc": "2026-10-05T08:02:04Z",
+    "provenance": "Original outside path retained in embedded outcome/manifest where present; added evidence preserved byte-exact."
+  },
+  {
+    "archive": "context-ancestor-body-seal-normal.log",
+    "bytes": 507,
+    "sha256": "6df197c88fc45f01e582ed951704aebdd2d7691ed4fd75ca6c7686bced8c6223",
+    "added_root_utc": "2026-10-05T08:02:04Z",
+    "provenance": "Original outside path retained in embedded outcome/manifest where present; added evidence preserved byte-exact."
+  },
+  {
+    "archive": "context-ancestor-body-seal-race.log",
+    "bytes": 507,
+    "sha256": "dd18accfc499505890a742e0021d04dccd4b7b9f67aadd857d8fdf4e88ff11ac",
+    "added_root_utc": "2026-10-05T08:02:04Z",
+    "provenance": "Original outside path retained in embedded outcome/manifest where present; added evidence preserved byte-exact."
+  },
+  {
+    "archive": "context-target-body-seal-fixed-format.log",
+    "bytes": 39,
+    "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+    "added_root_utc": "2026-10-05T08:02:04Z",
+    "provenance": "Original outside path retained in embedded outcome/manifest where present; added evidence preserved byte-exact."
+  },
+  {
+    "archive": "context-target-body-seal-fixed-public-normal.log",
+    "bytes": 1540,
+    "sha256": "076c734c57ba3d4d9a50015c964aa2e6ab0200692dba1d5dd4e9cd685ab366ff",
+    "added_root_utc": "2026-10-05T08:02:04Z",
+    "provenance": "Original outside path retained in embedded outcome/manifest where present; added evidence preserved byte-exact."
+  },
+  {
+    "archive": "context-target-body-seal-fixed-public-race.log",
+    "bytes": 1540,
+    "sha256": "948148b1967a8622697f79e03a2a9310cbd994fabd057896993b926011193975",
+    "added_root_utc": "2026-10-05T08:02:04Z",
+    "provenance": "Original outside path retained in embedded outcome/manifest where present; added evidence preserved byte-exact."
+  },
+  {
+    "archive": "context-target-body-seal-fixed-pure-normal.log",
+    "bytes": 361,
+    "sha256": "f65a0dd67df5a4bd17365d113418dd07da1e6a6135dc7b166371be9863a02961",
+    "added_root_utc": "2026-10-05T08:02:04Z",
+    "provenance": "Original outside path retained in embedded outcome/manifest where present; added evidence preserved byte-exact."
+  },
+  {
+    "archive": "root-independent-green-audit.json",
+    "bytes": 3473,
+    "sha256": "45f912e2b86be84544d8ac44a2d4dc45f76fa5a82426a3b31024fb153a438b6c",
+    "added_root_utc": "2026-10-05T08:02:04Z",
+    "provenance": "Original outside path retained in embedded outcome/manifest where present; added evidence preserved byte-exact."
+  },
+  {
+    "archive": "target-body-seal-fix/merged-head-product-affected.diff",
+    "bytes": 582,
+    "sha256": "424ea1b9de40f762be946ff3af65b5fc2e933e1352bcf73b6dcacd5b998867a0",
+    "added_root_utc": "2026-10-05T08:02:04Z",
+    "provenance": "Original outside path retained in embedded outcome/manifest where present; added evidence preserved byte-exact."
+  },
+  {
+    "archive": "target-body-seal-fix/processing.go.before-fixed-qualification-format",
+    "bytes": 4286,
+    "sha256": "b5cafb6ac64f96d7ff4a9bf119aaea7f47e50a2f1d78d4a15471f9b24c4f476a",
+    "added_root_utc": "2026-10-05T08:02:04Z",
+    "provenance": "Original outside path retained in embedded outcome/manifest where present; added evidence preserved byte-exact."
+  },
+  {
+    "archive": "target-body-seal-fix/qualification-actual-outcome-before-human-review.json",
+    "bytes": 546622,
+    "sha256": "41ed0379e0fdfdfae1720376d6143880d2aba94b3ca5b8fe52cc4038b2a7662c",
+    "added_root_utc": "2026-10-05T08:02:04Z",
+    "provenance": "Original outside path retained in embedded outcome/manifest where present; added evidence preserved byte-exact."
+  },
+  {
+    "archive": "target-body-seal-fix/qualification-actual-outcome.json",
+    "bytes": 551683,
+    "sha256": "77e7f79d9a5ef1243278ec333c8e0c6426af17cdbfd494a63e115900165d5acd",
+    "added_root_utc": "2026-10-05T08:02:04Z",
+    "provenance": "Original outside path retained in embedded outcome/manifest where present; added evidence preserved byte-exact."
+  },
+  {
+    "archive": "target-body-seal-fix/qualification-actual-scope-facts.json",
+    "bytes": 1984,
+    "sha256": "864cc6c3b4b0e4614caf90235041e058d4dd267f5cc020ec8c9c6cd0f1388c5a",
+    "added_root_utc": "2026-10-05T08:02:04Z",
+    "provenance": "Original outside path retained in embedded outcome/manifest where present; added evidence preserved byte-exact."
+  },
+  {
+    "archive": "target-body-seal-fix/qualification-format-actual-outcome.json",
+    "bytes": 111950,
+    "sha256": "7f96cf8a087b77de69ca9bf50996ead58d58d14a2f5271c646f4171fa1ae52ea",
+    "added_root_utc": "2026-10-05T08:02:04Z",
+    "provenance": "Original outside path retained in embedded outcome/manifest where present; added evidence preserved byte-exact."
+  },
+  {
+    "archive": "target-body-seal-fix/qualification-format-only.diff",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "added_root_utc": "2026-10-05T08:02:04Z",
+    "provenance": "Original outside path retained in embedded outcome/manifest where present; added evidence preserved byte-exact."
+  },
+  {
+    "archive": "target-body-seal-fix/qualification-format-prelaunch.json",
+    "bytes": 54351,
+    "sha256": "950d49a7f568faa66f636a932e85440c3f1b960ffb9e5f27703ac5b401b99e51",
+    "added_root_utc": "2026-10-05T08:02:04Z",
+    "provenance": "Original outside path retained in embedded outcome/manifest where present; added evidence preserved byte-exact."
+  },
+  {
+    "archive": "target-body-seal-fix/qualification-formatted-source-pins.json",
+    "bytes": 54088,
+    "sha256": "d909825b979eda573878b4de53c5256a716bd3da8bd43e5cf362259effd03255",
+    "added_root_utc": "2026-10-05T08:02:04Z",
+    "provenance": "Original outside path retained in embedded outcome/manifest where present; added evidence preserved byte-exact."
+  },
+  {
+    "archive": "target-body-seal-fix/qualification-grant-prelaunch.json",
+    "bytes": 54239,
+    "sha256": "0d30fd3e6aac06088100144c240fe7c0bd9fc5f3784f3e0c6736bafb0094af55",
+    "added_root_utc": "2026-10-05T08:02:04Z",
+    "provenance": "Original outside path retained in embedded outcome/manifest where present; added evidence preserved byte-exact."
+  },
+  {
+    "archive": "target-body-seal-fix/qualification-public-normal-actual-outcome.json",
+    "bytes": 113605,
+    "sha256": "5c46c098750046c3128fe94301ba139de46156c54c17156df2cacd57a2bb598c",
+    "added_root_utc": "2026-10-05T08:02:04Z",
+    "provenance": "Original outside path retained in embedded outcome/manifest where present; added evidence preserved byte-exact."
+  },
+  {
+    "archive": "target-body-seal-fix/qualification-public-normal-prelaunch.json",
+    "bytes": 54523,
+    "sha256": "d9a159e0cb6d870861b42fa43f2f3d322eb2818009e03e07d91355a328664de0",
+    "added_root_utc": "2026-10-05T08:02:04Z",
+    "provenance": "Original outside path retained in embedded outcome/manifest where present; added evidence preserved byte-exact."
+  },
+  {
+    "archive": "target-body-seal-fix/qualification-public-race-actual-outcome.json",
+    "bytes": 113631,
+    "sha256": "a02eef58c05ccda1823f8c7c61cab9fd01b63d0a7b5d96833e76ba9897c4e341",
+    "added_root_utc": "2026-10-05T08:02:04Z",
+    "provenance": "Original outside path retained in embedded outcome/manifest where present; added evidence preserved byte-exact."
+  },
+  {
+    "archive": "target-body-seal-fix/qualification-public-race-prelaunch.json",
+    "bytes": 54534,
+    "sha256": "4d2bc3fab00716aaf12c3e292d575f2ec0db291f637e5be12f734b66548673eb",
+    "added_root_utc": "2026-10-05T08:02:04Z",
+    "provenance": "Original outside path retained in embedded outcome/manifest where present; added evidence preserved byte-exact."
+  },
+  {
+    "archive": "target-body-seal-fix/qualification-pure-normal-actual-outcome.json",
+    "bytes": 112250,
+    "sha256": "39e19a3d9dbf3fd8e0bd9bb0eb854aceaa6d32610386939a00fa2f9c71e6fe7d",
+    "added_root_utc": "2026-10-05T08:02:04Z",
+    "provenance": "Original outside path retained in embedded outcome/manifest where present; added evidence preserved byte-exact."
+  },
+  {
+    "archive": "target-body-seal-fix/qualification-pure-normal-prelaunch.json",
+    "bytes": 54486,
+    "sha256": "3c9c12035afdb7774a8739867c3b4007fb688a2890f68169612e5e5cfcd59777",
+    "added_root_utc": "2026-10-05T08:02:04Z",
+    "provenance": "Original outside path retained in embedded outcome/manifest where present; added evidence preserved byte-exact."
+  },
+  {
+    "archive": "target-body-seal-fix/qualification-results.md",
+    "bytes": 2494,
+    "sha256": "c8a0ddc80496a8aad69ace378b4478e99c129eacc828cd76e4b3554efdc8ad9c",
+    "added_root_utc": "2026-10-05T08:02:04Z",
+    "provenance": "Original outside path retained in embedded outcome/manifest where present; added evidence preserved byte-exact."
+  }
+]
