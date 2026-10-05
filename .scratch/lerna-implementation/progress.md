@@ -6,6 +6,14 @@
 
 ## 当前状态
 
+2026-10-05 01:34 UTC，全文采用[单项 Binding 表示复用决定](../lerna-04-content-snapshots/ticket-03-large-graph-claim/binding-decode-reuse-decision.md)：每次仍真实锁定读取完整 Binding 行，仅同范围／input_id／locator／完整字节一致时复用成功严格解码值，所有可变字段深拷贝；当前 Input 全量新读／比较、Permission、祖先资格和时钟保持。03仅静态实现及首红准备，不同时优化 Content 两 Tx、不预热或扩大原5s期限，尚无新产品 green。
+
+05最小 AdmissionTarget 修复与完整原测试、真实到期前无效果／不同 Subject 拒绝对照已全文审查；SOLE LOCAL仅授该准确测试普通、通过后同例race，保持原20／30／120、2s cap及原一分钟责任窗。新targeted deadline锁等待仍待独立测试，旧普通分支等待不借称新分支覆盖。whole04仍15/41、两票未正式接受或合并、完整1.2关闭，全部22切片继续。
+
+2026-10-05 01:19 UTC，原B[子成本实验](../lerna-04-content-snapshots/ticket-03-large-graph-claim/subcost/results.md)actual native3142143／start13113594／exit1／group absence，完整工具完成并释放。两正常分支178固定stage／drop0／ambiguous0；64祖先29.52s、62材料21.98s失败，尚未Prepared或worker发布。新第一错误分别为Content读前CheckPolicy deadline、Current.InputRowScan deadline，终ValidateClaim晚原5s lease11.808／8.655ms。Current内全Binding严格解码0.697／1.325s、完整Input解码0.161／0.293s；对象实际读0.003／0.005s，Content两Tx fullancestor资格仍占主要成本。嵌套计时不相加，剩余材料和发布未执行，不线性外推或预言某一优化够5s；原Astra high正选单项等价改动，未修产品。
+
+采用[准确AdmissionTarget原cap窄决定](../lerna-04-content-snapshots/ticket-05-expired-accepted-cap/inherited-cap-admission-decision.md)：exact existing admissionKey／fulltarget与原SubjectPurpose，限accepted_retention_expired、当前持久targetcap真实到期、完整祖先、原due／Deadline及全页CAS／最后fresh clock；不续预算、nilpolicy不冒false、普通key／PG ACK／迁移保持。05只静态最小修复与真实拒绝对照准备，LOCAL当前空；没有green、本票接受或产品合并，whole04仍15/41／完整1.2关闭。
+
 2026-10-05 01:12 UTC，05整页原责任CAS资格partial `1a52d24a051442cd8ccdd3c3ef01ff7707cc84a7` 普通0.555s／race2.272s通过：公开页固定实际first／second，另一消费者提交second的not_required后，旧页第一条真实写入、第二条真实ManagementConflict，公开完整状态确认整页回滚；fresh同原页恢复／重开、三正文／固定回执／V2保持。随后[祖先上限／准确AdmissionTarget首red](../lerna-04-content-snapshots/ticket-05-expired-accepted-cap/inherited-admission-first-red/README.md)真实2.223s失败：两祖先与target正常、原2s cap续宽仍expired、原责任deadline live及独立原字节保持后，首Consume原admissionKey被拒绝。封存／擦除及红后回执重放尾段未执行；产品未修，Astra high正作最小身份与因果决定。
 
 03新九文件子成本overlay已全文审查，编译期／worker Current混合计时归属在运行前修正；全部原文件及SHA、dev／inode／mode核准，原已运行五文件overlay保持不变。当前唯一LOCAL归03机械格式／独立race二进制编译及一次原B实验，原5s Claim／30s caller／120s外界／业务tuple保持，暂无新测量结论。whole04仍15/41，两票未接受或合并、完整1.2关闭。

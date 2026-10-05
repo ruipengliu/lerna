@@ -1,0 +1,8 @@
+{
+  "source": "/tmp/lerna-04-ticket-03-binding-decode-reuse-decision.md",
+  "archive": "binding-decode-reuse-decision.md",
+  "bytes": 12217,
+  "sha256": "4606ef42de8baf8916ea704bf4cb079c844cdbfbf6073b9a9dc6e7e36371a2d3",
+  "root_review": "FULL read and adopted; one exact fresh-row byte-successful typed decode representation reuse; no native grant to 03",
+  "limits": "original Claim5/caller30/Go120/outer120; no proof optimization sufficient for full original B"
+}
