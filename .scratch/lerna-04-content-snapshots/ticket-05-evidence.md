@@ -1133,3 +1133,8 @@ root FULL采用27项原命令/selector及test-only三版本oracle后，授仅fmt
 未重复SIGKILL原holder case/未知原Close，仅保留旧真实killedcase资格与永久unknown3977538271 dev33/inode315225、4116685529 dev33/inode326495。actualLinux正向新资格不把旧unknown变成closed。此前全17原日志/原manifest不覆盖，新27不以旧green代替。当前最新源码必要验证已完成，尚待exactqualification commit后双轴审查、owner-only实际资源审核、root正式7AC接受/merge及准确CI；whole04仍15/41/profile1.2OFF。
 
 root归档上述current actual27与静态原plan/source至 `ticket-05-expired-job-scan/final-affected-checks/`；STATIC owner-only当前资源输入与有界只读审核计划另 `/tmp/lerna-05-own-resource-audit-current-inputs.json` / `/tmp/lerna-05-own-resource-audit-plan.md`，未实际运行PG/catalog/root审计。
+
+
+### root正式接受七AC与worker同步准确integration头
+
+2026-10-05，root对固定1a4...8db、既有资格／当前delta／27真实raw与独立双轴／Astra必要KEEP决定及实际资源observer完成复核，接受七AC；准确文档94e9c289310601bbf1eab5580efe002028db0cc9见 [root退出证据](ticket-05-exit-evidence.md)。worker依implement-spec以normal merge同步该root头，merge30cb0c0c388477a1a2ba0c0ac0bc776f224ed4dc双parents8db／94e9，无冲突，15份受测源码／SQL／test字节逐一仍等8db原pin。此后仅同步本票七checked／resolved／Answer、当前handoff和本地22/41进度，无native或额外Go／产品改动。实际回integration交付merge仍待root，未push／cleanup WT；whole04与profile1.2未整体接受。原历史pending叙述保留其cutoff，新状态以root退出与最新handoff为准，旧UNKNOWN责任不变。
