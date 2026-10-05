@@ -1,0 +1,143 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="technical-panorama-title technical-panorama-desc">
+<title id="technical-panorama-title">Lerna 技术全景</title>
+<desc id="technical-panorama-desc">个人 Agent Harness 的目标架构。可替换部分包括交互适配器、推理、记忆策略和执行适配器。核心包括裁决域、独立成域的执行管理、内容治理、出口闸门及共享基础。平台服务在核心之外。行动主线从输入与提议经过准入、交付动作并确认接纳、执行管理、执行适配器和出口闸门到外部系统。默认云端持有任务与裁决，端侧承担本机执行管理与出口。细节以正文契约为准。</desc>
+<style>
+text {font-family:'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif;fill:#2d3142}
+.title {font-size:38px;font-weight:700}.subtitle {font-size:20px;fill:#4f5d75}
+.section {font-size:24px;font-weight:700}.name {font-size:24px;font-weight:600}
+.body {font-size:18px}.small {font-size:16px;fill:#4f5d75}.step {font-size:18px;font-weight:600}
+.accent {fill:#bd4b20}.muted {fill:#4f5d75}
+</style>
+<defs><marker id="panorama-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="#4f5d75"/></marker></defs>
+<rect width="1600" height="1000" fill="#f5f5f5"/>
+<text x="800" y="58" class="title" text-anchor="middle">Lerna 技术全景</text>
+<text x="800" y="91" class="subtitle" text-anchor="middle">个人 Agent Harness · 以可靠性契约为核心</text>
+<rect x="32" y="120" width="1536" height="134" rx="8" fill="#fafafa" stroke="#bfc0c0"/>
+<text x="56" y="164" class="section" text-anchor="start">可替换部分</text>
+<text x="56" y="198" class="small" text-anchor="start">按需替换 · 保持契约</text>
+<g data-node="replaceable">
+<rect x="264" y="140" width="306" height="94" rx="8" fill="#fff" stroke="#bfc0c0"/>
+<text x="282" y="177" class="name" text-anchor="start">交互适配器</text>
+<text x="282" y="211" class="small" text-anchor="start">输入 · 确认 · 取消</text>
+</g>
+<g data-node="replaceable">
+<rect x="586" y="140" width="306" height="94" rx="8" fill="#fff" stroke="#bfc0c0"/>
+<text x="604" y="177" class="name" text-anchor="start">推理</text>
+<text x="604" y="211" class="small" text-anchor="start">只提议，不裁决</text>
+</g>
+<g data-node="replaceable">
+<rect x="908" y="140" width="306" height="94" rx="8" fill="#fff" stroke="#bfc0c0"/>
+<text x="926" y="177" class="name" text-anchor="start">记忆策略</text>
+<text x="926" y="211" class="small" text-anchor="start">候选 · 索引 · 检索</text>
+</g>
+<g data-node="replaceable">
+<rect x="1230" y="140" width="306" height="94" rx="8" fill="#fff" stroke="#bfc0c0"/>
+<text x="1248" y="177" class="name" text-anchor="start">执行适配器</text>
+<text x="1248" y="211" class="small" text-anchor="start">API · 文件 · GUI · 外部 Agent</text>
+</g>
+<rect x="32" y="272" width="1536" height="300" rx="8" fill="#fafafa" stroke="#8b96a5"/>
+<text x="56" y="317" class="section" text-anchor="start">核心</text>
+<text x="56" y="353" class="small" text-anchor="start">可靠的任务裁决</text>
+<text x="56" y="379" class="small" text-anchor="start">与执行控制</text>
+<g data-node="adjudication">
+<rect x="264" y="292" width="500" height="190" rx="8" fill="#fff2e9" stroke="#eb6c36"/>
+<text x="284" y="328" class="name accent" text-anchor="start">裁决域</text>
+<text x="284" y="358" class="body" text-anchor="start">同一用户分片 · 一个事务</text>
+<rect x="284" y="377" width="109" height="43" rx="8" fill="#fffaf6" stroke="#edbd9e"/>
+<text x="338.5" y="405" class="body" text-anchor="middle">任务编排</text>
+<rect x="401" y="377" width="109" height="43" rx="8" fill="#fffaf6" stroke="#edbd9e"/>
+<text x="455.5" y="405" class="body" text-anchor="middle">会话</text>
+<rect x="518" y="377" width="109" height="43" rx="8" fill="#fffaf6" stroke="#edbd9e"/>
+<text x="572.5" y="405" class="body" text-anchor="middle">授权</text>
+<rect x="635" y="377" width="109" height="43" rx="8" fill="#fffaf6" stroke="#edbd9e"/>
+<text x="689.5" y="405" class="body" text-anchor="middle">预算</text>
+<text x="514" y="456" class="small" text-anchor="middle">内容控制元数据参与同一事务</text>
+</g>
+<g data-node="execution">
+<rect x="780" y="292" width="250" height="190" rx="8" fill="#fff" stroke="#bfc0c0"/>
+<text x="800" y="328" class="name" text-anchor="start">执行管理</text>
+<text x="800" y="358" class="body" text-anchor="start">独立事务域</text>
+<text x="800" y="407" class="body" text-anchor="start">尝试 · 效果</text>
+<text x="800" y="440" class="body" text-anchor="start">核对 · 收尾</text>
+</g>
+<g data-node="content">
+<rect x="1046" y="292" width="250" height="190" rx="8" fill="#fff" stroke="#bfc0c0"/>
+<text x="1066" y="328" class="name" text-anchor="start">内容治理</text>
+<text x="1066" y="378" class="body" text-anchor="start">来源 · 用途</text>
+<text x="1066" y="407" class="body" text-anchor="start">派生 · 删除</text>
+<text x="1066" y="451" class="body" text-anchor="start">记忆权威记录</text>
+</g>
+<g data-node="egress">
+<rect x="1312" y="292" width="232" height="190" rx="8" fill="#fff2e9" stroke="#eb6c36"/>
+<text x="1332" y="328" class="name accent" text-anchor="start">出口闸门</text>
+<text x="1332" y="393" class="body" text-anchor="start">开始复查</text>
+<text x="1332" y="428" class="body" text-anchor="start">受控 I/O</text>
+</g>
+<rect x="264" y="498" width="1280" height="54" rx="8" fill="#edf0f3" stroke="#c6cdd4"/>
+<text x="284" y="532" class="small" text-anchor="start">共享基础</text>
+<text x="485" y="532" class="body" text-anchor="middle">核心契约</text>
+<line x1="650" y1="510" x2="650" y2="540" stroke="#bfc0c0"/>
+<text x="876" y="532" class="body" text-anchor="middle">持久工作：嵌入各域</text>
+<line x1="1102" y1="510" x2="1102" y2="540" stroke="#bfc0c0"/>
+<text x="1323" y="532" class="body" text-anchor="middle">运行记录</text>
+<rect x="32" y="590" width="1536" height="90" rx="8" fill="#fafafa" stroke="#bfc0c0"/>
+<text x="56" y="629" class="section" text-anchor="start">平台服务</text>
+<text x="56" y="656" class="small" text-anchor="start">提供能力 · 支撑运行</text>
+<text x="405" y="641" class="body" text-anchor="middle">网关与 SDK</text>
+<line x1="561" y1="612" x2="561" y2="658" stroke="#bfc0c0"/>
+<text x="725" y="641" class="body" text-anchor="middle">扩展管理</text>
+<line x1="881" y1="612" x2="881" y2="658" stroke="#bfc0c0"/>
+<text x="1045" y="641" class="body" text-anchor="middle">评测与进化</text>
+<line x1="1201" y1="612" x2="1201" y2="658" stroke="#bfc0c0"/>
+<text x="1372" y="641" class="small" text-anchor="middle">不参与任务裁决</text>
+<rect x="32" y="698" width="1536" height="132" rx="8" fill="#fafafa" stroke="#8b96a5"/>
+<text x="56" y="743" class="section" text-anchor="start">行动主线</text>
+<text x="56" y="775" class="small" text-anchor="start">从提议到外部执行</text>
+<g data-node="step-1">
+<rect x="264" y="718" width="150" height="62" rx="8" fill="#fff" stroke="#8b96a5"/>
+<text x="339.0" y="755" class="step" text-anchor="middle">输入与提议</text>
+</g>
+<path d="M419 749 H437" fill="none" stroke="#4f5d75" stroke-width="1.5" marker-end="url(#panorama-arrow)"/>
+<g data-node="step-2">
+<rect x="441" y="718" width="150" height="62" rx="8" fill="#fff" stroke="#8b96a5"/>
+<text x="516.0" y="755" class="step" text-anchor="middle">单事务准入</text>
+</g>
+<path d="M596 749 H614" fill="none" stroke="#4f5d75" stroke-width="1.5" marker-end="url(#panorama-arrow)"/>
+<g data-node="step-3">
+<rect x="618" y="718" width="188" height="62" rx="8" fill="#fff" stroke="#8b96a5"/>
+<text x="712.0" y="755" class="step" text-anchor="middle">交付动作并确认接纳</text>
+</g>
+<path d="M811 749 H829" fill="none" stroke="#4f5d75" stroke-width="1.5" marker-end="url(#panorama-arrow)"/>
+<g data-node="step-4">
+<rect x="833" y="718" width="150" height="62" rx="8" fill="#fff" stroke="#8b96a5"/>
+<text x="908.0" y="755" class="step" text-anchor="middle">执行管理</text>
+</g>
+<path d="M988 749 H1006" fill="none" stroke="#4f5d75" stroke-width="1.5" marker-end="url(#panorama-arrow)"/>
+<g data-node="step-5">
+<rect x="1010" y="718" width="150" height="62" rx="8" fill="#fff" stroke="#8b96a5"/>
+<text x="1085.0" y="755" class="step" text-anchor="middle">执行适配器</text>
+</g>
+<path d="M1165 749 H1183" fill="none" stroke="#4f5d75" stroke-width="1.5" marker-end="url(#panorama-arrow)"/>
+<g data-node="step-6">
+<rect x="1187" y="718" width="150" height="62" rx="8" fill="#fff2e9" stroke="#eb6c36"/>
+<text x="1262.0" y="755" class="step accent" text-anchor="middle">出口闸门</text>
+</g>
+<path d="M1342 749 H1360" fill="none" stroke="#4f5d75" stroke-width="1.5" marker-end="url(#panorama-arrow)"/>
+<g data-node="step-7">
+<rect x="1364" y="718" width="150" height="62" rx="8" fill="#fff" stroke="#8b96a5"/>
+<text x="1439.0" y="755" class="step" text-anchor="middle">外部系统</text>
+</g>
+<text x="904" y="810" class="small" text-anchor="middle">所有实际出口均经出口闸门；结果未知先核对</text>
+<rect x="32" y="848" width="1536" height="112" rx="8" fill="#fafafa" stroke="#bfc0c0"/>
+<text x="56" y="889" class="section" text-anchor="start">端云位置</text>
+<text x="56" y="922" class="small" text-anchor="start">按场景选择 · 职责不变</text>
+<path d="M290 902 H342 A15 15 0 0 0 344 872 A24 24 0 0 0 299 870 A16 16 0 0 0 290 902 Z" fill="none" stroke="#4f5d75" stroke-width="2"/>
+<text x="382" y="884" class="name" text-anchor="start">云端默认</text>
+<text x="382" y="914" class="body" text-anchor="start">持有任务与裁决</text>
+<line x1="894" y1="866" x2="894" y2="922" stroke="#bfc0c0"/>
+<path d="M969 868 H1019 V902 H969 Z M960 908 H1028 L1019 902 H969 Z M1040 876 H1057 V909 H1040 Z" fill="none" stroke="#4f5d75" stroke-width="2"/>
+<text x="1085" y="884" class="name" text-anchor="start">端侧设备</text>
+<text x="1085" y="914" class="body" text-anchor="start">本机执行管理 · 本机出口</text>
+<text x="904" y="947" class="small" text-anchor="middle">责任归属固定；断网无法证明当前资格时等待</text>
+<text x="1568" y="986" class="small" text-anchor="end">目标架构 · 细节以正文契约为准</text>
+</svg>

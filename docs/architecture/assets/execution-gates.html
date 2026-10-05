@@ -4,39 +4,44 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>四道门禁，各自回答一个问题</title>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&family=Noto+Serif:ital@0;1&family=Noto+Sans+KR:wght@400;500;600&family=Noto+Serif+KR:wght@400&family=Noto+Sans+TC:wght@400;500;600&family=Noto+Serif+TC:wght@400&display=swap" rel="stylesheet">
 <style>* {box-sizing:border-box} body {margin:0;padding:24px;background:#f5f5f5;color:#2d3142;font-family:'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif} .frame {width:100%;max-width:1328px;min-width:0;margin:auto} .diagram-container {width:100%;overflow-x:auto} h1 {font-family:'Instrument Serif', 'Noto Serif SC', 'Songti SC', serif;font-size:28px;font-weight:400} svg {width:100%;height:auto;min-width:1280px;display:block} @media print {.diagram-container {overflow-x:visible} svg {min-width:0}}</style>
 </head>
 <!-- Flowchart; doc-wide; balanced; engineer. Source: core/contracts/README.md §2.6. Shows only passing paths and conditional safe replay; full refusal, waiting and non-success semantics stay in the canonical gate tables. -->
+<!--
+修订记录（图源与同名 SVG）
+| 日期 | 修订说明 |
+| --- | --- |
+| 2026-10-05 | 分类标签改为中文，补充中文字体回退；移除在线字体引用，并重新导出 SVG。职责与契约不变。 |
+-->
 <body>
 <main class="frame">
 <div class="diagram-container">
-<svg width="1280" height="720" viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="execution-gates-title execution-gates-desc">
+<svg width="1280" height="720" viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="execution-gates-title execution-gates-desc" id="execution-gates-root">
 <title id="execution-gates-title">四道门禁，各自回答一个问题</title>
 <desc id="execution-gates-desc">动作经过准入、执行管理接纳、开始核验和发送后记录效果，结果未知的安全重发回到开始门禁，任务成功另经完成门禁。</desc>
 <defs>
-<marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto-start-reverse">
+<marker id="execution-gates-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto-start-reverse">
 <polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/>
 </marker>
-<marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto-start-reverse">
+<marker id="execution-gates-arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto-start-reverse">
 <polygon points="0 0, 8 3, 0 6" fill="#eb6c36"/>
 </marker>
-<marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto-start-reverse">
+<marker id="execution-gates-arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto-start-reverse">
 <polygon points="0 0, 8 3, 0 6" fill="#2e5aa8"/>
 </marker>
 </defs>
 <rect width="1280" height="720" fill="#f5f5f5"/>
 <text x="48" y="56" font-family="'Instrument Serif', 'Noto Serif SC', 'Songti SC', serif" font-size="28" font-weight="400" fill="#2d3142" text-anchor="start">四道门禁，各自回答一个问题</text>
 <text x="48" y="88" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="start">仅画通过后的主线 · 重试是条件性回路；拒绝、等待与非成功关闭见正文</text>
-<path data-connector="true" d="M 224,236 L 288,236" fill="none" stroke="#4f5d75" stroke-width="1.5" marker-end="url(#arrow)"/>
-<path data-connector="true" d="M 448,236 L 576,236" fill="none" stroke="#4f5d75" stroke-width="1.5" marker-end="url(#arrow)"/>
-<path data-connector="true" d="M 768,236 L 896,236" fill="none" stroke="#4f5d75" stroke-width="1.5" marker-end="url(#arrow)"/>
-<path data-connector="true" d="M 976,296 L 976,392" fill="none" stroke="#4f5d75" stroke-width="1.5" marker-end="url(#arrow)"/>
-<path data-connector="true" d="M 880,436 L 768,436" fill="none" stroke="#4f5d75" stroke-width="1.5" marker-end="url(#arrow)"/>
-<path data-connector="true" d="M 576,436 L 448,436" fill="none" stroke="#4f5d75" stroke-width="1.5" marker-end="url(#arrow)"/>
-<path data-connector="true" d="M 288,436 L 224,436" fill="none" stroke="#4f5d75" stroke-width="1.5" marker-end="url(#arrow)"/>
-<path data-connector="true" d="M 672,480 L 672,576 Q 672,584 680,584 L 896,584" fill="none" stroke="#4f5d75" stroke-width="1.5" marker-end="url(#arrow)"/>
-<path data-connector="true" d="M 976,528 L 976,520 Q 976,512 984,512 L 1144,512 Q 1152,512 1152,504 L 1152,136 Q 1152,128 1144,128 L 984,128 Q 976,128 976,136 L 976,176" fill="none" stroke="#4f5d75" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#arrow)"/>
+<path data-connector="true" d="M 224,236 L 288,236" fill="none" stroke="#4f5d75" stroke-width="1.5" marker-end="url(#execution-gates-arrow)"/>
+<path data-connector="true" d="M 448,236 L 576,236" fill="none" stroke="#4f5d75" stroke-width="1.5" marker-end="url(#execution-gates-arrow)"/>
+<path data-connector="true" d="M 768,236 L 896,236" fill="none" stroke="#4f5d75" stroke-width="1.5" marker-end="url(#execution-gates-arrow)"/>
+<path data-connector="true" d="M 976,296 L 976,392" fill="none" stroke="#4f5d75" stroke-width="1.5" marker-end="url(#execution-gates-arrow)"/>
+<path data-connector="true" d="M 880,436 L 768,436" fill="none" stroke="#4f5d75" stroke-width="1.5" marker-end="url(#execution-gates-arrow)"/>
+<path data-connector="true" d="M 576,436 L 448,436" fill="none" stroke="#4f5d75" stroke-width="1.5" marker-end="url(#execution-gates-arrow)"/>
+<path data-connector="true" d="M 288,436 L 224,436" fill="none" stroke="#4f5d75" stroke-width="1.5" marker-end="url(#execution-gates-arrow)"/>
+<path data-connector="true" d="M 672,480 L 672,576 Q 672,584 680,584 L 896,584" fill="none" stroke="#4f5d75" stroke-width="1.5" marker-end="url(#execution-gates-arrow)"/>
+<path data-connector="true" d="M 976,528 L 976,520 Q 976,512 984,512 L 1144,512 Q 1152,512 1152,504 L 1152,136 Q 1152,128 1144,128 L 984,128 Q 976,128 976,136 L 976,176" fill="none" stroke="#4f5d75" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#execution-gates-arrow)"/>
 <g data-edge-label="true">
 <rect x="480.0" y="208" width="64" height="20" rx="2" fill="#f5f5f5"/>
 <text x="512.0" y="222" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="middle">交付动作</text>
@@ -67,9 +72,9 @@
 </g>
 <g data-node="proposal" data-kind="input">
 <rect x="64" y="192" width="160" height="88" rx="6" fill="#f5f5f5"/>
-<rect class="node-surface" x="64" y="192" width="160" height="88" rx="6" fill="rgba(79,93,117,0.10)" stroke="#7a8399"/>
+<rect class="node-surface" x="64" y="192" width="160" height="88" rx="6" fill="#4f5d75" fill-opacity="0.10" stroke="#7a8399"/>
 <rect x="76" y="204" width="48" height="16" rx="2" fill="#f5f5f5" stroke="#7a8399" stroke-width="0.8"/>
-<text x="100.0" y="215" font-family="'Geist Mono', monospace" font-size="8" font-weight="400" fill="#4f5d75" text-anchor="middle">INPUT</text>
+<text x="100.0" y="215" font-family="'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="10" font-weight="400" fill="#4f5d75" text-anchor="middle">输入</text>
 <text x="80" y="240" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="start">提议</text>
 </g>
 <g data-node="admission" data-kind="backend">
@@ -80,15 +85,15 @@
 </g>
 <g data-node="ledger" data-kind="store">
 <rect x="576" y="192" width="192" height="88" rx="6" fill="#f5f5f5"/>
-<rect class="node-surface" x="576" y="192" width="192" height="88" rx="6" fill="rgba(45,49,66,0.05)" stroke="#4f5d75"/>
+<rect class="node-surface" x="576" y="192" width="192" height="88" rx="6" fill="#2d3142" fill-opacity="0.05" stroke="#4f5d75"/>
 <rect x="588" y="204" width="52" height="16" rx="2" fill="#f5f5f5" stroke="#4f5d75" stroke-width="0.8"/>
-<text x="614.0" y="215" font-family="'Geist Mono', monospace" font-size="8" font-weight="400" fill="#4f5d75" text-anchor="middle">CORE</text>
+<text x="614.0" y="215" font-family="'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="10" font-weight="400" fill="#4f5d75" text-anchor="middle">核心</text>
 <text x="592" y="240" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="start">执行管理持久接纳</text>
 <text x="592" y="264" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="start">保存原意图与接纳回执</text>
 </g>
 <g data-node="start" data-kind="focal">
 <polygon points="976,176.0 1056.0,236 976,296.0 896.0,236" fill="#f5f5f5"/>
-<polygon class="node-surface" points="976,176.0 1056.0,236 976,296.0 896.0,236" fill="rgba(235,108,54,0.08)" stroke="#eb6c36"/>
+<polygon class="node-surface" points="976,176.0 1056.0,236 976,296.0 896.0,236" fill="#eb6c36" fill-opacity="0.08" stroke="#eb6c36"/>
 <text x="976" y="232" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="middle">开始门禁 P4</text>
 <text x="976" y="252" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="middle">裁决域事务</text>
 </g>
@@ -96,21 +101,21 @@
 <rect x="880" y="392" width="192" height="88" rx="6" fill="#f5f5f5"/>
 <rect class="node-surface" x="880" y="392" width="192" height="88" rx="6" fill="#ffffff" stroke="#2d3142"/>
 <rect x="892" y="404" width="40" height="16" rx="2" fill="#f5f5f5" stroke="#2d3142" stroke-width="0.8"/>
-<text x="912.0" y="415" font-family="'Geist Mono', monospace" font-size="8" font-weight="400" fill="#4f5d75" text-anchor="middle">SEND</text>
+<text x="912.0" y="415" font-family="'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="10" font-weight="400" fill="#4f5d75" text-anchor="middle">发送</text>
 <text x="896" y="440" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="start">P5 可能已发出</text>
 <text x="896" y="464" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="start">先持久记录，再外部 I/O</text>
 </g>
 <g data-node="effect" data-kind="store">
 <rect x="576" y="392" width="192" height="88" rx="6" fill="#f5f5f5"/>
-<rect class="node-surface" x="576" y="392" width="192" height="88" rx="6" fill="rgba(45,49,66,0.05)" stroke="#4f5d75"/>
+<rect class="node-surface" x="576" y="392" width="192" height="88" rx="6" fill="#2d3142" fill-opacity="0.05" stroke="#4f5d75"/>
 <rect x="588" y="404" width="52" height="16" rx="2" fill="#f5f5f5" stroke="#4f5d75" stroke-width="0.8"/>
-<text x="614.0" y="415" font-family="'Geist Mono', monospace" font-size="8" font-weight="400" fill="#4f5d75" text-anchor="middle">EFFECT</text>
+<text x="614.0" y="415" font-family="'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="10" font-weight="400" fill="#4f5d75" text-anchor="middle">效果</text>
 <text x="592" y="440" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="start">效果与收尾记录</text>
 <text x="592" y="464" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="start">已生效 / 未生效 / 未知</text>
 </g>
 <g data-node="completion" data-kind="focal">
 <polygon points="368,376.0 448.0,436 368,496.0 288.0,436" fill="#f5f5f5"/>
-<polygon class="node-surface" points="368,376.0 448.0,436 368,496.0 288.0,436" fill="rgba(235,108,54,0.08)" stroke="#eb6c36"/>
+<polygon class="node-surface" points="368,376.0 448.0,436 368,496.0 288.0,436" fill="#eb6c36" fill-opacity="0.08" stroke="#eb6c36"/>
 <text x="368" y="432" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="middle">完成门禁</text>
 <text x="368" y="452" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="middle">裁决域事务</text>
 </g>
@@ -118,7 +123,7 @@
 <rect x="64" y="392" width="160" height="88" rx="6" fill="#f5f5f5"/>
 <rect class="node-surface" x="64" y="392" width="160" height="88" rx="6" fill="#ffffff" stroke="#2d3142"/>
 <rect x="76" y="404" width="52" height="16" rx="2" fill="#f5f5f5" stroke="#2d3142" stroke-width="0.8"/>
-<text x="102.0" y="415" font-family="'Geist Mono', monospace" font-size="8" font-weight="400" fill="#4f5d75" text-anchor="middle">RESULT</text>
+<text x="102.0" y="415" font-family="'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="10" font-weight="400" fill="#4f5d75" text-anchor="middle">结果</text>
 <text x="80" y="440" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="start">任务成功</text>
 <text x="80" y="464" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="start">SUCCEEDED</text>
 </g>

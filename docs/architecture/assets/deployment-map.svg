@@ -1,12 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <svg width="1280" height="720" viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="deployment-map-title deployment-map-desc" id="deployment-map-root">
 <title id="deployment-map-title">任务在云端，本机效果在端侧</title>
 <desc id="deployment-map-desc">默认部署把任务裁决放在云端，把本机执行管理与出口放在设备上，网关搬运命令和回执，责任按原标识跨域交接。</desc>
 <defs>
-      <style>@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Geist:wght@400;500;600&amp;family=Geist+Mono:wght@400;500;600&amp;family=Noto+Serif:ital@0;1&amp;family=Noto+Sans+KR:wght@400;500;600&amp;family=Noto+Serif+KR:wght@400&amp;family=Noto+Sans+TC:wght@400;500;600&amp;family=Noto+Serif+TC:wght@400&amp;display=swap');
-      #deployment-map-root { color: #2d3142; font-family: 'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif; }
-      #deployment-map-root .diagram-container { width:100%;overflow-x:auto }
-      #deployment-map-root .diagram-container { overflow-x:visible }</style>
 <marker id="deployment-map-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto-start-reverse">
 <polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/>
 </marker>
@@ -67,7 +62,7 @@
 <rect x="96" y="200" width="248" height="88" rx="6" fill="#f5f5f5"/>
 <rect class="node-surface" x="96" y="200" width="248" height="88" rx="6" fill="#ffffff" stroke="#2d3142"/>
 <rect x="108" y="212" width="48" height="16" rx="2" fill="#f5f5f5" stroke="#2d3142" stroke-width="0.8"/>
-<text x="132.0" y="223" font-family="'Geist Mono', monospace" font-size="8" font-weight="400" fill="#4f5d75" text-anchor="middle">CLOUD</text>
+<text x="132.0" y="223" font-family="'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="10" font-weight="400" fill="#4f5d75" text-anchor="middle">云端</text>
 <text x="112" y="248" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="start">接入进程</text>
 <text x="112" y="272" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="start">网关、连接恢复、传输限流</text>
 </g>
@@ -75,7 +70,7 @@
 <rect x="432" y="200" width="304" height="144" rx="6" fill="#f5f5f5"/>
 <rect class="node-surface" x="432" y="200" width="304" height="144" rx="6" fill="#eb6c36" fill-opacity="0.08" stroke="#eb6c36"/>
 <rect x="444" y="212" width="48" height="16" rx="2" fill="#f5f5f5" stroke="#eb6c36" stroke-width="0.8"/>
-<text x="468.0" y="223" font-family="'Geist Mono', monospace" font-size="8" font-weight="400" fill="#4f5d75" text-anchor="middle">CLOUD</text>
+<text x="468.0" y="223" font-family="'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="10" font-weight="400" fill="#4f5d75" text-anchor="middle">云端</text>
 <text x="448" y="248" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="start">裁决进程</text>
 <text x="448" y="272" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="start">任务编排、会话、授权、预算</text>
 <text x="448" y="292" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="start">任务负责方从创建到关闭不变</text>
@@ -85,7 +80,7 @@
 <rect x="96" y="344" width="248" height="88" rx="6" fill="#f5f5f5"/>
 <rect class="node-surface" x="96" y="344" width="248" height="88" rx="6" fill="#ffffff" stroke="#2d3142"/>
 <rect x="108" y="356" width="48" height="16" rx="2" fill="#f5f5f5" stroke="#2d3142" stroke-width="0.8"/>
-<text x="132.0" y="367" font-family="'Geist Mono', monospace" font-size="8" font-weight="400" fill="#4f5d75" text-anchor="middle">CLOUD</text>
+<text x="132.0" y="367" font-family="'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="10" font-weight="400" fill="#4f5d75" text-anchor="middle">云端</text>
 <text x="112" y="392" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="start">推理工作进程</text>
 <text x="112" y="416" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="start">推理及受控调用</text>
 </g>
@@ -93,7 +88,7 @@
 <rect x="96" y="480" width="248" height="104" rx="6" fill="#f5f5f5"/>
 <rect class="node-surface" x="96" y="480" width="248" height="104" rx="6" fill="#ffffff" stroke="#2d3142"/>
 <rect x="108" y="492" width="48" height="16" rx="2" fill="#f5f5f5" stroke="#2d3142" stroke-width="0.8"/>
-<text x="132.0" y="503" font-family="'Geist Mono', monospace" font-size="8" font-weight="400" fill="#4f5d75" text-anchor="middle">CLOUD</text>
+<text x="132.0" y="503" font-family="'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="10" font-weight="400" fill="#4f5d75" text-anchor="middle">云端</text>
 <text x="112" y="528" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="start">内容进程</text>
 <text x="112" y="552" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="start">内容治理、存储访问</text>
 <text x="112" y="572" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="start">记忆策略宿主</text>
@@ -102,16 +97,16 @@
 <rect x="432" y="464" width="304" height="120" rx="6" fill="#f5f5f5"/>
 <rect class="node-surface" x="432" y="464" width="304" height="120" rx="6" fill="#2d3142" fill-opacity="0.05" stroke="#4f5d75"/>
 <rect x="444" y="476" width="48" height="16" rx="2" fill="#f5f5f5" stroke="#4f5d75" stroke-width="0.8"/>
-<text x="468.0" y="487" font-family="'Geist Mono', monospace" font-size="8" font-weight="400" fill="#4f5d75" text-anchor="middle">CLOUD</text>
+<text x="468.0" y="487" font-family="'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="10" font-weight="400" fill="#4f5d75" text-anchor="middle">云端</text>
 <text x="448" y="512" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="start">云端执行宿主</text>
-<text x="448" y="536" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="start">云端执行管理、执行网关</text>
+<text x="448" y="536" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="start">云端执行管理、出口闸门</text>
 <text x="448" y="556" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="start">隔离的执行适配器宿主</text>
 </g>
 <g data-node="client" data-kind="backend">
 <rect x="864" y="200" width="304" height="88" rx="6" fill="#f5f5f5"/>
 <rect class="node-surface" x="864" y="200" width="304" height="88" rx="6" fill="#ffffff" stroke="#2d3142"/>
 <rect x="876" y="212" width="52" height="16" rx="2" fill="#f5f5f5" stroke="#2d3142" stroke-width="0.8"/>
-<text x="902.0" y="223" font-family="'Geist Mono', monospace" font-size="8" font-weight="400" fill="#4f5d75" text-anchor="middle">DEVICE</text>
+<text x="902.0" y="223" font-family="'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="10" font-weight="400" fill="#4f5d75" text-anchor="middle">端侧</text>
 <text x="880" y="248" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="start">恢复客户端</text>
 <text x="880" y="272" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="start">搬运命令与回执，不接管任务</text>
 </g>
@@ -119,16 +114,16 @@
 <rect x="864" y="368" width="304" height="112" rx="6" fill="#f5f5f5"/>
 <rect class="node-surface" x="864" y="368" width="304" height="112" rx="6" fill="#eb6c36" fill-opacity="0.08" stroke="#eb6c36"/>
 <rect x="876" y="380" width="52" height="16" rx="2" fill="#f5f5f5" stroke="#eb6c36" stroke-width="0.8"/>
-<text x="902.0" y="391" font-family="'Geist Mono', monospace" font-size="8" font-weight="400" fill="#4f5d75" text-anchor="middle">DEVICE</text>
+<text x="902.0" y="391" font-family="'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="10" font-weight="400" fill="#4f5d75" text-anchor="middle">端侧</text>
 <text x="880" y="416" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="start">本机执行宿主</text>
-<text x="880" y="440" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="start">本机执行管理、执行网关、本机适配器</text>
+<text x="880" y="440" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="start">本机执行管理、出口闸门、本机适配器</text>
 <text x="880" y="460" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="start">本机效果由本机执行管理负责</text>
 </g>
 <g data-node="local-content" data-kind="optional">
 <rect x="864" y="532" width="304" height="80" rx="6" fill="#f5f5f5"/>
 <rect class="node-surface" x="864" y="532" width="304" height="80" rx="6" fill="#2d3142" fill-opacity="0.02" stroke="#bfc0c0" stroke-dasharray="4,3"/>
 <rect x="876" y="544" width="52" height="16" rx="2" fill="#f5f5f5" stroke="#bfc0c0" stroke-width="0.8"/>
-<text x="902.0" y="555" font-family="'Geist Mono', monospace" font-size="8" font-weight="400" fill="#4f5d75" text-anchor="middle">DEVICE</text>
+<text x="902.0" y="555" font-family="'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="10" font-weight="400" fill="#4f5d75" text-anchor="middle">端侧</text>
 <text x="880" y="580" font-family="'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="start">使用本机内容时部署内容治理</text>
 </g>
 <line x1="48" y1="660" x2="1232" y2="660" stroke="#bfc0c0"/>

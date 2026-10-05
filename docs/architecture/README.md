@@ -14,6 +14,8 @@
 | 2026-10-05 | 索引登记新的流程文档"模型调用"。 |
 | 2026-10-05 | 模块名称统一为“执行网关”，职责与契约不变。 |
 | 2026-10-05 | 模块名称统一为“执行管理”，同步模块简称与图示；存储和连续性语境中的“账本”指其持久执行记录。职责与契约不变。 |
+| 2026-10-05 | 模块名称由执行网关改回出口闸门，避免与网关与 SDK 撞名；职责与契约不变。 |
+| 2026-10-05 | 文档索引增加 [ADR 0004](../adr/0004-language-and-stack.md) 和[开发规范](../development.md)。 |
 
 本目录存放 Lerna 的现行架构设计：一个面向个人用户、以可靠性契约为核心的 Agent Harness。目前只有设计，尚未实现；各文档的状态以第 2 节索引为准。
 
@@ -37,9 +39,11 @@
 | [分层与模块](layers.md) | 1 划分 | 已采纳 |
 | [整体方案](overview.md) | 解释 | 草稿 |
 | [文档规范](conventions.md) | 规范 | 已采纳 |
+| [开发规范](../development.md) | 规范 | 已采纳 |
 | [ADR 0001 持久性按部署档位声明](../adr/0001-durability-profiles.md) | 2 决定 | 已采纳 |
 | [ADR 0002 授权区分操作权利与处理目的](../adr/0002-processing-purposes.md) | 2 决定 | 已采纳 |
 | [ADR 0003 替换资格分三类，公共契约与内部接口分开](../adr/0003-replacement-classes-and-assembly.md) | 2 决定 | 已采纳 |
+| [ADR 0004 开发语言与主要技术栈](../adr/0004-language-and-stack.md) | 2 决定 | 已采纳 |
 | [核心契约](core/contracts/README.md) | 3 设计 | 草稿 |
 | [持久工作](core/durable/README.md) | 3 设计 | 草稿 |
 | [执行管理](core/ledger/README.md) | 3 设计 | 草稿 |
@@ -49,7 +53,7 @@
 | [会话](core/sessions/README.md) | 3 设计 | 草稿 |
 | [内容治理](core/content/README.md) | 3 设计 | 草稿 |
 | [运行记录](core/trace/README.md) | 3 设计 | 草稿 |
-| [执行网关](core/egress/README.md) | 3 设计 | 草稿 |
+| [出口闸门](core/egress/README.md) | 3 设计 | 草稿 |
 | [推理：接口](ports/reasoner/README.md) | 3 设计 | 草稿 |
 | [推理：默认实现](ports/reasoner/default.md) | 3 设计 | 草稿 |
 | [记忆策略：接口](ports/memory/README.md) | 3 设计 | 草稿 |
