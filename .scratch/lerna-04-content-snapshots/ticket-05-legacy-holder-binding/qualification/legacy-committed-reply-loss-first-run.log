@@ -1,0 +1,5 @@
+=== RUN   TestContentLegacyCommittedBindingReplyLossRecoversOnlyByOriginalQualification
+--- PASS: TestContentLegacyCommittedBindingReplyLossRecoversOnlyByOriginalQualification (2.31s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/component	2.316s
+NATIVE_COMPLETION_ACK {"pid": 3107805, "pgid": 3107805, "starttime": "12966595", "exit": 0, "group_absent": true, "timed_out": false}

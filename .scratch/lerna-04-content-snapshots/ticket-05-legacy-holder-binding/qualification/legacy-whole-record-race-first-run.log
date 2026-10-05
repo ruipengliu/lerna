@@ -1,0 +1,5 @@
+=== RUN   TestContentLegacyWholeRecordRaceRefusesStaleBindingAndReplaysOriginalQualification
+--- PASS: TestContentLegacyWholeRecordRaceRefusesStaleBindingAndReplaysOriginalQualification (2.26s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/component	2.273s
+NATIVE_COMPLETION_ACK {"pid": 3103592, "pgid": 3103592, "starttime": "12950303", "exit": 0, "group_absent": true, "timed_out": false}

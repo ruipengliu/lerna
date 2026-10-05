@@ -6,6 +6,8 @@
 
 ## 当前状态
 
+2026-10-05 00:56 UTC，旧holder升级[三条故障恢复](../lerna-04-content-snapshots/ticket-05-legacy-holder-binding/qualification/README.md)已分别真实通过普通／race：记录竞争2.273／3.852s；已commit后机械丢返回2.316／3.832s；初次固定700ms资格跨界整Tx回滚2.702／4.133s。完整源码partial `331154b132c5fd631fb8f663e05a12642cd014cd` clean；原qualification、字节、回执／历史和V2保持。六native均实际exit0及group absence，无原界扩大；原producer全部逻辑Close与actualWait先于消费者。最后释放后LOCAL为空，05仅静态准备整页责任真实竞争测试，03仅静态准备已采用子成本新overlay。尚不接受／合并两票或广告完整1.2，仍15/41。
+
 2026-10-05 00:50 UTC，05记录竞争测试partial `2402fd79d5093e0a29605f4e28f2da0c1cac8cac` 普通2.273s／race3.852s通过：真实旧Read后合法Rev2收紧原保存期，旧完整前态CAS精确拒绝；同原qualification与deadline在两次真实重开后恢复绑定，V2／固定回执／发布历史／字节保持。不是新产品修复或伪造业务red；当前继续唯一槽执行提交成功后机械丢返回测试，原截止越界仍待。采用[子阶段成本决定](../lerna-04-content-snapshots/ticket-03-large-graph-claim/source-phase-cost-decision.md)，03仅静态准备新有限overlay，未优化／运行。
 
 2026-10-05 00:46 UTC，原界独占大图B诊断race实际74.623s失败，native3086554／start12876878／exit1及group absence、session完成后明确释放。完整[原日志与结果](../lerna-04-content-snapshots/ticket-03-large-graph-claim/diagnostic/results.md)保留：64祖先和62材料都在calculate中由Access.Current先返回deadline，随后真实ValidateClaim的新DB时间分别晚原5s lease21.425／24.545ms；caller30s仍余1.161／6.921s。running／start1已经真实commit，尚无Prepared提交或worker publication；Material25／31次包括末次失败，成功24／30次。该新独占scope不解释历史共享负载失败。嵌套Current与Content读取成本不可相加，SQL／decode／对象读取子成本未知；已请求原Astra high审查下一次必要有限拆分，不预选缓存／索引、不扩期限或盲重试。原生产／测试字节仍等于5e8cad7，诊断overlay五文件／原文件身份及SHA全部重新机械核准，未进入集成产品。
