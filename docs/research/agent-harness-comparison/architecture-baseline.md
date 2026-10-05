@@ -18,7 +18,7 @@
 | [Extensions](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/extensions/README.md) | 组件合同、InstallLock、安装/健康/迁移/激活、排空和回退 | 精确制品字节及依赖可核对；批准有效与实例 ready 分开；回退旧版需当前独立批准 |
 | [Evaluation](https://github.com/ruipengliu/lerna/blob/e493ad266d110097aeeb69e10abdabfa771967ab/docs/architecture/.draft/evaluation/README.md) | 冻结总体/样本/各臂/计划、全部物理尝试、独立判断、暴露记录及证据资格 | 自评或 CI 通过不构成改善证据；恢复和取消不重置分母，质量与完整成本用同一实验口径 |
 
-领域术语按 [CONTEXT](../../../CONTEXT.md) 使用。参考项目的 session、thread、lane、task、operation、goal 等原名只解释该项目自己的对象；名称相同不意味着本项目身份、状态或成功点相同。
+领域术语按 [GLOSSARY](../../../GLOSSARY.md) 使用。参考项目的 session、thread、lane、task、operation、goal 等原名只解释该项目自己的对象；名称相同不意味着本项目身份、状态或成功点相同。
 
 ## 2. 已确定的共同选型
 

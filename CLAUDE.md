@@ -45,4 +45,4 @@ The five canonical triage roles use their default strings: `needs-triage`, `need
 
 ### Domain docs
 
-This is a single-context repo using root `CONTEXT.md` and `docs/adr/`. See `docs/agents/domain.md`. The authoritative glossary is section 3 of `docs/architecture/project-goals.md`; `CONTEXT.md` only points there.
+This is a single-context repo using root `GLOSSARY.md` and `docs/adr/`. See `docs/agents/domain.md`. The authoritative glossary is section 3 of `docs/architecture/project-goals.md`; `GLOSSARY.md` only points there.

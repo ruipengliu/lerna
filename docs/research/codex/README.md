@@ -65,7 +65,7 @@ flowchart TB
 | `RolloutPayload` | tagged payload：响应项、回合上下文、压缩、token usage、agent 通信、保留上下文、world state、安全评分和事件等。 | 原始模型内容、系统事件和工具结果各有语义，不能都当成可信控制命令。 |
 | `AgentStatus` / `TurnStatus` | 由事件映射 pending/running/completed/interrupted/errored 等；TurnStatus 有 completed/interrupted/failed/in_progress。 | `TurnComplete` 没有错误即可映射 Completed，不包含本项目 AcceptanceRule 所需独立成功证明。 |
 
-证据分别为 [线程入口][会话类型][回合运行类型][步骤冻结][线程身份][历史位置][会话元数据][回合快照][历史载荷][状态映射][前端回合状态]。本项目应把这些会话/历史结构映射到 [Task / Operation 模型](../../../CONTEXT.md)，而不是照搬名称。
+证据分别为 [线程入口][会话类型][回合运行类型][步骤冻结][线程身份][历史位置][会话元数据][回合快照][历史载荷][状态映射][前端回合状态]。本项目应把这些会话/历史结构映射到 [Task / Operation 模型](../../../GLOSSARY.md)，而不是照搬名称。
 
 ## 4. 存储、事务与恢复
 
