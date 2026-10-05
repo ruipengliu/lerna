@@ -107,6 +107,10 @@ func (m *Module) decide(ctx context.Context, c *durable.Claim) error {
 			if applyEvidence(op, interpret(st, o), o.o.GetObservationId()) {
 				changed = true
 			}
+			if o.o.GetPurpose() == lernav1.SendPurpose_SEND_PURPOSE_QUERY {
+				op.ReconcileChecks++
+				changed = true
+			}
 			if _, err := tx.Exec(`UPDATE observations SET decided = 1 WHERE user_id = ? AND observation_id = ?`,
 				c.User, o.o.GetObservationId()); err != nil {
 				return durable.Transition{}, err
@@ -146,13 +150,6 @@ func (m *Module) decide(ctx context.Context, c *durable.Claim) error {
 		}
 		return tr, nil
 	})
-}
-
-// recoveryPlan 在效果仍未知时，按能力声明的组合决定恢复策略（执行管理 4.2）。
-func (m *Module) recoveryPlan(_ *durable.Tx, _ *opState, op *lernav1.Operation) (durable.Transition, error) {
-	op.ReconcileState = lernav1.ReconcileState_RECONCILE_STATE_PAUSED
-	op.PauseReason = "no automatic recovery for this capability"
-	return durable.Done(), nil
 }
 
 // sourceID 是一次发送的内部计费来源：出口之前就由发送身份固定，供应商身份返回后登记为别名。

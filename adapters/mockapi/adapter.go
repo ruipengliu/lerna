@@ -3,6 +3,7 @@ package mockapi
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"google.golang.org/protobuf/types/known/timestamppb"
 
@@ -61,7 +62,8 @@ func (a *Adapter) Declarations() []*lernav1.CapabilityDeclaration {
 			Supported: true, Correlation: lernav1.QueryCorrelation_QUERY_CORRELATION_BY_ATTEMPT_ID,
 			VisibilityDelayMs: a.Target.QueryLag.Milliseconds(), RetentionSeconds: 7 * 24 * 3600,
 		}
-		d.LateFinality = &lernav1.LateFinality{Provable: true, Evidence: "query reports the attempt committed or terminally rejected"}
+		d.LateFinality = &lernav1.LateFinality{Provable: true,
+			Evidence: "query reports the attempt committed or rejected, or finds nothing after the request deadline plus the visibility delay"}
 	}
 	return []*lernav1.CapabilityDeclaration{d}
 }
@@ -71,7 +73,11 @@ func (a *Adapter) Execute(_ context.Context, req *lernav1.ExecuteRequest) (*lern
 	if req.GetCapabilityId() != a.Capability {
 		return nil, fmt.Errorf("mockapi: unknown capability %q", req.GetCapabilityId())
 	}
-	resp := a.Target.Put(req.GetExternalKey(), req.GetAttemptId(), req.GetArguments()["key"], req.GetArguments()["value"])
+	var deadline time.Time
+	if req.GetDeadline() != nil {
+		deadline = req.GetDeadline().AsTime()
+	}
+	resp := a.Target.Put(req.GetExternalKey(), req.GetAttemptId(), req.GetArguments()["key"], req.GetArguments()["value"], deadline)
 	rep := &lernav1.ExecutionReport{AdapterVersion: Version, ObservedAt: timestamppb.New(a.Target.now())}
 	if resp.Lost {
 		// 回执丢失：效果无法确定，用量也无法确定。
@@ -113,7 +119,11 @@ func (a *Adapter) Execute(_ context.Context, req *lernav1.ExecuteRequest) (*lern
 
 // Query 按原尝试查询；不重新执行原动作。"查无记录"保持未知，除非目标给出终局依据。
 func (a *Adapter) Query(_ context.Context, req *lernav1.QueryRequest) (*lernav1.ExecutionReport, error) {
-	q := a.Target.Query(req.GetAttemptId())
+	var notAfter time.Time
+	if req.GetNotAfter() != nil {
+		notAfter = req.GetNotAfter().AsTime()
+	}
+	q := a.Target.Query(req.GetAttemptId(), notAfter)
 	rep := &lernav1.ExecutionReport{AdapterVersion: Version, ObservedAt: timestamppb.New(a.Target.now()),
 		// 查询不收费：零费用有依据（模拟目标的计费约定）。
 		Usage: []*lernav1.UsageItem{{BillingSource: a.ID, NativeId: "query:" + req.GetAttemptId() + ":" + fmt.Sprint(req.GetSendSeq()),
@@ -128,7 +138,8 @@ func (a *Adapter) Query(_ context.Context, req *lernav1.QueryRequest) (*lernav1.
 		rep.ClaimsTerminal = true
 		rep.TargetReceipt = q.RequestID
 		rep.Fields = map[string]string{"value": q.Value}
-	case q.Found && q.Terminal:
+	case q.Terminal:
+		// 目标确认这个尝试被终止，或查无记录且期限已过：不会再生效。
 		rep.Status = lernav1.ExecutionStatus_EXECUTION_STATUS_FINISHED
 		rep.ClaimedEffect = lernav1.EffectOutcome_EFFECT_OUTCOME_NOT_APPLIED
 		rep.ClaimsTerminal = true

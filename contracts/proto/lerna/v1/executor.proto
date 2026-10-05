@@ -21,6 +21,8 @@ message ExecuteRequest {
   // 出口凭据：不透明引用，由出口闸门核验。
   string credential_ref = 9;
   bytes request_digest = 10;
+  // 请求的有效期限：目标在期限之后到达的请求不得生效（迟到终局的依据之一）。
+  google.protobuf.Timestamp deadline = 11;
 }
 
 // 查询输入：只按原尝试查询，不重新执行原动作。
@@ -33,6 +35,8 @@ message QueryRequest {
   map<string, string> arguments = 6;
   int32 send_seq = 7;
   string credential_ref = 8;
+  // 原尝试全部发送中最晚的请求期限：期限过后仍查不到，才可能证明原请求不会再生效。
+  google.protobuf.Timestamp not_after = 9;
 }
 
 // 执行情况（执行适配器接口 2.3）。

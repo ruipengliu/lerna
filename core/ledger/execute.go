@@ -81,8 +81,8 @@ func (m *Module) execute(ctx context.Context, c *durable.Claim) error {
 		}
 		last = st.lastSend(lernav1.SendPurpose_SEND_PURPOSE_EXECUTE)
 	case last.observed:
-		// 最近一次发送已有回报且已裁决：交给恢复策略。
-		return m.decide(ctx, c)
+		// 最近一次发送已有回报且效果仍未知：按能力核对或安全重发。
+		return m.recover(ctx, c, st)
 	}
 	return m.send(ctx, c, st, last)
 }
@@ -123,7 +123,14 @@ func (m *Module) send(ctx context.Context, c *durable.Claim, st *opState, s *sen
 	safeResend := st.anyDispatched()
 	out := m.gateSend(st, a, s, safeResend)
 	err := m.Gate.Call(ctx, out, egress.Hooks{
-		DispatchPossible: func(ctx context.Context, rec *lernav1.Receipt) error { return m.dispatchPossible(ctx, c, st, s, rec) },
+		DispatchPossible: func(ctx context.Context, rec *lernav1.Receipt) error {
+			if err := m.dispatchPossible(ctx, c, st, s, rec); err != nil {
+				return err
+			}
+			// 请求携带期限：期限之后到达的请求不得生效，这是可查询目标证明"不会再生效"的依据。
+			out.Execute.Deadline = timestamppb.New(s.dispatchAt.Add(RequestTTL))
+			return nil
+		},
 		Observe: func(ctx context.Context, rep *lernav1.ExecutionReport, ioErr error) error {
 			return m.observe(ctx, st.op, s, rep, ioErr)
 		},
@@ -215,6 +222,7 @@ func (m *Module) dispatchPossible(ctx context.Context, c *durable.Claim, st *opS
 		}
 		st.op = op
 		s.dispatchPossible = true
+		s.dispatchAt = tx.Now()
 		return durable.Keep(), nil
 	})
 }

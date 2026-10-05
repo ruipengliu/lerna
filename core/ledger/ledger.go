@@ -35,6 +35,8 @@ func (m *Module) Register() {
 		func() proto.Message { return &lernav1.OperationIntent{} }, m.handleAcceptIntent)
 	m.Domain.HandleCommand(ports.CommandSealDispatch,
 		func() proto.Message { return &lernav1.SealDispatchCommand{} }, m.handleSealDispatch)
+	m.Domain.HandleCommand(ports.CommandResumeReconciliation,
+		func() proto.Message { return &lernav1.ResumeReconciliationCommand{} }, m.handleResume)
 	m.Domain.HandleJob(JobExecute, m.execute)
 }
 

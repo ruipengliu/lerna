@@ -165,8 +165,9 @@ type Response struct {
 	Cost       int64
 }
 
-// Put 处理一次执行请求：把 key 设为 value。externalKey 是调用方显式传入的幂等键。
-func (t *Target) Put(externalKey, attemptID, key, value string) Response {
+// Put 处理一次执行请求：把 key 设为 value。externalKey 是调用方显式传入的幂等键；
+// deadline 非零时，期限之后到达的请求被拒绝，不产生效果（目标声明的迟到终局语义）。
+func (t *Target) Put(externalKey, attemptID, key, value string, deadline time.Time) Response {
 	t.mu.Lock()
 	defer t.mu.Unlock()
 	t.advance()
@@ -177,6 +178,11 @@ func (t *Target) Put(externalKey, attemptID, key, value string) Response {
 		return Response{Lost: true}
 	}
 	now := t.now()
+	if !deadline.IsZero() && now.After(deadline) {
+		t.calls = append(t.calls, Call{Seq: n, RequestID: fmt.Sprintf("req-%d", n), ExternalKey: externalKey, AttemptID: attemptID,
+			Key: key, Value: value, At: now, Fault: Reject})
+		return Response{Status: 422, RequestID: fmt.Sprintf("req-%d", n)}
+	}
 	reqID := fmt.Sprintf("req-%d", n)
 	call := Call{Seq: n, RequestID: reqID, ExternalKey: externalKey, AttemptID: attemptID, Key: key, Value: value, At: now, Fault: f}
 	if t.class == Idempotent && externalKey != "" {
@@ -240,7 +246,8 @@ type QueryResult struct {
 }
 
 // Query 按尝试标识查询结果。只有可查询目标支持；查询不重新执行原动作。
-func (t *Target) Query(attemptID string) QueryResult {
+// notAfter 是原尝试最晚的请求期限：期限和可见性延迟都过去之后仍查不到，才是终局的"未生效"。
+func (t *Target) Query(attemptID string, notAfter time.Time) QueryResult {
 	t.mu.Lock()
 	defer t.mu.Unlock()
 	t.advance()
@@ -268,6 +275,10 @@ func (t *Target) Query(attemptID string) QueryResult {
 		if c.AttemptID == attemptID && !c.Query && (c.Fault == RateLimit || c.Fault == Reject) {
 			return QueryResult{Supported: true, Found: true, Terminal: true, RequestID: c.RequestID}
 		}
+	}
+	if !notAfter.IsZero() && !now.Before(notAfter.Add(t.QueryLag)) {
+		// 期限之后到达的请求一律拒绝，而可见性延迟也已过去：原请求不会再生效。
+		return QueryResult{Supported: true, Terminal: true}
 	}
 	return QueryResult{Supported: true}
 }

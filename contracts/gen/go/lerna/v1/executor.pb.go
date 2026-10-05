@@ -161,6 +161,8 @@ type ExecuteRequest struct {
 	// 出口凭据：不透明引用，由出口闸门核验。
 	CredentialRef string `protobuf:"bytes,9,opt,name=credential_ref,json=credentialRef,proto3" json:"credential_ref,omitempty"`
 	RequestDigest []byte `protobuf:"bytes,10,opt,name=request_digest,json=requestDigest,proto3" json:"request_digest,omitempty"`
+	// 请求的有效期限：目标在期限之后到达的请求不得生效（迟到终局的依据之一）。
+	Deadline      *timestamppb.Timestamp `protobuf:"bytes,11,opt,name=deadline,proto3" json:"deadline,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -265,6 +267,13 @@ func (x *ExecuteRequest) GetRequestDigest() []byte {
 	return nil
 }
 
+func (x *ExecuteRequest) GetDeadline() *timestamppb.Timestamp {
+	if x != nil {
+		return x.Deadline
+	}
+	return nil
+}
+
 // 查询输入：只按原尝试查询，不重新执行原动作。
 type QueryRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -276,6 +285,8 @@ type QueryRequest struct {
 	Arguments     map[string]string      `protobuf:"bytes,6,rep,name=arguments,proto3" json:"arguments,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	SendSeq       int32                  `protobuf:"varint,7,opt,name=send_seq,json=sendSeq,proto3" json:"send_seq,omitempty"`
 	CredentialRef string                 `protobuf:"bytes,8,opt,name=credential_ref,json=credentialRef,proto3" json:"credential_ref,omitempty"`
+	// 原尝试全部发送中最晚的请求期限：期限过后仍查不到，才可能证明原请求不会再生效。
+	NotAfter      *timestamppb.Timestamp `protobuf:"bytes,9,opt,name=not_after,json=notAfter,proto3" json:"not_after,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -364,6 +375,13 @@ func (x *QueryRequest) GetCredentialRef() string {
 		return x.CredentialRef
 	}
 	return ""
+}
+
+func (x *QueryRequest) GetNotAfter() *timestamppb.Timestamp {
+	if x != nil {
+		return x.NotAfter
+	}
+	return nil
 }
 
 // 一项用量（执行回报中的用量部分）。
@@ -626,7 +644,7 @@ var File_lerna_v1_executor_proto protoreflect.FileDescriptor
 
 const file_lerna_v1_executor_proto_rawDesc = "" +
 	"\n" +
-	"\x17lerna/v1/executor.proto\x12\blerna.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x15lerna/v1/ledger.proto\"\xba\x03\n" +
+	"\x17lerna/v1/executor.proto\x12\blerna.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x15lerna/v1/ledger.proto\"\xf2\x03\n" +
 	"\x0eExecuteRequest\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x17\n" +
 	"\atask_id\x18\x02 \x01(\tR\x06taskId\x12!\n" +
@@ -639,10 +657,11 @@ const file_lerna_v1_executor_proto_rawDesc = "" +
 	"\fexternal_key\x18\b \x01(\tR\vexternalKey\x12%\n" +
 	"\x0ecredential_ref\x18\t \x01(\tR\rcredentialRef\x12%\n" +
 	"\x0erequest_digest\x18\n" +
-	" \x01(\fR\rrequestDigest\x1a<\n" +
+	" \x01(\fR\rrequestDigest\x126\n" +
+	"\bdeadline\x18\v \x01(\v2\x1a.google.protobuf.TimestampR\bdeadline\x1a<\n" +
 	"\x0eArgumentsEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xf6\x02\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xaf\x03\n" +
 	"\fQueryRequest\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\x12!\n" +
 	"\foperation_id\x18\x02 \x01(\tR\voperationId\x12\x1d\n" +
@@ -652,7 +671,8 @@ const file_lerna_v1_executor_proto_rawDesc = "" +
 	"\rcapability_id\x18\x05 \x01(\tR\fcapabilityId\x12C\n" +
 	"\targuments\x18\x06 \x03(\v2%.lerna.v1.QueryRequest.ArgumentsEntryR\targuments\x12\x19\n" +
 	"\bsend_seq\x18\a \x01(\x05R\asendSeq\x12%\n" +
-	"\x0ecredential_ref\x18\b \x01(\tR\rcredentialRef\x1a<\n" +
+	"\x0ecredential_ref\x18\b \x01(\tR\rcredentialRef\x127\n" +
+	"\tnot_after\x18\t \x01(\v2\x1a.google.protobuf.TimestampR\bnotAfter\x1a<\n" +
 	"\x0eArgumentsEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xf9\x01\n" +
@@ -728,23 +748,25 @@ var file_lerna_v1_executor_proto_goTypes = []any{
 	nil,                           // 6: lerna.v1.ExecuteRequest.ArgumentsEntry
 	nil,                           // 7: lerna.v1.QueryRequest.ArgumentsEntry
 	nil,                           // 8: lerna.v1.ExecutionReport.FieldsEntry
-	(EffectOutcome)(0),            // 9: lerna.v1.EffectOutcome
-	(*timestamppb.Timestamp)(nil), // 10: google.protobuf.Timestamp
+	(*timestamppb.Timestamp)(nil), // 9: google.protobuf.Timestamp
+	(EffectOutcome)(0),            // 10: lerna.v1.EffectOutcome
 }
 var file_lerna_v1_executor_proto_depIdxs = []int32{
 	6,  // 0: lerna.v1.ExecuteRequest.arguments:type_name -> lerna.v1.ExecuteRequest.ArgumentsEntry
-	7,  // 1: lerna.v1.QueryRequest.arguments:type_name -> lerna.v1.QueryRequest.ArgumentsEntry
-	0,  // 2: lerna.v1.ExecutionReport.status:type_name -> lerna.v1.ExecutionStatus
-	9,  // 3: lerna.v1.ExecutionReport.claimed_effect:type_name -> lerna.v1.EffectOutcome
-	8,  // 4: lerna.v1.ExecutionReport.fields:type_name -> lerna.v1.ExecutionReport.FieldsEntry
-	4,  // 5: lerna.v1.ExecutionReport.usage:type_name -> lerna.v1.UsageItem
-	1,  // 6: lerna.v1.ExecutionReport.rate_limit:type_name -> lerna.v1.RateLimitKind
-	10, // 7: lerna.v1.ExecutionReport.observed_at:type_name -> google.protobuf.Timestamp
-	8,  // [8:8] is the sub-list for method output_type
-	8,  // [8:8] is the sub-list for method input_type
-	8,  // [8:8] is the sub-list for extension type_name
-	8,  // [8:8] is the sub-list for extension extendee
-	0,  // [0:8] is the sub-list for field type_name
+	9,  // 1: lerna.v1.ExecuteRequest.deadline:type_name -> google.protobuf.Timestamp
+	7,  // 2: lerna.v1.QueryRequest.arguments:type_name -> lerna.v1.QueryRequest.ArgumentsEntry
+	9,  // 3: lerna.v1.QueryRequest.not_after:type_name -> google.protobuf.Timestamp
+	0,  // 4: lerna.v1.ExecutionReport.status:type_name -> lerna.v1.ExecutionStatus
+	10, // 5: lerna.v1.ExecutionReport.claimed_effect:type_name -> lerna.v1.EffectOutcome
+	8,  // 6: lerna.v1.ExecutionReport.fields:type_name -> lerna.v1.ExecutionReport.FieldsEntry
+	4,  // 7: lerna.v1.ExecutionReport.usage:type_name -> lerna.v1.UsageItem
+	1,  // 8: lerna.v1.ExecutionReport.rate_limit:type_name -> lerna.v1.RateLimitKind
+	9,  // 9: lerna.v1.ExecutionReport.observed_at:type_name -> google.protobuf.Timestamp
+	10, // [10:10] is the sub-list for method output_type
+	10, // [10:10] is the sub-list for method input_type
+	10, // [10:10] is the sub-list for extension type_name
+	10, // [10:10] is the sub-list for extension extendee
+	0,  // [0:10] is the sub-list for field type_name
 }
 
 func init() { file_lerna_v1_executor_proto_init() }

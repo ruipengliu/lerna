@@ -267,3 +267,16 @@ message SealDispatchResult {
   // 封闭先于意图被接纳：迟到的意图会被接纳为"禁止执行"。
   repeated string sealed_ahead_of_intent = 3;
 }
+
+// 恢复已暂停的核对：裁决域以收尾用途准入追加的核对查询额度后交给执行管理。
+message ResumeReconciliationCommand {
+  string user_id = 1;
+  string operation_id = 2;
+  int32 extra_queries = 3;
+}
+
+// 用户请求恢复核对（公共命令）：核心以收尾用途准入追加的核对额度，经过授权和预算。
+message ExtendReconciliationCommand {
+  string operation_id = 1;
+  int32 extra_queries = 2;
+}

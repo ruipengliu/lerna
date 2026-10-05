@@ -17,6 +17,8 @@ const (
 	CommandRevokeGrant   = "grants.revoke_grant"
 	CommandRequestGrant  = "grants.request_grant"
 	CommandSetBudget     = "budget.set_budget"
+	// CommandExtendReconciliation 恢复已暂停的核对：追加核对查询额度。
+	CommandExtendReconciliation = "tasks.extend_reconciliation"
 )
 
 // 核心模块之间的跨域命令（R7 交接）。它们是跨进程命令，属于公共契约；
@@ -36,6 +38,8 @@ const (
 	CommandSealDispatch = "ledger.seal_dispatch"
 	// CommandCloseReservation 是动作收尾后关闭预留（预算）。
 	CommandCloseReservation = "budget.close_reservation"
+	// CommandResumeReconciliation 把追加的核对额度交给执行管理。
+	CommandResumeReconciliation = "ledger.resume_reconciliation"
 	// CommandIngestBill 是受信的计费接入回报供应商账单（预算）。
 	CommandIngestBill = "budget.ingest_bill"
 )

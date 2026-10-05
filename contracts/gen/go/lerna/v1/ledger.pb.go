@@ -1974,6 +1974,120 @@ func (x *SealDispatchResult) GetSealedAheadOfIntent() []string {
 	return nil
 }
 
+// 恢复已暂停的核对：裁决域以收尾用途准入追加的核对查询额度后交给执行管理。
+type ResumeReconciliationCommand struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	OperationId   string                 `protobuf:"bytes,2,opt,name=operation_id,json=operationId,proto3" json:"operation_id,omitempty"`
+	ExtraQueries  int32                  `protobuf:"varint,3,opt,name=extra_queries,json=extraQueries,proto3" json:"extra_queries,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ResumeReconciliationCommand) Reset() {
+	*x = ResumeReconciliationCommand{}
+	mi := &file_lerna_v1_ledger_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ResumeReconciliationCommand) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ResumeReconciliationCommand) ProtoMessage() {}
+
+func (x *ResumeReconciliationCommand) ProtoReflect() protoreflect.Message {
+	mi := &file_lerna_v1_ledger_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ResumeReconciliationCommand.ProtoReflect.Descriptor instead.
+func (*ResumeReconciliationCommand) Descriptor() ([]byte, []int) {
+	return file_lerna_v1_ledger_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *ResumeReconciliationCommand) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *ResumeReconciliationCommand) GetOperationId() string {
+	if x != nil {
+		return x.OperationId
+	}
+	return ""
+}
+
+func (x *ResumeReconciliationCommand) GetExtraQueries() int32 {
+	if x != nil {
+		return x.ExtraQueries
+	}
+	return 0
+}
+
+// 用户请求恢复核对（公共命令）：核心以收尾用途准入追加的核对额度，经过授权和预算。
+type ExtendReconciliationCommand struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	OperationId   string                 `protobuf:"bytes,1,opt,name=operation_id,json=operationId,proto3" json:"operation_id,omitempty"`
+	ExtraQueries  int32                  `protobuf:"varint,2,opt,name=extra_queries,json=extraQueries,proto3" json:"extra_queries,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ExtendReconciliationCommand) Reset() {
+	*x = ExtendReconciliationCommand{}
+	mi := &file_lerna_v1_ledger_proto_msgTypes[14]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ExtendReconciliationCommand) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ExtendReconciliationCommand) ProtoMessage() {}
+
+func (x *ExtendReconciliationCommand) ProtoReflect() protoreflect.Message {
+	mi := &file_lerna_v1_ledger_proto_msgTypes[14]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ExtendReconciliationCommand.ProtoReflect.Descriptor instead.
+func (*ExtendReconciliationCommand) Descriptor() ([]byte, []int) {
+	return file_lerna_v1_ledger_proto_rawDescGZIP(), []int{14}
+}
+
+func (x *ExtendReconciliationCommand) GetOperationId() string {
+	if x != nil {
+		return x.OperationId
+	}
+	return ""
+}
+
+func (x *ExtendReconciliationCommand) GetExtraQueries() int32 {
+	if x != nil {
+		return x.ExtraQueries
+	}
+	return 0
+}
+
 var File_lerna_v1_ledger_proto protoreflect.FileDescriptor
 
 const file_lerna_v1_ledger_proto_rawDesc = "" +
@@ -2170,7 +2284,14 @@ const file_lerna_v1_ledger_proto_rawDesc = "" +
 	"\x12SealDispatchResult\x124\n" +
 	"\x16sealed_before_dispatch\x18\x01 \x03(\tR\x14sealedBeforeDispatch\x12+\n" +
 	"\x11dispatch_possible\x18\x02 \x03(\tR\x10dispatchPossible\x123\n" +
-	"\x16sealed_ahead_of_intent\x18\x03 \x03(\tR\x13sealedAheadOfIntent*\x9c\x01\n" +
+	"\x16sealed_ahead_of_intent\x18\x03 \x03(\tR\x13sealedAheadOfIntent\"~\n" +
+	"\x1bResumeReconciliationCommand\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\x12!\n" +
+	"\foperation_id\x18\x02 \x01(\tR\voperationId\x12#\n" +
+	"\rextra_queries\x18\x03 \x01(\x05R\fextraQueries\"e\n" +
+	"\x1bExtendReconciliationCommand\x12!\n" +
+	"\foperation_id\x18\x01 \x01(\tR\voperationId\x12#\n" +
+	"\rextra_queries\x18\x02 \x01(\x05R\fextraQueries*\x9c\x01\n" +
 	"\x12OperationLifecycle\x12#\n" +
 	"\x1fOPERATION_LIFECYCLE_UNSPECIFIED\x10\x00\x12 \n" +
 	"\x1cOPERATION_LIFECYCLE_ACCEPTED\x10\x01\x12\x1e\n" +
@@ -2226,70 +2347,72 @@ func file_lerna_v1_ledger_proto_rawDescGZIP() []byte {
 }
 
 var file_lerna_v1_ledger_proto_enumTypes = make([]protoimpl.EnumInfo, 8)
-var file_lerna_v1_ledger_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
+var file_lerna_v1_ledger_proto_msgTypes = make([]protoimpl.MessageInfo, 19)
 var file_lerna_v1_ledger_proto_goTypes = []any{
-	(OperationLifecycle)(0),       // 0: lerna.v1.OperationLifecycle
-	(DispatchState)(0),            // 1: lerna.v1.DispatchState
-	(AttemptPhase)(0),             // 2: lerna.v1.AttemptPhase
-	(EffectOutcome)(0),            // 3: lerna.v1.EffectOutcome
-	(LateEffect)(0),               // 4: lerna.v1.LateEffect
-	(ReconcileState)(0),           // 5: lerna.v1.ReconcileState
-	(SendPurpose)(0),              // 6: lerna.v1.SendPurpose
-	(ObservationSource)(0),        // 7: lerna.v1.ObservationSource
-	(*Operation)(nil),             // 8: lerna.v1.Operation
-	(*Attempt)(nil),               // 9: lerna.v1.Attempt
-	(*Send)(nil),                  // 10: lerna.v1.Send
-	(*Observation)(nil),           // 11: lerna.v1.Observation
-	(*Effect)(nil),                // 12: lerna.v1.Effect
-	(*OperationRecord)(nil),       // 13: lerna.v1.OperationRecord
-	(*OperationIntent)(nil),       // 14: lerna.v1.OperationIntent
-	(*AcceptIntentResult)(nil),    // 15: lerna.v1.AcceptIntentResult
-	(*OperationUpdate)(nil),       // 16: lerna.v1.OperationUpdate
-	(*StartSendCommand)(nil),      // 17: lerna.v1.StartSendCommand
-	(*StartSendResult)(nil),       // 18: lerna.v1.StartSendResult
-	(*SealDispatchCommand)(nil),   // 19: lerna.v1.SealDispatchCommand
-	(*SealDispatchResult)(nil),    // 20: lerna.v1.SealDispatchResult
-	nil,                           // 21: lerna.v1.Operation.ParametersEntry
-	nil,                           // 22: lerna.v1.Observation.FieldsEntry
-	nil,                           // 23: lerna.v1.OperationIntent.ParametersEntry
-	nil,                           // 24: lerna.v1.OperationUpdate.ObservedEntry
-	(*CapabilityDeclaration)(nil), // 25: lerna.v1.CapabilityDeclaration
-	(*timestamppb.Timestamp)(nil), // 26: google.protobuf.Timestamp
-	(*BudgetBasis)(nil),           // 27: lerna.v1.BudgetBasis
+	(OperationLifecycle)(0),             // 0: lerna.v1.OperationLifecycle
+	(DispatchState)(0),                  // 1: lerna.v1.DispatchState
+	(AttemptPhase)(0),                   // 2: lerna.v1.AttemptPhase
+	(EffectOutcome)(0),                  // 3: lerna.v1.EffectOutcome
+	(LateEffect)(0),                     // 4: lerna.v1.LateEffect
+	(ReconcileState)(0),                 // 5: lerna.v1.ReconcileState
+	(SendPurpose)(0),                    // 6: lerna.v1.SendPurpose
+	(ObservationSource)(0),              // 7: lerna.v1.ObservationSource
+	(*Operation)(nil),                   // 8: lerna.v1.Operation
+	(*Attempt)(nil),                     // 9: lerna.v1.Attempt
+	(*Send)(nil),                        // 10: lerna.v1.Send
+	(*Observation)(nil),                 // 11: lerna.v1.Observation
+	(*Effect)(nil),                      // 12: lerna.v1.Effect
+	(*OperationRecord)(nil),             // 13: lerna.v1.OperationRecord
+	(*OperationIntent)(nil),             // 14: lerna.v1.OperationIntent
+	(*AcceptIntentResult)(nil),          // 15: lerna.v1.AcceptIntentResult
+	(*OperationUpdate)(nil),             // 16: lerna.v1.OperationUpdate
+	(*StartSendCommand)(nil),            // 17: lerna.v1.StartSendCommand
+	(*StartSendResult)(nil),             // 18: lerna.v1.StartSendResult
+	(*SealDispatchCommand)(nil),         // 19: lerna.v1.SealDispatchCommand
+	(*SealDispatchResult)(nil),          // 20: lerna.v1.SealDispatchResult
+	(*ResumeReconciliationCommand)(nil), // 21: lerna.v1.ResumeReconciliationCommand
+	(*ExtendReconciliationCommand)(nil), // 22: lerna.v1.ExtendReconciliationCommand
+	nil,                                 // 23: lerna.v1.Operation.ParametersEntry
+	nil,                                 // 24: lerna.v1.Observation.FieldsEntry
+	nil,                                 // 25: lerna.v1.OperationIntent.ParametersEntry
+	nil,                                 // 26: lerna.v1.OperationUpdate.ObservedEntry
+	(*CapabilityDeclaration)(nil),       // 27: lerna.v1.CapabilityDeclaration
+	(*timestamppb.Timestamp)(nil),       // 28: google.protobuf.Timestamp
+	(*BudgetBasis)(nil),                 // 29: lerna.v1.BudgetBasis
 }
 var file_lerna_v1_ledger_proto_depIdxs = []int32{
-	21, // 0: lerna.v1.Operation.parameters:type_name -> lerna.v1.Operation.ParametersEntry
-	25, // 1: lerna.v1.Operation.capability_snapshot:type_name -> lerna.v1.CapabilityDeclaration
+	23, // 0: lerna.v1.Operation.parameters:type_name -> lerna.v1.Operation.ParametersEntry
+	27, // 1: lerna.v1.Operation.capability_snapshot:type_name -> lerna.v1.CapabilityDeclaration
 	0,  // 2: lerna.v1.Operation.lifecycle:type_name -> lerna.v1.OperationLifecycle
 	1,  // 3: lerna.v1.Operation.dispatch:type_name -> lerna.v1.DispatchState
 	3,  // 4: lerna.v1.Operation.effect:type_name -> lerna.v1.EffectOutcome
 	4,  // 5: lerna.v1.Operation.late_effect:type_name -> lerna.v1.LateEffect
 	5,  // 6: lerna.v1.Operation.reconcile_state:type_name -> lerna.v1.ReconcileState
-	26, // 7: lerna.v1.Operation.next_reconcile_at:type_name -> google.protobuf.Timestamp
-	26, // 8: lerna.v1.Attempt.key_valid_until:type_name -> google.protobuf.Timestamp
+	28, // 7: lerna.v1.Operation.next_reconcile_at:type_name -> google.protobuf.Timestamp
+	28, // 8: lerna.v1.Attempt.key_valid_until:type_name -> google.protobuf.Timestamp
 	2,  // 9: lerna.v1.Attempt.phase:type_name -> lerna.v1.AttemptPhase
-	26, // 10: lerna.v1.Attempt.first_possible_send_at:type_name -> google.protobuf.Timestamp
+	28, // 10: lerna.v1.Attempt.first_possible_send_at:type_name -> google.protobuf.Timestamp
 	6,  // 11: lerna.v1.Send.purpose:type_name -> lerna.v1.SendPurpose
-	26, // 12: lerna.v1.Send.dispatch_possible_at:type_name -> google.protobuf.Timestamp
+	28, // 12: lerna.v1.Send.dispatch_possible_at:type_name -> google.protobuf.Timestamp
 	6,  // 13: lerna.v1.Observation.purpose:type_name -> lerna.v1.SendPurpose
 	7,  // 14: lerna.v1.Observation.source:type_name -> lerna.v1.ObservationSource
 	3,  // 15: lerna.v1.Observation.claimed_effect:type_name -> lerna.v1.EffectOutcome
-	26, // 16: lerna.v1.Observation.observed_at:type_name -> google.protobuf.Timestamp
-	22, // 17: lerna.v1.Observation.fields:type_name -> lerna.v1.Observation.FieldsEntry
+	28, // 16: lerna.v1.Observation.observed_at:type_name -> google.protobuf.Timestamp
+	24, // 17: lerna.v1.Observation.fields:type_name -> lerna.v1.Observation.FieldsEntry
 	3,  // 18: lerna.v1.Effect.outcome:type_name -> lerna.v1.EffectOutcome
 	4,  // 19: lerna.v1.Effect.late_effect:type_name -> lerna.v1.LateEffect
-	26, // 20: lerna.v1.Effect.next_reconcile_at:type_name -> google.protobuf.Timestamp
+	28, // 20: lerna.v1.Effect.next_reconcile_at:type_name -> google.protobuf.Timestamp
 	8,  // 21: lerna.v1.OperationRecord.operation:type_name -> lerna.v1.Operation
 	9,  // 22: lerna.v1.OperationRecord.attempts:type_name -> lerna.v1.Attempt
 	10, // 23: lerna.v1.OperationRecord.sends:type_name -> lerna.v1.Send
 	11, // 24: lerna.v1.OperationRecord.observations:type_name -> lerna.v1.Observation
-	25, // 25: lerna.v1.OperationIntent.capability:type_name -> lerna.v1.CapabilityDeclaration
-	23, // 26: lerna.v1.OperationIntent.parameters:type_name -> lerna.v1.OperationIntent.ParametersEntry
-	27, // 27: lerna.v1.OperationIntent.budget_basis:type_name -> lerna.v1.BudgetBasis
+	27, // 25: lerna.v1.OperationIntent.capability:type_name -> lerna.v1.CapabilityDeclaration
+	25, // 26: lerna.v1.OperationIntent.parameters:type_name -> lerna.v1.OperationIntent.ParametersEntry
+	29, // 27: lerna.v1.OperationIntent.budget_basis:type_name -> lerna.v1.BudgetBasis
 	3,  // 28: lerna.v1.OperationUpdate.effect:type_name -> lerna.v1.EffectOutcome
 	4,  // 29: lerna.v1.OperationUpdate.late_effect:type_name -> lerna.v1.LateEffect
 	1,  // 30: lerna.v1.OperationUpdate.dispatch:type_name -> lerna.v1.DispatchState
-	24, // 31: lerna.v1.OperationUpdate.observed:type_name -> lerna.v1.OperationUpdate.ObservedEntry
+	26, // 31: lerna.v1.OperationUpdate.observed:type_name -> lerna.v1.OperationUpdate.ObservedEntry
 	5,  // 32: lerna.v1.OperationUpdate.reconcile_state:type_name -> lerna.v1.ReconcileState
 	6,  // 33: lerna.v1.StartSendCommand.purpose:type_name -> lerna.v1.SendPurpose
 	34, // [34:34] is the sub-list for method output_type
@@ -2312,7 +2435,7 @@ func file_lerna_v1_ledger_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_lerna_v1_ledger_proto_rawDesc), len(file_lerna_v1_ledger_proto_rawDesc)),
 			NumEnums:      8,
-			NumMessages:   17,
+			NumMessages:   19,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
