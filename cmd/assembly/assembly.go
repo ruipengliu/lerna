@@ -57,6 +57,7 @@ func Open(path, user, domain string) (*Harness, error) {
 	h.Trace = trace.New(s, durable.New(s.TraceWork(), user, domain+"/trace"), h.Ledger, user, domain+"/trace")
 	h.Ledger.WithReports(h.Budget, d, h.Trace)
 	t.WithStart(h.Grants, h.Budget, h.Ledger)
+	t.WithCompletion(h.Ledger, h.Budget)
 	critical, e := egressio.NewFileLock(path)
 	if e != nil {
 		s.Close()
@@ -65,6 +66,8 @@ func Open(path, user, domain string) (*Harness, error) {
 	h.Egress = egress.New(t, h.Ledger, c, egressio.HTTP{}, critical)
 	h.Ledger.WithGrantClosures(h.Grants)
 	h.Grants.WithRevocationExits(h.Egress)
+	h.Ledger.WithCompletionClosures(t)
+	t.WithCompletionClosures(d, h.Egress)
 	t.WithAdmission(h.Grants, h.Budget, c, h.Sessions, d, h.Ledger).WithHandoffs(d, h.Ledger)
 	// 固定受信宿主身份仅驱动已保存的责任，不替换原命令身份。
 	ctx, cancel := context.WithTimeout(context.Background(), 65*time.Second)
@@ -90,6 +93,10 @@ func Open(path, user, domain string) (*Harness, error) {
 		return nil, err
 	}
 	if err := h.Grants.ProcessRevocations(ctx); err != nil {
+		s.Close()
+		return nil, err
+	}
+	if err := h.Tasks.RecoverCompletions(ctx, &v1.Caller{UserId: user, IssuerId: "host-recovery"}); err != nil {
 		s.Close()
 		return nil, err
 	}

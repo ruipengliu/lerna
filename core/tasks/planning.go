@@ -46,18 +46,8 @@ func (s *Service) AcceptRequirements(ctx context.Context, caller *v1.Caller, c *
 		if c.InputVersion < t.BoundInputVersion {
 			return nil, command.Fail("STALE_INPUT")
 		}
-		if len(c.Conditions) == 0 {
-			return nil, command.Fail("INVALID_REQUIREMENTS")
-		}
-		seen := map[string]bool{}
-		for _, condition := range c.Conditions {
-			if condition == nil || condition.ConditionId == "" || seen[condition.ConditionId] || condition.DescriptionRef == nil || condition.RuleVersion != 1 || (condition.VerificationRule != "TARGET_RECORD" && condition.VerificationRule != "USER_EVALUATION") {
-				return nil, command.Fail("INVALID_REQUIREMENTS")
-			}
-			if e := s.content.CheckUsable(tx, caller, condition.DescriptionRef); e != nil {
-				return nil, e
-			}
-			seen[condition.ConditionId] = true
+		if e = s.validateConditions(tx, caller, c.Conditions); e != nil {
+			return nil, e
 		}
 		p, e := s.store.LoadPlanning(tx, t.TaskId)
 		if e != nil {
@@ -184,7 +174,7 @@ func (s *Service) ReceiveProposal(ctx context.Context, caller *v1.Caller, c *v1.
 	}
 	return s.decisions.Execute(ctx, caller, c.Header, command.SemanticFingerprint("proposal", c.Proposal), "tasks.planning", func(tx context.Context) (*v1.Ref, error) {
 		q := c.Proposal
-		if q == nil || q.ReasonerRef == nil || q.ReasonerRef.Name == nil || q.ReasonerRef.Name.UserId != s.user || q.ReasonerRef.Name.ObjectKind != "reasoner" || q.ReasonerRef.Revision == 0 || q.ReasonerRef.SchemaId != "lerna.v1.Reasoner" || q.Ref != nil || q.Step == nil || q.Step.StepId == "" || q.Kind != "ACTION" {
+		if q == nil || q.ReasonerRef == nil || q.ReasonerRef.Name == nil || q.ReasonerRef.Name.UserId != s.user || q.ReasonerRef.Name.ObjectKind != "reasoner" || q.ReasonerRef.Revision == 0 || q.ReasonerRef.SchemaId != "lerna.v1.Reasoner" || q.Ref != nil || !validProposalBody(q) {
 			return nil, command.Fail("INVALID_PROPOSAL")
 		}
 		if e := command.CheckName(caller, q.TaskId, s.user, s.domain, "task"); e != nil {
@@ -244,4 +234,21 @@ func (s *Service) QuerySnapshot(ctx context.Context, c *v1.Caller, r *v1.Ref) (*
 		return nil, command.Fail("STALE_REFERENCE")
 	}
 	return p, e
+}
+
+func validProposalBody(q *v1.Proposal) bool {
+	if q.Kind == "ACTION" {
+		return q.Step != nil && q.Step.StepId != "" && len(q.CompletionEvidence) == 0
+	}
+	if q.Kind != "COMPLETE" || q.Step != nil {
+		return false
+	}
+	seen := map[string]bool{}
+	for _, e := range q.CompletionEvidence {
+		if e == nil || e.ConditionId == "" || e.OperationId == nil || seen[e.ConditionId] {
+			return false
+		}
+		seen[e.ConditionId] = true
+	}
+	return true
 }

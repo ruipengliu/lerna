@@ -12,6 +12,7 @@ type Starts interface {
 	StartExecution(context.Context, *v1.Caller, *v1.StartExecutionCommand) (*v1.CommandReceipt, error)
 }
 type Ledger interface {
+	CloseForCompletion(context.Context, *v1.Caller, *v1.CloseCompletionCommand) (*v1.CommandReceipt, error)
 	CloseForGrantRevocation(context.Context, *v1.Caller, *v1.CloseGrantExitCommand) (*v1.CommandReceipt, error)
 	ProcessInterpretations(context.Context, *v1.Caller) error
 	ProcessReports(context.Context, *v1.Caller) error

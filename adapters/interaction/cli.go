@@ -41,7 +41,7 @@ type CLI struct {
 
 func (c CLI) Run(ctx context.Context, args []string, out io.Writer) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: submit --command ID --goal TEXT [--session ID] | receipt ID | task ID | session ID | recover | execute START_JSON | operation ID | observation ID | session-create --command ID | input --command ID --session ID --kind KIND [--text TEXT] | question --json FILE | process-input --json FILE | accept-requirements --json FILE | task-inputs ID")
+		return fmt.Errorf("usage: submit --command ID --goal TEXT [--session ID] | receipt ID | task ID | session ID | recover | execute START_JSON | operation ID | observation ID | session-create --command ID | input --command ID --session ID --kind KIND [--text TEXT] | question --json FILE | process-input --json FILE | accept-requirements --json FILE | task-inputs ID | complete --json FILE | result TASK_ID | verification --json REF_FILE | recheck-completion --json FILE | request-proposal --json FILE | receive-proposal --json FILE")
 	}
 	identity := func(id string) *v1.CommandIdentity {
 		return &v1.CommandIdentity{UserId: c.Caller.UserId, IssuerId: c.Caller.IssuerId, TargetDomainId: c.Domain, CommandId: id}
@@ -49,6 +49,8 @@ func (c CLI) Run(ctx context.Context, args []string, out io.Writer) error {
 	var value proto.Message
 	var err error
 	switch args[0] {
+	case "complete", "recheck-completion", "verification", "result", "request-proposal", "receive-proposal":
+		value, err = c.completion(ctx, args)
 	case "process-input", "accept-requirements", "task-inputs":
 		value, err = c.runTaskInputCommand(ctx, args)
 	case "session-create", "input", "question", "route-input", "query-input", "query-question":
@@ -121,7 +123,12 @@ func (c CLI) Run(ctx context.Context, args []string, out io.Writer) error {
 			}
 		}
 		if c.Grants != nil {
-			return c.Grants.ProcessRevocations(ctx)
+			if e := c.Grants.ProcessRevocations(ctx); e != nil {
+				return e
+			}
+		}
+		if tasks, ok := c.Tasks.(CompletionCommands); ok {
+			return tasks.ProcessCompletions(ctx, c.Caller)
 		}
 		return nil
 	default:

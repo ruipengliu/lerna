@@ -12,12 +12,21 @@ message CommandHeader {
   uint32 fingerprint_version = 4;
   repeated string must_understand = 5;
 }
+message TargetRecordAssertion {
+  Ref capability_ref = 1;
+  Ref parameters_ref = 2;
+}
+message CompletionEvidence {
+  string condition_id = 1;
+  GlobalName operation_id = 2;
+}
 message Requirement {
   string condition_id = 1;
   Ref description_ref = 2;
   bool necessary = 3;
   string verification_rule = 4;
   uint32 rule_version = 5;
+  TargetRecordAssertion target_record = 6;
 }
 message Requirements {
   Ref ref = 1;
@@ -73,6 +82,7 @@ message Proposal {
   Ref reasoner_ref = 9;
   string kind = 10;
   ActionStep step = 11;
+  repeated CompletionEvidence completion_evidence = 12;
 }
 message PlanningState {
   GlobalName task_id = 1;
@@ -84,6 +94,8 @@ message PlanningState {
   uint64 verification_freeze = 7;
   repeated Ref rejected_verification_operations = 8;
   repeated uint64 superseded_verification_generations = 9;
+  uint64 verification_round = 10;
+  Ref verification_ref = 11;
 }
 message AcceptRequirementsCommand {
   CommandHeader header = 1;
