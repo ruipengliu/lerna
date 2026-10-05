@@ -1,0 +1,94 @@
+syntax = "proto3";
+package lerna.v1;
+
+import "lerna/v1/identity.proto";
+import "lerna/v1/planning.proto";
+import "lerna/v1/submission.proto";
+
+option go_package = "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1;lernav1";
+message RawObservation {
+  Ref ref = 1;
+  string user_id = 2;
+  GlobalName task_id = 3;
+  GlobalName operation_id = 4;
+  GlobalName attempt_id = 5;
+  Ref send_ref = 6;
+  uint32 send_seq = 7;
+  string target = 8;
+  string actual_address = 9;
+  string executor_endpoint_id = 10;
+  string protocol = 11;
+  int32 status_code = 12;
+  int64 started_at_unix_ms = 13;
+  int64 finished_at_unix_ms = 14;
+  Ref body_ref = 15;
+  string external_key = 16;
+  string source = 17;
+  string transport_error = 18;
+  string provider_request_id = 19;
+}
+message RegisterObservationCommand {
+  CommandHeader header = 1;
+  RawObservation observation = 2;
+  bytes body = 3;
+}
+message AcceptObservationCommand {
+  CommandHeader header = 1;
+  RawObservation observation = 2;
+}
+message ObservationHandoff {
+  RawObservation observation = 1;
+  AcceptObservationCommand command = 2;
+  CommandReceipt recipient_receipt = 3;
+}
+message UsageReport {
+  Ref ref = 1;
+  Ref billing_source = 2;
+  uint64 source_revision = 3;
+  Ref measurement_ref = 4;
+  Ref price_rule_ref = 5;
+  GlobalName operation_id = 6;
+  GlobalName attempt_id = 7;
+  Ref send_ref = 8;
+  GlobalName task_id = 9;
+  string settlement = 10;
+  string unit = 11;
+  uint64 physical_sends = 12;
+}
+message AcceptUsageCommand {
+  CommandHeader header = 1;
+  UsageReport usage = 2;
+}
+message TraceEvent {
+  Ref ref = 1;
+  string event_type = 2;
+  GlobalName task_id = 3;
+  GlobalName operation_id = 4;
+  GlobalName attempt_id = 5;
+  Ref send_ref = 6;
+  Ref observation_ref = 7;
+  Ref body_ref = 8;
+}
+message AcceptTraceCommand {
+  CommandHeader header = 1;
+  TraceEvent event = 2;
+}
+message ObservationReports {
+  Ref observation_ref = 1;
+  AcceptUsageCommand usage = 2;
+  AcceptTraceCommand trace = 3;
+  CommandReceipt usage_receipt = 4;
+  CommandReceipt trace_receipt = 5;
+}
+message EffectInterpretation {
+  Ref ref = 1;
+  Ref observation_ref = 2;
+  string rule = 3;
+  string outcome = 4;
+  string late_effect = 5;
+  string reason = 6;
+}
+message InterpretObservationCommand {
+  CommandHeader header = 1;
+  Ref observation_ref = 2;
+}

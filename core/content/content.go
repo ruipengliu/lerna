@@ -16,10 +16,14 @@ type Store interface {
 }
 type Service struct {
 	store        Store
+	work         ObservationWork
+	ledger       ObservationLedger
 	user, domain string
 }
 
-func New(s Store, user, domain string) *Service { return &Service{s, user, domain} }
+func New(s Store, user, domain string) *Service {
+	return &Service{store: s, user: user, domain: domain}
+}
 func (s *Service) Stage(ctx context.Context, caller *v1.Caller, c *v1.SubmitGoalCommand) (*v1.Ref, error) {
 	if err := command.ValidateGoal(c); err != nil {
 		return nil, err
@@ -39,7 +43,11 @@ func (s *Service) Read(ctx context.Context, caller *v1.Caller, ref *v1.Ref) (*v1
 	if ref.Revision != 1 || ref.SchemaId != "lerna.v1.Content" {
 		return nil, command.Fail("UNSUPPORTED_CONTRACT")
 	}
-	return s.store.ReadContent(ctx, ref)
+	v, e := s.store.ReadContent(ctx, ref)
+	if v != nil && !proto.Equal(v.Ref, ref) {
+		return nil, command.Fail("INVALID_REFERENCE")
+	}
+	return v, e
 }
 
 // CheckUsable 检查精确内容版本、可信来源和当前用途；不得凭一个形状正确的引用放行。

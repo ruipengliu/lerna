@@ -47,15 +47,26 @@ func (s *Store) LoadBudget(ctx context.Context, id *v1.GlobalName) (*v1.Budget, 
 	return b, e
 }
 func (s *Store) SaveReservation(ctx context.Context, r *v1.Reservation) error {
-	return s.saveRecord(ctx, "adjudication", "INSERT INTO reservations VALUES(?,?,?,?,?)", r, r.Ref.Name.UserId, r.Ref.Name.AuthorityDomainId, r.Ref.Name.LocalId, r.OperationId.LocalId)
+	old, e := s.LoadCurrentReservation(ctx, r.Ref)
+	if e != nil {
+		return e
+	}
+	if old != nil {
+		if e = s.saveReservationVersion(ctx, old); e != nil {
+			return e
+		}
+	}
+	if e = s.saveReservationVersion(ctx, r); e != nil {
+		return e
+	}
+	return s.saveRecord(ctx, "adjudication", "INSERT INTO reservations VALUES(?,?,?,?,?) ON CONFLICT(user_id,domain_id,id) DO UPDATE SET record=excluded.record", r, r.Ref.Name.UserId, r.Ref.Name.AuthorityDomainId, r.Ref.Name.LocalId, r.OperationId.LocalId)
 }
 func (s *Store) LoadReservation(ctx context.Context, r *v1.Ref) (*v1.Reservation, error) {
-	v := new(v1.Reservation)
-	ok, e := s.load(ctx, v, "SELECT record FROM reservations WHERE user_id=? AND domain_id=? AND id=?", r.Name.UserId, r.Name.AuthorityDomainId, r.Name.LocalId)
-	if !ok {
-		return nil, e
+	v, e := s.LoadReservationVersion(ctx, r)
+	if e != nil || v != nil {
+		return v, e
 	}
-	return v, e
+	return s.LoadCurrentReservation(ctx, r)
 }
 
 // saveRecord 只封装本适配器的绑定与序列化，表与事务域由每个有类型方法固定。

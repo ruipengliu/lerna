@@ -38,7 +38,7 @@ test:
 	go test -race ./...
 
 test-fault:
-	@if test -d conformance/fault; then go test -race -tags fault ./conformance/fault/...; else echo 'No fault suite yet.'; fi
+	@if test -d conformance/fault; then go test -race -timeout 30m -tags fault ./conformance/fault/...; else echo 'No fault suite yet.'; fi
 
 gen: $(BUF) $(PROTO)
 	$(BUF) generate

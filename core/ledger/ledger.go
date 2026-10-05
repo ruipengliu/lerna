@@ -22,10 +22,18 @@ type Store interface {
 type Service struct {
 	store                      Store
 	user, domain, sourceDomain string
+	work                       ExecutionWork
+	adapter                    Compiler
+	starts                     StartFacts
+	observations               ObservationContent
+	usage                      UsageReceiver
+	usageReceipts              ReceiptReader
+	trace                      TraceReceiver
+	grantClosures              GrantClosures
 }
 
 func New(s Store, user, domain, sourceDomain string) *Service {
-	return &Service{s, user, domain, sourceDomain}
+	return &Service{store: s, user: user, domain: domain, sourceDomain: sourceDomain}
 }
 func (s *Service) Accept(ctx context.Context, caller *v1.Caller, c *v1.AcceptOperationCommand) (*v1.CommandReceipt, error) {
 	if e := command.ValidateHeader(c.GetHeader(), c); e != nil {

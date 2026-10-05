@@ -136,6 +136,7 @@ type Operation struct {
 	ClosureEvidenceRefs  []*Ref                 `protobuf:"bytes,11,rep,name=closure_evidence_refs,json=closureEvidenceRefs,proto3" json:"closure_evidence_refs,omitempty"`
 	Effect               *Effect                `protobuf:"bytes,12,opt,name=effect,proto3" json:"effect,omitempty"`
 	StartReceiptObtained bool                   `protobuf:"varint,13,opt,name=start_receipt_obtained,json=startReceiptObtained,proto3" json:"start_receipt_obtained,omitempty"`
+	Execution            *Execution             `protobuf:"bytes,14,opt,name=execution,proto3" json:"execution,omitempty"`
 	unknownFields        protoimpl.UnknownFields
 	sizeCache            protoimpl.SizeCache
 }
@@ -261,6 +262,13 @@ func (x *Operation) GetStartReceiptObtained() bool {
 	return false
 }
 
+func (x *Operation) GetExecution() *Execution {
+	if x != nil {
+		return x.Execution
+	}
+	return nil
+}
+
 type AcceptOperationCommand struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Header        *CommandHeader         `protobuf:"bytes,1,opt,name=header,proto3" json:"header,omitempty"`
@@ -313,6 +321,534 @@ func (x *AcceptOperationCommand) GetAdmission() *Admission {
 	return nil
 }
 
+type CallDescriptor struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Protocol      string                 `protobuf:"bytes,1,opt,name=protocol,proto3" json:"protocol,omitempty"`
+	Method        string                 `protobuf:"bytes,2,opt,name=method,proto3" json:"method,omitempty"`
+	Target        string                 `protobuf:"bytes,3,opt,name=target,proto3" json:"target,omitempty"`
+	ParametersRef *Ref                   `protobuf:"bytes,4,opt,name=parameters_ref,json=parametersRef,proto3" json:"parameters_ref,omitempty"`
+	CapabilityRef *Ref                   `protobuf:"bytes,5,opt,name=capability_ref,json=capabilityRef,proto3" json:"capability_ref,omitempty"`
+	ExternalKey   string                 `protobuf:"bytes,6,opt,name=external_key,json=externalKey,proto3" json:"external_key,omitempty"`
+	Digest        string                 `protobuf:"bytes,7,opt,name=digest,proto3" json:"digest,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CallDescriptor) Reset() {
+	*x = CallDescriptor{}
+	mi := &file_lerna_v1_ledger_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CallDescriptor) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CallDescriptor) ProtoMessage() {}
+
+func (x *CallDescriptor) ProtoReflect() protoreflect.Message {
+	mi := &file_lerna_v1_ledger_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CallDescriptor.ProtoReflect.Descriptor instead.
+func (*CallDescriptor) Descriptor() ([]byte, []int) {
+	return file_lerna_v1_ledger_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *CallDescriptor) GetProtocol() string {
+	if x != nil {
+		return x.Protocol
+	}
+	return ""
+}
+
+func (x *CallDescriptor) GetMethod() string {
+	if x != nil {
+		return x.Method
+	}
+	return ""
+}
+
+func (x *CallDescriptor) GetTarget() string {
+	if x != nil {
+		return x.Target
+	}
+	return ""
+}
+
+func (x *CallDescriptor) GetParametersRef() *Ref {
+	if x != nil {
+		return x.ParametersRef
+	}
+	return nil
+}
+
+func (x *CallDescriptor) GetCapabilityRef() *Ref {
+	if x != nil {
+		return x.CapabilityRef
+	}
+	return nil
+}
+
+func (x *CallDescriptor) GetExternalKey() string {
+	if x != nil {
+		return x.ExternalKey
+	}
+	return ""
+}
+
+func (x *CallDescriptor) GetDigest() string {
+	if x != nil {
+		return x.Digest
+	}
+	return ""
+}
+
+type ExecutionAttempt struct {
+	state                     protoimpl.MessageState `protogen:"open.v1"`
+	Ref                       *Ref                   `protobuf:"bytes,1,opt,name=ref,proto3" json:"ref,omitempty"`
+	OperationId               *GlobalName            `protobuf:"bytes,2,opt,name=operation_id,json=operationId,proto3" json:"operation_id,omitempty"`
+	AttemptNo                 uint32                 `protobuf:"varint,3,opt,name=attempt_no,json=attemptNo,proto3" json:"attempt_no,omitempty"`
+	Phase                     string                 `protobuf:"bytes,4,opt,name=phase,proto3" json:"phase,omitempty"`
+	ExternalKey               string                 `protobuf:"bytes,5,opt,name=external_key,json=externalKey,proto3" json:"external_key,omitempty"`
+	ExternalKeyScope          string                 `protobuf:"bytes,6,opt,name=external_key_scope,json=externalKeyScope,proto3" json:"external_key_scope,omitempty"`
+	FirstPossibleSendAtUnixMs int64                  `protobuf:"varint,7,opt,name=first_possible_send_at_unix_ms,json=firstPossibleSendAtUnixMs,proto3" json:"first_possible_send_at_unix_ms,omitempty"`
+	Capabilities              *ExecutionCapabilities `protobuf:"bytes,8,opt,name=capabilities,proto3" json:"capabilities,omitempty"`
+	unknownFields             protoimpl.UnknownFields
+	sizeCache                 protoimpl.SizeCache
+}
+
+func (x *ExecutionAttempt) Reset() {
+	*x = ExecutionAttempt{}
+	mi := &file_lerna_v1_ledger_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ExecutionAttempt) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ExecutionAttempt) ProtoMessage() {}
+
+func (x *ExecutionAttempt) ProtoReflect() protoreflect.Message {
+	mi := &file_lerna_v1_ledger_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ExecutionAttempt.ProtoReflect.Descriptor instead.
+func (*ExecutionAttempt) Descriptor() ([]byte, []int) {
+	return file_lerna_v1_ledger_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *ExecutionAttempt) GetRef() *Ref {
+	if x != nil {
+		return x.Ref
+	}
+	return nil
+}
+
+func (x *ExecutionAttempt) GetOperationId() *GlobalName {
+	if x != nil {
+		return x.OperationId
+	}
+	return nil
+}
+
+func (x *ExecutionAttempt) GetAttemptNo() uint32 {
+	if x != nil {
+		return x.AttemptNo
+	}
+	return 0
+}
+
+func (x *ExecutionAttempt) GetPhase() string {
+	if x != nil {
+		return x.Phase
+	}
+	return ""
+}
+
+func (x *ExecutionAttempt) GetExternalKey() string {
+	if x != nil {
+		return x.ExternalKey
+	}
+	return ""
+}
+
+func (x *ExecutionAttempt) GetExternalKeyScope() string {
+	if x != nil {
+		return x.ExternalKeyScope
+	}
+	return ""
+}
+
+func (x *ExecutionAttempt) GetFirstPossibleSendAtUnixMs() int64 {
+	if x != nil {
+		return x.FirstPossibleSendAtUnixMs
+	}
+	return 0
+}
+
+func (x *ExecutionAttempt) GetCapabilities() *ExecutionCapabilities {
+	if x != nil {
+		return x.Capabilities
+	}
+	return nil
+}
+
+type PhysicalSend struct {
+	state            protoimpl.MessageState `protogen:"open.v1"`
+	Ref              *Ref                   `protobuf:"bytes,1,opt,name=ref,proto3" json:"ref,omitempty"`
+	AttemptId        *GlobalName            `protobuf:"bytes,2,opt,name=attempt_id,json=attemptId,proto3" json:"attempt_id,omitempty"`
+	SendSeq          uint32                 `protobuf:"varint,3,opt,name=send_seq,json=sendSeq,proto3" json:"send_seq,omitempty"`
+	Phase            string                 `protobuf:"bytes,4,opt,name=phase,proto3" json:"phase,omitempty"`
+	ProcessInstance  string                 `protobuf:"bytes,5,opt,name=process_instance,json=processInstance,proto3" json:"process_instance,omitempty"`
+	ClaimEpoch       uint64                 `protobuf:"varint,6,opt,name=claim_epoch,json=claimEpoch,proto3" json:"claim_epoch,omitempty"`
+	LeaseUntilUnixMs int64                  `protobuf:"varint,7,opt,name=lease_until_unix_ms,json=leaseUntilUnixMs,proto3" json:"lease_until_unix_ms,omitempty"`
+	StartReceipt     *CommandReceipt        `protobuf:"bytes,8,opt,name=start_receipt,json=startReceipt,proto3" json:"start_receipt,omitempty"`
+	ObservationRef   *Ref                   `protobuf:"bytes,9,opt,name=observation_ref,json=observationRef,proto3" json:"observation_ref,omitempty"`
+	CredentialRef    *Ref                   `protobuf:"bytes,10,opt,name=credential_ref,json=credentialRef,proto3" json:"credential_ref,omitempty"`
+	unknownFields    protoimpl.UnknownFields
+	sizeCache        protoimpl.SizeCache
+}
+
+func (x *PhysicalSend) Reset() {
+	*x = PhysicalSend{}
+	mi := &file_lerna_v1_ledger_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PhysicalSend) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PhysicalSend) ProtoMessage() {}
+
+func (x *PhysicalSend) ProtoReflect() protoreflect.Message {
+	mi := &file_lerna_v1_ledger_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PhysicalSend.ProtoReflect.Descriptor instead.
+func (*PhysicalSend) Descriptor() ([]byte, []int) {
+	return file_lerna_v1_ledger_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *PhysicalSend) GetRef() *Ref {
+	if x != nil {
+		return x.Ref
+	}
+	return nil
+}
+
+func (x *PhysicalSend) GetAttemptId() *GlobalName {
+	if x != nil {
+		return x.AttemptId
+	}
+	return nil
+}
+
+func (x *PhysicalSend) GetSendSeq() uint32 {
+	if x != nil {
+		return x.SendSeq
+	}
+	return 0
+}
+
+func (x *PhysicalSend) GetPhase() string {
+	if x != nil {
+		return x.Phase
+	}
+	return ""
+}
+
+func (x *PhysicalSend) GetProcessInstance() string {
+	if x != nil {
+		return x.ProcessInstance
+	}
+	return ""
+}
+
+func (x *PhysicalSend) GetClaimEpoch() uint64 {
+	if x != nil {
+		return x.ClaimEpoch
+	}
+	return 0
+}
+
+func (x *PhysicalSend) GetLeaseUntilUnixMs() int64 {
+	if x != nil {
+		return x.LeaseUntilUnixMs
+	}
+	return 0
+}
+
+func (x *PhysicalSend) GetStartReceipt() *CommandReceipt {
+	if x != nil {
+		return x.StartReceipt
+	}
+	return nil
+}
+
+func (x *PhysicalSend) GetObservationRef() *Ref {
+	if x != nil {
+		return x.ObservationRef
+	}
+	return nil
+}
+
+func (x *PhysicalSend) GetCredentialRef() *Ref {
+	if x != nil {
+		return x.CredentialRef
+	}
+	return nil
+}
+
+type Execution struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	Attempt        *ExecutionAttempt      `protobuf:"bytes,1,opt,name=attempt,proto3" json:"attempt,omitempty"`
+	Send           *PhysicalSend          `protobuf:"bytes,2,opt,name=send,proto3" json:"send,omitempty"`
+	CallDescriptor *CallDescriptor        `protobuf:"bytes,3,opt,name=call_descriptor,json=callDescriptor,proto3" json:"call_descriptor,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *Execution) Reset() {
+	*x = Execution{}
+	mi := &file_lerna_v1_ledger_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Execution) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Execution) ProtoMessage() {}
+
+func (x *Execution) ProtoReflect() protoreflect.Message {
+	mi := &file_lerna_v1_ledger_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Execution.ProtoReflect.Descriptor instead.
+func (*Execution) Descriptor() ([]byte, []int) {
+	return file_lerna_v1_ledger_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *Execution) GetAttempt() *ExecutionAttempt {
+	if x != nil {
+		return x.Attempt
+	}
+	return nil
+}
+
+func (x *Execution) GetSend() *PhysicalSend {
+	if x != nil {
+		return x.Send
+	}
+	return nil
+}
+
+func (x *Execution) GetCallDescriptor() *CallDescriptor {
+	if x != nil {
+		return x.CallDescriptor
+	}
+	return nil
+}
+
+type PrepareExecutionCommand struct {
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	Header          *CommandHeader         `protobuf:"bytes,1,opt,name=header,proto3" json:"header,omitempty"`
+	OperationId     *GlobalName            `protobuf:"bytes,2,opt,name=operation_id,json=operationId,proto3" json:"operation_id,omitempty"`
+	ProcessInstance string                 `protobuf:"bytes,3,opt,name=process_instance,json=processInstance,proto3" json:"process_instance,omitempty"`
+	Claim           *Job                   `protobuf:"bytes,4,opt,name=claim,proto3" json:"claim,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
+}
+
+func (x *PrepareExecutionCommand) Reset() {
+	*x = PrepareExecutionCommand{}
+	mi := &file_lerna_v1_ledger_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PrepareExecutionCommand) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PrepareExecutionCommand) ProtoMessage() {}
+
+func (x *PrepareExecutionCommand) ProtoReflect() protoreflect.Message {
+	mi := &file_lerna_v1_ledger_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PrepareExecutionCommand.ProtoReflect.Descriptor instead.
+func (*PrepareExecutionCommand) Descriptor() ([]byte, []int) {
+	return file_lerna_v1_ledger_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *PrepareExecutionCommand) GetHeader() *CommandHeader {
+	if x != nil {
+		return x.Header
+	}
+	return nil
+}
+
+func (x *PrepareExecutionCommand) GetOperationId() *GlobalName {
+	if x != nil {
+		return x.OperationId
+	}
+	return nil
+}
+
+func (x *PrepareExecutionCommand) GetProcessInstance() string {
+	if x != nil {
+		return x.ProcessInstance
+	}
+	return ""
+}
+
+func (x *PrepareExecutionCommand) GetClaim() *Job {
+	if x != nil {
+		return x.Claim
+	}
+	return nil
+}
+
+type ExecutionCapabilities struct {
+	state              protoimpl.MessageState `protogen:"open.v1"`
+	Effect             string                 `protobuf:"bytes,1,opt,name=effect,proto3" json:"effect,omitempty"`
+	Idempotent         bool                   `protobuf:"varint,2,opt,name=idempotent,proto3" json:"idempotent,omitempty"`
+	Queryable          bool                   `protobuf:"varint,3,opt,name=queryable,proto3" json:"queryable,omitempty"`
+	ProtocolVersion    string                 `protobuf:"bytes,4,opt,name=protocol_version,json=protocolVersion,proto3" json:"protocol_version,omitempty"`
+	DeclarationVersion string                 `protobuf:"bytes,5,opt,name=declaration_version,json=declarationVersion,proto3" json:"declaration_version,omitempty"`
+	VerificationBasis  string                 `protobuf:"bytes,6,opt,name=verification_basis,json=verificationBasis,proto3" json:"verification_basis,omitempty"`
+	IdempotencyScope   string                 `protobuf:"bytes,7,opt,name=idempotency_scope,json=idempotencyScope,proto3" json:"idempotency_scope,omitempty"`
+	unknownFields      protoimpl.UnknownFields
+	sizeCache          protoimpl.SizeCache
+}
+
+func (x *ExecutionCapabilities) Reset() {
+	*x = ExecutionCapabilities{}
+	mi := &file_lerna_v1_ledger_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ExecutionCapabilities) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ExecutionCapabilities) ProtoMessage() {}
+
+func (x *ExecutionCapabilities) ProtoReflect() protoreflect.Message {
+	mi := &file_lerna_v1_ledger_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ExecutionCapabilities.ProtoReflect.Descriptor instead.
+func (*ExecutionCapabilities) Descriptor() ([]byte, []int) {
+	return file_lerna_v1_ledger_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *ExecutionCapabilities) GetEffect() string {
+	if x != nil {
+		return x.Effect
+	}
+	return ""
+}
+
+func (x *ExecutionCapabilities) GetIdempotent() bool {
+	if x != nil {
+		return x.Idempotent
+	}
+	return false
+}
+
+func (x *ExecutionCapabilities) GetQueryable() bool {
+	if x != nil {
+		return x.Queryable
+	}
+	return false
+}
+
+func (x *ExecutionCapabilities) GetProtocolVersion() string {
+	if x != nil {
+		return x.ProtocolVersion
+	}
+	return ""
+}
+
+func (x *ExecutionCapabilities) GetDeclarationVersion() string {
+	if x != nil {
+		return x.DeclarationVersion
+	}
+	return ""
+}
+
+func (x *ExecutionCapabilities) GetVerificationBasis() string {
+	if x != nil {
+		return x.VerificationBasis
+	}
+	return ""
+}
+
+func (x *ExecutionCapabilities) GetIdempotencyScope() string {
+	if x != nil {
+		return x.IdempotencyScope
+	}
+	return ""
+}
+
 var File_lerna_v1_ledger_proto protoreflect.FileDescriptor
 
 const file_lerna_v1_ledger_proto_rawDesc = "" +
@@ -328,7 +864,7 @@ const file_lerna_v1_ledger_proto_rawDesc = "" +
 	"\revidence_refs\x18\x06 \x03(\v2\r.lerna.v1.RefR\fevidenceRefs\x12=\n" +
 	"\x19next_reconcile_at_unix_ms\x18\a \x01(\x03H\x00R\x15nextReconcileAtUnixMs\x88\x01\x01\x12+\n" +
 	"\x11evidence_conflict\x18\b \x01(\bR\x10evidenceConflictB\x1c\n" +
-	"\x1a_next_reconcile_at_unix_ms\"\xfc\x04\n" +
+	"\x1a_next_reconcile_at_unix_ms\"\xaf\x05\n" +
 	"\tOperation\x12\x1f\n" +
 	"\x03ref\x18\x01 \x01(\v2\r.lerna.v1.RefR\x03ref\x122\n" +
 	"\radmission_ref\x18\x02 \x01(\v2\r.lerna.v1.RefR\fadmissionRef\x120\n" +
@@ -345,10 +881,62 @@ const file_lerna_v1_ledger_proto_rawDesc = "" +
 	" \x01(\v2\r.lerna.v1.RefR\teffectRef\x12A\n" +
 	"\x15closure_evidence_refs\x18\v \x03(\v2\r.lerna.v1.RefR\x13closureEvidenceRefs\x12(\n" +
 	"\x06effect\x18\f \x01(\v2\x10.lerna.v1.EffectR\x06effect\x124\n" +
-	"\x16start_receipt_obtained\x18\r \x01(\bR\x14startReceiptObtained\"|\n" +
+	"\x16start_receipt_obtained\x18\r \x01(\bR\x14startReceiptObtained\x121\n" +
+	"\texecution\x18\x0e \x01(\v2\x13.lerna.v1.ExecutionR\texecution\"|\n" +
 	"\x16AcceptOperationCommand\x12/\n" +
 	"\x06header\x18\x01 \x01(\v2\x17.lerna.v1.CommandHeaderR\x06header\x121\n" +
-	"\tadmission\x18\x02 \x01(\v2\x13.lerna.v1.AdmissionR\tadmissionB?Z=github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1;lernav1b\x06proto3"
+	"\tadmission\x18\x02 \x01(\v2\x13.lerna.v1.AdmissionR\tadmission\"\x83\x02\n" +
+	"\x0eCallDescriptor\x12\x1a\n" +
+	"\bprotocol\x18\x01 \x01(\tR\bprotocol\x12\x16\n" +
+	"\x06method\x18\x02 \x01(\tR\x06method\x12\x16\n" +
+	"\x06target\x18\x03 \x01(\tR\x06target\x124\n" +
+	"\x0eparameters_ref\x18\x04 \x01(\v2\r.lerna.v1.RefR\rparametersRef\x124\n" +
+	"\x0ecapability_ref\x18\x05 \x01(\v2\r.lerna.v1.RefR\rcapabilityRef\x12!\n" +
+	"\fexternal_key\x18\x06 \x01(\tR\vexternalKey\x12\x16\n" +
+	"\x06digest\x18\a \x01(\tR\x06digest\"\xfa\x02\n" +
+	"\x10ExecutionAttempt\x12\x1f\n" +
+	"\x03ref\x18\x01 \x01(\v2\r.lerna.v1.RefR\x03ref\x127\n" +
+	"\foperation_id\x18\x02 \x01(\v2\x14.lerna.v1.GlobalNameR\voperationId\x12\x1d\n" +
+	"\n" +
+	"attempt_no\x18\x03 \x01(\rR\tattemptNo\x12\x14\n" +
+	"\x05phase\x18\x04 \x01(\tR\x05phase\x12!\n" +
+	"\fexternal_key\x18\x05 \x01(\tR\vexternalKey\x12,\n" +
+	"\x12external_key_scope\x18\x06 \x01(\tR\x10externalKeyScope\x12A\n" +
+	"\x1efirst_possible_send_at_unix_ms\x18\a \x01(\x03R\x19firstPossibleSendAtUnixMs\x12C\n" +
+	"\fcapabilities\x18\b \x01(\v2\x1f.lerna.v1.ExecutionCapabilitiesR\fcapabilities\"\xbd\x03\n" +
+	"\fPhysicalSend\x12\x1f\n" +
+	"\x03ref\x18\x01 \x01(\v2\r.lerna.v1.RefR\x03ref\x123\n" +
+	"\n" +
+	"attempt_id\x18\x02 \x01(\v2\x14.lerna.v1.GlobalNameR\tattemptId\x12\x19\n" +
+	"\bsend_seq\x18\x03 \x01(\rR\asendSeq\x12\x14\n" +
+	"\x05phase\x18\x04 \x01(\tR\x05phase\x12)\n" +
+	"\x10process_instance\x18\x05 \x01(\tR\x0fprocessInstance\x12\x1f\n" +
+	"\vclaim_epoch\x18\x06 \x01(\x04R\n" +
+	"claimEpoch\x12-\n" +
+	"\x13lease_until_unix_ms\x18\a \x01(\x03R\x10leaseUntilUnixMs\x12=\n" +
+	"\rstart_receipt\x18\b \x01(\v2\x18.lerna.v1.CommandReceiptR\fstartReceipt\x126\n" +
+	"\x0fobservation_ref\x18\t \x01(\v2\r.lerna.v1.RefR\x0eobservationRef\x124\n" +
+	"\x0ecredential_ref\x18\n" +
+	" \x01(\v2\r.lerna.v1.RefR\rcredentialRef\"\xb0\x01\n" +
+	"\tExecution\x124\n" +
+	"\aattempt\x18\x01 \x01(\v2\x1a.lerna.v1.ExecutionAttemptR\aattempt\x12*\n" +
+	"\x04send\x18\x02 \x01(\v2\x16.lerna.v1.PhysicalSendR\x04send\x12A\n" +
+	"\x0fcall_descriptor\x18\x03 \x01(\v2\x18.lerna.v1.CallDescriptorR\x0ecallDescriptor\"\xd3\x01\n" +
+	"\x17PrepareExecutionCommand\x12/\n" +
+	"\x06header\x18\x01 \x01(\v2\x17.lerna.v1.CommandHeaderR\x06header\x127\n" +
+	"\foperation_id\x18\x02 \x01(\v2\x14.lerna.v1.GlobalNameR\voperationId\x12)\n" +
+	"\x10process_instance\x18\x03 \x01(\tR\x0fprocessInstance\x12#\n" +
+	"\x05claim\x18\x04 \x01(\v2\r.lerna.v1.JobR\x05claim\"\xa5\x02\n" +
+	"\x15ExecutionCapabilities\x12\x16\n" +
+	"\x06effect\x18\x01 \x01(\tR\x06effect\x12\x1e\n" +
+	"\n" +
+	"idempotent\x18\x02 \x01(\bR\n" +
+	"idempotent\x12\x1c\n" +
+	"\tqueryable\x18\x03 \x01(\bR\tqueryable\x12)\n" +
+	"\x10protocol_version\x18\x04 \x01(\tR\x0fprotocolVersion\x12/\n" +
+	"\x13declaration_version\x18\x05 \x01(\tR\x12declarationVersion\x12-\n" +
+	"\x12verification_basis\x18\x06 \x01(\tR\x11verificationBasis\x12+\n" +
+	"\x11idempotency_scope\x18\a \x01(\tR\x10idempotencyScopeB?Z=github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1;lernav1b\x06proto3"
 
 var (
 	file_lerna_v1_ledger_proto_rawDescOnce sync.Once
@@ -362,38 +950,63 @@ func file_lerna_v1_ledger_proto_rawDescGZIP() []byte {
 	return file_lerna_v1_ledger_proto_rawDescData
 }
 
-var file_lerna_v1_ledger_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_lerna_v1_ledger_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
 var file_lerna_v1_ledger_proto_goTypes = []any{
-	(*Effect)(nil),                 // 0: lerna.v1.Effect
-	(*Operation)(nil),              // 1: lerna.v1.Operation
-	(*AcceptOperationCommand)(nil), // 2: lerna.v1.AcceptOperationCommand
-	(*Ref)(nil),                    // 3: lerna.v1.Ref
-	(*GlobalName)(nil),             // 4: lerna.v1.GlobalName
-	(*Capability)(nil),             // 5: lerna.v1.Capability
-	(*CommandHeader)(nil),          // 6: lerna.v1.CommandHeader
-	(*Admission)(nil),              // 7: lerna.v1.Admission
+	(*Effect)(nil),                  // 0: lerna.v1.Effect
+	(*Operation)(nil),               // 1: lerna.v1.Operation
+	(*AcceptOperationCommand)(nil),  // 2: lerna.v1.AcceptOperationCommand
+	(*CallDescriptor)(nil),          // 3: lerna.v1.CallDescriptor
+	(*ExecutionAttempt)(nil),        // 4: lerna.v1.ExecutionAttempt
+	(*PhysicalSend)(nil),            // 5: lerna.v1.PhysicalSend
+	(*Execution)(nil),               // 6: lerna.v1.Execution
+	(*PrepareExecutionCommand)(nil), // 7: lerna.v1.PrepareExecutionCommand
+	(*ExecutionCapabilities)(nil),   // 8: lerna.v1.ExecutionCapabilities
+	(*Ref)(nil),                     // 9: lerna.v1.Ref
+	(*GlobalName)(nil),              // 10: lerna.v1.GlobalName
+	(*Capability)(nil),              // 11: lerna.v1.Capability
+	(*CommandHeader)(nil),           // 12: lerna.v1.CommandHeader
+	(*Admission)(nil),               // 13: lerna.v1.Admission
+	(*CommandReceipt)(nil),          // 14: lerna.v1.CommandReceipt
+	(*Job)(nil),                     // 15: lerna.v1.Job
 }
 var file_lerna_v1_ledger_proto_depIdxs = []int32{
-	3,  // 0: lerna.v1.Effect.ref:type_name -> lerna.v1.Ref
-	4,  // 1: lerna.v1.Effect.operation_id:type_name -> lerna.v1.GlobalName
-	4,  // 2: lerna.v1.Effect.covered_attempt_ids:type_name -> lerna.v1.GlobalName
-	3,  // 3: lerna.v1.Effect.evidence_refs:type_name -> lerna.v1.Ref
-	3,  // 4: lerna.v1.Operation.ref:type_name -> lerna.v1.Ref
-	3,  // 5: lerna.v1.Operation.admission_ref:type_name -> lerna.v1.Ref
-	3,  // 6: lerna.v1.Operation.adapter_ref:type_name -> lerna.v1.Ref
-	3,  // 7: lerna.v1.Operation.parameters_ref:type_name -> lerna.v1.Ref
-	5,  // 8: lerna.v1.Operation.capability_snapshot:type_name -> lerna.v1.Capability
-	3,  // 9: lerna.v1.Operation.attempt_refs:type_name -> lerna.v1.Ref
-	3,  // 10: lerna.v1.Operation.effect_ref:type_name -> lerna.v1.Ref
-	3,  // 11: lerna.v1.Operation.closure_evidence_refs:type_name -> lerna.v1.Ref
+	9,  // 0: lerna.v1.Effect.ref:type_name -> lerna.v1.Ref
+	10, // 1: lerna.v1.Effect.operation_id:type_name -> lerna.v1.GlobalName
+	10, // 2: lerna.v1.Effect.covered_attempt_ids:type_name -> lerna.v1.GlobalName
+	9,  // 3: lerna.v1.Effect.evidence_refs:type_name -> lerna.v1.Ref
+	9,  // 4: lerna.v1.Operation.ref:type_name -> lerna.v1.Ref
+	9,  // 5: lerna.v1.Operation.admission_ref:type_name -> lerna.v1.Ref
+	9,  // 6: lerna.v1.Operation.adapter_ref:type_name -> lerna.v1.Ref
+	9,  // 7: lerna.v1.Operation.parameters_ref:type_name -> lerna.v1.Ref
+	11, // 8: lerna.v1.Operation.capability_snapshot:type_name -> lerna.v1.Capability
+	9,  // 9: lerna.v1.Operation.attempt_refs:type_name -> lerna.v1.Ref
+	9,  // 10: lerna.v1.Operation.effect_ref:type_name -> lerna.v1.Ref
+	9,  // 11: lerna.v1.Operation.closure_evidence_refs:type_name -> lerna.v1.Ref
 	0,  // 12: lerna.v1.Operation.effect:type_name -> lerna.v1.Effect
-	6,  // 13: lerna.v1.AcceptOperationCommand.header:type_name -> lerna.v1.CommandHeader
-	7,  // 14: lerna.v1.AcceptOperationCommand.admission:type_name -> lerna.v1.Admission
-	15, // [15:15] is the sub-list for method output_type
-	15, // [15:15] is the sub-list for method input_type
-	15, // [15:15] is the sub-list for extension type_name
-	15, // [15:15] is the sub-list for extension extendee
-	0,  // [0:15] is the sub-list for field type_name
+	6,  // 13: lerna.v1.Operation.execution:type_name -> lerna.v1.Execution
+	12, // 14: lerna.v1.AcceptOperationCommand.header:type_name -> lerna.v1.CommandHeader
+	13, // 15: lerna.v1.AcceptOperationCommand.admission:type_name -> lerna.v1.Admission
+	9,  // 16: lerna.v1.CallDescriptor.parameters_ref:type_name -> lerna.v1.Ref
+	9,  // 17: lerna.v1.CallDescriptor.capability_ref:type_name -> lerna.v1.Ref
+	9,  // 18: lerna.v1.ExecutionAttempt.ref:type_name -> lerna.v1.Ref
+	10, // 19: lerna.v1.ExecutionAttempt.operation_id:type_name -> lerna.v1.GlobalName
+	8,  // 20: lerna.v1.ExecutionAttempt.capabilities:type_name -> lerna.v1.ExecutionCapabilities
+	9,  // 21: lerna.v1.PhysicalSend.ref:type_name -> lerna.v1.Ref
+	10, // 22: lerna.v1.PhysicalSend.attempt_id:type_name -> lerna.v1.GlobalName
+	14, // 23: lerna.v1.PhysicalSend.start_receipt:type_name -> lerna.v1.CommandReceipt
+	9,  // 24: lerna.v1.PhysicalSend.observation_ref:type_name -> lerna.v1.Ref
+	9,  // 25: lerna.v1.PhysicalSend.credential_ref:type_name -> lerna.v1.Ref
+	4,  // 26: lerna.v1.Execution.attempt:type_name -> lerna.v1.ExecutionAttempt
+	5,  // 27: lerna.v1.Execution.send:type_name -> lerna.v1.PhysicalSend
+	3,  // 28: lerna.v1.Execution.call_descriptor:type_name -> lerna.v1.CallDescriptor
+	12, // 29: lerna.v1.PrepareExecutionCommand.header:type_name -> lerna.v1.CommandHeader
+	10, // 30: lerna.v1.PrepareExecutionCommand.operation_id:type_name -> lerna.v1.GlobalName
+	15, // 31: lerna.v1.PrepareExecutionCommand.claim:type_name -> lerna.v1.Job
+	32, // [32:32] is the sub-list for method output_type
+	32, // [32:32] is the sub-list for method input_type
+	32, // [32:32] is the sub-list for extension type_name
+	32, // [32:32] is the sub-list for extension extendee
+	0,  // [0:32] is the sub-list for field type_name
 }
 
 func init() { file_lerna_v1_ledger_proto_init() }
@@ -412,7 +1025,7 @@ func file_lerna_v1_ledger_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_lerna_v1_ledger_proto_rawDesc), len(file_lerna_v1_ledger_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   3,
+			NumMessages:   9,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
