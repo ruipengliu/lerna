@@ -134,6 +134,12 @@ func TestSafeResendSkipsAdmissionGeneration(t *testing.T) { ... }
 | `content.stage` | 输入正文与来源；尚未承诺任务受理 |
 | `durable.submit` | SUBMITTED 回执、正文引用与决定待办 |
 | `durable.decide` | 会话输入、会话头、任务关联、任务、原决定与工作完成 |
+| `durable.jobs` | 领取、续租、工作控制的原决定与围栏 |
+| `tasks.planning` | 可信条件集、快照请求或不可变提议与原决定 |
+| `grants.configure`、`budget.configure` | 受信根授权或用户／任务额度与原决定 |
+| `tasks.admit` | 使用记录、两级预留、提议消费、准入意图、交接 outbox、待办与原决定 |
+| `ledger.accept` | 独立执行管理域的原交接回执、动作与执行待办 |
+| `tasks.handoff_receipt` | 源域保存对方原回执并在领取围栏下完成待办 |
 
 新增事务必须传入固定名称、登记到同一表，并补充对应故障用例。故障套件检查未登记的事务和无调用点的登记项，普通构建只编译空边界，不包含故障计划、登记表或配置 API。`make test-fault` 仅运行 `conformance/fault/` 中带 `fault` 标签的测试。
 
@@ -170,4 +176,6 @@ func TestSafeResendSkipsAdmissionGeneration(t *testing.T) { ... }
 
 目标工作使用 30 秒租约；持久工作命令允许 1–60000 毫秒，单次最多领取 100 项。宿主每个进程实例使用新身份。共享装配启动先恢复原目标责任：存在尚未过期的领取时等待自然到期，最多等待 65 秒，超时返回错误并保留责任。因此命令行启动可能等待旧工作者的租约，不提前抢占、不要求用户手动执行 recover。等待不持有数据库事务；最终资格仍按取得写锁后的权威时间核验。
 
-持久工作同一后端语义套件位于 `conformance/durable`：`runSemantics` 接收公开服务接口工厂，`leaseTimeAfterLock` 接收同一后端的两个连接和占锁事务接口。后续 PostgreSQL 实现复用这些行为用例。宿主专用的 `JobCommand` 不暴露给可替换适配器；CONTROL 的模块选择来自受信模块调用，不能由外部请求直接转发。DELIVER_HANDOFF 当前提供责任调度与固定端点保存，实际 R7 投递由执行管理实现接入。
+持久工作同一后端语义套件位于 `conformance/durable`：`runSemantics` 接收公开服务接口工厂，`leaseTimeAfterLock` 接收同一后端的两个连接和占锁事务接口。后续 PostgreSQL 实现复用这些行为用例。宿主专用的 `JobCommand` 不暴露给可替换适配器；CONTROL 的模块选择来自受信模块调用，不能由外部请求直接转发。任务编排的 DELIVER_HANDOFF 先查询原接收方命令，再按原身份投递；执行管理在独立域事务保存接纳回执、动作和待办，源域最后保存原回执并完成工作。启动恢复等待自然租约到期，不重建动作。通用 PROGRESS／CONTROL 不得完成或封闭尚无回执的交接，也不得封闭尚无决定的 DECIDE_GOAL。
+
+准入使用事务内业务保存点：任何参与者的确定拒绝撤回使用、预留、确认消费和意图，再保存不可变拒绝回执。受信模板、能力配置、根持续授权和两级预算由固定 host 身份提供；推理只产生提议。M1 此切片只接纳单步目标动作；记忆、子任务、模型自报准备／收尾类别，以及需要尚未实现的确认流程的动作明确拒绝。金额为 USD_MICRO 整数，持续授权仍建立每动作使用记录；预留在交接后保持，不代表费用已结清。

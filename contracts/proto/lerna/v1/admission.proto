@@ -1,0 +1,67 @@
+syntax = "proto3";
+package lerna.v1;
+
+import "lerna/v1/authority.proto";
+import "lerna/v1/identity.proto";
+import "lerna/v1/planning.proto";
+import "lerna/v1/submission.proto";
+
+option go_package = "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1;lernav1";
+message Capability {
+  Ref ref = 1;
+  string action = 2;
+  string resource = 3;
+  string use_right = 4;
+  string processing_purpose = 5;
+  string executor_endpoint_id = 6;
+  Ref adapter_ref = 7;
+  string unit = 8;
+  optional int64 fee_ceiling = 9;
+  Ref rate_basis_ref = 10;
+  uint32 max_sends = 11;
+  bool nonbillable = 12;
+  CommandIdentity approved_by = 13;
+}
+message ConfigureCapabilityCommand {
+  CommandHeader header = 1;
+  Capability capability = 2;
+}
+message Admission {
+  Ref ref = 1;
+  Ref origin = 2;
+  string step_id = 3;
+  GlobalName task_id = 4;
+  uint64 requirements_version = 5;
+  uint64 input_version = 6;
+  uint64 control_generation = 7;
+  repeated AncestorControl ancestor_controls = 8;
+  repeated MemoryDependency memory_dependencies = 9;
+  GlobalName operation_id = 10;
+  string ledger_domain_id = 11;
+  string executor_endpoint_id = 12;
+  repeated Ref grant_refs = 13;
+  BudgetBasis budget_basis = 14;
+  Ref confirmation_ref = 15;
+  Ref parameters_ref = 16;
+  Ref capability_ref = 17;
+  Ref grant_use_ref = 18;
+  string work_category = 19;
+  CommandIdentity handoff_identity = 20;
+  Capability capability_snapshot = 21;
+  repeated Ref content_refs = 22;
+}
+message AdmitCommand {
+  CommandHeader header = 1;
+  GlobalName task_id = 2;
+  Ref proposal_ref = 3;
+  Ref grant_ref = 4;
+  Ref confirmation_ref = 5;
+}
+message Handoff {
+  Ref ref = 1;
+  Ref admission_ref = 2;
+  CommandIdentity identity = 3;
+  Ref job_ref = 4;
+  CommandReceipt recipient_receipt = 5;
+  string state = 6;
+}

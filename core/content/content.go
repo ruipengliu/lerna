@@ -4,6 +4,8 @@ package content
 import (
 	"context"
 
+	"google.golang.org/protobuf/proto"
+
 	"github.com/ruipengliu/lerna/contracts/command"
 	v1 "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1"
 )
@@ -25,7 +27,7 @@ func (s *Service) Stage(ctx context.Context, caller *v1.Caller, c *v1.SubmitGoal
 	if err := command.CheckIdentity(caller, c.Identity, s.user, c.Identity.TargetDomainId); err != nil {
 		return nil, err
 	}
-	return s.store.StageContent(ctx, &v1.Content{Ref: command.NewRef(s.user, s.domain, "content", "lerna.v1.Content"), Text: c.Goal, Source: c.Identity, MediaType: "text/plain"}, command.FingerprintV1(c))
+	return s.store.StageContent(ctx, &v1.Content{Ref: command.NewRef(s.user, s.domain, "content", "lerna.v1.Content"), Text: c.Goal, Source: c.Identity, MediaType: "text/plain", Status: "AVAILABLE", ProcessingPurposes: []string{"CURRENT_TASK"}}, command.FingerprintV1(c))
 }
 func (s *Service) Read(ctx context.Context, caller *v1.Caller, ref *v1.Ref) (*v1.Content, error) {
 	if ref == nil {
@@ -38,4 +40,21 @@ func (s *Service) Read(ctx context.Context, caller *v1.Caller, ref *v1.Ref) (*v1
 		return nil, command.Fail("UNSUPPORTED_CONTRACT")
 	}
 	return s.store.ReadContent(ctx, ref)
+}
+
+// CheckUsable 检查精确内容版本、可信来源和当前用途；不得凭一个形状正确的引用放行。
+func (s *Service) CheckUsable(ctx context.Context, caller *v1.Caller, ref *v1.Ref) error {
+	c, e := s.Read(ctx, caller, ref)
+	if e != nil {
+		return e
+	}
+	if c == nil || c.Source == nil || c.Source.UserId != s.user || c.Source.IssuerId == "" || c.Source.CommandId == "" || c.Status != "AVAILABLE" || !proto.Equal(c.Ref, ref) {
+		return command.Fail("CONTENT_UNUSABLE")
+	}
+	for _, purpose := range c.ProcessingPurposes {
+		if purpose == "CURRENT_TASK" {
+			return nil
+		}
+	}
+	return command.Fail("CONTENT_USE_DENIED")
 }

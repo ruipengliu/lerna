@@ -906,6 +906,7 @@ type CommandReceipt struct {
 	Error               *ContractError         `protobuf:"bytes,14,opt,name=error,proto3" json:"error,omitempty"`
 	InputRef            *Ref                   `protobuf:"bytes,15,opt,name=input_ref,json=inputRef,proto3" json:"input_ref,omitempty"`
 	Jobs                []*Job                 `protobuf:"bytes,16,rep,name=jobs,proto3" json:"jobs,omitempty"`
+	ResultRef           *Ref                   `protobuf:"bytes,17,opt,name=result_ref,json=resultRef,proto3" json:"result_ref,omitempty"`
 	unknownFields       protoimpl.UnknownFields
 	sizeCache           protoimpl.SizeCache
 }
@@ -1048,6 +1049,13 @@ func (x *CommandReceipt) GetInputRef() *Ref {
 func (x *CommandReceipt) GetJobs() []*Job {
 	if x != nil {
 		return x.Jobs
+	}
+	return nil
+}
+
+func (x *CommandReceipt) GetResultRef() *Ref {
+	if x != nil {
+		return x.ResultRef
 	}
 	return nil
 }
@@ -1469,15 +1477,17 @@ func (x *Session) GetTaskRefs() []*Ref {
 }
 
 type Content struct {
-	state            protoimpl.MessageState `protogen:"open.v1"`
-	Ref              *Ref                   `protobuf:"bytes,1,opt,name=ref,proto3" json:"ref,omitempty"`
-	Text             string                 `protobuf:"bytes,2,opt,name=text,proto3" json:"text,omitempty"`
-	Source           *CommandIdentity       `protobuf:"bytes,3,opt,name=source,proto3" json:"source,omitempty"`
-	AcquiredAtUnixMs int64                  `protobuf:"varint,4,opt,name=acquired_at_unix_ms,json=acquiredAtUnixMs,proto3" json:"acquired_at_unix_ms,omitempty"`
-	DerivedFrom      []*Ref                 `protobuf:"bytes,5,rep,name=derived_from,json=derivedFrom,proto3" json:"derived_from,omitempty"`
-	MediaType        string                 `protobuf:"bytes,6,opt,name=media_type,json=mediaType,proto3" json:"media_type,omitempty"`
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
+	state              protoimpl.MessageState `protogen:"open.v1"`
+	Ref                *Ref                   `protobuf:"bytes,1,opt,name=ref,proto3" json:"ref,omitempty"`
+	Text               string                 `protobuf:"bytes,2,opt,name=text,proto3" json:"text,omitempty"`
+	Source             *CommandIdentity       `protobuf:"bytes,3,opt,name=source,proto3" json:"source,omitempty"`
+	AcquiredAtUnixMs   int64                  `protobuf:"varint,4,opt,name=acquired_at_unix_ms,json=acquiredAtUnixMs,proto3" json:"acquired_at_unix_ms,omitempty"`
+	DerivedFrom        []*Ref                 `protobuf:"bytes,5,rep,name=derived_from,json=derivedFrom,proto3" json:"derived_from,omitempty"`
+	MediaType          string                 `protobuf:"bytes,6,opt,name=media_type,json=mediaType,proto3" json:"media_type,omitempty"`
+	Status             string                 `protobuf:"bytes,7,opt,name=status,proto3" json:"status,omitempty"`
+	ProcessingPurposes []string               `protobuf:"bytes,8,rep,name=processing_purposes,json=processingPurposes,proto3" json:"processing_purposes,omitempty"`
+	unknownFields      protoimpl.UnknownFields
+	sizeCache          protoimpl.SizeCache
 }
 
 func (x *Content) Reset() {
@@ -1550,6 +1560,20 @@ func (x *Content) GetMediaType() string {
 		return x.MediaType
 	}
 	return ""
+}
+
+func (x *Content) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
+func (x *Content) GetProcessingPurposes() []string {
+	if x != nil {
+		return x.ProcessingPurposes
+	}
+	return nil
 }
 
 type PendingGoal struct {
@@ -1986,7 +2010,7 @@ const file_lerna_v1_submission_proto_rawDesc = "" +
 	"\frelated_refs\x18\x05 \x03(\v2\r.lerna.v1.RefR\vrelatedRefs\x122\n" +
 	"\x15responsible_domain_id\x18\x06 \x01(\tR\x13responsibleDomainId\x122\n" +
 	"\x13retry_after_unix_ms\x18\a \x01(\x03H\x00R\x10retryAfterUnixMs\x88\x01\x01B\x16\n" +
-	"\x14_retry_after_unix_ms\"\xe3\x05\n" +
+	"\x14_retry_after_unix_ms\"\x91\x06\n" +
 	"\x0eCommandReceipt\x125\n" +
 	"\bidentity\x18\x01 \x01(\v2\x19.lerna.v1.CommandIdentityR\bidentity\x12/\n" +
 	"\x13fingerprint_version\x18\x02 \x01(\rR\x12fingerprintVersion\x12 \n" +
@@ -2005,7 +2029,9 @@ const file_lerna_v1_submission_proto_rawDesc = "" +
 	"\x12durability_profile\x18\r \x01(\tR\x11durabilityProfile\x12-\n" +
 	"\x05error\x18\x0e \x01(\v2\x17.lerna.v1.ContractErrorR\x05error\x12*\n" +
 	"\tinput_ref\x18\x0f \x01(\v2\r.lerna.v1.RefR\binputRef\x12!\n" +
-	"\x04jobs\x18\x10 \x03(\v2\r.lerna.v1.JobR\x04jobs\"\xf4\x01\n" +
+	"\x04jobs\x18\x10 \x03(\v2\r.lerna.v1.JobR\x04jobs\x12,\n" +
+	"\n" +
+	"result_ref\x18\x11 \x01(\v2\r.lerna.v1.RefR\tresultRef\"\xf4\x01\n" +
 	"\fReceiptQuery\x121\n" +
 	"\x05state\x18\x01 \x01(\x0e2\x1b.lerna.v1.ReceiptQueryStateR\x05state\x122\n" +
 	"\x15responsible_domain_id\x18\x02 \x01(\tR\x13responsibleDomainId\x12\x1a\n" +
@@ -2050,7 +2076,7 @@ const file_lerna_v1_submission_proto_rawDesc = "" +
 	"\x12last_committed_seq\x18\x03 \x01(\x04R\x10lastCommittedSeq\x12\x1a\n" +
 	"\brevision\x18\x04 \x01(\x04R\brevision\x12.\n" +
 	"\x06inputs\x18\x05 \x03(\v2\x16.lerna.v1.SessionInputR\x06inputs\x12*\n" +
-	"\ttask_refs\x18\x06 \x03(\v2\r.lerna.v1.RefR\btaskRefs\"\xf1\x01\n" +
+	"\ttask_refs\x18\x06 \x03(\v2\r.lerna.v1.RefR\btaskRefs\"\xba\x02\n" +
 	"\aContent\x12\x1f\n" +
 	"\x03ref\x18\x01 \x01(\v2\r.lerna.v1.RefR\x03ref\x12\x12\n" +
 	"\x04text\x18\x02 \x01(\tR\x04text\x121\n" +
@@ -2058,7 +2084,9 @@ const file_lerna_v1_submission_proto_rawDesc = "" +
 	"\x13acquired_at_unix_ms\x18\x04 \x01(\x03R\x10acquiredAtUnixMs\x120\n" +
 	"\fderived_from\x18\x05 \x03(\v2\r.lerna.v1.RefR\vderivedFrom\x12\x1d\n" +
 	"\n" +
-	"media_type\x18\x06 \x01(\tR\tmediaType\"t\n" +
+	"media_type\x18\x06 \x01(\tR\tmediaType\x12\x16\n" +
+	"\x06status\x18\a \x01(\tR\x06status\x12/\n" +
+	"\x13processing_purposes\x18\b \x03(\tR\x12processingPurposes\"t\n" +
 	"\vPendingGoal\x125\n" +
 	"\acommand\x18\x01 \x01(\v2\x1b.lerna.v1.SubmitGoalCommandR\acommand\x12.\n" +
 	"\vcontent_ref\x18\x02 \x01(\v2\r.lerna.v1.RefR\n" +
@@ -2206,42 +2234,43 @@ var file_lerna_v1_submission_proto_depIdxs = []int32{
 	13, // 13: lerna.v1.CommandReceipt.error:type_name -> lerna.v1.ContractError
 	10, // 14: lerna.v1.CommandReceipt.input_ref:type_name -> lerna.v1.Ref
 	21, // 15: lerna.v1.CommandReceipt.jobs:type_name -> lerna.v1.Job
-	2,  // 16: lerna.v1.ReceiptQuery.state:type_name -> lerna.v1.ReceiptQueryState
-	14, // 17: lerna.v1.ReceiptQuery.receipt:type_name -> lerna.v1.CommandReceipt
-	13, // 18: lerna.v1.ReceiptQuery.error:type_name -> lerna.v1.ContractError
-	23, // 19: lerna.v1.Task.task_id:type_name -> lerna.v1.GlobalName
-	10, // 20: lerna.v1.Task.goal_ref:type_name -> lerna.v1.Ref
-	5,  // 21: lerna.v1.Task.lifecycle:type_name -> lerna.v1.TaskLifecycle
-	6,  // 22: lerna.v1.Task.control:type_name -> lerna.v1.TaskControl
-	7,  // 23: lerna.v1.Task.progress:type_name -> lerna.v1.TaskProgress
-	8,  // 24: lerna.v1.Task.requirements_status:type_name -> lerna.v1.RequirementsStatus
-	10, // 25: lerna.v1.Task.parent_task_ref:type_name -> lerna.v1.Ref
-	10, // 26: lerna.v1.Task.result_ref:type_name -> lerna.v1.Ref
-	23, // 27: lerna.v1.SessionInput.input_id:type_name -> lerna.v1.GlobalName
-	23, // 28: lerna.v1.SessionInput.task_id:type_name -> lerna.v1.GlobalName
-	10, // 29: lerna.v1.SessionInput.content_ref:type_name -> lerna.v1.Ref
-	11, // 30: lerna.v1.SessionInput.command_identity:type_name -> lerna.v1.CommandIdentity
-	23, // 31: lerna.v1.Session.session_id:type_name -> lerna.v1.GlobalName
-	17, // 32: lerna.v1.Session.inputs:type_name -> lerna.v1.SessionInput
-	10, // 33: lerna.v1.Session.task_refs:type_name -> lerna.v1.Ref
-	10, // 34: lerna.v1.Content.ref:type_name -> lerna.v1.Ref
-	11, // 35: lerna.v1.Content.source:type_name -> lerna.v1.CommandIdentity
-	10, // 36: lerna.v1.Content.derived_from:type_name -> lerna.v1.Ref
-	12, // 37: lerna.v1.PendingGoal.command:type_name -> lerna.v1.SubmitGoalCommand
-	10, // 38: lerna.v1.PendingGoal.content_ref:type_name -> lerna.v1.Ref
-	10, // 39: lerna.v1.Job.ref:type_name -> lerna.v1.Ref
-	11, // 40: lerna.v1.Job.responsibility:type_name -> lerna.v1.CommandIdentity
-	20, // 41: lerna.v1.Job.goal:type_name -> lerna.v1.PendingGoal
-	10, // 42: lerna.v1.Job.specification_ref:type_name -> lerna.v1.Ref
-	11, // 43: lerna.v1.JobCommand.identity:type_name -> lerna.v1.CommandIdentity
-	10, // 44: lerna.v1.JobCommand.job_ref:type_name -> lerna.v1.Ref
-	10, // 45: lerna.v1.JobCommand.specification_ref:type_name -> lerna.v1.Ref
-	21, // 46: lerna.v1.JobCommand.job:type_name -> lerna.v1.Job
-	47, // [47:47] is the sub-list for method output_type
-	47, // [47:47] is the sub-list for method input_type
-	47, // [47:47] is the sub-list for extension type_name
-	47, // [47:47] is the sub-list for extension extendee
-	0,  // [0:47] is the sub-list for field type_name
+	10, // 16: lerna.v1.CommandReceipt.result_ref:type_name -> lerna.v1.Ref
+	2,  // 17: lerna.v1.ReceiptQuery.state:type_name -> lerna.v1.ReceiptQueryState
+	14, // 18: lerna.v1.ReceiptQuery.receipt:type_name -> lerna.v1.CommandReceipt
+	13, // 19: lerna.v1.ReceiptQuery.error:type_name -> lerna.v1.ContractError
+	23, // 20: lerna.v1.Task.task_id:type_name -> lerna.v1.GlobalName
+	10, // 21: lerna.v1.Task.goal_ref:type_name -> lerna.v1.Ref
+	5,  // 22: lerna.v1.Task.lifecycle:type_name -> lerna.v1.TaskLifecycle
+	6,  // 23: lerna.v1.Task.control:type_name -> lerna.v1.TaskControl
+	7,  // 24: lerna.v1.Task.progress:type_name -> lerna.v1.TaskProgress
+	8,  // 25: lerna.v1.Task.requirements_status:type_name -> lerna.v1.RequirementsStatus
+	10, // 26: lerna.v1.Task.parent_task_ref:type_name -> lerna.v1.Ref
+	10, // 27: lerna.v1.Task.result_ref:type_name -> lerna.v1.Ref
+	23, // 28: lerna.v1.SessionInput.input_id:type_name -> lerna.v1.GlobalName
+	23, // 29: lerna.v1.SessionInput.task_id:type_name -> lerna.v1.GlobalName
+	10, // 30: lerna.v1.SessionInput.content_ref:type_name -> lerna.v1.Ref
+	11, // 31: lerna.v1.SessionInput.command_identity:type_name -> lerna.v1.CommandIdentity
+	23, // 32: lerna.v1.Session.session_id:type_name -> lerna.v1.GlobalName
+	17, // 33: lerna.v1.Session.inputs:type_name -> lerna.v1.SessionInput
+	10, // 34: lerna.v1.Session.task_refs:type_name -> lerna.v1.Ref
+	10, // 35: lerna.v1.Content.ref:type_name -> lerna.v1.Ref
+	11, // 36: lerna.v1.Content.source:type_name -> lerna.v1.CommandIdentity
+	10, // 37: lerna.v1.Content.derived_from:type_name -> lerna.v1.Ref
+	12, // 38: lerna.v1.PendingGoal.command:type_name -> lerna.v1.SubmitGoalCommand
+	10, // 39: lerna.v1.PendingGoal.content_ref:type_name -> lerna.v1.Ref
+	10, // 40: lerna.v1.Job.ref:type_name -> lerna.v1.Ref
+	11, // 41: lerna.v1.Job.responsibility:type_name -> lerna.v1.CommandIdentity
+	20, // 42: lerna.v1.Job.goal:type_name -> lerna.v1.PendingGoal
+	10, // 43: lerna.v1.Job.specification_ref:type_name -> lerna.v1.Ref
+	11, // 44: lerna.v1.JobCommand.identity:type_name -> lerna.v1.CommandIdentity
+	10, // 45: lerna.v1.JobCommand.job_ref:type_name -> lerna.v1.Ref
+	10, // 46: lerna.v1.JobCommand.specification_ref:type_name -> lerna.v1.Ref
+	21, // 47: lerna.v1.JobCommand.job:type_name -> lerna.v1.Job
+	48, // [48:48] is the sub-list for method output_type
+	48, // [48:48] is the sub-list for method input_type
+	48, // [48:48] is the sub-list for extension type_name
+	48, // [48:48] is the sub-list for extension extendee
+	0,  // [0:48] is the sub-list for field type_name
 }
 
 func init() { file_lerna_v1_submission_proto_init() }
