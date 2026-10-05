@@ -229,7 +229,7 @@ func (s *Store) SaveJob(ctx context.Context, j *v1.Job) error {
 func (s *Store) PendingJobs(ctx context.Context, user string) ([]*v1.Job, error) {
 	var jobs []*v1.Job
 	err := s.read(ctx, func(q querier) error {
-		rows, err := q.QueryContext(ctx, "SELECT record FROM jobs WHERE user_id=? AND domain_id=? AND state='READY' ORDER BY id", user, s.domain)
+		rows, err := q.QueryContext(ctx, "SELECT record FROM jobs WHERE user_id=? AND domain_id=? AND state IN ('READY','CLAIMED','WAITING') ORDER BY id", user, s.domain)
 		if err != nil {
 			return err
 		}
@@ -340,4 +340,22 @@ func (s *Store) ReadContent(ctx context.Context, r *v1.Ref) (*v1.Content, error)
 		return nil, err
 	}
 	return c, err
+}
+
+func (s *Store) LoadJob(ctx context.Context, n *v1.GlobalName) (*v1.Job, error) {
+	j := new(v1.Job)
+	found, err := s.load(ctx, j, "SELECT record FROM jobs WHERE user_id=? AND domain_id=? AND id=?", n.UserId, n.AuthorityDomainId, n.LocalId)
+	if !found {
+		return nil, err
+	}
+	return j, err
+}
+
+func (s *Store) FindJobPurpose(ctx context.Context, user, purpose string) (*v1.Job, error) {
+	j := new(v1.Job)
+	found, err := s.load(ctx, j, "SELECT record FROM jobs WHERE user_id=? AND domain_id=? AND purpose_key=?", user, s.domain, purpose)
+	if !found {
+		return nil, err
+	}
+	return j, err
 }

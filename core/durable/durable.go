@@ -16,6 +16,8 @@ type Store interface {
 	LoadReceipt(context.Context, *v1.CommandIdentity) (*v1.CommandReceipt, error)
 	SaveReceipt(context.Context, *v1.CommandReceipt) error
 	SaveJob(context.Context, *v1.Job) error
+	LoadJob(context.Context, *v1.GlobalName) (*v1.Job, error)
+	FindJobPurpose(context.Context, string, string) (*v1.Job, error)
 	PendingJobs(context.Context, string) ([]*v1.Job, error)
 	Position(context.Context) (uint64, int64, error)
 }
@@ -55,7 +57,7 @@ func (s *Service) Submit(ctx context.Context, caller *v1.Caller, c *v1.SubmitGoa
 		pending.Credential = ""
 		pending.TraceId = ""
 		identityKey, _ := json.Marshal([]string{c.Identity.UserId, c.Identity.IssuerId, c.Identity.TargetDomainId, c.Identity.CommandId})
-		job := &v1.Job{Ref: jobRef, Module: "sessions", JobType: "DECIDE_GOAL", ContractVersion: 1, Responsibility: c.Identity, State: "READY", PurposeKey: "decide:" + string(identityKey), Goal: &v1.PendingGoal{Command: pending, ContentRef: content}}
+		job := &v1.Job{Ref: jobRef, Module: "sessions", JobType: "DECIDE_GOAL", ContractVersion: 1, Responsibility: c.Identity, State: "READY", SpecificationRef: content, PurposeKey: "decide:" + string(identityKey), Goal: &v1.PendingGoal{Command: pending, ContentRef: content}}
 		receipt = &v1.CommandReceipt{Identity: c.Identity, FingerprintVersion: 1, Fingerprint: fingerprint, Phase: v1.ReceiptPhase_RECEIPT_PHASE_SUBMITTED, JobRef: jobRef, ResponsibleDomainId: s.domain, CommitPosition: position, DurabilityProfile: "LOCAL", InputRef: content}
 		if err := s.store.SaveJob(tx, job); err != nil {
 			return err
@@ -73,6 +75,22 @@ func (s *Service) Submit(ctx context.Context, caller *v1.Caller, c *v1.SubmitGoa
 // 多参与者需要写入后裁决时，必须先扩展事务保存点，不能直接复用此约定。
 func (s *Service) Decide(ctx context.Context, job *v1.Job, handler func(context.Context, *v1.PendingGoal) (*v1.Ref, *v1.Ref, error)) error {
 	return s.store.Transaction(ctx, "durable.decide", func(tx context.Context) error {
+		if job == nil || job.Ref == nil || job.Ref.Name == nil || job.Ref.Name.UserId != s.user || job.Ref.Name.AuthorityDomainId != s.domain {
+			return command.Fail("STALE_CLAIM")
+		}
+		current, err := s.store.LoadJob(tx, job.Ref.Name)
+		if err != nil {
+			return err
+		}
+		_, now, err := s.store.Position(tx)
+		if err != nil {
+			return err
+		}
+		if err := validClaim(current, job.ProcessInstance, job.ClaimEpoch, job.Ref.Revision, now); err != nil {
+			return err
+		}
+		job = current
+
 		r, err := s.store.LoadReceipt(tx, job.Responsibility)
 		if err != nil {
 			return err

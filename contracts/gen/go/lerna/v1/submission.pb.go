@@ -905,6 +905,7 @@ type CommandReceipt struct {
 	DurabilityProfile   string                 `protobuf:"bytes,13,opt,name=durability_profile,json=durabilityProfile,proto3" json:"durability_profile,omitempty"`
 	Error               *ContractError         `protobuf:"bytes,14,opt,name=error,proto3" json:"error,omitempty"`
 	InputRef            *Ref                   `protobuf:"bytes,15,opt,name=input_ref,json=inputRef,proto3" json:"input_ref,omitempty"`
+	Jobs                []*Job                 `protobuf:"bytes,16,rep,name=jobs,proto3" json:"jobs,omitempty"`
 	unknownFields       protoimpl.UnknownFields
 	sizeCache           protoimpl.SizeCache
 }
@@ -1040,6 +1041,13 @@ func (x *CommandReceipt) GetError() *ContractError {
 func (x *CommandReceipt) GetInputRef() *Ref {
 	if x != nil {
 		return x.InputRef
+	}
+	return nil
+}
+
+func (x *CommandReceipt) GetJobs() []*Job {
+	if x != nil {
+		return x.Jobs
 	}
 	return nil
 }
@@ -1597,17 +1605,27 @@ func (x *PendingGoal) GetContentRef() *Ref {
 }
 
 type Job struct {
-	state           protoimpl.MessageState `protogen:"open.v1"`
-	Ref             *Ref                   `protobuf:"bytes,1,opt,name=ref,proto3" json:"ref,omitempty"`
-	Module          string                 `protobuf:"bytes,2,opt,name=module,proto3" json:"module,omitempty"`
-	JobType         string                 `protobuf:"bytes,3,opt,name=job_type,json=jobType,proto3" json:"job_type,omitempty"`
-	ContractVersion uint32                 `protobuf:"varint,4,opt,name=contract_version,json=contractVersion,proto3" json:"contract_version,omitempty"`
-	Responsibility  *CommandIdentity       `protobuf:"bytes,5,opt,name=responsibility,proto3" json:"responsibility,omitempty"`
-	State           string                 `protobuf:"bytes,6,opt,name=state,proto3" json:"state,omitempty"`
-	PurposeKey      string                 `protobuf:"bytes,7,opt,name=purpose_key,json=purposeKey,proto3" json:"purpose_key,omitempty"`
-	Goal            *PendingGoal           `protobuf:"bytes,8,opt,name=goal,proto3" json:"goal,omitempty"`
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
+	state              protoimpl.MessageState `protogen:"open.v1"`
+	Ref                *Ref                   `protobuf:"bytes,1,opt,name=ref,proto3" json:"ref,omitempty"`
+	Module             string                 `protobuf:"bytes,2,opt,name=module,proto3" json:"module,omitempty"`
+	JobType            string                 `protobuf:"bytes,3,opt,name=job_type,json=jobType,proto3" json:"job_type,omitempty"`
+	ContractVersion    uint32                 `protobuf:"varint,4,opt,name=contract_version,json=contractVersion,proto3" json:"contract_version,omitempty"`
+	Responsibility     *CommandIdentity       `protobuf:"bytes,5,opt,name=responsibility,proto3" json:"responsibility,omitempty"`
+	State              string                 `protobuf:"bytes,6,opt,name=state,proto3" json:"state,omitempty"`
+	PurposeKey         string                 `protobuf:"bytes,7,opt,name=purpose_key,json=purposeKey,proto3" json:"purpose_key,omitempty"`
+	Goal               *PendingGoal           `protobuf:"bytes,8,opt,name=goal,proto3" json:"goal,omitempty"`
+	ProcessInstance    string                 `protobuf:"bytes,9,opt,name=process_instance,json=processInstance,proto3" json:"process_instance,omitempty"`
+	ClaimEpoch         uint64                 `protobuf:"varint,10,opt,name=claim_epoch,json=claimEpoch,proto3" json:"claim_epoch,omitempty"`
+	LeaseUntilUnixMs   int64                  `protobuf:"varint,11,opt,name=lease_until_unix_ms,json=leaseUntilUnixMs,proto3" json:"lease_until_unix_ms,omitempty"`
+	ReadyAtUnixMs      int64                  `protobuf:"varint,12,opt,name=ready_at_unix_ms,json=readyAtUnixMs,proto3" json:"ready_at_unix_ms,omitempty"`
+	Priority           int32                  `protobuf:"varint,13,opt,name=priority,proto3" json:"priority,omitempty"`
+	Attempts           uint64                 `protobuf:"varint,14,opt,name=attempts,proto3" json:"attempts,omitempty"`
+	ExecutorEndpointId string                 `protobuf:"bytes,15,opt,name=executor_endpoint_id,json=executorEndpointId,proto3" json:"executor_endpoint_id,omitempty"`
+	LedgerDomainId     string                 `protobuf:"bytes,16,opt,name=ledger_domain_id,json=ledgerDomainId,proto3" json:"ledger_domain_id,omitempty"`
+	SpecificationRef   *Ref                   `protobuf:"bytes,17,opt,name=specification_ref,json=specificationRef,proto3" json:"specification_ref,omitempty"`
+	WaitingReason      string                 `protobuf:"bytes,18,opt,name=waiting_reason,json=waitingReason,proto3" json:"waiting_reason,omitempty"`
+	unknownFields      protoimpl.UnknownFields
+	sizeCache          protoimpl.SizeCache
 }
 
 func (x *Job) Reset() {
@@ -1696,6 +1714,233 @@ func (x *Job) GetGoal() *PendingGoal {
 	return nil
 }
 
+func (x *Job) GetProcessInstance() string {
+	if x != nil {
+		return x.ProcessInstance
+	}
+	return ""
+}
+
+func (x *Job) GetClaimEpoch() uint64 {
+	if x != nil {
+		return x.ClaimEpoch
+	}
+	return 0
+}
+
+func (x *Job) GetLeaseUntilUnixMs() int64 {
+	if x != nil {
+		return x.LeaseUntilUnixMs
+	}
+	return 0
+}
+
+func (x *Job) GetReadyAtUnixMs() int64 {
+	if x != nil {
+		return x.ReadyAtUnixMs
+	}
+	return 0
+}
+
+func (x *Job) GetPriority() int32 {
+	if x != nil {
+		return x.Priority
+	}
+	return 0
+}
+
+func (x *Job) GetAttempts() uint64 {
+	if x != nil {
+		return x.Attempts
+	}
+	return 0
+}
+
+func (x *Job) GetExecutorEndpointId() string {
+	if x != nil {
+		return x.ExecutorEndpointId
+	}
+	return ""
+}
+
+func (x *Job) GetLedgerDomainId() string {
+	if x != nil {
+		return x.LedgerDomainId
+	}
+	return ""
+}
+
+func (x *Job) GetSpecificationRef() *Ref {
+	if x != nil {
+		return x.SpecificationRef
+	}
+	return nil
+}
+
+func (x *Job) GetWaitingReason() string {
+	if x != nil {
+		return x.WaitingReason
+	}
+	return ""
+}
+
+// JobCommand 只由受信模块与宿主调用，模块控制命令必须匹配所属模块。
+type JobCommand struct {
+	state            protoimpl.MessageState `protogen:"open.v1"`
+	Identity         *CommandIdentity       `protobuf:"bytes,1,opt,name=identity,proto3" json:"identity,omitempty"`
+	ContractVersion  uint32                 `protobuf:"varint,2,opt,name=contract_version,json=contractVersion,proto3" json:"contract_version,omitempty"`
+	Action           string                 `protobuf:"bytes,3,opt,name=action,proto3" json:"action,omitempty"`
+	ProcessInstance  string                 `protobuf:"bytes,4,opt,name=process_instance,json=processInstance,proto3" json:"process_instance,omitempty"`
+	AllowedTypes     []string               `protobuf:"bytes,5,rep,name=allowed_types,json=allowedTypes,proto3" json:"allowed_types,omitempty"`
+	Limit            uint32                 `protobuf:"varint,6,opt,name=limit,proto3" json:"limit,omitempty"`
+	LeaseMs          int64                  `protobuf:"varint,7,opt,name=lease_ms,json=leaseMs,proto3" json:"lease_ms,omitempty"`
+	JobRef           *Ref                   `protobuf:"bytes,8,opt,name=job_ref,json=jobRef,proto3" json:"job_ref,omitempty"`
+	ClaimEpoch       uint64                 `protobuf:"varint,9,opt,name=claim_epoch,json=claimEpoch,proto3" json:"claim_epoch,omitempty"`
+	Module           string                 `protobuf:"bytes,10,opt,name=module,proto3" json:"module,omitempty"`
+	NextState        string                 `protobuf:"bytes,11,opt,name=next_state,json=nextState,proto3" json:"next_state,omitempty"`
+	ReadyAtUnixMs    int64                  `protobuf:"varint,12,opt,name=ready_at_unix_ms,json=readyAtUnixMs,proto3" json:"ready_at_unix_ms,omitempty"`
+	WaitingReason    string                 `protobuf:"bytes,13,opt,name=waiting_reason,json=waitingReason,proto3" json:"waiting_reason,omitempty"`
+	SpecificationRef *Ref                   `protobuf:"bytes,14,opt,name=specification_ref,json=specificationRef,proto3" json:"specification_ref,omitempty"`
+	Job              *Job                   `protobuf:"bytes,15,opt,name=job,proto3" json:"job,omitempty"`
+	unknownFields    protoimpl.UnknownFields
+	sizeCache        protoimpl.SizeCache
+}
+
+func (x *JobCommand) Reset() {
+	*x = JobCommand{}
+	mi := &file_lerna_v1_submission_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *JobCommand) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*JobCommand) ProtoMessage() {}
+
+func (x *JobCommand) ProtoReflect() protoreflect.Message {
+	mi := &file_lerna_v1_submission_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use JobCommand.ProtoReflect.Descriptor instead.
+func (*JobCommand) Descriptor() ([]byte, []int) {
+	return file_lerna_v1_submission_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *JobCommand) GetIdentity() *CommandIdentity {
+	if x != nil {
+		return x.Identity
+	}
+	return nil
+}
+
+func (x *JobCommand) GetContractVersion() uint32 {
+	if x != nil {
+		return x.ContractVersion
+	}
+	return 0
+}
+
+func (x *JobCommand) GetAction() string {
+	if x != nil {
+		return x.Action
+	}
+	return ""
+}
+
+func (x *JobCommand) GetProcessInstance() string {
+	if x != nil {
+		return x.ProcessInstance
+	}
+	return ""
+}
+
+func (x *JobCommand) GetAllowedTypes() []string {
+	if x != nil {
+		return x.AllowedTypes
+	}
+	return nil
+}
+
+func (x *JobCommand) GetLimit() uint32 {
+	if x != nil {
+		return x.Limit
+	}
+	return 0
+}
+
+func (x *JobCommand) GetLeaseMs() int64 {
+	if x != nil {
+		return x.LeaseMs
+	}
+	return 0
+}
+
+func (x *JobCommand) GetJobRef() *Ref {
+	if x != nil {
+		return x.JobRef
+	}
+	return nil
+}
+
+func (x *JobCommand) GetClaimEpoch() uint64 {
+	if x != nil {
+		return x.ClaimEpoch
+	}
+	return 0
+}
+
+func (x *JobCommand) GetModule() string {
+	if x != nil {
+		return x.Module
+	}
+	return ""
+}
+
+func (x *JobCommand) GetNextState() string {
+	if x != nil {
+		return x.NextState
+	}
+	return ""
+}
+
+func (x *JobCommand) GetReadyAtUnixMs() int64 {
+	if x != nil {
+		return x.ReadyAtUnixMs
+	}
+	return 0
+}
+
+func (x *JobCommand) GetWaitingReason() string {
+	if x != nil {
+		return x.WaitingReason
+	}
+	return ""
+}
+
+func (x *JobCommand) GetSpecificationRef() *Ref {
+	if x != nil {
+		return x.SpecificationRef
+	}
+	return nil
+}
+
+func (x *JobCommand) GetJob() *Job {
+	if x != nil {
+		return x.Job
+	}
+	return nil
+}
+
 var File_lerna_v1_submission_proto protoreflect.FileDescriptor
 
 const file_lerna_v1_submission_proto_rawDesc = "" +
@@ -1741,7 +1986,7 @@ const file_lerna_v1_submission_proto_rawDesc = "" +
 	"\frelated_refs\x18\x05 \x03(\v2\r.lerna.v1.RefR\vrelatedRefs\x122\n" +
 	"\x15responsible_domain_id\x18\x06 \x01(\tR\x13responsibleDomainId\x122\n" +
 	"\x13retry_after_unix_ms\x18\a \x01(\x03H\x00R\x10retryAfterUnixMs\x88\x01\x01B\x16\n" +
-	"\x14_retry_after_unix_ms\"\xc0\x05\n" +
+	"\x14_retry_after_unix_ms\"\xe3\x05\n" +
 	"\x0eCommandReceipt\x125\n" +
 	"\bidentity\x18\x01 \x01(\v2\x19.lerna.v1.CommandIdentityR\bidentity\x12/\n" +
 	"\x13fingerprint_version\x18\x02 \x01(\rR\x12fingerprintVersion\x12 \n" +
@@ -1759,7 +2004,8 @@ const file_lerna_v1_submission_proto_rawDesc = "" +
 	"\x12decided_at_unix_ms\x18\f \x01(\x03R\x0fdecidedAtUnixMs\x12-\n" +
 	"\x12durability_profile\x18\r \x01(\tR\x11durabilityProfile\x12-\n" +
 	"\x05error\x18\x0e \x01(\v2\x17.lerna.v1.ContractErrorR\x05error\x12*\n" +
-	"\tinput_ref\x18\x0f \x01(\v2\r.lerna.v1.RefR\binputRef\"\xf4\x01\n" +
+	"\tinput_ref\x18\x0f \x01(\v2\r.lerna.v1.RefR\binputRef\x12!\n" +
+	"\x04jobs\x18\x10 \x03(\v2\r.lerna.v1.JobR\x04jobs\"\xf4\x01\n" +
 	"\fReceiptQuery\x121\n" +
 	"\x05state\x18\x01 \x01(\x0e2\x1b.lerna.v1.ReceiptQueryStateR\x05state\x122\n" +
 	"\x15responsible_domain_id\x18\x02 \x01(\tR\x13responsibleDomainId\x12\x1a\n" +
@@ -1816,7 +2062,7 @@ const file_lerna_v1_submission_proto_rawDesc = "" +
 	"\vPendingGoal\x125\n" +
 	"\acommand\x18\x01 \x01(\v2\x1b.lerna.v1.SubmitGoalCommandR\acommand\x12.\n" +
 	"\vcontent_ref\x18\x02 \x01(\v2\r.lerna.v1.RefR\n" +
-	"contentRef\"\xa9\x02\n" +
+	"contentRef\"\xc4\x05\n" +
 	"\x03Job\x12\x1f\n" +
 	"\x03ref\x18\x01 \x01(\v2\r.lerna.v1.RefR\x03ref\x12\x16\n" +
 	"\x06module\x18\x02 \x01(\tR\x06module\x12\x19\n" +
@@ -1826,7 +2072,39 @@ const file_lerna_v1_submission_proto_rawDesc = "" +
 	"\x05state\x18\x06 \x01(\tR\x05state\x12\x1f\n" +
 	"\vpurpose_key\x18\a \x01(\tR\n" +
 	"purposeKey\x12)\n" +
-	"\x04goal\x18\b \x01(\v2\x15.lerna.v1.PendingGoalR\x04goal*e\n" +
+	"\x04goal\x18\b \x01(\v2\x15.lerna.v1.PendingGoalR\x04goal\x12)\n" +
+	"\x10process_instance\x18\t \x01(\tR\x0fprocessInstance\x12\x1f\n" +
+	"\vclaim_epoch\x18\n" +
+	" \x01(\x04R\n" +
+	"claimEpoch\x12-\n" +
+	"\x13lease_until_unix_ms\x18\v \x01(\x03R\x10leaseUntilUnixMs\x12'\n" +
+	"\x10ready_at_unix_ms\x18\f \x01(\x03R\rreadyAtUnixMs\x12\x1a\n" +
+	"\bpriority\x18\r \x01(\x05R\bpriority\x12\x1a\n" +
+	"\battempts\x18\x0e \x01(\x04R\battempts\x120\n" +
+	"\x14executor_endpoint_id\x18\x0f \x01(\tR\x12executorEndpointId\x12(\n" +
+	"\x10ledger_domain_id\x18\x10 \x01(\tR\x0eledgerDomainId\x12:\n" +
+	"\x11specification_ref\x18\x11 \x01(\v2\r.lerna.v1.RefR\x10specificationRef\x12%\n" +
+	"\x0ewaiting_reason\x18\x12 \x01(\tR\rwaitingReason\"\xb4\x04\n" +
+	"\n" +
+	"JobCommand\x125\n" +
+	"\bidentity\x18\x01 \x01(\v2\x19.lerna.v1.CommandIdentityR\bidentity\x12)\n" +
+	"\x10contract_version\x18\x02 \x01(\rR\x0fcontractVersion\x12\x16\n" +
+	"\x06action\x18\x03 \x01(\tR\x06action\x12)\n" +
+	"\x10process_instance\x18\x04 \x01(\tR\x0fprocessInstance\x12#\n" +
+	"\rallowed_types\x18\x05 \x03(\tR\fallowedTypes\x12\x14\n" +
+	"\x05limit\x18\x06 \x01(\rR\x05limit\x12\x19\n" +
+	"\blease_ms\x18\a \x01(\x03R\aleaseMs\x12&\n" +
+	"\ajob_ref\x18\b \x01(\v2\r.lerna.v1.RefR\x06jobRef\x12\x1f\n" +
+	"\vclaim_epoch\x18\t \x01(\x04R\n" +
+	"claimEpoch\x12\x16\n" +
+	"\x06module\x18\n" +
+	" \x01(\tR\x06module\x12\x1d\n" +
+	"\n" +
+	"next_state\x18\v \x01(\tR\tnextState\x12'\n" +
+	"\x10ready_at_unix_ms\x18\f \x01(\x03R\rreadyAtUnixMs\x12%\n" +
+	"\x0ewaiting_reason\x18\r \x01(\tR\rwaitingReason\x12:\n" +
+	"\x11specification_ref\x18\x0e \x01(\v2\r.lerna.v1.RefR\x10specificationRef\x12\x1f\n" +
+	"\x03job\x18\x0f \x01(\v2\r.lerna.v1.JobR\x03job*e\n" +
 	"\fReceiptPhase\x12\x1d\n" +
 	"\x19RECEIPT_PHASE_UNSPECIFIED\x10\x00\x12\x1b\n" +
 	"\x17RECEIPT_PHASE_SUBMITTED\x10\x01\x12\x19\n" +
@@ -1884,7 +2162,7 @@ func file_lerna_v1_submission_proto_rawDescGZIP() []byte {
 }
 
 var file_lerna_v1_submission_proto_enumTypes = make([]protoimpl.EnumInfo, 9)
-var file_lerna_v1_submission_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
+var file_lerna_v1_submission_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
 var file_lerna_v1_submission_proto_goTypes = []any{
 	(ReceiptPhase)(0),         // 0: lerna.v1.ReceiptPhase
 	(Decision)(0),             // 1: lerna.v1.Decision
@@ -1908,12 +2186,13 @@ var file_lerna_v1_submission_proto_goTypes = []any{
 	(*Content)(nil),           // 19: lerna.v1.Content
 	(*PendingGoal)(nil),       // 20: lerna.v1.PendingGoal
 	(*Job)(nil),               // 21: lerna.v1.Job
-	(*GlobalName)(nil),        // 22: lerna.v1.GlobalName
+	(*JobCommand)(nil),        // 22: lerna.v1.JobCommand
+	(*GlobalName)(nil),        // 23: lerna.v1.GlobalName
 }
 var file_lerna_v1_submission_proto_depIdxs = []int32{
-	22, // 0: lerna.v1.Ref.name:type_name -> lerna.v1.GlobalName
+	23, // 0: lerna.v1.Ref.name:type_name -> lerna.v1.GlobalName
 	11, // 1: lerna.v1.SubmitGoalCommand.identity:type_name -> lerna.v1.CommandIdentity
-	22, // 2: lerna.v1.SubmitGoalCommand.session:type_name -> lerna.v1.GlobalName
+	23, // 2: lerna.v1.SubmitGoalCommand.session:type_name -> lerna.v1.GlobalName
 	3,  // 3: lerna.v1.ContractError.category:type_name -> lerna.v1.ErrorCategory
 	4,  // 4: lerna.v1.ContractError.command_acceptance:type_name -> lerna.v1.CommandAcceptance
 	10, // 5: lerna.v1.ContractError.related_refs:type_name -> lerna.v1.Ref
@@ -1926,37 +2205,43 @@ var file_lerna_v1_submission_proto_depIdxs = []int32{
 	10, // 12: lerna.v1.CommandReceipt.job_ref:type_name -> lerna.v1.Ref
 	13, // 13: lerna.v1.CommandReceipt.error:type_name -> lerna.v1.ContractError
 	10, // 14: lerna.v1.CommandReceipt.input_ref:type_name -> lerna.v1.Ref
-	2,  // 15: lerna.v1.ReceiptQuery.state:type_name -> lerna.v1.ReceiptQueryState
-	14, // 16: lerna.v1.ReceiptQuery.receipt:type_name -> lerna.v1.CommandReceipt
-	13, // 17: lerna.v1.ReceiptQuery.error:type_name -> lerna.v1.ContractError
-	22, // 18: lerna.v1.Task.task_id:type_name -> lerna.v1.GlobalName
-	10, // 19: lerna.v1.Task.goal_ref:type_name -> lerna.v1.Ref
-	5,  // 20: lerna.v1.Task.lifecycle:type_name -> lerna.v1.TaskLifecycle
-	6,  // 21: lerna.v1.Task.control:type_name -> lerna.v1.TaskControl
-	7,  // 22: lerna.v1.Task.progress:type_name -> lerna.v1.TaskProgress
-	8,  // 23: lerna.v1.Task.requirements_status:type_name -> lerna.v1.RequirementsStatus
-	10, // 24: lerna.v1.Task.parent_task_ref:type_name -> lerna.v1.Ref
-	10, // 25: lerna.v1.Task.result_ref:type_name -> lerna.v1.Ref
-	22, // 26: lerna.v1.SessionInput.input_id:type_name -> lerna.v1.GlobalName
-	22, // 27: lerna.v1.SessionInput.task_id:type_name -> lerna.v1.GlobalName
-	10, // 28: lerna.v1.SessionInput.content_ref:type_name -> lerna.v1.Ref
-	11, // 29: lerna.v1.SessionInput.command_identity:type_name -> lerna.v1.CommandIdentity
-	22, // 30: lerna.v1.Session.session_id:type_name -> lerna.v1.GlobalName
-	17, // 31: lerna.v1.Session.inputs:type_name -> lerna.v1.SessionInput
-	10, // 32: lerna.v1.Session.task_refs:type_name -> lerna.v1.Ref
-	10, // 33: lerna.v1.Content.ref:type_name -> lerna.v1.Ref
-	11, // 34: lerna.v1.Content.source:type_name -> lerna.v1.CommandIdentity
-	10, // 35: lerna.v1.Content.derived_from:type_name -> lerna.v1.Ref
-	12, // 36: lerna.v1.PendingGoal.command:type_name -> lerna.v1.SubmitGoalCommand
-	10, // 37: lerna.v1.PendingGoal.content_ref:type_name -> lerna.v1.Ref
-	10, // 38: lerna.v1.Job.ref:type_name -> lerna.v1.Ref
-	11, // 39: lerna.v1.Job.responsibility:type_name -> lerna.v1.CommandIdentity
-	20, // 40: lerna.v1.Job.goal:type_name -> lerna.v1.PendingGoal
-	41, // [41:41] is the sub-list for method output_type
-	41, // [41:41] is the sub-list for method input_type
-	41, // [41:41] is the sub-list for extension type_name
-	41, // [41:41] is the sub-list for extension extendee
-	0,  // [0:41] is the sub-list for field type_name
+	21, // 15: lerna.v1.CommandReceipt.jobs:type_name -> lerna.v1.Job
+	2,  // 16: lerna.v1.ReceiptQuery.state:type_name -> lerna.v1.ReceiptQueryState
+	14, // 17: lerna.v1.ReceiptQuery.receipt:type_name -> lerna.v1.CommandReceipt
+	13, // 18: lerna.v1.ReceiptQuery.error:type_name -> lerna.v1.ContractError
+	23, // 19: lerna.v1.Task.task_id:type_name -> lerna.v1.GlobalName
+	10, // 20: lerna.v1.Task.goal_ref:type_name -> lerna.v1.Ref
+	5,  // 21: lerna.v1.Task.lifecycle:type_name -> lerna.v1.TaskLifecycle
+	6,  // 22: lerna.v1.Task.control:type_name -> lerna.v1.TaskControl
+	7,  // 23: lerna.v1.Task.progress:type_name -> lerna.v1.TaskProgress
+	8,  // 24: lerna.v1.Task.requirements_status:type_name -> lerna.v1.RequirementsStatus
+	10, // 25: lerna.v1.Task.parent_task_ref:type_name -> lerna.v1.Ref
+	10, // 26: lerna.v1.Task.result_ref:type_name -> lerna.v1.Ref
+	23, // 27: lerna.v1.SessionInput.input_id:type_name -> lerna.v1.GlobalName
+	23, // 28: lerna.v1.SessionInput.task_id:type_name -> lerna.v1.GlobalName
+	10, // 29: lerna.v1.SessionInput.content_ref:type_name -> lerna.v1.Ref
+	11, // 30: lerna.v1.SessionInput.command_identity:type_name -> lerna.v1.CommandIdentity
+	23, // 31: lerna.v1.Session.session_id:type_name -> lerna.v1.GlobalName
+	17, // 32: lerna.v1.Session.inputs:type_name -> lerna.v1.SessionInput
+	10, // 33: lerna.v1.Session.task_refs:type_name -> lerna.v1.Ref
+	10, // 34: lerna.v1.Content.ref:type_name -> lerna.v1.Ref
+	11, // 35: lerna.v1.Content.source:type_name -> lerna.v1.CommandIdentity
+	10, // 36: lerna.v1.Content.derived_from:type_name -> lerna.v1.Ref
+	12, // 37: lerna.v1.PendingGoal.command:type_name -> lerna.v1.SubmitGoalCommand
+	10, // 38: lerna.v1.PendingGoal.content_ref:type_name -> lerna.v1.Ref
+	10, // 39: lerna.v1.Job.ref:type_name -> lerna.v1.Ref
+	11, // 40: lerna.v1.Job.responsibility:type_name -> lerna.v1.CommandIdentity
+	20, // 41: lerna.v1.Job.goal:type_name -> lerna.v1.PendingGoal
+	10, // 42: lerna.v1.Job.specification_ref:type_name -> lerna.v1.Ref
+	11, // 43: lerna.v1.JobCommand.identity:type_name -> lerna.v1.CommandIdentity
+	10, // 44: lerna.v1.JobCommand.job_ref:type_name -> lerna.v1.Ref
+	10, // 45: lerna.v1.JobCommand.specification_ref:type_name -> lerna.v1.Ref
+	21, // 46: lerna.v1.JobCommand.job:type_name -> lerna.v1.Job
+	47, // [47:47] is the sub-list for method output_type
+	47, // [47:47] is the sub-list for method input_type
+	47, // [47:47] is the sub-list for extension type_name
+	47, // [47:47] is the sub-list for extension extendee
+	0,  // [0:47] is the sub-list for field type_name
 }
 
 func init() { file_lerna_v1_submission_proto_init() }
@@ -1974,7 +2259,7 @@ func file_lerna_v1_submission_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_lerna_v1_submission_proto_rawDesc), len(file_lerna_v1_submission_proto_rawDesc)),
 			NumEnums:      9,
-			NumMessages:   13,
+			NumMessages:   14,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

@@ -21,7 +21,7 @@ func goal() (*v1.Caller, *v1.SubmitGoalCommand) {
 
 // 规则：G3、G11
 func TestAbruptCrashAtEverySubmissionCommit(t *testing.T) {
-	for _, point := range []string{"content.stage", "durable.submit", "durable.decide"} {
+	for _, point := range []string{"content.stage", "durable.submit", "durable.decide", "durable.jobs"} {
 		for _, mode := range []sqlite.FaultMode{sqlite.CrashBeforeCommit, sqlite.CrashAfterCommit} {
 			t.Run(point+"/"+string(mode), func(t *testing.T) {
 				path := filepath.Join(t.TempDir(), "crash.db")
@@ -42,7 +42,7 @@ func TestAbruptCrashAtEverySubmissionCommit(t *testing.T) {
 				if err != nil {
 					t.Fatal(err)
 				}
-				committed := point == "durable.decide" || (point == "durable.submit" && mode == sqlite.CrashAfterCommit)
+				committed := point == "durable.jobs" || point == "durable.decide" || (point == "durable.submit" && mode == sqlite.CrashAfterCommit)
 				if committed && q.State != v1.ReceiptQueryState_RECEIPT_QUERY_STATE_DECIDED {
 					t.Fatalf("saved responsibility not automatically recovered: %v", q)
 				}
@@ -85,7 +85,11 @@ func TestCrashChild(t *testing.T) {
 	if err != nil || q.State != v1.ReceiptQueryState_RECEIPT_QUERY_STATE_SUBMITTED || q.Receipt.TaskRef != nil {
 		t.Fatalf("expected saved input before task: %v %v", q, err)
 	}
-	if err := h.Sessions.ProcessPending(ctx, caller); err != nil {
+	claim, err := h.Durable.ExecuteJob(ctx, caller, &v1.JobCommand{Identity: &v1.CommandIdentity{UserId: "alice", IssuerId: "cli", TargetDomainId: "local", CommandId: "crash-claim"}, ContractVersion: 1, Action: "CLAIM", ProcessInstance: "crash-child", AllowedTypes: []string{"DECIDE_GOAL"}, Limit: 1, LeaseMs: 100})
+	if err != nil || len(claim.Jobs) != 1 {
+		t.Fatalf("claim %v %v", claim, err)
+	}
+	if err := h.Sessions.ProcessClaim(ctx, claim.Jobs[0]); err != nil {
 		t.Fatal(err)
 	}
 	t.Fatal("configured crash was not reached")

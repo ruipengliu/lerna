@@ -3,6 +3,7 @@ package assembly
 
 import (
 	"context"
+	"time"
 
 	v1 "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1"
 	"github.com/ruipengliu/lerna/core/content"
@@ -30,7 +31,9 @@ func Open(path, user, domain string) (*Harness, error) {
 	c := content.New(s, user, domain+"/content")
 	h := &Harness{Sessions: sessions.New(s, d, t, c, user, domain), Tasks: t, Durable: d, Content: c, store: s}
 	// 固定受信宿主身份仅驱动已保存的责任，不替换原命令身份。
-	if err := h.Sessions.ProcessPending(context.Background(), &v1.Caller{UserId: user, IssuerId: "host-recovery"}); err != nil {
+	ctx, cancel := context.WithTimeout(context.Background(), 65*time.Second)
+	defer cancel()
+	if err := h.Sessions.RecoverPending(ctx, &v1.Caller{UserId: user, IssuerId: "host-recovery"}); err != nil {
 		s.Close()
 		return nil, err
 	}
