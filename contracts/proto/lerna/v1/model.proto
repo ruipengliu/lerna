@@ -1,0 +1,109 @@
+syntax = "proto3";
+package lerna.v1;
+
+import "lerna/v1/identity.proto";
+import "lerna/v1/planning.proto";
+import "lerna/v1/submission.proto";
+
+option go_package = "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1;lernav1";
+message ProposalRequest {
+  Ref ref = 1;
+  GlobalName task_id = 2;
+  Ref snapshot_ref = 3;
+  Ref job_ref = 4;
+  string purpose = 5;
+  uint32 max_call_positions = 6;
+  uint32 max_physical_sends = 7;
+  repeated Ref model_operation_refs = 8;
+  string state = 9;
+  repeated Ref outcome_refs = 10;
+  CommandIdentity outcome_identity = 11;
+  CommandReceipt outcome_receipt = 12;
+}
+message ModelSettings {
+  string provider = 1;
+  string model = 2;
+  string encoder_version = 3;
+  string policy_version = 4;
+  bytes parameters_json = 5;
+  bytes tool_schemas_json = 6;
+  uint32 max_output_tokens = 7;
+}
+message ModelCall {
+  Ref ref = 1;
+  Ref request_ref = 2;
+  uint32 position = 3;
+  ModelSettings settings = 4;
+  repeated Ref input_refs = 5;
+  Ref derivation_ref = 6;
+  Ref input_ref = 7;
+  string descriptor_digest = 8;
+  string state = 9;
+  Ref admission_ref = 10;
+  Ref capability_ref = 11;
+  ModelCallResult result = 12;
+}
+message PrepareModelCallCommand {
+  CommandHeader header = 1;
+  Ref request_ref = 2;
+  uint32 position = 3;
+  ModelSettings settings = 4;
+  repeated Ref input_refs = 5;
+  Job claim = 6;
+  Ref capability_ref = 7;
+}
+
+message AdmitModelCallCommand {
+  CommandHeader header = 1;
+  Ref request_ref = 2;
+  uint32 position = 3;
+  string descriptor_digest = 4;
+  Ref grant_ref = 5;
+  Ref confirmation_ref = 6;
+  Job claim = 7;
+}
+
+message RunModelCallCommand {
+  PrepareModelCallCommand preparation = 1;
+  Ref grant_ref = 2;
+  Ref confirmation_ref = 3;
+}
+message ModelCallResult {
+  Ref call_ref = 1;
+  string status = 2;
+  Ref output_ref = 3;
+  Ref observation_ref = 4;
+  Ref usage_ref = 5;
+  GlobalName operation_id = 6;
+  Ref input_ref = 7;
+  Ref output_derivation_ref = 8;
+}
+
+message SubmitProposalOutcomeCommand {
+  CommandHeader header = 1;
+  Ref request_ref = 2;
+  Job claim = 3;
+  Proposal proposal = 4;
+  string error_code = 5;
+  Ref model_call_ref = 6;
+  Ref output_ref = 7;
+  Ref usage_ref = 8;
+}
+message ProposalOutcome {
+  Ref ref = 1;
+  Ref request_ref = 2;
+  Job claim = 3;
+  Proposal proposal = 4;
+  string error_code = 5;
+  Ref model_call_ref = 6;
+  Ref output_ref = 7;
+  Ref usage_ref = 8;
+  bool accepted_for_progress = 9;
+  string reason_code = 10;
+  Ref proposal_ref = 11;
+  CommandIdentity identity = 12;
+}
+message StopProposalRequestCommand {
+  CommandHeader header = 1;
+  Ref request_ref = 2;
+}

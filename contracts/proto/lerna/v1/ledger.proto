@@ -35,6 +35,7 @@ message Operation {
   Execution execution = 14;
   Ref closure_work_ref = 15;
   QuerySubject query_subject = 16;
+  string model_descriptor_digest = 17;
 }
 message AcceptOperationCommand {
   CommandHeader header = 1;
@@ -50,6 +51,7 @@ message CallDescriptor {
   string external_key = 6;
   string digest = 7;
   QuerySubject query_subject = 8;
+  string body_digest = 9;
 }
 message ExecutionAttempt {
   Ref ref = 1;

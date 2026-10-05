@@ -51,6 +51,7 @@ message Admission {
   Capability capability_snapshot = 21;
   repeated Ref content_refs = 22;
   QuerySubject query_subject = 23;
+  string model_descriptor_digest = 24;
 }
 message AdmitCommand {
   CommandHeader header = 1;

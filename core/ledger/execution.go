@@ -67,7 +67,7 @@ func (s *Service) Prepare(ctx context.Context, caller *v1.Caller, c *v1.PrepareE
 			return op.Execution.Attempt.Ref, nil
 		}
 		cap := op.CapabilitySnapshot
-		if cap.Action != "CREATE" && (cap.Action != "QUERY" || op.QuerySubject == nil || op.ClosureWorkRef == nil) {
+		if cap.Action != "CREATE" && cap.Action != "MODEL_INFER" && (cap.Action != "QUERY" || op.QuerySubject == nil || op.ClosureWorkRef == nil) {
 			return nil, command.Fail("UNSUPPORTED_FEATURE")
 		}
 		attempt := &v1.ExecutionAttempt{Ref: command.NewRef(s.user, s.domain, "attempt", "lerna.v1.ExecutionAttempt"), OperationId: c.OperationId, AttemptNo: 1, Phase: "REGISTERED", ExternalKeyScope: cap.Resource}

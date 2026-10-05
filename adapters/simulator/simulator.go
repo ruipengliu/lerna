@@ -13,11 +13,16 @@ type Adapter struct{}
 
 func (Adapter) Compile(op *v1.Operation, attempt *v1.ExecutionAttempt) (*v1.CallDescriptor, *v1.ExecutionCapabilities, error) {
 	cap := op.GetCapabilitySnapshot()
-	if cap == nil || cap.AdapterRef == nil || cap.AdapterRef.Name == nil || cap.AdapterRef.Revision != 1 || (cap.Action != "CREATE" && cap.Action != "QUERY") || op.ParametersRef == nil || attempt == nil || attempt.ExternalKey == "" {
+	if cap == nil || cap.AdapterRef == nil || cap.AdapterRef.Name == nil || cap.AdapterRef.Revision != 1 || (cap.Action != "CREATE" && cap.Action != "QUERY" && cap.Action != "MODEL_INFER") || op.ParametersRef == nil || attempt == nil || attempt.ExternalKey == "" {
 		return nil, nil, command.Fail("UNSUPPORTED_CAPABILITY")
 	}
 	declaration := &v1.ExecutionCapabilities{Effect: "ATOMIC_WRITE", ProtocolVersion: "lerna-simulator-v1", DeclarationVersion: "1", VerificationBasis: "reference-target-v1", IdempotencyScope: cap.Resource}
 	switch cap.AdapterRef.Name.LocalId {
+	case "model-reference-v1":
+		if cap.Action != "MODEL_INFER" || op.ModelDescriptorDigest == "" || cap.MaxSends != 1 {
+			return nil, nil, command.Fail("UNSUPPORTED_CAPABILITY")
+		}
+		declaration = &v1.ExecutionCapabilities{Effect: "MODEL_INFERENCE", ProtocolVersion: "lerna-model-v1", DeclarationVersion: "1", VerificationBasis: "reference-model-v1", IdempotencyScope: cap.Resource}
 	case "simulator-idempotent":
 		declaration.Idempotent = true
 	case "simulator-queryable":
@@ -41,6 +46,9 @@ func (Adapter) Compile(op *v1.Operation, attempt *v1.ExecutionAttempt) (*v1.Call
 		declaration.ProtocolVersion = "lerna-simulator-query-v1"
 		declaration.VerificationBasis = "reference-query-v1"
 		declaration.Queryable = false
+	}
+	if cap.Action == "MODEL_INFER" {
+		d.BodyDigest = op.ModelDescriptorDigest
 	}
 	d.Digest = command.SemanticFingerprint("call-descriptor-v1", d)
 	return d, declaration, nil

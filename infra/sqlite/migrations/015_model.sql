@@ -1,0 +1,3 @@
+CREATE TABLE IF NOT EXISTS proposal_requests (user_id TEXT NOT NULL, domain_id TEXT NOT NULL, id TEXT NOT NULL, record BLOB NOT NULL, PRIMARY KEY(user_id,domain_id,id));
+CREATE TABLE IF NOT EXISTS model_calls (user_id TEXT NOT NULL, domain_id TEXT NOT NULL, id TEXT NOT NULL, request_id TEXT NOT NULL, position INTEGER NOT NULL, record BLOB NOT NULL, PRIMARY KEY(user_id,domain_id,id), UNIQUE(user_id,domain_id,request_id,position));
+CREATE TABLE IF NOT EXISTS proposal_outcomes (user_id TEXT NOT NULL, domain_id TEXT NOT NULL, id TEXT NOT NULL, record BLOB NOT NULL, PRIMARY KEY(user_id,domain_id,id));

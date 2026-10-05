@@ -147,6 +147,9 @@ func (s *Service) Admit(ctx context.Context, caller *v1.Caller, c *v1.AdmitComma
 		if cap == nil || !proto.Equal(cap.Ref, step.CapabilityRef) {
 			return nil, command.Fail("CAPABILITY_INVALID")
 		}
+		if cap.Action == "MODEL_INFER" {
+			return nil, command.Fail("MODEL_HOST_REQUIRED")
+		}
 		known := false
 		for _, ref := range snap.CapabilityRefs {
 			if proto.Equal(ref, cap.Ref) {

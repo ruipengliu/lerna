@@ -225,6 +225,7 @@ func TestSafeResendSkipsAdmissionGeneration(t *testing.T) { ... }
 派生宿主依次调用 `PrepareDerivation`、`ReadDerivationInput`、`SealDerivation`、`CommitDerivation` 和 `ProcessRegistrations`。输入字节必须从 `ReadDerivationInput` 返回值取得；封闭集合必须覆盖全部实际输入，额外报告的来源也必须是可用版本。准备返回的责任可用 `QueryDerivation` 查询，其实例标识和代次绑定后续调用；`TakeoverDerivation` 保留原责任并隔离旧实例。模型和适配器不能登记可信原始观察，外部调用仍须经过准入和出口闸门。结构化的上下文快照保存引用；将它们编成提示、摘要或其他正文时，宿主必须使用派生入口。
 
 正文后端在独立 `body` 事务持久保存接纳回执。`assembly.Harness.Bodies.QueryReceipt` 是持有方的只读回执查询，可与内容源域的交接状态独立比较，不返回未发布正文。新增故障点为 `content.register`、`body.accept`、`content.publish`、`content.derivation`、`content.derivation_input`、`content.derivation_takeover`、`content.derivation_seal`、`content.derivation_commit`。原有 `content.stage` 和 `content.observation` 现在保存登记意图；正文持有责任和发布另有独立提交，原始观察发布完成后才交给执行管理。
+
 ### M1 可查询目标的结果核对
 
 `request-reconciliation --json FILE` 接收 `RequestReconciliationCommand`，指定原动作、查询能力、参数、同一份 READ 与 SAVE 授权和核对策略。`reconciliation OPERATION_ID` 查询当前责任；`reconciliation-query --json REF_FILE` 与 `reconciliation-finding --json REF_FILE` 读取不可变查询及结论。`control-reconciliation --json FILE` 按当前修订号暂停或恢复，可显式更新上限与授权。启动和 `recover` 恢复到期工作；未来的等待时间保留在待办中，下次推进时再次检查。普通工作控制不能替代核对控制。
@@ -232,3 +233,14 @@ func TestSafeResendSkipsAdmissionGeneration(t *testing.T) { ... }
 查询是独立的 CLOSURE 动作，进入同一任务的完整准入清单，单独使用授权、预留费用并经过 P4/P5 出口。目标的 GET 回报同时携带查询本身身份与原动作身份；只有可信的读取终态证明才能结清查询的效果责任，原动作的未生效结论还要求原请求再无迟到生效可能。查询自己丢失终态回报时保持 `QUERY_RESULT_UNKNOWN` 暂停，不递归生成查询。原写请求始终不会因此重发。查询与原写各自按独立发送核验账单；效果已确定也不代表费用为零，缺少最终计费证据时继续保留对应预留。
 
 确认型查询授权会先持久保存核心查询意图并暂停。`closure-confirmation --json FILE` 使用该意图的 `workRef` 创建精确事项，随后沿 `confirmation` / `confirm` 可信回应链批准；恢复命令附带批准引用，准入仍重查并原子消费。缺失或无效的初始确认不会消耗准入身份。弱证据保留未知及迟到可能性；全抖动退避与目标 Retry-After 下限、检查次数、时间和费用上限均持久。原始迟到回报独立接纳，更新原动作并以可恢复通知推进任务完成核验。
+
+
+### M1 模型调用与恢复
+
+受信宿主先通过 `RequestProposal` 保存 `ProposalRequest` 和 `PROPOSE` 工作，再领取工作。请求记录原快照、核心确定的用途及两个独立上限；M1 调用位置和每动作实际发送上限均为 1。`PrepareModelCall` 接受位置、模型设置和内容引用，从原快照补入事实并经内容派生入口读取实际字节；`AdmitModelCall` 将封存描述、授权使用、预算预留、动作及交接意图一起提交。`RunModelCall` 接续这些公开入口，经过普通执行准备和出口闸门发送，不能作为推理持有授权的接口。
+
+M1 参考适配器为 `model-reference-v1`，模型设置使用 `provider: reference`、`encoderVersion: reference-model-v1` 和 `policyVersion: m1-v1`。参数必须为 JSON 对象，工具模式必须为数组，输出上限为 1–65536 token。重复 JSON 字段被拒绝，数值按原十进制精度保留。封存正文包含设置、能力引用、原快照与不可变事实，以及按输入顺序排列的精确正文；二进制字段使用 Base64。出口再次核验正文 SHA-256，不能用摘要代替正文。
+
+`QueryModelCall` 查询原位置并检查内容当前是否可用；同位置更改设置、能力或输入引用返回 `MODEL_POSITION_CONFLICT`。原编码器、策略或正文不可恢复时返回 `PREPARATION_UNRECOVERABLE`。P5 后恢复只收集原发送的观察，不再发送。`COMPLETED`、`REFUSED`、`INCOMPLETE` 和 `INVALID_OUTPUT` 均保存原结果，不自动修复、换供应商或重采样；传输结果未明保存 `UNKNOWN`，原费用责任继续存在。模型正文不能提供可信费用，费用仍由普通计费证据解释器处理。
+
+`SubmitProposalOutcome` 保存原报告及命令回执，只有当前请求和有效领取可以推进提议。旧工作者的报告保留为迟到事实。`StopProposalRequest` 终止请求推进，保留已有动作、未知效果和费用；通用持久工作命令不能替代这个业务入口封闭 `PROPOSE`。故障点包括 `tasks.model_prepare`、`tasks.model_seal`、`tasks.model_admit`、`tasks.model_result`、`tasks.proposal_outcome` 和 `tasks.proposal_stop`，并复用内容派生、P4 与 P5 的故障点。
