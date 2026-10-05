@@ -1,0 +1,143 @@
+version: "2"
+run:
+  timeout: 5m
+linters:
+  default: none
+  enable:
+    - depguard
+    - govet
+    - ineffassign
+    - staticcheck
+    - unused
+  settings:
+    depguard:
+      rules:
+        contracts:
+          files: ["**/contracts/**/*.go"]
+          list-mode: strict
+          allow: ["$gostd", "google.golang.org/protobuf", "github.com/ruipengliu/lerna/contracts"]
+        core:
+          files: ["**/core/**/*.go"]
+          list-mode: strict
+          allow: ["$gostd", "github.com/ruipengliu/lerna/contracts", "github.com/ruipengliu/lerna/core", "google.golang.org/protobuf"]
+        core-durable:
+          files: ["**/core/durable/*.go", "**/core/durable/**/*.go"]
+          list-mode: strict
+          allow: ["$gostd", "google.golang.org/protobuf", "github.com/ruipengliu/lerna/contracts", "github.com/ruipengliu/lerna/core/durable$", "github.com/ruipengliu/lerna/core/durable/"]
+        core-tasks:
+          files: ["**/core/tasks/*.go", "**/core/tasks/**/*.go"]
+          list-mode: strict
+          allow: ["$gostd", "google.golang.org/protobuf", "github.com/ruipengliu/lerna/contracts", "github.com/ruipengliu/lerna/core/tasks$", "github.com/ruipengliu/lerna/core/tasks/"]
+        core-sessions:
+          files: ["**/core/sessions/*.go", "**/core/sessions/**/*.go"]
+          list-mode: strict
+          allow: ["$gostd", "google.golang.org/protobuf", "github.com/ruipengliu/lerna/contracts", "github.com/ruipengliu/lerna/core/sessions$", "github.com/ruipengliu/lerna/core/sessions/"]
+        core-grants:
+          files: ["**/core/grants/*.go", "**/core/grants/**/*.go"]
+          list-mode: strict
+          allow: ["$gostd", "google.golang.org/protobuf", "github.com/ruipengliu/lerna/contracts", "github.com/ruipengliu/lerna/core/grants$", "github.com/ruipengliu/lerna/core/grants/"]
+        core-budget:
+          files: ["**/core/budget/*.go", "**/core/budget/**/*.go"]
+          list-mode: strict
+          allow: ["$gostd", "google.golang.org/protobuf", "github.com/ruipengliu/lerna/contracts", "github.com/ruipengliu/lerna/core/budget$", "github.com/ruipengliu/lerna/core/budget/"]
+        core-ledger:
+          files: ["**/core/ledger/*.go", "**/core/ledger/**/*.go"]
+          list-mode: strict
+          allow: ["$gostd", "google.golang.org/protobuf", "github.com/ruipengliu/lerna/contracts", "github.com/ruipengliu/lerna/core/ledger$", "github.com/ruipengliu/lerna/core/ledger/"]
+        core-content:
+          files: ["**/core/content/*.go", "**/core/content/**/*.go"]
+          list-mode: strict
+          allow: ["$gostd", "google.golang.org/protobuf", "github.com/ruipengliu/lerna/contracts", "github.com/ruipengliu/lerna/core/content$", "github.com/ruipengliu/lerna/core/content/"]
+        core-trace:
+          files: ["**/core/trace/*.go", "**/core/trace/**/*.go"]
+          list-mode: strict
+          allow: ["$gostd", "google.golang.org/protobuf", "github.com/ruipengliu/lerna/contracts", "github.com/ruipengliu/lerna/core/trace$", "github.com/ruipengliu/lerna/core/trace/"]
+        core-egress:
+          files: ["**/core/egress/*.go", "**/core/egress/**/*.go"]
+          list-mode: strict
+          allow: ["$gostd", "google.golang.org/protobuf", "github.com/ruipengliu/lerna/contracts", "github.com/ruipengliu/lerna/core/egress$", "github.com/ruipengliu/lerna/core/egress/"]
+        infra:
+          files: ["**/infra/**/*.go"]
+          deny:
+            - pkg: github.com/ruipengliu/lerna/adapters
+              desc: R6 基础设施不得依赖适配器
+            - pkg: github.com/ruipengliu/lerna/defaults
+              desc: R6 基础设施不得依赖默认策略
+            - pkg: github.com/ruipengliu/lerna/platform
+              desc: R6 基础设施不得依赖平台
+            - pkg: github.com/ruipengliu/lerna/cmd
+              desc: R6 基础设施不得依赖装配入口
+        replaceable:
+          files: ["**/defaults/**/*.go", "**/adapters/**/*.go"]
+          deny:
+            - pkg: github.com/ruipengliu/lerna/core
+              desc: R6 可替换部分只通过公共契约交互
+            - pkg: github.com/ruipengliu/lerna/infra
+              desc: R6 可替换部分不得依赖受信实现
+            - pkg: github.com/ruipengliu/lerna/platform
+              desc: R6 可替换部分不得依赖平台
+            - pkg: github.com/ruipengliu/lerna/cmd
+              desc: R6 可替换部分不得依赖装配入口
+        defaults-reasoner:
+          files: ["**/defaults/reasoner/*.go", "**/defaults/reasoner/**/*.go"]
+          list-mode: lax
+          allow: ["github.com/ruipengliu/lerna/contracts", "github.com/ruipengliu/lerna/defaults/reasoner$", "github.com/ruipengliu/lerna/defaults/reasoner/"]
+          deny:
+            - pkg: github.com/ruipengliu/lerna/
+              desc: R6 可替换部分不得直接依赖其他模块
+        defaults-memory:
+          files: ["**/defaults/memory/*.go", "**/defaults/memory/**/*.go"]
+          list-mode: lax
+          allow: ["github.com/ruipengliu/lerna/contracts", "github.com/ruipengliu/lerna/defaults/memory$", "github.com/ruipengliu/lerna/defaults/memory/"]
+          deny:
+            - pkg: github.com/ruipengliu/lerna/
+              desc: R6 可替换部分不得直接依赖其他模块
+        adapters-api:
+          files: ["**/adapters/api/*.go", "**/adapters/api/**/*.go"]
+          list-mode: lax
+          allow: ["github.com/ruipengliu/lerna/contracts", "github.com/ruipengliu/lerna/adapters/api$", "github.com/ruipengliu/lerna/adapters/api/"]
+          deny:
+            - pkg: github.com/ruipengliu/lerna/
+              desc: R6 可替换部分不得直接依赖其他模块
+        adapters-file:
+          files: ["**/adapters/file/*.go", "**/adapters/file/**/*.go"]
+          list-mode: lax
+          allow: ["github.com/ruipengliu/lerna/contracts", "github.com/ruipengliu/lerna/adapters/file$", "github.com/ruipengliu/lerna/adapters/file/"]
+          deny:
+            - pkg: github.com/ruipengliu/lerna/
+              desc: R6 可替换部分不得直接依赖其他模块
+        adapters-gui:
+          files: ["**/adapters/gui/*.go", "**/adapters/gui/**/*.go"]
+          list-mode: lax
+          allow: ["github.com/ruipengliu/lerna/contracts", "github.com/ruipengliu/lerna/adapters/gui$", "github.com/ruipengliu/lerna/adapters/gui/"]
+          deny:
+            - pkg: github.com/ruipengliu/lerna/
+              desc: R6 可替换部分不得直接依赖其他模块
+        adapters-agent:
+          files: ["**/adapters/agent/*.go", "**/adapters/agent/**/*.go"]
+          list-mode: lax
+          allow: ["github.com/ruipengliu/lerna/contracts", "github.com/ruipengliu/lerna/adapters/agent$", "github.com/ruipengliu/lerna/adapters/agent/"]
+          deny:
+            - pkg: github.com/ruipengliu/lerna/
+              desc: R6 可替换部分不得直接依赖其他模块
+        adapters-interaction:
+          files: ["**/adapters/interaction/*.go", "**/adapters/interaction/**/*.go"]
+          list-mode: lax
+          allow: ["github.com/ruipengliu/lerna/contracts", "github.com/ruipengliu/lerna/adapters/interaction$", "github.com/ruipengliu/lerna/adapters/interaction/"]
+          deny:
+            - pkg: github.com/ruipengliu/lerna/
+              desc: R6 可替换部分不得直接依赖其他模块
+        adapters-simulated:
+          files: ["**/adapters/simulated/*.go", "**/adapters/simulated/**/*.go"]
+          list-mode: lax
+          allow: ["github.com/ruipengliu/lerna/contracts", "github.com/ruipengliu/lerna/adapters/simulated$", "github.com/ruipengliu/lerna/adapters/simulated/"]
+          deny:
+            - pkg: github.com/ruipengliu/lerna/
+              desc: R6 可替换部分不得直接依赖其他模块
+        platform:
+          files: ["**/platform/**/*.go"]
+          list-mode: strict
+          allow: ["$gostd", "github.com/ruipengliu/lerna/contracts", "github.com/ruipengliu/lerna/core", "google.golang.org/protobuf"]
+  exclusions:
+    generated: strict
+    presets: []
