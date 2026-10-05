@@ -114,3 +114,17 @@ func TestProductionBuildExcludesFaultConfiguration(t *testing.T) {
 		t.Fatalf("fault configuration entered production: %s ignored=%s", included, excluded)
 	}
 }
+
+// 规则：R6、G3
+func TestProductionBuildExcludesStorageInjection(t *testing.T) {
+	cmd := exec.Command("go", "list", "-deps", "-tags=", "-f", "{{.ImportPath}} {{.GoFiles}} {{.CgoFiles}} {{.CFiles}}", "github.com/ruipengliu/lerna/cmd/assembly")
+	out, err := cmd.Output()
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, name := range []string{"storagevfs", "storage_fault.go", "vfs.c"} {
+		if strings.Contains(string(out), name) {
+			t.Fatalf("storage injection entered production: %s", out)
+		}
+	}
+}
