@@ -6,6 +6,10 @@
 
 ## 当前状态
 
+2026-10-05 01:47 UTC，03 Binding单条表示复用五项机械资格普通0.028s／race1.209s通过，包含冷热原值、完整深拷贝／nil-empty、scope／locator／字节变更、原strict错误／非metadata和并发独立返回。实际Current反例普通3.426s装配失败：独立正常Completed1.71s，goal／control在原bound Snapshot的InstallInput ErrChanged，尚未到撤权Current／重开断言；race未运行。原[日志与范围](../lerna-04-content-snapshots/ticket-03-large-graph-claim/binding-decode-qualification/unit-and-setup-provenance.json)保留，root先前静态审查也漏掉原禁止；不放宽bound guard、不把setup失败称业务red。03仅静态改用合法当前控制／权限反例。
+
+三native实际Wait／absence后释放，唯一LOCAL现授05最小missing结构／currentpolicy错误机械观察的准确原AdmissionTarget测试普通→race，原身份／期限／正文及正常尾段保持。whole04仍15/41，完整1.2关闭，两票未正式接受／合并。
+
 2026-10-05 01:42 UTC，新targeted [原deadline真实锁等待](../lerna-04-content-snapshots/ticket-05-expired-accepted-cap/targeted-deadline-wait/README.md)普通5.325s／race6.905s两scope都通过，产品301be6d不改，test／证据partial `c01b4c3fd64a971499be93495e54722c07a2f5b7` clean。两fresh初次700ms责任窗分别及时释放全ACK和越原deadline20ms释放完整pending／字节保持，无seal／执行清理；真实join／重开／source字节／V2／原回执历史保持。全部native actual0／absence／noTimeout并释放；本票剩最小未知资格门、旧目录oracle和最终受影响suite／审查。
 
 随后03 [Binding 复用机械首red](../lerna-04-content-snapshots/ticket-03-large-graph-claim/binding-decode-qualification/first-mechanical-red.log)实际0.009s失败，native3177697／start13270091／exit1／absence并释放：冷／热完整值与返回修改隔离先通过，相同完整字节重复strict decode的真实次数2≠1。只为CPU seam，非业务red；03仅静态最小entry green准备，无容量新green或whole04接受。

@@ -1,0 +1,49 @@
+{
+  "scope": "5 exact mechanical cold-hot/deepclone/nil-empty/scope-locator-byte/strict-failure/nonmetadata/concurrency unit cases passed normal/race; Current counterexample setup failed because original bound Snapshot is immutable",
+  "failed_current_scope": "normal Completed1.71s; goal/control InstallInput ErrChanged before revoked-Current or Reopen assertions; no Current race launched; no business red or product fix justified",
+  "root_review": "FULL completed original logs and existing installCompileBudget bound guard read; explicit owner RELEASE; no capacity acceptance",
+  "files": [
+    {
+      "source": "/workspace/lerna-content-03-137311247276/context-binding-decode-unit-green.log",
+      "archive": "context-binding-decode-unit-green.log",
+      "bytes": 855,
+      "sha256": "d67599fdf67062e41c9fcb3878b3af96b12abb25078243b3a8cbe5129e117014",
+      "native": {
+        "pid": 3181606,
+        "pgid": 3181606,
+        "starttime": "13286827",
+        "exit": 0,
+        "group_absent": true
+      },
+      "go_package_seconds": 0.028
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/context-binding-decode-unit-race.log",
+      "archive": "context-binding-decode-unit-race.log",
+      "bytes": 855,
+      "sha256": "a7445e7120e0133c25ba586e64be1b34034db214c5f9a0d40103b4c5ae2fb859",
+      "native": {
+        "pid": 3182359,
+        "pgid": 3182359,
+        "starttime": "13289677",
+        "exit": 0,
+        "group_absent": true
+      },
+      "go_package_seconds": 1.209
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/context-binding-current-normal.log",
+      "archive": "context-binding-current-normal.log",
+      "bytes": 1019,
+      "sha256": "d09833d176fb0eac96ddbff059ee5aa420482a39dade4f4a65843febd67c070c",
+      "native": {
+        "pid": 3183097,
+        "pgid": 3183097,
+        "starttime": "13292662",
+        "exit": 1,
+        "group_absent": true
+      },
+      "go_package_seconds": 3.426
+    }
+  ]
+}
