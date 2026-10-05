@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package lerna.v1;
+
+option go_package = "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1;lernav1";
+
+// GlobalName 标识负责域内的对象，不授予访问权（核心契约 2.1）。
+message GlobalName {
+  string user_id = 1;
+  string authority_domain_id = 2;
+  string object_kind = 3;
+  string local_id = 4;
+}
