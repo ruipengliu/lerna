@@ -6,6 +6,10 @@
 
 ## 当前状态
 
+2026-10-05 00:28 UTC，03其余23个Context控制普通三组7.061s／10.917s／15.902s及race17.093s／26.246s／36.470s全部通过。格式检查首失败为一个测试文件尾部多余空行，保留原日志；仅删除该空行的固定源 `5e8cad7e9d77162fda9773bde747235f8937c9ce` 随后17项锁定检查全通过，包括Go普通／race、vet、生成／构建、44项TS、37项执行工具、生成探针及158／89／101共同合同正反序。合同脚本部分旧Go测试显示cached，照实保留；大图race仍未通过，有限overlay诊断正在静态准备。
+
+05旧正文绑定完整partial源码固定 `bb6e1f2ef05e49d88e2e4fb94ca04b0449981c52`。新原截止真实锁等待资格普通5.276s、测试race6.552s通过：两独立首次700ms WorkBudget／2s cap装配均观察真实policy阻塞；正常及时释放后原seal及实际全holder ACK／独立缺失／重开成立，跨原截止20ms释放后完整原pending／字节保持，无seal及可执行cleanup。原回执、新V2和deadline不变。race后校验和命令写错旧迁移路径，组合native exit1如实保留；单独正确三路径校验native exit0，未重跑已green测试。无产品修复或预算扩大；竞争CAS等剩余资格、最终受影响检查及两轴／架构审查仍待，两票未接受或合入，15/41与完整1.2关闭保持。
+
 2026-10-05，采用[大图claim复核决定](../lerna-04-content-snapshots/ticket-03-large-graph-claim/README.md)：保持原5s claim／30s caller／120s外界，一次独占完整B race加有限阶段诊断，保留第一错误、原Claim及Prepared实际提交范围；不盲重试、不预选性能补丁或扩大setup期限。05旧正文同准确测试独占race4.267s通过，错误介质／首次seal及原attempt页三个相关race1.727s／1.846s／2.496s通过。冻结旧producer所有原CloseACK、actualWait及group absence先于当前消费者，旧SQL三项校验和保持；竞争CAS、丢提交回执及截止越界仍待资格。03其余23个Context控制正按三组执行普通及race；两票未接受或正式合并，15/41与完整1.2关闭保持。
 
 2026-10-05 00:15 UTC，03容量最终分组普通A11.726s／B34.271s及race A30.122s通过；race B74.336s失败，64祖先和62直接材料的真实Decision.Step分别返回原claim失效，其余65拒绝、Content边界和重复角色通过。原caller30s、worker lease5s、原Snapshot预算均未放宽；失败保留，正由已授权Astra复核最小闭合路径，不能称容量race已通过。root执行授权前后不一致，05首次compileFAIL在03 race B后段真实重叠，故该组不声称独占负载；64祖先失败发生在05启动前，62材料的末段可能重叠，不能仅凭重叠解释失败。日志没有更细的RunClaim阶段观察，不将静态期限上界当成实际因果证明。
