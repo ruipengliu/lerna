@@ -1,0 +1,179 @@
+syntax = "proto3";
+package lerna.v1;
+
+import "lerna/v1/identity.proto";
+
+option go_package = "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1;lernav1";
+
+// Caller 由受信宿主从认证上下文提供，不能取自命令正文。
+message Caller {
+  string user_id = 1;
+  string issuer_id = 2;
+}
+message Ref {
+  GlobalName name = 1;
+  uint64 revision = 2;
+  string schema_id = 3;
+  optional string digest = 4;
+}
+message CommandIdentity {
+  string user_id = 1;
+  string issuer_id = 2;
+  string target_domain_id = 3;
+  string command_id = 4;
+}
+message SubmitGoalCommand {
+  CommandIdentity identity = 1;
+  uint32 contract_version = 2;
+  string schema_id = 3;
+  uint32 fingerprint_version = 4;
+  string goal = 5;
+  GlobalName session = 6;
+  repeated string must_understand = 7;
+  optional uint64 expected_revision = 8;
+  optional int64 accept_until_unix_ms = 9;
+  string credential = 10;
+  string trace_id = 11;
+}
+enum ReceiptPhase {
+  RECEIPT_PHASE_UNSPECIFIED = 0;
+  RECEIPT_PHASE_SUBMITTED = 1;
+  RECEIPT_PHASE_DECIDED = 2;
+}
+enum Decision {
+  DECISION_UNSPECIFIED = 0;
+  DECISION_ACCEPTED = 1;
+  DECISION_REJECTED = 2;
+}
+enum ReceiptQueryState {
+  RECEIPT_QUERY_STATE_UNSPECIFIED = 0;
+  RECEIPT_QUERY_STATE_NOT_FOUND = 1;
+  RECEIPT_QUERY_STATE_SUBMITTED = 2;
+  RECEIPT_QUERY_STATE_DECIDED = 3;
+  RECEIPT_QUERY_STATE_RETIRED = 4;
+  RECEIPT_QUERY_STATE_UNAVAILABLE = 5;
+}
+enum ErrorCategory {
+  ERROR_CATEGORY_UNSPECIFIED = 0;
+  ERROR_CATEGORY_TRANSIENT = 1;
+  ERROR_CATEGORY_PERMANENT = 2;
+  ERROR_CATEGORY_INDETERMINATE = 3;
+}
+enum CommandAcceptance {
+  COMMAND_ACCEPTANCE_UNSPECIFIED = 0;
+  COMMAND_ACCEPTANCE_NOT_SUBMITTED = 1;
+  COMMAND_ACCEPTANCE_SUBMITTED = 2;
+  COMMAND_ACCEPTANCE_DECIDED = 3;
+  COMMAND_ACCEPTANCE_UNKNOWN = 4;
+}
+message ContractError {
+  string code = 1;
+  ErrorCategory category = 2;
+  CommandAcceptance command_acceptance = 3;
+  string recovery_action = 4;
+  repeated Ref related_refs = 5;
+  string responsible_domain_id = 6;
+  optional int64 retry_after_unix_ms = 7;
+}
+message CommandReceipt {
+  CommandIdentity identity = 1;
+  uint32 fingerprint_version = 2;
+  string fingerprint = 3;
+  ReceiptPhase phase = 4;
+  Decision decision = 5;
+  Ref decision_ref = 6;
+  Ref task_ref = 7;
+  Ref session_ref = 8;
+  Ref job_ref = 9;
+  string responsible_domain_id = 10;
+  uint64 commit_position = 11;
+  int64 decided_at_unix_ms = 12;
+  string durability_profile = 13;
+  ContractError error = 14;
+  Ref input_ref = 15;
+}
+message ReceiptQuery {
+  ReceiptQueryState state = 1;
+  string responsible_domain_id = 2;
+  uint64 revision = 3;
+  CommandReceipt receipt = 4;
+  ContractError error = 5;
+}
+enum TaskLifecycle {
+  TASK_LIFECYCLE_UNSPECIFIED = 0;
+  TASK_LIFECYCLE_OPEN = 1;
+  TASK_LIFECYCLE_CLOSED = 2;
+}
+enum TaskControl {
+  TASK_CONTROL_UNSPECIFIED = 0;
+  TASK_CONTROL_ACTIVE = 1;
+  TASK_CONTROL_PAUSED = 2;
+  TASK_CONTROL_CANCELLING = 3;
+}
+enum TaskProgress {
+  TASK_PROGRESS_UNSPECIFIED = 0;
+  TASK_PROGRESS_RUNNING = 1;
+  TASK_PROGRESS_WAITING = 2;
+}
+enum RequirementsStatus {
+  REQUIREMENTS_STATUS_UNSPECIFIED = 0;
+  REQUIREMENTS_STATUS_DRAFT = 1;
+  REQUIREMENTS_STATUS_ACCEPTED = 2;
+}
+message Task {
+  GlobalName task_id = 1;
+  uint64 revision = 2;
+  Ref goal_ref = 3;
+  string owner_domain_id = 4;
+  uint64 requirements_version = 5;
+  uint64 input_version = 6;
+  TaskLifecycle lifecycle = 7;
+  TaskControl control = 8;
+  TaskProgress progress = 9;
+  repeated string waiting_on = 10;
+  uint64 planning_generation = 11;
+  uint64 control_generation = 12;
+  uint64 bound_input_version = 13;
+  RequirementsStatus requirements_status = 14;
+  Ref parent_task_ref = 15;
+  Ref result_ref = 16;
+}
+message SessionInput {
+  GlobalName input_id = 1;
+  uint64 session_seq = 2;
+  GlobalName task_id = 3;
+  string input_kind = 4;
+  Ref content_ref = 5;
+  CommandIdentity command_identity = 6;
+  string routing_status = 7;
+}
+message Session {
+  GlobalName session_id = 1;
+  string status = 2;
+  uint64 last_committed_seq = 3;
+  uint64 revision = 4;
+  repeated SessionInput inputs = 5;
+  repeated Ref task_refs = 6;
+}
+message Content {
+  Ref ref = 1;
+  string text = 2;
+  CommandIdentity source = 3;
+  int64 acquired_at_unix_ms = 4;
+  repeated Ref derived_from = 5;
+  string media_type = 6;
+}
+message PendingGoal {
+  SubmitGoalCommand command = 1;
+  Ref content_ref = 2;
+}
+message Job {
+  Ref ref = 1;
+  string module = 2;
+  string job_type = 3;
+  uint32 contract_version = 4;
+  CommandIdentity responsibility = 5;
+  string state = 6;
+  string purpose_key = 7;
+  PendingGoal goal = 8;
+}

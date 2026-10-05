@@ -1,0 +1,118 @@
+// Package sessions 接纳输入并维护会话顺序，不直接修改任务事实。
+package sessions
+
+import (
+	"context"
+
+	"github.com/ruipengliu/lerna/contracts/command"
+	v1 "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1"
+)
+
+type Store interface {
+	SaveSession(context.Context, *v1.Session) error
+	LoadSession(context.Context, *v1.GlobalName) (*v1.Session, error)
+	Position(context.Context) (uint64, int64, error)
+}
+type Durable interface {
+	Submit(context.Context, *v1.Caller, *v1.SubmitGoalCommand, *v1.Ref) (*v1.CommandReceipt, error)
+	Pending(context.Context, *v1.Caller) ([]*v1.Job, error)
+	Decide(context.Context, *v1.Job, func(context.Context, *v1.PendingGoal) (*v1.Ref, *v1.Ref, error)) error
+}
+type Tasks interface {
+	CreateInTransaction(context.Context, *v1.Ref) (*v1.Ref, error)
+}
+type Content interface {
+	Stage(context.Context, *v1.Caller, *v1.SubmitGoalCommand) (*v1.Ref, error)
+}
+type Service struct {
+	store        Store
+	durable      Durable
+	tasks        Tasks
+	content      Content
+	user, domain string
+}
+
+func New(s Store, d Durable, t Tasks, c Content, user, domain string) *Service {
+	return &Service{s, d, t, c, user, domain}
+}
+func (s *Service) SubmitGoal(ctx context.Context, caller *v1.Caller, c *v1.SubmitGoalCommand) (*v1.CommandReceipt, error) {
+	if err := command.ValidateGoal(c); err != nil {
+		return nil, err
+	}
+	if err := command.CheckIdentity(caller, c.Identity, s.user, s.domain); err != nil {
+		return nil, err
+	}
+	if c.Session != nil {
+		if err := command.CheckName(caller, c.Session, s.user, s.domain, "session"); err != nil {
+			return nil, err
+		}
+	}
+	ref, err := s.content.Stage(ctx, caller, c)
+	if err != nil {
+		return nil, err
+	}
+	return s.durable.Submit(ctx, caller, c, ref)
+}
+
+// ProcessPending 由单进程宿主驱动；每次决定仍在独立裁决事务内恢复。
+func (s *Service) ProcessPending(ctx context.Context, caller *v1.Caller) error {
+	jobs, err := s.durable.Pending(ctx, caller)
+	if err != nil {
+		return err
+	}
+	for _, job := range jobs {
+		if err := s.durable.Decide(ctx, job, s.accept); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+func (s *Service) accept(ctx context.Context, pending *v1.PendingGoal) (*v1.Ref, *v1.Ref, error) {
+	c := pending.Command
+	_, now, err := s.store.Position(ctx)
+	if err != nil {
+		return nil, nil, err
+	}
+	if c.AcceptUntilUnixMs != nil && *c.AcceptUntilUnixMs <= now {
+		return nil, nil, command.Fail("INVALID_INPUT")
+	}
+	var session *v1.Session
+	if c.Session != nil {
+		session, err = s.store.LoadSession(ctx, c.Session)
+		if err != nil {
+			return nil, nil, err
+		}
+		if session == nil {
+			return nil, nil, command.Fail("INVALID_INPUT")
+		}
+		if session.Status != "ACTIVE" {
+			return nil, nil, command.Fail("INVALID_INPUT")
+		}
+		if c.ExpectedRevision != nil && *c.ExpectedRevision != session.Revision {
+			return nil, nil, command.Fail("REVISION_CONFLICT")
+		}
+	} else {
+		if c.ExpectedRevision != nil {
+			return nil, nil, command.Fail("INVALID_INPUT")
+		}
+		session = &v1.Session{SessionId: command.NewRef(s.user, s.domain, "session", "lerna.v1.Session").Name, Status: "ACTIVE"}
+	}
+	task, err := s.tasks.CreateInTransaction(ctx, pending.ContentRef)
+	if err != nil {
+		return nil, nil, err
+	}
+	session.LastCommittedSeq++
+	session.Revision++
+	session.TaskRefs = append(session.TaskRefs, task)
+	session.Inputs = append(session.Inputs, &v1.SessionInput{InputId: command.NewRef(s.user, s.domain, "input", "lerna.v1.SessionInput").Name, SessionSeq: session.LastCommittedSeq, TaskId: task.Name, InputKind: "GOAL", ContentRef: pending.ContentRef, CommandIdentity: c.Identity, RoutingStatus: "DELIVERED"})
+	if err := s.store.SaveSession(ctx, session); err != nil {
+		return nil, nil, err
+	}
+	return &v1.Ref{Name: session.SessionId, Revision: session.Revision, SchemaId: "lerna.v1.Session"}, task, nil
+}
+func (s *Service) QuerySession(ctx context.Context, caller *v1.Caller, id *v1.GlobalName) (*v1.Session, error) {
+	if err := command.CheckName(caller, id, s.user, s.domain, "session"); err != nil {
+		return nil, err
+	}
+	return s.store.LoadSession(ctx, id)
+}

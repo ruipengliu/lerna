@@ -17,13 +17,17 @@ linters:
           list-mode: strict
           allow: ["$gostd", "google.golang.org/protobuf", "github.com/ruipengliu/lerna/contracts"]
         core:
-          files: ["**/core/**/*.go"]
+          files: ["**/core/**/*.go", "!**/core/durable/durable_test.go"]
           list-mode: strict
           allow: ["$gostd", "github.com/ruipengliu/lerna/contracts", "github.com/ruipengliu/lerna/core", "google.golang.org/protobuf"]
         core-durable:
-          files: ["**/core/durable/*.go", "**/core/durable/**/*.go"]
+          files: ["**/core/durable/*.go", "**/core/durable/**/*.go", "!**/core/durable/durable_test.go"]
           list-mode: strict
           allow: ["$gostd", "google.golang.org/protobuf", "github.com/ruipengliu/lerna/contracts", "github.com/ruipengliu/lerna/core/durable$", "github.com/ruipengliu/lerna/core/durable/"]
+        durable-harness-test:
+          files: ["**/core/durable/durable_test.go"]
+          list-mode: strict
+          allow: ["$gostd", "github.com/ruipengliu/lerna/contracts", "github.com/ruipengliu/lerna/cmd/assembly$"]
         core-tasks:
           files: ["**/core/tasks/*.go", "**/core/tasks/**/*.go"]
           list-mode: strict
