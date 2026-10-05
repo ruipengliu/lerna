@@ -1,0 +1,27 @@
+{
+  "kind": "actual original full64 normal after minimal scan fix andqualification guards",
+  "source_manifest": "/tmp/lerna-04-ticket05-execution/expired-backlog-scan-fix-first-normal-source/manifest.json",
+  "test_sha256": "60f817d14355d1565f744be850f9309d1ae0c2d0f7190be0e204929d0823823b",
+  "pid": 3429161,
+  "pgid": 3429161,
+  "starttime": "14360507",
+  "exit": 0,
+  "group_absent": true,
+  "timed_out": false,
+  "go_seconds": 20.418,
+  "case_seconds": 20.41,
+  "tool_session": 5593,
+  "log_sha256": "621c090c3eb42ee9869990e5a6c6957b6002fc4ec2436c8fe2f1936da164fbc8",
+  "schema": "lerna_test_73c2ee2ae74c7a750cc030b8",
+  "object_root": {
+    "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-1033797676",
+    "device": 33,
+    "inode": 384078
+  },
+  "new_v2_published_and_exact_beta_bytes": true,
+  "later_live_seal_all_holders_ACK_and_independent_absence": true,
+  "second_reopen_64_original_complete_duties_bodies_fixed_receipts_and_published_history_preserved": true,
+  "race_executed": false,
+  "mechanical_fault_vectors_executed": false,
+  "native_released": true
+}

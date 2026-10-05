@@ -6,7 +6,7 @@
 
 ## 当前状态
 
-2026-10-05 04:13 UTC：切片01–03已完整退出；切片04仍15/41AC，票03/05在独立工作树修正，尚未接受或合入，完整1.2 profile关闭。03当前28e原容量normal通过、race失败，一次CPU采样和七视图已保存并推送1f5f5a5，下一窄优化正在依据实测作Astra决定；独立审查的错误cause修正待TDD。05真实64过期积压首business red已成立，窄候选扫描修复仅静态准备，同原green/race和损坏记录边界待验证。05–22依真实整片退出推进，全部授权持续有效。下面逐条保留历史检查点，不用旧通过替代新源码资格。
+2026-10-05 04:58 UTC：切片01–03已完整退出；切片04仍15/41AC，票03/05在独立工作树修正，尚未接受或合入，完整1.2 profile关闭。03独立真实锁等待的StagePublication原因测试normal1.801s/race5.731s通过，源码修正与原red已保存推送；局部闭包成功身份复用后原容量normal仍在第二ReadPublished触及原Claim5（caller尚余17.410s），Prepared已提交而Completed未成立，race业务未运行。依据实测采用一次原边界下发布阶段细分测量，静态全源及逆变换核准后仅开始fmt/build。05同原64过期积压完整反例normal20.418s/race26.476s通过，两真实完整尾与七源副本已归档；异常记录、其他consumer、当前全检查与两轴资格仍待。05–22依真实整片退出推进，全部授权持续有效。下面逐条保留历史检查点，不用旧通过替代新源码资格。
 
 2026-10-05 02:01 UTC，05[最小未知资格门](../lerna-04-content-snapshots/ticket-05-expired-accepted-cap/unknown-source-gates/README.md)普通2.392s／race3.893s通过；原真实PG操作后机械missing source／currentpolicy sentinel使完整原pending／无seal／三正文保持，plain原consumer同正常尾段成功。首包compileFAIL由旧目录oracle三声明遗漏，原日志保留，仅声明修复。资格partial4735abc与15文件24case精确正文／缺失及knownempty lock整改partial1a4e1d2分别clean固定；24case只编译，最终执行待授，static coverage24unique／26callsite／缺漏0。
 
@@ -337,3 +337,7 @@ root全文读取[Astra六票复核](../lerna-04-content-snapshots/published-tick
 2026-10-05，03[StagePublication真实cause首red](../lerna-04-content-snapshots/ticket-03-stage-publication-cause/README.md)actual3397277/start14220903/1/absence、Go1.940；正常Publish/readback/reopen1.16通过，原真实row wait取消、双join/双peer Close、publicNotFound及重开尾全执行，最后cause断言得到ErrForbidden。root全文采用仅NoRows拒绝、其他cause保留的静态修正；green/race待，原边界不改，性能资格另列。
 
 2026-10-05，03同原[真实cause出口](../lerna-04-content-snapshots/ticket-03-stage-publication-cause/README.md)修正普通1.801/race5.731均actual0/absence，双join/peerClose/公开NotFound及重开尾全执行；root全文原log/provenance并核源hash。source是28e+显式两productWIP和两new tracer，closure容量待，不能据此接受票。05原red tests/evidence已commit85a1067（产品仍1a4加WIP），root采用固定Record/rawJSON类型必要资格，仅静态补足。15/41/profile OFF/all22授权持续。
+
+2026-10-05，root全文采用05固定stored BodySeal规范编码必要补充，仅静态实施，不从JSONB语义相等推断原Go Marshal字节资格。03两独立nonprofile新binary已actual0/absence并独立hash/devino核验，source28e+明确WIP；只授原四B普通ONE，当前新业务未结束，race待单独资格，30/5/120不变。
+
+2026-10-05，03[闭包身份新原B普通ONE](../lerna-04-content-snapshots/ticket-03-large-graph-claim/closure-identity-capacity/README.md)actual3420931/1/absence；root全文162原行。closure64真实Prepared/两Publish成功、第二readback deadline，Claim末晚3.586ms无Completed/成功公开尾；static62全Completed/readbacks/原公开尾通过，正常拒绝用例保持。race仅构建未跑，原30/5/120不改，不依据单wall归因回归或宣布收益。Astra只读下一必要阶段决定，05完整扫描候选仅授fmt+原64正常ONE，尚无新green。

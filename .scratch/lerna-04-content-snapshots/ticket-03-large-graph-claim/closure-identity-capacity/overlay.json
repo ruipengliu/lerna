@@ -1,0 +1,9 @@
+{
+  "Replace": {
+    "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_world.go": "/workspace/lerna-content-03-137311247276/large-graph-closure-identity-overlay/context_world.go",
+    "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_claim_diagnostics.go": "/workspace/lerna-content-03-137311247276/large-graph-closure-identity-overlay/context_claim_diagnostics.go",
+    "/tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_context_closure_test.go": "/workspace/lerna-content-03-137311247276/large-graph-closure-identity-overlay/content_context_closure_test.go",
+    "/tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_context_material_reachable_test.go": "/workspace/lerna-content-03-137311247276/large-graph-closure-identity-overlay/content_context_material_reachable_test.go",
+    "/tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_context_test.go": "/workspace/lerna-content-03-137311247276/large-graph-closure-identity-overlay/content_context_test.go"
+  }
+}

@@ -1,0 +1,5 @@
+=== RUN   TestContentLaterWorkPassesFullExpiredCleanupPageWithoutChangingOriginalDuties
+--- PASS: TestContentLaterWorkPassesFullExpiredCleanupPageWithoutChangingOriginalDuties (20.41s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/component	20.418s
+NATIVE_COMPLETION_ACK {"pid": 3429161, "pgid": 3429161, "starttime": "14360507", "exit": 0, "group_absent": true, "timed_out": false}

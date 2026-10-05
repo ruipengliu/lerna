@@ -1,0 +1,13 @@
+# 单次闭包身份复用：原容量正常模式的实际失败
+
+采用准确bb031的[下一次必要发布阶段测量](adopted-next-measurement-decision.md)：仅一个原4B normal样本，保原30/5/120/count1。当前最后ReadPublished的超时不足以选择下一产品优化；新测量区分Publish内部验证与worker独立ReadPublished的前Tx/对象/后Tx成本。无新产品优化、race业务或第二CPU采样授权。
+
+源码28e加显式closure成功纯身份复用与独立cause修正及两新tracer；不是原28e clean产品。root全文读candidate、原5byteequal低开销overlay及准确fmt后manifest57a357，独立核验9实际编译依赖、另列未进入component编译的mechanical unit、两新binary。normal9d26/dev27ino560496、race0514/dev27ino560808仅在原ownedroot；编译均实际0/absence。可执行文件不提交。
+
+ONE nonprofile原4B普通native3420931/start14323934/session74589实际exit1/groupAbsence/noTimeout；root全文162行原raw与outcome。closure64FAIL12.64/65PASS4.52(parent17.16)，static62PASS9.77，单内容1.57/拒绝.55、重复.36通过。原30caller/5Claim/120/count1不变，buffer314/15/327 drop0，直接binary无Go包总时长。
+
+closure64真实running sequence1和Prepared COMMIT10.733288，61次Material/2Plan均无错误，2Publish返回成功；第二ReadPublished真实ReadForProcessing timeout12.589605，caller仍余17.410366s。Step5.024562、最后freshClaim晚3.586ms；无completed COMMIT，成功Step后的原公开回执/完整正文/RuleStarts/reopen尾未执行。不能把2次publish当2次成功readback或完成。粗调用不区分preTx/实际Objects/postTx，不从本单样本认定纯map造成回归或确定性能收益。
+
+static62真实Prepared6.869493、Completed8.185956 COMMIT，两Publish/ReadPublished与原完整公开尾通过，Step2.497348；该case不能替代closure失败或竞态资格。原profile、先前normal/race及unknown/Prepared责任全部保留。
+
+owner实际join/absence明确STOP/RELEASE，root独立核原组absence。race二进制仅成功构建，业务UNRUN；没有盲重试/第二profile/追加产品优化。下一决定仅依据本次实际未闭合阶段；两票和whole04仍未接受。

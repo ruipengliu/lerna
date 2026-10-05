@@ -1,0 +1,22 @@
+{
+  "root_verification": "independent byte hashes/copies and actual process-group absence; full raw/outcomes read by root",
+  "source_manifest_prelaunch_kind_preserved": true,
+  "product_source_is_WIP": true,
+  "files": {
+    "normal-outcome.json": "ee404c06d62d76957163bec43cf0b23bd74131a5745981dbb9fb31e6e74d08bf",
+    "normal-prelaunch-source-manifest.json": "fd9fa10f1d7b3ceb7a643092d1249cdf6abf4b9ab5d200f50f3d870e5eea35fc",
+    "normal.log": "621c090c3eb42ee9869990e5a6c6957b6002fc4ec2436c8fe2f1936da164fbc8",
+    "race-outcome.json": "33072734d18f92c6ed921e608b44ed12fb66bb067239183a91b4b8e28344257f",
+    "race-prelaunch.json": "d8e59c5e5db4bf38d2ebdbc54113eb594139a6d7ce12bc0bc5e092067276ec79",
+    "race.log": "d282371db1205e4b93187ac3aaa0796537b4349c6272e1052dba71562acef197",
+    "source/adapters/postgres/content/work.go": "f690a261112ec1e37b7a51fc1d54f4637a987d348b4f912e57856a481c4fbbc0",
+    "source/adapters/postgres/content/work_seal_encoding.go": "7286fe4f59db9dcfa22405341bffd45d5b914d18d41bd0ecbcf31e382ab21c8b",
+    "source/conformance/component/content_expired_backlog_test.go": "60f817d14355d1565f744be850f9309d1ae0c2d0f7190be0e204929d0823823b",
+    "source/domain/content/lifecycle.go": "0708c4eb51e28ab9b7a3210981e408ae2310511e9728ee2bf46ba87fc0802699",
+    "source/domain/content/management.go": "c6fa3aa3dfee98ab82b873aa9d37e4c4725133390147e2d0aff04be49e3606ad",
+    "source/domain/content/ports.go": "51066cd99f2c79e8a5fc3f7b336cb0706f161899361681c99f8e6feff5454f90",
+    "source/domain/content/service.go": "ffefc916fa8e08e2a39f2264a12090eb7aa2ecf020b7da63e270aff3e925a477"
+  },
+  "both_actual_group_absent": true,
+  "per_resource_Close_not_inferred_from_group_absence": true
+}
