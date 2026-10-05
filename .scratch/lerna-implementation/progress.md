@@ -6,6 +6,8 @@
 
 ## 当前状态
 
+2026-10-05 07:05 UTC：已核准确 dadd801 push CI37274041977 实际 failure，见[原日志与范围](../lerna-04-content-snapshots/current-ci-dadd801/README.md)。两归档预格式源码仅保字节改后缀，Run 正常取消丢原因另开必要修复票；不撤销05原本地源码资格，也不假整体CI通过。03 clean b28b已合入dadd，330源静态绑定核准，真实target BodySeal反例准备后先运行RED；06前置实际满足并已claimed，当前唯一LOCAL给三源fmt及一次真实normal_release对照，fault/race未授。whole04仍22/41、完整1.2关闭，全部22切片授权继续。
+
 2026-10-05 06:45 UTC：票05七AC已接受并交付，准确源码8db74e3／worker32ca／整合361c353。27项检查全实际通过，独立两轴无硬性／规格发现；142schema／14backend／52原组无当前残留，216路径不存在，2原UNKNOWN匹配inode且不清理。whole04现22/41，06前置满足，完整1.2关闭；准确push／新CI随后核。03单读纯身份正常与读取期间撤权普通／竞态通过；原4B normal全通过、race两个大图仍超原Claim5且未到Prepared／发布。全部真实失败／未知边界保留，按026149决定准备当前SQL／本地成本单次测量，先同步已验收05的BodySeal门。全部22切片授权继续。
 
 2026-10-05 05:50 UTC：05新增Manager normal19.681/race27.528、不同合法完整委派Subject normal6.510/race13.953完整尾均通过。所有原期限/页/步数不变，首主体64live责任重开全量保持；完整证据已归档，最终当前源套件和两轴审查待做。03采用准确380731单项修订：一次ReadForProcessing前后观察只共享≤65项成功fullRef纯ID，所有记录/权限/来源/时钟和PG自主验证仍真实重读；只静态实现，暂无新资格。两票仍未接受或合入，whole04 15/41、完整1.2关闭。

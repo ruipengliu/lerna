@@ -1,0 +1,17 @@
+{
+  "change": "archive suffix only; no formatter; executable original paths and immutable historical manifests remain as observed",
+  "current_archive_paths": [
+    {
+      "original_archive": "current-resource-audit/audit.go",
+      "current_archive": "current-resource-audit/audit.go.txt",
+      "bytes": 6387,
+      "sha256": "748ba8db54a22ec1e8583ccf74ff48004c40ff3c0bf5a9a94c68d7fa58b9bf94"
+    },
+    {
+      "original_archive": "manager-full64-qualification/source-preformat-content_manager_expired_backlog_test.go",
+      "current_archive": "manager-full64-qualification/source-preformat-content_manager_expired_backlog_test.go.txt",
+      "bytes": 10292,
+      "sha256": "2b36441f2245057e3cffdc5365d61891eb8f358a9ef6b29a22c0f5d50edb044f"
+    }
+  ]
+}
