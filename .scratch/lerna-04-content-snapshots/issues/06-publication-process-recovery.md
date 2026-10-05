@@ -4,7 +4,7 @@
 
 **Blocked by:** 05 — 合法正文清理、真实holder残留和孤儿责任
 
-**Status:** ready-for-agent
+**Status:** claimed
 
 - [ ] 真实PG+对象adapter在文件/目录安装耐久确认后、元数据发布前设置有限管道gate，same-gate正常release及实际SIGKILL/Wait/EOF，由原staging/Job恢复原key/version。
 - [ ] 提交前rollback、发布后答复丢失、恢复时政策失效均有正常对照，公开原receipt/状态及独立完整字节区分实际边界。
@@ -16,3 +16,5 @@
 ## Comments
 
 2026-10-04，按用户授权与最终API复核发布；前置03完整退出5fbb1a0，采用decisions/final-api-handoff的具体映射。本票独立垂直出口，不将全片广告/审查/CI作为隐藏关闭依赖。
+
+2026-10-05，票05已实际交付361c353（受测8db、worker32ca），直接前置满足。本票正式claimed，采用原条件handoff并核最新票05API／BodySeal／三冻结迁移／物理fence与UNKNOWN保护。独立工作树TDD；native按原有限阶段授唯一LOCAL，不增加03／04／整片CI隐藏前置。

@@ -27,3 +27,5 @@
 2026-10-05，root已正式接受源码 `8db74e3dfd2677adb37fbdd13bd93e76b61b5eb7` 的七项AC，核定文档提交 `94e9c289310601bbf1eab5580efe002028db0cc9`。本票本机真实PG/Linux范围的逐AC行为、当前27项实际检查、独立双轴与资源观察见 [root退出证据](../ticket-05-exit-evidence.md)，当前接口及限制见 [交接](../ticket-05-api-handoff.md)。两个历史logical Close UNKNOWN保持原责任与inode，不因当前资源不存在改写关闭事实。
 
 worker已按implement-spec要求正常merge准确integration root94e9至自身分支，merge `30cb0c0c388477a1a2ba0c0ac0bc776f224ed4dc` 的parents为原受测8db与root94e9；15份已资格源码／SQL／test字节保持8db原pin，无新增产品修正或native测试。七项勾选与resolved表示root已接受的本票资格；实际交付回integration、push及新准确CI尚待root后序记录。worker本地票状态累计22/41，whole04仍in-progress、完整1.2广告OFF。票06仅依赖本票实际交付，不增加整片CI隐藏依赖。
+
+2026-10-05，实际整合merge361c353完成；root独立核parents／整树／15pin。前文待交付为worker历史cutoff，本票现已交付。票06直接前置满足，whole04累计22/41，整片广告及新准确CI仍未接受。

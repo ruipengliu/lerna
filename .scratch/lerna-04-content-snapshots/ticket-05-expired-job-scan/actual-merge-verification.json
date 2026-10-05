@@ -1,0 +1,150 @@
+{
+  "old_root": "94e9c289310601bbf1eab5580efe002028db0cc9",
+  "delivery": "32ca8f34a68f5ca5bfcb8c2353228804807ffa3a",
+  "qualification_commit": "8db74e3dfd2677adb37fbdd13bd93e76b61b5eb7",
+  "root_branch": "codex/lerna-implementation",
+  "root_initial_clean": true,
+  "worker_initial_clean": true,
+  "root_is_delivery_ancestor": true,
+  "manifest_sha256": "6462b2e7fd384dab3bddaa711b04d0a123d19d077d2db50c0d042b57a2743ef0",
+  "files": [
+    {
+      "path": "adapters/postgres/content/work.go",
+      "sha256": "f690a261112ec1e37b7a51fc1d54f4637a987d348b4f912e57856a481c4fbbc0",
+      "bytes": 12249,
+      "delivery_qualification_and_worker_equal": true,
+      "merged_blob_sha1": "37ccd5a0c2906d0f5933d8b4b429f064d7abef50",
+      "merged_worktree_delivery_qualification_and_worker_equal": true
+    },
+    {
+      "path": "adapters/postgres/content/work_seal_encoding.go",
+      "sha256": "7286fe4f59db9dcfa22405341bffd45d5b914d18d41bd0ecbcf31e382ab21c8b",
+      "bytes": 1695,
+      "delivery_qualification_and_worker_equal": true,
+      "merged_blob_sha1": "6d95b7e64f575337380dc3a5b541d1884793a78e",
+      "merged_worktree_delivery_qualification_and_worker_equal": true
+    },
+    {
+      "path": "domain/content/ports.go",
+      "sha256": "51066cd99f2c79e8a5fc3f7b336cb0706f161899361681c99f8e6feff5454f90",
+      "bytes": 5618,
+      "delivery_qualification_and_worker_equal": true,
+      "merged_blob_sha1": "96edd91a376cdffbc9d87ebb6347dfa01bedaa96",
+      "merged_worktree_delivery_qualification_and_worker_equal": true
+    },
+    {
+      "path": "domain/content/service.go",
+      "sha256": "ffefc916fa8e08e2a39f2264a12090eb7aa2ecf020b7da63e270aff3e925a477",
+      "bytes": 33783,
+      "delivery_qualification_and_worker_equal": true,
+      "merged_blob_sha1": "39381bdbe9de4eb6926896d129a53d853eae407e",
+      "merged_worktree_delivery_qualification_and_worker_equal": true
+    },
+    {
+      "path": "domain/content/management.go",
+      "sha256": "c6fa3aa3dfee98ab82b873aa9d37e4c4725133390147e2d0aff04be49e3606ad",
+      "bytes": 37419,
+      "delivery_qualification_and_worker_equal": true,
+      "merged_blob_sha1": "841f934366813b05439c775ce22c243d65f0b26e",
+      "merged_worktree_delivery_qualification_and_worker_equal": true
+    },
+    {
+      "path": "domain/content/lifecycle.go",
+      "sha256": "0708c4eb51e28ab9b7a3210981e408ae2310511e9728ee2bf46ba87fc0802699",
+      "bytes": 23932,
+      "delivery_qualification_and_worker_equal": true,
+      "merged_blob_sha1": "46a27b1b3e3001c964b47bbdb04e052a8627f093",
+      "merged_worktree_delivery_qualification_and_worker_equal": true
+    },
+    {
+      "path": "conformance/component/content_expired_backlog_test.go",
+      "sha256": "60f817d14355d1565f744be850f9309d1ae0c2d0f7190be0e204929d0823823b",
+      "bytes": 8657,
+      "delivery_qualification_and_worker_equal": true,
+      "merged_blob_sha1": "cb16eaccb797bacfaf86cab720cbba648bc600a0",
+      "merged_worktree_delivery_qualification_and_worker_equal": true
+    },
+    {
+      "path": "adapters/postgres/content/migrations/0001_content.sql",
+      "sha256": "00363b79dafb6eb1f373be9ef08e915fe23cc3db0fa55345e8ae6c051ce0c1ed",
+      "bytes": 3682,
+      "delivery_qualification_and_worker_equal": true,
+      "merged_blob_sha1": "9f14fd8caa76419618d568e80ecefa43281f7aec",
+      "merged_worktree_delivery_qualification_and_worker_equal": true
+    },
+    {
+      "path": "adapters/postgres/content/migrations/0002_source_policies.sql",
+      "sha256": "99519565ff1146d7cfc468413b449538c6ba71335e86edc8fd447a3bbff922a8",
+      "bytes": 2585,
+      "delivery_qualification_and_worker_equal": true,
+      "merged_blob_sha1": "02a082a5a0edfa57d0e8d2a2680b0af5ad9a5a41",
+      "merged_worktree_delivery_qualification_and_worker_equal": true
+    },
+    {
+      "path": "adapters/postgres/content/migrations/0003_body_cleanup.sql",
+      "sha256": "92739b464b8661e26befe092028f20802b586e42bf1578bd9811dcf240c5b58f",
+      "bytes": 2497,
+      "delivery_qualification_and_worker_equal": true,
+      "merged_blob_sha1": "738baea8203490d3ebe94d9c3f089277b515bb29",
+      "merged_worktree_delivery_qualification_and_worker_equal": true
+    },
+    {
+      "path": "conformance/internal/contentfixture/scan_deadline_fault.go",
+      "sha256": "7c57d9bffcb17c49daab3536b68284af3c24dce4ed08035f2fe3f74a0b22afa0",
+      "bytes": 3748,
+      "delivery_qualification_and_worker_equal": true,
+      "merged_blob_sha1": "3574c9033f58026c0af7d512cc1bcd6fbaf31f3f",
+      "merged_worktree_delivery_qualification_and_worker_equal": true
+    },
+    {
+      "path": "conformance/component/content_scan_deadline_test.go",
+      "sha256": "7f12df34684283e4e69c5bacff08f5d75a3d46643315beaa5130809190b68461",
+      "bytes": 8835,
+      "delivery_qualification_and_worker_equal": true,
+      "merged_blob_sha1": "a8b9e895efc983c47dd3511e2e2a6f2ac3a3a75f",
+      "merged_worktree_delivery_qualification_and_worker_equal": true
+    },
+    {
+      "path": "conformance/component/content_manager_expired_backlog_test.go",
+      "sha256": "81bc5d898d4c0275fd0a1aa9b7047716fe633cd9ee4fabc669cd46d92f1b8ed6",
+      "bytes": 10293,
+      "delivery_qualification_and_worker_equal": true,
+      "merged_blob_sha1": "5be684a47d8a008ad40cdb22a1947baa6c01138e",
+      "merged_worktree_delivery_qualification_and_worker_equal": true
+    },
+    {
+      "path": "conformance/component/content_delegated_cleanup_backlog_test.go",
+      "sha256": "85d9951fd44c08b374730f8c95d464e8e8efb5726cfb5ec1df20977689bf6995",
+      "bytes": 11121,
+      "delivery_qualification_and_worker_equal": true,
+      "merged_blob_sha1": "9e4a1f12507c82669caf4335401ae5e692139f9f",
+      "merged_worktree_delivery_qualification_and_worker_equal": true
+    },
+    {
+      "path": "conformance/internal/contentfixture/migration_test.go",
+      "sha256": "b8c9c471a9ed30bbaf8a2e6c89ed5a5a84e54b6b09cafc63ae6f01cf48a03e3a",
+      "bytes": 2642,
+      "delivery_qualification_and_worker_equal": true,
+      "merged_blob_sha1": "1fd77601dd7aeb20f02418c2837c220e8c37395c",
+      "merged_worktree_delivery_qualification_and_worker_equal": true
+    }
+  ],
+  "kind": "actual authorized normal no-ff merge verification; no native tests, push or cleanup",
+  "checked_at_utc": "2026-10-05T06:43:36.167765+00:00",
+  "merge_commit": "361c353b1abec601120bf638ad5de9e912a3aa9f",
+  "merge_parents": [
+    "94e9c289310601bbf1eab5580efe002028db0cc9",
+    "32ca8f34a68f5ca5bfcb8c2353228804807ffa3a"
+  ],
+  "merged_tree": "5913a28d768cc18b3f50a6dfe614d43aeeb3abee",
+  "delivery_tree": "5913a28d768cc18b3f50a6dfe614d43aeeb3abee",
+  "full_tree_equal_to_delivery": true,
+  "merge_delivery_diff_empty": true,
+  "root_final_status_porcelain": "",
+  "worker_final_status_porcelain": "",
+  "all_15_pins_pass": true,
+  "new_ci_run_observed": false,
+  "native_operations_performed": false,
+  "push_performed": false,
+  "worktree_cleanup_performed": false
+}

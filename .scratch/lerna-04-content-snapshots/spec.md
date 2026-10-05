@@ -80,3 +80,8 @@ Depends on: [01](../lerna-01-command-contracts/spec.md)、[02](../lerna-02-durab
 ## 票05 root接受与worker状态同步（实际整合交付待完成）
 
 2026-10-05，root接受票05源码8db74e3的七AC，准确核定文档94e9c28与 [逐AC退出证据](ticket-05-exit-evidence.md)记录当前27检查、双轴0hard／Spec0、无必要产品修正及真实只读资源观察。worker已normal merge root94e9并同步 [票05](issues/05-body-cleanup-and-holders.md) 七项勾选／resolved，15份已资格源码／SQL／test字节不变。本worker本地票状态累计22/41；实际交付回integration的merge仍待root执行，不冒root已合入。whole04仍in-progress、profile1.2广告OFF；新准确push／CI随后记录，票06只依赖本票实际交付，无整片CI隐藏依赖。历史两个原logical Close UNKNOWN继续保留。
+
+
+## 实际整合交付
+
+2026-10-05，正常merge `361c353b1abec601120bf638ad5de9e912a3aa9f` 已实际完成，parents为root94e9与worker32ca；整树等于worker32ca，15个受测文件逐字节匹配8db与原manifest，root再独立核真。[合并证明](ticket-05-expired-job-scan/actual-merge-verification.json)保留准确身份。票05已resolved并交付，whole04累计22/41；票06直接前置满足。此时准确push与CI待随后记录，完整1.2广告仍OFF，旧UNKNOWN范围不变。

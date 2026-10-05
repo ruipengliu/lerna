@@ -19,3 +19,8 @@
 [只读资源核查](ticket-05-expired-job-scan/current-resource-audit/actual-summary.json)实际native3584995/start15030462退出0、Wait及组消失。142原schema、14登记backend、52原进程组均无当前残留；218准确路径中216不存在。观察连接588251在事务前登记，原首次Close及rollback均成功。原两个目录3977538271（33:315225）与4116685529（33:326495）仍匹配原inode且永久保留UNKNOWN；不存在不等于历史Close成功。没有清理、DROP或补写旧Close。
 
 原15份源码、快照与8db commit blobs逐一匹配。新准确整合SHA、push及CI结果需随后记录；旧904 CI不替代本次交付。票06只依赖本票实际交付，不增加整片CI隐藏依赖。whole04仍15/41，直到票据交付状态同步。
+
+
+## 实际整合交付
+
+2026-10-05，正常merge `361c353b1abec601120bf638ad5de9e912a3aa9f` 已实际完成，parents为root94e9与worker32ca；整树等于worker32ca，15个受测文件逐字节匹配8db与原manifest，root再独立核真。[合并证明](ticket-05-expired-job-scan/actual-merge-verification.json)保留准确身份。票05已resolved并交付，whole04累计22/41；票06直接前置满足。此时准确push与CI待随后记录，完整1.2广告仍OFF，旧UNKNOWN范围不变。

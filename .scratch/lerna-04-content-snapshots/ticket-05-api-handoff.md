@@ -51,3 +51,8 @@ MetadataPolicy固定准确ref、完整Subject、Purpose、Revision及ValidUntil�
 ## 整合交付边界
 
 root已接受本票七AC，worker已同步准确root94e9并更新本票resolved。本地票状态22/41；实际worker回integration的交付merge、准确push／新CI与票06frontier由root随后记录。whole04／完整1.2仍未接受或广告，CI不作为票06直接依赖之外的隐藏阻塞。证据只覆盖本机真实PG/Linux，不声明WAL／备份法证擦除、已披露字节撤回或生产多机保证。
+
+
+## 实际整合交付
+
+2026-10-05，正常merge `361c353b1abec601120bf638ad5de9e912a3aa9f` 已实际完成，parents为root94e9与worker32ca；整树等于worker32ca，15个受测文件逐字节匹配8db与原manifest，root再独立核真。[合并证明](ticket-05-expired-job-scan/actual-merge-verification.json)保留准确身份。票05已resolved并交付，whole04累计22/41；票06直接前置满足。此时准确push与CI待随后记录，完整1.2广告仍OFF，旧UNKNOWN范围不变。
