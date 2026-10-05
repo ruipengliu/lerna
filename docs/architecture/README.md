@@ -72,3 +72,4 @@
 | [端云部署与故障域](topics/deployment.md) | 3 设计 | 草稿 |
 | [安全与威胁模型](topics/security.md) | 3 设计 | 草稿 |
 | [观测与诊断](topics/observability.md) | 3 设计 | 草稿 |
+| [SQLite 本地档存储故障验收](verification/local-durability.md) | 5 验证 | 有条件准入，见平台表 |

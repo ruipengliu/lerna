@@ -3,6 +3,7 @@ package sqlite
 
 import (
 	"context"
+	"crypto/sha256"
 	"database/sql"
 	_ "embed"
 	"errors"
@@ -27,13 +28,15 @@ var migration string
 var admissionMigration string
 
 type Settings struct {
-	SQLiteVersion      string
-	SQLiteSourceID     string
-	JournalMode        string
-	Synchronous        int
-	FullFSync          int
-	DurabilityProfile  string
-	PowerLossQualified bool
+	Platform                 string
+	SQLiteVersion            string
+	SQLiteSourceID           string
+	SQLiteCompileOptionsHash string
+	JournalMode              string
+	Synchronous              int
+	FullFSync                int
+	DurabilityProfile        string
+	PowerLossQualified       bool
 }
 type Store struct {
 	db           *sql.DB
@@ -56,6 +59,9 @@ type querier interface {
 
 // Open 固定一条经过核验的连接，不允许池中新建未配置的写连接。
 func Open(path, user, domain string) (*Store, error) {
+	if err := ensureBarrier(); err != nil {
+		return nil, err
+	}
 	if path == "" || path == ":memory:" || user == "" || domain == "" {
 		return nil, command.Fail("INVALID_INPUT")
 	}
@@ -75,14 +81,16 @@ func Open(path, user, domain string) (*Store, error) {
 		return nil, err
 	}
 	s := &Store{db: db, conn: conn, user: user, domain: domain}
+	s.settings.Platform = observedPlatform(path)
 	if err := s.configure(context.Background()); err != nil {
 		s.Close()
 		return nil, err
 	}
+
 	return s, nil
 }
 func (s *Store) configure(ctx context.Context) error {
-	for _, pragma := range []string{"PRAGMA journal_mode=WAL", "PRAGMA synchronous=FULL", "PRAGMA fullfsync=ON"} {
+	for _, pragma := range []string{"PRAGMA fullfsync=ON", "PRAGMA synchronous=FULL", "PRAGMA journal_mode=WAL"} {
 		if _, err := s.conn.ExecContext(ctx, pragma); err != nil {
 			return err
 		}
@@ -95,6 +103,25 @@ func (s *Store) configure(ctx context.Context) error {
 			return err
 		}
 	}
+	rows, err := s.conn.QueryContext(ctx, "SELECT compile_options FROM pragma_compile_options ORDER BY compile_options")
+	if err != nil {
+		return err
+	}
+	var options []string
+	for rows.Next() {
+		var option string
+		if err := rows.Scan(&option); err != nil {
+			rows.Close()
+			return err
+		}
+		options = append(options, option)
+	}
+	err = rows.Err()
+	rows.Close()
+	if err != nil {
+		return err
+	}
+	s.settings.SQLiteCompileOptionsHash = fmt.Sprintf("%x", sha256.Sum256([]byte(strings.Join(options, "\n"))))
 	parts := strings.Split(s.settings.SQLiteVersion, ".")
 	version := 0
 	for _, p := range parts {
@@ -106,6 +133,10 @@ func (s *Store) configure(ctx context.Context) error {
 	}
 	if version < 3051003 || s.settings.JournalMode != "wal" || s.settings.Synchronous != 2 || (runtime.GOOS == "darwin" && s.settings.FullFSync != 1) {
 		return fmt.Errorf("unsupported SQLite local profile: %+v", s.settings)
+	}
+	s.settings.PowerLossQualified = LocalProfileSupported(s.settings)
+	if !s.settings.PowerLossQualified {
+		return fmt.Errorf("unqualified local durability platform: %+v", s.settings)
 	}
 	if _, err := s.conn.ExecContext(ctx, migration+admissionMigration); err != nil {
 		return err

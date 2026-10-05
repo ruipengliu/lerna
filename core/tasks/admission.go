@@ -77,17 +77,17 @@ func (s *Service) Admit(ctx context.Context, caller *v1.Caller, c *v1.AdmitComma
 		// 准入-1：原决定已由持久工作处理，本处检查当前请求及未消费步骤。
 		q := p.Proposal
 		snap := p.Snapshot
-		if q == nil || snap == nil || p.ProposalConsumed || !proto.Equal(c.ProposalRef, q.Ref) || !proto.Equal(q.RequestRef, snap.RequestRef) || !proto.Equal(q.ContextSnapshotRef, snap.Ref) || now >= snap.ExpiresAtUnixMs || q.PlanningGeneration != t.PlanningGeneration {
+		if q == nil || snap == nil || p.ProposalConsumed || !proto.Equal(c.ProposalRef, q.Ref) || !proto.Equal(q.RequestRef, snap.RequestRef) || !proto.Equal(q.ContextSnapshotRef, snap.Ref) || now >= snap.ExpiresAtUnixMs || q.PlanningGeneration != t.PlanningGeneration || q.PlanningGeneration != snap.PlanningGeneration {
 			return nil, command.Fail("STALE_PROPOSAL")
 		}
 		// 准入-2：M1 只有一个具体步骤，不接纳依赖其他输出的参数。
-		if q.RequirementsVersion != t.RequirementsVersion {
+		if q.RequirementsVersion != t.RequirementsVersion || q.RequirementsVersion != snap.RequirementsVersion {
 			return nil, command.Fail("STALE_REQUIREMENT")
 		}
-		if q.InputVersion != t.InputVersion {
+		if q.InputVersion != t.InputVersion || q.InputVersion != snap.InputVersion {
 			return nil, command.Fail("STALE_INPUT")
 		}
-		if q.ControlGeneration != t.ControlGeneration {
+		if q.ControlGeneration != t.ControlGeneration || q.ControlGeneration != snap.ControlGeneration {
 			return nil, command.Fail("STALE_GENERATION")
 		}
 		step := q.Step

@@ -145,6 +145,10 @@ func TestSafeResendSkipsAdmissionGeneration(t *testing.T) { ... }
 
 这些用例验证进程崩溃恢复，不等于通过掉电或存储故障验证。本地档的掉电资格仍由 ADR 0001 的独立验收决定。
 
+### 5.2 本地档存储故障验收
+
+`go test -tags fault ./conformance/fault -run '^TestStorage' -count=1 -v` 通过生产装配采集 SQLite VFS 轨迹，再按故障前缀重建存储镜像。与杀进程用例不同，它丢弃、重排或部分保留未同步写入；确认判据来自独立父进程收到的回执。方法、固定构建、准入假设和复现方式见[本地档验收](architecture/verification/local-durability.md)。普通构建保留严格 macOS 同步包装器，但不包含轨迹采集、SQL 负对照或故障注入入口。
+
 ## 6 代码风格
 
 - 标识符用英文。公共对象的字段名、状态名和错误码沿用[核心契约](architecture/core/contracts/README.md)，不另起名字；

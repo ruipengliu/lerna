@@ -701,3 +701,35 @@ func TestGenericCloseCannotAbandonSubmittedGoalResponsibility(t *testing.T) {
 		t.Fatalf("responsibility not recoverable: %v %v", q, e)
 	}
 }
+
+// 规则：G4、G6、准入-1、准入-2
+func TestReasonerCannotRebindOldSnapshotToNewRequirements(t *testing.T) {
+	f := newFixture(t, 100, 80, false)
+	snap, e := f.h.Tasks.RequestProposal(f.ctx, f.caller, &v1.RequestProposalCommand{Header: header("request"), TaskId: f.task.Name})
+	if e != nil {
+		t.Fatal(e)
+	}
+	current, e := f.h.Tasks.QueryTask(f.ctx, f.caller, f.task.Name)
+	if e != nil {
+		t.Fatal(e)
+	}
+	r, e := f.h.Tasks.AcceptRequirements(f.ctx, f.caller, &v1.AcceptRequirementsCommand{Header: header("new-requirements"), TaskRef: &v1.Ref{Name: current.TaskId, Revision: current.Revision, SchemaId: "lerna.v1.Task"}, InputVersion: 1, Source: "TRUSTED_TEMPLATE", Conditions: []*v1.Requirement{{ConditionId: "different", DescriptionRef: f.parameters, Necessary: true, VerificationRule: "USER_EVALUATION", RuleVersion: 1}}})
+	accepted(t, r, e)
+	current, e = f.h.Tasks.QueryTask(f.ctx, f.caller, f.task.Name)
+	if e != nil {
+		t.Fatal(e)
+	}
+	p, e := (&scripted.Reasoner{Step: &v1.ActionStep{StepId: "one", ParametersRef: f.parameters, CapabilityRef: f.capability}}).Propose(f.ctx, snap)
+	if e != nil {
+		t.Fatal(e)
+	}
+	p.RequirementsVersion = current.RequirementsVersion
+	p.ControlGeneration = current.ControlGeneration
+	r, e = f.h.Tasks.ReceiveProposal(f.ctx, f.caller, &v1.ReceiveProposalCommand{Header: header("proposal"), Proposal: p})
+	accepted(t, r, e)
+	r, e = f.h.Tasks.Admit(f.ctx, f.caller, &v1.AdmitCommand{Header: header("admit"), TaskId: f.task.Name, ProposalRef: r.ResultRef, GrantRef: f.grant})
+	if e != nil || r.Error.GetCode() != "STALE_REQUIREMENT" {
+		t.Fatalf("reasoner rebound old snapshot: %v %v", r, e)
+	}
+	assertNoAdmission(t, f)
+}

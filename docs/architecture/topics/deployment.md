@@ -452,6 +452,15 @@ M1 的退出证据：回执丢失、进程重启、取消与执行竞争、迟�
 
 分阶段执行：M1 覆盖主线持久化点和动作故障；M2 加入治理和结算；M3 验证端云和手机；M4 验证替换与扩展；M6 验证容量、用户隔离和故障域。
 
+## 11 本地档平台准入表
+
+| 组合 | 数据库与屏障 | 进程崩溃与重启 | 掉电等价模型 | 原生文件协议与物理断电 |
+| --- | --- | --- | --- | --- |
+| macOS 27.0.1 (26A434)，Darwin 27.0.0，arm64，本地 APFS 可写卷；2026-10-05 | go-sqlite3 v1.14.52 / SQLite 3.53.4；精确 source ID 和编译选项摘要见[证据](../verification/local-durability.md#5-固定构建)；WAL、FULL、fullfsync=ON；受信 VFS 拒绝 F_FULLFSYNC 失败后的 fsync 回退 | 命名事务前后真实子进程退出和自动恢复通过 | [VFS 模型](../verification/local-durability.md)的全部 I/O 前缀与五种持久化策略通过；三个降级负对照确定丢失确认；同步错误拒绝确认。仅在模型的目录名称、powersafe-overwrite 和设备履行同步条件下准入数据库本地档 | 文件替换、目录同步尚未准入；物理电源中断未测试；介质永久丢失不覆盖 |
+| 其他 OS、内核、架构、文件系统、SQLite source ID 或编译选项组合 | 未验证 | 不据此推定掉电资格 | 不准入；写连接拒绝关键事实写入 | 不准入 |
+
+`PowerLossQualified` 只表示上述有条件的数据库等价模型资格。每条写连接从实际挂载点、内核和 SQLite 查询结果判定，未知组合在写入域配置、迁移业务表和责任之前拒绝打开；客户端不能自行指定资格。临时目录与 `/Volumes/Data` 的本地 APFS 卷用于复验。文件适配器必须在此表补齐自己的原语和故障证据后才可开放依赖掉电保证的文件操作，不能直接复用数据库资格。
+
 ## 参考资料
 
 - Ongaro、Ousterhout，Raft 扩展版（2014）：https://raft.github.io/raft.pdf ；Lee 等，RIFL（SOSP 2015）：https://web.stanford.edu/~ouster/cgi-bin/papers/rifl.pdf ；Little（1961）：https://pubsonline.informs.org/doi/10.1287/opre.9.3.383
