@@ -1,0 +1,668 @@
+{
+  "kind": "STATIC actual race18 andfinal3 byteexact archival additions; observer pending",
+  "head": "3570180514ce0a6cee4daa27430540003574533d",
+  "file_count": 132,
+  "original100_proposal_sha256": "1d72d27615780c91868a8ccc4f986b7db66c15a9c4141cce512c21a29cacb085",
+  "files": [
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-01-normal-outcome.json",
+      "sha256": "81dbf467c3d360be5e439557bf5b9960d5f8f67e2645d8a12ad90ff818baf957",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-01-normal-outcome.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-01-normal-prelaunch.json",
+      "sha256": "20309ffd49985004c0244d17d65f93ab0b4310d92a1b55447f2517f8433a373a",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-01-normal-prelaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-01-normal-source-postlaunch.json",
+      "sha256": "038130a26b9c1174090ad52047e61715e91432b927e88296cb36bfbcaf170d80",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-01-normal-source-postlaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-01-normal-source-prelaunch.json",
+      "sha256": "eb0be2dddacfa8e15a86bc11808c0e8167c41b818e902f39ae568846bbc27e4d",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-01-normal-source-prelaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-01-normal.log",
+      "sha256": "a6931fb20ea1781e2f7072f5a51082b98af9b54fec947aa9ebab11dbb3ad8dee",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-01-normal.log"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-02-race-outcome.json",
+      "sha256": "67bbac97f48f276d04d75f8139775f181b31bc679c3c5d1cc69dcca2c3547e0e",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-02-race-outcome.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-02-race-prelaunch.json",
+      "sha256": "273d3d3ccc53692db7783ab7b918f2d296669955bb028cdb8acb25579bc8f959",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-02-race-prelaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-02-race-source-postlaunch.json",
+      "sha256": "90b21fc9be6cffa4b3874b8fcf7c7880849c35e78b9ae72a48618472e56ca63b",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-02-race-source-postlaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-02-race-source-prelaunch.json",
+      "sha256": "591a36474b50308185658ac7bec6e05f7c9bd504aea40a1d8e7adadabaa9e6dd",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-02-race-source-prelaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-02-race.log",
+      "sha256": "02e39815425186a822e349f728e9cb237533a777efe410ca68d7bca44f607448",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-02-race.log"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-03-normal-outcome.json",
+      "sha256": "4ff9de3563a7c8c3cd1848521c29e76c21d5ab6b8156ad148f20a4ffa5552272",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-03-normal-outcome.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-03-normal-prelaunch.json",
+      "sha256": "5ba971f30f6990b095a20b1767ac8b9317cc7556964564e51bf730a34dc62cdd",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-03-normal-prelaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-03-normal-source-postlaunch.json",
+      "sha256": "e9e0f9089e321a88d7ad17ebc07bed4ce72af8b35e585131044cca397a6f05b2",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-03-normal-source-postlaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-03-normal-source-prelaunch.json",
+      "sha256": "ad02e0c5cb8c36fa485c10a3be44cc14b002be3997dd93e2b7adf37cbc6d3b1e",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-03-normal-source-prelaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-03-normal.log",
+      "sha256": "5d67721b08b39a85a7aae5eabc07febe662e72d8940160389dd78c26384651ff",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-03-normal.log"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-04-race-outcome.json",
+      "sha256": "67f7f6188f1d54f3f4663efe707499df43d7fb0e5293a6c54b399f446b7fc262",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-04-race-outcome.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-04-race-prelaunch.json",
+      "sha256": "0d40890596b9ecddd03911fb89d3a4e010efb27b8ab8c32d7993fa19d34ff116",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-04-race-prelaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-04-race-source-postlaunch.json",
+      "sha256": "3f07cc034d3b3c1219fb9f5d19041271d1c26d62c3f9989d2790cf98ef1d071e",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-04-race-source-postlaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-04-race-source-prelaunch.json",
+      "sha256": "9c327b196a26422681baaa1bd4e63dc36c7f4688e32e55e855af937bd3d9803e",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-04-race-source-prelaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-04-race.log",
+      "sha256": "c69f4b404f5a214ac409fea5adcda87f6d29f456bc6cbca80c5f43769d204040",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-04-race.log"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-05-normal-outcome.json",
+      "sha256": "d9aca68e5257c72aa9676d8ec7e7bc06aeceeea4510984d4fdf20e344d51752a",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-05-normal-outcome.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-05-normal-prelaunch.json",
+      "sha256": "a6049b260c77abb31f1e9f3d89607c77f7b900ed43aa2e6d5cdb94ab975129f4",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-05-normal-prelaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-05-normal-source-postlaunch.json",
+      "sha256": "18bf56ec5b4ab52de168f3810191e086875e8ed7f5241a4ce4f9bc4a97847412",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-05-normal-source-postlaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-05-normal-source-prelaunch.json",
+      "sha256": "4476b99b77895b89d011c646c429b922205b22f6c9e53ecf0fae59963b82792e",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-05-normal-source-prelaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-05-normal.log",
+      "sha256": "be91a37205e8ac0f941648c35c0ec5ae4e1f2bffb722499d53c872e588860b1e",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-05-normal.log"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-06-race-outcome.json",
+      "sha256": "5d591cf1d6ecfea530159452bef93fa2bfa55435094a55be4253820559d96686",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-06-race-outcome.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-06-race-prelaunch.json",
+      "sha256": "c48791b9a4a0201ddb7a4f19bfcf19143f0c017eafaf9a7097a321ce5bd0e136",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-06-race-prelaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-06-race-source-postlaunch.json",
+      "sha256": "0273e928f0c5cf9bce43731a22d5f95c45c13e8d16071181401cab57cee526d5",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-06-race-source-postlaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-06-race-source-prelaunch.json",
+      "sha256": "2b33277c2a673dd48545f6d8ab53a3214cd3b39542168ef9c17c63c11f923896",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-06-race-source-prelaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-06-race.log",
+      "sha256": "f1e44820c323ae5c518a51ec680bf0809e6ae9dac7e8d532fe83ad83d74b37fa",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-06-race.log"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-07-normal-outcome.json",
+      "sha256": "f20a3aaaa42447272ff0cd377e5d16e15227aae3b9584e56d179211f489fa6a5",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-07-normal-outcome.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-07-normal-prelaunch.json",
+      "sha256": "69768a0f52e1ddedda05977c6338e7d057775039e0daee8db89860c66527520b",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-07-normal-prelaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-07-normal-source-postlaunch.json",
+      "sha256": "5e419e7fbf2cf26959253ef32fa3816e1a748105662c11752f18e4cc811bcaca",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-07-normal-source-postlaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-07-normal-source-prelaunch.json",
+      "sha256": "a69bdfc4ebc1d296bc352aa54cd5e445d732a8f8f3d27c8b0d9c973d76337681",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-07-normal-source-prelaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-07-normal.log",
+      "sha256": "8c4c9a7a5c003fc0b3aff6f9a81ba34eced0c9e70d69c939f556cf1ec3533ce9",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-07-normal.log"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-08-race-outcome.json",
+      "sha256": "7963042b34e45a131843e9c7678c71578b10f078d15d03d99572d2b0e5a8a2ad",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-08-race-outcome.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-08-race-prelaunch.json",
+      "sha256": "5be6cb354ae8f8fd7a7fc643a813099fe3e4d063a3fe718026aa7bd99535d6f0",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-08-race-prelaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-08-race-source-postlaunch.json",
+      "sha256": "3e5d2a819d060aea344e4e4b3d68d333a97e8ee0f0e7c656248d804f14852e1c",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-08-race-source-postlaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-08-race-source-prelaunch.json",
+      "sha256": "e5a8a7412ca2bd5dd210d7ad7b5d4f647d4e643f63a93635bd6a5839e425b128",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-08-race-source-prelaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-08-race.log",
+      "sha256": "8e088098875226553b4cf398e2df3e86ecaab602d04444c4089539d0897d27f8",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-08-race.log"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-09-normal-outcome.json",
+      "sha256": "fca18e48912e9ba0facce07c32f188c62d01ac652a0343a80fb76096ea9f4095",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-09-normal-outcome.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-09-normal-prelaunch.json",
+      "sha256": "c21bb33cc368c490210bc95a987611d49bb011162cd22834648889b8b299d1b9",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-09-normal-prelaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-09-normal-source-postlaunch.json",
+      "sha256": "509bb84db3f5f3a7830b5c2d0bb291f6109a4fd72a8c830908da492fcdd7f89c",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-09-normal-source-postlaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-09-normal-source-prelaunch.json",
+      "sha256": "c55f609a98fdb9e98535d5a4558af9db45525880b3c480d49d47b28e0e2597c4",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-09-normal-source-prelaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-09-normal.log",
+      "sha256": "2327f3e419e241afc50d0343648822d6b483cf3e395aae162ca88ac076493ceb",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-09-normal.log"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-10-race-outcome.json",
+      "sha256": "5e0bc004e377f885254d21b6aba14184b0d749f15e1a8c1127ccdd49bac3ba7b",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-10-race-outcome.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-10-race-prelaunch.json",
+      "sha256": "2c67f7bc3232b22d3f461caf57777cbe091a073dd8e9f6a019d13cd98ede0468",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-10-race-prelaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-10-race-source-postlaunch.json",
+      "sha256": "36a9c0166c4fb059f04ea40f815f0767df4348d1b87d8b665052e62d3d9d16de",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-10-race-source-postlaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-10-race-source-prelaunch.json",
+      "sha256": "4c8c8f5c8c9c1474c9fd93d53f75dc965e28f999ada2a48cfe295a2159ae07ee",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-10-race-source-prelaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-10-race.log",
+      "sha256": "001e71696a1e7082aa3473949fb142f9aeea4ee7eee67eaf54a48353187065fa",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-10-race.log"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-11-normal-outcome.json",
+      "sha256": "0a971caec3c2050aee72f8549612fb4b561374cff8b02e8b5f5a647ba8336720",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-11-normal-outcome.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-11-normal-prelaunch.json",
+      "sha256": "315e5139e64e6183452971d6a6b3b2c493032e334eb023388505d25bf3b05d99",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-11-normal-prelaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-11-normal-source-postlaunch.json",
+      "sha256": "7c839e864b2a61a2a0c71ab68255243facaf2b8a3b57021bef6ca63b96360697",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-11-normal-source-postlaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-11-normal-source-prelaunch.json",
+      "sha256": "a210aee70f9b4c680cd8dd39f48824cc7b6153a6e255677236bca832993d889a",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-11-normal-source-prelaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-11-normal.log",
+      "sha256": "267ab1635397422dc19e410acd6f2c3858353aba535b94594c84e9387e730dd4",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-11-normal.log"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-12-race-outcome.json",
+      "sha256": "ac62385026da686703ea6faaaa629070531339e21eaa2e19f314fbb63ebc6036",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-12-race-outcome.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-12-race-prelaunch.json",
+      "sha256": "acaf242b5429b88bbaeda88b7d3bcce3bdc0536d8619846504a015418eecca1f",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-12-race-prelaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-12-race-source-postlaunch.json",
+      "sha256": "fa1419fc6fc7712ba370911ec3412d69f672ad27daf2909cd60d0fa03f47bc6a",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-12-race-source-postlaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-12-race-source-prelaunch.json",
+      "sha256": "ea09986e80a97b26411af6afa4c74285a6f2df5dd2b2b9b627dd8bcaa88aed66",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-12-race-source-prelaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-12-race.log",
+      "sha256": "1d01e1350039c475273ff3e9c0c0b4f142a243c9295550e968e9a75d1d2752ad",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-12-race.log"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-13-normal-outcome.json",
+      "sha256": "533fe4dafb38d038251b837e47e2bfb6cdc7958736b31013d0e71069e1fe7d52",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-13-normal-outcome.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-13-normal-prelaunch.json",
+      "sha256": "c601561512cb089f745d58555cb0d90aeacb741f45eaf6a479fe103802a2c4aa",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-13-normal-prelaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-13-normal-source-postlaunch.json",
+      "sha256": "b9591547539790a6d85c4cf3daf2646196e48a3afb7093a674ff43154b4e0271",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-13-normal-source-postlaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-13-normal-source-prelaunch.json",
+      "sha256": "9889c543f2afe136a90234140e4241612446b96eaca7f27026cdc4cb36fc8f0c",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-13-normal-source-prelaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-13-normal.log",
+      "sha256": "e7c9fd76f11796c0a94de37edb5cfaa217b5ef01662f92f6c52da31bf2bd030a",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-13-normal.log"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-14-race-outcome.json",
+      "sha256": "ee768a98020e55bc37a2f60cfaa798559099f498d186942cadddbcfd88122960",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-14-race-outcome.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-14-race-prelaunch.json",
+      "sha256": "2842a1215c16f26ab489e21e987adb275dd73981d42ae429b8366e15edd70c4f",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-14-race-prelaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-14-race-source-postlaunch.json",
+      "sha256": "e074883a8bdb6f3bec8869d317b385bca372a7f4b99696a5ecaf83d8efade032",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-14-race-source-postlaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-14-race-source-prelaunch.json",
+      "sha256": "85f0eb855fac176771d3e572cda4fe58a7b2a5eb1495e20178a1dcae1f347327",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-14-race-source-prelaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-14-race.log",
+      "sha256": "1ebfeb29a8cc2a58820378b32015bc27ba031b09e257481abb0f938286b9ca02",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-14-race.log"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-15-normal-outcome.json",
+      "sha256": "3f47049cf5beb5f58c3efe4abf709b9f9b3dfe75eadc1fbdb4b868845cec66bf",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-15-normal-outcome.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-15-normal-prelaunch.json",
+      "sha256": "79522040dd53b09bd0bea625bda08e1359b9fd40273978c02dfe973b91dfca8f",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-15-normal-prelaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-15-normal-source-postlaunch.json",
+      "sha256": "c07c7c95dacbca444578a034f81e38390fedc2d557d1589db5f724a61bbbf276",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-15-normal-source-postlaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-15-normal-source-prelaunch.json",
+      "sha256": "ebfc62d5b7c541294afc95f31d9ad82bafe9f4037937fcc75eb0061e3e62bf03",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-15-normal-source-prelaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-15-normal.log",
+      "sha256": "f679c6f731193400f5538ddbd71a6527811cd9e8abbaef50985db2d9e133d342",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-15-normal.log"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-16-race-outcome.json",
+      "sha256": "94a52edffc138f7507c00c473c266915e2ca1d9a733863571dd3085d3a30cba4",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-16-race-outcome.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-16-race-prelaunch.json",
+      "sha256": "08662849f6ac9b358da3f43287d2197b15de442f64a72df6737a5b0b8f5e2089",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-16-race-prelaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-16-race-source-postlaunch.json",
+      "sha256": "98ad39894610d20b1dec58a1a863e31b22483a69c0f07448a0a26d20b0d9f91b",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-16-race-source-postlaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-16-race-source-prelaunch.json",
+      "sha256": "02f71b9882d8df693ba5066838bbc1d91d9a8de03c3d4e5df96a69787bfeb6cc",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-16-race-source-prelaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-16-race.log",
+      "sha256": "7a6a3bf85e847eb4cdb6842ebfd2fd9f08d1e29a4f98ef56a6fea1b4ae624f8d",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-16-race.log"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-17-normal-outcome.json",
+      "sha256": "404f77c4b5f70f46d4570491dfd94fbc7c9ee96049e9dd7e287731219e786a37",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-17-normal-outcome.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-17-normal-prelaunch.json",
+      "sha256": "00852ed68eb4e41436dfc64aae57cb3b0205b4ff34b822b8a4a9f2faef41a023",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-17-normal-prelaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-17-normal-source-postlaunch.json",
+      "sha256": "787db1b1abe284235c5670c6b429b7332697d6c1d0b2a62bf8fea371c00af4b7",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-17-normal-source-postlaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-17-normal-source-prelaunch.json",
+      "sha256": "99841cddef07bf29591692bc0af2264565b38f690e8b8ca5eec58d250ace3563",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-17-normal-source-prelaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-17-normal.log",
+      "sha256": "cd88794db9a08a359c5dcdb5e8157dc3fde1ab13e4dec0e30c0ac81c17596e89",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-17-normal.log"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-18-race-outcome.json",
+      "sha256": "3173a88cd72914e2c3000778f92f2f2e78d3315fdd4ebaadd069bbfead1830f2",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-18-race-outcome.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-18-race-prelaunch.json",
+      "sha256": "a673035deaaaa2987a64541d957ec9c2f7269ffbd9c77a52202a961d4a3f6149",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-18-race-prelaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-18-race-source-postlaunch.json",
+      "sha256": "6f6e4b97e2a6919ce184315c59ef04dcaa2bad7e0d618fb795f47f6a80e21697",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-18-race-source-postlaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-18-race-source-prelaunch.json",
+      "sha256": "3f3ab16898be21b626262a417cd3d68ec05fc2269cdfe0acce2adef0da51fed0",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-18-race-source-prelaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected-18-race.log",
+      "sha256": "4f90cf8ca25a0988150d8380f947bc836c3d4fd81d82fa2df3be956a227e595e",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected-18-race.log"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/affected18-summary.json",
+      "sha256": "ae9232a54287f0a8de129150d97ec465ba093942e953e2709152d495bc0bcfc5",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/affected18-summary.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-caller-cancellation-race-outcome.json",
+      "sha256": "a78a6bc14057872a4236849984f0493234cf01be90c2da4b9ba13cc5dcb4524c",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-corrected-caller-cancellation-race-outcome.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-caller-cancellation-race-prelaunch.json",
+      "sha256": "76e1fba1a76c99e86b72c2e4f40c9ecaf063726de9f547acc9d73e88268a14cc",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-corrected-caller-cancellation-race-prelaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-caller-cancellation-race-source-prelaunch.json",
+      "sha256": "84cdcacbf83a171c3ba1186600aa26bc8a4fbefe94dacf5d75fbd3a000634df6",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-corrected-caller-cancellation-race-source-prelaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-caller-cancellation-race.log",
+      "sha256": "71cdb57223fe94b13bb714c97ee2b18b1c248b0747b9bd71aef823c51e269068",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-corrected-caller-cancellation-race.log"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-normal-release-race-outcome.json",
+      "sha256": "99a2231d0bc297c5a716fddfe177b640f16eba2d1e92a430dfb317368f5b2150",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-corrected-normal-release-race-outcome.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-normal-release-race-prelaunch.json",
+      "sha256": "3aafbb22d83103d8ee9844f6b39c078f7d803d82a48bac12aaf96772f534b82f",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-corrected-normal-release-race-prelaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-normal-release-race-source-prelaunch.json",
+      "sha256": "87c1e2a15b15feaadbde4e363d4872ea3ec20e45d238b0a00579b77fdad3ab4e",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-corrected-normal-release-race-source-prelaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-normal-release-race.log",
+      "sha256": "d63687bbedb7a40af0080194d202dc3740b9aea7744030320bb7a1dfbb99edd0",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-corrected-normal-release-race.log"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-race-pair-summary.json",
+      "sha256": "b2ed63cee2e3fc400e0de3360be6d7a79ec9115ca02c1a5cfab86cc6632ec7ce",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/pg-blocked-run-corrected-race-pair-summary.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/final-locked-dependencies-outcome.json",
+      "sha256": "67284ee984c71e089cced6eae3f4788b1919efac54cf9ade5b93274dda57f308",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/final-locked-dependencies-outcome.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/final-locked-dependencies-prelaunch.json",
+      "sha256": "8e21bb148211fc619a833259dea75fdbecd0a44845c43afadc507c7da5fc9733",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/final-locked-dependencies-prelaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/final-locked-dependencies-source-postlaunch.json",
+      "sha256": "bed4fd42e638a88aab5bb002901f56cda6e2d6800fbb2ba806575fa188958979",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/final-locked-dependencies-source-postlaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/final-locked-dependencies-source-prelaunch.json",
+      "sha256": "a69251de76016561c2e9fe5b4341036ad23eb044469df246b116ade79a90096b",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/final-locked-dependencies-source-prelaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/final-locked-dependencies.log",
+      "sha256": "aeef693fd28af98400b07004464539c9ab50e7a9a071bc0249c488958b3b1238",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/final-locked-dependencies.log"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/final-make-check-outcome.json",
+      "sha256": "afe40ad5b3c17971f9f9f2ca771adac5cf687d56b6dd107808f2e8d221561299",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/final-make-check-outcome.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/final-make-check-prelaunch.json",
+      "sha256": "5ba5d65267f85cecc0f86f638a7953ed128e377337866f523d83578d9157b8f0",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/final-make-check-prelaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/final-make-check-source-postlaunch.json",
+      "sha256": "2288b1c293a2b044e14d133176a815bb662f464bb5bce1f95fb228aaf374ed7b",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/final-make-check-source-postlaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/final-make-check-source-prelaunch.json",
+      "sha256": "1ee43a47f472499a9e86f272c30e5303e07160e7a8d9c96b4599af85525b6a37",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/final-make-check-source-prelaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/final-make-check.log",
+      "sha256": "904bca6adf82fd5dac4049aa6b28c5abba7eda2dbeb185748b2f987ecc92eb93",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/final-make-check.log"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/final-module-race-outcome.json",
+      "sha256": "29e40d638647d53a59e9124563cb2956a8c66bb745e4ba3bcd4bd2cd89a19662",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/final-module-race-outcome.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/final-module-race-prelaunch.json",
+      "sha256": "594ccd4c34d1ee8baca71960671716c4a835fc5ef0eeba4f4061162aba8bc274",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/final-module-race-prelaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/final-module-race-source-postlaunch.json",
+      "sha256": "a8330101f8edd95d76cd8831dc4d31718b94e0dbe0742aecb085d8478e75cb1a",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/final-module-race-source-postlaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/final-module-race-source-prelaunch.json",
+      "sha256": "69a90b6690f53670ddc1941f8a23ca4e08222eb8e76d5fc6ced756a2dbed3563",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/final-module-race-source-prelaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/final-module-race.log",
+      "sha256": "71e21e3a82fabc21662f3017ec7b9f2bbab0932df0aeaed316bf8b112c14c7ca",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/final-module-race.log"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-execution/final-three-checks-summary.json",
+      "sha256": "b73791fda5ec74dcad4360228aee7334d7e4893d0bfc0775029e55c38b209bc3",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/execution/final-three-checks-summary.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-final-static/audit-after-checks-v2-manifest.json",
+      "sha256": "c888185d7c5032b4060b13964974a9ed4af741636805f9fd241d0d1884c23e38",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/final-static/audit-after-checks-v2-manifest.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-final-static/audit-after-checks-v2-plan.md",
+      "sha256": "9313eb769329a56ce27e31b39daa61bba4da58fbcc6e95c2f8c0dfbd49c1f2df",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/final-static/audit-after-checks-v2-plan.md"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-final-static/audit-after-checks-v2.go",
+      "sha256": "397761e1e07fd9372ddbab8fd474c9b6d137959c6fc59a9878bac1450c64c635",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/final-static/audit-after-checks-v2.go.txt"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-final-static/audit-after-checks-v3-ledger-input.txt",
+      "sha256": "f15ce2060b656d25397d0452ccc9ca7784896635394a72c3f89f2fe1df8b4868",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/final-static/audit-after-checks-v3-ledger-input.txt"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-final-static/audit-after-checks-v3-manifest.json",
+      "sha256": "2d13ed27be8b5eec8c2cc5d89635c6d1ee043d04b079ec6dbad557702cbfb6c3",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/final-static/audit-after-checks-v3-manifest.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-final-static/audit-after-checks-v3-plan.md",
+      "sha256": "76680c063aeb59210e06612607695aacee9cd740a12ff4ed66bbd480aea350c5",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/final-static/audit-after-checks-v3-plan.md"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-final-static/audit-after-checks-v3-prelaunch.json",
+      "sha256": "c264cdf05e9f0d5ac9b62b64cccf76210d985f6ce06c13b1a8f6677f3d059d40",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/final-static/audit-after-checks-v3-prelaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-final-static/audit-after-checks-v3.go",
+      "sha256": "d7f5b779df281fb871bf064e28d591a25bf6cffacf750287369be60fd11c40b1",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/final-static/audit-after-checks-v3.go.txt"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-final-static/audit-prelaunch.json",
+      "sha256": "466428ba1206ca20bf6245050f101c9436ba613579e1fd8fc732612e70accb3c",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/final-static/audit-prelaunch.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-final-static/audit-v1-to-v2-minimal.diff",
+      "sha256": "eb0aef099c4dce91dd51de16f37126b2ff1a46e7aeb3ba9477dd4fdc2dbb2549",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/final-static/audit-v1-to-v2-minimal.diff"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-final-static/audit-v2-to-v3-minimal.diff",
+      "sha256": "b6ec243fc11e074617b3f75f80081998905a05013697108ca2bb243152bc708c",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/final-static/audit-v2-to-v3-minimal.diff"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-final-static/audit.go",
+      "sha256": "1b033200e44fa7c2e93deb1e3b48fdf7f4772e64fb38b26ebe53a6f05f1c9c4f",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/final-static/audit.go.txt"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-final-static/checks-dependency-precondition.json",
+      "sha256": "d415e242e7f55403d702a4ae92083fe339c1c3ced33840819fae5a3c9a59308e",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/final-static/checks-dependency-precondition.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-final-static/checks-manifest.json",
+      "sha256": "84508f8879815cf8d871cdc03eebc61e81cf4252e6587eb3b8c88c20477153f1",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/final-static/checks-manifest.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-final-static/execution-manifest.json",
+      "sha256": "ef392105836f4e7d43d9659adb16a185f8aeaa9bc4d11698dd8c2aa9c3b8515b",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/final-static/execution-manifest.json"
+    },
+    {
+      "original": "/tmp/lerna-current-ci-cancellation-final-static/plan.md",
+      "sha256": "67f41c80c4f7e6ecc515380c55216de2a0971ef467998c44d1f4db3777dfda88",
+      "destination": ".scratch/lerna-implementation/current-ci-cancellation-evidence/final-static/plan.md"
+    }
+  ]
+}

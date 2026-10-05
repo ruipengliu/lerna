@@ -1,0 +1,14 @@
+{
+  "event": "native_start_ack",
+  "operation": "final-make-check",
+  "pid": 3836964,
+  "pgid": 3836964,
+  "starttime": "16097756",
+  "root": "/tmp/lerna-current-ci-cancellation-execution",
+  "argv": [
+    "bash",
+    "-c",
+    "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; make check 'GOFLAGS=-mod=readonly -p=1'"
+  ],
+  "deadline_seconds": 120
+}

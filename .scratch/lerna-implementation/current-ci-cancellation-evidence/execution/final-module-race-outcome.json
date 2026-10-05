@@ -1,0 +1,11 @@
+{
+  "event": "native_completion_ack",
+  "operation": "final-module-race",
+  "pid": 3843228,
+  "pgid": 3843228,
+  "starttime": "16105615",
+  "exit": 0,
+  "group_absent": true,
+  "timed_out": false,
+  "owned_raw_fsync_close_ack": true
+}

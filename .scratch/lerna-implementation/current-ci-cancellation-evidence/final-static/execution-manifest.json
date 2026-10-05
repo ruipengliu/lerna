@@ -1,0 +1,46 @@
+{
+  "kind": "STATIC final commands and observer, not run",
+  "head": "3570180514ce0a6cee4daa27430540003574533d",
+  "strict_runner_sha256": "90a808a0e3cf3a3a62441818dd0f87392a763b5ebdeef9ec2d5f2b5abc3e8d6d",
+  "commands": [
+    {
+      "operation": "final-make-check",
+      "argv": [
+        "python3",
+        "/tmp/lerna-current-ci-cancellation-execution/run-native.py",
+        "final-make-check",
+        "bash",
+        "-c",
+        "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; make check 'GOFLAGS=-mod=readonly -p=1'"
+      ]
+    },
+    {
+      "operation": "final-module-race",
+      "argv": [
+        "python3",
+        "/tmp/lerna-current-ci-cancellation-execution/run-native.py",
+        "final-module-race",
+        "bash",
+        "-c",
+        "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; go test -race -v -mod=readonly -p=1 -count=1 -timeout=120s ./..."
+      ]
+    },
+    {
+      "operation": "final-owned-readonly-audit",
+      "argv": [
+        "python3",
+        "/tmp/lerna-current-ci-cancellation-execution/run-native.py",
+        "final-owned-readonly-audit",
+        "bash",
+        "-c",
+        "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; go run -mod=readonly -p=1 /tmp/lerna-current-ci-cancellation-final-static/audit.go"
+      ],
+      "not_authorized": true
+    }
+  ],
+  "files": {
+    "checks-manifest.json": "84508f8879815cf8d871cdc03eebc61e81cf4252e6587eb3b8c88c20477153f1",
+    "audit-prelaunch.json": "466428ba1206ca20bf6245050f101c9436ba613579e1fd8fc732612e70accb3c",
+    "audit.go": "1b033200e44fa7c2e93deb1e3b48fdf7f4772e64fb38b26ebe53a6f05f1c9c4f"
+  }
+}

@@ -1,0 +1,224 @@
+{
+  "kind": "actual corrected PG pair race completed STOP RELEASE",
+  "fixed_head": "3570180514ce0a6cee4daa27430540003574533d",
+  "manifest": "/tmp/lerna-current-ci-cancellation-current357-static/manifest.json",
+  "manifest_sha256": "c099f431db90003d0a79a01e2d90b6adedbb4b04746f32ef3b9ecad1364d967f",
+  "all22_prepostpins_unchanged": true,
+  "clean": true,
+  "operations": [
+    {
+      "operation": "pg-blocked-run-corrected-normal-release-race",
+      "pid": 3790419,
+      "pgid": 3790419,
+      "starttime": "15906325",
+      "exit": 0,
+      "actual_wait_confirmed": true,
+      "current_group_absent": true,
+      "timed_out": false,
+      "raw": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-normal-release-race.log",
+      "raw_sha256": "d63687bbedb7a40af0080194d202dc3740b9aea7744030320bb7a1dfbb99edd0",
+      "outcome": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-normal-release-race-outcome.json",
+      "raw_first_fsync_close_ack": true
+    },
+    {
+      "operation": "pg-blocked-run-corrected-caller-cancellation-race",
+      "pid": 3791769,
+      "pgid": 3791769,
+      "starttime": "15911152",
+      "exit": 0,
+      "actual_wait_confirmed": true,
+      "current_group_absent": true,
+      "timed_out": false,
+      "raw": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-caller-cancellation-race.log",
+      "raw_sha256": "71cdb57223fe94b13bb714c97ee2b18b1c248b0747b9bd71aef823c51e269068",
+      "outcome": "/tmp/lerna-current-ci-cancellation-execution/pg-blocked-run-corrected-caller-cancellation-race-outcome.json",
+      "raw_first_fsync_close_ack": true
+    }
+  ],
+  "registered_resource_intervals": {
+    "pg-blocked-run-corrected-normal-release-race": [
+      {
+        "backend": "postgres",
+        "schema": "lerna_test_e8b52d8aad75c37cd934f131"
+      },
+      {
+        "Event": "run_pg_role_intent",
+        "Schema": "lerna_test_e8b52d8aad75c37cd934f131",
+        "Role": "run",
+        "Application": "lerna_test_e8b52d8aad75c37cd934f131-run"
+      },
+      {
+        "Event": "run_pg_role_intent",
+        "Schema": "lerna_test_e8b52d8aad75c37cd934f131",
+        "Role": "blocker",
+        "Application": "lerna_test_e8b52d8aad75c37cd934f131-blocker"
+      },
+      {
+        "Event": "run_pg_role_intent",
+        "Schema": "lerna_test_e8b52d8aad75c37cd934f131",
+        "Role": "observer",
+        "Application": "lerna_test_e8b52d8aad75c37cd934f131-observer"
+      },
+      {
+        "Event": "run_pg_backend_observed_after_startup_pre_run",
+        "Schema": "lerna_test_e8b52d8aad75c37cd934f131",
+        "Role": "observer",
+        "Backend": {
+          "PID": 623963,
+          "Started": "2026-10-05T09:00:33.734168Z",
+          "Database": "lerna_durable_work_01_20261003",
+          "User": "lerna",
+          "Application": "lerna_test_e8b52d8aad75c37cd934f131-observer",
+          "State": "active"
+        }
+      },
+      {
+        "Event": "run_pg_backend_observed_after_startup_pre_run",
+        "Schema": "lerna_test_e8b52d8aad75c37cd934f131",
+        "Role": "run",
+        "Backend": {
+          "PID": 623959,
+          "Started": "2026-10-05T09:00:33.458877Z",
+          "Database": "lerna_durable_work_01_20261003",
+          "User": "lerna",
+          "Application": "lerna_test_e8b52d8aad75c37cd934f131-run",
+          "State": "idle in transaction"
+        }
+      },
+      {
+        "Event": "run_pg_backend_observed_after_startup_pre_run",
+        "Schema": "lerna_test_e8b52d8aad75c37cd934f131",
+        "Role": "run",
+        "Backend": {
+          "PID": 623964,
+          "Started": "2026-10-05T09:00:33.755693Z",
+          "Database": "lerna_durable_work_01_20261003",
+          "User": "lerna",
+          "Application": "lerna_test_e8b52d8aad75c37cd934f131-run",
+          "State": "idle in transaction"
+        }
+      },
+      {
+        "Event": "run_pg_backend_observed_after_startup_pre_run",
+        "Schema": "lerna_test_e8b52d8aad75c37cd934f131",
+        "Role": "run",
+        "Backend": {
+          "PID": 623965,
+          "Started": "2026-10-05T09:00:33.756078Z",
+          "Database": "lerna_durable_work_01_20261003",
+          "User": "lerna",
+          "Application": "lerna_test_e8b52d8aad75c37cd934f131-run",
+          "State": "idle in transaction"
+        }
+      },
+      {
+        "Event": "run_pg_backend_observed_after_startup_pre_run",
+        "Schema": "lerna_test_e8b52d8aad75c37cd934f131",
+        "Role": "blocker",
+        "Backend": {
+          "PID": 623961,
+          "Started": "2026-10-05T09:00:33.482946Z",
+          "Database": "lerna_durable_work_01_20261003",
+          "User": "lerna",
+          "Application": "lerna_test_e8b52d8aad75c37cd934f131-blocker",
+          "State": "idle"
+        }
+      }
+    ],
+    "pg-blocked-run-corrected-caller-cancellation-race": [
+      {
+        "backend": "postgres",
+        "schema": "lerna_test_24404ad94de9fdad71deb22d"
+      },
+      {
+        "Event": "run_pg_role_intent",
+        "Schema": "lerna_test_24404ad94de9fdad71deb22d",
+        "Role": "run",
+        "Application": "lerna_test_24404ad94de9fdad71deb22d-run"
+      },
+      {
+        "Event": "run_pg_role_intent",
+        "Schema": "lerna_test_24404ad94de9fdad71deb22d",
+        "Role": "blocker",
+        "Application": "lerna_test_24404ad94de9fdad71deb22d-blocker"
+      },
+      {
+        "Event": "run_pg_role_intent",
+        "Schema": "lerna_test_24404ad94de9fdad71deb22d",
+        "Role": "observer",
+        "Application": "lerna_test_24404ad94de9fdad71deb22d-observer"
+      },
+      {
+        "Event": "run_pg_backend_observed_after_startup_pre_run",
+        "Schema": "lerna_test_24404ad94de9fdad71deb22d",
+        "Role": "observer",
+        "Backend": {
+          "PID": 624126,
+          "Started": "2026-10-05T09:01:14.732536Z",
+          "Database": "lerna_durable_work_01_20261003",
+          "User": "lerna",
+          "Application": "lerna_test_24404ad94de9fdad71deb22d-observer",
+          "State": "active"
+        }
+      },
+      {
+        "Event": "run_pg_backend_observed_after_startup_pre_run",
+        "Schema": "lerna_test_24404ad94de9fdad71deb22d",
+        "Role": "run",
+        "Backend": {
+          "PID": 624124,
+          "Started": "2026-10-05T09:01:14.455152Z",
+          "Database": "lerna_durable_work_01_20261003",
+          "User": "lerna",
+          "Application": "lerna_test_24404ad94de9fdad71deb22d-run",
+          "State": "idle in transaction"
+        }
+      },
+      {
+        "Event": "run_pg_backend_observed_after_startup_pre_run",
+        "Schema": "lerna_test_24404ad94de9fdad71deb22d",
+        "Role": "run",
+        "Backend": {
+          "PID": 624127,
+          "Started": "2026-10-05T09:01:14.758379Z",
+          "Database": "lerna_durable_work_01_20261003",
+          "User": "lerna",
+          "Application": "lerna_test_24404ad94de9fdad71deb22d-run",
+          "State": "idle in transaction"
+        }
+      },
+      {
+        "Event": "run_pg_backend_observed_after_startup_pre_run",
+        "Schema": "lerna_test_24404ad94de9fdad71deb22d",
+        "Role": "run",
+        "Backend": {
+          "PID": 624128,
+          "Started": "2026-10-05T09:01:14.758832Z",
+          "Database": "lerna_durable_work_01_20261003",
+          "User": "lerna",
+          "Application": "lerna_test_24404ad94de9fdad71deb22d-run",
+          "State": "idle in transaction"
+        }
+      },
+      {
+        "Event": "run_pg_backend_observed_after_startup_pre_run",
+        "Schema": "lerna_test_24404ad94de9fdad71deb22d",
+        "Role": "blocker",
+        "Backend": {
+          "PID": 624125,
+          "Started": "2026-10-05T09:01:14.472172Z",
+          "Database": "lerna_durable_work_01_20261003",
+          "User": "lerna",
+          "Application": "lerna_test_24404ad94de9fdad71deb22d-blocker",
+          "State": "idle"
+        }
+      }
+    ]
+  },
+  "each_original_SQL_wait_and_complete_public_tail_actualPASS": true,
+  "each_observer_firstClose_raw_confirmed": true,
+  "no_product_source_fmt_or_otherselector_change": true,
+  "original18_affected_makecheck_audit_not_executed": true,
+  "no_native_CI_failed_statement_reproduction_claim": true,
+  "local_released": true
+}

@@ -1,0 +1,14 @@
+{
+  "event": "native_start_ack",
+  "operation": "final-owned-readonly-audit-v3",
+  "pid": 3863590,
+  "pgid": 3863590,
+  "starttime": "16192748",
+  "root": "/tmp/lerna-current-ci-cancellation-execution",
+  "argv": [
+    "bash",
+    "-c",
+    "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; go run -mod=readonly -p=1 /tmp/lerna-current-ci-cancellation-final-static/audit-after-checks-v3.go"
+  ],
+  "deadline_seconds": 120
+}

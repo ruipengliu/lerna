@@ -1,0 +1,509 @@
+{"base": "dadd801cfd11ca038f0496872941097f10ebe507", "branch": "codex/current-ci-cancellation", "device": 33, "event": "owned_root_registered", "inode": 410551, "mode": "0700", "native_launched": false, "no_cleanup_or_old05_touch": true, "owner": "current-ci-cancellation implementer", "root": "/tmp/lerna-current-ci-cancellation-execution"}
+{"argv": ["bash", "-c", "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; gofmt -w host/durablework/pool_run_test.go"], "deadline_seconds": 120, "event": "native_start_ack", "operation": "mechanical-cancellation-format", "pgid": 3642278, "pid": 3642278, "root": "/tmp/lerna-current-ci-cancellation-execution", "starttime": "15277195"}
+{"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "mechanical-cancellation-format", "owned_raw_fsync_close_ack": true, "pgid": 3642278, "pid": 3642278, "starttime": "15277195", "timed_out": false}
+{"argv": ["bash", "-c", "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; go test -v -mod=readonly -p=1 ./host/durablework -run \"^TestPoolRunCallerCancellationRetainsEveryIndependentLaneCause$\" -count=1 -timeout=120s"], "deadline_seconds": 120, "event": "native_start_ack", "operation": "mechanical-cancellation-first-red", "pgid": 3643325, "pid": 3643325, "root": "/tmp/lerna-current-ci-cancellation-execution", "starttime": "15280339"}
+{"event": "native_completion_ack", "exit": 1, "group_absent": true, "operation": "mechanical-cancellation-first-red", "owned_raw_fsync_close_ack": true, "pgid": 3643325, "pid": 3643325, "starttime": "15280339", "timed_out": false}
+{"argv": ["bash", "-c", "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; gofmt -w internal/durableworkdemo/pool_worker.go"], "deadline_seconds": 120, "event": "native_start_ack", "operation": "mechanical-cancellation-product-format", "pgid": 3654162, "pid": 3654162, "root": "/tmp/lerna-current-ci-cancellation-execution", "starttime": "15327003"}
+{"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "mechanical-cancellation-product-format", "owned_raw_fsync_close_ack": true, "pgid": 3654162, "pid": 3654162, "starttime": "15327003", "timed_out": false}
+{"argv": ["bash", "-c", "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; go test -v -mod=readonly -p=1 ./host/durablework -run \"^TestPoolRunCallerCancellationRetainsEveryIndependentLaneCause$\" -count=1 -timeout=120s"], "deadline_seconds": 120, "event": "native_start_ack", "operation": "mechanical-cancellation-fixed-first-normal", "pgid": 3654879, "pid": 3654879, "root": "/tmp/lerna-current-ci-cancellation-execution", "starttime": "15330380"}
+{"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "mechanical-cancellation-fixed-first-normal", "owned_raw_fsync_close_ack": true, "pgid": 3654879, "pid": 3654879, "starttime": "15330380", "timed_out": false}
+{"argv": ["bash", "-c", "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; go test -v -mod=readonly -p=1 -race ./host/durablework -run \"^TestPoolRunCallerCancellationRetainsEveryIndependentLaneCause$\" -count=1 -timeout=120s"], "deadline_seconds": 120, "event": "native_start_ack", "operation": "mechanical-cancellation-fixed-first-race", "pgid": 3655013, "pid": 3655013, "root": "/tmp/lerna-current-ci-cancellation-execution", "starttime": "15330528"}
+{"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "mechanical-cancellation-fixed-first-race", "owned_raw_fsync_close_ack": true, "pgid": 3655013, "pid": 3655013, "starttime": "15330528", "timed_out": false}
+{"argv": ["bash", "-c", "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; gofmt -w host/durablework/pool_run_live_fault_test.go"], "deadline_seconds": 120, "event": "native_start_ack", "operation": "mechanical-live-caller-format", "pgid": 3692719, "pid": 3692719, "root": "/tmp/lerna-current-ci-cancellation-execution", "starttime": "15497914"}
+{"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "mechanical-live-caller-format", "owned_raw_fsync_close_ack": true, "pgid": 3692719, "pid": 3692719, "starttime": "15497914", "timed_out": false}
+{"argv": ["bash", "-c", "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; go test -v -mod=readonly -p=1 ./host/durablework -run \"^TestPoolRunFirstFaultKeepsCallerLiveAndRetainsJoinedDiagnostics$\" -count=1 -timeout=120s"], "deadline_seconds": 120, "event": "native_start_ack", "operation": "mechanical-live-caller-first-normal", "pgid": 3693574, "pid": 3693574, "root": "/tmp/lerna-current-ci-cancellation-execution", "starttime": "15501639"}
+{"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "mechanical-live-caller-first-normal", "owned_raw_fsync_close_ack": true, "pgid": 3693574, "pid": 3693574, "starttime": "15501639", "timed_out": false}
+{"argv": ["bash", "-c", "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; go test -race -v -mod=readonly -p=1 ./host/durablework -run \"^TestPoolRunFirstFaultKeepsCallerLiveAndRetainsJoinedDiagnostics$\" -count=1 -timeout=120s"], "deadline_seconds": 120, "event": "native_start_ack", "operation": "mechanical-live-caller-first-race", "pgid": 3694299, "pid": 3694299, "root": "/tmp/lerna-current-ci-cancellation-execution", "starttime": "15504552"}
+{"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "mechanical-live-caller-first-race", "owned_raw_fsync_close_ack": true, "pgid": 3694299, "pid": 3694299, "starttime": "15504552", "timed_out": false}
+{"all7_postpins_match": true, "all_groups_currently_absent": true, "event": "local_stop_release_ack", "operations": ["mechanical-live-caller-format", "mechanical-live-caller-first-normal", "mechanical-live-caller-first-race"], "qualification": "caller-live normal/race", "source_manifest": "/tmp/lerna-current-ci-cancellation-execution/live-caller-source/manifest.json"}
+{"argv": ["bash", "-c", "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; gofmt -w conformance/recovery/pool_run_blocked_sql_test.go"], "deadline_seconds": 120, "event": "native_start_ack", "operation": "pg-blocked-run-format", "pgid": 3723428, "pid": 3723428, "root": "/tmp/lerna-current-ci-cancellation-execution", "starttime": "15629876"}
+{"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "pg-blocked-run-format", "owned_raw_fsync_close_ack": true, "pgid": 3723428, "pid": 3723428, "starttime": "15629876", "timed_out": false}
+{"argv": ["bash", "-c", "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; go test -v -mod=readonly -p=1 -tags=integration ./conformance/recovery -run \"^TestPGPoolRunBlockedSQLNormalRelease$\" -count=1 -timeout=120s"], "deadline_seconds": 120, "event": "native_start_ack", "operation": "pg-blocked-run-first-normal-release", "pgid": 3724192, "pid": 3724192, "root": "/tmp/lerna-current-ci-cancellation-execution", "starttime": "15633398"}
+postgres lerna_test_40f0bd3bcd6e945eaca0445b
+{"Event":"run_pg_connection_ack","Schema":"lerna_test_40f0bd3bcd6e945eaca0445b","Role":"run","PID":611551}
+{"Event":"run_pg_connection_ack","Schema":"lerna_test_40f0bd3bcd6e945eaca0445b","Role":"blocker","PID":611552}
+{"Event":"run_pg_connection_ack","Schema":"lerna_test_40f0bd3bcd6e945eaca0445b","Role":"observer","PID":611553}
+{"Event":"run_pg_connection_ack","Schema":"lerna_test_40f0bd3bcd6e945eaca0445b","Role":"run","PID":611554}
+{"Event":"run_pg_connection_ack","Schema":"lerna_test_40f0bd3bcd6e945eaca0445b","Role":"run","PID":611555}
+{"Event":"run_pg_connection_ack","Schema":"lerna_test_40f0bd3bcd6e945eaca0445b","Role":"run","PID":611556}
+{"event": "native_completion_ack", "exit": 1, "group_absent": true, "operation": "pg-blocked-run-first-normal-release", "owned_raw_fsync_close_ack": true, "pgid": 3724192, "pid": 3724192, "starttime": "15633398", "timed_out": false}
+{"all22_postpins_match": true, "all_groups_currently_absent": true, "caller_cancel_not_run": true, "event": "local_stop_release_ack", "qualification": "first PG blocked-SQL normal counterpart FAIL"}
+{"argv": ["bash", "-c", "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; gofmt -w conformance/recovery/pool_run_blocked_sql_test.go"], "deadline_seconds": 120, "event": "native_start_ack", "operation": "pg-blocked-run-corrected-format", "pgid": 3763190, "pid": 3763190, "root": "/tmp/lerna-current-ci-cancellation-execution", "starttime": "15804862"}
+{"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "pg-blocked-run-corrected-format", "owned_raw_fsync_close_ack": true, "pgid": 3763190, "pid": 3763190, "starttime": "15804862", "timed_out": false}
+{"argv": ["bash", "-c", "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; go test -v -mod=readonly -p=1 -tags=integration ./conformance/recovery -run \"^TestPGPoolRunBlockedSQLNormalRelease$\" -count=1 -timeout=120s"], "deadline_seconds": 120, "event": "native_start_ack", "operation": "pg-blocked-run-corrected-normal-release", "pgid": 3764961, "pid": 3764961, "root": "/tmp/lerna-current-ci-cancellation-execution", "starttime": "15812793"}
+postgres lerna_test_e1df8c195a3a4dc35d4423b1
+{"Event":"run_pg_role_intent","Schema":"lerna_test_e1df8c195a3a4dc35d4423b1","Role":"run","Application":"lerna_test_e1df8c195a3a4dc35d4423b1-run"}
+{"Event":"run_pg_role_intent","Schema":"lerna_test_e1df8c195a3a4dc35d4423b1","Role":"blocker","Application":"lerna_test_e1df8c195a3a4dc35d4423b1-blocker"}
+{"Event":"run_pg_role_intent","Schema":"lerna_test_e1df8c195a3a4dc35d4423b1","Role":"observer","Application":"lerna_test_e1df8c195a3a4dc35d4423b1-observer"}
+{"Event":"run_pg_backend_observed_after_startup_pre_run","Schema":"lerna_test_e1df8c195a3a4dc35d4423b1","Role":"observer","Backend":{"PID":618532,"Started":"2026-10-05T08:44:53.592452Z","Database":"lerna_durable_work_01_20261003","User":"lerna","Application":"lerna_test_e1df8c195a3a4dc35d4423b1-observer","State":"active"}}
+{"Event":"run_pg_backend_observed_after_startup_pre_run","Schema":"lerna_test_e1df8c195a3a4dc35d4423b1","Role":"run","Backend":{"PID":618530,"Started":"2026-10-05T08:44:53.429344Z","Database":"lerna_durable_work_01_20261003","User":"lerna","Application":"lerna_test_e1df8c195a3a4dc35d4423b1-run","State":"idle in transaction"}}
+{"Event":"run_pg_backend_observed_after_startup_pre_run","Schema":"lerna_test_e1df8c195a3a4dc35d4423b1","Role":"run","Backend":{"PID":618533,"Started":"2026-10-05T08:44:53.602229Z","Database":"lerna_durable_work_01_20261003","User":"lerna","Application":"lerna_test_e1df8c195a3a4dc35d4423b1-run","State":"idle in transaction"}}
+{"Event":"run_pg_backend_observed_after_startup_pre_run","Schema":"lerna_test_e1df8c195a3a4dc35d4423b1","Role":"run","Backend":{"PID":618534,"Started":"2026-10-05T08:44:53.602716Z","Database":"lerna_durable_work_01_20261003","User":"lerna","Application":"lerna_test_e1df8c195a3a4dc35d4423b1-run","State":"idle in transaction"}}
+{"Event":"run_pg_backend_observed_after_startup_pre_run","Schema":"lerna_test_e1df8c195a3a4dc35d4423b1","Role":"blocker","Backend":{"PID":618531,"Started":"2026-10-05T08:44:53.437499Z","Database":"lerna_durable_work_01_20261003","User":"lerna","Application":"lerna_test_e1df8c195a3a4dc35d4423b1-blocker","State":"idle"}}
+{"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "pg-blocked-run-corrected-normal-release", "owned_raw_fsync_close_ack": true, "pgid": 3764961, "pid": 3764961, "starttime": "15812793", "timed_out": false}
+{"argv": ["bash", "-c", "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; go test -v -mod=readonly -p=1 -tags=integration ./conformance/recovery -run \"^TestPGPoolRunBlockedSQLCallerCancellation$\" -count=1 -timeout=120s"], "deadline_seconds": 120, "event": "native_start_ack", "operation": "pg-blocked-run-corrected-caller-cancellation", "pgid": 3765851, "pid": 3765851, "root": "/tmp/lerna-current-ci-cancellation-execution", "starttime": "15816383"}
+postgres lerna_test_4e7f9b2f917bee25413fbcc9
+{"Event":"run_pg_role_intent","Schema":"lerna_test_4e7f9b2f917bee25413fbcc9","Role":"run","Application":"lerna_test_4e7f9b2f917bee25413fbcc9-run"}
+{"Event":"run_pg_role_intent","Schema":"lerna_test_4e7f9b2f917bee25413fbcc9","Role":"blocker","Application":"lerna_test_4e7f9b2f917bee25413fbcc9-blocker"}
+{"Event":"run_pg_role_intent","Schema":"lerna_test_4e7f9b2f917bee25413fbcc9","Role":"observer","Application":"lerna_test_4e7f9b2f917bee25413fbcc9-observer"}
+{"Event":"run_pg_backend_observed_after_startup_pre_run","Schema":"lerna_test_4e7f9b2f917bee25413fbcc9","Role":"observer","Backend":{"PID":618672,"Started":"2026-10-05T08:45:27.314685Z","Database":"lerna_durable_work_01_20261003","User":"lerna","Application":"lerna_test_4e7f9b2f917bee25413fbcc9-observer","State":"active"}}
+{"Event":"run_pg_backend_observed_after_startup_pre_run","Schema":"lerna_test_4e7f9b2f917bee25413fbcc9","Role":"run","Backend":{"PID":618670,"Started":"2026-10-05T08:45:27.132274Z","Database":"lerna_durable_work_01_20261003","User":"lerna","Application":"lerna_test_4e7f9b2f917bee25413fbcc9-run","State":"idle in transaction"}}
+{"Event":"run_pg_backend_observed_after_startup_pre_run","Schema":"lerna_test_4e7f9b2f917bee25413fbcc9","Role":"run","Backend":{"PID":618673,"Started":"2026-10-05T08:45:27.346848Z","Database":"lerna_durable_work_01_20261003","User":"lerna","Application":"lerna_test_4e7f9b2f917bee25413fbcc9-run","State":"idle in transaction"}}
+{"Event":"run_pg_backend_observed_after_startup_pre_run","Schema":"lerna_test_4e7f9b2f917bee25413fbcc9","Role":"run","Backend":{"PID":618674,"Started":"2026-10-05T08:45:27.346328Z","Database":"lerna_durable_work_01_20261003","User":"lerna","Application":"lerna_test_4e7f9b2f917bee25413fbcc9-run","State":"idle in transaction"}}
+{"Event":"run_pg_backend_observed_after_startup_pre_run","Schema":"lerna_test_4e7f9b2f917bee25413fbcc9","Role":"blocker","Backend":{"PID":618671,"Started":"2026-10-05T08:45:27.141703Z","Database":"lerna_durable_work_01_20261003","User":"lerna","Application":"lerna_test_4e7f9b2f917bee25413fbcc9-blocker","State":"idle"}}
+{"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "pg-blocked-run-corrected-caller-cancellation", "owned_raw_fsync_close_ack": true, "pgid": 3765851, "pid": 3765851, "starttime": "15816383", "timed_out": false}
+{"all22_postpins_match": true, "all_groups_currently_absent": true, "event": "local_stop_release_ack", "no_race_or_otherselectors": true, "qualification": "corrected PG actualblockedSQL normalrelease and callercancel normal"}
+{"argv": ["bash", "-c", "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; go test -race -v -mod=readonly -p=1 -tags=integration ./conformance/recovery -run \"^TestPGPoolRunBlockedSQLNormalRelease$\" -count=1 -timeout=120s"], "deadline_seconds": 120, "event": "native_start_ack", "operation": "pg-blocked-run-corrected-normal-release-race", "pgid": 3790419, "pid": 3790419, "root": "/tmp/lerna-current-ci-cancellation-execution", "starttime": "15906325"}
+postgres lerna_test_e8b52d8aad75c37cd934f131
+{"Event":"run_pg_role_intent","Schema":"lerna_test_e8b52d8aad75c37cd934f131","Role":"run","Application":"lerna_test_e8b52d8aad75c37cd934f131-run"}
+{"Event":"run_pg_role_intent","Schema":"lerna_test_e8b52d8aad75c37cd934f131","Role":"blocker","Application":"lerna_test_e8b52d8aad75c37cd934f131-blocker"}
+{"Event":"run_pg_role_intent","Schema":"lerna_test_e8b52d8aad75c37cd934f131","Role":"observer","Application":"lerna_test_e8b52d8aad75c37cd934f131-observer"}
+{"Event":"run_pg_backend_observed_after_startup_pre_run","Schema":"lerna_test_e8b52d8aad75c37cd934f131","Role":"observer","Backend":{"PID":623963,"Started":"2026-10-05T09:00:33.734168Z","Database":"lerna_durable_work_01_20261003","User":"lerna","Application":"lerna_test_e8b52d8aad75c37cd934f131-observer","State":"active"}}
+{"Event":"run_pg_backend_observed_after_startup_pre_run","Schema":"lerna_test_e8b52d8aad75c37cd934f131","Role":"run","Backend":{"PID":623959,"Started":"2026-10-05T09:00:33.458877Z","Database":"lerna_durable_work_01_20261003","User":"lerna","Application":"lerna_test_e8b52d8aad75c37cd934f131-run","State":"idle in transaction"}}
+{"Event":"run_pg_backend_observed_after_startup_pre_run","Schema":"lerna_test_e8b52d8aad75c37cd934f131","Role":"run","Backend":{"PID":623964,"Started":"2026-10-05T09:00:33.755693Z","Database":"lerna_durable_work_01_20261003","User":"lerna","Application":"lerna_test_e8b52d8aad75c37cd934f131-run","State":"idle in transaction"}}
+{"Event":"run_pg_backend_observed_after_startup_pre_run","Schema":"lerna_test_e8b52d8aad75c37cd934f131","Role":"run","Backend":{"PID":623965,"Started":"2026-10-05T09:00:33.756078Z","Database":"lerna_durable_work_01_20261003","User":"lerna","Application":"lerna_test_e8b52d8aad75c37cd934f131-run","State":"idle in transaction"}}
+{"Event":"run_pg_backend_observed_after_startup_pre_run","Schema":"lerna_test_e8b52d8aad75c37cd934f131","Role":"blocker","Backend":{"PID":623961,"Started":"2026-10-05T09:00:33.482946Z","Database":"lerna_durable_work_01_20261003","User":"lerna","Application":"lerna_test_e8b52d8aad75c37cd934f131-blocker","State":"idle"}}
+{"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "pg-blocked-run-corrected-normal-release-race", "owned_raw_fsync_close_ack": true, "pgid": 3790419, "pid": 3790419, "starttime": "15906325", "timed_out": false}
+{"argv": ["bash", "-c", "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; go test -race -v -mod=readonly -p=1 -tags=integration ./conformance/recovery -run \"^TestPGPoolRunBlockedSQLCallerCancellation$\" -count=1 -timeout=120s"], "deadline_seconds": 120, "event": "native_start_ack", "operation": "pg-blocked-run-corrected-caller-cancellation-race", "pgid": 3791769, "pid": 3791769, "root": "/tmp/lerna-current-ci-cancellation-execution", "starttime": "15911152"}
+postgres lerna_test_24404ad94de9fdad71deb22d
+{"Event":"run_pg_role_intent","Schema":"lerna_test_24404ad94de9fdad71deb22d","Role":"run","Application":"lerna_test_24404ad94de9fdad71deb22d-run"}
+{"Event":"run_pg_role_intent","Schema":"lerna_test_24404ad94de9fdad71deb22d","Role":"blocker","Application":"lerna_test_24404ad94de9fdad71deb22d-blocker"}
+{"Event":"run_pg_role_intent","Schema":"lerna_test_24404ad94de9fdad71deb22d","Role":"observer","Application":"lerna_test_24404ad94de9fdad71deb22d-observer"}
+{"Event":"run_pg_backend_observed_after_startup_pre_run","Schema":"lerna_test_24404ad94de9fdad71deb22d","Role":"observer","Backend":{"PID":624126,"Started":"2026-10-05T09:01:14.732536Z","Database":"lerna_durable_work_01_20261003","User":"lerna","Application":"lerna_test_24404ad94de9fdad71deb22d-observer","State":"active"}}
+{"Event":"run_pg_backend_observed_after_startup_pre_run","Schema":"lerna_test_24404ad94de9fdad71deb22d","Role":"run","Backend":{"PID":624124,"Started":"2026-10-05T09:01:14.455152Z","Database":"lerna_durable_work_01_20261003","User":"lerna","Application":"lerna_test_24404ad94de9fdad71deb22d-run","State":"idle in transaction"}}
+{"Event":"run_pg_backend_observed_after_startup_pre_run","Schema":"lerna_test_24404ad94de9fdad71deb22d","Role":"run","Backend":{"PID":624127,"Started":"2026-10-05T09:01:14.758379Z","Database":"lerna_durable_work_01_20261003","User":"lerna","Application":"lerna_test_24404ad94de9fdad71deb22d-run","State":"idle in transaction"}}
+{"Event":"run_pg_backend_observed_after_startup_pre_run","Schema":"lerna_test_24404ad94de9fdad71deb22d","Role":"run","Backend":{"PID":624128,"Started":"2026-10-05T09:01:14.758832Z","Database":"lerna_durable_work_01_20261003","User":"lerna","Application":"lerna_test_24404ad94de9fdad71deb22d-run","State":"idle in transaction"}}
+{"Event":"run_pg_backend_observed_after_startup_pre_run","Schema":"lerna_test_24404ad94de9fdad71deb22d","Role":"blocker","Backend":{"PID":624125,"Started":"2026-10-05T09:01:14.472172Z","Database":"lerna_durable_work_01_20261003","User":"lerna","Application":"lerna_test_24404ad94de9fdad71deb22d-blocker","State":"idle"}}
+{"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "pg-blocked-run-corrected-caller-cancellation-race", "owned_raw_fsync_close_ack": true, "pgid": 3791769, "pid": 3791769, "starttime": "15911152", "timed_out": false}
+{"all22_prepostpins_match": true, "all_groups_currently_absent": true, "event": "local_stop_release_ack", "fixed_head": "3570180514ce0a6cee4daa27430540003574533d", "original18_not_run": true, "qualification": "corrected PG two races PASS"}
+{"argv": ["bash", "-c", "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; go test -v -mod=readonly -p=1 -tags=integration ./conformance/recovery -run '^TestPGPoolRunReservedLaneProgress$' -count=1 -timeout=120s"], "deadline_seconds": 120, "event": "native_start_ack", "operation": "affected-01-normal", "pgid": 3801101, "pid": 3801101, "root": "/tmp/lerna-current-ci-cancellation-execution", "starttime": "15953040"}
+postgres lerna_test_099cd6999c5760ef380adf61
+{"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "affected-01-normal", "owned_raw_fsync_close_ack": true, "pgid": 3801101, "pid": 3801101, "starttime": "15953040", "timed_out": false}
+{"argv": ["bash", "-c", "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; go test -race -v -mod=readonly -p=1 -tags=integration ./conformance/recovery -run '^TestPGPoolRunReservedLaneProgress$' -count=1 -timeout=120s"], "deadline_seconds": 120, "event": "native_start_ack", "operation": "affected-02-race", "pgid": 3801248, "pid": 3801248, "root": "/tmp/lerna-current-ci-cancellation-execution", "starttime": "15953236"}
+postgres lerna_test_5353019215404d2d7bdc57b2
+{"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "affected-02-race", "owned_raw_fsync_close_ack": true, "pgid": 3801248, "pid": 3801248, "starttime": "15953236", "timed_out": false}
+{"argv": ["bash", "-c", "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; go test -v -mod=readonly -p=1 -tags=integration ./conformance/recovery -run '^TestSQLitePoolRunReservedLaneProgress$' -count=1 -timeout=120s"], "deadline_seconds": 120, "event": "native_start_ack", "operation": "affected-03-normal", "pgid": 3801391, "pid": 3801391, "root": "/tmp/lerna-current-ci-cancellation-execution", "starttime": "15953550"}
+sqlite /tmp/lerna-current-ci-cancellation-execution/lerna-owned-fixture-1524014219
+{"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "affected-03-normal", "owned_raw_fsync_close_ack": true, "pgid": 3801391, "pid": 3801391, "starttime": "15953550", "timed_out": false}
+{"argv": ["bash", "-c", "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; go test -race -v -mod=readonly -p=1 -tags=integration ./conformance/recovery -run '^TestSQLitePoolRunReservedLaneProgress$' -count=1 -timeout=120s"], "deadline_seconds": 120, "event": "native_start_ack", "operation": "affected-04-race", "pgid": 3801525, "pid": 3801525, "root": "/tmp/lerna-current-ci-cancellation-execution", "starttime": "15953654"}
+sqlite /tmp/lerna-current-ci-cancellation-execution/lerna-owned-fixture-3965096558
+{"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "affected-04-race", "owned_raw_fsync_close_ack": true, "pgid": 3801525, "pid": 3801525, "starttime": "15953654", "timed_out": false}
+{"argv": ["bash", "-c", "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; go test -v -mod=readonly -p=1 -tags=integration ./conformance/recovery -run '^TestPGPoolRunPreservesRetryWindow$' -count=1 -timeout=120s"], "deadline_seconds": 120, "event": "native_start_ack", "operation": "affected-05-normal", "pgid": 3801662, "pid": 3801662, "root": "/tmp/lerna-current-ci-cancellation-execution", "starttime": "15953900"}
+postgres lerna_test_0de9b572d58cb85d3bb099d2
+{"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "affected-05-normal", "owned_raw_fsync_close_ack": true, "pgid": 3801662, "pid": 3801662, "starttime": "15953900", "timed_out": false}
+{"argv": ["bash", "-c", "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; go test -race -v -mod=readonly -p=1 -tags=integration ./conformance/recovery -run '^TestPGPoolRunPreservesRetryWindow$' -count=1 -timeout=120s"], "deadline_seconds": 120, "event": "native_start_ack", "operation": "affected-06-race", "pgid": 3801756, "pid": 3801756, "root": "/tmp/lerna-current-ci-cancellation-execution", "starttime": "15954029"}
+postgres lerna_test_243de634d02510340140a13a
+{"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "affected-06-race", "owned_raw_fsync_close_ack": true, "pgid": 3801756, "pid": 3801756, "starttime": "15954029", "timed_out": false}
+{"argv": ["bash", "-c", "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; go test -v -mod=readonly -p=1 -tags=integration ./conformance/recovery -run '^TestSQLitePoolRunPreservesRetryWindow$' -count=1 -timeout=120s"], "deadline_seconds": 120, "event": "native_start_ack", "operation": "affected-07-normal", "pgid": 3801955, "pid": 3801955, "root": "/tmp/lerna-current-ci-cancellation-execution", "starttime": "15954321"}
+sqlite /tmp/lerna-current-ci-cancellation-execution/lerna-owned-fixture-4009348521
+{"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "affected-07-normal", "owned_raw_fsync_close_ack": true, "pgid": 3801955, "pid": 3801955, "starttime": "15954321", "timed_out": false}
+{"argv": ["bash", "-c", "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; go test -race -v -mod=readonly -p=1 -tags=integration ./conformance/recovery -run '^TestSQLitePoolRunPreservesRetryWindow$' -count=1 -timeout=120s"], "deadline_seconds": 120, "event": "native_start_ack", "operation": "affected-08-race", "pgid": 3802044, "pid": 3802044, "root": "/tmp/lerna-current-ci-cancellation-execution", "starttime": "15954427"}
+sqlite /tmp/lerna-current-ci-cancellation-execution/lerna-owned-fixture-3224292
+{"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "affected-08-race", "owned_raw_fsync_close_ack": true, "pgid": 3802044, "pid": 3802044, "starttime": "15954427", "timed_out": false}
+{"argv": ["bash", "-c", "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; go test -v -mod=readonly -p=1 -tags=integration ./conformance/recovery -run '^TestPGPoolRunCurrentRevisionDeadlineAndZeroQuota$' -count=1 -timeout=120s"], "deadline_seconds": 120, "event": "native_start_ack", "operation": "affected-09-normal", "pgid": 3802179, "pid": 3802179, "root": "/tmp/lerna-current-ci-cancellation-execution", "starttime": "15954672"}
+postgres lerna_test_4bd555f4ff5fbd4a0d720d80
+{"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "affected-09-normal", "owned_raw_fsync_close_ack": true, "pgid": 3802179, "pid": 3802179, "starttime": "15954672", "timed_out": false}
+{"argv": ["bash", "-c", "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; go test -race -v -mod=readonly -p=1 -tags=integration ./conformance/recovery -run '^TestPGPoolRunCurrentRevisionDeadlineAndZeroQuota$' -count=1 -timeout=120s"], "deadline_seconds": 120, "event": "native_start_ack", "operation": "affected-10-race", "pgid": 3802318, "pid": 3802318, "root": "/tmp/lerna-current-ci-cancellation-execution", "starttime": "15954805"}
+postgres lerna_test_135a1a3737781ad5182a2bff
+{"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "affected-10-race", "owned_raw_fsync_close_ack": true, "pgid": 3802318, "pid": 3802318, "starttime": "15954805", "timed_out": false}
+{"argv": ["bash", "-c", "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; go test -v -mod=readonly -p=1 -tags=integration ./conformance/recovery -run '^TestSQLitePoolRunCurrentRevisionDeadlineAndZeroQuota$' -count=1 -timeout=120s"], "deadline_seconds": 120, "event": "native_start_ack", "operation": "affected-11-normal", "pgid": 3802459, "pid": 3802459, "root": "/tmp/lerna-current-ci-cancellation-execution", "starttime": "15955097"}
+sqlite /tmp/lerna-current-ci-cancellation-execution/lerna-owned-fixture-269804852
+{"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "affected-11-normal", "owned_raw_fsync_close_ack": true, "pgid": 3802459, "pid": 3802459, "starttime": "15955097", "timed_out": false}
+{"argv": ["bash", "-c", "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; go test -race -v -mod=readonly -p=1 -tags=integration ./conformance/recovery -run '^TestSQLitePoolRunCurrentRevisionDeadlineAndZeroQuota$' -count=1 -timeout=120s"], "deadline_seconds": 120, "event": "native_start_ack", "operation": "affected-12-race", "pgid": 3802596, "pid": 3802596, "root": "/tmp/lerna-current-ci-cancellation-execution", "starttime": "15955216"}
+sqlite /tmp/lerna-current-ci-cancellation-execution/lerna-owned-fixture-809850383
+{"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "affected-12-race", "owned_raw_fsync_close_ack": true, "pgid": 3802596, "pid": 3802596, "starttime": "15955216", "timed_out": false}
+{"argv": ["bash", "-c", "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; go test -v -mod=readonly -p=1 -tags=integration ./conformance/recovery -run '^TestPGPoolWakeKeepsEarlierClaimedDeadline$' -count=1 -timeout=120s"], "deadline_seconds": 120, "event": "native_start_ack", "operation": "affected-13-normal", "pgid": 3802734, "pid": 3802734, "root": "/tmp/lerna-current-ci-cancellation-execution", "starttime": "15955451"}
+postgres lerna_test_667d377a7db5d15d21902a97
+{"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "affected-13-normal", "owned_raw_fsync_close_ack": true, "pgid": 3802734, "pid": 3802734, "starttime": "15955451", "timed_out": false}
+{"argv": ["bash", "-c", "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; go test -race -v -mod=readonly -p=1 -tags=integration ./conformance/recovery -run '^TestPGPoolWakeKeepsEarlierClaimedDeadline$' -count=1 -timeout=120s"], "deadline_seconds": 120, "event": "native_start_ack", "operation": "affected-14-race", "pgid": 3802846, "pid": 3802846, "root": "/tmp/lerna-current-ci-cancellation-execution", "starttime": "15955570"}
+postgres lerna_test_0486abb533520d26ea8837fb
+{"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "affected-14-race", "owned_raw_fsync_close_ack": true, "pgid": 3802846, "pid": 3802846, "starttime": "15955570", "timed_out": false}
+{"argv": ["bash", "-c", "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; go test -v -mod=readonly -p=1 -tags=integration ./conformance/recovery -run '^TestSQLitePoolWakeKeepsEarlierClaimedDeadline$' -count=1 -timeout=120s"], "deadline_seconds": 120, "event": "native_start_ack", "operation": "affected-15-normal", "pgid": 3803009, "pid": 3803009, "root": "/tmp/lerna-current-ci-cancellation-execution", "starttime": "15955823"}
+sqlite /tmp/lerna-current-ci-cancellation-execution/lerna-owned-fixture-2771521701
+{"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "affected-15-normal", "owned_raw_fsync_close_ack": true, "pgid": 3803009, "pid": 3803009, "starttime": "15955823", "timed_out": false}
+{"argv": ["bash", "-c", "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; go test -race -v -mod=readonly -p=1 -tags=integration ./conformance/recovery -run '^TestSQLitePoolWakeKeepsEarlierClaimedDeadline$' -count=1 -timeout=120s"], "deadline_seconds": 120, "event": "native_start_ack", "operation": "affected-16-race", "pgid": 3803101, "pid": 3803101, "root": "/tmp/lerna-current-ci-cancellation-execution", "starttime": "15955956"}
+sqlite /tmp/lerna-current-ci-cancellation-execution/lerna-owned-fixture-1342657948
+{"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "affected-16-race", "owned_raw_fsync_close_ack": true, "pgid": 3803101, "pid": 3803101, "starttime": "15955956", "timed_out": false}
+{"argv": ["bash", "-c", "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; go test -v -mod=readonly -p=1 -tags=integration ./conformance/recovery -run '^TestPGPoolLockedPagePreservesFairHeadAndMaintenanceCursor$' -count=1 -timeout=120s"], "deadline_seconds": 120, "event": "native_start_ack", "operation": "affected-17-normal", "pgid": 3803255, "pid": 3803255, "root": "/tmp/lerna-current-ci-cancellation-execution", "starttime": "15956232"}
+postgres lerna_test_39017e21b39a0efda64f0690
+{"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "affected-17-normal", "owned_raw_fsync_close_ack": true, "pgid": 3803255, "pid": 3803255, "starttime": "15956232", "timed_out": false}
+{"argv": ["bash", "-c", "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; go test -race -v -mod=readonly -p=1 -tags=integration ./conformance/recovery -run '^TestPGPoolLockedPagePreservesFairHeadAndMaintenanceCursor$' -count=1 -timeout=120s"], "deadline_seconds": 120, "event": "native_start_ack", "operation": "affected-18-race", "pgid": 3803423, "pid": 3803423, "root": "/tmp/lerna-current-ci-cancellation-execution", "starttime": "15956538"}
+postgres lerna_test_cd82bf60982f877f19e87f1b
+{"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "affected-18-race", "owned_raw_fsync_close_ack": true, "pgid": 3803423, "pid": 3803423, "starttime": "15956538", "timed_out": false}
+{"actual_operation_count": 18, "all18_actualPASS": true, "all22_pins_unchanged": true, "all_actual_Wait_current_group_absent": true, "event": "local_stop_release_ack", "makecheck_audit_not_executed": true, "operation": "affected18"}
+{"argv": ["bash", "-c", "source /workspace/.lerna-env/env.sh; pnpm exec prettier --write .scratch/lerna-implementation/progress.md .scratch/lerna-04-content-snapshots/ticket-03-current-cost-measurement/README.md .scratch/lerna-04-content-snapshots/current-ci-75f0429/README.md .scratch/lerna-04-content-snapshots/ticket-06-process-recovery/precommit-tracer/README.md .scratch/lerna-04-content-snapshots/ticket-06-process-recovery/postcommit-tracer/README.md .scratch/lerna-04-content-snapshots/ticket-06-process-recovery/policy-orphan-next/README.md .scratch/lerna-implementation/current-ci-repair-decisions/README.md .scratch/lerna-implementation/current-ci-partition-shared-normal/README.md"], "deadline_seconds": 120, "event": "native_start_ack", "operation": "root-recovery-evidence-format-0910", "pgid": 3805801, "pid": 3805801, "root": "/tmp/lerna-current-ci-cancellation-execution", "starttime": "15966815"}
+{"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "root-recovery-evidence-format-0910", "owned_raw_fsync_close_ack": true, "pgid": 3805801, "pid": 3805801, "starttime": "15966815", "timed_out": false}
+{"argv": ["bash", "-c", "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; pnpm install --offline --frozen-lockfile --ignore-scripts"], "deadline_seconds": 120, "event": "native_start_ack", "operation": "final-locked-dependencies", "pgid": 3836902, "pid": 3836902, "root": "/tmp/lerna-current-ci-cancellation-execution", "starttime": "16097720"}
+{"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "final-locked-dependencies", "owned_raw_fsync_close_ack": true, "pgid": 3836902, "pid": 3836902, "starttime": "16097720", "timed_out": false}
+{"argv": ["bash", "-c", "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; make check 'GOFLAGS=-mod=readonly -p=1'"], "deadline_seconds": 120, "event": "native_start_ack", "operation": "final-make-check", "pgid": 3836964, "pid": 3836964, "root": "/tmp/lerna-current-ci-cancellation-execution", "starttime": "16097756"}
+contract /tmp/lerna-current-ci-cancellation-execution/lerna-component-race-tool-fSsN4T 33 444066
+process_group 3837735 3837735 /tmp/lerna-current-ci-cancellation-execution/lerna-component-race-tool-fSsN4T
+objects /tmp/lerna-current-ci-cancellation-execution/lerna-tool-ownership-BVkSdX 33 444068
+contract /tmp/lerna-current-ci-cancellation-execution/lerna-tool-ownership-BVkSdX 33 444068
+process_group 3837748 3837748 /tmp/lerna-current-ci-cancellation-execution/lerna-tool-ownership-BVkSdX
+process_exit 3837748 confirmed=true
+contract_removed /tmp/lerna-current-ci-cancellation-execution/lerna-tool-ownership-BVkSdX
+objects /tmp/lerna-current-ci-cancellation-execution/lerna-tool-ownership-dnzSl1 33 444069
+contract /tmp/lerna-current-ci-cancellation-execution/lerna-tool-ownership-dnzSl1 33 444069
+process_group 3837763 3837763 /tmp/lerna-current-ci-cancellation-execution/lerna-tool-ownership-dnzSl1
+process_exit 3837735 confirmed=true
+contract_removed /tmp/lerna-current-ci-cancellation-execution/lerna-component-race-tool-fSsN4T
+contract /tmp/lerna-current-ci-cancellation-execution/lerna-component-race-tool-nAPbU9 33 444070
+process_group 3837764 3837764 /tmp/lerna-current-ci-cancellation-execution/lerna-component-race-tool-nAPbU9
+process_exit 3837763 confirmed=true
+contract_removed /tmp/lerna-current-ci-cancellation-execution/lerna-tool-ownership-dnzSl1
+objects /tmp/lerna-current-ci-cancellation-execution/lerna-tool-ownership-jQGxxd 33 444072
+contract /tmp/lerna-current-ci-cancellation-execution/lerna-tool-ownership-jQGxxd 33 444072
+process_group 3837778 3837778 /tmp/lerna-current-ci-cancellation-execution/lerna-tool-ownership-jQGxxd
+process_exit 3837778 confirmed=true
+objects /tmp/lerna-current-ci-cancellation-execution/lerna-tool-ownership-PIZ4z1 33 444073
+generator /tmp/lerna-current-ci-cancellation-execution/lerna-tool-ownership-PIZ4z1 33 444073
+process_exit 3837792 confirmed=true
+objects /tmp/lerna-current-ci-cancellation-execution/lerna-tool-ownership-WpcUhi 33 444074
+generator /tmp/lerna-current-ci-cancellation-execution/lerna-tool-ownership-WpcUhi 33 444074
+process_group 3837795 3837795 /tmp/lerna-current-ci-cancellation-execution/lerna-tool-ownership-WpcUhi
+process_exit 3837795 confirmed=true
+objects /tmp/lerna-current-ci-cancellation-execution/lerna-tool-ownership-phQuSD 33 444076
+generator /tmp/lerna-current-ci-cancellation-execution/lerna-tool-ownership-phQuSD 33 444076
+process_group 3837807 3837807 /tmp/lerna-current-ci-cancellation-execution/lerna-tool-ownership-phQuSD
+process_exit 3837807 confirmed=true
+objects /tmp/lerna-current-ci-cancellation-execution/lerna-tool-ownership-HcWmhX 33 444077
+contract /tmp/lerna-current-ci-cancellation-execution/lerna-tool-ownership-HcWmhX 33 444077
+process_group 3837808 3837808 /tmp/lerna-current-ci-cancellation-execution/lerna-tool-ownership-HcWmhX
+process_group 3837824 3837824 /tmp/lerna-current-ci-cancellation-execution/lerna-tool-ownership-HcWmhX
+process_exit 3837808 confirmed=false
+process_exit 3837824 confirmed=true
+objects /tmp/lerna-current-ci-cancellation-execution/lerna-tool-ownership-AVQeog 33 444079
+contract /tmp/lerna-current-ci-cancellation-execution/lerna-tool-ownership-AVQeog 33 444079
+process_group 3837844 3837844 /tmp/lerna-current-ci-cancellation-execution/lerna-tool-ownership-AVQeog
+process_exit 3837764 confirmed=true
+contract_removed /tmp/lerna-current-ci-cancellation-execution/lerna-component-race-tool-nAPbU9
+contract /tmp/lerna-current-ci-cancellation-execution/lerna-component-race-tool-rlj7H1 33 444080
+process_exit 3837844 confirmed=true
+objects /tmp/lerna-current-ci-cancellation-execution/lerna-tool-ownership-D4DkTs 33 444082
+objects /tmp/lerna-current-ci-cancellation-execution/lerna-tool-ownership-LtFPnM 33 444083
+objects /tmp/lerna-current-ci-cancellation-execution/lerna-tool-ownership-THvOpY 33 444084
+process_group 3837859 3837859 /tmp/lerna-current-ci-cancellation-execution/lerna-component-race-tool-rlj7H1
+objects /tmp/lerna-current-ci-cancellation-execution/lerna-tool-ownership-7rvbMt 33 444087
+contract /tmp/lerna-current-ci-cancellation-execution/lerna-tool-ownership-7rvbMt 33 444087
+process_group 3837881 3837881 /tmp/lerna-current-ci-cancellation-execution/lerna-tool-ownership-7rvbMt
+process_exit 3837881 confirmed=true
+process_exit 3837859 confirmed=true
+contract_removed /tmp/lerna-current-ci-cancellation-execution/lerna-component-race-tool-rlj7H1
+contract /tmp/lerna-current-ci-cancellation-execution/lerna-component-race-tool-XtcZfO 33 444089
+process_group 3837897 3837897 /tmp/lerna-current-ci-cancellation-execution/lerna-component-race-tool-XtcZfO
+process_exit 3837897 confirmed=true
+contract_removed /tmp/lerna-current-ci-cancellation-execution/lerna-component-race-tool-XtcZfO
+contract /tmp/lerna-current-ci-cancellation-execution/lerna-component-race-tool-55jGh2 33 444091
+process_group 3837911 3837911 /tmp/lerna-current-ci-cancellation-execution/lerna-component-race-tool-55jGh2
+process_exit 3837911 confirmed=true
+contract_removed /tmp/lerna-current-ci-cancellation-execution/lerna-component-race-tool-55jGh2
+contract /tmp/lerna-current-ci-cancellation-execution/lerna-component-race-tool-kGVaQn 33 444093
+process_group 3837925 3837925 /tmp/lerna-current-ci-cancellation-execution/lerna-component-race-tool-kGVaQn
+process_exit 3837925 confirmed=true
+contract_removed /tmp/lerna-current-ci-cancellation-execution/lerna-component-race-tool-kGVaQn
+contract /tmp/lerna-current-ci-cancellation-execution/lerna-component-race-tool-5vvSzh 33 444097
+process_group 3837941 3837941 /tmp/lerna-current-ci-cancellation-execution/lerna-component-race-tool-5vvSzh
+process_exit 3837941 confirmed=true
+contract_removed /tmp/lerna-current-ci-cancellation-execution/lerna-component-race-tool-5vvSzh
+contract /tmp/lerna-current-ci-cancellation-execution/lerna-component-race-tool-xbRVVm 33 444103
+process_group 3838004 3838004 /tmp/lerna-current-ci-cancellation-execution/lerna-component-race-tool-xbRVVm
+process_exit 3838004 confirmed=true
+contract_removed /tmp/lerna-current-ci-cancellation-execution/lerna-component-race-tool-xbRVVm
+contract /tmp/lerna-current-ci-cancellation-execution/lerna-component-race-tool-40Z8Fi 33 444110
+process_group 3838055 3838055 /tmp/lerna-current-ci-cancellation-execution/lerna-component-race-tool-40Z8Fi
+process_exit 3838055 confirmed=true
+contract_removed /tmp/lerna-current-ci-cancellation-execution/lerna-component-race-tool-40Z8Fi
+generator /tmp/lerna-current-ci-cancellation-execution/lerna-generator-VWa33q 33 444118
+process_group 3838324 3838324 /tmp/lerna-current-ci-cancellation-execution/lerna-generator-VWa33q
+process_exit 3838324 confirmed=true
+generator_removed /tmp/lerna-current-ci-cancellation-execution/lerna-generator-VWa33q
+generator /tmp/lerna-current-ci-cancellation-execution/lerna-generator-zsdsrH 33 444130
+process_group 3838332 3838332 /tmp/lerna-current-ci-cancellation-execution/lerna-generator-zsdsrH
+process_exit 3838332 confirmed=true
+generator_removed /tmp/lerna-current-ci-cancellation-execution/lerna-generator-zsdsrH
+generator /tmp/lerna-current-ci-cancellation-execution/lerna-generator-0LphL9 33 444142
+process_group 3838340 3838340 /tmp/lerna-current-ci-cancellation-execution/lerna-generator-0LphL9
+process_exit 3838340 confirmed=true
+generator_removed /tmp/lerna-current-ci-cancellation-execution/lerna-generator-0LphL9
+generator /tmp/lerna-current-ci-cancellation-execution/lerna-generator-XKMPPg 33 444154
+process_group 3838347 3838347 /tmp/lerna-current-ci-cancellation-execution/lerna-generator-XKMPPg
+process_exit 3838347 confirmed=true
+generator_removed /tmp/lerna-current-ci-cancellation-execution/lerna-generator-XKMPPg
+generator /tmp/lerna-current-ci-cancellation-execution/lerna-generator-D8C41Z 33 444166
+process_group 3838354 3838354 /tmp/lerna-current-ci-cancellation-execution/lerna-generator-D8C41Z
+process_exit 3838354 confirmed=true
+generator_removed /tmp/lerna-current-ci-cancellation-execution/lerna-generator-D8C41Z
+generator /tmp/lerna-current-ci-cancellation-execution/lerna-generator-BqPpoq 33 444178
+process_group 3838361 3838361 /tmp/lerna-current-ci-cancellation-execution/lerna-generator-BqPpoq
+process_exit 3838361 confirmed=true
+generator_removed /tmp/lerna-current-ci-cancellation-execution/lerna-generator-BqPpoq
+generator /tmp/lerna-current-ci-cancellation-execution/lerna-generator-ivTiaP 33 444190
+process_group 3838368 3838368 /tmp/lerna-current-ci-cancellation-execution/lerna-generator-ivTiaP
+process_exit 3838368 confirmed=true
+generator_removed /tmp/lerna-current-ci-cancellation-execution/lerna-generator-ivTiaP
+generator /tmp/lerna-current-ci-cancellation-execution/lerna-generator-UCNKYJ 33 444202
+process_group 3838375 3838375 /tmp/lerna-current-ci-cancellation-execution/lerna-generator-UCNKYJ
+process_exit 3838375 confirmed=true
+generator_removed /tmp/lerna-current-ci-cancellation-execution/lerna-generator-UCNKYJ
+generator /tmp/lerna-current-ci-cancellation-execution/lerna-generator-0cQg8E 33 444214
+process_group 3838382 3838382 /tmp/lerna-current-ci-cancellation-execution/lerna-generator-0cQg8E
+process_exit 3838382 confirmed=true
+generator_removed /tmp/lerna-current-ci-cancellation-execution/lerna-generator-0cQg8E
+generator /tmp/lerna-current-ci-cancellation-execution/lerna-generator-mozX70 33 444226
+process_group 3838389 3838389 /tmp/lerna-current-ci-cancellation-execution/lerna-generator-mozX70
+process_exit 3838389 confirmed=true
+generator_removed /tmp/lerna-current-ci-cancellation-execution/lerna-generator-mozX70
+generator /tmp/lerna-current-ci-cancellation-execution/lerna-generator-GgAX4v 33 444238
+process_group 3838396 3838396 /tmp/lerna-current-ci-cancellation-execution/lerna-generator-GgAX4v
+process_exit 3838396 confirmed=true
+generator_removed /tmp/lerna-current-ci-cancellation-execution/lerna-generator-GgAX4v
+generator /tmp/lerna-current-ci-cancellation-execution/lerna-generator-YqBF5A 33 444250
+process_group 3838403 3838403 /tmp/lerna-current-ci-cancellation-execution/lerna-generator-YqBF5A
+process_exit 3838403 confirmed=true
+generator_removed /tmp/lerna-current-ci-cancellation-execution/lerna-generator-YqBF5A
+generator /tmp/lerna-current-ci-cancellation-execution/lerna-generator-vMplrb 33 444262
+process_group 3838410 3838410 /tmp/lerna-current-ci-cancellation-execution/lerna-generator-vMplrb
+process_exit 3838410 confirmed=true
+generator_removed /tmp/lerna-current-ci-cancellation-execution/lerna-generator-vMplrb
+generator /tmp/lerna-current-ci-cancellation-execution/lerna-schema-change-cnQIqJ 33 444274
+process_group 3838417 3838417 /tmp/lerna-current-ci-cancellation-execution/lerna-schema-change-cnQIqJ
+process_exit 3838417 confirmed=true
+generator_removed /tmp/lerna-current-ci-cancellation-execution/lerna-schema-change-cnQIqJ
+generator /tmp/lerna-current-ci-cancellation-execution/lerna-schema-change-L7GQuB 33 444319
+process_group 3838549 3838549 /tmp/lerna-current-ci-cancellation-execution/lerna-schema-change-L7GQuB
+process_exit 3838549 confirmed=true
+generator_removed /tmp/lerna-current-ci-cancellation-execution/lerna-schema-change-L7GQuB
+generator /tmp/lerna-current-ci-cancellation-execution/lerna-schema-change-t0jdQe 33 444364
+process_group 3838677 3838677 /tmp/lerna-current-ci-cancellation-execution/lerna-schema-change-t0jdQe
+process_exit 3838677 confirmed=true
+generator_removed /tmp/lerna-current-ci-cancellation-execution/lerna-schema-change-t0jdQe
+generator /tmp/lerna-current-ci-cancellation-execution/lerna-schema-change-MWCLyF 33 444408
+process_group 3838780 3838780 /tmp/lerna-current-ci-cancellation-execution/lerna-schema-change-MWCLyF
+process_exit 3838780 confirmed=true
+generator_removed /tmp/lerna-current-ci-cancellation-execution/lerna-schema-change-MWCLyF
+generator /tmp/lerna-current-ci-cancellation-execution/lerna-schema-change-OdJuc9 33 444452
+process_group 3838894 3838894 /tmp/lerna-current-ci-cancellation-execution/lerna-schema-change-OdJuc9
+process_exit 3838894 confirmed=true
+generator_removed /tmp/lerna-current-ci-cancellation-execution/lerna-schema-change-OdJuc9
+generator /tmp/lerna-current-ci-cancellation-execution/lerna-schema-change-7tnKMO 33 444496
+process_group 3839005 3839005 /tmp/lerna-current-ci-cancellation-execution/lerna-schema-change-7tnKMO
+process_exit 3839005 confirmed=true
+generator_removed /tmp/lerna-current-ci-cancellation-execution/lerna-schema-change-7tnKMO
+generator /tmp/lerna-current-ci-cancellation-execution/lerna-schema-change-wBk4qX 33 444540
+process_group 3839115 3839115 /tmp/lerna-current-ci-cancellation-execution/lerna-schema-change-wBk4qX
+process_exit 3839115 confirmed=true
+generator_removed /tmp/lerna-current-ci-cancellation-execution/lerna-schema-change-wBk4qX
+generator /tmp/lerna-current-ci-cancellation-execution/lerna-schema-change-XgVJ9E 33 444585
+process_group 3839244 3839244 /tmp/lerna-current-ci-cancellation-execution/lerna-schema-change-XgVJ9E
+process_exit 3839244 confirmed=true
+generator_removed /tmp/lerna-current-ci-cancellation-execution/lerna-schema-change-XgVJ9E
+generator /tmp/lerna-current-ci-cancellation-execution/lerna-generator-entry-9ts72H 33 444629
+process_group 3839355 3839355 /tmp/lerna-current-ci-cancellation-execution/lerna-generator-entry-9ts72H
+generator /tmp/lerna-current-ci-cancellation-execution/lerna-generator-v1_1-tHd4LF 33 444630
+process_group 3839362 3839362 /tmp/lerna-current-ci-cancellation-execution/lerna-generator-v1_1-tHd4LF
+process_exit 3839362 confirmed=true
+generator_removed /tmp/lerna-current-ci-cancellation-execution/lerna-generator-v1_1-tHd4LF
+generator /tmp/lerna-current-ci-cancellation-execution/lerna-generator-v1_1-RRuCge 33 444675
+process_group 3839467 3839467 /tmp/lerna-current-ci-cancellation-execution/lerna-generator-v1_1-RRuCge
+process_exit 3839467 confirmed=true
+generator_removed /tmp/lerna-current-ci-cancellation-execution/lerna-generator-v1_1-RRuCge
+generator /tmp/lerna-current-ci-cancellation-execution/lerna-generator-v1_1-Nd4nU3 33 444702
+process_group 3839519 3839519 /tmp/lerna-current-ci-cancellation-execution/lerna-generator-v1_1-Nd4nU3
+process_exit 3839519 confirmed=true
+generator_removed /tmp/lerna-current-ci-cancellation-execution/lerna-generator-v1_1-Nd4nU3
+generator /tmp/lerna-current-ci-cancellation-execution/lerna-generator-v1_1-VHCNWi 33 444728
+process_group 3839559 3839559 /tmp/lerna-current-ci-cancellation-execution/lerna-generator-v1_1-VHCNWi
+process_exit 3839559 confirmed=true
+generator_removed /tmp/lerna-current-ci-cancellation-execution/lerna-generator-v1_1-VHCNWi
+generator /tmp/lerna-current-ci-cancellation-execution/lerna-generator-v1_1-2i2Ab7 33 444755
+process_group 3839614 3839614 /tmp/lerna-current-ci-cancellation-execution/lerna-generator-v1_1-2i2Ab7
+process_exit 3839614 confirmed=true
+generator_removed /tmp/lerna-current-ci-cancellation-execution/lerna-generator-v1_1-2i2Ab7
+generator /tmp/lerna-current-ci-cancellation-execution/lerna-generator-v1_1-rFvMcQ 33 444781
+process_group 3839646 3839646 /tmp/lerna-current-ci-cancellation-execution/lerna-generator-v1_1-rFvMcQ
+process_exit 3839646 confirmed=true
+generator_removed /tmp/lerna-current-ci-cancellation-execution/lerna-generator-v1_1-rFvMcQ
+generator /tmp/lerna-current-ci-cancellation-execution/lerna-generator-v1_1-7RxRjm 33 444807
+process_group 3839679 3839679 /tmp/lerna-current-ci-cancellation-execution/lerna-generator-v1_1-7RxRjm
+process_exit 3839679 confirmed=true
+generator_removed /tmp/lerna-current-ci-cancellation-execution/lerna-generator-v1_1-7RxRjm
+generator /tmp/lerna-current-ci-cancellation-execution/lerna-generator-v1_1-S1boOi 33 444833
+process_group 3839712 3839712 /tmp/lerna-current-ci-cancellation-execution/lerna-generator-v1_1-S1boOi
+process_exit 3839712 confirmed=true
+generator_removed /tmp/lerna-current-ci-cancellation-execution/lerna-generator-v1_1-S1boOi
+generator /tmp/lerna-current-ci-cancellation-execution/lerna-generator-v1_1-CCxoEC 33 444879
+process_group 3839852 3839852 /tmp/lerna-current-ci-cancellation-execution/lerna-generator-v1_1-CCxoEC
+process_exit 3839852 confirmed=true
+generator_removed /tmp/lerna-current-ci-cancellation-execution/lerna-generator-v1_1-CCxoEC
+generator /tmp/lerna-current-ci-cancellation-execution/lerna-generator-v1_1-WgaM8L 33 444924
+process_group 3839963 3839963 /tmp/lerna-current-ci-cancellation-execution/lerna-generator-v1_1-WgaM8L
+process_exit 3839963 confirmed=true
+generator_removed /tmp/lerna-current-ci-cancellation-execution/lerna-generator-v1_1-WgaM8L
+generator /tmp/lerna-current-ci-cancellation-execution/lerna-generator-v1_1-FrfEYu 33 444969
+process_group 3840069 3840069 /tmp/lerna-current-ci-cancellation-execution/lerna-generator-v1_1-FrfEYu
+process_exit 3840069 confirmed=true
+generator_removed /tmp/lerna-current-ci-cancellation-execution/lerna-generator-v1_1-FrfEYu
+generator /tmp/lerna-current-ci-cancellation-execution/lerna-generator-v1_1-oiMTUA 33 445015
+process_group 3840197 3840197 /tmp/lerna-current-ci-cancellation-execution/lerna-generator-v1_1-oiMTUA
+process_exit 3840197 confirmed=true
+generator_removed /tmp/lerna-current-ci-cancellation-execution/lerna-generator-v1_1-oiMTUA
+process_exit 3839355 confirmed=true
+generator_removed /tmp/lerna-current-ci-cancellation-execution/lerna-generator-entry-9ts72H
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-3130514027
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-1166770470
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-2753247802
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-418982439
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-3662848867
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-2474731883
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-4232909579
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-1446007391
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-2645380401
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-2119232111
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-3229135132
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-1372647974
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-1489855450
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-687071583
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-1294475535
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-3321050513
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-1487336523
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-3160801725
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-2747911311
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-2515829177
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-2858074823
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-290487189
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-1904071442
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-2809309685
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-2731137287
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-3794845726
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-936418983
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-4094843396
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-3592376623
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-2934859283
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-2699831193
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-3889125968
+contract /tmp/lerna-current-ci-cancellation-execution/lerna-contract-xqffMK 33 446028
+process_group 3841650 3841650 /tmp/lerna-current-ci-cancellation-execution/lerna-contract-xqffMK
+producer 3841711 3836964 /tmp/lerna-current-ci-cancellation-execution/lerna-contract-xqffMK
+producer 3841716 3836964 /tmp/lerna-current-ci-cancellation-execution/lerna-contract-xqffMK
+process_group 3841726 3841726 /tmp/lerna-current-ci-cancellation-execution/lerna-contract-xqffMK
+process_group 3841769 3841769 /tmp/lerna-current-ci-cancellation-execution/lerna-contract-xqffMK
+process_group 3841832 3841832 /tmp/lerna-current-ci-cancellation-execution/lerna-contract-xqffMK
+process_group 3841880 3841880 /tmp/lerna-current-ci-cancellation-execution/lerna-contract-xqffMK
+process_group 3841897 3841897 /tmp/lerna-current-ci-cancellation-execution/lerna-contract-xqffMK
+process_group 3841940 3841940 /tmp/lerna-current-ci-cancellation-execution/lerna-contract-xqffMK
+process_group 3841975 3841975 /tmp/lerna-current-ci-cancellation-execution/lerna-contract-xqffMK
+contract /tmp/lerna-current-ci-cancellation-execution/lerna-contract-7ReftP 33 446479
+process_group 3841983 3841983 /tmp/lerna-current-ci-cancellation-execution/lerna-contract-7ReftP
+producer 3842055 3841975 /tmp/lerna-current-ci-cancellation-execution/lerna-contract-7ReftP
+producer 3842060 3841975 /tmp/lerna-current-ci-cancellation-execution/lerna-contract-7ReftP
+process_group 3842069 3842069 /tmp/lerna-current-ci-cancellation-execution/lerna-contract-7ReftP
+process_group 3842134 3842134 /tmp/lerna-current-ci-cancellation-execution/lerna-contract-7ReftP
+process_exit 3841983 confirmed=true
+producer_exit 3842055 closed=true
+producer_exit 3842060 closed=true
+process_exit 3842069 confirmed=true
+process_exit 3842134 confirmed=true
+contract_removed /tmp/lerna-current-ci-cancellation-execution/lerna-contract-7ReftP
+process_exit 3841650 confirmed=true
+producer_exit 3841711 closed=true
+producer_exit 3841716 closed=true
+process_exit 3841726 confirmed=true
+process_exit 3841769 confirmed=true
+process_exit 3841832 confirmed=true
+process_exit 3841880 confirmed=true
+process_exit 3841897 confirmed=true
+process_exit 3841940 confirmed=true
+process_exit 3841975 confirmed=true
+contract_removed /tmp/lerna-current-ci-cancellation-execution/lerna-contract-xqffMK
+contract /tmp/lerna-current-ci-cancellation-execution/lerna-contract-ODYbIx 33 446637
+process_group 3842192 3842192 /tmp/lerna-current-ci-cancellation-execution/lerna-contract-ODYbIx
+producer 3842234 3836964 /tmp/lerna-current-ci-cancellation-execution/lerna-contract-ODYbIx
+producer 3842239 3836964 /tmp/lerna-current-ci-cancellation-execution/lerna-contract-ODYbIx
+process_group 3842291 3842291 /tmp/lerna-current-ci-cancellation-execution/lerna-contract-ODYbIx
+process_group 3842319 3842319 /tmp/lerna-current-ci-cancellation-execution/lerna-contract-ODYbIx
+process_group 3842336 3842336 /tmp/lerna-current-ci-cancellation-execution/lerna-contract-ODYbIx
+process_group 3842364 3842364 /tmp/lerna-current-ci-cancellation-execution/lerna-contract-ODYbIx
+process_group 3842381 3842381 /tmp/lerna-current-ci-cancellation-execution/lerna-contract-ODYbIx
+process_group 3842410 3842410 /tmp/lerna-current-ci-cancellation-execution/lerna-contract-ODYbIx
+process_group 3842447 3842447 /tmp/lerna-current-ci-cancellation-execution/lerna-contract-ODYbIx
+contract /tmp/lerna-current-ci-cancellation-execution/lerna-contract-F1Bah9 33 447080
+process_group 3842473 3842473 /tmp/lerna-current-ci-cancellation-execution/lerna-contract-F1Bah9
+producer 3842520 3842447 /tmp/lerna-current-ci-cancellation-execution/lerna-contract-F1Bah9
+producer 3842525 3842447 /tmp/lerna-current-ci-cancellation-execution/lerna-contract-F1Bah9
+process_group 3842539 3842539 /tmp/lerna-current-ci-cancellation-execution/lerna-contract-F1Bah9
+process_group 3842604 3842604 /tmp/lerna-current-ci-cancellation-execution/lerna-contract-F1Bah9
+process_exit 3842473 confirmed=true
+producer_exit 3842520 closed=true
+producer_exit 3842525 closed=true
+process_exit 3842539 confirmed=true
+process_exit 3842604 confirmed=true
+contract_removed /tmp/lerna-current-ci-cancellation-execution/lerna-contract-F1Bah9
+process_exit 3842192 confirmed=true
+producer_exit 3842234 closed=true
+producer_exit 3842239 closed=true
+process_exit 3842291 confirmed=true
+process_exit 3842319 confirmed=true
+process_exit 3842336 confirmed=true
+process_exit 3842364 confirmed=true
+process_exit 3842381 confirmed=true
+process_exit 3842410 confirmed=true
+process_exit 3842447 confirmed=true
+contract_removed /tmp/lerna-current-ci-cancellation-execution/lerna-contract-ODYbIx
+contract /tmp/lerna-current-ci-cancellation-execution/lerna-content-contract-4TRR60 33 447235
+process_group 3842661 3842661 /tmp/lerna-current-ci-cancellation-execution/lerna-content-contract-4TRR60
+producer 3842728 3836964 /tmp/lerna-current-ci-cancellation-execution/lerna-content-contract-4TRR60
+producer 3842733 3836964 /tmp/lerna-current-ci-cancellation-execution/lerna-content-contract-4TRR60
+process_exit 3842661 confirmed=true
+producer_exit 3842728 closed=true
+producer_exit 3842733 closed=true
+contract_removed /tmp/lerna-current-ci-cancellation-execution/lerna-content-contract-4TRR60
+contract /tmp/lerna-current-ci-cancellation-execution/lerna-content-contract-jbXiMO 33 447246
+process_group 3842776 3842776 /tmp/lerna-current-ci-cancellation-execution/lerna-content-contract-jbXiMO
+producer 3842837 3836964 /tmp/lerna-current-ci-cancellation-execution/lerna-content-contract-jbXiMO
+producer 3842842 3836964 /tmp/lerna-current-ci-cancellation-execution/lerna-content-contract-jbXiMO
+process_exit 3842776 confirmed=true
+producer_exit 3842837 closed=true
+producer_exit 3842842 closed=true
+contract_removed /tmp/lerna-current-ci-cancellation-execution/lerna-content-contract-jbXiMO
+{"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "final-make-check", "owned_raw_fsync_close_ack": true, "pgid": 3836964, "pid": 3836964, "starttime": "16097756", "timed_out": false}
+{"argv": ["bash", "-c", "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; go test -race -v -mod=readonly -p=1 -count=1 -timeout=120s ./..."], "deadline_seconds": 120, "event": "native_start_ack", "operation": "final-module-race", "pgid": 3843228, "pid": 3843228, "root": "/tmp/lerna-current-ci-cancellation-execution", "starttime": "16105615"}
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-273647509
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-2271428724
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-1065277220
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-1425181863
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-2692003486
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-3370996768
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-2153038665
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-1345420195
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-3182012123
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-1881394811
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-3079451634
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-2729312393
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-2032850025
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-2403371011
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-4253864698
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-4260575400
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-810005941
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-2550352734
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-2892096789
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-3576222766
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-418848132
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-2386831487
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-356249611
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-103618952
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-2751550874
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-3889588634
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-1807178866
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-2339196781
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-1534009065
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-1706998003
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-3118144311
+sqlite-target /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-2406819243
+{"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "final-module-race", "owned_raw_fsync_close_ack": true, "pgid": 3843228, "pid": 3843228, "starttime": "16105615", "timed_out": false}
+{"actual_count": 3, "all22_and8_unchanged": true, "all3_actualPASS": true, "all_actual_Wait_currentGroupAbsent": true, "event": "local_stop_release_ack", "observer_not_executed": true, "operation": "final-three-checks"}
+{"argv": ["bash", "-c", "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; go run -mod=readonly -p=1 /tmp/lerna-current-ci-cancellation-final-static/audit-after-checks-v3.go"], "deadline_seconds": 120, "event": "native_start_ack", "operation": "final-owned-readonly-audit-v3", "pgid": 3863590, "pid": 3863590, "root": "/tmp/lerna-current-ci-cancellation-execution", "starttime": "16192748"}
+{"application":"lerna-current-ci-cancellation-audit","event":"ci_audit_observer_intent","head":"3570180514ce0a6cee4daa27430540003574533d","prelaunch_sha256":"c264cdf05e9f0d5ac9b62b64cccf76210d985f6ce06c13b1a8f6677f3d059d40"}
+{"event":"ci_audit_observer_actual_protocol_pid_before_SQL","head":"3570180514ce0a6cee4daa27430540003574533d","pid":635928}
+{"backend_start":"2026-10-05T09:48:09.733296Z","event":"ci_audit_observer_actual_backend_start_after_SQL","head":"3570180514ce0a6cee4daa27430540003574533d","pid":635928}
+{"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "final-owned-readonly-audit-v3", "owned_raw_fsync_close_ack": true, "pgid": 3863590, "pid": 3863590, "starttime": "16192748", "timed_out": false}

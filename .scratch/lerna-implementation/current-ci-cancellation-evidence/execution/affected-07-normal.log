@@ -1,0 +1,5 @@
+=== RUN   TestSQLitePoolRunPreservesRetryWindow
+--- PASS: TestSQLitePoolRunPreservesRetryWindow (0.07s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/recovery	0.077s
+NATIVE_COMPLETION_ACK {"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "affected-07-normal", "pgid": 3801955, "pid": 3801955, "starttime": "15954321", "timed_out": false}

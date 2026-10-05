@@ -1,0 +1,11 @@
+{
+  "event": "native_completion_ack",
+  "operation": "pg-blocked-run-corrected-normal-release-race",
+  "pid": 3790419,
+  "pgid": 3790419,
+  "starttime": "15906325",
+  "exit": 0,
+  "group_absent": true,
+  "timed_out": false,
+  "owned_raw_fsync_close_ack": true
+}

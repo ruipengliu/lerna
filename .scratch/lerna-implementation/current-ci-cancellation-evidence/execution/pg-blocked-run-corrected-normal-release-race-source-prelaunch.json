@@ -1,0 +1,10 @@
+{
+  "operation": "pg-blocked-run-corrected-normal-release-race",
+  "fixed_head": "3570180514ce0a6cee4daa27430540003574533d",
+  "current_manifest": "/tmp/lerna-current-ci-cancellation-current357-static/manifest.json",
+  "current_manifest_sha256": "c099f431db90003d0a79a01e2d90b6adedbb4b04746f32ef3b9ecad1364d967f",
+  "all22_source_pins_verified": true,
+  "previous_normal_actualPASS": true,
+  "no_source_writes": true,
+  "ledger_prelaunch_line_count": 55
+}

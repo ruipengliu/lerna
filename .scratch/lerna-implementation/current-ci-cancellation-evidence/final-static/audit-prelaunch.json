@@ -1,0 +1,605 @@
+{
+  "kind": "STATIC finite readonly current CI resources; no observation executed",
+  "commit": "3570180514ce0a6cee4daa27430540003574533d",
+  "worktree": "/tmp/lerna-worktrees/current-ci-cancellation",
+  "ledger": "/tmp/lerna-current-ci-cancellation-execution/owned-scopes.log",
+  "ledger_last_line": 135,
+  "ledger_prefix_sha256": "13331b7703f30340dc87842730be1119dd7dd2dec9b48b03cad75865b6973dfd",
+  "schemas": [
+    "lerna_test_0486abb533520d26ea8837fb",
+    "lerna_test_099cd6999c5760ef380adf61",
+    "lerna_test_0de9b572d58cb85d3bb099d2",
+    "lerna_test_135a1a3737781ad5182a2bff",
+    "lerna_test_243de634d02510340140a13a",
+    "lerna_test_24404ad94de9fdad71deb22d",
+    "lerna_test_39017e21b39a0efda64f0690",
+    "lerna_test_40f0bd3bcd6e945eaca0445b",
+    "lerna_test_4bd555f4ff5fbd4a0d720d80",
+    "lerna_test_4e7f9b2f917bee25413fbcc9",
+    "lerna_test_5353019215404d2d7bdc57b2",
+    "lerna_test_667d377a7db5d15d21902a97",
+    "lerna_test_cd82bf60982f877f19e87f1b",
+    "lerna_test_e1df8c195a3a4dc35d4423b1",
+    "lerna_test_e8b52d8aad75c37cd934f131"
+  ],
+  "registered_backends": [
+    {
+      "pid": 611551,
+      "backend_start": null,
+      "identity_complete": false,
+      "role": "run",
+      "schema": "lerna_test_40f0bd3bcd6e945eaca0445b",
+      "registration_line": 23,
+      "protected_first_bad_fixture": true
+    },
+    {
+      "pid": 611552,
+      "backend_start": null,
+      "identity_complete": false,
+      "role": "blocker",
+      "schema": "lerna_test_40f0bd3bcd6e945eaca0445b",
+      "registration_line": 24,
+      "protected_first_bad_fixture": true
+    },
+    {
+      "pid": 611553,
+      "backend_start": null,
+      "identity_complete": false,
+      "role": "observer",
+      "schema": "lerna_test_40f0bd3bcd6e945eaca0445b",
+      "registration_line": 25,
+      "protected_first_bad_fixture": true
+    },
+    {
+      "pid": 611554,
+      "backend_start": null,
+      "identity_complete": false,
+      "role": "run",
+      "schema": "lerna_test_40f0bd3bcd6e945eaca0445b",
+      "registration_line": 26,
+      "protected_first_bad_fixture": true
+    },
+    {
+      "pid": 611555,
+      "backend_start": null,
+      "identity_complete": false,
+      "role": "run",
+      "schema": "lerna_test_40f0bd3bcd6e945eaca0445b",
+      "registration_line": 27,
+      "protected_first_bad_fixture": true
+    },
+    {
+      "pid": 611556,
+      "backend_start": null,
+      "identity_complete": false,
+      "role": "run",
+      "schema": "lerna_test_40f0bd3bcd6e945eaca0445b",
+      "registration_line": 28,
+      "protected_first_bad_fixture": true
+    },
+    {
+      "pid": 618532,
+      "backend_start": "2026-10-05T08:44:53.592452Z",
+      "database": "lerna_durable_work_01_20261003",
+      "user": "lerna",
+      "application": "lerna_test_e1df8c195a3a4dc35d4423b1-observer",
+      "role": "observer",
+      "schema": "lerna_test_e1df8c195a3a4dc35d4423b1",
+      "identity_complete": true,
+      "registration_line": 38
+    },
+    {
+      "pid": 618530,
+      "backend_start": "2026-10-05T08:44:53.429344Z",
+      "database": "lerna_durable_work_01_20261003",
+      "user": "lerna",
+      "application": "lerna_test_e1df8c195a3a4dc35d4423b1-run",
+      "role": "run",
+      "schema": "lerna_test_e1df8c195a3a4dc35d4423b1",
+      "identity_complete": true,
+      "registration_line": 39
+    },
+    {
+      "pid": 618533,
+      "backend_start": "2026-10-05T08:44:53.602229Z",
+      "database": "lerna_durable_work_01_20261003",
+      "user": "lerna",
+      "application": "lerna_test_e1df8c195a3a4dc35d4423b1-run",
+      "role": "run",
+      "schema": "lerna_test_e1df8c195a3a4dc35d4423b1",
+      "identity_complete": true,
+      "registration_line": 40
+    },
+    {
+      "pid": 618534,
+      "backend_start": "2026-10-05T08:44:53.602716Z",
+      "database": "lerna_durable_work_01_20261003",
+      "user": "lerna",
+      "application": "lerna_test_e1df8c195a3a4dc35d4423b1-run",
+      "role": "run",
+      "schema": "lerna_test_e1df8c195a3a4dc35d4423b1",
+      "identity_complete": true,
+      "registration_line": 41
+    },
+    {
+      "pid": 618531,
+      "backend_start": "2026-10-05T08:44:53.437499Z",
+      "database": "lerna_durable_work_01_20261003",
+      "user": "lerna",
+      "application": "lerna_test_e1df8c195a3a4dc35d4423b1-blocker",
+      "role": "blocker",
+      "schema": "lerna_test_e1df8c195a3a4dc35d4423b1",
+      "identity_complete": true,
+      "registration_line": 42
+    },
+    {
+      "pid": 618672,
+      "backend_start": "2026-10-05T08:45:27.314685Z",
+      "database": "lerna_durable_work_01_20261003",
+      "user": "lerna",
+      "application": "lerna_test_4e7f9b2f917bee25413fbcc9-observer",
+      "role": "observer",
+      "schema": "lerna_test_4e7f9b2f917bee25413fbcc9",
+      "identity_complete": true,
+      "registration_line": 49
+    },
+    {
+      "pid": 618670,
+      "backend_start": "2026-10-05T08:45:27.132274Z",
+      "database": "lerna_durable_work_01_20261003",
+      "user": "lerna",
+      "application": "lerna_test_4e7f9b2f917bee25413fbcc9-run",
+      "role": "run",
+      "schema": "lerna_test_4e7f9b2f917bee25413fbcc9",
+      "identity_complete": true,
+      "registration_line": 50
+    },
+    {
+      "pid": 618673,
+      "backend_start": "2026-10-05T08:45:27.346848Z",
+      "database": "lerna_durable_work_01_20261003",
+      "user": "lerna",
+      "application": "lerna_test_4e7f9b2f917bee25413fbcc9-run",
+      "role": "run",
+      "schema": "lerna_test_4e7f9b2f917bee25413fbcc9",
+      "identity_complete": true,
+      "registration_line": 51
+    },
+    {
+      "pid": 618674,
+      "backend_start": "2026-10-05T08:45:27.346328Z",
+      "database": "lerna_durable_work_01_20261003",
+      "user": "lerna",
+      "application": "lerna_test_4e7f9b2f917bee25413fbcc9-run",
+      "role": "run",
+      "schema": "lerna_test_4e7f9b2f917bee25413fbcc9",
+      "identity_complete": true,
+      "registration_line": 52
+    },
+    {
+      "pid": 618671,
+      "backend_start": "2026-10-05T08:45:27.141703Z",
+      "database": "lerna_durable_work_01_20261003",
+      "user": "lerna",
+      "application": "lerna_test_4e7f9b2f917bee25413fbcc9-blocker",
+      "role": "blocker",
+      "schema": "lerna_test_4e7f9b2f917bee25413fbcc9",
+      "identity_complete": true,
+      "registration_line": 53
+    },
+    {
+      "pid": 623963,
+      "backend_start": "2026-10-05T09:00:33.734168Z",
+      "database": "lerna_durable_work_01_20261003",
+      "user": "lerna",
+      "application": "lerna_test_e8b52d8aad75c37cd934f131-observer",
+      "role": "observer",
+      "schema": "lerna_test_e8b52d8aad75c37cd934f131",
+      "identity_complete": true,
+      "registration_line": 61
+    },
+    {
+      "pid": 623959,
+      "backend_start": "2026-10-05T09:00:33.458877Z",
+      "database": "lerna_durable_work_01_20261003",
+      "user": "lerna",
+      "application": "lerna_test_e8b52d8aad75c37cd934f131-run",
+      "role": "run",
+      "schema": "lerna_test_e8b52d8aad75c37cd934f131",
+      "identity_complete": true,
+      "registration_line": 62
+    },
+    {
+      "pid": 623964,
+      "backend_start": "2026-10-05T09:00:33.755693Z",
+      "database": "lerna_durable_work_01_20261003",
+      "user": "lerna",
+      "application": "lerna_test_e8b52d8aad75c37cd934f131-run",
+      "role": "run",
+      "schema": "lerna_test_e8b52d8aad75c37cd934f131",
+      "identity_complete": true,
+      "registration_line": 63
+    },
+    {
+      "pid": 623965,
+      "backend_start": "2026-10-05T09:00:33.756078Z",
+      "database": "lerna_durable_work_01_20261003",
+      "user": "lerna",
+      "application": "lerna_test_e8b52d8aad75c37cd934f131-run",
+      "role": "run",
+      "schema": "lerna_test_e8b52d8aad75c37cd934f131",
+      "identity_complete": true,
+      "registration_line": 64
+    },
+    {
+      "pid": 623961,
+      "backend_start": "2026-10-05T09:00:33.482946Z",
+      "database": "lerna_durable_work_01_20261003",
+      "user": "lerna",
+      "application": "lerna_test_e8b52d8aad75c37cd934f131-blocker",
+      "role": "blocker",
+      "schema": "lerna_test_e8b52d8aad75c37cd934f131",
+      "identity_complete": true,
+      "registration_line": 65
+    },
+    {
+      "pid": 624126,
+      "backend_start": "2026-10-05T09:01:14.732536Z",
+      "database": "lerna_durable_work_01_20261003",
+      "user": "lerna",
+      "application": "lerna_test_24404ad94de9fdad71deb22d-observer",
+      "role": "observer",
+      "schema": "lerna_test_24404ad94de9fdad71deb22d",
+      "identity_complete": true,
+      "registration_line": 72
+    },
+    {
+      "pid": 624124,
+      "backend_start": "2026-10-05T09:01:14.455152Z",
+      "database": "lerna_durable_work_01_20261003",
+      "user": "lerna",
+      "application": "lerna_test_24404ad94de9fdad71deb22d-run",
+      "role": "run",
+      "schema": "lerna_test_24404ad94de9fdad71deb22d",
+      "identity_complete": true,
+      "registration_line": 73
+    },
+    {
+      "pid": 624127,
+      "backend_start": "2026-10-05T09:01:14.758379Z",
+      "database": "lerna_durable_work_01_20261003",
+      "user": "lerna",
+      "application": "lerna_test_24404ad94de9fdad71deb22d-run",
+      "role": "run",
+      "schema": "lerna_test_24404ad94de9fdad71deb22d",
+      "identity_complete": true,
+      "registration_line": 74
+    },
+    {
+      "pid": 624128,
+      "backend_start": "2026-10-05T09:01:14.758832Z",
+      "database": "lerna_durable_work_01_20261003",
+      "user": "lerna",
+      "application": "lerna_test_24404ad94de9fdad71deb22d-run",
+      "role": "run",
+      "schema": "lerna_test_24404ad94de9fdad71deb22d",
+      "identity_complete": true,
+      "registration_line": 75
+    },
+    {
+      "pid": 624125,
+      "backend_start": "2026-10-05T09:01:14.472172Z",
+      "database": "lerna_durable_work_01_20261003",
+      "user": "lerna",
+      "application": "lerna_test_24404ad94de9fdad71deb22d-blocker",
+      "role": "blocker",
+      "schema": "lerna_test_24404ad94de9fdad71deb22d",
+      "identity_complete": true,
+      "registration_line": 76
+    }
+  ],
+  "owned_groups": [
+    {
+      "pid": 3642278,
+      "pgid": 3642278,
+      "starttime": "15277195",
+      "operation": "mechanical-cancellation-format"
+    },
+    {
+      "pid": 3643325,
+      "pgid": 3643325,
+      "starttime": "15280339",
+      "operation": "mechanical-cancellation-first-red"
+    },
+    {
+      "pid": 3654162,
+      "pgid": 3654162,
+      "starttime": "15327003",
+      "operation": "mechanical-cancellation-product-format"
+    },
+    {
+      "pid": 3654879,
+      "pgid": 3654879,
+      "starttime": "15330380",
+      "operation": "mechanical-cancellation-fixed-first-normal"
+    },
+    {
+      "pid": 3655013,
+      "pgid": 3655013,
+      "starttime": "15330528",
+      "operation": "mechanical-cancellation-fixed-first-race"
+    },
+    {
+      "pid": 3692719,
+      "pgid": 3692719,
+      "starttime": "15497914",
+      "operation": "mechanical-live-caller-format"
+    },
+    {
+      "pid": 3693574,
+      "pgid": 3693574,
+      "starttime": "15501639",
+      "operation": "mechanical-live-caller-first-normal"
+    },
+    {
+      "pid": 3694299,
+      "pgid": 3694299,
+      "starttime": "15504552",
+      "operation": "mechanical-live-caller-first-race"
+    },
+    {
+      "pid": 3723428,
+      "pgid": 3723428,
+      "starttime": "15629876",
+      "operation": "pg-blocked-run-format"
+    },
+    {
+      "pid": 3724192,
+      "pgid": 3724192,
+      "starttime": "15633398",
+      "operation": "pg-blocked-run-first-normal-release"
+    },
+    {
+      "pid": 3763190,
+      "pgid": 3763190,
+      "starttime": "15804862",
+      "operation": "pg-blocked-run-corrected-format"
+    },
+    {
+      "pid": 3764961,
+      "pgid": 3764961,
+      "starttime": "15812793",
+      "operation": "pg-blocked-run-corrected-normal-release"
+    },
+    {
+      "pid": 3765851,
+      "pgid": 3765851,
+      "starttime": "15816383",
+      "operation": "pg-blocked-run-corrected-caller-cancellation"
+    },
+    {
+      "pid": 3790419,
+      "pgid": 3790419,
+      "starttime": "15906325",
+      "operation": "pg-blocked-run-corrected-normal-release-race"
+    },
+    {
+      "pid": 3791769,
+      "pgid": 3791769,
+      "starttime": "15911152",
+      "operation": "pg-blocked-run-corrected-caller-cancellation-race"
+    },
+    {
+      "pid": 3801101,
+      "pgid": 3801101,
+      "starttime": "15953040",
+      "operation": "affected-01-normal"
+    },
+    {
+      "pid": 3801248,
+      "pgid": 3801248,
+      "starttime": "15953236",
+      "operation": "affected-02-race"
+    },
+    {
+      "pid": 3801391,
+      "pgid": 3801391,
+      "starttime": "15953550",
+      "operation": "affected-03-normal"
+    },
+    {
+      "pid": 3801525,
+      "pgid": 3801525,
+      "starttime": "15953654",
+      "operation": "affected-04-race"
+    },
+    {
+      "pid": 3801662,
+      "pgid": 3801662,
+      "starttime": "15953900",
+      "operation": "affected-05-normal"
+    },
+    {
+      "pid": 3801756,
+      "pgid": 3801756,
+      "starttime": "15954029",
+      "operation": "affected-06-race"
+    },
+    {
+      "pid": 3801955,
+      "pgid": 3801955,
+      "starttime": "15954321",
+      "operation": "affected-07-normal"
+    },
+    {
+      "pid": 3802044,
+      "pgid": 3802044,
+      "starttime": "15954427",
+      "operation": "affected-08-race"
+    },
+    {
+      "pid": 3802179,
+      "pgid": 3802179,
+      "starttime": "15954672",
+      "operation": "affected-09-normal"
+    },
+    {
+      "pid": 3802318,
+      "pgid": 3802318,
+      "starttime": "15954805",
+      "operation": "affected-10-race"
+    },
+    {
+      "pid": 3802459,
+      "pgid": 3802459,
+      "starttime": "15955097",
+      "operation": "affected-11-normal"
+    },
+    {
+      "pid": 3802596,
+      "pgid": 3802596,
+      "starttime": "15955216",
+      "operation": "affected-12-race"
+    },
+    {
+      "pid": 3802734,
+      "pgid": 3802734,
+      "starttime": "15955451",
+      "operation": "affected-13-normal"
+    },
+    {
+      "pid": 3802846,
+      "pgid": 3802846,
+      "starttime": "15955570",
+      "operation": "affected-14-race"
+    },
+    {
+      "pid": 3803009,
+      "pgid": 3803009,
+      "starttime": "15955823",
+      "operation": "affected-15-normal"
+    },
+    {
+      "pid": 3803101,
+      "pgid": 3803101,
+      "starttime": "15955956",
+      "operation": "affected-16-race"
+    },
+    {
+      "pid": 3803255,
+      "pgid": 3803255,
+      "starttime": "15956232",
+      "operation": "affected-17-normal"
+    },
+    {
+      "pid": 3803423,
+      "pgid": 3803423,
+      "starttime": "15956538",
+      "operation": "affected-18-race"
+    },
+    {
+      "pid": 3805801,
+      "pgid": 3805801,
+      "starttime": "15966815",
+      "operation": "root-recovery-evidence-format-0910"
+    }
+  ],
+  "paths": [
+    {
+      "path": "/tmp/lerna-current-ci-cancellation-execution/lerna-owned-fixture-1524014219",
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "reason": "original plain path registration has no dev/ino"
+    },
+    {
+      "path": "/tmp/lerna-current-ci-cancellation-execution/lerna-owned-fixture-3965096558",
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "reason": "original plain path registration has no dev/ino"
+    },
+    {
+      "path": "/tmp/lerna-current-ci-cancellation-execution/lerna-owned-fixture-4009348521",
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "reason": "original plain path registration has no dev/ino"
+    },
+    {
+      "path": "/tmp/lerna-current-ci-cancellation-execution/lerna-owned-fixture-3224292",
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "reason": "original plain path registration has no dev/ino"
+    },
+    {
+      "path": "/tmp/lerna-current-ci-cancellation-execution/lerna-owned-fixture-269804852",
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "reason": "original plain path registration has no dev/ino"
+    },
+    {
+      "path": "/tmp/lerna-current-ci-cancellation-execution/lerna-owned-fixture-809850383",
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "reason": "original plain path registration has no dev/ino"
+    },
+    {
+      "path": "/tmp/lerna-current-ci-cancellation-execution/lerna-owned-fixture-2771521701",
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "reason": "original plain path registration has no dev/ino"
+    },
+    {
+      "path": "/tmp/lerna-current-ci-cancellation-execution/lerna-owned-fixture-1342657948",
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "reason": "original plain path registration has no dev/ino"
+    }
+  ],
+  "execution_root": {
+    "event": "owned_root_registered",
+    "root": "/tmp/lerna-current-ci-cancellation-execution",
+    "device": 33,
+    "inode": 410551,
+    "mode": "0700",
+    "base": "dadd801cfd11ca038f0496872941097f10ebe507",
+    "branch": "codex/current-ci-cancellation",
+    "owner": "current-ci-cancellation implementer",
+    "native_launched": false,
+    "no_cleanup_or_old05_touch": true
+  },
+  "pins": {
+    "host/durablework/pool_run_test.go": "6e6eacbc17679dc1d8cf99cb03afbaf2d39978d9c179f6467548f5fea36ad4f7",
+    "internal/durableworkdemo/pool_worker.go": "65e16f218a9fda70240a8e01b42ee7b85404c586214fb4089ddcd129ec223a60",
+    "host/durablework/pool.go": "f3d2ac781246e837e683b86cdbfbcb7824471740c1638989d86696a13c239375",
+    "internal/durableworkdemo/maintenance.go": "3d0d13089ac8cf76372a28155f0896757ec8990d034dacefa94956d87ad97800",
+    "runtime/admission.go": "9f6136f51196814bdaacd2065b038371d1a1827e9d4c0e0d496cf80c161bad21",
+    "runtime/schedule.go": "d1d72e6cd41bafeb792cca905cf107ef7be5571b54656b32027bce58045a836f",
+    "host/durablework/pool_run_live_fault_test.go": "e3a8aa6f8cc5b2f74c56310db3d602cfb9760dc57f96465ec7b5eb56e21ef868",
+    "conformance/recovery/pool_test.go": "64d27653cad585e809c2c96eab28c7285c46918909a12e320c1bb0d81af8a740",
+    "conformance/recovery/pool_wake_test.go": "2c3eae4de7adc78c50cca03a1b7cd951577e016847bfdc376ddb54273350a3f1",
+    "conformance/recovery/owned_fixture_test.go": "571401f59a2568f89a5d5bf8a3ee2c26fde69c6c1dbec6f796067790f043daea",
+    "conformance/recovery/owned_pg_fault_test.go": "487ab1a7a4a0365a1d386eaaa0cb96200329dbeda3082b14c4ebf33276285a05",
+    "conformance/recovery/owned_cleanup_failure_test.go": "cc174d06876ed558abe205cda4fcb646c7b9398258a6ee77713670d38fe52551",
+    "conformance/recovery/pg_lock_scope_test.go": "345bcd5d8a1bf296d87e4b2aeae5b750063f99b034f21db23e81f2604afbd382",
+    "conformance/recovery/admission_test.go": "99186d71bc37541e3c94e6941b5f506bf655b42d04fe6ac5c8f2d7b4994c6cd1",
+    "conformance/recovery/sqlite_test.go": "7210687fb15c5e6aba88a6abdc24a6942ba55a583512f01667133e00eb9536d8",
+    "conformance/recovery/wait_test.go": "3b0223eb04234635a0ea3815ddd1e9e63b935aa63f8130539485fc7c3b8490d3",
+    "adapters/postgres/internal/pgstore/core.go": "6a7a494bcb33bb03e0b3844b33829f2bd4a3954326a3f05d4737e5ba75c19499",
+    "adapters/postgres/internal/pgstore/pool.go": "ca3e395b06d2cda0d995f325b27663782e5c06359d3dde7495ff1574531099f1",
+    "conformance/recovery/pool_run_blocked_sql_test.go": "fcfe38b40601798e8928847d123e3923d758fa674141079682d2f233599a06f2",
+    "adapters/postgres/pool.go": "4b88ee97ec80a7b7f51c0c45a1199192106ff0d84b0421fa926404cd705a5609",
+    "adapters/postgres/store.go": "1be157b5ab0938e04915eebdbcaa4d957f904db88c14d594a2efd155e420c3f0",
+    "internal/durableworkdemo/pool.go": "9fe6056767bb2deba551ad88c5a85e16e8b2fa72b5945f22f02fd805d3d37ab6"
+  },
+  "protected_first_bad_fixture_schema": "lerna_test_40f0bd3bcd6e945eaca0445b",
+  "historical_unknowns_retained_without_observation_or_cleanup": [
+    "/tmp/lerna-04-ticket05-execution/lerna-local-lifetime-3977538271",
+    "/tmp/lerna-04-ticket05-execution/lerna-local-lifetime-4116685529"
+  ],
+  "bounds": {
+    "caller_seconds": 5,
+    "transaction_seconds": 3,
+    "statement_seconds": 2,
+    "lock_seconds": 1,
+    "outer_seconds": 120
+  }
+}

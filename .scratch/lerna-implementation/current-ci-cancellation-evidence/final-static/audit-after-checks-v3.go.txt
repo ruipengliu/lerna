@@ -1,0 +1,50 @@
+package main
+
+import (
+ "context"
+ "crypto/sha256"
+ "encoding/hex"
+ "encoding/json"
+ "errors"
+ "fmt"
+ "os"
+ "path/filepath"
+ "strconv"
+ "strings"
+ "syscall"
+ "time"
+
+ "github.com/jackc/pgx/v5"
+ "github.com/jackc/pgx/v5/pgconn"
+)
+
+type backend struct { PID int32 `json:"pid"`; Start *time.Time `json:"backend_start"`; Complete bool `json:"identity_complete"`; Role string `json:"role"`; Schema string `json:"schema"` }
+type pathInput struct { Path string `json:"path"`; Identity bool `json:"identity_registered"`; Dev uint64 `json:"dev"`; Ino uint64 `json:"ino"`; Sticky bool `json:"sticky_unknown"`; ReceiptMissing bool `json:"original_terminal_receipt_missing"`; Kinds []string `json:"kinds"` }
+type group struct { PID int `json:"pid"`; PGID int `json:"pgid"`; Start string `json:"starttime"`; Complete bool `json:"identity_complete"`; Scope string `json:"scope"`; Kind string `json:"kind"` }
+type plan struct { Commit string `json:"commit"`; Worktree string `json:"worktree"`; Ledger string `json:"ledger"`; Last int `json:"ledger_last_line"`; LedgerSHA string `json:"ledger_prefix_sha256"`; Schemas []string `json:"schemas"`; Backends []backend `json:"registered_backends"`; Groups []group `json:"owned_groups"`; Paths []pathInput `json:"paths"`; Pins map[string]string `json:"pins"`; Root struct { Path string `json:"root"`; Dev uint64 `json:"device"`; Ino uint64 `json:"inode"` } `json:"execution_root"` }
+func digest(b []byte) string { h:=sha256.Sum256(b);return hex.EncodeToString(h[:]) }
+func errorFact(stage string,err error) map[string]any { f:=map[string]any{"stage":stage,"type":fmt.Sprintf("%T",err),"deadline":errors.Is(err,context.DeadlineExceeded)};var pg *pgconn.PgError;if errors.As(err,&pg){f["sqlstate"]=pg.Code};return f }
+func appendFact(path string,fact any) error { b,e:=json.Marshal(fact);if e!=nil{return e};f,e:=os.OpenFile(path,os.O_WRONLY|os.O_APPEND,0600);if e!=nil{return e};_,writeErr:=f.Write(append(b,'\n'));return errors.Join(writeErr,f.Sync(),f.Close()) }
+func run(out map[string]any) (retErr error) {
+ b,err:=os.ReadFile("/tmp/lerna-current-ci-cancellation-final-static/audit-after-checks-v3-prelaunch.json");if err!=nil{return err};var p plan;if err=json.Unmarshal(b,&p);err!=nil{return err};out["head"]=p.Commit;out["prelaunch_sha256"]=digest(b);out["cleanup_performed"]=false;out["nativeWait_implies_Close"]=false;out["historical_unknowns_retained"]=true
+ b,err=os.ReadFile(p.Ledger);if err!=nil{return err};lines:=strings.Split(strings.TrimSuffix(string(b),"\n"),"\n");if p.Last<1||p.Last>len(lines)||digest([]byte(strings.Join(lines[:p.Last],"\n")+"\n"))!=p.LedgerSHA{return errors.New("original ledger prefix changed")}
+ for name,h:=range p.Pins {b,err=os.ReadFile(filepath.Join(p.Worktree,name));if err!=nil{return err};if digest(b)!=h{return errors.New("qualified source changed")}};out["all22_pins_unchanged"]=true
+ ctx,cancel:=context.WithTimeout(context.Background(),5*time.Second);defer cancel()
+ rootStat,err:=os.Lstat(p.Root.Path);if err!=nil{return err};rootIdentity,ok:=rootStat.Sys().(*syscall.Stat_t);if !ok{return errors.New("execution root stat identity unavailable")};out["execution_root"]=map[string]any{"path":p.Root.Path,"registered_dev":p.Root.Dev,"registered_ino":p.Root.Ino,"actual_dev":rootIdentity.Dev,"actual_ino":rootIdentity.Ino,"mode":rootStat.Mode().Perm(),"cleanup_allowed":false};if rootIdentity.Dev!=p.Root.Dev||rootIdentity.Ino!=p.Root.Ino||rootStat.Mode().Perm()!=0700{return errors.New("execution root identity changed")}
+ paths:=[]map[string]any{};for _,x:=range p.Paths {if err=ctx.Err();err!=nil{return err};f:=map[string]any{"path":x.Path,"original_identity_registered":x.Identity,"registered_dev":x.Dev,"registered_ino":x.Ino,"sticky_unknown":x.Sticky,"original_terminal_receipt_missing":x.ReceiptMissing,"kinds":x.Kinds,"cleanup_allowed":false};st,e:=os.Lstat(x.Path);switch {case errors.Is(e,os.ErrNotExist):f["observation"]="absent";case e!=nil:f["observation"]="read_error";return e;default:actual,ok:=st.Sys().(*syscall.Stat_t);if !ok{return errors.New("stat identity unavailable")};f["observation"]="present_identity_originally_unregistered";f["actual_dev"]=actual.Dev;f["actual_ino"]=actual.Ino;f["symlink"]=st.Mode()&os.ModeSymlink!=0;if x.Identity {f["observation"]="registered_identity_mismatch";if actual.Dev==x.Dev&&actual.Ino==x.Ino {f["observation"]="registered_original_identity_present"}}};paths=append(paths,f)};out["registered_paths"]=paths
+ ids:=map[int]bool{};processIDs:=map[int]bool{};for _,x:=range p.Groups{if x.PGID>0{ids[x.PGID]=true};if x.PID>0{processIDs[x.PID]=true}};entries,err:=os.ReadDir("/proc");if err!=nil{return err};if len(entries)>32768{return errors.New("proc census bound exceeded")};members:=[]map[string]any{};for _,entry:=range entries {if err=ctx.Err();err!=nil{return err};pid,e:=strconv.Atoi(entry.Name());if e!=nil{continue};b,e=os.ReadFile(filepath.Join("/proc",entry.Name(),"stat"));if errors.Is(e,os.ErrNotExist){continue};if e!=nil{return e};i:=strings.LastIndex(string(b),")");if i<0{return errors.New("proc stat shape")};fields:=strings.Fields(string(b)[i+1:]);if len(fields)<20{return errors.New("proc stat fields")};pgid,e:=strconv.Atoi(fields[2]);if e!=nil{return e};if ids[pgid]||processIDs[pid]{members=append(members,map[string]any{"pid":pid,"pgid":pgid,"state":fields[0],"starttime":fields[19]})}};out["registered_group_members"]=members;out["original_group_registrations"]=p.Groups;out["legacy_missing_start_identity_not_repaired"]=true;out["group_numbers_do_not_fill_original_Close"]=true
+ config,err:=pgx.ParseConfig(os.Getenv("LERNA_TEST_POSTGRES_DSN"));if err!=nil{return err};config.RuntimeParams["application_name"]="lerna-current-ci-cancellation-audit"
+ if err=appendFact(p.Ledger,map[string]any{"event":"ci_audit_observer_intent","head":p.Commit,"application":"lerna-current-ci-cancellation-audit","prelaunch_sha256":out["prelaunch_sha256"]});err!=nil{return err};out["observer_intent_fsynced_before_connect"]=true
+ conn,err:=pgx.ConnectConfig(ctx,config);if err!=nil{return err};defer func(){e:=conn.Close(ctx);out["observer_firstClose_returned_nil"]=e==nil;if e!=nil{out["observer_firstClose_error"]=errorFact("close",e);retErr=errors.Join(retErr,e)}}()
+ pid:=int32(conn.PgConn().PID());out["observer_actual_protocol_pid"]=pid
+ if err=appendFact(p.Ledger,map[string]any{"event":"ci_audit_observer_actual_protocol_pid_before_SQL","pid":pid,"head":p.Commit});err!=nil{return err};out["observer_PID_registration_fsynced_before_SQL"]=true
+ txctx,txcancel:=context.WithTimeout(ctx,3*time.Second);defer txcancel();tx,err:=conn.BeginTx(txctx,pgx.TxOptions{AccessMode:pgx.ReadOnly});if err!=nil{return err};defer func(){e:=tx.Rollback(ctx);out["transaction_rollback_nil_or_alreadyClosed"]=e==nil||errors.Is(e,pgx.ErrTxClosed);if e!=nil&&!errors.Is(e,pgx.ErrTxClosed){retErr=errors.Join(retErr,e)}}()
+ if _,err=tx.Exec(txctx,"SET LOCAL statement_timeout = '2s'; SET LOCAL lock_timeout = '1s'");err!=nil{return err}
+ var start time.Time;if err=tx.QueryRow(txctx,"SELECT backend_start FROM pg_stat_activity WHERE pid = $1",pid).Scan(&start);err!=nil{return err};out["observer_actual_backend_start_after_SQL"]=start
+ if err=appendFact(p.Ledger,map[string]any{"event":"ci_audit_observer_actual_backend_start_after_SQL","pid":pid,"backend_start":start,"head":p.Commit});err!=nil{return err}
+ var schemas string;if err=tx.QueryRow(txctx,"SELECT COALESCE(json_agg(nspname ORDER BY nspname), '[]'::json)::text FROM pg_namespace WHERE nspname = ANY($1::text[])",p.Schemas).Scan(&schemas);err!=nil{return err};out["present_registered_schemas"]=json.RawMessage(schemas);out["registered_schema_count"]=len(p.Schemas)
+ pids:=[]int32{};for _,x:=range p.Backends{pids=append(pids,x.PID)};rows,err:=tx.Query(txctx,"SELECT pid,backend_start FROM pg_stat_activity WHERE pid = ANY($1::int[]) ORDER BY pid",pids);if err!=nil{return err};actual:=map[int32]time.Time{};for rows.Next(){var id int32;var at time.Time;if err=rows.Scan(&id,&at);err!=nil{rows.Close();return err};actual[id]=at};rows.Close();if err=rows.Err();err!=nil{return err}
+ facts:=[]map[string]any{};for _,x:=range p.Backends{f:=map[string]any{"registered_pid":x.PID,"registered_start":x.Start,"complete_original_identity":x.Complete,"role":x.Role,"schema":x.Schema,"cleanup_allowed":false};at,present:=actual[x.PID];f["observation"]="pid_absent";if present{f["actual_backend_start"]=at;f["observation"]="pid_present_original_start_unknown";if x.Complete&&x.Start!=nil{f["observation"]="pid_reused_different_generation";if at.Equal(*x.Start){f["observation"]="original_registered_generation_present"}}};facts=append(facts,f)};out["registered_backend_observations"]=facts
+ return nil
+}
+func main(){out:=map[string]any{"kind":"finite owner-only readonly current CI resource observation"};err:=run(out);out["completed"]=err==nil;if err!=nil{out["error"]=errorFact("audit",err)};if e:=json.NewEncoder(os.Stdout).Encode(out);e!=nil{os.Exit(1)};if err!=nil{os.Exit(1)} }

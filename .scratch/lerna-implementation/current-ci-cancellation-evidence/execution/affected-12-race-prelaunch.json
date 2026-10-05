@@ -1,0 +1,14 @@
+{
+  "event": "native_start_ack",
+  "operation": "affected-12-race",
+  "pid": 3802596,
+  "pgid": 3802596,
+  "starttime": "15955216",
+  "root": "/tmp/lerna-current-ci-cancellation-execution",
+  "argv": [
+    "bash",
+    "-c",
+    "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; go test -race -v -mod=readonly -p=1 -tags=integration ./conformance/recovery -run '^TestSQLitePoolRunCurrentRevisionDeadlineAndZeroQuota$' -count=1 -timeout=120s"
+  ],
+  "deadline_seconds": 120
+}

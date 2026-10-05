@@ -1,0 +1,14 @@
+{
+  "event": "native_start_ack",
+  "operation": "affected-06-race",
+  "pid": 3801756,
+  "pgid": 3801756,
+  "starttime": "15954029",
+  "root": "/tmp/lerna-current-ci-cancellation-execution",
+  "argv": [
+    "bash",
+    "-c",
+    "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; go test -race -v -mod=readonly -p=1 -tags=integration ./conformance/recovery -run '^TestPGPoolRunPreservesRetryWindow$' -count=1 -timeout=120s"
+  ],
+  "deadline_seconds": 120
+}

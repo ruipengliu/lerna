@@ -1,0 +1,14 @@
+{
+  "event": "native_start_ack",
+  "operation": "final-module-race",
+  "pid": 3843228,
+  "pgid": 3843228,
+  "starttime": "16105615",
+  "root": "/tmp/lerna-current-ci-cancellation-execution",
+  "argv": [
+    "bash",
+    "-c",
+    "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; go test -race -v -mod=readonly -p=1 -count=1 -timeout=120s ./..."
+  ],
+  "deadline_seconds": 120
+}

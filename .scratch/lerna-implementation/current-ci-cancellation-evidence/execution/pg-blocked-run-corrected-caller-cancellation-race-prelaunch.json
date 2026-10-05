@@ -1,0 +1,14 @@
+{
+  "event": "native_start_ack",
+  "operation": "pg-blocked-run-corrected-caller-cancellation-race",
+  "pid": 3791769,
+  "pgid": 3791769,
+  "starttime": "15911152",
+  "root": "/tmp/lerna-current-ci-cancellation-execution",
+  "argv": [
+    "bash",
+    "-c",
+    "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; go test -race -v -mod=readonly -p=1 -tags=integration ./conformance/recovery -run \"^TestPGPoolRunBlockedSQLCallerCancellation$\" -count=1 -timeout=120s"
+  ],
+  "deadline_seconds": 120
+}

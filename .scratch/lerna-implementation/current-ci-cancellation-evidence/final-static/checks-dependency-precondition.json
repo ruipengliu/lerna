@@ -1,0 +1,27 @@
+{
+  "kind": "STATIC existing checks precondition proposal, no installation executed",
+  "head": "3570180514ce0a6cee4daa27430540003574533d",
+  "unchanged_execution_manifest_sha256": "ef392105836f4e7d43d9659adb16a185f8aeaa9bc4d11698dd8c2aa9c3b8515b",
+  "dependency_paths_absent": [
+    "node_modules",
+    "sdk/typescript/node_modules"
+  ],
+  "operation": "final-locked-dependencies",
+  "argv": [
+    "python3",
+    "/tmp/lerna-current-ci-cancellation-execution/run-native.py",
+    "final-locked-dependencies",
+    "bash",
+    "-c",
+    "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; pnpm install --offline --frozen-lockfile --ignore-scripts"
+  ],
+  "outer_seconds": 120,
+  "success_precondition": "actual exit0/Wait/currentgroupabsence, existing locks and all22 byteequal, git clean",
+  "first_failure": "STOP, no network fallback or retry without root decision",
+  "then_exact_operations": [
+    "final-make-check",
+    "final-module-race"
+  ],
+  "no_global_dependency_link": true,
+  "no_project_dependency_version_change": true
+}

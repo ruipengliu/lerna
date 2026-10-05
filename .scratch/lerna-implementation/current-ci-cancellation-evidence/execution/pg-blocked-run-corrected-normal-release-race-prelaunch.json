@@ -1,0 +1,14 @@
+{
+  "event": "native_start_ack",
+  "operation": "pg-blocked-run-corrected-normal-release-race",
+  "pid": 3790419,
+  "pgid": 3790419,
+  "starttime": "15906325",
+  "root": "/tmp/lerna-current-ci-cancellation-execution",
+  "argv": [
+    "bash",
+    "-c",
+    "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; go test -race -v -mod=readonly -p=1 -tags=integration ./conformance/recovery -run \"^TestPGPoolRunBlockedSQLNormalRelease$\" -count=1 -timeout=120s"
+  ],
+  "deadline_seconds": 120
+}

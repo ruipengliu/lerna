@@ -1,0 +1,11 @@
+{
+  "event": "native_completion_ack",
+  "operation": "pg-blocked-run-corrected-caller-cancellation-race",
+  "pid": 3791769,
+  "pgid": 3791769,
+  "starttime": "15911152",
+  "exit": 0,
+  "group_absent": true,
+  "timed_out": false,
+  "owned_raw_fsync_close_ack": true
+}

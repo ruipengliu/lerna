@@ -1,9 +1,9 @@
-# Partial Run cancellation checkpoint
+# Run cancellation 原始资格证据
 
-This archive preserves the accepted mechanical cause RED, two mechanical normal/race controls, the actual opaque-DSN PG fixture failure and the corrected genuine PG normal release/cancel qualifications. It is partial evidence; PG pair race, original PG/SQLite affected controls, final checks, two independent axes, current resource audit and delivery/newCI remain pending.
+archive-map.json映射309个原字节文件。原partial checkpoint的165份、原100份race/受影响增量、首机械RED、1027失败及全部旧STATIC版本保留；partial-checkpoint-357-archive-map.json保存原165-map本身。原Go副本使用.go.txt，不格式化历史字节。
 
-`archive-map.json` gives exact original outside paths, current archive destinations, byte counts and SHA256 for165 immutable copied files. Original manifests and raw path labels are not rewritten. Original `.go` snapshots are archived as `.go.txt`; they are data, and their original bytes were not formatted. Current implementation is the real repository product/test files, not these snapshots.
+execution/保存普通/竞态raw、source/native预登记、completion ACK、outcome、源码快照和summary。final-static/保存规范checks、锁定离线安装前置、v1/v2/v3 observer和有限输入；旧STATIC文字属于当时准备状态，实际结果以execution对应summary为准。原outside路径及manifest不重写。
 
-Execution raws, separate pre-effect source/native registrations, completion ACKs, outcomes and source snapshots are under `execution/`. The ledger is a finite snapshot at this partial checkpoint, not a future/exhaustive resource census. `first-red-source`, `fixed-mechanical-source`, `live-caller-source`, `pg-blocked-run-source` and `pg-blocked-run-corrected-source` retain each corresponding actual source point. Source1027 and first raw a33f8821 remain the failed fixture; correctedfcfe is normal-qualified only.
+原owned-scopes.log是partial checkpoint有限快照；新v3 ledger-input是504-line检查后census；owned-scopes-after-audit-prefix-509.txt包含实际observer登记，510快照再包含STOP/RELEASE。快照不冒称终身全部登记，不把当前absence或进程退出当原Close证明。
 
-The adopted faithful PG decision is `adopted-faithful-pg-fixture-decision.md`. Static plans/candidates/diffs remain separately in `first-static`, `live-static`, `blocked-sql-static` and `affected-static`. Those command plans are not additional successful runs. Current status and limits are in [qualification](../current-ci-cancellation-qualification.md).
+review/保存独立Standards/Spec原报告。当前资格见[qualification](../current-ci-cancellation-qualification.md)；primary merge/push与新CI仍待，issue未resolve。

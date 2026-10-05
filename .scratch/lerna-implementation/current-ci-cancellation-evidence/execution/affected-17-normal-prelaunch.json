@@ -1,0 +1,14 @@
+{
+  "event": "native_start_ack",
+  "operation": "affected-17-normal",
+  "pid": 3803255,
+  "pgid": 3803255,
+  "starttime": "15956232",
+  "root": "/tmp/lerna-current-ci-cancellation-execution",
+  "argv": [
+    "bash",
+    "-c",
+    "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; go test -v -mod=readonly -p=1 -tags=integration ./conformance/recovery -run '^TestPGPoolLockedPagePreservesFairHeadAndMaintenanceCursor$' -count=1 -timeout=120s"
+  ],
+  "deadline_seconds": 120
+}

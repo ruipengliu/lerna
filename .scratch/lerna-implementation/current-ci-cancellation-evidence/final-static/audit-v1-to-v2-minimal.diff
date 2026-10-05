@@ -1,0 +1,11 @@
+--- audit.go (immutable original)
++++ audit-after-checks-v2.go (new static version)
+@@ -26,7 +26,7 @@
+ func errorFact(stage string,err error) map[string]any { f:=map[string]any{"stage":stage,"type":fmt.Sprintf("%T",err),"deadline":errors.Is(err,context.DeadlineExceeded)};var pg *pgconn.PgError;if errors.As(err,&pg){f["sqlstate"]=pg.Code};return f }
+ func appendFact(path string,fact any) error { b,e:=json.Marshal(fact);if e!=nil{return e};f,e:=os.OpenFile(path,os.O_WRONLY|os.O_APPEND,0600);if e!=nil{return e};_,writeErr:=f.Write(append(b,'\n'));return errors.Join(writeErr,f.Sync(),f.Close()) }
+ func run(out map[string]any) (retErr error) {
+- b,err:=os.ReadFile("/tmp/lerna-current-ci-cancellation-final-static/audit-prelaunch.json");if err!=nil{return err};var p plan;if err=json.Unmarshal(b,&p);err!=nil{return err};out["head"]=p.Commit;out["prelaunch_sha256"]=digest(b);out["cleanup_performed"]=false;out["nativeWait_implies_Close"]=false;out["historical_unknowns_retained"]=true
++ b,err:=os.ReadFile("/tmp/lerna-current-ci-cancellation-final-static/audit-after-checks-v2-prelaunch.json");if err!=nil{return err};var p plan;if err=json.Unmarshal(b,&p);err!=nil{return err};out["head"]=p.Commit;out["prelaunch_sha256"]=digest(b);out["cleanup_performed"]=false;out["nativeWait_implies_Close"]=false;out["historical_unknowns_retained"]=true
+  b,err=os.ReadFile(p.Ledger);if err!=nil{return err};lines:=strings.Split(strings.TrimSuffix(string(b),"\n"),"\n");if p.Last<1||p.Last>len(lines)||digest([]byte(strings.Join(lines[:p.Last],"\n")+"\n"))!=p.LedgerSHA{return errors.New("original ledger prefix changed")}
+  for name,h:=range p.Pins {b,err=os.ReadFile(filepath.Join(p.Worktree,name));if err!=nil{return err};if digest(b)!=h{return errors.New("qualified source changed")}};out["all22_pins_unchanged"]=true
+  ctx,cancel:=context.WithTimeout(context.Background(),5*time.Second);defer cancel()

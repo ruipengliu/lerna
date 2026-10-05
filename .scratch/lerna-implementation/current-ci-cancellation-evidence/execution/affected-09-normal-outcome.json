@@ -1,0 +1,11 @@
+{
+  "event": "native_completion_ack",
+  "operation": "affected-09-normal",
+  "pid": 3802179,
+  "pgid": 3802179,
+  "starttime": "15954672",
+  "exit": 0,
+  "group_absent": true,
+  "timed_out": false,
+  "owned_raw_fsync_close_ack": true
+}

@@ -1,0 +1,1040 @@
+?   	github.com/ruipengliu/lerna/adapters/objectstore/local	[no test files]
+?   	github.com/ruipengliu/lerna/adapters/postgres	[no test files]
+=== RUN   TestManagementPageRowsPreserveCloseAndPrimaryCauses
+=== RUN   TestManagementPageRowsPreserveCloseAndPrimaryCauses/policies/normal
+=== RUN   TestManagementPageRowsPreserveCloseAndPrimaryCauses/policies/early-close
+=== RUN   TestManagementPageRowsPreserveCloseAndPrimaryCauses/policies/decode-close
+=== RUN   TestManagementPageRowsPreserveCloseAndPrimaryCauses/policies/scan-close
+=== RUN   TestManagementPageRowsPreserveCloseAndPrimaryCauses/policies/iteration
+=== RUN   TestManagementPageRowsPreserveCloseAndPrimaryCauses/descendants/normal
+=== RUN   TestManagementPageRowsPreserveCloseAndPrimaryCauses/descendants/early-close
+=== RUN   TestManagementPageRowsPreserveCloseAndPrimaryCauses/descendants/decode-close
+=== RUN   TestManagementPageRowsPreserveCloseAndPrimaryCauses/descendants/scan-close
+=== RUN   TestManagementPageRowsPreserveCloseAndPrimaryCauses/descendants/iteration
+=== RUN   TestManagementPageRowsPreserveCloseAndPrimaryCauses/responsibilities/normal
+=== RUN   TestManagementPageRowsPreserveCloseAndPrimaryCauses/responsibilities/early-close
+=== RUN   TestManagementPageRowsPreserveCloseAndPrimaryCauses/responsibilities/decode-close
+=== RUN   TestManagementPageRowsPreserveCloseAndPrimaryCauses/responsibilities/scan-close
+=== RUN   TestManagementPageRowsPreserveCloseAndPrimaryCauses/responsibilities/iteration
+=== RUN   TestManagementPageRowsPreserveCloseAndPrimaryCauses/admissions/normal
+=== RUN   TestManagementPageRowsPreserveCloseAndPrimaryCauses/admissions/early-close
+=== RUN   TestManagementPageRowsPreserveCloseAndPrimaryCauses/admissions/decode-close
+=== RUN   TestManagementPageRowsPreserveCloseAndPrimaryCauses/admissions/scan-close
+=== RUN   TestManagementPageRowsPreserveCloseAndPrimaryCauses/admissions/iteration
+--- PASS: TestManagementPageRowsPreserveCloseAndPrimaryCauses (0.06s)
+    --- PASS: TestManagementPageRowsPreserveCloseAndPrimaryCauses/policies/normal (0.00s)
+    --- PASS: TestManagementPageRowsPreserveCloseAndPrimaryCauses/policies/early-close (0.00s)
+    --- PASS: TestManagementPageRowsPreserveCloseAndPrimaryCauses/policies/decode-close (0.00s)
+    --- PASS: TestManagementPageRowsPreserveCloseAndPrimaryCauses/policies/scan-close (0.00s)
+    --- PASS: TestManagementPageRowsPreserveCloseAndPrimaryCauses/policies/iteration (0.00s)
+    --- PASS: TestManagementPageRowsPreserveCloseAndPrimaryCauses/descendants/normal (0.04s)
+    --- PASS: TestManagementPageRowsPreserveCloseAndPrimaryCauses/descendants/early-close (0.00s)
+    --- PASS: TestManagementPageRowsPreserveCloseAndPrimaryCauses/descendants/decode-close (0.00s)
+    --- PASS: TestManagementPageRowsPreserveCloseAndPrimaryCauses/descendants/scan-close (0.00s)
+    --- PASS: TestManagementPageRowsPreserveCloseAndPrimaryCauses/descendants/iteration (0.00s)
+    --- PASS: TestManagementPageRowsPreserveCloseAndPrimaryCauses/responsibilities/normal (0.00s)
+    --- PASS: TestManagementPageRowsPreserveCloseAndPrimaryCauses/responsibilities/early-close (0.00s)
+    --- PASS: TestManagementPageRowsPreserveCloseAndPrimaryCauses/responsibilities/decode-close (0.00s)
+    --- PASS: TestManagementPageRowsPreserveCloseAndPrimaryCauses/responsibilities/scan-close (0.00s)
+    --- PASS: TestManagementPageRowsPreserveCloseAndPrimaryCauses/responsibilities/iteration (0.00s)
+    --- PASS: TestManagementPageRowsPreserveCloseAndPrimaryCauses/admissions/normal (0.00s)
+    --- PASS: TestManagementPageRowsPreserveCloseAndPrimaryCauses/admissions/early-close (0.00s)
+    --- PASS: TestManagementPageRowsPreserveCloseAndPrimaryCauses/admissions/decode-close (0.00s)
+    --- PASS: TestManagementPageRowsPreserveCloseAndPrimaryCauses/admissions/scan-close (0.00s)
+    --- PASS: TestManagementPageRowsPreserveCloseAndPrimaryCauses/admissions/iteration (0.00s)
+=== RUN   TestManagementFullRowsPreserveEarlyFailureCloseCause
+=== RUN   TestManagementFullRowsPreserveEarlyFailureCloseCause/unindexed/normal
+=== RUN   TestManagementFullRowsPreserveEarlyFailureCloseCause/unindexed/eof-close
+=== RUN   TestManagementFullRowsPreserveEarlyFailureCloseCause/unindexed/decode-close
+=== RUN   TestManagementFullRowsPreserveEarlyFailureCloseCause/unindexed/scan-close
+=== RUN   TestManagementFullRowsPreserveEarlyFailureCloseCause/unindexed/iteration
+=== RUN   TestManagementFullRowsPreserveEarlyFailureCloseCause/pending/normal
+=== RUN   TestManagementFullRowsPreserveEarlyFailureCloseCause/pending/eof-close
+=== RUN   TestManagementFullRowsPreserveEarlyFailureCloseCause/pending/decode-close
+=== RUN   TestManagementFullRowsPreserveEarlyFailureCloseCause/pending/scan-close
+=== RUN   TestManagementFullRowsPreserveEarlyFailureCloseCause/pending/iteration
+--- PASS: TestManagementFullRowsPreserveEarlyFailureCloseCause (0.01s)
+    --- PASS: TestManagementFullRowsPreserveEarlyFailureCloseCause/unindexed/normal (0.00s)
+    --- PASS: TestManagementFullRowsPreserveEarlyFailureCloseCause/unindexed/eof-close (0.00s)
+    --- PASS: TestManagementFullRowsPreserveEarlyFailureCloseCause/unindexed/decode-close (0.00s)
+    --- PASS: TestManagementFullRowsPreserveEarlyFailureCloseCause/unindexed/scan-close (0.00s)
+    --- PASS: TestManagementFullRowsPreserveEarlyFailureCloseCause/unindexed/iteration (0.00s)
+    --- PASS: TestManagementFullRowsPreserveEarlyFailureCloseCause/pending/normal (0.00s)
+    --- PASS: TestManagementFullRowsPreserveEarlyFailureCloseCause/pending/eof-close (0.00s)
+    --- PASS: TestManagementFullRowsPreserveEarlyFailureCloseCause/pending/decode-close (0.00s)
+    --- PASS: TestManagementFullRowsPreserveEarlyFailureCloseCause/pending/scan-close (0.00s)
+    --- PASS: TestManagementFullRowsPreserveEarlyFailureCloseCause/pending/iteration (0.00s)
+PASS
+ok  	github.com/ruipengliu/lerna/adapters/postgres/content	1.193s
+?   	github.com/ruipengliu/lerna/adapters/postgres/decision_engine	[no test files]
+=== RUN   TestCoreCloseKeepsFirstDriverFailure
+--- PASS: TestCoreCloseKeepsFirstDriverFailure (0.00s)
+=== RUN   TestCoreConcurrentCloseWaitsForFirstDriverResult
+--- PASS: TestCoreConcurrentCloseWaitsForFirstDriverResult (0.05s)
+=== RUN   TestCoreOpenPreservesStartupAndCloseOutcomes
+=== RUN   TestCoreOpenPreservesStartupAndCloseOutcomes/success
+=== RUN   TestCoreOpenPreservesStartupAndCloseOutcomes/ping_failure
+=== RUN   TestCoreOpenPreservesStartupAndCloseOutcomes/dual_failure
+=== RUN   TestCoreOpenPreservesStartupAndCloseOutcomes/cancelled
+=== RUN   TestCoreOpenPreservesStartupAndCloseOutcomes/open_failure
+--- PASS: TestCoreOpenPreservesStartupAndCloseOutcomes (0.00s)
+    --- PASS: TestCoreOpenPreservesStartupAndCloseOutcomes/success (0.00s)
+    --- PASS: TestCoreOpenPreservesStartupAndCloseOutcomes/ping_failure (0.00s)
+    --- PASS: TestCoreOpenPreservesStartupAndCloseOutcomes/dual_failure (0.00s)
+    --- PASS: TestCoreOpenPreservesStartupAndCloseOutcomes/cancelled (0.00s)
+    --- PASS: TestCoreOpenPreservesStartupAndCloseOutcomes/open_failure (0.00s)
+PASS
+ok  	github.com/ruipengliu/lerna/adapters/postgres/internal/pgstore	1.100s
+=== RUN   TestSQLiteMechanicalCloseFailureKeepsWriterReleaseUnattempted
+--- PASS: TestSQLiteMechanicalCloseFailureKeepsWriterReleaseUnattempted (0.00s)
+=== RUN   TestSQLiteMechanicalOpenPreservesStartupAndReleaseOutcomes
+=== RUN   TestSQLiteMechanicalOpenPreservesStartupAndReleaseOutcomes/success
+=== RUN   TestSQLiteMechanicalOpenPreservesStartupAndReleaseOutcomes/ping_failure
+=== RUN   TestSQLiteMechanicalOpenPreservesStartupAndReleaseOutcomes/dual_failure
+=== RUN   TestSQLiteMechanicalOpenPreservesStartupAndReleaseOutcomes/cancelled
+=== RUN   TestSQLiteMechanicalOpenPreservesStartupAndReleaseOutcomes/open_failure
+=== RUN   TestSQLiteMechanicalOpenPreservesStartupAndReleaseOutcomes/release_failure
+=== RUN   TestSQLiteMechanicalOpenPreservesStartupAndReleaseOutcomes/acquire_cleanup_failure
+--- PASS: TestSQLiteMechanicalOpenPreservesStartupAndReleaseOutcomes (0.00s)
+    --- PASS: TestSQLiteMechanicalOpenPreservesStartupAndReleaseOutcomes/success (0.00s)
+    --- PASS: TestSQLiteMechanicalOpenPreservesStartupAndReleaseOutcomes/ping_failure (0.00s)
+    --- PASS: TestSQLiteMechanicalOpenPreservesStartupAndReleaseOutcomes/dual_failure (0.00s)
+    --- PASS: TestSQLiteMechanicalOpenPreservesStartupAndReleaseOutcomes/cancelled (0.00s)
+    --- PASS: TestSQLiteMechanicalOpenPreservesStartupAndReleaseOutcomes/open_failure (0.00s)
+    --- PASS: TestSQLiteMechanicalOpenPreservesStartupAndReleaseOutcomes/release_failure (0.00s)
+    --- PASS: TestSQLiteMechanicalOpenPreservesStartupAndReleaseOutcomes/acquire_cleanup_failure (0.00s)
+PASS
+ok  	github.com/ruipengliu/lerna/adapters/sqlite	1.075s
+?   	github.com/ruipengliu/lerna/cmd/durable-work-fixture	[no test files]
+?   	github.com/ruipengliu/lerna/cmd/sqlite-durable-work-fixture	[no test files]
+?   	github.com/ruipengliu/lerna/components/decision_engine	[no test files]
+=== RUN   TestPublicErrorsAreClosedAndClassifiable
+--- PASS: TestPublicErrorsAreClosedAndClassifiable (0.02s)
+=== RUN   TestEnvelopeAcceptsDefinedFutureMethodWithoutOfferingExecution
+--- PASS: TestEnvelopeAcceptsDefinedFutureMethodWithoutOfferingExecution (0.03s)
+=== RUN   TestCommandGetRetainsOriginalIdentitySeparateFromQuery
+--- PASS: TestCommandGetRetainsOriginalIdentitySeparateFromQuery (0.02s)
+=== RUN   TestCommandGetRequiresExactTargetAndRejectsWriteRevision
+--- PASS: TestCommandGetRequiresExactTargetAndRejectsWriteRevision (0.00s)
+=== RUN   TestProgrammableEnvelopeCannotSmuggleJSONNumbers
+--- PASS: TestProgrammableEnvelopeCannotSmuggleJSONNumbers (0.00s)
+=== RUN   TestUnknownVersionAndMethodCannotDowngrade
+--- PASS: TestUnknownVersionAndMethodCannotDowngrade (0.00s)
+=== RUN   TestSharedCommandFixtures
+=== RUN   TestSharedCommandFixtures/query-original-owner
+=== RUN   TestSharedCommandFixtures/query-id-is-distinct
+=== RUN   TestSharedCommandFixtures/query-optional-trace
+=== RUN   TestSharedCommandFixtures/missing-contract_version
+=== RUN   TestSharedCommandFixtures/missing-profile
+=== RUN   TestSharedCommandFixtures/missing-command_id
+=== RUN   TestSharedCommandFixtures/missing-target
+=== RUN   TestSharedCommandFixtures/missing-method
+=== RUN   TestSharedCommandFixtures/missing-payload
+=== RUN   TestSharedCommandFixtures/missing-accept_before
+=== RUN   TestSharedCommandFixtures/unknown-top-field
+=== RUN   TestSharedCommandFixtures/unknown-payload-field
+=== RUN   TestSharedCommandFixtures/wrong-payload
+=== RUN   TestSharedCommandFixtures/get-forbids-expected-revision
+=== RUN   TestSharedCommandFixtures/wrong-target-kind
+=== RUN   TestSharedCommandFixtures/target-forbids-object-revision
+=== RUN   TestSharedCommandFixtures/target-ref-mismatch-tenant_id
+=== RUN   TestSharedCommandFixtures/target-ref-mismatch-owner_id
+=== RUN   TestSharedCommandFixtures/target-ref-mismatch-id
+=== RUN   TestSharedCommandFixtures/unknown-owner-field
+=== RUN   TestSharedCommandFixtures/null-owner
+=== RUN   TestSharedCommandFixtures/non-object-payload
+=== RUN   TestSharedCommandFixtures/wrong-command-id-type
+=== RUN   TestSharedCommandFixtures/empty-id
+=== RUN   TestSharedCommandFixtures/max-id-128
+=== RUN   TestSharedCommandFixtures/id-129
+=== RUN   TestSharedCommandFixtures/utc-leap-date
+=== RUN   TestSharedCommandFixtures/utc-year-lower-bound
+=== RUN   TestSharedCommandFixtures/utc-year-upper-bound
+=== RUN   TestSharedCommandFixtures/invalid-gregorian-date
+=== RUN   TestSharedCommandFixtures/offset-forbidden
+=== RUN   TestSharedCommandFixtures/unknown-version
+=== RUN   TestSharedCommandFixtures/design-version-not-supported
+=== RUN   TestSharedCommandFixtures/unknown-profile
+=== RUN   TestSharedCommandFixtures/future-method-not-open
+=== RUN   TestSharedCommandFixtures/bad-method-syntax
+=== RUN   TestSharedCommandFixtures/unregistered-payload-not-get-validated
+=== RUN   TestSharedCommandFixtures/duplicate-root-command-id
+=== RUN   TestSharedCommandFixtures/duplicate-decoded-nested-owner
+=== RUN   TestSharedCommandFixtures/trailing-json-value
+=== RUN   TestSharedCommandFixtures/nonfinite-NaN-token
+=== RUN   TestSharedCommandFixtures/numeric-command-id
+=== RUN   TestSharedCommandFixtures/exact-body-limit
+=== RUN   TestSharedCommandFixtures/body-limit-exceeded
+=== RUN   TestSharedCommandFixtures/future-envelope-format-only
+=== RUN   TestSharedCommandFixtures/envelope-payload-properties-1024
+=== RUN   TestSharedCommandFixtures/envelope-payload-properties-1025
+=== RUN   TestSharedCommandFixtures/envelope-container-depth-64
+=== RUN   TestSharedCommandFixtures/envelope-container-depth-65
+=== RUN   TestSharedCommandFixtures/public-error-schema_invalid
+=== RUN   TestSharedCommandFixtures/public-error-version_unsupported
+=== RUN   TestSharedCommandFixtures/public-error-forbidden
+=== RUN   TestSharedCommandFixtures/public-error-expired
+=== RUN   TestSharedCommandFixtures/public-error-idempotency_conflict
+=== RUN   TestSharedCommandFixtures/public-error-revision_changed
+=== RUN   TestSharedCommandFixtures/public-error-budget_exhausted
+=== RUN   TestSharedCommandFixtures/public-error-dependency_unavailable
+=== RUN   TestSharedCommandFixtures/public-error-unsupported
+=== RUN   TestSharedCommandFixtures/unknown-public-error
+=== RUN   TestSharedCommandFixtures/public-error-private-detail
+=== RUN   TestSharedCommandFixtures/command_id-rejects-lf
+=== RUN   TestSharedCommandFixtures/accept_before-rejects-lf
+=== RUN   TestSharedCommandFixtures/command_id-rejects-cr
+=== RUN   TestSharedCommandFixtures/accept_before-rejects-cr
+=== RUN   TestSharedCommandFixtures/command_id-rejects-line-separator
+=== RUN   TestSharedCommandFixtures/accept_before-rejects-line-separator
+=== RUN   TestSharedCommandFixtures/command_id-rejects-paragraph-separator
+=== RUN   TestSharedCommandFixtures/accept_before-rejects-paragraph-separator
+--- PASS: TestSharedCommandFixtures (0.26s)
+    --- PASS: TestSharedCommandFixtures/query-original-owner (0.00s)
+    --- PASS: TestSharedCommandFixtures/query-id-is-distinct (0.00s)
+    --- PASS: TestSharedCommandFixtures/query-optional-trace (0.00s)
+    --- PASS: TestSharedCommandFixtures/missing-contract_version (0.00s)
+    --- PASS: TestSharedCommandFixtures/missing-profile (0.00s)
+    --- PASS: TestSharedCommandFixtures/missing-command_id (0.00s)
+    --- PASS: TestSharedCommandFixtures/missing-target (0.00s)
+    --- PASS: TestSharedCommandFixtures/missing-method (0.00s)
+    --- PASS: TestSharedCommandFixtures/missing-payload (0.00s)
+    --- PASS: TestSharedCommandFixtures/missing-accept_before (0.00s)
+    --- PASS: TestSharedCommandFixtures/unknown-top-field (0.00s)
+    --- PASS: TestSharedCommandFixtures/unknown-payload-field (0.00s)
+    --- PASS: TestSharedCommandFixtures/wrong-payload (0.00s)
+    --- PASS: TestSharedCommandFixtures/get-forbids-expected-revision (0.00s)
+    --- PASS: TestSharedCommandFixtures/wrong-target-kind (0.00s)
+    --- PASS: TestSharedCommandFixtures/target-forbids-object-revision (0.00s)
+    --- PASS: TestSharedCommandFixtures/target-ref-mismatch-tenant_id (0.00s)
+    --- PASS: TestSharedCommandFixtures/target-ref-mismatch-owner_id (0.00s)
+    --- PASS: TestSharedCommandFixtures/target-ref-mismatch-id (0.00s)
+    --- PASS: TestSharedCommandFixtures/unknown-owner-field (0.00s)
+    --- PASS: TestSharedCommandFixtures/null-owner (0.00s)
+    --- PASS: TestSharedCommandFixtures/non-object-payload (0.00s)
+    --- PASS: TestSharedCommandFixtures/wrong-command-id-type (0.00s)
+    --- PASS: TestSharedCommandFixtures/empty-id (0.00s)
+    --- PASS: TestSharedCommandFixtures/max-id-128 (0.00s)
+    --- PASS: TestSharedCommandFixtures/id-129 (0.00s)
+    --- PASS: TestSharedCommandFixtures/utc-leap-date (0.00s)
+    --- PASS: TestSharedCommandFixtures/utc-year-lower-bound (0.00s)
+    --- PASS: TestSharedCommandFixtures/utc-year-upper-bound (0.00s)
+    --- PASS: TestSharedCommandFixtures/invalid-gregorian-date (0.00s)
+    --- PASS: TestSharedCommandFixtures/offset-forbidden (0.00s)
+    --- PASS: TestSharedCommandFixtures/unknown-version (0.00s)
+    --- PASS: TestSharedCommandFixtures/design-version-not-supported (0.00s)
+    --- PASS: TestSharedCommandFixtures/unknown-profile (0.00s)
+    --- PASS: TestSharedCommandFixtures/future-method-not-open (0.00s)
+    --- PASS: TestSharedCommandFixtures/bad-method-syntax (0.00s)
+    --- PASS: TestSharedCommandFixtures/unregistered-payload-not-get-validated (0.00s)
+    --- PASS: TestSharedCommandFixtures/duplicate-root-command-id (0.00s)
+    --- PASS: TestSharedCommandFixtures/duplicate-decoded-nested-owner (0.00s)
+    --- PASS: TestSharedCommandFixtures/trailing-json-value (0.00s)
+    --- PASS: TestSharedCommandFixtures/nonfinite-NaN-token (0.00s)
+    --- PASS: TestSharedCommandFixtures/numeric-command-id (0.00s)
+    --- PASS: TestSharedCommandFixtures/exact-body-limit (0.18s)
+    --- PASS: TestSharedCommandFixtures/body-limit-exceeded (0.01s)
+    --- PASS: TestSharedCommandFixtures/future-envelope-format-only (0.00s)
+    --- PASS: TestSharedCommandFixtures/envelope-payload-properties-1024 (0.01s)
+    --- PASS: TestSharedCommandFixtures/envelope-payload-properties-1025 (0.00s)
+    --- PASS: TestSharedCommandFixtures/envelope-container-depth-64 (0.00s)
+    --- PASS: TestSharedCommandFixtures/envelope-container-depth-65 (0.00s)
+    --- PASS: TestSharedCommandFixtures/public-error-schema_invalid (0.00s)
+    --- PASS: TestSharedCommandFixtures/public-error-version_unsupported (0.00s)
+    --- PASS: TestSharedCommandFixtures/public-error-forbidden (0.00s)
+    --- PASS: TestSharedCommandFixtures/public-error-expired (0.00s)
+    --- PASS: TestSharedCommandFixtures/public-error-idempotency_conflict (0.00s)
+    --- PASS: TestSharedCommandFixtures/public-error-revision_changed (0.00s)
+    --- PASS: TestSharedCommandFixtures/public-error-budget_exhausted (0.00s)
+    --- PASS: TestSharedCommandFixtures/public-error-dependency_unavailable (0.00s)
+    --- PASS: TestSharedCommandFixtures/public-error-unsupported (0.00s)
+    --- PASS: TestSharedCommandFixtures/unknown-public-error (0.00s)
+    --- PASS: TestSharedCommandFixtures/public-error-private-detail (0.00s)
+    --- PASS: TestSharedCommandFixtures/command_id-rejects-lf (0.00s)
+    --- PASS: TestSharedCommandFixtures/accept_before-rejects-lf (0.00s)
+    --- PASS: TestSharedCommandFixtures/command_id-rejects-cr (0.00s)
+    --- PASS: TestSharedCommandFixtures/accept_before-rejects-cr (0.00s)
+    --- PASS: TestSharedCommandFixtures/command_id-rejects-line-separator (0.00s)
+    --- PASS: TestSharedCommandFixtures/accept_before-rejects-line-separator (0.00s)
+    --- PASS: TestSharedCommandFixtures/command_id-rejects-paragraph-separator (0.00s)
+    --- PASS: TestSharedCommandFixtures/accept_before-rejects-paragraph-separator (0.00s)
+=== RUN   TestProgrammaticPayloadAlsoEnforcesContainerDepth
+--- PASS: TestProgrammaticPayloadAlsoEnforcesContainerDepth (0.00s)
+=== RUN   TestPublicErrorProjectionCannotDiscloseLocalCause
+--- PASS: TestPublicErrorProjectionCannotDiscloseLocalCause (0.00s)
+=== RUN   TestProgrammaticPayloadRejectsValuesOutsideJSON
+--- PASS: TestProgrammaticPayloadRejectsValuesOutsideJSON (0.00s)
+=== RUN   TestCancelledBeforeInputHasExactZeroObservations
+=== RUN   TestCancelledBeforeInputHasExactZeroObservations/cancel_before_decide_no_fake_snapshot
+=== RUN   TestCancelledBeforeInputHasExactZeroObservations/current_stop_outside_frozen_cancelled_Decision
+=== RUN   TestCancelledBeforeInputHasExactZeroObservations/pre-input_cancellation_cannot_invent_rule_starts
+=== RUN   TestCancelledBeforeInputHasExactZeroObservations/pre-input_cancellation_cannot_invent_input_bytes
+=== RUN   TestCancelledBeforeInputHasExactZeroObservations/pre-input_cancellation_cannot_invent_unknown_measurements
+--- PASS: TestCancelledBeforeInputHasExactZeroObservations (0.25s)
+    --- PASS: TestCancelledBeforeInputHasExactZeroObservations/cancel_before_decide_no_fake_snapshot (0.09s)
+    --- PASS: TestCancelledBeforeInputHasExactZeroObservations/current_stop_outside_frozen_cancelled_Decision (0.11s)
+    --- PASS: TestCancelledBeforeInputHasExactZeroObservations/pre-input_cancellation_cannot_invent_rule_starts (0.00s)
+    --- PASS: TestCancelledBeforeInputHasExactZeroObservations/pre-input_cancellation_cannot_invent_input_bytes (0.00s)
+    --- PASS: TestCancelledBeforeInputHasExactZeroObservations/pre-input_cancellation_cannot_invent_unknown_measurements (0.00s)
+=== RUN   TestFixedDecisionInputTypedRoundtrip
+--- PASS: TestFixedDecisionInputTypedRoundtrip (0.14s)
+=== RUN   TestDecisionDigestAndIsolatedInventory
+--- PASS: TestDecisionDigestAndIsolatedInventory (0.19s)
+=== RUN   TestCompletedDecisionContractNegotiatesAllMethods
+=== RUN   TestCompletedDecisionContractNegotiatesAllMethods/command.get
+=== RUN   TestCompletedDecisionContractNegotiatesAllMethods/decision_engine.decide
+=== RUN   TestCompletedDecisionContractNegotiatesAllMethods/decision_engine.get
+=== RUN   TestCompletedDecisionContractNegotiatesAllMethods/decision_engine.cancel
+--- PASS: TestCompletedDecisionContractNegotiatesAllMethods (0.07s)
+    --- PASS: TestCompletedDecisionContractNegotiatesAllMethods/command.get (0.07s)
+    --- PASS: TestCompletedDecisionContractNegotiatesAllMethods/decision_engine.decide (0.00s)
+    --- PASS: TestCompletedDecisionContractNegotiatesAllMethods/decision_engine.get (0.00s)
+    --- PASS: TestCompletedDecisionContractNegotiatesAllMethods/decision_engine.cancel (0.00s)
+=== RUN   TestCompletedDecisionContractRefusesInexactNegotiation
+=== RUN   TestCompletedDecisionContractRefusesInexactNegotiation/command.get/version
+=== RUN   TestCompletedDecisionContractRefusesInexactNegotiation/command.get/profile
+=== RUN   TestCompletedDecisionContractRefusesInexactNegotiation/command.get/input_digest
+=== RUN   TestCompletedDecisionContractRefusesInexactNegotiation/command.get/output_digest
+=== RUN   TestCompletedDecisionContractRefusesInexactNegotiation/command.get/both_digests
+=== RUN   TestCompletedDecisionContractRefusesInexactNegotiation/command.get/missing_method
+=== RUN   TestCompletedDecisionContractRefusesInexactNegotiation/decision_engine.decide/version
+=== RUN   TestCompletedDecisionContractRefusesInexactNegotiation/decision_engine.decide/profile
+=== RUN   TestCompletedDecisionContractRefusesInexactNegotiation/decision_engine.decide/input_digest
+=== RUN   TestCompletedDecisionContractRefusesInexactNegotiation/decision_engine.decide/output_digest
+=== RUN   TestCompletedDecisionContractRefusesInexactNegotiation/decision_engine.decide/both_digests
+=== RUN   TestCompletedDecisionContractRefusesInexactNegotiation/decision_engine.decide/missing_method
+=== RUN   TestCompletedDecisionContractRefusesInexactNegotiation/decision_engine.get/version
+=== RUN   TestCompletedDecisionContractRefusesInexactNegotiation/decision_engine.get/profile
+=== RUN   TestCompletedDecisionContractRefusesInexactNegotiation/decision_engine.get/input_digest
+=== RUN   TestCompletedDecisionContractRefusesInexactNegotiation/decision_engine.get/output_digest
+=== RUN   TestCompletedDecisionContractRefusesInexactNegotiation/decision_engine.get/both_digests
+=== RUN   TestCompletedDecisionContractRefusesInexactNegotiation/decision_engine.get/missing_method
+=== RUN   TestCompletedDecisionContractRefusesInexactNegotiation/decision_engine.cancel/version
+=== RUN   TestCompletedDecisionContractRefusesInexactNegotiation/decision_engine.cancel/profile
+=== RUN   TestCompletedDecisionContractRefusesInexactNegotiation/decision_engine.cancel/input_digest
+=== RUN   TestCompletedDecisionContractRefusesInexactNegotiation/decision_engine.cancel/output_digest
+=== RUN   TestCompletedDecisionContractRefusesInexactNegotiation/decision_engine.cancel/both_digests
+=== RUN   TestCompletedDecisionContractRefusesInexactNegotiation/decision_engine.cancel/missing_method
+--- PASS: TestCompletedDecisionContractRefusesInexactNegotiation (0.01s)
+    --- PASS: TestCompletedDecisionContractRefusesInexactNegotiation/command.get/version (0.00s)
+    --- PASS: TestCompletedDecisionContractRefusesInexactNegotiation/command.get/profile (0.00s)
+    --- PASS: TestCompletedDecisionContractRefusesInexactNegotiation/command.get/input_digest (0.00s)
+    --- PASS: TestCompletedDecisionContractRefusesInexactNegotiation/command.get/output_digest (0.00s)
+    --- PASS: TestCompletedDecisionContractRefusesInexactNegotiation/command.get/both_digests (0.00s)
+    --- PASS: TestCompletedDecisionContractRefusesInexactNegotiation/command.get/missing_method (0.00s)
+    --- PASS: TestCompletedDecisionContractRefusesInexactNegotiation/decision_engine.decide/version (0.00s)
+    --- PASS: TestCompletedDecisionContractRefusesInexactNegotiation/decision_engine.decide/profile (0.00s)
+    --- PASS: TestCompletedDecisionContractRefusesInexactNegotiation/decision_engine.decide/input_digest (0.00s)
+    --- PASS: TestCompletedDecisionContractRefusesInexactNegotiation/decision_engine.decide/output_digest (0.00s)
+    --- PASS: TestCompletedDecisionContractRefusesInexactNegotiation/decision_engine.decide/both_digests (0.00s)
+    --- PASS: TestCompletedDecisionContractRefusesInexactNegotiation/decision_engine.decide/missing_method (0.00s)
+    --- PASS: TestCompletedDecisionContractRefusesInexactNegotiation/decision_engine.get/version (0.00s)
+    --- PASS: TestCompletedDecisionContractRefusesInexactNegotiation/decision_engine.get/profile (0.00s)
+    --- PASS: TestCompletedDecisionContractRefusesInexactNegotiation/decision_engine.get/input_digest (0.00s)
+    --- PASS: TestCompletedDecisionContractRefusesInexactNegotiation/decision_engine.get/output_digest (0.00s)
+    --- PASS: TestCompletedDecisionContractRefusesInexactNegotiation/decision_engine.get/both_digests (0.00s)
+    --- PASS: TestCompletedDecisionContractRefusesInexactNegotiation/decision_engine.get/missing_method (0.00s)
+    --- PASS: TestCompletedDecisionContractRefusesInexactNegotiation/decision_engine.cancel/version (0.00s)
+    --- PASS: TestCompletedDecisionContractRefusesInexactNegotiation/decision_engine.cancel/profile (0.00s)
+    --- PASS: TestCompletedDecisionContractRefusesInexactNegotiation/decision_engine.cancel/input_digest (0.00s)
+    --- PASS: TestCompletedDecisionContractRefusesInexactNegotiation/decision_engine.cancel/output_digest (0.00s)
+    --- PASS: TestCompletedDecisionContractRefusesInexactNegotiation/decision_engine.cancel/both_digests (0.00s)
+    --- PASS: TestCompletedDecisionContractRefusesInexactNegotiation/decision_engine.cancel/missing_method (0.00s)
+=== RUN   TestCommandDigestMatchesIndependentGolden
+=== RUN   TestCommandDigestMatchesIndependentGolden/unicode-exact-golden
+=== RUN   TestCommandDigestMatchesIndependentGolden/reversed-keys-and-wire-whitespace
+=== RUN   TestCommandDigestMatchesIndependentGolden/trace-and-key-are-outside-content-digest
+=== RUN   TestCommandDigestMatchesIndependentGolden/contract-version-changes-digest
+=== RUN   TestCommandDigestMatchesIndependentGolden/profile-changes-digest
+=== RUN   TestCommandDigestMatchesIndependentGolden/method-changes-digest
+=== RUN   TestCommandDigestMatchesIndependentGolden/deadline-changes-digest
+=== RUN   TestCommandDigestMatchesIndependentGolden/target-owner_id-changes-digest
+=== RUN   TestCommandDigestMatchesIndependentGolden/target-tenant_id-changes-digest
+=== RUN   TestCommandDigestMatchesIndependentGolden/target-id-changes-digest
+=== RUN   TestCommandDigestMatchesIndependentGolden/target-kind-changes-digest
+=== RUN   TestCommandDigestMatchesIndependentGolden/trusted-subject_id-changes-digest
+=== RUN   TestCommandDigestMatchesIndependentGolden/trusted-tenant_id-changes-digest
+=== RUN   TestCommandDigestMatchesIndependentGolden/expected-revision-0
+=== RUN   TestCommandDigestMatchesIndependentGolden/expected-revision-9007199254740993
+=== RUN   TestCommandDigestMatchesIndependentGolden/expected-revision-9223372036854775807
+=== RUN   TestCommandDigestMatchesIndependentGolden/target-revision-bound
+=== RUN   TestCommandDigestMatchesIndependentGolden/business-text-whitespace
+=== RUN   TestCommandDigestMatchesIndependentGolden/business-text-unicode-decomposed
+=== RUN   TestCommandDigestMatchesIndependentGolden/business-text-unicode-composed
+=== RUN   TestCommandDigestMatchesIndependentGolden/business-text-path-and-case
+=== RUN   TestCommandDigestMatchesIndependentGolden/business-text-control-characters
+=== RUN   TestCommandDigestMatchesIndependentGolden/trusted-delegation-chain-0
+=== RUN   TestCommandDigestMatchesIndependentGolden/trusted-delegation-chain-1
+=== RUN   TestCommandDigestMatchesIndependentGolden/trusted-delegation-chain-2
+=== RUN   TestCommandDigestMatchesIndependentGolden/trusted-delegation-chain-3
+=== RUN   TestCommandDigestMatchesIndependentGolden/utf16-order-arrays-null-bool-prototype-keys
+=== RUN   TestCommandDigestMatchesIndependentGolden/array-original-order
+=== RUN   TestCommandDigestMatchesIndependentGolden/array-reversal-changes-digest
+=== RUN   TestCommandDigestMatchesIndependentGolden/payload-subject-does-not-replace-trusted-subject
+=== RUN   TestCommandDigestMatchesIndependentGolden/duplicate-command-key
+=== RUN   TestCommandDigestMatchesIndependentGolden/number-in-payload
+=== RUN   TestCommandDigestMatchesIndependentGolden/invalid-time
+=== RUN   TestCommandDigestMatchesIndependentGolden/explicit-null-revision
+=== RUN   TestCommandDigestMatchesIndependentGolden/raw-subject-number
+=== RUN   TestCommandDigestMatchesIndependentGolden/duplicate-subject-decoded-key
+=== RUN   TestCommandDigestMatchesIndependentGolden/untrusted-subject-field
+=== RUN   TestCommandDigestMatchesIndependentGolden/missing-subject-chain
+=== RUN   TestCommandDigestMatchesIndependentGolden/null-subject-chain
+=== RUN   TestCommandDigestMatchesIndependentGolden/subject-id-over-bound
+=== RUN   TestCommandDigestMatchesIndependentGolden/subject-chain-over-bound
+=== RUN   TestCommandDigestMatchesIndependentGolden/unknown-delegation-field
+=== RUN   TestCommandDigestMatchesIndependentGolden/subject-invalid-surrogate
+=== RUN   TestCommandDigestMatchesIndependentGolden/subject-trailing-json
+=== RUN   TestCommandDigestMatchesIndependentGolden/one-mib-body-remains-valid-with-internal-identity
+=== RUN   TestCommandDigestMatchesIndependentGolden/one-mib-plus-one-wire-refused
+--- PASS: TestCommandDigestMatchesIndependentGolden (0.46s)
+    --- PASS: TestCommandDigestMatchesIndependentGolden/unicode-exact-golden (0.02s)
+    --- PASS: TestCommandDigestMatchesIndependentGolden/reversed-keys-and-wire-whitespace (0.00s)
+    --- PASS: TestCommandDigestMatchesIndependentGolden/trace-and-key-are-outside-content-digest (0.00s)
+    --- PASS: TestCommandDigestMatchesIndependentGolden/contract-version-changes-digest (0.00s)
+    --- PASS: TestCommandDigestMatchesIndependentGolden/profile-changes-digest (0.00s)
+    --- PASS: TestCommandDigestMatchesIndependentGolden/method-changes-digest (0.00s)
+    --- PASS: TestCommandDigestMatchesIndependentGolden/deadline-changes-digest (0.00s)
+    --- PASS: TestCommandDigestMatchesIndependentGolden/target-owner_id-changes-digest (0.00s)
+    --- PASS: TestCommandDigestMatchesIndependentGolden/target-tenant_id-changes-digest (0.00s)
+    --- PASS: TestCommandDigestMatchesIndependentGolden/target-id-changes-digest (0.00s)
+    --- PASS: TestCommandDigestMatchesIndependentGolden/target-kind-changes-digest (0.00s)
+    --- PASS: TestCommandDigestMatchesIndependentGolden/trusted-subject_id-changes-digest (0.00s)
+    --- PASS: TestCommandDigestMatchesIndependentGolden/trusted-tenant_id-changes-digest (0.00s)
+    --- PASS: TestCommandDigestMatchesIndependentGolden/expected-revision-0 (0.00s)
+    --- PASS: TestCommandDigestMatchesIndependentGolden/expected-revision-9007199254740993 (0.00s)
+    --- PASS: TestCommandDigestMatchesIndependentGolden/expected-revision-9223372036854775807 (0.00s)
+    --- PASS: TestCommandDigestMatchesIndependentGolden/target-revision-bound (0.00s)
+    --- PASS: TestCommandDigestMatchesIndependentGolden/business-text-whitespace (0.00s)
+    --- PASS: TestCommandDigestMatchesIndependentGolden/business-text-unicode-decomposed (0.00s)
+    --- PASS: TestCommandDigestMatchesIndependentGolden/business-text-unicode-composed (0.00s)
+    --- PASS: TestCommandDigestMatchesIndependentGolden/business-text-path-and-case (0.00s)
+    --- PASS: TestCommandDigestMatchesIndependentGolden/business-text-control-characters (0.00s)
+    --- PASS: TestCommandDigestMatchesIndependentGolden/trusted-delegation-chain-0 (0.00s)
+    --- PASS: TestCommandDigestMatchesIndependentGolden/trusted-delegation-chain-1 (0.00s)
+    --- PASS: TestCommandDigestMatchesIndependentGolden/trusted-delegation-chain-2 (0.00s)
+    --- PASS: TestCommandDigestMatchesIndependentGolden/trusted-delegation-chain-3 (0.00s)
+    --- PASS: TestCommandDigestMatchesIndependentGolden/utf16-order-arrays-null-bool-prototype-keys (0.00s)
+    --- PASS: TestCommandDigestMatchesIndependentGolden/array-original-order (0.00s)
+    --- PASS: TestCommandDigestMatchesIndependentGolden/array-reversal-changes-digest (0.00s)
+    --- PASS: TestCommandDigestMatchesIndependentGolden/payload-subject-does-not-replace-trusted-subject (0.00s)
+    --- PASS: TestCommandDigestMatchesIndependentGolden/duplicate-command-key (0.00s)
+    --- PASS: TestCommandDigestMatchesIndependentGolden/number-in-payload (0.00s)
+    --- PASS: TestCommandDigestMatchesIndependentGolden/invalid-time (0.00s)
+    --- PASS: TestCommandDigestMatchesIndependentGolden/explicit-null-revision (0.00s)
+    --- PASS: TestCommandDigestMatchesIndependentGolden/raw-subject-number (0.00s)
+    --- PASS: TestCommandDigestMatchesIndependentGolden/duplicate-subject-decoded-key (0.00s)
+    --- PASS: TestCommandDigestMatchesIndependentGolden/untrusted-subject-field (0.00s)
+    --- PASS: TestCommandDigestMatchesIndependentGolden/missing-subject-chain (0.00s)
+    --- PASS: TestCommandDigestMatchesIndependentGolden/null-subject-chain (0.00s)
+    --- PASS: TestCommandDigestMatchesIndependentGolden/subject-id-over-bound (0.00s)
+    --- PASS: TestCommandDigestMatchesIndependentGolden/subject-chain-over-bound (0.00s)
+    --- PASS: TestCommandDigestMatchesIndependentGolden/unknown-delegation-field (0.00s)
+    --- PASS: TestCommandDigestMatchesIndependentGolden/subject-invalid-surrogate (0.00s)
+    --- PASS: TestCommandDigestMatchesIndependentGolden/subject-trailing-json (0.00s)
+    --- PASS: TestCommandDigestMatchesIndependentGolden/one-mib-body-remains-valid-with-internal-identity (0.36s)
+    --- PASS: TestCommandDigestMatchesIndependentGolden/one-mib-plus-one-wire-refused (0.01s)
+=== RUN   TestDigestDoesNotGrantExecutionForFixtureMethods
+--- PASS: TestDigestDoesNotGrantExecutionForFixtureMethods (0.01s)
+=== RUN   TestNegotiationAdvertisesOnlyCompletedCommandGet
+--- PASS: TestNegotiationAdvertisesOnlyCompletedCommandGet (0.00s)
+=== RUN   TestNegotiationAcceptsExactMethodSchemas
+--- PASS: TestNegotiationAcceptsExactMethodSchemas (0.03s)
+=== RUN   TestNegotiationSharedRefusals
+=== RUN   TestNegotiationSharedRefusals/exact_pair
+=== RUN   TestNegotiationSharedRefusals/contract_version_2.0.0
+=== RUN   TestNegotiationSharedRefusals/contract_version_v2-design-1
+=== RUN   TestNegotiationSharedRefusals/profile_core
+=== RUN   TestNegotiationSharedRefusals/profile_schedule
+=== RUN   TestNegotiationSharedRefusals/method_task.submit
+=== RUN   TestNegotiationSharedRefusals/method_memory.query
+=== RUN   TestNegotiationSharedRefusals/method_delegation.create
+=== RUN   TestNegotiationSharedRefusals/method_environment.install
+=== RUN   TestNegotiationSharedRefusals/input_schema_digest_sha256:0000000000000000000000000000000000000000000000000000000000000000
+=== RUN   TestNegotiationSharedRefusals/output_schema_digest_sha256:0000000000000000000000000000000000000000000000000000000000000000
+=== RUN   TestNegotiationSharedRefusals/input_schema_digest_INVALID
+=== RUN   TestNegotiationSharedRefusals/added_optional_field
+=== RUN   TestNegotiationSharedRefusals/missing_digest
+=== RUN   TestNegotiationSharedRefusals/duplicate_version
+--- PASS: TestNegotiationSharedRefusals (0.01s)
+    --- PASS: TestNegotiationSharedRefusals/exact_pair (0.00s)
+    --- PASS: TestNegotiationSharedRefusals/contract_version_2.0.0 (0.00s)
+    --- PASS: TestNegotiationSharedRefusals/contract_version_v2-design-1 (0.00s)
+    --- PASS: TestNegotiationSharedRefusals/profile_core (0.00s)
+    --- PASS: TestNegotiationSharedRefusals/profile_schedule (0.00s)
+    --- PASS: TestNegotiationSharedRefusals/method_task.submit (0.00s)
+    --- PASS: TestNegotiationSharedRefusals/method_memory.query (0.00s)
+    --- PASS: TestNegotiationSharedRefusals/method_delegation.create (0.00s)
+    --- PASS: TestNegotiationSharedRefusals/method_environment.install (0.00s)
+    --- PASS: TestNegotiationSharedRefusals/input_schema_digest_sha256:0000000000000000000000000000000000000000000000000000000000000000 (0.00s)
+    --- PASS: TestNegotiationSharedRefusals/output_schema_digest_sha256:0000000000000000000000000000000000000000000000000000000000000000 (0.00s)
+    --- PASS: TestNegotiationSharedRefusals/input_schema_digest_INVALID (0.00s)
+    --- PASS: TestNegotiationSharedRefusals/added_optional_field (0.00s)
+    --- PASS: TestNegotiationSharedRefusals/missing_digest (0.00s)
+    --- PASS: TestNegotiationSharedRefusals/duplicate_version (0.00s)
+=== RUN   TestNegotiationThenAuthenticatedQueryPreservesReceiptAndCurrentProgress
+--- PASS: TestNegotiationThenAuthenticatedQueryPreservesReceiptAndCurrentProgress (0.07s)
+=== RUN   TestNegotiationSchemaDigestIndependentGoldens
+--- PASS: TestNegotiationSchemaDigestIndependentGoldens (0.02s)
+=== RUN   TestNegotiationDoesNotOpenDesignedBusinessMethods
+--- PASS: TestNegotiationDoesNotOpenDesignedBusinessMethods (0.00s)
+=== RUN   TestAuthenticatedQueryOpaqueRefusalAndNormalControl
+--- PASS: TestAuthenticatedQueryOpaqueRefusalAndNormalControl (0.01s)
+=== RUN   TestAuthenticatedQuerySnapshotsCallerWireAndTrustedBinding
+--- PASS: TestAuthenticatedQuerySnapshotsCallerWireAndTrustedBinding (0.01s)
+=== RUN   TestAuthenticatedQuerySharedFixtures
+=== RUN   TestAuthenticatedQuerySharedFixtures/allowed-existing-read
+=== RUN   TestAuthenticatedQuerySharedFixtures/allowed-absent-read
+=== RUN   TestAuthenticatedQuerySharedFixtures/allowed-delegated-read
+=== RUN   TestAuthenticatedQuerySharedFixtures/denied-subject-existing
+=== RUN   TestAuthenticatedQuerySharedFixtures/denied-subject-absent
+=== RUN   TestAuthenticatedQuerySharedFixtures/missing-principal-existing
+=== RUN   TestAuthenticatedQuerySharedFixtures/missing-principal-absent
+=== RUN   TestAuthenticatedQuerySharedFixtures/invalid-principal-existing
+=== RUN   TestAuthenticatedQuerySharedFixtures/invalid-principal-absent
+=== RUN   TestAuthenticatedQuerySharedFixtures/cross-tenant-existing
+=== RUN   TestAuthenticatedQuerySharedFixtures/cross-tenant-absent
+=== RUN   TestAuthenticatedQuerySharedFixtures/untrusted-delegation-existing
+=== RUN   TestAuthenticatedQuerySharedFixtures/untrusted-delegation-absent
+=== RUN   TestAuthenticatedQuerySharedFixtures/self-reported-owner-is-no-grant
+=== RUN   TestAuthenticatedQuerySharedFixtures/target-tenant-cannot-override-principal
+=== RUN   TestAuthenticatedQuerySharedFixtures/payload-cannot-forge-principal
+=== RUN   TestAuthenticatedQuerySharedFixtures/authorization-failure-existing
+=== RUN   TestAuthenticatedQuerySharedFixtures/authorization-failure-absent
+=== RUN   TestAuthenticatedQuerySharedFixtures/directory-failure
+=== RUN   TestAuthenticatedQuerySharedFixtures/directory-wrong_owner
+=== RUN   TestAuthenticatedQuerySharedFixtures/directory-wrong_tenant
+=== RUN   TestAuthenticatedQuerySharedFixtures/directory-missing_reader
+=== RUN   TestAuthenticatedQuerySharedFixtures/original-owner-unavailable
+=== RUN   TestAuthenticatedQuerySharedFixtures/original-owner-retention
+=== RUN   TestAuthenticatedQuerySharedFixtures/read-cutoff-expired
+=== RUN   TestAuthenticatedQuerySharedFixtures/denied-subject-directory-failure
+=== RUN   TestAuthenticatedQuerySharedFixtures/denied-subject-directory-wrong_owner
+=== RUN   TestAuthenticatedQuerySharedFixtures/denied-subject-untrusted-fact
+--- PASS: TestAuthenticatedQuerySharedFixtures (0.09s)
+    --- PASS: TestAuthenticatedQuerySharedFixtures/allowed-existing-read (0.01s)
+    --- PASS: TestAuthenticatedQuerySharedFixtures/allowed-absent-read (0.00s)
+    --- PASS: TestAuthenticatedQuerySharedFixtures/allowed-delegated-read (0.01s)
+    --- PASS: TestAuthenticatedQuerySharedFixtures/denied-subject-existing (0.00s)
+    --- PASS: TestAuthenticatedQuerySharedFixtures/denied-subject-absent (0.00s)
+    --- PASS: TestAuthenticatedQuerySharedFixtures/missing-principal-existing (0.00s)
+    --- PASS: TestAuthenticatedQuerySharedFixtures/missing-principal-absent (0.00s)
+    --- PASS: TestAuthenticatedQuerySharedFixtures/invalid-principal-existing (0.00s)
+    --- PASS: TestAuthenticatedQuerySharedFixtures/invalid-principal-absent (0.00s)
+    --- PASS: TestAuthenticatedQuerySharedFixtures/cross-tenant-existing (0.00s)
+    --- PASS: TestAuthenticatedQuerySharedFixtures/cross-tenant-absent (0.00s)
+    --- PASS: TestAuthenticatedQuerySharedFixtures/untrusted-delegation-existing (0.00s)
+    --- PASS: TestAuthenticatedQuerySharedFixtures/untrusted-delegation-absent (0.00s)
+    --- PASS: TestAuthenticatedQuerySharedFixtures/self-reported-owner-is-no-grant (0.00s)
+    --- PASS: TestAuthenticatedQuerySharedFixtures/target-tenant-cannot-override-principal (0.00s)
+    --- PASS: TestAuthenticatedQuerySharedFixtures/payload-cannot-forge-principal (0.00s)
+    --- PASS: TestAuthenticatedQuerySharedFixtures/authorization-failure-existing (0.00s)
+    --- PASS: TestAuthenticatedQuerySharedFixtures/authorization-failure-absent (0.00s)
+    --- PASS: TestAuthenticatedQuerySharedFixtures/directory-failure (0.00s)
+    --- PASS: TestAuthenticatedQuerySharedFixtures/directory-wrong_owner (0.00s)
+    --- PASS: TestAuthenticatedQuerySharedFixtures/directory-wrong_tenant (0.00s)
+    --- PASS: TestAuthenticatedQuerySharedFixtures/directory-missing_reader (0.00s)
+    --- PASS: TestAuthenticatedQuerySharedFixtures/original-owner-unavailable (0.01s)
+    --- PASS: TestAuthenticatedQuerySharedFixtures/original-owner-retention (0.01s)
+    --- PASS: TestAuthenticatedQuerySharedFixtures/read-cutoff-expired (0.00s)
+    --- PASS: TestAuthenticatedQuerySharedFixtures/denied-subject-directory-failure (0.00s)
+    --- PASS: TestAuthenticatedQuerySharedFixtures/denied-subject-directory-wrong_owner (0.00s)
+    --- PASS: TestAuthenticatedQuerySharedFixtures/denied-subject-untrusted-fact (0.00s)
+=== RUN   TestAuthenticatedQueryCancellationIsAReadFaultNotAuthorizationRefusal
+--- PASS: TestAuthenticatedQueryCancellationIsAReadFaultNotAuthorizationRefusal (0.00s)
+=== RUN   TestAuthenticatedQueryFixedOwnerSurvivesDirectoryAndDefaultChangesReadOnly
+--- PASS: TestAuthenticatedQueryFixedOwnerSurvivesDirectoryAndDefaultChangesReadOnly (0.06s)
+=== RUN   TestAuthenticatedQueryRequiresFiniteContextAndKeepsStartCutoff
+--- PASS: TestAuthenticatedQueryRequiresFiniteContextAndKeepsStartCutoff (0.01s)
+=== RUN   TestAuthenticatedQuery11SharedFixtures
+=== RUN   TestAuthenticatedQuery11SharedFixtures/allowed-existing-read
+=== RUN   TestAuthenticatedQuery11SharedFixtures/allowed-absent-read
+=== RUN   TestAuthenticatedQuery11SharedFixtures/allowed-delegated-read
+=== RUN   TestAuthenticatedQuery11SharedFixtures/denied-subject-existing
+=== RUN   TestAuthenticatedQuery11SharedFixtures/denied-subject-absent
+=== RUN   TestAuthenticatedQuery11SharedFixtures/missing-principal-existing
+=== RUN   TestAuthenticatedQuery11SharedFixtures/missing-principal-absent
+=== RUN   TestAuthenticatedQuery11SharedFixtures/invalid-principal-existing
+=== RUN   TestAuthenticatedQuery11SharedFixtures/invalid-principal-absent
+=== RUN   TestAuthenticatedQuery11SharedFixtures/cross-tenant-existing
+=== RUN   TestAuthenticatedQuery11SharedFixtures/cross-tenant-absent
+=== RUN   TestAuthenticatedQuery11SharedFixtures/untrusted-delegation-existing
+=== RUN   TestAuthenticatedQuery11SharedFixtures/untrusted-delegation-absent
+=== RUN   TestAuthenticatedQuery11SharedFixtures/self-reported-owner-is-no-grant
+=== RUN   TestAuthenticatedQuery11SharedFixtures/target-tenant-cannot-override-principal
+=== RUN   TestAuthenticatedQuery11SharedFixtures/payload-cannot-forge-principal
+=== RUN   TestAuthenticatedQuery11SharedFixtures/authorization-failure-existing
+=== RUN   TestAuthenticatedQuery11SharedFixtures/authorization-failure-absent
+=== RUN   TestAuthenticatedQuery11SharedFixtures/directory-failure
+=== RUN   TestAuthenticatedQuery11SharedFixtures/directory-wrong_owner
+=== RUN   TestAuthenticatedQuery11SharedFixtures/directory-wrong_tenant
+=== RUN   TestAuthenticatedQuery11SharedFixtures/directory-missing_reader
+=== RUN   TestAuthenticatedQuery11SharedFixtures/original-owner-unavailable
+=== RUN   TestAuthenticatedQuery11SharedFixtures/original-owner-retention
+=== RUN   TestAuthenticatedQuery11SharedFixtures/read-cutoff-expired
+=== RUN   TestAuthenticatedQuery11SharedFixtures/denied-subject-directory-failure
+=== RUN   TestAuthenticatedQuery11SharedFixtures/denied-subject-directory-wrong_owner
+=== RUN   TestAuthenticatedQuery11SharedFixtures/denied-subject-untrusted-fact
+=== RUN   TestAuthenticatedQuery11SharedFixtures/fixed-new-receipt-decision_mismatch
+=== RUN   TestAuthenticatedQuery11SharedFixtures/fixed-new-receipt-decision_cancelled
+--- PASS: TestAuthenticatedQuery11SharedFixtures (0.30s)
+    --- PASS: TestAuthenticatedQuery11SharedFixtures/allowed-existing-read (0.21s)
+    --- PASS: TestAuthenticatedQuery11SharedFixtures/allowed-absent-read (0.00s)
+    --- PASS: TestAuthenticatedQuery11SharedFixtures/allowed-delegated-read (0.01s)
+    --- PASS: TestAuthenticatedQuery11SharedFixtures/denied-subject-existing (0.00s)
+    --- PASS: TestAuthenticatedQuery11SharedFixtures/denied-subject-absent (0.00s)
+    --- PASS: TestAuthenticatedQuery11SharedFixtures/missing-principal-existing (0.00s)
+    --- PASS: TestAuthenticatedQuery11SharedFixtures/missing-principal-absent (0.00s)
+    --- PASS: TestAuthenticatedQuery11SharedFixtures/invalid-principal-existing (0.00s)
+    --- PASS: TestAuthenticatedQuery11SharedFixtures/invalid-principal-absent (0.00s)
+    --- PASS: TestAuthenticatedQuery11SharedFixtures/cross-tenant-existing (0.00s)
+    --- PASS: TestAuthenticatedQuery11SharedFixtures/cross-tenant-absent (0.00s)
+    --- PASS: TestAuthenticatedQuery11SharedFixtures/untrusted-delegation-existing (0.00s)
+    --- PASS: TestAuthenticatedQuery11SharedFixtures/untrusted-delegation-absent (0.00s)
+    --- PASS: TestAuthenticatedQuery11SharedFixtures/self-reported-owner-is-no-grant (0.00s)
+    --- PASS: TestAuthenticatedQuery11SharedFixtures/target-tenant-cannot-override-principal (0.00s)
+    --- PASS: TestAuthenticatedQuery11SharedFixtures/payload-cannot-forge-principal (0.00s)
+    --- PASS: TestAuthenticatedQuery11SharedFixtures/authorization-failure-existing (0.00s)
+    --- PASS: TestAuthenticatedQuery11SharedFixtures/authorization-failure-absent (0.00s)
+    --- PASS: TestAuthenticatedQuery11SharedFixtures/directory-failure (0.00s)
+    --- PASS: TestAuthenticatedQuery11SharedFixtures/directory-wrong_owner (0.00s)
+    --- PASS: TestAuthenticatedQuery11SharedFixtures/directory-wrong_tenant (0.00s)
+    --- PASS: TestAuthenticatedQuery11SharedFixtures/directory-missing_reader (0.00s)
+    --- PASS: TestAuthenticatedQuery11SharedFixtures/original-owner-unavailable (0.01s)
+    --- PASS: TestAuthenticatedQuery11SharedFixtures/original-owner-retention (0.00s)
+    --- PASS: TestAuthenticatedQuery11SharedFixtures/read-cutoff-expired (0.00s)
+    --- PASS: TestAuthenticatedQuery11SharedFixtures/denied-subject-directory-failure (0.00s)
+    --- PASS: TestAuthenticatedQuery11SharedFixtures/denied-subject-directory-wrong_owner (0.00s)
+    --- PASS: TestAuthenticatedQuery11SharedFixtures/denied-subject-untrusted-fact (0.00s)
+    --- PASS: TestAuthenticatedQuery11SharedFixtures/fixed-new-receipt-decision_mismatch (0.01s)
+    --- PASS: TestAuthenticatedQuery11SharedFixtures/fixed-new-receipt-decision_cancelled (0.01s)
+=== RUN   TestReadOnlyFactsDoNotReinterpretFixedReceipt
+--- PASS: TestReadOnlyFactsDoNotReinterpretFixedReceipt (0.01s)
+=== RUN   TestReadOnlyFactsSeparateAbsenceAndUnavailability
+--- PASS: TestReadOnlyFactsSeparateAbsenceAndUnavailability (0.01s)
+=== RUN   TestReturnedReadCannotMutateRetainedFactRevision
+--- PASS: TestReturnedReadCannotMutateRetainedFactRevision (0.00s)
+=== RUN   TestSharedResponseFixtures
+=== RUN   TestSharedResponseFixtures/applied_fixed_revision
+=== RUN   TestSharedResponseFixtures/accepted_only_nested_revision
+=== RUN   TestSharedResponseFixtures/rejected_revision_changed
+=== RUN   TestSharedResponseFixtures/rejected_idempotency_conflict
+=== RUN   TestSharedResponseFixtures/rejected_forbidden
+=== RUN   TestSharedResponseFixtures/rejected_view_hides_identity
+=== RUN   TestSharedResponseFixtures/read_not_found
+=== RUN   TestSharedResponseFixtures/read_gone
+=== RUN   TestSharedResponseFixtures/read_unavailable
+=== RUN   TestSharedResponseFixtures/fixed_receipt_progress_active
+=== RUN   TestSharedResponseFixtures/fixed_receipt_progress_waiting
+=== RUN   TestSharedResponseFixtures/fixed_receipt_progress_paused
+=== RUN   TestSharedResponseFixtures/fixed_receipt_progress_succeeded
+=== RUN   TestSharedResponseFixtures/fixed_receipt_progress_failed
+=== RUN   TestSharedResponseFixtures/fixed_receipt_progress_cancelled
+=== RUN   TestSharedResponseFixtures/found_progress_none
+=== RUN   TestSharedResponseFixtures/found_progress_unavailable
+=== RUN   TestSharedResponseFixtures/baseline_5_current_5
+=== RUN   TestSharedResponseFixtures/baseline_5_current_6
+=== RUN   TestSharedResponseFixtures/baseline_5_current_4
+=== RUN   TestSharedResponseFixtures/exact_monotonic_9007199254740992_9007199254740993
+=== RUN   TestSharedResponseFixtures/exact_monotonic_9007199254740993_9007199254740992
+=== RUN   TestSharedResponseFixtures/nested_versions_absent
+=== RUN   TestSharedResponseFixtures/accepted_nested_baseline_current_6
+=== RUN   TestSharedResponseFixtures/accepted_no_invented_baseline
+=== RUN   TestSharedResponseFixtures/receipt_conflicting_nested_revision
+=== RUN   TestSharedResponseFixtures/progress_conflicting_nested_revision
+=== RUN   TestSharedResponseFixtures/wrong_object_tenant_id
+=== RUN   TestSharedResponseFixtures/wrong_object_owner_id
+=== RUN   TestSharedResponseFixtures/wrong_object_kind
+=== RUN   TestSharedResponseFixtures/wrong_object_id
+=== RUN   TestSharedResponseFixtures/wrong_outer_command_binding
+=== RUN   TestSharedResponseFixtures/wrong_receipt_command_binding
+=== RUN   TestSharedResponseFixtures/commit_unknown_receipt
+=== RUN   TestSharedResponseFixtures/conflict_fourth_state
+=== RUN   TestSharedResponseFixtures/applied_missing_object
+=== RUN   TestSharedResponseFixtures/illegal_next_action
+=== RUN   TestSharedResponseFixtures/rejected_cannot_carry_object
+=== RUN   TestSharedResponseFixtures/accepted_revision_existence
+=== RUN   TestSharedResponseFixtures/applied_revision_existence
+=== RUN   TestSharedResponseFixtures/transport_received
+=== RUN   TestSharedResponseFixtures/transport_original_uncertain
+=== RUN   TestSharedResponseFixtures/transport_unknown_no_fixed_receipt
+=== RUN   TestSharedResponseFixtures/invalid_future_task_status
+--- PASS: TestSharedResponseFixtures (0.05s)
+    --- PASS: TestSharedResponseFixtures/applied_fixed_revision (0.00s)
+    --- PASS: TestSharedResponseFixtures/accepted_only_nested_revision (0.00s)
+    --- PASS: TestSharedResponseFixtures/rejected_revision_changed (0.00s)
+    --- PASS: TestSharedResponseFixtures/rejected_idempotency_conflict (0.00s)
+    --- PASS: TestSharedResponseFixtures/rejected_forbidden (0.00s)
+    --- PASS: TestSharedResponseFixtures/rejected_view_hides_identity (0.00s)
+    --- PASS: TestSharedResponseFixtures/read_not_found (0.00s)
+    --- PASS: TestSharedResponseFixtures/read_gone (0.00s)
+    --- PASS: TestSharedResponseFixtures/read_unavailable (0.00s)
+    --- PASS: TestSharedResponseFixtures/fixed_receipt_progress_active (0.00s)
+    --- PASS: TestSharedResponseFixtures/fixed_receipt_progress_waiting (0.00s)
+    --- PASS: TestSharedResponseFixtures/fixed_receipt_progress_paused (0.00s)
+    --- PASS: TestSharedResponseFixtures/fixed_receipt_progress_succeeded (0.00s)
+    --- PASS: TestSharedResponseFixtures/fixed_receipt_progress_failed (0.00s)
+    --- PASS: TestSharedResponseFixtures/fixed_receipt_progress_cancelled (0.00s)
+    --- PASS: TestSharedResponseFixtures/found_progress_none (0.00s)
+    --- PASS: TestSharedResponseFixtures/found_progress_unavailable (0.00s)
+    --- PASS: TestSharedResponseFixtures/baseline_5_current_5 (0.00s)
+    --- PASS: TestSharedResponseFixtures/baseline_5_current_6 (0.00s)
+    --- PASS: TestSharedResponseFixtures/baseline_5_current_4 (0.00s)
+    --- PASS: TestSharedResponseFixtures/exact_monotonic_9007199254740992_9007199254740993 (0.00s)
+    --- PASS: TestSharedResponseFixtures/exact_monotonic_9007199254740993_9007199254740992 (0.00s)
+    --- PASS: TestSharedResponseFixtures/nested_versions_absent (0.00s)
+    --- PASS: TestSharedResponseFixtures/accepted_nested_baseline_current_6 (0.00s)
+    --- PASS: TestSharedResponseFixtures/accepted_no_invented_baseline (0.00s)
+    --- PASS: TestSharedResponseFixtures/receipt_conflicting_nested_revision (0.00s)
+    --- PASS: TestSharedResponseFixtures/progress_conflicting_nested_revision (0.00s)
+    --- PASS: TestSharedResponseFixtures/wrong_object_tenant_id (0.00s)
+    --- PASS: TestSharedResponseFixtures/wrong_object_owner_id (0.00s)
+    --- PASS: TestSharedResponseFixtures/wrong_object_kind (0.00s)
+    --- PASS: TestSharedResponseFixtures/wrong_object_id (0.00s)
+    --- PASS: TestSharedResponseFixtures/wrong_outer_command_binding (0.00s)
+    --- PASS: TestSharedResponseFixtures/wrong_receipt_command_binding (0.00s)
+    --- PASS: TestSharedResponseFixtures/commit_unknown_receipt (0.00s)
+    --- PASS: TestSharedResponseFixtures/conflict_fourth_state (0.00s)
+    --- PASS: TestSharedResponseFixtures/applied_missing_object (0.00s)
+    --- PASS: TestSharedResponseFixtures/illegal_next_action (0.00s)
+    --- PASS: TestSharedResponseFixtures/rejected_cannot_carry_object (0.00s)
+    --- PASS: TestSharedResponseFixtures/accepted_revision_existence (0.00s)
+    --- PASS: TestSharedResponseFixtures/applied_revision_existence (0.00s)
+    --- PASS: TestSharedResponseFixtures/transport_received (0.02s)
+    --- PASS: TestSharedResponseFixtures/transport_original_uncertain (0.00s)
+    --- PASS: TestSharedResponseFixtures/transport_unknown_no_fixed_receipt (0.00s)
+    --- PASS: TestSharedResponseFixtures/invalid_future_task_status (0.00s)
+=== RUN   TestClosedReceiptRoundtrip
+--- PASS: TestClosedReceiptRoundtrip (0.00s)
+=== RUN   TestResponseEncodingValidatesOriginalIdentity
+--- PASS: TestResponseEncodingValidatesOriginalIdentity (0.00s)
+=== RUN   TestRevisionRetainsExactLargeInteger
+--- PASS: TestRevisionRetainsExactLargeInteger (0.03s)
+=== RUN   TestContentReferenceRetainsExactVersionAndLength
+--- PASS: TestContentReferenceRetainsExactVersionAndLength (0.03s)
+=== RUN   TestValueBoundaryRejectsTruncationAndMalformedJSON
+=== RUN   TestValueBoundaryRejectsTruncationAndMalformedJSON/"9223372036854775808"
+=== RUN   TestValueBoundaryRejectsTruncationAndMalformedJSON/"01"
+=== RUN   TestValueBoundaryRejectsTruncationAndMalformedJSON/"-1"
+=== RUN   TestValueBoundaryRejectsTruncationAndMalformedJSON/1
+=== RUN   TestValueBoundaryRejectsTruncationAndMalformedJSON/"0"_"1"
+=== RUN   TestValueBoundaryRejectsTruncationAndMalformedJSON/"\ud800"
+=== RUN   TestValueBoundaryRejectsTruncationAndMalformedJSON/"�"
+--- PASS: TestValueBoundaryRejectsTruncationAndMalformedJSON (0.00s)
+    --- PASS: TestValueBoundaryRejectsTruncationAndMalformedJSON/"9223372036854775808" (0.00s)
+    --- PASS: TestValueBoundaryRejectsTruncationAndMalformedJSON/"01" (0.00s)
+    --- PASS: TestValueBoundaryRejectsTruncationAndMalformedJSON/"-1" (0.00s)
+    --- PASS: TestValueBoundaryRejectsTruncationAndMalformedJSON/1 (0.00s)
+    --- PASS: TestValueBoundaryRejectsTruncationAndMalformedJSON/"0"_"1" (0.00s)
+    --- PASS: TestValueBoundaryRejectsTruncationAndMalformedJSON/"\ud800" (0.00s)
+    --- PASS: TestValueBoundaryRejectsTruncationAndMalformedJSON/"�" (0.00s)
+=== RUN   TestPublicJSONBoundaryPreservesUnicodeAndRejectsAmbiguity
+--- PASS: TestPublicJSONBoundaryPreservesUnicodeAndRejectsAmbiguity (0.00s)
+=== RUN   TestSharedValueFixtures
+=== RUN   TestSharedValueFixtures/large_revision
+=== RUN   TestSharedValueFixtures/revision_overflow
+=== RUN   TestSharedValueFixtures/leading_zero
+=== RUN   TestSharedValueFixtures/negative_revision
+=== RUN   TestSharedValueFixtures/ID_exact_characters
+=== RUN   TestSharedValueFixtures/ID_unicode_forbidden
+=== RUN   TestSharedValueFixtures/empty_ID
+=== RUN   TestSharedValueFixtures/zero_revision
+=== RUN   TestSharedValueFixtures/exact_amount
+=== RUN   TestSharedValueFixtures/float_amount
+=== RUN   TestSharedValueFixtures/unit_required
+=== RUN   TestSharedValueFixtures/owner_reference
+=== RUN   TestSharedValueFixtures/owner_unknown_field
+=== RUN   TestSharedValueFixtures/object_revision
+=== RUN   TestSharedValueFixtures/object_revision_omitted
+=== RUN   TestSharedValueFixtures/object_revision_null
+=== RUN   TestSharedValueFixtures/valid_leap_day
+=== RUN   TestSharedValueFixtures/first_timestamp
+=== RUN   TestSharedValueFixtures/last_timestamp
+=== RUN   TestSharedValueFixtures/invalid_leap_day
+=== RUN   TestSharedValueFixtures/precision_loss
+=== RUN   TestSharedValueFixtures/offset_forbidden
+=== RUN   TestSharedValueFixtures/leap_second
+=== RUN   TestSharedValueFixtures/empty_complete_collection
+=== RUN   TestSharedValueFixtures/contradictory_collection_cursor
+=== RUN   TestSharedValueFixtures/ID_max128
+=== RUN   TestSharedValueFixtures/ID_overflow129
+=== RUN   TestSharedValueFixtures/kind_max64
+=== RUN   TestSharedValueFixtures/kind_overflow65
+=== RUN   TestSharedValueFixtures/amount_unit_max64
+=== RUN   TestSharedValueFixtures/amount_unit_overflow65
+=== RUN   TestSharedValueFixtures/content_accurate
+=== RUN   TestSharedValueFixtures/partial_Unicode_cursor
+=== RUN   TestSharedValueFixtures/cursor_max4096
+=== RUN   TestSharedValueFixtures/cursor_overflow4097
+=== RUN   TestSharedValueFixtures/partial_empty_gaps
+=== RUN   TestSharedValueFixtures/items_max1000
+=== RUN   TestSharedValueFixtures/items_overflow1001
+=== RUN   TestSharedValueFixtures/gaps_max100
+=== RUN   TestSharedValueFixtures/gaps_overflow101
+=== RUN   TestSharedValueFixtures/gap_enum_unknown
+=== RUN   TestSharedValueFixtures/exact_schema_digest
+=== RUN   TestSharedValueFixtures/input_output_method_support
+=== RUN   TestSharedValueFixtures/exact_negotiation_request
+=== RUN   TestSharedValueFixtures/schema_digest_uppercase_rejected
+=== RUN   TestSharedValueFixtures/method_support_unknown_field
+--- PASS: TestSharedValueFixtures (0.45s)
+    --- PASS: TestSharedValueFixtures/large_revision (0.00s)
+    --- PASS: TestSharedValueFixtures/revision_overflow (0.00s)
+    --- PASS: TestSharedValueFixtures/leading_zero (0.00s)
+    --- PASS: TestSharedValueFixtures/negative_revision (0.00s)
+    --- PASS: TestSharedValueFixtures/ID_exact_characters (0.03s)
+    --- PASS: TestSharedValueFixtures/ID_unicode_forbidden (0.00s)
+    --- PASS: TestSharedValueFixtures/empty_ID (0.00s)
+    --- PASS: TestSharedValueFixtures/zero_revision (0.00s)
+    --- PASS: TestSharedValueFixtures/exact_amount (0.04s)
+    --- PASS: TestSharedValueFixtures/float_amount (0.00s)
+    --- PASS: TestSharedValueFixtures/unit_required (0.00s)
+    --- PASS: TestSharedValueFixtures/owner_reference (0.03s)
+    --- PASS: TestSharedValueFixtures/owner_unknown_field (0.00s)
+    --- PASS: TestSharedValueFixtures/object_revision (0.03s)
+    --- PASS: TestSharedValueFixtures/object_revision_omitted (0.00s)
+    --- PASS: TestSharedValueFixtures/object_revision_null (0.00s)
+    --- PASS: TestSharedValueFixtures/valid_leap_day (0.02s)
+    --- PASS: TestSharedValueFixtures/first_timestamp (0.00s)
+    --- PASS: TestSharedValueFixtures/last_timestamp (0.00s)
+    --- PASS: TestSharedValueFixtures/invalid_leap_day (0.00s)
+    --- PASS: TestSharedValueFixtures/precision_loss (0.00s)
+    --- PASS: TestSharedValueFixtures/offset_forbidden (0.00s)
+    --- PASS: TestSharedValueFixtures/leap_second (0.00s)
+    --- PASS: TestSharedValueFixtures/empty_complete_collection (0.03s)
+    --- PASS: TestSharedValueFixtures/contradictory_collection_cursor (0.00s)
+    --- PASS: TestSharedValueFixtures/ID_max128 (0.00s)
+    --- PASS: TestSharedValueFixtures/ID_overflow129 (0.00s)
+    --- PASS: TestSharedValueFixtures/kind_max64 (0.03s)
+    --- PASS: TestSharedValueFixtures/kind_overflow65 (0.00s)
+    --- PASS: TestSharedValueFixtures/amount_unit_max64 (0.00s)
+    --- PASS: TestSharedValueFixtures/amount_unit_overflow65 (0.00s)
+    --- PASS: TestSharedValueFixtures/content_accurate (0.00s)
+    --- PASS: TestSharedValueFixtures/partial_Unicode_cursor (0.00s)
+    --- PASS: TestSharedValueFixtures/cursor_max4096 (0.00s)
+    --- PASS: TestSharedValueFixtures/cursor_overflow4097 (0.00s)
+    --- PASS: TestSharedValueFixtures/partial_empty_gaps (0.00s)
+    --- PASS: TestSharedValueFixtures/items_max1000 (0.06s)
+    --- PASS: TestSharedValueFixtures/items_overflow1001 (0.06s)
+    --- PASS: TestSharedValueFixtures/gaps_max100 (0.00s)
+    --- PASS: TestSharedValueFixtures/gaps_overflow101 (0.00s)
+    --- PASS: TestSharedValueFixtures/gap_enum_unknown (0.00s)
+    --- PASS: TestSharedValueFixtures/exact_schema_digest (0.03s)
+    --- PASS: TestSharedValueFixtures/input_output_method_support (0.03s)
+    --- PASS: TestSharedValueFixtures/exact_negotiation_request (0.00s)
+    --- PASS: TestSharedValueFixtures/schema_digest_uppercase_rejected (0.00s)
+    --- PASS: TestSharedValueFixtures/method_support_unknown_field (0.00s)
+=== RUN   TestEncodingCannotReplaceInvalidUnicode
+--- PASS: TestEncodingCannotReplaceInvalidUnicode (0.00s)
+=== RUN   TestRawJSONBodyAndDepthLimits
+--- PASS: TestRawJSONBodyAndDepthLimits (0.06s)
+=== RUN   TestCommandEncodingPreservesCompactUnicodeAtBodyLimit
+=== RUN   TestCommandEncodingPreservesCompactUnicodeAtBodyLimit/<
+=== RUN   TestCommandEncodingPreservesCompactUnicodeAtBodyLimit/>
+=== RUN   TestCommandEncodingPreservesCompactUnicodeAtBodyLimit/&
+=== RUN   TestCommandEncodingPreservesCompactUnicodeAtBodyLimit/_
+=== RUN   TestCommandEncodingPreservesCompactUnicodeAtBodyLimit/_#01
+--- PASS: TestCommandEncodingPreservesCompactUnicodeAtBodyLimit (9.49s)
+    --- PASS: TestCommandEncodingPreservesCompactUnicodeAtBodyLimit/< (2.15s)
+    --- PASS: TestCommandEncodingPreservesCompactUnicodeAtBodyLimit/> (2.02s)
+    --- PASS: TestCommandEncodingPreservesCompactUnicodeAtBodyLimit/& (1.85s)
+    --- PASS: TestCommandEncodingPreservesCompactUnicodeAtBodyLimit/_ (1.55s)
+    --- PASS: TestCommandEncodingPreservesCompactUnicodeAtBodyLimit/_#01 (1.92s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/component	13.278s
+?   	github.com/ruipengliu/lerna/conformance/component/valuerunner	[no test files]
+?   	github.com/ruipengliu/lerna/conformance/component/valuerunner_v1_1	[no test files]
+?   	github.com/ruipengliu/lerna/conformance/component/valuerunner_v1_2	[no test files]
+?   	github.com/ruipengliu/lerna/conformance/internal/contentfixture	[no test files]
+=== RUN   TestSourceCloseKeepsFirstDriverFailure
+--- PASS: TestSourceCloseKeepsFirstDriverFailure (0.00s)
+=== RUN   TestSourceConcurrentCloseWaitsForFirstDriverResult
+--- PASS: TestSourceConcurrentCloseWaitsForFirstDriverResult (0.05s)
+=== RUN   TestSourceOpenPreservesStartupAndCloseOutcomes
+=== RUN   TestSourceOpenPreservesStartupAndCloseOutcomes/success
+=== RUN   TestSourceOpenPreservesStartupAndCloseOutcomes/ping_failure
+=== RUN   TestSourceOpenPreservesStartupAndCloseOutcomes/dual_failure
+=== RUN   TestSourceOpenPreservesStartupAndCloseOutcomes/cancelled
+=== RUN   TestSourceOpenPreservesStartupAndCloseOutcomes/open_failure
+--- PASS: TestSourceOpenPreservesStartupAndCloseOutcomes (0.05s)
+    --- PASS: TestSourceOpenPreservesStartupAndCloseOutcomes/success (0.04s)
+    --- PASS: TestSourceOpenPreservesStartupAndCloseOutcomes/ping_failure (0.00s)
+    --- PASS: TestSourceOpenPreservesStartupAndCloseOutcomes/dual_failure (0.00s)
+    --- PASS: TestSourceOpenPreservesStartupAndCloseOutcomes/cancelled (0.00s)
+    --- PASS: TestSourceOpenPreservesStartupAndCloseOutcomes/open_failure (0.00s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/internal/decisionfixture	1.141s
+=== RUN   TestProcessLifecycleChild
+--- PASS: TestProcessLifecycleChild (0.00s)
+=== RUN   TestChildDoesNotConfirmCleanupWhileStartIsPublishingHandle
+--- PASS: TestChildDoesNotConfirmCleanupWhileStartIsPublishingHandle (0.04s)
+=== RUN   TestChildCleanupBeforeStartClosesAdmission
+--- PASS: TestChildCleanupBeforeStartClosesAdmission (0.00s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/internal/testkit/process	1.058s
+=== RUN   TestFileReleasePreservesFirstUnknownOutcome
+--- PASS: TestFileReleasePreservesFirstUnknownOutcome (0.00s)
+=== RUN   TestTargetClosePreservesFirstNativeFailure
+--- PASS: TestTargetClosePreservesFirstNativeFailure (0.00s)
+=== RUN   TestObserverClosePreservesFirstNativeFailure
+--- PASS: TestObserverClosePreservesFirstNativeFailure (0.00s)
+=== RUN   TestTargetConcurrentCloseWaitIsBoundedBeforeNativeResult
+--- PASS: TestTargetConcurrentCloseWaitIsBoundedBeforeNativeResult (0.02s)
+=== RUN   TestTargetOpenFailureRetainsAcquiredCleanupHolder
+--- PASS: TestTargetOpenFailureRetainsAcquiredCleanupHolder (0.00s)
+=== RUN   TestTargetCloseDrainTimeoutRemainsRetryable
+--- PASS: TestTargetCloseDrainTimeoutRemainsRetryable (0.02s)
+=== RUN   TestDurableReceivedRequestAppliesAfterWindowExpiry
+    plan_test.go:14: owned SQLite target: /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-273647509
+    plan_test.go:65: owned SQLite target: /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-2271428724
+--- PASS: TestDurableReceivedRequestAppliesAfterWindowExpiry (0.03s)
+=== RUN   TestBeforeCommitDisconnectRollsBackTargetThenNormalEventCompletes
+    plan_test.go:81: owned SQLite target: /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-1065277220
+--- PASS: TestBeforeCommitDisconnectRollsBackTargetThenNormalEventCompletes (0.01s)
+=== RUN   TestDroppedResponseHasIndependentCommitAndDurableEventIdentity
+    plan_test.go:122: owned SQLite target: /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-1425181863
+--- PASS: TestDroppedResponseHasIndependentCommitAndDurableEventIdentity (0.02s)
+=== RUN   TestDuplicateOutOfOrderAndFreshScenarioReplayAreBounded
+    plan_test.go:172: owned SQLite target: /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-2692003486
+    plan_test.go:242: owned SQLite target: /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-3370996768
+--- PASS: TestDuplicateOutOfOrderAndFreshScenarioReplayAreBounded (0.03s)
+=== RUN   TestNoQueryLateOriginalAndPlanDeadlinePreserveResponsibility
+    plan_test.go:279: owned SQLite target: /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-2153038665
+--- PASS: TestNoQueryLateOriginalAndPlanDeadlinePreserveResponsibility (0.01s)
+=== RUN   TestPlanIdentityFiniteConfigurationAndRecordedRejection
+    plan_test.go:341: owned SQLite target: /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-1345420195
+--- PASS: TestPlanIdentityFiniteConfigurationAndRecordedRejection (0.01s)
+=== RUN   TestConcurrentDuplicateFaultEventCommitsOnlyOriginalOnce
+    plan_test.go:390: owned SQLite target: /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-3182012123
+--- PASS: TestConcurrentDuplicateFaultEventCommitsOnlyOriginalOnce (0.01s)
+=== RUN   TestPlanRejectsLossyUTF8OriginalIdentities
+    plan_test.go:426: owned SQLite target: /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-1881394811
+--- PASS: TestPlanRejectsLossyUTF8OriginalIdentities (0.01s)
+=== RUN   TestIndependentTargetProcess
+--- PASS: TestIndependentTargetProcess (0.00s)
+=== RUN   TestTargetIsolatedSameSeedReplaysFiniteNormalAndLossEvents
+    process_test.go:184: owned SQLite target: /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-3079451634
+    process_test.go:204: target process scenario=seed-original event=normal-original generation=1 SQLite=3.53.4 DB=21e29fd742f2d39fa018ed7d0a543a43 migrations=[{1 83333adce6536f21154443a83c969b32ba14845e379df7341f91ea9cbd4bb8c7} {2 61e7e6927f22c3046db20ca8ed2c42c19ad806cc64bef431776472e15364c3f0}]
+    process_test.go:204: target process scenario=seed-original event=loss-original generation=2 SQLite=3.53.4 DB=21e29fd742f2d39fa018ed7d0a543a43 migrations=[{1 83333adce6536f21154443a83c969b32ba14845e379df7341f91ea9cbd4bb8c7} {2 61e7e6927f22c3046db20ca8ed2c42c19ad806cc64bef431776472e15364c3f0}]
+    process_test.go:184: owned SQLite target: /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-2729312393
+    process_test.go:204: target process scenario=seed-isolated event=normal-original generation=1 SQLite=3.53.4 DB=3809e621c05fd1808e4dca63c9e63594 migrations=[{1 83333adce6536f21154443a83c969b32ba14845e379df7341f91ea9cbd4bb8c7} {2 61e7e6927f22c3046db20ca8ed2c42c19ad806cc64bef431776472e15364c3f0}]
+    process_test.go:204: target process scenario=seed-isolated event=loss-original generation=2 SQLite=3.53.4 DB=3809e621c05fd1808e4dca63c9e63594 migrations=[{1 83333adce6536f21154443a83c969b32ba14845e379df7341f91ea9cbd4bb8c7} {2 61e7e6927f22c3046db20ca8ed2c42c19ad806cc64bef431776472e15364c3f0}]
+--- PASS: TestTargetIsolatedSameSeedReplaysFiniteNormalAndLossEvents (4.16s)
+=== RUN   TestTargetNormalChildCommitsOriginalPlanAndFact
+    process_test.go:253: owned SQLite target: /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-2032850025
+    process_test.go:263: target process scenario=process-normal event=write-1 generation=1 SQLite=3.53.4 DB=899f5a69c5c7b81a74a0694b76d187ad migrations=[{1 83333adce6536f21154443a83c969b32ba14845e379df7341f91ea9cbd4bb8c7} {2 61e7e6927f22c3046db20ca8ed2c42c19ad806cc64bef431776472e15364c3f0}]
+--- PASS: TestTargetNormalChildCommitsOriginalPlanAndFact (1.05s)
+=== RUN   TestTargetSIGKILLBeforeCommitRollsBackFactAndCursor
+=== RUN   TestTargetSIGKILLBeforeCommitRollsBackFactAndCursor/normal_release
+    process_test.go:304: owned SQLite target: /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-2403371011
+    process_test.go:314: target process scenario=process-before event=write-1 generation=1 SQLite=3.53.4 DB=9dcd044d298d928316924d4ecc926a90 migrations=[{1 83333adce6536f21154443a83c969b32ba14845e379df7341f91ea9cbd4bb8c7} {2 61e7e6927f22c3046db20ca8ed2c42c19ad806cc64bef431776472e15364c3f0}]
+=== RUN   TestTargetSIGKILLBeforeCommitRollsBackFactAndCursor/SIGKILL_before_COMMIT
+    process_test.go:304: owned SQLite target: /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-4253864698
+    process_test.go:314: target process scenario=process-before event=write-1 generation=1 SQLite=3.53.4 DB=18ade49af3be581ff17a4b1dfa93957a migrations=[{1 83333adce6536f21154443a83c969b32ba14845e379df7341f91ea9cbd4bb8c7} {2 61e7e6927f22c3046db20ca8ed2c42c19ad806cc64bef431776472e15364c3f0}]
+    process_test.go:358: target process scenario=process-before event=write-1 generation=2 SQLite=3.53.4 DB=18ade49af3be581ff17a4b1dfa93957a migrations=[{1 83333adce6536f21154443a83c969b32ba14845e379df7341f91ea9cbd4bb8c7} {2 61e7e6927f22c3046db20ca8ed2c42c19ad806cc64bef431776472e15364c3f0}]
+--- PASS: TestTargetSIGKILLBeforeCommitRollsBackFactAndCursor (2.13s)
+    --- PASS: TestTargetSIGKILLBeforeCommitRollsBackFactAndCursor/normal_release (1.07s)
+    --- PASS: TestTargetSIGKILLBeforeCommitRollsBackFactAndCursor/SIGKILL_before_COMMIT (1.06s)
+=== RUN   TestTargetSIGKILLAfterCommitRetainsOriginalFactAndReplayCursor
+=== RUN   TestTargetSIGKILLAfterCommitRetainsOriginalFactAndReplayCursor/normal_release
+    process_test.go:389: owned SQLite target: /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-4260575400
+    process_test.go:399: target process scenario=process-after event=write-1 generation=1 SQLite=3.53.4 DB=cbebd78b856a9d273ee968540706c9fd migrations=[{1 83333adce6536f21154443a83c969b32ba14845e379df7341f91ea9cbd4bb8c7} {2 61e7e6927f22c3046db20ca8ed2c42c19ad806cc64bef431776472e15364c3f0}]
+    process_test.go:430: target process scenario=process-after event=write-1 generation=2 SQLite=3.53.4 DB=cbebd78b856a9d273ee968540706c9fd migrations=[{1 83333adce6536f21154443a83c969b32ba14845e379df7341f91ea9cbd4bb8c7} {2 61e7e6927f22c3046db20ca8ed2c42c19ad806cc64bef431776472e15364c3f0}]
+=== RUN   TestTargetSIGKILLAfterCommitRetainsOriginalFactAndReplayCursor/SIGKILL_response_unknown
+    process_test.go:389: owned SQLite target: /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-810005941
+    process_test.go:399: target process scenario=process-after event=write-1 generation=1 SQLite=3.53.4 DB=187002abb5cd57cef1c2674717cdff04 migrations=[{1 83333adce6536f21154443a83c969b32ba14845e379df7341f91ea9cbd4bb8c7} {2 61e7e6927f22c3046db20ca8ed2c42c19ad806cc64bef431776472e15364c3f0}]
+    process_test.go:430: target process scenario=process-after event=write-1 generation=2 SQLite=3.53.4 DB=187002abb5cd57cef1c2674717cdff04 migrations=[{1 83333adce6536f21154443a83c969b32ba14845e379df7341f91ea9cbd4bb8c7} {2 61e7e6927f22c3046db20ca8ed2c42c19ad806cc64bef431776472e15364c3f0}]
+--- PASS: TestTargetSIGKILLAfterCommitRetainsOriginalFactAndReplayCursor (3.13s)
+    --- PASS: TestTargetSIGKILLAfterCommitRetainsOriginalFactAndReplayCursor/normal_release (2.07s)
+    --- PASS: TestTargetSIGKILLAfterCommitRetainsOriginalFactAndReplayCursor/SIGKILL_response_unknown (1.07s)
+=== RUN   TestTargetPendingOriginalSurvivesProcessRestartAndLateApply
+=== RUN   TestTargetPendingOriginalSurvivesProcessRestartAndLateApply/normal_release
+    process_test.go:451: owned SQLite target: /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-2550352734
+    process_test.go:462: target process scenario=process-pending event=receive-original generation=1 SQLite=3.53.4 DB=c5c6794e0f1cbb62c0a87db5e5cfc875 migrations=[{1 83333adce6536f21154443a83c969b32ba14845e379df7341f91ea9cbd4bb8c7} {2 61e7e6927f22c3046db20ca8ed2c42c19ad806cc64bef431776472e15364c3f0}]
+    process_test.go:517: target process scenario=process-pending event=apply-original generation=2 SQLite=3.53.4 DB=c5c6794e0f1cbb62c0a87db5e5cfc875 migrations=[{1 83333adce6536f21154443a83c969b32ba14845e379df7341f91ea9cbd4bb8c7} {2 61e7e6927f22c3046db20ca8ed2c42c19ad806cc64bef431776472e15364c3f0}]
+=== RUN   TestTargetPendingOriginalSurvivesProcessRestartAndLateApply/SIGKILL_after_durable_receive
+    process_test.go:451: owned SQLite target: /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-2892096789
+    process_test.go:462: target process scenario=process-pending event=receive-original generation=1 SQLite=3.53.4 DB=bd090b9a42269370c70b642da4f2b314 migrations=[{1 83333adce6536f21154443a83c969b32ba14845e379df7341f91ea9cbd4bb8c7} {2 61e7e6927f22c3046db20ca8ed2c42c19ad806cc64bef431776472e15364c3f0}]
+    process_test.go:517: target process scenario=process-pending event=apply-original generation=2 SQLite=3.53.4 DB=bd090b9a42269370c70b642da4f2b314 migrations=[{1 83333adce6536f21154443a83c969b32ba14845e379df7341f91ea9cbd4bb8c7} {2 61e7e6927f22c3046db20ca8ed2c42c19ad806cc64bef431776472e15364c3f0}]
+--- PASS: TestTargetPendingOriginalSurvivesProcessRestartAndLateApply (3.11s)
+    --- PASS: TestTargetPendingOriginalSurvivesProcessRestartAndLateApply/normal_release (2.06s)
+    --- PASS: TestTargetPendingOriginalSurvivesProcessRestartAndLateApply/SIGKILL_after_durable_receive (1.05s)
+=== RUN   TestWriteReadAndIndependentObserverSurviveReopen
+    target_test.go:21: owned SQLite target: /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-3576222766
+--- PASS: TestWriteReadAndIndependentObserverSurviveReopen (0.01s)
+=== RUN   TestOriginalKeyReplayPreservesWindowAndRejectsChangedInput
+    target_test.go:158: owned SQLite target: /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-418848132
+--- PASS: TestOriginalKeyReplayPreservesWindowAndRejectsChangedInput (0.01s)
+=== RUN   TestExpiredGuaranteeDoesNotEraseOriginalProcessingFact
+    target_test.go:210: owned SQLite target: /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-2386831487
+--- PASS: TestExpiredGuaranteeDoesNotEraseOriginalProcessingFact (0.01s)
+=== RUN   TestDisabledQueryStillHasIndependentPrivilegedObservation
+    target_test.go:255: owned SQLite target: /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-356249611
+--- PASS: TestDisabledQueryStillHasIndependentPrivilegedObservation (0.01s)
+=== RUN   TestTargetIdentityDurabilitySettingsAndMigrationAreObserved
+    target_test.go:290: owned SQLite target: /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-103618952
+    target_test.go:299: SQLite target settings: {DatabaseID:f19753c1369246c5f4d41461f29bd6e7 JournalMode:wal SQLiteVersion:3.53.4 Synchronous:2 ForeignKeys:1 BusyTimeout:10 Migrations:[{Version:1 Checksum:83333adce6536f21154443a83c969b32ba14845e379df7341f91ea9cbd4bb8c7} {Version:2 Checksum:61e7e6927f22c3046db20ca8ed2c42c19ad806cc64bef431776472e15364c3f0}]}
+    target_test.go:327: owned SQLite target: /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-2751550874
+--- PASS: TestTargetIdentityDurabilitySettingsAndMigrationAreObserved (0.01s)
+=== RUN   TestBoundedNativeSQLiteContentionHasNormalCompletionControl
+    target_test.go:339: owned SQLite target: /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-3889588634
+--- PASS: TestBoundedNativeSQLiteContentionHasNormalCompletionControl (0.02s)
+=== RUN   TestRejectsForeignDatabaseAndUnboundedConfiguration
+    target_test.go:394: owned SQLite target: /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-1807178866
+    target_test.go:410: owned SQLite target: /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-2339196781
+--- PASS: TestRejectsForeignDatabaseAndUnboundedConfiguration (0.01s)
+=== RUN   TestOriginalKeyBindsResourceAsWellAsExactBytes
+    target_test.go:436: owned SQLite target: /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-1534009065
+--- PASS: TestOriginalKeyBindsResourceAsWellAsExactBytes (0.01s)
+=== RUN   TestConcurrentOriginalKeyReceivesOnlyCommitOneVersion
+    target_test.go:473: owned SQLite target: /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-1706998003
+--- PASS: TestConcurrentOriginalKeyReceivesOnlyCommitOneVersion (0.01s)
+=== RUN   TestInvalidTestClockCannotCommitWrappedTime
+    target_test.go:517: owned SQLite target: /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-3118144311
+--- PASS: TestInvalidTestClockCannotCommitWrappedTime (0.01s)
+=== RUN   TestPublishedV1WriterUpgradesWithOriginalFactsAndMigration
+    upgrade_test.go:23: owned SQLite target: /tmp/lerna-current-ci-cancellation-execution/lerna-target-04-2406819243
+    upgrade_test.go:119: actual v1→v2: old={DatabaseID:7687298d5d59f7a25a89f56fc602c302 JournalMode:wal SQLiteVersion:3.53.4 Synchronous:2 ForeignKeys:1 BusyTimeout:10 Migrations:[{Version:1 Checksum:83333adce6536f21154443a83c969b32ba14845e379df7341f91ea9cbd4bb8c7}]} new={DatabaseID:7687298d5d59f7a25a89f56fc602c302 JournalMode:wal SQLiteVersion:3.53.4 Synchronous:2 ForeignKeys:1 BusyTimeout:10 Migrations:[{Version:1 Checksum:83333adce6536f21154443a83c969b32ba14845e379df7341f91ea9cbd4bb8c7} {Version:2 Checksum:61e7e6927f22c3046db20ca8ed2c42c19ad806cc64bef431776472e15364c3f0}]}
+--- PASS: TestPublishedV1WriterUpgradesWithOriginalFactsAndMigration (1.29s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/internal/testkit/target	16.155s
+?   	github.com/ruipengliu/lerna/contract	[no test files]
+?   	github.com/ruipengliu/lerna/contract/gen/go	[no test files]
+?   	github.com/ruipengliu/lerna/contract/gen/go/v1_1	[no test files]
+?   	github.com/ruipengliu/lerna/contract/gen/go/v1_2	[no test files]
+?   	github.com/ruipengliu/lerna/contract/v1_1	[no test files]
+=== RUN   TestContentResponseBindsOriginalFullRefAndRange
+--- PASS: TestContentResponseBindsOriginalFullRefAndRange (0.18s)
+=== RUN   TestContentCanonicalBodyBound
+--- PASS: TestContentCanonicalBodyBound (0.46s)
+=== RUN   TestIndependentCommandDigestGolden
+--- PASS: TestIndependentCommandDigestGolden (0.03s)
+PASS
+ok  	github.com/ruipengliu/lerna/contract/v1_2	1.847s
+=== RUN   TestCleanupAcceptedCapRejectsInvalidPersistentTime
+--- PASS: TestCleanupAcceptedCapRejectsInvalidPersistentTime (0.00s)
+=== RUN   TestIndependentVersionIdentityGolden
+--- PASS: TestIndependentVersionIdentityGolden (0.03s)
+PASS
+ok  	github.com/ruipengliu/lerna/domain/content	1.068s
+=== RUN   TestPoolRunFirstFaultKeepsCallerLiveAndRetainsJoinedDiagnostics
+--- PASS: TestPoolRunFirstFaultKeepsCallerLiveAndRetainsJoinedDiagnostics (0.00s)
+=== RUN   TestPoolRunCallerCancellationRetainsEveryIndependentLaneCause
+--- PASS: TestPoolRunCallerCancellationRetainsEveryIndependentLaneCause (0.00s)
+PASS
+ok  	github.com/ruipengliu/lerna/host/durablework	1.056s
+=== RUN   TestRecordHasDedicatedClosedSchema
+--- PASS: TestRecordHasDedicatedClosedSchema (0.13s)
+=== RUN   TestSchedulingConfigurationRejectsUnboundedOrUnknownPolicies
+--- PASS: TestSchedulingConfigurationRejectsUnboundedOrUnknownPolicies (0.00s)
+=== RUN   TestTrustedPolicySelectionCopiesExactBinding
+--- PASS: TestTrustedPolicySelectionCopiesExactBinding (0.03s)
+PASS
+ok  	github.com/ruipengliu/lerna/internal/durableworkdemo	1.212s
+?   	github.com/ruipengliu/lerna/internal/sqlclosetest	[no test files]
+?   	github.com/ruipengliu/lerna/runtime	[no test files]
+=== RUN   TestWaitingTenantKeepsPlaceWhileNewArrivalJoinsTail
+--- PASS: TestWaitingTenantKeepsPlaceWhileNewArrivalJoinsTail (0.00s)
+PASS
+ok  	github.com/ruipengliu/lerna/runtime/workpool	1.055s
+NATIVE_COMPLETION_ACK {"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "final-module-race", "pgid": 3843228, "pid": 3843228, "starttime": "16105615", "timed_out": false}

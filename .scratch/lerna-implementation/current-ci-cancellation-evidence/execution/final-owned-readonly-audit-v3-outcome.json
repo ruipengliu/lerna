@@ -1,0 +1,11 @@
+{
+  "event": "native_completion_ack",
+  "operation": "final-owned-readonly-audit-v3",
+  "pid": 3863590,
+  "pgid": 3863590,
+  "starttime": "16192748",
+  "exit": 0,
+  "group_absent": true,
+  "timed_out": false,
+  "owned_raw_fsync_close_ack": true
+}

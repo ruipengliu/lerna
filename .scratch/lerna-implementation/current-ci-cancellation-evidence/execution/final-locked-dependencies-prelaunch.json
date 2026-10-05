@@ -1,0 +1,14 @@
+{
+  "event": "native_start_ack",
+  "operation": "final-locked-dependencies",
+  "pid": 3836902,
+  "pgid": 3836902,
+  "starttime": "16097720",
+  "root": "/tmp/lerna-current-ci-cancellation-execution",
+  "argv": [
+    "bash",
+    "-c",
+    "source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; pnpm install --offline --frozen-lockfile --ignore-scripts"
+  ],
+  "deadline_seconds": 120
+}
