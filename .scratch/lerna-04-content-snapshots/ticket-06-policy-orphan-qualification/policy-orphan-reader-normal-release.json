@@ -1,0 +1,33 @@
+{
+  "status": "STOP_RELEASED",
+  "actual_policy_orphan_corrected_normal_only_pass": true,
+  "native_actual": {
+    "event": "native_completion_ack",
+    "operation": "policy-orphan-reader-normal-control",
+    "pid": 3868040,
+    "pgid": 3868040,
+    "starttime": "16212656",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false,
+    "owned_raw_fsync_close_ack": true
+  },
+  "format_native_actual": {
+    "event": "native_completion_ack",
+    "operation": "policy-orphan-reader-format",
+    "pid": 3867394,
+    "pgid": 3867394,
+    "starttime": "16209893",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false,
+    "owned_raw_fsync_close_ack": true
+  },
+  "formatted_source_pins_26_unchanged": true,
+  "manifest_sha256": "0f42b6aa02006f6b74fd294fd934261466472a52e0e07d3a09b65ba810132e3d",
+  "raw_log_sha256": "d477add13dc38ccaa9f99352fbdcf3ad81526739ae370a1c0316c2677053b1bb",
+  "ledger_lines": 112,
+  "fault_race_unexecuted": true,
+  "other_tracer_unexecuted": true,
+  "original_failed_normal_raw_and_26_preserved": true
+}

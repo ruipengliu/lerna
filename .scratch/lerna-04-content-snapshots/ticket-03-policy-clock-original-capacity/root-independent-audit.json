@@ -1,0 +1,17 @@
+{
+  "kind": "root exact archive-copy check; preserves actual business FAIL and UNKNOWN",
+  "payload_files": 36,
+  "payload_bytes": 1898411,
+  "exact_original_copy_entries": 33,
+  "raw_lines": 319,
+  "source331_unchanged_checked_for_new_observation": true,
+  "actual_build_normal_exit": 0,
+  "actual_build_race_exit": 0,
+  "actual_normal_exit": 0,
+  "actual_race_exit": 1,
+  "binaries_profiles_and_executable_Go_excluded": true,
+  "first_static_KeyError_preserved": true,
+  "original_Go_output_FD_close": "UNKNOWN",
+  "earlier_failed_Put_possible_effect": "UNKNOWN",
+  "ticket_acceptance": false
+}

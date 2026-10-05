@@ -1,0 +1,146 @@
+OWNED_GO_CHILD_COMPLETION_ACK {"actual_wait_confirmed": true, "event": "owned_go_child_completion_ack", "exit": 0, "operation": "go-child-0015", "original_pid_generation_absent": true, "original_whole_deadline_monotonic": 165591.921575297, "parent_operation": "partition-shared-race", "pgid": 3915789, "pid": 3915811, "shared_group_absence_checked_only_after_whole_wait": true, "starttime": "16414699", "timed_out": false}
+OWNED_GO_CHILD_COMPLETION_ACK {"actual_wait_confirmed": true, "event": "owned_go_child_completion_ack", "exit": 0, "operation": "go-child-0016", "original_pid_generation_absent": true, "original_whole_deadline_monotonic": 165591.921575297, "parent_operation": "partition-shared-race", "pgid": 3915789, "pid": 3915844, "shared_group_absence_checked_only_after_whole_wait": true, "starttime": "16414713", "timed_out": false}
+psql --version
+psql (PostgreSQL) 17.11 (Debian 17.11-0+deb13u1)
+cd conformance/fixtures/durable-work/pg-v1 && sha256sum -c SHA256SUMS
+0001_admission.sql: OK
+commands.json: OK
+database.sql: OK
+writer-observation.json: OK
+writer-revision.txt: OK
+cd conformance/fixtures/durable-work/sqlite-v1 && sha256sum -c SHA256SUMS
+0001_admission.sql: OK
+commands.json: OK
+database.sqlite: OK
+writer-observation.json: OK
+writer-revision.txt: OK
+cd conformance/fixtures/durable-work/pg-v2 && sha256sum -c SHA256SUMS
+0001_admission.sql: OK
+0002_claims.sql: OK
+README.md: OK
+database.sql: OK
+migrations.json: OK
+writer-observation.json: OK
+writer-revision.txt: OK
+writer-schema.txt: OK
+../v2-writer.go.txt: OK
+cd conformance/fixtures/durable-work/sqlite-v2 && sha256sum -c SHA256SUMS
+0001_admission.sql: OK
+0002_claims.sql: OK
+README.md: OK
+database.sqlite: OK
+migrations.json: OK
+writer-observation.json: OK
+writer-revision.txt: OK
+../v2-writer.go.txt: OK
+go test -p=1 -count=1 -race -tags=integration -timeout=120s ./conformance/recovery/...
+ok  	github.com/ruipengliu/lerna/conformance/recovery	86.899s
+OWNED_GO_CHILD_COMPLETION_ACK {"actual_wait_confirmed": true, "event": "owned_go_child_completion_ack", "exit": 0, "operation": "go-child-0017", "original_pid_generation_absent": true, "original_whole_deadline_monotonic": 165591.921575297, "parent_operation": "partition-shared-race", "pgid": 3915789, "pid": 3915859, "shared_group_absence_checked_only_after_whole_wait": true, "starttime": "16414726", "timed_out": false}
+bash scripts/test-component-integration-race.sh
+OWNED_GO_CHILD_COMPLETION_ACK {"actual_wait_confirmed": true, "event": "owned_go_child_completion_ack", "exit": 0, "operation": "go-child-0018", "original_pid_generation_absent": true, "original_whole_deadline_monotonic": 165591.921575297, "parent_operation": "partition-shared-race", "pgid": 3915789, "pid": 3918959, "shared_group_absence_checked_only_after_whole_wait": true, "starttime": "16424153", "timed_out": false}
+Component integration race: 201 runnables (1 closure, 97 content, 60 durable, 43 other)
+Component integration race: running closure (1 runnables)
+ok  	github.com/ruipengliu/lerna/conformance/component	50.522s
+OWNED_GO_CHILD_COMPLETION_ACK {"actual_wait_confirmed": true, "event": "owned_go_child_completion_ack", "exit": 0, "operation": "go-child-0019", "original_pid_generation_absent": true, "original_whole_deadline_monotonic": 165591.921575297, "parent_operation": "partition-shared-race", "pgid": 3915789, "pid": 3919238, "shared_group_absence_checked_only_after_whole_wait": true, "starttime": "16424732", "timed_out": false}
+Component integration race: running content_a (33 runnables)
+ok  	github.com/ruipengliu/lerna/conformance/component	64.804s
+OWNED_GO_CHILD_COMPLETION_ACK {"actual_wait_confirmed": true, "event": "owned_go_child_completion_ack", "exit": 0, "operation": "go-child-0020", "original_pid_generation_absent": true, "original_whole_deadline_monotonic": 165591.921575297, "parent_operation": "partition-shared-race", "pgid": 3915789, "pid": 3920692, "shared_group_absence_checked_only_after_whole_wait": true, "starttime": "16430699", "timed_out": false}
+Component integration race: running content_b (32 runnables)
+ok  	github.com/ruipengliu/lerna/conformance/component	93.051s
+OWNED_GO_CHILD_COMPLETION_ACK {"actual_wait_confirmed": true, "event": "owned_go_child_completion_ack", "exit": 0, "operation": "go-child-0021", "original_pid_generation_absent": true, "original_whole_deadline_monotonic": 165591.921575297, "parent_operation": "partition-shared-race", "pgid": 3915789, "pid": 3922440, "shared_group_absence_checked_only_after_whole_wait": true, "starttime": "16437307", "timed_out": false}
+Component integration race: running content_c (32 runnables)
+ok  	github.com/ruipengliu/lerna/conformance/component	96.118s
+OWNED_GO_CHILD_COMPLETION_ACK {"actual_wait_confirmed": true, "event": "owned_go_child_completion_ack", "exit": 0, "operation": "go-child-0022", "original_pid_generation_absent": true, "original_whole_deadline_monotonic": 165591.921575297, "parent_operation": "partition-shared-race", "pgid": 3915789, "pid": 3924940, "shared_group_absence_checked_only_after_whole_wait": true, "starttime": "16446760", "timed_out": false}
+Component integration race: running durable (60 runnables)
+panic: test timed out after 2m0s
+	running tests:
+		TestDurableDecisionPreparedCannotRefreshOriginalExpiredPermission (0s)
+
+goroutine 32897 [running]:
+testing.(*M).startAlarm.func1()
+	/home/agent/.local/toolchains/go1.27.1/src/testing/testing.go:2959 +0x605
+created by time.goFunc
+	/home/agent/.local/toolchains/go1.27.1/src/time/sleep.go:182 +0x45
+
+goroutine 1 [chan receive]:
+testing.(*T).Run(0xc00010a488, {0x10806dd, 0x41}, 0x1a025e8)
+	/home/agent/.local/toolchains/go1.27.1/src/testing/testing.go:2266 +0xb3e
+testing.runTests.func1(0xc00010a488)
+	/home/agent/.local/toolchains/go1.27.1/src/testing/testing.go:2742 +0x85
+testing.tRunner(0xc00010a488, 0xc00050fa40)
+	/home/agent/.local/toolchains/go1.27.1/src/testing/testing.go:2193 +0x21d
+testing.runTests({0x105ca0f, 0x1b}, {0x1074476, 0x31}, 0xc0002247c8, {0x1a788d0, 0xc9, 0xc9}, {0xc2a8fd28245bac40, 0x1bf28f9bcc, ...})
+	/home/agent/.local/toolchains/go1.27.1/src/testing/testing.go:2740 +0x9ea
+testing.(*M).Run(0xc000297180)
+	/home/agent/.local/toolchains/go1.27.1/src/testing/testing.go:2600 +0xf45
+main.main()
+	_testmain.go:446 +0x165
+
+goroutine 32895 [select]:
+database/sql.(*DB).connectionOpener(0xc000688a90, {0x19fe828, 0xc00085e050})
+	/home/agent/.local/toolchains/go1.27.1/src/database/sql/sql.go:1266 +0xed
+created by database/sql.OpenDB in goroutine 32705
+	/home/agent/.local/toolchains/go1.27.1/src/database/sql/sql.go:846 +0x287
+
+goroutine 32896 [select]:
+database/sql.(*DB).connectionOpener(0xc000689450, {0x19fe828, 0xc00085e780})
+	/home/agent/.local/toolchains/go1.27.1/src/database/sql/sql.go:1266 +0xed
+created by database/sql.OpenDB in goroutine 32705
+	/home/agent/.local/toolchains/go1.27.1/src/database/sql/sql.go:846 +0x287
+
+goroutine 32705 [runnable]:
+crypto/internal/fips140/hmac.(*HMAC).Reset(0xc0005a8ba0)
+	/home/agent/.local/toolchains/go1.27.1/src/crypto/internal/fips140/hmac/hmac.go:82 +0x530
+crypto/internal/fips140/pbkdf2.Key[...](0xc0006af788, {0xc0007de2d0, 0x30}, {0xc000b52930, 0x10, 0x12}, 0x1000, 0x20)
+	/home/agent/.local/toolchains/go1.27.1/src/crypto/internal/fips140/pbkdf2/pbkdf2.go:59 +0x5b3
+crypto/pbkdf2.Key[...](0x1a03100, {0xc0007de2d0, 0x30}, {0xc000b52930, 0x10, 0x12}, 0x1000, 0x20)
+	/home/agent/.local/toolchains/go1.27.1/src/crypto/pbkdf2/pbkdf2.go:53 +0x26d
+github.com/jackc/pgx/v5/pgconn.(*scramClient).clientFinalMessage(0xc0006de120)
+	/home/agent/go/pkg/mod/github.com/jackc/pgx/v5@v5.11.0/pgconn/auth_scram.go:322 +0x688
+github.com/jackc/pgx/v5/pgconn.(*PgConn).scramAuth(0xc000345608, {0xc0008e45d0, 0x1, 0x1})
+	/home/agent/go/pkg/mod/github.com/jackc/pgx/v5@v5.11.0/pgconn/auth_scram.go:98 +0x123e
+github.com/jackc/pgx/v5/pgconn.connectOne({0x19fe898, 0xc0006c8fc0}, 0xc000241040, 0xc000a106c0, 0x0)
+	/home/agent/go/pkg/mod/github.com/jackc/pgx/v5@v5.11.0/pgconn/pgconn.go:487 +0x3e68
+github.com/jackc/pgx/v5/pgconn.connectPreferred({0x19fe898, 0xc0006c8fc0}, 0xc000241040, {0xc00097c060, 0x1, 0x1?})
+	/home/agent/go/pkg/mod/github.com/jackc/pgx/v5@v5.11.0/pgconn/pgconn.go:266 +0x30e
+github.com/jackc/pgx/v5/pgconn.ConnectConfig({0x19fe898, 0xc0006c8fc0}, 0xc000241040)
+	/home/agent/go/pkg/mod/github.com/jackc/pgx/v5@v5.11.0/pgconn/pgconn.go:161 +0x187
+github.com/jackc/pgx/v5.connect({0x19fe898, 0xc0006c8fc0}, 0xc000241040)
+	/home/agent/go/pkg/mod/github.com/jackc/pgx/v5@v5.11.0/conn.go:279 +0x78d
+github.com/jackc/pgx/v5.ConnectConfig({0x19fe898, 0xc0006c8fc0}, 0xc000240d00)
+	/home/agent/go/pkg/mod/github.com/jackc/pgx/v5@v5.11.0/conn.go:161 +0x173
+github.com/jackc/pgx/v5/stdlib.(*driverConnector).Connect(0xc000b68360, {0x19fe898, 0xc0006c8fc0})
+	/home/agent/go/pkg/mod/github.com/jackc/pgx/v5@v5.11.0/stdlib/sql.go:387 +0x186
+database/sql.(*DB).conn(0xc000689450, {0x19fe898, 0xc0006c8fc0}, 0x1)
+	/home/agent/.local/toolchains/go1.27.1/src/database/sql/sql.go:1436 +0xebf
+database/sql.(*DB).PingContext.func1(0x1)
+	/home/agent/.local/toolchains/go1.27.1/src/database/sql/sql.go:905 +0x66
+database/sql.(*DB).retry(0x7fee7dab3bf0?, 0xc0006b07b0)
+	/home/agent/.local/toolchains/go1.27.1/src/database/sql/sql.go:1581 +0x4b
+database/sql.(*DB).PingContext(0xc000689450, {0x19fe898, 0xc0006c8fc0})
+	/home/agent/.local/toolchains/go1.27.1/src/database/sql/sql.go:904 +0xf4
+github.com/ruipengliu/lerna/adapters/postgres/internal/pgstore.open({0x19fe898, 0xc0006c8000}, {{0xc00004e018, 0x81}, {0xc0007de150, 0x23}, 0x4, 0xb2d05e00, 0x77359400, 0x3b9aca00}, ...)
+	/tmp/lerna-worktrees/current-ci-partition/adapters/postgres/internal/pgstore/core.go:71 +0x49f
+github.com/ruipengliu/lerna/adapters/postgres/internal/pgstore.Open(...)
+	/tmp/lerna-worktrees/current-ci-partition/adapters/postgres/internal/pgstore/core.go:47
+github.com/ruipengliu/lerna/adapters/postgres/decision_engine.Open({0x19fe898, 0xc0006c8000}, {{0xc00004e018, 0x81}, {0xc0007de150, 0x23}, 0x4, 0xb2d05e00, 0x77359400, 0x3b9aca00})
+	/tmp/lerna-worktrees/current-ci-partition/adapters/postgres/decision_engine/store.go:28 +0x85
+github.com/ruipengliu/lerna/conformance/internal/decisionfixture.NewWorld(0xc00010a6c8, {0x19fe898, 0xc0006c8000})
+	/tmp/lerna-worktrees/current-ci-partition/conformance/internal/decisionfixture/world.go:72 +0x445
+github.com/ruipengliu/lerna/conformance/component_test.TestDurableDecisionPreparedCannotRefreshOriginalExpiredPermission(0xc00010a6c8)
+	/tmp/lerna-worktrees/current-ci-partition/conformance/component/durable_decision_tx_boundary_test.go:310 +0x6a
+testing.tRunner(0xc00010a6c8, 0x1a025e8)
+	/home/agent/.local/toolchains/go1.27.1/src/testing/testing.go:2193 +0x21d
+created by testing.(*T).Run in goroutine 1
+	/home/agent/.local/toolchains/go1.27.1/src/testing/testing.go:2258 +0xb13
+
+goroutine 32726 [select]:
+database/sql.(*DB).connectionOpener(0xc0007d8000, {0x19fe828, 0xc000902000})
+	/home/agent/.local/toolchains/go1.27.1/src/database/sql/sql.go:1266 +0xed
+created by database/sql.OpenDB in goroutine 32705
+	/home/agent/.local/toolchains/go1.27.1/src/database/sql/sql.go:846 +0x287
+FAIL	github.com/ruipengliu/lerna/conformance/component	120.066s
+FAIL
+OWNED_GO_CHILD_COMPLETION_ACK {"actual_wait_confirmed": true, "event": "owned_go_child_completion_ack", "exit": 1, "operation": "go-child-0023", "original_pid_generation_absent": true, "original_whole_deadline_monotonic": 165591.921575297, "parent_operation": "partition-shared-race", "pgid": 3915789, "pid": 3927569, "shared_group_absence_checked_only_after_whole_wait": true, "starttime": "16456546", "timed_out": false}
+make: *** [Makefile:42: test-integration-race] Error 1
+NATIVE_COMPLETION_ACK {"event": "native_completion_ack", "exit": 2, "group_absent": true, "operation": "partition-shared-race", "pgid": 3915789, "pid": 3915789, "starttime": "16414692", "timed_out": false}

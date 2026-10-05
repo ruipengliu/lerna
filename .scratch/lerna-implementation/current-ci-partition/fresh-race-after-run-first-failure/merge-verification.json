@@ -1,0 +1,31 @@
+{
+  "kind": "actual normal source merge followed STATIC fresh race readiness; no native",
+  "actual_head": "860df74ef610c1e7280b9c6abd2974ae0677b739",
+  "actual_parents": [
+    "fa4ad6acfa58927000c830619da55598a0f9a506",
+    "b9db5cc67647a15d6556fe92941757034a1e80d1"
+  ],
+  "actual_tree": "e8c2671577699e434159f03efef0337024fd1e1d",
+  "actual_source_diff_vs_priorfa4": [
+    "conformance/recovery/pool_run_blocked_sql_test.go",
+    "host/durablework/pool_run_live_fault_test.go",
+    "host/durablework/pool_run_test.go",
+    "internal/durableworkdemo/pool_worker.go"
+  ],
+  "three_dot_nonempty": true,
+  "three_dot_paths": 647,
+  "rootclean": true,
+  "source_inventory286_pass": true,
+  "qualified5_pass": true,
+  "acceptedRun30_pass": true,
+  "controllers4_pass": true,
+  "counter15_byteexact_old_unchanged": true,
+  "old_ledger1436_byteexact_unchanged": true,
+  "new_ledger_empty_from1": true,
+  "normal_original_raw_sha256": "eb837b008c2938b41d17aa54a77c7335be94548142d5267ae00f4ad71103de6b",
+  "firstR_original_raw_sha256": "1f2e4a2b67aa9fda8f9a42e8ed19414eedb988aafff1213ceade367c48668554",
+  "manifest_sha256": "2e454c72e7b3e2734c1ef37602856634101a3f81eb58eb7ce18bb48b7169b047",
+  "unknown_old33_431541_preserved": true,
+  "native_permission_not_granted": true,
+  "STATIC_STOP": true
+}

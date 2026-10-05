@@ -1,0 +1,14 @@
+{
+  "event": "native_start_ack",
+  "operation": "policy-orphan-reader-format",
+  "pid": 3867394,
+  "pgid": 3867394,
+  "starttime": "16209893",
+  "root": "/tmp/lerna-04-ticket06-execution",
+  "argv": [
+    "gofmt",
+    "-w",
+    "conformance/component/content_process_recovery_test.go"
+  ],
+  "deadline_seconds": 120
+}

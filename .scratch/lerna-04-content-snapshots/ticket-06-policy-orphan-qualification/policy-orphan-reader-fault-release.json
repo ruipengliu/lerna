@@ -1,0 +1,25 @@
+{
+  "status": "STOP_RELEASED",
+  "actual_policy_withdrawal_original_orphan_fault_only_pass": true,
+  "native_actual": {
+    "event": "native_completion_ack",
+    "operation": "policy-orphan-reader-sigkill-fault",
+    "pid": 3886840,
+    "pgid": 3886840,
+    "starttime": "16296846",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false,
+    "owned_raw_fsync_close_ack": true
+  },
+  "formatted_source_pins_26_unchanged": true,
+  "manifest_sha256": "0f42b6aa02006f6b74fd294fd934261466472a52e0e07d3a09b65ba810132e3d",
+  "raw_log_sha256": "d879bdb70ab5203e1f5cdb3a4fe09044031327ba8165dad342defdb64fd5c933",
+  "ledger_lines": 122,
+  "paired_race_unexecuted": true,
+  "other_tracer_unexecuted": true,
+  "original_failed_normal_raw_and_26_preserved": true,
+  "killed_original_child_native_first_close": "UNKNOWN_PERMANENTLY_RETAIN_EXACT_SCOPE",
+  "body_orphan_cleanup": "ACTUAL_ALL_HOLDER_ACK_AND_QUALIFIED_GONE",
+  "original_policy_responsibility": "SEPARATELY_PENDING_HOLDER_UNCONFIRMED_NOT_FAKE_ERASED"
+}

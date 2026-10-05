@@ -1,0 +1,24 @@
+{
+  "status": "STOP_RELEASED",
+  "actual_policy_withdrawal_original_orphan_paired_race_pass": true,
+  "native_actual": {
+    "event": "native_completion_ack",
+    "operation": "policy-orphan-reader-paired-race",
+    "pid": 3905075,
+    "pgid": 3905075,
+    "starttime": "16367800",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false,
+    "owned_raw_fsync_close_ack": true
+  },
+  "formatted_source_pins_26_unchanged": true,
+  "manifest_sha256": "0f42b6aa02006f6b74fd294fd934261466472a52e0e07d3a09b65ba810132e3d",
+  "raw_log_sha256": "8577cb47619916ee23624cb1dd7022b8678b19603feede3d8085c65e47889876",
+  "ledger_lines": 137,
+  "other_tracer_unexecuted": true,
+  "original_failed_normal_raw_and_26_preserved": true,
+  "killed_original_child_native_first_close": "UNKNOWN_PERMANENTLY_RETAIN_EXACT_SCOPE",
+  "body_orphan_cleanup": "ACTUAL_ALL_HOLDER_ACK_AND_QUALIFIED_GONE",
+  "original_policy_responsibility": "SEPARATELY_PENDING_HOLDER_UNCONFIRMED_NOT_FAKE_ERASED"
+}

@@ -1,0 +1,391 @@
+{
+  "STATIC_only_no_repository_mutation_or_native": true,
+  "proposed_repository_directory": ".scratch/lerna-04-content-snapshots/ticket-03-policy-clock-original-capacity",
+  "original_source_manifest_sha256": "60f92164e164cfe64658f176e5967755370c72aa31a52c39ba44e038965ca3ac",
+  "copy_entries": [
+    {
+      "payload_path": "artifacts/README.md",
+      "sha256": "d90970a9d1b3a805dc5174add227a1aac0f11a61b308952b54aa5b3254ee7d52",
+      "bytes": 3228,
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/README.md"
+    },
+    {
+      "payload_path": "artifacts/candidate-minimal-clock-change-from-previous-qualified.diff",
+      "sha256": "e439fd3fa427650f9a9a3d8514a21278e9940abb13b40a00d99319f5ca336b74",
+      "bytes": 9220,
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/candidate-minimal-clock-change-from-previous-qualified.diff"
+    },
+    {
+      "payload_path": "artifacts/commands-static.json",
+      "sha256": "d45302767f7719b99fb89ef33ed00e1a9df0a15845415d8bb0998f1ec5978bc0",
+      "bytes": 3601,
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/commands-static.json"
+    },
+    {
+      "payload_path": "artifacts/content_context_closure_test.go.txt",
+      "sha256": "c668eacce37c9363cccaa243e2c484951582a872652d1a875c1281362a5c4e43",
+      "bytes": 4558,
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/content_context_closure_test.go"
+    },
+    {
+      "payload_path": "artifacts/content_context_material_reachable_test.go.txt",
+      "sha256": "4223c74583ac7ecace18402ec114708e7a43bbf1593da47bbc675e3a6617e7f2",
+      "bytes": 3369,
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/content_context_material_reachable_test.go"
+    },
+    {
+      "payload_path": "artifacts/content_context_test.go.txt",
+      "sha256": "9f1bdc9e8757057ed09836a9d8aee213825e3fe1484c1a86966a4cce2911189f",
+      "bytes": 18517,
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/content_context_test.go"
+    },
+    {
+      "payload_path": "artifacts/context_claim_diagnostics.go.txt",
+      "sha256": "573ae56fe178fb5f1cfa8898575ab5ca141f22077383173b383635e4a7b743e9",
+      "bytes": 13261,
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/context_claim_diagnostics.go"
+    },
+    {
+      "payload_path": "artifacts/context_world.go.txt",
+      "sha256": "e37d876a734b2639a044ae931e8066b9844a8c88e8a213f6d3a32c2db0421612",
+      "bytes": 11298,
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/context_world.go"
+    },
+    {
+      "payload_path": "artifacts/fresh-builds-actual-outcome.json",
+      "sha256": "2b314e6fc0d59dd9b0beca31c7ac313aeebbee0e10daa164692ffab300e73c5a",
+      "bytes": 395709,
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/fresh-builds-actual-outcome.json"
+    },
+    {
+      "payload_path": "artifacts/fresh-builds-before-effects-source-pins.json",
+      "sha256": "05c65ce8481057b5658443bfd1fc167997c49106a015e4b5bd4628754b918584",
+      "bytes": 68136,
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/fresh-builds-before-effects-source-pins.json"
+    },
+    {
+      "payload_path": "artifacts/fresh-builds-results.md",
+      "sha256": "d75e258da9578aed20c434a8ef578fbbb691bde5cb02f438b180ab6c76c8a186",
+      "bytes": 2020,
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/fresh-builds-results.md"
+    },
+    {
+      "payload_path": "artifacts/fresh-normal_build-actual-provenance.json",
+      "sha256": "525bc73583506c55e6211d5f10d78a722533d636f496313e415ad05542dc8b05",
+      "bytes": 148917,
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/fresh-normal_build-actual-provenance.json"
+    },
+    {
+      "payload_path": "artifacts/fresh-normal_build-prelaunch.json",
+      "sha256": "098e8e99f908f209db8bbb79717ca85186b1d268e2d1ecf955939af355a00f95",
+      "bytes": 72470,
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/fresh-normal_build-prelaunch.json"
+    },
+    {
+      "payload_path": "artifacts/fresh-race_build-actual-provenance.json",
+      "sha256": "26c83f82f77fc5add9c51100edcb998bd9c3515f38a065c4f73f75213be4631b",
+      "bytes": 148933,
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/fresh-race_build-actual-provenance.json"
+    },
+    {
+      "payload_path": "artifacts/fresh-race_build-prelaunch.json",
+      "sha256": "5f410fe4532d50438968c1a8da4b930aaf26979e3ab4f58a189473185cde005a",
+      "bytes": 72475,
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/fresh-race_build-prelaunch.json"
+    },
+    {
+      "payload_path": "artifacts/manifest-static.json",
+      "sha256": "60f92164e164cfe64658f176e5967755370c72aa31a52c39ba44e038965ca3ac",
+      "bytes": 70351,
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/manifest-static.json"
+    },
+    {
+      "payload_path": "artifacts/original4b-normal-actual-outcome.json",
+      "sha256": "ebc91909c8f27f3c7bb050aad480b949fd45378771b18576a42381f8c5cd58b5",
+      "bytes": 151540,
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/original4b-normal-actual-outcome.json"
+    },
+    {
+      "payload_path": "artifacts/original4b-normal-actual-outcome.reviewed.json",
+      "sha256": "94adcf08b2e4f1acd6579f0430f751fbf22569adbc2990f79eba1a7c3932db71",
+      "bytes": 159211,
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/original4b-normal-actual-outcome.reviewed.json"
+    },
+    {
+      "payload_path": "artifacts/original4b-normal-prelaunch.json",
+      "sha256": "f6d6bffca7df2029d09b3ece33759ec5bff720642496101ea6f1b8bc0d82d145",
+      "bytes": 73166,
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/original4b-normal-prelaunch.json"
+    },
+    {
+      "payload_path": "artifacts/original4b-normal-resource-interval-facts.json",
+      "sha256": "2d016dc840781084e6711b00d30ff7fde284e867a186f2cf8f2d22d111d93eb4",
+      "bytes": 2436,
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/original4b-normal-resource-interval-facts.json"
+    },
+    {
+      "payload_path": "artifacts/original4b-normal-results.md",
+      "sha256": "d1565a8823d3ca51cdeb2812e2f2c20e7468e88d204f9dec11699f7a18745f38",
+      "bytes": 2924,
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/original4b-normal-results.md"
+    },
+    {
+      "payload_path": "artifacts/original4b-race-actual-outcome.json",
+      "sha256": "74bcc7828664c06e85d953f1fefb97ebf5518aada5bc46694e1748890c48b6d5",
+      "bytes": 151532,
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/original4b-race-actual-outcome.json"
+    },
+    {
+      "payload_path": "artifacts/original4b-race-actual-outcome.reviewed.json",
+      "sha256": "e9c7256f0ed85afb3f8ad399b92e58c8d251056d3c289a62833aa280e8ac4189",
+      "bytes": 164760,
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/original4b-race-actual-outcome.reviewed.json"
+    },
+    {
+      "payload_path": "artifacts/original4b-race-prelaunch.json",
+      "sha256": "ae430a560bd4cc002790790f4d926d1aca16ac05a84de4f743e12f5fa4f1e44c",
+      "bytes": 73166,
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/original4b-race-prelaunch.json"
+    },
+    {
+      "payload_path": "artifacts/original4b-race-resource-interval-facts.json",
+      "sha256": "f4e35850a31fbe8a0c73231881531733e7b6ad224c23f7df6ccf22b56a6f45b6",
+      "bytes": 2440,
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/original4b-race-resource-interval-facts.json"
+    },
+    {
+      "payload_path": "artifacts/original4b-race-results.md",
+      "sha256": "8a3839f65927762e517fc95984cb22267e3ce352dd309e866b78cc6ad3a5f2dc",
+      "bytes": 3786,
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/original4b-race-results.md"
+    },
+    {
+      "payload_path": "artifacts/original5-byteidentity-proof.json",
+      "sha256": "8f32dcca0a12fe8164cbde8fbe8b91da7dcfa1e5ed6ace21ab6e777698f4e1bd",
+      "bytes": 2515,
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/original5-byteidentity-proof.json"
+    },
+    {
+      "payload_path": "artifacts/overlay.json",
+      "sha256": "a909dbbaf3248c152da48dd2e04e599ccc0b2ec564ecb418f469798a9ddbd521",
+      "bytes": 1132,
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/overlay.json"
+    },
+    {
+      "payload_path": "artifacts/static-generation-first-partial-failure.json",
+      "sha256": "c905c2cd5f61a2ab50845ec92b2a20e7efb29a8b9269b2b30769957336c1b3f5",
+      "bytes": 472,
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/static-generation-first-partial-failure.json"
+    },
+    {
+      "payload_path": "raw/context-policy-clock-original4b-build-normal.log",
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+      "bytes": 39,
+      "original_path": "/workspace/lerna-content-03-137311247276/context-policy-clock-original4b-build-normal.log"
+    },
+    {
+      "payload_path": "raw/context-policy-clock-original4b-build-race.log",
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+      "bytes": 39,
+      "original_path": "/workspace/lerna-content-03-137311247276/context-policy-clock-original4b-build-race.log"
+    },
+    {
+      "payload_path": "raw/context-policy-clock-original4b-normal.log",
+      "sha256": "9dea4e1d5513118092b758c6e8cbdd5eda7ea2e9ec4cd43ac93711c376a7dfe0",
+      "bytes": 26121,
+      "original_path": "/workspace/lerna-content-03-137311247276/context-policy-clock-original4b-normal.log"
+    },
+    {
+      "payload_path": "raw/context-policy-clock-original4b-race.log",
+      "sha256": "0d2f5fac1bf072dc92e5897655200ada428e916d46a453ac9bb0173c55473e94",
+      "bytes": 25900,
+      "original_path": "/workspace/lerna-content-03-137311247276/context-policy-clock-original4b-race.log"
+    }
+  ],
+  "payload_exact_pins": {
+    "README.md": {
+      "sha256": "da1ef030c576f9736c5e6e8bcc7d11a148c2c44f45d13b719fe59b7a8b7fb5eb",
+      "bytes": 2727
+    },
+    "artifacts/README.md": {
+      "sha256": "d90970a9d1b3a805dc5174add227a1aac0f11a61b308952b54aa5b3254ee7d52",
+      "bytes": 3228
+    },
+    "artifacts/candidate-minimal-clock-change-from-previous-qualified.diff": {
+      "sha256": "e439fd3fa427650f9a9a3d8514a21278e9940abb13b40a00d99319f5ca336b74",
+      "bytes": 9220
+    },
+    "artifacts/commands-static.json": {
+      "sha256": "d45302767f7719b99fb89ef33ed00e1a9df0a15845415d8bb0998f1ec5978bc0",
+      "bytes": 3601
+    },
+    "artifacts/content_context_closure_test.go.txt": {
+      "sha256": "c668eacce37c9363cccaa243e2c484951582a872652d1a875c1281362a5c4e43",
+      "bytes": 4558
+    },
+    "artifacts/content_context_material_reachable_test.go.txt": {
+      "sha256": "4223c74583ac7ecace18402ec114708e7a43bbf1593da47bbc675e3a6617e7f2",
+      "bytes": 3369
+    },
+    "artifacts/content_context_test.go.txt": {
+      "sha256": "9f1bdc9e8757057ed09836a9d8aee213825e3fe1484c1a86966a4cce2911189f",
+      "bytes": 18517
+    },
+    "artifacts/context_claim_diagnostics.go.txt": {
+      "sha256": "573ae56fe178fb5f1cfa8898575ab5ca141f22077383173b383635e4a7b743e9",
+      "bytes": 13261
+    },
+    "artifacts/context_world.go.txt": {
+      "sha256": "e37d876a734b2639a044ae931e8066b9844a8c88e8a213f6d3a32c2db0421612",
+      "bytes": 11298
+    },
+    "artifacts/fresh-builds-actual-outcome.json": {
+      "sha256": "2b314e6fc0d59dd9b0beca31c7ac313aeebbee0e10daa164692ffab300e73c5a",
+      "bytes": 395709
+    },
+    "artifacts/fresh-builds-before-effects-source-pins.json": {
+      "sha256": "05c65ce8481057b5658443bfd1fc167997c49106a015e4b5bd4628754b918584",
+      "bytes": 68136
+    },
+    "artifacts/fresh-builds-results.md": {
+      "sha256": "d75e258da9578aed20c434a8ef578fbbb691bde5cb02f438b180ab6c76c8a186",
+      "bytes": 2020
+    },
+    "artifacts/fresh-normal_build-actual-provenance.json": {
+      "sha256": "525bc73583506c55e6211d5f10d78a722533d636f496313e415ad05542dc8b05",
+      "bytes": 148917
+    },
+    "artifacts/fresh-normal_build-prelaunch.json": {
+      "sha256": "098e8e99f908f209db8bbb79717ca85186b1d268e2d1ecf955939af355a00f95",
+      "bytes": 72470
+    },
+    "artifacts/fresh-race_build-actual-provenance.json": {
+      "sha256": "26c83f82f77fc5add9c51100edcb998bd9c3515f38a065c4f73f75213be4631b",
+      "bytes": 148933
+    },
+    "artifacts/fresh-race_build-prelaunch.json": {
+      "sha256": "5f410fe4532d50438968c1a8da4b930aaf26979e3ab4f58a189473185cde005a",
+      "bytes": 72475
+    },
+    "artifacts/manifest-static.json": {
+      "sha256": "60f92164e164cfe64658f176e5967755370c72aa31a52c39ba44e038965ca3ac",
+      "bytes": 70351
+    },
+    "artifacts/original4b-normal-actual-outcome.json": {
+      "sha256": "ebc91909c8f27f3c7bb050aad480b949fd45378771b18576a42381f8c5cd58b5",
+      "bytes": 151540
+    },
+    "artifacts/original4b-normal-actual-outcome.reviewed.json": {
+      "sha256": "94adcf08b2e4f1acd6579f0430f751fbf22569adbc2990f79eba1a7c3932db71",
+      "bytes": 159211
+    },
+    "artifacts/original4b-normal-prelaunch.json": {
+      "sha256": "f6d6bffca7df2029d09b3ece33759ec5bff720642496101ea6f1b8bc0d82d145",
+      "bytes": 73166
+    },
+    "artifacts/original4b-normal-resource-interval-facts.json": {
+      "sha256": "2d016dc840781084e6711b00d30ff7fde284e867a186f2cf8f2d22d111d93eb4",
+      "bytes": 2436
+    },
+    "artifacts/original4b-normal-results.md": {
+      "sha256": "d1565a8823d3ca51cdeb2812e2f2c20e7468e88d204f9dec11699f7a18745f38",
+      "bytes": 2924
+    },
+    "artifacts/original4b-race-actual-outcome.json": {
+      "sha256": "74bcc7828664c06e85d953f1fefb97ebf5518aada5bc46694e1748890c48b6d5",
+      "bytes": 151532
+    },
+    "artifacts/original4b-race-actual-outcome.reviewed.json": {
+      "sha256": "e9c7256f0ed85afb3f8ad399b92e58c8d251056d3c289a62833aa280e8ac4189",
+      "bytes": 164760
+    },
+    "artifacts/original4b-race-prelaunch.json": {
+      "sha256": "ae430a560bd4cc002790790f4d926d1aca16ac05a84de4f743e12f5fa4f1e44c",
+      "bytes": 73166
+    },
+    "artifacts/original4b-race-resource-interval-facts.json": {
+      "sha256": "f4e35850a31fbe8a0c73231881531733e7b6ad224c23f7df6ccf22b56a6f45b6",
+      "bytes": 2440
+    },
+    "artifacts/original4b-race-results.md": {
+      "sha256": "8a3839f65927762e517fc95984cb22267e3ce352dd309e866b78cc6ad3a5f2dc",
+      "bytes": 3786
+    },
+    "artifacts/original5-byteidentity-proof.json": {
+      "sha256": "8f32dcca0a12fe8164cbde8fbe8b91da7dcfa1e5ed6ace21ab6e777698f4e1bd",
+      "bytes": 2515
+    },
+    "artifacts/overlay.json": {
+      "sha256": "a909dbbaf3248c152da48dd2e04e599ccc0b2ec564ecb418f469798a9ddbd521",
+      "bytes": 1132
+    },
+    "artifacts/static-generation-first-partial-failure.json": {
+      "sha256": "c905c2cd5f61a2ab50845ec92b2a20e7efb29a8b9269b2b30769957336c1b3f5",
+      "bytes": 472
+    },
+    "existing-and-next-STATIC-reference-pins.json": {
+      "sha256": "b0e694ebfad9d3b7242605a96552d8b9af17d75b7e0b09f72c5e28d262425a42",
+      "bytes": 1337
+    },
+    "four-actual-native-registry-derived.json": {
+      "sha256": "c5eeafcd7fab66381e15aba7be79811240f51c10a5898000e16c2d969e8ed696",
+      "bytes": 7105
+    },
+    "raw/context-policy-clock-original4b-build-normal.log": {
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+      "bytes": 39
+    },
+    "raw/context-policy-clock-original4b-build-race.log": {
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+      "bytes": 39
+    },
+    "raw/context-policy-clock-original4b-normal.log": {
+      "sha256": "9dea4e1d5513118092b758c6e8cbdd5eda7ea2e9ec4cd43ac93711c376a7dfe0",
+      "bytes": 26121
+    },
+    "raw/context-policy-clock-original4b-race.log": {
+      "sha256": "0d2f5fac1bf072dc92e5897655200ada428e916d46a453ac9bb0173c55473e94",
+      "bytes": 25900
+    }
+  },
+  "four_current_actual_raws": [
+    {
+      "phase": "build-normal",
+      "path": "/workspace/lerna-content-03-137311247276/context-policy-clock-original4b-build-normal.log",
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+      "bytes": 39,
+      "lines": 1,
+      "actual_footer": "NATIVE_EXIT status=0 group_absent=True"
+    },
+    {
+      "phase": "build-race",
+      "path": "/workspace/lerna-content-03-137311247276/context-policy-clock-original4b-build-race.log",
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+      "bytes": 39,
+      "lines": 1,
+      "actual_footer": "NATIVE_EXIT status=0 group_absent=True"
+    },
+    {
+      "phase": "normal",
+      "path": "/workspace/lerna-content-03-137311247276/context-policy-clock-original4b-normal.log",
+      "sha256": "9dea4e1d5513118092b758c6e8cbdd5eda7ea2e9ec4cd43ac93711c376a7dfe0",
+      "bytes": 26121,
+      "lines": 158,
+      "actual_footer": "NATIVE_EXIT status=0 group_absent=True"
+    },
+    {
+      "phase": "race",
+      "path": "/workspace/lerna-content-03-137311247276/context-policy-clock-original4b-race.log",
+      "sha256": "0d2f5fac1bf072dc92e5897655200ada428e916d46a453ac9bb0173c55473e94",
+      "bytes": 25900,
+      "lines": 159,
+      "actual_footer": "NATIVE_EXIT status=1 group_absent=True"
+    }
+  ],
+  "source331_bytes_not_duplicated": true,
+  "binaries_and_profiles_excluded": true,
+  "historical_FAILURE_UNKNOWN_preserved_originals_unchanged": true,
+  "total_payload_files": 36,
+  "total_payload_bytes": 1898411,
+  "root_adoption_gate": "Only proposal; root chooses actual archive copying/commit after review. No acceptance implied."
+}

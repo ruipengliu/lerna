@@ -1,0 +1,12 @@
+--- /tmp/lerna-04-ticket06-policy-recovery-static/reader-setup-correction/failed-source/conformance/component/content_process_recovery_test.go	2026-10-05 09:40:02.600713553 +0000
++++ /tmp/lerna-worktrees/content-snapshots-06/conformance/component/content_process_recovery_test.go	2026-10-05 09:40:03.510418694 +0000
+@@ -800,6 +800,9 @@
+ 			if err != nil {
+ 				t.Fatal("original actual policy admission:", contentProcessCauseClasses(err))
+ 			}
++			if err = w.Store().InstallFixtureCommandReader(ctx, contentOwner, contentPrincipal, originalTrust); err != nil {
++				t.Fatal("original finite Command reader fixture:", contentProcessCauseClasses(err))
++			}
+ 			service, err := publicationProcessService(w.Store(), w.Objects, "original-policy-recovery-parent")
+ 			if err != nil {
+ 				t.Fatal("original publication service:", contentProcessCauseClasses(err))

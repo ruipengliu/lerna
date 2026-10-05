@@ -1,0 +1,12 @@
+{
+  "kind": "root current26 and actual N/fault/R already checked; archive and 8 retained FS exact now",
+  "worker_checkpoint": "d9dce0c3840f558c544750c92bfba2b6329ad8af",
+  "archived_exact_files": 31,
+  "raw_lines_fully_read_by_root": 33,
+  "protected_current_directory_identities": 8,
+  "original_first_setup_failure_preserved": true,
+  "current_source_manifest": "0f42b6aa02006f6b74fd294fd934261466472a52e0e07d3a09b65ba810132e3d",
+  "scope_catalog_audit_performed": false,
+  "scope_cleanup_performed": false,
+  "whole_ticket_acceptance": false
+}

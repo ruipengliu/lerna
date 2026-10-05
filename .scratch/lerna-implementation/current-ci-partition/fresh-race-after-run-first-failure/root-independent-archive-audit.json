@@ -1,0 +1,14 @@
+{
+  "observed_utc": "2026-10-05T11:03:23.019666+00:00",
+  "original_and_archive_byteexact": 36,
+  "bytes": 546127,
+  "source": "/tmp/lerna-ci-partition-fresh-race-archive-proposal.json",
+  "proposal_sha256": "4123531d3cc0d395d69026dca0c8e751ade6fbd5c73a9bed2b1362f0f96eb227",
+  "root_FULL_raw_lines": 146,
+  "full_make_race_pass": false,
+  "unexecuted": [
+    "other43",
+    "fixtures"
+  ],
+  "original_unknown_not_backfilled": true
+}

@@ -1,0 +1,31 @@
+{
+  "references_only": [
+    {
+      "path": "/workspace/lerna-content-03-137311247276/policy-clock-eight-qualification-compact-archive-proposal/archive-proposal-index.json",
+      "sha256": "5575dd0cbff0c7b08b9cb7e7bd60edd45397dfaf5cc65b6e88b61c51502d074a",
+      "bytes": 101027
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/policy-clock-eight-qualification-archive-proposal/archive-proposal-index.json",
+      "sha256": "e09162fb29bb2e6e49ae8b3486888a04b60253e78682203508787d4e7c489540",
+      "bytes": 812033
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/policy-clock-ownership-correction/formatted-source-manifest.json",
+      "sha256": "abd13179b4a7a6230fcdd7292b53c6ad84de2fd72e208767a31ca6913761e461",
+      "bytes": 56930
+    },
+    {
+      "path": "/tmp/lerna-03-policy-clock-capacity-next-decision.md",
+      "sha256": "00e699d62e4981763dc0672c30e784cd6443797fce9c0240457bffd9fdb3c0c5",
+      "bytes": 8658
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/manifest-static.json",
+      "sha256": "b000eb4172caac97b8753228bdd7ba9c770c2e9086981c8023876c88747137d2",
+      "bytes": 79445
+    }
+  ],
+  "no_duplicated_full331_or_historical_failure_raws": true,
+  "next_measurement_static_only_not_build_or_run": true
+}

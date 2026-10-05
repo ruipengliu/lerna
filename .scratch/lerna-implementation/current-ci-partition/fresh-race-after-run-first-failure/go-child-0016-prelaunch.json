@@ -1,0 +1,16 @@
+{
+  "event": "owned_go_child_start_ack",
+  "operation": "go-child-0016",
+  "parent_operation": "partition-shared-race",
+  "pid": 3915844,
+  "pgid": 3915789,
+  "starttime": "16414713",
+  "root": "/tmp/lerna-current-ci-partition-after-run-execution",
+  "argv": [
+    "/home/agent/.local/toolchains/go1.27.1/bin/go",
+    "env",
+    "GOOS"
+  ],
+  "original_whole_deadline_monotonic": 165591.921575297,
+  "remaining_whole_seconds": 1444.7838392599951
+}

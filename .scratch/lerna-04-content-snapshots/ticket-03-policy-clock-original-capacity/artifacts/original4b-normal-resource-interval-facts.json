@@ -1,0 +1,13 @@
+{
+  "original_interval": "process_group 3871345 3871345 /workspace/lerna-content-03-137311247276\npostgres lerna_test_5de8ff472f74f94abb6341f6\npostgres lerna_test_e549ac0086a2b80ac80161b2\npostgres lerna_test_4450722130480feb0f556195\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-1840001800 27 1179866\npostgres lerna_test_b287c5e5131b5333bc7ab641\npostgres lerna_test_875e844c2c679b38859d2e33\npostgres lerna_test_4dcb86fa9df2edbc184fc5a6\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-2431689121 27 1180001\npostgres lerna_test_76c4facd756d1d423470c0ba\npostgres lerna_test_8feff8ee029521081a4d9b36\npostgres lerna_test_2f784e839525a6bc602645ee\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-651374765 27 1180126\npostgres lerna_test_b878d1ac27cc4406b0650384\npostgres lerna_test_9e85acb9075476c409f5e1fd\npostgres lerna_test_00af48fefe77eefd2bc6dd7e\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-3772919528 27 1180263\npostgres lerna_test_56297562e160e6dad325e44d\npostgres lerna_test_b889eca8f0c8532fca922267\npostgres lerna_test_8b2fe0256ba993e754dbd897\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-2546858738 27 1180280\npostgres lerna_test_b5234a76c07cbd481565d9f8\npostgres lerna_test_111321ed1f4d3fcbf3789f38\npostgres lerna_test_67b8a02dd3ad89eda4c9b6ea\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-1919405030 27 1180280\nnative_exit 3871345 3871345 status=0 group_absent=True\n",
+  "registered_postgres_count": 18,
+  "registered_object_roots": [
+    "objects /workspace/lerna-content-03-137311247276/lerna-content-objects-1840001800 27 1179866",
+    "objects /workspace/lerna-content-03-137311247276/lerna-content-objects-2431689121 27 1180001",
+    "objects /workspace/lerna-content-03-137311247276/lerna-content-objects-651374765 27 1180126",
+    "objects /workspace/lerna-content-03-137311247276/lerna-content-objects-3772919528 27 1180263",
+    "objects /workspace/lerna-content-03-137311247276/lerna-content-objects-2546858738 27 1180280",
+    "objects /workspace/lerna-content-03-137311247276/lerna-content-objects-1919405030 27 1180280"
+  ],
+  "limit": "Original fresh resource devino registration before effects; native Wait/absence and PASS do not prove every fixture logicalClose or all holders cleanup. No new resource probes/SQL or old UNKNOWN changes."
+}

@@ -1,0 +1,13 @@
+{
+  "original_interval": "process_group 3878367 3878367 /workspace/lerna-content-03-137311247276\npostgres lerna_test_ae538f9973189f41d6b0a395\npostgres lerna_test_8761dd50658b8586b0e17617\npostgres lerna_test_557762ef86b08a51a65d2162\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-4077120865 27 1179866\npostgres lerna_test_7fb66567083e2acb9733e067\npostgres lerna_test_51605f7fb4a3d2358fe413be\npostgres lerna_test_9574ecdd647fc28437d45e84\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-2595346956 27 1179866\npostgres lerna_test_ba1d0d6828c458e491b9c172\npostgres lerna_test_af5753da29449780c582a514\npostgres lerna_test_5d27f92028a4f30f294a3dc2\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-2691203424 27 1179866\npostgres lerna_test_77c5edb359b252713b3554c7\npostgres lerna_test_6f5437c7fc112373e9cc0237\npostgres lerna_test_c7c37beadabf19fc7d0e4560\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-497969222 27 1179866\npostgres lerna_test_7bdb67e338bbbbed363e4436\npostgres lerna_test_6e288454ef50c1b5ec929ea5\npostgres lerna_test_f078086a69421639b7a989cd\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-1548242575 27 1179866\npostgres lerna_test_2082fb37bb53fbe73ddfa59f\npostgres lerna_test_4473d5c8c3ad497dc8fc4a03\npostgres lerna_test_4dbc8010ccd90afa7ea629bf\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-736465387 27 1179903\nnative_exit 3878367 3878367 status=1 group_absent=True\n",
+  "registered_postgres_count": 18,
+  "registered_object_roots": [
+    "objects /workspace/lerna-content-03-137311247276/lerna-content-objects-4077120865 27 1179866",
+    "objects /workspace/lerna-content-03-137311247276/lerna-content-objects-2595346956 27 1179866",
+    "objects /workspace/lerna-content-03-137311247276/lerna-content-objects-2691203424 27 1179866",
+    "objects /workspace/lerna-content-03-137311247276/lerna-content-objects-497969222 27 1179866",
+    "objects /workspace/lerna-content-03-137311247276/lerna-content-objects-1548242575 27 1179866",
+    "objects /workspace/lerna-content-03-137311247276/lerna-content-objects-736465387 27 1179903"
+  ],
+  "limit": "Original fresh pre-effect resource registrations. Actual native Wait/groupabsence and our own FD/raw Close are separate from fixture/holder logicalClose. No new SQL/resource probes or retroACK for old UNKNOWN."
+}

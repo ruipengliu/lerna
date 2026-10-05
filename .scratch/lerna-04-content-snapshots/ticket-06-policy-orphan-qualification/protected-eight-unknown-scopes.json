@@ -1,0 +1,99 @@
+{
+  "status": "STATIC_EXACT_LSTAT_IDENTITY_ONLY_NO_PG_OR_CLEANUP",
+  "ownroot": "/tmp/lerna-04-ticket06-execution",
+  "ownroot_identity": [
+    33,
+    407243,
+    "0700"
+  ],
+  "scopes": [
+    {
+      "schema": "lerna_test_a77911089367a14459f3d9e8",
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-4136084765",
+      "device": 33,
+      "inode": 410968,
+      "current_mode": "0700",
+      "current_is_original_directory": true,
+      "original_first_native_close": "UNKNOWN_PERMANENTLY_RETAIN",
+      "scope_cleanup": "PROHIBITED",
+      "schema_catalog_current": "NOT_OBSERVED_THIS_STATIC_RECORD"
+    },
+    {
+      "schema": "lerna_test_c79770996c493281433e9ff1",
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-403060689",
+      "device": 33,
+      "inode": 412800,
+      "current_mode": "0700",
+      "current_is_original_directory": true,
+      "original_first_native_close": "UNKNOWN_PERMANENTLY_RETAIN",
+      "scope_cleanup": "PROHIBITED",
+      "schema_catalog_current": "NOT_OBSERVED_THIS_STATIC_RECORD"
+    },
+    {
+      "schema": "lerna_test_e7119ccdb081fbe3f1bbf03c",
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-4013822289",
+      "device": 33,
+      "inode": 418085,
+      "current_mode": "0700",
+      "current_is_original_directory": true,
+      "original_first_native_close": "UNKNOWN_PERMANENTLY_RETAIN",
+      "scope_cleanup": "PROHIBITED",
+      "schema_catalog_current": "NOT_OBSERVED_THIS_STATIC_RECORD"
+    },
+    {
+      "schema": "lerna_test_16e9679776e1a666b76b47d6",
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-283551839",
+      "device": 33,
+      "inode": 418493,
+      "current_mode": "0700",
+      "current_is_original_directory": true,
+      "original_first_native_close": "UNKNOWN_PERMANENTLY_RETAIN",
+      "scope_cleanup": "PROHIBITED",
+      "schema_catalog_current": "NOT_OBSERVED_THIS_STATIC_RECORD"
+    },
+    {
+      "schema": "lerna_test_c2f794d660d6f7e336c377b4",
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-2029374551",
+      "device": 33,
+      "inode": 423714,
+      "current_mode": "0700",
+      "current_is_original_directory": true,
+      "original_first_native_close": "UNKNOWN_PERMANENTLY_RETAIN",
+      "scope_cleanup": "PROHIBITED",
+      "schema_catalog_current": "NOT_OBSERVED_THIS_STATIC_RECORD"
+    },
+    {
+      "schema": "lerna_test_f991ad1c96ea361e8f2a3490",
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-3499575554",
+      "device": 33,
+      "inode": 424086,
+      "current_mode": "0700",
+      "current_is_original_directory": true,
+      "original_first_native_close": "UNKNOWN_PERMANENTLY_RETAIN",
+      "scope_cleanup": "PROHIBITED",
+      "schema_catalog_current": "NOT_OBSERVED_THIS_STATIC_RECORD"
+    },
+    {
+      "schema": "lerna_test_19c2e383adb12e48ac55afed",
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-3364467673",
+      "device": 33,
+      "inode": 451764,
+      "current_mode": "0700",
+      "current_is_original_directory": true,
+      "original_first_native_close": "UNKNOWN_PERMANENTLY_RETAIN",
+      "scope_cleanup": "PROHIBITED",
+      "schema_catalog_current": "NOT_OBSERVED_THIS_STATIC_RECORD"
+    },
+    {
+      "schema": "lerna_test_5aa1dba26c48dcc1e55eb965",
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-3028872266",
+      "device": 33,
+      "inode": 452726,
+      "current_mode": "0700",
+      "current_is_original_directory": true,
+      "original_first_native_close": "UNKNOWN_PERMANENTLY_RETAIN",
+      "scope_cleanup": "PROHIBITED",
+      "schema_catalog_current": "NOT_OBSERVED_THIS_STATIC_RECORD"
+    }
+  ]
+}

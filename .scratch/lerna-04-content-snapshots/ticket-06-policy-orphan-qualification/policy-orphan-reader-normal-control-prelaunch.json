@@ -1,0 +1,26 @@
+{
+  "event": "native_start_ack",
+  "operation": "policy-orphan-reader-normal-control",
+  "pid": 3868040,
+  "pgid": 3868040,
+  "starttime": "16212656",
+  "root": "/tmp/lerna-04-ticket06-execution",
+  "argv": [
+    "bash",
+    "-c",
+    ". /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local GOFLAGS=-mod=readonly; exec \"$@\"",
+    "owned-locked",
+    "go",
+    "test",
+    "-tags=integration",
+    "-v",
+    "-count=1",
+    "-p=1",
+    "-mod=readonly",
+    "-timeout=120s",
+    "./conformance/component",
+    "-run",
+    "^TestContentSIGKILLWithCurrentSaveWithdrawalRecoversOriginalOrphanDuty$/^normal_release$"
+  ],
+  "deadline_seconds": 120
+}

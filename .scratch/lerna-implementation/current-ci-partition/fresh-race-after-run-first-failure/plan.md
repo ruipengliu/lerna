@@ -1,0 +1,9 @@
+# Fresh partition race after accepted Run merge — STATIC only
+
+Fixed partition HEAD 860df74ef610c1e7280b9c6abd2974ae0677b739 normally merges fa4 and primary b9. Current full 286 inputs and accepted Run 30 pins are frozen; Content sources and literal 97 selectors are unchanged. Dependency is accepted Run code, not any pending CI state.
+
+New isolated owned root has its own device/inode ACK, new ledger from line 1, and inherited exact counter15 bytes. It is not a continuation of the old 1436-line ledger. Original 3 Python controllers are copied byte for byte; only Go shim absolute path changes. Old root controllers, counter15, ledger, normal PASS, first race FAIL and UNKNOWN FS 33:431541 remain unchanged. Identical operation names are disambiguated by owned root identity and original PID/PGID/start ACK.
+
+After a separate sole LOCAL grant, execute the exact manifest supervisor_argv once. Fresh complete race runs original 11 Go calls 0015–0025: env2, Recovery, current Component discovery, six exact Component groups, fixture three packages. Discovery must compare literal97 exact order/33-32-32 and complete201 sets; original normal evidence supplies static expectations only. No old race or normal tail is inherited as new qualification.
+
+Administrative whole deadline is one 1445-second monotonic deadline, not renewed per child; all original Go package 120-second alarms and business limits remain. Every real Go child gets gate pre-effect PID/PGID/start/full argv registration plus fsync ACK, original owner Wait and generation absence; whole Wait/current group absence and Close evidence remain separate. First failure stops with exact missing tail, no retry/fix/N. Native source pins, new/old ledger cutoff, counters and UNKNOWN FS must be rechecked before/after actual run. No execution or audit is authorized by this STATIC plan.

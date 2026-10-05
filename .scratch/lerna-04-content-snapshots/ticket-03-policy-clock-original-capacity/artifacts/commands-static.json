@@ -1,0 +1,65 @@
+{
+  "STATIC_only_future_separate_explicit_root_grants": true,
+  "workdir": "/tmp/lerna-worktrees/content-snapshots-03",
+  "locked_environment": "source /workspace/.lerna-env/env.sh; GOTOOLCHAIN=local GOFLAGS=-mod=readonly",
+  "supervisor": "/workspace/lerna-content-03-137311247276/run-native.py",
+  "supervisor_sha256": "82c4e6a19e1aaabbd4a2412f89eb54c0b1690221f92d3ea826b05ca455a2042e",
+  "original_budgets": {
+    "caller_seconds": 30,
+    "claim_seconds": 5,
+    "go_seconds": 120,
+    "outer_seconds": 120,
+    "run_count": 1
+  },
+  "normal_build": [
+    "go",
+    "test",
+    "-c",
+    "-p",
+    "1",
+    "-tags=integration",
+    "-overlay=/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/overlay.json",
+    "-o",
+    "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/component-policy-clock-normal.test",
+    "./conformance/component"
+  ],
+  "race_build": [
+    "go",
+    "test",
+    "-race",
+    "-c",
+    "-p",
+    "1",
+    "-tags=integration",
+    "-overlay=/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/overlay.json",
+    "-o",
+    "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/component-policy-clock-race.test",
+    "./conformance/component"
+  ],
+  "normal_business": [
+    "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/component-policy-clock-normal.test",
+    "-test.v",
+    "-test.run=^(TestContentContextReachableClosure64And65IncludesIntermediateVersions|TestContentContextStaticModeMaximumReachable62Materials|TestContentContextSingleContentBoundHasHonestLayerAndNoDispatch|TestContentContextDuplicateSelectorRoleRefusesBeforeOriginalInputReplacement)$",
+    "-test.count=1",
+    "-test.timeout=120s"
+  ],
+  "race_business": [
+    "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/component-policy-clock-race.test",
+    "-test.v",
+    "-test.run=^(TestContentContextReachableClosure64And65IncludesIntermediateVersions|TestContentContextStaticModeMaximumReachable62Materials|TestContentContextSingleContentBoundHasHonestLayerAndNoDispatch|TestContentContextDuplicateSelectorRoleRefusesBeforeOriginalInputReplacement)$",
+    "-test.count=1",
+    "-test.timeout=120s"
+  ],
+  "future_exact_log_paths": {
+    "build-normal": "/workspace/lerna-content-03-137311247276/context-policy-clock-original4b-build-normal.log",
+    "build-race": "/workspace/lerna-content-03-137311247276/context-policy-clock-original4b-build-race.log",
+    "normal": "/workspace/lerna-content-03-137311247276/context-policy-clock-original4b-normal.log",
+    "race": "/workspace/lerna-content-03-137311247276/context-policy-clock-original4b-race.log"
+  },
+  "gates": "Current331/source9/5byteequal/map/commands/rootACK/strict82 before effects. Each independent build sourcepre/post actualPIDPGIDtick/fsync-beforeexec/Wait/groupabsence, newbinary complete independentFD/hash/devino/size/fsync/Close ACK (originaldescriptor does not inherit). Separate root FULL binaryidentity audit then normal business; only normal all4positive/refusal tails actualPASS/Wait/currentgroupabsence may a separately authorized race execute. STOP firstfailure, no repair/retry.",
+  "copied5_already_qualified_formatted_byteexact": "No formatting needed or granted; no product formatter. If later source changes, this binding invalid until fresh review.",
+  "no_profile_CPU_SQL_observer_preheat_lease_renew_budget_change": true,
+  "normal_binary_missing": true,
+  "race_binary_missing": true,
+  "no_native_yet": true
+}

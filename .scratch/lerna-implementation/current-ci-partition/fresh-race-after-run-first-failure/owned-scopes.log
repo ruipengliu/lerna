@@ -1,0 +1,982 @@
+{"argv": ["bash", "-c", "set -e; set -o pipefail; source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; export GOFLAGS=-mod=readonly; export PATH=/tmp/lerna-current-ci-partition-after-run-execution/go-shim:$PATH; make test-integration-race"], "deadline_seconds": 1445, "event": "native_start_ack", "operation": "partition-shared-race", "pgid": 3915789, "pid": 3915789, "root": "/tmp/lerna-current-ci-partition-after-run-execution", "starttime": "16414692"}
+{"argv": ["/home/agent/.local/toolchains/go1.27.1/bin/go", "env", "CGO_ENABLED"], "event": "owned_go_child_start_ack", "operation": "go-child-0015", "original_whole_deadline_monotonic": 165591.921575297, "parent_operation": "partition-shared-race", "pgid": 3915789, "pid": 3915811, "remaining_whole_seconds": 1444.9286902619933, "root": "/tmp/lerna-current-ci-partition-after-run-execution", "starttime": "16414699"}
+{"actual_wait_confirmed": true, "event": "owned_go_child_completion_ack", "exit": 0, "operation": "go-child-0015", "original_pid_generation_absent": true, "original_whole_deadline_monotonic": 165591.921575297, "parent_operation": "partition-shared-race", "pgid": 3915789, "pid": 3915811, "shared_group_absence_checked_only_after_whole_wait": true, "starttime": "16414699", "timed_out": false}
+{"argv": ["/home/agent/.local/toolchains/go1.27.1/bin/go", "env", "GOOS"], "event": "owned_go_child_start_ack", "operation": "go-child-0016", "original_whole_deadline_monotonic": 165591.921575297, "parent_operation": "partition-shared-race", "pgid": 3915789, "pid": 3915844, "remaining_whole_seconds": 1444.7838392599951, "root": "/tmp/lerna-current-ci-partition-after-run-execution", "starttime": "16414713"}
+{"actual_wait_confirmed": true, "event": "owned_go_child_completion_ack", "exit": 0, "operation": "go-child-0016", "original_pid_generation_absent": true, "original_whole_deadline_monotonic": 165591.921575297, "parent_operation": "partition-shared-race", "pgid": 3915789, "pid": 3915844, "shared_group_absence_checked_only_after_whole_wait": true, "starttime": "16414713", "timed_out": false}
+{"argv": ["/home/agent/.local/toolchains/go1.27.1/bin/go", "test", "-p=1", "-count=1", "-race", "-tags=integration", "-timeout=120s", "./conformance/recovery/..."], "event": "owned_go_child_start_ack", "operation": "go-child-0017", "original_whole_deadline_monotonic": 165591.921575297, "parent_operation": "partition-shared-race", "pgid": 3915789, "pid": 3915859, "remaining_whole_seconds": 1444.6608292329765, "root": "/tmp/lerna-current-ci-partition-after-run-execution", "starttime": "16414726"}
+postgres lerna_test_a8664c881208300caf6f1c0d
+postgres lerna_test_199b039db92f050647379555
+postgres lerna_test_8d0db9e485f2c116a6f583a9
+postgres lerna_test_d9fa9c86ef58f17b0ac6ef72
+postgres lerna_test_ce4eaa65e0843b1ddfdfce92
+postgres lerna_test_fe5026351d86a80f668598c8
+postgres lerna_test_13976323007f1ed513bc8b86
+postgres lerna_test_66a4fa096045ae916e0187ea
+postgres lerna_test_68d36005f6e8b143e2fbdfad
+postgres lerna_test_161e58a094c46f2b8fdc9234
+postgres lerna_test_acecf08074e12f58b69ddcf8
+postgres lerna_test_7114490c94dfbc79ae553fcb
+postgres lerna_test_999237124796a5bb6e7f7ce0
+postgres lerna_test_7d6ff0c4f3bf6a5e4f12244a
+postgres lerna_test_c08c6a5479289f94908fed51
+postgres lerna_test_8c4183e14779dc1d6f4ad007
+postgres lerna_test_c912d4dbf01f94afb422a7e9
+postgres lerna_test_9964aa3065da5cdfaaa7bae7
+postgres lerna_test_72a17750aa397301269e4a27
+postgres lerna_test_adfd3fb206cc1e4de750e284
+postgres lerna_test_0568e618007ccc1d7fbd87e7
+postgres lerna_test_678aef22b54233d27ed151e4
+postgres lerna_test_832d8fb21ce0bfa6ef52c90f
+postgres lerna_test_1e853608dc4433048e693902
+postgres lerna_test_d8d1614be99cda9e770f3006
+postgres lerna_test_c4481cb2a9406e5c1d9efb43
+postgres lerna_test_6310dab2b95d6ac14cb732ed
+postgres lerna_test_ce4d29d4800c526a9d290d82
+postgres lerna_test_802efc48e63eb5f9654355d1
+postgres lerna_test_daac40dd1ebf9438d3aa06c4
+postgres lerna_test_e6d7b2fd656b7ff25d6ba13c
+postgres lerna_test_4c28803f792dc628d335f8db
+postgres lerna_test_606bff5c14c864f83077a316
+postgres lerna_test_3868514a38f5cd84427b36d9
+postgres lerna_test_878faf6b776c4987ea0aba4e
+postgres lerna_test_2fffcd316cd8535f638a175c
+postgres lerna_test_7444fdfcd67f91bc1315c96a
+postgres lerna_test_91d0fc3300878939c55c07d8
+postgres lerna_test_ac191c0e416b8206f62fceb9
+postgres lerna_test_07643a1055e57a9ba4c9e91b
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-2159777249
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-1167110342
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-674511348
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-2758732043
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-476092949
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-3520452577
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-3788654549
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-1370716524
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-1934830237
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-434063858
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-3355629477
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-431005543
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-3028841287
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-525010894
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-1685561434
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-2120786301
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-1296860753
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-2342752363
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-2748672675
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-2242359464
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-2876509696
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-1158368691
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-4053567430
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-2034026489
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-1868678268
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-2227691946
+postgres lerna_test_111ecda33d00ba30063e75d9
+postgres lerna_test_2326d354538f1208a6828c23
+postgres lerna_test_68d79d5e45e161db9149aa4f
+postgres lerna_test_16851bd75d59e4561cde13df
+postgres lerna_test_dd6085a8460fdbd247e3671a
+postgres lerna_test_d0f32969736bb7ac09bfea63
+postgres lerna_test_8c88e5dd44c3eec3ddf6303b
+postgres lerna_test_3cd18e6ef5524787eaed8169
+postgres lerna_test_d80d118ce2a4dfebd3544b9c
+postgres lerna_test_42d01b08f54d37a38c8a746e
+postgres lerna_test_897977ac20b282b90eb52a12
+postgres lerna_test_f6467deecf7ea6afec6515fa
+postgres lerna_test_9c0c41e43c96df9a2865a6f4
+postgres lerna_test_f1e4ffcb3cf7f900085678ce
+postgres lerna_test_0fb142412f98ce3bf53fec03
+postgres lerna_test_ff7fa10c71b99cf2369c44b7
+postgres lerna_test_f5b519b76307077df8ef20be
+postgres lerna_test_87001d600d70d41cb4edac51
+postgres lerna_test_79df7ac9dff8f6bf268826de
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-2328596665
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-2005458846
+postgres lerna_test_90f3db9ba9afcb059db9c8b9
+postgres lerna_test_6add86bf53f83beb9261e644
+postgres lerna_test_f3455c61ca3501594a3098b5
+postgres lerna_test_65507be7c0d8dc4a6b68ff02
+postgres lerna_test_4712c93a69f4a16ab843a692
+postgres lerna_test_c78f0c6d597ea9e083edd2fc
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-647255828
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-3551419534
+postgres lerna_test_397aa624280dedd960f3caca
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-621077863
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-2219100041
+postgres lerna_test_c069324443b91113658c9df0
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-721110857
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-3046671740
+postgres lerna_test_d1d93b2a24e24382928fe827
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-630939702
+postgres lerna_test_202013d4d6fbf4663139f51e
+postgres lerna_test_b4e4a997123961b4307ab899
+postgres lerna_test_efecb2588990e222a9a70ae1
+postgres lerna_test_b82e09d7705dbca87b8ba4c9
+postgres lerna_test_8808c43a4208884db5b373cf
+postgres lerna_test_07d3d0ffd275b377ea267443
+postgres lerna_test_6facadcdcf561c54ea4529da
+{"Event":"run_pg_role_intent","Schema":"lerna_test_6facadcdcf561c54ea4529da","Role":"run","Application":"lerna_test_6facadcdcf561c54ea4529da-run"}
+{"Event":"run_pg_role_intent","Schema":"lerna_test_6facadcdcf561c54ea4529da","Role":"blocker","Application":"lerna_test_6facadcdcf561c54ea4529da-blocker"}
+{"Event":"run_pg_role_intent","Schema":"lerna_test_6facadcdcf561c54ea4529da","Role":"observer","Application":"lerna_test_6facadcdcf561c54ea4529da-observer"}
+{"Event":"run_pg_backend_observed_after_startup_pre_run","Schema":"lerna_test_6facadcdcf561c54ea4529da","Role":"observer","Backend":{"PID":644993,"Started":"2026-10-05T10:25:51.635369Z","Database":"lerna_durable_work_01_20261003","User":"lerna","Application":"lerna_test_6facadcdcf561c54ea4529da-observer","State":"active"}}
+{"Event":"run_pg_backend_observed_after_startup_pre_run","Schema":"lerna_test_6facadcdcf561c54ea4529da","Role":"run","Backend":{"PID":644991,"Started":"2026-10-05T10:25:51.517701Z","Database":"lerna_durable_work_01_20261003","User":"lerna","Application":"lerna_test_6facadcdcf561c54ea4529da-run","State":"idle in transaction"}}
+{"Event":"run_pg_backend_observed_after_startup_pre_run","Schema":"lerna_test_6facadcdcf561c54ea4529da","Role":"run","Backend":{"PID":644994,"Started":"2026-10-05T10:25:51.657366Z","Database":"lerna_durable_work_01_20261003","User":"lerna","Application":"lerna_test_6facadcdcf561c54ea4529da-run","State":"idle in transaction"}}
+{"Event":"run_pg_backend_observed_after_startup_pre_run","Schema":"lerna_test_6facadcdcf561c54ea4529da","Role":"run","Backend":{"PID":644995,"Started":"2026-10-05T10:25:51.657287Z","Database":"lerna_durable_work_01_20261003","User":"lerna","Application":"lerna_test_6facadcdcf561c54ea4529da-run","State":"idle in transaction"}}
+{"Event":"run_pg_backend_observed_after_startup_pre_run","Schema":"lerna_test_6facadcdcf561c54ea4529da","Role":"blocker","Backend":{"PID":644992,"Started":"2026-10-05T10:25:51.53311Z","Database":"lerna_durable_work_01_20261003","User":"lerna","Application":"lerna_test_6facadcdcf561c54ea4529da-blocker","State":"idle"}}
+postgres lerna_test_ab3b733ab4d6d10a6ad6697e
+{"Event":"run_pg_role_intent","Schema":"lerna_test_ab3b733ab4d6d10a6ad6697e","Role":"run","Application":"lerna_test_ab3b733ab4d6d10a6ad6697e-run"}
+{"Event":"run_pg_role_intent","Schema":"lerna_test_ab3b733ab4d6d10a6ad6697e","Role":"blocker","Application":"lerna_test_ab3b733ab4d6d10a6ad6697e-blocker"}
+{"Event":"run_pg_role_intent","Schema":"lerna_test_ab3b733ab4d6d10a6ad6697e","Role":"observer","Application":"lerna_test_ab3b733ab4d6d10a6ad6697e-observer"}
+{"Event":"run_pg_backend_observed_after_startup_pre_run","Schema":"lerna_test_ab3b733ab4d6d10a6ad6697e","Role":"observer","Backend":{"PID":645003,"Started":"2026-10-05T10:25:52.252528Z","Database":"lerna_durable_work_01_20261003","User":"lerna","Application":"lerna_test_ab3b733ab4d6d10a6ad6697e-observer","State":"active"}}
+{"Event":"run_pg_backend_observed_after_startup_pre_run","Schema":"lerna_test_ab3b733ab4d6d10a6ad6697e","Role":"run","Backend":{"PID":645001,"Started":"2026-10-05T10:25:52.112788Z","Database":"lerna_durable_work_01_20261003","User":"lerna","Application":"lerna_test_ab3b733ab4d6d10a6ad6697e-run","State":"idle in transaction"}}
+{"Event":"run_pg_backend_observed_after_startup_pre_run","Schema":"lerna_test_ab3b733ab4d6d10a6ad6697e","Role":"run","Backend":{"PID":645004,"Started":"2026-10-05T10:25:52.275309Z","Database":"lerna_durable_work_01_20261003","User":"lerna","Application":"lerna_test_ab3b733ab4d6d10a6ad6697e-run","State":"idle in transaction"}}
+{"Event":"run_pg_backend_observed_after_startup_pre_run","Schema":"lerna_test_ab3b733ab4d6d10a6ad6697e","Role":"run","Backend":{"PID":645005,"Started":"2026-10-05T10:25:52.276058Z","Database":"lerna_durable_work_01_20261003","User":"lerna","Application":"lerna_test_ab3b733ab4d6d10a6ad6697e-run","State":"idle in transaction"}}
+{"Event":"run_pg_backend_observed_after_startup_pre_run","Schema":"lerna_test_ab3b733ab4d6d10a6ad6697e","Role":"blocker","Backend":{"PID":645002,"Started":"2026-10-05T10:25:52.133624Z","Database":"lerna_durable_work_01_20261003","User":"lerna","Application":"lerna_test_ab3b733ab4d6d10a6ad6697e-blocker","State":"idle"}}
+postgres lerna_test_fd713ef5ef1ad766215856a6
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-545362425
+postgres lerna_test_3ee24fa1fd5bd619cd72d2fd
+postgres lerna_test_076776312210c1a134f0fda3
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-2035404881
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-3133261647
+postgres lerna_test_033d1189ac133703fbea9518
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-4252510549
+postgres lerna_test_9fa0ab629d8a0458e6faf81f
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-240011396
+postgres lerna_test_3142c1effb2ea6016355b77a
+postgres lerna_test_2898b9008983c2776ba743d6
+postgres lerna_test_b3f61269b37bc36fa298f915
+postgres lerna_test_e4bc60c4afe7c8d5eef4ebc4
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-486920636
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-3631378869
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-2469308370
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-3958508633
+postgres lerna_test_6dd16b20bfbeb238b297ba2e
+postgres lerna_test_5ce451d66029c06de1711997
+postgres lerna_test_f4fa040f5492bee5cbfb31dc
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-236288317
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-1376390894
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-1056721430
+postgres lerna_test_7cddcf3a0c0c626bb78e5fb7
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-3468821298
+postgres lerna_test_c3fa8b0cca4171f4ff3a5504
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-2652468856
+postgres lerna_test_957e53572fbe9df72d53cb8d
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-3494926383
+postgres lerna_test_e1564eead8efdaabc3720231
+postgres lerna_test_7972df3b66243d5025380b91
+postgres lerna_test_d4661d8c1e1583bfdfc6b02d
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-1215883215
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-3100408998
+postgres lerna_test_369386f0e2196d14e4227344
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-612092777
+postgres lerna_test_78b990cb380ee99f687f2aff
+postgres lerna_test_834ac5054e5d51c2bbdfdfb6
+postgres lerna_test_b195aa01f7bcb26960647fff
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-3280261088
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-1566302772
+postgres lerna_test_b468d3391d62f3101a06bfa5
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-3064299749
+postgres lerna_test_4ff2e5fb96dd3443b51d0062
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-1972037045
+postgres lerna_test_e968447ce777c1d712eee0bc
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-3663322231
+postgres lerna_test_c1817f45e547f952b0c80715
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-276137631
+postgres lerna_test_1a0db70c5b2621dfd3cdf222
+postgres lerna_test_b8fed30538e6fa014009dff9
+postgres lerna_test_6306c5f449eb5ed2eb52f2b1
+postgres lerna_test_4fe04a657ef19ac5918772b8
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-3871338464
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-3445433060
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-3104870434
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-2647542473
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-1431170827
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-87838522
+postgres lerna_test_408f24bfe5b99ee5e4a76d28
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-1914904198
+postgres lerna_test_a196ea28def287bd07711ea3
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-2114297243
+postgres lerna_test_14e0cf8742702d974863982e
+postgres lerna_test_d661d80cdde8115ab13a1fbd
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-1961228668
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-3783886232
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-1832692718
+postgres lerna_test_a6599e48cf9abc19fab923f4
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-623779289
+postgres lerna_test_27db1d264ec405c8bb6d3b25
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-4255907093
+postgres lerna_test_1531670727124e2ecb232dbc
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-2836491981
+postgres lerna_test_22f34abd5b12ecbe83365b99
+postgres lerna_test_487300486ff5e7bed46e2b3c
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-2401295839
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-4173750291
+postgres lerna_test_0723a647896325cbe85493da
+postgres lerna_test_dbe86ddf4615a1219013041d
+postgres lerna_test_b43eacfa6deedfe4dc0accb6
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-1825512865
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-2686402039
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-339194925
+postgres lerna_test_1bab55c7d0bdc9aebe6c44ed
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-1053692818
+postgres lerna_test_272a3cf6461199d0ef2de002
+postgres lerna_test_c3b3278f3450bd7304d70edf
+postgres lerna_test_e7ac47ef87627192f945bc6c
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-162876339
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-485687291
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-1776823030
+postgres lerna_test_1424e482b4245ca437f70de1
+postgres lerna_test_2068efccc43b87d877ee2c0d
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-2826699270
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-2672933294
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-1747895317
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-4113436557
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-1313734723
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-3973512725
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-3789530747
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-1921110751
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-3202777447
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-902034051
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-3687145408
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-1821336637
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-1223807208
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-2923979948
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-762733252
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-3263591489
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-3857775314
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-613407440
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-312475626
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-599122749
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-3128675137
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-1612648468
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-3527748562
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-2151202961
+postgres lerna_test_5aa69bba9ea2d6c3c906856f
+postgres lerna_test_1e44ca6f1d422fcfce5e8af3
+postgres lerna_test_a27dc737a01d1ddfee629e39
+postgres lerna_test_56ce59df7f0cacbe6a99c706
+postgres lerna_test_3630715986fb5f4cce51e5a1
+postgres lerna_test_35931a75d3bc2d2319c95c9d
+postgres lerna_test_4f53b6fdbdcacd334e2c5f36
+postgres lerna_test_45572d0170adb6469cc8a86e
+postgres lerna_test_975d7af5871e2ef18b1caab7
+postgres lerna_test_cdfa3ab0c77e8988bc527f01
+postgres lerna_test_73bc05201ea45c50e5a2c48d
+postgres lerna_test_cf416a4bd17fb42ad7bfebc3
+postgres lerna_test_0cda7f3754b78c75cf999458
+postgres lerna_test_6ff32d4defe83ed7f8d22c76
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-426285802
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-301190693
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-2205724065
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-868801235
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-3468645408
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-1419292157
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-2515055474
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-3094334169
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-1034974827
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-489944436
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-2052124635
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-1039098804
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-1900859142
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-3641782615
+postgres lerna_test_54d4c635d41aa3375141ea9f
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-2907363605
+postgres lerna_test_89552b3343051352b908b0bd
+sqlite /tmp/lerna-current-ci-partition-after-run-execution/lerna-owned-fixture-2242022167
+postgres lerna_test_bcce4a33a3715d602b7a0b06
+postgres lerna_test_b2925be04946153537b15adc
+{"actual_wait_confirmed": true, "event": "owned_go_child_completion_ack", "exit": 0, "operation": "go-child-0017", "original_pid_generation_absent": true, "original_whole_deadline_monotonic": 165591.921575297, "parent_operation": "partition-shared-race", "pgid": 3915789, "pid": 3915859, "shared_group_absence_checked_only_after_whole_wait": true, "starttime": "16414726", "timed_out": false}
+{"argv": ["/home/agent/.local/toolchains/go1.27.1/bin/go", "test", "-p=1", "-count=1", "-tags=integration", "-timeout=120s", "./conformance/component", "-list", "."], "event": "owned_go_child_start_ack", "operation": "go-child-0018", "original_whole_deadline_monotonic": 165591.921575297, "parent_operation": "partition-shared-race", "pgid": 3915789, "pid": 3918959, "remaining_whole_seconds": 1350.3846759109874, "root": "/tmp/lerna-current-ci-partition-after-run-execution", "starttime": "16424153"}
+{"actual_wait_confirmed": true, "event": "owned_go_child_completion_ack", "exit": 0, "operation": "go-child-0018", "original_pid_generation_absent": true, "original_whole_deadline_monotonic": 165591.921575297, "parent_operation": "partition-shared-race", "pgid": 3915789, "pid": 3918959, "shared_group_absence_checked_only_after_whole_wait": true, "starttime": "16424153", "timed_out": false}
+{"argv": ["/home/agent/.local/toolchains/go1.27.1/bin/go", "test", "-p=1", "-count=1", "-race", "-tags=integration", "-timeout=120s", "./conformance/component", "-run", "^(TestContentFullClosureIncludesIntermediateVersionsAndExact64Bound)$"], "event": "owned_go_child_start_ack", "operation": "go-child-0019", "original_whole_deadline_monotonic": 165591.921575297, "parent_operation": "partition-shared-race", "pgid": 3915789, "pid": 3919238, "remaining_whole_seconds": 1344.5956099249888, "root": "/tmp/lerna-current-ci-partition-after-run-execution", "starttime": "16424732"}
+postgres lerna_test_272ffb51796f323c9ec8ca6e
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-4239534705 33 455826
+{"actual_wait_confirmed": true, "event": "owned_go_child_completion_ack", "exit": 0, "operation": "go-child-0019", "original_pid_generation_absent": true, "original_whole_deadline_monotonic": 165591.921575297, "parent_operation": "partition-shared-race", "pgid": 3915789, "pid": 3919238, "shared_group_absence_checked_only_after_whole_wait": true, "starttime": "16424732", "timed_out": false}
+{"argv": ["/home/agent/.local/toolchains/go1.27.1/bin/go", "test", "-p=1", "-count=1", "-race", "-tags=integration", "-timeout=120s", "./conformance/component", "-run", "^(TestContentExpiredOriginalAcceptedCapStartsCleanupDespiteCurrentWideRenewal|TestContentAssociationCannotExtendObservedRetention|TestContentActualStagingAndPrimaryErasureAllowsOnlyAuthorizedGone|TestContentEveryOriginalAttemptPagePreservesUnknownSameKeyResidual|TestContentOriginalPolicyAndHolderPagesResumeWithoutErasingOtherSavingBasis|TestContentHiddenAncestorControlsCurrentDerivedUse|TestContentPublicationFinalTransactionChecksHiddenAncestorAfterRealObjectWrite|TestContentLostActualErasureReplyRetainsOriginalDutyAndRecoversAfterConfirmedDefer|TestContentDeclaredBytesAndVersionCannotChange|TestContentFailedStagingStillConsumesExplicitByteLimit|TestContentFirstSealCannotAdoptAnEmptyConfiguredRoot|TestContentCommandReplayAndExactVersionIdentities|TestContentLaterAdmissionInheritsOriginalAncestorExpiry|TestContentSameSubjectIDAliasRetainsOriginalFullSavingBinding|TestContentLegacyWholeRecordRaceRefusesStaleBindingAndReplaysOriginalQualification|TestContentLegacyBackfillRestoresOriginalExpiryAndFailedHolderResponsibilities|TestContentTrustedManagementSealsUseAndReopensResponsibility|TestContentNaturalRetentionExpiryHasDurableOriginalMaintenance|TestContentAcceptedRequestCapHasOriginalExpiryMaintenance|TestContentManagerPolicyPassesFullExpiredCleanupPageWithoutChangingOriginalDuties|TestContentPublishedReferenceWinsOrphanSelectionWithoutCreatingCleanup|TestContentClosureActionIntersectionKeepsIndependentFlags|TestContentPolicyPortClockFollowsLockedRow|TestContentExplicitPolicyAndTrustedPrincipalFailClosed|TestContentLateAdmissionExtraCauseCannotFixRejection|TestContentCommitUnknownKeepsAcceptedAndLateRejectedTruth|TestContentProcessingDeadlineRechecksAllChangesAtFinalDecision|TestContentCorrectBytesDurablyAccepted|TestContentReadVersionWaitCannotReuseAdmissionClock|TestContentReturnedBytesRequireCurrentReadAndDisclose|TestContentExpiredOriginalClaimCannotStartObjectIO|TestContentIndependentSecondaryOfflineRetainsOriginalCleanupResponsibility|TestContentReferenceRetainsExactVersionAndLength)$"], "event": "owned_go_child_start_ack", "operation": "go-child-0020", "original_whole_deadline_monotonic": 165591.921575297, "parent_operation": "partition-shared-race", "pgid": 3915789, "pid": 3920692, "remaining_whole_seconds": 1284.923964407004, "root": "/tmp/lerna-current-ci-partition-after-run-execution", "starttime": "16430699"}
+postgres lerna_test_76b72fd75fa4264ade48fa4c
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-761405470 33 456280
+postgres lerna_test_62a6aa5b7bc2382d88ed77c3
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-81345318 33 456288
+postgres lerna_test_1afa28bb8562f42486e321a3
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-3012520799 33 456292
+postgres lerna_test_5e888990c921cb4278eeb7f5
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-3908786464 33 456295
+postgres lerna_test_fa9b9c5482a168be430be82c
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-3301050850 33 456300
+fixture_unregistered_attempt_duty /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-3301050850/da73fc3f262e288d3fbf5bf06db2ebcfbb031f2a5cacbc4e8be74a516714a028.999.tmp
+fixture_unregistered_attempt_inode /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-3301050850/da73fc3f262e288d3fbf5bf06db2ebcfbb031f2a5cacbc4e8be74a516714a028.999.tmp 33 456308
+fixture_unregistered_attempt_owner_removal /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-3301050850/da73fc3f262e288d3fbf5bf06db2ebcfbb031f2a5cacbc4e8be74a516714a028.999.tmp 33 456308
+postgres lerna_test_2f27fbe547875082cc4ee6c0
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-2306831970 33 456310
+postgres lerna_test_59adf6e8979a5670798fe8ce
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-716653609 33 456311
+postgres lerna_test_9f333c7538aacda6cf6702a5
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-3083045326 33 456333
+postgres lerna_test_b0a2d4547e6175161c4c24c8
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-2949553807 33 456340
+postgres lerna_test_b071a77f1ccf6665efff2328
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-328764849 33 456350
+postgres lerna_test_42502255dcee2acff772b81a
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-1878319752 33 456360
+postgres lerna_test_2b40148b92861f2431612805
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-2021771662 33 456364
+postgres lerna_test_ca443b8d37eba8123fe081d8
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-2472221021 33 456367
+postgres lerna_test_3b2ed648b55c04e52c83eb53
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-3042624351 33 456368
+postgres lerna_test_c8e9385a77a27119401f9af2
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-3071714161 33 456372
+postgres lerna_test_4354756efceb9b9961720760
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-457526059 33 456374
+postgres lerna_test_cf5726fd2e8f77605553832e
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-1239866453 33 456380
+postgres lerna_test_4682ea6527e0f7acbc66fdad
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-1793299897 33 456387
+postgres lerna_test_d5848457bc344e85fde9ef50
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-119336246 33 456392
+frozen_content_build_scope /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-frozen-build-69241377 33 456393 writer=1a7d910238eb74cddc712d92b0ba4014a72ff507 manifest_sha256=589a151af608daf9accc510c7905d7635528fd3fb87cac64a2cdf8f7070d9c77
+frozen_content_compiler_prestart /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-frozen-build-69241377
+frozen_content_compiler_start_ack pid=3921168 pgid=3921168 starttime=16432456 source=1a7d910238eb74cddc712d92b0ba4014a72ff507
+frozen_content_compiler_completion pid=3921168 pgid=3921168 starttime=16432456 exit=0 group_absent=true state_known=true control_close_ack=true
+frozen_content_compiler_artifact /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-frozen-build-69241377/legacy-producer sha256:963fb69aa978026ed6e965df06e8d87f297ae03559a06791c961afb06067f575 driver_sha256:3d683e3b66e662b21102a42e0f418d49c1776e52cd4f421bfb3f88da718ee8be
+{"binding":"linux-directory:33:456392","event":"legacy_original_prestart_duty","namespace":"lerna_test_d5848457bc344e85fde9ef50","root":"/tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-119336246","scope_id":"ticket05-stopped-lerna_test_d5848457bc344e85fde9ef50","versions":[{"content_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"content_id":"stopped-legacy","version":"1","hash":"sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060","media_type":"text/plain","byte_length":"6"},"subject":{"tenant_id":"content-tenant","subject_id":"verified-subject","delegation_chain":[]},"purpose":"verification","object_key":"ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72","attempt_keys":null},{"content_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"content_id":"stopped-legacy","version":"2","hash":"sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad","media_type":"text/plain","byte_length":"5"},"subject":{"tenant_id":"content-tenant","subject_id":"verified-subject","delegation_chain":[]},"purpose":"verification","object_key":"d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6","attempt_keys":null}],"writer_sha":"1a7d910238eb74cddc712d92b0ba4014a72ff507"}
+{"binding":"linux-directory:33:456392","effect_released":false,"event":"legacy_original_start_ack","pgid":3921343,"pid":3921343,"scope_id":"ticket05-stopped-lerna_test_d5848457bc344e85fde9ef50","starttime":"16432676"}
+{"event":"legacy_original_published","observation":{"scope_id":"ticket05-stopped-lerna_test_d5848457bc344e85fde9ef50","schema":"lerna_test_d5848457bc344e85fde9ef50","writer_sha":"1a7d910238eb74cddc712d92b0ba4014a72ff507","binding":"linux-directory:33:456392","requests":[{"contract_version":"1.2.0","profile":"content","command_id":"stopped-legacy-0","target":{"tenant_id":"content-tenant","owner_id":"content-owner","kind":"content","id":"stopped-legacy"},"method":"content.put","accept_before":"2026-10-05T11:28:08.476008Z","payload":{"content_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"content_id":"stopped-legacy","version":"1","hash":"sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060","media_type":"text/plain","byte_length":"6"},"sources":[],"purpose":"verification","bytes_base64":"YWxwaGEK","retain_until":"2026-10-05T11:28:08.476008Z"}},{"contract_version":"1.2.0","profile":"content","command_id":"stopped-legacy-1","target":{"tenant_id":"content-tenant","owner_id":"content-owner","kind":"content","id":"stopped-legacy"},"method":"content.put","accept_before":"2026-10-05T11:28:08.476008Z","payload":{"content_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"content_id":"stopped-legacy","version":"2","hash":"sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad","media_type":"text/plain","byte_length":"5"},"sources":[],"purpose":"verification","bytes_base64":"YmV0YQo=","retain_until":"2026-10-05T11:28:08.476008Z"}}],"receipts":[{"state":"accepted","command_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"command_id":"stopped-legacy-0"},"object_ref":{"tenant_id":"content-tenant","owner_id":"content-owner","kind":"content","id":"stopped-legacy"},"next_action":"query_original","content_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"content_id":"stopped-legacy","version":"1","hash":"sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060","media_type":"text/plain","byte_length":"6"},"retain_until":"2026-10-05T11:28:08.476008Z"},{"state":"accepted","command_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"command_id":"stopped-legacy-1"},"object_ref":{"tenant_id":"content-tenant","owner_id":"content-owner","kind":"content","id":"stopped-legacy"},"next_action":"query_original","content_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"content_id":"stopped-legacy","version":"2","hash":"sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad","media_type":"text/plain","byte_length":"5"},"retain_until":"2026-10-05T11:28:08.476008Z"}],"states":["published","published"],"attempts":{"ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72":[{"key":"ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72","attempt":"ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72.1.tmp","hash":"sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060","length":6,"input_sha256":"b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060"}],"d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6":[{"key":"d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6","attempt":"d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6.1.tmp","hash":"sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad","length":5,"input_sha256":"f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad"}]},"object_fds":[8,9],"migration_checksum":"sha256:00363b79dafb6eb1f373be9ef08e915fe23cc3db0fa55345e8ae6c051ce0c1ed"},"pgid":3921343,"pid":3921343,"scope_id":"ticket05-stopped-lerna_test_d5848457bc344e85fde9ef50","starttime":"16432676"}
+{"close_frame":{"phase":"stopped","observation":{"scope_id":"ticket05-stopped-lerna_test_d5848457bc344e85fde9ef50","schema":"lerna_test_d5848457bc344e85fde9ef50","writer_sha":"1a7d910238eb74cddc712d92b0ba4014a72ff507","binding":"linux-directory:33:456392","requests":[{"contract_version":"1.2.0","profile":"content","command_id":"stopped-legacy-0","target":{"tenant_id":"content-tenant","owner_id":"content-owner","kind":"content","id":"stopped-legacy"},"method":"content.put","accept_before":"2026-10-05T11:28:08.476008Z","payload":{"content_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"content_id":"stopped-legacy","version":"1","hash":"sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060","media_type":"text/plain","byte_length":"6"},"sources":[],"purpose":"verification","bytes_base64":"YWxwaGEK","retain_until":"2026-10-05T11:28:08.476008Z"}},{"contract_version":"1.2.0","profile":"content","command_id":"stopped-legacy-1","target":{"tenant_id":"content-tenant","owner_id":"content-owner","kind":"content","id":"stopped-legacy"},"method":"content.put","accept_before":"2026-10-05T11:28:08.476008Z","payload":{"content_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"content_id":"stopped-legacy","version":"2","hash":"sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad","media_type":"text/plain","byte_length":"5"},"sources":[],"purpose":"verification","bytes_base64":"YmV0YQo=","retain_until":"2026-10-05T11:28:08.476008Z"}}],"receipts":[{"state":"accepted","command_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"command_id":"stopped-legacy-0"},"object_ref":{"tenant_id":"content-tenant","owner_id":"content-owner","kind":"content","id":"stopped-legacy"},"next_action":"query_original","content_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"content_id":"stopped-legacy","version":"1","hash":"sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060","media_type":"text/plain","byte_length":"6"},"retain_until":"2026-10-05T11:28:08.476008Z"},{"state":"accepted","command_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"command_id":"stopped-legacy-1"},"object_ref":{"tenant_id":"content-tenant","owner_id":"content-owner","kind":"content","id":"stopped-legacy"},"next_action":"query_original","content_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"content_id":"stopped-legacy","version":"2","hash":"sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad","media_type":"text/plain","byte_length":"5"},"retain_until":"2026-10-05T11:28:08.476008Z"}],"states":["published","published"],"attempts":{"ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72":[{"key":"ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72","attempt":"ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72.1.tmp","hash":"sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060","length":6,"input_sha256":"b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060"}],"d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6":[{"key":"d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6","attempt":"d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6.1.tmp","hash":"sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad","length":5,"input_sha256":"f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad"}]},"object_fds":[8,9],"migration_checksum":"sha256:00363b79dafb6eb1f373be9ef08e915fe23cc3db0fa55345e8ae6c051ce0c1ed"},"object_close_ack":true,"store_close_ack":true,"witness_close_ack":true,"start_gate_close_ack":true,"stop_gate_close_ack":true,"object_fds_closed":true,"failed":false},"event":"legacy_original_completion","exit":0,"frame_error":"\u003cnil\u003e","group_absent":true,"parent_pipe_close_error":"\u003cnil\u003e","pgid":3921343,"pid":3921343,"scope_id":"ticket05-stopped-lerna_test_d5848457bc344e85fde9ef50","starttime":"16432676","state_known":true,"wait_error":"\u003cnil\u003e"}
+{"event":"legacy_exact_scope_qualified","old_writer_restart_authorized":false,"qualification":{"id":"ticket05-stopped-lerna_test_d5848457bc344e85fde9ef50","namespace":"lerna_test_d5848457bc344e85fde9ef50","owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"writer_sha":"1a7d910238eb74cddc712d92b0ba4014a72ff507","binding":"linux-directory:33:456392","evidence_digest":"sha256:43d805ef593e99498ccb00e78fc279f9daba8a7e333406d40c979f6481410587","valid_until":"2026-10-05T10:29:08.651414Z","versions":[{"content_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"content_id":"stopped-legacy","version":"1","hash":"sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060","media_type":"text/plain","byte_length":"6"},"subject":{"tenant_id":"content-tenant","subject_id":"verified-subject","delegation_chain":[]},"purpose":"verification","object_key":"ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72","attempt_keys":["ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72.1.tmp"]},{"content_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"content_id":"stopped-legacy","version":"2","hash":"sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad","media_type":"text/plain","byte_length":"5"},"subject":{"tenant_id":"content-tenant","subject_id":"verified-subject","delegation_chain":[]},"purpose":"verification","object_key":"d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6","attempt_keys":["d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6.1.tmp"]}]}}
+postgres lerna_test_ccb01b748f0d3b4504cf96ce
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-826049815 33 456554
+pg_legacy_restore_connection lerna_test_ccb01b748f0d3b4504cf96ce
+postgres lerna_test_372ee373be04a7d549dcc2bf
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-3221478413 33 456558
+postgres lerna_test_6f65d63794ca6483900cf3ee
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-2044125027 33 456562
+postgres lerna_test_c47f99d30c3e2c5b94672307
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-826090613 33 456567
+postgres lerna_test_0f90b21795847cd11e933159
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-1730488954 33 456572
+postgres lerna_test_5331eff489968dff620cf2a5
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-3916308909 33 456731
+postgres lerna_test_eccbf90ec97155b20bbd55ca
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-3858248898 33 456736
+postgres lerna_test_58691c4f2e11123e17dee071
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-1096534281 33 456743
+postgres lerna_test_e21d4b1b7dded799460fa36b
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-1295417200 33 456751
+postgres lerna_test_7234f67a5805f48342636e03
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-3869554630 33 456759
+postgres lerna_test_296084d07ce2ab5b7a20d1f1
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-627321831 33 456766
+postgres lerna_test_13710aea6a1ebdee7eeab7c2
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-781996705 33 456774
+postgres lerna_test_f5453613cc271935c6f1010c
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-2927600701 33 456781
+pg_policy_connections lerna_test_f5453613cc271935c6f1010c
+pg_policy_holder lerna_test_f5453613cc271935c6f1010c 645973
+pg_policy_holder lerna_test_f5453613cc271935c6f1010c 645975
+postgres lerna_test_c753280ff39c613c2ff8f522
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-131675478 33 456783
+pg_policy_connections lerna_test_c753280ff39c613c2ff8f522
+pg_policy_holder lerna_test_c753280ff39c613c2ff8f522 645978
+pg_policy_holder lerna_test_c753280ff39c613c2ff8f522 645980
+postgres lerna_test_a21839ce9f85def3bafbc3b1
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-3885047431 33 456784
+postgres lerna_test_aaed34895252ba2c2df8a7e6
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-608274867 33 456788
+postgres lerna_test_f72a877af8f444620ab8c510
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-963941061 33 456789
+postgres lerna_test_b67b7550f9c45209b0044d8e
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-2442050740 33 456792
+postgres lerna_test_7dd813baadc5176be9ee5b4c
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-2446706460 33 456794
+postgres lerna_test_bb66fa3ba9ea947f8686f326
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-3637578033 33 456802
+postgres lerna_test_1311cf5e1556857986a8cb44
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-1390628808 33 456805
+pg_policy_connections lerna_test_1311cf5e1556857986a8cb44
+pg_policy_holder lerna_test_1311cf5e1556857986a8cb44 646018
+postgres lerna_test_56b6943f19c8de9f4a3b12ad
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-1746294768 33 456809
+postgres lerna_test_0cfff7507bb305f55f13bfb6
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-1953479138 33 456812
+postgres lerna_test_1a7b8f2fbd19b67412eb7134
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-284092038 33 456816
+postgres lerna_test_ede1175281859775f272e605
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-2827117157 33 456819
+postgres lerna_test_b145b3edf89af78a6347fcbf
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-3335248253 33 456820
+{"actual_wait_confirmed": true, "event": "owned_go_child_completion_ack", "exit": 0, "operation": "go-child-0020", "original_pid_generation_absent": true, "original_whole_deadline_monotonic": 165591.921575297, "parent_operation": "partition-shared-race", "pgid": 3915789, "pid": 3920692, "shared_group_absence_checked_only_after_whole_wait": true, "starttime": "16430699", "timed_out": false}
+{"argv": ["/home/agent/.local/toolchains/go1.27.1/bin/go", "test", "-p=1", "-count=1", "-race", "-tags=integration", "-timeout=120s", "./conformance/component", "-run", "^(TestContentOriginalAdmissionCleanupDeadlineSurvivesCurrentTargetPolicyLockWait|TestContentReplayRechecksReaderAfterCommandLock|TestContentTrustedSealSurvivesReopenAndPreservesOriginalReceipt|TestContentOriginalCleanupDeadlineCannotBeExtendedByCurrentPolicyLockWait|TestContentLockWaitCannotReuseExpiredAdmissionClock|TestContentClosureDeduplicatesSharedAncestorAndRejectsForeignOwners|TestContentDelegatedLifecyclePassesOtherSavingSubjectFullPageWithoutChangingOriginalDuties|TestContentLaterWorkPassesOneExpiredCleanupResponsibility|TestContentPublishedDamageAndMissingNeverRepairOnQuery|TestContentNoClobberExistingBytesMustMatchBeforePublication|TestContentAuthoritativeErasureStopsNewPrimaryHolderClaimsAndKeepsOldHistory|TestContentEmptyBytesBinaryAndFiniteRanges|TestContentNaturalSourceAndTargetChecksCurrentRenewalWithoutErasingRevoke|TestContentMultipleAncestorsKeepIndependentEarlierAdmissionDue|TestContentLegacyCommittedBindingReplyLossRecoversOnlyByOriginalQualification|TestContentLegacyPolicyPagesDoNotTruncateAt64OrResetOnReopen|TestContentPolicyPropagationAllDescendantPagesRecoverFrozenWatermark|TestContentPolicyAndCleanupResponsibilityRollbackTogether|TestContentManagementStepRechecksTrustedDeadlineAfterPageLocks|TestContentDerivedGoneRequiresCurrentExactMetadataForReaderAndEveryAncestor|TestContentNaturalPolicyPhaseCannotUndoOriginalErasureAcknowledgement|TestContentPolicyActionVectorsFailClosed|TestContentRestoredSaveBasisMakesOriginalCleanupNotRequiredWithoutSealing|TestContentDirectSourcesRequireSeparateReadProcessSaveAndRetention|TestContentPostScheduleAliasPreservesOriginalCapOnRollback|TestContentAdmissionReaderExpiryCannotDiscloseAfterWait|TestContentHistoricalTighteningClassifiesNewCapAtCurrentTime|TestContentCurrentSavePolicyStopsObjectWrite|TestContentCommandWaitRechecksReaderAndAdmission|TestContentReadAdmissionDeadlineDoesNotBecomeCompletionDeadline|TestContentCleanupScanKeepsMalformedDeadlineParseCauseBeforePage|TestContentTargetReadPoliciesBindExactPublishedDeclaration)$"], "event": "owned_go_child_start_ack", "operation": "go-child-0021", "original_whole_deadline_monotonic": 165591.921575297, "parent_operation": "partition-shared-race", "pgid": 3915789, "pid": 3922440, "remaining_whole_seconds": 1218.8485926019785, "root": "/tmp/lerna-current-ci-partition-after-run-execution", "starttime": "16437307"}
+postgres lerna_test_c5b6844ab6b8757684b8d7cf
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-2656086937 33 457105
+pg_policy_connections lerna_test_c5b6844ab6b8757684b8d7cf
+pg_policy_holder lerna_test_c5b6844ab6b8757684b8d7cf 646059
+postgres lerna_test_754858d90d72c8618d348ecd
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-2779409530 33 457116
+pg_policy_connections lerna_test_754858d90d72c8618d348ecd
+pg_policy_holder lerna_test_754858d90d72c8618d348ecd 646080
+postgres lerna_test_c8bc4267cff977b2b0d806f4
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-920977685 33 457126
+pg_policy_connections lerna_test_c8bc4267cff977b2b0d806f4
+pg_policy_holder lerna_test_c8bc4267cff977b2b0d806f4 646085
+postgres lerna_test_0651da3cd1c608c842deab74
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-3621798217 33 457129
+postgres lerna_test_d85997f1171dbf83d0922737
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-2815643817 33 457133
+pg_policy_connections lerna_test_d85997f1171dbf83d0922737
+pg_policy_holder lerna_test_d85997f1171dbf83d0922737 646108
+postgres lerna_test_c5e83a8f84dc15382ccc31a1
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-469110077 33 457141
+pg_policy_connections lerna_test_c5e83a8f84dc15382ccc31a1
+pg_policy_holder lerna_test_c5e83a8f84dc15382ccc31a1 646122
+postgres lerna_test_931ab0e8e3e1e042a8781590
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-1613987016 33 457149
+pg_policy_connections lerna_test_931ab0e8e3e1e042a8781590
+pg_policy_holder lerna_test_931ab0e8e3e1e042a8781590 646127
+postgres lerna_test_8b32b5dd0efb4aca1f6bf613
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-755613312 33 457153
+postgres lerna_test_af06f09e071efda5ce567da9
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-2448066653 33 457162
+postgres lerna_test_7f7ff9ea155a70b842d2d9a5
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-4003281907 33 457308
+postgres lerna_test_d1e1a21a2c25a55fe63a083c
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-1894955720 33 457333
+fixture_object_file /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-1894955720/da73fc3f262e288d3fbf5bf06db2ebcfbb031f2a5cacbc4e8be74a516714a028
+postgres lerna_test_b8f59f479abbda8c39d86ba4
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-2163881821 33 457338
+postgres lerna_test_e874b42204c866faac5df58f
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-3518873588 33 457343
+fixture_object_file /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-3518873588/da73fc3f262e288d3fbf5bf06db2ebcfbb031f2a5cacbc4e8be74a516714a028
+postgres lerna_test_f15807b4069fa3cee1c98961
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-1101974297 33 457347
+fixture_object_file /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-1101974297/da73fc3f262e288d3fbf5bf06db2ebcfbb031f2a5cacbc4e8be74a516714a028
+postgres lerna_test_fdef3768bfa60cca49d57865
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-1227720481 33 457351
+postgres lerna_test_a1a6dd9422d1c69dcb0d3b05
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-1838385909 33 457357
+postgres lerna_test_355d16ccc6d64fc8d8795476
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-548146835 33 457364
+postgres lerna_test_86afb61d1298cf9db68e0a1e
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-2367784023 33 457371
+postgres lerna_test_fe9b9213f7ff6a4fd3c36ac4
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-813844412 33 457378
+postgres lerna_test_aa4d823240622c436d313383
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-1583534016 33 457387
+frozen_content_build_scope /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-frozen-build-943786149 33 457388 writer=1a7d910238eb74cddc712d92b0ba4014a72ff507 manifest_sha256=589a151af608daf9accc510c7905d7635528fd3fb87cac64a2cdf8f7070d9c77
+frozen_content_compiler_prestart /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-frozen-build-943786149
+frozen_content_compiler_start_ack pid=3923831 pgid=3923831 starttime=16442932 source=1a7d910238eb74cddc712d92b0ba4014a72ff507
+frozen_content_compiler_completion pid=3923831 pgid=3923831 starttime=16442932 exit=0 group_absent=true state_known=true control_close_ack=true
+frozen_content_compiler_artifact /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-frozen-build-943786149/legacy-producer sha256:ba72c6a08c54aca755f6027bdce795ecc443710be5fab7687be652f128d858dd driver_sha256:3d683e3b66e662b21102a42e0f418d49c1776e52cd4f421bfb3f88da718ee8be
+{"binding":"linux-directory:33:457387","event":"legacy_original_prestart_duty","namespace":"lerna_test_aa4d823240622c436d313383","root":"/tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-1583534016","scope_id":"ticket05-stopped-lerna_test_aa4d823240622c436d313383","versions":[{"content_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"content_id":"stopped-legacy","version":"1","hash":"sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060","media_type":"text/plain","byte_length":"6"},"subject":{"tenant_id":"content-tenant","subject_id":"verified-subject","delegation_chain":[]},"purpose":"verification","object_key":"ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72","attempt_keys":null},{"content_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"content_id":"stopped-legacy","version":"2","hash":"sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad","media_type":"text/plain","byte_length":"5"},"subject":{"tenant_id":"content-tenant","subject_id":"verified-subject","delegation_chain":[]},"purpose":"verification","object_key":"d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6","attempt_keys":null}],"writer_sha":"1a7d910238eb74cddc712d92b0ba4014a72ff507"}
+{"binding":"linux-directory:33:457387","effect_released":false,"event":"legacy_original_start_ack","pgid":3924021,"pid":3924021,"scope_id":"ticket05-stopped-lerna_test_aa4d823240622c436d313383","starttime":"16443215"}
+{"event":"legacy_original_published","observation":{"scope_id":"ticket05-stopped-lerna_test_aa4d823240622c436d313383","schema":"lerna_test_aa4d823240622c436d313383","writer_sha":"1a7d910238eb74cddc712d92b0ba4014a72ff507","binding":"linux-directory:33:457387","requests":[{"contract_version":"1.2.0","profile":"content","command_id":"stopped-legacy-0","target":{"tenant_id":"content-tenant","owner_id":"content-owner","kind":"content","id":"stopped-legacy"},"method":"content.put","accept_before":"2026-10-05T11:29:53.855580Z","payload":{"content_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"content_id":"stopped-legacy","version":"1","hash":"sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060","media_type":"text/plain","byte_length":"6"},"sources":[],"purpose":"verification","bytes_base64":"YWxwaGEK","retain_until":"2026-10-05T11:29:53.855580Z"}},{"contract_version":"1.2.0","profile":"content","command_id":"stopped-legacy-1","target":{"tenant_id":"content-tenant","owner_id":"content-owner","kind":"content","id":"stopped-legacy"},"method":"content.put","accept_before":"2026-10-05T11:29:53.855580Z","payload":{"content_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"content_id":"stopped-legacy","version":"2","hash":"sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad","media_type":"text/plain","byte_length":"5"},"sources":[],"purpose":"verification","bytes_base64":"YmV0YQo=","retain_until":"2026-10-05T11:29:53.855580Z"}}],"receipts":[{"state":"accepted","command_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"command_id":"stopped-legacy-0"},"object_ref":{"tenant_id":"content-tenant","owner_id":"content-owner","kind":"content","id":"stopped-legacy"},"next_action":"query_original","content_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"content_id":"stopped-legacy","version":"1","hash":"sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060","media_type":"text/plain","byte_length":"6"},"retain_until":"2026-10-05T11:29:53.855580Z"},{"state":"accepted","command_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"command_id":"stopped-legacy-1"},"object_ref":{"tenant_id":"content-tenant","owner_id":"content-owner","kind":"content","id":"stopped-legacy"},"next_action":"query_original","content_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"content_id":"stopped-legacy","version":"2","hash":"sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad","media_type":"text/plain","byte_length":"5"},"retain_until":"2026-10-05T11:29:53.855580Z"}],"states":["published","published"],"attempts":{"ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72":[{"key":"ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72","attempt":"ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72.1.tmp","hash":"sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060","length":6,"input_sha256":"b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060"}],"d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6":[{"key":"d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6","attempt":"d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6.1.tmp","hash":"sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad","length":5,"input_sha256":"f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad"}]},"object_fds":[8,9],"migration_checksum":"sha256:00363b79dafb6eb1f373be9ef08e915fe23cc3db0fa55345e8ae6c051ce0c1ed"},"pgid":3924021,"pid":3924021,"scope_id":"ticket05-stopped-lerna_test_aa4d823240622c436d313383","starttime":"16443215"}
+{"close_frame":{"phase":"stopped","observation":{"scope_id":"ticket05-stopped-lerna_test_aa4d823240622c436d313383","schema":"lerna_test_aa4d823240622c436d313383","writer_sha":"1a7d910238eb74cddc712d92b0ba4014a72ff507","binding":"linux-directory:33:457387","requests":[{"contract_version":"1.2.0","profile":"content","command_id":"stopped-legacy-0","target":{"tenant_id":"content-tenant","owner_id":"content-owner","kind":"content","id":"stopped-legacy"},"method":"content.put","accept_before":"2026-10-05T11:29:53.855580Z","payload":{"content_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"content_id":"stopped-legacy","version":"1","hash":"sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060","media_type":"text/plain","byte_length":"6"},"sources":[],"purpose":"verification","bytes_base64":"YWxwaGEK","retain_until":"2026-10-05T11:29:53.855580Z"}},{"contract_version":"1.2.0","profile":"content","command_id":"stopped-legacy-1","target":{"tenant_id":"content-tenant","owner_id":"content-owner","kind":"content","id":"stopped-legacy"},"method":"content.put","accept_before":"2026-10-05T11:29:53.855580Z","payload":{"content_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"content_id":"stopped-legacy","version":"2","hash":"sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad","media_type":"text/plain","byte_length":"5"},"sources":[],"purpose":"verification","bytes_base64":"YmV0YQo=","retain_until":"2026-10-05T11:29:53.855580Z"}}],"receipts":[{"state":"accepted","command_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"command_id":"stopped-legacy-0"},"object_ref":{"tenant_id":"content-tenant","owner_id":"content-owner","kind":"content","id":"stopped-legacy"},"next_action":"query_original","content_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"content_id":"stopped-legacy","version":"1","hash":"sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060","media_type":"text/plain","byte_length":"6"},"retain_until":"2026-10-05T11:29:53.855580Z"},{"state":"accepted","command_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"command_id":"stopped-legacy-1"},"object_ref":{"tenant_id":"content-tenant","owner_id":"content-owner","kind":"content","id":"stopped-legacy"},"next_action":"query_original","content_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"content_id":"stopped-legacy","version":"2","hash":"sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad","media_type":"text/plain","byte_length":"5"},"retain_until":"2026-10-05T11:29:53.855580Z"}],"states":["published","published"],"attempts":{"ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72":[{"key":"ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72","attempt":"ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72.1.tmp","hash":"sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060","length":6,"input_sha256":"b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060"}],"d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6":[{"key":"d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6","attempt":"d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6.1.tmp","hash":"sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad","length":5,"input_sha256":"f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad"}]},"object_fds":[8,9],"migration_checksum":"sha256:00363b79dafb6eb1f373be9ef08e915fe23cc3db0fa55345e8ae6c051ce0c1ed"},"object_close_ack":true,"store_close_ack":true,"witness_close_ack":true,"start_gate_close_ack":true,"stop_gate_close_ack":true,"object_fds_closed":true,"failed":false},"event":"legacy_original_completion","exit":0,"frame_error":"\u003cnil\u003e","group_absent":true,"parent_pipe_close_error":"\u003cnil\u003e","pgid":3924021,"pid":3924021,"scope_id":"ticket05-stopped-lerna_test_aa4d823240622c436d313383","starttime":"16443215","state_known":true,"wait_error":"\u003cnil\u003e"}
+{"event":"legacy_exact_scope_qualified","old_writer_restart_authorized":false,"qualification":{"id":"ticket05-stopped-lerna_test_aa4d823240622c436d313383","namespace":"lerna_test_aa4d823240622c436d313383","owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"writer_sha":"1a7d910238eb74cddc712d92b0ba4014a72ff507","binding":"linux-directory:33:457387","evidence_digest":"sha256:fde1ec3447b801f33ad2061a54e36f70a1db4d7c9a0a76e5a1ffe2324d8cb9d0","valid_until":"2026-10-05T10:30:54.038381Z","versions":[{"content_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"content_id":"stopped-legacy","version":"1","hash":"sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060","media_type":"text/plain","byte_length":"6"},"subject":{"tenant_id":"content-tenant","subject_id":"verified-subject","delegation_chain":[]},"purpose":"verification","object_key":"ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72","attempt_keys":["ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72.1.tmp"]},{"content_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"content_id":"stopped-legacy","version":"2","hash":"sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad","media_type":"text/plain","byte_length":"5"},"subject":{"tenant_id":"content-tenant","subject_id":"verified-subject","delegation_chain":[]},"purpose":"verification","object_key":"d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6","attempt_keys":["d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6.1.tmp"]}]}}
+postgres lerna_test_6f5e5e5928faf5eec07f3f3a
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-4049688744 33 457552
+pg_legacy_restore_connection lerna_test_6f5e5e5928faf5eec07f3f3a
+postgres lerna_test_7729faea06c6424cdc0378ec
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-2748273523 33 457556
+postgres lerna_test_bc0e4508a9a29ad4d8f0ba5d
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-3555879723 33 457696
+pg_policy_holder lerna_test_bc0e4508a9a29ad4d8f0ba5d 646393
+postgres lerna_test_eab6ed4a29fde6a978263e32
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-2365147827 33 457699
+postgres lerna_test_59e2f7338670c6033cfd2a23
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-2629570725 33 457707
+postgres lerna_test_10f8f0986f478b87613453d9
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-2232322507 33 457717
+postgres lerna_test_57bc973102ba66dfd9a38718
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-2895003354 33 457723
+postgres lerna_test_ac3b7e9c4995b693d4cc1db8
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-132457167 33 457724
+postgres lerna_test_9b17531952f14425925534da
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-1440241375 33 457728
+postgres lerna_test_460469fed47d535f33d46989
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-1291484977 33 457734
+postgres lerna_test_8ff35bef4fa18cf66759ad73
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-739368115 33 457739
+postgres lerna_test_4aa5fbdd16f8f66b8ff1e85f
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-14063222 33 457745
+postgres lerna_test_4a14bc1c0b0651b08ea09f32
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-1919157009 33 457749
+postgres lerna_test_996263bb64e3eac4e3619429
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-2361015265 33 457754
+postgres lerna_test_9fe6d8c96cfd33cfb1732a27
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-519147551 33 457757
+pg_policy_connections lerna_test_9fe6d8c96cfd33cfb1732a27
+pg_policy_holder lerna_test_9fe6d8c96cfd33cfb1732a27 646478
+postgres lerna_test_3b2b9228303c6ebe0ae89106
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-2444976024 33 457760
+postgres lerna_test_b8a0d9bca81e372925257c75
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-2826987244 33 457761
+postgres lerna_test_39e9e3b48da741d1ce9d4f54
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-2180235087 33 457763
+postgres lerna_test_ce929737dfb96d06b7a816fd
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-39575761 33 457771
+postgres lerna_test_3341fd7881bbe5ee9794ddfc
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-1913059697 33 457778
+postgres lerna_test_8fd87adbaef5199341705836
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-3251403154 33 457779
+pg_policy_connections lerna_test_8fd87adbaef5199341705836
+pg_policy_holder lerna_test_8fd87adbaef5199341705836 646511
+postgres lerna_test_74b340bef50a39860d5b7bfb
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-479233623 33 457784
+pg_policy_connections lerna_test_74b340bef50a39860d5b7bfb
+pg_policy_holder lerna_test_74b340bef50a39860d5b7bfb 646523
+postgres lerna_test_5ee7a6a946480f2b70df6aab
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-4154373912 33 457787
+pg_policy_connections lerna_test_5ee7a6a946480f2b70df6aab
+pg_policy_holder lerna_test_5ee7a6a946480f2b70df6aab 646527
+postgres lerna_test_c12d5bc5740820874adaafe6
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-3704082153 33 457790
+pg_policy_connections lerna_test_c12d5bc5740820874adaafe6
+pg_policy_holder lerna_test_c12d5bc5740820874adaafe6 646531
+postgres lerna_test_223b027bb238703dcdfa864a
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-278098255 33 457795
+postgres lerna_test_2e2d0aef3de87d42f6755b24
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-948885989 33 457798
+pg_scan_deadline_fault lerna_test_2e2d0aef3de87d42f6755b24 646545
+postgres lerna_test_6a43ce83acfc07cbf2bf45d4
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-3260954853 33 457806
+postgres lerna_test_2781cee253c01ca1fc143b0b
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-493485308 33 457810
+postgres lerna_test_c32378143ab8a4468dceb29d
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-71390425 33 457813
+postgres lerna_test_d9260da33bb29f95ea76a3f6
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-2493058995 33 457816
+postgres lerna_test_2fbdeff861f37ad2aceeb0b2
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-2032507804 33 457819
+postgres lerna_test_bfc3d10e5d35782f1edb709f
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-3099058547 33 457822
+{"actual_wait_confirmed": true, "event": "owned_go_child_completion_ack", "exit": 0, "operation": "go-child-0021", "original_pid_generation_absent": true, "original_whole_deadline_monotonic": 165591.921575297, "parent_operation": "partition-shared-race", "pgid": 3915789, "pid": 3922440, "shared_group_absence_checked_only_after_whole_wait": true, "starttime": "16437307", "timed_out": false}
+{"argv": ["/home/agent/.local/toolchains/go1.27.1/bin/go", "test", "-p=1", "-count=1", "-race", "-tags=integration", "-timeout=120s", "./conformance/component", "-run", "^(TestContentNewAssociationRequiresCurrentDirectSourceAdmission|TestContentAssociationKeepsPreparingCapacityAndFailedHistory|TestContentDecodedByteBoundHasRealNormalPublication|TestContentOriginalCleanupPageCASRollsBackEarlierQualificationsAfterConcurrentConsumer|TestContentPublicationWaitCannotReuseExpiredPolicyClock|TestContentHiddenAncestorPurposeIntersectionAndOriginalCapSurviveFurtherDerivation|TestContentDirectReadPermissionsAreCurrentAndSeparate|TestContentLaterWorkPassesFullExpiredCleanupPageWithoutChangingOriginalDuties|TestContentOldReadersPreserveLosslessFactsAndUnavailable|TestContentWrongPhysicalRootCannotAcknowledgeOriginalHolderErasure|TestContentLateSuccessfulPutCannotRestoreErasedPrimaryHolderFact|TestContentInheritedExpiredCapConsumesItsExactAdmissionTargetWithoutDeletingLiveAncestor|TestContentRenewalResidualDoesNotPretendFutureMaintenanceCoverage|TestContentLegacyOriginalQualificationCutoffRollsBackBindingAndAttemptWrites|TestContentStoppedOriginalLegacyScopeBindsOnlyAfterPositiveWriterClose|TestContentActualExpiredOldWriterArchiveRetainsAncestorResponsibilities|TestContentFiveActionsAreIndependentCurrentQualification|TestContentMalformedPolicyBindingRegistersActualSourceResponsibility|TestContentExpiredMaintenanceBudgetRetainsKnownHolderWithoutClaimingComplete|TestContentOrphanSealWinsBeforeLatePublicationAndPreservesLiveVersion|TestContentClosureRecordWaitRechecksPolicyBeforeMetadata|TestContentClosurePolicyIntersectionUsesClockAfterRealPolicyLock|TestContentCurrentSaveWithdrawalStartsOriginalSealAndRealCleanupConsumer|TestContentPostScheduleAdmissionRollsBackLateVersion|TestContentLateAdmissionRespectsCompetingOriginalCommand|TestContentProcessingDeadlineAfterNativeDescendantLock|TestContentDelayedHistoricalPageHandsOffOriginalNaturalValidUntil|TestContentReadPolicyWaitRespectsAdmissionForEveryObservation|TestContentLastDirectSourceWaitCannotReuseReadAdmission|TestContentTemporaryFailureKeepsNarrowedRetentionAfterReopen|TestContentSecondaryNativeRemovalFailureRetainsOriginalResponsibility|TestContentTargetAuthorizationPrecedesExistenceAndMismatchObservation)$"], "event": "owned_go_child_start_ack", "operation": "go-child-0022", "original_whole_deadline_monotonic": 165591.921575297, "parent_operation": "partition-shared-race", "pgid": 3915789, "pid": 3924940, "remaining_whole_seconds": 1124.312411812978, "root": "/tmp/lerna-current-ci-partition-after-run-execution", "starttime": "16446760"}
+postgres lerna_test_a9c857dabaed5a8e0df79d6f
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-2311544020 33 458104
+postgres lerna_test_5306eab1894c5744c1ab3e83
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-2977410817 33 458111
+postgres lerna_test_8fa27a83494c1f49706523e5
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-2027205874 33 458120
+postgres lerna_test_6cfcf4993b20b4096b5950fd
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-1990151900 33 458121
+postgres lerna_test_89576f0e100ede0fe02fc3bb
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-439280846 33 458129
+postgres lerna_test_99fb6dd2988dff484ada3f6c
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-677019725 33 458139
+pg_policy_connections lerna_test_99fb6dd2988dff484ada3f6c
+pg_policy_holder lerna_test_99fb6dd2988dff484ada3f6c 646628
+postgres lerna_test_d26bc9046d784e0d08892fdf
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-2709633239 33 458142
+postgres lerna_test_51fa8461ec150014a4274b30
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-1749837337 33 458155
+postgres lerna_test_fb0a15579a7f7511e8ca4d13
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-3744105160 33 458162
+postgres lerna_test_90586211fe600a1a3719860d
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-1128449312 33 458170
+postgres lerna_test_c3281da7a6e40992fe5b7082
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-3484122027 33 458178
+postgres lerna_test_94ea1fc1383364edf7ad7104
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-2218981627 33 458185
+postgres lerna_test_ff729148f48f2b525ab0bffc
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-2052783693 33 458198
+postgres lerna_test_a675b759bb8fd4ec48b460c1
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-3853478182 33 458205
+postgres lerna_test_eb22bc3bc8b19baabe21eacc
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-2601051664 33 458365
+postgres lerna_test_d67cbecd9d6cc93610c9f7ed
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-1620123054 33 458369
+postgres lerna_test_4168694919b47ea32226da23
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-3453472308 33 458372
+postgres lerna_test_140711cdc56b4e78b4f7b3f4
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-3933318814 33 458375
+postgres lerna_test_580fcd6e1e210e15e60c2370
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-796070765 33 458379
+postgres lerna_test_f52d3e884206879be6e8cdf4
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-140441417 33 458392
+postgres lerna_test_1ad7f590830814aa327358a9
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-2140341996 33 458399
+frozen_content_build_scope /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-frozen-build-909696528 33 458400 writer=1a7d910238eb74cddc712d92b0ba4014a72ff507 manifest_sha256=589a151af608daf9accc510c7905d7635528fd3fb87cac64a2cdf8f7070d9c77
+frozen_content_compiler_prestart /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-frozen-build-909696528
+frozen_content_compiler_start_ack pid=3926190 pgid=3926190 starttime=16452046 source=1a7d910238eb74cddc712d92b0ba4014a72ff507
+frozen_content_compiler_completion pid=3926190 pgid=3926190 starttime=16452046 exit=0 group_absent=true state_known=true control_close_ack=true
+frozen_content_compiler_artifact /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-frozen-build-909696528/legacy-producer sha256:616994640238ba9db4f9720c996ca01a02e15ee000e0f20a59ed4bf61c51994c driver_sha256:3d683e3b66e662b21102a42e0f418d49c1776e52cd4f421bfb3f88da718ee8be
+{"binding":"linux-directory:33:458399","event":"legacy_original_prestart_duty","namespace":"lerna_test_1ad7f590830814aa327358a9","root":"/tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-2140341996","scope_id":"ticket05-stopped-lerna_test_1ad7f590830814aa327358a9","versions":[{"content_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"content_id":"stopped-legacy","version":"1","hash":"sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060","media_type":"text/plain","byte_length":"6"},"subject":{"tenant_id":"content-tenant","subject_id":"verified-subject","delegation_chain":[]},"purpose":"verification","object_key":"ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72","attempt_keys":null},{"content_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"content_id":"stopped-legacy","version":"2","hash":"sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad","media_type":"text/plain","byte_length":"5"},"subject":{"tenant_id":"content-tenant","subject_id":"verified-subject","delegation_chain":[]},"purpose":"verification","object_key":"d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6","attempt_keys":null}],"writer_sha":"1a7d910238eb74cddc712d92b0ba4014a72ff507"}
+{"binding":"linux-directory:33:458399","effect_released":false,"event":"legacy_original_start_ack","pgid":3926364,"pid":3926364,"scope_id":"ticket05-stopped-lerna_test_1ad7f590830814aa327358a9","starttime":"16452298"}
+{"event":"legacy_original_published","observation":{"scope_id":"ticket05-stopped-lerna_test_1ad7f590830814aa327358a9","schema":"lerna_test_1ad7f590830814aa327358a9","writer_sha":"1a7d910238eb74cddc712d92b0ba4014a72ff507","binding":"linux-directory:33:458399","requests":[{"contract_version":"1.2.0","profile":"content","command_id":"stopped-legacy-0","target":{"tenant_id":"content-tenant","owner_id":"content-owner","kind":"content","id":"stopped-legacy"},"method":"content.put","accept_before":"2026-10-05T11:31:24.691616Z","payload":{"content_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"content_id":"stopped-legacy","version":"1","hash":"sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060","media_type":"text/plain","byte_length":"6"},"sources":[],"purpose":"verification","bytes_base64":"YWxwaGEK","retain_until":"2026-10-05T11:31:24.691616Z"}},{"contract_version":"1.2.0","profile":"content","command_id":"stopped-legacy-1","target":{"tenant_id":"content-tenant","owner_id":"content-owner","kind":"content","id":"stopped-legacy"},"method":"content.put","accept_before":"2026-10-05T11:31:24.691616Z","payload":{"content_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"content_id":"stopped-legacy","version":"2","hash":"sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad","media_type":"text/plain","byte_length":"5"},"sources":[],"purpose":"verification","bytes_base64":"YmV0YQo=","retain_until":"2026-10-05T11:31:24.691616Z"}}],"receipts":[{"state":"accepted","command_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"command_id":"stopped-legacy-0"},"object_ref":{"tenant_id":"content-tenant","owner_id":"content-owner","kind":"content","id":"stopped-legacy"},"next_action":"query_original","content_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"content_id":"stopped-legacy","version":"1","hash":"sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060","media_type":"text/plain","byte_length":"6"},"retain_until":"2026-10-05T11:31:24.691616Z"},{"state":"accepted","command_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"command_id":"stopped-legacy-1"},"object_ref":{"tenant_id":"content-tenant","owner_id":"content-owner","kind":"content","id":"stopped-legacy"},"next_action":"query_original","content_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"content_id":"stopped-legacy","version":"2","hash":"sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad","media_type":"text/plain","byte_length":"5"},"retain_until":"2026-10-05T11:31:24.691616Z"}],"states":["published","published"],"attempts":{"ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72":[{"key":"ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72","attempt":"ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72.1.tmp","hash":"sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060","length":6,"input_sha256":"b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060"}],"d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6":[{"key":"d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6","attempt":"d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6.1.tmp","hash":"sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad","length":5,"input_sha256":"f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad"}]},"object_fds":[8,9],"migration_checksum":"sha256:00363b79dafb6eb1f373be9ef08e915fe23cc3db0fa55345e8ae6c051ce0c1ed"},"pgid":3926364,"pid":3926364,"scope_id":"ticket05-stopped-lerna_test_1ad7f590830814aa327358a9","starttime":"16452298"}
+{"close_frame":{"phase":"stopped","observation":{"scope_id":"ticket05-stopped-lerna_test_1ad7f590830814aa327358a9","schema":"lerna_test_1ad7f590830814aa327358a9","writer_sha":"1a7d910238eb74cddc712d92b0ba4014a72ff507","binding":"linux-directory:33:458399","requests":[{"contract_version":"1.2.0","profile":"content","command_id":"stopped-legacy-0","target":{"tenant_id":"content-tenant","owner_id":"content-owner","kind":"content","id":"stopped-legacy"},"method":"content.put","accept_before":"2026-10-05T11:31:24.691616Z","payload":{"content_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"content_id":"stopped-legacy","version":"1","hash":"sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060","media_type":"text/plain","byte_length":"6"},"sources":[],"purpose":"verification","bytes_base64":"YWxwaGEK","retain_until":"2026-10-05T11:31:24.691616Z"}},{"contract_version":"1.2.0","profile":"content","command_id":"stopped-legacy-1","target":{"tenant_id":"content-tenant","owner_id":"content-owner","kind":"content","id":"stopped-legacy"},"method":"content.put","accept_before":"2026-10-05T11:31:24.691616Z","payload":{"content_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"content_id":"stopped-legacy","version":"2","hash":"sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad","media_type":"text/plain","byte_length":"5"},"sources":[],"purpose":"verification","bytes_base64":"YmV0YQo=","retain_until":"2026-10-05T11:31:24.691616Z"}}],"receipts":[{"state":"accepted","command_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"command_id":"stopped-legacy-0"},"object_ref":{"tenant_id":"content-tenant","owner_id":"content-owner","kind":"content","id":"stopped-legacy"},"next_action":"query_original","content_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"content_id":"stopped-legacy","version":"1","hash":"sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060","media_type":"text/plain","byte_length":"6"},"retain_until":"2026-10-05T11:31:24.691616Z"},{"state":"accepted","command_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"command_id":"stopped-legacy-1"},"object_ref":{"tenant_id":"content-tenant","owner_id":"content-owner","kind":"content","id":"stopped-legacy"},"next_action":"query_original","content_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"content_id":"stopped-legacy","version":"2","hash":"sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad","media_type":"text/plain","byte_length":"5"},"retain_until":"2026-10-05T11:31:24.691616Z"}],"states":["published","published"],"attempts":{"ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72":[{"key":"ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72","attempt":"ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72.1.tmp","hash":"sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060","length":6,"input_sha256":"b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060"}],"d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6":[{"key":"d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6","attempt":"d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6.1.tmp","hash":"sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad","length":5,"input_sha256":"f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad"}]},"object_fds":[8,9],"migration_checksum":"sha256:00363b79dafb6eb1f373be9ef08e915fe23cc3db0fa55345e8ae6c051ce0c1ed"},"object_close_ack":true,"store_close_ack":true,"witness_close_ack":true,"start_gate_close_ack":true,"stop_gate_close_ack":true,"object_fds_closed":true,"failed":false},"event":"legacy_original_completion","exit":0,"frame_error":"\u003cnil\u003e","group_absent":true,"parent_pipe_close_error":"\u003cnil\u003e","pgid":3926364,"pid":3926364,"scope_id":"ticket05-stopped-lerna_test_1ad7f590830814aa327358a9","starttime":"16452298","state_known":true,"wait_error":"\u003cnil\u003e"}
+{"event":"legacy_exact_scope_qualified","old_writer_restart_authorized":false,"qualification":{"id":"ticket05-stopped-lerna_test_1ad7f590830814aa327358a9","namespace":"lerna_test_1ad7f590830814aa327358a9","owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"writer_sha":"1a7d910238eb74cddc712d92b0ba4014a72ff507","binding":"linux-directory:33:458399","evidence_digest":"sha256:93906b216d658c83fbfdbbab99d8307829c5b682a245982eabb7fdc4594dd9f7","valid_until":"2026-10-05T10:32:24.883234Z","versions":[{"content_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"content_id":"stopped-legacy","version":"1","hash":"sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060","media_type":"text/plain","byte_length":"6"},"subject":{"tenant_id":"content-tenant","subject_id":"verified-subject","delegation_chain":[]},"purpose":"verification","object_key":"ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72","attempt_keys":["ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72.1.tmp"]},{"content_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"content_id":"stopped-legacy","version":"2","hash":"sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad","media_type":"text/plain","byte_length":"5"},"subject":{"tenant_id":"content-tenant","subject_id":"verified-subject","delegation_chain":[]},"purpose":"verification","object_key":"d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6","attempt_keys":["d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6.1.tmp"]}]}}
+{"event":"legacy_initial_short_upgrade_authorization","qualification":{"id":"ticket05-stopped-lerna_test_1ad7f590830814aa327358a9","namespace":"lerna_test_1ad7f590830814aa327358a9","owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"writer_sha":"1a7d910238eb74cddc712d92b0ba4014a72ff507","binding":"linux-directory:33:458399","evidence_digest":"sha256:93906b216d658c83fbfdbbab99d8307829c5b682a245982eabb7fdc4594dd9f7","valid_until":"2026-10-05T10:31:25.625403Z","versions":[{"content_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"content_id":"stopped-legacy","version":"1","hash":"sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060","media_type":"text/plain","byte_length":"6"},"subject":{"tenant_id":"content-tenant","subject_id":"verified-subject","delegation_chain":[]},"purpose":"verification","object_key":"ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72","attempt_keys":["ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72.1.tmp"]},{"content_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"content_id":"stopped-legacy","version":"2","hash":"sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad","media_type":"text/plain","byte_length":"5"},"subject":{"tenant_id":"content-tenant","subject_id":"verified-subject","delegation_chain":[]},"purpose":"verification","object_key":"d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6","attempt_keys":["d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6.1.tmp"]}]}}
+postgres lerna_test_0f8231a6cf65dd6c42a603c3
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-3146715406 33 458563
+frozen_content_build_scope /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-frozen-build-3081953824 33 458564 writer=1a7d910238eb74cddc712d92b0ba4014a72ff507 manifest_sha256=589a151af608daf9accc510c7905d7635528fd3fb87cac64a2cdf8f7070d9c77
+frozen_content_compiler_prestart /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-frozen-build-3081953824
+frozen_content_compiler_start_ack pid=3926427 pgid=3926427 starttime=16452426 source=1a7d910238eb74cddc712d92b0ba4014a72ff507
+frozen_content_compiler_completion pid=3926427 pgid=3926427 starttime=16452426 exit=0 group_absent=true state_known=true control_close_ack=true
+frozen_content_compiler_artifact /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-frozen-build-3081953824/legacy-producer sha256:7e8672584e1f6f09f8a3ac7b91f725251a1ec4b2bca58db2bf530ed7cb048239 driver_sha256:3d683e3b66e662b21102a42e0f418d49c1776e52cd4f421bfb3f88da718ee8be
+{"binding":"linux-directory:33:458563","event":"legacy_original_prestart_duty","namespace":"lerna_test_0f8231a6cf65dd6c42a603c3","root":"/tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-3146715406","scope_id":"ticket05-stopped-lerna_test_0f8231a6cf65dd6c42a603c3","versions":[{"content_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"content_id":"stopped-legacy","version":"1","hash":"sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060","media_type":"text/plain","byte_length":"6"},"subject":{"tenant_id":"content-tenant","subject_id":"verified-subject","delegation_chain":[]},"purpose":"verification","object_key":"ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72","attempt_keys":null},{"content_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"content_id":"stopped-legacy","version":"2","hash":"sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad","media_type":"text/plain","byte_length":"5"},"subject":{"tenant_id":"content-tenant","subject_id":"verified-subject","delegation_chain":[]},"purpose":"verification","object_key":"d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6","attempt_keys":null}],"writer_sha":"1a7d910238eb74cddc712d92b0ba4014a72ff507"}
+{"binding":"linux-directory:33:458563","effect_released":false,"event":"legacy_original_start_ack","pgid":3926604,"pid":3926604,"scope_id":"ticket05-stopped-lerna_test_0f8231a6cf65dd6c42a603c3","starttime":"16452684"}
+{"event":"legacy_original_published","observation":{"scope_id":"ticket05-stopped-lerna_test_0f8231a6cf65dd6c42a603c3","schema":"lerna_test_0f8231a6cf65dd6c42a603c3","writer_sha":"1a7d910238eb74cddc712d92b0ba4014a72ff507","binding":"linux-directory:33:458563","requests":[{"contract_version":"1.2.0","profile":"content","command_id":"stopped-legacy-0","target":{"tenant_id":"content-tenant","owner_id":"content-owner","kind":"content","id":"stopped-legacy"},"method":"content.put","accept_before":"2026-10-05T11:31:28.568235Z","payload":{"content_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"content_id":"stopped-legacy","version":"1","hash":"sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060","media_type":"text/plain","byte_length":"6"},"sources":[],"purpose":"verification","bytes_base64":"YWxwaGEK","retain_until":"2026-10-05T11:31:28.568235Z"}},{"contract_version":"1.2.0","profile":"content","command_id":"stopped-legacy-1","target":{"tenant_id":"content-tenant","owner_id":"content-owner","kind":"content","id":"stopped-legacy"},"method":"content.put","accept_before":"2026-10-05T11:31:28.568235Z","payload":{"content_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"content_id":"stopped-legacy","version":"2","hash":"sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad","media_type":"text/plain","byte_length":"5"},"sources":[],"purpose":"verification","bytes_base64":"YmV0YQo=","retain_until":"2026-10-05T11:31:28.568235Z"}}],"receipts":[{"state":"accepted","command_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"command_id":"stopped-legacy-0"},"object_ref":{"tenant_id":"content-tenant","owner_id":"content-owner","kind":"content","id":"stopped-legacy"},"next_action":"query_original","content_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"content_id":"stopped-legacy","version":"1","hash":"sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060","media_type":"text/plain","byte_length":"6"},"retain_until":"2026-10-05T11:31:28.568235Z"},{"state":"accepted","command_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"command_id":"stopped-legacy-1"},"object_ref":{"tenant_id":"content-tenant","owner_id":"content-owner","kind":"content","id":"stopped-legacy"},"next_action":"query_original","content_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"content_id":"stopped-legacy","version":"2","hash":"sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad","media_type":"text/plain","byte_length":"5"},"retain_until":"2026-10-05T11:31:28.568235Z"}],"states":["published","published"],"attempts":{"ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72":[{"key":"ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72","attempt":"ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72.1.tmp","hash":"sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060","length":6,"input_sha256":"b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060"}],"d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6":[{"key":"d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6","attempt":"d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6.1.tmp","hash":"sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad","length":5,"input_sha256":"f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad"}]},"object_fds":[8,9],"migration_checksum":"sha256:00363b79dafb6eb1f373be9ef08e915fe23cc3db0fa55345e8ae6c051ce0c1ed"},"pgid":3926604,"pid":3926604,"scope_id":"ticket05-stopped-lerna_test_0f8231a6cf65dd6c42a603c3","starttime":"16452684"}
+{"close_frame":{"phase":"stopped","observation":{"scope_id":"ticket05-stopped-lerna_test_0f8231a6cf65dd6c42a603c3","schema":"lerna_test_0f8231a6cf65dd6c42a603c3","writer_sha":"1a7d910238eb74cddc712d92b0ba4014a72ff507","binding":"linux-directory:33:458563","requests":[{"contract_version":"1.2.0","profile":"content","command_id":"stopped-legacy-0","target":{"tenant_id":"content-tenant","owner_id":"content-owner","kind":"content","id":"stopped-legacy"},"method":"content.put","accept_before":"2026-10-05T11:31:28.568235Z","payload":{"content_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"content_id":"stopped-legacy","version":"1","hash":"sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060","media_type":"text/plain","byte_length":"6"},"sources":[],"purpose":"verification","bytes_base64":"YWxwaGEK","retain_until":"2026-10-05T11:31:28.568235Z"}},{"contract_version":"1.2.0","profile":"content","command_id":"stopped-legacy-1","target":{"tenant_id":"content-tenant","owner_id":"content-owner","kind":"content","id":"stopped-legacy"},"method":"content.put","accept_before":"2026-10-05T11:31:28.568235Z","payload":{"content_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"content_id":"stopped-legacy","version":"2","hash":"sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad","media_type":"text/plain","byte_length":"5"},"sources":[],"purpose":"verification","bytes_base64":"YmV0YQo=","retain_until":"2026-10-05T11:31:28.568235Z"}}],"receipts":[{"state":"accepted","command_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"command_id":"stopped-legacy-0"},"object_ref":{"tenant_id":"content-tenant","owner_id":"content-owner","kind":"content","id":"stopped-legacy"},"next_action":"query_original","content_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"content_id":"stopped-legacy","version":"1","hash":"sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060","media_type":"text/plain","byte_length":"6"},"retain_until":"2026-10-05T11:31:28.568235Z"},{"state":"accepted","command_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"command_id":"stopped-legacy-1"},"object_ref":{"tenant_id":"content-tenant","owner_id":"content-owner","kind":"content","id":"stopped-legacy"},"next_action":"query_original","content_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"content_id":"stopped-legacy","version":"2","hash":"sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad","media_type":"text/plain","byte_length":"5"},"retain_until":"2026-10-05T11:31:28.568235Z"}],"states":["published","published"],"attempts":{"ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72":[{"key":"ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72","attempt":"ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72.1.tmp","hash":"sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060","length":6,"input_sha256":"b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060"}],"d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6":[{"key":"d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6","attempt":"d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6.1.tmp","hash":"sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad","length":5,"input_sha256":"f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad"}]},"object_fds":[8,9],"migration_checksum":"sha256:00363b79dafb6eb1f373be9ef08e915fe23cc3db0fa55345e8ae6c051ce0c1ed"},"object_close_ack":true,"store_close_ack":true,"witness_close_ack":true,"start_gate_close_ack":true,"stop_gate_close_ack":true,"object_fds_closed":true,"failed":false},"event":"legacy_original_completion","exit":0,"frame_error":"\u003cnil\u003e","group_absent":true,"parent_pipe_close_error":"\u003cnil\u003e","pgid":3926604,"pid":3926604,"scope_id":"ticket05-stopped-lerna_test_0f8231a6cf65dd6c42a603c3","starttime":"16452684","state_known":true,"wait_error":"\u003cnil\u003e"}
+{"event":"legacy_exact_scope_qualified","old_writer_restart_authorized":false,"qualification":{"id":"ticket05-stopped-lerna_test_0f8231a6cf65dd6c42a603c3","namespace":"lerna_test_0f8231a6cf65dd6c42a603c3","owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"writer_sha":"1a7d910238eb74cddc712d92b0ba4014a72ff507","binding":"linux-directory:33:458563","evidence_digest":"sha256:8f43a43d08c52360f272c2a0590271409908875e5f1a9d3b1cab06c11374a6d6","valid_until":"2026-10-05T10:32:28.804768Z","versions":[{"content_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"content_id":"stopped-legacy","version":"1","hash":"sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060","media_type":"text/plain","byte_length":"6"},"subject":{"tenant_id":"content-tenant","subject_id":"verified-subject","delegation_chain":[]},"purpose":"verification","object_key":"ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72","attempt_keys":["ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72.1.tmp"]},{"content_ref":{"owner":{"tenant_id":"content-tenant","owner_id":"content-owner"},"content_id":"stopped-legacy","version":"2","hash":"sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad","media_type":"text/plain","byte_length":"5"},"subject":{"tenant_id":"content-tenant","subject_id":"verified-subject","delegation_chain":[]},"purpose":"verification","object_key":"d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6","attempt_keys":["d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6.1.tmp"]}]}}
+postgres lerna_test_ce3d9507ac866cca251e2a5e
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-2100239741 33 458726
+fixture_object_file /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-2100239741/ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72
+postgres lerna_test_7aed2a9c56ae6a78ea157d0a
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-2067373914 33 458730
+pg_legacy_restore_connection lerna_test_7aed2a9c56ae6a78ea157d0a
+postgres lerna_test_ae3bc69cc6bfa2f4ab56525e
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-1882891356 33 458738
+postgres lerna_test_7da11f672eb77dbededb749b
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-2661549742 33 458742
+postgres lerna_test_5b83db33426f980d567b1bd1
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-3683432965 33 458746
+postgres lerna_test_d0357fc6aa916349c11823c9
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-1501161778 33 458749
+postgres lerna_test_9bf60d8e8f4a78819a4eca0a
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-795038147 33 458752
+postgres lerna_test_b3d298c2ffbb17e4bf6f4dfa
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-2234833095 33 458755
+postgres lerna_test_e5cd38fb4019481b41eeee67
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-973450330 33 458763
+postgres lerna_test_882b7816101c53b0846b7fd8
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-1625285864 33 458771
+postgres lerna_test_c71f790466bfa99c023544b0
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-2608822024 33 458778
+postgres lerna_test_9f3f8002ceb8078044cf31e4
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-97746678 33 458783
+postgres lerna_test_6c20d6761986be7a77a25669
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-1102338682 33 458790
+pg_policy_connections lerna_test_6c20d6761986be7a77a25669
+pg_policy_holder lerna_test_6c20d6761986be7a77a25669 646933
+postgres lerna_test_0ed216e4c06bea893e720e49
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-3947360066 33 458794
+pg_policy_connections lerna_test_0ed216e4c06bea893e720e49
+pg_policy_holder lerna_test_0ed216e4c06bea893e720e49 646937
+postgres lerna_test_3422fc213b0165ff39140edc
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-2354599792 33 458797
+pg_policy_connections lerna_test_3422fc213b0165ff39140edc
+pg_policy_holder lerna_test_3422fc213b0165ff39140edc 646941
+postgres lerna_test_acef99ac00c28ea98c45de38
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-654500211 33 458800
+pg_policy_connections lerna_test_acef99ac00c28ea98c45de38
+pg_policy_holder lerna_test_acef99ac00c28ea98c45de38 646945
+postgres lerna_test_cdf24cedbf3650e20dbf979c
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-1747481190 33 458805
+pg_policy_connections lerna_test_cdf24cedbf3650e20dbf979c
+pg_policy_holder lerna_test_cdf24cedbf3650e20dbf979c 646958
+postgres lerna_test_d93a52999a6fbf15d3f16f05
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-2263811400 33 458810
+pg_policy_connections lerna_test_d93a52999a6fbf15d3f16f05
+pg_policy_holder lerna_test_d93a52999a6fbf15d3f16f05 646962
+postgres lerna_test_da77e048dcadebf49deb512e
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-4034665788 33 458813
+postgres lerna_test_044dfa200ee268242c73b951
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-2272193154 33 458819
+postgres lerna_test_5b094ecb16b8a6295317a7ed
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-3792678555 33 458822
+postgres lerna_test_7469594131b55dd7ac0560a9
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-3527670716 33 458823
+postgres lerna_test_beb4f1fa4cdf1e7f836b925d
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-1928818195 33 458826
+postgres lerna_test_99db927f2f66a8354981ec80
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-813640231 33 458829
+postgres lerna_test_4d6e2d8c724dafd9f95eb19f
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-1552733038 33 458834
+postgres lerna_test_d5da77c7f8e9f1b51633c863
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-3272602979 33 458838
+postgres lerna_test_cba4b3d88aa5c24a05c10fca
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-737394348 33 458842
+postgres lerna_test_ffc9b8ef1a8f7c458304dabb
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-1821806121 33 458843
+postgres lerna_test_7943475380a162e3da5a7dc4
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-2085757960 33 458846
+postgres lerna_test_b4b7498aa021278fea3e7865
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-1514076811 33 458851
+postgres lerna_test_76d8f846c76d826f3378cb5a
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-3522164895 33 458858
+pg_policy_connections lerna_test_76d8f846c76d826f3378cb5a
+pg_policy_holder lerna_test_76d8f846c76d826f3378cb5a 647031
+postgres lerna_test_546c8355a6853d06bb0fb892
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-23528049 33 458866
+postgres lerna_test_40dc83891afc787d77a0f0e4
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-1056793061 33 458874
+pg_policy_connections lerna_test_40dc83891afc787d77a0f0e4
+pg_policy_holder lerna_test_40dc83891afc787d77a0f0e4 647047
+postgres lerna_test_de21f9ef57c9c7a5f2cb9350
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-454785478 33 458882
+postgres lerna_test_1feb78bbe14876039ad919bc
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-1420495468 33 458890
+postgres lerna_test_3c43ad931e4af735b9f6f222
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-488534428 33 458897
+postgres lerna_test_2706f9111580a9058cc92274
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-2300828561 33 458905
+postgres lerna_test_a4070564c686c6ee398aadaf
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-890761092 33 458913
+pg_policy_connections lerna_test_a4070564c686c6ee398aadaf
+pg_policy_holder lerna_test_a4070564c686c6ee398aadaf 647076
+postgres lerna_test_9b55f6fa17f9009ac95b589d
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-216727085 33 458914
+pg_policy_connections lerna_test_9b55f6fa17f9009ac95b589d
+pg_policy_holder lerna_test_9b55f6fa17f9009ac95b589d 647088
+postgres lerna_test_7eaf32340b0e93a384e5d363
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-4043159424 33 458917
+pg_policy_connections lerna_test_7eaf32340b0e93a384e5d363
+pg_policy_holder lerna_test_7eaf32340b0e93a384e5d363 647092
+postgres lerna_test_8fd6f9d36a2aa49f9124a240
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-3882792690 33 458918
+pg_policy_connections lerna_test_8fd6f9d36a2aa49f9124a240
+pg_policy_holder lerna_test_8fd6f9d36a2aa49f9124a240 647096
+postgres lerna_test_7108e68d728cbf346c396e33
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-2627286473 33 458922
+pg_policy_connections lerna_test_7108e68d728cbf346c396e33
+pg_policy_holder lerna_test_7108e68d728cbf346c396e33 647108
+postgres lerna_test_8372bc4b8d85596e254a0e0d
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-865854322 33 458926
+pg_policy_connections lerna_test_8372bc4b8d85596e254a0e0d
+pg_policy_holder lerna_test_8372bc4b8d85596e254a0e0d 647112
+postgres lerna_test_04e5ce662bf17a5c95d394e7
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-1653079594 33 458933
+postgres lerna_test_ff11fe3f98c0411f7ba9fef2
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-1358279897 33 458938
+postgres lerna_test_7250aff76b33f4875d446365
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-4187532190 33 458939
+fixture_nonempty_object /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-4187532190/da73fc3f262e288d3fbf5bf06db2ebcfbb031f2a5cacbc4e8be74a516714a028
+postgres lerna_test_9221015378f3bcdf05f4737c
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-702557370 33 458948
+postgres lerna_test_bed686440d698dd0a4a9cad0
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-2129231417 33 458951
+postgres lerna_test_e0f49dbdc3f865812b8c6a58
+objects /tmp/lerna-current-ci-partition-after-run-execution/lerna-content-objects-1736086568 33 458955
+{"actual_wait_confirmed": true, "event": "owned_go_child_completion_ack", "exit": 0, "operation": "go-child-0022", "original_pid_generation_absent": true, "original_whole_deadline_monotonic": 165591.921575297, "parent_operation": "partition-shared-race", "pgid": 3915789, "pid": 3924940, "shared_group_absence_checked_only_after_whole_wait": true, "starttime": "16446760", "timed_out": false}
+{"argv": ["/home/agent/.local/toolchains/go1.27.1/bin/go", "test", "-p=1", "-count=1", "-race", "-tags=integration", "-timeout=120s", "./conformance/component", "-run", "^(TestDurableControlRealSourceFailureIsDependencyUnavailable|TestDurableControlExpiredProofReplayRequiresCurrentAccess|TestDurableControlProofBindsPrincipalIssuerAndOriginalIdentity|TestDurableControlReadsRealSnapshotFloorAndForbidsExpectedRevision|TestDurableControlSeparatesAcceptBeforeExecutionAndContextDeadlines|TestDurableControlFinishCommitsBeforeConcurrentCancelPreservingOriginalFacts|TestDurableControlOriginalCommandPrecedesMethodAndClosedBindingConflicts|TestDurableControlResourceLimitsRetainFailureAndAllowExactCounterpart|TestDurableControlCancelsWithoutOrdinaryCapacityAndFencesOldClaim|TestDurableControlDeadlineMaintenanceClosesBeyondOnePageAtZeroQuota|TestDurableCancelBeforeDecideSurvivesBothOwnersReopen|TestDurableCancelStopsNextPublicationAfterArtifactReadback|TestDurableCancelBeforeFinishPreservesPublishedUnadoptedBytes|TestDurableControlPreparedV2StopsNextPublicationAfterArtifactReadback|TestDurableControlPreparedV2StopsFinishAfterProposalReadback|TestDurableControlPreservesTerminalFactsAndOrdersRevisions|TestDurableControlStopReceiptAndJobShareTransactionRecovery|TestDurableDecisionPreparedRecoversLostPublicationWithoutSecondFee|TestDurableDecisionStartIsOnePermissionAndUnknownWorkConsumesOriginalLimit|TestDurableDecisionConcurrentStartAndCumulativeUnknownUsage|TestDurableDecisionOriginalLimitsGateStartAndWholePreparedOutput|TestDurableDecisionAuthorityCannotRewriteFullDelegatedSubject|TestDurableDecisionAuthorityCannotRewriteFixedCommandInput|TestDurableDecisionOriginalReceiptSurvivesComponentConfigurationChange|TestDurableDecisionInterruptedComputedOutputRetainsUnknownAllowance|TestDurableDecisionPreparedBeforePublicationResumesWithoutNewStart|TestDurableDecisionCannotCompleteWithDifferentPublisherReference|TestDurableDecisionTwoIdentitiesAndFixedLegacyView|TestDurableDecisionRollbackAndTokenIsolation|TestDurableDecisionCrossTenantAndOwnerAuthorization|TestDurableDecisionOriginalReplaySurvivesAcceptanceCutoff|TestDurableDecisionPoolCoversNonAnchorDeadlineAtZeroQuota|TestDurableDecisionStartFencesClaimAndRequiresRecordedStart|TestDurableDecisionLastQueueSlotAcrossStoreInstances|TestDurableDecisionMissingPoolPreservesOriginalIdentity|TestDurableDecisionTenantQuotaCombinesTwoOwners|TestDurableProposalNativeSourceFailureRetainsDependencyMeaning|TestDurableProposalImmutableCaseBindingSurvivesRejectedReseed|TestDurableProposalOriginalLimitsMatrix|TestDurableProposalPreparedV2RecoversActualReplyLoss|TestDurableProposalRuleVersionRetainsUnknownCaseMeaning|TestDurableProposalCandidateSourceEvidenceUsesAllowedPurpose|TestDurableProposalDeltaOnlyHasNoInventedArtifact|TestDurableProposalFourIndependentActions|TestDurableProposalInputRequestIsClarificationWithReadableSchema|TestDurableProposalDeltaWithCandidatePreservesBothSuggestions|TestDurableProposalCannotContinueCompletesWithoutTaskVerdict|TestDurableProposalFixedDependsOnOutputFailsThroughPublicCodec|TestDurableProposalRejectsValidBindingRefsInWrongArgumentPair|TestDurableProposalArgumentsRequireSourcePurposeConsumption|TestDurableProposalReplacementMustUseCurrentConditionRevision|TestDurableProposalBoundedInvalidOutputMatrix|TestDurableDecisionReadDistinguishesAbsenceAndActualStoreUnavailable|TestDurableDecisionFinishFencesExpiredClaimAfterBothPublications|TestDurableRuleProposalSurvivesReopen|TestDurableDecisionStartRollbackKeepsOriginalAllowance|TestDurableDecisionCommitReplyLossPreservesPreparedAndCompletedFacts|TestDurableDecisionSnapshotLockAndManifestConsumeInputBound|TestDurableDecisionPreparedPublicationCannotCrossOriginalDeadline|TestDurableDecisionPreparedCannotRefreshOriginalExpiredPermission)$"], "event": "owned_go_child_start_ack", "operation": "go-child-0023", "original_whole_deadline_monotonic": 165591.921575297, "parent_operation": "partition-shared-race", "pgid": 3915789, "pid": 3927569, "remaining_whole_seconds": 1026.4548129559844, "root": "/tmp/lerna-current-ci-partition-after-run-execution", "starttime": "16456546"}
+postgres lerna_test_18b14900a751e3d54462f3ee
+postgres lerna_test_084a41f6c7802c7c0b45da51
+postgres lerna_test_1a09385ca6805349e7e6ca44
+postgres lerna_test_b2bf875fe658ab4badf262c1
+postgres lerna_test_8daefaf483fd36a20d143ad7
+postgres lerna_test_a9b21ad7a61c260a3f46d43b
+postgres lerna_test_c26d62a74f1bb77a4049de5d
+postgres lerna_test_37cf62bec246a7b4a58cca7d
+postgres lerna_test_49b7c955d4ce07caf8ea8d5e
+postgres lerna_test_acbc8bec7cf9b4294b427075
+postgres lerna_test_f42f0f588c614ec1516b8b30
+postgres lerna_test_2fe00420461ab347575dbd79
+postgres lerna_test_735994ef17b44f5d60f4b01f
+postgres lerna_test_1f2cdb7f41d32e5495c0e139
+postgres lerna_test_70b0ced360d61f203a634ddc
+postgres lerna_test_b3bf8c4a7d81ae4877b0ff36
+postgres lerna_test_84991c781189644a00b082de
+postgres lerna_test_cfa9100ddc4ef51a465dade4
+postgres lerna_test_ddc241e69e50a7a510cc0e5a
+postgres lerna_test_12b78fc41a592c3ec2253fb3
+postgres lerna_test_45521909c2429d0a2fa1e398
+postgres lerna_test_7d23c849196a0d5c530d324f
+postgres lerna_test_10c7f339686cfeab67f602de
+postgres lerna_test_ab66204484f929e82ce72591
+postgres lerna_test_44f97520cf0353dfa8e7eb99
+postgres lerna_test_3425887fccfadc72e9c291d1
+postgres lerna_test_161e84b88ef6f4f2c5a95eec
+postgres lerna_test_00ac945a02f86428658a933f
+postgres lerna_test_da74b4fddb963a017e2ac7bc
+postgres lerna_test_93b371c47b940f221e51401d
+postgres lerna_test_e3d52f616de91a0d3019a579
+postgres lerna_test_0431f71d603b018c73b207b4
+postgres lerna_test_bc75b934e599b78d80d14cb0
+postgres lerna_test_6a17fd9523f41220e1321ed2
+postgres lerna_test_7a4d321ed712b92dd2b35ba4
+postgres lerna_test_f6555141397aa98b68a35fcd
+postgres lerna_test_b78c1237d6b43a7cdba32032
+postgres lerna_test_2bcc29ed21be1c69e9b58fb4
+postgres lerna_test_7c7e0ebfe160bd8701166f47
+postgres lerna_test_c67f35e88004e016f0fc04aa
+postgres lerna_test_eeb59a982893146fe3fca1a3
+postgres lerna_test_61220fd68d3f468629ffc517
+postgres lerna_test_624c84582da5b111525e1877
+postgres lerna_test_548b7192be52e9474cfd045c
+postgres lerna_test_8509accbc0318c5f2037d270
+postgres lerna_test_13445d970b8b2ac0748a998d
+postgres lerna_test_7991f0697066875f86dd1912
+postgres lerna_test_86df37fb9d30491468669dac
+postgres lerna_test_6323672c551c6513d36c4de8
+postgres lerna_test_c6ab2786d9142b950a48806b
+postgres lerna_test_08163d42be24f09057cc9302
+postgres lerna_test_1be18cb379f4c754924ca02b
+postgres lerna_test_e07d6474d09936cbc6c7fb3a
+postgres lerna_test_36c079c0cbd48bc082e4dcf8
+postgres lerna_test_2d3f6ed0bcbc83b7c2c4ddf2
+postgres lerna_test_7424933343dd9bfe25c349ad
+postgres lerna_test_bf35a5b223cee73ad6c3424e
+postgres lerna_test_a5b5ae196ab1ef48479ffeb2
+postgres lerna_test_eff339c031e82d2d56c0d1a6
+postgres lerna_test_f8d0fd2b38f3fe5d1c86f8e0
+postgres lerna_test_9894677a30c957e0be38bc12
+postgres lerna_test_0ba8afc30111a9abd2e75b8d
+postgres lerna_test_b1f326ff876f07ce7f0ef678
+postgres lerna_test_dd67f2684183aba1b02d6b80
+postgres lerna_test_11e6e366d956a4c438f72770
+postgres lerna_test_57c594080fe9a2a1134b2215
+postgres lerna_test_9b08b56a73d44b06c7e867a7
+postgres lerna_test_10181556d3b8f0c665b81ec5
+postgres lerna_test_ebfdc709066565fdcbdc273b
+postgres lerna_test_7aabf5b8e2d8ca1135e6a136
+postgres lerna_test_7a3f2ba8d99e8212c248bc0b
+postgres lerna_test_79a873cbedd45f8ab681be79
+postgres lerna_test_f7120a202c66cdf17b8b3f5b
+postgres lerna_test_6d1a96633692391cfd0df3e7
+postgres lerna_test_30d8366cb2b00ea051fef129
+postgres lerna_test_47230ae1ef8b1543b0a38112
+postgres lerna_test_090cecfd0d7dc53ced9e7cf5
+postgres lerna_test_6bc2175f25b375515853ace0
+postgres lerna_test_b94c855cbd121a4d0179444e
+postgres lerna_test_237ffddb7403a2f21785f280
+postgres lerna_test_1059c2dd3711f92dbe9a6c09
+postgres lerna_test_1bf5a7bc462cb999c9ec53d0
+postgres lerna_test_4907557fc9c4b6808e2b92a0
+postgres lerna_test_01b8c80dbad5fc2e19350c2b
+postgres lerna_test_cbdabbd535b3f7be9c023f93
+postgres lerna_test_c469204809ba4e49c7afcf6a
+postgres lerna_test_f3c285172baf18b9a70ff838
+postgres lerna_test_98d6d805eb7661da2689ee80
+postgres lerna_test_6da8ebec8b25aec1db8787ef
+postgres lerna_test_3d6c4ebc1b487a4cba0748d2
+postgres lerna_test_d46b8d6c0f8a93fd757d3693
+postgres lerna_test_6c5e304831fb59ff3e3d6987
+postgres lerna_test_12ac01bc5a44e4b2a5454986
+postgres lerna_test_5c8acf422cfe282c98fc3b20
+postgres lerna_test_5427f07759f7f614d2fea233
+postgres lerna_test_67ad04c4baf241b47c9c8ffd
+postgres lerna_test_6ff455f08a395143e1d85ae3
+postgres lerna_test_de4fb2123caa3d602022c8e6
+postgres lerna_test_d88ebfd162d4ae4381adb36c
+postgres lerna_test_158b1da3bd47ac2050884f18
+postgres lerna_test_960a77e8f184209eaa2917ae
+postgres lerna_test_64a56fe6ed1e2ffed7a164c6
+postgres lerna_test_e4d96347205d078e2cdb508d
+postgres lerna_test_36f76e2d9689408b1a8220fe
+postgres lerna_test_70c69a673be5aefab8b09f7c
+postgres lerna_test_9dae82923479a14ef46cea16
+postgres lerna_test_ea9da10ec44cb42103f3bdbd
+postgres lerna_test_90f6153bacbe223e62868b83
+postgres lerna_test_7b71250161929da20e351f3c
+postgres lerna_test_a037ae994b2d0e93a9728ad0
+postgres lerna_test_4148a6db45edf536bac4b8be
+postgres lerna_test_d44cdcb90873e074c8a4cc4c
+postgres lerna_test_ff43a57b18ff668de8ee5407
+postgres lerna_test_619a93361dd7e665edc68e53
+postgres lerna_test_504c777901cc931124d544dc
+postgres lerna_test_cc1a5e6d7164f50e21d29f58
+postgres lerna_test_ab257e99001a0468324879cc
+postgres lerna_test_4b5efdf7defd6d36c4787465
+postgres lerna_test_8b3cd5ce9da5deacbb13ac8e
+postgres lerna_test_90a02578e11cc2a495635dfd
+postgres lerna_test_a0f726470fae8e48d018e5fd
+postgres lerna_test_1b8675396b28fc13335c3790
+postgres lerna_test_ea6a889037594f3133a0e5d4
+postgres lerna_test_ebabf2f75376d35265d5a5a6
+postgres lerna_test_b9267ff902fa4180b51e507b
+postgres lerna_test_4d12f643c4abebf857bee70e
+postgres lerna_test_4cfbdaa0fadc39cd63818b73
+postgres lerna_test_f7e13fb38c8df365c528f1bc
+postgres lerna_test_3294a8d7c7abe27b448207fb
+postgres lerna_test_ac6a9523f88bc6c64f9002be
+postgres lerna_test_225cae0e9e40620ef22cc4b1
+postgres lerna_test_a68a67efd7d36dcaf908b415
+postgres lerna_test_106ac4687717b30c6a7c449d
+postgres lerna_test_f1b7783bf37d7a1b1ba2a269
+postgres lerna_test_13aa083cfb970be7640b0f90
+postgres lerna_test_285edb21addc32bae53dbdb2
+postgres lerna_test_a5056782eb52ae3b10be35fc
+postgres lerna_test_318f7e8fa63c6747dc794b82
+postgres lerna_test_521ce72b2876053bf9d8d4a4
+postgres lerna_test_7bf525c7deca492843584607
+postgres lerna_test_0725d12c6012e293e74c182a
+postgres lerna_test_d038fd0bfe2621c14d426864
+postgres lerna_test_7760f858964ee66d80d934f2
+postgres lerna_test_bd7e47631f786b9e22db327c
+postgres lerna_test_b7f5549eb344ad732229b84c
+postgres lerna_test_9b50a9afb780900accfaec37
+postgres lerna_test_b86dcfb5ce9cc160c08c9ae4
+postgres lerna_test_aa310f23d14162a0c63117dc
+postgres lerna_test_5f0f8262dd813a5072e4112d
+postgres lerna_test_1e3f9206b2ad513a8b4397d8
+postgres lerna_test_1fef8a6c5ccddf8db122dbb4
+postgres lerna_test_273e980e34e3d011727c72ef
+postgres lerna_test_95c81ec7cf42ebfcd0e2d269
+postgres lerna_test_a7a2b82bd43b39e045265561
+postgres lerna_test_4dd751ebd3259fb8852d674f
+postgres lerna_test_59d67f869ce289a15546e2a5
+postgres lerna_test_16ea68598fa53234b580845e
+postgres lerna_test_d7badfecd22d49ec5dc463ed
+postgres lerna_test_91ca8ffcf664fb2843e426a2
+postgres lerna_test_82c44f4866b359749a4e0e57
+postgres lerna_test_5ffc368ba2968000177dfb50
+postgres lerna_test_9072809b94d12d287c503626
+postgres lerna_test_127ef5bd518ab85f6859856d
+postgres lerna_test_c3f891cac9a4fd584929e246
+postgres lerna_test_2193b42dafc9b1e8aa04e6c5
+postgres lerna_test_aff51f2e6f7605649178e63e
+postgres lerna_test_ad840c74c1914bf9f62b6b4f
+postgres lerna_test_e77b6cc491cc3c33824ce586
+postgres lerna_test_2d3069a64f4f4a4b30b4be00
+postgres lerna_test_d8895b077ff25de697b7222b
+postgres lerna_test_0db94f8398ab5c75b2d57288
+postgres lerna_test_faf11908b18708f6347374c3
+postgres lerna_test_0a7a1a3be244cbb03294c08c
+postgres lerna_test_bbedf6a05348a452189c7da0
+postgres lerna_test_7eeff68c19c6a4e99116fab4
+postgres lerna_test_f415c06a2b800cf178b6db24
+postgres lerna_test_3b701f760895ad5fe9e6c40c
+postgres lerna_test_bb05f2943c820a20880f27fa
+postgres lerna_test_1292888dd4f94af9a15722fa
+postgres lerna_test_5f54170fe766f7f80027ab23
+postgres lerna_test_4b03cca9a33c0dd28804744d
+postgres lerna_test_325a8fb7442a23dbdc90fa8d
+postgres lerna_test_c6c000ca553150ebe2c78bdd
+postgres lerna_test_59e1cac1d125a38d02f0ccf2
+postgres lerna_test_59c5db9b3bd408de05fc318c
+postgres lerna_test_e289ed9c93dec86ee4a54268
+postgres lerna_test_41b9837e42f09b6776af477e
+postgres lerna_test_9518b75e181c65bf01633aee
+postgres lerna_test_032e5aab2aa0d25b45537bf2
+postgres lerna_test_eda3cde065784317665874aa
+postgres lerna_test_6ce149455bdf03852c236dd5
+postgres lerna_test_4252d918a5777f34205b46a6
+postgres lerna_test_c6314d9eebbfda3b75e32c36
+postgres lerna_test_8efd226db35d899e3f55cb1a
+postgres lerna_test_cc9291e19976d0d00dc095c8
+postgres lerna_test_a784c018b25a3a969d9d5426
+postgres lerna_test_21aa7cc2465cb37f5d0a43a2
+postgres lerna_test_17da90dab396ed992854e685
+postgres lerna_test_710bd92ce293a0f4490e9ba8
+postgres lerna_test_61850ad299808ba6cb083a61
+postgres lerna_test_f8e88e5afdee68fb58e8b183
+postgres lerna_test_decca8520b83979c457e86da
+postgres lerna_test_f4b236c4861eb918f3fa0389
+postgres lerna_test_c8b4992976ed1743ddbfb4f9
+postgres lerna_test_7af344e93deb132e13aea6d3
+postgres lerna_test_108e9bfec82c3de2b88e408e
+postgres lerna_test_fdad687105873c81f8abc61b
+postgres lerna_test_2f9891080af37af74a8cb81d
+postgres lerna_test_71af62ee3bb3a40fd50de83d
+postgres lerna_test_3103a6273da5907cfa1be785
+postgres lerna_test_82c92c289b325c0ff9b7d73b
+postgres lerna_test_9b5a359c49c981347301b443
+postgres lerna_test_d86fbe15e89dcb69d39a0746
+postgres lerna_test_c70bb8e86146bca406eda0a4
+postgres lerna_test_561fa8fde9813000fa9382cc
+postgres lerna_test_384a6bf2954640b5e2e79d77
+postgres lerna_test_7873fc10f20c8c6c27960560
+postgres lerna_test_d8d4f03f75d4123bc0a8f9c3
+postgres lerna_test_04a94aaa39df62d2427eb46c
+postgres lerna_test_017bf2e9aa025e921facfe3b
+postgres lerna_test_973cd7505770b78c0e4a85d0
+postgres lerna_test_cb83f5faad818dad1949d2b9
+postgres lerna_test_13ff408fab0d10df1f27a614
+postgres lerna_test_cc3d439e34b68a65478784f4
+postgres lerna_test_31b6501814e7f7c7a5914a27
+postgres lerna_test_687ce292d0198c9417f8f918
+postgres lerna_test_0eca39bfcfbe2d18d4de889d
+postgres lerna_test_47499897ff2afb60ef77aae4
+postgres lerna_test_ecaa5a5caab60a1db88d82a0
+{"actual_wait_confirmed": true, "event": "owned_go_child_completion_ack", "exit": 1, "operation": "go-child-0023", "original_pid_generation_absent": true, "original_whole_deadline_monotonic": 165591.921575297, "parent_operation": "partition-shared-race", "pgid": 3915789, "pid": 3927569, "shared_group_absence_checked_only_after_whole_wait": true, "starttime": "16456546", "timed_out": false}
+{"event": "native_completion_ack", "exit": 2, "group_absent": true, "operation": "partition-shared-race", "owned_raw_fsync_close_ack": true, "pgid": 3915789, "pid": 3915789, "starttime": "16414692", "timed_out": false}
+{"actual_owner_wait_confirmed": true, "current_whole_group_absent": true, "event": "STATIC_STOP_LOCAL_RELEASE", "no_retry": true, "operation": "partition-shared-race", "outcome_exit": 2, "release_path": "/tmp/lerna-current-ci-partition-after-run-execution/fresh-race-first-failure-release.json", "release_sha256": "abea4c1f30530d95a6a5321f9a896a2a47cdf20238e718e7cd8374299f980330", "root": "/tmp/lerna-current-ci-partition-after-run-execution", "source_head": "860df74ef610c1e7280b9c6abd2974ae0677b739", "source_pins_unchanged": true}

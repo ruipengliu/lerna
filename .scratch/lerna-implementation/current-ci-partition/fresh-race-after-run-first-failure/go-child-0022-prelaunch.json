@@ -1,0 +1,23 @@
+{
+  "event": "owned_go_child_start_ack",
+  "operation": "go-child-0022",
+  "parent_operation": "partition-shared-race",
+  "pid": 3924940,
+  "pgid": 3915789,
+  "starttime": "16446760",
+  "root": "/tmp/lerna-current-ci-partition-after-run-execution",
+  "argv": [
+    "/home/agent/.local/toolchains/go1.27.1/bin/go",
+    "test",
+    "-p=1",
+    "-count=1",
+    "-race",
+    "-tags=integration",
+    "-timeout=120s",
+    "./conformance/component",
+    "-run",
+    "^(TestContentNewAssociationRequiresCurrentDirectSourceAdmission|TestContentAssociationKeepsPreparingCapacityAndFailedHistory|TestContentDecodedByteBoundHasRealNormalPublication|TestContentOriginalCleanupPageCASRollsBackEarlierQualificationsAfterConcurrentConsumer|TestContentPublicationWaitCannotReuseExpiredPolicyClock|TestContentHiddenAncestorPurposeIntersectionAndOriginalCapSurviveFurtherDerivation|TestContentDirectReadPermissionsAreCurrentAndSeparate|TestContentLaterWorkPassesFullExpiredCleanupPageWithoutChangingOriginalDuties|TestContentOldReadersPreserveLosslessFactsAndUnavailable|TestContentWrongPhysicalRootCannotAcknowledgeOriginalHolderErasure|TestContentLateSuccessfulPutCannotRestoreErasedPrimaryHolderFact|TestContentInheritedExpiredCapConsumesItsExactAdmissionTargetWithoutDeletingLiveAncestor|TestContentRenewalResidualDoesNotPretendFutureMaintenanceCoverage|TestContentLegacyOriginalQualificationCutoffRollsBackBindingAndAttemptWrites|TestContentStoppedOriginalLegacyScopeBindsOnlyAfterPositiveWriterClose|TestContentActualExpiredOldWriterArchiveRetainsAncestorResponsibilities|TestContentFiveActionsAreIndependentCurrentQualification|TestContentMalformedPolicyBindingRegistersActualSourceResponsibility|TestContentExpiredMaintenanceBudgetRetainsKnownHolderWithoutClaimingComplete|TestContentOrphanSealWinsBeforeLatePublicationAndPreservesLiveVersion|TestContentClosureRecordWaitRechecksPolicyBeforeMetadata|TestContentClosurePolicyIntersectionUsesClockAfterRealPolicyLock|TestContentCurrentSaveWithdrawalStartsOriginalSealAndRealCleanupConsumer|TestContentPostScheduleAdmissionRollsBackLateVersion|TestContentLateAdmissionRespectsCompetingOriginalCommand|TestContentProcessingDeadlineAfterNativeDescendantLock|TestContentDelayedHistoricalPageHandsOffOriginalNaturalValidUntil|TestContentReadPolicyWaitRespectsAdmissionForEveryObservation|TestContentLastDirectSourceWaitCannotReuseReadAdmission|TestContentTemporaryFailureKeepsNarrowedRetentionAfterReopen|TestContentSecondaryNativeRemovalFailureRetainsOriginalResponsibility|TestContentTargetAuthorizationPrecedesExistenceAndMismatchObservation)$"
+  ],
+  "original_whole_deadline_monotonic": 165591.921575297,
+  "remaining_whole_seconds": 1124.312411812978
+}

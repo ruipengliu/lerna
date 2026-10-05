@@ -1,0 +1,11 @@
+{
+  "event": "native_completion_ack",
+  "operation": "policy-orphan-reader-paired-race",
+  "pid": 3905075,
+  "pgid": 3905075,
+  "starttime": "16367800",
+  "exit": 0,
+  "group_absent": true,
+  "timed_out": false,
+  "owned_raw_fsync_close_ack": true
+}

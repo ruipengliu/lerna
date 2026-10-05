@@ -1,0 +1,90 @@
+{
+  "status": "Derived exact four actual identity objects; original full outcome and global append-only registry remain unchanged.",
+  "identities": [
+    {
+      "pid": 3859786,
+      "pgid": 3859786,
+      "starttime": "16176177",
+      "started_ns": 1791193523431667371,
+      "args": [
+        "go",
+        "test",
+        "-c",
+        "-p",
+        "1",
+        "-tags=integration",
+        "-overlay=/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/overlay.json",
+        "-o",
+        "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/component-policy-clock-normal.test",
+        "./conformance/component"
+      ]
+    },
+    {
+      "pid": 3860018,
+      "pgid": 3860018,
+      "starttime": "16176915",
+      "started_ns": 1791193530808404108,
+      "args": [
+        "go",
+        "test",
+        "-race",
+        "-c",
+        "-p",
+        "1",
+        "-tags=integration",
+        "-overlay=/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/overlay.json",
+        "-o",
+        "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/component-policy-clock-race.test",
+        "./conformance/component"
+      ]
+    },
+    {
+      "pid": 3871345,
+      "pgid": 3871345,
+      "starttime": "16227233",
+      "started_ns": 1791194033991690955,
+      "args": [
+        "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/component-policy-clock-normal.test",
+        "-test.v",
+        "-test.run=^(TestContentContextReachableClosure64And65IncludesIntermediateVersions|TestContentContextStaticModeMaximumReachable62Materials|TestContentContextSingleContentBoundHasHonestLayerAndNoDispatch|TestContentContextDuplicateSelectorRoleRefusesBeforeOriginalInputReplacement)$",
+        "-test.count=1",
+        "-test.timeout=120s"
+      ]
+    },
+    {
+      "pid": 3878367,
+      "pgid": 3878367,
+      "starttime": "16258579",
+      "started_ns": 1791194347449604101,
+      "args": [
+        "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/component-policy-clock-race.test",
+        "-test.v",
+        "-test.run=^(TestContentContextReachableClosure64And65IncludesIntermediateVersions|TestContentContextStaticModeMaximumReachable62Materials|TestContentContextSingleContentBoundHasHonestLayerAndNoDispatch|TestContentContextDuplicateSelectorRoleRefusesBeforeOriginalInputReplacement)$",
+        "-test.count=1",
+        "-test.timeout=120s"
+      ]
+    }
+  ],
+  "scope_intervals": [
+    {
+      "original_outcome": "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/fresh-normal_build-actual-provenance.json",
+      "original_outcome_sha256": "525bc73583506c55e6211d5f10d78a722533d636f496313e415ad05542dc8b05",
+      "owned_scope_interval_exact": "process_group 3859786 3859786 /workspace/lerna-content-03-137311247276\nnative_exit 3859786 3859786 status=0 group_absent=True\n"
+    },
+    {
+      "original_outcome": "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/fresh-race_build-actual-provenance.json",
+      "original_outcome_sha256": "26c83f82f77fc5add9c51100edcb998bd9c3515f38a065c4f73f75213be4631b",
+      "owned_scope_interval_exact": "process_group 3860018 3860018 /workspace/lerna-content-03-137311247276\nnative_exit 3860018 3860018 status=0 group_absent=True\n"
+    },
+    {
+      "original_outcome": "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/original4b-normal-actual-outcome.json",
+      "original_outcome_sha256": "ebc91909c8f27f3c7bb050aad480b949fd45378771b18576a42381f8c5cd58b5",
+      "owned_scope_interval_exact": "process_group 3871345 3871345 /workspace/lerna-content-03-137311247276\npostgres lerna_test_5de8ff472f74f94abb6341f6\npostgres lerna_test_e549ac0086a2b80ac80161b2\npostgres lerna_test_4450722130480feb0f556195\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-1840001800 27 1179866\npostgres lerna_test_b287c5e5131b5333bc7ab641\npostgres lerna_test_875e844c2c679b38859d2e33\npostgres lerna_test_4dcb86fa9df2edbc184fc5a6\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-2431689121 27 1180001\npostgres lerna_test_76c4facd756d1d423470c0ba\npostgres lerna_test_8feff8ee029521081a4d9b36\npostgres lerna_test_2f784e839525a6bc602645ee\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-651374765 27 1180126\npostgres lerna_test_b878d1ac27cc4406b0650384\npostgres lerna_test_9e85acb9075476c409f5e1fd\npostgres lerna_test_00af48fefe77eefd2bc6dd7e\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-3772919528 27 1180263\npostgres lerna_test_56297562e160e6dad325e44d\npostgres lerna_test_b889eca8f0c8532fca922267\npostgres lerna_test_8b2fe0256ba993e754dbd897\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-2546858738 27 1180280\npostgres lerna_test_b5234a76c07cbd481565d9f8\npostgres lerna_test_111321ed1f4d3fcbf3789f38\npostgres lerna_test_67b8a02dd3ad89eda4c9b6ea\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-1919405030 27 1180280\nnative_exit 3871345 3871345 status=0 group_absent=True\n"
+    },
+    {
+      "original_outcome": "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/original4b-race-actual-outcome.json",
+      "original_outcome_sha256": "74bcc7828664c06e85d953f1fefb97ebf5518aada5bc46694e1748890c48b6d5",
+      "owned_scope_interval_exact": "process_group 3878367 3878367 /workspace/lerna-content-03-137311247276\npostgres lerna_test_ae538f9973189f41d6b0a395\npostgres lerna_test_8761dd50658b8586b0e17617\npostgres lerna_test_557762ef86b08a51a65d2162\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-4077120865 27 1179866\npostgres lerna_test_7fb66567083e2acb9733e067\npostgres lerna_test_51605f7fb4a3d2358fe413be\npostgres lerna_test_9574ecdd647fc28437d45e84\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-2595346956 27 1179866\npostgres lerna_test_ba1d0d6828c458e491b9c172\npostgres lerna_test_af5753da29449780c582a514\npostgres lerna_test_5d27f92028a4f30f294a3dc2\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-2691203424 27 1179866\npostgres lerna_test_77c5edb359b252713b3554c7\npostgres lerna_test_6f5437c7fc112373e9cc0237\npostgres lerna_test_c7c37beadabf19fc7d0e4560\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-497969222 27 1179866\npostgres lerna_test_7bdb67e338bbbbed363e4436\npostgres lerna_test_6e288454ef50c1b5ec929ea5\npostgres lerna_test_f078086a69421639b7a989cd\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-1548242575 27 1179866\npostgres lerna_test_2082fb37bb53fbe73ddfa59f\npostgres lerna_test_4473d5c8c3ad497dc8fc4a03\npostgres lerna_test_4dbc8010ccd90afa7ea629bf\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-736465387 27 1179903\nnative_exit 3878367 3878367 status=1 group_absent=True\n"
+    }
+  ]
+}

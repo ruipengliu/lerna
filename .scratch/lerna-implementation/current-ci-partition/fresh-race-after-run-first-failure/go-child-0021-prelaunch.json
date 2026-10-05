@@ -1,0 +1,23 @@
+{
+  "event": "owned_go_child_start_ack",
+  "operation": "go-child-0021",
+  "parent_operation": "partition-shared-race",
+  "pid": 3922440,
+  "pgid": 3915789,
+  "starttime": "16437307",
+  "root": "/tmp/lerna-current-ci-partition-after-run-execution",
+  "argv": [
+    "/home/agent/.local/toolchains/go1.27.1/bin/go",
+    "test",
+    "-p=1",
+    "-count=1",
+    "-race",
+    "-tags=integration",
+    "-timeout=120s",
+    "./conformance/component",
+    "-run",
+    "^(TestContentOriginalAdmissionCleanupDeadlineSurvivesCurrentTargetPolicyLockWait|TestContentReplayRechecksReaderAfterCommandLock|TestContentTrustedSealSurvivesReopenAndPreservesOriginalReceipt|TestContentOriginalCleanupDeadlineCannotBeExtendedByCurrentPolicyLockWait|TestContentLockWaitCannotReuseExpiredAdmissionClock|TestContentClosureDeduplicatesSharedAncestorAndRejectsForeignOwners|TestContentDelegatedLifecyclePassesOtherSavingSubjectFullPageWithoutChangingOriginalDuties|TestContentLaterWorkPassesOneExpiredCleanupResponsibility|TestContentPublishedDamageAndMissingNeverRepairOnQuery|TestContentNoClobberExistingBytesMustMatchBeforePublication|TestContentAuthoritativeErasureStopsNewPrimaryHolderClaimsAndKeepsOldHistory|TestContentEmptyBytesBinaryAndFiniteRanges|TestContentNaturalSourceAndTargetChecksCurrentRenewalWithoutErasingRevoke|TestContentMultipleAncestorsKeepIndependentEarlierAdmissionDue|TestContentLegacyCommittedBindingReplyLossRecoversOnlyByOriginalQualification|TestContentLegacyPolicyPagesDoNotTruncateAt64OrResetOnReopen|TestContentPolicyPropagationAllDescendantPagesRecoverFrozenWatermark|TestContentPolicyAndCleanupResponsibilityRollbackTogether|TestContentManagementStepRechecksTrustedDeadlineAfterPageLocks|TestContentDerivedGoneRequiresCurrentExactMetadataForReaderAndEveryAncestor|TestContentNaturalPolicyPhaseCannotUndoOriginalErasureAcknowledgement|TestContentPolicyActionVectorsFailClosed|TestContentRestoredSaveBasisMakesOriginalCleanupNotRequiredWithoutSealing|TestContentDirectSourcesRequireSeparateReadProcessSaveAndRetention|TestContentPostScheduleAliasPreservesOriginalCapOnRollback|TestContentAdmissionReaderExpiryCannotDiscloseAfterWait|TestContentHistoricalTighteningClassifiesNewCapAtCurrentTime|TestContentCurrentSavePolicyStopsObjectWrite|TestContentCommandWaitRechecksReaderAndAdmission|TestContentReadAdmissionDeadlineDoesNotBecomeCompletionDeadline|TestContentCleanupScanKeepsMalformedDeadlineParseCauseBeforePage|TestContentTargetReadPoliciesBindExactPublishedDeclaration)$"
+  ],
+  "original_whole_deadline_monotonic": 165591.921575297,
+  "remaining_whole_seconds": 1218.8485926019785
+}

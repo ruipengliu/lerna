@@ -1,0 +1,11 @@
+{
+  "event": "native_completion_ack",
+  "operation": "policy-orphan-normal-control",
+  "pid": 3847706,
+  "pgid": 3847706,
+  "starttime": "16122119",
+  "exit": 1,
+  "group_absent": true,
+  "timed_out": false,
+  "owned_raw_fsync_close_ack": true
+}

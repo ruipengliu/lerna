@@ -1,0 +1,6 @@
+{
+  "status": "STATIC generator first attempt partial artifact writes then actual KeyError; no native/Go/DB/fmt/productsource effects",
+  "error": "KeyError adapters/content/decision/content_source.go (owned overlay filename, not actualsource path)",
+  "correction": "Actual pinned original is adapters/content/decision/source.go; verify and retain partial artifacts byteexact rather than recreate original inputs",
+  "old_source_and_original_artifacts_unchanged": true
+}

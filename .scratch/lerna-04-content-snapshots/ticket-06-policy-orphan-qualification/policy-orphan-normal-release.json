@@ -1,0 +1,32 @@
+{
+  "status": "STOP_RELEASED_FIRST_FAILURE",
+  "actual_policy_orphan_normal_exit": 1,
+  "native_actual": {
+    "event": "native_completion_ack",
+    "operation": "policy-orphan-normal-control",
+    "pid": 3847706,
+    "pgid": 3847706,
+    "starttime": "16122119",
+    "exit": 1,
+    "group_absent": true,
+    "timed_out": false,
+    "owned_raw_fsync_close_ack": true
+  },
+  "format_native_actual": {
+    "event": "native_completion_ack",
+    "operation": "policy-orphan-format",
+    "pid": 3846993,
+    "pgid": 3846993,
+    "starttime": "16118850",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false,
+    "owned_raw_fsync_close_ack": true
+  },
+  "formatted_source_pins_26_unchanged": true,
+  "manifest_sha256": "21d04a39997415a36e182989dfcc0d0c8e3bd920cbbd415235bfa0bbc742a1a9",
+  "raw_log_sha256": "d2f5442534f192d307b820600f653defa1e29cb3761b2c2fd8680895b764f053",
+  "ledger_lines": 103,
+  "fault_race_unexecuted": true,
+  "repair_retry_other_native_unexecuted": true
+}
