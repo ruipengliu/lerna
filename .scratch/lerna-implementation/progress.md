@@ -6,6 +6,8 @@
 
 ## 当前状态
 
+2026-10-05 01:35 UTC，05继承上限修复partial `301be6d6e0e176ad10cd94012baa5c87d9debd14` clean，准确测试[普通2.422s／race3.913s](../lerna-04-content-snapshots/ticket-05-expired-accepted-cap/inherited-admission-first-red/README.md)均actual exit0／group absence／no timeout并明确释放。原red尾段全执行：准确target-only seal和全部holder ACK、真实重开、target独立缺失、两祖先原正文保持／无误封、V2正常与三原回执逐字／发布历史保持；同原admission到期前无效果和实际不同完整Subject forbidden对照通过。新targeted原deadline锁等待及最终受影响检查／评审仍待，本票与whole04不提前接受。诊断及两项窄决定已提交推送 `5eed627`；LOCAL当前空，03／05均只静态准备下一有限范围。
+
 2026-10-05 01:34 UTC，全文采用[单项 Binding 表示复用决定](../lerna-04-content-snapshots/ticket-03-large-graph-claim/binding-decode-reuse-decision.md)：每次仍真实锁定读取完整 Binding 行，仅同范围／input_id／locator／完整字节一致时复用成功严格解码值，所有可变字段深拷贝；当前 Input 全量新读／比较、Permission、祖先资格和时钟保持。03仅静态实现及首红准备，不同时优化 Content 两 Tx、不预热或扩大原5s期限，尚无新产品 green。
 
 05最小 AdmissionTarget 修复与完整原测试、真实到期前无效果／不同 Subject 拒绝对照已全文审查；SOLE LOCAL仅授该准确测试普通、通过后同例race，保持原20／30／120、2s cap及原一分钟责任窗。新targeted deadline锁等待仍待独立测试，旧普通分支等待不借称新分支覆盖。whole04仍15/41、两票未正式接受或合并、完整1.2关闭，全部22切片继续。
