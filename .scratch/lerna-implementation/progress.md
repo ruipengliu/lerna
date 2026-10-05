@@ -323,3 +323,7 @@ root全文读取[Astra六票复核](../lerna-04-content-snapshots/published-tick
 2026-10-05，03同原四B竞态ONE实际exit1/absence：closure64在实际processing失败无Prepared，static62已首次真实Prepared COMMIT却在首次Publish的PrepareContent失败，无completed/readback；[原日志与准确身份](../lerna-04-content-snapshots/ticket-03-large-graph-claim/binding-reuse-capacity/README.md)均保存。原30/5/120不改，单语法memo不足。root FULL读新阶段后交Astra只读评估下一最小等价修正；03未accept。LOCAL明确释放后只授05fmt与独立低积压正常对照，64积压首red尚未执行。
 
 2026-10-05，03固定28e[独立两轴](../lerna-04-content-snapshots/ticket-03-review-28e3a46/README.md)：Standards一P2错误cause丢失、零可选；Spec a0b0c0。root全文采用必要cause修正方向与Astra下一只读决定：只一次当前原完整B阶段标签CPU采样，粗wall不能断言SQL根因，尚无第二产品优化或七AC接受。05低积压初次count1失败在准备阶段重开观察DeepEqual；V2未接纳，不能当调度red。原log/源码保留，只授公开tuple诊断一次，原bounds不改。
+
+2026-10-05，05低积压count1正常15.464s实际0/absence，完整V2/live全holderACK/独立物理缺失/旧expired职责正文与固定回执history尾均执行，[原源与原日志](../lerna-04-content-snapshots/ticket-05-expired-job-scan/README.md)保存。只有test-only公开编码等值修正，产品未改。root只授独立64首red（初始15s seal、caller90、四Step、120不变），未授权产品fix或race。
+
+2026-10-05，05真实64积压首businessred18.131s/1/absence已成立：[原源码、预登记计划及实际日志](../lerna-04-content-snapshots/ticket-05-expired-job-scan/README.md)。64原合法封闭到期并重开后，新准确版本已accepted、四推进仍preparing、独立bodymissing；live/policy尾未执行。root全文采用后只授Content-own两窄扫描口/三消费者的静态最小修正，冻结runtime/schema/旧expired职责字节期限不改，新green/race/边界及审查待。03CPU新5overlay静态准备中，未native采样，whole04仍15/41。

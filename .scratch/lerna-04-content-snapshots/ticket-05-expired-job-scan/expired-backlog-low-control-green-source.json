@@ -1,0 +1,11 @@
+{
+  "kind": "prelaunch public whole observation encoding equality source",
+  "sha256": "60f817d14355d1565f744be850f9309d1ae0c2d0f7190be0e204929d0823823b",
+  "caller_seconds": 90,
+  "seal_seconds": 15,
+  "live_seconds": 45,
+  "step_limit": 4,
+  "go_seconds": 120,
+  "outer_seconds": 120,
+  "product_changed": false
+}
