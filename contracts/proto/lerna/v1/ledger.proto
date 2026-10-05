@@ -31,8 +31,61 @@ message Operation {
   repeated Ref closure_evidence_refs = 11;
   Effect effect = 12;
   bool start_receipt_obtained = 13;
+  Execution execution = 14;
 }
 message AcceptOperationCommand {
   CommandHeader header = 1;
   Admission admission = 2;
+}
+
+message CallDescriptor {
+  string protocol = 1;
+  string method = 2;
+  string target = 3;
+  Ref parameters_ref = 4;
+  Ref capability_ref = 5;
+  string external_key = 6;
+  string digest = 7;
+}
+message ExecutionAttempt {
+  Ref ref = 1;
+  GlobalName operation_id = 2;
+  uint32 attempt_no = 3;
+  string phase = 4;
+  string external_key = 5;
+  string external_key_scope = 6;
+  int64 first_possible_send_at_unix_ms = 7;
+  ExecutionCapabilities capabilities = 8;
+}
+message PhysicalSend {
+  Ref ref = 1;
+  GlobalName attempt_id = 2;
+  uint32 send_seq = 3;
+  string phase = 4;
+  string process_instance = 5;
+  uint64 claim_epoch = 6;
+  int64 lease_until_unix_ms = 7;
+  CommandReceipt start_receipt = 8;
+  Ref observation_ref = 9;
+  Ref credential_ref = 10;
+}
+message Execution {
+  ExecutionAttempt attempt = 1;
+  PhysicalSend send = 2;
+  CallDescriptor call_descriptor = 3;
+}
+message PrepareExecutionCommand {
+  CommandHeader header = 1;
+  GlobalName operation_id = 2;
+  string process_instance = 3;
+  Job claim = 4;
+}
+message ExecutionCapabilities {
+  string effect = 1;
+  bool idempotent = 2;
+  bool queryable = 3;
+  string protocol_version = 4;
+  string declaration_version = 5;
+  string verification_basis = 6;
+  string idempotency_scope = 7;
 }

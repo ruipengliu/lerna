@@ -1,0 +1,53 @@
+syntax = "proto3";
+package lerna.v1;
+
+import "lerna/v1/credential.proto";
+import "lerna/v1/identity.proto";
+import "lerna/v1/ledger.proto";
+import "lerna/v1/planning.proto";
+import "lerna/v1/reporting.proto";
+import "lerna/v1/submission.proto";
+
+option go_package = "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1;lernav1";
+message StartExecutionCommand {
+  CommandHeader header = 1;
+  Ref admission_ref = 2;
+  Ref credential_ref = 3;
+  ExitCredentialBinding binding = 4;
+  Job claim = 5;
+  CallDescriptor call_descriptor = 6;
+}
+message StartRecord {
+  Ref ref = 1;
+  ExitCredentialBinding binding = 2;
+  Ref credential_ref = 3;
+  Ref send_ref = 4;
+  CommandIdentity identity = 5;
+  int64 started_at_unix_ms = 6;
+}
+message SendConsumption {
+  Ref ref = 1;
+  Ref reservation_ref = 2;
+  Ref send_ref = 3;
+  GlobalName operation_id = 4;
+  CommandIdentity start_identity = 5;
+}
+message DispatchCommand {
+  CommandHeader header = 1;
+  GlobalName operation_id = 2;
+  CommandReceipt start_receipt = 3;
+  Job claim = 4;
+}
+message PhysicalIORequest {
+  GlobalName task_id = 1;
+  GlobalName operation_id = 2;
+  string executor_endpoint_id = 3;
+  ExecutionAttempt attempt = 4;
+  PhysicalSend send = 5;
+  CallDescriptor call_descriptor = 6;
+  bytes body = 7;
+}
+message PhysicalIOResult {
+  RawObservation observation = 1;
+  bytes body = 2;
+}

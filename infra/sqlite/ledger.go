@@ -24,7 +24,19 @@ func (s *Store) SaveLedgerReceipt(ctx context.Context, r *v1.CommandReceipt) err
 	return s.saveRecord(ctx, "ledger", "INSERT INTO command_receipts VALUES(?,?,?,?,?)", r, r.Identity.UserId, r.Identity.IssuerId, r.Identity.TargetDomainId, r.Identity.CommandId)
 }
 func (s *Store) SaveOperation(ctx context.Context, o *v1.Operation) error {
-	return s.saveRecord(ctx, "ledger", "INSERT INTO operations VALUES(?,?,?,?)", o, o.Ref.Name.UserId, o.Ref.Name.AuthorityDomainId, o.Ref.Name.LocalId)
+	old, e := s.LoadOperation(ctx, o.Ref.Name)
+	if e != nil {
+		return e
+	}
+	if old != nil {
+		if e = s.saveExecutionVersions(ctx, old); e != nil {
+			return e
+		}
+	}
+	if e = s.saveExecutionVersions(ctx, o); e != nil {
+		return e
+	}
+	return s.saveRecord(ctx, "ledger", "INSERT INTO operations VALUES(?,?,?,?) ON CONFLICT(user_id,domain_id,id) DO UPDATE SET record=excluded.record", o, o.Ref.Name.UserId, o.Ref.Name.AuthorityDomainId, o.Ref.Name.LocalId)
 }
 func (s *Store) LoadOperation(ctx context.Context, id *v1.GlobalName) (*v1.Operation, error) {
 	o := new(v1.Operation)
@@ -35,7 +47,7 @@ func (s *Store) LoadOperation(ctx context.Context, id *v1.GlobalName) (*v1.Opera
 	return o, e
 }
 func (s *Store) SaveLedgerJob(ctx context.Context, j *v1.Job) error {
-	return s.saveRecord(ctx, "ledger", "INSERT INTO ledger_jobs VALUES(?,?,?,?,?)", j, j.Ref.Name.UserId, j.Ref.Name.AuthorityDomainId, j.Ref.Name.LocalId, j.SpecificationRef.Name.LocalId)
+	return s.saveRecord(ctx, "ledger", "INSERT INTO ledger_jobs VALUES(?,?,?,?,?) ON CONFLICT(user_id,domain_id,id) DO UPDATE SET record=excluded.record", j, j.Ref.Name.UserId, j.Ref.Name.AuthorityDomainId, j.Ref.Name.LocalId, j.SpecificationRef.Name.LocalId)
 }
 func (s *Store) LedgerJobs(ctx context.Context, id *v1.GlobalName) ([]*v1.Job, error) {
 	var jobs []*v1.Job

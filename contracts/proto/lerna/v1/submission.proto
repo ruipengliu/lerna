@@ -173,6 +173,7 @@ message Content {
   string media_type = 6;
   string status = 7;
   repeated string processing_purposes = 8;
+  bytes raw_body = 9;
 }
 message PendingGoal {
   SubmitGoalCommand command = 1;

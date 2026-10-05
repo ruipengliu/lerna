@@ -8,7 +8,10 @@ import (
 )
 
 func (s *Store) BusinessScope(ctx context.Context, fn func(context.Context) error) error {
-	tx, err := s.writer(ctx, "adjudication")
+	return s.businessScope(ctx, "adjudication", fn)
+}
+func (s *Store) businessScope(ctx context.Context, domain string, fn func(context.Context) error) error {
+	tx, err := s.writer(ctx, domain)
 	if err != nil {
 		return err
 	}

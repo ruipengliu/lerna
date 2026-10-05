@@ -10,6 +10,10 @@ import (
 )
 
 type Store interface {
+	SaveExitCredentialUse(context.Context, *v1.ExitCredentialUse) error
+	LoadExitCredentialUse(context.Context, *v1.Ref) (*v1.ExitCredentialUse, error)
+	SaveExitCredential(context.Context, *v1.ExitCredential) error
+	LoadExitCredential(context.Context, *v1.Ref) (*v1.ExitCredential, error)
 	GrantUses(context.Context, *v1.GlobalName) ([]*v1.GrantUse, error)
 	SaveGrant(context.Context, *v1.Grant) error
 	LoadGrant(context.Context, *v1.Ref) (*v1.Grant, error)
@@ -21,13 +25,14 @@ type Decisions interface {
 	Execute(context.Context, *v1.Caller, *v1.CommandHeader, string, string, func(context.Context) (*v1.Ref, error)) (*v1.CommandReceipt, error)
 }
 type Service struct {
+	admissions                  Admissions
 	store                       Store
 	decisions                   Decisions
 	user, domain, trustedIssuer string
 }
 
 func New(s Store, d Decisions, user, domain, trustedIssuer string) *Service {
-	return &Service{s, d, user, domain, trustedIssuer}
+	return &Service{store: s, decisions: d, user: user, domain: domain, trustedIssuer: trustedIssuer}
 }
 func (s *Service) Configure(ctx context.Context, caller *v1.Caller, c *v1.ConfigureGrantCommand) (*v1.CommandReceipt, error) {
 	if e := command.ValidateHeader(c.GetHeader(), c); e != nil {

@@ -1542,6 +1542,7 @@ type Content struct {
 	MediaType          string                 `protobuf:"bytes,6,opt,name=media_type,json=mediaType,proto3" json:"media_type,omitempty"`
 	Status             string                 `protobuf:"bytes,7,opt,name=status,proto3" json:"status,omitempty"`
 	ProcessingPurposes []string               `protobuf:"bytes,8,rep,name=processing_purposes,json=processingPurposes,proto3" json:"processing_purposes,omitempty"`
+	RawBody            []byte                 `protobuf:"bytes,9,opt,name=raw_body,json=rawBody,proto3" json:"raw_body,omitempty"`
 	unknownFields      protoimpl.UnknownFields
 	sizeCache          protoimpl.SizeCache
 }
@@ -1628,6 +1629,13 @@ func (x *Content) GetStatus() string {
 func (x *Content) GetProcessingPurposes() []string {
 	if x != nil {
 		return x.ProcessingPurposes
+	}
+	return nil
+}
+
+func (x *Content) GetRawBody() []byte {
+	if x != nil {
+		return x.RawBody
 	}
 	return nil
 }
@@ -2142,7 +2150,7 @@ const file_lerna_v1_submission_proto_rawDesc = "" +
 	"\x12last_committed_seq\x18\x03 \x01(\x04R\x10lastCommittedSeq\x12\x1a\n" +
 	"\brevision\x18\x04 \x01(\x04R\brevision\x12.\n" +
 	"\x06inputs\x18\x05 \x03(\v2\x16.lerna.v1.SessionInputR\x06inputs\x12*\n" +
-	"\ttask_refs\x18\x06 \x03(\v2\r.lerna.v1.RefR\btaskRefs\"\xba\x02\n" +
+	"\ttask_refs\x18\x06 \x03(\v2\r.lerna.v1.RefR\btaskRefs\"\xd5\x02\n" +
 	"\aContent\x12\x1f\n" +
 	"\x03ref\x18\x01 \x01(\v2\r.lerna.v1.RefR\x03ref\x12\x12\n" +
 	"\x04text\x18\x02 \x01(\tR\x04text\x121\n" +
@@ -2152,7 +2160,8 @@ const file_lerna_v1_submission_proto_rawDesc = "" +
 	"\n" +
 	"media_type\x18\x06 \x01(\tR\tmediaType\x12\x16\n" +
 	"\x06status\x18\a \x01(\tR\x06status\x12/\n" +
-	"\x13processing_purposes\x18\b \x03(\tR\x12processingPurposes\"t\n" +
+	"\x13processing_purposes\x18\b \x03(\tR\x12processingPurposes\x12\x19\n" +
+	"\braw_body\x18\t \x01(\fR\arawBody\"t\n" +
 	"\vPendingGoal\x125\n" +
 	"\acommand\x18\x01 \x01(\v2\x1b.lerna.v1.SubmitGoalCommandR\acommand\x12.\n" +
 	"\vcontent_ref\x18\x02 \x01(\v2\r.lerna.v1.RefR\n" +
