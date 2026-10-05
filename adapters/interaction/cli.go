@@ -1,0 +1,107 @@
+// Package interaction 只收集命令与呈现公共契约，不写核心事实。
+package interaction
+
+import (
+	"context"
+	"flag"
+	"fmt"
+	"io"
+
+	"github.com/ruipengliu/lerna/contracts/command"
+	v1 "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1"
+	"google.golang.org/protobuf/encoding/protojson"
+	"google.golang.org/protobuf/proto"
+)
+
+type Sessions interface {
+	SubmitGoal(context.Context, *v1.Caller, *v1.SubmitGoalCommand) (*v1.CommandReceipt, error)
+	ProcessPending(context.Context, *v1.Caller) error
+	QuerySession(context.Context, *v1.Caller, *v1.GlobalName) (*v1.Session, error)
+}
+type Tasks interface {
+	QueryTask(context.Context, *v1.Caller, *v1.GlobalName) (*v1.Task, error)
+}
+type Durable interface {
+	QueryReceipt(context.Context, *v1.Caller, *v1.CommandIdentity) (*v1.ReceiptQuery, error)
+}
+type CLI struct {
+	Sessions Sessions
+	Tasks    Tasks
+	Durable  Durable
+	Caller   *v1.Caller
+	Domain   string
+}
+
+func (c CLI) Run(ctx context.Context, args []string, out io.Writer) error {
+	if len(args) == 0 {
+		return fmt.Errorf("usage: submit --command ID --goal TEXT [--session ID] | receipt ID | task ID | session ID | recover")
+	}
+	identity := func(id string) *v1.CommandIdentity {
+		return &v1.CommandIdentity{UserId: c.Caller.UserId, IssuerId: c.Caller.IssuerId, TargetDomainId: c.Domain, CommandId: id}
+	}
+	var value proto.Message
+	var err error
+	switch args[0] {
+	case "submit":
+		flags := flag.NewFlagSet("submit", flag.ContinueOnError)
+		flags.SetOutput(io.Discard)
+		id := flags.String("command", "", "stable caller command id")
+		goal := flags.String("goal", "", "goal text")
+		session := flags.String("session", "", "existing session id")
+		if err := flags.Parse(args[1:]); err != nil {
+			return err
+		}
+		if *id == "" || *goal == "" || flags.NArg() != 0 {
+			return command.Fail("INVALID_INPUT")
+		}
+		cmd := &v1.SubmitGoalCommand{Identity: identity(*id), ContractVersion: 1, SchemaId: "lerna.v1.SubmitGoal", FingerprintVersion: 1, Goal: *goal}
+		if *session != "" {
+			cmd.Session = &v1.GlobalName{UserId: c.Caller.UserId, AuthorityDomainId: c.Domain, ObjectKind: "session", LocalId: *session}
+		}
+		if _, err := c.Sessions.SubmitGoal(ctx, c.Caller, cmd); err != nil {
+			return err
+		}
+		if err := c.Sessions.ProcessPending(ctx, c.Caller); err != nil {
+			return err
+		}
+		q, e := c.Durable.QueryReceipt(ctx, c.Caller, cmd.Identity)
+		err = e
+		if q != nil {
+			value = q.Receipt
+		}
+	case "receipt":
+		if len(args) != 2 {
+			return command.Fail("INVALID_INPUT")
+		}
+		value, err = c.Durable.QueryReceipt(ctx, c.Caller, identity(args[1]))
+	case "task", "session":
+		if len(args) != 2 {
+			return command.Fail("INVALID_INPUT")
+		}
+		name := &v1.GlobalName{UserId: c.Caller.UserId, AuthorityDomainId: c.Domain, ObjectKind: args[0], LocalId: args[1]}
+		if args[0] == "task" {
+			value, err = c.Tasks.QueryTask(ctx, c.Caller, name)
+		} else {
+			value, err = c.Sessions.QuerySession(ctx, c.Caller, name)
+		}
+	case "recover":
+		if len(args) != 1 {
+			return command.Fail("INVALID_INPUT")
+		}
+		return c.Sessions.ProcessPending(ctx, c.Caller)
+	default:
+		return command.Fail("UNSUPPORTED_FEATURE")
+	}
+	if err != nil {
+		return err
+	}
+	if value == nil || !value.ProtoReflect().IsValid() {
+		return command.Fail("INVALID_INPUT")
+	}
+	b, err := (protojson.MarshalOptions{Multiline: true, EmitUnpopulated: true}).Marshal(value)
+	if err != nil {
+		return err
+	}
+	_, err = fmt.Fprintln(out, string(b))
+	return err
+}
