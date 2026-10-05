@@ -1,0 +1,110 @@
+[
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/precommit-format.log",
+    "archive": "precommit-format.log",
+    "bytes": 201,
+    "sha256": "a7bc9a958fa024b44b7a0cc05f50d96c992f7c15f586ca8d8f9c28fc0d471b0a"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/precommit-format-prelaunch.json",
+    "archive": "precommit-format-prelaunch.json",
+    "bytes": 448,
+    "sha256": "3349342937868bb44e5289dac08a8eeacdcf13ffa45c4f69c78649015dd068f9"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/precommit-format-outcome.json",
+    "archive": "precommit-format-outcome.json",
+    "bytes": 234,
+    "sha256": "5158789fcf7a385aa83665f46eb4156c68e09c4883dd3f70e2ce8a8f3d899cb9"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/precommit-format-only.diff",
+    "archive": "precommit-format-only.diff",
+    "bytes": 21065,
+    "sha256": "88677aa59d75ad645a9fcbc41ef83f1477bad18bd2dbbd34e4ffc2f7cc99248a"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/precommit-formatted-manifest.json",
+    "archive": "precommit-formatted-manifest.json",
+    "bytes": 3803,
+    "sha256": "52f1179b491b0e1c2dcdaee74f910b9bb88c37dd5871e700a1a79c5377fd2a39"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/precommit-normal-control.log",
+    "archive": "precommit-normal-control.log",
+    "bytes": 742,
+    "sha256": "37ba7a62c429d411272a5387a31825e5ef130e11329d78735b7351a9158343f0"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/precommit-normal-control-prelaunch.json",
+    "archive": "precommit-normal-control-prelaunch.json",
+    "bytes": 632,
+    "sha256": "c08389842402d597f49e60a10927ad5adb9d24c0fa274264d34364355f0a11de"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/precommit-normal-control-outcome.json",
+    "archive": "precommit-normal-control-outcome.json",
+    "bytes": 242,
+    "sha256": "c3c33f3ca047813084eb44e445f5acbd4e65e91449bb0595b52e511c934e6396"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/precommit-normal-release.json",
+    "archive": "precommit-normal-release.json",
+    "bytes": 963,
+    "sha256": "9073d960732b57c5d1101b69ee3f441a1035531191c5548c1b62685d46eca994"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/precommit-sigkill-fault.log",
+    "archive": "precommit-sigkill-fault.log",
+    "bytes": 1012,
+    "sha256": "7cb9ce5c433554a9e6f015fd9e811e84dbb59890874609d16eba4fc0350c00b5"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/precommit-sigkill-fault-prelaunch.json",
+    "archive": "precommit-sigkill-fault-prelaunch.json",
+    "bytes": 650,
+    "sha256": "d299f5dfb4504ad486529968c4326a001c7cdf217b45c98377c0736a6c86a3c4"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/precommit-sigkill-fault-outcome.json",
+    "archive": "precommit-sigkill-fault-outcome.json",
+    "bytes": 241,
+    "sha256": "1cf6cd3553153b2bccc26f2a01654c8ddca3807d5cb9d420899023475ff6fa0b"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/precommit-fault-release.json",
+    "archive": "precommit-fault-release.json",
+    "bytes": 927,
+    "sha256": "ddb3e416e570d138c8eefd6eabd02cab4d5b36ba8472395684cd2480d038e9d0"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/precommit-paired-race.log",
+    "archive": "precommit-paired-race.log",
+    "bytes": 1318,
+    "sha256": "8fa39fae0da232399741fe6da7d404d1003c55ac953daa9f59a13ad4b279480b"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/precommit-paired-race-prelaunch.json",
+    "archive": "precommit-paired-race-prelaunch.json",
+    "bytes": 625,
+    "sha256": "6abd542a94b6b2e4dbe43ce54f559e8af00013e2100bde18f645df4f2616911e"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/precommit-paired-race-outcome.json",
+    "archive": "precommit-paired-race-outcome.json",
+    "bytes": 239,
+    "sha256": "dbffdae72df5013854018f8e9c8937af7253e9173dc47e11da6d6328fa4de85a"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/precommit-race-release.json",
+    "archive": "precommit-race-release.json",
+    "bytes": 724,
+    "sha256": "18ab417284987b3b3fa8f85bdc530c8299589bac76ff17d027b126d93a3e4715"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-execution/precommit-source-formatted/conformance/component/content_process_recovery_test.go",
+    "archive": "content_process_recovery_test.go.txt",
+    "bytes": 25003,
+    "sha256": "16aff1b095f1734e30d8c942b384b83f8557021cdafebeba562662f18d378f3f"
+  }
+]

@@ -1,0 +1,122 @@
+{
+  "kind": "STATIC actual Go discovery and fresh complete shared normal/race proposal; not launched",
+  "worktree": "/tmp/lerna-worktrees/current-ci-partition",
+  "fixed_source_head": "fa4ad6acfa58927000c830619da55598a0f9a506",
+  "qualified_5pins": {
+    "scripts/component-integration-race.test.mjs": {
+      "bytes": 9985,
+      "sha256": "c6c69505842aa5ad6ce2af93badc440a72efc501a2cf0461e0ed3aa1cd651ffb"
+    },
+    "scripts/test-component-integration-race.sh": {
+      "bytes": 3365,
+      "sha256": "750aad4c8f304c6c73819c47cc08f811a4a8669fecabf3bb6f121bd471593b4a"
+    },
+    "scripts/testdata/component-content-97.json": {
+      "bytes": 14126,
+      "sha256": "99301ce17abe265578d272a1150093e8e17cc5a73ca71a174752cf6090b3c049"
+    },
+    "scripts/bounded-build.mjs": {
+      "bytes": 4201,
+      "sha256": "9987ff70c2ff6349ca9de5fe225ea6e310379534f633dffef0ef738a168b3a6e"
+    },
+    "scripts/conformance-ownership.mjs": {
+      "bytes": 5453,
+      "sha256": "d17b90608d45335036f7c794b1f4e9d651a010bec60aed44d7fd26b0b030f88d"
+    }
+  },
+  "module_source_file_count": 283,
+  "module_source_inventory": "/tmp/lerna-current-ci-partition-execution/shared-whole-static/module-go-source-inventory.json",
+  "module_source_inventory_sha256": "643bcc0da9997cf91f38fb6e01dafbb44176d87dc4afd8339d6913bac9dd646e",
+  "controllers": {
+    "run-native.py": {
+      "path": "/tmp/lerna-current-ci-partition-execution/run-native.py",
+      "sha256": "90a808a0e3cf3a3a62441818dd0f87392a763b5ebdeef9ec2d5f2b5abc3e8d6d",
+      "bytes": 5324
+    },
+    "run-shared.py": {
+      "path": "/tmp/lerna-current-ci-partition-execution/run-shared.py",
+      "sha256": "ecb27b5f69bd93219c07b04dd7f8a425b0609897fefc1d430bfcfb1a21ee0157",
+      "bytes": 5581
+    },
+    "register-go-child.py": {
+      "path": "/tmp/lerna-current-ci-partition-execution/register-go-child.py",
+      "sha256": "4f99e917e4abe29d9a091991a92c60105c50d1f9eb51092ad85320727af987fd",
+      "bytes": 5929
+    },
+    "go-shim/go": {
+      "path": "/tmp/lerna-current-ci-partition-execution/go-shim/go",
+      "sha256": "7c7e9ae4ba1ab7d0696f95f06f69f70e43f98e687ee6e0c58b98d2d91022f981",
+      "bytes": 119
+    },
+    "go-child-counter.json": {
+      "path": "/tmp/lerna-current-ci-partition-execution/go-child-counter.json",
+      "sha256": "623037aca97fba31ec3a4a8df3af6bdb1b4876831c3bb86982f169c09d4b6c11",
+      "bytes": 12
+    }
+  },
+  "python_ast_parse_only": true,
+  "controller_native_qualification_not_yet_run": true,
+  "real_go": {
+    "path": "/home/agent/.local/toolchains/go1.27.1/bin/go",
+    "device": 27,
+    "inode": 262604,
+    "sha256": "30969f97169d7f43fe6a085873d75613adc21e30818a8c61d95bd27275df4624"
+  },
+  "actual_discovery": {
+    "operation": "partition-actual-go-discovery",
+    "supervisor": "/tmp/lerna-current-ci-partition-execution/run-native.py",
+    "outer_seconds": 120,
+    "command": "set -e; set -o pipefail; source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; export GOFLAGS=-mod=readonly; go test -p=1 -count=1 -tags=integration -timeout=120s ./conformance/component -list .",
+    "require_literal97_names_in_exact_order_equal_static_fixture": true,
+    "expected_census_at_this_fixed_tree": {
+      "all": 201,
+      "closure": 1,
+      "content": 97,
+      "durable": 60,
+      "other": 43
+    },
+    "must_parse_full_original_discovery_raw_not_treat_stub_fixture_as_actual": true
+  },
+  "shared_normal": {
+    "operation": "partition-shared-normal",
+    "supervisor": "/tmp/lerna-current-ci-partition-execution/run-shared.py",
+    "whole_seconds": 1445,
+    "command": "set -e; set -o pipefail; source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; export GOFLAGS=-mod=readonly; export PATH=/tmp/lerna-current-ci-partition-execution/go-shim:$PATH; make test-integration"
+  },
+  "shared_race": {
+    "operation": "partition-shared-race",
+    "supervisor": "/tmp/lerna-current-ci-partition-execution/run-shared.py",
+    "whole_seconds": 1445,
+    "command": "set -e; set -o pipefail; source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; export GOFLAGS=-mod=readonly; export PATH=/tmp/lerna-current-ci-partition-execution/go-shim:$PATH; make test-integration-race"
+  },
+  "whole_envelope_derivation_seconds": {
+    "component_six_groups": 720,
+    "recovery_one_package": 120,
+    "fixture_three_packages_with_p1": 360,
+    "go_discovery": 120,
+    "fixed_prerequisites": 120,
+    "fixed_final_exit": 5,
+    "sum": 1445
+  },
+  "whole_deadline_created_once_not_renewed_each_child": true,
+  "go_package_timeout_unchanged": 120,
+  "go_child_registration": "actual effect gate before exec realGo; PID/shared outer PGID/starttick/full argv durable ACK; actual original owner Wait; Go stdout/stderr inherited, ACK metadata only stderr",
+  "go_child_timeout": "only remaining original whole deadline, never resets; Go own package alarm120 retained",
+  "go_child_group_absence": "children inherit registered whole PGID; each original PID generation absent/Wait checked, shared PGID absence checked after whole Wait only",
+  "expected_sequential_go_invocations_each_shared_mode": {
+    "prereq_env": 2,
+    "recovery": 1,
+    "discovery": 1,
+    "component_groups": 6,
+    "fixture_p1_three_package_invocation": 1,
+    "total": 11
+  },
+  "normal_recovery_original_command_has_no_p1_override": "preserve exact original Make recipe; one Recovery package; other groups use originalp1",
+  "no_original_business_deadline_or_lease_permission_or_frozen_fixture_changes": true,
+  "no_old_race_tails_inherited": true,
+  "stop_first_failure_without_retry": true,
+  "timeout_or_close_unknown_scopes_retained_no_backfill_from_group_absence": true,
+  "owned_resources_audit_after_actual_shared_runs_not_claimed_here": true,
+  "controllers_stay_external_not_productdiff": true,
+  "current_head_review_static_not_native_qualification": true
+}

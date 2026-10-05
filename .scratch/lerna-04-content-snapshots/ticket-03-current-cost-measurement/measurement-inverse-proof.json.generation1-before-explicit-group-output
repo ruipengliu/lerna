@@ -1,0 +1,63 @@
+{
+  "STATIC_only_no_fmt_build_native": true,
+  "six_files": [
+    {
+      "file": "processing.go",
+      "original_path": "/tmp/lerna-worktrees/content-snapshots-03/domain/content/processing.go",
+      "original_sha256": "b5cafb6ac64f96d7ff4a9bf119aaea7f47e50a2f1d78d4a15471f9b24c4f476a",
+      "replacement_sha256": "da9c7f8c72c8abe19199ad4e6d46fc4832e9d45bf7495b5f7f9d96b04bb25cd5",
+      "inverse_full_original_byte_equal": true,
+      "operation_count": 7,
+      "scope": "only temporary measurement; original statements/SQL/returns/callorder restored byteexact by inverse"
+    },
+    {
+      "file": "content_source.go",
+      "original_path": "/tmp/lerna-worktrees/content-snapshots-03/adapters/content/decision/source.go",
+      "original_sha256": "f3342f0bfefabd1adeb59d8fa8566e4af70dfb64ea41185aa721386a04a3df27",
+      "replacement_sha256": "c265f1ae920b34998693657ac2a4e2f45f4f32ee93cc270b373f9b90ce0d976b",
+      "inverse_full_original_byte_equal": true,
+      "operation_count": 6,
+      "scope": "only temporary measurement; original statements/SQL/returns/callorder restored byteexact by inverse"
+    },
+    {
+      "file": "facts.go",
+      "original_path": "/tmp/lerna-worktrees/content-snapshots-03/adapters/postgres/content/facts.go",
+      "original_sha256": "e56785902e481eafdaa7904f44fabc44770d77f3d605da93906df827fe8a42d5",
+      "replacement_sha256": "32c8b7a390f46143b0f1d3d3c7ae29be1b1c362c5828e4af0f6e9b676f1bf6ce",
+      "inverse_full_original_byte_equal": true,
+      "operation_count": 10,
+      "scope": "only temporary measurement; original statements/SQL/returns/callorder restored byteexact by inverse"
+    },
+    {
+      "file": "policy.go",
+      "original_path": "/tmp/lerna-worktrees/content-snapshots-03/adapters/postgres/content/policy.go",
+      "original_sha256": "3cb31490a70e0141daa24b4766295ea1a57598194877eda6f19e58371a2d45d9",
+      "replacement_sha256": "cfd86e6efa9826ecb57f90c604470859a7a8bb6566b8096b2ed3f00a5673a201",
+      "inverse_full_original_byte_equal": true,
+      "operation_count": 2,
+      "scope": "only temporary measurement; original statements/SQL/returns/callorder restored byteexact by inverse"
+    },
+    {
+      "file": "pgstore_core.go",
+      "original_path": "/tmp/lerna-worktrees/content-snapshots-03/adapters/postgres/internal/pgstore/core.go",
+      "original_sha256": "6a7a494bcb33bb03e0b3844b33829f2bd4a3954326a3f05d4737e5ba75c19499",
+      "replacement_sha256": "f0c41856f5b89c54d1c6814095b6bbf1d82a553b9969441787f33710d5033c18",
+      "inverse_full_original_byte_equal": true,
+      "operation_count": 2,
+      "scope": "only temporary measurement; original statements/SQL/returns/callorder restored byteexact by inverse"
+    },
+    {
+      "file": "context_claim_diagnostics.go",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-single-read-identity-overlay/context_claim_diagnostics.go",
+      "original_sha256": "573ae56fe178fb5f1cfa8898575ab5ca141f22077383173b383635e4a7b743e9",
+      "replacement_sha256": "29b6dcd346f9f542efbdf30d862870543e273dfae1b55e6fbda69b24912508ff",
+      "inverse_full_original_byte_equal": true,
+      "operation_count": 11,
+      "scope": "only temporary measurement; original statements/SQL/returns/callorder restored byteexact by inverse"
+    }
+  ],
+  "four_original_base_replacements_byte_equal": true,
+  "memo_closure_not_mapped": true,
+  "memo_processing_original_reconstructed_exact_current_b5caf": true,
+  "NowSQL_exactQueryRowScan_only": "pgstore.Core.Within/pool/settings unchanged; SQL statement and Scan targets preserved"
+}

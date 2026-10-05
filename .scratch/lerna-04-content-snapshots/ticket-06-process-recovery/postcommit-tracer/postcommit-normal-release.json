@@ -1,0 +1,32 @@
+{
+  "status": "STOP_RELEASED",
+  "actual_postcommit_normal_only_pass": true,
+  "native_actual": {
+    "event": "native_completion_ack",
+    "operation": "postcommit-normal-control",
+    "pid": 3760631,
+    "pgid": 3760631,
+    "starttime": "15793710",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false,
+    "owned_raw_fsync_close_ack": true
+  },
+  "format_native_actual": {
+    "event": "native_completion_ack",
+    "operation": "postcommit-format",
+    "pid": 3760029,
+    "pgid": 3760029,
+    "starttime": "15790976",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false,
+    "owned_raw_fsync_close_ack": true
+  },
+  "formatted_source_pins_17_unchanged": true,
+  "manifest_sha256": "eb65852891a8959667fc378ccffe8ba10007de2a2ee7e7e536deaf18959ff72c",
+  "raw_log_sha256": "67752f33c4aeb80e40d9fbc02a07863bc35d07d20c74cfe68054404a68e141df",
+  "ledger_lines": 78,
+  "postcommit_fault_race_unexecuted": true,
+  "other_tracer_unexecuted": true
+}

@@ -1,0 +1,139 @@
+{
+  "actual_ONEformatter": {
+    "pid": 3719502,
+    "pgid": 3719502,
+    "starttime": "15612688",
+    "started_ns": 1791187888533402625,
+    "args": [
+      "gofmt",
+      "-w",
+      "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/context_world.go",
+      "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/context_claim_diagnostics.go",
+      "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/content_context_closure_test.go",
+      "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/content_context_material_reachable_test.go",
+      "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/content_context_test.go",
+      "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/processing.go",
+      "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/content_source.go",
+      "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/facts.go",
+      "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/policy.go",
+      "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/pgstore_core.go"
+    ]
+  },
+  "formatter_actual_exit": 0,
+  "formatter_actualWait_groupabsence": true,
+  "fullformatdiff": {
+    "path": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/all-actual-format-only.diff",
+    "sha256": "a9908fc475873308ef806f7a0f78482f77618f4d031a934b5800555850f390ea",
+    "bytes": 9989,
+    "lines": 271
+  },
+  "format_reversal_blocks": {
+    "path": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/actual-format-reversal-blocks.json",
+    "sha256": "dea0d91f675daf50ba2309a6906eda39b0e3073a4419f0e31def86423de1f4e6",
+    "bytes": 19004,
+    "device": 27,
+    "inode": 560556
+  },
+  "six_files": [
+    {
+      "file": "processing.go",
+      "original_path": "/tmp/lerna-worktrees/content-snapshots-03/domain/content/processing.go",
+      "original_sha256": "b5cafb6ac64f96d7ff4a9bf119aaea7f47e50a2f1d78d4a15471f9b24c4f476a",
+      "pinned_preformat_measurement_sha256": "da9c7f8c72c8abe19199ad4e6d46fc4832e9d45bf7495b5f7f9d96b04bb25cd5",
+      "current_formatted_measurement_sha256": "f38c89aea27aa74787e965d2e7c9ac0a2527a348306f4802675eb15940428841",
+      "actual_formatter_bytepatch_reverse_prefmt_exact": true,
+      "original_measurement_ledger_inverse_original_exact": true,
+      "original_current_byte_equal": true,
+      "semantic_proof_limit": "Two exact mechanical links plus actualknownONEgofmt provenance/full271linefmt diff; not an independentsemanticproof for arbitraryformatpatch. No normalization of original statement/token/semicolon strings."
+    },
+    {
+      "file": "content_source.go",
+      "original_path": "/tmp/lerna-worktrees/content-snapshots-03/adapters/content/decision/source.go",
+      "original_sha256": "f3342f0bfefabd1adeb59d8fa8566e4af70dfb64ea41185aa721386a04a3df27",
+      "pinned_preformat_measurement_sha256": "c265f1ae920b34998693657ac2a4e2f45f4f32ee93cc270b373f9b90ce0d976b",
+      "current_formatted_measurement_sha256": "3c6b586d1c3c9c74c2070ae7bfd1213fb84d8bd93488ad06c7375aa9328f2bcc",
+      "actual_formatter_bytepatch_reverse_prefmt_exact": true,
+      "original_measurement_ledger_inverse_original_exact": true,
+      "original_current_byte_equal": true,
+      "semantic_proof_limit": "Two exact mechanical links plus actualknownONEgofmt provenance/full271linefmt diff; not an independentsemanticproof for arbitraryformatpatch. No normalization of original statement/token/semicolon strings."
+    },
+    {
+      "file": "facts.go",
+      "original_path": "/tmp/lerna-worktrees/content-snapshots-03/adapters/postgres/content/facts.go",
+      "original_sha256": "e56785902e481eafdaa7904f44fabc44770d77f3d605da93906df827fe8a42d5",
+      "pinned_preformat_measurement_sha256": "32c8b7a390f46143b0f1d3d3c7ae29be1b1c362c5828e4af0f6e9b676f1bf6ce",
+      "current_formatted_measurement_sha256": "a02e9ece118e28b75342a306d510c4b6c1bea581197054782ca58be5e8f30109",
+      "actual_formatter_bytepatch_reverse_prefmt_exact": true,
+      "original_measurement_ledger_inverse_original_exact": true,
+      "original_current_byte_equal": true,
+      "semantic_proof_limit": "Two exact mechanical links plus actualknownONEgofmt provenance/full271linefmt diff; not an independentsemanticproof for arbitraryformatpatch. No normalization of original statement/token/semicolon strings."
+    },
+    {
+      "file": "policy.go",
+      "original_path": "/tmp/lerna-worktrees/content-snapshots-03/adapters/postgres/content/policy.go",
+      "original_sha256": "3cb31490a70e0141daa24b4766295ea1a57598194877eda6f19e58371a2d45d9",
+      "pinned_preformat_measurement_sha256": "cfd86e6efa9826ecb57f90c604470859a7a8bb6566b8096b2ed3f00a5673a201",
+      "current_formatted_measurement_sha256": "a437e536e9b8199ae031c94af58805f86ff9b50e19468b943a0c237d4a3ee4a2",
+      "actual_formatter_bytepatch_reverse_prefmt_exact": true,
+      "original_measurement_ledger_inverse_original_exact": true,
+      "original_current_byte_equal": true,
+      "semantic_proof_limit": "Two exact mechanical links plus actualknownONEgofmt provenance/full271linefmt diff; not an independentsemanticproof for arbitraryformatpatch. No normalization of original statement/token/semicolon strings."
+    },
+    {
+      "file": "pgstore_core.go",
+      "original_path": "/tmp/lerna-worktrees/content-snapshots-03/adapters/postgres/internal/pgstore/core.go",
+      "original_sha256": "6a7a494bcb33bb03e0b3844b33829f2bd4a3954326a3f05d4737e5ba75c19499",
+      "pinned_preformat_measurement_sha256": "f0c41856f5b89c54d1c6814095b6bbf1d82a553b9969441787f33710d5033c18",
+      "current_formatted_measurement_sha256": "740a2875af6ffb60f093b5c67cb3b971af4b9c6a42e7bd1ee7f19463e6bc4461",
+      "actual_formatter_bytepatch_reverse_prefmt_exact": true,
+      "original_measurement_ledger_inverse_original_exact": true,
+      "original_current_byte_equal": true,
+      "semantic_proof_limit": "Two exact mechanical links plus actualknownONEgofmt provenance/full271linefmt diff; not an independentsemanticproof for arbitraryformatpatch. No normalization of original statement/token/semicolon strings."
+    },
+    {
+      "file": "context_claim_diagnostics.go",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-single-read-identity-overlay/context_claim_diagnostics.go",
+      "original_sha256": "573ae56fe178fb5f1cfa8898575ab5ca141f22077383173b383635e4a7b743e9",
+      "pinned_preformat_measurement_sha256": "82607587a3d2f285a4ed8d24c642935c0aa7d5daa9bc6db89553e85950f7746d",
+      "current_formatted_measurement_sha256": "530751b81eb21f2d0acc153ba8d5c628ba7fd1b0f70d5dfc9994fadb33164309",
+      "actual_formatter_bytepatch_reverse_prefmt_exact": true,
+      "original_measurement_ledger_inverse_original_exact": true,
+      "original_current_byte_equal": true,
+      "semantic_proof_limit": "Two exact mechanical links plus actualknownONEgofmt provenance/full271linefmt diff; not an independentsemanticproof for arbitraryformatpatch. No normalization of original statement/token/semicolon strings."
+    }
+  ],
+  "four_other_original_inputs_byteequal_afterfmt": true,
+  "current331_product_source_unchanged": true,
+  "protected_sources": {
+    "domain/content/closure.go": {
+      "sha256": "97447424e7765960288b878b9b3b0b37496b2e863a21946b769c22e0322e5c3f",
+      "bytes": 7541
+    },
+    "domain/content/processing.go": {
+      "sha256": "b5cafb6ac64f96d7ff4a9bf119aaea7f47e50a2f1d78d4a15471f9b24c4f476a",
+      "bytes": 4286
+    },
+    "adapters/postgres/content/facts.go": {
+      "sha256": "e56785902e481eafdaa7904f44fabc44770d77f3d605da93906df827fe8a42d5",
+      "bytes": 10970
+    },
+    "adapters/postgres/content/policy.go": {
+      "sha256": "3cb31490a70e0141daa24b4766295ea1a57598194877eda6f19e58371a2d45d9",
+      "bytes": 4834
+    },
+    "adapters/postgres/internal/pgstore/core.go": {
+      "sha256": "6a7a494bcb33bb03e0b3844b33829f2bd4a3954326a3f05d4737e5ba75c19499",
+      "bytes": 6886
+    },
+    "adapters/content/decision/source.go": {
+      "sha256": "f3342f0bfefabd1adeb59d8fa8566e4af70dfb64ea41185aa721386a04a3df27",
+      "bytes": 5461
+    },
+    "components/decision_engine/worker.go": {
+      "sha256": "663d0c96eae83a4175c66f2ceaf3b87688d9a8199d3998e647eff4868eb0ff27",
+      "bytes": 31783
+    }
+  },
+  "no_original_semicolon_tokens_normalized": true,
+  "format_semicolon_changes": "only explicit separators inside added recorder loops/branches; original productstatements not broadly tokennormalized. Imports of added observerpaths reorder; diagnosticstruct columnalignment changes are formatterwhitespace. RootmustFULL actualfmt diff."
+}

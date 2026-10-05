@@ -1,0 +1,217 @@
+{
+  "records": [
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/postcommit-fault-release.json",
+      "archive": "postcommit-fault-release.json",
+      "bytes": 765,
+      "sha256": "d716f97ca858f092daa3f1d24a035fb93f8520be546b7db96afeb0c856be27a8"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/postcommit-format-only.diff",
+      "archive": "postcommit-format-only.diff",
+      "bytes": 10284,
+      "sha256": "75ebb81b7f01b9f8f3a94cfc78ae69c0c32fb9cb37ed14e04570530cc5ea0b1c"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/postcommit-format-outcome.json",
+      "archive": "postcommit-format-outcome.json",
+      "bytes": 235,
+      "sha256": "31085e9f3af8003d6878c9e9fe26cd4c22cb4629e0c6b458fbf78f384674cb4c"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/postcommit-format-prelaunch.json",
+      "archive": "postcommit-format-prelaunch.json",
+      "bytes": 308,
+      "sha256": "a0eb216bab52783aab3e12871d70a3f012bcabe1cbf7160f3b698045fdeb59a8"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/postcommit-format.log",
+      "archive": "postcommit-format.log",
+      "bytes": 202,
+      "sha256": "4d66870481e0bfd9210e4dd29252aa77662e655f48d0c65a749cb97abf0fceac"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/postcommit-formatted-manifest.json",
+      "archive": "postcommit-formatted-manifest.json",
+      "bytes": 3804,
+      "sha256": "eb65852891a8959667fc378ccffe8ba10007de2a2ee7e7e536deaf18959ff72c"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/postcommit-normal-control-outcome.json",
+      "archive": "postcommit-normal-control-outcome.json",
+      "bytes": 243,
+      "sha256": "f821bb1afa62211edba7b1f0379aeac8984c5e1e061974a7a77119ca28e8ccd1"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/postcommit-normal-control-prelaunch.json",
+      "archive": "postcommit-normal-control-prelaunch.json",
+      "bytes": 637,
+      "sha256": "4c56fed8abac6d4ce003c72831641ade08115e80792e1b19d993aecb28dee8f2"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/postcommit-normal-control.log",
+      "archive": "postcommit-normal-control.log",
+      "bytes": 759,
+      "sha256": "67752f33c4aeb80e40d9fbc02a07863bc35d07d20c74cfe68054404a68e141df"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/postcommit-normal-release.json",
+      "archive": "postcommit-normal-release.json",
+      "bytes": 967,
+      "sha256": "bdab80cdebb812ba4bc44551627ad10e4c3b482ca4b67346d74c383c0d39cc44"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/postcommit-paired-race-outcome.json",
+      "archive": "postcommit-paired-race-outcome.json",
+      "bytes": 240,
+      "sha256": "85fee954c821eeb52229d8433d305e36f4b861eca7d6a401904cef76a570be96"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/postcommit-paired-race-prelaunch.json",
+      "archive": "postcommit-paired-race-prelaunch.json",
+      "bytes": 630,
+      "sha256": "6c361e03ee2b0dd1a3b59b8a178a403795e76851db4134e220d57612cadc9f69"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/postcommit-paired-race.log",
+      "archive": "postcommit-paired-race.log",
+      "bytes": 1251,
+      "sha256": "5b6cdb4bb4bb3844bfe91644c5259b5eb596ab8c536dc9c0c185c7cc45df5ea5"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/postcommit-race-release.json",
+      "archive": "postcommit-race-release.json",
+      "bytes": 726,
+      "sha256": "dbe5301c31dabc039f269fc0a0744db9c77bb5f96908519714a8f793424b20d5"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/postcommit-sigkill-fault-outcome.json",
+      "archive": "postcommit-sigkill-fault-outcome.json",
+      "bytes": 242,
+      "sha256": "08b4fab290cdc7d0d6cfb60e29036b6fa4b1c9eeb028a19cc8d166cd2f25f30c"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/postcommit-sigkill-fault-prelaunch.json",
+      "archive": "postcommit-sigkill-fault-prelaunch.json",
+      "bytes": 667,
+      "sha256": "c4c4339622925f1aafd24076b7e325b2a9707c1f03aae34f3330c6a8b578d22d"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/postcommit-sigkill-fault.log",
+      "archive": "postcommit-sigkill-fault.log",
+      "bytes": 937,
+      "sha256": "8acb6162854753ce6ffcf92b6be67185b6028e948da16f813cd25552eeedab6a"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/postcommit-source-formatted/adapters/objectstore/local/store_linux.go",
+      "archive": "postcommit-source-formatted/adapters/objectstore/local/store_linux.go.txt",
+      "bytes": 10790,
+      "sha256": "ea678add4d594d5cdd8dbfa50d29684ba998686cf649c58c19313391da298fe0"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/postcommit-source-formatted/adapters/postgres/content/facts.go",
+      "archive": "postcommit-source-formatted/adapters/postgres/content/facts.go.txt",
+      "bytes": 10970,
+      "sha256": "e56785902e481eafdaa7904f44fabc44770d77f3d605da93906df827fe8a42d5"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/postcommit-source-formatted/adapters/postgres/content/migrations/0001_content.sql",
+      "archive": "postcommit-source-formatted/adapters/postgres/content/migrations/0001_content.sql",
+      "bytes": 3682,
+      "sha256": "00363b79dafb6eb1f373be9ef08e915fe23cc3db0fa55345e8ae6c051ce0c1ed"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/postcommit-source-formatted/adapters/postgres/content/migrations/0002_source_policies.sql",
+      "archive": "postcommit-source-formatted/adapters/postgres/content/migrations/0002_source_policies.sql",
+      "bytes": 2585,
+      "sha256": "99519565ff1146d7cfc468413b449538c6ba71335e86edc8fd447a3bbff922a8"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/postcommit-source-formatted/adapters/postgres/content/migrations/0003_body_cleanup.sql",
+      "archive": "postcommit-source-formatted/adapters/postgres/content/migrations/0003_body_cleanup.sql",
+      "bytes": 2497,
+      "sha256": "92739b464b8661e26befe092028f20802b586e42bf1578bd9811dcf240c5b58f"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/postcommit-source-formatted/adapters/postgres/content/store.go",
+      "archive": "postcommit-source-formatted/adapters/postgres/content/store.go.txt",
+      "bytes": 777,
+      "sha256": "e1da8da60b48d85c5d668ac88a0d33da3c824603b93bc01e5dd821def34fa69d"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/postcommit-source-formatted/conformance/component/content_orphan_test.go",
+      "archive": "postcommit-source-formatted/conformance/component/content_orphan_test.go.txt",
+      "bytes": 6789,
+      "sha256": "1732b6f28a4f83c698035b33e6da09b6dc8ae779a8f6895a4953b24086e2ba9f"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/postcommit-source-formatted/conformance/component/content_process_recovery_test.go",
+      "archive": "postcommit-source-formatted/conformance/component/content_process_recovery_test.go.txt",
+      "bytes": 30509,
+      "sha256": "938efc560014fe2d958293bdc82aab4c16da889bc1d05ac23b318ff84798f7e1"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/postcommit-source-formatted/conformance/component/content_publication_test.go",
+      "archive": "postcommit-source-formatted/conformance/component/content_publication_test.go.txt",
+      "bytes": 8105,
+      "sha256": "8f762b685f7df3470e13b2e3d7c1a89026bb8d90e3bf6b9efb44257e400430e9"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/postcommit-source-formatted/conformance/internal/contentfixture/process_borrow.go",
+      "archive": "postcommit-source-formatted/conformance/internal/contentfixture/process_borrow.go.txt",
+      "bytes": 4979,
+      "sha256": "ed46b35916b9e1577e4ca1e0ddaf411e3de9407b51cb6ed38f8425406766e972"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/postcommit-source-formatted/conformance/internal/contentfixture/world.go",
+      "archive": "postcommit-source-formatted/conformance/internal/contentfixture/world.go.txt",
+      "bytes": 6607,
+      "sha256": "3e38d89f988422eacfa1b6e22e25905cec1db246d418177e34eaf5758b6fc14d"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/postcommit-source-formatted/conformance/internal/testkit/process/child.go",
+      "archive": "postcommit-source-formatted/conformance/internal/testkit/process/child.go.txt",
+      "bytes": 10242,
+      "sha256": "edf4cdce78c92c0150d7075cecc02e742b84a55fd910b3cb25adec6079a3be25"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/postcommit-source-formatted/conformance/internal/testkit/process/pipes.go",
+      "archive": "postcommit-source-formatted/conformance/internal/testkit/process/pipes.go.txt",
+      "bytes": 3022,
+      "sha256": "93cc1bd3b23817e453817abc18988c39e4300fa252d74890531650f53096401d"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/postcommit-source-formatted/domain/content/identity.go",
+      "archive": "postcommit-source-formatted/domain/content/identity.go.txt",
+      "bytes": 1533,
+      "sha256": "e093a7918be9af0aeaec08c62b472de1141314812a71e3da386583237bbf60f0"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/postcommit-source-formatted/domain/content/lifecycle.go",
+      "archive": "postcommit-source-formatted/domain/content/lifecycle.go.txt",
+      "bytes": 23932,
+      "sha256": "0708c4eb51e28ab9b7a3210981e408ae2310511e9728ee2bf46ba87fc0802699"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/postcommit-source-formatted/domain/content/ports.go",
+      "archive": "postcommit-source-formatted/domain/content/ports.go.txt",
+      "bytes": 5618,
+      "sha256": "51066cd99f2c79e8a5fc3f7b336cb0706f161899361681c99f8e6feff5454f90"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/postcommit-source-formatted/domain/content/service.go",
+      "archive": "postcommit-source-formatted/domain/content/service.go.txt",
+      "bytes": 33783,
+      "sha256": "ffefc916fa8e08e2a39f2264a12090eb7aa2ecf020b7da63e270aff3e925a477"
+    }
+  ],
+  "ledger_interval": {
+    "source": "/tmp/lerna-04-ticket06-execution/owned-scopes.log",
+    "inclusive_lines": [
+      70,
+      97
+    ],
+    "sha256": "c5546844f1ce547247ae30c91be60f35b152576352ba2714ac85a4837c3ae6b5",
+    "archive": "exact-ledger-lines70-97.txt"
+  }
+}

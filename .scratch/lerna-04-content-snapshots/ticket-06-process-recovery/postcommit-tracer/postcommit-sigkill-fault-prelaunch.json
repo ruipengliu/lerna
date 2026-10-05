@@ -1,0 +1,26 @@
+{
+  "event": "native_start_ack",
+  "operation": "postcommit-sigkill-fault",
+  "pid": 3769041,
+  "pgid": 3769041,
+  "starttime": "15830448",
+  "root": "/tmp/lerna-04-ticket06-execution",
+  "argv": [
+    "bash",
+    "-c",
+    ". /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local GOFLAGS=-mod=readonly; exec \"$@\"",
+    "owned-locked",
+    "go",
+    "test",
+    "-tags=integration",
+    "-v",
+    "-count=1",
+    "-p=1",
+    "-mod=readonly",
+    "-timeout=120s",
+    "./conformance/component",
+    "-run",
+    "^TestContentSIGKILLAfterPublicationCommitRetainsOriginalPublishedFact$/^SIGKILL_after_publication_commit_before_reply$"
+  ],
+  "deadline_seconds": 120
+}

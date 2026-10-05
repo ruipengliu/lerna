@@ -1,0 +1,11 @@
+{
+  "event": "native_completion_ack",
+  "operation": "postcommit-paired-race",
+  "pid": 3770896,
+  "pgid": 3770896,
+  "starttime": "15838349",
+  "exit": 0,
+  "group_absent": true,
+  "timed_out": false,
+  "owned_raw_fsync_close_ack": true
+}

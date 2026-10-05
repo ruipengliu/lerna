@@ -1,0 +1,112 @@
+--- domain/content/processing.go
++++ /workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/processing.go
+@@ -11,6 +11,52 @@
+ 	v "github.com/ruipengliu/lerna/contract/v1_2"
+ 	"github.com/ruipengliu/lerna/runtime"
+ )
++
++// Temporary measurement-only overlay: these context labels select counters.
++// They contain no authority, ref/body cache, budget, deadline, or current fact.
++type ContentQualificationObserver interface {
++	BeginContentQualification(role, phase, stage string)
++	EndContentQualification(role, phase, stage string, elapsed time.Duration, err error)
++}
++type contentQualificationKey struct{}
++type contentQualificationLabels struct {
++	observer ContentQualificationObserver
++	role, phase string
++}
++func WithContentQualificationObserver(ctx context.Context, observer ContentQualificationObserver, role string) context.Context {
++	return context.WithValue(ctx, contentQualificationKey{}, contentQualificationLabels{observer: observer, role: role})
++}
++func WithContentQualificationRole(ctx context.Context, role string) context.Context {
++	if labels, ok := ctx.Value(contentQualificationKey{}).(contentQualificationLabels); ok {
++		labels.role = role
++		return context.WithValue(ctx, contentQualificationKey{}, labels)
++	}
++	return ctx
++}
++func WithContentQualificationPhase(ctx context.Context, phase string) context.Context {
++	if labels, ok := ctx.Value(contentQualificationKey{}).(contentQualificationLabels); ok {
++		labels.phase = phase
++		return context.WithValue(ctx, contentQualificationKey{}, labels)
++	}
++	return ctx
++}
++func ContentQualificationActive(ctx context.Context) bool {
++	labels, ok := ctx.Value(contentQualificationKey{}).(contentQualificationLabels)
++	return ok && labels.observer != nil && labels.phase != ""
++}
++func BeginContentQualification(ctx context.Context, stage string) time.Time {
++	if labels, ok := ctx.Value(contentQualificationKey{}).(contentQualificationLabels); ok && labels.observer != nil && labels.phase != "" {
++		labels.observer.BeginContentQualification(labels.role, labels.phase, stage)
++		return time.Now()
++	}
++	return time.Time{}
++}
++func EndContentQualification(ctx context.Context, stage string, start time.Time, err error) {
++	if start.IsZero() { return }
++	if labels, ok := ctx.Value(contentQualificationKey{}).(contentQualificationLabels); ok && labels.observer != nil && labels.phase != "" {
++		labels.observer.EndContentQualification(labels.role, labels.phase, stage, time.Since(start), err)
++	}
++}
+ 
+ var ErrProcessingLimit = errors.New("content processing exceeds remaining byte limit")
+ var ErrProcessingForbidden = errors.New("content processing forbidden")
+@@ -46,7 +92,11 @@
+ 	var objectKey string
+ 	var before time.Time
+ 	identities := make(closureIdentityMemo, 65)
+-	observe := func(ctx context.Context, tx runtime.Tx) error {
++	observationPhase := "pre"
++	observe := func(ctx context.Context, tx runtime.Tx) (observationErr error) {
++		ctx = WithContentQualificationPhase(ctx, observationPhase)
++		callbackStart := BeginContentQualification(ctx, "callback")
++		defer func() { EndContentQualification(ctx, "callback", callbackStart, observationErr) }()
+ 		// Each observation rebuilds its closure. No private records or permission
+ 		// from the first transaction are used as authority by the second one.
+ 		now, err := s.config.Store.Now(ctx, tx)
+@@ -115,24 +165,39 @@
+ 		out.RetainUntil = bound
+ 		return nil
+ 	}
++	preQualificationContext := WithContentQualificationPhase(ctx, "pre")
++	preWithinStart := BeginContentQualification(preQualificationContext, "within")
+ 	if err = s.config.Store.Within(ctx, owner(s.config.Owner), observe); err != nil {
+-		return ProcessingRead{}, err
+-	}
++		EndContentQualification(preQualificationContext, "within", preWithinStart, err)
++		return ProcessingRead{}, err
++	}
++	EndContentQualification(preQualificationContext, "within", preWithinStart, nil)
+ 	bounded, cancel := context.WithDeadline(ctx, before)
+ 	defer cancel()
++	objectsStart := BeginContentQualification(ctx, "objects.read")
+ 	body, err := s.config.Objects.Read(bounded, objectKey, ref.Hash, length)
++	EndContentQualification(ctx, "objects.read", objectsStart, err)
+ 	if err != nil {
+ 		return ProcessingRead{}, err
+ 	}
++	integrityStart := BeginContentQualification(ctx, "integrity")
+ 	if err = bounded.Err(); err != nil {
++		EndContentQualification(ctx, "integrity", integrityStart, err)
+ 		return ProcessingRead{}, err
+ 	}
+ 	if int64(len(body)) != length || processingHash(body) != ref.Hash {
++		EndContentQualification(ctx, "integrity", integrityStart, ErrObjectIntegrity)
+ 		return ProcessingRead{}, ErrObjectIntegrity
+ 	}
++	EndContentQualification(ctx, "integrity", integrityStart, nil)
++	observationPhase = "post"
++	postQualificationContext := WithContentQualificationPhase(ctx, "post")
++	postWithinStart := BeginContentQualification(postQualificationContext, "within")
+ 	if err = s.config.Store.Within(ctx, owner(s.config.Owner), observe); err != nil {
+-		return ProcessingRead{}, err
+-	}
++		EndContentQualification(postQualificationContext, "within", postWithinStart, err)
++		return ProcessingRead{}, err
++	}
++	EndContentQualification(postQualificationContext, "within", postWithinStart, nil)
+ 	out.Ref = ref
+ 	out.Bytes = body
+ 	return out, nil

@@ -1,0 +1,30 @@
+--- adapters/postgres/internal/pgstore/core.go
++++ /workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/pgstore_core.go
+@@ -165,13 +165,27 @@
+ 	}
+ 	return nil
+ }
++// Temporary measurement-only observer for the original Now SQL call.
++type NowSQLObserver interface {
++	BeginNowSQL() time.Time
++	EndNowSQL(time.Time, error)
++}
++type nowSQLObserverKey struct{}
++func WithNowSQLObserver(ctx context.Context, observer NowSQLObserver) context.Context {
++	return context.WithValue(ctx, nowSQLObserverKey{}, observer)
++}
++
+ func (s *Core) Now(ctx context.Context, token runtime.Tx) (time.Time, error) {
+ 	tx, err := s.LocalSQL(ctx, token)
+ 	if err != nil {
+ 		return time.Time{}, err
+ 	}
+ 	var now time.Time
++	observer, observed := ctx.Value(nowSQLObserverKey{}).(NowSQLObserver)
++	var nowSQLStart time.Time
++	if observed { nowSQLStart = observer.BeginNowSQL() }
+ 	err = tx.QueryRowContext(ctx, `SELECT clock_timestamp()`).Scan(&now)
++	if observed { observer.EndNowSQL(nowSQLStart, err) }
+ 	return now, err
+ }
+ 

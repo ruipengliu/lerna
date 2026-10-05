@@ -1,0 +1,13 @@
+--- policy.go.before-format
++++ policy.go.actual-formatted
+@@ -56,7 +56,9 @@
+ 	// projection. Keep clock_timestamp outside LockRows; transaction or statement
+ 	// timestamps, and independent clock CTEs, can precede the actual lock wait.
+ 	policyDecodeStart := contentdomain.BeginContentQualification(ctx, "policy.decode_actions")
+-	defer func() { contentdomain.EndContentQualification(ctx, "policy.decode_actions", policyDecodeStart, policyErr) }()
++	defer func() {
++		contentdomain.EndContentQualification(ctx, "policy.decode_actions", policyDecodeStart, policyErr)
++	}()
+ 	var policy contentdomain.FixturePolicy
+ 	if err = json.Unmarshal(body, &policy); err != nil {
+ 		return nil, err

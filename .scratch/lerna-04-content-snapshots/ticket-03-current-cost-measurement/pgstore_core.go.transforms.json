@@ -1,0 +1,12 @@
+[
+  {
+    "old": "func (s *Core) Now(",
+    "new": "// Temporary measurement-only observer for the original Now SQL call.\ntype NowSQLObserver interface {\n\tBeginNowSQL() time.Time\n\tEndNowSQL(time.Time, error)\n}\ntype nowSQLObserverKey struct{}\nfunc WithNowSQLObserver(ctx context.Context, observer NowSQLObserver) context.Context {\n\treturn context.WithValue(ctx, nowSQLObserverKey{}, observer)\n}\n\nfunc (s *Core) Now(",
+    "count": 1
+  },
+  {
+    "old": "\terr = tx.QueryRowContext(ctx, `SELECT clock_timestamp()`).Scan(&now)\n",
+    "new": "\tobserver, observed := ctx.Value(nowSQLObserverKey{}).(NowSQLObserver)\n\tvar nowSQLStart time.Time\n\tif observed { nowSQLStart = observer.BeginNowSQL() }\n\terr = tx.QueryRowContext(ctx, `SELECT clock_timestamp()`).Scan(&now)\n\tif observed { observer.EndNowSQL(nowSQLStart, err) }\n",
+    "count": 1
+  }
+]

@@ -1,0 +1,765 @@
+{
+  "context_world.go": [],
+  "context_claim_diagnostics.go": [
+    {
+      "tag": "insert",
+      "preformat_start": 982,
+      "preformat_end": 982,
+      "postformat_start": 982,
+      "postformat_end": 1016,
+      "old_hex": "",
+      "new_hex": "20202020202020202020202020202020202020202020202020202020202020202020"
+    },
+    {
+      "tag": "insert",
+      "preformat_start": 1005,
+      "preformat_end": 1005,
+      "postformat_start": 1039,
+      "postformat_end": 1073,
+      "old_hex": "",
+      "new_hex": "20202020202020202020202020202020202020202020202020202020202020202020"
+    },
+    {
+      "tag": "insert",
+      "preformat_start": 1019,
+      "preformat_end": 1019,
+      "postformat_start": 1087,
+      "postformat_end": 1121,
+      "old_hex": "",
+      "new_hex": "20202020202020202020202020202020202020202020202020202020202020202020"
+    },
+    {
+      "tag": "insert",
+      "preformat_start": 1050,
+      "preformat_end": 1050,
+      "postformat_start": 1152,
+      "postformat_end": 1186,
+      "old_hex": "",
+      "new_hex": "20202020202020202020202020202020202020202020202020202020202020202020"
+    },
+    {
+      "tag": "insert",
+      "preformat_start": 1090,
+      "preformat_end": 1090,
+      "postformat_start": 1226,
+      "postformat_end": 1260,
+      "old_hex": "",
+      "new_hex": "20202020202020202020202020202020202020202020202020202020202020202020"
+    },
+    {
+      "tag": "insert",
+      "preformat_start": 1125,
+      "preformat_end": 1125,
+      "postformat_start": 1295,
+      "postformat_end": 1329,
+      "old_hex": "",
+      "new_hex": "20202020202020202020202020202020202020202020202020202020202020202020"
+    },
+    {
+      "tag": "insert",
+      "preformat_start": 1141,
+      "preformat_end": 1141,
+      "postformat_start": 1345,
+      "postformat_end": 1379,
+      "old_hex": "",
+      "new_hex": "20202020202020202020202020202020202020202020202020202020202020202020"
+    },
+    {
+      "tag": "insert",
+      "preformat_start": 1153,
+      "preformat_end": 1153,
+      "postformat_start": 1391,
+      "postformat_end": 1425,
+      "old_hex": "",
+      "new_hex": "20202020202020202020202020202020202020202020202020202020202020202020"
+    },
+    {
+      "tag": "insert",
+      "preformat_start": 1188,
+      "preformat_end": 1188,
+      "postformat_start": 1460,
+      "postformat_end": 1494,
+      "old_hex": "",
+      "new_hex": "20202020202020202020202020202020202020202020202020202020202020202020"
+    },
+    {
+      "tag": "insert",
+      "preformat_start": 1238,
+      "preformat_end": 1238,
+      "postformat_start": 1544,
+      "postformat_end": 1578,
+      "old_hex": "",
+      "new_hex": "20202020202020202020202020202020202020202020202020202020202020202020"
+    },
+    {
+      "tag": "insert",
+      "preformat_start": 1292,
+      "preformat_end": 1292,
+      "postformat_start": 1632,
+      "postformat_end": 1659,
+      "old_hex": "",
+      "new_hex": "202020202020202020202020202020202020202020202020202020"
+    },
+    {
+      "tag": "insert",
+      "preformat_start": 1313,
+      "preformat_end": 1313,
+      "postformat_start": 1680,
+      "postformat_end": 1711,
+      "old_hex": "",
+      "new_hex": "20202020202020202020202020202020202020202020202020202020202020"
+    },
+    {
+      "tag": "insert",
+      "preformat_start": 1421,
+      "preformat_end": 1421,
+      "postformat_start": 1819,
+      "postformat_end": 1841,
+      "old_hex": "",
+      "new_hex": "20202020202020202020202020202020202020202020"
+    },
+    {
+      "tag": "insert",
+      "preformat_start": 1450,
+      "preformat_end": 1450,
+      "postformat_start": 1870,
+      "postformat_end": 1890,
+      "old_hex": "",
+      "new_hex": "2020202020202020202020202020202020202020"
+    },
+    {
+      "tag": "insert",
+      "preformat_start": 14173,
+      "preformat_end": 14173,
+      "postformat_start": 14613,
+      "postformat_end": 14637,
+      "old_hex": "",
+      "new_hex": "202020202020202020202020202020202020202020202020"
+    },
+    {
+      "tag": "insert",
+      "preformat_start": 14199,
+      "preformat_end": 14199,
+      "postformat_start": 14663,
+      "postformat_end": 14687,
+      "old_hex": "",
+      "new_hex": "202020202020202020202020202020202020202020202020"
+    },
+    {
+      "tag": "insert",
+      "preformat_start": 14207,
+      "preformat_end": 14207,
+      "postformat_start": 14695,
+      "postformat_end": 14696,
+      "old_hex": "",
+      "new_hex": "0a"
+    },
+    {
+      "tag": "insert",
+      "preformat_start": 14661,
+      "preformat_end": 14661,
+      "postformat_start": 15150,
+      "postformat_end": 15151,
+      "old_hex": "",
+      "new_hex": "0a"
+    },
+    {
+      "tag": "replace",
+      "preformat_start": 14792,
+      "preformat_end": 14793,
+      "postformat_start": 15282,
+      "postformat_end": 15285,
+      "old_hex": "20",
+      "new_hex": "0a0909"
+    },
+    {
+      "tag": "replace",
+      "preformat_start": 14807,
+      "preformat_end": 14808,
+      "postformat_start": 15299,
+      "postformat_end": 15303,
+      "old_hex": "20",
+      "new_hex": "0a090909"
+    },
+    {
+      "tag": "replace",
+      "preformat_start": 14813,
+      "preformat_end": 14815,
+      "postformat_start": 15308,
+      "postformat_end": 15312,
+      "old_hex": "3b20",
+      "new_hex": "0a090909"
+    },
+    {
+      "tag": "replace",
+      "preformat_start": 14820,
+      "preformat_end": 14821,
+      "postformat_start": 15317,
+      "postformat_end": 15320,
+      "old_hex": "20",
+      "new_hex": "0a0909"
+    },
+    {
+      "tag": "replace",
+      "preformat_start": 14822,
+      "preformat_end": 14823,
+      "postformat_start": 15321,
+      "postformat_end": 15323,
+      "old_hex": "20",
+      "new_hex": "0a09"
+    },
+    {
+      "tag": "replace",
+      "preformat_start": 14865,
+      "preformat_end": 14866,
+      "postformat_start": 15365,
+      "postformat_end": 15368,
+      "old_hex": "20",
+      "new_hex": "0a0909"
+    },
+    {
+      "tag": "replace",
+      "preformat_start": 14881,
+      "preformat_end": 14882,
+      "postformat_start": 15383,
+      "postformat_end": 15387,
+      "old_hex": "20",
+      "new_hex": "0a090909"
+    },
+    {
+      "tag": "replace",
+      "preformat_start": 14887,
+      "preformat_end": 14889,
+      "postformat_start": 15392,
+      "postformat_end": 15396,
+      "old_hex": "3b20",
+      "new_hex": "0a090909"
+    },
+    {
+      "tag": "replace",
+      "preformat_start": 14894,
+      "preformat_end": 14895,
+      "postformat_start": 15401,
+      "postformat_end": 15404,
+      "old_hex": "20",
+      "new_hex": "0a0909"
+    },
+    {
+      "tag": "replace",
+      "preformat_start": 14896,
+      "preformat_end": 14897,
+      "postformat_start": 15405,
+      "postformat_end": 15407,
+      "old_hex": "20",
+      "new_hex": "0a09"
+    },
+    {
+      "tag": "replace",
+      "preformat_start": 14939,
+      "preformat_end": 14940,
+      "postformat_start": 15449,
+      "postformat_end": 15452,
+      "old_hex": "20",
+      "new_hex": "0a0909"
+    },
+    {
+      "tag": "replace",
+      "preformat_start": 14955,
+      "preformat_end": 14956,
+      "postformat_start": 15467,
+      "postformat_end": 15471,
+      "old_hex": "20",
+      "new_hex": "0a090909"
+    },
+    {
+      "tag": "replace",
+      "preformat_start": 14961,
+      "preformat_end": 14963,
+      "postformat_start": 15476,
+      "postformat_end": 15480,
+      "old_hex": "3b20",
+      "new_hex": "0a090909"
+    },
+    {
+      "tag": "replace",
+      "preformat_start": 14968,
+      "preformat_end": 14969,
+      "postformat_start": 15485,
+      "postformat_end": 15488,
+      "old_hex": "20",
+      "new_hex": "0a0909"
+    },
+    {
+      "tag": "replace",
+      "preformat_start": 14970,
+      "preformat_end": 14971,
+      "postformat_start": 15489,
+      "postformat_end": 15491,
+      "old_hex": "20",
+      "new_hex": "0a09"
+    },
+    {
+      "tag": "replace",
+      "preformat_start": 15094,
+      "preformat_end": 15095,
+      "postformat_start": 15614,
+      "postformat_end": 15617,
+      "old_hex": "20",
+      "new_hex": "0a0909"
+    },
+    {
+      "tag": "replace",
+      "preformat_start": 15101,
+      "preformat_end": 15102,
+      "postformat_start": 15623,
+      "postformat_end": 15625,
+      "old_hex": "20",
+      "new_hex": "0a09"
+    },
+    {
+      "tag": "replace",
+      "preformat_start": 15241,
+      "preformat_end": 15242,
+      "postformat_start": 15764,
+      "postformat_end": 15767,
+      "old_hex": "20",
+      "new_hex": "0a0909"
+    },
+    {
+      "tag": "replace",
+      "preformat_start": 15266,
+      "preformat_end": 15268,
+      "postformat_start": 15791,
+      "postformat_end": 15794,
+      "old_hex": "3b20",
+      "new_hex": "0a0909"
+    },
+    {
+      "tag": "replace",
+      "preformat_start": 15294,
+      "preformat_end": 15295,
+      "postformat_start": 15820,
+      "postformat_end": 15822,
+      "old_hex": "20",
+      "new_hex": "0a09"
+    },
+    {
+      "tag": "replace",
+      "preformat_start": 15303,
+      "preformat_end": 15304,
+      "postformat_start": 15830,
+      "postformat_end": 15833,
+      "old_hex": "20",
+      "new_hex": "0a0909"
+    },
+    {
+      "tag": "replace",
+      "preformat_start": 15340,
+      "preformat_end": 15341,
+      "postformat_start": 15869,
+      "postformat_end": 15871,
+      "old_hex": "20",
+      "new_hex": "0a09"
+    },
+    {
+      "tag": "replace",
+      "preformat_start": 15559,
+      "preformat_end": 15560,
+      "postformat_start": 16089,
+      "postformat_end": 16092,
+      "old_hex": "20",
+      "new_hex": "0a0909"
+    },
+    {
+      "tag": "replace",
+      "preformat_start": 15566,
+      "preformat_end": 15567,
+      "postformat_start": 16098,
+      "postformat_end": 16100,
+      "old_hex": "20",
+      "new_hex": "0a09"
+    },
+    {
+      "tag": "replace",
+      "preformat_start": 15706,
+      "preformat_end": 15707,
+      "postformat_start": 16239,
+      "postformat_end": 16242,
+      "old_hex": "20",
+      "new_hex": "0a0909"
+    },
+    {
+      "tag": "replace",
+      "preformat_start": 15731,
+      "preformat_end": 15733,
+      "postformat_start": 16266,
+      "postformat_end": 16269,
+      "old_hex": "3b20",
+      "new_hex": "0a0909"
+    },
+    {
+      "tag": "replace",
+      "preformat_start": 15759,
+      "preformat_end": 15760,
+      "postformat_start": 16295,
+      "postformat_end": 16297,
+      "old_hex": "20",
+      "new_hex": "0a09"
+    },
+    {
+      "tag": "replace",
+      "preformat_start": 15861,
+      "preformat_end": 15862,
+      "postformat_start": 16398,
+      "postformat_end": 16402,
+      "old_hex": "20",
+      "new_hex": "0a090909"
+    },
+    {
+      "tag": "replace",
+      "preformat_start": 15877,
+      "preformat_end": 15878,
+      "postformat_start": 16417,
+      "postformat_end": 16420,
+      "old_hex": "20",
+      "new_hex": "0a0909"
+    },
+    {
+      "tag": "replace",
+      "preformat_start": 15897,
+      "preformat_end": 15898,
+      "postformat_start": 16439,
+      "postformat_end": 16443,
+      "old_hex": "20",
+      "new_hex": "0a090909"
+    },
+    {
+      "tag": "replace",
+      "preformat_start": 15914,
+      "preformat_end": 15916,
+      "postformat_start": 16459,
+      "postformat_end": 16463,
+      "old_hex": "3b20",
+      "new_hex": "0a090909"
+    },
+    {
+      "tag": "replace",
+      "preformat_start": 15939,
+      "preformat_end": 15940,
+      "postformat_start": 16486,
+      "postformat_end": 16491,
+      "old_hex": "20",
+      "new_hex": "0a09090909"
+    },
+    {
+      "tag": "replace",
+      "preformat_start": 15970,
+      "preformat_end": 15971,
+      "postformat_start": 16521,
+      "postformat_end": 16525,
+      "old_hex": "20",
+      "new_hex": "0a090909"
+    },
+    {
+      "tag": "replace",
+      "preformat_start": 15972,
+      "preformat_end": 15973,
+      "postformat_start": 16526,
+      "postformat_end": 16529,
+      "old_hex": "20",
+      "new_hex": "0a0909"
+    },
+    {
+      "tag": "replace",
+      "preformat_start": 16689,
+      "preformat_end": 16690,
+      "postformat_start": 17245,
+      "postformat_end": 17251,
+      "old_hex": "20",
+      "new_hex": "0a0909090909"
+    },
+    {
+      "tag": "replace",
+      "preformat_start": 16698,
+      "preformat_end": 16699,
+      "postformat_start": 17259,
+      "postformat_end": 17264,
+      "old_hex": "20",
+      "new_hex": "0a09090909"
+    },
+    {
+      "tag": "replace",
+      "preformat_start": 16747,
+      "preformat_end": 16748,
+      "postformat_start": 17312,
+      "postformat_end": 17318,
+      "old_hex": "20",
+      "new_hex": "0a0909090909"
+    },
+    {
+      "tag": "replace",
+      "preformat_start": 16761,
+      "preformat_end": 16762,
+      "postformat_start": 17331,
+      "postformat_end": 17336,
+      "old_hex": "20",
+      "new_hex": "0a09090909"
+    },
+    {
+      "tag": "replace",
+      "preformat_start": 17084,
+      "preformat_end": 17085,
+      "postformat_start": 17658,
+      "postformat_end": 17665,
+      "old_hex": "20",
+      "new_hex": "0a090909090909"
+    },
+    {
+      "tag": "replace",
+      "preformat_start": 17107,
+      "preformat_end": 17108,
+      "postformat_start": 17687,
+      "postformat_end": 17693,
+      "old_hex": "20",
+      "new_hex": "0a0909090909"
+    },
+    {
+      "tag": "replace",
+      "preformat_start": 17116,
+      "preformat_end": 17117,
+      "postformat_start": 17701,
+      "postformat_end": 17708,
+      "old_hex": "20",
+      "new_hex": "0a090909090909"
+    },
+    {
+      "tag": "replace",
+      "preformat_start": 17141,
+      "preformat_end": 17142,
+      "postformat_start": 17732,
+      "postformat_end": 17738,
+      "old_hex": "20",
+      "new_hex": "0a0909090909"
+    }
+  ],
+  "content_context_closure_test.go": [],
+  "content_context_material_reachable_test.go": [],
+  "content_context_test.go": [],
+  "processing.go": [
+    {
+      "tag": "insert",
+      "preformat_start": 624,
+      "preformat_end": 624,
+      "postformat_start": 624,
+      "postformat_end": 627,
+      "old_hex": "",
+      "new_hex": "202020"
+    },
+    {
+      "tag": "insert",
+      "preformat_start": 674,
+      "preformat_end": 674,
+      "postformat_start": 677,
+      "postformat_end": 678,
+      "old_hex": "",
+      "new_hex": "0a"
+    },
+    {
+      "tag": "replace",
+      "preformat_start": 2145,
+      "preformat_end": 2146,
+      "postformat_start": 2149,
+      "postformat_end": 2152,
+      "old_hex": "20",
+      "new_hex": "0a0909"
+    },
+    {
+      "tag": "replace",
+      "preformat_start": 2152,
+      "preformat_end": 2153,
+      "postformat_start": 2158,
+      "postformat_end": 2160,
+      "old_hex": "20",
+      "new_hex": "0a09"
+    }
+  ],
+  "content_source.go": [
+    {
+      "tag": "insert",
+      "preformat_start": 236,
+      "preformat_end": 236,
+      "postformat_start": 236,
+      "postformat_end": 296,
+      "old_hex": "",
+      "new_hex": "6e74656e74646f6d61696e20226769746875622e636f6d2f72756970656e676c69752f6c65726e612f646f6d61696e2f636f6e74656e74220a09636f"
+    },
+    {
+      "tag": "delete",
+      "preformat_start": 290,
+      "preformat_end": 350,
+      "postformat_start": 350,
+      "postformat_end": 350,
+      "old_hex": "74220a09636f6e74656e74646f6d61696e20226769746875622e636f6d2f72756970656e676c69752f6c65726e612f646f6d61696e2f636f6e74656e",
+      "new_hex": ""
+    }
+  ],
+  "facts.go": [
+    {
+      "tag": "insert",
+      "preformat_start": 78,
+      "preformat_end": 78,
+      "postformat_start": 78,
+      "postformat_end": 144,
+      "old_hex": "",
+      "new_hex": "220a09226769746875622e636f6d2f72756970656e676c69752f6c65726e612f61646170746572732f706f7374677265732f696e7465726e616c2f706773746f7265"
+    },
+    {
+      "tag": "delete",
+      "preformat_start": 251,
+      "preformat_end": 317,
+      "postformat_start": 317,
+      "postformat_end": 317,
+      "old_hex": "65220a09226769746875622e636f6d2f72756970656e676c69752f6c65726e612f61646170746572732f706f7374677265732f696e7465726e616c2f706773746f72",
+      "new_hex": ""
+    },
+    {
+      "tag": "insert",
+      "preformat_start": 721,
+      "preformat_end": 721,
+      "postformat_start": 721,
+      "postformat_end": 722,
+      "old_hex": "",
+      "new_hex": "0a"
+    },
+    {
+      "tag": "delete",
+      "preformat_start": 837,
+      "preformat_end": 838,
+      "postformat_start": 838,
+      "postformat_end": 838,
+      "old_hex": "20",
+      "new_hex": ""
+    },
+    {
+      "tag": "insert",
+      "preformat_start": 861,
+      "preformat_end": 861,
+      "postformat_start": 861,
+      "postformat_end": 862,
+      "old_hex": "",
+      "new_hex": "0a"
+    },
+    {
+      "tag": "replace",
+      "preformat_start": 918,
+      "preformat_end": 919,
+      "postformat_start": 919,
+      "postformat_end": 921,
+      "old_hex": "20",
+      "new_hex": "0a09"
+    },
+    {
+      "tag": "replace",
+      "preformat_start": 971,
+      "preformat_end": 972,
+      "postformat_start": 973,
+      "postformat_end": 974,
+      "old_hex": "20",
+      "new_hex": "0a"
+    },
+    {
+      "tag": "replace",
+      "preformat_start": 1044,
+      "preformat_end": 1045,
+      "postformat_start": 1046,
+      "postformat_end": 1048,
+      "old_hex": "20",
+      "new_hex": "0a09"
+    },
+    {
+      "tag": "replace",
+      "preformat_start": 1100,
+      "preformat_end": 1101,
+      "postformat_start": 1103,
+      "postformat_end": 1104,
+      "old_hex": "20",
+      "new_hex": "0a"
+    }
+  ],
+  "policy.go": [
+    {
+      "tag": "replace",
+      "preformat_start": 2461,
+      "preformat_end": 2462,
+      "postformat_start": 2461,
+      "postformat_end": 2464,
+      "old_hex": "20",
+      "new_hex": "0a0909"
+    },
+    {
+      "tag": "replace",
+      "preformat_start": 2559,
+      "preformat_end": 2560,
+      "postformat_start": 2561,
+      "postformat_end": 2563,
+      "old_hex": "20",
+      "new_hex": "0a09"
+    }
+  ],
+  "pgstore_core.go": [
+    {
+      "tag": "insert",
+      "preformat_start": 5701,
+      "preformat_end": 5701,
+      "postformat_start": 5701,
+      "postformat_end": 5702,
+      "old_hex": "",
+      "new_hex": "0a"
+    },
+    {
+      "tag": "insert",
+      "preformat_start": 5890,
+      "preformat_end": 5890,
+      "postformat_start": 5891,
+      "postformat_end": 5892,
+      "old_hex": "",
+      "new_hex": "0a"
+    },
+    {
+      "tag": "replace",
+      "preformat_start": 6335,
+      "preformat_end": 6336,
+      "postformat_start": 6337,
+      "postformat_end": 6340,
+      "old_hex": "20",
+      "new_hex": "0a0909"
+    },
+    {
+      "tag": "replace",
+      "preformat_start": 6372,
+      "preformat_end": 6373,
+      "postformat_start": 6376,
+      "postformat_end": 6378,
+      "old_hex": "20",
+      "new_hex": "0a09"
+    },
+    {
+      "tag": "replace",
+      "preformat_start": 6459,
+      "preformat_end": 6460,
+      "postformat_start": 6464,
+      "postformat_end": 6467,
+      "old_hex": "20",
+      "new_hex": "0a0909"
+    },
+    {
+      "tag": "replace",
+      "preformat_start": 6496,
+      "preformat_end": 6497,
+      "postformat_start": 6503,
+      "postformat_end": 6505,
+      "old_hex": "20",
+      "new_hex": "0a09"
+    }
+  ]
+}

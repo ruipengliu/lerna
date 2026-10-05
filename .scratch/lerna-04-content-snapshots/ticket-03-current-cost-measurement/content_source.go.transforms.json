@@ -1,0 +1,32 @@
+[
+  {
+    "old": "\tcompiler \"github.com/ruipengliu/lerna/domain/task/context\"",
+    "new": "\tcompiler \"github.com/ruipengliu/lerna/domain/task/context\"\n\tcontentdomain \"github.com/ruipengliu/lerna/domain/content\"",
+    "count": 1
+  },
+  {
+    "old": "a.read(ctx, binding.Bundle.Shell.Ref, remaining)",
+    "new": "a.read(contentdomain.WithContentQualificationRole(ctx, \"shell\"), binding.Bundle.Shell.Ref, remaining)",
+    "count": 1
+  },
+  {
+    "old": "a.read(ctx, binding.Bundle.Mandatory.Ref, 262144)",
+    "new": "a.read(contentdomain.WithContentQualificationRole(ctx, \"mandatory\"), binding.Bundle.Mandatory.Ref, 262144)",
+    "count": 1
+  },
+  {
+    "old": "a.read(ctx, binding.Bundle.Lock.Ref, remaining)",
+    "new": "a.read(contentdomain.WithContentQualificationRole(ctx, \"lock\"), binding.Bundle.Lock.Ref, remaining)",
+    "count": 1
+  },
+  {
+    "old": "a.read(ctx, binding.Bundle.Manifest.Ref, remaining-int64(len(lockRaw)))",
+    "new": "a.read(contentdomain.WithContentQualificationRole(ctx, \"manifest\"), binding.Bundle.Manifest.Ref, remaining-int64(len(lockRaw)))",
+    "count": 1
+  },
+  {
+    "old": "a.read(ctx, exact, remaining)",
+    "new": "a.read(contentdomain.WithContentQualificationRole(ctx, \"material\"), exact, remaining)",
+    "count": 1
+  }
+]

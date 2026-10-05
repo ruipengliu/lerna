@@ -1,0 +1,65 @@
+OWNED_GO_CHILD_COMPLETION_ACK {"actual_wait_confirmed": true, "event": "owned_go_child_completion_ack", "exit": 0, "operation": "go-child-0001", "original_pid_generation_absent": true, "original_whole_deadline_monotonic": 159927.303240098, "parent_operation": "partition-shared-normal", "pgid": 3773218, "pid": 3773221, "shared_group_absence_checked_only_after_whole_wait": true, "starttime": "15848234", "timed_out": false}
+OWNED_GO_CHILD_COMPLETION_ACK {"actual_wait_confirmed": true, "event": "owned_go_child_completion_ack", "exit": 0, "operation": "go-child-0002", "original_pid_generation_absent": true, "original_whole_deadline_monotonic": 159927.303240098, "parent_operation": "partition-shared-normal", "pgid": 3773218, "pid": 3773227, "shared_group_absence_checked_only_after_whole_wait": true, "starttime": "15848240", "timed_out": false}
+psql --version
+psql (PostgreSQL) 17.11 (Debian 17.11-0+deb13u1)
+cd conformance/fixtures/durable-work/pg-v1 && sha256sum -c SHA256SUMS
+0001_admission.sql: OK
+commands.json: OK
+database.sql: OK
+writer-observation.json: OK
+writer-revision.txt: OK
+cd conformance/fixtures/durable-work/sqlite-v1 && sha256sum -c SHA256SUMS
+0001_admission.sql: OK
+commands.json: OK
+database.sqlite: OK
+writer-observation.json: OK
+writer-revision.txt: OK
+cd conformance/fixtures/durable-work/pg-v2 && sha256sum -c SHA256SUMS
+0001_admission.sql: OK
+0002_claims.sql: OK
+README.md: OK
+database.sql: OK
+migrations.json: OK
+writer-observation.json: OK
+writer-revision.txt: OK
+writer-schema.txt: OK
+../v2-writer.go.txt: OK
+cd conformance/fixtures/durable-work/sqlite-v2 && sha256sum -c SHA256SUMS
+0001_admission.sql: OK
+0002_claims.sql: OK
+README.md: OK
+database.sqlite: OK
+migrations.json: OK
+writer-observation.json: OK
+writer-revision.txt: OK
+../v2-writer.go.txt: OK
+go test -count=1 -tags=integration -timeout=120s ./conformance/recovery/...
+ok  	github.com/ruipengliu/lerna/conformance/recovery	34.568s
+OWNED_GO_CHILD_COMPLETION_ACK {"actual_wait_confirmed": true, "event": "owned_go_child_completion_ack", "exit": 0, "operation": "go-child-0003", "original_pid_generation_absent": true, "original_whole_deadline_monotonic": 159927.303240098, "parent_operation": "partition-shared-normal", "pgid": 3773218, "pid": 3773259, "shared_group_absence_checked_only_after_whole_wait": true, "starttime": "15848249", "timed_out": false}
+bash scripts/test-component-integration-race.sh --normal
+OWNED_GO_CHILD_COMPLETION_ACK {"actual_wait_confirmed": true, "event": "owned_go_child_completion_ack", "exit": 0, "operation": "go-child-0004", "original_pid_generation_absent": true, "original_whole_deadline_monotonic": 159927.303240098, "parent_operation": "partition-shared-normal", "pgid": 3773218, "pid": 3774935, "shared_group_absence_checked_only_after_whole_wait": true, "starttime": "15851986", "timed_out": false}
+Component integration normal: 201 runnables (1 closure, 97 content, 60 durable, 43 other)
+Component integration normal: running closure (1 runnables)
+ok  	github.com/ruipengliu/lerna/conformance/component	17.391s
+OWNED_GO_CHILD_COMPLETION_ACK {"actual_wait_confirmed": true, "event": "owned_go_child_completion_ack", "exit": 0, "operation": "go-child-0005", "original_pid_generation_absent": true, "original_whole_deadline_monotonic": 159927.303240098, "parent_operation": "partition-shared-normal", "pgid": 3773218, "pid": 3775033, "shared_group_absence_checked_only_after_whole_wait": true, "starttime": "15852069", "timed_out": false}
+Component integration normal: running content_a (33 runnables)
+ok  	github.com/ruipengliu/lerna/conformance/component	49.824s
+OWNED_GO_CHILD_COMPLETION_ACK {"actual_wait_confirmed": true, "event": "owned_go_child_completion_ack", "exit": 0, "operation": "go-child-0006", "original_pid_generation_absent": true, "original_whole_deadline_monotonic": 159927.303240098, "parent_operation": "partition-shared-normal", "pgid": 3773218, "pid": 3775551, "shared_group_absence_checked_only_after_whole_wait": true, "starttime": "15853874", "timed_out": false}
+Component integration normal: running content_b (32 runnables)
+ok  	github.com/ruipengliu/lerna/conformance/component	69.222s
+OWNED_GO_CHILD_COMPLETION_ACK {"actual_wait_confirmed": true, "event": "owned_go_child_completion_ack", "exit": 0, "operation": "go-child-0007", "original_pid_generation_absent": true, "original_whole_deadline_monotonic": 159927.303240098, "parent_operation": "partition-shared-normal", "pgid": 3773218, "pid": 3777054, "shared_group_absence_checked_only_after_whole_wait": true, "starttime": "15858929", "timed_out": false}
+Component integration normal: running content_c (32 runnables)
+ok  	github.com/ruipengliu/lerna/conformance/component	68.931s
+OWNED_GO_CHILD_COMPLETION_ACK {"actual_wait_confirmed": true, "event": "owned_go_child_completion_ack", "exit": 0, "operation": "go-child-0008", "original_pid_generation_absent": true, "original_whole_deadline_monotonic": 159927.303240098, "parent_operation": "partition-shared-normal", "pgid": 3773218, "pid": 3779006, "shared_group_absence_checked_only_after_whole_wait": true, "starttime": "15865940", "timed_out": false}
+Component integration normal: running durable (60 runnables)
+ok  	github.com/ruipengliu/lerna/conformance/component	65.085s
+OWNED_GO_CHILD_COMPLETION_ACK {"actual_wait_confirmed": true, "event": "owned_go_child_completion_ack", "exit": 0, "operation": "go-child-0009", "original_pid_generation_absent": true, "original_whole_deadline_monotonic": 159927.303240098, "parent_operation": "partition-shared-normal", "pgid": 3773218, "pid": 3781203, "shared_group_absence_checked_only_after_whole_wait": true, "starttime": "15872924", "timed_out": false}
+Component integration normal: running other (43 runnables)
+ok  	github.com/ruipengliu/lerna/conformance/component	1.593s
+OWNED_GO_CHILD_COMPLETION_ACK {"actual_wait_confirmed": true, "event": "owned_go_child_completion_ack", "exit": 0, "operation": "go-child-0010", "original_pid_generation_absent": true, "original_whole_deadline_monotonic": 159927.303240098, "parent_operation": "partition-shared-normal", "pgid": 3773218, "pid": 3783436, "shared_group_absence_checked_only_after_whole_wait": true, "starttime": "15879507", "timed_out": false}
+go test -p=1 -count=1 -tags=integration -timeout=120s ./conformance/internal/decisionfixture ./conformance/internal/contentfixture ./adapters/objectstore/local
+ok  	github.com/ruipengliu/lerna/conformance/internal/decisionfixture	20.604s
+ok  	github.com/ruipengliu/lerna/conformance/internal/contentfixture	0.140s
+ok  	github.com/ruipengliu/lerna/adapters/objectstore/local	0.114s
+OWNED_GO_CHILD_COMPLETION_ACK {"actual_wait_confirmed": true, "event": "owned_go_child_completion_ack", "exit": 0, "operation": "go-child-0011", "original_pid_generation_absent": true, "original_whole_deadline_monotonic": 159927.303240098, "parent_operation": "partition-shared-normal", "pgid": 3773218, "pid": 3783555, "shared_group_absence_checked_only_after_whole_wait": true, "starttime": "15879796", "timed_out": false}
+NATIVE_COMPLETION_ACK {"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "partition-shared-normal", "pgid": 3773218, "pid": 3773218, "starttime": "15848230", "timed_out": false}

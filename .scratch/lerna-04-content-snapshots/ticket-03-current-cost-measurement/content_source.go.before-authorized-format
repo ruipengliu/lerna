@@ -1,0 +1,157 @@
+package decision
+
+import (
+	"bytes"
+	"context"
+	"encoding/json"
+	"errors"
+	engine "github.com/ruipengliu/lerna/components/decision_engine"
+	v "github.com/ruipengliu/lerna/contract/v1_1"
+	c "github.com/ruipengliu/lerna/contract/v1_2"
+	compiler "github.com/ruipengliu/lerna/domain/task/context"
+	contentdomain "github.com/ruipengliu/lerna/domain/content"
+	"io"
+	"reflect"
+	"slices"
+)
+
+func closed(body []byte, out any) error {
+	if _, err := v.ParseJSON(body); err != nil {
+		return err
+	}
+	d := json.NewDecoder(bytes.NewReader(body))
+	d.DisallowUnknownFields()
+	if err := d.Decode(out); err != nil {
+		return err
+	}
+	if err := d.Decode(new(any)); err != io.EOF {
+		return errors.New("trailing fixture JSON")
+	}
+	return nil
+}
+func (a *Adapter) read(ctx context.Context, ref c.ContentRef, remaining int64) ([]byte, error) {
+	if remaining < 0 || remaining > v.MaxBodyBytes {
+		return nil, engine.ErrInputLimit
+	}
+	read, err := a.config.Content.ReadForProcessing(ctx, &a.config.Subject, ref, a.config.Purpose, remaining)
+	return read.Bytes, mapContentError(err)
+}
+
+func originalMaterialProjection(binding Binding) ([]c.ContentRef, error) {
+	refs := []c.ContentRef{binding.Bundle.Mandatory.Ref}
+	for _, material := range binding.Input.Materials {
+		if material.Selected {
+			refs = append(refs, material.Ref)
+		}
+	}
+	if !reflect.DeepEqual(refs, binding.Bundle.Materials) {
+		return nil, engine.ErrUnavailable
+	}
+	return refs, nil
+}
+
+func (a *Adapter) ReadSnapshot(ctx context.Context, ref v.SnapshotRef, p engine.Permission, remaining int64) (engine.Snapshot, error) {
+	var out engine.Snapshot
+	binding, err := a.config.Access.Binding(ctx, ref, p, "rule.input")
+	if err != nil {
+		return out, err
+	}
+	raw, err := a.read(contentdomain.WithContentQualificationRole(ctx, "shell"), binding.Bundle.Shell.Ref, remaining)
+	if err != nil {
+		return out, err
+	}
+	if err = closed(raw, &out); err != nil {
+		return engine.Snapshot{}, err
+	}
+	// Mandatory validation is an additional actual bounded Content read. It is
+	// deliberately outside frozen DecisionUsage's shell/lock/manifest/material sum.
+	mandatory, err := a.read(contentdomain.WithContentQualificationRole(ctx, "mandatory"), binding.Bundle.Mandatory.Ref, 262144)
+	if err != nil {
+		return engine.Snapshot{}, err
+	}
+	m, err := compiler.DecodeMandatory(mandatory)
+	if err != nil {
+		return engine.Snapshot{}, err
+	}
+	materials, err := originalMaterialProjection(binding)
+	if err != nil {
+		return engine.Snapshot{}, err
+	}
+	expected, err := a.snapshot(binding.Input, materials)
+	if err != nil {
+		return engine.Snapshot{}, err
+	}
+	if !reflect.DeepEqual(out, expected) || !reflect.DeepEqual(compiler.CanonicalInput(m.Input), compiler.CanonicalInput(binding.Input)) || !reflect.DeepEqual(m.Processed, binding.Bundle.Processed) || len(out.MaterialRefs) == 0 {
+		return engine.Snapshot{}, engine.ErrUnavailable
+	}
+	first, err := ToRule(binding.Bundle.Mandatory.Ref)
+	if err != nil || out.MaterialRefs[0] != first {
+		return engine.Snapshot{}, engine.ErrUnavailable
+	}
+	out.Raw = raw
+	return out, nil
+}
+func (a *Adapter) ReadMaterial(ctx context.Context, ref v.ContentRef, purpose string, p engine.Permission, remaining int64) ([]byte, error) {
+	binding, err := a.config.Access.Current(ctx, p, "rule.input")
+	if err != nil {
+		return nil, err
+	}
+	if purpose != "rule.input" {
+		return nil, engine.ErrForbidden
+	}
+	exact, err := ToContent(ref)
+	if err != nil {
+		return nil, err
+	}
+	if !slices.Contains(binding.Bundle.Materials, exact) {
+		return nil, engine.ErrForbidden
+	}
+	return a.read(contentdomain.WithContentQualificationRole(ctx, "material"), exact, remaining)
+}
+func (a *Adapter) ReadFixtureLock(ctx context.Context, ref v.InstallLockRef, p engine.Permission, remaining int64) (engine.FixtureLock, error) {
+	var out engine.FixtureLock
+	binding, err := a.config.Access.Current(ctx, p, "fixture.lock")
+	if err != nil {
+		return out, err
+	}
+	if ref != binding.Input.Request.Payload.ComponentRef.InstallLockRef {
+		return out, engine.ErrForbidden
+	}
+	lockRaw, err := a.read(contentdomain.WithContentQualificationRole(ctx, "lock"), binding.Bundle.Lock.Ref, remaining)
+	if err != nil {
+		return out, err
+	}
+	manifestRaw, err := a.read(contentdomain.WithContentQualificationRole(ctx, "manifest"), binding.Bundle.Manifest.Ref, remaining-int64(len(lockRaw)))
+	if err != nil {
+		return out, err
+	}
+	var lock fixtureLock
+	var man manifest
+	if err = closed(lockRaw, &lock); err != nil {
+		return out, err
+	}
+	if err = closed(manifestRaw, &man); err != nil {
+		return out, err
+	}
+	manifestRef, err := ToRule(binding.Bundle.Manifest.Ref)
+	if err != nil {
+		return out, err
+	}
+	materials, err := originalMaterialProjection(binding)
+	if err != nil {
+		return out, err
+	}
+	expected, err := a.snapshot(binding.Input, materials)
+	if err != nil {
+		return out, err
+	}
+	if lock.Kind != "component_fixture_lock" || lock.ManifestRef != manifestRef || lock.ComponentRef != p.ComponentRef || man.Kind != "durable_fixture_manifest" || !reflect.DeepEqual(man.Snapshot, expected) || lock.RuleVersion != p.RuleVersion || lock.ChargeBasis != p.ChargeBasis || lock.RuleStartCharge != p.RuleStartCharge || man.RuleVersion != lock.RuleVersion || man.ChargeBasis != lock.ChargeBasis || man.RuleStartCharge != lock.RuleStartCharge || string(p.ComponentRef.ArtifactDigest) != hash([]byte(lock.RuleVersion)) || string(p.ComponentRef.ConfigDigest) != hash([]byte(expected.Rule)) {
+		return out, engine.ErrUnavailable
+	}
+	out = engine.FixtureLock{Raw: lockRaw, ManifestRef: manifestRef, ManifestRaw: manifestRaw, ComponentRef: lock.ComponentRef, RuleVersion: lock.RuleVersion, ChargeBasis: lock.ChargeBasis, RuleStartCharge: lock.RuleStartCharge}
+	return out, nil
+}
+
+var _ engine.Source = (*Adapter)(nil)
+var _ engine.Publisher = (*Adapter)(nil)
+var _ compiler.Assembly = (*Adapter)(nil)

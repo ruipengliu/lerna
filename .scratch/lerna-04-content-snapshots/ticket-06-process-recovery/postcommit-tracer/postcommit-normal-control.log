@@ -1,0 +1,8 @@
+=== RUN   TestContentSIGKILLAfterPublicationCommitRetainsOriginalPublishedFact
+=== RUN   TestContentSIGKILLAfterPublicationCommitRetainsOriginalPublishedFact/normal_release
+    content_process_recovery_test.go:703: Content child native pid=3760796 pgid=3760631 start=15794178 generation=1
+--- PASS: TestContentSIGKILLAfterPublicationCommitRetainsOriginalPublishedFact (0.34s)
+    --- PASS: TestContentSIGKILLAfterPublicationCommitRetainsOriginalPublishedFact/normal_release (0.34s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/component	0.362s
+NATIVE_COMPLETION_ACK {"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "postcommit-normal-control", "pgid": 3760631, "pid": 3760631, "starttime": "15793710", "timed_out": false}

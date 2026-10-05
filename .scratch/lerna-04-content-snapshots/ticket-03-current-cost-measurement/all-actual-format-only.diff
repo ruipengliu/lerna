@@ -1,0 +1,271 @@
+--- context_claim_diagnostics.go.before-format
++++ context_claim_diagnostics.go.actual-formatted
+@@ -31,21 +31,21 @@
+ 	Total, Max time.Duration
+ }
+ type ContextClaimDiagnostics struct {
+-	mu         sync.Mutex
+-	start      time.Time
+-	ctx        context.Context
+-	events     []claimDiagnosticEvent
+-	critical   []claimDiagnosticEvent
+-	dropped    int
+-	firstCause error
+-	first      *claimDiagnosticEvent
+-	totals     map[string]claimDiagnosticAggregate
+-	lastGate   map[string]claimDiagnosticEvent
+-	qualificationCase string
+-	qualification [7][3][13]qualificationAggregate
++	mu                                           sync.Mutex
++	start                                        time.Time
++	ctx                                          context.Context
++	events                                       []claimDiagnosticEvent
++	critical                                     []claimDiagnosticEvent
++	dropped                                      int
++	firstCause                                   error
++	first                                        *claimDiagnosticEvent
++	totals                                       map[string]claimDiagnosticAggregate
++	lastGate                                     map[string]claimDiagnosticEvent
++	qualificationCase                            string
++	qualification                                [7][3][13]qualificationAggregate
+ 	qualificationDropped, qualificationAmbiguous int
+-	qualificationHookCalls int
+-	qualificationHookElapsed time.Duration
++	qualificationHookCalls                       int
++	qualificationHookElapsed                     time.Duration
+ }
+ 
+ func NewContextClaimDiagnostics(t *testing.T, ctx context.Context) *ContextClaimDiagnostics {
+@@ -367,41 +367,77 @@
+ 
+ type qualificationAggregate struct {
+ 	Attempted, Completed, ErrorReturns int
+-	Total, Max time.Duration
+-	FirstCause string
+-}
++	Total, Max                         time.Duration
++	FirstCause                         string
++}
++
+ var qualificationRoles = [7]string{"shell", "mandatory", "lock", "manifest", "material", "worker-verification", "outer-readback"}
+ var qualificationPhases = [3]string{"pre", "post", "read"}
+ var qualificationStages = [13]string{"lock.identity_key", "lock.advisory_sql", "lock.row_sql", "lock.decode_validate", "policy.subject_prep", "policy.locked_sql", "policy.decode_actions", "now.sql", "callback", "within", "objects.read", "integrity", "read.total"}
++
+ func qualificationIndex(role, phase, stage string) (int, int, int) {
+ 	r, p, s := -1, -1, -1
+-	for i, v := range qualificationRoles { if v == role { r = i; break } }
+-	for i, v := range qualificationPhases { if v == phase { p = i; break } }
+-	for i, v := range qualificationStages { if v == stage { s = i; break } }
++	for i, v := range qualificationRoles {
++		if v == role {
++			r = i
++			break
++		}
++	}
++	for i, v := range qualificationPhases {
++		if v == phase {
++			p = i
++			break
++		}
++	}
++	for i, v := range qualificationStages {
++		if v == stage {
++			s = i
++			break
++		}
++	}
+ 	return r, p, s
+ }
+ func (d *ContextClaimDiagnostics) BeginContentQualification(role, phase, stage string) {
+-	if d == nil { return }
++	if d == nil {
++		return
++	}
+ 	started := time.Now()
+ 	d.mu.Lock()
+ 	defer d.mu.Unlock()
+ 	r, p, s := qualificationIndex(role, phase, stage)
+-	if r < 0 || p < 0 || s < 0 { d.qualificationDropped++; d.qualificationAmbiguous++ } else { d.qualification[r][p][s].Attempted++ }
++	if r < 0 || p < 0 || s < 0 {
++		d.qualificationDropped++
++		d.qualificationAmbiguous++
++	} else {
++		d.qualification[r][p][s].Attempted++
++	}
+ 	d.qualificationHookCalls++
+ 	d.qualificationHookElapsed += time.Since(started)
+ }
+ func (d *ContextClaimDiagnostics) EndContentQualification(role, phase, stage string, elapsed time.Duration, err error) {
+-	if d == nil { return }
++	if d == nil {
++		return
++	}
+ 	started := time.Now()
+ 	d.mu.Lock()
+ 	defer d.mu.Unlock()
+ 	r, p, s := qualificationIndex(role, phase, stage)
+-	if r < 0 || p < 0 || s < 0 { d.qualificationDropped++; d.qualificationAmbiguous++ } else {
++	if r < 0 || p < 0 || s < 0 {
++		d.qualificationDropped++
++		d.qualificationAmbiguous++
++	} else {
+ 		a := &d.qualification[r][p][s]
+ 		a.Completed++
+ 		a.Total += elapsed
+-		if elapsed > a.Max { a.Max = elapsed }
+-		if err != nil { a.ErrorReturns++; if a.FirstCause == "" { a.FirstCause = claimCause(err) } }
++		if elapsed > a.Max {
++			a.Max = elapsed
++		}
++		if err != nil {
++			a.ErrorReturns++
++			if a.FirstCause == "" {
++				a.FirstCause = claimCause(err)
++			}
++		}
+ 	}
+ 	d.qualificationHookCalls++
+ 	d.qualificationHookElapsed += time.Since(started)
+@@ -413,13 +449,21 @@
+ 			var serial, sqlCallWall, localLeafWall time.Duration
+ 			for s, stage := range qualificationStages {
+ 				a := d.qualification[r][p][s]
+-				if a.Attempted == 0 && a.Completed == 0 { continue }
++				if a.Attempted == 0 && a.Completed == 0 {
++					continue
++				}
+ 				first := a.FirstCause
+-				if first == "" { first = "nil" }
++				if first == "" {
++					first = "nil"
++				}
+ 				t.Logf("QUAL_SQL case=%s role=%s phase=%s stage=%s attempted=%d completed=%d error_returns=%d wall=%s max=%s first_cause=%s", d.qualificationCase, role, phase, stage, a.Attempted, a.Completed, a.ErrorReturns, a.Total, a.Max, first)
+ 				if s < 8 {
+ 					serial += a.Total
+-					if s == 1 || s == 2 || s == 5 || s == 7 { sqlCallWall += a.Total } else { localLeafWall += a.Total }
++					if s == 1 || s == 2 || s == 5 || s == 7 {
++						sqlCallWall += a.Total
++					} else {
++						localLeafWall += a.Total
++					}
+ 				}
+ 			}
+ 			callback := d.qualification[r][p][8]
+--- processing.go.before-format
++++ processing.go.actual-formatted
+@@ -20,9 +20,10 @@
+ }
+ type contentQualificationKey struct{}
+ type contentQualificationLabels struct {
+-	observer ContentQualificationObserver
++	observer    ContentQualificationObserver
+ 	role, phase string
+ }
++
+ func WithContentQualificationObserver(ctx context.Context, observer ContentQualificationObserver, role string) context.Context {
+ 	return context.WithValue(ctx, contentQualificationKey{}, contentQualificationLabels{observer: observer, role: role})
+ }
+@@ -52,7 +53,9 @@
+ 	return time.Time{}
+ }
+ func EndContentQualification(ctx context.Context, stage string, start time.Time, err error) {
+-	if start.IsZero() { return }
++	if start.IsZero() {
++		return
++	}
+ 	if labels, ok := ctx.Value(contentQualificationKey{}).(contentQualificationLabels); ok && labels.observer != nil && labels.phase != "" {
+ 		labels.observer.EndContentQualification(labels.role, labels.phase, stage, time.Since(start), err)
+ 	}
+--- content_source.go.before-format
++++ content_source.go.actual-formatted
+@@ -8,8 +8,8 @@
+ 	engine "github.com/ruipengliu/lerna/components/decision_engine"
+ 	v "github.com/ruipengliu/lerna/contract/v1_1"
+ 	c "github.com/ruipengliu/lerna/contract/v1_2"
++	contentdomain "github.com/ruipengliu/lerna/domain/content"
+ 	compiler "github.com/ruipengliu/lerna/domain/task/context"
+-	contentdomain "github.com/ruipengliu/lerna/domain/content"
+ 	"io"
+ 	"reflect"
+ 	"slices"
+--- facts.go.before-format
++++ facts.go.actual-formatted
+@@ -5,11 +5,11 @@
+ 	"database/sql"
+ 	"encoding/json"
+ 	"errors"
++	"github.com/ruipengliu/lerna/adapters/postgres/internal/pgstore"
+ 	"github.com/ruipengliu/lerna/contract"
+ 	v "github.com/ruipengliu/lerna/contract/v1_2"
+ 	d "github.com/ruipengliu/lerna/domain/content"
+ 	"github.com/ruipengliu/lerna/runtime"
+-	"github.com/ruipengliu/lerna/adapters/postgres/internal/pgstore"
+ 	"time"
+ )
+ 
+@@ -22,10 +22,16 @@
+ 	}
+ 	return s.core.Now(ctx, token)
+ }
++
+ // Temporary bridge to the exact Core.Now QueryRow/Scan; no domain import in Core.
+-type contentNowSQLObserver struct { ctx context.Context }
+-func (o contentNowSQLObserver) BeginNowSQL() time.Time { return d.BeginContentQualification(o.ctx, "now.sql") }
+-func (o contentNowSQLObserver) EndNowSQL(start time.Time, err error) { d.EndContentQualification(o.ctx, "now.sql", start, err) }
++type contentNowSQLObserver struct{ ctx context.Context }
++
++func (o contentNowSQLObserver) BeginNowSQL() time.Time {
++	return d.BeginContentQualification(o.ctx, "now.sql")
++}
++func (o contentNowSQLObserver) EndNowSQL(start time.Time, err error) {
++	d.EndContentQualification(o.ctx, "now.sql", start, err)
++}
+ 
+ func (s *Store) LockCommand(ctx context.Context, token runtime.Tx, ref v.CommandRef) (*d.CommandRecord, error) {
+ 	tx, err := s.core.SQL(ctx, token, commonOwner(ref.Owner))
+--- policy.go.before-format
++++ policy.go.actual-formatted
+@@ -56,7 +56,9 @@
+ 	// projection. Keep clock_timestamp outside LockRows; transaction or statement
+ 	// timestamps, and independent clock CTEs, can precede the actual lock wait.
+ 	policyDecodeStart := contentdomain.BeginContentQualification(ctx, "policy.decode_actions")
+-	defer func() { contentdomain.EndContentQualification(ctx, "policy.decode_actions", policyDecodeStart, policyErr) }()
++	defer func() {
++		contentdomain.EndContentQualification(ctx, "policy.decode_actions", policyDecodeStart, policyErr)
++	}()
+ 	var policy contentdomain.FixturePolicy
+ 	if err = json.Unmarshal(body, &policy); err != nil {
+ 		return nil, err
+--- pgstore_core.go.before-format
++++ pgstore_core.go.actual-formatted
+@@ -165,12 +165,14 @@
+ 	}
+ 	return nil
+ }
++
+ // Temporary measurement-only observer for the original Now SQL call.
+ type NowSQLObserver interface {
+ 	BeginNowSQL() time.Time
+ 	EndNowSQL(time.Time, error)
+ }
+ type nowSQLObserverKey struct{}
++
+ func WithNowSQLObserver(ctx context.Context, observer NowSQLObserver) context.Context {
+ 	return context.WithValue(ctx, nowSQLObserverKey{}, observer)
+ }
+@@ -183,9 +185,13 @@
+ 	var now time.Time
+ 	observer, observed := ctx.Value(nowSQLObserverKey{}).(NowSQLObserver)
+ 	var nowSQLStart time.Time
+-	if observed { nowSQLStart = observer.BeginNowSQL() }
++	if observed {
++		nowSQLStart = observer.BeginNowSQL()
++	}
+ 	err = tx.QueryRowContext(ctx, `SELECT clock_timestamp()`).Scan(&now)
+-	if observed { observer.EndNowSQL(nowSQLStart, err) }
++	if observed {
++		observer.EndNowSQL(nowSQLStart, err)
++	}
+ 	return now, err
+ }
+ 

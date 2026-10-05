@@ -1,0 +1,29 @@
+{
+  "head": "75f0429d709d95b6a63137c397fcd9d80203ed5f",
+  "run_id": 37281363495,
+  "status": "completed",
+  "conclusion": "failure",
+  "jobs": {
+    "contracts": {
+      "id": 111669973702,
+      "conclusion": "success",
+      "all_steps": "success"
+    },
+    "durable-admission": {
+      "id": 111669973960,
+      "conclusion": "failure",
+      "normal": "success",
+      "race": "failure"
+    }
+  },
+  "log": {
+    "sha256": "1f037abdfa9c8a098940e3dc54febdf72b8174fc3627bf6dfe126433345ecd47",
+    "bytes": 58636,
+    "lines": 655,
+    "sanitized": true
+  },
+  "root_read_scope": "Complete finite normal/race result summaries and timeout stack through actual make failure; setup and service-log sections not asserted human FULL",
+  "capacity_qualification": "not claimed",
+  "partition_candidate_in_this_head": false,
+  "run_cancellation_candidate_in_this_head": false
+}

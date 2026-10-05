@@ -1,0 +1,52 @@
+[
+  {
+    "old": "\t\"github.com/ruipengliu/lerna/runtime\"",
+    "new": "\t\"github.com/ruipengliu/lerna/runtime\"\n\t\"github.com/ruipengliu/lerna/adapters/postgres/internal/pgstore\"",
+    "count": 1
+  },
+  {
+    "old": "\treturn s.core.Now(ctx, token)",
+    "new": "\tif d.ContentQualificationActive(ctx) {\n\t\tctx = pgstore.WithNowSQLObserver(ctx, contentNowSQLObserver{ctx: ctx})\n\t}\n\treturn s.core.Now(ctx, token)",
+    "count": 1
+  },
+  {
+    "old": "func (s *Store) LockCommand(",
+    "new": "// Temporary bridge to the exact Core.Now QueryRow/Scan; no domain import in Core.\ntype contentNowSQLObserver struct { ctx context.Context }\nfunc (o contentNowSQLObserver) BeginNowSQL() time.Time { return d.BeginContentQualification(o.ctx, \"now.sql\") }\nfunc (o contentNowSQLObserver) EndNowSQL(start time.Time, err error) { d.EndContentQualification(o.ctx, \"now.sql\", start, err) }\n\nfunc (s *Store) LockCommand(",
+    "count": 1
+  },
+  {
+    "old": "func (s *Store) LockVersion(ctx context.Context, token runtime.Tx, ref v.ContentRef) (*d.Record, error) {",
+    "new": "func (s *Store) LockVersion(ctx context.Context, token runtime.Tx, ref v.ContentRef) (lockRecord *d.Record, lockErr error) {",
+    "count": 1
+  },
+  {
+    "old": "\tid, expectedObjectKey, err := d.VersionIdentity(ref)",
+    "new": "\tidentityKeyStart := d.BeginContentQualification(ctx, \"lock.identity_key\")\n\tid, expectedObjectKey, err := d.VersionIdentity(ref)",
+    "count": 1
+  },
+  {
+    "old": "\tid, expectedObjectKey, err := d.VersionIdentity(ref)\n\tif err != nil {",
+    "new": "\tid, expectedObjectKey, err := d.VersionIdentity(ref)\n\tif err != nil {\n\t\td.EndContentQualification(ctx, \"lock.identity_key\", identityKeyStart, err)",
+    "count": 1
+  },
+  {
+    "old": "\tkey, _ := json.Marshal([]string{s.schema, string(ref.Owner.TenantID), string(ref.Owner.OwnerID), id})\n",
+    "new": "\tkey, _ := json.Marshal([]string{s.schema, string(ref.Owner.TenantID), string(ref.Owner.OwnerID), id})\n\td.EndContentQualification(ctx, \"lock.identity_key\", identityKeyStart, nil)\n\tadvisoryStart := d.BeginContentQualification(ctx, \"lock.advisory_sql\")\n",
+    "count": 1
+  },
+  {
+    "old": "\tif _, err = tx.ExecContext(ctx, `SELECT pg_advisory_xact_lock(2,hashtext($1))`, string(key)); err != nil {\n\t\treturn nil, err\n\t}",
+    "new": "\tif _, err = tx.ExecContext(ctx, `SELECT pg_advisory_xact_lock(2,hashtext($1))`, string(key)); err != nil {\n\t\td.EndContentQualification(ctx, \"lock.advisory_sql\", advisoryStart, err)\n\t\treturn nil, err\n\t}\n\td.EndContentQualification(ctx, \"lock.advisory_sql\", advisoryStart, nil)",
+    "count": 1
+  },
+  {
+    "old": "\terr = tx.QueryRowContext(ctx, `SELECT body,staging,object_id,object_key,tuple_digest,publication,revision,body_seal,body_gone,primary_holder_binding FROM `+s.core.Table(\"content_versions\")+` WHERE tenant_id=$1 AND owner_id=$2 AND content_id=$3 AND version=$4 FOR UPDATE`, ref.Owner.TenantID, ref.Owner.OwnerID, ref.ContentID, ref.Version).Scan(&body, &staging, &objectID, &keyStored, &tuple, &publication, &revision, &seal, &gone, &binding)\n",
+    "new": "\trowStart := d.BeginContentQualification(ctx, \"lock.row_sql\")\n\terr = tx.QueryRowContext(ctx, `SELECT body,staging,object_id,object_key,tuple_digest,publication,revision,body_seal,body_gone,primary_holder_binding FROM `+s.core.Table(\"content_versions\")+` WHERE tenant_id=$1 AND owner_id=$2 AND content_id=$3 AND version=$4 FOR UPDATE`, ref.Owner.TenantID, ref.Owner.OwnerID, ref.ContentID, ref.Version).Scan(&body, &staging, &objectID, &keyStored, &tuple, &publication, &revision, &seal, &gone, &binding)\n\td.EndContentQualification(ctx, \"lock.row_sql\", rowStart, err)\n",
+    "count": 1
+  },
+  {
+    "old": "func (s *Store) LockVersion(ctx context.Context, token runtime.Tx, ref v.ContentRef) (lockRecord *d.Record, lockErr error) {\n\ttx, err := s.core.SQL(ctx, token, commonOwner(ref.Owner))\n\tif err != nil {\n\t\treturn nil, err\n\t}\n\tidentityKeyStart := d.BeginContentQualification(ctx, \"lock.identity_key\")\n\tid, expectedObjectKey, err := d.VersionIdentity(ref)\n\tif err != nil {\n\t\td.EndContentQualification(ctx, \"lock.identity_key\", identityKeyStart, err)\n\t\treturn nil, err\n\t}\n\tkey, _ := json.Marshal([]string{s.schema, string(ref.Owner.TenantID), string(ref.Owner.OwnerID), id})\n\td.EndContentQualification(ctx, \"lock.identity_key\", identityKeyStart, nil)\n\tadvisoryStart := d.BeginContentQualification(ctx, \"lock.advisory_sql\")\n\tif _, err = tx.ExecContext(ctx, `SELECT pg_advisory_xact_lock(2,hashtext($1))`, string(key)); err != nil {\n\t\td.EndContentQualification(ctx, \"lock.advisory_sql\", advisoryStart, err)\n\t\treturn nil, err\n\t}\n\td.EndContentQualification(ctx, \"lock.advisory_sql\", advisoryStart, nil)\n\tvar body, staging, seal []byte\n\tvar objectID, keyStored, tuple, publication, binding string\n\tvar revision int64\n\tvar gone bool\n\trowStart := d.BeginContentQualification(ctx, \"lock.row_sql\")\n\terr = tx.QueryRowContext(ctx, `SELECT body,staging,object_id,object_key,tuple_digest,publication,revision,body_seal,body_gone,primary_holder_binding FROM `+s.core.Table(\"content_versions\")+` WHERE tenant_id=$1 AND owner_id=$2 AND content_id=$3 AND version=$4 FOR UPDATE`, ref.Owner.TenantID, ref.Owner.OwnerID, ref.ContentID, ref.Version).Scan(&body, &staging, &objectID, &keyStored, &tuple, &publication, &revision, &seal, &gone, &binding)\n\td.EndContentQualification(ctx, \"lock.row_sql\", rowStart, err)\n\tif errors.Is(err, sql.ErrNoRows) {\n\t\treturn nil, nil\n\t}\n\tif err != nil {\n\t\treturn nil, err\n\t}\n\tvar record d.Record\n\tif err = json.Unmarshal(body, &record); err != nil {\n\t\treturn nil, err\n\t}\n\tif record.Ref.Owner != ref.Owner || record.Ref.ContentID != ref.ContentID || record.Ref.Version != ref.Version || record.ObjectID != objectID || record.ObjectKey != keyStored || record.TupleDigest != tuple || record.Publication != publication || record.Revision != revision {\n\t\treturn nil, runtime.ErrScope\n\t}\n\tif record.Ref != ref || record.ObjectID != id || record.ObjectKey != expectedObjectKey {\n\t\tif err = record.ValidateIdentity(); err != nil {\n\t\t\treturn nil, err\n\t\t}\n\t}\n\trecord.Bytes = staging\n\tif record.BodyGone != gone || record.PrimaryHolderBinding != binding {\n\t\treturn nil, runtime.ErrScope\n\t}\n\tif record.BodySeal == nil {\n\t\tif seal != nil {\n\t\t\treturn nil, runtime.ErrScope\n\t\t}\n\t} else {\n\t\texpected, err := json.Marshal(record.BodySeal)\n\t\tif err != nil {\n\t\t\treturn nil, err\n\t\t}\n\t\tif string(expected) != string(seal) || record.BodySeal.Ref != record.Ref || record.BodySeal.PrimaryHolderBinding != record.PrimaryHolderBinding {\n\t\t\treturn nil, runtime.ErrScope\n\t\t}\n\t}\n\treturn &record, nil\n}\n",
+    "new": "func (s *Store) LockVersion(ctx context.Context, token runtime.Tx, ref v.ContentRef) (lockRecord *d.Record, lockErr error) {\n\ttx, err := s.core.SQL(ctx, token, commonOwner(ref.Owner))\n\tif err != nil {\n\t\treturn nil, err\n\t}\n\tidentityKeyStart := d.BeginContentQualification(ctx, \"lock.identity_key\")\n\tid, expectedObjectKey, err := d.VersionIdentity(ref)\n\tif err != nil {\n\t\td.EndContentQualification(ctx, \"lock.identity_key\", identityKeyStart, err)\n\t\treturn nil, err\n\t}\n\tkey, _ := json.Marshal([]string{s.schema, string(ref.Owner.TenantID), string(ref.Owner.OwnerID), id})\n\td.EndContentQualification(ctx, \"lock.identity_key\", identityKeyStart, nil)\n\tadvisoryStart := d.BeginContentQualification(ctx, \"lock.advisory_sql\")\n\tif _, err = tx.ExecContext(ctx, `SELECT pg_advisory_xact_lock(2,hashtext($1))`, string(key)); err != nil {\n\t\td.EndContentQualification(ctx, \"lock.advisory_sql\", advisoryStart, err)\n\t\treturn nil, err\n\t}\n\td.EndContentQualification(ctx, \"lock.advisory_sql\", advisoryStart, nil)\n\tvar body, staging, seal []byte\n\tvar objectID, keyStored, tuple, publication, binding string\n\tvar revision int64\n\tvar gone bool\n\trowStart := d.BeginContentQualification(ctx, \"lock.row_sql\")\n\terr = tx.QueryRowContext(ctx, `SELECT body,staging,object_id,object_key,tuple_digest,publication,revision,body_seal,body_gone,primary_holder_binding FROM `+s.core.Table(\"content_versions\")+` WHERE tenant_id=$1 AND owner_id=$2 AND content_id=$3 AND version=$4 FOR UPDATE`, ref.Owner.TenantID, ref.Owner.OwnerID, ref.ContentID, ref.Version).Scan(&body, &staging, &objectID, &keyStored, &tuple, &publication, &revision, &seal, &gone, &binding)\n\td.EndContentQualification(ctx, \"lock.row_sql\", rowStart, err)\n\tif errors.Is(err, sql.ErrNoRows) {\n\t\treturn nil, nil\n\t}\n\tif err != nil {\n\t\treturn nil, err\n\t}\n\tdecodeStart := d.BeginContentQualification(ctx, \"lock.decode_validate\")\n\tdefer func() { d.EndContentQualification(ctx, \"lock.decode_validate\", decodeStart, lockErr) }()\n\tvar record d.Record\n\tif err = json.Unmarshal(body, &record); err != nil {\n\t\treturn nil, err\n\t}\n\tif record.Ref.Owner != ref.Owner || record.Ref.ContentID != ref.ContentID || record.Ref.Version != ref.Version || record.ObjectID != objectID || record.ObjectKey != keyStored || record.TupleDigest != tuple || record.Publication != publication || record.Revision != revision {\n\t\treturn nil, runtime.ErrScope\n\t}\n\tif record.Ref != ref || record.ObjectID != id || record.ObjectKey != expectedObjectKey {\n\t\tif err = record.ValidateIdentity(); err != nil {\n\t\t\treturn nil, err\n\t\t}\n\t}\n\trecord.Bytes = staging\n\tif record.BodyGone != gone || record.PrimaryHolderBinding != binding {\n\t\treturn nil, runtime.ErrScope\n\t}\n\tif record.BodySeal == nil {\n\t\tif seal != nil {\n\t\t\treturn nil, runtime.ErrScope\n\t\t}\n\t} else {\n\t\texpected, err := json.Marshal(record.BodySeal)\n\t\tif err != nil {\n\t\t\treturn nil, err\n\t\t}\n\t\tif string(expected) != string(seal) || record.BodySeal.Ref != record.Ref || record.BodySeal.PrimaryHolderBinding != record.PrimaryHolderBinding {\n\t\t\treturn nil, runtime.ErrScope\n\t\t}\n\t}\n\treturn &record, nil\n}\n",
+    "count": 1
+  }
+]

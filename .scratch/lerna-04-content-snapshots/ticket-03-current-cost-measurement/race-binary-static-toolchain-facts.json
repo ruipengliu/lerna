@@ -1,0 +1,12 @@
+{
+  "STATIC_readonly_binaryinspection_no_new_native": true,
+  "binary_sha256": "427b035349c92fe4ae120bc467c5ad19891f00f61e4c2e551eeea8e0070d6fca",
+  "actual_embedded_GoVersion": "go1.27.1",
+  "buildinfo_magic_offset": 24608768,
+  "inline_format_flag": true,
+  "only_version_field_read_no_module_or_env_dump": true,
+  "source331_pre_post_map10_unchanged": true,
+  "original_group_actualWait_absence": "3736448 tick15687101 actual0/Wait/groupabsence as stored",
+  "owner_status": "STOP/RELEASE; original4B binarybusiness unrun",
+  "historical_CPU_testingdescriptor_Close": "UNKNOWN unchanged"
+}

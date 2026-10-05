@@ -1,0 +1,153 @@
+--- context_claim_diagnostics.go.before-format
++++ context_claim_diagnostics.go.actual-formatted
+@@ -31,21 +31,21 @@
+ 	Total, Max time.Duration
+ }
+ type ContextClaimDiagnostics struct {
+-	mu         sync.Mutex
+-	start      time.Time
+-	ctx        context.Context
+-	events     []claimDiagnosticEvent
+-	critical   []claimDiagnosticEvent
+-	dropped    int
+-	firstCause error
+-	first      *claimDiagnosticEvent
+-	totals     map[string]claimDiagnosticAggregate
+-	lastGate   map[string]claimDiagnosticEvent
+-	qualificationCase string
+-	qualification [7][3][13]qualificationAggregate
++	mu                                           sync.Mutex
++	start                                        time.Time
++	ctx                                          context.Context
++	events                                       []claimDiagnosticEvent
++	critical                                     []claimDiagnosticEvent
++	dropped                                      int
++	firstCause                                   error
++	first                                        *claimDiagnosticEvent
++	totals                                       map[string]claimDiagnosticAggregate
++	lastGate                                     map[string]claimDiagnosticEvent
++	qualificationCase                            string
++	qualification                                [7][3][13]qualificationAggregate
+ 	qualificationDropped, qualificationAmbiguous int
+-	qualificationHookCalls int
+-	qualificationHookElapsed time.Duration
++	qualificationHookCalls                       int
++	qualificationHookElapsed                     time.Duration
+ }
+ 
+ func NewContextClaimDiagnostics(t *testing.T, ctx context.Context) *ContextClaimDiagnostics {
+@@ -367,41 +367,77 @@
+ 
+ type qualificationAggregate struct {
+ 	Attempted, Completed, ErrorReturns int
+-	Total, Max time.Duration
+-	FirstCause string
+-}
++	Total, Max                         time.Duration
++	FirstCause                         string
++}
++
+ var qualificationRoles = [7]string{"shell", "mandatory", "lock", "manifest", "material", "worker-verification", "outer-readback"}
+ var qualificationPhases = [3]string{"pre", "post", "read"}
+ var qualificationStages = [13]string{"lock.identity_key", "lock.advisory_sql", "lock.row_sql", "lock.decode_validate", "policy.subject_prep", "policy.locked_sql", "policy.decode_actions", "now.sql", "callback", "within", "objects.read", "integrity", "read.total"}
++
+ func qualificationIndex(role, phase, stage string) (int, int, int) {
+ 	r, p, s := -1, -1, -1
+-	for i, v := range qualificationRoles { if v == role { r = i; break } }
+-	for i, v := range qualificationPhases { if v == phase { p = i; break } }
+-	for i, v := range qualificationStages { if v == stage { s = i; break } }
++	for i, v := range qualificationRoles {
++		if v == role {
++			r = i
++			break
++		}
++	}
++	for i, v := range qualificationPhases {
++		if v == phase {
++			p = i
++			break
++		}
++	}
++	for i, v := range qualificationStages {
++		if v == stage {
++			s = i
++			break
++		}
++	}
+ 	return r, p, s
+ }
+ func (d *ContextClaimDiagnostics) BeginContentQualification(role, phase, stage string) {
+-	if d == nil { return }
++	if d == nil {
++		return
++	}
+ 	started := time.Now()
+ 	d.mu.Lock()
+ 	defer d.mu.Unlock()
+ 	r, p, s := qualificationIndex(role, phase, stage)
+-	if r < 0 || p < 0 || s < 0 { d.qualificationDropped++; d.qualificationAmbiguous++ } else { d.qualification[r][p][s].Attempted++ }
++	if r < 0 || p < 0 || s < 0 {
++		d.qualificationDropped++
++		d.qualificationAmbiguous++
++	} else {
++		d.qualification[r][p][s].Attempted++
++	}
+ 	d.qualificationHookCalls++
+ 	d.qualificationHookElapsed += time.Since(started)
+ }
+ func (d *ContextClaimDiagnostics) EndContentQualification(role, phase, stage string, elapsed time.Duration, err error) {
+-	if d == nil { return }
++	if d == nil {
++		return
++	}
+ 	started := time.Now()
+ 	d.mu.Lock()
+ 	defer d.mu.Unlock()
+ 	r, p, s := qualificationIndex(role, phase, stage)
+-	if r < 0 || p < 0 || s < 0 { d.qualificationDropped++; d.qualificationAmbiguous++ } else {
++	if r < 0 || p < 0 || s < 0 {
++		d.qualificationDropped++
++		d.qualificationAmbiguous++
++	} else {
+ 		a := &d.qualification[r][p][s]
+ 		a.Completed++
+ 		a.Total += elapsed
+-		if elapsed > a.Max { a.Max = elapsed }
+-		if err != nil { a.ErrorReturns++; if a.FirstCause == "" { a.FirstCause = claimCause(err) } }
++		if elapsed > a.Max {
++			a.Max = elapsed
++		}
++		if err != nil {
++			a.ErrorReturns++
++			if a.FirstCause == "" {
++				a.FirstCause = claimCause(err)
++			}
++		}
+ 	}
+ 	d.qualificationHookCalls++
+ 	d.qualificationHookElapsed += time.Since(started)
+@@ -413,13 +449,21 @@
+ 			var serial, sqlCallWall, localLeafWall time.Duration
+ 			for s, stage := range qualificationStages {
+ 				a := d.qualification[r][p][s]
+-				if a.Attempted == 0 && a.Completed == 0 { continue }
++				if a.Attempted == 0 && a.Completed == 0 {
++					continue
++				}
+ 				first := a.FirstCause
+-				if first == "" { first = "nil" }
++				if first == "" {
++					first = "nil"
++				}
+ 				t.Logf("QUAL_SQL case=%s role=%s phase=%s stage=%s attempted=%d completed=%d error_returns=%d wall=%s max=%s first_cause=%s", d.qualificationCase, role, phase, stage, a.Attempted, a.Completed, a.ErrorReturns, a.Total, a.Max, first)
+ 				if s < 8 {
+ 					serial += a.Total
+-					if s == 1 || s == 2 || s == 5 || s == 7 { sqlCallWall += a.Total } else { localLeafWall += a.Total }
++					if s == 1 || s == 2 || s == 5 || s == 7 {
++						sqlCallWall += a.Total
++					} else {
++						localLeafWall += a.Total
++					}
+ 				}
+ 			}
+ 			callback := d.qualification[r][p][8]

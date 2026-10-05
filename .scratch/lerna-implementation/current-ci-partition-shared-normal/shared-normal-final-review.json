@@ -1,0 +1,26 @@
+{
+  "kind": "post-release full raw review and complete ledger interval static audit; source and native release unchanged",
+  "full65_raw_lines_human_read": true,
+  "release_immutable_original": "/tmp/lerna-current-ci-partition-execution/shared-normal-release.json",
+  "release_sha256": "6a2fc53faba9dd3470a790e45da005ec9cb358a8bddfd899715c46b6c189753d",
+  "owned_scope_sidecar_sha256": "e21b8840e16785fc34ed8f432c3bfe0f017c362800d65619f511294c49916cda",
+  "logical_close_unknown_count": 1,
+  "unknown_scope_current_identity": [
+    {
+      "event": "object_child_logical_close_unknown",
+      "line_1based": 1159,
+      "root": "/tmp/lerna-current-ci-partition-execution/lerna-local-lifetime-4236457110",
+      "pid": 3785013,
+      "pgid": 3785013,
+      "starttime": "15882148",
+      "cause": "SIGKILL before actual Store.Close",
+      "cleanup_allowed": false,
+      "current_exists": true,
+      "current_device": 33,
+      "current_inode": 431541,
+      "logical_close_sticky_unknown": true
+    }
+  ],
+  "postgres_catalog_qualification_pending": true,
+  "LOCAL_released": true
+}

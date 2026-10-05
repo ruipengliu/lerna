@@ -1,0 +1,197 @@
+--- /tmp/lerna-04-ticket06-postcommit-static/candidate/conformance/component/content_process_recovery_test.go	2026-10-05 08:14:07.067023549 +0000
++++ /tmp/lerna-worktrees/content-snapshots-06/conformance/component/content_process_recovery_test.go	2026-10-05 08:41:11.425805923 +0000
+@@ -113,14 +113,22 @@
+ 		}
+ 		return nil
+ 	})
+-	if err!=nil || s.cfg.Gate!="published_commit_before_reply" || marker.record==nil {return err}
++	if err != nil || s.cfg.Gate != "published_commit_before_reply" || marker.record == nil {
++		return err
++	}
+ 	// Genuine Core.Within returned nil after Commit. Its Tx context is already
+ 	// cancelled; the original child caller context bounds this reply hold.
+-	frame:=contentProcessFrame{Scenario:s.cfg.Scenario,Generation:s.cfg.Generation,Stage:s.cfg.Gate,LeaseUntil:s.claim.LeaseUntil,ObjectKey:marker.record.ObjectKey,Attempt:marker.record.AttemptKey}
+-	if err=s.pipes.Emit(ctx,frame);err!=nil {return err}
++	frame := contentProcessFrame{Scenario: s.cfg.Scenario, Generation: s.cfg.Generation, Stage: s.cfg.Gate, LeaseUntil: s.claim.LeaseUntil, ObjectKey: marker.record.ObjectKey, Attempt: marker.record.AttemptKey}
++	if err = s.pipes.Emit(ctx, frame); err != nil {
++		return err
++	}
+ 	var release contentProcessFrame
+-	if err=s.pipes.Receive(ctx,&release);err!=nil {return err}
+-	if release.Scenario!=s.cfg.Scenario || release.Generation!=s.cfg.Generation || release.Stage!="release" {return errors.New("wrong original Content confirmed-Commit reply release")}
++	if err = s.pipes.Receive(ctx, &release); err != nil {
++		return err
++	}
++	if release.Scenario != s.cfg.Scenario || release.Generation != s.cfg.Generation || release.Stage != "release" {
++		return errors.New("wrong original Content confirmed-Commit reply release")
++	}
+ 	return nil
+ }
+ 
+@@ -669,67 +677,105 @@
+ }
+ 
+ func TestContentSIGKILLAfterPublicationCommitRetainsOriginalPublishedFact(t *testing.T) {
+- for _,kill:=range []bool{false,true} {
+-  name:="normal_release"
+-  if kill {name="SIGKILL_after_publication_commit_before_reply"}
+-  t.Run(name,func(t *testing.T){
+-   ctx,cancel:=context.WithTimeout(context.Background(),30*time.Second)
+-   defer cancel()
+-   w:=fixture.New(t,ctx)
+-   installContentPolicy(t,ctx,w,alphaRef)
+-   service,err:=publicationProcessService(w.Store(),w.Objects,"original-postcommit-parent")
+-   if err!=nil {t.Fatal(err)}
+-   request:=contentPut(t,alphaRef,"original-postcommit-publication","YWxwaGEK")
+-   receipt:=putContentRequest(t,ctx,service,request)
+-   if _,ok:=receipt.AsAccepted();!ok {t.Fatal("normal original postcommit publication not accepted")}
+-   fixed,err:=v.Encode(receipt)
+-   if err!=nil {t.Fatal(err)}
+-   child:=startContentPublicationChild(t,ctx,w,"published_commit_before_reply",1)
+-   var gate contentProcessFrame
+-   if err=child.Event(ctx,&gate);err!=nil {t.Fatal("actual original Core Commit before reply gate:",err)}
+-   _,key,err:=content.VersionIdentity(alphaRef)
+-   if err!=nil || gate.Stage!="published_commit_before_reply" || gate.Scenario!="original-content-publication" || gate.Generation!=1 || gate.ObjectKey!=key || gate.Attempt=="" || gate.LeaseUntil.IsZero() {t.Fatal("confirmed original Commit gate identity mismatch")}
+-   // This gate is after actual Commit, so independent public reads are safe:
+-   // neither an accepted receipt nor a pre-COMMIT private marker is this proof.
+-   assertContentBody(t,ctx,service,alphaRef,nil,"alpha\n")
+-   original,err:=service.GetCommand(ctx,contentCommandGetWire(t,request.CommandID),&contentPrincipal)
+-   if err!=nil {t.Fatal(err)}
+-   found,ok:=original.AsFound()
+-   if !ok {t.Fatal("actual Commit before reply lost original fixed receipt")}
+-   current,err:=v.Encode(found.Receipt)
+-   progress,hasProgress:=found.Progress.AsContent()
+-   if err!=nil || string(current)!=string(fixed) || !hasProgress || progress.Publication!="published" || progress.ContentRef!=alphaRef {t.Fatal("pre-reply public fact does not prove original publication")}
+-   body,err:=os.ReadFile(filepath.Join(w.Directory,key))
+-   if err!=nil || string(body)!="alpha\n" {t.Fatal("pre-reply independent full original body missing")}
+-   if !kill {
+-    if err=child.Send(ctx,contentProcessFrame{Scenario:gate.Scenario,Generation:1,Stage:"release"});err!=nil {t.Fatal(err)}
+-    finishContentPublicationChild(t,ctx,w,child,1)
+-   } else {
+-    cutoff,stop:=context.WithTimeout(ctx,3*time.Second)
+-    defer stop()
+-    if err=child.KillWait(cutoff);err!=nil {t.Fatal("actual original postcommit SIGKILL/Wait:",err)}
+-    if err=w.RetainChildNativeClose(child);err!=nil {t.Fatal(err)}
+-    var lost contentProcessFrame
+-    if err=child.Reply(cutoff,&lost);!errors.Is(err,io.EOF) {t.Fatal("confirmed-Commit killed reply not EOF:",err)}
+-    confirmed,closeErr:=child.Stop(cutoff)
+-    if !confirmed || closeErr!=nil {t.Fatal("postcommit killed physical pipes:",closeErr)}
+-   }
+-   // Already committed: do not recreate staging, renew Claim, or run a second
+-   // publication Step. Actual reopened owner queries the same original fact.
+-   w.Reopen(ctx)
+-   service,err=publicationProcessService(w.Store(),w.Objects,"postcommit-reopened-observer")
+-   if err!=nil {t.Fatal(err)}
+-   assertContentBody(t,ctx,service,alphaRef,nil,"alpha\n")
+-   original,err=service.GetCommand(ctx,contentCommandGetWire(t,request.CommandID),&contentPrincipal)
+-   if err!=nil {t.Fatal(err)}
+-   found,ok=original.AsFound()
+-   if !ok {t.Fatal("original postcommit receipt lost on real reopen")}
+-   current,err=v.Encode(found.Receipt)
+-   progress,hasProgress=found.Progress.AsContent()
+-   if err!=nil || string(current)!=string(fixed) || !hasProgress || progress.Publication!="published" || progress.ContentRef!=alphaRef {t.Fatal("lost reply changed original committed publication")}
+-   assertExactContentObjects(t,w.Directory,map[v.ContentRef]string{alphaRef:"alpha\n"})
+-  })
+- }
++	for _, kill := range []bool{false, true} {
++		name := "normal_release"
++		if kill {
++			name = "SIGKILL_after_publication_commit_before_reply"
++		}
++		t.Run(name, func(t *testing.T) {
++			ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
++			defer cancel()
++			w := fixture.New(t, ctx)
++			installContentPolicy(t, ctx, w, alphaRef)
++			service, err := publicationProcessService(w.Store(), w.Objects, "original-postcommit-parent")
++			if err != nil {
++				t.Fatal(err)
++			}
++			request := contentPut(t, alphaRef, "original-postcommit-publication", "YWxwaGEK")
++			receipt := putContentRequest(t, ctx, service, request)
++			if _, ok := receipt.AsAccepted(); !ok {
++				t.Fatal("normal original postcommit publication not accepted")
++			}
++			fixed, err := v.Encode(receipt)
++			if err != nil {
++				t.Fatal(err)
++			}
++			child := startContentPublicationChild(t, ctx, w, "published_commit_before_reply", 1)
++			var gate contentProcessFrame
++			if err = child.Event(ctx, &gate); err != nil {
++				t.Fatal("actual original Core Commit before reply gate:", err)
++			}
++			_, key, err := content.VersionIdentity(alphaRef)
++			if err != nil || gate.Stage != "published_commit_before_reply" || gate.Scenario != "original-content-publication" || gate.Generation != 1 || gate.ObjectKey != key || gate.Attempt == "" || gate.LeaseUntil.IsZero() {
++				t.Fatal("confirmed original Commit gate identity mismatch")
++			}
++			// This gate is after actual Commit, so independent public reads are safe:
++			// neither an accepted receipt nor a pre-COMMIT private marker is this proof.
++			assertContentBody(t, ctx, service, alphaRef, nil, "alpha\n")
++			original, err := service.GetCommand(ctx, contentCommandGetWire(t, request.CommandID), &contentPrincipal)
++			if err != nil {
++				t.Fatal(err)
++			}
++			found, ok := original.AsFound()
++			if !ok {
++				t.Fatal("actual Commit before reply lost original fixed receipt")
++			}
++			current, err := v.Encode(found.Receipt)
++			progress, hasProgress := found.Progress.AsContent()
++			if err != nil || string(current) != string(fixed) || !hasProgress || progress.Publication != "published" || progress.ContentRef != alphaRef {
++				t.Fatal("pre-reply public fact does not prove original publication")
++			}
++			body, err := os.ReadFile(filepath.Join(w.Directory, key))
++			if err != nil || string(body) != "alpha\n" {
++				t.Fatal("pre-reply independent full original body missing")
++			}
++			if !kill {
++				if err = child.Send(ctx, contentProcessFrame{Scenario: gate.Scenario, Generation: 1, Stage: "release"}); err != nil {
++					t.Fatal(err)
++				}
++				finishContentPublicationChild(t, ctx, w, child, 1)
++			} else {
++				cutoff, stop := context.WithTimeout(ctx, 3*time.Second)
++				defer stop()
++				if err = child.KillWait(cutoff); err != nil {
++					t.Fatal("actual original postcommit SIGKILL/Wait:", err)
++				}
++				if err = w.RetainChildNativeClose(child); err != nil {
++					t.Fatal(err)
++				}
++				var lost contentProcessFrame
++				if err = child.Reply(cutoff, &lost); !errors.Is(err, io.EOF) {
++					t.Fatal("confirmed-Commit killed reply not EOF:", err)
++				}
++				confirmed, closeErr := child.Stop(cutoff)
++				if !confirmed || closeErr != nil {
++					t.Fatal("postcommit killed physical pipes:", closeErr)
++				}
++			}
++			// Already committed: do not recreate staging, renew Claim, or run a second
++			// publication Step. Actual reopened owner queries the same original fact.
++			w.Reopen(ctx)
++			service, err = publicationProcessService(w.Store(), w.Objects, "postcommit-reopened-observer")
++			if err != nil {
++				t.Fatal(err)
++			}
++			assertContentBody(t, ctx, service, alphaRef, nil, "alpha\n")
++			original, err = service.GetCommand(ctx, contentCommandGetWire(t, request.CommandID), &contentPrincipal)
++			if err != nil {
++				t.Fatal(err)
++			}
++			found, ok = original.AsFound()
++			if !ok {
++				t.Fatal("original postcommit receipt lost on real reopen")
++			}
++			current, err = v.Encode(found.Receipt)
++			progress, hasProgress = found.Progress.AsContent()
++			if err != nil || string(current) != string(fixed) || !hasProgress || progress.Publication != "published" || progress.ContentRef != alphaRef {
++				t.Fatal("lost reply changed original committed publication")
++			}
++			assertExactContentObjects(t, w.Directory, map[v.ContentRef]string{alphaRef: "alpha\n"})
++		})
++	}
+ }
+ 
+ var _ content.Repository = (*contentProcessStore)(nil)
