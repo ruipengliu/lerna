@@ -90,10 +90,7 @@ func (s *Service) Invoke(ctx context.Context, caller *v1.Caller, c *v1.StartExec
 	if e != nil {
 		return nil, e
 	}
-	payload := body.RawBody
-	if payload == nil {
-		payload = []byte(body.Text)
-	}
+	payload := command.ContentBytes(body)
 	result, e := s.io.Perform(ctx, &v1.PhysicalIORequest{TaskId: c.Binding.TaskId, OperationId: c.Binding.OperationId, ExecutorEndpointId: c.Binding.ExecutorEndpointId, Attempt: x.Attempt, Send: x.Send, CallDescriptor: x.CallDescriptor, Body: payload})
 	if e != nil {
 		return receipt, e

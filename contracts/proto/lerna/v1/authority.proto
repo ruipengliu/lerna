@@ -12,6 +12,8 @@ message PermissionClause {
   string use_right = 3;
   string processing_purpose = 4;
   string executor_endpoint_id = 5;
+  string parameter_mode = 6;
+  Ref parameters_ref = 7;
 }
 message Grant {
   Ref ref = 1;
@@ -26,6 +28,12 @@ message Grant {
   bool confirmation_required = 10;
   CommandIdentity issuer = 11;
   uint32 semantic_version = 12;
+  uint64 max_admissions = 13;
+  string revocation_completion = 14;
+  Ref revocation_ref = 15;
+  Ref parent_grant_ref = 16;
+  repeated Ref source_grant_refs = 17;
+  string delegation_mode = 18;
 }
 message GrantUse {
   Ref ref = 1;

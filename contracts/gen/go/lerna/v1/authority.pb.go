@@ -28,6 +28,8 @@ type PermissionClause struct {
 	UseRight           string                 `protobuf:"bytes,3,opt,name=use_right,json=useRight,proto3" json:"use_right,omitempty"`
 	ProcessingPurpose  string                 `protobuf:"bytes,4,opt,name=processing_purpose,json=processingPurpose,proto3" json:"processing_purpose,omitempty"`
 	ExecutorEndpointId string                 `protobuf:"bytes,5,opt,name=executor_endpoint_id,json=executorEndpointId,proto3" json:"executor_endpoint_id,omitempty"`
+	ParameterMode      string                 `protobuf:"bytes,6,opt,name=parameter_mode,json=parameterMode,proto3" json:"parameter_mode,omitempty"`
+	ParametersRef      *Ref                   `protobuf:"bytes,7,opt,name=parameters_ref,json=parametersRef,proto3" json:"parameters_ref,omitempty"`
 	unknownFields      protoimpl.UnknownFields
 	sizeCache          protoimpl.SizeCache
 }
@@ -97,6 +99,20 @@ func (x *PermissionClause) GetExecutorEndpointId() string {
 	return ""
 }
 
+func (x *PermissionClause) GetParameterMode() string {
+	if x != nil {
+		return x.ParameterMode
+	}
+	return ""
+}
+
+func (x *PermissionClause) GetParametersRef() *Ref {
+	if x != nil {
+		return x.ParametersRef
+	}
+	return nil
+}
+
 type Grant struct {
 	state                protoimpl.MessageState `protogen:"open.v1"`
 	Ref                  *Ref                   `protobuf:"bytes,1,opt,name=ref,proto3" json:"ref,omitempty"`
@@ -111,6 +127,12 @@ type Grant struct {
 	ConfirmationRequired bool                   `protobuf:"varint,10,opt,name=confirmation_required,json=confirmationRequired,proto3" json:"confirmation_required,omitempty"`
 	Issuer               *CommandIdentity       `protobuf:"bytes,11,opt,name=issuer,proto3" json:"issuer,omitempty"`
 	SemanticVersion      uint32                 `protobuf:"varint,12,opt,name=semantic_version,json=semanticVersion,proto3" json:"semantic_version,omitempty"`
+	MaxAdmissions        uint64                 `protobuf:"varint,13,opt,name=max_admissions,json=maxAdmissions,proto3" json:"max_admissions,omitempty"`
+	RevocationCompletion string                 `protobuf:"bytes,14,opt,name=revocation_completion,json=revocationCompletion,proto3" json:"revocation_completion,omitempty"`
+	RevocationRef        *Ref                   `protobuf:"bytes,15,opt,name=revocation_ref,json=revocationRef,proto3" json:"revocation_ref,omitempty"`
+	ParentGrantRef       *Ref                   `protobuf:"bytes,16,opt,name=parent_grant_ref,json=parentGrantRef,proto3" json:"parent_grant_ref,omitempty"`
+	SourceGrantRefs      []*Ref                 `protobuf:"bytes,17,rep,name=source_grant_refs,json=sourceGrantRefs,proto3" json:"source_grant_refs,omitempty"`
+	DelegationMode       string                 `protobuf:"bytes,18,opt,name=delegation_mode,json=delegationMode,proto3" json:"delegation_mode,omitempty"`
 	unknownFields        protoimpl.UnknownFields
 	sizeCache            protoimpl.SizeCache
 }
@@ -227,6 +249,48 @@ func (x *Grant) GetSemanticVersion() uint32 {
 		return x.SemanticVersion
 	}
 	return 0
+}
+
+func (x *Grant) GetMaxAdmissions() uint64 {
+	if x != nil {
+		return x.MaxAdmissions
+	}
+	return 0
+}
+
+func (x *Grant) GetRevocationCompletion() string {
+	if x != nil {
+		return x.RevocationCompletion
+	}
+	return ""
+}
+
+func (x *Grant) GetRevocationRef() *Ref {
+	if x != nil {
+		return x.RevocationRef
+	}
+	return nil
+}
+
+func (x *Grant) GetParentGrantRef() *Ref {
+	if x != nil {
+		return x.ParentGrantRef
+	}
+	return nil
+}
+
+func (x *Grant) GetSourceGrantRefs() []*Ref {
+	if x != nil {
+		return x.SourceGrantRefs
+	}
+	return nil
+}
+
+func (x *Grant) GetDelegationMode() string {
+	if x != nil {
+		return x.DelegationMode
+	}
+	return ""
 }
 
 type GrantUse struct {
@@ -729,13 +793,15 @@ var File_lerna_v1_authority_proto protoreflect.FileDescriptor
 
 const file_lerna_v1_authority_proto_rawDesc = "" +
 	"\n" +
-	"\x18lerna/v1/authority.proto\x12\blerna.v1\x1a\x17lerna/v1/identity.proto\x1a\x17lerna/v1/planning.proto\x1a\x19lerna/v1/submission.proto\"\xc4\x01\n" +
+	"\x18lerna/v1/authority.proto\x12\blerna.v1\x1a\x17lerna/v1/identity.proto\x1a\x17lerna/v1/planning.proto\x1a\x19lerna/v1/submission.proto\"\xa1\x02\n" +
 	"\x10PermissionClause\x12\x16\n" +
 	"\x06action\x18\x01 \x01(\tR\x06action\x12\x1a\n" +
 	"\bresource\x18\x02 \x01(\tR\bresource\x12\x1b\n" +
 	"\tuse_right\x18\x03 \x01(\tR\buseRight\x12-\n" +
 	"\x12processing_purpose\x18\x04 \x01(\tR\x11processingPurpose\x120\n" +
-	"\x14executor_endpoint_id\x18\x05 \x01(\tR\x12executorEndpointId\"\x83\x04\n" +
+	"\x14executor_endpoint_id\x18\x05 \x01(\tR\x12executorEndpointId\x12%\n" +
+	"\x0eparameter_mode\x18\x06 \x01(\tR\rparameterMode\x124\n" +
+	"\x0eparameters_ref\x18\a \x01(\v2\r.lerna.v1.RefR\rparametersRef\"\xb2\x06\n" +
 	"\x05Grant\x12\x1f\n" +
 	"\x03ref\x18\x01 \x01(\v2\r.lerna.v1.RefR\x03ref\x12.\n" +
 	"\asubject\x18\x02 \x01(\v2\x14.lerna.v1.GlobalNameR\asubject\x12<\n" +
@@ -749,7 +815,13 @@ const file_lerna_v1_authority_proto_rawDesc = "" +
 	"\x15confirmation_required\x18\n" +
 	" \x01(\bR\x14confirmationRequired\x121\n" +
 	"\x06issuer\x18\v \x01(\v2\x19.lerna.v1.CommandIdentityR\x06issuer\x12)\n" +
-	"\x10semantic_version\x18\f \x01(\rR\x0fsemanticVersion\"\x93\x02\n" +
+	"\x10semantic_version\x18\f \x01(\rR\x0fsemanticVersion\x12%\n" +
+	"\x0emax_admissions\x18\r \x01(\x04R\rmaxAdmissions\x123\n" +
+	"\x15revocation_completion\x18\x0e \x01(\tR\x14revocationCompletion\x124\n" +
+	"\x0erevocation_ref\x18\x0f \x01(\v2\r.lerna.v1.RefR\rrevocationRef\x127\n" +
+	"\x10parent_grant_ref\x18\x10 \x01(\v2\r.lerna.v1.RefR\x0eparentGrantRef\x129\n" +
+	"\x11source_grant_refs\x18\x11 \x03(\v2\r.lerna.v1.RefR\x0fsourceGrantRefs\x12'\n" +
+	"\x0fdelegation_mode\x18\x12 \x01(\tR\x0edelegationMode\"\x93\x02\n" +
 	"\bGrantUse\x12\x1f\n" +
 	"\x03ref\x18\x01 \x01(\v2\r.lerna.v1.RefR\x03ref\x12*\n" +
 	"\tgrant_ref\x18\x02 \x01(\v2\r.lerna.v1.RefR\bgrantRef\x12\x1e\n" +
@@ -823,35 +895,39 @@ var file_lerna_v1_authority_proto_goTypes = []any{
 	(*CommandHeader)(nil),          // 11: lerna.v1.CommandHeader
 }
 var file_lerna_v1_authority_proto_depIdxs = []int32{
-	8,  // 0: lerna.v1.Grant.ref:type_name -> lerna.v1.Ref
-	9,  // 1: lerna.v1.Grant.subject:type_name -> lerna.v1.GlobalName
-	0,  // 2: lerna.v1.Grant.permissions:type_name -> lerna.v1.PermissionClause
-	10, // 3: lerna.v1.Grant.issuer:type_name -> lerna.v1.CommandIdentity
-	8,  // 4: lerna.v1.GrantUse.ref:type_name -> lerna.v1.Ref
-	8,  // 5: lerna.v1.GrantUse.grant_ref:type_name -> lerna.v1.Ref
-	9,  // 6: lerna.v1.GrantUse.operation_id:type_name -> lerna.v1.GlobalName
-	8,  // 7: lerna.v1.GrantUse.admission_ref:type_name -> lerna.v1.Ref
-	9,  // 8: lerna.v1.GrantUse.task_id:type_name -> lerna.v1.GlobalName
-	11, // 9: lerna.v1.ConfigureGrantCommand.header:type_name -> lerna.v1.CommandHeader
-	1,  // 10: lerna.v1.ConfigureGrantCommand.grant:type_name -> lerna.v1.Grant
-	8,  // 11: lerna.v1.Budget.ref:type_name -> lerna.v1.Ref
-	9,  // 12: lerna.v1.Budget.task_id:type_name -> lerna.v1.GlobalName
-	11, // 13: lerna.v1.ConfigureBudgetCommand.header:type_name -> lerna.v1.CommandHeader
-	9,  // 14: lerna.v1.ConfigureBudgetCommand.task_id:type_name -> lerna.v1.GlobalName
-	8,  // 15: lerna.v1.Reservation.ref:type_name -> lerna.v1.Ref
-	8,  // 16: lerna.v1.Reservation.admission_ref:type_name -> lerna.v1.Ref
-	9,  // 17: lerna.v1.Reservation.operation_id:type_name -> lerna.v1.GlobalName
-	8,  // 18: lerna.v1.Reservation.budget_refs:type_name -> lerna.v1.Ref
-	9,  // 19: lerna.v1.Reservation.task_id:type_name -> lerna.v1.GlobalName
-	8,  // 20: lerna.v1.BudgetBasis.budget_ref:type_name -> lerna.v1.Ref
-	8,  // 21: lerna.v1.BudgetBasis.rate_basis_ref:type_name -> lerna.v1.Ref
-	8,  // 22: lerna.v1.BudgetBasis.reservation_ref:type_name -> lerna.v1.Ref
-	8,  // 23: lerna.v1.BudgetBasis.budget_chain_refs:type_name -> lerna.v1.Ref
-	24, // [24:24] is the sub-list for method output_type
-	24, // [24:24] is the sub-list for method input_type
-	24, // [24:24] is the sub-list for extension type_name
-	24, // [24:24] is the sub-list for extension extendee
-	0,  // [0:24] is the sub-list for field type_name
+	8,  // 0: lerna.v1.PermissionClause.parameters_ref:type_name -> lerna.v1.Ref
+	8,  // 1: lerna.v1.Grant.ref:type_name -> lerna.v1.Ref
+	9,  // 2: lerna.v1.Grant.subject:type_name -> lerna.v1.GlobalName
+	0,  // 3: lerna.v1.Grant.permissions:type_name -> lerna.v1.PermissionClause
+	10, // 4: lerna.v1.Grant.issuer:type_name -> lerna.v1.CommandIdentity
+	8,  // 5: lerna.v1.Grant.revocation_ref:type_name -> lerna.v1.Ref
+	8,  // 6: lerna.v1.Grant.parent_grant_ref:type_name -> lerna.v1.Ref
+	8,  // 7: lerna.v1.Grant.source_grant_refs:type_name -> lerna.v1.Ref
+	8,  // 8: lerna.v1.GrantUse.ref:type_name -> lerna.v1.Ref
+	8,  // 9: lerna.v1.GrantUse.grant_ref:type_name -> lerna.v1.Ref
+	9,  // 10: lerna.v1.GrantUse.operation_id:type_name -> lerna.v1.GlobalName
+	8,  // 11: lerna.v1.GrantUse.admission_ref:type_name -> lerna.v1.Ref
+	9,  // 12: lerna.v1.GrantUse.task_id:type_name -> lerna.v1.GlobalName
+	11, // 13: lerna.v1.ConfigureGrantCommand.header:type_name -> lerna.v1.CommandHeader
+	1,  // 14: lerna.v1.ConfigureGrantCommand.grant:type_name -> lerna.v1.Grant
+	8,  // 15: lerna.v1.Budget.ref:type_name -> lerna.v1.Ref
+	9,  // 16: lerna.v1.Budget.task_id:type_name -> lerna.v1.GlobalName
+	11, // 17: lerna.v1.ConfigureBudgetCommand.header:type_name -> lerna.v1.CommandHeader
+	9,  // 18: lerna.v1.ConfigureBudgetCommand.task_id:type_name -> lerna.v1.GlobalName
+	8,  // 19: lerna.v1.Reservation.ref:type_name -> lerna.v1.Ref
+	8,  // 20: lerna.v1.Reservation.admission_ref:type_name -> lerna.v1.Ref
+	9,  // 21: lerna.v1.Reservation.operation_id:type_name -> lerna.v1.GlobalName
+	8,  // 22: lerna.v1.Reservation.budget_refs:type_name -> lerna.v1.Ref
+	9,  // 23: lerna.v1.Reservation.task_id:type_name -> lerna.v1.GlobalName
+	8,  // 24: lerna.v1.BudgetBasis.budget_ref:type_name -> lerna.v1.Ref
+	8,  // 25: lerna.v1.BudgetBasis.rate_basis_ref:type_name -> lerna.v1.Ref
+	8,  // 26: lerna.v1.BudgetBasis.reservation_ref:type_name -> lerna.v1.Ref
+	8,  // 27: lerna.v1.BudgetBasis.budget_chain_refs:type_name -> lerna.v1.Ref
+	28, // [28:28] is the sub-list for method output_type
+	28, // [28:28] is the sub-list for method input_type
+	28, // [28:28] is the sub-list for extension type_name
+	28, // [28:28] is the sub-list for extension extendee
+	0,  // [0:28] is the sub-list for field type_name
 }
 
 func init() { file_lerna_v1_authority_proto_init() }

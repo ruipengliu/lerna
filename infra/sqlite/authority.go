@@ -8,7 +8,10 @@ import (
 )
 
 func (s *Store) SaveGrant(ctx context.Context, g *v1.Grant) error {
-	return s.saveRecord(ctx, "adjudication", "INSERT INTO grants VALUES(?,?,?,?)", g, g.Ref.Name.UserId, g.Ref.Name.AuthorityDomainId, g.Ref.Name.LocalId)
+	if e := s.saveRecord(ctx, "adjudication", "INSERT INTO grants VALUES(?,?,?,?) ON CONFLICT(user_id,domain_id,id) DO UPDATE SET record=excluded.record", g, g.Ref.Name.UserId, g.Ref.Name.AuthorityDomainId, g.Ref.Name.LocalId); e != nil {
+		return e
+	}
+	return s.saveRecord(ctx, "adjudication", "INSERT INTO grant_versions VALUES(?,?,?,?,?)", g, g.Ref.Name.UserId, g.Ref.Name.AuthorityDomainId, g.Ref.Name.LocalId, g.Ref.Revision)
 }
 func (s *Store) LoadGrant(ctx context.Context, r *v1.Ref) (*v1.Grant, error) {
 	g := new(v1.Grant)
@@ -132,4 +135,20 @@ func (s *Store) Reservations(ctx context.Context, id *v1.GlobalName) ([]*v1.Rese
 		return rows.Err()
 	})
 	return result, e
+}
+
+func (s *Store) GrantUseCount(ctx context.Context, pool string) (uint64, error) {
+	var count uint64
+	e := s.read(ctx, func(q querier) error {
+		return q.QueryRowContext(ctx, "SELECT COUNT(*) FROM grant_uses WHERE user_id=? AND pool_id=?", s.user, pool).Scan(&count)
+	})
+	return count, e
+}
+
+func (s *Store) ReadAuthorityTime(ctx context.Context) (int64, error) {
+	var now int64
+	e := s.read(ctx, func(q querier) error {
+		return q.QueryRowContext(ctx, "SELECT CAST(unixepoch('subsec')*1000 AS INTEGER)").Scan(&now)
+	})
+	return now, e
 }

@@ -45,6 +45,9 @@ func Open(path, user, domain string) (*Harness, error) {
 	c := content.New(s, user, domain+"/content")
 	h := &Harness{Sessions: sessions.New(s, d, t, c, user, domain), Tasks: t, Durable: d, Content: c, store: s}
 	h.Grants = grants.New(s, d, user, domain, "host").WithAdmissions(t)
+	h.Grants.WithConfirmations(h.Sessions).WithConfirmationContent(c)
+	h.Sessions.WithConfirmations(s, d, t, h.Grants)
+	t.WithConfirmationRequests(h.Sessions, c)
 	h.Budget = budget.New(s, d, user, domain, "host")
 	h.LedgerWork = durable.New(s.LedgerWork(), user, domain+"/ledger")
 	h.Ledger = ledger.New(s, user, domain+"/ledger", domain).WithWork(h.LedgerWork).WithCompiler(simulator.Adapter{}).WithStarts(t)
@@ -60,6 +63,8 @@ func Open(path, user, domain string) (*Harness, error) {
 		return nil, e
 	}
 	h.Egress = egress.New(t, h.Ledger, c, egressio.HTTP{}, critical)
+	h.Ledger.WithGrantClosures(h.Grants)
+	h.Grants.WithRevocationExits(h.Egress)
 	t.WithAdmission(h.Grants, h.Budget, c, h.Sessions, d, h.Ledger).WithHandoffs(d, h.Ledger)
 	// 固定受信宿主身份仅驱动已保存的责任，不替换原命令身份。
 	ctx, cancel := context.WithTimeout(context.Background(), 65*time.Second)
@@ -81,6 +86,10 @@ func Open(path, user, domain string) (*Harness, error) {
 		return nil, err
 	}
 	if err := h.Ledger.ProcessInterpretations(ctx, &v1.Caller{UserId: user, IssuerId: "host-recovery"}); err != nil {
+		s.Close()
+		return nil, err
+	}
+	if err := h.Grants.ProcessRevocations(ctx); err != nil {
 		s.Close()
 		return nil, err
 	}

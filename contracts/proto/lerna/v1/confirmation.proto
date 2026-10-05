@@ -1,0 +1,77 @@
+syntax = "proto3";
+package lerna.v1;
+
+import "lerna/v1/admission.proto";
+import "lerna/v1/authority.proto";
+import "lerna/v1/identity.proto";
+import "lerna/v1/planning.proto";
+import "lerna/v1/submission.proto";
+
+option go_package = "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1;lernav1";
+message OperationConfirmationMatter {
+  GlobalName task_id = 1;
+  Ref proposal_ref = 2;
+  Ref grant_ref = 3;
+  uint64 requirements_version = 4;
+  uint64 input_version = 5;
+  uint64 control_generation = 6;
+  string step_id = 7;
+  Capability capability = 8;
+  Ref parameters_ref = 9;
+  repeated Ref content_refs = 10;
+}
+message GrantConfirmationMatter {
+  Ref issuance_ref = 1;
+  Grant grant = 2;
+}
+message Confirmation {
+  Ref ref = 1;
+  GlobalName session_id = 2;
+  string matter_type = 3;
+  string binding_digest = 4;
+  string description = 5;
+  int64 expires_at_unix_ms = 6;
+  string state = 7;
+  oneof matter {
+    OperationConfirmationMatter operation_admission = 8;
+    GrantConfirmationMatter grant_issuance = 9;
+  }
+  CommandIdentity responded_by = 10;
+  CommandIdentity withdrawn_by = 13;
+  oneof consumed_by {
+    Ref consumed_admission_ref = 11;
+    Ref consumed_grant_issuance_ref = 12;
+  }
+}
+message RequestAdmissionConfirmationCommand {
+  CommandHeader header = 1;
+  GlobalName task_id = 2;
+  Ref proposal_ref = 3;
+  Ref grant_ref = 4;
+  GlobalName session_id = 5;
+}
+message RespondConfirmationCommand {
+  CommandHeader header = 1;
+  Ref confirmation_ref = 2;
+  string binding_digest = 3;
+  string decision = 4;
+}
+message GrantIssuance {
+  Ref ref = 1;
+  Grant grant = 2;
+  string state = 3;
+  Ref grant_ref = 4;
+}
+message RequestGrantConfirmationCommand {
+  CommandHeader header = 1;
+  Grant grant = 2;
+  GlobalName session_id = 3;
+}
+message IssueGrantCommand {
+  CommandHeader header = 1;
+  Ref confirmation_ref = 2;
+}
+message WithdrawConfirmationCommand {
+  CommandHeader header = 1;
+  Ref confirmation_ref = 2;
+}

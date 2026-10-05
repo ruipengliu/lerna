@@ -179,37 +179,61 @@ func TestSeparateHarnessClosureWaitsForOriginalPhysicalUse(t *testing.T) {
 	oracle := simulator.New("idempotent")
 	slow := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { close(entered); <-release; oracle.ServeHTTP(w, r) })
 	f := newFixtureWithTarget(t, 100, 80, false, slow)
-	_, c := prepareStart(t, f)
+	a, c := prepareStart(t, f)
 	done := make(chan error, 1)
 	go func() { _, e := f.h.Egress.Invoke(f.ctx, &v1.Caller{UserId: "u", IssuerId: "egress"}, c); done <- e }()
 	<-entered
 	second, e := assembly.Open(f.path, "u", "d")
 	if e != nil {
 		close(release)
+		<-done
 		t.Fatal(e)
 	}
 	defer second.Close()
+	r, e := second.Grants.Revoke(f.ctx, f.caller, &v1.RevokeGrantCommand{Header: header("revoke-active-exit"), GrantId: f.grant.Name})
+	if e != nil || r.GetDecision() != v1.Decision_DECISION_ACCEPTED {
+		close(release)
+		<-done
+		t.Fatalf("revoke: %v %v", r, e)
+	}
+	pendingRef := r.ResultRef
 	closed := make(chan error, 1)
-	go func() {
-		h := ledgerHeader("closure")
-		h.Identity.IssuerId = "grants-revocation"
-		_, e := second.Egress.CloseForGrantRevocation(f.ctx, &v1.Caller{UserId: "u", IssuerId: "grants-revocation"}, &v1.CloseGrantExitCommand{Header: h, CredentialRef: c.CredentialRef, Binding: c.Binding})
-		closed <- e
-	}()
+	go func() { closed <- second.Grants.ProcessRevocations(f.ctx) }()
 	select {
 	case e := <-closed:
 		close(release)
 		<-done
-		t.Fatalf("other instance passed the critical section before original use exited: %v", e)
+		t.Fatalf("revocation completed before original use exited: %v", e)
 	case <-time.After(100 * time.Millisecond):
+	}
+	pending, e := second.Grants.QueryCurrentRevocation(f.ctx, f.caller, pendingRef.Name)
+	if e != nil || pending.Status != "PENDING" || pending.Closures[0].RecipientReceipt != nil {
+		close(release)
+		<-done
+		t.Fatalf("premature completion: %v %v", pending, e)
 	}
 	close(release)
 	if e = <-done; e != nil {
 		t.Fatal(e)
 	}
-	// 08 会接入真实撤销源；这里的拒绝仍必须排在已经进入的实际使用之后。
-	if e = <-closed; e == nil {
-		t.Fatal("missing source authority accepted")
+	if e = <-closed; e != nil {
+		t.Fatal(e)
+	}
+	complete, e := second.Grants.QueryCurrentRevocation(f.ctx, f.caller, pendingRef.Name)
+	if e != nil || complete.Status != "COMPLETE" || complete.Closures[0].RecipientReceipt == nil {
+		t.Fatalf("closure incomplete: %v %v", complete, e)
+	}
+	proof, e := second.Ledger.QueryGrantExitClosure(f.ctx, f.caller, complete.Closures[0].RecipientReceipt.ResultRef)
+	if e != nil || !proof.PhysicalSendWasPossible {
+		t.Fatalf("lost send proof: %v %v", proof, e)
+	}
+	op, e := second.Ledger.QueryOperation(f.ctx, f.caller, a.OperationId)
+	if e != nil || op.Dispatch != "SEALED" || op.Effect.Outcome != "APPLIED" || op.Effect.LateEffect != "RULED_OUT" {
+		t.Fatalf("lost actual effect: %v %v", op, e)
+	}
+	_, e = second.Egress.Invoke(f.ctx, &v1.Caller{UserId: "u", IssuerId: "egress"}, c)
+	if e != nil {
+		t.Fatal(e)
 	}
 	requests, effects := oracle.Snapshot()
 	if len(requests) != 1 || len(effects) != 1 {

@@ -25,15 +25,18 @@ type Durable interface {
 	QueryReceipt(context.Context, *v1.Caller, *v1.CommandIdentity) (*v1.ReceiptQuery, error)
 }
 type CLI struct {
-	Content      Content
-	Observations ObservationContent
-	Ledger       ExecutionLedger
-	Egress       Egress
-	Sessions     Sessions
-	Tasks        Tasks
-	Durable      Durable
-	Caller       *v1.Caller
-	Domain       string
+	Grants            Grants
+	Confirmations     Confirmations
+	ConfirmationTasks ConfirmationTasks
+	Content           Content
+	Observations      ObservationContent
+	Ledger            ExecutionLedger
+	Egress            Egress
+	Sessions          Sessions
+	Tasks             Tasks
+	Durable           Durable
+	Caller            *v1.Caller
+	Domain            string
 }
 
 func (c CLI) Run(ctx context.Context, args []string, out io.Writer) error {
@@ -52,6 +55,8 @@ func (c CLI) Run(ctx context.Context, args []string, out io.Writer) error {
 		value, err = c.runSessionCommand(ctx, args)
 	case "execute", "operation", "observation":
 		value, err = c.execution(ctx, args)
+	case "grant-request", "admission-confirmation", "grant-issue", "confirmation", "confirm", "withdraw-confirmation", "grant", "revoke-grant", "revocation":
+		value, err = c.confirmationCommand(ctx, args)
 
 	case "submit":
 		flags := flag.NewFlagSet("submit", flag.ContinueOnError)
@@ -111,7 +116,12 @@ func (c CLI) Run(ctx context.Context, args []string, out io.Writer) error {
 			if e := c.Ledger.ProcessReports(ctx, c.Caller); e != nil {
 				return e
 			}
-			return c.Ledger.ProcessInterpretations(ctx, c.Caller)
+			if e := c.Ledger.ProcessInterpretations(ctx, c.Caller); e != nil {
+				return e
+			}
+		}
+		if c.Grants != nil {
+			return c.Grants.ProcessRevocations(ctx)
 		}
 		return nil
 	default:

@@ -1,2 +1,10 @@
 CREATE TABLE IF NOT EXISTS exit_credentials (user_id TEXT NOT NULL, domain_id TEXT NOT NULL, id TEXT NOT NULL, record BLOB NOT NULL, PRIMARY KEY(user_id,domain_id,id));
 CREATE TABLE IF NOT EXISTS exit_credential_uses (user_id TEXT NOT NULL, domain_id TEXT NOT NULL, credential_id TEXT NOT NULL, record BLOB NOT NULL, PRIMARY KEY(user_id,domain_id,credential_id));
+CREATE TABLE IF NOT EXISTS confirmations (user_id TEXT NOT NULL, domain_id TEXT NOT NULL, id TEXT NOT NULL, record BLOB NOT NULL, PRIMARY KEY(user_id,domain_id,id));
+CREATE TABLE IF NOT EXISTS confirmation_versions (user_id TEXT NOT NULL, domain_id TEXT NOT NULL, id TEXT NOT NULL, revision INTEGER NOT NULL, record BLOB NOT NULL, PRIMARY KEY(user_id,domain_id,id,revision));
+CREATE TABLE IF NOT EXISTS grant_issuances (user_id TEXT NOT NULL, domain_id TEXT NOT NULL, id TEXT NOT NULL, record BLOB NOT NULL, PRIMARY KEY(user_id,domain_id,id));
+CREATE TABLE IF NOT EXISTS grant_issuance_versions (user_id TEXT NOT NULL, domain_id TEXT NOT NULL, id TEXT NOT NULL, revision INTEGER NOT NULL, record BLOB NOT NULL, PRIMARY KEY(user_id,domain_id,id,revision));
+CREATE TABLE IF NOT EXISTS grant_versions (user_id TEXT NOT NULL, domain_id TEXT NOT NULL, id TEXT NOT NULL, revision INTEGER NOT NULL, record BLOB NOT NULL, PRIMARY KEY(user_id,domain_id,id,revision));
+INSERT OR IGNORE INTO grant_versions SELECT user_id,domain_id,id,1,record FROM grants;
+CREATE TABLE IF NOT EXISTS grant_revocations (user_id TEXT NOT NULL, domain_id TEXT NOT NULL, id TEXT NOT NULL, record BLOB NOT NULL, PRIMARY KEY(user_id,domain_id,id));
+CREATE TABLE IF NOT EXISTS grant_revocation_versions (user_id TEXT NOT NULL, domain_id TEXT NOT NULL, id TEXT NOT NULL, revision INTEGER NOT NULL, record BLOB NOT NULL, PRIMARY KEY(user_id,domain_id,id,revision));

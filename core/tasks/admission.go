@@ -9,7 +9,7 @@ import (
 )
 
 type Grants interface {
-	OccupyInTransaction(context.Context, *v1.Ref, *v1.GlobalName, *v1.GlobalName, *v1.Ref, *v1.Capability) (*v1.GrantUse, bool, error)
+	OccupyInTransaction(context.Context, *v1.Ref, *v1.GlobalName, *v1.GlobalName, *v1.Ref, *v1.Capability, *v1.Ref) (*v1.GrantUse, bool, error)
 }
 type Budget interface {
 	ReserveInTransaction(context.Context, *v1.GlobalName, *v1.GlobalName, *v1.Ref, *v1.Capability) (*v1.BudgetBasis, error)
@@ -160,7 +160,7 @@ func (s *Service) Admit(ctx context.Context, caller *v1.Caller, c *v1.AdmitComma
 		op := command.NewRef(s.user, s.domain+"/ledger", "operation", "lerna.v1.Operation")
 		a := &v1.Admission{Ref: ref, Origin: q.Ref, StepId: step.StepId, TaskId: t.TaskId, RequirementsVersion: t.RequirementsVersion, InputVersion: t.InputVersion, ControlGeneration: t.ControlGeneration, OperationId: op.Name, LedgerDomainId: s.domain + "/ledger", ExecutorEndpointId: cap.ExecutorEndpointId, ParametersRef: step.ParametersRef, CapabilityRef: cap.Ref, CapabilitySnapshot: cap, WorkCategory: "TARGET", ContentRefs: step.ContentRefs, HandoffIdentity: &v1.CommandIdentity{UserId: s.user, IssuerId: "tasks-handoff", TargetDomainId: s.domain + "/ledger", CommandId: op.Name.LocalId}}
 		// 准入-7、8、9、10 全部在保存点内，最后一道门禁拒绝撤回前面的使用与预留。
-		use, required, e := s.grants.OccupyInTransaction(tx, c.GrantRef, t.TaskId, op.Name, ref, cap)
+		use, required, e := s.grants.OccupyInTransaction(tx, c.GrantRef, t.TaskId, op.Name, ref, cap, step.ParametersRef)
 		if e != nil {
 			return nil, e
 		}
