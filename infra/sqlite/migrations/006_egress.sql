@@ -1,0 +1,15 @@
+CREATE TABLE IF NOT EXISTS ledger_versions (user_id TEXT NOT NULL, domain_id TEXT NOT NULL, object_kind TEXT NOT NULL, id TEXT NOT NULL, revision INTEGER NOT NULL, record BLOB NOT NULL, PRIMARY KEY(user_id,domain_id,object_kind,id,revision));
+CREATE TABLE IF NOT EXISTS starts (user_id TEXT NOT NULL, domain_id TEXT NOT NULL, id TEXT NOT NULL, send_id TEXT NOT NULL, record BLOB NOT NULL, PRIMARY KEY(user_id,domain_id,id), UNIQUE(user_id,domain_id,send_id));
+CREATE TABLE IF NOT EXISTS reservation_versions (user_id TEXT NOT NULL, domain_id TEXT NOT NULL, id TEXT NOT NULL, revision INTEGER NOT NULL, record BLOB NOT NULL, PRIMARY KEY(user_id,domain_id,id,revision));
+CREATE TABLE IF NOT EXISTS send_consumptions (user_id TEXT NOT NULL, domain_id TEXT NOT NULL, send_id TEXT NOT NULL, record BLOB NOT NULL, PRIMARY KEY(user_id,domain_id,send_id));
+CREATE TABLE IF NOT EXISTS content_observations (user_id TEXT NOT NULL, domain_id TEXT NOT NULL, id TEXT NOT NULL, record BLOB NOT NULL, PRIMARY KEY(user_id,domain_id,id));
+CREATE TABLE IF NOT EXISTS ledger_observations (user_id TEXT NOT NULL, domain_id TEXT NOT NULL, id TEXT NOT NULL, record BLOB NOT NULL, PRIMARY KEY(user_id,domain_id,id));
+CREATE TABLE IF NOT EXISTS content_commit_clock (singleton INTEGER PRIMARY KEY CHECK(singleton=1), position INTEGER NOT NULL);
+INSERT OR IGNORE INTO content_commit_clock VALUES(1,0);
+CREATE TABLE IF NOT EXISTS observation_reports (user_id TEXT NOT NULL, domain_id TEXT NOT NULL, id TEXT NOT NULL, record BLOB NOT NULL, PRIMARY KEY(user_id,domain_id,id));
+CREATE TABLE IF NOT EXISTS usage_reports (user_id TEXT NOT NULL, domain_id TEXT NOT NULL, id TEXT NOT NULL, billing_source TEXT NOT NULL, source_revision INTEGER NOT NULL, record BLOB NOT NULL, PRIMARY KEY(user_id,domain_id,id), UNIQUE(user_id,domain_id,billing_source,source_revision));
+CREATE TABLE IF NOT EXISTS trace_events (user_id TEXT NOT NULL, domain_id TEXT NOT NULL, id TEXT NOT NULL, record BLOB NOT NULL, PRIMARY KEY(user_id,domain_id,id));
+CREATE TABLE IF NOT EXISTS trace_commit_clock (singleton INTEGER PRIMARY KEY CHECK(singleton=1), position INTEGER NOT NULL);
+INSERT OR IGNORE INTO trace_commit_clock VALUES(1,0);
+CREATE TABLE IF NOT EXISTS effect_interpretations (user_id TEXT NOT NULL, domain_id TEXT NOT NULL, id TEXT NOT NULL, record BLOB NOT NULL, PRIMARY KEY(user_id,domain_id,id));
+CREATE TABLE IF NOT EXISTS grant_exit_closures (user_id TEXT NOT NULL, domain_id TEXT NOT NULL, id TEXT NOT NULL, record BLOB NOT NULL, PRIMARY KEY(user_id,domain_id,id));

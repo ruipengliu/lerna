@@ -25,17 +25,23 @@ type Durable interface {
 	QueryReceipt(context.Context, *v1.Caller, *v1.CommandIdentity) (*v1.ReceiptQuery, error)
 }
 type CLI struct {
-	Content  Content
-	Sessions Sessions
-	Tasks    Tasks
-	Durable  Durable
-	Caller   *v1.Caller
-	Domain   string
+	Grants            Grants
+	Confirmations     Confirmations
+	ConfirmationTasks ConfirmationTasks
+	Content           Content
+	Observations      ObservationContent
+	Ledger            ExecutionLedger
+	Egress            Egress
+	Sessions          Sessions
+	Tasks             Tasks
+	Durable           Durable
+	Caller            *v1.Caller
+	Domain            string
 }
 
 func (c CLI) Run(ctx context.Context, args []string, out io.Writer) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: submit --command ID --goal TEXT [--session ID] | receipt ID | task ID | session ID | recover | session-create --command ID | input --command ID --session ID --kind KIND [--text TEXT] | question --json FILE | process-input --json FILE | accept-requirements --json FILE | task-inputs ID")
+		return fmt.Errorf("usage: submit --command ID --goal TEXT [--session ID] | receipt ID | task ID | session ID | recover | execute START_JSON | operation ID | observation ID | session-create --command ID | input --command ID --session ID --kind KIND [--text TEXT] | question --json FILE | process-input --json FILE | accept-requirements --json FILE | task-inputs ID")
 	}
 	identity := func(id string) *v1.CommandIdentity {
 		return &v1.CommandIdentity{UserId: c.Caller.UserId, IssuerId: c.Caller.IssuerId, TargetDomainId: c.Domain, CommandId: id}
@@ -47,6 +53,11 @@ func (c CLI) Run(ctx context.Context, args []string, out io.Writer) error {
 		value, err = c.runTaskInputCommand(ctx, args)
 	case "session-create", "input", "question", "route-input", "query-input", "query-question":
 		value, err = c.runSessionCommand(ctx, args)
+	case "execute", "operation", "observation":
+		value, err = c.execution(ctx, args)
+	case "grant-request", "admission-confirmation", "grant-issue", "confirmation", "confirm", "withdraw-confirmation", "grant", "revoke-grant", "revocation":
+		value, err = c.confirmationCommand(ctx, args)
+
 	case "submit":
 		flags := flag.NewFlagSet("submit", flag.ContinueOnError)
 		flags.SetOutput(io.Discard)
@@ -93,7 +104,26 @@ func (c CLI) Run(ctx context.Context, args []string, out io.Writer) error {
 		if len(args) != 1 {
 			return command.Fail("INVALID_INPUT")
 		}
-		return c.Sessions.ProcessPending(ctx, c.Caller)
+		if e := c.Sessions.ProcessPending(ctx, c.Caller); e != nil {
+			return e
+		}
+		if c.Observations != nil {
+			if e := c.Observations.ProcessObservations(ctx, c.Caller); e != nil {
+				return e
+			}
+		}
+		if c.Ledger != nil {
+			if e := c.Ledger.ProcessReports(ctx, c.Caller); e != nil {
+				return e
+			}
+			if e := c.Ledger.ProcessInterpretations(ctx, c.Caller); e != nil {
+				return e
+			}
+		}
+		if c.Grants != nil {
+			return c.Grants.ProcessRevocations(ctx)
+		}
+		return nil
 	default:
 		return command.Fail("UNSUPPORTED_FEATURE")
 	}

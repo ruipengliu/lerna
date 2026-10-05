@@ -30,6 +30,9 @@ var admissionMigration string
 //go:embed migrations/003_session_input.sql
 var sessionInputMigration string
 
+//go:embed migrations/006_egress.sql
+var egressMigration string
+
 //go:embed migrations/004_grants_confirmation.sql
 var grantsMigration string
 
@@ -144,7 +147,7 @@ func (s *Store) configure(ctx context.Context) error {
 	if !s.settings.PowerLossQualified {
 		return fmt.Errorf("unqualified local durability platform: %+v", s.settings)
 	}
-	if _, err := s.conn.ExecContext(ctx, migration+admissionMigration+sessionInputMigration+grantsMigration); err != nil {
+	if _, err := s.conn.ExecContext(ctx, migration+admissionMigration+sessionInputMigration+grantsMigration+egressMigration); err != nil {
 		return err
 	}
 	if _, err := s.conn.ExecContext(ctx, "INSERT OR IGNORE INTO domain_config VALUES(1,?,?,?)", s.user, s.domain, "LOCAL"); err != nil {
@@ -374,6 +377,9 @@ func (s *Store) StageContent(ctx context.Context, c *v1.Content, fingerprint str
 	return ref, nil
 }
 func (s *Store) ReadContent(ctx context.Context, r *v1.Ref) (*v1.Content, error) {
+	if e := contentReadBoundary(ctx); e != nil {
+		return nil, e
+	}
 	c := new(v1.Content)
 	found, err := s.load(ctx, c, "SELECT record FROM content WHERE user_id=? AND domain_id=? AND id=?", r.Name.UserId, r.Name.AuthorityDomainId, r.Name.LocalId)
 	if !found {
@@ -398,4 +404,15 @@ func (s *Store) FindJobPurpose(ctx context.Context, user, purpose string) (*v1.J
 		return nil, err
 	}
 	return j, err
+}
+
+func (s *Store) ledgerWorkTransaction(ctx context.Context, point string, fn func(context.Context) error) error {
+	return s.transact(ctx, "ledger", point, fn)
+}
+
+func (s *Store) contentWorkTransaction(ctx context.Context, point string, fn func(context.Context) error) error {
+	return s.transact(ctx, "content", point, fn)
+}
+func (s *Store) traceWorkTransaction(ctx context.Context, point string, fn func(context.Context) error) error {
+	return s.transact(ctx, "trace", point, fn)
 }

@@ -27,7 +27,7 @@ func TestRevokedOrReadOnlyGrantCannotAuthorizeInvocation(t *testing.T) {
 			ref := &v1.Ref{Name: &v1.GlobalName{UserId: "u", AuthorityDomainId: "d", ObjectKind: "grant", LocalId: "g"}, Revision: 1, SchemaId: "lerna.v1.Grant"}
 			task := &v1.GlobalName{UserId: "u", AuthorityDomainId: "d", ObjectKind: "task", LocalId: "t"}
 			store := &grantStore{grant: &v1.Grant{Ref: ref, Subject: task, Status: tc.status, SemanticVersion: 1, UseMode: "CONTINUOUS", UsePoolId: "root", Issuer: &v1.CommandIdentity{IssuerId: "host"}, ValidFromUnixMs: 1, ValidUntilUnixMs: 200, Permissions: []*v1.PermissionClause{{Action: "CREATE", Resource: "r", UseRight: tc.right, ProcessingPurpose: "CURRENT_TASK", ExecutorEndpointId: "e"}}}}
-			use, _, e := New(store, nil, "u", "d", "host").OccupyInTransaction(context.Background(), ref, task, &v1.GlobalName{LocalId: "o"}, nil, &v1.Capability{Action: "CREATE", Resource: "r", UseRight: "INVOKE", ProcessingPurpose: "CURRENT_TASK", ExecutorEndpointId: "e"})
+			use, _, e := New(store, nil, "u", "d", "host").OccupyInTransaction(context.Background(), ref, task, &v1.GlobalName{LocalId: "o"}, nil, &v1.Capability{Action: "CREATE", Resource: "r", UseRight: "INVOKE", ProcessingPurpose: "CURRENT_TASK", ExecutorEndpointId: "e"}, nil)
 			if e == nil || use != nil || len(store.uses) != 0 {
 				t.Fatalf("authorization escaped: %v %v %v", use, e, store.uses)
 			}

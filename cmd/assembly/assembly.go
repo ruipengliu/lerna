@@ -5,26 +5,34 @@ import (
 	"context"
 	"time"
 
+	"github.com/ruipengliu/lerna/adapters/simulator"
+
 	v1 "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1"
 	"github.com/ruipengliu/lerna/core/budget"
 	"github.com/ruipengliu/lerna/core/content"
 	"github.com/ruipengliu/lerna/core/durable"
+	"github.com/ruipengliu/lerna/core/egress"
 	"github.com/ruipengliu/lerna/core/grants"
 	"github.com/ruipengliu/lerna/core/ledger"
 	"github.com/ruipengliu/lerna/core/sessions"
 	"github.com/ruipengliu/lerna/core/tasks"
+	"github.com/ruipengliu/lerna/core/trace"
+	"github.com/ruipengliu/lerna/infra/egressio"
 	"github.com/ruipengliu/lerna/infra/sqlite"
 )
 
 type Harness struct {
-	Ledger   *ledger.Service
-	Grants   *grants.Service
-	Budget   *budget.Service
-	Sessions *sessions.Service
-	Tasks    *tasks.Service
-	Durable  *durable.Service
-	Content  *content.Service
-	store    *sqlite.Store
+	Egress     *egress.Service
+	Trace      *trace.Service
+	Ledger     *ledger.Service
+	LedgerWork *durable.Service
+	Grants     *grants.Service
+	Budget     *budget.Service
+	Sessions   *sessions.Service
+	Tasks      *tasks.Service
+	Durable    *durable.Service
+	Content    *content.Service
+	store      *sqlite.Store
 }
 
 func Open(path, user, domain string) (*Harness, error) {
@@ -37,8 +45,26 @@ func Open(path, user, domain string) (*Harness, error) {
 	c := content.New(s, user, domain+"/content")
 	h := &Harness{Sessions: sessions.New(s, d, t, c, user, domain), Tasks: t, Durable: d, Content: c, store: s}
 	h.Grants = grants.New(s, d, user, domain, "host").WithAdmissions(t)
+	h.Grants.WithConfirmations(h.Sessions).WithConfirmationContent(c)
+	h.Sessions.WithConfirmations(s, d, t, h.Grants)
+	t.WithConfirmationRequests(h.Sessions, c)
 	h.Budget = budget.New(s, d, user, domain, "host")
-	h.Ledger = ledger.New(s, user, domain+"/ledger", domain)
+	h.LedgerWork = durable.New(s.LedgerWork(), user, domain+"/ledger")
+	h.Ledger = ledger.New(s, user, domain+"/ledger", domain).WithWork(h.LedgerWork).WithCompiler(simulator.Adapter{}).WithStarts(t)
+	c.WithObservations(durable.New(s.ContentWork(), user, domain+"/content"), h.Ledger)
+	h.Ledger.WithObservations(c)
+	h.Budget.WithUsageSource(h.Ledger)
+	h.Trace = trace.New(s, durable.New(s.TraceWork(), user, domain+"/trace"), h.Ledger, user, domain+"/trace")
+	h.Ledger.WithReports(h.Budget, d, h.Trace)
+	t.WithStart(h.Grants, h.Budget, h.Ledger)
+	critical, e := egressio.NewFileLock(path)
+	if e != nil {
+		s.Close()
+		return nil, e
+	}
+	h.Egress = egress.New(t, h.Ledger, c, egressio.HTTP{}, critical)
+	h.Ledger.WithGrantClosures(h.Grants)
+	h.Grants.WithRevocationExits(h.Egress)
 	t.WithAdmission(h.Grants, h.Budget, c, h.Sessions, d, h.Ledger).WithHandoffs(d, h.Ledger)
 	// 固定受信宿主身份仅驱动已保存的责任，不替换原命令身份。
 	ctx, cancel := context.WithTimeout(context.Background(), 65*time.Second)
@@ -48,6 +74,22 @@ func Open(path, user, domain string) (*Harness, error) {
 		return nil, err
 	}
 	if err := h.Tasks.RecoverHandoffs(ctx, &v1.Caller{UserId: user, IssuerId: "host-recovery"}); err != nil {
+		s.Close()
+		return nil, err
+	}
+	if err := c.ProcessObservations(ctx, &v1.Caller{UserId: user, IssuerId: "host-recovery"}); err != nil {
+		s.Close()
+		return nil, err
+	}
+	if err := h.Ledger.ProcessReports(ctx, &v1.Caller{UserId: user, IssuerId: "host-recovery"}); err != nil {
+		s.Close()
+		return nil, err
+	}
+	if err := h.Ledger.ProcessInterpretations(ctx, &v1.Caller{UserId: user, IssuerId: "host-recovery"}); err != nil {
+		s.Close()
+		return nil, err
+	}
+	if err := h.Grants.ProcessRevocations(ctx); err != nil {
 		s.Close()
 		return nil, err
 	}

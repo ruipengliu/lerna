@@ -10,6 +10,17 @@ import (
 )
 
 type Store interface {
+	ReadAuthorityTime(context.Context) (int64, error)
+	PendingGrantRevocations(context.Context) ([]*v1.GrantRevocation, error)
+	LoadGrantVersion(context.Context, *v1.Ref) (*v1.Grant, error)
+	SaveGrantRevocation(context.Context, *v1.GrantRevocation) error
+	LoadGrantRevocation(context.Context, *v1.Ref) (*v1.GrantRevocation, error)
+	LoadCurrentGrantRevocation(context.Context, *v1.GlobalName) (*v1.GrantRevocation, error)
+	ExitCredentials(context.Context) ([]*v1.ExitCredential, error)
+	SaveGrantIssuance(context.Context, *v1.GrantIssuance) error
+	LoadGrantIssuance(context.Context, *v1.Ref) (*v1.GrantIssuance, error)
+	LoadCurrentGrantIssuance(context.Context, *v1.GlobalName) (*v1.GrantIssuance, error)
+	GrantUseCount(context.Context, string) (uint64, error)
 	SaveExitCredentialUse(context.Context, *v1.ExitCredentialUse) error
 	LoadExitCredentialUse(context.Context, *v1.Ref) (*v1.ExitCredentialUse, error)
 	SaveExitCredential(context.Context, *v1.ExitCredential) error
@@ -25,6 +36,9 @@ type Decisions interface {
 	Execute(context.Context, *v1.Caller, *v1.CommandHeader, string, string, func(context.Context) (*v1.Ref, error)) (*v1.CommandReceipt, error)
 }
 type Service struct {
+	confirmationContent         ConfirmationContent
+	revocationExits             RevocationExits
+	confirmations               ConfirmationSessions
 	admissions                  Admissions
 	store                       Store
 	decisions                   Decisions
@@ -43,7 +57,10 @@ func (s *Service) Configure(ctx context.Context, caller *v1.Caller, c *v1.Config
 			return nil, command.Fail("PERMISSION_DENIED")
 		}
 		g := c.Grant
-		if g == nil || g.Ref != nil || g.Issuer != nil || g.Status != "" || g.RevocationEpoch != 0 || g.SemanticVersion > 1 || g.UseMode != "CONTINUOUS" || g.UsePoolId == "" || g.ValidFromUnixMs <= 0 || g.ValidUntilUnixMs <= g.ValidFromUnixMs || len(g.Permissions) == 0 {
+		if unsupportedGrant(g) {
+			return nil, command.Fail("UNSUPPORTED_FEATURE")
+		}
+		if g == nil || g.Ref != nil || g.Issuer != nil || g.Status != "" || g.RevocationEpoch != 0 || g.RevocationCompletion != "" || g.RevocationRef != nil || g.SemanticVersion > 1 || (g.UseMode != "CONTINUOUS" && g.UseMode != "SINGLE") || (g.UseMode == "SINGLE" && g.MaxAdmissions != 1) || g.ValidFromUnixMs <= 0 || g.ValidUntilUnixMs <= g.ValidFromUnixMs || len(g.Permissions) == 0 {
 			return nil, command.Fail("INVALID_GRANT")
 		}
 		if e := command.CheckName(caller, g.Subject, s.user, s.domain, "task"); e != nil {
@@ -56,6 +73,20 @@ func (s *Service) Configure(ctx context.Context, caller *v1.Caller, c *v1.Config
 		}
 		g = proto.Clone(g).(*v1.Grant)
 		g.Ref = command.NewRef(s.user, s.domain, "grant", "lerna.v1.Grant")
+		g.UsePoolId = g.Ref.Name.LocalId
+		for _, p := range g.Permissions {
+			if p.ParametersRef != nil {
+				if command.CheckName(caller, p.ParametersRef.Name, s.user, s.domain+"/content", "content") != nil || p.ParametersRef.Revision == 0 || p.ParametersRef.SchemaId != "lerna.v1.Content" {
+					return nil, command.Fail("INVALID_GRANT")
+				}
+			}
+			if p.ParameterMode == "" && g.UseMode == "CONTINUOUS" {
+				p.ParameterMode = "ANY"
+			}
+			if (p.ParameterMode != "ANY" && p.ParameterMode != "EXACT") || (p.ParameterMode == "EXACT" && p.ParametersRef == nil) || (p.ParameterMode == "ANY" && p.ParametersRef != nil) || (g.UseMode == "SINGLE" && p.ParameterMode != "EXACT") {
+				return nil, command.Fail("INVALID_GRANT")
+			}
+		}
 		g.Issuer = c.Header.Identity
 		g.Status = "ACTIVE"
 		g.SemanticVersion = 1
@@ -64,7 +95,7 @@ func (s *Service) Configure(ctx context.Context, caller *v1.Caller, c *v1.Config
 }
 
 // OccupyInTransaction 在调用者的裁决事务中建立 operation 绑定的使用事实。
-func (s *Service) OccupyInTransaction(ctx context.Context, grant *v1.Ref, task, operation *v1.GlobalName, admission *v1.Ref, cap *v1.Capability) (*v1.GrantUse, bool, error) {
+func (s *Service) OccupyInTransaction(ctx context.Context, grant *v1.Ref, task, operation *v1.GlobalName, admission *v1.Ref, cap *v1.Capability, parameters *v1.Ref) (*v1.GrantUse, bool, error) {
 	caller := &v1.Caller{UserId: s.user, IssuerId: s.trustedIssuer}
 	if grant == nil || command.CheckName(caller, grant.Name, s.user, s.domain, "grant") != nil {
 		return nil, false, command.Fail("GRANT_INVALID")
@@ -77,17 +108,24 @@ func (s *Service) OccupyInTransaction(ctx context.Context, grant *v1.Ref, task, 
 	if e != nil {
 		return nil, false, e
 	}
-	if g == nil || !proto.Equal(g.Ref, grant) || g.Status != "ACTIVE" || g.SemanticVersion != 1 || g.Issuer == nil || g.Issuer.IssuerId != s.trustedIssuer || g.UseMode != "CONTINUOUS" || !proto.Equal(g.Subject, task) || now < g.ValidFromUnixMs || now >= g.ValidUntilUnixMs {
+	if g == nil || !proto.Equal(g.Ref, grant) || g.Status != "ACTIVE" || g.SemanticVersion != 1 || g.Issuer == nil || (g.Issuer.IssuerId != s.trustedIssuer && g.Issuer.IssuerId != "local-cli") || (g.UseMode != "CONTINUOUS" && g.UseMode != "SINGLE") || !proto.Equal(g.Subject, task) || now < g.ValidFromUnixMs || now >= g.ValidUntilUnixMs {
 		return nil, false, command.Fail("GRANT_INVALID")
 	}
 	matched := false
 	for _, p := range g.Permissions {
-		if p.Action == cap.Action && p.Resource == cap.Resource && p.UseRight == cap.UseRight && p.ProcessingPurpose == cap.ProcessingPurpose && p.ExecutorEndpointId == cap.ExecutorEndpointId {
+		if p.Action == cap.Action && p.Resource == cap.Resource && p.UseRight == cap.UseRight && p.ProcessingPurpose == cap.ProcessingPurpose && p.ExecutorEndpointId == cap.ExecutorEndpointId && (p.ParameterMode == "ANY" || (p.ParameterMode == "EXACT" && proto.Equal(p.ParametersRef, parameters))) {
 			matched = true
 		}
 	}
 	if !matched {
 		return nil, false, command.Fail("GRANT_SCOPE_MISMATCH")
+	}
+	count, e := s.store.GrantUseCount(ctx, g.UsePoolId)
+	if e != nil {
+		return nil, false, e
+	}
+	if g.MaxAdmissions > 0 && count >= g.MaxAdmissions {
+		return nil, false, command.Fail("GRANT_EXHAUSTED")
 	}
 	use := &v1.GrantUse{Ref: command.NewRef(s.user, s.domain, "grant-use", "lerna.v1.GrantUse"), GrantRef: g.Ref, UsePoolId: g.UsePoolId, OperationId: operation, AdmissionRef: admission, TaskId: task}
 	return use, g.ConfirmationRequired, s.store.SaveGrantUse(ctx, use)
@@ -99,7 +137,7 @@ func (s *Service) QueryGrant(ctx context.Context, c *v1.Caller, r *v1.Ref) (*v1.
 	if e := command.CheckName(c, r.Name, s.user, s.domain, "grant"); e != nil {
 		return nil, e
 	}
-	g, e := s.store.LoadGrant(ctx, r)
+	g, e := s.store.LoadGrantVersion(ctx, r)
 	if e == nil && g != nil && !proto.Equal(g.Ref, r) {
 		return nil, command.Fail("STALE_REFERENCE")
 	}

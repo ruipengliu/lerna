@@ -136,7 +136,11 @@ func TestSafeResendSkipsAdmissionGeneration(t *testing.T) { ... }
 | `durable.decide` | 会话输入、会话头、任务关联、任务、原决定与工作完成 |
 | `durable.jobs` | 领取、续租、工作控制的原决定与围栏 |
 | `tasks.planning` | 可信条件集、快照请求或不可变提议与原决定 |
-| `grants.configure`、`budget.configure` | 受信根授权或用户／任务额度与原决定 |
+| `grants.configure`、`budget.configure` | 根授权签发（含签发确认消费）或用户／任务额度与原决定 |
+| `tasks.confirmation`、`grants.confirmation` | 核心生成的动作确认，或授权草稿与签发确认 |
+| `sessions.confirmation` | 可信回应或撤回、不可变确认版本与会话事件 |
+| `grants.credential` | 不透明出口凭据与原决定 |
+| `grants.revoke`、`grants.revocation_receipt` | 撤销受理与原出口封闭责任，或保存对方原回执后的完成状态 |
 | `tasks.admit` | 使用记录、两级预留、提议消费、准入意图、交接 outbox、待办与原决定 |
 | `ledger.accept` | 独立执行管理域的原交接回执、动作与执行待办 |
 | `tasks.handoff_receipt` | 源域保存对方原回执并在领取围栏下完成待办 |
@@ -182,4 +186,16 @@ func TestSafeResendSkipsAdmissionGeneration(t *testing.T) { ... }
 
 持久工作同一后端语义套件位于 `conformance/durable`：`runSemantics` 接收公开服务接口工厂，`leaseTimeAfterLock` 接收同一后端的两个连接和占锁事务接口。后续 PostgreSQL 实现复用这些行为用例。宿主专用的 `JobCommand` 不暴露给可替换适配器；CONTROL 的模块选择来自受信模块调用，不能由外部请求直接转发。任务编排的 DELIVER_HANDOFF 先查询原接收方命令，再按原身份投递；执行管理在独立域事务保存接纳回执、动作和待办，源域最后保存原回执并完成工作。启动恢复等待自然租约到期，不重建动作。通用 PROGRESS／CONTROL 不得完成或封闭尚无回执的交接，也不得封闭尚无决定的 DECIDE_GOAL。
 
-准入使用事务内业务保存点：任何参与者的确定拒绝撤回使用、预留、确认消费和意图，再保存不可变拒绝回执。受信模板、能力配置、根持续授权和两级预算由固定 host 身份提供；推理只产生提议。M1 此切片只接纳单步目标动作；记忆、子任务、模型自报准备／收尾类别，以及需要尚未实现的确认流程的动作明确拒绝。金额为 USD_MICRO 整数，持续授权仍建立每动作使用记录；预留在交接后保持，不代表费用已结清。
+准入使用事务内业务保存点：任何参与者的确定拒绝撤回使用、预留、确认消费和意图，再保存不可变拒绝回执。受信模板、能力配置和两级预算由固定 host 身份提供；根授权可由受信用户确认后签发，推理只产生提议。M1 此切片只接纳单步目标动作；记忆、子任务、模型自报准备／收尾类别明确拒绝。金额为 USD_MICRO 整数，持续授权仍建立每动作使用记录；预留在交接后保持，不代表费用已结清。
+
+### M1 授权与可信确认命令
+
+`grant-request --command ID --json GRANT_JSON [--session ID]` 提交授权范围，返回确认引用。单次授权使用 `useMode: SINGLE`、`maxAdmissions: 1`，每条权限必须用 `parameterMode: EXACT` 绑定参数内容引用；持续授权显式选择 `ANY` 或 `EXACT`，`maxAdmissions: 0` 表示不限准入次数。授权主体是同用户的明确任务标识；可以先授权未来任务，不会因此创建任务。
+
+`confirmation ID` 展示核心生成的事项描述、具体参数、绑定摘要与当前版本。参数描述与出口共用实际发送字节选择：优先使用显式 `RawBody`（包括空字节），否则使用 `Text`；有效 UTF-8 以字符串展示，其他字节以 Base64 展示，并携带媒体类型，不截断。用户阅读后用 `confirm --command ID --confirmation ID --revision N --digest DIGEST --decision APPROVE` 批准，或以 `REJECT` 拒绝。`grant-issue --command ID --confirmation ID --revision N` 消费已批准的签发确认。动作确认由 `admission-confirmation --command ID --json REQUEST_JSON` 请求，JSON 包含任务、提议和授权引用；准入时由任务编排消费。两种确认不能交叉消费；批准后仍须重新核验当前事实。
+
+`withdraw-confirmation --command ID --confirmation ID --revision N` 撤回未消费的批准。`grant ID` 查询当前授权及计算出的剩余次数、过期标记和展示状态；这些诊断值不产生使用许可。`revoke-grant --command ID --grant ID` 撤销授权并返回撤销进度引用，`revocation ID` 查询当前收尾状态。`PENDING` 表示尚未取得全部原出口的封闭回执；已过期、已耗尽的授权仍可撤销。准入使用额度不因撤销或后续失败退还。
+
+这些命令使用宿主认证后的 `host` 或 `local-cli` 身份回应；普通输入与模型输出不会被转换为可信批准。CLI 只呈现公共查询结果和转发结构化命令。
+
+启动恢复与 `recover` 会查询并继续原撤销交接，先读取出口原回执，再保存源端确认。所有宿主实例共用数据库对应的出口文件锁；撤销完成必须等待原实际使用退出。发送前封闭保存未发送证明，发送后封闭保留已有结果与迟到可能性，不会重发。封闭证明与仍待结算的预算预留都保留，后续结算不得依赖并不存在的原始发送证据。

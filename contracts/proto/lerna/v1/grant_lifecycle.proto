@@ -1,0 +1,35 @@
+syntax = "proto3";
+package lerna.v1;
+
+import "lerna/v1/authority.proto";
+import "lerna/v1/credential.proto";
+import "lerna/v1/identity.proto";
+import "lerna/v1/planning.proto";
+import "lerna/v1/submission.proto";
+
+option go_package = "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1;lernav1";
+message RevokeGrantCommand {
+  CommandHeader header = 1;
+  GlobalName grant_id = 2;
+  optional uint64 expected_revision = 3;
+}
+message GrantExitClosureRequest {
+  CloseGrantExitCommand command = 1;
+  CommandReceipt recipient_receipt = 2;
+}
+message GrantRevocation {
+  Ref ref = 1;
+  Ref grant_ref = 2;
+  string status = 3;
+  repeated GrantExitClosureRequest closures = 4;
+  CommandIdentity accepted_by = 5;
+}
+
+message GrantStatus {
+  Grant grant = 1;
+  uint64 occupied_admissions = 2;
+  optional uint64 remaining_admissions = 3;
+  bool expired = 4;
+  string display_status = 5;
+  int64 observed_at_unix_ms = 6;
+}

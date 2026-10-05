@@ -22,12 +22,13 @@ type Decisions interface {
 }
 type Service struct {
 	store                       Store
+	usageSource                 UsageSource
 	decisions                   Decisions
 	user, domain, trustedIssuer string
 }
 
 func New(s Store, d Decisions, user, domain, trustedIssuer string) *Service {
-	return &Service{s, d, user, domain, trustedIssuer}
+	return &Service{store: s, decisions: d, user: user, domain: domain, trustedIssuer: trustedIssuer}
 }
 func (s *Service) Configure(ctx context.Context, caller *v1.Caller, c *v1.ConfigureBudgetCommand) (*v1.CommandReceipt, error) {
 	if e := command.ValidateHeader(c.GetHeader(), c); e != nil {

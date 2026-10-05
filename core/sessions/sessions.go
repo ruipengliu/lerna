@@ -36,16 +36,20 @@ type Content interface {
 	Stage(context.Context, *v1.Caller, *v1.SubmitGoalCommand) (*v1.Ref, error)
 }
 type Service struct {
-	store           Store
-	durable         Durable
-	tasks           Tasks
-	content         Content
-	user, domain    string
-	processInstance string
+	confirmationStore     ConfirmationStore
+	confirmationDecisions ConfirmationDecisions
+	operationFacts        ConfirmationFacts
+	grantFacts            ConfirmationFacts
+	store                 Store
+	durable               Durable
+	tasks                 Tasks
+	content               Content
+	user, domain          string
+	processInstance       string
 }
 
 func New(s Store, d Durable, t Tasks, c Content, user, domain string) *Service {
-	return &Service{s, d, t, c, user, domain, command.NewRef(user, domain, "worker", "worker").Name.LocalId}
+	return &Service{store: s, durable: d, tasks: t, content: c, user: user, domain: domain, processInstance: command.NewRef(user, domain, "worker", "worker").Name.LocalId}
 }
 func (s *Service) SubmitGoal(ctx context.Context, caller *v1.Caller, c *v1.SubmitGoalCommand) (*v1.CommandReceipt, error) {
 	if err := command.ValidateGoal(c); err != nil {

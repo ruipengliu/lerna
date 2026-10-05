@@ -126,9 +126,19 @@ type fixture struct {
 }
 
 func newFixture(t *testing.T, userLimit, taskLimit int64, confirmation bool) *fixture {
+	return newFixtureWithTarget(t, userLimit, taskLimit, confirmation, nil)
+}
+func newFixtureWithTarget(t *testing.T, userLimit, taskLimit int64, confirmation bool, target http.Handler) *fixture {
 	t.Helper()
 	f := &fixture{ctx: context.Background(), caller: &v1.Caller{UserId: "u", IssuerId: "host"}}
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { f.calls.Add(1); w.WriteHeader(200) }))
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		f.calls.Add(1)
+		if target != nil {
+			target.ServeHTTP(w, r)
+		} else {
+			w.WriteHeader(200)
+		}
+	}))
 	t.Cleanup(server.Close)
 	var err error
 	f.path = filepath.Join(t.TempDir(), "state.db")
@@ -154,7 +164,7 @@ func newFixture(t *testing.T, userLimit, taskLimit int64, confirmation bool) *fi
 	r, err = f.h.Tasks.AcceptRequirements(f.ctx, f.caller, &v1.AcceptRequirementsCommand{Header: header("requirements"), TaskRef: f.task, InputVersion: 1, Conditions: []*v1.Requirement{{ConditionId: "created", DescriptionRef: f.parameters, Necessary: true, VerificationRule: "TARGET_RECORD", RuleVersion: 1}}, Source: "TRUSTED_TEMPLATE"})
 	accepted(t, r, err)
 	ceiling := int64(30)
-	r, err = f.h.Tasks.ConfigureCapability(f.ctx, f.caller, &v1.ConfigureCapabilityCommand{Header: header("capability"), Capability: &v1.Capability{Action: "CREATE", Resource: server.URL, ExecutorEndpointId: "local-api", AdapterRef: &v1.Ref{Name: &v1.GlobalName{UserId: "u", AuthorityDomainId: "adapter", ObjectKind: "adapter", LocalId: "api"}, Revision: 1, SchemaId: "lerna.v1.Adapter"}, UseRight: "INVOKE", ProcessingPurpose: "CURRENT_TASK", Unit: "USD_MICRO", FeeCeiling: &ceiling, RateBasisRef: f.parameters, MaxSends: 1}})
+	r, err = f.h.Tasks.ConfigureCapability(f.ctx, f.caller, &v1.ConfigureCapabilityCommand{Header: header("capability"), Capability: &v1.Capability{Action: "CREATE", Resource: server.URL, ExecutorEndpointId: "local-api", AdapterRef: &v1.Ref{Name: &v1.GlobalName{UserId: "u", AuthorityDomainId: "adapter", ObjectKind: "adapter", LocalId: "simulator-idempotent"}, Revision: 1, SchemaId: "lerna.v1.Adapter"}, UseRight: "INVOKE", ProcessingPurpose: "CURRENT_TASK", Unit: "USD_MICRO", FeeCeiling: &ceiling, RateBasisRef: f.parameters, MaxSends: 1}})
 	accepted(t, r, err)
 	f.capability = r.ResultRef
 	for _, c := range []*v1.ConfigureBudgetCommand{{Header: header("user-budget"), Unit: "USD_MICRO", Limit: userLimit}, {Header: header("task-budget"), TaskId: f.task.Name, Unit: "USD_MICRO", Limit: taskLimit}} {

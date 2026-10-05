@@ -505,6 +505,90 @@ func (x *CloseGrantExitCommand) GetRevocationRef() *Ref {
 	return nil
 }
 
+type GrantExitClosure struct {
+	state                   protoimpl.MessageState `protogen:"open.v1"`
+	Ref                     *Ref                   `protobuf:"bytes,1,opt,name=ref,proto3" json:"ref,omitempty"`
+	CredentialRef           *Ref                   `protobuf:"bytes,2,opt,name=credential_ref,json=credentialRef,proto3" json:"credential_ref,omitempty"`
+	RevocationRef           *Ref                   `protobuf:"bytes,3,opt,name=revocation_ref,json=revocationRef,proto3" json:"revocation_ref,omitempty"`
+	OperationId             *GlobalName            `protobuf:"bytes,4,opt,name=operation_id,json=operationId,proto3" json:"operation_id,omitempty"`
+	SendRef                 *Ref                   `protobuf:"bytes,5,opt,name=send_ref,json=sendRef,proto3" json:"send_ref,omitempty"`
+	PhysicalSendWasPossible bool                   `protobuf:"varint,6,opt,name=physical_send_was_possible,json=physicalSendWasPossible,proto3" json:"physical_send_was_possible,omitempty"`
+	unknownFields           protoimpl.UnknownFields
+	sizeCache               protoimpl.SizeCache
+}
+
+func (x *GrantExitClosure) Reset() {
+	*x = GrantExitClosure{}
+	mi := &file_lerna_v1_credential_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GrantExitClosure) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GrantExitClosure) ProtoMessage() {}
+
+func (x *GrantExitClosure) ProtoReflect() protoreflect.Message {
+	mi := &file_lerna_v1_credential_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GrantExitClosure.ProtoReflect.Descriptor instead.
+func (*GrantExitClosure) Descriptor() ([]byte, []int) {
+	return file_lerna_v1_credential_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *GrantExitClosure) GetRef() *Ref {
+	if x != nil {
+		return x.Ref
+	}
+	return nil
+}
+
+func (x *GrantExitClosure) GetCredentialRef() *Ref {
+	if x != nil {
+		return x.CredentialRef
+	}
+	return nil
+}
+
+func (x *GrantExitClosure) GetRevocationRef() *Ref {
+	if x != nil {
+		return x.RevocationRef
+	}
+	return nil
+}
+
+func (x *GrantExitClosure) GetOperationId() *GlobalName {
+	if x != nil {
+		return x.OperationId
+	}
+	return nil
+}
+
+func (x *GrantExitClosure) GetSendRef() *Ref {
+	if x != nil {
+		return x.SendRef
+	}
+	return nil
+}
+
+func (x *GrantExitClosure) GetPhysicalSendWasPossible() bool {
+	if x != nil {
+		return x.PhysicalSendWasPossible
+	}
+	return false
+}
+
 var File_lerna_v1_credential_proto protoreflect.FileDescriptor
 
 const file_lerna_v1_credential_proto_rawDesc = "" +
@@ -555,7 +639,14 @@ const file_lerna_v1_credential_proto_rawDesc = "" +
 	"\x06header\x18\x01 \x01(\v2\x17.lerna.v1.CommandHeaderR\x06header\x124\n" +
 	"\x0ecredential_ref\x18\x02 \x01(\v2\r.lerna.v1.RefR\rcredentialRef\x129\n" +
 	"\abinding\x18\x03 \x01(\v2\x1f.lerna.v1.ExitCredentialBindingR\abinding\x124\n" +
-	"\x0erevocation_ref\x18\x04 \x01(\v2\r.lerna.v1.RefR\rrevocationRefB?Z=github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1;lernav1b\x06proto3"
+	"\x0erevocation_ref\x18\x04 \x01(\v2\r.lerna.v1.RefR\rrevocationRef\"\xbf\x02\n" +
+	"\x10GrantExitClosure\x12\x1f\n" +
+	"\x03ref\x18\x01 \x01(\v2\r.lerna.v1.RefR\x03ref\x124\n" +
+	"\x0ecredential_ref\x18\x02 \x01(\v2\r.lerna.v1.RefR\rcredentialRef\x124\n" +
+	"\x0erevocation_ref\x18\x03 \x01(\v2\r.lerna.v1.RefR\rrevocationRef\x127\n" +
+	"\foperation_id\x18\x04 \x01(\v2\x14.lerna.v1.GlobalNameR\voperationId\x12(\n" +
+	"\bsend_ref\x18\x05 \x01(\v2\r.lerna.v1.RefR\asendRef\x12;\n" +
+	"\x1aphysical_send_was_possible\x18\x06 \x01(\bR\x17physicalSendWasPossibleB?Z=github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1;lernav1b\x06proto3"
 
 var (
 	file_lerna_v1_credential_proto_rawDescOnce sync.Once
@@ -569,41 +660,47 @@ func file_lerna_v1_credential_proto_rawDescGZIP() []byte {
 	return file_lerna_v1_credential_proto_rawDescData
 }
 
-var file_lerna_v1_credential_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_lerna_v1_credential_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_lerna_v1_credential_proto_goTypes = []any{
 	(*ExitCredentialBinding)(nil),      // 0: lerna.v1.ExitCredentialBinding
 	(*ExitCredential)(nil),             // 1: lerna.v1.ExitCredential
 	(*IssueExitCredentialCommand)(nil), // 2: lerna.v1.IssueExitCredentialCommand
 	(*ExitCredentialUse)(nil),          // 3: lerna.v1.ExitCredentialUse
 	(*CloseGrantExitCommand)(nil),      // 4: lerna.v1.CloseGrantExitCommand
-	(*GlobalName)(nil),                 // 5: lerna.v1.GlobalName
-	(*Ref)(nil),                        // 6: lerna.v1.Ref
-	(*CommandHeader)(nil),              // 7: lerna.v1.CommandHeader
+	(*GrantExitClosure)(nil),           // 5: lerna.v1.GrantExitClosure
+	(*GlobalName)(nil),                 // 6: lerna.v1.GlobalName
+	(*Ref)(nil),                        // 7: lerna.v1.Ref
+	(*CommandHeader)(nil),              // 8: lerna.v1.CommandHeader
 }
 var file_lerna_v1_credential_proto_depIdxs = []int32{
-	5,  // 0: lerna.v1.ExitCredentialBinding.task_id:type_name -> lerna.v1.GlobalName
-	5,  // 1: lerna.v1.ExitCredentialBinding.operation_id:type_name -> lerna.v1.GlobalName
-	5,  // 2: lerna.v1.ExitCredentialBinding.attempt_id:type_name -> lerna.v1.GlobalName
-	6,  // 3: lerna.v1.ExitCredentialBinding.admission_ref:type_name -> lerna.v1.Ref
-	6,  // 4: lerna.v1.ExitCredentialBinding.grant_use_ref:type_name -> lerna.v1.Ref
-	5,  // 5: lerna.v1.ExitCredentialBinding.subject_id:type_name -> lerna.v1.GlobalName
-	6,  // 6: lerna.v1.ExitCredentialBinding.budget_reservation_ref:type_name -> lerna.v1.Ref
-	6,  // 7: lerna.v1.ExitCredential.ref:type_name -> lerna.v1.Ref
+	6,  // 0: lerna.v1.ExitCredentialBinding.task_id:type_name -> lerna.v1.GlobalName
+	6,  // 1: lerna.v1.ExitCredentialBinding.operation_id:type_name -> lerna.v1.GlobalName
+	6,  // 2: lerna.v1.ExitCredentialBinding.attempt_id:type_name -> lerna.v1.GlobalName
+	7,  // 3: lerna.v1.ExitCredentialBinding.admission_ref:type_name -> lerna.v1.Ref
+	7,  // 4: lerna.v1.ExitCredentialBinding.grant_use_ref:type_name -> lerna.v1.Ref
+	6,  // 5: lerna.v1.ExitCredentialBinding.subject_id:type_name -> lerna.v1.GlobalName
+	7,  // 6: lerna.v1.ExitCredentialBinding.budget_reservation_ref:type_name -> lerna.v1.Ref
+	7,  // 7: lerna.v1.ExitCredential.ref:type_name -> lerna.v1.Ref
 	0,  // 8: lerna.v1.ExitCredential.binding:type_name -> lerna.v1.ExitCredentialBinding
-	7,  // 9: lerna.v1.IssueExitCredentialCommand.header:type_name -> lerna.v1.CommandHeader
-	6,  // 10: lerna.v1.IssueExitCredentialCommand.admission_ref:type_name -> lerna.v1.Ref
+	8,  // 9: lerna.v1.IssueExitCredentialCommand.header:type_name -> lerna.v1.CommandHeader
+	7,  // 10: lerna.v1.IssueExitCredentialCommand.admission_ref:type_name -> lerna.v1.Ref
 	0,  // 11: lerna.v1.IssueExitCredentialCommand.binding:type_name -> lerna.v1.ExitCredentialBinding
-	6,  // 12: lerna.v1.ExitCredentialUse.ref:type_name -> lerna.v1.Ref
-	6,  // 13: lerna.v1.ExitCredentialUse.credential_ref:type_name -> lerna.v1.Ref
-	7,  // 14: lerna.v1.CloseGrantExitCommand.header:type_name -> lerna.v1.CommandHeader
-	6,  // 15: lerna.v1.CloseGrantExitCommand.credential_ref:type_name -> lerna.v1.Ref
+	7,  // 12: lerna.v1.ExitCredentialUse.ref:type_name -> lerna.v1.Ref
+	7,  // 13: lerna.v1.ExitCredentialUse.credential_ref:type_name -> lerna.v1.Ref
+	8,  // 14: lerna.v1.CloseGrantExitCommand.header:type_name -> lerna.v1.CommandHeader
+	7,  // 15: lerna.v1.CloseGrantExitCommand.credential_ref:type_name -> lerna.v1.Ref
 	0,  // 16: lerna.v1.CloseGrantExitCommand.binding:type_name -> lerna.v1.ExitCredentialBinding
-	6,  // 17: lerna.v1.CloseGrantExitCommand.revocation_ref:type_name -> lerna.v1.Ref
-	18, // [18:18] is the sub-list for method output_type
-	18, // [18:18] is the sub-list for method input_type
-	18, // [18:18] is the sub-list for extension type_name
-	18, // [18:18] is the sub-list for extension extendee
-	0,  // [0:18] is the sub-list for field type_name
+	7,  // 17: lerna.v1.CloseGrantExitCommand.revocation_ref:type_name -> lerna.v1.Ref
+	7,  // 18: lerna.v1.GrantExitClosure.ref:type_name -> lerna.v1.Ref
+	7,  // 19: lerna.v1.GrantExitClosure.credential_ref:type_name -> lerna.v1.Ref
+	7,  // 20: lerna.v1.GrantExitClosure.revocation_ref:type_name -> lerna.v1.Ref
+	6,  // 21: lerna.v1.GrantExitClosure.operation_id:type_name -> lerna.v1.GlobalName
+	7,  // 22: lerna.v1.GrantExitClosure.send_ref:type_name -> lerna.v1.Ref
+	23, // [23:23] is the sub-list for method output_type
+	23, // [23:23] is the sub-list for method input_type
+	23, // [23:23] is the sub-list for extension type_name
+	23, // [23:23] is the sub-list for extension extendee
+	0,  // [0:23] is the sub-list for field type_name
 }
 
 func init() { file_lerna_v1_credential_proto_init() }
@@ -620,7 +717,7 @@ func file_lerna_v1_credential_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_lerna_v1_credential_proto_rawDesc), len(file_lerna_v1_credential_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   5,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
