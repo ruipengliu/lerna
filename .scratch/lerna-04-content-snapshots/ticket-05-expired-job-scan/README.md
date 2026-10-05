@@ -15,3 +15,7 @@ root全文读诊断8行，并机械核全公开before/after JSON字节相同；S
 相同60f817原测试与1a4e1d2产品，ONE原90/15/45/4/120，native3290594/start13743233/session60810实际1/absence/noTimeout，18.131s。64原版本真实逐份出版、原共同seal15s、到期20ms、trueReopen完整旧观察/alpha字节均通过；新exactV2接纳后四次原Service.Step无error，但command stillpreparing且独立准确对象不存在。root全文读8行并采用该business red。首publication断言后live/policy与后history尾未执行，不能冒第二red。
 
 root仅授权Astra准确3b16方案的静态最小产品修正；新64正常/竞态完整尾、第三消费者和多Subject边界/受影响suite/审阅/资源/CI尚待。原64expired责任/原deadline/holder/body/history不改。
+
+## 尚未执行的新扫描类型资格
+
+05测试/原red证据已保存到85a1067，产品仍1a4加静态扫描WIP。root全文采用[Astra固定Record类型资格](adopted-malformed-qualification-decision.md)，准确58f54d；完整原Go字段类型与raw整数/重复键须能保守证明，不能用jsonb归一化后的部分字段相等假称合法expired。当前仅静态补足，无Go/fmt/DB/native或新green；BodyGone原shadow一致性及Seal精确原字节资格另核，不冒jsonb语义相等是全部原校验。原60f业务测试/15/45/90/4/120边界与所有旧责任不改。

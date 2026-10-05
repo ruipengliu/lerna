@@ -333,3 +333,7 @@ root全文读取[Astra六票复核](../lerna-04-content-snapshots/published-tick
 2026-10-05，03一次原B CPU采样实际exit1/absence，七个只读pprof视图均实际0/absence；root全文原159行和全部视图并核对profile/log哈希，见[准确测量](../lerna-04-content-snapshots/ticket-03-large-graph-claim/worker-cpu-measurement/README.md)。两个大图仍失败，本次closure caller截止、static原Prepared后首次Publish领取截止，阶段与未采样失败分列；标签6.80/总62.18CPU、offCPU未知、不相加cum。原profileFD Close UNKNOWN保留。Astra只读决定下一等价优化，未授权第二产品fix或重跑；05窄扫描静态核对损坏记录不隐去，whole04仍15/41/profile OFF。
 
 2026-10-05，root全文采用[Astra实测后唯一局部优化](../lerna-04-content-snapshots/ticket-03-large-graph-claim/worker-cpu-measurement/adopted-next-decision.md)：只单次registeredClosure内fullRef成功纯身份计算复用<=65项，满不缓存而不新增拒绝；排序/visit原顺序和所有PG权限/锁/clock/两Tx保持。03只静态实施，新非profile原B正常/race尚未跑；独立causeP2反例分列。whole04仍15/41。
+
+2026-10-05，03[StagePublication真实cause首red](../lerna-04-content-snapshots/ticket-03-stage-publication-cause/README.md)actual3397277/start14220903/1/absence、Go1.940；正常Publish/readback/reopen1.16通过，原真实row wait取消、双join/双peer Close、publicNotFound及重开尾全执行，最后cause断言得到ErrForbidden。root全文采用仅NoRows拒绝、其他cause保留的静态修正；green/race待，原边界不改，性能资格另列。
+
+2026-10-05，03同原[真实cause出口](../lerna-04-content-snapshots/ticket-03-stage-publication-cause/README.md)修正普通1.801/race5.731均actual0/absence，双join/peerClose/公开NotFound及重开尾全执行；root全文原log/provenance并核源hash。source是28e+显式两productWIP和两new tracer，closure容量待，不能据此接受票。05原red tests/evidence已commit85a1067（产品仍1a4加WIP），root采用固定Record/rawJSON类型必要资格，仅静态补足。15/41/profile OFF/all22授权持续。

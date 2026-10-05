@@ -1,0 +1,92 @@
+diff --git a/conformance/internal/decisionfixture/context_dispatch.go b/conformance/internal/decisionfixture/context_dispatch.go
+index 47d5444..111e096 100644
+--- a/conformance/internal/decisionfixture/context_dispatch.go
++++ b/conformance/internal/decisionfixture/context_dispatch.go
+@@ -370,9 +370,12 @@ func (d *ContextDispatcher) StagePublication(ctx context.Context, in compiler.In
+ 		}
+ 		var id string
+ 		err := tx.QueryRowContext(ctx, `SELECT input_id FROM `+d.Store.table("fixture_context_inputs")+` WHERE revision=$1 AND body=$2 FOR UPDATE`, in.Revision, mustJSON(in)).Scan(&id)
+-		if err != nil {
++		if errors.Is(err, sql.ErrNoRows) {
+ 			return engine.ErrForbidden
+ 		}
++		if err != nil {
++			return err
++		}
+ 		current, err := d.input(ctx, tx, id)
+ 		if err != nil {
+ 			return err
+diff --git a/domain/content/closure.go b/domain/content/closure.go
+index f78c51e..fed0943 100644
+--- a/domain/content/closure.go
++++ b/domain/content/closure.go
+@@ -34,7 +34,23 @@ func (s *Service) registeredClosure(ctx context.Context, tx runtime.Tx, target v
+ 	refs := map[string]v.ContentRef{}
+ 	records := map[string]Record{}
+ 	active := map[string]bool{}
+-	targetID, _, err := VersionIdentity(target)
++	// Reuse only successful pure identity conversions within this traversal.
++	// Full refs include declaration metadata; no current repository fact is saved.
++	identities := make(map[v.ContentRef]string, 65)
++	identityID := func(ref v.ContentRef) (string, error) {
++		if id, ok := identities[ref]; ok {
++			return id, nil
++		}
++		id, _, err := VersionIdentity(ref)
++		if err != nil {
++			return "", err
++		}
++		if len(identities) < 65 {
++			identities[ref] = id
++		}
++		return id, nil
++	}
++	targetID, err := identityID(target)
+ 	if err != nil {
+ 		return observed, err
+ 	}
+@@ -46,7 +62,7 @@ func (s *Service) registeredClosure(ctx context.Context, tx runtime.Tx, target v
+ 		if ref.Owner != s.config.Owner {
+ 			return refusal("unsupported")
+ 		}
+-		id, _, err := VersionIdentity(ref)
++		id, err := identityID(ref)
+ 		if err != nil {
+ 			return err
+ 		}
+@@ -112,7 +128,7 @@ func (s *Service) registeredClosure(ctx context.Context, tx runtime.Tx, target v
+ 		}
+ 		active[id] = true
+ 		children := append([]v.ContentRef{}, record.Sources...)
+-		if err := sortRefs(children); err != nil {
++		if err := sortRefs(children, identityID); err != nil {
+ 			return err
+ 		}
+ 		for _, child := range children {
+@@ -124,7 +140,7 @@ func (s *Service) registeredClosure(ctx context.Context, tx runtime.Tx, target v
+ 		return nil
+ 	}
+ 	roots = append([]v.ContentRef{}, roots...)
+-	if err := sortRefs(roots); err != nil {
++	if err := sortRefs(roots, identityID); err != nil {
+ 		return observed, err
+ 	}
+ 	for _, root := range roots {
+@@ -145,7 +161,7 @@ func (s *Service) registeredClosure(ctx context.Context, tx runtime.Tx, target v
+ 	}
+ 	return observed, nil
+ }
+-func sortRefs(refs []v.ContentRef) error {
++func sortRefs(refs []v.ContentRef, identityID func(v.ContentRef) (string, error)) error {
+ 	if len(refs) < 2 {
+ 		return nil
+ 	}
+@@ -154,7 +170,7 @@ func sortRefs(refs []v.ContentRef) error {
+ 		id  string
+ 	}, len(refs))
+ 	for i, ref := range refs {
+-		id, _, err := VersionIdentity(ref)
++		id, err := identityID(ref)
+ 		if err != nil {
+ 			return err
+ 		}

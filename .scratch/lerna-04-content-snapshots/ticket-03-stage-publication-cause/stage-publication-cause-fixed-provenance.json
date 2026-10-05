@@ -1,0 +1,135 @@
+{
+  "phase": "approved gofmt then normal and conditional race cause qualification only",
+  "head": "28e3a468c86d4323d3b497836de23bb311a58952",
+  "tracked_wip": [
+    "conformance/internal/decisionfixture/context_dispatch.go",
+    "domain/content/closure.go"
+  ],
+  "files_before_format": [
+    {
+      "path": "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_dispatch.go",
+      "sha256": "5c2b8d472fdbe458b9affb9a9543db3359c85c0dfa90d5357bea843995e624fb",
+      "bytes": 23388
+    },
+    {
+      "path": "/tmp/lerna-worktrees/content-snapshots-03/domain/content/closure.go",
+      "sha256": "8542696150191da3fafd6b0df90e38f272fd934de807317442933c536fb1331c",
+      "bytes": 6914
+    },
+    {
+      "path": "/tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_context_publication_cause_test.go",
+      "sha256": "e944e3439eabe84936eb166e1966b178166fd7e1f7b8a1972139b96b9b2768d0",
+      "bytes": 7278
+    },
+    {
+      "path": "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_publication_probe.go",
+      "sha256": "39051536517c23e30d1c80e919824d9c509e2d773a8e0568fe786fe82f9d5517",
+      "bytes": 2457
+    }
+  ],
+  "normal_log": "/workspace/lerna-content-03-137311247276/context-stage-publication-cause-fixed-normal.log",
+  "race_log": "/workspace/lerna-content-03-137311247276/context-stage-publication-cause-fixed-race.log",
+  "format_log": "/workspace/lerna-content-03-137311247276/context-stage-publication-cause-fixed-format.log",
+  "caller_transaction_statement_lock_seconds": [
+    30,
+    3,
+    2,
+    1
+  ],
+  "go_outer_seconds": [
+    120,
+    120
+  ],
+  "format_identity": {
+    "pid": 3406002,
+    "pgid": 3406002,
+    "starttime": "14259347",
+    "started_ns": 1791174355124529834,
+    "args": [
+      "bash",
+      "-c",
+      "set -e; . /workspace/.lerna-env/env.sh; GOTOOLCHAIN=local GOFLAGS=-mod=readonly gofmt -w conformance/internal/decisionfixture/context_dispatch.go domain/content/closure.go conformance/component/content_context_publication_cause_test.go conformance/internal/decisionfixture/context_publication_probe.go"
+    ]
+  },
+  "files_after_format": [
+    {
+      "path": "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_dispatch.go",
+      "bytes": 23388,
+      "sha256": "5c2b8d472fdbe458b9affb9a9543db3359c85c0dfa90d5357bea843995e624fb"
+    },
+    {
+      "path": "/tmp/lerna-worktrees/content-snapshots-03/domain/content/closure.go",
+      "bytes": 6914,
+      "sha256": "8542696150191da3fafd6b0df90e38f272fd934de807317442933c536fb1331c"
+    },
+    {
+      "path": "/tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_context_publication_cause_test.go",
+      "bytes": 7278,
+      "sha256": "e944e3439eabe84936eb166e1966b178166fd7e1f7b8a1972139b96b9b2768d0"
+    },
+    {
+      "path": "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_publication_probe.go",
+      "bytes": 2457,
+      "sha256": "39051536517c23e30d1c80e919824d9c509e2d773a8e0568fe786fe82f9d5517"
+    }
+  ],
+  "format_exit": 0,
+  "format_group_absent": true,
+  "normal": {
+    "identity": {
+      "pid": 3406457,
+      "pgid": 3406457,
+      "starttime": "14261484",
+      "started_ns": 1791174376501583199,
+      "args": [
+        "bash",
+        "-c",
+        "set -e; . /workspace/.lerna-env/env.sh; GOTOOLCHAIN=local GOFLAGS=-mod=readonly go test -v -p 1 -count=1 -tags=integration -timeout=120s ./conformance/component -run \"^TestContentContextStagePublicationPreservesCanceledInputLockCause$\""
+      ]
+    },
+    "tool_session": 87137,
+    "exit": 0,
+    "group_absent": true,
+    "log": "/workspace/lerna-content-03-137311247276/context-stage-publication-cause-fixed-normal.log",
+    "sha256": "3e5f1ef036d4c7b31f121ab824aee4acdc9c48ed703631bdc011a8ab0f7c0b71",
+    "bytes": 657,
+    "package_seconds": 1.801,
+    "actual_publisher_blocker": [
+      557855,
+      557856
+    ],
+    "cause_errors_is_canceled": true,
+    "normal_public_publish_and_read_pass": true,
+    "remaining_public_not_found_reopen_joins_close_tail_pass": true
+  },
+  "race": {
+    "identity": {
+      "pid": 3407442,
+      "pgid": 3407442,
+      "starttime": "14265022",
+      "started_ns": 1791174411879202077,
+      "args": [
+        "bash",
+        "-c",
+        "set -e; . /workspace/.lerna-env/env.sh; GOTOOLCHAIN=local GOFLAGS=-mod=readonly go test -race -v -p 1 -count=1 -tags=integration -timeout=120s ./conformance/component -run \"^TestContentContextStagePublicationPreservesCanceledInputLockCause$\""
+      ]
+    },
+    "tool_session": 89145,
+    "exit": 0,
+    "group_absent": true,
+    "log": "/workspace/lerna-content-03-137311247276/context-stage-publication-cause-fixed-race.log",
+    "sha256": "496b5102a24b9beff5db24b3f5039b40f3d4c597f80cd672670525647d41ab39",
+    "bytes": 657,
+    "package_seconds": 5.731,
+    "actual_publisher_blocker": [
+      558038,
+      558039
+    ],
+    "cause_errors_is_canceled": true,
+    "normal_public_publish_and_read_pass": true,
+    "remaining_public_not_found_reopen_joins_close_tail_pass": true,
+    "data_race_reported": false
+  },
+  "status": "both actual cause qualifications PASS; original process groups absent; STOP/RELEASE; no capacity evidence",
+  "no_timeout": true
+}

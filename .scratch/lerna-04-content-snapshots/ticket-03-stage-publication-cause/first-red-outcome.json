@@ -1,0 +1,68 @@
+{
+  "original_tracked_source_pin": "28e3a468c86d4323d3b497836de23bb311a58952",
+  "two_new_formatted_tracer_sources_not_in_original_commit": true,
+  "native_pid": 3397277,
+  "native_pgid": 3397277,
+  "starttime": "14220903",
+  "actual_session": 72752,
+  "actual_exit": 1,
+  "wrapper_group_absent": true,
+  "root_current_group_absent": true,
+  "go_package_duration": "1.940s",
+  "normal_subtest": "PASS 1.16s",
+  "failure": "real canceled StagePublication input read lost its original cause decision authorization denied",
+  "fault_tail_executed": [
+    "actual pg native lock wait before cancel",
+    "publisher actor result and exit joined",
+    "read-only row locker ordinary transaction exit joined",
+    "two peers Close succeeded",
+    "public original command not_found",
+    "owner reopen",
+    "public original command not_found after reopen"
+  ],
+  "not_proving_profile_performance": true,
+  "records": [
+    {
+      "source": "/workspace/lerna-content-03-137311247276/context-stage-publication-cause-format.log",
+      "artifact": "context-stage-publication-cause-format.log",
+      "bytes": 39,
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/context-stage-publication-cause-first-red.log",
+      "artifact": "context-stage-publication-cause-first-red.log",
+      "bytes": 672,
+      "sha256": "49436a59c202385259bbc280ae3f0eb3d59910c753de71b4a6c6e8fcccee4be7"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/stage-publication-cause-first-red-provenance.json",
+      "artifact": "stage-publication-cause-first-red-provenance.json",
+      "bytes": 1057,
+      "sha256": "637f0c0871d86ca27141029c5350e65775b93102c88e2c2e006c9ab70541f935"
+    },
+    {
+      "source": "/tmp/lerna-03-stage-publication-cause-plan.md",
+      "artifact": "lerna-03-stage-publication-cause-plan.md",
+      "bytes": 7081,
+      "sha256": "f8376b2a5aa5b9cdde52c91d6689e3de89ed6363fdd28e7e54f2053246232fe5"
+    },
+    {
+      "source": "/tmp/lerna-03-stage-publication-cause-static.json",
+      "artifact": "lerna-03-stage-publication-cause-static.json",
+      "bytes": 1415,
+      "sha256": "70654206bcf77d463563d890b81a76732782b5b4ccaaa575f7ea3a88ccdbfc6d"
+    },
+    {
+      "source": "/tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_context_publication_cause_test.go",
+      "artifact": "content_context_publication_cause_test.go",
+      "bytes": 7278,
+      "sha256": "e944e3439eabe84936eb166e1966b178166fd7e1f7b8a1972139b96b9b2768d0"
+    },
+    {
+      "source": "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_publication_probe.go",
+      "artifact": "context_publication_probe.go",
+      "bytes": 2457,
+      "sha256": "39051536517c23e30d1c80e919824d9c509e2d773a8e0568fe786fe82f9d5517"
+    }
+  ]
+}
