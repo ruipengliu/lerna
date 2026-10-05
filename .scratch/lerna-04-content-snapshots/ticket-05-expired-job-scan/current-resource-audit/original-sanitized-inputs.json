@@ -1,0 +1,3772 @@
+{
+  "kind": "STATIC audit inputs only, not catalog or filesystem audit",
+  "ledger": "/tmp/lerna-04-ticket05-execution/owned-scopes.log",
+  "interval_first_line": 967,
+  "interval_last_line": 1474,
+  "first_native_pid": 3279876,
+  "last_native_pid": 3551930,
+  "natives": [
+    {
+      "ledger_line": 967,
+      "record": {
+        "deadline_seconds": 120,
+        "event": "native_start_ack",
+        "pgid": 3279876,
+        "pid": 3279876,
+        "root": "/tmp/lerna-04-ticket05-execution",
+        "starttime": "13698741"
+      }
+    },
+    {
+      "ledger_line": 970,
+      "record": {
+        "event": "native_completion_ack",
+        "exit": 1,
+        "group_absent": true,
+        "pgid": 3279876,
+        "pid": 3279876,
+        "starttime": "13698741",
+        "timed_out": false
+      }
+    },
+    {
+      "ledger_line": 971,
+      "record": {
+        "deadline_seconds": 120,
+        "event": "native_start_ack",
+        "pgid": 3285260,
+        "pid": 3285260,
+        "root": "/tmp/lerna-04-ticket05-execution",
+        "starttime": "13720463"
+      }
+    },
+    {
+      "ledger_line": 972,
+      "record": {
+        "event": "native_completion_ack",
+        "exit": 0,
+        "group_absent": true,
+        "pgid": 3285260,
+        "pid": 3285260,
+        "starttime": "13720463",
+        "timed_out": false
+      }
+    },
+    {
+      "ledger_line": 973,
+      "record": {
+        "deadline_seconds": 120,
+        "event": "native_start_ack",
+        "pgid": 3285295,
+        "pid": 3285295,
+        "root": "/tmp/lerna-04-ticket05-execution",
+        "starttime": "13720476"
+      }
+    },
+    {
+      "ledger_line": 976,
+      "record": {
+        "event": "native_completion_ack",
+        "exit": 1,
+        "group_absent": true,
+        "pgid": 3285295,
+        "pid": 3285295,
+        "starttime": "13720476",
+        "timed_out": false
+      }
+    },
+    {
+      "ledger_line": 977,
+      "record": {
+        "deadline_seconds": 120,
+        "event": "native_start_ack",
+        "pgid": 3287983,
+        "pid": 3287983,
+        "root": "/tmp/lerna-04-ticket05-execution",
+        "starttime": "13731933"
+      }
+    },
+    {
+      "ledger_line": 978,
+      "record": {
+        "event": "native_completion_ack",
+        "exit": 0,
+        "group_absent": true,
+        "pgid": 3287983,
+        "pid": 3287983,
+        "starttime": "13731933",
+        "timed_out": false
+      }
+    },
+    {
+      "ledger_line": 979,
+      "record": {
+        "deadline_seconds": 120,
+        "event": "native_start_ack",
+        "pgid": 3287994,
+        "pid": 3287994,
+        "root": "/tmp/lerna-04-ticket05-execution",
+        "starttime": "13731941"
+      }
+    },
+    {
+      "ledger_line": 982,
+      "record": {
+        "event": "native_completion_ack",
+        "exit": 0,
+        "group_absent": true,
+        "pgid": 3287994,
+        "pid": 3287994,
+        "starttime": "13731941",
+        "timed_out": false
+      }
+    },
+    {
+      "ledger_line": 983,
+      "record": {
+        "deadline_seconds": 120,
+        "event": "native_start_ack",
+        "pgid": 3290594,
+        "pid": 3290594,
+        "root": "/tmp/lerna-04-ticket05-execution",
+        "starttime": "13743233"
+      }
+    },
+    {
+      "ledger_line": 986,
+      "record": {
+        "event": "native_completion_ack",
+        "exit": 1,
+        "group_absent": true,
+        "pgid": 3290594,
+        "pid": 3290594,
+        "starttime": "13743233",
+        "timed_out": false
+      }
+    },
+    {
+      "ledger_line": 987,
+      "record": {
+        "deadline_seconds": 120,
+        "event": "native_start_ack",
+        "pgid": 3429147,
+        "pid": 3429147,
+        "root": "/tmp/lerna-04-ticket05-execution",
+        "starttime": "14360495"
+      }
+    },
+    {
+      "ledger_line": 988,
+      "record": {
+        "event": "native_completion_ack",
+        "exit": 0,
+        "group_absent": true,
+        "pgid": 3429147,
+        "pid": 3429147,
+        "starttime": "14360495",
+        "timed_out": false
+      }
+    },
+    {
+      "ledger_line": 989,
+      "record": {
+        "deadline_seconds": 120,
+        "event": "native_start_ack",
+        "pgid": 3429161,
+        "pid": 3429161,
+        "root": "/tmp/lerna-04-ticket05-execution",
+        "starttime": "14360507"
+      }
+    },
+    {
+      "ledger_line": 992,
+      "record": {
+        "event": "native_completion_ack",
+        "exit": 0,
+        "group_absent": true,
+        "pgid": 3429161,
+        "pid": 3429161,
+        "starttime": "14360507",
+        "timed_out": false
+      }
+    },
+    {
+      "ledger_line": 993,
+      "record": {
+        "deadline_seconds": 120,
+        "event": "native_start_ack",
+        "pgid": 3433733,
+        "pid": 3433733,
+        "root": "/tmp/lerna-04-ticket05-execution",
+        "starttime": "14380509"
+      }
+    },
+    {
+      "ledger_line": 996,
+      "record": {
+        "event": "native_completion_ack",
+        "exit": 0,
+        "group_absent": true,
+        "pgid": 3433733,
+        "pid": 3433733,
+        "starttime": "14380509",
+        "timed_out": false
+      }
+    },
+    {
+      "ledger_line": 997,
+      "record": {
+        "deadline_seconds": 120,
+        "event": "native_start_ack",
+        "pgid": 3467224,
+        "pid": 3467224,
+        "root": "/tmp/lerna-04-ticket05-execution",
+        "starttime": "14522702"
+      }
+    },
+    {
+      "ledger_line": 998,
+      "record": {
+        "event": "native_completion_ack",
+        "exit": 0,
+        "group_absent": true,
+        "pgid": 3467224,
+        "pid": 3467224,
+        "starttime": "14522702",
+        "timed_out": false
+      }
+    },
+    {
+      "ledger_line": 999,
+      "record": {
+        "deadline_seconds": 120,
+        "event": "native_start_ack",
+        "pgid": 3467904,
+        "pid": 3467904,
+        "root": "/tmp/lerna-04-ticket05-execution",
+        "starttime": "14525665"
+      }
+    },
+    {
+      "ledger_line": 1003,
+      "record": {
+        "event": "native_completion_ack",
+        "exit": 0,
+        "group_absent": true,
+        "pgid": 3467904,
+        "pid": 3467904,
+        "starttime": "14525665",
+        "timed_out": false
+      }
+    },
+    {
+      "ledger_line": 1004,
+      "record": {
+        "deadline_seconds": 120,
+        "event": "native_start_ack",
+        "pgid": 3481197,
+        "pid": 3481197,
+        "root": "/tmp/lerna-04-ticket05-execution",
+        "starttime": "14584530"
+      }
+    },
+    {
+      "ledger_line": 1008,
+      "record": {
+        "event": "native_completion_ack",
+        "exit": 0,
+        "group_absent": true,
+        "pgid": 3481197,
+        "pid": 3481197,
+        "starttime": "14584530",
+        "timed_out": false
+      }
+    },
+    {
+      "ledger_line": 1009,
+      "record": {
+        "deadline_seconds": 120,
+        "event": "native_start_ack",
+        "pgid": 3495146,
+        "pid": 3495146,
+        "root": "/tmp/lerna-04-ticket05-execution",
+        "starttime": "14648084"
+      }
+    },
+    {
+      "ledger_line": 1010,
+      "record": {
+        "event": "native_completion_ack",
+        "exit": 0,
+        "group_absent": true,
+        "pgid": 3495146,
+        "pid": 3495146,
+        "starttime": "14648084",
+        "timed_out": false
+      }
+    },
+    {
+      "ledger_line": 1011,
+      "record": {
+        "deadline_seconds": 120,
+        "event": "native_start_ack",
+        "pgid": 3495830,
+        "pid": 3495830,
+        "root": "/tmp/lerna-04-ticket05-execution",
+        "starttime": "14651192"
+      }
+    },
+    {
+      "ledger_line": 1014,
+      "record": {
+        "event": "native_completion_ack",
+        "exit": 0,
+        "group_absent": true,
+        "pgid": 3495830,
+        "pid": 3495830,
+        "starttime": "14651192",
+        "timed_out": false
+      }
+    },
+    {
+      "ledger_line": 1015,
+      "record": {
+        "deadline_seconds": 120,
+        "event": "native_start_ack",
+        "pgid": 3510349,
+        "pid": 3510349,
+        "root": "/tmp/lerna-04-ticket05-execution",
+        "starttime": "14714811"
+      }
+    },
+    {
+      "ledger_line": 1016,
+      "record": {
+        "event": "native_completion_ack",
+        "exit": 0,
+        "group_absent": true,
+        "pgid": 3510349,
+        "pid": 3510349,
+        "starttime": "14714811",
+        "timed_out": false
+      }
+    },
+    {
+      "ledger_line": 1017,
+      "record": {
+        "deadline_seconds": 120,
+        "event": "native_start_ack",
+        "pgid": 3511127,
+        "pid": 3511127,
+        "root": "/tmp/lerna-04-ticket05-execution",
+        "starttime": "14718304"
+      }
+    },
+    {
+      "ledger_line": 1020,
+      "record": {
+        "event": "native_completion_ack",
+        "exit": 0,
+        "group_absent": true,
+        "pgid": 3511127,
+        "pid": 3511127,
+        "starttime": "14718304",
+        "timed_out": false
+      }
+    },
+    {
+      "ledger_line": 1021,
+      "record": {
+        "deadline_seconds": 120,
+        "event": "native_start_ack",
+        "pgid": 3514791,
+        "pid": 3514791,
+        "root": "/tmp/lerna-04-ticket05-execution",
+        "starttime": "14733329"
+      }
+    },
+    {
+      "ledger_line": 1024,
+      "record": {
+        "event": "native_completion_ack",
+        "exit": 0,
+        "group_absent": true,
+        "pgid": 3514791,
+        "pid": 3514791,
+        "starttime": "14733329",
+        "timed_out": false
+      }
+    },
+    {
+      "ledger_line": 1025,
+      "record": {
+        "deadline_seconds": 120,
+        "event": "native_start_ack",
+        "pgid": 3517014,
+        "pid": 3517014,
+        "root": "/tmp/lerna-04-ticket05-execution",
+        "starttime": "14742643"
+      }
+    },
+    {
+      "ledger_line": 1028,
+      "record": {
+        "event": "native_completion_ack",
+        "exit": 0,
+        "group_absent": true,
+        "pgid": 3517014,
+        "pid": 3517014,
+        "starttime": "14742643",
+        "timed_out": false
+      }
+    },
+    {
+      "ledger_line": 1029,
+      "record": {
+        "deadline_seconds": 120,
+        "event": "native_start_ack",
+        "pgid": 3535304,
+        "pid": 3535304,
+        "root": "/tmp/lerna-04-ticket05-execution",
+        "starttime": "14824359"
+      }
+    },
+    {
+      "ledger_line": 1030,
+      "record": {
+        "event": "native_completion_ack",
+        "exit": 0,
+        "group_absent": true,
+        "pgid": 3535304,
+        "pid": 3535304,
+        "starttime": "14824359",
+        "timed_out": false
+      }
+    },
+    {
+      "ledger_line": 1031,
+      "record": {
+        "deadline_seconds": 120,
+        "event": "native_start_ack",
+        "pgid": 3543955,
+        "pid": 3543955,
+        "root": "/tmp/lerna-04-ticket05-execution",
+        "starttime": "14863364"
+      }
+    },
+    {
+      "ledger_line": 1032,
+      "record": {
+        "event": "native_completion_ack",
+        "exit": 0,
+        "group_absent": true,
+        "pgid": 3543955,
+        "pid": 3543955,
+        "starttime": "14863364",
+        "timed_out": false
+      }
+    },
+    {
+      "ledger_line": 1033,
+      "record": {
+        "deadline_seconds": 120,
+        "event": "native_start_ack",
+        "pgid": 3544000,
+        "pid": 3544000,
+        "root": "/tmp/lerna-04-ticket05-execution",
+        "starttime": "14863389"
+      }
+    },
+    {
+      "ledger_line": 1034,
+      "record": {
+        "event": "native_completion_ack",
+        "exit": 0,
+        "group_absent": true,
+        "pgid": 3544000,
+        "pid": 3544000,
+        "starttime": "14863389",
+        "timed_out": false
+      }
+    },
+    {
+      "ledger_line": 1035,
+      "record": {
+        "deadline_seconds": 120,
+        "event": "native_start_ack",
+        "pgid": 3544157,
+        "pid": 3544157,
+        "root": "/tmp/lerna-04-ticket05-execution",
+        "starttime": "14863571"
+      }
+    },
+    {
+      "ledger_line": 1068,
+      "record": {
+        "event": "native_completion_ack",
+        "exit": 0,
+        "group_absent": true,
+        "pgid": 3544157,
+        "pid": 3544157,
+        "starttime": "14863571",
+        "timed_out": false
+      }
+    },
+    {
+      "ledger_line": 1069,
+      "record": {
+        "deadline_seconds": 120,
+        "event": "native_start_ack",
+        "pgid": 3544761,
+        "pid": 3544761,
+        "root": "/tmp/lerna-04-ticket05-execution",
+        "starttime": "14864264"
+      }
+    },
+    {
+      "ledger_line": 1102,
+      "record": {
+        "event": "native_completion_ack",
+        "exit": 0,
+        "group_absent": true,
+        "pgid": 3544761,
+        "pid": 3544761,
+        "starttime": "14864264",
+        "timed_out": false
+      }
+    },
+    {
+      "ledger_line": 1103,
+      "record": {
+        "deadline_seconds": 120,
+        "event": "native_start_ack",
+        "pgid": 3546259,
+        "pid": 3546259,
+        "root": "/tmp/lerna-04-ticket05-execution",
+        "starttime": "14868692"
+      }
+    },
+    {
+      "ledger_line": 1119,
+      "record": {
+        "event": "native_completion_ack",
+        "exit": 0,
+        "group_absent": true,
+        "pgid": 3546259,
+        "pid": 3546259,
+        "starttime": "14868692",
+        "timed_out": false
+      }
+    },
+    {
+      "ledger_line": 1120,
+      "record": {
+        "deadline_seconds": 120,
+        "event": "native_start_ack",
+        "pgid": 3546380,
+        "pid": 3546380,
+        "root": "/tmp/lerna-04-ticket05-execution",
+        "starttime": "14868938"
+      }
+    },
+    {
+      "ledger_line": 1165,
+      "record": {
+        "event": "native_completion_ack",
+        "exit": 0,
+        "group_absent": true,
+        "pgid": 3546380,
+        "pid": 3546380,
+        "starttime": "14868938",
+        "timed_out": false
+      }
+    },
+    {
+      "ledger_line": 1166,
+      "record": {
+        "deadline_seconds": 120,
+        "event": "native_start_ack",
+        "pgid": 3546616,
+        "pid": 3546616,
+        "root": "/tmp/lerna-04-ticket05-execution",
+        "starttime": "14869526"
+      }
+    },
+    {
+      "ledger_line": 1199,
+      "record": {
+        "event": "native_completion_ack",
+        "exit": 0,
+        "group_absent": true,
+        "pgid": 3546616,
+        "pid": 3546616,
+        "starttime": "14869526",
+        "timed_out": false
+      }
+    },
+    {
+      "ledger_line": 1200,
+      "record": {
+        "deadline_seconds": 120,
+        "event": "native_start_ack",
+        "pgid": 3546942,
+        "pid": 3546942,
+        "root": "/tmp/lerna-04-ticket05-execution",
+        "starttime": "14870708"
+      }
+    },
+    {
+      "ledger_line": 1218,
+      "record": {
+        "event": "native_completion_ack",
+        "exit": 0,
+        "group_absent": true,
+        "pgid": 3546942,
+        "pid": 3546942,
+        "starttime": "14870708",
+        "timed_out": false
+      }
+    },
+    {
+      "ledger_line": 1219,
+      "record": {
+        "deadline_seconds": 120,
+        "event": "native_start_ack",
+        "pgid": 3547159,
+        "pid": 3547159,
+        "root": "/tmp/lerna-04-ticket05-execution",
+        "starttime": "14871250"
+      }
+    },
+    {
+      "ledger_line": 1235,
+      "record": {
+        "event": "native_completion_ack",
+        "exit": 0,
+        "group_absent": true,
+        "pgid": 3547159,
+        "pid": 3547159,
+        "starttime": "14871250",
+        "timed_out": false
+      }
+    },
+    {
+      "ledger_line": 1236,
+      "record": {
+        "deadline_seconds": 120,
+        "event": "native_start_ack",
+        "pgid": 3547420,
+        "pid": 3547420,
+        "root": "/tmp/lerna-04-ticket05-execution",
+        "starttime": "14872129"
+      }
+    },
+    {
+      "ledger_line": 1281,
+      "record": {
+        "event": "native_completion_ack",
+        "exit": 0,
+        "group_absent": true,
+        "pgid": 3547420,
+        "pid": 3547420,
+        "starttime": "14872129",
+        "timed_out": false
+      }
+    },
+    {
+      "ledger_line": 1282,
+      "record": {
+        "deadline_seconds": 120,
+        "event": "native_start_ack",
+        "pgid": 3547905,
+        "pid": 3547905,
+        "root": "/tmp/lerna-04-ticket05-execution",
+        "starttime": "14873836"
+      }
+    },
+    {
+      "ledger_line": 1315,
+      "record": {
+        "event": "native_completion_ack",
+        "exit": 0,
+        "group_absent": true,
+        "pgid": 3547905,
+        "pid": 3547905,
+        "starttime": "14873836",
+        "timed_out": false
+      }
+    },
+    {
+      "ledger_line": 1316,
+      "record": {
+        "deadline_seconds": 120,
+        "event": "native_start_ack",
+        "pgid": 3548332,
+        "pid": 3548332,
+        "root": "/tmp/lerna-04-ticket05-execution",
+        "starttime": "14875218"
+      }
+    },
+    {
+      "ledger_line": 1334,
+      "record": {
+        "event": "native_completion_ack",
+        "exit": 0,
+        "group_absent": true,
+        "pgid": 3548332,
+        "pid": 3548332,
+        "starttime": "14875218",
+        "timed_out": false
+      }
+    },
+    {
+      "ledger_line": 1335,
+      "record": {
+        "deadline_seconds": 120,
+        "event": "native_start_ack",
+        "pgid": 3548619,
+        "pid": 3548619,
+        "root": "/tmp/lerna-04-ticket05-execution",
+        "starttime": "14876252"
+      }
+    },
+    {
+      "ledger_line": 1344,
+      "record": {
+        "event": "native_completion_ack",
+        "exit": 0,
+        "group_absent": true,
+        "pgid": 3548619,
+        "pid": 3548619,
+        "starttime": "14876252",
+        "timed_out": false
+      }
+    },
+    {
+      "ledger_line": 1345,
+      "record": {
+        "deadline_seconds": 120,
+        "event": "native_start_ack",
+        "pgid": 3548802,
+        "pid": 3548802,
+        "root": "/tmp/lerna-04-ticket05-execution",
+        "starttime": "14876904"
+      }
+    },
+    {
+      "ledger_line": 1364,
+      "record": {
+        "event": "native_completion_ack",
+        "exit": 0,
+        "group_absent": true,
+        "pgid": 3548802,
+        "pid": 3548802,
+        "starttime": "14876904",
+        "timed_out": false
+      }
+    },
+    {
+      "ledger_line": 1365,
+      "record": {
+        "deadline_seconds": 120,
+        "event": "native_start_ack",
+        "pgid": 3549204,
+        "pid": 3549204,
+        "root": "/tmp/lerna-04-ticket05-execution",
+        "starttime": "14878338"
+      }
+    },
+    {
+      "ledger_line": 1374,
+      "record": {
+        "event": "native_completion_ack",
+        "exit": 0,
+        "group_absent": true,
+        "pgid": 3549204,
+        "pid": 3549204,
+        "starttime": "14878338",
+        "timed_out": false
+      }
+    },
+    {
+      "ledger_line": 1375,
+      "record": {
+        "deadline_seconds": 120,
+        "event": "native_start_ack",
+        "pgid": 3549415,
+        "pid": 3549415,
+        "root": "/tmp/lerna-04-ticket05-execution",
+        "starttime": "14879070"
+      }
+    },
+    {
+      "ledger_line": 1394,
+      "record": {
+        "event": "native_completion_ack",
+        "exit": 0,
+        "group_absent": true,
+        "pgid": 3549415,
+        "pid": 3549415,
+        "starttime": "14879070",
+        "timed_out": false
+      }
+    },
+    {
+      "ledger_line": 1395,
+      "record": {
+        "deadline_seconds": 120,
+        "event": "native_start_ack",
+        "pgid": 3549860,
+        "pid": 3549860,
+        "root": "/tmp/lerna-04-ticket05-execution",
+        "starttime": "14880698"
+      }
+    },
+    {
+      "ledger_line": 1396,
+      "record": {
+        "event": "native_completion_ack",
+        "exit": 0,
+        "group_absent": true,
+        "pgid": 3549860,
+        "pid": 3549860,
+        "starttime": "14880698",
+        "timed_out": false
+      }
+    },
+    {
+      "ledger_line": 1397,
+      "record": {
+        "deadline_seconds": 120,
+        "event": "native_start_ack",
+        "pgid": 3549862,
+        "pid": 3549862,
+        "root": "/tmp/lerna-04-ticket05-execution",
+        "starttime": "14880703"
+      }
+    },
+    {
+      "ledger_line": 1400,
+      "record": {
+        "event": "native_completion_ack",
+        "exit": 0,
+        "group_absent": true,
+        "pgid": 3549862,
+        "pid": 3549862,
+        "starttime": "14880703",
+        "timed_out": false
+      }
+    },
+    {
+      "ledger_line": 1401,
+      "record": {
+        "deadline_seconds": 120,
+        "event": "native_start_ack",
+        "pgid": 3550262,
+        "pid": 3550262,
+        "root": "/tmp/lerna-04-ticket05-execution",
+        "starttime": "14882342"
+      }
+    },
+    {
+      "ledger_line": 1404,
+      "record": {
+        "event": "native_completion_ack",
+        "exit": 0,
+        "group_absent": true,
+        "pgid": 3550262,
+        "pid": 3550262,
+        "starttime": "14882342",
+        "timed_out": false
+      }
+    },
+    {
+      "ledger_line": 1405,
+      "record": {
+        "deadline_seconds": 120,
+        "event": "native_start_ack",
+        "pgid": 3550742,
+        "pid": 3550742,
+        "root": "/tmp/lerna-04-ticket05-execution",
+        "starttime": "14884182"
+      }
+    },
+    {
+      "ledger_line": 1407,
+      "record": {
+        "deadline": "2026-10-05T06:10:09.064700817Z",
+        "event": "object_child_prestart_duty",
+        "identity": {
+          "binding": "linux-directory:33:398417",
+          "content_ref": {
+            "owner": {
+              "tenant_id": "tenant-process",
+              "owner_id": "content-owner"
+            },
+            "content_id": "artifact",
+            "version": "1",
+            "hash": "sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",
+            "media_type": "text/plain",
+            "byte_length": "6"
+          },
+          "object_key": "964ed11840176964bdb6f3456b0bad6864a1a3b2ae07cbc9cab684eac7182e4b",
+          "holder_id": "primary",
+          "seal_id": "process-original-seal"
+        },
+        "mode": "put-stop",
+        "root": "/tmp/lerna-04-ticket05-execution/lerna-local-lifetime-2280513771"
+      }
+    },
+    {
+      "ledger_line": 1408,
+      "record": {
+        "deadline": "2026-10-05T06:10:09.064700817Z",
+        "event": "object_child_start_ack",
+        "mode": "put-stop",
+        "pgid": 3550804,
+        "pid": 3550804,
+        "root": "/tmp/lerna-04-ticket05-execution/lerna-local-lifetime-2280513771",
+        "starttime": "14884241"
+      }
+    },
+    {
+      "ledger_line": 1409,
+      "record": {
+        "actual_store_close_returned_nil": true,
+        "event": "object_child_logical_close_ack",
+        "mode": "put-stop",
+        "pgid": 3550804,
+        "pid": 3550804,
+        "root": "/tmp/lerna-04-ticket05-execution/lerna-local-lifetime-2280513771",
+        "starttime": "14884241"
+      }
+    },
+    {
+      "ledger_line": 1410,
+      "record": {
+        "event": "object_child_kernel_completion",
+        "exit": 0,
+        "group_absent": true,
+        "logical_close_inferred": false,
+        "mode": "put-stop",
+        "pgid": 3550804,
+        "pid": 3550804,
+        "root": "/tmp/lerna-04-ticket05-execution/lerna-local-lifetime-2280513771",
+        "starttime": "14884241"
+      }
+    },
+    {
+      "ledger_line": 1411,
+      "record": {
+        "event": "native_completion_ack",
+        "exit": 0,
+        "group_absent": true,
+        "pgid": 3550742,
+        "pid": 3550742,
+        "starttime": "14884182",
+        "timed_out": false
+      }
+    },
+    {
+      "ledger_line": 1412,
+      "record": {
+        "deadline_seconds": 120,
+        "event": "native_start_ack",
+        "pgid": 3550810,
+        "pid": 3550810,
+        "root": "/tmp/lerna-04-ticket05-execution",
+        "starttime": "14884254"
+      }
+    },
+    {
+      "ledger_line": 1414,
+      "record": {
+        "deadline": "2026-10-05T06:10:10.211339823Z",
+        "event": "object_child_prestart_duty",
+        "identity": {
+          "binding": "linux-directory:33:398587",
+          "content_ref": {
+            "owner": {
+              "tenant_id": "tenant-process",
+              "owner_id": "content-owner"
+            },
+            "content_id": "artifact",
+            "version": "1",
+            "hash": "sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",
+            "media_type": "text/plain",
+            "byte_length": "6"
+          },
+          "object_key": "964ed11840176964bdb6f3456b0bad6864a1a3b2ae07cbc9cab684eac7182e4b",
+          "holder_id": "primary",
+          "seal_id": "process-original-seal"
+        },
+        "mode": "put-stop",
+        "root": "/tmp/lerna-04-ticket05-execution/lerna-local-lifetime-3531288571"
+      }
+    },
+    {
+      "ledger_line": 1415,
+      "record": {
+        "deadline": "2026-10-05T06:10:10.211339823Z",
+        "event": "object_child_start_ack",
+        "mode": "put-stop",
+        "pgid": 3550929,
+        "pid": 3550929,
+        "root": "/tmp/lerna-04-ticket05-execution/lerna-local-lifetime-3531288571",
+        "starttime": "14884358"
+      }
+    },
+    {
+      "ledger_line": 1416,
+      "record": {
+        "actual_store_close_returned_nil": true,
+        "event": "object_child_logical_close_ack",
+        "mode": "put-stop",
+        "pgid": 3550929,
+        "pid": 3550929,
+        "root": "/tmp/lerna-04-ticket05-execution/lerna-local-lifetime-3531288571",
+        "starttime": "14884358"
+      }
+    },
+    {
+      "ledger_line": 1417,
+      "record": {
+        "event": "object_child_kernel_completion",
+        "exit": 0,
+        "group_absent": true,
+        "logical_close_inferred": false,
+        "mode": "put-stop",
+        "pgid": 3550929,
+        "pid": 3550929,
+        "root": "/tmp/lerna-04-ticket05-execution/lerna-local-lifetime-3531288571",
+        "starttime": "14884358"
+      }
+    },
+    {
+      "ledger_line": 1418,
+      "record": {
+        "event": "native_completion_ack",
+        "exit": 0,
+        "group_absent": true,
+        "pgid": 3550810,
+        "pid": 3550810,
+        "starttime": "14884254",
+        "timed_out": false
+      }
+    },
+    {
+      "ledger_line": 1419,
+      "record": {
+        "deadline_seconds": 120,
+        "event": "native_start_ack",
+        "pgid": 3550983,
+        "pid": 3550983,
+        "root": "/tmp/lerna-04-ticket05-execution",
+        "starttime": "14884572"
+      }
+    },
+    {
+      "ledger_line": 1427,
+      "record": {
+        "binding": "linux-directory:33:398871",
+        "event": "legacy_original_prestart_duty",
+        "namespace": "lerna_test_2389bc0ad4dbda05e7dd771c",
+        "root": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-1177382667",
+        "scope_id": "ticket05-stopped-lerna_test_2389bc0ad4dbda05e7dd771c",
+        "versions": [
+          {
+            "content_ref": {
+              "owner": {
+                "tenant_id": "content-tenant",
+                "owner_id": "content-owner"
+              },
+              "content_id": "stopped-legacy",
+              "version": "1",
+              "hash": "sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",
+              "media_type": "text/plain",
+              "byte_length": "6"
+            },
+            "subject": {
+              "tenant_id": "content-tenant",
+              "subject_id": "verified-subject",
+              "delegation_chain": []
+            },
+            "purpose": "verification",
+            "object_key": "ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72",
+            "attempt_keys": null
+          },
+          {
+            "content_ref": {
+              "owner": {
+                "tenant_id": "content-tenant",
+                "owner_id": "content-owner"
+              },
+              "content_id": "stopped-legacy",
+              "version": "2",
+              "hash": "sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad",
+              "media_type": "text/plain",
+              "byte_length": "5"
+            },
+            "subject": {
+              "tenant_id": "content-tenant",
+              "subject_id": "verified-subject",
+              "delegation_chain": []
+            },
+            "purpose": "verification",
+            "object_key": "d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6",
+            "attempt_keys": null
+          }
+        ],
+        "writer_sha": "1a7d910238eb74cddc712d92b0ba4014a72ff507"
+      }
+    },
+    {
+      "ledger_line": 1428,
+      "record": {
+        "binding": "linux-directory:33:398871",
+        "effect_released": false,
+        "event": "legacy_original_start_ack",
+        "pgid": 3551210,
+        "pid": 3551210,
+        "scope_id": "ticket05-stopped-lerna_test_2389bc0ad4dbda05e7dd771c",
+        "starttime": "14884837"
+      }
+    },
+    {
+      "ledger_line": 1429,
+      "record": {
+        "event": "legacy_original_published",
+        "observation": {
+          "scope_id": "ticket05-stopped-lerna_test_2389bc0ad4dbda05e7dd771c",
+          "schema": "lerna_test_2389bc0ad4dbda05e7dd771c",
+          "writer_sha": "1a7d910238eb74cddc712d92b0ba4014a72ff507",
+          "binding": "linux-directory:33:398871",
+          "requests": [
+            {
+              "contract_version": "1.2.0",
+              "profile": "content",
+              "command_id": "stopped-legacy-0",
+              "target": {
+                "tenant_id": "content-tenant",
+                "owner_id": "content-owner",
+                "kind": "content",
+                "id": "stopped-legacy"
+              },
+              "method": "content.put",
+              "accept_before": "2026-10-05T07:10:10.079097Z",
+              "payload": {
+                "content_ref": {
+                  "owner": {
+                    "tenant_id": "content-tenant",
+                    "owner_id": "content-owner"
+                  },
+                  "content_id": "stopped-legacy",
+                  "version": "1",
+                  "hash": "sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",
+                  "media_type": "text/plain",
+                  "byte_length": "6"
+                },
+                "sources": [],
+                "purpose": "verification",
+                "bytes_base64": "YWxwaGEK",
+                "retain_until": "2026-10-05T07:10:10.079097Z"
+              }
+            },
+            {
+              "contract_version": "1.2.0",
+              "profile": "content",
+              "command_id": "stopped-legacy-1",
+              "target": {
+                "tenant_id": "content-tenant",
+                "owner_id": "content-owner",
+                "kind": "content",
+                "id": "stopped-legacy"
+              },
+              "method": "content.put",
+              "accept_before": "2026-10-05T07:10:10.079097Z",
+              "payload": {
+                "content_ref": {
+                  "owner": {
+                    "tenant_id": "content-tenant",
+                    "owner_id": "content-owner"
+                  },
+                  "content_id": "stopped-legacy",
+                  "version": "2",
+                  "hash": "sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad",
+                  "media_type": "text/plain",
+                  "byte_length": "5"
+                },
+                "sources": [],
+                "purpose": "verification",
+                "bytes_base64": "YmV0YQo=",
+                "retain_until": "2026-10-05T07:10:10.079097Z"
+              }
+            }
+          ],
+          "receipts": [
+            {
+              "state": "accepted",
+              "command_ref": {
+                "owner": {
+                  "tenant_id": "content-tenant",
+                  "owner_id": "content-owner"
+                },
+                "command_id": "stopped-legacy-0"
+              },
+              "object_ref": {
+                "tenant_id": "content-tenant",
+                "owner_id": "content-owner",
+                "kind": "content",
+                "id": "stopped-legacy"
+              },
+              "next_action": "query_original",
+              "content_ref": {
+                "owner": {
+                  "tenant_id": "content-tenant",
+                  "owner_id": "content-owner"
+                },
+                "content_id": "stopped-legacy",
+                "version": "1",
+                "hash": "sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",
+                "media_type": "text/plain",
+                "byte_length": "6"
+              },
+              "retain_until": "2026-10-05T07:10:10.079097Z"
+            },
+            {
+              "state": "accepted",
+              "command_ref": {
+                "owner": {
+                  "tenant_id": "content-tenant",
+                  "owner_id": "content-owner"
+                },
+                "command_id": "stopped-legacy-1"
+              },
+              "object_ref": {
+                "tenant_id": "content-tenant",
+                "owner_id": "content-owner",
+                "kind": "content",
+                "id": "stopped-legacy"
+              },
+              "next_action": "query_original",
+              "content_ref": {
+                "owner": {
+                  "tenant_id": "content-tenant",
+                  "owner_id": "content-owner"
+                },
+                "content_id": "stopped-legacy",
+                "version": "2",
+                "hash": "sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad",
+                "media_type": "text/plain",
+                "byte_length": "5"
+              },
+              "retain_until": "2026-10-05T07:10:10.079097Z"
+            }
+          ],
+          "states": [
+            "published",
+            "published"
+          ],
+          "attempts": {
+            "ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72": [
+              {
+                "key": "ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72",
+                "attempt": "ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72.1.tmp",
+                "hash": "sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",
+                "length": 6,
+                "input_sha256": "b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060"
+              }
+            ],
+            "d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6": [
+              {
+                "key": "d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6",
+                "attempt": "d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6.1.tmp",
+                "hash": "sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad",
+                "length": 5,
+                "input_sha256": "f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad"
+              }
+            ]
+          },
+          "object_fds": [
+            8,
+            9
+          ],
+          "migration_checksum": "sha256:00363b79dafb6eb1f373be9ef08e915fe23cc3db0fa55345e8ae6c051ce0c1ed"
+        },
+        "pgid": 3551210,
+        "pid": 3551210,
+        "scope_id": "ticket05-stopped-lerna_test_2389bc0ad4dbda05e7dd771c",
+        "starttime": "14884837"
+      }
+    },
+    {
+      "ledger_line": 1430,
+      "record": {
+        "close_frame": {
+          "phase": "stopped",
+          "observation": {
+            "scope_id": "ticket05-stopped-lerna_test_2389bc0ad4dbda05e7dd771c",
+            "schema": "lerna_test_2389bc0ad4dbda05e7dd771c",
+            "writer_sha": "1a7d910238eb74cddc712d92b0ba4014a72ff507",
+            "binding": "linux-directory:33:398871",
+            "requests": [
+              {
+                "contract_version": "1.2.0",
+                "profile": "content",
+                "command_id": "stopped-legacy-0",
+                "target": {
+                  "tenant_id": "content-tenant",
+                  "owner_id": "content-owner",
+                  "kind": "content",
+                  "id": "stopped-legacy"
+                },
+                "method": "content.put",
+                "accept_before": "2026-10-05T07:10:10.079097Z",
+                "payload": {
+                  "content_ref": {
+                    "owner": {
+                      "tenant_id": "content-tenant",
+                      "owner_id": "content-owner"
+                    },
+                    "content_id": "stopped-legacy",
+                    "version": "1",
+                    "hash": "sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",
+                    "media_type": "text/plain",
+                    "byte_length": "6"
+                  },
+                  "sources": [],
+                  "purpose": "verification",
+                  "bytes_base64": "YWxwaGEK",
+                  "retain_until": "2026-10-05T07:10:10.079097Z"
+                }
+              },
+              {
+                "contract_version": "1.2.0",
+                "profile": "content",
+                "command_id": "stopped-legacy-1",
+                "target": {
+                  "tenant_id": "content-tenant",
+                  "owner_id": "content-owner",
+                  "kind": "content",
+                  "id": "stopped-legacy"
+                },
+                "method": "content.put",
+                "accept_before": "2026-10-05T07:10:10.079097Z",
+                "payload": {
+                  "content_ref": {
+                    "owner": {
+                      "tenant_id": "content-tenant",
+                      "owner_id": "content-owner"
+                    },
+                    "content_id": "stopped-legacy",
+                    "version": "2",
+                    "hash": "sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad",
+                    "media_type": "text/plain",
+                    "byte_length": "5"
+                  },
+                  "sources": [],
+                  "purpose": "verification",
+                  "bytes_base64": "YmV0YQo=",
+                  "retain_until": "2026-10-05T07:10:10.079097Z"
+                }
+              }
+            ],
+            "receipts": [
+              {
+                "state": "accepted",
+                "command_ref": {
+                  "owner": {
+                    "tenant_id": "content-tenant",
+                    "owner_id": "content-owner"
+                  },
+                  "command_id": "stopped-legacy-0"
+                },
+                "object_ref": {
+                  "tenant_id": "content-tenant",
+                  "owner_id": "content-owner",
+                  "kind": "content",
+                  "id": "stopped-legacy"
+                },
+                "next_action": "query_original",
+                "content_ref": {
+                  "owner": {
+                    "tenant_id": "content-tenant",
+                    "owner_id": "content-owner"
+                  },
+                  "content_id": "stopped-legacy",
+                  "version": "1",
+                  "hash": "sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",
+                  "media_type": "text/plain",
+                  "byte_length": "6"
+                },
+                "retain_until": "2026-10-05T07:10:10.079097Z"
+              },
+              {
+                "state": "accepted",
+                "command_ref": {
+                  "owner": {
+                    "tenant_id": "content-tenant",
+                    "owner_id": "content-owner"
+                  },
+                  "command_id": "stopped-legacy-1"
+                },
+                "object_ref": {
+                  "tenant_id": "content-tenant",
+                  "owner_id": "content-owner",
+                  "kind": "content",
+                  "id": "stopped-legacy"
+                },
+                "next_action": "query_original",
+                "content_ref": {
+                  "owner": {
+                    "tenant_id": "content-tenant",
+                    "owner_id": "content-owner"
+                  },
+                  "content_id": "stopped-legacy",
+                  "version": "2",
+                  "hash": "sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad",
+                  "media_type": "text/plain",
+                  "byte_length": "5"
+                },
+                "retain_until": "2026-10-05T07:10:10.079097Z"
+              }
+            ],
+            "states": [
+              "published",
+              "published"
+            ],
+            "attempts": {
+              "ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72": [
+                {
+                  "key": "ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72",
+                  "attempt": "ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72.1.tmp",
+                  "hash": "sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",
+                  "length": 6,
+                  "input_sha256": "b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060"
+                }
+              ],
+              "d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6": [
+                {
+                  "key": "d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6",
+                  "attempt": "d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6.1.tmp",
+                  "hash": "sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad",
+                  "length": 5,
+                  "input_sha256": "f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad"
+                }
+              ]
+            },
+            "object_fds": [
+              8,
+              9
+            ],
+            "migration_checksum": "sha256:00363b79dafb6eb1f373be9ef08e915fe23cc3db0fa55345e8ae6c051ce0c1ed"
+          },
+          "object_close_ack": true,
+          "store_close_ack": true,
+          "witness_close_ack": true,
+          "start_gate_close_ack": true,
+          "stop_gate_close_ack": true,
+          "object_fds_closed": true,
+          "failed": false
+        },
+        "event": "legacy_original_completion",
+        "exit": 0,
+        "frame_error": "<nil>",
+        "group_absent": true,
+        "parent_pipe_close_error": "<nil>",
+        "pgid": 3551210,
+        "pid": 3551210,
+        "scope_id": "ticket05-stopped-lerna_test_2389bc0ad4dbda05e7dd771c",
+        "starttime": "14884837",
+        "state_known": true,
+        "wait_error": "<nil>"
+      }
+    },
+    {
+      "ledger_line": 1431,
+      "record": {
+        "event": "legacy_exact_scope_qualified",
+        "old_writer_restart_authorized": false,
+        "qualification": {
+          "id": "ticket05-stopped-lerna_test_2389bc0ad4dbda05e7dd771c",
+          "namespace": "lerna_test_2389bc0ad4dbda05e7dd771c",
+          "owner": {
+            "tenant_id": "content-tenant",
+            "owner_id": "content-owner"
+          },
+          "writer_sha": "1a7d910238eb74cddc712d92b0ba4014a72ff507",
+          "binding": "linux-directory:33:398871",
+          "evidence_digest": "sha256:1f257a7eb337ca631a082fc77709457660d4baec88aba599cdab1baf7498127c",
+          "valid_until": "2026-10-05T06:11:10.399503Z",
+          "versions": [
+            {
+              "content_ref": {
+                "owner": {
+                  "tenant_id": "content-tenant",
+                  "owner_id": "content-owner"
+                },
+                "content_id": "stopped-legacy",
+                "version": "1",
+                "hash": "sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",
+                "media_type": "text/plain",
+                "byte_length": "6"
+              },
+              "subject": {
+                "tenant_id": "content-tenant",
+                "subject_id": "verified-subject",
+                "delegation_chain": []
+              },
+              "purpose": "verification",
+              "object_key": "ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72",
+              "attempt_keys": [
+                "ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72.1.tmp"
+              ]
+            },
+            {
+              "content_ref": {
+                "owner": {
+                  "tenant_id": "content-tenant",
+                  "owner_id": "content-owner"
+                },
+                "content_id": "stopped-legacy",
+                "version": "2",
+                "hash": "sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad",
+                "media_type": "text/plain",
+                "byte_length": "5"
+              },
+              "subject": {
+                "tenant_id": "content-tenant",
+                "subject_id": "verified-subject",
+                "delegation_chain": []
+              },
+              "purpose": "verification",
+              "object_key": "d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6",
+              "attempt_keys": [
+                "d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6.1.tmp"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "ledger_line": 1435,
+      "record": {
+        "event": "native_completion_ack",
+        "exit": 0,
+        "group_absent": true,
+        "pgid": 3550983,
+        "pid": 3550983,
+        "starttime": "14884572",
+        "timed_out": false
+      }
+    },
+    {
+      "ledger_line": 1436,
+      "record": {
+        "deadline_seconds": 120,
+        "event": "native_start_ack",
+        "pgid": 3551225,
+        "pid": 3551225,
+        "root": "/tmp/lerna-04-ticket05-execution",
+        "starttime": "14884951"
+      }
+    },
+    {
+      "ledger_line": 1444,
+      "record": {
+        "binding": "linux-directory:33:399314",
+        "event": "legacy_original_prestart_duty",
+        "namespace": "lerna_test_0b08d7b7f4234b13feb04caf",
+        "root": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-1218559426",
+        "scope_id": "ticket05-stopped-lerna_test_0b08d7b7f4234b13feb04caf",
+        "versions": [
+          {
+            "content_ref": {
+              "owner": {
+                "tenant_id": "content-tenant",
+                "owner_id": "content-owner"
+              },
+              "content_id": "stopped-legacy",
+              "version": "1",
+              "hash": "sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",
+              "media_type": "text/plain",
+              "byte_length": "6"
+            },
+            "subject": {
+              "tenant_id": "content-tenant",
+              "subject_id": "verified-subject",
+              "delegation_chain": []
+            },
+            "purpose": "verification",
+            "object_key": "ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72",
+            "attempt_keys": null
+          },
+          {
+            "content_ref": {
+              "owner": {
+                "tenant_id": "content-tenant",
+                "owner_id": "content-owner"
+              },
+              "content_id": "stopped-legacy",
+              "version": "2",
+              "hash": "sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad",
+              "media_type": "text/plain",
+              "byte_length": "5"
+            },
+            "subject": {
+              "tenant_id": "content-tenant",
+              "subject_id": "verified-subject",
+              "delegation_chain": []
+            },
+            "purpose": "verification",
+            "object_key": "d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6",
+            "attempt_keys": null
+          }
+        ],
+        "writer_sha": "1a7d910238eb74cddc712d92b0ba4014a72ff507"
+      }
+    },
+    {
+      "ledger_line": 1445,
+      "record": {
+        "binding": "linux-directory:33:399314",
+        "effect_released": false,
+        "event": "legacy_original_start_ack",
+        "pgid": 3551503,
+        "pid": 3551503,
+        "scope_id": "ticket05-stopped-lerna_test_0b08d7b7f4234b13feb04caf",
+        "starttime": "14885374"
+      }
+    },
+    {
+      "ledger_line": 1446,
+      "record": {
+        "event": "legacy_original_published",
+        "observation": {
+          "scope_id": "ticket05-stopped-lerna_test_0b08d7b7f4234b13feb04caf",
+          "schema": "lerna_test_0b08d7b7f4234b13feb04caf",
+          "writer_sha": "1a7d910238eb74cddc712d92b0ba4014a72ff507",
+          "binding": "linux-directory:33:399314",
+          "requests": [
+            {
+              "contract_version": "1.2.0",
+              "profile": "content",
+              "command_id": "stopped-legacy-0",
+              "target": {
+                "tenant_id": "content-tenant",
+                "owner_id": "content-owner",
+                "kind": "content",
+                "id": "stopped-legacy"
+              },
+              "method": "content.put",
+              "accept_before": "2026-10-05T07:10:15.479930Z",
+              "payload": {
+                "content_ref": {
+                  "owner": {
+                    "tenant_id": "content-tenant",
+                    "owner_id": "content-owner"
+                  },
+                  "content_id": "stopped-legacy",
+                  "version": "1",
+                  "hash": "sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",
+                  "media_type": "text/plain",
+                  "byte_length": "6"
+                },
+                "sources": [],
+                "purpose": "verification",
+                "bytes_base64": "YWxwaGEK",
+                "retain_until": "2026-10-05T07:10:15.479930Z"
+              }
+            },
+            {
+              "contract_version": "1.2.0",
+              "profile": "content",
+              "command_id": "stopped-legacy-1",
+              "target": {
+                "tenant_id": "content-tenant",
+                "owner_id": "content-owner",
+                "kind": "content",
+                "id": "stopped-legacy"
+              },
+              "method": "content.put",
+              "accept_before": "2026-10-05T07:10:15.479930Z",
+              "payload": {
+                "content_ref": {
+                  "owner": {
+                    "tenant_id": "content-tenant",
+                    "owner_id": "content-owner"
+                  },
+                  "content_id": "stopped-legacy",
+                  "version": "2",
+                  "hash": "sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad",
+                  "media_type": "text/plain",
+                  "byte_length": "5"
+                },
+                "sources": [],
+                "purpose": "verification",
+                "bytes_base64": "YmV0YQo=",
+                "retain_until": "2026-10-05T07:10:15.479930Z"
+              }
+            }
+          ],
+          "receipts": [
+            {
+              "state": "accepted",
+              "command_ref": {
+                "owner": {
+                  "tenant_id": "content-tenant",
+                  "owner_id": "content-owner"
+                },
+                "command_id": "stopped-legacy-0"
+              },
+              "object_ref": {
+                "tenant_id": "content-tenant",
+                "owner_id": "content-owner",
+                "kind": "content",
+                "id": "stopped-legacy"
+              },
+              "next_action": "query_original",
+              "content_ref": {
+                "owner": {
+                  "tenant_id": "content-tenant",
+                  "owner_id": "content-owner"
+                },
+                "content_id": "stopped-legacy",
+                "version": "1",
+                "hash": "sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",
+                "media_type": "text/plain",
+                "byte_length": "6"
+              },
+              "retain_until": "2026-10-05T07:10:15.479930Z"
+            },
+            {
+              "state": "accepted",
+              "command_ref": {
+                "owner": {
+                  "tenant_id": "content-tenant",
+                  "owner_id": "content-owner"
+                },
+                "command_id": "stopped-legacy-1"
+              },
+              "object_ref": {
+                "tenant_id": "content-tenant",
+                "owner_id": "content-owner",
+                "kind": "content",
+                "id": "stopped-legacy"
+              },
+              "next_action": "query_original",
+              "content_ref": {
+                "owner": {
+                  "tenant_id": "content-tenant",
+                  "owner_id": "content-owner"
+                },
+                "content_id": "stopped-legacy",
+                "version": "2",
+                "hash": "sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad",
+                "media_type": "text/plain",
+                "byte_length": "5"
+              },
+              "retain_until": "2026-10-05T07:10:15.479930Z"
+            }
+          ],
+          "states": [
+            "published",
+            "published"
+          ],
+          "attempts": {
+            "ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72": [
+              {
+                "key": "ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72",
+                "attempt": "ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72.1.tmp",
+                "hash": "sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",
+                "length": 6,
+                "input_sha256": "b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060"
+              }
+            ],
+            "d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6": [
+              {
+                "key": "d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6",
+                "attempt": "d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6.1.tmp",
+                "hash": "sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad",
+                "length": 5,
+                "input_sha256": "f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad"
+              }
+            ]
+          },
+          "object_fds": [
+            8,
+            9
+          ],
+          "migration_checksum": "sha256:00363b79dafb6eb1f373be9ef08e915fe23cc3db0fa55345e8ae6c051ce0c1ed"
+        },
+        "pgid": 3551503,
+        "pid": 3551503,
+        "scope_id": "ticket05-stopped-lerna_test_0b08d7b7f4234b13feb04caf",
+        "starttime": "14885374"
+      }
+    },
+    {
+      "ledger_line": 1447,
+      "record": {
+        "close_frame": {
+          "phase": "stopped",
+          "observation": {
+            "scope_id": "ticket05-stopped-lerna_test_0b08d7b7f4234b13feb04caf",
+            "schema": "lerna_test_0b08d7b7f4234b13feb04caf",
+            "writer_sha": "1a7d910238eb74cddc712d92b0ba4014a72ff507",
+            "binding": "linux-directory:33:399314",
+            "requests": [
+              {
+                "contract_version": "1.2.0",
+                "profile": "content",
+                "command_id": "stopped-legacy-0",
+                "target": {
+                  "tenant_id": "content-tenant",
+                  "owner_id": "content-owner",
+                  "kind": "content",
+                  "id": "stopped-legacy"
+                },
+                "method": "content.put",
+                "accept_before": "2026-10-05T07:10:15.479930Z",
+                "payload": {
+                  "content_ref": {
+                    "owner": {
+                      "tenant_id": "content-tenant",
+                      "owner_id": "content-owner"
+                    },
+                    "content_id": "stopped-legacy",
+                    "version": "1",
+                    "hash": "sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",
+                    "media_type": "text/plain",
+                    "byte_length": "6"
+                  },
+                  "sources": [],
+                  "purpose": "verification",
+                  "bytes_base64": "YWxwaGEK",
+                  "retain_until": "2026-10-05T07:10:15.479930Z"
+                }
+              },
+              {
+                "contract_version": "1.2.0",
+                "profile": "content",
+                "command_id": "stopped-legacy-1",
+                "target": {
+                  "tenant_id": "content-tenant",
+                  "owner_id": "content-owner",
+                  "kind": "content",
+                  "id": "stopped-legacy"
+                },
+                "method": "content.put",
+                "accept_before": "2026-10-05T07:10:15.479930Z",
+                "payload": {
+                  "content_ref": {
+                    "owner": {
+                      "tenant_id": "content-tenant",
+                      "owner_id": "content-owner"
+                    },
+                    "content_id": "stopped-legacy",
+                    "version": "2",
+                    "hash": "sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad",
+                    "media_type": "text/plain",
+                    "byte_length": "5"
+                  },
+                  "sources": [],
+                  "purpose": "verification",
+                  "bytes_base64": "YmV0YQo=",
+                  "retain_until": "2026-10-05T07:10:15.479930Z"
+                }
+              }
+            ],
+            "receipts": [
+              {
+                "state": "accepted",
+                "command_ref": {
+                  "owner": {
+                    "tenant_id": "content-tenant",
+                    "owner_id": "content-owner"
+                  },
+                  "command_id": "stopped-legacy-0"
+                },
+                "object_ref": {
+                  "tenant_id": "content-tenant",
+                  "owner_id": "content-owner",
+                  "kind": "content",
+                  "id": "stopped-legacy"
+                },
+                "next_action": "query_original",
+                "content_ref": {
+                  "owner": {
+                    "tenant_id": "content-tenant",
+                    "owner_id": "content-owner"
+                  },
+                  "content_id": "stopped-legacy",
+                  "version": "1",
+                  "hash": "sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",
+                  "media_type": "text/plain",
+                  "byte_length": "6"
+                },
+                "retain_until": "2026-10-05T07:10:15.479930Z"
+              },
+              {
+                "state": "accepted",
+                "command_ref": {
+                  "owner": {
+                    "tenant_id": "content-tenant",
+                    "owner_id": "content-owner"
+                  },
+                  "command_id": "stopped-legacy-1"
+                },
+                "object_ref": {
+                  "tenant_id": "content-tenant",
+                  "owner_id": "content-owner",
+                  "kind": "content",
+                  "id": "stopped-legacy"
+                },
+                "next_action": "query_original",
+                "content_ref": {
+                  "owner": {
+                    "tenant_id": "content-tenant",
+                    "owner_id": "content-owner"
+                  },
+                  "content_id": "stopped-legacy",
+                  "version": "2",
+                  "hash": "sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad",
+                  "media_type": "text/plain",
+                  "byte_length": "5"
+                },
+                "retain_until": "2026-10-05T07:10:15.479930Z"
+              }
+            ],
+            "states": [
+              "published",
+              "published"
+            ],
+            "attempts": {
+              "ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72": [
+                {
+                  "key": "ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72",
+                  "attempt": "ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72.1.tmp",
+                  "hash": "sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",
+                  "length": 6,
+                  "input_sha256": "b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060"
+                }
+              ],
+              "d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6": [
+                {
+                  "key": "d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6",
+                  "attempt": "d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6.1.tmp",
+                  "hash": "sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad",
+                  "length": 5,
+                  "input_sha256": "f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad"
+                }
+              ]
+            },
+            "object_fds": [
+              8,
+              9
+            ],
+            "migration_checksum": "sha256:00363b79dafb6eb1f373be9ef08e915fe23cc3db0fa55345e8ae6c051ce0c1ed"
+          },
+          "object_close_ack": true,
+          "store_close_ack": true,
+          "witness_close_ack": true,
+          "start_gate_close_ack": true,
+          "stop_gate_close_ack": true,
+          "object_fds_closed": true,
+          "failed": false
+        },
+        "event": "legacy_original_completion",
+        "exit": 0,
+        "frame_error": "<nil>",
+        "group_absent": true,
+        "parent_pipe_close_error": "<nil>",
+        "pgid": 3551503,
+        "pid": 3551503,
+        "scope_id": "ticket05-stopped-lerna_test_0b08d7b7f4234b13feb04caf",
+        "starttime": "14885374",
+        "state_known": true,
+        "wait_error": "<nil>"
+      }
+    },
+    {
+      "ledger_line": 1448,
+      "record": {
+        "event": "legacy_exact_scope_qualified",
+        "old_writer_restart_authorized": false,
+        "qualification": {
+          "id": "ticket05-stopped-lerna_test_0b08d7b7f4234b13feb04caf",
+          "namespace": "lerna_test_0b08d7b7f4234b13feb04caf",
+          "owner": {
+            "tenant_id": "content-tenant",
+            "owner_id": "content-owner"
+          },
+          "writer_sha": "1a7d910238eb74cddc712d92b0ba4014a72ff507",
+          "binding": "linux-directory:33:399314",
+          "evidence_digest": "sha256:ee7e3082575ef1ec15f7fda297fa7f466b55e2ed1d7ae14054421501ab0a727a",
+          "valid_until": "2026-10-05T06:11:15.733728Z",
+          "versions": [
+            {
+              "content_ref": {
+                "owner": {
+                  "tenant_id": "content-tenant",
+                  "owner_id": "content-owner"
+                },
+                "content_id": "stopped-legacy",
+                "version": "1",
+                "hash": "sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",
+                "media_type": "text/plain",
+                "byte_length": "6"
+              },
+              "subject": {
+                "tenant_id": "content-tenant",
+                "subject_id": "verified-subject",
+                "delegation_chain": []
+              },
+              "purpose": "verification",
+              "object_key": "ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72",
+              "attempt_keys": [
+                "ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72.1.tmp"
+              ]
+            },
+            {
+              "content_ref": {
+                "owner": {
+                  "tenant_id": "content-tenant",
+                  "owner_id": "content-owner"
+                },
+                "content_id": "stopped-legacy",
+                "version": "2",
+                "hash": "sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad",
+                "media_type": "text/plain",
+                "byte_length": "5"
+              },
+              "subject": {
+                "tenant_id": "content-tenant",
+                "subject_id": "verified-subject",
+                "delegation_chain": []
+              },
+              "purpose": "verification",
+              "object_key": "d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6",
+              "attempt_keys": [
+                "d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6.1.tmp"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "ledger_line": 1452,
+      "record": {
+        "event": "native_completion_ack",
+        "exit": 0,
+        "group_absent": true,
+        "pgid": 3551225,
+        "pid": 3551225,
+        "starttime": "14884951",
+        "timed_out": false
+      }
+    },
+    {
+      "ledger_line": 1453,
+      "record": {
+        "deadline_seconds": 120,
+        "event": "native_start_ack",
+        "pgid": 3551584,
+        "pid": 3551584,
+        "root": "/tmp/lerna-04-ticket05-execution",
+        "starttime": "14885617"
+      }
+    },
+    {
+      "ledger_line": 1457,
+      "record": {
+        "event": "native_completion_ack",
+        "exit": 0,
+        "group_absent": true,
+        "pgid": 3551584,
+        "pid": 3551584,
+        "starttime": "14885617",
+        "timed_out": false
+      }
+    },
+    {
+      "ledger_line": 1458,
+      "record": {
+        "deadline_seconds": 120,
+        "event": "native_start_ack",
+        "pgid": 3551683,
+        "pid": 3551683,
+        "root": "/tmp/lerna-04-ticket05-execution",
+        "starttime": "14885741"
+      }
+    },
+    {
+      "ledger_line": 1462,
+      "record": {
+        "event": "native_completion_ack",
+        "exit": 0,
+        "group_absent": true,
+        "pgid": 3551683,
+        "pid": 3551683,
+        "starttime": "14885741",
+        "timed_out": false
+      }
+    },
+    {
+      "ledger_line": 1463,
+      "record": {
+        "deadline_seconds": 120,
+        "event": "native_start_ack",
+        "pgid": 3551807,
+        "pid": 3551807,
+        "root": "/tmp/lerna-04-ticket05-execution",
+        "starttime": "14886008"
+      }
+    },
+    {
+      "ledger_line": 1468,
+      "record": {
+        "event": "native_completion_ack",
+        "exit": 0,
+        "group_absent": true,
+        "pgid": 3551807,
+        "pid": 3551807,
+        "starttime": "14886008",
+        "timed_out": false
+      }
+    },
+    {
+      "ledger_line": 1469,
+      "record": {
+        "deadline_seconds": 120,
+        "event": "native_start_ack",
+        "pgid": 3551930,
+        "pid": 3551930,
+        "root": "/tmp/lerna-04-ticket05-execution",
+        "starttime": "14886240"
+      }
+    },
+    {
+      "ledger_line": 1474,
+      "record": {
+        "event": "native_completion_ack",
+        "exit": 0,
+        "group_absent": true,
+        "pgid": 3551930,
+        "pid": 3551930,
+        "starttime": "14886240",
+        "timed_out": false
+      }
+    }
+  ],
+  "scope_records": [
+    {
+      "ledger_line": 968,
+      "record": "postgres lerna_test_d5d70f509f6d4351cc2147ee"
+    },
+    {
+      "ledger_line": 969,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-2823625114 33 376497"
+    },
+    {
+      "ledger_line": 974,
+      "record": "postgres lerna_test_d2e8ba97c90849253932fd5e"
+    },
+    {
+      "ledger_line": 975,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-18610967 33 376996"
+    },
+    {
+      "ledger_line": 980,
+      "record": "postgres lerna_test_ae060348e9859d84008298f4"
+    },
+    {
+      "ledger_line": 981,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-490049524 33 377394"
+    },
+    {
+      "ledger_line": 984,
+      "record": "postgres lerna_test_8750735b58e5560d1a0a33b1"
+    },
+    {
+      "ledger_line": 985,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-1248967092 33 377785"
+    },
+    {
+      "ledger_line": 990,
+      "record": "postgres lerna_test_73c2ee2ae74c7a750cc030b8"
+    },
+    {
+      "ledger_line": 991,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-1033797676 33 384078"
+    },
+    {
+      "ledger_line": 994,
+      "record": "postgres lerna_test_adc1a12fd7197b1fc6b272b3"
+    },
+    {
+      "ledger_line": 995,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-2968571310 33 384711"
+    },
+    {
+      "ledger_line": 1000,
+      "record": "postgres lerna_test_cd55ac0aa1641873a0b4ccf4"
+    },
+    {
+      "ledger_line": 1001,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-2084815391 33 386516"
+    },
+    {
+      "ledger_line": 1002,
+      "record": "pg_scan_deadline_fault lerna_test_cd55ac0aa1641873a0b4ccf4 568204"
+    },
+    {
+      "ledger_line": 1005,
+      "record": "postgres lerna_test_398ac6ceb182431638a1317b"
+    },
+    {
+      "ledger_line": 1006,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-1463348232 33 387376"
+    },
+    {
+      "ledger_line": 1007,
+      "record": "pg_scan_deadline_fault lerna_test_398ac6ceb182431638a1317b 570554"
+    },
+    {
+      "ledger_line": 1012,
+      "record": "postgres lerna_test_a0e085fa52383284ea333314"
+    },
+    {
+      "ledger_line": 1013,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-3158398028 33 388291"
+    },
+    {
+      "ledger_line": 1018,
+      "record": "postgres lerna_test_c0035b7fa47a0d4c294453b6"
+    },
+    {
+      "ledger_line": 1019,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-1169068078 33 389360"
+    },
+    {
+      "ledger_line": 1022,
+      "record": "postgres lerna_test_7ad72f42ca7949a32c007daa"
+    },
+    {
+      "ledger_line": 1023,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-3657138946 33 389919"
+    },
+    {
+      "ledger_line": 1026,
+      "record": "postgres lerna_test_e09fffb3e39c50636d4824f7"
+    },
+    {
+      "ledger_line": 1027,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-19833061 33 390411"
+    },
+    {
+      "ledger_line": 1036,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-3232716582"
+    },
+    {
+      "ledger_line": 1037,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-503942273"
+    },
+    {
+      "ledger_line": 1038,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-1998051975"
+    },
+    {
+      "ledger_line": 1039,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-3328934859"
+    },
+    {
+      "ledger_line": 1040,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-2069657804"
+    },
+    {
+      "ledger_line": 1041,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-2881336678"
+    },
+    {
+      "ledger_line": 1042,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-1280645292"
+    },
+    {
+      "ledger_line": 1043,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-1424684092"
+    },
+    {
+      "ledger_line": 1044,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-1601098493"
+    },
+    {
+      "ledger_line": 1045,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-4077494822"
+    },
+    {
+      "ledger_line": 1046,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-3279325064"
+    },
+    {
+      "ledger_line": 1047,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-497353751"
+    },
+    {
+      "ledger_line": 1048,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-887305486"
+    },
+    {
+      "ledger_line": 1049,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-417510598"
+    },
+    {
+      "ledger_line": 1050,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-3800930847"
+    },
+    {
+      "ledger_line": 1051,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-1239369513"
+    },
+    {
+      "ledger_line": 1052,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-908244717"
+    },
+    {
+      "ledger_line": 1053,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-3598505968"
+    },
+    {
+      "ledger_line": 1054,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-897581446"
+    },
+    {
+      "ledger_line": 1055,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-4044045757"
+    },
+    {
+      "ledger_line": 1056,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-1934944836"
+    },
+    {
+      "ledger_line": 1057,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-250522192"
+    },
+    {
+      "ledger_line": 1058,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-835539855"
+    },
+    {
+      "ledger_line": 1059,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-531278010"
+    },
+    {
+      "ledger_line": 1060,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-3114894217"
+    },
+    {
+      "ledger_line": 1061,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-4114156873"
+    },
+    {
+      "ledger_line": 1062,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-687688290"
+    },
+    {
+      "ledger_line": 1063,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-1856058648"
+    },
+    {
+      "ledger_line": 1064,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-2137492199"
+    },
+    {
+      "ledger_line": 1065,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-2914283581"
+    },
+    {
+      "ledger_line": 1066,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-3480435195"
+    },
+    {
+      "ledger_line": 1067,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-232943249"
+    },
+    {
+      "ledger_line": 1070,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-2571762758"
+    },
+    {
+      "ledger_line": 1071,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-1435114049"
+    },
+    {
+      "ledger_line": 1072,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-3682403255"
+    },
+    {
+      "ledger_line": 1073,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-2911760280"
+    },
+    {
+      "ledger_line": 1074,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-455622924"
+    },
+    {
+      "ledger_line": 1075,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-418025640"
+    },
+    {
+      "ledger_line": 1076,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-1111823657"
+    },
+    {
+      "ledger_line": 1077,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-2688265225"
+    },
+    {
+      "ledger_line": 1078,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-1321478528"
+    },
+    {
+      "ledger_line": 1079,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-1837357783"
+    },
+    {
+      "ledger_line": 1080,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-2363989685"
+    },
+    {
+      "ledger_line": 1081,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-2645669688"
+    },
+    {
+      "ledger_line": 1082,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-1666646845"
+    },
+    {
+      "ledger_line": 1083,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-2489267523"
+    },
+    {
+      "ledger_line": 1084,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-1673946313"
+    },
+    {
+      "ledger_line": 1085,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-3520741713"
+    },
+    {
+      "ledger_line": 1086,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-405844091"
+    },
+    {
+      "ledger_line": 1087,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-869132878"
+    },
+    {
+      "ledger_line": 1088,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-1731170689"
+    },
+    {
+      "ledger_line": 1089,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-3667341099"
+    },
+    {
+      "ledger_line": 1090,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-1524839986"
+    },
+    {
+      "ledger_line": 1091,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-3943911127"
+    },
+    {
+      "ledger_line": 1092,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-1078030389"
+    },
+    {
+      "ledger_line": 1093,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-1966499708"
+    },
+    {
+      "ledger_line": 1094,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-3731366585"
+    },
+    {
+      "ledger_line": 1095,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-3337294193"
+    },
+    {
+      "ledger_line": 1096,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-976126057"
+    },
+    {
+      "ledger_line": 1097,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-192137743"
+    },
+    {
+      "ledger_line": 1098,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-4180936614"
+    },
+    {
+      "ledger_line": 1099,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-1589081166"
+    },
+    {
+      "ledger_line": 1100,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-2343775081"
+    },
+    {
+      "ledger_line": 1101,
+      "record": "sqlite-target /tmp/lerna-04-ticket05-execution/lerna-target-04-1832181509"
+    },
+    {
+      "ledger_line": 1104,
+      "record": "postgres lerna_test_c96b43438b555a5a8444d478"
+    },
+    {
+      "ledger_line": 1105,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-3148151439 33 393981"
+    },
+    {
+      "ledger_line": 1106,
+      "record": "postgres lerna_test_bbe27ebeb8b7a36ae96b4782"
+    },
+    {
+      "ledger_line": 1107,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-3280561437 33 393986"
+    },
+    {
+      "ledger_line": 1108,
+      "record": "fixture_object_file /tmp/lerna-04-ticket05-execution/lerna-content-objects-3280561437/da73fc3f262e288d3fbf5bf06db2ebcfbb031f2a5cacbc4e8be74a516714a028"
+    },
+    {
+      "ledger_line": 1109,
+      "record": "postgres lerna_test_11b3ea1ff575c8c8c738b0e7"
+    },
+    {
+      "ledger_line": 1110,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-895306237 33 393991"
+    },
+    {
+      "ledger_line": 1111,
+      "record": "postgres lerna_test_5919cd0dc6f214a58457d785"
+    },
+    {
+      "ledger_line": 1112,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-3692259728 33 393996"
+    },
+    {
+      "ledger_line": 1113,
+      "record": "postgres lerna_test_a6bd15ca3f01a44b52fd0521"
+    },
+    {
+      "ledger_line": 1114,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-4100720191 33 393997"
+    },
+    {
+      "ledger_line": 1115,
+      "record": "postgres lerna_test_7702f7f7a2ffb85246f823c7"
+    },
+    {
+      "ledger_line": 1116,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-2261789492 33 394002"
+    },
+    {
+      "ledger_line": 1117,
+      "record": "postgres lerna_test_6a9a912711dba8bedb7a3848"
+    },
+    {
+      "ledger_line": 1118,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-2150915181 33 394005"
+    },
+    {
+      "ledger_line": 1121,
+      "record": "postgres lerna_test_1daf55afc5167216e28b9b7f"
+    },
+    {
+      "ledger_line": 1122,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-3644863876 33 394282"
+    },
+    {
+      "ledger_line": 1123,
+      "record": "postgres lerna_test_1450d51a862fad480a9b1fb5"
+    },
+    {
+      "ledger_line": 1124,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-2143009526 33 394291"
+    },
+    {
+      "ledger_line": 1125,
+      "record": "postgres lerna_test_b9c200f721b23dec814a6df1"
+    },
+    {
+      "ledger_line": 1126,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-15537042 33 394298"
+    },
+    {
+      "ledger_line": 1127,
+      "record": "postgres lerna_test_180ef70831b80345b457297e"
+    },
+    {
+      "ledger_line": 1128,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-3715207549 33 394305"
+    },
+    {
+      "ledger_line": 1129,
+      "record": "postgres lerna_test_2b7839f4c1434ac7ea988e8a"
+    },
+    {
+      "ledger_line": 1130,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-2394063230 33 394312"
+    },
+    {
+      "ledger_line": 1131,
+      "record": "postgres lerna_test_dcbf6486ccdcb52f4a34f3f3"
+    },
+    {
+      "ledger_line": 1132,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-1686586041 33 394319"
+    },
+    {
+      "ledger_line": 1133,
+      "record": "postgres lerna_test_cb06021ca161a37aace34a02"
+    },
+    {
+      "ledger_line": 1134,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-4074119282 33 394326"
+    },
+    {
+      "ledger_line": 1135,
+      "record": "postgres lerna_test_d51eca251eec47e1ee35c8bb"
+    },
+    {
+      "ledger_line": 1136,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-2905317508 33 394339"
+    },
+    {
+      "ledger_line": 1137,
+      "record": "postgres lerna_test_4ee7195c59954b3013aca733"
+    },
+    {
+      "ledger_line": 1138,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-3984068051 33 394346"
+    },
+    {
+      "ledger_line": 1139,
+      "record": "postgres lerna_test_87b92e7dd72f127005510076"
+    },
+    {
+      "ledger_line": 1140,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-2582211088 33 394351"
+    },
+    {
+      "ledger_line": 1141,
+      "record": "postgres lerna_test_06e4335140b650bb735bee8f"
+    },
+    {
+      "ledger_line": 1142,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-3400716889 33 394356"
+    },
+    {
+      "ledger_line": 1143,
+      "record": "postgres lerna_test_dd24d01c63acba8e1c5f79b9"
+    },
+    {
+      "ledger_line": 1144,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-1603067436 33 394361"
+    },
+    {
+      "ledger_line": 1145,
+      "record": "postgres lerna_test_c5a4ab7c3a205be123752093"
+    },
+    {
+      "ledger_line": 1146,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-3047139036 33 394364"
+    },
+    {
+      "ledger_line": 1147,
+      "record": "postgres lerna_test_f25eadfc0127b97775af1b3a"
+    },
+    {
+      "ledger_line": 1148,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-1827906759 33 394367"
+    },
+    {
+      "ledger_line": 1149,
+      "record": "postgres lerna_test_cc55df339d6ff9e423fa35c8"
+    },
+    {
+      "ledger_line": 1150,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-1544102257 33 394370"
+    },
+    {
+      "ledger_line": 1151,
+      "record": "postgres lerna_test_46c12cd26252026efafe40e0"
+    },
+    {
+      "ledger_line": 1152,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-658913489 33 394373"
+    },
+    {
+      "ledger_line": 1153,
+      "record": "postgres lerna_test_6673c1cf9910fe567b7e8011"
+    },
+    {
+      "ledger_line": 1154,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-3962352482 33 394376"
+    },
+    {
+      "ledger_line": 1155,
+      "record": "postgres lerna_test_f309da208433cc5d4579cdf6"
+    },
+    {
+      "ledger_line": 1156,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-2737763300 33 394379"
+    },
+    {
+      "ledger_line": 1157,
+      "record": "postgres lerna_test_f9d4cf2822291454c10fbb8f"
+    },
+    {
+      "ledger_line": 1158,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-2005592541 33 394384"
+    },
+    {
+      "ledger_line": 1159,
+      "record": "postgres lerna_test_3c3259fcf242fe8c89a9913f"
+    },
+    {
+      "ledger_line": 1160,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-1453791216 33 394387"
+    },
+    {
+      "ledger_line": 1161,
+      "record": "postgres lerna_test_ba793c7c1795313eb4d156c9"
+    },
+    {
+      "ledger_line": 1162,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-2141059088 33 394390"
+    },
+    {
+      "ledger_line": 1163,
+      "record": "postgres lerna_test_2fc40beac36a52d84349287d"
+    },
+    {
+      "ledger_line": 1164,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-617589750 33 394393"
+    },
+    {
+      "ledger_line": 1167,
+      "record": "postgres lerna_test_e083312961e99f8e5627e19f"
+    },
+    {
+      "ledger_line": 1168,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-1391064556 33 394670"
+    },
+    {
+      "ledger_line": 1169,
+      "record": "pg_policy_connections lerna_test_e083312961e99f8e5627e19f"
+    },
+    {
+      "ledger_line": 1170,
+      "record": "pg_policy_holder lerna_test_e083312961e99f8e5627e19f 581628"
+    },
+    {
+      "ledger_line": 1171,
+      "record": "postgres lerna_test_a1999976b95d0cce67406ed8"
+    },
+    {
+      "ledger_line": 1172,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-460297819 33 394675"
+    },
+    {
+      "ledger_line": 1173,
+      "record": "pg_policy_connections lerna_test_a1999976b95d0cce67406ed8"
+    },
+    {
+      "ledger_line": 1174,
+      "record": "pg_policy_holder lerna_test_a1999976b95d0cce67406ed8 581640"
+    },
+    {
+      "ledger_line": 1175,
+      "record": "postgres lerna_test_3fc028f0a1995eee0be82410"
+    },
+    {
+      "ledger_line": 1176,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-2549922678 33 394678"
+    },
+    {
+      "ledger_line": 1177,
+      "record": "postgres lerna_test_e36f59eacf9a5bf4b5cbc7ba"
+    },
+    {
+      "ledger_line": 1178,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-2637455136 33 394681"
+    },
+    {
+      "ledger_line": 1179,
+      "record": "postgres lerna_test_a7f1d86af4f889a6968016a7"
+    },
+    {
+      "ledger_line": 1180,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-484068542 33 394682"
+    },
+    {
+      "ledger_line": 1181,
+      "record": "postgres lerna_test_51af2c03413f6f68149b8a56"
+    },
+    {
+      "ledger_line": 1182,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-2068224811 33 394685"
+    },
+    {
+      "ledger_line": 1183,
+      "record": "postgres lerna_test_b4565af0631e2375db7050e3"
+    },
+    {
+      "ledger_line": 1184,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-1693790382 33 394688"
+    },
+    {
+      "ledger_line": 1185,
+      "record": "postgres lerna_test_188b47040bed317458534f5c"
+    },
+    {
+      "ledger_line": 1186,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-1844178355 33 394693"
+    },
+    {
+      "ledger_line": 1187,
+      "record": "postgres lerna_test_f01b9e021a8867302cdb9342"
+    },
+    {
+      "ledger_line": 1188,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-3981903827 33 394697"
+    },
+    {
+      "ledger_line": 1189,
+      "record": "postgres lerna_test_bae54f9edba390e3132acd67"
+    },
+    {
+      "ledger_line": 1190,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-2412753742 33 394701"
+    },
+    {
+      "ledger_line": 1191,
+      "record": "postgres lerna_test_22a9fead4c6b84a6d61e1ee2"
+    },
+    {
+      "ledger_line": 1192,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-1714809141 33 394702"
+    },
+    {
+      "ledger_line": 1193,
+      "record": "postgres lerna_test_59d157f0427a70dee335e11f"
+    },
+    {
+      "ledger_line": 1194,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-3375271930 33 394707"
+    },
+    {
+      "ledger_line": 1195,
+      "record": "postgres lerna_test_ec4bd5ce23dff8cc97284254"
+    },
+    {
+      "ledger_line": 1196,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-1375641907 33 394712"
+    },
+    {
+      "ledger_line": 1197,
+      "record": "postgres lerna_test_360ea3f079ad6dcee242c635"
+    },
+    {
+      "ledger_line": 1198,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-1148705400 33 394715"
+    },
+    {
+      "ledger_line": 1201,
+      "record": "postgres lerna_test_3636dbc309baee051cbd8cfa"
+    },
+    {
+      "ledger_line": 1202,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-4035405530 33 394996"
+    },
+    {
+      "ledger_line": 1203,
+      "record": "postgres lerna_test_db0c761c3dcb3dd6fde7f818"
+    },
+    {
+      "ledger_line": 1204,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-2222918653 33 394997"
+    },
+    {
+      "ledger_line": 1205,
+      "record": "postgres lerna_test_0d913193f9472c5d6fd89fa8"
+    },
+    {
+      "ledger_line": 1206,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-1358882889 33 395006"
+    },
+    {
+      "ledger_line": 1207,
+      "record": "postgres lerna_test_30c580da9d4a359c2d4a8668"
+    },
+    {
+      "ledger_line": 1208,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-2288871510 33 395015"
+    },
+    {
+      "ledger_line": 1209,
+      "record": "postgres lerna_test_b87ddc455e672cfc81b52f24"
+    },
+    {
+      "ledger_line": 1210,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-1109169904 33 395022"
+    },
+    {
+      "ledger_line": 1211,
+      "record": "pg_legacy_restore_connection lerna_test_b87ddc455e672cfc81b52f24"
+    },
+    {
+      "ledger_line": 1212,
+      "record": "postgres lerna_test_8eb38d5c93dff58511b79775"
+    },
+    {
+      "ledger_line": 1213,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-2895959472 33 395025"
+    },
+    {
+      "ledger_line": 1214,
+      "record": "pg_legacy_restore_connection lerna_test_8eb38d5c93dff58511b79775"
+    },
+    {
+      "ledger_line": 1215,
+      "record": "postgres lerna_test_3a89e6a83d14920bb429a7c0"
+    },
+    {
+      "ledger_line": 1216,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-3577487213 33 395030"
+    },
+    {
+      "ledger_line": 1217,
+      "record": "pg_legacy_restore_connection lerna_test_3a89e6a83d14920bb429a7c0"
+    },
+    {
+      "ledger_line": 1220,
+      "record": "postgres lerna_test_3b3894ebed2859e5867e8fbc"
+    },
+    {
+      "ledger_line": 1221,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-2088621208 33 395313"
+    },
+    {
+      "ledger_line": 1222,
+      "record": "postgres lerna_test_1ac090d89b64aefdb84ed70d"
+    },
+    {
+      "ledger_line": 1223,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-2128374974 33 395322"
+    },
+    {
+      "ledger_line": 1224,
+      "record": "fixture_object_file /tmp/lerna-04-ticket05-execution/lerna-content-objects-2128374974/da73fc3f262e288d3fbf5bf06db2ebcfbb031f2a5cacbc4e8be74a516714a028"
+    },
+    {
+      "ledger_line": 1225,
+      "record": "postgres lerna_test_bab9b37e32ad819ee259317f"
+    },
+    {
+      "ledger_line": 1226,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-1001479913 33 395327"
+    },
+    {
+      "ledger_line": 1227,
+      "record": "postgres lerna_test_c9321289e5158c9204cd5b74"
+    },
+    {
+      "ledger_line": 1228,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-3701735379 33 395332"
+    },
+    {
+      "ledger_line": 1229,
+      "record": "postgres lerna_test_0ff09e95f8a79eb1f796b784"
+    },
+    {
+      "ledger_line": 1230,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-457732887 33 395333"
+    },
+    {
+      "ledger_line": 1231,
+      "record": "postgres lerna_test_4880c204d616e935ef558b86"
+    },
+    {
+      "ledger_line": 1232,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-357853276 33 395338"
+    },
+    {
+      "ledger_line": 1233,
+      "record": "postgres lerna_test_f8c308ff5a2c76b0ca159738"
+    },
+    {
+      "ledger_line": 1234,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-2183742642 33 395342"
+    },
+    {
+      "ledger_line": 1237,
+      "record": "postgres lerna_test_2a7f4da1088faea08699e363"
+    },
+    {
+      "ledger_line": 1238,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-1249536015 33 395621"
+    },
+    {
+      "ledger_line": 1239,
+      "record": "postgres lerna_test_e3a7fc7d4d7307c9cb0ffa6a"
+    },
+    {
+      "ledger_line": 1240,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-2687706125 33 395630"
+    },
+    {
+      "ledger_line": 1241,
+      "record": "postgres lerna_test_9327a67da5c9fed5e1434e7a"
+    },
+    {
+      "ledger_line": 1242,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-2578983646 33 395638"
+    },
+    {
+      "ledger_line": 1243,
+      "record": "postgres lerna_test_25a66c62db641ddbf9e08e58"
+    },
+    {
+      "ledger_line": 1244,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-284631522 33 395646"
+    },
+    {
+      "ledger_line": 1245,
+      "record": "postgres lerna_test_18696e737157349b2a6312f3"
+    },
+    {
+      "ledger_line": 1246,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-3449007776 33 395654"
+    },
+    {
+      "ledger_line": 1247,
+      "record": "postgres lerna_test_b6042e1b73451e0b835ab777"
+    },
+    {
+      "ledger_line": 1248,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-1142694862 33 395662"
+    },
+    {
+      "ledger_line": 1249,
+      "record": "postgres lerna_test_9483df369680ec6f77cea485"
+    },
+    {
+      "ledger_line": 1250,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-2181415124 33 395670"
+    },
+    {
+      "ledger_line": 1251,
+      "record": "postgres lerna_test_28ccb22491f76a2556c594ac"
+    },
+    {
+      "ledger_line": 1252,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-3397353441 33 395683"
+    },
+    {
+      "ledger_line": 1253,
+      "record": "postgres lerna_test_b7aa9785de44a3cfa6f119f9"
+    },
+    {
+      "ledger_line": 1254,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-1300121505 33 395690"
+    },
+    {
+      "ledger_line": 1255,
+      "record": "postgres lerna_test_ef3eee55637f9ff662750e81"
+    },
+    {
+      "ledger_line": 1256,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-2181525761 33 395696"
+    },
+    {
+      "ledger_line": 1257,
+      "record": "postgres lerna_test_045be737217e5994560fa146"
+    },
+    {
+      "ledger_line": 1258,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-3414552872 33 395701"
+    },
+    {
+      "ledger_line": 1259,
+      "record": "postgres lerna_test_8935cbe598f4798b84097785"
+    },
+    {
+      "ledger_line": 1260,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-1192030384 33 395706"
+    },
+    {
+      "ledger_line": 1261,
+      "record": "postgres lerna_test_dfcf078da2d52fdb474ab1ea"
+    },
+    {
+      "ledger_line": 1262,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-676838864 33 395710"
+    },
+    {
+      "ledger_line": 1263,
+      "record": "postgres lerna_test_d3cd2735367f458f5e95cebb"
+    },
+    {
+      "ledger_line": 1264,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-199969120 33 395713"
+    },
+    {
+      "ledger_line": 1265,
+      "record": "postgres lerna_test_55c8ab656ebead078b06a197"
+    },
+    {
+      "ledger_line": 1266,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-3973225574 33 395716"
+    },
+    {
+      "ledger_line": 1267,
+      "record": "postgres lerna_test_af990d4b851a1d3050a0580e"
+    },
+    {
+      "ledger_line": 1268,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-1342090990 33 395720"
+    },
+    {
+      "ledger_line": 1269,
+      "record": "postgres lerna_test_63facc7486c16bcfb6821085"
+    },
+    {
+      "ledger_line": 1270,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-2579369832 33 395723"
+    },
+    {
+      "ledger_line": 1271,
+      "record": "postgres lerna_test_489b7db045af8a5ef021d095"
+    },
+    {
+      "ledger_line": 1272,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-210443602 33 395726"
+    },
+    {
+      "ledger_line": 1273,
+      "record": "postgres lerna_test_d8af1bc72a544ac03c610bd8"
+    },
+    {
+      "ledger_line": 1274,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-3678810764 33 395729"
+    },
+    {
+      "ledger_line": 1275,
+      "record": "postgres lerna_test_bb135fd29d76584c57732dfb"
+    },
+    {
+      "ledger_line": 1276,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-2134054362 33 395733"
+    },
+    {
+      "ledger_line": 1277,
+      "record": "postgres lerna_test_336d252dc74ce67d5808d2a0"
+    },
+    {
+      "ledger_line": 1278,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-633193228 33 395736"
+    },
+    {
+      "ledger_line": 1279,
+      "record": "postgres lerna_test_bf7dc1d8e4c9f16589da5db9"
+    },
+    {
+      "ledger_line": 1280,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-343030810 33 395739"
+    },
+    {
+      "ledger_line": 1283,
+      "record": "postgres lerna_test_5b01c61913ed0daeadabc499"
+    },
+    {
+      "ledger_line": 1284,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-3928401576 33 396018"
+    },
+    {
+      "ledger_line": 1285,
+      "record": "pg_policy_connections lerna_test_5b01c61913ed0daeadabc499"
+    },
+    {
+      "ledger_line": 1286,
+      "record": "pg_policy_holder lerna_test_5b01c61913ed0daeadabc499 581924"
+    },
+    {
+      "ledger_line": 1287,
+      "record": "postgres lerna_test_b9ffb06951e2bd84b944e546"
+    },
+    {
+      "ledger_line": 1288,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-2033679296 33 396022"
+    },
+    {
+      "ledger_line": 1289,
+      "record": "pg_policy_connections lerna_test_b9ffb06951e2bd84b944e546"
+    },
+    {
+      "ledger_line": 1290,
+      "record": "pg_policy_holder lerna_test_b9ffb06951e2bd84b944e546 581929"
+    },
+    {
+      "ledger_line": 1291,
+      "record": "postgres lerna_test_77ce4fabfe0d8058bb314ba8"
+    },
+    {
+      "ledger_line": 1292,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-1310645544 33 396026"
+    },
+    {
+      "ledger_line": 1293,
+      "record": "postgres lerna_test_90f903fc2de0f0b5fb7f2f79"
+    },
+    {
+      "ledger_line": 1294,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-1335686121 33 396029"
+    },
+    {
+      "ledger_line": 1295,
+      "record": "postgres lerna_test_9c4834cd14e1c2603a73356c"
+    },
+    {
+      "ledger_line": 1296,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-1223038475 33 396031"
+    },
+    {
+      "ledger_line": 1297,
+      "record": "postgres lerna_test_510fd5321037fe778601d3bc"
+    },
+    {
+      "ledger_line": 1298,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-1108108447 33 396034"
+    },
+    {
+      "ledger_line": 1299,
+      "record": "postgres lerna_test_5f73daf14950d8d1f2a6799d"
+    },
+    {
+      "ledger_line": 1300,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-596969288 33 396036"
+    },
+    {
+      "ledger_line": 1301,
+      "record": "postgres lerna_test_4f4157ae746e1c34f4aea1ba"
+    },
+    {
+      "ledger_line": 1302,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-1384172008 33 396042"
+    },
+    {
+      "ledger_line": 1303,
+      "record": "postgres lerna_test_451f9a5dc1034bacccd61845"
+    },
+    {
+      "ledger_line": 1304,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-1781004449 33 396045"
+    },
+    {
+      "ledger_line": 1305,
+      "record": "postgres lerna_test_7350705529a2d1e179f2bd1d"
+    },
+    {
+      "ledger_line": 1306,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-2392519113 33 396048"
+    },
+    {
+      "ledger_line": 1307,
+      "record": "postgres lerna_test_c9318cf158646216685ffe4b"
+    },
+    {
+      "ledger_line": 1308,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-530880902 33 396051"
+    },
+    {
+      "ledger_line": 1309,
+      "record": "postgres lerna_test_3b2ba4fc0771bd29a6b927d0"
+    },
+    {
+      "ledger_line": 1310,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-861607926 33 396055"
+    },
+    {
+      "ledger_line": 1311,
+      "record": "postgres lerna_test_99a615451557f2f201a8dd91"
+    },
+    {
+      "ledger_line": 1312,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-4143404487 33 396060"
+    },
+    {
+      "ledger_line": 1313,
+      "record": "postgres lerna_test_aa27a2c83b0e5fd93d337bfc"
+    },
+    {
+      "ledger_line": 1314,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-17787904 33 396064"
+    },
+    {
+      "ledger_line": 1317,
+      "record": "postgres lerna_test_2e8f24641c42313d4af2ca21"
+    },
+    {
+      "ledger_line": 1318,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-3045807679 33 396346"
+    },
+    {
+      "ledger_line": 1319,
+      "record": "postgres lerna_test_3b8931367de698a8f5d913f2"
+    },
+    {
+      "ledger_line": 1320,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-399354399 33 396348"
+    },
+    {
+      "ledger_line": 1321,
+      "record": "postgres lerna_test_f877c83c54996d1958be5139"
+    },
+    {
+      "ledger_line": 1322,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-2392620958 33 396357"
+    },
+    {
+      "ledger_line": 1323,
+      "record": "postgres lerna_test_39e95239afda2b382461b5c2"
+    },
+    {
+      "ledger_line": 1324,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-3118827983 33 396367"
+    },
+    {
+      "ledger_line": 1325,
+      "record": "postgres lerna_test_3a3b4ccfa55d99cecac4e5fc"
+    },
+    {
+      "ledger_line": 1326,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-981561083 33 396375"
+    },
+    {
+      "ledger_line": 1327,
+      "record": "pg_legacy_restore_connection lerna_test_3a3b4ccfa55d99cecac4e5fc"
+    },
+    {
+      "ledger_line": 1328,
+      "record": "postgres lerna_test_43ead307c62f86546c0a9c78"
+    },
+    {
+      "ledger_line": 1329,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-1227451299 33 396378"
+    },
+    {
+      "ledger_line": 1330,
+      "record": "pg_legacy_restore_connection lerna_test_43ead307c62f86546c0a9c78"
+    },
+    {
+      "ledger_line": 1331,
+      "record": "postgres lerna_test_a5c3605059b4ccbdce6e7dbc"
+    },
+    {
+      "ledger_line": 1332,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-802557583 33 396381"
+    },
+    {
+      "ledger_line": 1333,
+      "record": "pg_legacy_restore_connection lerna_test_a5c3605059b4ccbdce6e7dbc"
+    },
+    {
+      "ledger_line": 1336,
+      "record": "postgres lerna_test_57599d14351be12127709760"
+    },
+    {
+      "ledger_line": 1337,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-3838159508 33 396668"
+    },
+    {
+      "ledger_line": 1338,
+      "record": "postgres lerna_test_65cf9f78a5b69d72a66d3588"
+    },
+    {
+      "ledger_line": 1339,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-707543588 33 396676"
+    },
+    {
+      "ledger_line": 1340,
+      "record": "postgres lerna_test_a366b260ddf0896feba7707b"
+    },
+    {
+      "ledger_line": 1341,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-1189532093 33 396687"
+    },
+    {
+      "ledger_line": 1342,
+      "record": "postgres lerna_test_734c403ccbd2acd6c8703132"
+    },
+    {
+      "ledger_line": 1343,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-2425174729 33 396690"
+    },
+    {
+      "ledger_line": 1346,
+      "record": "postgres lerna_test_5f8c776cbe71f3911a53b735"
+    },
+    {
+      "ledger_line": 1347,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-3414332725 33 396972"
+    },
+    {
+      "ledger_line": 1348,
+      "record": "pg_policy_connections lerna_test_5f8c776cbe71f3911a53b735"
+    },
+    {
+      "ledger_line": 1349,
+      "record": "pg_policy_holder lerna_test_5f8c776cbe71f3911a53b735 582124"
+    },
+    {
+      "ledger_line": 1350,
+      "record": "postgres lerna_test_39fa4acc79ed673b1c54d6ba"
+    },
+    {
+      "ledger_line": 1351,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-1608694496 33 396982"
+    },
+    {
+      "ledger_line": 1352,
+      "record": "pg_policy_connections lerna_test_39fa4acc79ed673b1c54d6ba"
+    },
+    {
+      "ledger_line": 1353,
+      "record": "pg_policy_holder lerna_test_39fa4acc79ed673b1c54d6ba 582137"
+    },
+    {
+      "ledger_line": 1354,
+      "record": "postgres lerna_test_df9af59edc5b19e800e657a4"
+    },
+    {
+      "ledger_line": 1355,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-2317259770 33 396991"
+    },
+    {
+      "ledger_line": 1356,
+      "record": "pg_policy_connections lerna_test_df9af59edc5b19e800e657a4"
+    },
+    {
+      "ledger_line": 1357,
+      "record": "pg_policy_holder lerna_test_df9af59edc5b19e800e657a4 582150"
+    },
+    {
+      "ledger_line": 1358,
+      "record": "postgres lerna_test_f03a8f71af800b6ab79d8c25"
+    },
+    {
+      "ledger_line": 1359,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-2874330168 33 396999"
+    },
+    {
+      "ledger_line": 1360,
+      "record": "pg_policy_connections lerna_test_f03a8f71af800b6ab79d8c25"
+    },
+    {
+      "ledger_line": 1361,
+      "record": "pg_policy_holder lerna_test_f03a8f71af800b6ab79d8c25 582163"
+    },
+    {
+      "ledger_line": 1362,
+      "record": "postgres lerna_test_4c69d19958ad857cf1597470"
+    },
+    {
+      "ledger_line": 1363,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-3870407923 33 397008"
+    },
+    {
+      "ledger_line": 1366,
+      "record": "postgres lerna_test_7349344934dae8a748d093e1"
+    },
+    {
+      "ledger_line": 1367,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-295817522 33 397297"
+    },
+    {
+      "ledger_line": 1368,
+      "record": "postgres lerna_test_e4457164bf4de293c5ad38d9"
+    },
+    {
+      "ledger_line": 1369,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-4017068908 33 397306"
+    },
+    {
+      "ledger_line": 1370,
+      "record": "postgres lerna_test_b595540ae75e9c726355a7f5"
+    },
+    {
+      "ledger_line": 1371,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-7176058 33 397315"
+    },
+    {
+      "ledger_line": 1372,
+      "record": "postgres lerna_test_2f52a4679988925a5a85c08d"
+    },
+    {
+      "ledger_line": 1373,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-72952517 33 397319"
+    },
+    {
+      "ledger_line": 1376,
+      "record": "postgres lerna_test_117e2c50f5456670050a99f1"
+    },
+    {
+      "ledger_line": 1377,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-2732109419 33 397602"
+    },
+    {
+      "ledger_line": 1378,
+      "record": "pg_policy_connections lerna_test_117e2c50f5456670050a99f1"
+    },
+    {
+      "ledger_line": 1379,
+      "record": "pg_policy_holder lerna_test_117e2c50f5456670050a99f1 582246"
+    },
+    {
+      "ledger_line": 1380,
+      "record": "postgres lerna_test_416b555a38743c1c417765d3"
+    },
+    {
+      "ledger_line": 1381,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-774801372 33 397612"
+    },
+    {
+      "ledger_line": 1382,
+      "record": "pg_policy_connections lerna_test_416b555a38743c1c417765d3"
+    },
+    {
+      "ledger_line": 1383,
+      "record": "pg_policy_holder lerna_test_416b555a38743c1c417765d3 582260"
+    },
+    {
+      "ledger_line": 1384,
+      "record": "postgres lerna_test_87a977abdf4d096610cd29b8"
+    },
+    {
+      "ledger_line": 1385,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-178259962 33 397622"
+    },
+    {
+      "ledger_line": 1386,
+      "record": "pg_policy_connections lerna_test_87a977abdf4d096610cd29b8"
+    },
+    {
+      "ledger_line": 1387,
+      "record": "pg_policy_holder lerna_test_87a977abdf4d096610cd29b8 582282"
+    },
+    {
+      "ledger_line": 1388,
+      "record": "postgres lerna_test_25bca83fa19cdcd973e78cae"
+    },
+    {
+      "ledger_line": 1389,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-1150119713 33 397630"
+    },
+    {
+      "ledger_line": 1390,
+      "record": "pg_policy_connections lerna_test_25bca83fa19cdcd973e78cae"
+    },
+    {
+      "ledger_line": 1391,
+      "record": "pg_policy_holder lerna_test_25bca83fa19cdcd973e78cae 582295"
+    },
+    {
+      "ledger_line": 1392,
+      "record": "postgres lerna_test_6a1ddf8415e5a137da17c2f5"
+    },
+    {
+      "ledger_line": 1393,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-3026645089 33 397638"
+    },
+    {
+      "ledger_line": 1398,
+      "record": "postgres lerna_test_430c3f7a2cf043a01cfb4461"
+    },
+    {
+      "ledger_line": 1399,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-1244244051 33 397932"
+    },
+    {
+      "ledger_line": 1402,
+      "record": "postgres lerna_test_672d03b3baeec1079df8751c"
+    },
+    {
+      "ledger_line": 1403,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-1654778403 33 398232"
+    },
+    {
+      "ledger_line": 1406,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-local-lifetime-2280513771 33 398417"
+    },
+    {
+      "ledger_line": 1413,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-local-lifetime-3531288571 33 398587"
+    },
+    {
+      "ledger_line": 1420,
+      "record": "postgres lerna_test_2389bc0ad4dbda05e7dd771c"
+    },
+    {
+      "ledger_line": 1421,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-1177382667 33 398871"
+    },
+    {
+      "ledger_line": 1422,
+      "record": "frozen_content_build_scope /tmp/lerna-04-ticket05-execution/lerna-content-frozen-build-181636157 33 398872 writer=1a7d910238eb74cddc712d92b0ba4014a72ff507 manifest_sha256=589a151af608daf9accc510c7905d7635528fd3fb87cac64a2cdf8f7070d9c77"
+    },
+    {
+      "ledger_line": 1423,
+      "record": "frozen_content_compiler_prestart /tmp/lerna-04-ticket05-execution/lerna-content-frozen-build-181636157"
+    },
+    {
+      "ledger_line": 1424,
+      "record": "frozen_content_compiler_start_ack pid=3551037 pgid=3551037 starttime=14884641 source=1a7d910238eb74cddc712d92b0ba4014a72ff507"
+    },
+    {
+      "ledger_line": 1425,
+      "record": "frozen_content_compiler_completion pid=3551037 pgid=3551037 starttime=14884641 exit=0 group_absent=true state_known=true control_close_ack=true"
+    },
+    {
+      "ledger_line": 1426,
+      "record": "frozen_content_compiler_artifact /tmp/lerna-04-ticket05-execution/lerna-content-frozen-build-181636157/legacy-producer sha256:a3110ec3a814fc923209e4ce5eb79eac1167a016ee8453f0a6f306b726cd3aeb driver_sha256:3d683e3b66e662b21102a42e0f418d49c1776e52cd4f421bfb3f88da718ee8be"
+    },
+    {
+      "ledger_line": 1432,
+      "record": "postgres lerna_test_ecbdbbe573f668098e18ae0d"
+    },
+    {
+      "ledger_line": 1433,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-1298692172 33 399033"
+    },
+    {
+      "ledger_line": 1434,
+      "record": "fixture_object_file /tmp/lerna-04-ticket05-execution/lerna-content-objects-1298692172/ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72"
+    },
+    {
+      "ledger_line": 1437,
+      "record": "postgres lerna_test_0b08d7b7f4234b13feb04caf"
+    },
+    {
+      "ledger_line": 1438,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-1218559426 33 399314"
+    },
+    {
+      "ledger_line": 1439,
+      "record": "frozen_content_build_scope /tmp/lerna-04-ticket05-execution/lerna-content-frozen-build-4084989322 33 399315 writer=1a7d910238eb74cddc712d92b0ba4014a72ff507 manifest_sha256=589a151af608daf9accc510c7905d7635528fd3fb87cac64a2cdf8f7070d9c77"
+    },
+    {
+      "ledger_line": 1440,
+      "record": "frozen_content_compiler_prestart /tmp/lerna-04-ticket05-execution/lerna-content-frozen-build-4084989322"
+    },
+    {
+      "ledger_line": 1441,
+      "record": "frozen_content_compiler_start_ack pid=3551328 pgid=3551328 starttime=14885082 source=1a7d910238eb74cddc712d92b0ba4014a72ff507"
+    },
+    {
+      "ledger_line": 1442,
+      "record": "frozen_content_compiler_completion pid=3551328 pgid=3551328 starttime=14885082 exit=0 group_absent=true state_known=true control_close_ack=true"
+    },
+    {
+      "ledger_line": 1443,
+      "record": "frozen_content_compiler_artifact /tmp/lerna-04-ticket05-execution/lerna-content-frozen-build-4084989322/legacy-producer sha256:b003209979a2bf1887b84bda928c65b186e7d738d21319e4e9c389ec90f90c36 driver_sha256:3d683e3b66e662b21102a42e0f418d49c1776e52cd4f421bfb3f88da718ee8be"
+    },
+    {
+      "ledger_line": 1449,
+      "record": "postgres lerna_test_6b875d5923e351cad213158b"
+    },
+    {
+      "ledger_line": 1450,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-1941952520 33 399477"
+    },
+    {
+      "ledger_line": 1451,
+      "record": "fixture_object_file /tmp/lerna-04-ticket05-execution/lerna-content-objects-1941952520/ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72"
+    },
+    {
+      "ledger_line": 1454,
+      "record": "postgres lerna_test_63e3152f726f1f128672463e"
+    },
+    {
+      "ledger_line": 1455,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-1121231178 33 399762"
+    },
+    {
+      "ledger_line": 1456,
+      "record": "pg_migration_connection lerna_test_63e3152f726f1f128672463e"
+    },
+    {
+      "ledger_line": 1459,
+      "record": "postgres lerna_test_2b062b9c2511145381f819de"
+    },
+    {
+      "ledger_line": 1460,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-4078894791 33 400043"
+    },
+    {
+      "ledger_line": 1461,
+      "record": "pg_migration_connection lerna_test_2b062b9c2511145381f819de"
+    },
+    {
+      "ledger_line": 1464,
+      "record": "postgres lerna_test_b785c05c06bbd9daeec491ff"
+    },
+    {
+      "ledger_line": 1465,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-1179633765 33 400322"
+    },
+    {
+      "ledger_line": 1466,
+      "record": "postgres lerna_test_5e21a9c75d2dbd3d7dcd3bae"
+    },
+    {
+      "ledger_line": 1467,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-251611314 33 400323"
+    },
+    {
+      "ledger_line": 1470,
+      "record": "postgres lerna_test_c2a0bad0cf768bba981f774a"
+    },
+    {
+      "ledger_line": 1471,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-3727698723 33 400622"
+    },
+    {
+      "ledger_line": 1472,
+      "record": "postgres lerna_test_80f15e1274c68978ffe2b984"
+    },
+    {
+      "ledger_line": 1473,
+      "record": "objects /tmp/lerna-04-ticket05-execution/lerna-content-objects-960718227 33 400623"
+    }
+  ],
+  "unknown_sticky": [
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-local-lifetime-3977538271",
+      "dev": 33,
+      "ino": 315225,
+      "logical_close": "unknown retain"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-local-lifetime-4116685529",
+      "dev": 33,
+      "ino": 326495,
+      "logical_close": "unknown retain"
+    }
+  ]
+}

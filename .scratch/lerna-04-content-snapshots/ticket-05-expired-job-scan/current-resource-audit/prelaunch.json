@@ -1,0 +1,2495 @@
+{
+  "kind": "STATIC resource audit prelaunch, not run",
+  "commit": "8db74e3dfd2677adb37fbdd13bd93e76b61b5eb7",
+  "worktree": "/tmp/lerna-worktrees/content-snapshots-05",
+  "inputs": "/tmp/lerna-05-own-resource-audit-current-inputs.json",
+  "inputs_sha256": "347b84c5a2e78108d4faa44f179dc48d8e37ade50c16b382d06300c051fa1f7b",
+  "ledger": "/tmp/lerna-04-ticket05-execution/owned-scopes.log",
+  "ledger_first_line": 967,
+  "ledger_last_line": 1474,
+  "ledger_interval_sha256": "86a41c3b4364fa431b2979d3230c03c5e24217c4d62aea97665c75a462628128",
+  "schemas": [
+    "lerna_test_045be737217e5994560fa146",
+    "lerna_test_06e4335140b650bb735bee8f",
+    "lerna_test_0b08d7b7f4234b13feb04caf",
+    "lerna_test_0d913193f9472c5d6fd89fa8",
+    "lerna_test_0ff09e95f8a79eb1f796b784",
+    "lerna_test_117e2c50f5456670050a99f1",
+    "lerna_test_11b3ea1ff575c8c8c738b0e7",
+    "lerna_test_1450d51a862fad480a9b1fb5",
+    "lerna_test_180ef70831b80345b457297e",
+    "lerna_test_18696e737157349b2a6312f3",
+    "lerna_test_188b47040bed317458534f5c",
+    "lerna_test_1ac090d89b64aefdb84ed70d",
+    "lerna_test_1daf55afc5167216e28b9b7f",
+    "lerna_test_22a9fead4c6b84a6d61e1ee2",
+    "lerna_test_2389bc0ad4dbda05e7dd771c",
+    "lerna_test_25a66c62db641ddbf9e08e58",
+    "lerna_test_25bca83fa19cdcd973e78cae",
+    "lerna_test_28ccb22491f76a2556c594ac",
+    "lerna_test_2a7f4da1088faea08699e363",
+    "lerna_test_2b062b9c2511145381f819de",
+    "lerna_test_2b7839f4c1434ac7ea988e8a",
+    "lerna_test_2e8f24641c42313d4af2ca21",
+    "lerna_test_2f52a4679988925a5a85c08d",
+    "lerna_test_2fc40beac36a52d84349287d",
+    "lerna_test_30c580da9d4a359c2d4a8668",
+    "lerna_test_336d252dc74ce67d5808d2a0",
+    "lerna_test_360ea3f079ad6dcee242c635",
+    "lerna_test_3636dbc309baee051cbd8cfa",
+    "lerna_test_398ac6ceb182431638a1317b",
+    "lerna_test_39e95239afda2b382461b5c2",
+    "lerna_test_39fa4acc79ed673b1c54d6ba",
+    "lerna_test_3a3b4ccfa55d99cecac4e5fc",
+    "lerna_test_3a89e6a83d14920bb429a7c0",
+    "lerna_test_3b2ba4fc0771bd29a6b927d0",
+    "lerna_test_3b3894ebed2859e5867e8fbc",
+    "lerna_test_3b8931367de698a8f5d913f2",
+    "lerna_test_3c3259fcf242fe8c89a9913f",
+    "lerna_test_3fc028f0a1995eee0be82410",
+    "lerna_test_416b555a38743c1c417765d3",
+    "lerna_test_430c3f7a2cf043a01cfb4461",
+    "lerna_test_43ead307c62f86546c0a9c78",
+    "lerna_test_451f9a5dc1034bacccd61845",
+    "lerna_test_46c12cd26252026efafe40e0",
+    "lerna_test_4880c204d616e935ef558b86",
+    "lerna_test_489b7db045af8a5ef021d095",
+    "lerna_test_4c69d19958ad857cf1597470",
+    "lerna_test_4ee7195c59954b3013aca733",
+    "lerna_test_4f4157ae746e1c34f4aea1ba",
+    "lerna_test_510fd5321037fe778601d3bc",
+    "lerna_test_51af2c03413f6f68149b8a56",
+    "lerna_test_55c8ab656ebead078b06a197",
+    "lerna_test_57599d14351be12127709760",
+    "lerna_test_5919cd0dc6f214a58457d785",
+    "lerna_test_59d157f0427a70dee335e11f",
+    "lerna_test_5b01c61913ed0daeadabc499",
+    "lerna_test_5e21a9c75d2dbd3d7dcd3bae",
+    "lerna_test_5f73daf14950d8d1f2a6799d",
+    "lerna_test_5f8c776cbe71f3911a53b735",
+    "lerna_test_63e3152f726f1f128672463e",
+    "lerna_test_63facc7486c16bcfb6821085",
+    "lerna_test_65cf9f78a5b69d72a66d3588",
+    "lerna_test_6673c1cf9910fe567b7e8011",
+    "lerna_test_672d03b3baeec1079df8751c",
+    "lerna_test_6a1ddf8415e5a137da17c2f5",
+    "lerna_test_6a9a912711dba8bedb7a3848",
+    "lerna_test_6b875d5923e351cad213158b",
+    "lerna_test_7349344934dae8a748d093e1",
+    "lerna_test_734c403ccbd2acd6c8703132",
+    "lerna_test_7350705529a2d1e179f2bd1d",
+    "lerna_test_73c2ee2ae74c7a750cc030b8",
+    "lerna_test_7702f7f7a2ffb85246f823c7",
+    "lerna_test_77ce4fabfe0d8058bb314ba8",
+    "lerna_test_7ad72f42ca7949a32c007daa",
+    "lerna_test_80f15e1274c68978ffe2b984",
+    "lerna_test_8750735b58e5560d1a0a33b1",
+    "lerna_test_87a977abdf4d096610cd29b8",
+    "lerna_test_87b92e7dd72f127005510076",
+    "lerna_test_8935cbe598f4798b84097785",
+    "lerna_test_8eb38d5c93dff58511b79775",
+    "lerna_test_90f903fc2de0f0b5fb7f2f79",
+    "lerna_test_9327a67da5c9fed5e1434e7a",
+    "lerna_test_9483df369680ec6f77cea485",
+    "lerna_test_99a615451557f2f201a8dd91",
+    "lerna_test_9c4834cd14e1c2603a73356c",
+    "lerna_test_a0e085fa52383284ea333314",
+    "lerna_test_a1999976b95d0cce67406ed8",
+    "lerna_test_a366b260ddf0896feba7707b",
+    "lerna_test_a5c3605059b4ccbdce6e7dbc",
+    "lerna_test_a6bd15ca3f01a44b52fd0521",
+    "lerna_test_a7f1d86af4f889a6968016a7",
+    "lerna_test_aa27a2c83b0e5fd93d337bfc",
+    "lerna_test_adc1a12fd7197b1fc6b272b3",
+    "lerna_test_ae060348e9859d84008298f4",
+    "lerna_test_af990d4b851a1d3050a0580e",
+    "lerna_test_b4565af0631e2375db7050e3",
+    "lerna_test_b595540ae75e9c726355a7f5",
+    "lerna_test_b6042e1b73451e0b835ab777",
+    "lerna_test_b785c05c06bbd9daeec491ff",
+    "lerna_test_b7aa9785de44a3cfa6f119f9",
+    "lerna_test_b87ddc455e672cfc81b52f24",
+    "lerna_test_b9c200f721b23dec814a6df1",
+    "lerna_test_b9ffb06951e2bd84b944e546",
+    "lerna_test_ba793c7c1795313eb4d156c9",
+    "lerna_test_bab9b37e32ad819ee259317f",
+    "lerna_test_bae54f9edba390e3132acd67",
+    "lerna_test_bb135fd29d76584c57732dfb",
+    "lerna_test_bbe27ebeb8b7a36ae96b4782",
+    "lerna_test_bf7dc1d8e4c9f16589da5db9",
+    "lerna_test_c0035b7fa47a0d4c294453b6",
+    "lerna_test_c2a0bad0cf768bba981f774a",
+    "lerna_test_c5a4ab7c3a205be123752093",
+    "lerna_test_c9318cf158646216685ffe4b",
+    "lerna_test_c9321289e5158c9204cd5b74",
+    "lerna_test_c96b43438b555a5a8444d478",
+    "lerna_test_cb06021ca161a37aace34a02",
+    "lerna_test_cc55df339d6ff9e423fa35c8",
+    "lerna_test_cd55ac0aa1641873a0b4ccf4",
+    "lerna_test_d2e8ba97c90849253932fd5e",
+    "lerna_test_d3cd2735367f458f5e95cebb",
+    "lerna_test_d51eca251eec47e1ee35c8bb",
+    "lerna_test_d5d70f509f6d4351cc2147ee",
+    "lerna_test_d8af1bc72a544ac03c610bd8",
+    "lerna_test_db0c761c3dcb3dd6fde7f818",
+    "lerna_test_dcbf6486ccdcb52f4a34f3f3",
+    "lerna_test_dd24d01c63acba8e1c5f79b9",
+    "lerna_test_df9af59edc5b19e800e657a4",
+    "lerna_test_dfcf078da2d52fdb474ab1ea",
+    "lerna_test_e083312961e99f8e5627e19f",
+    "lerna_test_e09fffb3e39c50636d4824f7",
+    "lerna_test_e36f59eacf9a5bf4b5cbc7ba",
+    "lerna_test_e3a7fc7d4d7307c9cb0ffa6a",
+    "lerna_test_e4457164bf4de293c5ad38d9",
+    "lerna_test_ec4bd5ce23dff8cc97284254",
+    "lerna_test_ecbdbbe573f668098e18ae0d",
+    "lerna_test_ef3eee55637f9ff662750e81",
+    "lerna_test_f01b9e021a8867302cdb9342",
+    "lerna_test_f03a8f71af800b6ab79d8c25",
+    "lerna_test_f25eadfc0127b97775af1b3a",
+    "lerna_test_f309da208433cc5d4579cdf6",
+    "lerna_test_f877c83c54996d1958be5139",
+    "lerna_test_f8c308ff5a2c76b0ca159738",
+    "lerna_test_f9d4cf2822291454c10fbb8f"
+  ],
+  "backend_pids": [
+    568204,
+    570554,
+    581628,
+    581640,
+    581924,
+    581929,
+    582124,
+    582137,
+    582150,
+    582163,
+    582246,
+    582260,
+    582282,
+    582295
+  ],
+  "owned_pgids": [
+    3279876,
+    3285260,
+    3285295,
+    3287983,
+    3287994,
+    3290594,
+    3429147,
+    3429161,
+    3433733,
+    3467224,
+    3467904,
+    3481197,
+    3495146,
+    3495830,
+    3510349,
+    3511127,
+    3514791,
+    3517014,
+    3535304,
+    3543955,
+    3544000,
+    3544157,
+    3544761,
+    3546259,
+    3546380,
+    3546616,
+    3546942,
+    3547159,
+    3547420,
+    3547905,
+    3548332,
+    3548619,
+    3548802,
+    3549204,
+    3549415,
+    3549860,
+    3549862,
+    3550262,
+    3550742,
+    3550804,
+    3550810,
+    3550929,
+    3550983,
+    3551037,
+    3551210,
+    3551225,
+    3551328,
+    3551503,
+    3551584,
+    3551683,
+    3551807,
+    3551930
+  ],
+  "paths": [
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-2823625114",
+      "dev": 33,
+      "ino": 376497,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-18610967",
+      "dev": 33,
+      "ino": 376996,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-490049524",
+      "dev": 33,
+      "ino": 377394,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-1248967092",
+      "dev": 33,
+      "ino": 377785,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-1033797676",
+      "dev": 33,
+      "ino": 384078,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-2968571310",
+      "dev": 33,
+      "ino": 384711,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-2084815391",
+      "dev": 33,
+      "ino": 386516,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-1463348232",
+      "dev": 33,
+      "ino": 387376,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-3158398028",
+      "dev": 33,
+      "ino": 388291,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-1169068078",
+      "dev": 33,
+      "ino": 389360,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-3657138946",
+      "dev": 33,
+      "ino": 389919,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-19833061",
+      "dev": 33,
+      "ino": 390411,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-3232716582",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-503942273",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-1998051975",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-3328934859",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-2069657804",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-2881336678",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-1280645292",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-1424684092",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-1601098493",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-4077494822",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-3279325064",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-497353751",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-887305486",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-417510598",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-3800930847",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-1239369513",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-908244717",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-3598505968",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-897581446",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-4044045757",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-1934944836",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-250522192",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-835539855",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-531278010",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-3114894217",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-4114156873",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-687688290",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-1856058648",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-2137492199",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-2914283581",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-3480435195",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-232943249",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-2571762758",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-1435114049",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-3682403255",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-2911760280",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-455622924",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-418025640",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-1111823657",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-2688265225",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-1321478528",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-1837357783",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-2363989685",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-2645669688",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-1666646845",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-2489267523",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-1673946313",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-3520741713",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-405844091",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-869132878",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-1731170689",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-3667341099",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-1524839986",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-3943911127",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-1078030389",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-1966499708",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-3731366585",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-3337294193",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-976126057",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-192137743",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-4180936614",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-1589081166",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-2343775081",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-target-04-1832181509",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "sqlite-target"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-3148151439",
+      "dev": 33,
+      "ino": 393981,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-3280561437",
+      "dev": 33,
+      "ino": 393986,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-3280561437/da73fc3f262e288d3fbf5bf06db2ebcfbb031f2a5cacbc4e8be74a516714a028",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "fixture_object_file"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-895306237",
+      "dev": 33,
+      "ino": 393991,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-3692259728",
+      "dev": 33,
+      "ino": 393996,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-4100720191",
+      "dev": 33,
+      "ino": 393997,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-2261789492",
+      "dev": 33,
+      "ino": 394002,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-2150915181",
+      "dev": 33,
+      "ino": 394005,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-3644863876",
+      "dev": 33,
+      "ino": 394282,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-2143009526",
+      "dev": 33,
+      "ino": 394291,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-15537042",
+      "dev": 33,
+      "ino": 394298,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-3715207549",
+      "dev": 33,
+      "ino": 394305,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-2394063230",
+      "dev": 33,
+      "ino": 394312,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-1686586041",
+      "dev": 33,
+      "ino": 394319,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-4074119282",
+      "dev": 33,
+      "ino": 394326,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-2905317508",
+      "dev": 33,
+      "ino": 394339,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-3984068051",
+      "dev": 33,
+      "ino": 394346,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-2582211088",
+      "dev": 33,
+      "ino": 394351,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-3400716889",
+      "dev": 33,
+      "ino": 394356,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-1603067436",
+      "dev": 33,
+      "ino": 394361,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-3047139036",
+      "dev": 33,
+      "ino": 394364,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-1827906759",
+      "dev": 33,
+      "ino": 394367,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-1544102257",
+      "dev": 33,
+      "ino": 394370,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-658913489",
+      "dev": 33,
+      "ino": 394373,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-3962352482",
+      "dev": 33,
+      "ino": 394376,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-2737763300",
+      "dev": 33,
+      "ino": 394379,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-2005592541",
+      "dev": 33,
+      "ino": 394384,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-1453791216",
+      "dev": 33,
+      "ino": 394387,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-2141059088",
+      "dev": 33,
+      "ino": 394390,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-617589750",
+      "dev": 33,
+      "ino": 394393,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-1391064556",
+      "dev": 33,
+      "ino": 394670,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-460297819",
+      "dev": 33,
+      "ino": 394675,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-2549922678",
+      "dev": 33,
+      "ino": 394678,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-2637455136",
+      "dev": 33,
+      "ino": 394681,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-484068542",
+      "dev": 33,
+      "ino": 394682,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-2068224811",
+      "dev": 33,
+      "ino": 394685,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-1693790382",
+      "dev": 33,
+      "ino": 394688,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-1844178355",
+      "dev": 33,
+      "ino": 394693,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-3981903827",
+      "dev": 33,
+      "ino": 394697,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-2412753742",
+      "dev": 33,
+      "ino": 394701,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-1714809141",
+      "dev": 33,
+      "ino": 394702,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-3375271930",
+      "dev": 33,
+      "ino": 394707,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-1375641907",
+      "dev": 33,
+      "ino": 394712,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-1148705400",
+      "dev": 33,
+      "ino": 394715,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-4035405530",
+      "dev": 33,
+      "ino": 394996,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-2222918653",
+      "dev": 33,
+      "ino": 394997,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-1358882889",
+      "dev": 33,
+      "ino": 395006,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-2288871510",
+      "dev": 33,
+      "ino": 395015,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-1109169904",
+      "dev": 33,
+      "ino": 395022,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-2895959472",
+      "dev": 33,
+      "ino": 395025,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-3577487213",
+      "dev": 33,
+      "ino": 395030,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-2088621208",
+      "dev": 33,
+      "ino": 395313,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-2128374974",
+      "dev": 33,
+      "ino": 395322,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-2128374974/da73fc3f262e288d3fbf5bf06db2ebcfbb031f2a5cacbc4e8be74a516714a028",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "fixture_object_file"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-1001479913",
+      "dev": 33,
+      "ino": 395327,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-3701735379",
+      "dev": 33,
+      "ino": 395332,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-457732887",
+      "dev": 33,
+      "ino": 395333,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-357853276",
+      "dev": 33,
+      "ino": 395338,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-2183742642",
+      "dev": 33,
+      "ino": 395342,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-1249536015",
+      "dev": 33,
+      "ino": 395621,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-2687706125",
+      "dev": 33,
+      "ino": 395630,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-2578983646",
+      "dev": 33,
+      "ino": 395638,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-284631522",
+      "dev": 33,
+      "ino": 395646,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-3449007776",
+      "dev": 33,
+      "ino": 395654,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-1142694862",
+      "dev": 33,
+      "ino": 395662,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-2181415124",
+      "dev": 33,
+      "ino": 395670,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-3397353441",
+      "dev": 33,
+      "ino": 395683,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-1300121505",
+      "dev": 33,
+      "ino": 395690,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-2181525761",
+      "dev": 33,
+      "ino": 395696,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-3414552872",
+      "dev": 33,
+      "ino": 395701,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-1192030384",
+      "dev": 33,
+      "ino": 395706,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-676838864",
+      "dev": 33,
+      "ino": 395710,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-199969120",
+      "dev": 33,
+      "ino": 395713,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-3973225574",
+      "dev": 33,
+      "ino": 395716,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-1342090990",
+      "dev": 33,
+      "ino": 395720,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-2579369832",
+      "dev": 33,
+      "ino": 395723,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-210443602",
+      "dev": 33,
+      "ino": 395726,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-3678810764",
+      "dev": 33,
+      "ino": 395729,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-2134054362",
+      "dev": 33,
+      "ino": 395733,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-633193228",
+      "dev": 33,
+      "ino": 395736,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-343030810",
+      "dev": 33,
+      "ino": 395739,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-3928401576",
+      "dev": 33,
+      "ino": 396018,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-2033679296",
+      "dev": 33,
+      "ino": 396022,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-1310645544",
+      "dev": 33,
+      "ino": 396026,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-1335686121",
+      "dev": 33,
+      "ino": 396029,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-1223038475",
+      "dev": 33,
+      "ino": 396031,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-1108108447",
+      "dev": 33,
+      "ino": 396034,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-596969288",
+      "dev": 33,
+      "ino": 396036,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-1384172008",
+      "dev": 33,
+      "ino": 396042,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-1781004449",
+      "dev": 33,
+      "ino": 396045,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-2392519113",
+      "dev": 33,
+      "ino": 396048,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-530880902",
+      "dev": 33,
+      "ino": 396051,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-861607926",
+      "dev": 33,
+      "ino": 396055,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-4143404487",
+      "dev": 33,
+      "ino": 396060,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-17787904",
+      "dev": 33,
+      "ino": 396064,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-3045807679",
+      "dev": 33,
+      "ino": 396346,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-399354399",
+      "dev": 33,
+      "ino": 396348,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-2392620958",
+      "dev": 33,
+      "ino": 396357,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-3118827983",
+      "dev": 33,
+      "ino": 396367,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-981561083",
+      "dev": 33,
+      "ino": 396375,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-1227451299",
+      "dev": 33,
+      "ino": 396378,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-802557583",
+      "dev": 33,
+      "ino": 396381,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-3838159508",
+      "dev": 33,
+      "ino": 396668,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-707543588",
+      "dev": 33,
+      "ino": 396676,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-1189532093",
+      "dev": 33,
+      "ino": 396687,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-2425174729",
+      "dev": 33,
+      "ino": 396690,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-3414332725",
+      "dev": 33,
+      "ino": 396972,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-1608694496",
+      "dev": 33,
+      "ino": 396982,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-2317259770",
+      "dev": 33,
+      "ino": 396991,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-2874330168",
+      "dev": 33,
+      "ino": 396999,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-3870407923",
+      "dev": 33,
+      "ino": 397008,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-295817522",
+      "dev": 33,
+      "ino": 397297,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-4017068908",
+      "dev": 33,
+      "ino": 397306,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-7176058",
+      "dev": 33,
+      "ino": 397315,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-72952517",
+      "dev": 33,
+      "ino": 397319,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-2732109419",
+      "dev": 33,
+      "ino": 397602,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-774801372",
+      "dev": 33,
+      "ino": 397612,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-178259962",
+      "dev": 33,
+      "ino": 397622,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-1150119713",
+      "dev": 33,
+      "ino": 397630,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-3026645089",
+      "dev": 33,
+      "ino": 397638,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-1244244051",
+      "dev": 33,
+      "ino": 397932,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-1654778403",
+      "dev": 33,
+      "ino": 398232,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-local-lifetime-2280513771",
+      "dev": 33,
+      "ino": 398417,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-local-lifetime-3531288571",
+      "dev": 33,
+      "ino": 398587,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-1177382667",
+      "dev": 33,
+      "ino": 398871,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-frozen-build-181636157",
+      "dev": 33,
+      "ino": 398872,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "frozen_content_build_scope"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-frozen-build-181636157/legacy-producer",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "frozen_content_compiler_artifact"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-1298692172",
+      "dev": 33,
+      "ino": 399033,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-1298692172/ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "fixture_object_file"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-1218559426",
+      "dev": 33,
+      "ino": 399314,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-frozen-build-4084989322",
+      "dev": 33,
+      "ino": 399315,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "frozen_content_build_scope"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-frozen-build-4084989322/legacy-producer",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "frozen_content_compiler_artifact"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-1941952520",
+      "dev": 33,
+      "ino": 399477,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-1941952520/ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72",
+      "dev": 0,
+      "ino": 0,
+      "identity_registered": false,
+      "sticky_unknown": false,
+      "kinds": [
+        "fixture_object_file"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-1121231178",
+      "dev": 33,
+      "ino": 399762,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-4078894791",
+      "dev": 33,
+      "ino": 400043,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-1179633765",
+      "dev": 33,
+      "ino": 400322,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-251611314",
+      "dev": 33,
+      "ino": 400323,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-3727698723",
+      "dev": 33,
+      "ino": 400622,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-960718227",
+      "dev": 33,
+      "ino": 400623,
+      "identity_registered": true,
+      "sticky_unknown": false,
+      "kinds": [
+        "objects"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-local-lifetime-3977538271",
+      "dev": 33,
+      "ino": 315225,
+      "identity_registered": true,
+      "sticky_unknown": true,
+      "kinds": [
+        "permanent_original_close_unknown"
+      ]
+    },
+    {
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-local-lifetime-4116685529",
+      "dev": 33,
+      "ino": 326495,
+      "identity_registered": true,
+      "sticky_unknown": true,
+      "kinds": [
+        "permanent_original_close_unknown"
+      ]
+    }
+  ],
+  "pins": {
+    "adapters/postgres/content/work.go": {
+      "sha256": "f690a261112ec1e37b7a51fc1d54f4637a987d348b4f912e57856a481c4fbbc0",
+      "bytes": 12249
+    },
+    "adapters/postgres/content/work_seal_encoding.go": {
+      "sha256": "7286fe4f59db9dcfa22405341bffd45d5b914d18d41bd0ecbcf31e382ab21c8b",
+      "bytes": 1695
+    },
+    "domain/content/ports.go": {
+      "sha256": "51066cd99f2c79e8a5fc3f7b336cb0706f161899361681c99f8e6feff5454f90",
+      "bytes": 5618
+    },
+    "domain/content/service.go": {
+      "sha256": "ffefc916fa8e08e2a39f2264a12090eb7aa2ecf020b7da63e270aff3e925a477",
+      "bytes": 33783
+    },
+    "domain/content/management.go": {
+      "sha256": "c6fa3aa3dfee98ab82b873aa9d37e4c4725133390147e2d0aff04be49e3606ad",
+      "bytes": 37419
+    },
+    "domain/content/lifecycle.go": {
+      "sha256": "0708c4eb51e28ab9b7a3210981e408ae2310511e9728ee2bf46ba87fc0802699",
+      "bytes": 23932
+    },
+    "conformance/component/content_expired_backlog_test.go": {
+      "sha256": "60f817d14355d1565f744be850f9309d1ae0c2d0f7190be0e204929d0823823b",
+      "bytes": 8657
+    },
+    "adapters/postgres/content/migrations/0001_content.sql": {
+      "sha256": "00363b79dafb6eb1f373be9ef08e915fe23cc3db0fa55345e8ae6c051ce0c1ed",
+      "role": "unchanged SQL, static hash only"
+    },
+    "adapters/postgres/content/migrations/0002_source_policies.sql": {
+      "sha256": "99519565ff1146d7cfc468413b449538c6ba71335e86edc8fd447a3bbff922a8",
+      "role": "unchanged SQL, static hash only"
+    },
+    "adapters/postgres/content/migrations/0003_body_cleanup.sql": {
+      "sha256": "92739b464b8661e26befe092028f20802b586e42bf1578bd9811dcf240c5b58f",
+      "role": "unchanged SQL, static hash only"
+    },
+    "conformance/internal/contentfixture/scan_deadline_fault.go": {
+      "sha256": "7c57d9bffcb17c49daab3536b68284af3c24dce4ed08035f2fe3f74a0b22afa0",
+      "bytes": 3748,
+      "status": "formatted prelaunch, native test not launched"
+    },
+    "conformance/component/content_scan_deadline_test.go": {
+      "sha256": "7f12df34684283e4e69c5bacff08f5d75a3d46643315beaa5130809190b68461",
+      "bytes": 8835,
+      "status": "formatted prelaunch, native test not launched"
+    },
+    "conformance/component/content_manager_expired_backlog_test.go": {
+      "path": "conformance/component/content_manager_expired_backlog_test.go",
+      "sha256": "81bc5d898d4c0275fd0a1aa9b7047716fe633cd9ee4fabc669cd46d92f1b8ed6",
+      "bytes": 10293,
+      "formatted_compiled_executed": "formatted only; not launched"
+    },
+    "conformance/component/content_delegated_cleanup_backlog_test.go": {
+      "path": "conformance/component/content_delegated_cleanup_backlog_test.go",
+      "sha256": "85d9951fd44c08b374730f8c95d464e8e8efb5726cfb5ec1df20977689bf6995",
+      "bytes": 11121,
+      "formatted_compiled_executed": "formatted only, no test launch yet"
+    },
+    "conformance/internal/contentfixture/migration_test.go": {
+      "sha256": "b8c9c471a9ed30bbaf8a2e6c89ed5a5a84e54b6b09cafc63ae6f01cf48a03e3a",
+      "bytes": 2642,
+      "status": "formatted only, qualifier not launched"
+    }
+  },
+  "caller_seconds": 5,
+  "transaction_seconds": 3,
+  "statement_seconds": 2,
+  "lock_seconds": 1,
+  "readonly": true,
+  "cleanup_authorized": false,
+  "logical_close_absence_inference": false,
+  "compiler_group_additions": [
+    {
+      "pgid": 3551037,
+      "starttime": "14884641",
+      "ledger_line": 1424
+    },
+    {
+      "pgid": 3551328,
+      "starttime": "14885082",
+      "ledger_line": 1441
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "kind": "STATIC executable review manifest; not executed/formatted/built",
+  "qualification_commit": "8db74e3dfd2677adb37fbdd13bd93e76b61b5eb7",
+  "baseline": "1a4e1d2d704261a59491dfc6e0c5d26b80ec5107",
+  "paths": {
+    "/tmp/lerna-05-own-resource-audit-static/audit.go": "748ba8db54a22ec1e8583ccf74ff48004c40ff3c0bf5a9a94c68d7fa58b9bf94",
+    "/tmp/lerna-05-own-resource-audit-static/prelaunch.json": "6230a0a7b2a6b06819160ac9a02bde5f296d2a9353161240193caf2005ef1c9a"
+  },
+  "expected_runtime_bounds": {
+    "caller_seconds": 5,
+    "tx_seconds": 3,
+    "statement_seconds": 2,
+    "lock_seconds": 1,
+    "outer_seconds": 120
+  },
+  "safe_command": "python3 /tmp/lerna-04-ticket05-execution/run-native.py bash -c 'source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; go run -mod=readonly -p=1 /tmp/lerna-05-own-resource-audit-static/audit.go'",
+  "cwd": "/tmp/lerna-worktrees/content-snapshots-05",
+  "registry": "/tmp/lerna-04-ticket05-execution/owned-scopes.log",
+  "log": "/tmp/lerna-04-ticket05-execution/scan-current-own-resource-readonly-audit.log",
+  "requires_new_root_native_grant": true,
+  "no_cleanup": true,
+  "source_15_frozen": true
+}

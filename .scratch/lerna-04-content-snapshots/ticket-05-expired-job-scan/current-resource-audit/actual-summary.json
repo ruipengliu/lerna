@@ -1,0 +1,65 @@
+{
+  "kind": "actual exact readonly owner resource audit completion",
+  "raw": "/tmp/lerna-04-ticket05-execution/scan-current-own-resource-readonly-audit.log",
+  "raw_sha256": "786b492857834617f8c8b134ec749c0247f19628cd48015c0d2547bb2e794c11",
+  "native_completion_ack": {
+    "pid": 3584995,
+    "pgid": 3584995,
+    "starttime": "15030462",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false
+  },
+  "independent_group_absent": true,
+  "completed": true,
+  "audit_connection_backend_pid": 588251,
+  "audit_connection_registration_fsynced": true,
+  "first_connection_close_returned_nil": true,
+  "transaction_rollback_returned_nil_or_already_closed": true,
+  "registered_schema_count": 142,
+  "present_owned_schemas": [],
+  "registered_backend_count": 14,
+  "present_registered_backends": [],
+  "owned_group_members": [],
+  "filesystem_count": 218,
+  "filesystem_counts": {
+    "absent": 216,
+    "original_identity_present": 2
+  },
+  "sticky_unknowns": [
+    {
+      "actual_dev": 33,
+      "actual_ino": 315225,
+      "cleanup_allowed": false,
+      "identity_registered": true,
+      "kinds": [
+        "permanent_original_close_unknown"
+      ],
+      "observation": "original_identity_present",
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-local-lifetime-3977538271",
+      "registered_dev": 33,
+      "registered_ino": 315225,
+      "sticky_unknown": true,
+      "symlink": false
+    },
+    {
+      "actual_dev": 33,
+      "actual_ino": 326495,
+      "cleanup_allowed": false,
+      "identity_registered": true,
+      "kinds": [
+        "permanent_original_close_unknown"
+      ],
+      "observation": "original_identity_present",
+      "path": "/tmp/lerna-04-ticket05-execution/lerna-local-lifetime-4116685529",
+      "registered_dev": 33,
+      "registered_ino": 326495,
+      "sticky_unknown": true,
+      "symlink": false
+    }
+  ],
+  "cleanup_performed": false,
+  "logical_close_inferred": false,
+  "native_stopped_released": true,
+  "formal_7ac_accepted": false
+}
