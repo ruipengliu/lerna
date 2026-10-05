@@ -969,3 +969,27 @@ Close。caller20/Go30/wrapper120/join3/2s+20ms/700ms固定；sessions33979/7473
 actualcomplete、明确RELEASE/no pending。产品固定301be6d不改，首执行直接
 正常qualification，无虚构businessred。最小未知结构/currentpolicy错误gate与
 既有typedFS目录oracles及最终source/suites/reviews仍待；七AC未accept。
+
+### 新 cap 支路的最小未知结构和当前政策 port 错误门
+
+在sameexisting inherited-cap真实两祖先/实际原pending duty之后，两个明确
+机械观察仅在真实原PG操作完成后返回：source LockVersion实际成功后观察nil，
+或ancestor CurrentSavingPolicy实际成功后返回固定port错误。它们不伪造私表
+或合法政策state，不把nilpolicy解释成false。公共原Consume分别保持完整原
+pendingobservation或传播同错误；独立重新Observe fulltuple未改、无target
+seal且三个原alpha准确文件仍在。plainconsumer随后同原key完成正常全ACK/
+reopen/ancestor保留/固定receipt历史尾部，错误未知资格不借cap删除。缺结构
+观察是原结构资格失败；cap因果仍独立允许实际nilpolicy，未造相反oracle。
+
+| `/tmp/lerna-04-ticket05-execution/` 日志 | 实际结果 |
+| --- | --- |
+| `inherited-cap-unknown-gates-first-run.log` | package compile/input FAIL：3187323/start13310616/exit1/groupAbsent/noTimeout；旧oracle WIP删entries后3处局部err未声明，无业务执行。 |
+| `inherited-cap-unknown-gates-compile-repair.log` | 3处if err:=机械修复，-v exact PASS2.392s（case2.38），3190444/start13324294/exit0/groupAbsent/noTimeout。 |
+| `inherited-cap-unknown-gates-race.log` | sameexact-race PASS3.893s（case2.85），3191680/start13329410/exit0/groupAbsent/noTimeout。 |
+
+normal ownschema d29c01f7c2f3ee2ae738f43e/root3176456827(dev33/inode366284)，
+race5d54ca6ddb66a96fd637eb73/root2267177482(33/366627)。原20/30/120/2s+20ms/
+minuteDeadline固定，sessions93683/8128 actualcomplete、全部nativeactualWait/
+groupAbsent、明确RELEASE/no pending。compileFAIL首log保留不是businessred，
+产品固定301be6d无改。15旧目录oracle文件同pkg已编译，但其case尚未执行，
+不借本exactpass声称baselines通过；需要独立finite affected suites/root审查。

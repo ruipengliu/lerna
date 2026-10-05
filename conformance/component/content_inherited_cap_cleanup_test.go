@@ -14,7 +14,36 @@ import (
 	fixture "github.com/ruipengliu/lerna/conformance/internal/contentfixture"
 	v "github.com/ruipengliu/lerna/contract/v1_2"
 	"github.com/ruipengliu/lerna/domain/content"
+	"github.com/ruipengliu/lerna/runtime"
 )
+
+// These two observations are mechanical faults after the original PostgreSQL
+// operation, not fabricated durable source records or legitimate policy facts.
+type inheritedCleanupGate struct {
+	content.LifecycleRepository
+	source        v.ContentRef
+	missingSource bool
+	policyError   error
+	observed      bool
+}
+
+func (r *inheritedCleanupGate) LockVersion(ctx context.Context, tx runtime.Tx, ref v.ContentRef) (*content.Record, error) {
+	record, err := r.LifecycleRepository.LockVersion(ctx, tx, ref)
+	if err == nil && record != nil && ref == r.source && r.missingSource {
+		r.observed = true
+		return nil, nil
+	}
+	return record, err
+}
+
+func (r *inheritedCleanupGate) CurrentSavingPolicy(ctx context.Context, tx runtime.Tx, subject v.SubjectBinding, ref v.ContentRef, purpose string) (*content.FixturePolicy, error) {
+	policy, err := r.LifecycleRepository.CurrentSavingPolicy(ctx, tx, subject, ref, purpose)
+	if err == nil && ref == r.source && r.policyError != nil {
+		r.observed = true
+		return nil, r.policyError
+	}
+	return policy, err
+}
 
 func TestContentInheritedExpiredCapConsumesItsExactAdmissionTargetWithoutDeletingLiveAncestor(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
@@ -211,6 +240,38 @@ func TestContentInheritedExpiredCapConsumesItsExactAdmissionTargetWithoutDeletin
 	unchanged, err := manager.ObserveChange(ctx, &contentPrincipal, admission.Key, "", 2)
 	if err != nil || !reflect.DeepEqual(unchanged, pending) {
 		t.Fatal("forbidden consumption changed the original pending duty", unchanged, err)
+	}
+	policyReadError := errors.New("one mechanically unavailable original ancestor policy read")
+	for _, missing := range []bool{true, false} {
+		gate := &inheritedCleanupGate{LifecycleRepository: w.Store(), source: alphaRef, missingSource: missing}
+		if !missing {
+			gate.policyError = policyReadError
+		}
+		guarded, err := content.NewLifecycle(content.LifecycleConfig{ManagementConfig: content.ManagementConfig{Owner: contentOwner, Store: gate, TrustedSubject: contentPrincipal, TrustedUntil: wide, PageSize: 2, WorkBudget: time.Minute}, PrimaryHolderID: "primary", Objects: w.Objects, Worker: "inherited-cleanup-fault-control"})
+		if err != nil {
+			t.Fatal(err)
+		}
+		observed, err := guarded.ConsumePolicyCleanup(ctx, &contentPrincipal, admission.Key, "")
+		if !gate.observed || missing && (err != nil || !reflect.DeepEqual(observed, pending)) || !missing && !errors.Is(err, policyReadError) {
+			t.Fatal("missing structure or policy read error qualified target cleanup", missing, observed, err)
+		}
+		unchanged, err = manager.ObserveChange(ctx, &contentPrincipal, admission.Key, "", 2)
+		if err != nil || !reflect.DeepEqual(unchanged, pending) {
+			t.Fatal("mechanical source fault changed original pending duty", unchanged, err)
+		}
+		if _, err = l.Observe(ctx, &contentPrincipal, target, ""); !errors.Is(err, content.ErrUnavailable) {
+			t.Fatal("unqualified source fault created a target seal", err)
+		}
+		for _, ref := range []v.ContentRef{alphaRef, live, target} {
+			_, key, err := content.VersionIdentity(ref)
+			if err != nil {
+				t.Fatal(err)
+			}
+			body, err := os.ReadFile(filepath.Join(w.Directory, key))
+			if err != nil || string(body) != "alpha\n" {
+				t.Fatal("unqualified source fault erased original bytes", missing, ref, err)
+			}
+		}
 	}
 	if _, err = l.ConsumePolicyCleanup(ctx, &contentPrincipal, admission.Key, ""); err != nil {
 		t.Fatal("exact original admission target cannot consume definite expired inherited cap", err)

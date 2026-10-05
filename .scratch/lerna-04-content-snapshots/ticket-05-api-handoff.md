@@ -258,3 +258,11 @@ join/World.Reopen/sourcebytes/noSeal/V2/原source与target receipt/pub保持。
 exact两scope5.325/race6.905，原20/30/120/join3不改。该case准确覆盖新支路，
 没有借旧ordinarykey等待或源码存在冒执行；产品301be6d不改。最小unknown
 结构/currentpolicy错误资格、typedFS旧oracle整改与最终两轴审查/suite仍待。
+
+新targeted cap支路最小missing-structure/current-policy-error门已实际资格：
+原PG操作后明确机械nil-source观察或固定ancestor policy-read error，公开
+Consume原pendingfulltuple/noSeal/三准确body保持，port错误原样传播，plain
+原consumer随后全部normal尾部成功。不是私表合法政策事实，不把nil当false；
+独立durable cap原因语义保持。首包编译FAIL（旧oracle3个err声明）诚实保留，
+机械修复exact2.392/race3.893原期限通过，明确RELEASE。15baselineoracles
+只编译未执行，最终准确affected suites和reviews仍待，七AC未accept。
