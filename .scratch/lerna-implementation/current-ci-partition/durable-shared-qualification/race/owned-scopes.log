@@ -1,0 +1,295 @@
+{"argv": ["bash", "-c", "set -e; set -o pipefail; source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; export GOFLAGS=-mod=readonly; export PATH=/tmp/lerna-ci-partition-durable-race-execution/go-shim:$PATH; make test-integration-race"], "deadline_seconds": 1445, "event": "native_start_ack", "operation": "partition-shared-race", "pgid": 4094347, "pid": 4094347, "root": "/tmp/lerna-ci-partition-durable-race-execution", "starttime": "17177230"}
+{"argv": ["/home/agent/.local/toolchains/go1.27.1/bin/go", "env", "CGO_ENABLED"], "event": "owned_go_child_start_ack", "operation": "go-child-0036", "original_whole_deadline_monotonic": 173217.30429753, "parent_operation": "partition-shared-race", "pgid": 4094347, "pid": 4094350, "remaining_whole_seconds": 1444.8173081790155, "root": "/tmp/lerna-ci-partition-durable-race-execution", "starttime": "17177248"}
+{"actual_wait_confirmed": true, "event": "owned_go_child_completion_ack", "exit": 0, "operation": "go-child-0036", "original_pid_generation_absent": true, "original_whole_deadline_monotonic": 173217.30429753, "parent_operation": "partition-shared-race", "pgid": 4094347, "pid": 4094350, "shared_group_absence_checked_only_after_whole_wait": true, "starttime": "17177248", "timed_out": false}
+{"argv": ["/home/agent/.local/toolchains/go1.27.1/bin/go", "env", "GOOS"], "event": "owned_go_child_start_ack", "operation": "go-child-0037", "original_whole_deadline_monotonic": 173217.30429753, "parent_operation": "partition-shared-race", "pgid": 4094347, "pid": 4094356, "remaining_whole_seconds": 1444.4866844470089, "root": "/tmp/lerna-ci-partition-durable-race-execution", "starttime": "17177281"}
+{"actual_wait_confirmed": true, "event": "owned_go_child_completion_ack", "exit": 0, "operation": "go-child-0037", "original_pid_generation_absent": true, "original_whole_deadline_monotonic": 173217.30429753, "parent_operation": "partition-shared-race", "pgid": 4094347, "pid": 4094356, "shared_group_absence_checked_only_after_whole_wait": true, "starttime": "17177281", "timed_out": false}
+{"argv": ["/home/agent/.local/toolchains/go1.27.1/bin/go", "test", "-p=1", "-count=1", "-race", "-tags=integration", "-timeout=120s", "./conformance/recovery/..."], "event": "owned_go_child_start_ack", "operation": "go-child-0038", "original_whole_deadline_monotonic": 173217.30429753, "parent_operation": "partition-shared-race", "pgid": 4094347, "pid": 4094369, "remaining_whole_seconds": 1444.1677398270112, "root": "/tmp/lerna-ci-partition-durable-race-execution", "starttime": "17177313"}
+postgres lerna_test_0f1fdef3a92111444a564d8d
+postgres lerna_test_8b243ec834c2f28ce2e7e235
+postgres lerna_test_ebf64984d5a4e7690b96a9d8
+postgres lerna_test_a853385f1eaee91e6a8172e9
+postgres lerna_test_7291dc0e8ac778f5d133041f
+postgres lerna_test_0a2ff85f33f77ce227b5e357
+postgres lerna_test_a90d65323dc90a74231f928b
+postgres lerna_test_efb3a5657e4a22d5daf00d51
+postgres lerna_test_733b19b942709df54d1362d8
+postgres lerna_test_d478948d60cf9d09e781cabd
+postgres lerna_test_99e559a947d293a305d78dba
+postgres lerna_test_fe2a3eca6f1588e9ba958022
+postgres lerna_test_46606d7765fff911142033f7
+postgres lerna_test_59b99e26daed9beb14dcc717
+postgres lerna_test_ebce1ab95fc28a9f59a90f04
+postgres lerna_test_9258b9eaae3f350a827b3f5e
+postgres lerna_test_494538a38f5b97ffcecbd144
+postgres lerna_test_c8f432a7c85b332e10bf4148
+postgres lerna_test_c0b763af800b809682c73de4
+postgres lerna_test_423a3f52f3d4ca7ae5441a56
+postgres lerna_test_49bc7ffe9ad151b9884f1208
+postgres lerna_test_0c78268e3d92a9613543ddab
+postgres lerna_test_b923092689e1157e326309ac
+postgres lerna_test_9864a970092c81844481a444
+postgres lerna_test_58b1af6305ee132a88c85db1
+postgres lerna_test_549ab6827fed0f69e7d0d9b1
+postgres lerna_test_4858bc467a149d145672c37b
+postgres lerna_test_494c863ce49193382e548bc8
+postgres lerna_test_56ae970b4d61cdbe29370016
+postgres lerna_test_4695f5510d0e67f72d9120ff
+postgres lerna_test_411c76a0a300b0416045cc0d
+postgres lerna_test_0ffd9cc646f909733cccb341
+postgres lerna_test_82a554a12d497797305bb5f6
+postgres lerna_test_7d45ddc0d9d06762f95b8f15
+postgres lerna_test_be7a532ffc6c250822841fbf
+postgres lerna_test_e4b115fedc786a2a0948b64e
+postgres lerna_test_214184ec3b48bf6005394056
+postgres lerna_test_1b3c4adcce2129519329a3dd
+postgres lerna_test_b8caf81cd476946ddc4d1015
+postgres lerna_test_94f58fc1c18f7608e085a985
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-145442579
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-1103897840
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-645619889
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-2024775195
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-1268450838
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-1570167424
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-3474263629
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-1023973144
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-3274487955
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-4065046150
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-1100856895
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-2893508415
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-3166856686
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-3382563730
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-1252197031
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-3989657456
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-589872037
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-1744171711
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-3476893713
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-2823451314
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-3726706893
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-1384379936
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-3361224640
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-2874179093
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-3376365769
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-908593696
+postgres lerna_test_a95dc28ff8c5b951064de6c4
+postgres lerna_test_f50a000ee6de530287489b98
+postgres lerna_test_8c89b054d78f1d96b3d88455
+postgres lerna_test_62720d6b2f5c2077b519c505
+postgres lerna_test_f1e4165081e806e758966d65
+postgres lerna_test_e3b890957f922a3e87c9188b
+postgres lerna_test_589c8897d92e081ad552ece3
+postgres lerna_test_9c34e5820b60fa32638ef084
+postgres lerna_test_7db9a8894b4552ff3a60bbee
+postgres lerna_test_d9d0acf37d43faa6814fc960
+postgres lerna_test_b4009db1a19c5c068371aa2a
+postgres lerna_test_199bf656390408324fe36021
+postgres lerna_test_94d76f81eadd58b211ebc404
+postgres lerna_test_dd445124ac76f6a8a95bb3fd
+postgres lerna_test_ccab8ae74132224c2385975d
+postgres lerna_test_64a8b4124beda6a6776ceb38
+postgres lerna_test_f5ce49e1efb7c2bbd54441a6
+postgres lerna_test_f3c396f456abbb4446514ebf
+postgres lerna_test_141be4a3ef941e2f70e2c8d2
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-2241347932
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-928713071
+postgres lerna_test_3ac22e4ce1148d2bfb1d1f71
+postgres lerna_test_a7a00fee897776828ea6f732
+postgres lerna_test_b9c53f7ad1009fd7be5bb865
+postgres lerna_test_4eb986f5eb26f4334c164644
+postgres lerna_test_336d3baeb7887ad32b739653
+postgres lerna_test_2f8e5284eb1d861aa3374a8e
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-1806007259
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-2181661887
+postgres lerna_test_461df6e6dac855ade9140e87
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-2379344826
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-2479935516
+postgres lerna_test_da902186ac20083cdfbc90ee
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-2828368324
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-2328483798
+postgres lerna_test_1327c53edd588776b9d48c65
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-2608635293
+postgres lerna_test_e4bdff52e097f2c1776d2a1d
+postgres lerna_test_e660c1db3cccec9e9e857f22
+postgres lerna_test_7fd235b4c94e0f50d112b2cd
+postgres lerna_test_d82126127df82263e5c54710
+postgres lerna_test_ef16ef8aeb322d815d6283e3
+postgres lerna_test_17c094454fe615c871c93029
+postgres lerna_test_ebe60542bad6b1a2fd367704
+{"Event":"run_pg_role_intent","Schema":"lerna_test_ebe60542bad6b1a2fd367704","Role":"run","Application":"lerna_test_ebe60542bad6b1a2fd367704-run"}
+{"Event":"run_pg_role_intent","Schema":"lerna_test_ebe60542bad6b1a2fd367704","Role":"blocker","Application":"lerna_test_ebe60542bad6b1a2fd367704-blocker"}
+{"Event":"run_pg_role_intent","Schema":"lerna_test_ebe60542bad6b1a2fd367704","Role":"observer","Application":"lerna_test_ebe60542bad6b1a2fd367704-observer"}
+{"Event":"run_pg_backend_observed_after_startup_pre_run","Schema":"lerna_test_ebe60542bad6b1a2fd367704","Role":"observer","Backend":{"PID":677813,"Started":"2026-10-05T12:32:58.739551Z","Database":"lerna_durable_work_01_20261003","User":"lerna","Application":"lerna_test_ebe60542bad6b1a2fd367704-observer","State":"active"}}
+{"Event":"run_pg_backend_observed_after_startup_pre_run","Schema":"lerna_test_ebe60542bad6b1a2fd367704","Role":"run","Backend":{"PID":677811,"Started":"2026-10-05T12:32:58.585508Z","Database":"lerna_durable_work_01_20261003","User":"lerna","Application":"lerna_test_ebe60542bad6b1a2fd367704-run","State":"idle in transaction"}}
+{"Event":"run_pg_backend_observed_after_startup_pre_run","Schema":"lerna_test_ebe60542bad6b1a2fd367704","Role":"run","Backend":{"PID":677814,"Started":"2026-10-05T12:32:58.760813Z","Database":"lerna_durable_work_01_20261003","User":"lerna","Application":"lerna_test_ebe60542bad6b1a2fd367704-run","State":"idle in transaction"}}
+{"Event":"run_pg_backend_observed_after_startup_pre_run","Schema":"lerna_test_ebe60542bad6b1a2fd367704","Role":"run","Backend":{"PID":677815,"Started":"2026-10-05T12:32:58.761134Z","Database":"lerna_durable_work_01_20261003","User":"lerna","Application":"lerna_test_ebe60542bad6b1a2fd367704-run","State":"idle in transaction"}}
+{"Event":"run_pg_backend_observed_after_startup_pre_run","Schema":"lerna_test_ebe60542bad6b1a2fd367704","Role":"blocker","Backend":{"PID":677812,"Started":"2026-10-05T12:32:58.602958Z","Database":"lerna_durable_work_01_20261003","User":"lerna","Application":"lerna_test_ebe60542bad6b1a2fd367704-blocker","State":"idle"}}
+postgres lerna_test_c63d5e9fe22152b6b945438a
+{"Event":"run_pg_role_intent","Schema":"lerna_test_c63d5e9fe22152b6b945438a","Role":"run","Application":"lerna_test_c63d5e9fe22152b6b945438a-run"}
+{"Event":"run_pg_role_intent","Schema":"lerna_test_c63d5e9fe22152b6b945438a","Role":"blocker","Application":"lerna_test_c63d5e9fe22152b6b945438a-blocker"}
+{"Event":"run_pg_role_intent","Schema":"lerna_test_c63d5e9fe22152b6b945438a","Role":"observer","Application":"lerna_test_c63d5e9fe22152b6b945438a-observer"}
+{"Event":"run_pg_backend_observed_after_startup_pre_run","Schema":"lerna_test_c63d5e9fe22152b6b945438a","Role":"observer","Backend":{"PID":677830,"Started":"2026-10-05T12:32:59.456856Z","Database":"lerna_durable_work_01_20261003","User":"lerna","Application":"lerna_test_c63d5e9fe22152b6b945438a-observer","State":"active"}}
+{"Event":"run_pg_backend_observed_after_startup_pre_run","Schema":"lerna_test_c63d5e9fe22152b6b945438a","Role":"run","Backend":{"PID":677828,"Started":"2026-10-05T12:32:59.318251Z","Database":"lerna_durable_work_01_20261003","User":"lerna","Application":"lerna_test_c63d5e9fe22152b6b945438a-run","State":"idle in transaction"}}
+{"Event":"run_pg_backend_observed_after_startup_pre_run","Schema":"lerna_test_c63d5e9fe22152b6b945438a","Role":"run","Backend":{"PID":677831,"Started":"2026-10-05T12:32:59.477112Z","Database":"lerna_durable_work_01_20261003","User":"lerna","Application":"lerna_test_c63d5e9fe22152b6b945438a-run","State":"idle in transaction"}}
+{"Event":"run_pg_backend_observed_after_startup_pre_run","Schema":"lerna_test_c63d5e9fe22152b6b945438a","Role":"run","Backend":{"PID":677832,"Started":"2026-10-05T12:32:59.478444Z","Database":"lerna_durable_work_01_20261003","User":"lerna","Application":"lerna_test_c63d5e9fe22152b6b945438a-run","State":"idle in transaction"}}
+{"Event":"run_pg_backend_observed_after_startup_pre_run","Schema":"lerna_test_c63d5e9fe22152b6b945438a","Role":"blocker","Backend":{"PID":677829,"Started":"2026-10-05T12:32:59.33733Z","Database":"lerna_durable_work_01_20261003","User":"lerna","Application":"lerna_test_c63d5e9fe22152b6b945438a-blocker","State":"idle"}}
+postgres lerna_test_beb9ad45a0681a5adb329645
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-3716827849
+postgres lerna_test_2e367e079bf4069788b9d448
+postgres lerna_test_f3c24b591fc7ac31171bd389
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-2587550117
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-1774038227
+postgres lerna_test_d5243dd95ce475b1eb9eda34
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-1947363786
+postgres lerna_test_a0743d00d29a38ff17bb5252
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-2854252460
+postgres lerna_test_3a3fe5d190fdc6679967348e
+postgres lerna_test_5e1ed7c0bd61cb4605215649
+postgres lerna_test_5bff822aecaac796ecf6ddf4
+postgres lerna_test_455854b990b2ab54ffe30728
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-921902998
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-2521158667
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-1171829417
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-3515491968
+postgres lerna_test_da1d9e18b64d0d4ef8605057
+postgres lerna_test_8d5fd03d9f224b79b5cc1cfe
+postgres lerna_test_e3d45840e8be3cbc34d0c714
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-120554414
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-3449473333
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-3662271423
+postgres lerna_test_4b1f6557d2c49184a22a04d5
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-942606899
+postgres lerna_test_bc1c2f03511019a58cd48f55
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-2292828266
+postgres lerna_test_f8b8eb15cef86d0b9cfb23c3
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-503106128
+postgres lerna_test_6f453eb2495f995649c82ec7
+postgres lerna_test_3f211ecc8f1b4f931cf35b19
+postgres lerna_test_c05155adbb76581e5af26fa1
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-3748523735
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-3610631860
+postgres lerna_test_a94ae1cc010f229dc2072abc
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-1906523280
+postgres lerna_test_328624b5bf6d91e721d4d121
+postgres lerna_test_8b958313cadc0d49dafa3ce5
+postgres lerna_test_940b9799e6d8892da0d2d246
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-406727442
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-554515993
+postgres lerna_test_c19ecae8bebfa8e2bcdbff8c
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-1480082182
+postgres lerna_test_1e71b4bd7e65bc5915702a7c
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-947893513
+postgres lerna_test_412811451e12e18d9d5a2e4e
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-2926898654
+postgres lerna_test_a998b82e5ad68bae94eedd14
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-2368616613
+postgres lerna_test_8fd0dbac06e566fe81c70aa5
+postgres lerna_test_50a74435e98ae7286d3cfe4b
+postgres lerna_test_68d58d9b6e1e2ba688136657
+postgres lerna_test_4738f8930807f26d595e6b90
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-3673143123
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-3404559641
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-2598766775
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-1282801268
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-2180721029
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-129008540
+postgres lerna_test_f9b1b53d40dc46bc158f2f69
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-1996866406
+postgres lerna_test_ee687655d6b2cf16532e9343
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-495987237
+postgres lerna_test_fc085822e453ae882ea26298
+postgres lerna_test_ddfde49e24e332350181e7fd
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-243138999
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-928533743
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-2593053346
+postgres lerna_test_a5f6b63186a3719569687087
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-692492648
+postgres lerna_test_f8e2cc97400669f04a420869
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-3235552069
+postgres lerna_test_a5fd5c4547b4949b7e1c3e7c
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-2416143159
+postgres lerna_test_c0462858368a865b83799b8f
+postgres lerna_test_beaa148bf71a0c79c77129ec
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-2955518262
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-2800813780
+postgres lerna_test_9ddfabd16baffc4e896e3141
+postgres lerna_test_9a2eb6aaa37053fce3746242
+postgres lerna_test_81231f6338cb19544b549721
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-2530647396
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-3750186952
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-2171700503
+postgres lerna_test_ae75ce7bf4ae7de5faec851b
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-4229141468
+postgres lerna_test_f9155cdd7997090e0dd2fd21
+postgres lerna_test_9af5bbe1bf2875ef9379c58b
+postgres lerna_test_578f094ef5568769ab8104e7
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-1108635090
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-829274554
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-2839035943
+postgres lerna_test_f83d3c2fb970e13af9592b97
+postgres lerna_test_0bc665f94e28682ae35d98fa
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-2543360254
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-1554056578
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-1765871385
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-2289473832
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-1311303512
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-2603223433
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-2273379038
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-2814914282
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-3001828335
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-610804319
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-422208546
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-4036067240
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-732042521
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-3001578896
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-3605820751
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-2105236904
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-876999710
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-3708998266
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-2103522978
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-2118534266
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-3263437493
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-3893715973
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-1655213064
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-809396984
+postgres lerna_test_bac79dc9ab0304936f56ee5f
+postgres lerna_test_f46fd6cd3f2211070f1a9c91
+postgres lerna_test_46fa47a581f7e80f135eb152
+postgres lerna_test_ac959f24cae6fd623239bb9f
+postgres lerna_test_b624d808bd847912cfcd3308
+postgres lerna_test_8a0c5fa043aa1e64d59c62c7
+postgres lerna_test_51485f27d9ad07847a230d96
+postgres lerna_test_5a0f324d37dbe1511fc06a51
+postgres lerna_test_b3c4792483f56f60f600ebbd
+postgres lerna_test_f09c252a0aa90d12c283a4ea
+postgres lerna_test_eccabc47cb3456f6adcb7916
+postgres lerna_test_c13d943d11fa7351f7f7b7de
+postgres lerna_test_397f904acdace80ed9cb0506
+postgres lerna_test_2829435401df8d0322bfcb26
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-3846894112
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-3688783983
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-4041535052
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-2152808721
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-3366194167
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-2862533637
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-1754784676
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-653915911
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-3939868881
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-3298780274
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-3915881513
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-647492864
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-1146874144
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-105872726
+postgres lerna_test_a432383d1c7b2a0914a5cc04
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-2017727416
+postgres lerna_test_017dd9d134ff7f902fb87fae
+sqlite /tmp/lerna-ci-partition-durable-race-execution/lerna-owned-fixture-2987942657
+postgres lerna_test_4be353f6a0c6dccf464af0fa
+postgres lerna_test_001be8945a24760c5d203541
+{"actual_wait_confirmed": true, "event": "owned_go_child_completion_ack", "exit": 0, "operation": "go-child-0038", "original_pid_generation_absent": true, "original_whole_deadline_monotonic": 173217.30429753, "parent_operation": "partition-shared-race", "pgid": 4094347, "pid": 4094369, "shared_group_absence_checked_only_after_whole_wait": true, "starttime": "17177313", "timed_out": false}
+{"argv": ["/home/agent/.local/toolchains/go1.27.1/bin/go", "test", "-p=1", "-count=1", "-tags=integration", "-timeout=120s", "./conformance/component", "-list", "."], "event": "owned_go_child_start_ack", "operation": "go-child-0039", "original_whole_deadline_monotonic": 173217.30429753, "parent_operation": "partition-shared-race", "pgid": 4094347, "pid": 4097493, "remaining_whole_seconds": 1340.7554018369992, "root": "/tmp/lerna-ci-partition-durable-race-execution", "starttime": "17187654"}
+{"actual_wait_confirmed": true, "event": "owned_go_child_completion_ack", "exit": 0, "operation": "go-child-0039", "original_pid_generation_absent": true, "original_whole_deadline_monotonic": 173217.30429753, "parent_operation": "partition-shared-race", "pgid": 4094347, "pid": 4097493, "shared_group_absence_checked_only_after_whole_wait": true, "starttime": "17187654", "timed_out": false}
+{"argv": ["/home/agent/.local/toolchains/go1.27.1/bin/go", "test", "-p=1", "-count=1", "-race", "-tags=integration", "-timeout=120s", "./conformance/component", "-run", "^(TestContentFullClosureIncludesIntermediateVersionsAndExact64Bound)$"], "event": "owned_go_child_start_ack", "operation": "go-child-0040", "original_whole_deadline_monotonic": 173217.30429753, "parent_operation": "partition-shared-race", "pgid": 4094347, "pid": 4097574, "remaining_whole_seconds": 1339.248216300999, "root": "/tmp/lerna-ci-partition-durable-race-execution", "starttime": "17187805"}
+postgres lerna_test_ebc6bf33403f29e0cdb6b41d
+objects /tmp/lerna-ci-partition-durable-race-execution/lerna-content-objects-3488884010 33 477320
+{"actual_wait_confirmed": true, "event": "owned_go_child_completion_ack", "exit": 1, "operation": "go-child-0040", "original_pid_generation_absent": true, "original_whole_deadline_monotonic": 173217.30429753, "parent_operation": "partition-shared-race", "pgid": 4094347, "pid": 4097574, "shared_group_absence_checked_only_after_whole_wait": true, "starttime": "17187805", "timed_out": false}
+{"event": "native_completion_ack", "exit": 2, "group_absent": true, "operation": "partition-shared-race", "owned_raw_fsync_close_ack": true, "pgid": 4094347, "pid": 4094347, "starttime": "17177230", "timed_out": false}
+{"counter_after": 41, "current_group_absent": true, "event": "STATIC_STOP_LOCAL_RELEASE", "exit": 2, "operation": "partition-shared-race", "original_wait_confirmed": true, "release_path": "/tmp/lerna-ci-partition-durable-race-execution/sharedrace-release.json", "release_sha256": "6b9f578e09be3684514ed9484c9c3dd89614f70a9df12f7961287eb12eb47a00", "retained_UNKNOWN_FS": [[33, 431541], [33, 473830]], "root": "/tmp/lerna-ci-partition-durable-race-execution"}

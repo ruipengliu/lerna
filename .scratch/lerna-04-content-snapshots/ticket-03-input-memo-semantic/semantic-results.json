@@ -1,0 +1,141 @@
+{
+  "status": "STOP_RELEASE; complete finite183-line raw and formatdiff FULL read; no further native",
+  "actual_outcome_sha256": "7ba81569ce457b27ced5fa8a2a65d491a413d38239624871251e908821defe3b",
+  "source332_byteexact_pre_post": true,
+  "phase_summaries": [
+    {
+      "phase": "format",
+      "exit": 0,
+      "native": [
+        {
+          "pid": 4126582,
+          "pgid": 4126582,
+          "starttime": "17304109",
+          "started_ns": 1791204802743779632,
+          "args": [
+            "gofmt",
+            "-w",
+            "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-semantic-qualification-static/content_context_compile_budget_test.go.txt",
+            "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-semantic-qualification-static/content_context_budget_concurrency_test.go.txt",
+            "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-semantic-qualification-static/content_processing_policy_lock_timeout_test.go.txt"
+          ]
+        }
+      ],
+      "raw": {
+        "path": "/workspace/lerna-content-03-137311247276/context-input-memo-semantic-format.log",
+        "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+        "bytes": 39,
+        "lines": 1
+      },
+      "top_pass": [],
+      "sub_pass_count": 0,
+      "Wait_and_groupabsence_ACK": true,
+      "current_original_group_members": [],
+      "own_raw_fsync_firstClose_ACK": true,
+      "full_finite_raw_read": true
+    },
+    {
+      "phase": "normal",
+      "exit": 0,
+      "native": [
+        {
+          "pid": 4126600,
+          "pgid": 4126600,
+          "starttime": "17304127",
+          "started_ns": 1791204802932438303,
+          "args": [
+            "go",
+            "test",
+            "-v",
+            "-tags=integration",
+            "-p",
+            "1",
+            "-count=1",
+            "-timeout=120s",
+            "-overlay=/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-semantic-qualification-static/test-only-overlay-static.json",
+            "-run=^(TestContentContextInputRevisionKeepsOriginalRoundsAndRejectsWiderTuple|TestContentContextBudgetLockWaitRejectsOriginalDeadlineAfterRealLock|TestContentContextConcurrentBeginAdmitsOnlyLastOriginalRound|TestContentContextConcurrentReserveAdmitsOnlyOriginalSixBytes|TestContentContextDecodedBindingPreservesCurrentPolicyAndWorkerControl|TestContentProcessingRejectsTargetBodySeal|TestContentProcessingSealedAncestorAfterRealObjectRead|TestContentProcessingRechecksHiddenAncestorAfterRealObjectRead|TestContentClosureRecordWaitRechecksPolicyBeforeMetadata|TestContentClosurePolicyIntersectionUsesClockAfterRealPolicyLock|TestContentPolicyPortClockFollowsLockedRow|TestContentProcessingAncestorPolicyLockTimeoutPreservesNativeCause)$",
+            "./conformance/component"
+          ]
+        }
+      ],
+      "raw": {
+        "path": "/workspace/lerna-content-03-137311247276/context-input-memo-semantic-normal.log",
+        "sha256": "864c61cd44f4fda1b5e5f41337d92417ed509c45c816460f4d2679d0436fb2b6",
+        "bytes": 8106,
+        "lines": 91
+      },
+      "top_pass": [
+        "TestContentContextDecodedBindingPreservesCurrentPolicyAndWorkerControl",
+        "TestContentContextBudgetLockWaitRejectsOriginalDeadlineAfterRealLock",
+        "TestContentContextConcurrentBeginAdmitsOnlyLastOriginalRound",
+        "TestContentContextConcurrentReserveAdmitsOnlyOriginalSixBytes",
+        "TestContentContextInputRevisionKeepsOriginalRoundsAndRejectsWiderTuple",
+        "TestContentClosureRecordWaitRechecksPolicyBeforeMetadata",
+        "TestContentClosurePolicyIntersectionUsesClockAfterRealPolicyLock",
+        "TestContentPolicyPortClockFollowsLockedRow",
+        "TestContentProcessingRechecksHiddenAncestorAfterRealObjectRead",
+        "TestContentProcessingSealedAncestorAfterRealObjectRead",
+        "TestContentProcessingRejectsTargetBodySeal",
+        "TestContentProcessingAncestorPolicyLockTimeoutPreservesNativeCause"
+      ],
+      "sub_pass_count": 18,
+      "Wait_and_groupabsence_ACK": true,
+      "current_original_group_members": [],
+      "own_raw_fsync_firstClose_ACK": true,
+      "full_finite_raw_read": true
+    },
+    {
+      "phase": "race",
+      "exit": 0,
+      "native": [
+        {
+          "pid": 4127455,
+          "pgid": 4127455,
+          "starttime": "17306887",
+          "started_ns": 1791204830531307620,
+          "args": [
+            "go",
+            "test",
+            "-race",
+            "-v",
+            "-tags=integration",
+            "-p",
+            "1",
+            "-count=1",
+            "-timeout=120s",
+            "-overlay=/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-semantic-qualification-static/test-only-overlay-static.json",
+            "-run=^(TestContentContextInputRevisionKeepsOriginalRoundsAndRejectsWiderTuple|TestContentContextBudgetLockWaitRejectsOriginalDeadlineAfterRealLock|TestContentContextConcurrentBeginAdmitsOnlyLastOriginalRound|TestContentContextConcurrentReserveAdmitsOnlyOriginalSixBytes|TestContentContextDecodedBindingPreservesCurrentPolicyAndWorkerControl|TestContentProcessingRejectsTargetBodySeal|TestContentProcessingSealedAncestorAfterRealObjectRead|TestContentProcessingRechecksHiddenAncestorAfterRealObjectRead|TestContentClosureRecordWaitRechecksPolicyBeforeMetadata|TestContentClosurePolicyIntersectionUsesClockAfterRealPolicyLock|TestContentPolicyPortClockFollowsLockedRow|TestContentProcessingAncestorPolicyLockTimeoutPreservesNativeCause)$",
+            "./conformance/component"
+          ]
+        }
+      ],
+      "raw": {
+        "path": "/workspace/lerna-content-03-137311247276/context-input-memo-semantic-race.log",
+        "sha256": "0dc6cf6a990a381998e184f1986c97801c3b1a79bca1ec04bd83c2bd6db3031e",
+        "bytes": 8106,
+        "lines": 91
+      },
+      "top_pass": [
+        "TestContentContextDecodedBindingPreservesCurrentPolicyAndWorkerControl",
+        "TestContentContextBudgetLockWaitRejectsOriginalDeadlineAfterRealLock",
+        "TestContentContextConcurrentBeginAdmitsOnlyLastOriginalRound",
+        "TestContentContextConcurrentReserveAdmitsOnlyOriginalSixBytes",
+        "TestContentContextInputRevisionKeepsOriginalRoundsAndRejectsWiderTuple",
+        "TestContentClosureRecordWaitRechecksPolicyBeforeMetadata",
+        "TestContentClosurePolicyIntersectionUsesClockAfterRealPolicyLock",
+        "TestContentPolicyPortClockFollowsLockedRow",
+        "TestContentProcessingRechecksHiddenAncestorAfterRealObjectRead",
+        "TestContentProcessingSealedAncestorAfterRealObjectRead",
+        "TestContentProcessingRejectsTargetBodySeal",
+        "TestContentProcessingAncestorPolicyLockTimeoutPreservesNativeCause"
+      ],
+      "sub_pass_count": 18,
+      "Wait_and_groupabsence_ACK": true,
+      "current_original_group_members": [],
+      "own_raw_fsync_firstClose_ACK": true,
+      "full_finite_raw_read": true
+    }
+  ],
+  "public_coverage": "Same dispatcher Input revision actual oldAttempt seq7 ErrChanged+empty+whole public budget unchanged before second realCompile; thirdReopen/fourthrefusal/cumulative18reads. Original budget realwait expired deadline2s with warm Input samecaller; concurrencysameoriginal3round/6bytes. Existing policy/expiry/BodySeal/postIO/processwithdrawal controls. New ancestor actualPG blocked normal/fault SQLSTATE55P03 nativecause, callerlive, zeroProcessingRead, actorjoined/releasefirstClose, publicalpha/fixedreceipts/publishedhist/recoveryreopen tails.",
+  "limits": "No network/TCP/transport-disconnect claim, no TrustedUntil-natural-expiry newtest, no currentAttempt downstreambranch coverage inferred from first revision refusal, no capacity/benefit proof. OriginalFD/Put UNKNOWN unchanged; processabsence is not aggregate holderClose ACK."
+}

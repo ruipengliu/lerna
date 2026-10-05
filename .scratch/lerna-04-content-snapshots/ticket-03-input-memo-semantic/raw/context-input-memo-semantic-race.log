@@ -1,0 +1,91 @@
+=== RUN   TestContentContextDecodedBindingPreservesCurrentPolicyAndWorkerControl
+=== RUN   TestContentContextDecodedBindingPreservesCurrentPolicyAndWorkerControl/normal
+=== RUN   TestContentContextDecodedBindingPreservesCurrentPolicyAndWorkerControl/process
+=== RUN   TestContentContextDecodedBindingPreservesCurrentPolicyAndWorkerControl/worker-control
+--- PASS: TestContentContextDecodedBindingPreservesCurrentPolicyAndWorkerControl (9.95s)
+    --- PASS: TestContentContextDecodedBindingPreservesCurrentPolicyAndWorkerControl/normal (5.12s)
+    --- PASS: TestContentContextDecodedBindingPreservesCurrentPolicyAndWorkerControl/process (2.18s)
+    --- PASS: TestContentContextDecodedBindingPreservesCurrentPolicyAndWorkerControl/worker-control (2.65s)
+=== RUN   TestContentContextBudgetLockWaitRejectsOriginalDeadlineAfterRealLock
+=== RUN   TestContentContextBudgetLockWaitRejectsOriginalDeadlineAfterRealLock/normal
+=== NAME  TestContentContextBudgetLockWaitRejectsOriginalDeadlineAfterRealLock
+    content_context_budget_concurrency_test.go:152: real native waiter backend=683147 expired original deadline=2026-10-05T12:54:16.715379Z rounds=0 reserved=0
+--- PASS: TestContentContextBudgetLockWaitRejectsOriginalDeadlineAfterRealLock (6.35s)
+    --- PASS: TestContentContextBudgetLockWaitRejectsOriginalDeadlineAfterRealLock/normal (3.66s)
+=== RUN   TestContentContextConcurrentBeginAdmitsOnlyLastOriginalRound
+    content_context_budget_concurrency_test.go:218: actual original last-round contenders=2 accepted=1 refused=1 rounds=3
+--- PASS: TestContentContextConcurrentBeginAdmitsOnlyLastOriginalRound (1.01s)
+=== RUN   TestContentContextConcurrentReserveAdmitsOnlyOriginalSixBytes
+    content_context_budget_concurrency_test.go:289: actual original read contenders=2 accepted=1 refused=1 reserved=6 confirmed=6 physical_reads=1
+--- PASS: TestContentContextConcurrentReserveAdmitsOnlyOriginalSixBytes (0.88s)
+=== RUN   TestContentContextInputRevisionKeepsOriginalRoundsAndRejectsWiderTuple
+    content_context_compile_budget_test.go:389: same Snapshot input revision rounds=3 reserved=27926 confirmed=27926 unknown=0 reads=18 original_limit=65536
+--- PASS: TestContentContextInputRevisionKeepsOriginalRoundsAndRejectsWiderTuple (4.29s)
+=== RUN   TestContentClosureRecordWaitRechecksPolicyBeforeMetadata
+=== RUN   TestContentClosureRecordWaitRechecksPolicyBeforeMetadata/missing=false/late=false
+=== RUN   TestContentClosureRecordWaitRechecksPolicyBeforeMetadata/missing=false/late=true
+=== RUN   TestContentClosureRecordWaitRechecksPolicyBeforeMetadata/missing=true/late=false
+=== RUN   TestContentClosureRecordWaitRechecksPolicyBeforeMetadata/missing=true/late=true
+--- PASS: TestContentClosureRecordWaitRechecksPolicyBeforeMetadata (2.78s)
+    --- PASS: TestContentClosureRecordWaitRechecksPolicyBeforeMetadata/missing=false/late=false (0.38s)
+    --- PASS: TestContentClosureRecordWaitRechecksPolicyBeforeMetadata/missing=false/late=true (0.99s)
+    --- PASS: TestContentClosureRecordWaitRechecksPolicyBeforeMetadata/missing=true/late=false (0.51s)
+    --- PASS: TestContentClosureRecordWaitRechecksPolicyBeforeMetadata/missing=true/late=true (0.89s)
+=== RUN   TestContentClosurePolicyIntersectionUsesClockAfterRealPolicyLock
+=== RUN   TestContentClosurePolicyIntersectionUsesClockAfterRealPolicyLock/late=false
+=== RUN   TestContentClosurePolicyIntersectionUsesClockAfterRealPolicyLock/late=true
+--- PASS: TestContentClosurePolicyIntersectionUsesClockAfterRealPolicyLock (1.54s)
+    --- PASS: TestContentClosurePolicyIntersectionUsesClockAfterRealPolicyLock/late=false (0.49s)
+    --- PASS: TestContentClosurePolicyIntersectionUsesClockAfterRealPolicyLock/late=true (1.05s)
+=== RUN   TestContentPolicyPortClockFollowsLockedRow
+=== RUN   TestContentPolicyPortClockFollowsLockedRow/late=false
+    content_policy_actions_test.go:341: mechanical PG execution plan (conditions omitted):
+        CTE Scan on locked_policy
+          Output: locked_policy.body, clock_timestamp()
+          CTE locked_policy
+            ->  LockRows
+                  Output: content_fixture_policies.body, content_fixture_policies.ctid
+                  ->  Index Scan using content_fixture_policies_pkey on lerna_test_69d24f7c4b26d1475ed28685.content_fixture_policies
+                        Output: content_fixture_policies.body, content_fixture_policies.ctid
+=== RUN   TestContentPolicyPortClockFollowsLockedRow/late=true
+    content_policy_actions_test.go:341: mechanical PG execution plan (conditions omitted):
+        CTE Scan on locked_policy
+          Output: locked_policy.body, clock_timestamp()
+          CTE locked_policy
+            ->  LockRows
+                  Output: content_fixture_policies.body, content_fixture_policies.ctid
+                  ->  Index Scan using content_fixture_policies_pkey on lerna_test_492b5cd532064e638933987c.content_fixture_policies
+                        Output: content_fixture_policies.body, content_fixture_policies.ctid
+--- PASS: TestContentPolicyPortClockFollowsLockedRow (1.08s)
+    --- PASS: TestContentPolicyPortClockFollowsLockedRow/late=false (0.26s)
+    --- PASS: TestContentPolicyPortClockFollowsLockedRow/late=true (0.82s)
+=== RUN   TestContentProcessingRechecksHiddenAncestorAfterRealObjectRead
+=== RUN   TestContentProcessingRechecksHiddenAncestorAfterRealObjectRead/permitted
+=== RUN   TestContentProcessingRechecksHiddenAncestorAfterRealObjectRead/ancestor-process-withdrawn
+--- PASS: TestContentProcessingRechecksHiddenAncestorAfterRealObjectRead (2.01s)
+    --- PASS: TestContentProcessingRechecksHiddenAncestorAfterRealObjectRead/permitted (1.12s)
+    --- PASS: TestContentProcessingRechecksHiddenAncestorAfterRealObjectRead/ancestor-process-withdrawn (0.89s)
+=== RUN   TestContentProcessingSealedAncestorAfterRealObjectRead
+    content_processing_ancestor_seal_test.go:184: actual ancestor Seal processing post-I/O cause=*errors.joinError:content processing forbidden
+        forbidden zero=true; reopened cause=*errors.joinError:content processing forbidden
+        forbidden zero=true
+--- PASS: TestContentProcessingSealedAncestorAfterRealObjectRead (1.07s)
+=== RUN   TestContentProcessingRejectsTargetBodySeal
+=== RUN   TestContentProcessingRejectsTargetBodySeal/seal-before-read
+    content_processing_body_seal_test.go:191: actual sealed processing before-reopen cause=*errors.errorString:content processing forbidden zero=true; reopened cause=*errors.errorString:content processing forbidden zero=true
+=== RUN   TestContentProcessingRejectsTargetBodySeal/seal-after-real-object-read
+    content_processing_body_seal_test.go:191: actual sealed processing before-reopen cause=*errors.errorString:content processing forbidden zero=true; reopened cause=*errors.errorString:content processing forbidden zero=true
+--- PASS: TestContentProcessingRejectsTargetBodySeal (1.20s)
+    --- PASS: TestContentProcessingRejectsTargetBodySeal/seal-before-read (0.62s)
+    --- PASS: TestContentProcessingRejectsTargetBodySeal/seal-after-real-object-read (0.58s)
+=== RUN   TestContentProcessingAncestorPolicyLockTimeoutPreservesNativeCause
+=== RUN   TestContentProcessingAncestorPolicyLockTimeoutPreservesNativeCause/normal-release
+    content_processing_policy_lock_timeout_test.go:140: actual ancestor policy blocked=true fault=false native_cause=<nil> SQLSTATE= caller_live=true actor_joined=true original_release_ACK=true read_zero=false
+=== RUN   TestContentProcessingAncestorPolicyLockTimeoutPreservesNativeCause/native-lock-timeout
+    content_processing_policy_lock_timeout_test.go:140: actual ancestor policy blocked=true fault=true native_cause=*pgconn.PgError SQLSTATE=55P03 caller_live=true actor_joined=true original_release_ACK=true read_zero=true
+--- PASS: TestContentProcessingAncestorPolicyLockTimeoutPreservesNativeCause (2.86s)
+    --- PASS: TestContentProcessingAncestorPolicyLockTimeoutPreservesNativeCause/normal-release (0.93s)
+    --- PASS: TestContentProcessingAncestorPolicyLockTimeoutPreservesNativeCause/native-lock-timeout (1.93s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/component	36.109s
+NATIVE_EXIT status=0 group_absent=True

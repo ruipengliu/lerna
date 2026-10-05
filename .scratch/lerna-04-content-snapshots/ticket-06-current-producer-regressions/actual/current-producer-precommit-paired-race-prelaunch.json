@@ -1,0 +1,27 @@
+{
+  "event": "native_start_ack",
+  "operation": "current-producer-precommit-paired-race",
+  "pid": 4109067,
+  "pgid": 4109067,
+  "starttime": "17236675",
+  "root": "/tmp/lerna-04-ticket06-execution",
+  "argv": [
+    "bash",
+    "-c",
+    ". /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local GOFLAGS=-mod=readonly; exec \"$@\"",
+    "owned-locked",
+    "go",
+    "test",
+    "-race",
+    "-tags=integration",
+    "-v",
+    "-count=1",
+    "-p=1",
+    "-mod=readonly",
+    "-timeout=120s",
+    "./conformance/component",
+    "-run",
+    "^TestContentSIGKILLBeforePublicationCommitRecoversOriginalStaging$"
+  ],
+  "deadline_seconds": 120
+}

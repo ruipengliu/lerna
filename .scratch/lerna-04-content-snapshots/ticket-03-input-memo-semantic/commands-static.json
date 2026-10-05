@@ -1,0 +1,63 @@
+{
+  "STATIC_only_no_native_grant": true,
+  "workdir": "/tmp/lerna-worktrees/content-snapshots-03",
+  "locked_environment": "source /workspace/.lerna-env/env.sh; GOTOOLCHAIN=local GOFLAGS=-mod=readonly",
+  "supervisor": "/workspace/lerna-content-03-137311247276/run-native.py",
+  "supervisor_sha256": "82c4e6a19e1aaabbd4a2412f89eb54c0b1690221f92d3ea826b05ca455a2042e",
+  "format": [
+    "gofmt",
+    "-w",
+    "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-semantic-qualification-static/content_context_compile_budget_test.go.txt",
+    "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-semantic-qualification-static/content_context_budget_concurrency_test.go.txt",
+    "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-semantic-qualification-static/content_processing_policy_lock_timeout_test.go.txt"
+  ],
+  "semantic_normal": [
+    "go",
+    "test",
+    "-v",
+    "-tags=integration",
+    "-p",
+    "1",
+    "-count=1",
+    "-timeout=120s",
+    "-overlay=/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-semantic-qualification-static/test-only-overlay-static.json",
+    "-run=^(TestContentContextInputRevisionKeepsOriginalRoundsAndRejectsWiderTuple|TestContentContextBudgetLockWaitRejectsOriginalDeadlineAfterRealLock|TestContentContextConcurrentBeginAdmitsOnlyLastOriginalRound|TestContentContextConcurrentReserveAdmitsOnlyOriginalSixBytes|TestContentContextDecodedBindingPreservesCurrentPolicyAndWorkerControl|TestContentProcessingRejectsTargetBodySeal|TestContentProcessingSealedAncestorAfterRealObjectRead|TestContentProcessingRechecksHiddenAncestorAfterRealObjectRead|TestContentClosureRecordWaitRechecksPolicyBeforeMetadata|TestContentClosurePolicyIntersectionUsesClockAfterRealPolicyLock|TestContentPolicyPortClockFollowsLockedRow|TestContentProcessingAncestorPolicyLockTimeoutPreservesNativeCause)$",
+    "./conformance/component"
+  ],
+  "semantic_race": [
+    "go",
+    "test",
+    "-race",
+    "-v",
+    "-tags=integration",
+    "-p",
+    "1",
+    "-count=1",
+    "-timeout=120s",
+    "-overlay=/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-semantic-qualification-static/test-only-overlay-static.json",
+    "-run=^(TestContentContextInputRevisionKeepsOriginalRoundsAndRejectsWiderTuple|TestContentContextBudgetLockWaitRejectsOriginalDeadlineAfterRealLock|TestContentContextConcurrentBeginAdmitsOnlyLastOriginalRound|TestContentContextConcurrentReserveAdmitsOnlyOriginalSixBytes|TestContentContextDecodedBindingPreservesCurrentPolicyAndWorkerControl|TestContentProcessingRejectsTargetBodySeal|TestContentProcessingSealedAncestorAfterRealObjectRead|TestContentProcessingRechecksHiddenAncestorAfterRealObjectRead|TestContentClosureRecordWaitRechecksPolicyBeforeMetadata|TestContentClosurePolicyIntersectionUsesClockAfterRealPolicyLock|TestContentPolicyPortClockFollowsLockedRow|TestContentProcessingAncestorPolicyLockTimeoutPreservesNativeCause)$",
+    "./conformance/component"
+  ],
+  "exact_selectors12": [
+    "TestContentContextInputRevisionKeepsOriginalRoundsAndRejectsWiderTuple",
+    "TestContentContextBudgetLockWaitRejectsOriginalDeadlineAfterRealLock",
+    "TestContentContextConcurrentBeginAdmitsOnlyLastOriginalRound",
+    "TestContentContextConcurrentReserveAdmitsOnlyOriginalSixBytes",
+    "TestContentContextDecodedBindingPreservesCurrentPolicyAndWorkerControl",
+    "TestContentProcessingRejectsTargetBodySeal",
+    "TestContentProcessingSealedAncestorAfterRealObjectRead",
+    "TestContentProcessingRechecksHiddenAncestorAfterRealObjectRead",
+    "TestContentClosureRecordWaitRechecksPolicyBeforeMetadata",
+    "TestContentClosurePolicyIntersectionUsesClockAfterRealPolicyLock",
+    "TestContentPolicyPortClockFollowsLockedRow",
+    "TestContentProcessingAncestorPolicyLockTimeoutPreservesNativeCause"
+  ],
+  "outer_seconds": 120,
+  "sequence": "Future explicit soleLOCAL rootgrant only threeowned testfmt -> normal12 -> onlyactualPASS/Wait/currentoriginalPGIDempty/wholeproduct332unchanged same12race; firstfailure STOP_RELEASE nofix/retry/budget increase. No capacity/profile/transportfaultmatrix.",
+  "future_logs": {
+    "format": "/workspace/lerna-content-03-137311247276/context-input-memo-semantic-format.log",
+    "normal": "/workspace/lerna-content-03-137311247276/context-input-memo-semantic-normal.log",
+    "race": "/workspace/lerna-content-03-137311247276/context-input-memo-semantic-race.log"
+  },
+  "product_source_format_or_override": false
+}

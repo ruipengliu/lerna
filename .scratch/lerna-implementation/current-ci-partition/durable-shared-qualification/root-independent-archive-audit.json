@@ -1,0 +1,16 @@
+{
+  "observed_utc": "2026-10-05T12:43:06.423678+00:00",
+  "payload61_source_and_copies_exact": true,
+  "payload_bytes": 642745,
+  "references_exact": 21,
+  "actual17_native_acks_verified": true,
+  "raw_normal68_and_race63_root_FULL": true,
+  "all17_argv_original_deadline_verified_separately": true,
+  "normal_actual12_pass_and_all201_exact_once_verified": true,
+  "race_actual5_first_closure_60s_fail_missing7_unexecuted": true,
+  "current_wholegroups_absent": true,
+  "protected2_unknown_devino_unchanged": true,
+  "catalog_audit_not_executed": true,
+  "logical_Close_not_inferred_from_absence": true,
+  "candidate_d0_not_delivered": true
+}

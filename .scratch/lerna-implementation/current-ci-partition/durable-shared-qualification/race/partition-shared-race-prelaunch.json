@@ -1,0 +1,14 @@
+{
+  "event": "native_start_ack",
+  "operation": "partition-shared-race",
+  "pid": 4094347,
+  "pgid": 4094347,
+  "starttime": "17177230",
+  "root": "/tmp/lerna-ci-partition-durable-race-execution",
+  "argv": [
+    "bash",
+    "-c",
+    "set -e; set -o pipefail; source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; export GOFLAGS=-mod=readonly; export PATH=/tmp/lerna-ci-partition-durable-race-execution/go-shim:$PATH; make test-integration-race"
+  ],
+  "deadline_seconds": 1445
+}

@@ -1,0 +1,491 @@
+{
+  "kind": "root byteexact actual15 regressions at c9a; pending cause fix/checks/audit/integration",
+  "observed_utc": "2026-10-05T12:54:26.127205+00:00",
+  "entries": [
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-durable-normal-control.log",
+      "destination_relative": "actual/current-producer-durable-normal-control.log",
+      "bytes": 757,
+      "sha256": "e2e64001e0c79297cae150a9d45f6f1d0409c0e7691c010de618ab23e00fd36e"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-durable-normal-control-prelaunch.json",
+      "destination_relative": "actual/current-producer-durable-normal-control-prelaunch.json",
+      "bytes": 647,
+      "sha256": "2ac64623465863a99b57e609bf810d0039e22b03ab5bccf53aa9b7156cba5f7c"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-durable-normal-control-outcome.json",
+      "destination_relative": "actual/current-producer-durable-normal-control-outcome.json",
+      "bytes": 257,
+      "sha256": "088a5c4932824530040f5afe1eafccc6d89afdcf9eb1479fb84932e8240ab6c5"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-durable-normal-control-postchecks.json",
+      "destination_relative": "actual/current-producer-durable-normal-control-postchecks.json",
+      "bytes": 7819,
+      "sha256": "55df6401400d849007f138bdbc7cc2c3ebee2653dd01a2531719aad22e5d68ef"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-durable-original-fault.log",
+      "destination_relative": "actual/current-producer-durable-original-fault.log",
+      "bytes": 1030,
+      "sha256": "e1c0c7cc59c34e5b3288322790b687a9390bf268435d0880e7c9eeca8df19fe6"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-durable-original-fault-prelaunch.json",
+      "destination_relative": "actual/current-producer-durable-original-fault-prelaunch.json",
+      "bytes": 667,
+      "sha256": "9023976ead6a38ea3e4803ff5ae7e19e102a8bbf67f129eb0c52fdf50c6d4a84"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-durable-original-fault-outcome.json",
+      "destination_relative": "actual/current-producer-durable-original-fault-outcome.json",
+      "bytes": 257,
+      "sha256": "a55fe0f85d6e95ee7f530bde0cf9da605e5fd5c2c42a4f6b9f8fc04ae4664b6b"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-durable-original-fault-postchecks.json",
+      "destination_relative": "actual/current-producer-durable-original-fault-postchecks.json",
+      "bytes": 9754,
+      "sha256": "3dfc66b4f452d2a7601350d61547aa865bef2cca67eafba6df3c70beb94445af"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-durable-paired-race.log",
+      "destination_relative": "actual/current-producer-durable-paired-race.log",
+      "bytes": 1335,
+      "sha256": "328dfcb2a1416bfe28cf3fb076d432dbdd58ddbf6623cf47cc1cccf5dac1306d"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-durable-paired-race-prelaunch.json",
+      "destination_relative": "actual/current-producer-durable-paired-race-prelaunch.json",
+      "bytes": 640,
+      "sha256": "5d63226a13b061899f989a6f0b177dc1c788e85c1e7bde2eaedd6e1f2ed65c80"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-durable-paired-race-outcome.json",
+      "destination_relative": "actual/current-producer-durable-paired-race-outcome.json",
+      "bytes": 254,
+      "sha256": "dc21ded6b8e922668d5d46ec49af14e9f8aa052c4e69f5dfea7ab50e80a2670d"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-durable-paired-race-postchecks.json",
+      "destination_relative": "actual/current-producer-durable-paired-race-postchecks.json",
+      "bytes": 10776,
+      "sha256": "8054e33b5ec839a395959fa26564bbcde02693e08a670f41550def318ff0a2bb"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-precommit-normal-control.log",
+      "destination_relative": "actual/current-producer-precommit-normal-control.log",
+      "bytes": 759,
+      "sha256": "90d4f212009bad65f2c79d1f2f65137295b861c920ace534d6249e869613e5d2"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-precommit-normal-control-prelaunch.json",
+      "destination_relative": "actual/current-producer-precommit-normal-control-prelaunch.json",
+      "bytes": 649,
+      "sha256": "8a88d65b2866d34759fa2dc4f2b38547c1178a110e7a9b923403eb8145dd6b8e"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-precommit-normal-control-outcome.json",
+      "destination_relative": "actual/current-producer-precommit-normal-control-outcome.json",
+      "bytes": 259,
+      "sha256": "206a7ee67537989b0315f8f0fcef3841707eabf123c486bc27da2f9a467d69ca"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-precommit-normal-control-postchecks.json",
+      "destination_relative": "actual/current-producer-precommit-normal-control-postchecks.json",
+      "bytes": 7823,
+      "sha256": "ac212cf83d21ad159b4b13eac1e8ed358873e3e07e6cf22681506d2a624e3556"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-precommit-original-fault.log",
+      "destination_relative": "actual/current-producer-precommit-original-fault.log",
+      "bytes": 1030,
+      "sha256": "f4c1e72fa06a421254850d34974a891f9bd6be19c624536059fd1ad7bb85eb3c"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-precommit-original-fault-prelaunch.json",
+      "destination_relative": "actual/current-producer-precommit-original-fault-prelaunch.json",
+      "bytes": 668,
+      "sha256": "8c0000f47a532a71ffcd94b6a935713887ac33aac78f7ab6d2346241ce77a84f"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-precommit-original-fault-outcome.json",
+      "destination_relative": "actual/current-producer-precommit-original-fault-outcome.json",
+      "bytes": 259,
+      "sha256": "b19a26835e2913dc6c42273ebc110bfcc4e2bc9162f94e35c9d3b85bf6414af2"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-precommit-original-fault-postchecks.json",
+      "destination_relative": "actual/current-producer-precommit-original-fault-postchecks.json",
+      "bytes": 9757,
+      "sha256": "e4c6cee0cf9164f97f32502ff0e492be8558fbe57ea4625579253cc081dfe3c6"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-precommit-paired-race.log",
+      "destination_relative": "actual/current-producer-precommit-paired-race.log",
+      "bytes": 1335,
+      "sha256": "a90d2af8161c7d2375db60fe7c180626409480ef17c25056712a9b9dbffa90f9"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-precommit-paired-race-prelaunch.json",
+      "destination_relative": "actual/current-producer-precommit-paired-race-prelaunch.json",
+      "bytes": 642,
+      "sha256": "20168794f4efc7ecd908165cc58e5267a29b89ed8dfe4fa903e91363deac00c7"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-precommit-paired-race-outcome.json",
+      "destination_relative": "actual/current-producer-precommit-paired-race-outcome.json",
+      "bytes": 256,
+      "sha256": "de8b1e0791f83708badbec0f3748c0839843906961859c121fb6af1fb8e5e6d4"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-precommit-paired-race-postchecks.json",
+      "destination_relative": "actual/current-producer-precommit-paired-race-postchecks.json",
+      "bytes": 10781,
+      "sha256": "3609da4a99c4ff4b7a18c4851bc6415a29fcfa0a19dc8c4c51835153b0af5dd1"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-postcommit-normal-control.log",
+      "destination_relative": "actual/current-producer-postcommit-normal-control.log",
+      "bytes": 776,
+      "sha256": "c401d87f5e3a9bc66c7ece93e383c13a359945cf995827ec7ab8b965241829f8"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-postcommit-normal-control-prelaunch.json",
+      "destination_relative": "actual/current-producer-postcommit-normal-control-prelaunch.json",
+      "bytes": 654,
+      "sha256": "edef53592b8944f9d968f8f3753005a34a2b2c0b1a84d806606eb189adab5492"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-postcommit-normal-control-outcome.json",
+      "destination_relative": "actual/current-producer-postcommit-normal-control-outcome.json",
+      "bytes": 260,
+      "sha256": "62cd612239b7716f335f9519201c5fe4b8a8fc01de8b34cf81a35e02ed2495c1"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-postcommit-normal-control-postchecks.json",
+      "destination_relative": "actual/current-producer-postcommit-normal-control-postchecks.json",
+      "bytes": 7830,
+      "sha256": "69d69dc506b63e298b485edf5af31c5ebe34ff08cea072b567ac79325a35e6b9"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-postcommit-original-fault.log",
+      "destination_relative": "actual/current-producer-postcommit-original-fault.log",
+      "bytes": 955,
+      "sha256": "dc400d789925851578c2dd5b86e5e343b583b0e3a2f44697c5d05775cc2b0897"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-postcommit-original-fault-prelaunch.json",
+      "destination_relative": "actual/current-producer-postcommit-original-fault-prelaunch.json",
+      "bytes": 685,
+      "sha256": "c630fed0e2120f22b04dfb0cf58df497098f0b637a858bb1d384634946384a8d"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-postcommit-original-fault-outcome.json",
+      "destination_relative": "actual/current-producer-postcommit-original-fault-outcome.json",
+      "bytes": 260,
+      "sha256": "a15a5b4fb7da1fa450d3647efbc84fe7e83776b8ed2e5e063a4ac8ac6e4945ea"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-postcommit-original-fault-postchecks.json",
+      "destination_relative": "actual/current-producer-postcommit-original-fault-postchecks.json",
+      "bytes": 8947,
+      "sha256": "8c5c4129d3dd081619de1f5d7dd9f9c2b37be9fbb16afb96e7660712b4102e04"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-postcommit-paired-race.log",
+      "destination_relative": "actual/current-producer-postcommit-paired-race.log",
+      "bytes": 1268,
+      "sha256": "f88bf3324ce0c375b286b36e73c3f70056c9f1666c37994e34fe5cb6cfc06503"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-postcommit-paired-race-prelaunch.json",
+      "destination_relative": "actual/current-producer-postcommit-paired-race-prelaunch.json",
+      "bytes": 647,
+      "sha256": "5469a3e594eb63c551a9cb1c202f70e887c0904105d46e2a353b28fa22454aa6"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-postcommit-paired-race-outcome.json",
+      "destination_relative": "actual/current-producer-postcommit-paired-race-outcome.json",
+      "bytes": 257,
+      "sha256": "9985a63fe7d7e64e42a31c90dddfa1b961fe87db5a401c5725b0417a0921458a"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-postcommit-paired-race-postchecks.json",
+      "destination_relative": "actual/current-producer-postcommit-paired-race-postchecks.json",
+      "bytes": 9971,
+      "sha256": "a3092f799fb693fc1fdbd3be5d303d710a6d567a3ab4cfbb21c46f8140050983"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-policy-orphan-normal-control.log",
+      "destination_relative": "actual/current-producer-policy-orphan-normal-control.log",
+      "bytes": 783,
+      "sha256": "2daaade5b7cc09ad888b742ce718762c59c4b41dc17c3118d1107eda77c5e808"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-policy-orphan-normal-control-prelaunch.json",
+      "destination_relative": "actual/current-producer-policy-orphan-normal-control-prelaunch.json",
+      "bytes": 658,
+      "sha256": "a9ad743d00e6d3198fb1ba02aee2d03a3c8dd2ade1553dc6e3b9348543ce96b5"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-policy-orphan-normal-control-outcome.json",
+      "destination_relative": "actual/current-producer-policy-orphan-normal-control-outcome.json",
+      "bytes": 263,
+      "sha256": "a086e71f931a3cdab0aa0b4d1f9827bfcdf55a63b3fa31422fc66791fb81baac"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-policy-orphan-normal-control-postchecks.json",
+      "destination_relative": "actual/current-producer-policy-orphan-normal-control-postchecks.json",
+      "bytes": 7836,
+      "sha256": "7fcc1fe36e2845f2741728eeff8ae98a5ed18a55f8cf5fc96c747e72342f1ff5"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-policy-orphan-original-fault.log",
+      "destination_relative": "actual/current-producer-policy-orphan-original-fault.log",
+      "bytes": 1166,
+      "sha256": "c1b35106dcfb056781a7c75134d8b891952094cc7667a1fccadb684b2158398a"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-policy-orphan-original-fault-prelaunch.json",
+      "destination_relative": "actual/current-producer-policy-orphan-original-fault-prelaunch.json",
+      "bytes": 680,
+      "sha256": "35b968631de7414a94b3ee805ea107347822a96efe5eee1fb27d886c66a31fcc"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-policy-orphan-original-fault-outcome.json",
+      "destination_relative": "actual/current-producer-policy-orphan-original-fault-outcome.json",
+      "bytes": 263,
+      "sha256": "bb372147e4362c70ff65957db41e2b8f574a53812006b8a92cc76b1aebe8c4a6"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-policy-orphan-original-fault-postchecks.json",
+      "destination_relative": "actual/current-producer-policy-orphan-original-fault-postchecks.json",
+      "bytes": 9774,
+      "sha256": "4258a9678174cad9937114f199dda3d14d8bb7aad34216c85a068c73501bd191"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-policy-orphan-paired-race.log",
+      "destination_relative": "actual/current-producer-policy-orphan-paired-race.log",
+      "bytes": 1482,
+      "sha256": "20f99596aa1c8e0cf7f8c11568d57b895e7b6209679afc1b47dca7370314bf68"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-policy-orphan-paired-race-prelaunch.json",
+      "destination_relative": "actual/current-producer-policy-orphan-paired-race-prelaunch.json",
+      "bytes": 651,
+      "sha256": "0c5fbf5c70c3c298ba46ec760cf32e2aa8265ae644f71f75b3d66a17c09b2caa"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-policy-orphan-paired-race-outcome.json",
+      "destination_relative": "actual/current-producer-policy-orphan-paired-race-outcome.json",
+      "bytes": 260,
+      "sha256": "00adbd014718490557b078a61d42a909cdb249f7f940a45e9dcbc9cc2ff87603"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-policy-orphan-paired-race-postchecks.json",
+      "destination_relative": "actual/current-producer-policy-orphan-paired-race-postchecks.json",
+      "bytes": 10798,
+      "sha256": "384e1a397e903a893a01187dc39659dd1e63a019eb7ca64b004fd6f150a47648"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-late-finish-normal-control.log",
+      "destination_relative": "actual/current-producer-late-finish-normal-control.log",
+      "bytes": 894,
+      "sha256": "e3beed2fafd639d2a75ce39b2035a5bb9b6fefa60dd0c1656b052cd2df867700"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-late-finish-normal-control-prelaunch.json",
+      "destination_relative": "actual/current-producer-late-finish-normal-control-prelaunch.json",
+      "bytes": 647,
+      "sha256": "c7103b32a50795a32da137879a58a961ee535b03188b1251ac5e3df8495ba1bf"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-late-finish-normal-control-outcome.json",
+      "destination_relative": "actual/current-producer-late-finish-normal-control-outcome.json",
+      "bytes": 261,
+      "sha256": "9933a43bdd9b8b51aa1736ac255a7a1655abbec5a0097cae078a01e1db8e231b"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-late-finish-normal-control-postchecks.json",
+      "destination_relative": "actual/current-producer-late-finish-normal-control-postchecks.json",
+      "bytes": 7822,
+      "sha256": "dada26ac5f68ed8d4b3a981ba8961fb0f973dd97a28c409dc3a05dc82e09e84a"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-late-finish-original-fault.log",
+      "destination_relative": "actual/current-producer-late-finish-original-fault.log",
+      "bytes": 1082,
+      "sha256": "0e6b70d3b3d6fa27e743e2decf68fd056db91bb5c34de8b9a85d0da0fe5c74e1"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-late-finish-original-fault-prelaunch.json",
+      "destination_relative": "actual/current-producer-late-finish-original-fault-prelaunch.json",
+      "bytes": 666,
+      "sha256": "23e02b4a770c8cc4ade3bc9a2f2e8b9c8ea5b13fe829c954dd098627d8380190"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-late-finish-original-fault-outcome.json",
+      "destination_relative": "actual/current-producer-late-finish-original-fault-outcome.json",
+      "bytes": 261,
+      "sha256": "5859ad81294e9d4fc2fe6f89c6089370b47ef00ef4b18276ec04ad1e549cc148"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-late-finish-original-fault-postchecks.json",
+      "destination_relative": "actual/current-producer-late-finish-original-fault-postchecks.json",
+      "bytes": 7846,
+      "sha256": "89c1c5d5592b577b81b44bc48a3c59a0e43e6c2aaadcb9b920508fdaa86c5684"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-late-finish-paired-race.log",
+      "destination_relative": "actual/current-producer-late-finish-paired-race.log",
+      "bytes": 1528,
+      "sha256": "c4d05ac55042ba314c433ad1dafc9f95e17c11018e6396a71679ec434e368ddf"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-late-finish-paired-race-prelaunch.json",
+      "destination_relative": "actual/current-producer-late-finish-paired-race-prelaunch.json",
+      "bytes": 640,
+      "sha256": "cdf17b5c1ffecdeb00c210a9ca62098b551e92f23b16c664e20a8b6eb51673af"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-late-finish-paired-race-outcome.json",
+      "destination_relative": "actual/current-producer-late-finish-paired-race-outcome.json",
+      "bytes": 258,
+      "sha256": "7ac680e091dd1d7a30b021a6fd401ad06861884a82c46459c32506baa74b34d9"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-late-finish-paired-race-postchecks.json",
+      "destination_relative": "actual/current-producer-late-finish-paired-race-postchecks.json",
+      "bytes": 8870,
+      "sha256": "709be93254138ae2d7be91895376fd5c7c84c7eecb8036c04443bb5b35fdbcf6"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-regression-compact-summary.md",
+      "destination_relative": "current-producer-regression-compact-summary.md",
+      "bytes": 5431,
+      "sha256": "f4c1ce919c2ea4877b178c693a25df53c8e6f9e48c9a849827da49c59a92890d"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-regression-v2-actual-summary.json",
+      "destination_relative": "current-producer-regression-v2-actual-summary.json",
+      "bytes": 77439,
+      "sha256": "4c34c33e7e8fc03da091d944c14e0d725b96ef5e7c97dd5cf1b316a335b17641"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-regression-v2-release.json",
+      "destination_relative": "current-producer-regression-v2-release.json",
+      "bytes": 2697,
+      "sha256": "65bb2f542629ad9f15462ce55bcbf8684c4090db3e18989e24344e8f8fc49a8d"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-regression-release.json",
+      "destination_relative": "current-producer-regression-release.json",
+      "bytes": 1877,
+      "sha256": "5502620475d39b518e4f2a3de2daca57576bc6f6f0873563f910a2a0dc15838a"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-regression-ledger-194-through-341.log",
+      "destination_relative": "current-producer-regression-ledger-194-through-341.log",
+      "bytes": 22515,
+      "sha256": "a2d8f664d21918b2df2ad77cd7335d6547d41c32af12f3063d3d1847121e6752"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/current-producer-regression-protected-current16.json",
+      "destination_relative": "current-producer-regression-protected-current16.json",
+      "bytes": 14365,
+      "sha256": "97af17159a6173830cb94c4f9d0a882dcc1bca47bbd60e29bead5422f5da2f18"
+    },
+    {
+      "source": "/tmp/lerna-04-ticket06-execution/late-put-formatted-26-manifest.json",
+      "destination_relative": "late-put-formatted-26-manifest.json",
+      "bytes": 6573,
+      "sha256": "df707faeff172b1e817d124d8813da2ae9f1d1e3da90daf782263d3ddbbd47bc"
+    },
+    {
+      "source": "/tmp/lerna-06-current-producer-postchecker-first-failure/original-postchecker-stdin.py",
+      "destination_relative": "first-failure/original-postchecker-stdin.py",
+      "bytes": 7052,
+      "sha256": "f3a96697f31bf115e554cfd901a44f14a3ae053570722892c9d115ea385e5672"
+    },
+    {
+      "source": "/tmp/lerna-06-current-producer-postchecker-first-failure/original-postchecker-tool-result.json",
+      "destination_relative": "first-failure/original-postchecker-tool-result.json",
+      "bytes": 1011,
+      "sha256": "7cccff749492351fc6e1fa2251763242196f31a424493bea1b18ee937fc6ac75"
+    },
+    {
+      "source": "/tmp/lerna-06-current-producer-postchecker-v2/checker.py",
+      "destination_relative": "v2-checker/checker.py",
+      "bytes": 8163,
+      "sha256": "f561182fd565162ccb90951f31d37cff6cb4ca6adc6f7ec95537e6663b1f9214"
+    },
+    {
+      "source": "/tmp/lerna-06-current-producer-postchecker-v2/checker-only.diff",
+      "destination_relative": "v2-checker/checker-only.diff",
+      "bytes": 2379,
+      "sha256": "4cf6e9920f07a87400c6c3659933a93d3a53561bc6bc29dcc27f69845ef4bab4"
+    },
+    {
+      "source": "/tmp/lerna-06-current-producer-postchecker-v2/plan.md",
+      "destination_relative": "v2-checker/plan.md",
+      "bytes": 5784,
+      "sha256": "498a7e3368695f1c59fc374edc603f68cdec16bbd569052066adf2ea115f4fa3"
+    },
+    {
+      "source": "/tmp/lerna-06-final-fixed-review/manifest.json",
+      "destination_relative": "review/manifest.json",
+      "bytes": 2317,
+      "sha256": "629746cc7e2a2d2ce61e30106b29bcfdf2011546231262eec1becbab92913ccc"
+    },
+    {
+      "source": "/tmp/lerna-06-final-standards-review.md",
+      "destination_relative": "review/lerna-06-final-standards-review.md",
+      "bytes": 2587,
+      "sha256": "538739723a8e99b95e70ca14f975e806381df606ef8ea02625c681d10201a096"
+    },
+    {
+      "source": "/tmp/lerna-06-final-spec-review.md",
+      "destination_relative": "review/lerna-06-final-spec-review.md",
+      "bytes": 3171,
+      "sha256": "346a31614c1aeb7ff42cb738f596aae971f2d989375f8a70d0688af3ee47153e"
+    },
+    {
+      "source": "/tmp/lerna-06-setup-cause-next-decision.md",
+      "destination_relative": "review/lerna-06-setup-cause-next-decision.md",
+      "bytes": 5978,
+      "sha256": "2e0a50228b09af75ce4351eeb85bcbd4c793382a34220492b9e4ec3aef119dbb"
+    },
+    {
+      "source": "/tmp/lerna-worktrees/content-snapshots-06/conformance/component/content_process_recovery_test.go",
+      "destination_relative": "source3/conformance/component/content_process_recovery_test.go.txt",
+      "bytes": 79561,
+      "sha256": "c9a098141d23cda9c40d210539384d7cfb17b0d6b4f0222c16d70577308ff7e5"
+    },
+    {
+      "source": "/tmp/lerna-worktrees/content-snapshots-06/conformance/internal/contentfixture/process_borrow.go",
+      "destination_relative": "source3/conformance/internal/contentfixture/process_borrow.go.txt",
+      "bytes": 4979,
+      "sha256": "ed46b35916b9e1577e4ca1e0ddaf411e3de9407b51cb6ed38f8425406766e972"
+    },
+    {
+      "source": "/tmp/lerna-worktrees/content-snapshots-06/conformance/internal/contentfixture/world.go",
+      "destination_relative": "source3/conformance/internal/contentfixture/world.go.txt",
+      "bytes": 6607,
+      "sha256": "3e38d89f988422eacfa1b6e22e25905cec1db246d418177e34eaf5758b6fc14d"
+    }
+  ],
+  "file_count": 79,
+  "bytes": 426796,
+  "raw15_root_FULL_lines": 157,
+  "raw_concatenation_not_duplicated": true,
+  "normal1_not_rerun": true,
+  "old8_plus_new8_firstClose_unknown_retained": true,
+  "catalog_not_audited": true,
+  "two_independent_axes_separate": true,
+  "Standards_P2_pending": "setup cause dropped; safe-wrapper decision adopted; private test-first planned",
+  "Standards_optional_P3": "KEEP",
+  "Spec_code_findings": 0
+}

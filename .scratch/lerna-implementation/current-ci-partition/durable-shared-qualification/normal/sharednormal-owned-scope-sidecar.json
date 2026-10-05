@@ -1,0 +1,6484 @@
+{
+  "kind": "actual sharednormal original scope interval STATIC census only",
+  "root": "/tmp/lerna-ci-partition-durable-normal-execution",
+  "interval_1based": [
+    1,
+    1081
+  ],
+  "ledger_sha256": "1f94f3f2b63695844c02b79fb4c1602fc4cf38c8cc9bba7efcaecd16fe8827fb",
+  "record_type_counts": {
+    "native_start_ack": 1,
+    "owned_go_child_start_ack": 12,
+    "owned_go_child_completion_ack": 12,
+    "postgres": 598,
+    "sqlite": 122,
+    "run_pg_role_intent": 6,
+    "run_pg_backend_observed_after_startup_pre_run": 10,
+    "objects": 180,
+    "fixture_unregistered_attempt_duty": 1,
+    "fixture_unregistered_attempt_inode": 1,
+    "fixture_unregistered_attempt_owner_removal": 1,
+    "frozen_content_build_scope": 4,
+    "frozen_content_compiler_prestart": 4,
+    "frozen_content_compiler_start_ack": 4,
+    "frozen_content_compiler_completion": 4,
+    "frozen_content_compiler_artifact": 4,
+    "legacy_original_prestart_duty": 4,
+    "legacy_original_start_ack": 4,
+    "legacy_original_published": 4,
+    "legacy_original_completion": 4,
+    "legacy_exact_scope_qualified": 4,
+    "pg_legacy_restore_connection": 3,
+    "pg_policy_connections": 29,
+    "pg_policy_holder": 32,
+    "fixture_object_file": 4,
+    "pg_scan_deadline_fault": 1,
+    "legacy_initial_short_upgrade_authorization": 1,
+    "fixture_nonempty_object": 1,
+    "directory": 3,
+    "process_group": 6,
+    "pg_migration_connection": 1,
+    "fixture_close_control": 3,
+    "object_child_prestart_duty": 3,
+    "object_child_start_ack": 3,
+    "object_child_logical_close_ack": 2,
+    "object_child_kernel_completion": 3,
+    "object_child_logical_close_unknown": 1,
+    "native_completion_ack": 1
+  },
+  "postgres_registration_records": [
+    {
+      "line": 7,
+      "schema": "lerna_test_611c9565068e641d45675ec5"
+    },
+    {
+      "line": 8,
+      "schema": "lerna_test_199f0dd8cc7224129bc0ceec"
+    },
+    {
+      "line": 9,
+      "schema": "lerna_test_2a72f797bd20dae5b317e31f"
+    },
+    {
+      "line": 10,
+      "schema": "lerna_test_440b0f3512d76c5655083107"
+    },
+    {
+      "line": 11,
+      "schema": "lerna_test_60bf66c6a72d192070b6cc46"
+    },
+    {
+      "line": 12,
+      "schema": "lerna_test_c6aee4f2ae937a6b7e6d66fe"
+    },
+    {
+      "line": 13,
+      "schema": "lerna_test_2f5a819dce1e574d7678a771"
+    },
+    {
+      "line": 14,
+      "schema": "lerna_test_f07dcc8c40d9425fbe6dd4c6"
+    },
+    {
+      "line": 15,
+      "schema": "lerna_test_0eab969ed6015851f993bffe"
+    },
+    {
+      "line": 16,
+      "schema": "lerna_test_1eef0203fc2adcddc1bfda7d"
+    },
+    {
+      "line": 17,
+      "schema": "lerna_test_ad2bcf175e53ac7b010558d7"
+    },
+    {
+      "line": 18,
+      "schema": "lerna_test_c7d23833013635f4355f22eb"
+    },
+    {
+      "line": 19,
+      "schema": "lerna_test_3546245ad80c74166b3f6e7c"
+    },
+    {
+      "line": 20,
+      "schema": "lerna_test_a95d93692d74698b9879a6b4"
+    },
+    {
+      "line": 21,
+      "schema": "lerna_test_25373172377a4456832789db"
+    },
+    {
+      "line": 22,
+      "schema": "lerna_test_baaefbc92f14911a29561227"
+    },
+    {
+      "line": 23,
+      "schema": "lerna_test_08d53f6463e63306e9f9e001"
+    },
+    {
+      "line": 24,
+      "schema": "lerna_test_c40a3dcb552f80310a48a4fd"
+    },
+    {
+      "line": 25,
+      "schema": "lerna_test_7af4e154806a4680fec67e23"
+    },
+    {
+      "line": 26,
+      "schema": "lerna_test_3039e0b84f57ed03310ce152"
+    },
+    {
+      "line": 27,
+      "schema": "lerna_test_29b708e7a5d85596e12b36a4"
+    },
+    {
+      "line": 28,
+      "schema": "lerna_test_770390812cd3624706e8322d"
+    },
+    {
+      "line": 29,
+      "schema": "lerna_test_4e60a093c11ca8d7ea6ed03d"
+    },
+    {
+      "line": 30,
+      "schema": "lerna_test_f96412304221f74f14828720"
+    },
+    {
+      "line": 31,
+      "schema": "lerna_test_f3badf6e1dba654bfd3f8928"
+    },
+    {
+      "line": 32,
+      "schema": "lerna_test_03aa674a7aee61be43d0a9c0"
+    },
+    {
+      "line": 33,
+      "schema": "lerna_test_784bb622f01a0a55da30cb79"
+    },
+    {
+      "line": 34,
+      "schema": "lerna_test_7ae7c20c21a4b7ca8a1c93a3"
+    },
+    {
+      "line": 35,
+      "schema": "lerna_test_545d6d05dedd743d0a39214a"
+    },
+    {
+      "line": 36,
+      "schema": "lerna_test_11b2809aaff191b9c2fce0ba"
+    },
+    {
+      "line": 37,
+      "schema": "lerna_test_652bf30ef53a045d2998acc2"
+    },
+    {
+      "line": 38,
+      "schema": "lerna_test_6eb41213748d339a59b0921d"
+    },
+    {
+      "line": 39,
+      "schema": "lerna_test_36e02fa1835740da1c2d6c91"
+    },
+    {
+      "line": 40,
+      "schema": "lerna_test_9557157cf9d083be86063c2f"
+    },
+    {
+      "line": 41,
+      "schema": "lerna_test_3e8095c0d87a18d23aee1e4f"
+    },
+    {
+      "line": 42,
+      "schema": "lerna_test_4a5873527b4de5f0e5fe5e4d"
+    },
+    {
+      "line": 43,
+      "schema": "lerna_test_e28398890c16db58cbac3665"
+    },
+    {
+      "line": 44,
+      "schema": "lerna_test_c511de34dc0bfa98ec2ae003"
+    },
+    {
+      "line": 45,
+      "schema": "lerna_test_a3d161a42fe9786383e77132"
+    },
+    {
+      "line": 46,
+      "schema": "lerna_test_3ffa7420bc703dab43d06f09"
+    },
+    {
+      "line": 73,
+      "schema": "lerna_test_eb646f4a70d3c679abbfbe77"
+    },
+    {
+      "line": 74,
+      "schema": "lerna_test_8ced9b67ac4896ff54a91e05"
+    },
+    {
+      "line": 75,
+      "schema": "lerna_test_8d796f314999d222dfc10116"
+    },
+    {
+      "line": 76,
+      "schema": "lerna_test_861b4090cd9149d495b1ea3f"
+    },
+    {
+      "line": 77,
+      "schema": "lerna_test_da98d51312b0590d91c1fd7c"
+    },
+    {
+      "line": 78,
+      "schema": "lerna_test_12f5223c403fc56c068a4b48"
+    },
+    {
+      "line": 79,
+      "schema": "lerna_test_c48aa0b3030c04f9cacfebb0"
+    },
+    {
+      "line": 80,
+      "schema": "lerna_test_cf8233266dfc0abd300600c6"
+    },
+    {
+      "line": 81,
+      "schema": "lerna_test_d76bd916c87fd561f69300e0"
+    },
+    {
+      "line": 82,
+      "schema": "lerna_test_2aa71588f140b19af475038d"
+    },
+    {
+      "line": 83,
+      "schema": "lerna_test_55ed02270d2a76794f683ebf"
+    },
+    {
+      "line": 84,
+      "schema": "lerna_test_e768c716e925eb2ba7201867"
+    },
+    {
+      "line": 85,
+      "schema": "lerna_test_790fde8f915a4f83b85d7e01"
+    },
+    {
+      "line": 86,
+      "schema": "lerna_test_8ccc28180c6f8f13814808f4"
+    },
+    {
+      "line": 87,
+      "schema": "lerna_test_bde98e4250019a026f4c88ed"
+    },
+    {
+      "line": 88,
+      "schema": "lerna_test_3f0335e8e1ac3a3e1927a85d"
+    },
+    {
+      "line": 89,
+      "schema": "lerna_test_e55477aff9c53dd6ffb51a3e"
+    },
+    {
+      "line": 90,
+      "schema": "lerna_test_2e5fad3d39938599e7c9c537"
+    },
+    {
+      "line": 91,
+      "schema": "lerna_test_48564dd11167e85d5126abb7"
+    },
+    {
+      "line": 94,
+      "schema": "lerna_test_715f6b9747cfb1d1a84ccaf7"
+    },
+    {
+      "line": 95,
+      "schema": "lerna_test_c84630fe5e8e565a2d77b909"
+    },
+    {
+      "line": 96,
+      "schema": "lerna_test_baf05968455167cf22026148"
+    },
+    {
+      "line": 97,
+      "schema": "lerna_test_02f49137c35a1383784def32"
+    },
+    {
+      "line": 98,
+      "schema": "lerna_test_c5d003ba09ec1bf7d84b7c2f"
+    },
+    {
+      "line": 99,
+      "schema": "lerna_test_2cc3e5ee90b5d5d948df6829"
+    },
+    {
+      "line": 102,
+      "schema": "lerna_test_635b4a3eaa4df6b68b166847"
+    },
+    {
+      "line": 105,
+      "schema": "lerna_test_8cfbc58ac50f211e71639080"
+    },
+    {
+      "line": 108,
+      "schema": "lerna_test_4c35af05fa037cc9551d672c"
+    },
+    {
+      "line": 110,
+      "schema": "lerna_test_44a12a50bf3539bfdbfdb712"
+    },
+    {
+      "line": 111,
+      "schema": "lerna_test_524a5f858ac81e3c66a57c5a"
+    },
+    {
+      "line": 112,
+      "schema": "lerna_test_b85d317d0617b95a5fb7c8ee"
+    },
+    {
+      "line": 113,
+      "schema": "lerna_test_c174ca37f7c54366a279762e"
+    },
+    {
+      "line": 114,
+      "schema": "lerna_test_c45c647be7aa10d79456c13e"
+    },
+    {
+      "line": 115,
+      "schema": "lerna_test_eaa508d1e095fe9cb3d6a6fe"
+    },
+    {
+      "line": 116,
+      "schema": "lerna_test_1418115440d3877b27a51837"
+    },
+    {
+      "line": 125,
+      "schema": "lerna_test_1b5ba1ade3d47d1d3d546228"
+    },
+    {
+      "line": 134,
+      "schema": "lerna_test_46ef3f89a36c03d467be2f10"
+    },
+    {
+      "line": 136,
+      "schema": "lerna_test_cac5f207811393891c1ed40f"
+    },
+    {
+      "line": 137,
+      "schema": "lerna_test_ccbd488fc13b6c46cdccadfc"
+    },
+    {
+      "line": 140,
+      "schema": "lerna_test_f29e1086a01e5a1b94dd548a"
+    },
+    {
+      "line": 142,
+      "schema": "lerna_test_ffed7fd8994634dbf5277f78"
+    },
+    {
+      "line": 144,
+      "schema": "lerna_test_b722643b36edc41c25ac3ee0"
+    },
+    {
+      "line": 145,
+      "schema": "lerna_test_bf17a3bf13f8929c54e7f166"
+    },
+    {
+      "line": 146,
+      "schema": "lerna_test_c315548cc951ebca7191ca0f"
+    },
+    {
+      "line": 147,
+      "schema": "lerna_test_eff0c6e62732a8f20d135aae"
+    },
+    {
+      "line": 152,
+      "schema": "lerna_test_9d292bb3597b4affd2133042"
+    },
+    {
+      "line": 153,
+      "schema": "lerna_test_1b86b06ef4452bd85f4b5405"
+    },
+    {
+      "line": 154,
+      "schema": "lerna_test_de8d83ebaf8b4e0d8bf715c7"
+    },
+    {
+      "line": 158,
+      "schema": "lerna_test_722aecc70cb8b49e9673ed0e"
+    },
+    {
+      "line": 160,
+      "schema": "lerna_test_c8cb0cea1aefd2b8890b694a"
+    },
+    {
+      "line": 162,
+      "schema": "lerna_test_c2ead38da51731221d2ef9ac"
+    },
+    {
+      "line": 164,
+      "schema": "lerna_test_4c0ab663a50eeaed730960d7"
+    },
+    {
+      "line": 165,
+      "schema": "lerna_test_5e79a0bd3947c636ca9261db"
+    },
+    {
+      "line": 166,
+      "schema": "lerna_test_5a445b51dbe4dcbbb00967da"
+    },
+    {
+      "line": 169,
+      "schema": "lerna_test_66bc5faa29a3814bd102c54e"
+    },
+    {
+      "line": 171,
+      "schema": "lerna_test_f5a2b8c546cebb55d34e04dc"
+    },
+    {
+      "line": 172,
+      "schema": "lerna_test_b0cf6012d411f70cc8f6a4dd"
+    },
+    {
+      "line": 173,
+      "schema": "lerna_test_55f5e0847badbd64b774a3ea"
+    },
+    {
+      "line": 176,
+      "schema": "lerna_test_4e3c5b101475c685f3c1c46b"
+    },
+    {
+      "line": 178,
+      "schema": "lerna_test_f99daf3f66b84f0d7dacfb57"
+    },
+    {
+      "line": 180,
+      "schema": "lerna_test_0b2feb03cd1483dc24b301dd"
+    },
+    {
+      "line": 182,
+      "schema": "lerna_test_ff85e85407a5098853badffa"
+    },
+    {
+      "line": 184,
+      "schema": "lerna_test_39eb40b259f1cff259491e80"
+    },
+    {
+      "line": 185,
+      "schema": "lerna_test_147605c7f53f690e008a33c4"
+    },
+    {
+      "line": 186,
+      "schema": "lerna_test_9e25f49602733e09f1b50f56"
+    },
+    {
+      "line": 187,
+      "schema": "lerna_test_96a6af45c098503ed00c267c"
+    },
+    {
+      "line": 194,
+      "schema": "lerna_test_8b449c78bfc2c181f9d1a14f"
+    },
+    {
+      "line": 196,
+      "schema": "lerna_test_331e8fdbb585693db34e953c"
+    },
+    {
+      "line": 198,
+      "schema": "lerna_test_f90d9067c4cf039985d4d712"
+    },
+    {
+      "line": 199,
+      "schema": "lerna_test_3a2ea0ad6739b31ac4be0bc2"
+    },
+    {
+      "line": 203,
+      "schema": "lerna_test_81e249b0733c3f9b3ff97e86"
+    },
+    {
+      "line": 205,
+      "schema": "lerna_test_e86428a53ee23e4be4b68321"
+    },
+    {
+      "line": 207,
+      "schema": "lerna_test_fe7921ca28651ead9a8a98c2"
+    },
+    {
+      "line": 209,
+      "schema": "lerna_test_789b8f46f9e4e81484b60a7b"
+    },
+    {
+      "line": 210,
+      "schema": "lerna_test_1e0acc1e67e87af4bf3594ed"
+    },
+    {
+      "line": 213,
+      "schema": "lerna_test_4e26ccd8a922043063d08150"
+    },
+    {
+      "line": 214,
+      "schema": "lerna_test_7e6f84b7deaee2530404ba63"
+    },
+    {
+      "line": 215,
+      "schema": "lerna_test_f8252ff9c95fb20218200b20"
+    },
+    {
+      "line": 219,
+      "schema": "lerna_test_dac38dd1967e2d95febf8f3b"
+    },
+    {
+      "line": 221,
+      "schema": "lerna_test_449deec249aa7c1a47435209"
+    },
+    {
+      "line": 222,
+      "schema": "lerna_test_2832fd110f7e38235e679d0e"
+    },
+    {
+      "line": 223,
+      "schema": "lerna_test_200dbb9afb9b588a3416f65c"
+    },
+    {
+      "line": 227,
+      "schema": "lerna_test_c9ff56736591772149b289cc"
+    },
+    {
+      "line": 228,
+      "schema": "lerna_test_51198ec326bde89667b26a3a"
+    },
+    {
+      "line": 253,
+      "schema": "lerna_test_d460a107a059694ed3cb9f65"
+    },
+    {
+      "line": 254,
+      "schema": "lerna_test_7ff3592b9eaa69aee3e96da0"
+    },
+    {
+      "line": 255,
+      "schema": "lerna_test_5f90c5da2e07ea53b9d8b7b4"
+    },
+    {
+      "line": 256,
+      "schema": "lerna_test_d3be24d805d9c13eeddf26db"
+    },
+    {
+      "line": 257,
+      "schema": "lerna_test_32df4e98146b28234cd1a977"
+    },
+    {
+      "line": 258,
+      "schema": "lerna_test_382d508df413cf3b4094117a"
+    },
+    {
+      "line": 259,
+      "schema": "lerna_test_2c7d99ccd05d4c8970fccf9d"
+    },
+    {
+      "line": 260,
+      "schema": "lerna_test_5f278e462c1bbe731c2f13ae"
+    },
+    {
+      "line": 261,
+      "schema": "lerna_test_fa2c401b3a08681ad4cec12d"
+    },
+    {
+      "line": 262,
+      "schema": "lerna_test_bf7f7b2a8a6d8517b2862c75"
+    },
+    {
+      "line": 263,
+      "schema": "lerna_test_2fa67a11453b304e2df9cff3"
+    },
+    {
+      "line": 264,
+      "schema": "lerna_test_a44e8758606bc72a3335804f"
+    },
+    {
+      "line": 265,
+      "schema": "lerna_test_086f146137d3d685c425b3a1"
+    },
+    {
+      "line": 266,
+      "schema": "lerna_test_73a9e055700a0a86ea77b3ce"
+    },
+    {
+      "line": 281,
+      "schema": "lerna_test_0a79ea13a296f5c473d71efc"
+    },
+    {
+      "line": 283,
+      "schema": "lerna_test_dfe350bcd396cc34e85842d0"
+    },
+    {
+      "line": 285,
+      "schema": "lerna_test_62588a3536da9258db6f064a"
+    },
+    {
+      "line": 286,
+      "schema": "lerna_test_34220cee13f0708fa17f1375"
+    },
+    {
+      "line": 291,
+      "schema": "lerna_test_77bf67d1db118512b3bea8ee"
+    },
+    {
+      "line": 295,
+      "schema": "lerna_test_95bf4789cca3e7d5fbd492b2"
+    },
+    {
+      "line": 297,
+      "schema": "lerna_test_8da448301be2fd81fb799403"
+    },
+    {
+      "line": 299,
+      "schema": "lerna_test_4efa50a41448ea739304777b"
+    },
+    {
+      "line": 301,
+      "schema": "lerna_test_a1c0f1395cd31791cbf23446"
+    },
+    {
+      "line": 303,
+      "schema": "lerna_test_7089581dbc4182fd43ef5a21"
+    },
+    {
+      "line": 308,
+      "schema": "lerna_test_f9894017fc250bd45bb80d39"
+    },
+    {
+      "line": 310,
+      "schema": "lerna_test_40b8865690f4db47bbac2d14"
+    },
+    {
+      "line": 312,
+      "schema": "lerna_test_5d584976e559ae4649a73715"
+    },
+    {
+      "line": 314,
+      "schema": "lerna_test_3aa10b96cd0ba8e328cb5bbe"
+    },
+    {
+      "line": 316,
+      "schema": "lerna_test_4cf3eb1afdb02c495b44471d"
+    },
+    {
+      "line": 318,
+      "schema": "lerna_test_30854c29faec8539abb8606a"
+    },
+    {
+      "line": 320,
+      "schema": "lerna_test_ac8a0cbc1890808ebc67662c"
+    },
+    {
+      "line": 322,
+      "schema": "lerna_test_65c625ccd478686617e07c99"
+    },
+    {
+      "line": 324,
+      "schema": "lerna_test_d46abaef3beb64886532786e"
+    },
+    {
+      "line": 326,
+      "schema": "lerna_test_2fe597d25d01fc758063ac13"
+    },
+    {
+      "line": 328,
+      "schema": "lerna_test_c99e5ba447e40032113b38e9"
+    },
+    {
+      "line": 330,
+      "schema": "lerna_test_56c76472eacb71d009b76b28"
+    },
+    {
+      "line": 332,
+      "schema": "lerna_test_48384a5bf1c59fb38d3793ef"
+    },
+    {
+      "line": 334,
+      "schema": "lerna_test_ebaef54071141121f92557e2"
+    },
+    {
+      "line": 346,
+      "schema": "lerna_test_8589c4bbb786089e75e6d7ac"
+    },
+    {
+      "line": 349,
+      "schema": "lerna_test_24cfd025f92f396e2aae5ef9"
+    },
+    {
+      "line": 351,
+      "schema": "lerna_test_506fb67473e8531812690150"
+    },
+    {
+      "line": 353,
+      "schema": "lerna_test_2a99471ed9144430c6008c35"
+    },
+    {
+      "line": 355,
+      "schema": "lerna_test_5f3268de09e05ecdbcbd76a4"
+    },
+    {
+      "line": 357,
+      "schema": "lerna_test_d8ebb211672bfa70807e4154"
+    },
+    {
+      "line": 359,
+      "schema": "lerna_test_dffe10d35c785de3136b2edb"
+    },
+    {
+      "line": 361,
+      "schema": "lerna_test_92b24ff8765deeec9ef2dcc3"
+    },
+    {
+      "line": 363,
+      "schema": "lerna_test_44e8617a877fff19272dcbdc"
+    },
+    {
+      "line": 365,
+      "schema": "lerna_test_e6c447d8ce1176a879386b20"
+    },
+    {
+      "line": 367,
+      "schema": "lerna_test_ee5608cf13841b5e5b691027"
+    },
+    {
+      "line": 369,
+      "schema": "lerna_test_9edf9762a9fdffea97b885d3"
+    },
+    {
+      "line": 371,
+      "schema": "lerna_test_0f6a0665812a2aa91428effa"
+    },
+    {
+      "line": 376,
+      "schema": "lerna_test_a0487333256984ab3871882e"
+    },
+    {
+      "line": 381,
+      "schema": "lerna_test_b0f185fb2b7b7240d875422a"
+    },
+    {
+      "line": 383,
+      "schema": "lerna_test_9b972028cb7ceb70cf7c35da"
+    },
+    {
+      "line": 385,
+      "schema": "lerna_test_93793dbccf4fdda46600c9cd"
+    },
+    {
+      "line": 387,
+      "schema": "lerna_test_b492bcabc2cb7e14f32ee554"
+    },
+    {
+      "line": 389,
+      "schema": "lerna_test_6c506e4819e276b9074b77c2"
+    },
+    {
+      "line": 391,
+      "schema": "lerna_test_1710848cd52626d29b0ef4f4"
+    },
+    {
+      "line": 393,
+      "schema": "lerna_test_5073c50d80ca910452d44ed0"
+    },
+    {
+      "line": 397,
+      "schema": "lerna_test_dfa7a280972153d733cfa8b4"
+    },
+    {
+      "line": 399,
+      "schema": "lerna_test_fcb61b7c0130192482ff75d3"
+    },
+    {
+      "line": 401,
+      "schema": "lerna_test_7e1b1a414657c400cc83b6f0"
+    },
+    {
+      "line": 403,
+      "schema": "lerna_test_dbc1c5575ec0ba4263aeaeb5"
+    },
+    {
+      "line": 405,
+      "schema": "lerna_test_383c8c76a4fd8912453a9d38"
+    },
+    {
+      "line": 409,
+      "schema": "lerna_test_d5ade8a2735ad9060105be74"
+    },
+    {
+      "line": 413,
+      "schema": "lerna_test_25f4f91e495883d047358384"
+    },
+    {
+      "line": 417,
+      "schema": "lerna_test_558ee2f796cab500d085a61d"
+    },
+    {
+      "line": 421,
+      "schema": "lerna_test_f3f45976ea3f5a0c7fb8b7f2"
+    },
+    {
+      "line": 423,
+      "schema": "lerna_test_99539d9da445aaf8dc6e6413"
+    },
+    {
+      "line": 427,
+      "schema": "lerna_test_ac9185da91d7931c65f3eeac"
+    },
+    {
+      "line": 431,
+      "schema": "lerna_test_9a4fd3af7e2acfc403ae5b7e"
+    },
+    {
+      "line": 435,
+      "schema": "lerna_test_92d4f7ce740098984973daad"
+    },
+    {
+      "line": 437,
+      "schema": "lerna_test_d01fa9f3a82f475d26a5329f"
+    },
+    {
+      "line": 439,
+      "schema": "lerna_test_fa7c5f6305206a94eb311b94"
+    },
+    {
+      "line": 441,
+      "schema": "lerna_test_ef7db1b0069985359214dfdf"
+    },
+    {
+      "line": 444,
+      "schema": "lerna_test_468119259241ecb904c39f8f"
+    },
+    {
+      "line": 446,
+      "schema": "lerna_test_cd7cdfaa821fd020e714306c"
+    },
+    {
+      "line": 449,
+      "schema": "lerna_test_7e08f5805ae997685b4e2cdf"
+    },
+    {
+      "line": 452,
+      "schema": "lerna_test_ac478eab92cae9003486f520"
+    },
+    {
+      "line": 454,
+      "schema": "lerna_test_9800ed2e8343d1b30372f418"
+    },
+    {
+      "line": 456,
+      "schema": "lerna_test_ecf0490076d7fbda3da83b97"
+    },
+    {
+      "line": 458,
+      "schema": "lerna_test_09bd11e0338558f6555f19e9"
+    },
+    {
+      "line": 460,
+      "schema": "lerna_test_c1f8f58fbc627fcfba367344"
+    },
+    {
+      "line": 462,
+      "schema": "lerna_test_2d80f6ecc04d877a0837cef8"
+    },
+    {
+      "line": 474,
+      "schema": "lerna_test_0f6b7fba25a8ea233586b728"
+    },
+    {
+      "line": 477,
+      "schema": "lerna_test_6a0cf115e6498daed5dc3fe3"
+    },
+    {
+      "line": 479,
+      "schema": "lerna_test_59d65f752308e4f0329d750b"
+    },
+    {
+      "line": 482,
+      "schema": "lerna_test_bbeb47d685c9efa0608012ad"
+    },
+    {
+      "line": 484,
+      "schema": "lerna_test_f74d768741ba78ade940c1b3"
+    },
+    {
+      "line": 486,
+      "schema": "lerna_test_540b07deae509e8c79991285"
+    },
+    {
+      "line": 488,
+      "schema": "lerna_test_a5b694a8331f5ae4417724f6"
+    },
+    {
+      "line": 490,
+      "schema": "lerna_test_c8d0fdc7e135928771dae080"
+    },
+    {
+      "line": 492,
+      "schema": "lerna_test_3c92ab4a195f344804711788"
+    },
+    {
+      "line": 494,
+      "schema": "lerna_test_ae783cfe82e5e5d276145af2"
+    },
+    {
+      "line": 496,
+      "schema": "lerna_test_ef35a1cdc95c4ac72c2c38a7"
+    },
+    {
+      "line": 498,
+      "schema": "lerna_test_68c3aab6990bdf0375032942"
+    },
+    {
+      "line": 500,
+      "schema": "lerna_test_887201b91660e402793c2d42"
+    },
+    {
+      "line": 502,
+      "schema": "lerna_test_5f3bae6c54a98795341a9098"
+    },
+    {
+      "line": 504,
+      "schema": "lerna_test_dc715c18d5b80c1b078278ba"
+    },
+    {
+      "line": 508,
+      "schema": "lerna_test_52f6a04e4f64402dee8e0490"
+    },
+    {
+      "line": 510,
+      "schema": "lerna_test_1a480938654a7b5b576aa9f8"
+    },
+    {
+      "line": 512,
+      "schema": "lerna_test_414980c4c4c3dc0e7ad8858b"
+    },
+    {
+      "line": 514,
+      "schema": "lerna_test_ab2b78efcb094f988c59b52b"
+    },
+    {
+      "line": 516,
+      "schema": "lerna_test_d6d6d20d55f8d1090036db5e"
+    },
+    {
+      "line": 518,
+      "schema": "lerna_test_f21b12f347d1833238ccc7e7"
+    },
+    {
+      "line": 522,
+      "schema": "lerna_test_5502996c68139b563c3fc0e2"
+    },
+    {
+      "line": 526,
+      "schema": "lerna_test_b57b34263000d257923195e4"
+    },
+    {
+      "line": 530,
+      "schema": "lerna_test_d8daa8b09b5329b40fd3792a"
+    },
+    {
+      "line": 534,
+      "schema": "lerna_test_2a6458710db01c2e10e093a1"
+    },
+    {
+      "line": 536,
+      "schema": "lerna_test_6d087e357109eae80e2fd5a6"
+    },
+    {
+      "line": 539,
+      "schema": "lerna_test_11d06919d053f0f29d21dca2"
+    },
+    {
+      "line": 541,
+      "schema": "lerna_test_3bb63c2b365d95d3f9b26a01"
+    },
+    {
+      "line": 543,
+      "schema": "lerna_test_3911c16e43a27c32de2a8d64"
+    },
+    {
+      "line": 545,
+      "schema": "lerna_test_6c4c80dd8fcdb866c895346f"
+    },
+    {
+      "line": 547,
+      "schema": "lerna_test_a6e7172ebea4673f13879ca8"
+    },
+    {
+      "line": 549,
+      "schema": "lerna_test_cbc736a61133bedd4eaa814c"
+    },
+    {
+      "line": 553,
+      "schema": "lerna_test_44fbb665deec8491b760368c"
+    },
+    {
+      "line": 555,
+      "schema": "lerna_test_cdd14e9b1aa00ad943cece05"
+    },
+    {
+      "line": 557,
+      "schema": "lerna_test_f93b43b3fa87f5d9c4e98db7"
+    },
+    {
+      "line": 559,
+      "schema": "lerna_test_18cd4ab08a5f90295aa69ede"
+    },
+    {
+      "line": 561,
+      "schema": "lerna_test_cf5698314cc09449c9313fba"
+    },
+    {
+      "line": 563,
+      "schema": "lerna_test_efb918a08757359b70f26e8d"
+    },
+    {
+      "line": 567,
+      "schema": "lerna_test_2467a5b5cf168c0bfa1aa9c8"
+    },
+    {
+      "line": 569,
+      "schema": "lerna_test_70f7db1b7114b05776798f13"
+    },
+    {
+      "line": 571,
+      "schema": "lerna_test_0de1a2e1db3d3fdb43051561"
+    },
+    {
+      "line": 573,
+      "schema": "lerna_test_81bc97e29408cd2c25c94466"
+    },
+    {
+      "line": 575,
+      "schema": "lerna_test_69db2959448d2fb7296e0290"
+    },
+    {
+      "line": 577,
+      "schema": "lerna_test_d7e9406754306374ae7d2e09"
+    },
+    {
+      "line": 579,
+      "schema": "lerna_test_5361cb5add4c6fe058c57f0e"
+    },
+    {
+      "line": 581,
+      "schema": "lerna_test_ba1e72e388def834860b0245"
+    },
+    {
+      "line": 583,
+      "schema": "lerna_test_074549b78e3028fd4a10f49e"
+    },
+    {
+      "line": 585,
+      "schema": "lerna_test_23eefd6b22efe0b5323736c2"
+    },
+    {
+      "line": 587,
+      "schema": "lerna_test_74b798bec8278900d7c5103b"
+    },
+    {
+      "line": 589,
+      "schema": "lerna_test_d028543e272cea701a90c1d4"
+    },
+    {
+      "line": 591,
+      "schema": "lerna_test_cedfa5a17509f53798a57003"
+    },
+    {
+      "line": 593,
+      "schema": "lerna_test_5f60834935dc1e67c3b73c2f"
+    },
+    {
+      "line": 595,
+      "schema": "lerna_test_da6331b4db408d861ff822bb"
+    },
+    {
+      "line": 608,
+      "schema": "lerna_test_59385be547c2254b2e453ed7"
+    },
+    {
+      "line": 620,
+      "schema": "lerna_test_e6d1cc563957bff62c25d7b5"
+    },
+    {
+      "line": 623,
+      "schema": "lerna_test_c054c2cd6ee3aa4e4637d06d"
+    },
+    {
+      "line": 626,
+      "schema": "lerna_test_eb691cc8f9b71e649706b580"
+    },
+    {
+      "line": 628,
+      "schema": "lerna_test_06968e9b7be3936bfe55e54f"
+    },
+    {
+      "line": 630,
+      "schema": "lerna_test_fe2c70a8dec08f6c55e2fd6d"
+    },
+    {
+      "line": 632,
+      "schema": "lerna_test_e2e32d1e8576a44bbc1f26ae"
+    },
+    {
+      "line": 634,
+      "schema": "lerna_test_903b3d8841ebfa9ac0d5bb98"
+    },
+    {
+      "line": 636,
+      "schema": "lerna_test_8185fe69281f60d3e3fb8740"
+    },
+    {
+      "line": 638,
+      "schema": "lerna_test_b0a4d84d71b97196e372d2b4"
+    },
+    {
+      "line": 640,
+      "schema": "lerna_test_eedaee4caaa5bd79cbeaa6ec"
+    },
+    {
+      "line": 642,
+      "schema": "lerna_test_95738bae676abda2d842b9b9"
+    },
+    {
+      "line": 644,
+      "schema": "lerna_test_35b8451fe6fd30a8b1ff5727"
+    },
+    {
+      "line": 646,
+      "schema": "lerna_test_ca1d09ea5824dcc9ddde9de6"
+    },
+    {
+      "line": 650,
+      "schema": "lerna_test_7ea6523c33344c1ceab13842"
+    },
+    {
+      "line": 654,
+      "schema": "lerna_test_16194175332b008404045f47"
+    },
+    {
+      "line": 658,
+      "schema": "lerna_test_67fbd6c5e7e857e558260082"
+    },
+    {
+      "line": 662,
+      "schema": "lerna_test_2c2138114f9204a17d39b765"
+    },
+    {
+      "line": 666,
+      "schema": "lerna_test_9eba168ddf23a4a96edec9be"
+    },
+    {
+      "line": 670,
+      "schema": "lerna_test_4dc025fc4431dca0eff7935b"
+    },
+    {
+      "line": 672,
+      "schema": "lerna_test_6d315d47bad5f40ed3d2c60a"
+    },
+    {
+      "line": 674,
+      "schema": "lerna_test_e87c23c6766360b9028ba5e8"
+    },
+    {
+      "line": 676,
+      "schema": "lerna_test_e029c15d6c994ec44a9c6c5c"
+    },
+    {
+      "line": 678,
+      "schema": "lerna_test_776c33358bf2ff094911ff05"
+    },
+    {
+      "line": 680,
+      "schema": "lerna_test_d452d75a45624367cee89661"
+    },
+    {
+      "line": 682,
+      "schema": "lerna_test_e29b62264789473cc458d508"
+    },
+    {
+      "line": 684,
+      "schema": "lerna_test_53f799be02bc1026be22c1a0"
+    },
+    {
+      "line": 686,
+      "schema": "lerna_test_cfef278145810d8697c89c3a"
+    },
+    {
+      "line": 688,
+      "schema": "lerna_test_ba4aa8b172fb4b63c4d6d5c7"
+    },
+    {
+      "line": 690,
+      "schema": "lerna_test_eb34046cd9e1b5276fa093d1"
+    },
+    {
+      "line": 692,
+      "schema": "lerna_test_b6a3e7edf43e8b31f47a7335"
+    },
+    {
+      "line": 694,
+      "schema": "lerna_test_f48f71f08f6fd1b012416b11"
+    },
+    {
+      "line": 698,
+      "schema": "lerna_test_728e76d623225b05aa021790"
+    },
+    {
+      "line": 700,
+      "schema": "lerna_test_ee9915bdf96b96a23d744d7a"
+    },
+    {
+      "line": 704,
+      "schema": "lerna_test_c7c732a8e881fc108e22a924"
+    },
+    {
+      "line": 706,
+      "schema": "lerna_test_d58c8ccd8afe06804a2afaef"
+    },
+    {
+      "line": 708,
+      "schema": "lerna_test_b625db5e845ee486fd16ab6b"
+    },
+    {
+      "line": 710,
+      "schema": "lerna_test_51a3c2026a662290ce0999fa"
+    },
+    {
+      "line": 712,
+      "schema": "lerna_test_68e1c5bcf3ab312c5c123e64"
+    },
+    {
+      "line": 716,
+      "schema": "lerna_test_748561cf41a5ad9c0b0bcbc0"
+    },
+    {
+      "line": 720,
+      "schema": "lerna_test_4074e086bb407ed271b95840"
+    },
+    {
+      "line": 724,
+      "schema": "lerna_test_0e8e02ae3da48d2ad28a7529"
+    },
+    {
+      "line": 728,
+      "schema": "lerna_test_4311d3b9e794411dfd6a83b1"
+    },
+    {
+      "line": 732,
+      "schema": "lerna_test_d747c0932d7700240c9367e5"
+    },
+    {
+      "line": 736,
+      "schema": "lerna_test_359f244d8fc1af34ce6368ce"
+    },
+    {
+      "line": 738,
+      "schema": "lerna_test_1a9b44278edd4fefb00b6773"
+    },
+    {
+      "line": 740,
+      "schema": "lerna_test_cfc4d8511dbda4db251f8971"
+    },
+    {
+      "line": 743,
+      "schema": "lerna_test_79da447e285093b0c5498f9a"
+    },
+    {
+      "line": 745,
+      "schema": "lerna_test_a6df6eb566998d6deaa5de57"
+    },
+    {
+      "line": 747,
+      "schema": "lerna_test_92f3914861b512c7d449bbf5"
+    },
+    {
+      "line": 751,
+      "schema": "lerna_test_a13e4cccd18a538963875304"
+    },
+    {
+      "line": 752,
+      "schema": "lerna_test_91ad0c788e560c2e178b8869"
+    },
+    {
+      "line": 753,
+      "schema": "lerna_test_ed2bd81d5c4fffa05b61affc"
+    },
+    {
+      "line": 754,
+      "schema": "lerna_test_a6b8f64aff67bfb892caf043"
+    },
+    {
+      "line": 755,
+      "schema": "lerna_test_51a86753a9b85aa4454bc991"
+    },
+    {
+      "line": 756,
+      "schema": "lerna_test_39771c50b7090d871815ac2c"
+    },
+    {
+      "line": 757,
+      "schema": "lerna_test_4af5e32551429b771dd963e1"
+    },
+    {
+      "line": 758,
+      "schema": "lerna_test_ca41a0bde1d2dc226529ea68"
+    },
+    {
+      "line": 759,
+      "schema": "lerna_test_6f6a8f24d71c6524a7342a32"
+    },
+    {
+      "line": 760,
+      "schema": "lerna_test_975a8ffbd9d3d4429447869f"
+    },
+    {
+      "line": 761,
+      "schema": "lerna_test_0d9099b6c9cca529fb92d341"
+    },
+    {
+      "line": 762,
+      "schema": "lerna_test_2aa766a6fd6622f3f282a2f8"
+    },
+    {
+      "line": 763,
+      "schema": "lerna_test_b44632f594753776ef0bf447"
+    },
+    {
+      "line": 764,
+      "schema": "lerna_test_4a798cbd5604b482e35771df"
+    },
+    {
+      "line": 765,
+      "schema": "lerna_test_5e83be1dec384817c22b51fd"
+    },
+    {
+      "line": 766,
+      "schema": "lerna_test_2d3e0c58c987e593b6e370ee"
+    },
+    {
+      "line": 767,
+      "schema": "lerna_test_5590f3c3948035bc900cee12"
+    },
+    {
+      "line": 768,
+      "schema": "lerna_test_e8fc38208959bff662b0b7b5"
+    },
+    {
+      "line": 769,
+      "schema": "lerna_test_8cf5c147964db2ce5f93a855"
+    },
+    {
+      "line": 770,
+      "schema": "lerna_test_3e650bc530c27f1883252a71"
+    },
+    {
+      "line": 771,
+      "schema": "lerna_test_6a87c798367aa6d60d782709"
+    },
+    {
+      "line": 772,
+      "schema": "lerna_test_10fcbbd451d64a62fa4f1ba2"
+    },
+    {
+      "line": 773,
+      "schema": "lerna_test_d0997576105ef41fefc2b1d4"
+    },
+    {
+      "line": 774,
+      "schema": "lerna_test_34f459318041710dddf33d6b"
+    },
+    {
+      "line": 775,
+      "schema": "lerna_test_f612459bb9febdf55fb679d1"
+    },
+    {
+      "line": 776,
+      "schema": "lerna_test_86166694df705c7eee4e365a"
+    },
+    {
+      "line": 777,
+      "schema": "lerna_test_65a8f9dd2b9d0c986179ca95"
+    },
+    {
+      "line": 778,
+      "schema": "lerna_test_98d0f8f88a1baf43b843fd9d"
+    },
+    {
+      "line": 779,
+      "schema": "lerna_test_4c754f40d371c09722b47d00"
+    },
+    {
+      "line": 780,
+      "schema": "lerna_test_a2594170e5a18eb51c1be861"
+    },
+    {
+      "line": 781,
+      "schema": "lerna_test_934c636bfc1ad9270689fbca"
+    },
+    {
+      "line": 782,
+      "schema": "lerna_test_87518adf0b64438d3abdccf8"
+    },
+    {
+      "line": 783,
+      "schema": "lerna_test_5686ab0e9bb11d42e745a9cd"
+    },
+    {
+      "line": 784,
+      "schema": "lerna_test_3af5cce9886cf9b056f52e8c"
+    },
+    {
+      "line": 785,
+      "schema": "lerna_test_77722f56b5a0ef20377d9b31"
+    },
+    {
+      "line": 786,
+      "schema": "lerna_test_193f77d44393ea00b96f931f"
+    },
+    {
+      "line": 787,
+      "schema": "lerna_test_24b25a4cd00060446b69a3fa"
+    },
+    {
+      "line": 788,
+      "schema": "lerna_test_99007cf66487181ac4b914fe"
+    },
+    {
+      "line": 789,
+      "schema": "lerna_test_5bdf1b453e4036dcad70046c"
+    },
+    {
+      "line": 790,
+      "schema": "lerna_test_b7250179dbb1ad008cec6ef0"
+    },
+    {
+      "line": 791,
+      "schema": "lerna_test_018fd01db46a3d48e4e94609"
+    },
+    {
+      "line": 792,
+      "schema": "lerna_test_39fbc65153cd9dc5388d44f0"
+    },
+    {
+      "line": 793,
+      "schema": "lerna_test_a2ffdc1c7c6862c69ae480cc"
+    },
+    {
+      "line": 794,
+      "schema": "lerna_test_d8508890ac26d211e2e0720d"
+    },
+    {
+      "line": 795,
+      "schema": "lerna_test_6e8cead3c3a43f11da102986"
+    },
+    {
+      "line": 796,
+      "schema": "lerna_test_0a88735c374de13652eb13a4"
+    },
+    {
+      "line": 797,
+      "schema": "lerna_test_9d84bd81483114defd15c264"
+    },
+    {
+      "line": 798,
+      "schema": "lerna_test_db5af9e50181f164491aadeb"
+    },
+    {
+      "line": 799,
+      "schema": "lerna_test_4eecfe8749888ce58bf715d1"
+    },
+    {
+      "line": 800,
+      "schema": "lerna_test_5d5a38be1472cdd3c14953b1"
+    },
+    {
+      "line": 801,
+      "schema": "lerna_test_15c8400e8ffcc706614fb02e"
+    },
+    {
+      "line": 802,
+      "schema": "lerna_test_45cb1efe0e5d988d78f57f8c"
+    },
+    {
+      "line": 803,
+      "schema": "lerna_test_b4009619370936ada5bd0a19"
+    },
+    {
+      "line": 804,
+      "schema": "lerna_test_3704c78f85ff235e97f9a5f0"
+    },
+    {
+      "line": 805,
+      "schema": "lerna_test_f17735dfd79af5d5b5309176"
+    },
+    {
+      "line": 806,
+      "schema": "lerna_test_dcc63ed4b2763bedd33fd3bd"
+    },
+    {
+      "line": 807,
+      "schema": "lerna_test_4c1ed846fe59816d6119b74f"
+    },
+    {
+      "line": 808,
+      "schema": "lerna_test_8c6bd217857cf906e5c3e7d7"
+    },
+    {
+      "line": 809,
+      "schema": "lerna_test_ed8cf24ca78f98f4ebc3aeae"
+    },
+    {
+      "line": 810,
+      "schema": "lerna_test_d260ddf7801d2d6f244eaec1"
+    },
+    {
+      "line": 811,
+      "schema": "lerna_test_126296fbe58f9f3e40ee22c1"
+    },
+    {
+      "line": 812,
+      "schema": "lerna_test_f0d78ddf10b3c80dbcf3e761"
+    },
+    {
+      "line": 813,
+      "schema": "lerna_test_5dc6239514875fba6303a534"
+    },
+    {
+      "line": 814,
+      "schema": "lerna_test_a25ccb3283bb62f3f4cf9245"
+    },
+    {
+      "line": 815,
+      "schema": "lerna_test_202575751facaf235a7f0ee2"
+    },
+    {
+      "line": 816,
+      "schema": "lerna_test_980f08c9a8afd3cfdcdf9f3c"
+    },
+    {
+      "line": 817,
+      "schema": "lerna_test_3bb3636f97053d6cc154536d"
+    },
+    {
+      "line": 818,
+      "schema": "lerna_test_f32d8b41e3da4a41a6f32616"
+    },
+    {
+      "line": 819,
+      "schema": "lerna_test_a87ec67d2637569b58906cfd"
+    },
+    {
+      "line": 820,
+      "schema": "lerna_test_ec633dfb72d0c067e03b8636"
+    },
+    {
+      "line": 821,
+      "schema": "lerna_test_2221daf1ca6c8c1eec57b2e1"
+    },
+    {
+      "line": 822,
+      "schema": "lerna_test_9d37f97458cce6101b25d857"
+    },
+    {
+      "line": 823,
+      "schema": "lerna_test_fbbc8929ea9c30cb560fdcbe"
+    },
+    {
+      "line": 824,
+      "schema": "lerna_test_5acbeeced566b21a696eb20f"
+    },
+    {
+      "line": 825,
+      "schema": "lerna_test_ac79b3fe46f081d05cfc8ef6"
+    },
+    {
+      "line": 826,
+      "schema": "lerna_test_59e0b156ecc18d47de2ccf28"
+    },
+    {
+      "line": 827,
+      "schema": "lerna_test_dd792639a900594385a414ef"
+    },
+    {
+      "line": 828,
+      "schema": "lerna_test_8e25bb88415dc647eb787ff4"
+    },
+    {
+      "line": 829,
+      "schema": "lerna_test_9b31a95d83863683217add5e"
+    },
+    {
+      "line": 830,
+      "schema": "lerna_test_f3f7a7a1c0245c17a822b153"
+    },
+    {
+      "line": 831,
+      "schema": "lerna_test_7a26ea95e147a40174b60dbd"
+    },
+    {
+      "line": 832,
+      "schema": "lerna_test_ffd1ea82ed8e76813519c58c"
+    },
+    {
+      "line": 833,
+      "schema": "lerna_test_cc40e0b2a3495424263982df"
+    },
+    {
+      "line": 834,
+      "schema": "lerna_test_53b1571bfd1d5bf5878c4854"
+    },
+    {
+      "line": 835,
+      "schema": "lerna_test_66a551a448f363d3d9bd9f7c"
+    },
+    {
+      "line": 836,
+      "schema": "lerna_test_297e4db90099091239721774"
+    },
+    {
+      "line": 837,
+      "schema": "lerna_test_c8cdbc7feb7ced3f060be1db"
+    },
+    {
+      "line": 838,
+      "schema": "lerna_test_d1450389567c4ed13d4ddd1d"
+    },
+    {
+      "line": 839,
+      "schema": "lerna_test_73273a7ada1511a9c6902f19"
+    },
+    {
+      "line": 840,
+      "schema": "lerna_test_518319a979ef9dfbfcc58d8e"
+    },
+    {
+      "line": 841,
+      "schema": "lerna_test_0dde4910337c1e114a1e2f01"
+    },
+    {
+      "line": 842,
+      "schema": "lerna_test_30fc9e7b612160ac757f88a6"
+    },
+    {
+      "line": 843,
+      "schema": "lerna_test_c1b2b764fcf357fd1374dd58"
+    },
+    {
+      "line": 844,
+      "schema": "lerna_test_0dd242396a54cdc94b2b8267"
+    },
+    {
+      "line": 845,
+      "schema": "lerna_test_30f8a6b8fa3819c19c226925"
+    },
+    {
+      "line": 846,
+      "schema": "lerna_test_55a5fffe97fe87877701888f"
+    },
+    {
+      "line": 847,
+      "schema": "lerna_test_9eecf6ce441114e37529cae9"
+    },
+    {
+      "line": 848,
+      "schema": "lerna_test_63316ea1b7da7aba36e75af0"
+    },
+    {
+      "line": 849,
+      "schema": "lerna_test_84970266cc3ae16787e03229"
+    },
+    {
+      "line": 850,
+      "schema": "lerna_test_d7907595349c590b9be49503"
+    },
+    {
+      "line": 851,
+      "schema": "lerna_test_be341e72dece50d15d84e0d3"
+    },
+    {
+      "line": 852,
+      "schema": "lerna_test_fbb15b5d4d60e66e7eead24a"
+    },
+    {
+      "line": 853,
+      "schema": "lerna_test_4b868bb131922f110327ad53"
+    },
+    {
+      "line": 854,
+      "schema": "lerna_test_f0ea09aab6ed0f60e18fab87"
+    },
+    {
+      "line": 855,
+      "schema": "lerna_test_ac3ef4a1888873985608ec09"
+    },
+    {
+      "line": 856,
+      "schema": "lerna_test_090fa604ed4cc6ad7ba0d819"
+    },
+    {
+      "line": 857,
+      "schema": "lerna_test_9f0a440bb6606c51d1b8556a"
+    },
+    {
+      "line": 858,
+      "schema": "lerna_test_7ef9e01934ded74fa4eed043"
+    },
+    {
+      "line": 861,
+      "schema": "lerna_test_dc43cce72eca835a7bd3416b"
+    },
+    {
+      "line": 862,
+      "schema": "lerna_test_a3b7444f3c476c0a05e7e405"
+    },
+    {
+      "line": 863,
+      "schema": "lerna_test_775b1241eb6c34f51f735be7"
+    },
+    {
+      "line": 864,
+      "schema": "lerna_test_d5f8783c82682e9bd39d67a5"
+    },
+    {
+      "line": 865,
+      "schema": "lerna_test_24a7baf181be9cb5267ceb3b"
+    },
+    {
+      "line": 866,
+      "schema": "lerna_test_87f1addb0765400a7bedfa19"
+    },
+    {
+      "line": 867,
+      "schema": "lerna_test_83f49bf72e56d29caa12a5f2"
+    },
+    {
+      "line": 868,
+      "schema": "lerna_test_d45a38b3ed2e1a46f901dc92"
+    },
+    {
+      "line": 869,
+      "schema": "lerna_test_d38a081e564fed9398ad53ac"
+    },
+    {
+      "line": 870,
+      "schema": "lerna_test_527984bfdf78d88ba5dff124"
+    },
+    {
+      "line": 871,
+      "schema": "lerna_test_c635d6e16ad50a6788c7586a"
+    },
+    {
+      "line": 872,
+      "schema": "lerna_test_eff5c3d70ba959c0def88f12"
+    },
+    {
+      "line": 873,
+      "schema": "lerna_test_65a1f1c4da08f7e53fab3a93"
+    },
+    {
+      "line": 874,
+      "schema": "lerna_test_7a9203cb1b7449d2f4a07ab5"
+    },
+    {
+      "line": 875,
+      "schema": "lerna_test_80f5228a86da2cbcacef1720"
+    },
+    {
+      "line": 876,
+      "schema": "lerna_test_ac46c8329b061478a96dd15b"
+    },
+    {
+      "line": 877,
+      "schema": "lerna_test_337d318ca5b11b08d5351bf8"
+    },
+    {
+      "line": 878,
+      "schema": "lerna_test_ffeb53301af5d4b92cffebfe"
+    },
+    {
+      "line": 879,
+      "schema": "lerna_test_bcbfdc98b7589004c4d4b789"
+    },
+    {
+      "line": 880,
+      "schema": "lerna_test_2a97ce56448ed52b44ac34be"
+    },
+    {
+      "line": 881,
+      "schema": "lerna_test_f4a0f44fa46870b37ae3d2db"
+    },
+    {
+      "line": 882,
+      "schema": "lerna_test_75b4a468e43fd9460bddfc5a"
+    },
+    {
+      "line": 883,
+      "schema": "lerna_test_81d81b74df76180771479c3c"
+    },
+    {
+      "line": 884,
+      "schema": "lerna_test_20e854f3a1e63ded15f75a8e"
+    },
+    {
+      "line": 885,
+      "schema": "lerna_test_120253264d70beae63ea2e6a"
+    },
+    {
+      "line": 886,
+      "schema": "lerna_test_68153aa44152aa6d96e09b0b"
+    },
+    {
+      "line": 887,
+      "schema": "lerna_test_f53337c8ecde630ca7ffe74f"
+    },
+    {
+      "line": 888,
+      "schema": "lerna_test_02e499081e0785ecea8880a7"
+    },
+    {
+      "line": 889,
+      "schema": "lerna_test_97dab106909d828cee3616e4"
+    },
+    {
+      "line": 890,
+      "schema": "lerna_test_0ff61f8c89ad0725ace4e27e"
+    },
+    {
+      "line": 891,
+      "schema": "lerna_test_67082760c77e1cf69f8e2842"
+    },
+    {
+      "line": 892,
+      "schema": "lerna_test_bebee1f4e4f01d25dc533a1f"
+    },
+    {
+      "line": 893,
+      "schema": "lerna_test_7cfad6005eb7ce14ae1d7286"
+    },
+    {
+      "line": 894,
+      "schema": "lerna_test_d4312252eae9df9a7294253d"
+    },
+    {
+      "line": 895,
+      "schema": "lerna_test_fb1c1e0121f07e004fc98664"
+    },
+    {
+      "line": 896,
+      "schema": "lerna_test_67e085d581cecd516995f05b"
+    },
+    {
+      "line": 897,
+      "schema": "lerna_test_cefa242ae61977c309531f7f"
+    },
+    {
+      "line": 898,
+      "schema": "lerna_test_fa86e0074d9355253e591372"
+    },
+    {
+      "line": 899,
+      "schema": "lerna_test_6adbd522102826fe41b2d765"
+    },
+    {
+      "line": 900,
+      "schema": "lerna_test_dc794ad19ec4891ff68bb697"
+    },
+    {
+      "line": 901,
+      "schema": "lerna_test_c678005dd48ccb636c55e9f4"
+    },
+    {
+      "line": 902,
+      "schema": "lerna_test_b36eeb87693ec8a0a30fd39f"
+    },
+    {
+      "line": 903,
+      "schema": "lerna_test_5bd5db93564063e4fff8b29d"
+    },
+    {
+      "line": 904,
+      "schema": "lerna_test_ccaec78de6db24cace2bac38"
+    },
+    {
+      "line": 905,
+      "schema": "lerna_test_1f3732ddf86ea44ee1f25f04"
+    },
+    {
+      "line": 906,
+      "schema": "lerna_test_8091f9941227e2770f574736"
+    },
+    {
+      "line": 907,
+      "schema": "lerna_test_258aee245648ad3b188f362c"
+    },
+    {
+      "line": 908,
+      "schema": "lerna_test_1335639c198b6235d477aa05"
+    },
+    {
+      "line": 909,
+      "schema": "lerna_test_8234f19df8e93439dff23d76"
+    },
+    {
+      "line": 910,
+      "schema": "lerna_test_082b62757b06732d3859433d"
+    },
+    {
+      "line": 911,
+      "schema": "lerna_test_6ff30350d7529220d3767662"
+    },
+    {
+      "line": 912,
+      "schema": "lerna_test_bcbedd158b4bda282be641a7"
+    },
+    {
+      "line": 913,
+      "schema": "lerna_test_fd62b7968d22390b1008861c"
+    },
+    {
+      "line": 914,
+      "schema": "lerna_test_7d5b00344a66effa31718f77"
+    },
+    {
+      "line": 915,
+      "schema": "lerna_test_68fc721a33bfdb49d1a3d317"
+    },
+    {
+      "line": 916,
+      "schema": "lerna_test_b649d932b7fc982573bfcc6e"
+    },
+    {
+      "line": 917,
+      "schema": "lerna_test_0e972482e6c751f79d7262b0"
+    },
+    {
+      "line": 918,
+      "schema": "lerna_test_44988df915fa7c216e0b8b9f"
+    },
+    {
+      "line": 919,
+      "schema": "lerna_test_ef0dd7079c3d26c494775de0"
+    },
+    {
+      "line": 920,
+      "schema": "lerna_test_cc77abf798c016848ece17ed"
+    },
+    {
+      "line": 921,
+      "schema": "lerna_test_696b77c0bd62c06da402c9e6"
+    },
+    {
+      "line": 922,
+      "schema": "lerna_test_6862372d538005decb4440f5"
+    },
+    {
+      "line": 923,
+      "schema": "lerna_test_d0a4ef7889a35b080c6af955"
+    },
+    {
+      "line": 924,
+      "schema": "lerna_test_6f431cc5b08458f310fa4294"
+    },
+    {
+      "line": 925,
+      "schema": "lerna_test_b94ece9e0bcf3f266dea2866"
+    },
+    {
+      "line": 926,
+      "schema": "lerna_test_485aca89c65521b36e971209"
+    },
+    {
+      "line": 927,
+      "schema": "lerna_test_c8e2edeca74bd81faf47e902"
+    },
+    {
+      "line": 928,
+      "schema": "lerna_test_2b1357b11b976153c7c447c2"
+    },
+    {
+      "line": 929,
+      "schema": "lerna_test_6b76de47c1a5af5f3fea79af"
+    },
+    {
+      "line": 930,
+      "schema": "lerna_test_edb2b2a05557024616a78835"
+    },
+    {
+      "line": 931,
+      "schema": "lerna_test_131db3006cad160f829e1023"
+    },
+    {
+      "line": 932,
+      "schema": "lerna_test_e7e79617932631345d17b93a"
+    },
+    {
+      "line": 933,
+      "schema": "lerna_test_4cb9fccb464863983f5c2022"
+    },
+    {
+      "line": 934,
+      "schema": "lerna_test_34ec567bd536086be008aff9"
+    },
+    {
+      "line": 935,
+      "schema": "lerna_test_602bcfb73c9c68107edef91e"
+    },
+    {
+      "line": 936,
+      "schema": "lerna_test_d6792e8caf3e2cab8b7525c6"
+    },
+    {
+      "line": 937,
+      "schema": "lerna_test_4109f7e5a2d759c9986f2b92"
+    },
+    {
+      "line": 938,
+      "schema": "lerna_test_71d838434a9d0e5bdabc20f3"
+    },
+    {
+      "line": 939,
+      "schema": "lerna_test_30f7be81bb14b511a2abf117"
+    },
+    {
+      "line": 940,
+      "schema": "lerna_test_d5647945aa58bc27db7c9d4f"
+    },
+    {
+      "line": 941,
+      "schema": "lerna_test_3379d724f93c875960b4de7c"
+    },
+    {
+      "line": 942,
+      "schema": "lerna_test_e15ca88c74c504f530f910f3"
+    },
+    {
+      "line": 943,
+      "schema": "lerna_test_bcc1f3ee03a4d98d2b38e17b"
+    },
+    {
+      "line": 944,
+      "schema": "lerna_test_822d7c21fef647cda344f303"
+    },
+    {
+      "line": 945,
+      "schema": "lerna_test_df13ca3d53f23b4e84c60e87"
+    },
+    {
+      "line": 946,
+      "schema": "lerna_test_02250e0f243410484823caf4"
+    },
+    {
+      "line": 947,
+      "schema": "lerna_test_2b5d4dd170363d8fb9ef7e71"
+    },
+    {
+      "line": 948,
+      "schema": "lerna_test_b74c8f099ff6f4b68df3e6fe"
+    },
+    {
+      "line": 949,
+      "schema": "lerna_test_bd98ef84e0d0ed2262212b3f"
+    },
+    {
+      "line": 950,
+      "schema": "lerna_test_eb6244e88412d52c64fb9de8"
+    },
+    {
+      "line": 951,
+      "schema": "lerna_test_9b3ca77992ec276125b60521"
+    },
+    {
+      "line": 952,
+      "schema": "lerna_test_591e2bef745aa6c21ecfe64f"
+    },
+    {
+      "line": 953,
+      "schema": "lerna_test_b72daf29b076aea7d70c50e7"
+    },
+    {
+      "line": 954,
+      "schema": "lerna_test_d928d53101acf40355ce2d48"
+    },
+    {
+      "line": 955,
+      "schema": "lerna_test_5f911e1ac0f58791d5565d1d"
+    },
+    {
+      "line": 956,
+      "schema": "lerna_test_b5ab32e7e55b31b210fa80b6"
+    },
+    {
+      "line": 957,
+      "schema": "lerna_test_506de776ba54dfbbc1bb68ff"
+    },
+    {
+      "line": 958,
+      "schema": "lerna_test_9ab28b6fc6339e201c2c1cfa"
+    },
+    {
+      "line": 959,
+      "schema": "lerna_test_5add788e51b399aa12c4061b"
+    },
+    {
+      "line": 960,
+      "schema": "lerna_test_97fd6ed981a1526d795b6096"
+    },
+    {
+      "line": 961,
+      "schema": "lerna_test_18403bb8901a5b389a67b54a"
+    },
+    {
+      "line": 962,
+      "schema": "lerna_test_05af87db30d1acac5b774384"
+    },
+    {
+      "line": 963,
+      "schema": "lerna_test_434798a13a703742d478c476"
+    },
+    {
+      "line": 964,
+      "schema": "lerna_test_5b331e7f79e0eb8d502cad8d"
+    },
+    {
+      "line": 965,
+      "schema": "lerna_test_719db689a4a4fffcf5fcb1ec"
+    },
+    {
+      "line": 966,
+      "schema": "lerna_test_2fef3770b221c390cdd43c95"
+    },
+    {
+      "line": 967,
+      "schema": "lerna_test_4cfdb145ca31ca31c3885de2"
+    },
+    {
+      "line": 968,
+      "schema": "lerna_test_031a4b1634c2573dc6accc95"
+    },
+    {
+      "line": 969,
+      "schema": "lerna_test_b3f165ab64f8a9ef7e0b5e75"
+    },
+    {
+      "line": 970,
+      "schema": "lerna_test_03e70c52316a07f16254991c"
+    },
+    {
+      "line": 971,
+      "schema": "lerna_test_eb354921a116429de84b3d55"
+    },
+    {
+      "line": 972,
+      "schema": "lerna_test_e3a4adfb16b7d9f5d664ca03"
+    },
+    {
+      "line": 973,
+      "schema": "lerna_test_f27b0fcecd23abfd164835bc"
+    },
+    {
+      "line": 974,
+      "schema": "lerna_test_35370c948f5c62679ed3605a"
+    },
+    {
+      "line": 975,
+      "schema": "lerna_test_4d3f742ef04e41739eb9189c"
+    },
+    {
+      "line": 976,
+      "schema": "lerna_test_9dcb7881a6b91e374ff12e38"
+    },
+    {
+      "line": 977,
+      "schema": "lerna_test_7c66c3920a3d446a22fb91e2"
+    },
+    {
+      "line": 978,
+      "schema": "lerna_test_5b45580ba2eb4d2c25f70a97"
+    },
+    {
+      "line": 979,
+      "schema": "lerna_test_1a0ba711c126e6ea9b68dd95"
+    },
+    {
+      "line": 980,
+      "schema": "lerna_test_88032deeff1aa5139261fe3b"
+    },
+    {
+      "line": 981,
+      "schema": "lerna_test_aaf1e0161688e67cfb35b0c3"
+    },
+    {
+      "line": 982,
+      "schema": "lerna_test_e30937f7895626e688080159"
+    },
+    {
+      "line": 990,
+      "schema": "lerna_test_8ee12aa62fa3295e10447ceb"
+    },
+    {
+      "line": 991,
+      "schema": "lerna_test_1f5f828fa5f81df26b285688"
+    },
+    {
+      "line": 992,
+      "schema": "lerna_test_6a50c13618fa45246d689891"
+    },
+    {
+      "line": 993,
+      "schema": "lerna_test_b049b03d2a52529051849c9f"
+    },
+    {
+      "line": 994,
+      "schema": "lerna_test_68a13f2dd94357968c1dcedc"
+    },
+    {
+      "line": 995,
+      "schema": "lerna_test_2aa920cf55382665b6af1802"
+    },
+    {
+      "line": 996,
+      "schema": "lerna_test_c1af77ddcdd4140e4196cef1"
+    },
+    {
+      "line": 997,
+      "schema": "lerna_test_3d0861e0e0fdd3751744b42b"
+    },
+    {
+      "line": 998,
+      "schema": "lerna_test_2e53d3329fe4b865f6e6150a"
+    },
+    {
+      "line": 999,
+      "schema": "lerna_test_d3215c4ec5ddffe228ac6a19"
+    },
+    {
+      "line": 1000,
+      "schema": "lerna_test_b56ce5c21f8495db9e12234a"
+    },
+    {
+      "line": 1001,
+      "schema": "lerna_test_497f630a859d8fb6e1056917"
+    },
+    {
+      "line": 1005,
+      "schema": "lerna_test_7c2045fd60eba38e29ed0f89"
+    },
+    {
+      "line": 1006,
+      "schema": "lerna_test_25fb3b031958f04daa8c39d8"
+    },
+    {
+      "line": 1007,
+      "schema": "lerna_test_82eceaca4b3ff4ca6dd3a6f9"
+    },
+    {
+      "line": 1008,
+      "schema": "lerna_test_96d491f911444b2d7894d01c"
+    },
+    {
+      "line": 1009,
+      "schema": "lerna_test_4b92a1b7fbaf3d7e66c96280"
+    },
+    {
+      "line": 1010,
+      "schema": "lerna_test_dcab62325d3eb4ae724fab6b"
+    },
+    {
+      "line": 1011,
+      "schema": "lerna_test_421ec9d937b8aab8c9143286"
+    },
+    {
+      "line": 1012,
+      "schema": "lerna_test_a06b141127ff3cc919d6413f"
+    },
+    {
+      "line": 1013,
+      "schema": "lerna_test_def37295dd1110fef9bd713f"
+    },
+    {
+      "line": 1014,
+      "schema": "lerna_test_f09083decc9d2ccc31b1b400"
+    },
+    {
+      "line": 1015,
+      "schema": "lerna_test_04325acdbaf3019706972a38"
+    },
+    {
+      "line": 1016,
+      "schema": "lerna_test_0a7ffad29355ca39dfdfe480"
+    },
+    {
+      "line": 1017,
+      "schema": "lerna_test_0a7ffad29355ca39dfdfe480"
+    },
+    {
+      "line": 1018,
+      "schema": "lerna_test_7c2045fd60eba38e29ed0f89"
+    },
+    {
+      "line": 1019,
+      "schema": "lerna_test_421ec9d937b8aab8c9143286"
+    },
+    {
+      "line": 1020,
+      "schema": "lerna_test_25fb3b031958f04daa8c39d8"
+    },
+    {
+      "line": 1021,
+      "schema": "lerna_test_82eceaca4b3ff4ca6dd3a6f9"
+    },
+    {
+      "line": 1022,
+      "schema": "lerna_test_a06b141127ff3cc919d6413f"
+    },
+    {
+      "line": 1023,
+      "schema": "lerna_test_def37295dd1110fef9bd713f"
+    },
+    {
+      "line": 1024,
+      "schema": "lerna_test_f09083decc9d2ccc31b1b400"
+    },
+    {
+      "line": 1025,
+      "schema": "lerna_test_96d491f911444b2d7894d01c"
+    },
+    {
+      "line": 1026,
+      "schema": "lerna_test_4b92a1b7fbaf3d7e66c96280"
+    },
+    {
+      "line": 1027,
+      "schema": "lerna_test_dcab62325d3eb4ae724fab6b"
+    },
+    {
+      "line": 1028,
+      "schema": "lerna_test_04325acdbaf3019706972a38"
+    },
+    {
+      "line": 1032,
+      "schema": "lerna_test_cf6f2f88733d272391b7ad08"
+    },
+    {
+      "line": 1033,
+      "schema": "lerna_test_98213d9bdf37324a188aadb7"
+    },
+    {
+      "line": 1034,
+      "schema": "lerna_test_4592b3af06ad1f003d639834"
+    },
+    {
+      "line": 1035,
+      "schema": "lerna_test_9e5b6fd72207f7af8bde286a"
+    },
+    {
+      "line": 1036,
+      "schema": "lerna_test_5b296fa8d31c567ef0f535f4"
+    },
+    {
+      "line": 1037,
+      "schema": "lerna_test_7ce1439248212355bd8d0e57"
+    },
+    {
+      "line": 1038,
+      "schema": "lerna_test_bd15c3d794ff02e5fe3e9f34"
+    },
+    {
+      "line": 1039,
+      "schema": "lerna_test_4c5bfd2edb7018436c5f8eb7"
+    },
+    {
+      "line": 1040,
+      "schema": "lerna_test_d7bce03edad5dd1b4852a60e"
+    },
+    {
+      "line": 1041,
+      "schema": "lerna_test_5af8248af74b4518294c72e5"
+    },
+    {
+      "line": 1042,
+      "schema": "lerna_test_ea6aad42f0c7af256b5ce2cd"
+    },
+    {
+      "line": 1043,
+      "schema": "lerna_test_e1be6b0a4fcd18680dcc6c07"
+    },
+    {
+      "line": 1044,
+      "schema": "lerna_test_f9de125fd50f66e5a97409e0"
+    },
+    {
+      "line": 1045,
+      "schema": "lerna_test_8b140eb475ed53197a07a2d5"
+    },
+    {
+      "line": 1046,
+      "schema": "lerna_test_6ef67fe9f8f05eb8db7182e3"
+    },
+    {
+      "line": 1047,
+      "schema": "lerna_test_4dfdaeb95d00a326d35b7e70"
+    },
+    {
+      "line": 1048,
+      "schema": "lerna_test_e40874e0079fe75a4a2956ed"
+    },
+    {
+      "line": 1049,
+      "schema": "lerna_test_a709c69b1ce5ef77e488149c"
+    },
+    {
+      "line": 1050,
+      "schema": "lerna_test_a3c8a4d1cbea260755e9104a"
+    },
+    {
+      "line": 1051,
+      "schema": "lerna_test_d1012e0634cd68743b672aea"
+    },
+    {
+      "line": 1052,
+      "schema": "lerna_test_46c22308060feef4d81171b7"
+    }
+  ],
+  "postgres_unique_schemas": [
+    "lerna_test_018fd01db46a3d48e4e94609",
+    "lerna_test_02250e0f243410484823caf4",
+    "lerna_test_02e499081e0785ecea8880a7",
+    "lerna_test_02f49137c35a1383784def32",
+    "lerna_test_031a4b1634c2573dc6accc95",
+    "lerna_test_03aa674a7aee61be43d0a9c0",
+    "lerna_test_03e70c52316a07f16254991c",
+    "lerna_test_04325acdbaf3019706972a38",
+    "lerna_test_05af87db30d1acac5b774384",
+    "lerna_test_06968e9b7be3936bfe55e54f",
+    "lerna_test_074549b78e3028fd4a10f49e",
+    "lerna_test_082b62757b06732d3859433d",
+    "lerna_test_086f146137d3d685c425b3a1",
+    "lerna_test_08d53f6463e63306e9f9e001",
+    "lerna_test_090fa604ed4cc6ad7ba0d819",
+    "lerna_test_09bd11e0338558f6555f19e9",
+    "lerna_test_0a79ea13a296f5c473d71efc",
+    "lerna_test_0a7ffad29355ca39dfdfe480",
+    "lerna_test_0a88735c374de13652eb13a4",
+    "lerna_test_0b2feb03cd1483dc24b301dd",
+    "lerna_test_0d9099b6c9cca529fb92d341",
+    "lerna_test_0dd242396a54cdc94b2b8267",
+    "lerna_test_0dde4910337c1e114a1e2f01",
+    "lerna_test_0de1a2e1db3d3fdb43051561",
+    "lerna_test_0e8e02ae3da48d2ad28a7529",
+    "lerna_test_0e972482e6c751f79d7262b0",
+    "lerna_test_0eab969ed6015851f993bffe",
+    "lerna_test_0f6a0665812a2aa91428effa",
+    "lerna_test_0f6b7fba25a8ea233586b728",
+    "lerna_test_0ff61f8c89ad0725ace4e27e",
+    "lerna_test_10fcbbd451d64a62fa4f1ba2",
+    "lerna_test_11b2809aaff191b9c2fce0ba",
+    "lerna_test_11d06919d053f0f29d21dca2",
+    "lerna_test_120253264d70beae63ea2e6a",
+    "lerna_test_126296fbe58f9f3e40ee22c1",
+    "lerna_test_12f5223c403fc56c068a4b48",
+    "lerna_test_131db3006cad160f829e1023",
+    "lerna_test_1335639c198b6235d477aa05",
+    "lerna_test_1418115440d3877b27a51837",
+    "lerna_test_147605c7f53f690e008a33c4",
+    "lerna_test_15c8400e8ffcc706614fb02e",
+    "lerna_test_16194175332b008404045f47",
+    "lerna_test_1710848cd52626d29b0ef4f4",
+    "lerna_test_18403bb8901a5b389a67b54a",
+    "lerna_test_18cd4ab08a5f90295aa69ede",
+    "lerna_test_193f77d44393ea00b96f931f",
+    "lerna_test_199f0dd8cc7224129bc0ceec",
+    "lerna_test_1a0ba711c126e6ea9b68dd95",
+    "lerna_test_1a480938654a7b5b576aa9f8",
+    "lerna_test_1a9b44278edd4fefb00b6773",
+    "lerna_test_1b5ba1ade3d47d1d3d546228",
+    "lerna_test_1b86b06ef4452bd85f4b5405",
+    "lerna_test_1e0acc1e67e87af4bf3594ed",
+    "lerna_test_1eef0203fc2adcddc1bfda7d",
+    "lerna_test_1f3732ddf86ea44ee1f25f04",
+    "lerna_test_1f5f828fa5f81df26b285688",
+    "lerna_test_200dbb9afb9b588a3416f65c",
+    "lerna_test_202575751facaf235a7f0ee2",
+    "lerna_test_20e854f3a1e63ded15f75a8e",
+    "lerna_test_2221daf1ca6c8c1eec57b2e1",
+    "lerna_test_23eefd6b22efe0b5323736c2",
+    "lerna_test_2467a5b5cf168c0bfa1aa9c8",
+    "lerna_test_24a7baf181be9cb5267ceb3b",
+    "lerna_test_24b25a4cd00060446b69a3fa",
+    "lerna_test_24cfd025f92f396e2aae5ef9",
+    "lerna_test_25373172377a4456832789db",
+    "lerna_test_258aee245648ad3b188f362c",
+    "lerna_test_25f4f91e495883d047358384",
+    "lerna_test_25fb3b031958f04daa8c39d8",
+    "lerna_test_2832fd110f7e38235e679d0e",
+    "lerna_test_297e4db90099091239721774",
+    "lerna_test_29b708e7a5d85596e12b36a4",
+    "lerna_test_2a6458710db01c2e10e093a1",
+    "lerna_test_2a72f797bd20dae5b317e31f",
+    "lerna_test_2a97ce56448ed52b44ac34be",
+    "lerna_test_2a99471ed9144430c6008c35",
+    "lerna_test_2aa71588f140b19af475038d",
+    "lerna_test_2aa766a6fd6622f3f282a2f8",
+    "lerna_test_2aa920cf55382665b6af1802",
+    "lerna_test_2b1357b11b976153c7c447c2",
+    "lerna_test_2b5d4dd170363d8fb9ef7e71",
+    "lerna_test_2c2138114f9204a17d39b765",
+    "lerna_test_2c7d99ccd05d4c8970fccf9d",
+    "lerna_test_2cc3e5ee90b5d5d948df6829",
+    "lerna_test_2d3e0c58c987e593b6e370ee",
+    "lerna_test_2d80f6ecc04d877a0837cef8",
+    "lerna_test_2e53d3329fe4b865f6e6150a",
+    "lerna_test_2e5fad3d39938599e7c9c537",
+    "lerna_test_2f5a819dce1e574d7678a771",
+    "lerna_test_2fa67a11453b304e2df9cff3",
+    "lerna_test_2fe597d25d01fc758063ac13",
+    "lerna_test_2fef3770b221c390cdd43c95",
+    "lerna_test_3039e0b84f57ed03310ce152",
+    "lerna_test_30854c29faec8539abb8606a",
+    "lerna_test_30f7be81bb14b511a2abf117",
+    "lerna_test_30f8a6b8fa3819c19c226925",
+    "lerna_test_30fc9e7b612160ac757f88a6",
+    "lerna_test_32df4e98146b28234cd1a977",
+    "lerna_test_331e8fdbb585693db34e953c",
+    "lerna_test_3379d724f93c875960b4de7c",
+    "lerna_test_337d318ca5b11b08d5351bf8",
+    "lerna_test_34220cee13f0708fa17f1375",
+    "lerna_test_34ec567bd536086be008aff9",
+    "lerna_test_34f459318041710dddf33d6b",
+    "lerna_test_35370c948f5c62679ed3605a",
+    "lerna_test_3546245ad80c74166b3f6e7c",
+    "lerna_test_359f244d8fc1af34ce6368ce",
+    "lerna_test_35b8451fe6fd30a8b1ff5727",
+    "lerna_test_36e02fa1835740da1c2d6c91",
+    "lerna_test_3704c78f85ff235e97f9a5f0",
+    "lerna_test_382d508df413cf3b4094117a",
+    "lerna_test_383c8c76a4fd8912453a9d38",
+    "lerna_test_3911c16e43a27c32de2a8d64",
+    "lerna_test_39771c50b7090d871815ac2c",
+    "lerna_test_39eb40b259f1cff259491e80",
+    "lerna_test_39fbc65153cd9dc5388d44f0",
+    "lerna_test_3a2ea0ad6739b31ac4be0bc2",
+    "lerna_test_3aa10b96cd0ba8e328cb5bbe",
+    "lerna_test_3af5cce9886cf9b056f52e8c",
+    "lerna_test_3bb3636f97053d6cc154536d",
+    "lerna_test_3bb63c2b365d95d3f9b26a01",
+    "lerna_test_3c92ab4a195f344804711788",
+    "lerna_test_3d0861e0e0fdd3751744b42b",
+    "lerna_test_3e650bc530c27f1883252a71",
+    "lerna_test_3e8095c0d87a18d23aee1e4f",
+    "lerna_test_3f0335e8e1ac3a3e1927a85d",
+    "lerna_test_3ffa7420bc703dab43d06f09",
+    "lerna_test_4074e086bb407ed271b95840",
+    "lerna_test_40b8865690f4db47bbac2d14",
+    "lerna_test_4109f7e5a2d759c9986f2b92",
+    "lerna_test_414980c4c4c3dc0e7ad8858b",
+    "lerna_test_421ec9d937b8aab8c9143286",
+    "lerna_test_4311d3b9e794411dfd6a83b1",
+    "lerna_test_434798a13a703742d478c476",
+    "lerna_test_440b0f3512d76c5655083107",
+    "lerna_test_44988df915fa7c216e0b8b9f",
+    "lerna_test_449deec249aa7c1a47435209",
+    "lerna_test_44a12a50bf3539bfdbfdb712",
+    "lerna_test_44e8617a877fff19272dcbdc",
+    "lerna_test_44fbb665deec8491b760368c",
+    "lerna_test_4592b3af06ad1f003d639834",
+    "lerna_test_45cb1efe0e5d988d78f57f8c",
+    "lerna_test_468119259241ecb904c39f8f",
+    "lerna_test_46c22308060feef4d81171b7",
+    "lerna_test_46ef3f89a36c03d467be2f10",
+    "lerna_test_48384a5bf1c59fb38d3793ef",
+    "lerna_test_48564dd11167e85d5126abb7",
+    "lerna_test_485aca89c65521b36e971209",
+    "lerna_test_497f630a859d8fb6e1056917",
+    "lerna_test_4a5873527b4de5f0e5fe5e4d",
+    "lerna_test_4a798cbd5604b482e35771df",
+    "lerna_test_4af5e32551429b771dd963e1",
+    "lerna_test_4b868bb131922f110327ad53",
+    "lerna_test_4b92a1b7fbaf3d7e66c96280",
+    "lerna_test_4c0ab663a50eeaed730960d7",
+    "lerna_test_4c1ed846fe59816d6119b74f",
+    "lerna_test_4c35af05fa037cc9551d672c",
+    "lerna_test_4c5bfd2edb7018436c5f8eb7",
+    "lerna_test_4c754f40d371c09722b47d00",
+    "lerna_test_4cb9fccb464863983f5c2022",
+    "lerna_test_4cf3eb1afdb02c495b44471d",
+    "lerna_test_4cfdb145ca31ca31c3885de2",
+    "lerna_test_4d3f742ef04e41739eb9189c",
+    "lerna_test_4dc025fc4431dca0eff7935b",
+    "lerna_test_4dfdaeb95d00a326d35b7e70",
+    "lerna_test_4e26ccd8a922043063d08150",
+    "lerna_test_4e3c5b101475c685f3c1c46b",
+    "lerna_test_4e60a093c11ca8d7ea6ed03d",
+    "lerna_test_4eecfe8749888ce58bf715d1",
+    "lerna_test_4efa50a41448ea739304777b",
+    "lerna_test_506de776ba54dfbbc1bb68ff",
+    "lerna_test_506fb67473e8531812690150",
+    "lerna_test_5073c50d80ca910452d44ed0",
+    "lerna_test_51198ec326bde89667b26a3a",
+    "lerna_test_518319a979ef9dfbfcc58d8e",
+    "lerna_test_51a3c2026a662290ce0999fa",
+    "lerna_test_51a86753a9b85aa4454bc991",
+    "lerna_test_524a5f858ac81e3c66a57c5a",
+    "lerna_test_527984bfdf78d88ba5dff124",
+    "lerna_test_52f6a04e4f64402dee8e0490",
+    "lerna_test_5361cb5add4c6fe058c57f0e",
+    "lerna_test_53b1571bfd1d5bf5878c4854",
+    "lerna_test_53f799be02bc1026be22c1a0",
+    "lerna_test_540b07deae509e8c79991285",
+    "lerna_test_545d6d05dedd743d0a39214a",
+    "lerna_test_5502996c68139b563c3fc0e2",
+    "lerna_test_558ee2f796cab500d085a61d",
+    "lerna_test_5590f3c3948035bc900cee12",
+    "lerna_test_55a5fffe97fe87877701888f",
+    "lerna_test_55ed02270d2a76794f683ebf",
+    "lerna_test_55f5e0847badbd64b774a3ea",
+    "lerna_test_5686ab0e9bb11d42e745a9cd",
+    "lerna_test_56c76472eacb71d009b76b28",
+    "lerna_test_591e2bef745aa6c21ecfe64f",
+    "lerna_test_59385be547c2254b2e453ed7",
+    "lerna_test_59d65f752308e4f0329d750b",
+    "lerna_test_59e0b156ecc18d47de2ccf28",
+    "lerna_test_5a445b51dbe4dcbbb00967da",
+    "lerna_test_5acbeeced566b21a696eb20f",
+    "lerna_test_5add788e51b399aa12c4061b",
+    "lerna_test_5af8248af74b4518294c72e5",
+    "lerna_test_5b296fa8d31c567ef0f535f4",
+    "lerna_test_5b331e7f79e0eb8d502cad8d",
+    "lerna_test_5b45580ba2eb4d2c25f70a97",
+    "lerna_test_5bd5db93564063e4fff8b29d",
+    "lerna_test_5bdf1b453e4036dcad70046c",
+    "lerna_test_5d584976e559ae4649a73715",
+    "lerna_test_5d5a38be1472cdd3c14953b1",
+    "lerna_test_5dc6239514875fba6303a534",
+    "lerna_test_5e79a0bd3947c636ca9261db",
+    "lerna_test_5e83be1dec384817c22b51fd",
+    "lerna_test_5f278e462c1bbe731c2f13ae",
+    "lerna_test_5f3268de09e05ecdbcbd76a4",
+    "lerna_test_5f3bae6c54a98795341a9098",
+    "lerna_test_5f60834935dc1e67c3b73c2f",
+    "lerna_test_5f90c5da2e07ea53b9d8b7b4",
+    "lerna_test_5f911e1ac0f58791d5565d1d",
+    "lerna_test_602bcfb73c9c68107edef91e",
+    "lerna_test_60bf66c6a72d192070b6cc46",
+    "lerna_test_611c9565068e641d45675ec5",
+    "lerna_test_62588a3536da9258db6f064a",
+    "lerna_test_63316ea1b7da7aba36e75af0",
+    "lerna_test_635b4a3eaa4df6b68b166847",
+    "lerna_test_652bf30ef53a045d2998acc2",
+    "lerna_test_65a1f1c4da08f7e53fab3a93",
+    "lerna_test_65a8f9dd2b9d0c986179ca95",
+    "lerna_test_65c625ccd478686617e07c99",
+    "lerna_test_66a551a448f363d3d9bd9f7c",
+    "lerna_test_66bc5faa29a3814bd102c54e",
+    "lerna_test_67082760c77e1cf69f8e2842",
+    "lerna_test_67e085d581cecd516995f05b",
+    "lerna_test_67fbd6c5e7e857e558260082",
+    "lerna_test_68153aa44152aa6d96e09b0b",
+    "lerna_test_6862372d538005decb4440f5",
+    "lerna_test_68a13f2dd94357968c1dcedc",
+    "lerna_test_68c3aab6990bdf0375032942",
+    "lerna_test_68e1c5bcf3ab312c5c123e64",
+    "lerna_test_68fc721a33bfdb49d1a3d317",
+    "lerna_test_696b77c0bd62c06da402c9e6",
+    "lerna_test_69db2959448d2fb7296e0290",
+    "lerna_test_6a0cf115e6498daed5dc3fe3",
+    "lerna_test_6a50c13618fa45246d689891",
+    "lerna_test_6a87c798367aa6d60d782709",
+    "lerna_test_6adbd522102826fe41b2d765",
+    "lerna_test_6b76de47c1a5af5f3fea79af",
+    "lerna_test_6c4c80dd8fcdb866c895346f",
+    "lerna_test_6c506e4819e276b9074b77c2",
+    "lerna_test_6d087e357109eae80e2fd5a6",
+    "lerna_test_6d315d47bad5f40ed3d2c60a",
+    "lerna_test_6e8cead3c3a43f11da102986",
+    "lerna_test_6eb41213748d339a59b0921d",
+    "lerna_test_6ef67fe9f8f05eb8db7182e3",
+    "lerna_test_6f431cc5b08458f310fa4294",
+    "lerna_test_6f6a8f24d71c6524a7342a32",
+    "lerna_test_6ff30350d7529220d3767662",
+    "lerna_test_7089581dbc4182fd43ef5a21",
+    "lerna_test_70f7db1b7114b05776798f13",
+    "lerna_test_715f6b9747cfb1d1a84ccaf7",
+    "lerna_test_719db689a4a4fffcf5fcb1ec",
+    "lerna_test_71d838434a9d0e5bdabc20f3",
+    "lerna_test_722aecc70cb8b49e9673ed0e",
+    "lerna_test_728e76d623225b05aa021790",
+    "lerna_test_73273a7ada1511a9c6902f19",
+    "lerna_test_73a9e055700a0a86ea77b3ce",
+    "lerna_test_748561cf41a5ad9c0b0bcbc0",
+    "lerna_test_74b798bec8278900d7c5103b",
+    "lerna_test_75b4a468e43fd9460bddfc5a",
+    "lerna_test_770390812cd3624706e8322d",
+    "lerna_test_775b1241eb6c34f51f735be7",
+    "lerna_test_776c33358bf2ff094911ff05",
+    "lerna_test_77722f56b5a0ef20377d9b31",
+    "lerna_test_77bf67d1db118512b3bea8ee",
+    "lerna_test_784bb622f01a0a55da30cb79",
+    "lerna_test_789b8f46f9e4e81484b60a7b",
+    "lerna_test_790fde8f915a4f83b85d7e01",
+    "lerna_test_79da447e285093b0c5498f9a",
+    "lerna_test_7a26ea95e147a40174b60dbd",
+    "lerna_test_7a9203cb1b7449d2f4a07ab5",
+    "lerna_test_7ae7c20c21a4b7ca8a1c93a3",
+    "lerna_test_7af4e154806a4680fec67e23",
+    "lerna_test_7c2045fd60eba38e29ed0f89",
+    "lerna_test_7c66c3920a3d446a22fb91e2",
+    "lerna_test_7ce1439248212355bd8d0e57",
+    "lerna_test_7cfad6005eb7ce14ae1d7286",
+    "lerna_test_7d5b00344a66effa31718f77",
+    "lerna_test_7e08f5805ae997685b4e2cdf",
+    "lerna_test_7e1b1a414657c400cc83b6f0",
+    "lerna_test_7e6f84b7deaee2530404ba63",
+    "lerna_test_7ea6523c33344c1ceab13842",
+    "lerna_test_7ef9e01934ded74fa4eed043",
+    "lerna_test_7ff3592b9eaa69aee3e96da0",
+    "lerna_test_8091f9941227e2770f574736",
+    "lerna_test_80f5228a86da2cbcacef1720",
+    "lerna_test_8185fe69281f60d3e3fb8740",
+    "lerna_test_81bc97e29408cd2c25c94466",
+    "lerna_test_81d81b74df76180771479c3c",
+    "lerna_test_81e249b0733c3f9b3ff97e86",
+    "lerna_test_822d7c21fef647cda344f303",
+    "lerna_test_8234f19df8e93439dff23d76",
+    "lerna_test_82eceaca4b3ff4ca6dd3a6f9",
+    "lerna_test_83f49bf72e56d29caa12a5f2",
+    "lerna_test_84970266cc3ae16787e03229",
+    "lerna_test_8589c4bbb786089e75e6d7ac",
+    "lerna_test_86166694df705c7eee4e365a",
+    "lerna_test_861b4090cd9149d495b1ea3f",
+    "lerna_test_87518adf0b64438d3abdccf8",
+    "lerna_test_87f1addb0765400a7bedfa19",
+    "lerna_test_88032deeff1aa5139261fe3b",
+    "lerna_test_887201b91660e402793c2d42",
+    "lerna_test_8b140eb475ed53197a07a2d5",
+    "lerna_test_8b449c78bfc2c181f9d1a14f",
+    "lerna_test_8c6bd217857cf906e5c3e7d7",
+    "lerna_test_8ccc28180c6f8f13814808f4",
+    "lerna_test_8ced9b67ac4896ff54a91e05",
+    "lerna_test_8cf5c147964db2ce5f93a855",
+    "lerna_test_8cfbc58ac50f211e71639080",
+    "lerna_test_8d796f314999d222dfc10116",
+    "lerna_test_8da448301be2fd81fb799403",
+    "lerna_test_8e25bb88415dc647eb787ff4",
+    "lerna_test_8ee12aa62fa3295e10447ceb",
+    "lerna_test_903b3d8841ebfa9ac0d5bb98",
+    "lerna_test_91ad0c788e560c2e178b8869",
+    "lerna_test_92b24ff8765deeec9ef2dcc3",
+    "lerna_test_92d4f7ce740098984973daad",
+    "lerna_test_92f3914861b512c7d449bbf5",
+    "lerna_test_934c636bfc1ad9270689fbca",
+    "lerna_test_93793dbccf4fdda46600c9cd",
+    "lerna_test_9557157cf9d083be86063c2f",
+    "lerna_test_95738bae676abda2d842b9b9",
+    "lerna_test_95bf4789cca3e7d5fbd492b2",
+    "lerna_test_96a6af45c098503ed00c267c",
+    "lerna_test_96d491f911444b2d7894d01c",
+    "lerna_test_975a8ffbd9d3d4429447869f",
+    "lerna_test_97dab106909d828cee3616e4",
+    "lerna_test_97fd6ed981a1526d795b6096",
+    "lerna_test_9800ed2e8343d1b30372f418",
+    "lerna_test_980f08c9a8afd3cfdcdf9f3c",
+    "lerna_test_98213d9bdf37324a188aadb7",
+    "lerna_test_98d0f8f88a1baf43b843fd9d",
+    "lerna_test_99007cf66487181ac4b914fe",
+    "lerna_test_99539d9da445aaf8dc6e6413",
+    "lerna_test_9a4fd3af7e2acfc403ae5b7e",
+    "lerna_test_9ab28b6fc6339e201c2c1cfa",
+    "lerna_test_9b31a95d83863683217add5e",
+    "lerna_test_9b3ca77992ec276125b60521",
+    "lerna_test_9b972028cb7ceb70cf7c35da",
+    "lerna_test_9d292bb3597b4affd2133042",
+    "lerna_test_9d37f97458cce6101b25d857",
+    "lerna_test_9d84bd81483114defd15c264",
+    "lerna_test_9dcb7881a6b91e374ff12e38",
+    "lerna_test_9e25f49602733e09f1b50f56",
+    "lerna_test_9e5b6fd72207f7af8bde286a",
+    "lerna_test_9eba168ddf23a4a96edec9be",
+    "lerna_test_9edf9762a9fdffea97b885d3",
+    "lerna_test_9eecf6ce441114e37529cae9",
+    "lerna_test_9f0a440bb6606c51d1b8556a",
+    "lerna_test_a0487333256984ab3871882e",
+    "lerna_test_a06b141127ff3cc919d6413f",
+    "lerna_test_a13e4cccd18a538963875304",
+    "lerna_test_a1c0f1395cd31791cbf23446",
+    "lerna_test_a2594170e5a18eb51c1be861",
+    "lerna_test_a25ccb3283bb62f3f4cf9245",
+    "lerna_test_a2ffdc1c7c6862c69ae480cc",
+    "lerna_test_a3b7444f3c476c0a05e7e405",
+    "lerna_test_a3c8a4d1cbea260755e9104a",
+    "lerna_test_a3d161a42fe9786383e77132",
+    "lerna_test_a44e8758606bc72a3335804f",
+    "lerna_test_a5b694a8331f5ae4417724f6",
+    "lerna_test_a6b8f64aff67bfb892caf043",
+    "lerna_test_a6df6eb566998d6deaa5de57",
+    "lerna_test_a6e7172ebea4673f13879ca8",
+    "lerna_test_a709c69b1ce5ef77e488149c",
+    "lerna_test_a87ec67d2637569b58906cfd",
+    "lerna_test_a95d93692d74698b9879a6b4",
+    "lerna_test_aaf1e0161688e67cfb35b0c3",
+    "lerna_test_ab2b78efcb094f988c59b52b",
+    "lerna_test_ac3ef4a1888873985608ec09",
+    "lerna_test_ac46c8329b061478a96dd15b",
+    "lerna_test_ac478eab92cae9003486f520",
+    "lerna_test_ac79b3fe46f081d05cfc8ef6",
+    "lerna_test_ac8a0cbc1890808ebc67662c",
+    "lerna_test_ac9185da91d7931c65f3eeac",
+    "lerna_test_ad2bcf175e53ac7b010558d7",
+    "lerna_test_ae783cfe82e5e5d276145af2",
+    "lerna_test_b049b03d2a52529051849c9f",
+    "lerna_test_b0a4d84d71b97196e372d2b4",
+    "lerna_test_b0cf6012d411f70cc8f6a4dd",
+    "lerna_test_b0f185fb2b7b7240d875422a",
+    "lerna_test_b36eeb87693ec8a0a30fd39f",
+    "lerna_test_b3f165ab64f8a9ef7e0b5e75",
+    "lerna_test_b4009619370936ada5bd0a19",
+    "lerna_test_b44632f594753776ef0bf447",
+    "lerna_test_b492bcabc2cb7e14f32ee554",
+    "lerna_test_b56ce5c21f8495db9e12234a",
+    "lerna_test_b57b34263000d257923195e4",
+    "lerna_test_b5ab32e7e55b31b210fa80b6",
+    "lerna_test_b625db5e845ee486fd16ab6b",
+    "lerna_test_b649d932b7fc982573bfcc6e",
+    "lerna_test_b6a3e7edf43e8b31f47a7335",
+    "lerna_test_b722643b36edc41c25ac3ee0",
+    "lerna_test_b7250179dbb1ad008cec6ef0",
+    "lerna_test_b72daf29b076aea7d70c50e7",
+    "lerna_test_b74c8f099ff6f4b68df3e6fe",
+    "lerna_test_b85d317d0617b95a5fb7c8ee",
+    "lerna_test_b94ece9e0bcf3f266dea2866",
+    "lerna_test_ba1e72e388def834860b0245",
+    "lerna_test_ba4aa8b172fb4b63c4d6d5c7",
+    "lerna_test_baaefbc92f14911a29561227",
+    "lerna_test_baf05968455167cf22026148",
+    "lerna_test_bbeb47d685c9efa0608012ad",
+    "lerna_test_bcbedd158b4bda282be641a7",
+    "lerna_test_bcbfdc98b7589004c4d4b789",
+    "lerna_test_bcc1f3ee03a4d98d2b38e17b",
+    "lerna_test_bd15c3d794ff02e5fe3e9f34",
+    "lerna_test_bd98ef84e0d0ed2262212b3f",
+    "lerna_test_bde98e4250019a026f4c88ed",
+    "lerna_test_be341e72dece50d15d84e0d3",
+    "lerna_test_bebee1f4e4f01d25dc533a1f",
+    "lerna_test_bf17a3bf13f8929c54e7f166",
+    "lerna_test_bf7f7b2a8a6d8517b2862c75",
+    "lerna_test_c054c2cd6ee3aa4e4637d06d",
+    "lerna_test_c174ca37f7c54366a279762e",
+    "lerna_test_c1af77ddcdd4140e4196cef1",
+    "lerna_test_c1b2b764fcf357fd1374dd58",
+    "lerna_test_c1f8f58fbc627fcfba367344",
+    "lerna_test_c2ead38da51731221d2ef9ac",
+    "lerna_test_c315548cc951ebca7191ca0f",
+    "lerna_test_c40a3dcb552f80310a48a4fd",
+    "lerna_test_c45c647be7aa10d79456c13e",
+    "lerna_test_c48aa0b3030c04f9cacfebb0",
+    "lerna_test_c511de34dc0bfa98ec2ae003",
+    "lerna_test_c5d003ba09ec1bf7d84b7c2f",
+    "lerna_test_c635d6e16ad50a6788c7586a",
+    "lerna_test_c678005dd48ccb636c55e9f4",
+    "lerna_test_c6aee4f2ae937a6b7e6d66fe",
+    "lerna_test_c7c732a8e881fc108e22a924",
+    "lerna_test_c7d23833013635f4355f22eb",
+    "lerna_test_c84630fe5e8e565a2d77b909",
+    "lerna_test_c8cb0cea1aefd2b8890b694a",
+    "lerna_test_c8cdbc7feb7ced3f060be1db",
+    "lerna_test_c8d0fdc7e135928771dae080",
+    "lerna_test_c8e2edeca74bd81faf47e902",
+    "lerna_test_c99e5ba447e40032113b38e9",
+    "lerna_test_c9ff56736591772149b289cc",
+    "lerna_test_ca1d09ea5824dcc9ddde9de6",
+    "lerna_test_ca41a0bde1d2dc226529ea68",
+    "lerna_test_cac5f207811393891c1ed40f",
+    "lerna_test_cbc736a61133bedd4eaa814c",
+    "lerna_test_cc40e0b2a3495424263982df",
+    "lerna_test_cc77abf798c016848ece17ed",
+    "lerna_test_ccaec78de6db24cace2bac38",
+    "lerna_test_ccbd488fc13b6c46cdccadfc",
+    "lerna_test_cd7cdfaa821fd020e714306c",
+    "lerna_test_cdd14e9b1aa00ad943cece05",
+    "lerna_test_cedfa5a17509f53798a57003",
+    "lerna_test_cefa242ae61977c309531f7f",
+    "lerna_test_cf5698314cc09449c9313fba",
+    "lerna_test_cf6f2f88733d272391b7ad08",
+    "lerna_test_cf8233266dfc0abd300600c6",
+    "lerna_test_cfc4d8511dbda4db251f8971",
+    "lerna_test_cfef278145810d8697c89c3a",
+    "lerna_test_d01fa9f3a82f475d26a5329f",
+    "lerna_test_d028543e272cea701a90c1d4",
+    "lerna_test_d0997576105ef41fefc2b1d4",
+    "lerna_test_d0a4ef7889a35b080c6af955",
+    "lerna_test_d1012e0634cd68743b672aea",
+    "lerna_test_d1450389567c4ed13d4ddd1d",
+    "lerna_test_d260ddf7801d2d6f244eaec1",
+    "lerna_test_d3215c4ec5ddffe228ac6a19",
+    "lerna_test_d38a081e564fed9398ad53ac",
+    "lerna_test_d3be24d805d9c13eeddf26db",
+    "lerna_test_d4312252eae9df9a7294253d",
+    "lerna_test_d452d75a45624367cee89661",
+    "lerna_test_d45a38b3ed2e1a46f901dc92",
+    "lerna_test_d460a107a059694ed3cb9f65",
+    "lerna_test_d46abaef3beb64886532786e",
+    "lerna_test_d5647945aa58bc27db7c9d4f",
+    "lerna_test_d58c8ccd8afe06804a2afaef",
+    "lerna_test_d5ade8a2735ad9060105be74",
+    "lerna_test_d5f8783c82682e9bd39d67a5",
+    "lerna_test_d6792e8caf3e2cab8b7525c6",
+    "lerna_test_d6d6d20d55f8d1090036db5e",
+    "lerna_test_d747c0932d7700240c9367e5",
+    "lerna_test_d76bd916c87fd561f69300e0",
+    "lerna_test_d7907595349c590b9be49503",
+    "lerna_test_d7bce03edad5dd1b4852a60e",
+    "lerna_test_d7e9406754306374ae7d2e09",
+    "lerna_test_d8508890ac26d211e2e0720d",
+    "lerna_test_d8daa8b09b5329b40fd3792a",
+    "lerna_test_d8ebb211672bfa70807e4154",
+    "lerna_test_d928d53101acf40355ce2d48",
+    "lerna_test_da6331b4db408d861ff822bb",
+    "lerna_test_da98d51312b0590d91c1fd7c",
+    "lerna_test_dac38dd1967e2d95febf8f3b",
+    "lerna_test_db5af9e50181f164491aadeb",
+    "lerna_test_dbc1c5575ec0ba4263aeaeb5",
+    "lerna_test_dc43cce72eca835a7bd3416b",
+    "lerna_test_dc715c18d5b80c1b078278ba",
+    "lerna_test_dc794ad19ec4891ff68bb697",
+    "lerna_test_dcab62325d3eb4ae724fab6b",
+    "lerna_test_dcc63ed4b2763bedd33fd3bd",
+    "lerna_test_dd792639a900594385a414ef",
+    "lerna_test_de8d83ebaf8b4e0d8bf715c7",
+    "lerna_test_def37295dd1110fef9bd713f",
+    "lerna_test_df13ca3d53f23b4e84c60e87",
+    "lerna_test_dfa7a280972153d733cfa8b4",
+    "lerna_test_dfe350bcd396cc34e85842d0",
+    "lerna_test_dffe10d35c785de3136b2edb",
+    "lerna_test_e029c15d6c994ec44a9c6c5c",
+    "lerna_test_e15ca88c74c504f530f910f3",
+    "lerna_test_e1be6b0a4fcd18680dcc6c07",
+    "lerna_test_e28398890c16db58cbac3665",
+    "lerna_test_e29b62264789473cc458d508",
+    "lerna_test_e2e32d1e8576a44bbc1f26ae",
+    "lerna_test_e30937f7895626e688080159",
+    "lerna_test_e3a4adfb16b7d9f5d664ca03",
+    "lerna_test_e40874e0079fe75a4a2956ed",
+    "lerna_test_e55477aff9c53dd6ffb51a3e",
+    "lerna_test_e6c447d8ce1176a879386b20",
+    "lerna_test_e6d1cc563957bff62c25d7b5",
+    "lerna_test_e768c716e925eb2ba7201867",
+    "lerna_test_e7e79617932631345d17b93a",
+    "lerna_test_e86428a53ee23e4be4b68321",
+    "lerna_test_e87c23c6766360b9028ba5e8",
+    "lerna_test_e8fc38208959bff662b0b7b5",
+    "lerna_test_ea6aad42f0c7af256b5ce2cd",
+    "lerna_test_eaa508d1e095fe9cb3d6a6fe",
+    "lerna_test_eb34046cd9e1b5276fa093d1",
+    "lerna_test_eb354921a116429de84b3d55",
+    "lerna_test_eb6244e88412d52c64fb9de8",
+    "lerna_test_eb646f4a70d3c679abbfbe77",
+    "lerna_test_eb691cc8f9b71e649706b580",
+    "lerna_test_ebaef54071141121f92557e2",
+    "lerna_test_ec633dfb72d0c067e03b8636",
+    "lerna_test_ecf0490076d7fbda3da83b97",
+    "lerna_test_ed2bd81d5c4fffa05b61affc",
+    "lerna_test_ed8cf24ca78f98f4ebc3aeae",
+    "lerna_test_edb2b2a05557024616a78835",
+    "lerna_test_ee5608cf13841b5e5b691027",
+    "lerna_test_ee9915bdf96b96a23d744d7a",
+    "lerna_test_eedaee4caaa5bd79cbeaa6ec",
+    "lerna_test_ef0dd7079c3d26c494775de0",
+    "lerna_test_ef35a1cdc95c4ac72c2c38a7",
+    "lerna_test_ef7db1b0069985359214dfdf",
+    "lerna_test_efb918a08757359b70f26e8d",
+    "lerna_test_eff0c6e62732a8f20d135aae",
+    "lerna_test_eff5c3d70ba959c0def88f12",
+    "lerna_test_f07dcc8c40d9425fbe6dd4c6",
+    "lerna_test_f09083decc9d2ccc31b1b400",
+    "lerna_test_f0d78ddf10b3c80dbcf3e761",
+    "lerna_test_f0ea09aab6ed0f60e18fab87",
+    "lerna_test_f17735dfd79af5d5b5309176",
+    "lerna_test_f21b12f347d1833238ccc7e7",
+    "lerna_test_f27b0fcecd23abfd164835bc",
+    "lerna_test_f29e1086a01e5a1b94dd548a",
+    "lerna_test_f32d8b41e3da4a41a6f32616",
+    "lerna_test_f3badf6e1dba654bfd3f8928",
+    "lerna_test_f3f45976ea3f5a0c7fb8b7f2",
+    "lerna_test_f3f7a7a1c0245c17a822b153",
+    "lerna_test_f48f71f08f6fd1b012416b11",
+    "lerna_test_f4a0f44fa46870b37ae3d2db",
+    "lerna_test_f53337c8ecde630ca7ffe74f",
+    "lerna_test_f5a2b8c546cebb55d34e04dc",
+    "lerna_test_f612459bb9febdf55fb679d1",
+    "lerna_test_f74d768741ba78ade940c1b3",
+    "lerna_test_f8252ff9c95fb20218200b20",
+    "lerna_test_f90d9067c4cf039985d4d712",
+    "lerna_test_f93b43b3fa87f5d9c4e98db7",
+    "lerna_test_f96412304221f74f14828720",
+    "lerna_test_f9894017fc250bd45bb80d39",
+    "lerna_test_f99daf3f66b84f0d7dacfb57",
+    "lerna_test_f9de125fd50f66e5a97409e0",
+    "lerna_test_fa2c401b3a08681ad4cec12d",
+    "lerna_test_fa7c5f6305206a94eb311b94",
+    "lerna_test_fa86e0074d9355253e591372",
+    "lerna_test_fb1c1e0121f07e004fc98664",
+    "lerna_test_fbb15b5d4d60e66e7eead24a",
+    "lerna_test_fbbc8929ea9c30cb560fdcbe",
+    "lerna_test_fcb61b7c0130192482ff75d3",
+    "lerna_test_fd62b7968d22390b1008861c",
+    "lerna_test_fe2c70a8dec08f6c55e2fd6d",
+    "lerna_test_fe7921ca28651ead9a8a98c2",
+    "lerna_test_ff85e85407a5098853badffa",
+    "lerna_test_ffd1ea82ed8e76813519c58c",
+    "lerna_test_ffeb53301af5d4b92cffebfe",
+    "lerna_test_ffed7fd8994634dbf5277f78"
+  ],
+  "postgres_catalog_not_queried": true,
+  "filesystem_registration_records": [
+    {
+      "line": 47,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-1657917736",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 48,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-3279684520",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 49,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-4026099227",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 50,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-2591562339",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 51,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-4020999047",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 52,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-2545033178",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 53,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-51877437",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 54,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-1986475797",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 55,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-944660044",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 56,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-1275008707",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 57,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-769317415",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 58,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-2394211479",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 59,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-4144578267",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 60,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-3253039899",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 61,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-792664056",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 62,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-2590833941",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 63,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-1203395233",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 64,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-1433813731",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 65,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-2844109873",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 66,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-1419414689",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 67,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-4052474436",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 68,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-1452541465",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 69,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-4065200935",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 70,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-3961558665",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 71,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-2444917663",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 72,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-2540512336",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 92,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-967674356",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 93,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-252926565",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 100,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-3393811024",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 101,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-133110883",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 103,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-2787312664",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 104,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-2627443107",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 106,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-1961675406",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 107,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-4248187418",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 109,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-1120270345",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 135,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-6745854",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 138,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-1862473340",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 139,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-1556590152",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 141,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-3174816305",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 143,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-1193446751",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 148,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-165447183",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 149,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-2178141565",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 150,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-3040990616",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 151,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-3240544698",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 155,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-135440155",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 156,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-1948388215",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 157,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-3143451220",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 159,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-1514676148",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 161,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-3696631224",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 163,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-616223672",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 167,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-3144051222",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 168,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-192191740",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 170,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-2209640685",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 174,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-465167661",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 175,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-3185807576",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 177,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-1846586957",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 179,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-2360298076",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 181,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-2583365247",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 183,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-2459110463",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 188,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-3877528286",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 189,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-3294223326",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 190,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-2257411110",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 191,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-1178631088",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 192,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-2475916705",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 193,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-1492415999",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 195,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-2057887328",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 197,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-1290774962",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 200,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-3749093604",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 201,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-2991084056",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 202,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-894279422",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 204,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-1543887756",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 206,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-3904043283",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 208,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-1223691375",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 211,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-1082069385",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 212,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-206496984",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 216,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-498727890",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 217,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-2048347129",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 218,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-46012203",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 220,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-716388549",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 224,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-1212392235",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 225,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-4206259119",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 226,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-3863043827",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 229,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-3163009383",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 230,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-2942039189",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 231,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-869901566",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 232,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-1610547648",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 233,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-980942383",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 234,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-3881819923",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 235,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-3106702649",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 236,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-3791350686",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 237,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-3372884891",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 238,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-1733076811",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 239,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-3856313288",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 240,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-1581007570",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 241,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-2806187943",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 242,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-3948798475",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 243,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-1364656907",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 244,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-50630459",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 245,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-3933406579",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 246,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-1883431864",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 247,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-1394471705",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 248,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-4055683764",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 249,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-3114263879",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 250,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-4158063245",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 251,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-2270390352",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 252,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-336073351",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 267,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-2818949792",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 268,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-246762799",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 269,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-3104136959",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 270,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-927762868",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 271,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-1227453456",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 272,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-3535491923",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 273,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-3898540975",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 274,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-3969922099",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 275,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-1268063528",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 276,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-4105324572",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 277,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-508626695",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 278,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-1107400747",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 279,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-375520365",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 280,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-2966344324",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 282,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-740594672",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 284,
+      "kind": "sqlite",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-owned-fixture-2602170079",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 292,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-144647734",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 296,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-291004319",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 298,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-3803634949",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 300,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-2997134110",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 302,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-2067668270",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 304,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-3571711293",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 309,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-3720972420",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 311,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-743459726",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 313,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-3349410665",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 315,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-2561496995",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 317,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-2303734048",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 319,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-3677274956",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 321,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-2714950380",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 323,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-914334583",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 325,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-1488978625",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 327,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-181832519",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 329,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-3372977211",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 331,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-3866356798",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 333,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-1757937537",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 335,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-1401697563",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 336,
+      "kind": "frozen_content_build_scope",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-frozen-build-377374133",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 347,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-2026420893",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 350,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-425227091",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 352,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-152055754",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 354,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-2353327765",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 356,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-3912648753",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 358,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-383603862",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 360,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-3050183724",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 362,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-1102604332",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 364,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-1201333380",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 366,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-1245454428",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 368,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-712160426",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 370,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-2458343913",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 372,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-2823843592",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 377,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-2836334392",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 382,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-1759772566",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 384,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-1794298604",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 386,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-490023638",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 388,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-1318460981",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 390,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-3025008477",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 392,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-3671428213",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 394,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-2580672789",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 398,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-3980818960",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 400,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-2477307221",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 402,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-2134169704",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 404,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-3247874828",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 406,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-2625351563",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 410,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-655740011",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 414,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-3251900153",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 418,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-3347878344",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 422,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-3515458073",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 424,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-3890121373",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 428,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-194459935",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 432,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-3956806395",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 436,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-2811104301",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 438,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-2485560203",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 440,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-4222601409",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 442,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-4119791815",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 445,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-1737202358",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 447,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-3494889721",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 450,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-1017346736",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 453,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-459082981",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 455,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-3675579257",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 457,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-2890127417",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 459,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-1658880886",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 461,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-1246907363",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 463,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-2197026788",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 464,
+      "kind": "frozen_content_build_scope",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-frozen-build-3378332317",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 475,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-474432687",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 478,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-3252620735",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 480,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-1941765253",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 483,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-2400236914",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 485,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-2684797332",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 487,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-3788875704",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 489,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-892306398",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 491,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-3650400575",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 493,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-2338082260",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 495,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-3952270453",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 497,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-1234552540",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 499,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-3777600582",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 501,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-2629983599",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 503,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-2382050742",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 505,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-1187771992",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 509,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-561463847",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 511,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-202690290",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 513,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-491634181",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 515,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-838763631",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 517,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-356829709",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 519,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-2460668195",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 523,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-883580742",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 527,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-3143351855",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 531,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-1850331244",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 535,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-4005579469",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 537,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-1144295313",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 540,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-1142996755",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 542,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-3490375704",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 544,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-3081154182",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 546,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-514447997",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 548,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-3362832003",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 550,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-1645937661",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 554,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-162865612",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 556,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-2919083688",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 558,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-158354802",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 560,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-491213559",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 562,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-2199394734",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 564,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-3660346",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 568,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-2461943318",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 570,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-1974608515",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 572,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-4171818316",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 574,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-3009759056",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 576,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-553758525",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 578,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-1564845676",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 580,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-1603241784",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 582,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-3770040688",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 584,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-3858527517",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 586,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-3855203029",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 588,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-2341648803",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 590,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-4194863422",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 592,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-1737513955",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 594,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-960258285",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 596,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-1626308684",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 597,
+      "kind": "frozen_content_build_scope",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-frozen-build-3471092079",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 609,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-4095166452",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 610,
+      "kind": "frozen_content_build_scope",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-frozen-build-3879555515",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 621,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-1394563668",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 624,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-1967946735",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 627,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-3256660215",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 629,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-737654532",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 631,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-2681405683",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 633,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-1079587103",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 635,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-2954508820",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 637,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-91321249",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 639,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-3167741974",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 641,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-2859525850",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 643,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-1557121999",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 645,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-741010053",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 647,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-3158554646",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 651,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-550604089",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 655,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-397917020",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 659,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-2730687906",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 663,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-795093712",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 667,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-1683565882",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 671,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-2403622524",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 673,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-2718358836",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 675,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-2673689543",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 677,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-3842746235",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 679,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-2249856048",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 681,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-1343362466",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 683,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-3772826160",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 685,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-3199842600",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 687,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-3832244452",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 689,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-2158884405",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 691,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-100866739",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 693,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-4083335328",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 695,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-1896814647",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 699,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-2148436073",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 701,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-687470245",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 705,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-3290896765",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 707,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-351613887",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 709,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-1728050060",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 711,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-4196946656",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 713,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-3599895542",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 717,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-1969500861",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 721,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-1045556232",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 725,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-3477600994",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 729,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-1552960468",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 733,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-3376159541",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 737,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-3220095186",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 739,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-1006791943",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 741,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-1013225824",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 744,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-2633827761",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 746,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-699226843",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 748,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-465450418",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 987,
+      "kind": "directory",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-03-legacy-upgrade-2244114258",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 1002,
+      "kind": "directory",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-03-legacy-upgrade-2292784262",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 1029,
+      "kind": "directory",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-03-legacy-upgrade-71638554",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 1053,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-objects-2208767792",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 1055,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-fixture-close-2739159792",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 1057,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-fixture-close-3163639031",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 1059,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-content-fixture-close-958221351",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 1061,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-local-lifetime-3015341577",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 1066,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-local-lifetime-3810108689",
+      "current_exists": true,
+      "currentabsence_not_Closeproof": true,
+      "current_observed_dev_inode": [
+        33,
+        473830
+      ]
+    },
+    {
+      "line": 1075,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-local-lifetime-3525095570",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 1076,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-local-lifetime-1663567675",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 1077,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-local-lifetime-2928946421",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 1078,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-local-lifetime-2257101834",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    },
+    {
+      "line": 1079,
+      "kind": "objects",
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-local-lifetime-3200437906",
+      "current_exists": false,
+      "currentabsence_not_Closeproof": true
+    }
+  ],
+  "filesystem_record_count": 309,
+  "filesystem_unique_path_count": 309,
+  "filesystem_current_existing_count": 1,
+  "process_PID_PGID_records": [
+    {
+      "line": 1,
+      "event": "native_start_ack",
+      "pid": 4049229,
+      "pgid": 4049229,
+      "starttime": "16990389",
+      "root": "/tmp/lerna-ci-partition-durable-normal-execution",
+      "operation": "partition-shared-normal"
+    },
+    {
+      "line": 2,
+      "event": "owned_go_child_start_ack",
+      "pid": 4049251,
+      "pgid": 4049229,
+      "starttime": "16990396",
+      "root": "/tmp/lerna-ci-partition-durable-normal-execution",
+      "operation": "go-child-0024"
+    },
+    {
+      "line": 3,
+      "event": "owned_go_child_completion_ack",
+      "pid": 4049251,
+      "pgid": 4049229,
+      "starttime": "16990396",
+      "operation": "go-child-0024"
+    },
+    {
+      "line": 4,
+      "event": "owned_go_child_start_ack",
+      "pid": 4049284,
+      "pgid": 4049229,
+      "starttime": "16990405",
+      "root": "/tmp/lerna-ci-partition-durable-normal-execution",
+      "operation": "go-child-0025"
+    },
+    {
+      "line": 5,
+      "event": "owned_go_child_completion_ack",
+      "pid": 4049284,
+      "pgid": 4049229,
+      "starttime": "16990405",
+      "operation": "go-child-0025"
+    },
+    {
+      "line": 6,
+      "event": "owned_go_child_start_ack",
+      "pid": 4049300,
+      "pgid": 4049229,
+      "starttime": "16990415",
+      "root": "/tmp/lerna-ci-partition-durable-normal-execution",
+      "operation": "go-child-0026"
+    },
+    {
+      "line": 287,
+      "event": "owned_go_child_completion_ack",
+      "pid": 4049300,
+      "pgid": 4049229,
+      "starttime": "16990415",
+      "operation": "go-child-0026"
+    },
+    {
+      "line": 288,
+      "event": "owned_go_child_start_ack",
+      "pid": 4051142,
+      "pgid": 4049229,
+      "starttime": "16994865",
+      "root": "/tmp/lerna-ci-partition-durable-normal-execution",
+      "operation": "go-child-0027"
+    },
+    {
+      "line": 289,
+      "event": "owned_go_child_completion_ack",
+      "pid": 4051142,
+      "pgid": 4049229,
+      "starttime": "16994865",
+      "operation": "go-child-0027"
+    },
+    {
+      "line": 290,
+      "event": "owned_go_child_start_ack",
+      "pid": 4051213,
+      "pgid": 4049229,
+      "starttime": "16995002",
+      "root": "/tmp/lerna-ci-partition-durable-normal-execution",
+      "operation": "go-child-0028"
+    },
+    {
+      "line": 293,
+      "event": "owned_go_child_completion_ack",
+      "pid": 4051213,
+      "pgid": 4049229,
+      "starttime": "16995002",
+      "operation": "go-child-0028"
+    },
+    {
+      "line": 294,
+      "event": "owned_go_child_start_ack",
+      "pid": 4051701,
+      "pgid": 4049229,
+      "starttime": "16996928",
+      "root": "/tmp/lerna-ci-partition-durable-normal-execution",
+      "operation": "go-child-0029"
+    },
+    {
+      "line": 338,
+      "event": "frozen_content_compiler_start_ack",
+      "pid": "4052151",
+      "pgid": "4052151",
+      "starttime": "16998403"
+    },
+    {
+      "line": 339,
+      "event": "frozen_content_compiler_completion",
+      "pid": "4052151",
+      "pgid": "4052151",
+      "starttime": "16998403"
+    },
+    {
+      "line": 342,
+      "event": "legacy_original_start_ack",
+      "pid": 4052325,
+      "pgid": 4052325,
+      "starttime": "16998646"
+    },
+    {
+      "line": 343,
+      "event": "legacy_original_published",
+      "pid": 4052325,
+      "pgid": 4052325,
+      "starttime": "16998646"
+    },
+    {
+      "line": 344,
+      "event": "legacy_original_completion",
+      "pid": 4052325,
+      "pgid": 4052325,
+      "starttime": "16998646"
+    },
+    {
+      "line": 407,
+      "event": "owned_go_child_completion_ack",
+      "pid": 4051701,
+      "pgid": 4049229,
+      "starttime": "16996928",
+      "operation": "go-child-0029"
+    },
+    {
+      "line": 408,
+      "event": "owned_go_child_start_ack",
+      "pid": 4053207,
+      "pgid": 4049229,
+      "starttime": "17002148",
+      "root": "/tmp/lerna-ci-partition-durable-normal-execution",
+      "operation": "go-child-0030"
+    },
+    {
+      "line": 466,
+      "event": "frozen_content_compiler_start_ack",
+      "pid": "4054299",
+      "pgid": "4054299",
+      "starttime": "17006457"
+    },
+    {
+      "line": 467,
+      "event": "frozen_content_compiler_completion",
+      "pid": "4054299",
+      "pgid": "4054299",
+      "starttime": "17006457"
+    },
+    {
+      "line": 470,
+      "event": "legacy_original_start_ack",
+      "pid": 4054472,
+      "pgid": 4054472,
+      "starttime": "17006663"
+    },
+    {
+      "line": 471,
+      "event": "legacy_original_published",
+      "pid": 4054472,
+      "pgid": 4054472,
+      "starttime": "17006663"
+    },
+    {
+      "line": 472,
+      "event": "legacy_original_completion",
+      "pid": 4054472,
+      "pgid": 4054472,
+      "starttime": "17006663"
+    },
+    {
+      "line": 551,
+      "event": "owned_go_child_completion_ack",
+      "pid": 4053207,
+      "pgid": 4049229,
+      "starttime": "17002148",
+      "operation": "go-child-0030"
+    },
+    {
+      "line": 552,
+      "event": "owned_go_child_start_ack",
+      "pid": 4055074,
+      "pgid": 4049229,
+      "starttime": "17008969",
+      "root": "/tmp/lerna-ci-partition-durable-normal-execution",
+      "operation": "go-child-0031"
+    },
+    {
+      "line": 599,
+      "event": "frozen_content_compiler_start_ack",
+      "pid": "4055963",
+      "pgid": "4055963",
+      "starttime": "17012414"
+    },
+    {
+      "line": 600,
+      "event": "frozen_content_compiler_completion",
+      "pid": "4055963",
+      "pgid": "4055963",
+      "starttime": "17012414"
+    },
+    {
+      "line": 603,
+      "event": "legacy_original_start_ack",
+      "pid": 4056137,
+      "pgid": 4056137,
+      "starttime": "17012633"
+    },
+    {
+      "line": 604,
+      "event": "legacy_original_published",
+      "pid": 4056137,
+      "pgid": 4056137,
+      "starttime": "17012633"
+    },
+    {
+      "line": 605,
+      "event": "legacy_original_completion",
+      "pid": 4056137,
+      "pgid": 4056137,
+      "starttime": "17012633"
+    },
+    {
+      "line": 612,
+      "event": "frozen_content_compiler_start_ack",
+      "pid": "4056149",
+      "pgid": "4056149",
+      "starttime": "17012743"
+    },
+    {
+      "line": 613,
+      "event": "frozen_content_compiler_completion",
+      "pid": "4056149",
+      "pgid": "4056149",
+      "starttime": "17012743"
+    },
+    {
+      "line": 616,
+      "event": "legacy_original_start_ack",
+      "pid": 4056345,
+      "pgid": 4056345,
+      "starttime": "17013005"
+    },
+    {
+      "line": 617,
+      "event": "legacy_original_published",
+      "pid": 4056345,
+      "pgid": 4056345,
+      "starttime": "17013005"
+    },
+    {
+      "line": 618,
+      "event": "legacy_original_completion",
+      "pid": 4056345,
+      "pgid": 4056345,
+      "starttime": "17013005"
+    },
+    {
+      "line": 749,
+      "event": "owned_go_child_completion_ack",
+      "pid": 4055074,
+      "pgid": 4049229,
+      "starttime": "17008969",
+      "operation": "go-child-0031"
+    },
+    {
+      "line": 750,
+      "event": "owned_go_child_start_ack",
+      "pid": 4057092,
+      "pgid": 4049229,
+      "starttime": "17015747",
+      "root": "/tmp/lerna-ci-partition-durable-normal-execution",
+      "operation": "go-child-0032"
+    },
+    {
+      "line": 859,
+      "event": "owned_go_child_completion_ack",
+      "pid": 4057092,
+      "pgid": 4049229,
+      "starttime": "17015747",
+      "operation": "go-child-0032"
+    },
+    {
+      "line": 860,
+      "event": "owned_go_child_start_ack",
+      "pid": 4058099,
+      "pgid": 4049229,
+      "starttime": "17018673",
+      "root": "/tmp/lerna-ci-partition-durable-normal-execution",
+      "operation": "go-child-0033"
+    },
+    {
+      "line": 983,
+      "event": "owned_go_child_completion_ack",
+      "pid": 4058099,
+      "pgid": 4049229,
+      "starttime": "17018673",
+      "operation": "go-child-0033"
+    },
+    {
+      "line": 984,
+      "event": "owned_go_child_start_ack",
+      "pid": 4059324,
+      "pgid": 4049229,
+      "starttime": "17022268",
+      "root": "/tmp/lerna-ci-partition-durable-normal-execution",
+      "operation": "go-child-0034"
+    },
+    {
+      "line": 985,
+      "event": "owned_go_child_completion_ack",
+      "pid": 4059324,
+      "pgid": 4049229,
+      "starttime": "17022268",
+      "operation": "go-child-0034"
+    },
+    {
+      "line": 986,
+      "event": "owned_go_child_start_ack",
+      "pid": 4059422,
+      "pgid": 4049229,
+      "starttime": "17022491",
+      "root": "/tmp/lerna-ci-partition-durable-normal-execution",
+      "operation": "go-child-0035"
+    },
+    {
+      "line": 988,
+      "event": "process_group",
+      "pid": 4059547,
+      "pgid": 4059547,
+      "original_tick_not_added": true
+    },
+    {
+      "line": 989,
+      "event": "process_group",
+      "pid": 4059798,
+      "pgid": 4059798,
+      "original_tick_not_added": true
+    },
+    {
+      "line": 1003,
+      "event": "process_group",
+      "pid": 4059980,
+      "pgid": 4059980,
+      "original_tick_not_added": true
+    },
+    {
+      "line": 1004,
+      "event": "process_group",
+      "pid": 4060226,
+      "pgid": 4060226,
+      "original_tick_not_added": true
+    },
+    {
+      "line": 1030,
+      "event": "process_group",
+      "pid": 4060334,
+      "pgid": 4060334,
+      "original_tick_not_added": true
+    },
+    {
+      "line": 1031,
+      "event": "process_group",
+      "pid": 4060572,
+      "pgid": 4060572,
+      "original_tick_not_added": true
+    },
+    {
+      "line": 1063,
+      "event": "object_child_start_ack",
+      "pid": 4060851,
+      "pgid": 4060851,
+      "starttime": "17024813",
+      "root": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-local-lifetime-3015341577"
+    },
+    {
+      "line": 1064,
+      "event": "object_child_logical_close_ack",
+      "pid": 4060851,
+      "pgid": 4060851,
+      "starttime": "17024813",
+      "root": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-local-lifetime-3015341577"
+    },
+    {
+      "line": 1065,
+      "event": "object_child_kernel_completion",
+      "pid": 4060851,
+      "pgid": 4060851,
+      "starttime": "17024813",
+      "root": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-local-lifetime-3015341577"
+    },
+    {
+      "line": 1068,
+      "event": "object_child_start_ack",
+      "pid": 4060856,
+      "pgid": 4060856,
+      "starttime": "17024816",
+      "root": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-local-lifetime-3810108689"
+    },
+    {
+      "line": 1070,
+      "event": "object_child_start_ack",
+      "pid": 4060862,
+      "pgid": 4060862,
+      "starttime": "17024818",
+      "root": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-local-lifetime-3810108689"
+    },
+    {
+      "line": 1071,
+      "event": "object_child_logical_close_ack",
+      "pid": 4060862,
+      "pgid": 4060862,
+      "starttime": "17024818",
+      "root": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-local-lifetime-3810108689"
+    },
+    {
+      "line": 1072,
+      "event": "object_child_kernel_completion",
+      "pid": 4060862,
+      "pgid": 4060862,
+      "starttime": "17024818",
+      "root": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-local-lifetime-3810108689"
+    },
+    {
+      "line": 1073,
+      "event": "object_child_kernel_completion",
+      "pid": 4060856,
+      "pgid": 4060856,
+      "starttime": "17024816",
+      "root": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-local-lifetime-3810108689"
+    },
+    {
+      "line": 1074,
+      "event": "object_child_logical_close_unknown",
+      "pid": 4060856,
+      "pgid": 4060856,
+      "starttime": "17024816",
+      "root": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-local-lifetime-3810108689"
+    },
+    {
+      "line": 1080,
+      "event": "owned_go_child_completion_ack",
+      "pid": 4059422,
+      "pgid": 4049229,
+      "starttime": "17022491",
+      "operation": "go-child-0035"
+    },
+    {
+      "line": 1081,
+      "event": "native_completion_ack",
+      "pid": 4049229,
+      "pgid": 4049229,
+      "starttime": "16990389",
+      "operation": "partition-shared-normal"
+    }
+  ],
+  "original_close_and_kernel_witnesses_separate": [
+    {
+      "line": 344,
+      "record": {
+        "close_frame": {
+          "phase": "stopped",
+          "observation": {
+            "scope_id": "ticket05-stopped-lerna_test_ebaef54071141121f92557e2",
+            "schema": "lerna_test_ebaef54071141121f92557e2",
+            "writer_sha": "1a7d910238eb74cddc712d92b0ba4014a72ff507",
+            "binding": "linux-directory:33:468816",
+            "requests": [
+              {
+                "contract_version": "1.2.0",
+                "profile": "content",
+                "command_id": "stopped-legacy-0",
+                "target": {
+                  "tenant_id": "content-tenant",
+                  "owner_id": "content-owner",
+                  "kind": "content",
+                  "id": "stopped-legacy"
+                },
+                "method": "content.put",
+                "accept_before": "2026-10-05T13:02:28.189897Z",
+                "payload": {
+                  "content_ref": {
+                    "owner": {
+                      "tenant_id": "content-tenant",
+                      "owner_id": "content-owner"
+                    },
+                    "content_id": "stopped-legacy",
+                    "version": "1",
+                    "hash": "sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",
+                    "media_type": "text/plain",
+                    "byte_length": "6"
+                  },
+                  "sources": [],
+                  "purpose": "verification",
+                  "bytes_base64": "YWxwaGEK",
+                  "retain_until": "2026-10-05T13:02:28.189897Z"
+                }
+              },
+              {
+                "contract_version": "1.2.0",
+                "profile": "content",
+                "command_id": "stopped-legacy-1",
+                "target": {
+                  "tenant_id": "content-tenant",
+                  "owner_id": "content-owner",
+                  "kind": "content",
+                  "id": "stopped-legacy"
+                },
+                "method": "content.put",
+                "accept_before": "2026-10-05T13:02:28.189897Z",
+                "payload": {
+                  "content_ref": {
+                    "owner": {
+                      "tenant_id": "content-tenant",
+                      "owner_id": "content-owner"
+                    },
+                    "content_id": "stopped-legacy",
+                    "version": "2",
+                    "hash": "sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad",
+                    "media_type": "text/plain",
+                    "byte_length": "5"
+                  },
+                  "sources": [],
+                  "purpose": "verification",
+                  "bytes_base64": "YmV0YQo=",
+                  "retain_until": "2026-10-05T13:02:28.189897Z"
+                }
+              }
+            ],
+            "receipts": [
+              {
+                "state": "accepted",
+                "command_ref": {
+                  "owner": {
+                    "tenant_id": "content-tenant",
+                    "owner_id": "content-owner"
+                  },
+                  "command_id": "stopped-legacy-0"
+                },
+                "object_ref": {
+                  "tenant_id": "content-tenant",
+                  "owner_id": "content-owner",
+                  "kind": "content",
+                  "id": "stopped-legacy"
+                },
+                "next_action": "query_original",
+                "content_ref": {
+                  "owner": {
+                    "tenant_id": "content-tenant",
+                    "owner_id": "content-owner"
+                  },
+                  "content_id": "stopped-legacy",
+                  "version": "1",
+                  "hash": "sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",
+                  "media_type": "text/plain",
+                  "byte_length": "6"
+                },
+                "retain_until": "2026-10-05T13:02:28.189897Z"
+              },
+              {
+                "state": "accepted",
+                "command_ref": {
+                  "owner": {
+                    "tenant_id": "content-tenant",
+                    "owner_id": "content-owner"
+                  },
+                  "command_id": "stopped-legacy-1"
+                },
+                "object_ref": {
+                  "tenant_id": "content-tenant",
+                  "owner_id": "content-owner",
+                  "kind": "content",
+                  "id": "stopped-legacy"
+                },
+                "next_action": "query_original",
+                "content_ref": {
+                  "owner": {
+                    "tenant_id": "content-tenant",
+                    "owner_id": "content-owner"
+                  },
+                  "content_id": "stopped-legacy",
+                  "version": "2",
+                  "hash": "sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad",
+                  "media_type": "text/plain",
+                  "byte_length": "5"
+                },
+                "retain_until": "2026-10-05T13:02:28.189897Z"
+              }
+            ],
+            "states": [
+              "published",
+              "published"
+            ],
+            "attempts": {
+              "ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72": [
+                {
+                  "key": "ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72",
+                  "attempt": "ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72.1.tmp",
+                  "hash": "sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",
+                  "length": 6,
+                  "input_sha256": "b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060"
+                }
+              ],
+              "d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6": [
+                {
+                  "key": "d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6",
+                  "attempt": "d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6.1.tmp",
+                  "hash": "sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad",
+                  "length": 5,
+                  "input_sha256": "f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad"
+                }
+              ]
+            },
+            "object_fds": [
+              8,
+              9
+            ],
+            "migration_checksum": "sha256:00363b79dafb6eb1f373be9ef08e915fe23cc3db0fa55345e8ae6c051ce0c1ed"
+          },
+          "object_close_ack": true,
+          "store_close_ack": true,
+          "witness_close_ack": true,
+          "start_gate_close_ack": true,
+          "stop_gate_close_ack": true,
+          "object_fds_closed": true,
+          "failed": false
+        },
+        "event": "legacy_original_completion",
+        "exit": 0,
+        "frame_error": "<nil>",
+        "group_absent": true,
+        "parent_pipe_close_error": "<nil>",
+        "pgid": 4052325,
+        "pid": 4052325,
+        "scope_id": "ticket05-stopped-lerna_test_ebaef54071141121f92557e2",
+        "starttime": "16998646",
+        "state_known": true,
+        "wait_error": "<nil>"
+      }
+    },
+    {
+      "line": 472,
+      "record": {
+        "close_frame": {
+          "phase": "stopped",
+          "observation": {
+            "scope_id": "ticket05-stopped-lerna_test_2d80f6ecc04d877a0837cef8",
+            "schema": "lerna_test_2d80f6ecc04d877a0837cef8",
+            "writer_sha": "1a7d910238eb74cddc712d92b0ba4014a72ff507",
+            "binding": "linux-directory:33:469789",
+            "requests": [
+              {
+                "contract_version": "1.2.0",
+                "profile": "content",
+                "command_id": "stopped-legacy-0",
+                "target": {
+                  "tenant_id": "content-tenant",
+                  "owner_id": "content-owner",
+                  "kind": "content",
+                  "id": "stopped-legacy"
+                },
+                "method": "content.put",
+                "accept_before": "2026-10-05T13:03:48.341508Z",
+                "payload": {
+                  "content_ref": {
+                    "owner": {
+                      "tenant_id": "content-tenant",
+                      "owner_id": "content-owner"
+                    },
+                    "content_id": "stopped-legacy",
+                    "version": "1",
+                    "hash": "sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",
+                    "media_type": "text/plain",
+                    "byte_length": "6"
+                  },
+                  "sources": [],
+                  "purpose": "verification",
+                  "bytes_base64": "YWxwaGEK",
+                  "retain_until": "2026-10-05T13:03:48.341508Z"
+                }
+              },
+              {
+                "contract_version": "1.2.0",
+                "profile": "content",
+                "command_id": "stopped-legacy-1",
+                "target": {
+                  "tenant_id": "content-tenant",
+                  "owner_id": "content-owner",
+                  "kind": "content",
+                  "id": "stopped-legacy"
+                },
+                "method": "content.put",
+                "accept_before": "2026-10-05T13:03:48.341508Z",
+                "payload": {
+                  "content_ref": {
+                    "owner": {
+                      "tenant_id": "content-tenant",
+                      "owner_id": "content-owner"
+                    },
+                    "content_id": "stopped-legacy",
+                    "version": "2",
+                    "hash": "sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad",
+                    "media_type": "text/plain",
+                    "byte_length": "5"
+                  },
+                  "sources": [],
+                  "purpose": "verification",
+                  "bytes_base64": "YmV0YQo=",
+                  "retain_until": "2026-10-05T13:03:48.341508Z"
+                }
+              }
+            ],
+            "receipts": [
+              {
+                "state": "accepted",
+                "command_ref": {
+                  "owner": {
+                    "tenant_id": "content-tenant",
+                    "owner_id": "content-owner"
+                  },
+                  "command_id": "stopped-legacy-0"
+                },
+                "object_ref": {
+                  "tenant_id": "content-tenant",
+                  "owner_id": "content-owner",
+                  "kind": "content",
+                  "id": "stopped-legacy"
+                },
+                "next_action": "query_original",
+                "content_ref": {
+                  "owner": {
+                    "tenant_id": "content-tenant",
+                    "owner_id": "content-owner"
+                  },
+                  "content_id": "stopped-legacy",
+                  "version": "1",
+                  "hash": "sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",
+                  "media_type": "text/plain",
+                  "byte_length": "6"
+                },
+                "retain_until": "2026-10-05T13:03:48.341508Z"
+              },
+              {
+                "state": "accepted",
+                "command_ref": {
+                  "owner": {
+                    "tenant_id": "content-tenant",
+                    "owner_id": "content-owner"
+                  },
+                  "command_id": "stopped-legacy-1"
+                },
+                "object_ref": {
+                  "tenant_id": "content-tenant",
+                  "owner_id": "content-owner",
+                  "kind": "content",
+                  "id": "stopped-legacy"
+                },
+                "next_action": "query_original",
+                "content_ref": {
+                  "owner": {
+                    "tenant_id": "content-tenant",
+                    "owner_id": "content-owner"
+                  },
+                  "content_id": "stopped-legacy",
+                  "version": "2",
+                  "hash": "sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad",
+                  "media_type": "text/plain",
+                  "byte_length": "5"
+                },
+                "retain_until": "2026-10-05T13:03:48.341508Z"
+              }
+            ],
+            "states": [
+              "published",
+              "published"
+            ],
+            "attempts": {
+              "ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72": [
+                {
+                  "key": "ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72",
+                  "attempt": "ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72.1.tmp",
+                  "hash": "sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",
+                  "length": 6,
+                  "input_sha256": "b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060"
+                }
+              ],
+              "d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6": [
+                {
+                  "key": "d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6",
+                  "attempt": "d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6.1.tmp",
+                  "hash": "sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad",
+                  "length": 5,
+                  "input_sha256": "f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad"
+                }
+              ]
+            },
+            "object_fds": [
+              8,
+              9
+            ],
+            "migration_checksum": "sha256:00363b79dafb6eb1f373be9ef08e915fe23cc3db0fa55345e8ae6c051ce0c1ed"
+          },
+          "object_close_ack": true,
+          "store_close_ack": true,
+          "witness_close_ack": true,
+          "start_gate_close_ack": true,
+          "stop_gate_close_ack": true,
+          "object_fds_closed": true,
+          "failed": false
+        },
+        "event": "legacy_original_completion",
+        "exit": 0,
+        "frame_error": "<nil>",
+        "group_absent": true,
+        "parent_pipe_close_error": "<nil>",
+        "pgid": 4054472,
+        "pid": 4054472,
+        "scope_id": "ticket05-stopped-lerna_test_2d80f6ecc04d877a0837cef8",
+        "starttime": "17006663",
+        "state_known": true,
+        "wait_error": "<nil>"
+      }
+    },
+    {
+      "line": 605,
+      "record": {
+        "close_frame": {
+          "phase": "stopped",
+          "observation": {
+            "scope_id": "ticket05-stopped-lerna_test_da6331b4db408d861ff822bb",
+            "schema": "lerna_test_da6331b4db408d861ff822bb",
+            "writer_sha": "1a7d910238eb74cddc712d92b0ba4014a72ff507",
+            "binding": "linux-directory:33:470773",
+            "requests": [
+              {
+                "contract_version": "1.2.0",
+                "profile": "content",
+                "command_id": "stopped-legacy-0",
+                "target": {
+                  "tenant_id": "content-tenant",
+                  "owner_id": "content-owner",
+                  "kind": "content",
+                  "id": "stopped-legacy"
+                },
+                "method": "content.put",
+                "accept_before": "2026-10-05T13:04:48.048528Z",
+                "payload": {
+                  "content_ref": {
+                    "owner": {
+                      "tenant_id": "content-tenant",
+                      "owner_id": "content-owner"
+                    },
+                    "content_id": "stopped-legacy",
+                    "version": "1",
+                    "hash": "sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",
+                    "media_type": "text/plain",
+                    "byte_length": "6"
+                  },
+                  "sources": [],
+                  "purpose": "verification",
+                  "bytes_base64": "YWxwaGEK",
+                  "retain_until": "2026-10-05T13:04:48.048528Z"
+                }
+              },
+              {
+                "contract_version": "1.2.0",
+                "profile": "content",
+                "command_id": "stopped-legacy-1",
+                "target": {
+                  "tenant_id": "content-tenant",
+                  "owner_id": "content-owner",
+                  "kind": "content",
+                  "id": "stopped-legacy"
+                },
+                "method": "content.put",
+                "accept_before": "2026-10-05T13:04:48.048528Z",
+                "payload": {
+                  "content_ref": {
+                    "owner": {
+                      "tenant_id": "content-tenant",
+                      "owner_id": "content-owner"
+                    },
+                    "content_id": "stopped-legacy",
+                    "version": "2",
+                    "hash": "sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad",
+                    "media_type": "text/plain",
+                    "byte_length": "5"
+                  },
+                  "sources": [],
+                  "purpose": "verification",
+                  "bytes_base64": "YmV0YQo=",
+                  "retain_until": "2026-10-05T13:04:48.048528Z"
+                }
+              }
+            ],
+            "receipts": [
+              {
+                "state": "accepted",
+                "command_ref": {
+                  "owner": {
+                    "tenant_id": "content-tenant",
+                    "owner_id": "content-owner"
+                  },
+                  "command_id": "stopped-legacy-0"
+                },
+                "object_ref": {
+                  "tenant_id": "content-tenant",
+                  "owner_id": "content-owner",
+                  "kind": "content",
+                  "id": "stopped-legacy"
+                },
+                "next_action": "query_original",
+                "content_ref": {
+                  "owner": {
+                    "tenant_id": "content-tenant",
+                    "owner_id": "content-owner"
+                  },
+                  "content_id": "stopped-legacy",
+                  "version": "1",
+                  "hash": "sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",
+                  "media_type": "text/plain",
+                  "byte_length": "6"
+                },
+                "retain_until": "2026-10-05T13:04:48.048528Z"
+              },
+              {
+                "state": "accepted",
+                "command_ref": {
+                  "owner": {
+                    "tenant_id": "content-tenant",
+                    "owner_id": "content-owner"
+                  },
+                  "command_id": "stopped-legacy-1"
+                },
+                "object_ref": {
+                  "tenant_id": "content-tenant",
+                  "owner_id": "content-owner",
+                  "kind": "content",
+                  "id": "stopped-legacy"
+                },
+                "next_action": "query_original",
+                "content_ref": {
+                  "owner": {
+                    "tenant_id": "content-tenant",
+                    "owner_id": "content-owner"
+                  },
+                  "content_id": "stopped-legacy",
+                  "version": "2",
+                  "hash": "sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad",
+                  "media_type": "text/plain",
+                  "byte_length": "5"
+                },
+                "retain_until": "2026-10-05T13:04:48.048528Z"
+              }
+            ],
+            "states": [
+              "published",
+              "published"
+            ],
+            "attempts": {
+              "ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72": [
+                {
+                  "key": "ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72",
+                  "attempt": "ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72.1.tmp",
+                  "hash": "sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",
+                  "length": 6,
+                  "input_sha256": "b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060"
+                }
+              ],
+              "d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6": [
+                {
+                  "key": "d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6",
+                  "attempt": "d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6.1.tmp",
+                  "hash": "sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad",
+                  "length": 5,
+                  "input_sha256": "f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad"
+                }
+              ]
+            },
+            "object_fds": [
+              8,
+              9
+            ],
+            "migration_checksum": "sha256:00363b79dafb6eb1f373be9ef08e915fe23cc3db0fa55345e8ae6c051ce0c1ed"
+          },
+          "object_close_ack": true,
+          "store_close_ack": true,
+          "witness_close_ack": true,
+          "start_gate_close_ack": true,
+          "stop_gate_close_ack": true,
+          "object_fds_closed": true,
+          "failed": false
+        },
+        "event": "legacy_original_completion",
+        "exit": 0,
+        "frame_error": "<nil>",
+        "group_absent": true,
+        "parent_pipe_close_error": "<nil>",
+        "pgid": 4056137,
+        "pid": 4056137,
+        "scope_id": "ticket05-stopped-lerna_test_da6331b4db408d861ff822bb",
+        "starttime": "17012633",
+        "state_known": true,
+        "wait_error": "<nil>"
+      }
+    },
+    {
+      "line": 618,
+      "record": {
+        "close_frame": {
+          "phase": "stopped",
+          "observation": {
+            "scope_id": "ticket05-stopped-lerna_test_59385be547c2254b2e453ed7",
+            "schema": "lerna_test_59385be547c2254b2e453ed7",
+            "writer_sha": "1a7d910238eb74cddc712d92b0ba4014a72ff507",
+            "binding": "linux-directory:33:470935",
+            "requests": [
+              {
+                "contract_version": "1.2.0",
+                "profile": "content",
+                "command_id": "stopped-legacy-0",
+                "target": {
+                  "tenant_id": "content-tenant",
+                  "owner_id": "content-owner",
+                  "kind": "content",
+                  "id": "stopped-legacy"
+                },
+                "method": "content.put",
+                "accept_before": "2026-10-05T13:04:51.762570Z",
+                "payload": {
+                  "content_ref": {
+                    "owner": {
+                      "tenant_id": "content-tenant",
+                      "owner_id": "content-owner"
+                    },
+                    "content_id": "stopped-legacy",
+                    "version": "1",
+                    "hash": "sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",
+                    "media_type": "text/plain",
+                    "byte_length": "6"
+                  },
+                  "sources": [],
+                  "purpose": "verification",
+                  "bytes_base64": "YWxwaGEK",
+                  "retain_until": "2026-10-05T13:04:51.762570Z"
+                }
+              },
+              {
+                "contract_version": "1.2.0",
+                "profile": "content",
+                "command_id": "stopped-legacy-1",
+                "target": {
+                  "tenant_id": "content-tenant",
+                  "owner_id": "content-owner",
+                  "kind": "content",
+                  "id": "stopped-legacy"
+                },
+                "method": "content.put",
+                "accept_before": "2026-10-05T13:04:51.762570Z",
+                "payload": {
+                  "content_ref": {
+                    "owner": {
+                      "tenant_id": "content-tenant",
+                      "owner_id": "content-owner"
+                    },
+                    "content_id": "stopped-legacy",
+                    "version": "2",
+                    "hash": "sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad",
+                    "media_type": "text/plain",
+                    "byte_length": "5"
+                  },
+                  "sources": [],
+                  "purpose": "verification",
+                  "bytes_base64": "YmV0YQo=",
+                  "retain_until": "2026-10-05T13:04:51.762570Z"
+                }
+              }
+            ],
+            "receipts": [
+              {
+                "state": "accepted",
+                "command_ref": {
+                  "owner": {
+                    "tenant_id": "content-tenant",
+                    "owner_id": "content-owner"
+                  },
+                  "command_id": "stopped-legacy-0"
+                },
+                "object_ref": {
+                  "tenant_id": "content-tenant",
+                  "owner_id": "content-owner",
+                  "kind": "content",
+                  "id": "stopped-legacy"
+                },
+                "next_action": "query_original",
+                "content_ref": {
+                  "owner": {
+                    "tenant_id": "content-tenant",
+                    "owner_id": "content-owner"
+                  },
+                  "content_id": "stopped-legacy",
+                  "version": "1",
+                  "hash": "sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",
+                  "media_type": "text/plain",
+                  "byte_length": "6"
+                },
+                "retain_until": "2026-10-05T13:04:51.762570Z"
+              },
+              {
+                "state": "accepted",
+                "command_ref": {
+                  "owner": {
+                    "tenant_id": "content-tenant",
+                    "owner_id": "content-owner"
+                  },
+                  "command_id": "stopped-legacy-1"
+                },
+                "object_ref": {
+                  "tenant_id": "content-tenant",
+                  "owner_id": "content-owner",
+                  "kind": "content",
+                  "id": "stopped-legacy"
+                },
+                "next_action": "query_original",
+                "content_ref": {
+                  "owner": {
+                    "tenant_id": "content-tenant",
+                    "owner_id": "content-owner"
+                  },
+                  "content_id": "stopped-legacy",
+                  "version": "2",
+                  "hash": "sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad",
+                  "media_type": "text/plain",
+                  "byte_length": "5"
+                },
+                "retain_until": "2026-10-05T13:04:51.762570Z"
+              }
+            ],
+            "states": [
+              "published",
+              "published"
+            ],
+            "attempts": {
+              "ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72": [
+                {
+                  "key": "ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72",
+                  "attempt": "ac2d493af978572c1b856759f34d0ee281d48472ce84abf53a52f7b8c38daf72.1.tmp",
+                  "hash": "sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",
+                  "length": 6,
+                  "input_sha256": "b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060"
+                }
+              ],
+              "d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6": [
+                {
+                  "key": "d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6",
+                  "attempt": "d7113159dfb58753a2816724794ddb104aa54362bc50f26a0d0ca0fa6655e3f6.1.tmp",
+                  "hash": "sha256:f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad",
+                  "length": 5,
+                  "input_sha256": "f2c82decdd7181cf98945929a62598db7e6b477e11f6e0eb0ae97020eff151ad"
+                }
+              ]
+            },
+            "object_fds": [
+              9,
+              8
+            ],
+            "migration_checksum": "sha256:00363b79dafb6eb1f373be9ef08e915fe23cc3db0fa55345e8ae6c051ce0c1ed"
+          },
+          "object_close_ack": true,
+          "store_close_ack": true,
+          "witness_close_ack": true,
+          "start_gate_close_ack": true,
+          "stop_gate_close_ack": true,
+          "object_fds_closed": true,
+          "failed": false
+        },
+        "event": "legacy_original_completion",
+        "exit": 0,
+        "frame_error": "<nil>",
+        "group_absent": true,
+        "parent_pipe_close_error": "<nil>",
+        "pgid": 4056345,
+        "pid": 4056345,
+        "scope_id": "ticket05-stopped-lerna_test_59385be547c2254b2e453ed7",
+        "starttime": "17013005",
+        "state_known": true,
+        "wait_error": "<nil>"
+      }
+    },
+    {
+      "line": 1064,
+      "record": {
+        "actual_store_close_returned_nil": true,
+        "event": "object_child_logical_close_ack",
+        "mode": "put-stop",
+        "pgid": 4060851,
+        "pid": 4060851,
+        "root": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-local-lifetime-3015341577",
+        "starttime": "17024813"
+      }
+    },
+    {
+      "line": 1065,
+      "record": {
+        "event": "object_child_kernel_completion",
+        "exit": 0,
+        "group_absent": true,
+        "logical_close_inferred": false,
+        "mode": "put-stop",
+        "pgid": 4060851,
+        "pid": 4060851,
+        "root": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-local-lifetime-3015341577",
+        "starttime": "17024813"
+      }
+    },
+    {
+      "line": 1071,
+      "record": {
+        "actual_store_close_returned_nil": true,
+        "event": "object_child_logical_close_ack",
+        "mode": "late-put",
+        "pgid": 4060862,
+        "pid": 4060862,
+        "root": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-local-lifetime-3810108689",
+        "starttime": "17024818"
+      }
+    },
+    {
+      "line": 1072,
+      "record": {
+        "event": "object_child_kernel_completion",
+        "exit": 0,
+        "group_absent": true,
+        "logical_close_inferred": false,
+        "mode": "late-put",
+        "pgid": 4060862,
+        "pid": 4060862,
+        "root": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-local-lifetime-3810108689",
+        "starttime": "17024818"
+      }
+    },
+    {
+      "line": 1073,
+      "record": {
+        "event": "object_child_kernel_completion",
+        "exit": -1,
+        "group_absent": true,
+        "logical_close_inferred": false,
+        "mode": "erase-stop",
+        "pgid": 4060856,
+        "pid": 4060856,
+        "root": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-local-lifetime-3810108689",
+        "starttime": "17024816"
+      }
+    }
+  ],
+  "protected_unknown_inventory": "/tmp/lerna-ci-partition-durable-normal-execution/protected-unknown-inventory.json",
+  "protected_unknown_inventory_sha256": "0c23a8a56b47848043d5db9a9f37ccda989adcff7232b3735826f3e996983f7a",
+  "no_cleanup_SQL_audit_or_firstClose_backfill": true
+}

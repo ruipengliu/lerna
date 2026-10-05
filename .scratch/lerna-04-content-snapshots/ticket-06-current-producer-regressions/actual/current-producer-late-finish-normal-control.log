@@ -1,0 +1,9 @@
+=== RUN   TestContentOriginalWorkerCannotFinishAcrossOriginalBodyFence
+=== RUN   TestContentOriginalWorkerCannotFinishAcrossOriginalBodyFence/normal_release
+    content_process_recovery_test.go:1228: Content child native pid=4116033 pgid=4115932 start=17262445 generation=1
+    content_process_recovery_test.go:1257: original live worker released and actual native Close/Wait/Stop before conservative original I/O4 cutoff
+--- PASS: TestContentOriginalWorkerCannotFinishAcrossOriginalBodyFence (0.35s)
+    --- PASS: TestContentOriginalWorkerCannotFinishAcrossOriginalBodyFence/normal_release (0.35s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/component	0.362s
+NATIVE_COMPLETION_ACK {"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "current-producer-late-finish-normal-control", "pgid": 4115932, "pid": 4115932, "starttime": "17262342", "timed_out": false}

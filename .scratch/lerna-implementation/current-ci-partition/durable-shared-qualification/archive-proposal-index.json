@@ -1,0 +1,529 @@
+{
+  "kind": "STATIC byte-exact compact shared qualification archive proposal; no copy/commit/merge/push performed",
+  "fixed_head": "d0fcc61264904070ce94e1146f07327a0ef9b2aa",
+  "review_base": "b9db5cc67647a15d6556fe92941757034a1e80d1",
+  "source_clean": true,
+  "destination_root": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification",
+  "destination_absent": true,
+  "entries": [
+    {
+      "source": "/tmp/lerna-ci-partition-durable-normal-execution/go-child-0024-outcome.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/go-child-0024-outcome.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/go-child-0024-outcome.json",
+      "bytes": 421,
+      "sha256": "97bed03dae2da6c45bd64916b264b3fdf8e78372b7c5ef03c5545b7bf8b6b07f",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-normal-execution/go-child-0024-prelaunch.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/go-child-0024-prelaunch.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/go-child-0024-prelaunch.json",
+      "bytes": 454,
+      "sha256": "3a0721b166f8268af92e589a8f962bf43f8bc49b5c35de816bca9479230919f6",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-normal-execution/go-child-0025-outcome.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/go-child-0025-outcome.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/go-child-0025-outcome.json",
+      "bytes": 421,
+      "sha256": "f4ec51e9d1bb90fac367b889e91926d96a173bdf7208dd6fb72589cc2d373e82",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-normal-execution/go-child-0025-prelaunch.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/go-child-0025-prelaunch.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/go-child-0025-prelaunch.json",
+      "bytes": 447,
+      "sha256": "f4e000abd726bef4f3ecba13973f03c87c3c6f20e6029f19344c8dc7dc3364ef",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-normal-execution/go-child-0026-outcome.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/go-child-0026-outcome.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/go-child-0026-outcome.json",
+      "bytes": 421,
+      "sha256": "95f2f4f76c39481e790f71fc7a1453323ab4dcea2bfb985ff274baae6af6af25",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-normal-execution/go-child-0026-prelaunch.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/go-child-0026-prelaunch.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/go-child-0026-prelaunch.json",
+      "bytes": 532,
+      "sha256": "8fff0ec1d8f3ca3215ab3d20bcbd906ed3b51d0439098a067dfb636e2fa0155f",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-normal-execution/go-child-0027-outcome.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/go-child-0027-outcome.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/go-child-0027-outcome.json",
+      "bytes": 421,
+      "sha256": "72789a4c85ee21255a6c05e6de7246a585c241a63a45a704ca6f8e53f909bed9",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-normal-execution/go-child-0027-prelaunch.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/go-child-0027-prelaunch.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/go-child-0027-prelaunch.json",
+      "bytes": 563,
+      "sha256": "6816942789dd2838d1896fbd48e4d96d2c6eb214ff71e8675dbe1adf0be064e9",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-normal-execution/go-child-0028-outcome.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/go-child-0028-outcome.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/go-child-0028-outcome.json",
+      "bytes": 421,
+      "sha256": "f95b5ee8c423870f15d6418ee317aca368b15d2bb32df8a50eef9b3674014501",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-normal-execution/go-child-0028-prelaunch.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/go-child-0028-prelaunch.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/go-child-0028-prelaunch.json",
+      "bytes": 629,
+      "sha256": "b76417a13d5cc2685eb91b2dc7d6c090d00050742f3b099d46e01a918846217f",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-normal-execution/go-child-0029-outcome.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/go-child-0029-outcome.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/go-child-0029-outcome.json",
+      "bytes": 421,
+      "sha256": "3e2b54d7e66ad64a70f0b7966bf2704e5433607efb4aee58c7754350566dcfcd",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-normal-execution/go-child-0029-prelaunch.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/go-child-0029-prelaunch.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/go-child-0029-prelaunch.json",
+      "bytes": 2584,
+      "sha256": "caa0ad16e6c5134a117fcc962c1185e408a4552765e78e5f3c0fdc80df23a897",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-normal-execution/go-child-0030-outcome.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/go-child-0030-outcome.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/go-child-0030-outcome.json",
+      "bytes": 421,
+      "sha256": "fa97200bcf33bdc1d9a3db0d853e141bf14af84f35c8eefa21319e6799cfc938",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-normal-execution/go-child-0030-prelaunch.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/go-child-0030-prelaunch.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/go-child-0030-prelaunch.json",
+      "bytes": 2585,
+      "sha256": "644eb71dd9c5746b1150987fd085eae5b34cc77d1a154fced083247a479e46a9",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-normal-execution/go-child-0031-outcome.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/go-child-0031-outcome.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/go-child-0031-outcome.json",
+      "bytes": 421,
+      "sha256": "e2bb22e053f60f6eeb57002a7780901f4c8663104b2ade6be4af05f947d0fc8d",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-normal-execution/go-child-0031-prelaunch.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/go-child-0031-prelaunch.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/go-child-0031-prelaunch.json",
+      "bytes": 2679,
+      "sha256": "512a359454488007d55468c7b7464a286e929240e92b177bcea5db7d5f4c27aa",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-normal-execution/go-child-0032-outcome.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/go-child-0032-outcome.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/go-child-0032-outcome.json",
+      "bytes": 421,
+      "sha256": "0cdf35038ca73b47ad6879d0d9c261c38b30accad1e076b8b413695cebacb9d4",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-normal-execution/go-child-0032-prelaunch.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/go-child-0032-prelaunch.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/go-child-0032-prelaunch.json",
+      "bytes": 2381,
+      "sha256": "62d312e2f8a09f9fc31f4e9e2b8a4987c6e9e7c3ebb9aef2f692083bd5adb5b2",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-normal-execution/go-child-0033-outcome.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/go-child-0033-outcome.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/go-child-0033-outcome.json",
+      "bytes": 421,
+      "sha256": "c93098ee6d5e4c8e1a2745977366cae509707e2db930ac1e2a2f8504c7767bfa",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-normal-execution/go-child-0033-prelaunch.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/go-child-0033-prelaunch.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/go-child-0033-prelaunch.json",
+      "bytes": 2376,
+      "sha256": "f27b5a8c12c1652a9651084e2be0cd4537d4328b1eb8345c51ce5413a63d187a",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-normal-execution/go-child-0034-outcome.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/go-child-0034-outcome.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/go-child-0034-outcome.json",
+      "bytes": 421,
+      "sha256": "2ed79b2410f50c889740a1e98c7334f44169db4d3650787193fde60ff8ac0612",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-normal-execution/go-child-0034-prelaunch.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/go-child-0034-prelaunch.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/go-child-0034-prelaunch.json",
+      "bytes": 2589,
+      "sha256": "1fccea406f21463b96845896532a766a9b312ac66b74644956cffdc1f23aaffc",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-normal-execution/go-child-0035-outcome.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/go-child-0035-outcome.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/go-child-0035-outcome.json",
+      "bytes": 421,
+      "sha256": "49fc569e6d70c43fa1efcb46a0b65b63e1a3247af801f875d9d3695c93e8a768",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-normal-execution/go-child-0035-prelaunch.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/go-child-0035-prelaunch.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/go-child-0035-prelaunch.json",
+      "bytes": 637,
+      "sha256": "195d535ee663bf1f33bdb0443679c5a84aa508b65615f243a1aa6bfeb97f36aa",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-normal-execution/go-child-counter.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/go-child-counter.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/go-child-counter.json",
+      "bytes": 13,
+      "sha256": "e455edd6ba7c49777a65e1a786cb6c2ba0044179991a1f93592640374d446d13",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-normal-execution/owned-scopes.log",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/owned-scopes.log",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/owned-scopes.log",
+      "bytes": 143441,
+      "sha256": "63ee2eff0905490b8240dc4a507e32a85438eacb16935e85cd859aa9b73ec772",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-normal-execution/partition-shared-normal-outcome.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/partition-shared-normal-outcome.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/partition-shared-normal-outcome.json",
+      "bytes": 241,
+      "sha256": "9fa1850fb47c335ad0dfd150b3b99b2be7a726b362ae1c4bec32f8a9cd80c7e1",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-normal-execution/partition-shared-normal-prelaunch.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/partition-shared-normal-prelaunch.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/partition-shared-normal-prelaunch.json",
+      "bytes": 491,
+      "sha256": "0ab29160d488415c4f74b8c764fdef8c7ad77c577b5a93fc041d04c3f306cfd7",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-normal-execution/partition-shared-normal.log",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/partition-shared-normal.log",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/partition-shared-normal.log",
+      "bytes": 7788,
+      "sha256": "0cc6444494dc2a92531fba7881a3df14c88553d017342ee020a0c2aab3d2e95f",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-normal-execution/protected-unknown-inventory.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/protected-unknown-inventory.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/protected-unknown-inventory.json",
+      "bytes": 2537,
+      "sha256": "0c23a8a56b47848043d5db9a9f37ccda989adcff7232b3735826f3e996983f7a",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-normal-execution/root-ack.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/root-ack.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/root-ack.json",
+      "bytes": 378,
+      "sha256": "7115c86cbf093e441a2368b831db7e2729640511b0f06dd1850e07f2af61edec",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-normal-execution/sharednormal-owned-scope-sidecar.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/sharednormal-owned-scope-sidecar.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/sharednormal-owned-scope-sidecar.json",
+      "bytes": 193187,
+      "sha256": "946e9731d6cd9c16d0809eed0522787240f2d502e283b27061a40b861a45ef64",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-normal-execution/sharednormal-release.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/sharednormal-release.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/sharednormal-release.json",
+      "bytes": 30064,
+      "sha256": "dffca4396a0e0aa2925608f07e81fa049c14ed686bd1c8e8154aee5834b70a8d",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-normal-execution/sharednormal-selector-proof.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/sharednormal-selector-proof.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/sharednormal-selector-proof.json",
+      "bytes": 78820,
+      "sha256": "c4fb3375aebaf6d40522e9663671c8422d345e535ff69458b0608bab651cdf74",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-normal-execution/sharednormal-source-postlaunch.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/sharednormal-source-postlaunch.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/sharednormal-source-postlaunch.json",
+      "bytes": 1581,
+      "sha256": "200fc55553b49c44cfdc869e5fb75ae660674ed610b168568a393c7dd82232e4",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-normal-execution/sharednormal-source-prelaunch.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/sharednormal-source-prelaunch.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/normal/sharednormal-source-prelaunch.json",
+      "bytes": 7919,
+      "sha256": "9810129cfdac027e6ec8bf70ad63fab28ca1b0e094ba2daec95ddaa54c09dffe",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-race-execution/go-child-0036-outcome.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/race/go-child-0036-outcome.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/race/go-child-0036-outcome.json",
+      "bytes": 418,
+      "sha256": "75e41671369f94eccaf1e44fa7a517302aec1b296ebfd6a40442be7c7bd9bfd5",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-race-execution/go-child-0036-prelaunch.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/race/go-child-0036-prelaunch.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/race/go-child-0036-prelaunch.json",
+      "bytes": 449,
+      "sha256": "20371d259a7c06afc65675761f0d8b9910b91de49bbe3a4c7b037d9669bb91c4",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-race-execution/go-child-0037-outcome.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/race/go-child-0037-outcome.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/race/go-child-0037-outcome.json",
+      "bytes": 418,
+      "sha256": "17d59dc955b0757047627851c9ae7c0ee2eaa8a615d18357514d6c7e8d75b803",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-race-execution/go-child-0037-prelaunch.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/race/go-child-0037-prelaunch.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/race/go-child-0037-prelaunch.json",
+      "bytes": 442,
+      "sha256": "13fcc6882e8a7d60599afd12fca5990925ad7dce26ce7de9d5126c16bb67e631",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-race-execution/go-child-0038-outcome.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/race/go-child-0038-outcome.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/race/go-child-0038-outcome.json",
+      "bytes": 418,
+      "sha256": "6f531c6b8eddf35cba05cc3420fb4be09ff3cda384d989b437897bcf91e94965",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-race-execution/go-child-0038-prelaunch.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/race/go-child-0038-prelaunch.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/race/go-child-0038-prelaunch.json",
+      "bytes": 552,
+      "sha256": "14b688ad868f78fd1b309ba303bd0b6e56276969b84e90983a6746a03079fbba",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-race-execution/go-child-0039-outcome.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/race/go-child-0039-outcome.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/race/go-child-0039-outcome.json",
+      "bytes": 418,
+      "sha256": "5cf4c4cdfa1836b4770c7adfe77f1f246a4d21e72cd0e8225c51568d4e7164c3",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-race-execution/go-child-0039-prelaunch.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/race/go-child-0039-prelaunch.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/race/go-child-0039-prelaunch.json",
+      "bytes": 558,
+      "sha256": "a50f77cf1a64a9989ccd22fa268809a7ef88efa975179ef4177796d1bc83935e",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-race-execution/go-child-0040-outcome.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/race/go-child-0040-outcome.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/race/go-child-0040-outcome.json",
+      "bytes": 418,
+      "sha256": "d2af67dc67b0a56af6729eed174c9daf3b8c607a71663078cc0857234ca4fa37",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-race-execution/go-child-0040-prelaunch.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/race/go-child-0040-prelaunch.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/race/go-child-0040-prelaunch.json",
+      "bytes": 637,
+      "sha256": "86040853d12837f38fabea3302307aeb34b2a922bfa0cf4ad5290dbcd1120e0f",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-race-execution/go-child-counter.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/race/go-child-counter.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/race/go-child-counter.json",
+      "bytes": 13,
+      "sha256": "7960bdff1c310d73093dbdf340bf441f12aeee93bdb238217419ff9df6f70ac1",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-race-execution/owned-scopes.log",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/race/owned-scopes.log",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/race/owned-scopes.log",
+      "bytes": 26524,
+      "sha256": "385f8e8cf922200af27afa5e3911620023492ba5aa147a17073de8046d2015ae",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-race-execution/partition-shared-race-outcome.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/race/partition-shared-race-outcome.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/race/partition-shared-race-outcome.json",
+      "bytes": 239,
+      "sha256": "e62f73386169858c7daa0de9090db77b6637be258bb7856c6c7286cb51b25f02",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-race-execution/partition-shared-race-prelaunch.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/race/partition-shared-race-prelaunch.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/race/partition-shared-race-prelaunch.json",
+      "bytes": 490,
+      "sha256": "01a0bccdd9a2f72af41d0ac65dee42ecfe056284bb60753a5ae390beff0c8039",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-race-execution/partition-shared-race.log",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/race/partition-shared-race.log",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/race/partition-shared-race.log",
+      "bytes": 5309,
+      "sha256": "27504b39e046d3af94884242ee94507db667ef709aefb05084c4fb59debb2f71",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-race-execution/protected-unknown-inventory.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/race/protected-unknown-inventory.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/race/protected-unknown-inventory.json",
+      "bytes": 3120,
+      "sha256": "10f48ff2a80d1b298c5bfdae486ee26704b0484af640621b534f08b49b4622ca",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-race-execution/root-ack.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/race/root-ack.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/race/root-ack.json",
+      "bytes": 362,
+      "sha256": "46cff301c656a5361dc8b2e06a701f4a587f0cfe1925609ba01a68c76cdb8251",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-race-execution/sharedrace-owned-scope-sidecar-v2.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/race/sharedrace-owned-scope-sidecar-v2.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/race/sharedrace-owned-scope-sidecar-v2.json",
+      "bytes": 67653,
+      "sha256": "9439e9f962732fde0698fcd6a397e45292270b9fe0c2faa1e586ec1422867a2d",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-race-execution/sharedrace-release.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/race/sharedrace-release.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/race/sharedrace-release.json",
+      "bytes": 12076,
+      "sha256": "6b9f578e09be3684514ed9484c9c3dd89614f70a9df12f7961287eb12eb47a00",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-race-execution/sharedrace-selector-proof.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/race/sharedrace-selector-proof.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/race/sharedrace-selector-proof.json",
+      "bytes": 2088,
+      "sha256": "96bd3b67f83ee62cc6f8314d59c08fed1d142cd65376ddaac69be765e9e801f4",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-race-execution/sharedrace-source-postlaunch.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/race/sharedrace-source-postlaunch.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/race/sharedrace-source-postlaunch.json",
+      "bytes": 2423,
+      "sha256": "50892e3c7bff5cb13fd0d94e8b1ed48e9d501ef35f2b19735720ce2711b3963b",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-race-execution/sharedrace-source-prelaunch.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/race/sharedrace-source-prelaunch.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/race/sharedrace-source-prelaunch.json",
+      "bytes": 8977,
+      "sha256": "3b515ea02b6107e0c80658c527ae047d5299409be07e10f25ce0627a1e1cd8c7",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-ci-partition-durable-race-execution/sharedrace-static-evidence-completion-v2.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/race/sharedrace-static-evidence-completion-v2.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/race/sharedrace-static-evidence-completion-v2.json",
+      "bytes": 1902,
+      "sha256": "a01cc5a23125c626d0e19ffbc01d1b8ea544b27c8c006682621dbeacb54e263a",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-partition-durable-shared-qualification-archive-staging/README.md",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/README.md",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/README.md",
+      "bytes": 2274,
+      "sha256": "781027947a7cdfee352d10ea15d50003d4725aec934b1a821f0b4fabff10a4b7",
+      "byteexact_required": true
+    },
+    {
+      "source": "/tmp/lerna-partition-durable-shared-qualification-archive-staging/source-controller-provenance-refs.json",
+      "destination": "/workspace/lerna/.scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/source-controller-provenance-refs.json",
+      "destination_repo_relative": ".scratch/lerna-implementation/current-ci-partition/durable-shared-qualification/source-controller-provenance-refs.json",
+      "bytes": 14599,
+      "sha256": "741c69633cae2e866ef56076b5fc6d52c77ecff8975d4401cbb39228a415d905",
+      "byteexact_required": true
+    }
+  ],
+  "file_count": 61,
+  "total_bytes": 642745,
+  "canonical_entries_sha256": "9b88449741d9488e3504fe46c1f2218de54c14987fcc220704e9b66a357f0d3a",
+  "normal_original_file_count": 36,
+  "race_original_file_count": 23,
+  "derived_reference_README_file_count": 2,
+  "excluded": "binaries/cache/module286 source/three Python controller payload/old historical archive payload/duplicate argv reports",
+  "controllers_and_source_refs": "/tmp/lerna-partition-durable-shared-qualification-archive-staging/source-controller-provenance-refs.json",
+  "two_original_unknowns_protected": [
+    {
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-local-lifetime-4236457110",
+      "device": 33,
+      "inode": 431541,
+      "exists": true,
+      "observation": "current read-only FS identity after original native Wait; not original pre-effect inode ACK",
+      "original_Close_UNKNOWN": "original historical SIGKILL Close UNKNOWN",
+      "no_cleanup_adoption_or_Close_backfill": true
+    },
+    {
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-local-lifetime-3810108689",
+      "device": 33,
+      "inode": 473830,
+      "exists": true,
+      "observation": "current read-only FS identity after original native Wait; not original pre-effect inode ACK",
+      "original_Close_UNKNOWN": "normal original ledger1074 SIGKILL before actual Store.Close",
+      "no_cleanup_adoption_or_Close_backfill": true
+    }
+  ],
+  "actual_native_already_STOP_RELEASE": true,
+  "normal_PASS_Race_FAIL_no_missing_tail_credit": true,
+  "static_only_no_native_DB_audit_sourcechange_merge_push": true
+}

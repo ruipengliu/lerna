@@ -1,0 +1,10 @@
+=== RUN   TestContentOriginalWorkerCannotFinishAcrossOriginalBodyFence
+=== RUN   TestContentOriginalWorkerCannotFinishAcrossOriginalBodyFence/original_fence_before_late_finish
+    content_process_recovery_test.go:1228: Content child native pid=4116712 pgid=4116610 start=17265198 generation=1
+    content_process_recovery_test.go:1368: original live staging erased; independent primary complete bytes remain
+    content_process_recovery_test.go:1390: same original live worker released and actual native Close/Wait/Stop before conservative original I/O4 cutoff after genuine original allACK
+--- PASS: TestContentOriginalWorkerCannotFinishAcrossOriginalBodyFence (0.52s)
+    --- PASS: TestContentOriginalWorkerCannotFinishAcrossOriginalBodyFence/original_fence_before_late_finish (0.52s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/component	0.532s
+NATIVE_COMPLETION_ACK {"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "current-producer-late-finish-original-fault", "pgid": 4116610, "pid": 4116610, "starttime": "17265097", "timed_out": false}

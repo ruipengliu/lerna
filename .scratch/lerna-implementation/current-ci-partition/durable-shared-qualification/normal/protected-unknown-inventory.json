@@ -1,0 +1,70 @@
+{
+  "kind": "exact observed retained new and historical UNKNOWN protection inventory; not originalinode backfill",
+  "new_original_logical_Close_UNKNOWN": {
+    "original_record": {
+      "line": 1074,
+      "record": {
+        "cause": "SIGKILL before actual Store.Close",
+        "cleanup_allowed": false,
+        "event": "object_child_logical_close_unknown",
+        "pgid": 4060856,
+        "pid": 4060856,
+        "root": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-local-lifetime-3810108689",
+        "starttime": "17024816"
+      }
+    },
+    "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-local-lifetime-3810108689",
+    "observed_after_nativeWait_device_inode": [
+      33,
+      473830
+    ],
+    "no_cleanup_adoption_or_Close_backfill": true,
+    "whole_or_Go_exit0_does_not_requalify": true
+  },
+  "historical_sticky_UNKNOWN": {
+    "path": "/tmp/lerna-current-ci-partition-execution/lerna-local-lifetime-4236457110",
+    "device": 33,
+    "inode": 431541,
+    "original_Close_UNKNOWN_sticky": true,
+    "do_not_adopt_remove_or_backfill": true
+  },
+  "old_ledger_snapshots": [
+    {
+      "path": "/tmp/lerna-current-ci-partition-execution",
+      "device": 33,
+      "inode": 415239,
+      "mode": "0o700",
+      "ledger_lines": 1436,
+      "ledger_bytes": 166092,
+      "ledger_sha256": "5f81464f298a3257b040dec29ba250717b08dcdfcfc2f773452f8c095f1bd99d",
+      "counter_next": 15,
+      "counter_sha256": "65aade1cee42cbab5ce894a8e810d15d50c8d25eb346cda85f66c62f1bbee7b0",
+      "no_scope_adoption_or_cleanup_or_Close_backfill": true
+    },
+    {
+      "path": "/tmp/lerna-current-ci-partition-after-run-execution",
+      "device": 33,
+      "inode": 453685,
+      "mode": "0o700",
+      "ledger_lines": 982,
+      "ledger_bytes": 130502,
+      "ledger_sha256": "874a198ff51e6d3a68c2a2dcf74d1e324a7defb6d357aebea5e882a743dca178",
+      "counter_next": 24,
+      "counter_sha256": "cc6564169687edec5dbe5b39324240e6b6ea9fb6973faf958874e3ba59d69cf4",
+      "no_scope_adoption_or_cleanup_or_Close_backfill": true
+    },
+    {
+      "path": "/tmp/lerna-ci-partition-durable-mechanical",
+      "device": 33,
+      "inode": 459929,
+      "mode": "0o700",
+      "ledger_lines": 159,
+      "ledger_bytes": 16245,
+      "ledger_sha256": "4f3fb50817b94b628c7162735394c0e10816e0f1131ead414db1b507ab29c1bc",
+      "counter_next": null,
+      "counter_sha256": null,
+      "no_scope_adoption_or_cleanup_or_Close_backfill": true
+    }
+  ],
+  "only_readonlyFS_current_identity_observation_no_catalog": true
+}

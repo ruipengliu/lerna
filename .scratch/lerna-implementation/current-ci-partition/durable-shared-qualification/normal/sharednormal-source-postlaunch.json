@@ -1,0 +1,40 @@
+{
+  "kind": "actual sharednormal source postfreeze",
+  "head": "d0fcc61264904070ce94e1146f07327a0ef9b2aa",
+  "qualified6": {
+    "scripts/component-integration-race.test.mjs": {
+      "bytes": 14867,
+      "sha256": "980549594cb0754ca01c72626986359184b7344782fa1ceddb9e9b9e7170a6be"
+    },
+    "scripts/test-component-integration-race.sh": {
+      "bytes": 3622,
+      "sha256": "58625eb9021299a7549a3b98ad3bd2b70b24a85acf2ac44662d0118aede91937"
+    },
+    "scripts/testdata/component-content-97.json": {
+      "bytes": 14126,
+      "sha256": "99301ce17abe265578d272a1150093e8e17cc5a73ca71a174752cf6090b3c049"
+    },
+    "scripts/bounded-build.mjs": {
+      "bytes": 4201,
+      "sha256": "9987ff70c2ff6349ca9de5fe225ea6e310379534f633dffef0ef738a168b3a6e"
+    },
+    "scripts/conformance-ownership.mjs": {
+      "bytes": 5453,
+      "sha256": "d17b90608d45335036f7c794b1f4e9d651a010bec60aed44d7fd26b0b030f88d"
+    },
+    "scripts/testdata/component-durable-60.json": {
+      "bytes": 8583,
+      "sha256": "3fc89edc6f2ad8dbd1377441615b3636c201e02bb5af5e225cdcfe480b9eb194"
+    }
+  },
+  "module286_allunchanged": true,
+  "module286_inventory_sha256": "244ff00bc019bbbe41ac0fd1f47d6094b51584e8d18d2caa6af7be5a7ce04562",
+  "Run30_allunchanged": true,
+  "controllers4_allunchanged": true,
+  "old_sources_ledgers_counters_UNKNOWN_unchanged": true,
+  "counter_actual_after": 36,
+  "clean": true,
+  "current_whole_group_absent": true,
+  "original_owner_Wait_confirmed": true,
+  "protected_newUNKNOWN": "/tmp/lerna-ci-partition-durable-normal-execution/protected-unknown-inventory.json"
+}

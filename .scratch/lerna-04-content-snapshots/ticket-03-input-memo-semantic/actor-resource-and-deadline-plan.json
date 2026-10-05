@@ -1,0 +1,56 @@
+{
+  "STATIC_only": true,
+  "unchanged_product332": true,
+  "Input_revision": {
+    "original_caller_seconds": 30,
+    "original_Request_Deadline": "original unchanged fixed world value",
+    "first_public_attempt": "Original ObserveCompileBudget.Reads[0].Reservation.Attempt; first6 read IDs1..6/ordinal1 confirmed; no guessed private state",
+    "stale_read_id": "7; legal unused sequence, exact original fullRef/Purpose/Subject; no physical read after refusal",
+    "budget_assertion": "ErrChanged+zero ReadReservation; beforeStale/afterStale full public observations identical; original same-dispatcher secondCompile 12reads; later Reopen third18reads/fourthRounds/final fullbounds unchanged",
+    "warm_observation": "two public ObserveInput before legal revision update; original fullInput equality and returned mutable Goal/Material mutation does not poison actual row; private memo counts absent"
+  },
+  "warm_budget_lock": {
+    "original_caller_seconds": 30,
+    "original_deadline_seconds": 2,
+    "original_start_offset_ms": -400,
+    "original_unlock_offset_ms": 20,
+    "original_policy_or_budget_lock_timeout_seconds": 1,
+    "original_peer": "same actual singleconnection peer; two ObserveInput before original rootHold, no renewal",
+    "original_actors": "existing launchBudgetActor registers BorrowWorkerExit beforegoroutine; true WaitCompileBudgetLock exact PID/rootkey thenoriginal locker/contenderJoin/peerfirstClose; original publicBudget/refusal/Reopen unchanged"
+  },
+  "new_ancestor_policy_lock": {
+    "cases2": [
+      "normal-release",
+      "native-lock-timeout"
+    ],
+    "caller_each_seconds": 12,
+    "World_limits_unchanged": {
+      "transaction_seconds": 3,
+      "statement_seconds": 2,
+      "lock_seconds": 1,
+      "connections": 1
+    },
+    "service_limits_unchanged": {
+      "lease_seconds": 60,
+      "work_seconds": 5,
+      "publish_seconds": 60
+    },
+    "initial_policy_trusted_window": "one hour established once beforetwo originalpublic publications; neverrenewed later",
+    "original_shapes": "A alpha6 -> target alpha6 sourceA; 2 fullrefs/receipts; own world/schema percase, no fakeprivate row/businessoracle",
+    "locker": "World.HoldPolicy(A) existingactual FOR UPDATE holder+observer handles; original registration pg_policy_connections/schema+holderPID beforeactor effect; originalrelease Rollback plus first locker/observer Close via sync.Once",
+    "actor": "one buffered result+finished created; joinContentRead cleanup registered BEFORE goroutine; no actualObjects barrier/decorator or newbackground engine",
+    "lock_gate": "existing waitBlocked observes real pg_blocking_pids of originalholder; no guessed timeout/CPU/countoracle",
+    "normal": "release only after actualwait, then actual result+finished; complete sameProcessingRead asbefore",
+    "fault": "keep lock until natural originalserver lock_timeout returns; result+finishedJoin beforefirstrelease; originalparentctx stillvalid; errors.As(*pgconn.PgError) code55P03 not context deadline/cancel; zeroProcessingRead",
+    "release_facts": "original release error retained iffirstClose unknown; normal secondrelease only returns originalfirstClose result, not new nativeClose; no PGIDabsence => perresourceACK inference",
+    "public_recovery": "only after actorjoined+originalrelease/Closeack: both currentpublic alpha bodies/fullfixed receipts+publishedhistory, complete sameProcessingRead; Reopen originalStores/Objects thenrepeat public/history/fullProcessingRead; classificationassertions at end",
+    "cleanup": "existing w infrastructureClosers retain originalunknown; joinContentRead original3second cleanup joins/RetainInvocation ifunconfirmed; no descriptor or holder gate bypass"
+  },
+  "reused_existing_controls": "only exact selected normal/Processwithdrawal/Cancel, BodySeal targets/ancestor, real postIO revocation, lockedclock/record600ms gates and two last-original budget concurrency; no newmatrix",
+  "unknown_limits": [
+    "not TCP/network transport disconnection proof",
+    "does not separately prove TrustedUntil natural expiry",
+    "existing Now transport gap not pretended fullycovered",
+    "not original4B capacity or netbenefit proof"
+  ]
+}

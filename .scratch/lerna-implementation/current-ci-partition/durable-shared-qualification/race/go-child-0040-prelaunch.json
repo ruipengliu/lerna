@@ -1,0 +1,23 @@
+{
+  "event": "owned_go_child_start_ack",
+  "operation": "go-child-0040",
+  "parent_operation": "partition-shared-race",
+  "pid": 4097574,
+  "pgid": 4094347,
+  "starttime": "17187805",
+  "root": "/tmp/lerna-ci-partition-durable-race-execution",
+  "argv": [
+    "/home/agent/.local/toolchains/go1.27.1/bin/go",
+    "test",
+    "-p=1",
+    "-count=1",
+    "-race",
+    "-tags=integration",
+    "-timeout=120s",
+    "./conformance/component",
+    "-run",
+    "^(TestContentFullClosureIncludesIntermediateVersionsAndExact64Bound)$"
+  ],
+  "original_whole_deadline_monotonic": 173217.30429753,
+  "remaining_whole_seconds": 1339.248216300999
+}

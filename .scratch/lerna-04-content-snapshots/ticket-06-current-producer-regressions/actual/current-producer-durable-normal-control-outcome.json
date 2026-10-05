@@ -1,0 +1,11 @@
+{
+  "event": "native_completion_ack",
+  "operation": "current-producer-durable-normal-control",
+  "pid": 4078161,
+  "pgid": 4078161,
+  "starttime": "17103157",
+  "exit": 0,
+  "group_absent": true,
+  "timed_out": false,
+  "owned_raw_fsync_close_ack": true
+}

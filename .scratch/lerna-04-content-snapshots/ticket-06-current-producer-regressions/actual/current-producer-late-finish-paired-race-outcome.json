@@ -1,0 +1,11 @@
+{
+  "event": "native_completion_ack",
+  "operation": "current-producer-late-finish-paired-race",
+  "pid": 4117261,
+  "pgid": 4117261,
+  "starttime": "17267749",
+  "exit": 0,
+  "group_absent": true,
+  "timed_out": false,
+  "owned_raw_fsync_close_ack": true
+}

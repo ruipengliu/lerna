@@ -1,0 +1,11 @@
+{
+  "root": "/tmp/lerna-ci-partition-durable-race-execution",
+  "device": 33,
+  "inode": 474553,
+  "mode": "0700",
+  "purpose": "STATIC future ONEsharedrace at fixed d0; no native granted or started",
+  "new_ledger_next_line": 1,
+  "not_old_ledger_continuation": true,
+  "counter_inherited_byteexact_next36": true,
+  "unknown_historical_scopes_adopted": false
+}

@@ -1,0 +1,477 @@
+//go:build integration
+
+package component_test
+
+import (
+	"context"
+	"errors"
+	fixture "github.com/ruipengliu/lerna/conformance/internal/decisionfixture"
+	v "github.com/ruipengliu/lerna/contract/v1_1"
+	c "github.com/ruipengliu/lerna/contract/v1_2"
+	"github.com/ruipengliu/lerna/domain/content"
+	compiler "github.com/ruipengliu/lerna/domain/task/context"
+	"reflect"
+	"strconv"
+	"testing"
+	"time"
+)
+
+func TestContentContextOriginalSnapshotCompilationLimitSurvivesReopen(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+	w := fixture.NewContextWorld(t, ctx)
+	entries, active, err := w.Boundary.Observe()
+	if err != nil || len(entries) != 0 || active != 0 {
+		t.Fatal("entry window must begin before the original compilation")
+	}
+	var original compiler.Bundle
+	for attempt := 1; attempt <= 4; attempt++ {
+		if attempt == 3 {
+			w.Reopen(ctx)
+		}
+		// Use the real compiler and publishers, before the independent fixture
+		//Bind boundary; every successful compilation truly publishes Content.
+		processor := compiler.Compiler{Current: w.Dispatcher, Content: w.Content, Assembly: w.Adapter, Subject: w.Subject}
+		input, bundle, err := processor.Compile(ctx, "context-input")
+		if attempt == 4 {
+			var refusal *compiler.BudgetError
+			if !errors.Is(err, compiler.ErrBudget) || !errors.As(err, &refusal) || refusal.Reason != compiler.BudgetRounds || errors.Is(err, compiler.ErrOverflow) || errors.Is(err, compiler.ErrBodyLimit) || errors.Is(err, compiler.ErrChanged) {
+				t.Fatal("reopen allowed a fourth compilation of the original Snapshot")
+			}
+			if !reflect.DeepEqual(bundle, compiler.Bundle{}) {
+				t.Fatal("round refusal exposed a successful Bundle")
+			}
+			assertContextNoDispatchFacts(t, ctx, w)
+			budget, e := w.Dispatcher.ObserveCompileBudget(ctx, w.Input.Request.Payload.SnapshotRef, "", 64)
+			if e != nil || budget.Rounds != 3 || budget.Reserved != budget.Confirmed || budget.Unknown != 0 || len(budget.Reads) != 18 || budget.Next != "" || budget.Tuple.Policy.ReadBudget != "65536" || budget.Tuple.MaxRounds != "3" {
+				t.Fatal("original durable compilation/read scope inaccurate", e, budget.Rounds, budget.Reserved, budget.Confirmed, budget.Unknown, len(budget.Reads))
+			}
+			var total int64
+			for _, length := range []int64{22, int64(len(original.Mandatory.Bytes)), int64(len(original.Shell.Bytes)), int64(len(original.Manifest.Bytes)), int64(len(original.Lock.Bytes))} {
+				total += length
+			}
+			if budget.Reserved != 3*total || budget.Reserved > 65536 {
+				t.Fatal("shared material and four verification reads must consume the original cumulative budget", budget.Reserved, total)
+			}
+			t.Logf("original compilation budget rounds=%d reserved=%d confirmed=%d unknown=%d reads=%d per_round=%d limit=%s", budget.Rounds, budget.Reserved, budget.Confirmed, budget.Unknown, len(budget.Reads), total, budget.Tuple.Policy.ReadBudget)
+			for i, read := range budget.Reads {
+				if !read.Confirmed || string(read.Reservation.Attempt.Ordinal) != strconv.Itoa(i/6+1) || string(read.Reservation.ReadID) != strconv.Itoa(i%6+1) {
+					t.Fatal("accurate unique attempts/read observations differ")
+				}
+				refs := []c.ContentRef{w.Input.Materials[0].Ref, w.Input.Materials[1].Ref, original.Mandatory.Ref, original.Shell.Ref, original.Manifest.Ref, original.Lock.Ref}
+				if read.Reservation.Ref != refs[i%6] || read.Reservation.Purpose != w.Input.Purpose {
+					t.Fatal("budget omitted an actual material/verification full ref")
+				}
+			}
+			w.Reopen(ctx)
+			assertContextNoDispatchFacts(t, ctx, w)
+			fixed, e := w.Dispatcher.ObserveCompileBudget(ctx, w.Input.Request.Payload.SnapshotRef, "", 64)
+			if e != nil || !reflect.DeepEqual(budget, fixed) {
+				t.Fatal("budget original tuple/reads reset after reopen", e)
+			}
+			entries, active, e := w.Boundary.Observe()
+			if e != nil || len(entries) != 0 || active != 0 {
+				t.Fatal("bounded original compilation window reached Decide or left an open sender")
+			}
+			return
+		}
+		if err != nil || !reflect.DeepEqual(input, w.Input) {
+			t.Fatal("original legal compilation did not complete accurately", attempt, err)
+		}
+		if attempt == 1 {
+			original = bundle
+		}
+		if bundle.Mandatory.Ref != original.Mandatory.Ref || bundle.Manifest.Ref != original.Manifest.Ref || bundle.ExtraReadBytes != 22 {
+			t.Fatal("reopen changed original identity or actual processed read scope", attempt)
+		}
+		if !reflect.DeepEqual(publicContextBytes(t, ctx, w, bundle.Mandatory.Ref), original.Mandatory.Bytes) {
+			t.Fatal("original true Content bytes changed")
+		}
+	}
+}
+
+// This observer forwards every admitted processing call to the real Content
+// service. The compiler passes that same reader into all four verifications.
+type compileReadObserver struct {
+	compiler.ProcessingContent
+	refs []c.ContentRef
+}
+
+func (o *compileReadObserver) ReadForProcessing(ctx context.Context, subject *c.SubjectBinding, ref c.ContentRef, purpose string, remaining int64) (content.ProcessingRead, error) {
+	if len(o.refs) >= 18 {
+		return content.ProcessingRead{}, errors.New("bounded compilation observation exhausted")
+	}
+	o.refs = append(o.refs, ref)
+	return o.ProcessingContent.ReadForProcessing(ctx, subject, ref, purpose, remaining)
+}
+
+func TestContentContextOriginalReadBudgetStopsVerificationBeforeRealRead(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+	// The smaller original quota is fixed before the first trusted InstallInput.
+	// It is never changed after a failure or during recovery.
+	w := fixture.NewContextWorldWithInput(t, ctx, func(in *compiler.Input) { in.Policy.ReadBudget = "20000" })
+	reads := &compileReadObserver{ProcessingContent: w.Content}
+	processor := compiler.Compiler{Current: w.Dispatcher, Content: reads, Assembly: w.Adapter, Subject: w.Subject}
+	in, first, err := processor.Compile(ctx, "context-input")
+	if err != nil || !reflect.DeepEqual(in, w.Input) {
+		t.Fatal("first original cumulative-budget control failed", err)
+	}
+	refs := []c.ContentRef{w.Input.Materials[0].Ref, w.Input.Materials[1].Ref, first.Mandatory.Ref, first.Shell.Ref, first.Manifest.Ref, first.Lock.Ref}
+	var roundBytes int64
+	for _, ref := range refs {
+		n, e := strconv.ParseInt(string(ref.ByteLength), 10, 64)
+		if e != nil {
+			t.Fatal(e)
+		}
+		roundBytes += n
+	}
+	if !reflect.DeepEqual(reads.refs, refs) || 2*roundBytes > 20000 || 3*roundBytes <= 20000 {
+		t.Fatal("real first control did not isolate cumulative verification exhaustion", roundBytes)
+	}
+	firstBudget, err := w.Dispatcher.ObserveCompileBudget(ctx, w.Input.Request.Payload.SnapshotRef, "", 64)
+	if err != nil || firstBudget.Rounds != 1 || firstBudget.Reserved != roundBytes || firstBudget.Confirmed != roundBytes || firstBudget.Unknown != 0 || len(firstBudget.Reads) != 6 {
+		t.Fatal("first whole compilation read observation differs", err)
+	}
+	w.Reopen(ctx)
+	reads.ProcessingContent = w.Content
+	processor.Current, processor.Assembly = w.Dispatcher, w.Adapter
+	secondInput, second, err := processor.Compile(ctx, "context-input")
+	if err != nil || !reflect.DeepEqual(secondInput, w.Input) || second.Mandatory.Ref != first.Mandatory.Ref || second.Manifest.Ref != first.Manifest.Ref || !reflect.DeepEqual(reads.refs, append(append([]c.ContentRef(nil), refs...), refs...)) {
+		t.Fatal("second original cumulative-budget control failed", err)
+	}
+	w.Reopen(ctx)
+	reads.ProcessingContent = w.Content
+	processor.Current, processor.Assembly = w.Dispatcher, w.Adapter
+	_, _, err = processor.Compile(ctx, "context-input")
+	var refusal *compiler.BudgetError
+	if !errors.Is(err, compiler.ErrBudget) || !errors.As(err, &refusal) || refusal.Reason != compiler.BudgetReadBytes || errors.Is(err, compiler.ErrOverflow) || errors.Is(err, compiler.ErrBodyLimit) || errors.Is(err, compiler.ErrChanged) {
+		t.Fatal("third compilation ignored the original cumulative verification quota", err)
+	}
+	// Independently count the exact prefix that fits the original residual.
+	expected := append(append([]c.ContentRef(nil), refs...), refs...)
+	reserved := 2 * roundBytes
+	for _, ref := range refs {
+		n, e := strconv.ParseInt(string(ref.ByteLength), 10, 64)
+		if e != nil {
+			t.Fatal(e)
+		}
+		if n > 20000-reserved {
+			break
+		}
+		reserved += n
+		expected = append(expected, ref)
+	}
+	if len(expected) < 14 || len(expected) >= 18 || !reflect.DeepEqual(reads.refs, expected) {
+		t.Fatal("refused verification reached real Content, or original reads were omitted", len(reads.refs), len(expected))
+	}
+	budget, err := w.Dispatcher.ObserveCompileBudget(ctx, w.Input.Request.Payload.SnapshotRef, "", 64)
+	if err != nil || budget.Rounds != 3 || budget.Tuple.Policy.ReadBudget != "20000" || budget.Reserved != reserved || budget.Confirmed != reserved || budget.Unknown != 0 || len(budget.Reads) != len(expected) || budget.Next != "" {
+		t.Fatal("cumulative original observation is inaccurate", err)
+	}
+	for i, read := range budget.Reads {
+		if !read.Confirmed || read.Reservation.Ref != expected[i] || string(read.Reservation.Attempt.Ordinal) != strconv.Itoa(i/6+1) || string(read.Reservation.ReadID) != strconv.Itoa(i%6+1) {
+			t.Fatal("actual unique admitted read facts differ")
+		}
+	}
+	t.Logf("original cumulative budget limit=%s rounds=%d reserved=%d confirmed=%d unknown=%d reads=%d first_round=%d refused_verification_index=%d", budget.Tuple.Policy.ReadBudget, budget.Rounds, budget.Reserved, budget.Confirmed, budget.Unknown, len(budget.Reads), roundBytes, len(expected)-12)
+	assertContextNoDispatchFacts(t, ctx, w)
+	w.Reopen(ctx)
+	assertContextNoDispatchFacts(t, ctx, w)
+	fixed, err := w.Dispatcher.ObserveCompileBudget(ctx, w.Input.Request.Payload.SnapshotRef, "", 64)
+	if err != nil || !reflect.DeepEqual(budget, fixed) {
+		t.Fatal("reopen reset original cumulative quota", err)
+	}
+	entries, active, err := w.Boundary.Observe()
+	if err != nil || len(entries) != 0 || active != 0 {
+		t.Fatal("cumulative budget refusal dispatched or left an open sender")
+	}
+}
+
+var errProcessingResponseUnknown = errors.New("processing read response unknown")
+
+type lostProcessingResponse struct {
+	compiler.ProcessingContent
+	lose bool
+	seen []c.ContentRef
+}
+
+func (o *lostProcessingResponse) ReadForProcessing(ctx context.Context, subject *c.SubjectBinding, ref c.ContentRef, purpose string, remaining int64) (content.ProcessingRead, error) {
+	if len(o.seen) >= 7 {
+		return content.ProcessingRead{}, errors.New("bounded lost-response observation exhausted")
+	}
+	read, err := o.ProcessingContent.ReadForProcessing(ctx, subject, ref, purpose, remaining)
+	if err != nil {
+		return read, err
+	}
+	o.seen = append(o.seen, read.Ref)
+	if o.lose {
+		o.lose = false
+		// Real current processing completed. Only its response is lost at this
+		// consumer boundary; this is not a claim that a physical timeout fired.
+		return content.ProcessingRead{}, errProcessingResponseUnknown
+	}
+	return read, nil
+}
+
+func TestContentContextUnknownReadReservationSurvivesReopenWithoutRefund(t *testing.T) {
+	t.Run("normal", func(t *testing.T) {
+		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+		defer cancel()
+		w := fixture.NewContextWorld(t, ctx)
+		bundle, err := w.Compile(ctx)
+		if err != nil {
+			t.Fatal(err)
+		}
+		completeContextDecision(t, ctx, w, bundle)
+	})
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+	w := fixture.NewContextWorld(t, ctx)
+	reader := &lostProcessingResponse{ProcessingContent: w.Content, lose: true}
+	processor := compiler.Compiler{Current: w.Dispatcher, Content: reader, Assembly: w.Adapter, Subject: w.Subject}
+	_, bundle, err := processor.Compile(ctx, "context-input")
+	if !errors.Is(err, errProcessingResponseUnknown) || errors.Is(err, compiler.ErrBudget) || !reflect.DeepEqual(bundle, compiler.Bundle{}) || !reflect.DeepEqual(reader.seen, []c.ContentRef{w.Input.Materials[0].Ref}) {
+		t.Fatal("real processing response loss was not preserved accurately", err)
+	}
+	unknown, err := w.Dispatcher.ObserveCompileBudget(ctx, w.Input.Request.Payload.SnapshotRef, "", 64)
+	if err != nil || unknown.Rounds != 1 || unknown.Reserved != 6 || unknown.Confirmed != 0 || unknown.Unknown != 6 || len(unknown.Reads) != 1 || unknown.Reads[0].Confirmed {
+		t.Fatal("unconfirmed real read reservation was refunded or fabricated as confirmed", err)
+	}
+	reservation := unknown.Reads[0].Reservation
+	if reservation.Ref != w.Input.Materials[0].Ref || reservation.Attempt.Ordinal != "1" || reservation.ReadID != "1" {
+		t.Fatal("unknown reservation lost its original full identity")
+	}
+	_, err = w.Dispatcher.ReserveRead(ctx, reservation.Attempt, reservation.ReadID, reservation.Ref, reservation.Purpose, w.Subject)
+	var refusal *compiler.BudgetError
+	if !errors.Is(err, compiler.ErrBudget) || !errors.As(err, &refusal) || refusal.Reason != compiler.BudgetReadReused || len(reader.seen) != 1 {
+		t.Fatal("replaying an unknown reservation granted a second physical read", err)
+	}
+	assertContextNoDispatchFacts(t, ctx, w)
+	w.Reopen(ctx)
+	fixed, err := w.Dispatcher.ObserveCompileBudget(ctx, w.Input.Request.Payload.SnapshotRef, "", 64)
+	if err != nil || !reflect.DeepEqual(unknown, fixed) {
+		t.Fatal("unknown occupancy reset at reopen", err)
+	}
+	reader.ProcessingContent = w.Content
+	processor.Current, processor.Assembly = w.Dispatcher, w.Adapter
+	in, recovered, err := processor.Compile(ctx, "context-input")
+	if err != nil || !reflect.DeepEqual(in, w.Input) || recovered.ExtraReadBytes != 22 || len(reader.seen) != 7 {
+		t.Fatal("fresh bounded second attempt did not retain the original input", err)
+	}
+	var confirmed int64 = 22
+	for _, object := range []compiler.Object{recovered.Mandatory, recovered.Shell, recovered.Manifest, recovered.Lock} {
+		confirmed += int64(len(object.Bytes))
+	}
+	budget, err := w.Dispatcher.ObserveCompileBudget(ctx, w.Input.Request.Payload.SnapshotRef, "", 64)
+	if err != nil || budget.Rounds != 2 || budget.Reserved != confirmed+6 || budget.Confirmed != confirmed || budget.Unknown != 6 || len(budget.Reads) != 7 || budget.Reads[0].Confirmed {
+		t.Fatal("successful next attempt refunded the original unknown occupancy", err)
+	}
+	for i, read := range budget.Reads[1:] {
+		if !read.Confirmed || read.Reservation.Attempt.Ordinal != "2" || string(read.Reservation.ReadID) != strconv.Itoa(i+1) || read.Reservation.Ref != reader.seen[i+1] {
+			t.Fatal("new physical reads reused an old unknown reservation")
+		}
+	}
+	t.Logf("original unknown read budget rounds=%d reserved=%d confirmed=%d unknown=%d reads=%d", budget.Rounds, budget.Reserved, budget.Confirmed, budget.Unknown, len(budget.Reads))
+	assertContextNoDispatchFacts(t, ctx, w)
+	w.Reopen(ctx)
+	assertContextNoDispatchFacts(t, ctx, w)
+	fixed, err = w.Dispatcher.ObserveCompileBudget(ctx, w.Input.Request.Payload.SnapshotRef, "", 64)
+	if err != nil || !reflect.DeepEqual(budget, fixed) {
+		t.Fatal("original unknown reservation changed after successful recovery reopen", err)
+	}
+	entries, active, err := w.Boundary.Observe()
+	if err != nil || len(entries) != 0 || active != 0 {
+		t.Fatal("unknown compilation response dispatched or left an open sender")
+	}
+}
+
+func TestContentContextInputRevisionKeepsOriginalRoundsAndRejectsWiderTuple(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+	w := fixture.NewContextWorld(t, ctx)
+	processor := compiler.Compiler{Current: w.Dispatcher, Content: w.Content, Assembly: w.Adapter, Subject: w.Subject}
+	_, original, err := processor.Compile(ctx, "context-input")
+	if err != nil {
+		t.Fatal("original current input control failed", err)
+	}
+	originalTuple, err := w.Dispatcher.ObserveCompileBudget(ctx, w.Input.Request.Payload.SnapshotRef, "", 64)
+	if err != nil || originalTuple.Rounds != 1 || len(originalTuple.Reads) != 6 || originalTuple.Unknown != 0 || originalTuple.Reserved != originalTuple.Confirmed {
+		t.Fatal("original scope admission/read facts missing", err)
+	}
+	for i, read := range originalTuple.Reads {
+		if !read.Confirmed || read.Reservation.ReadID != v.Revision(strconv.Itoa(i+1)) || read.Reservation.Attempt.Ordinal != "1" {
+			t.Fatal("first original attempt/read identity missing")
+		}
+	}
+	originalAttempt := originalTuple.Reads[0].Reservation.Attempt
+	warm, err := w.Dispatcher.ObserveInput(ctx, "context-input")
+	if err != nil || !reflect.DeepEqual(warm, w.Input) {
+		t.Fatal("normal warm current Input differs", err)
+	}
+	warm.Goal = "caller-only mutation"
+	warm.Materials[0].Selected = false
+	again, err := w.Dispatcher.ObserveInput(ctx, "context-input")
+	if err != nil || !reflect.DeepEqual(again, w.Input) {
+		t.Fatal("warm returned Input poisoned the actual current row", err)
+	}
+	w.Input.Revision = "2"
+	w.Input.GoalRevision = "2"
+	w.Input.Goal += " 原输入更新仍保留原累计预算。"
+	if err = w.Dispatcher.InstallInput(ctx, "context-input", w.Input, "1"); err != nil {
+		t.Fatal("authorized unbound goal/input revision update was rejected", err)
+	}
+	// Keep the original dispatcher and its warm syntax representation. The
+	// original Request/deadline and durable budget are never renewed.
+	beforeStale, err := w.Dispatcher.ObserveCompileBudget(ctx, w.Input.Request.Payload.SnapshotRef, "", 64)
+	if err != nil || !reflect.DeepEqual(beforeStale, originalTuple) {
+		t.Fatal("authorized revision changed the original durable budget", err)
+	}
+	stale, staleErr := w.Dispatcher.ReserveRead(ctx, originalAttempt, "7", w.Input.Materials[0].Ref, w.Input.Purpose, w.Subject)
+	afterStale, observeStaleErr := w.Dispatcher.ObserveCompileBudget(ctx, w.Input.Request.Payload.SnapshotRef, "", 64)
+	if !errors.Is(staleErr, compiler.ErrChanged) || !reflect.DeepEqual(stale, compiler.ReadReservation{}) || observeStaleErr != nil || !reflect.DeepEqual(afterStale, beforeStale) {
+		t.Fatal("old exact attempt reused changed current Input or altered original budget", staleErr, observeStaleErr)
+	}
+	// No physical read follows the refused reservation. The second real
+	// compilation uses this same dispatcher; original later Reopens remain.
+	in, revised, err := processor.Compile(ctx, "context-input")
+	if err != nil || !reflect.DeepEqual(in, w.Input) || revised.Mandatory.Ref == original.Mandatory.Ref {
+		t.Fatal("current revised body was replaced with an old or latest mapping", err)
+	}
+	mandatory, err := compiler.DecodeMandatory(publicContextBytes(t, ctx, w, revised.Mandatory.Ref))
+	if err != nil || !reflect.DeepEqual(mandatory.Input, w.Input) {
+		t.Fatal("revised necessary input was not preserved fully", err)
+	}
+	budget, err := w.Dispatcher.ObserveCompileBudget(ctx, w.Input.Request.Payload.SnapshotRef, "", 64)
+	if err != nil || budget.Rounds != 2 || len(budget.Reads) != 12 || !reflect.DeepEqual(originalTuple.Tuple, budget.Tuple) || budget.Unknown != 0 || budget.Reserved != budget.Confirmed {
+		t.Fatal("input revision reset the original counters or tuple", err)
+	}
+	for i, read := range budget.Reads {
+		expectedRevision := "1"
+		if i >= 6 {
+			expectedRevision = "2"
+		}
+		if string(read.Reservation.Attempt.InputRevision) != expectedRevision || string(read.Reservation.Attempt.Ordinal) != strconv.Itoa(i/6+1) {
+			t.Fatal("input revision changed the original attempt identity")
+		}
+	}
+	wide := w.Input
+	wide.Revision = "3"
+	wide.Policy.ReadBudget = "65537"
+	err = w.Dispatcher.InstallInput(ctx, "context-input", wide, "2")
+	var refusal *compiler.BudgetError
+	if !errors.Is(err, compiler.ErrBudget) || !errors.As(err, &refusal) || refusal.Reason != compiler.BudgetTuple || errors.Is(err, compiler.ErrOverflow) || errors.Is(err, compiler.ErrBodyLimit) {
+		t.Fatal("same original Snapshot accepted a wider tuple", err)
+	}
+	current, err := w.Dispatcher.ObserveInput(ctx, "context-input")
+	unchanged, observeErr := w.Dispatcher.ObserveCompileBudget(ctx, w.Input.Request.Payload.SnapshotRef, "", 64)
+	if err != nil || observeErr != nil || !reflect.DeepEqual(current, w.Input) || !reflect.DeepEqual(unchanged, budget) {
+		t.Fatal("rejected wider tuple changed original current input or counters", err, observeErr)
+	}
+	w.Reopen(ctx)
+	processor.Current, processor.Content, processor.Assembly = w.Dispatcher, w.Content, w.Adapter
+	_, third, err := processor.Compile(ctx, "context-input")
+	if err != nil || third.Mandatory.Ref != revised.Mandatory.Ref {
+		t.Fatal("last original round failed to use its exact revised mapping", err)
+	}
+	_, empty, err := processor.Compile(ctx, "context-input")
+	if !errors.Is(err, compiler.ErrBudget) || !errors.As(err, &refusal) || refusal.Reason != compiler.BudgetRounds || !reflect.DeepEqual(empty, compiler.Bundle{}) {
+		t.Fatal("input revision minted a fourth original compilation round", err)
+	}
+	budget, err = w.Dispatcher.ObserveCompileBudget(ctx, w.Input.Request.Payload.SnapshotRef, "", 64)
+	var expected int64
+	for _, bundle := range []compiler.Bundle{original, revised, revised} {
+		expected += 22 + int64(len(bundle.Mandatory.Bytes)+len(bundle.Shell.Bytes)+len(bundle.Manifest.Bytes)+len(bundle.Lock.Bytes))
+	}
+	if err != nil || budget.Rounds != 3 || len(budget.Reads) != 18 || budget.Reserved != expected || budget.Confirmed != expected || budget.Unknown != 0 || !reflect.DeepEqual(originalTuple.Tuple, budget.Tuple) {
+		t.Fatal("same original Snapshot lost accurate cumulative facts", err)
+	}
+	t.Logf("same Snapshot input revision rounds=%d reserved=%d confirmed=%d unknown=%d reads=%d original_limit=%s", budget.Rounds, budget.Reserved, budget.Confirmed, budget.Unknown, len(budget.Reads), budget.Tuple.Policy.ReadBudget)
+	assertContextNoDispatchFacts(t, ctx, w)
+	w.Reopen(ctx)
+	assertContextNoDispatchFacts(t, ctx, w)
+	fixed, err := w.Dispatcher.ObserveCompileBudget(ctx, w.Input.Request.Payload.SnapshotRef, "", 64)
+	if err != nil || !reflect.DeepEqual(budget, fixed) {
+		t.Fatal("reopen revised the original Snapshot budget identity", err)
+	}
+	entries, active, err := w.Boundary.Observe()
+	if err != nil || len(entries) != 0 || active != 0 {
+		t.Fatal("original input budget refusal dispatched or left an open sender")
+	}
+}
+
+func TestContentContextThreeOriginalOverflowsConsumeAllCompilationRounds(t *testing.T) {
+	t.Run("normal", func(t *testing.T) {
+		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+		defer cancel()
+		w := fixture.NewContextWorld(t, ctx)
+		reader := &compileReadObserver{ProcessingContent: w.Content}
+		processor := compiler.Compiler{Current: w.Dispatcher, Content: reader, Assembly: w.Adapter, Subject: w.Subject}
+		in, bundle, err := processor.Compile(ctx, "context-input")
+		if err != nil || len(reader.refs) != 6 {
+			t.Fatal("admitted normal processing control failed", err)
+		}
+		if err = w.Dispatcher.Bind(ctx, "context-input", in, bundle); err != nil {
+			t.Fatal(err)
+		}
+		completeContextDecision(t, ctx, w, bundle)
+	})
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+	w := fixture.NewContextWorld(t, ctx)
+	w.Input.Revision = "2"
+	condition := w.Input.Conditions[0]
+	w.Input.Conditions = make([]compiler.Condition, 65)
+	for i := range w.Input.Conditions {
+		w.Input.Conditions[i] = condition
+		w.Input.Conditions[i].Ref.ID = v.ID("original-overflow-requirement-" + strconv.Itoa(100+i))
+	}
+	if err := w.Dispatcher.InstallInput(ctx, "context-input", w.Input, "1"); err != nil {
+		t.Fatal("legal original identity with declared condition overflow was not installed", err)
+	}
+	reader := &compileReadObserver{ProcessingContent: w.Content}
+	for attempt := 1; attempt <= 4; attempt++ {
+		if attempt == 3 {
+			w.Reopen(ctx)
+			reader.ProcessingContent = w.Content
+		}
+		processor := compiler.Compiler{Current: w.Dispatcher, Content: reader, Assembly: w.Adapter, Subject: w.Subject}
+		in, bundle, err := processor.Compile(ctx, "context-input")
+		if !reflect.DeepEqual(bundle, compiler.Bundle{}) || !reflect.DeepEqual(in, w.Input) || len(reader.refs) != 0 {
+			t.Fatal("overflow or exhausted admission read Content or exposed a successful Bundle")
+		}
+		if attempt <= 3 {
+			if !errors.Is(err, compiler.ErrOverflow) || errors.Is(err, compiler.ErrBudget) || errors.Is(err, compiler.ErrBodyLimit) || errors.Is(err, compiler.ErrChanged) {
+				t.Fatal("admitted quantity overflow was replaced by another refusal", attempt, err)
+			}
+			if err = w.Dispatcher.RecordFailure(ctx, "context-input", in.Revision, "context_overflow"); err != nil {
+				t.Fatal(err)
+			}
+		} else {
+			var refusal *compiler.BudgetError
+			if !errors.Is(err, compiler.ErrBudget) || !errors.As(err, &refusal) || refusal.Reason != compiler.BudgetRounds || errors.Is(err, compiler.ErrOverflow) || errors.Is(err, compiler.ErrBodyLimit) || errors.Is(err, compiler.ErrChanged) {
+				t.Fatal("three original overflows did not consume admitted rounds", err)
+			}
+		}
+		budget, err := w.Dispatcher.ObserveCompileBudget(ctx, w.Input.Request.Payload.SnapshotRef, "", 64)
+		expectedRounds := attempt
+		if expectedRounds > 3 {
+			expectedRounds = 3
+		}
+		if err != nil || budget.Rounds != expectedRounds || budget.Reserved != 0 || budget.Confirmed != 0 || budget.Unknown != 0 || len(budget.Reads) != 0 || budget.Tuple.Policy.ReadBudget != "65536" {
+			t.Fatal("early overflow admission accounting differs", attempt, err)
+		}
+		assertContextNoDispatchFacts(t, ctx, w)
+	}
+	w.Reopen(ctx)
+	budget, err := w.Dispatcher.ObserveCompileBudget(ctx, w.Input.Request.Payload.SnapshotRef, "", 64)
+	if err != nil || budget.Rounds != 3 || budget.Reserved != 0 || len(budget.Reads) != 0 {
+		t.Fatal("reopen refunded original overflow rounds", err)
+	}
+	assertContextNoDispatchFacts(t, ctx, w)
+	entries, active, err := w.Boundary.Observe()
+	if err != nil || len(entries) != 0 || active != 0 {
+		t.Fatal("overflow admissions reached real Decide or left an open sender")
+	}
+	t.Logf("original overflow admissions rounds=%d reserved=%d confirmed=%d unknown=%d reads=%d", budget.Rounds, budget.Reserved, budget.Confirmed, budget.Unknown, len(budget.Reads))
+}

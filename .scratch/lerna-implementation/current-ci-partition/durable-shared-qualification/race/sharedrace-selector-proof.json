@@ -1,0 +1,77 @@
+{
+  "kind": "actual fresh Race selector evidence limited by first closure failure",
+  "head": "d0fcc61264904070ce94e1146f07327a0ef9b2aa",
+  "fresh_discovery_operation": "go-child-0039",
+  "discovery_actual_exit0": true,
+  "reported_census": {
+    "all": 201,
+    "closure": 1,
+    "Content": 97,
+    "Durable": 60,
+    "other": 43
+  },
+  "reported_census_origin": "/tmp/lerna-ci-partition-durable-race-execution/partition-shared-race.log",
+  "originalGo_list_stdout_consumed_not_separatelycaptured": true,
+  "actual_invoked_Component_selectors": [
+    {
+      "operation": "go-child-0040",
+      "names": [
+        "TestContentFullClosureIncludesIntermediateVersionsAndExact64Bound"
+      ],
+      "argv": [
+        "/home/agent/.local/toolchains/go1.27.1/bin/go",
+        "test",
+        "-p=1",
+        "-count=1",
+        "-race",
+        "-tags=integration",
+        "-timeout=120s",
+        "./conformance/component",
+        "-run",
+        "^(TestContentFullClosureIncludesIntermediateVersionsAndExact64Bound)$"
+      ],
+      "actual_exit": 1
+    }
+  ],
+  "only_actual_selected1_not_all201_execution": true,
+  "Content97_Durable60_literal_group_argv_not_invoked": true,
+  "all7groups_execution_qualification": false,
+  "missing_tail": [
+    {
+      "operation": "go-child-0041",
+      "stage": "content_a race",
+      "not_executed": true
+    },
+    {
+      "operation": "go-child-0042",
+      "stage": "content_b race",
+      "not_executed": true
+    },
+    {
+      "operation": "go-child-0043",
+      "stage": "content_c race",
+      "not_executed": true
+    },
+    {
+      "operation": "go-child-0044",
+      "stage": "durable_a race",
+      "not_executed": true
+    },
+    {
+      "operation": "go-child-0045",
+      "stage": "durable_b race",
+      "not_executed": true
+    },
+    {
+      "operation": "go-child-0046",
+      "stage": "other race",
+      "not_executed": true
+    },
+    {
+      "operation": "go-child-0047",
+      "stage": "fixture three packages race",
+      "not_executed": true
+    }
+  ],
+  "no_extra_GoList_or_old_Normal_or_Race_PASS_inheritance": true
+}

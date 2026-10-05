@@ -1,0 +1,43 @@
+{
+  "status": "STOP_RELEASED_ACTUAL_REMAINING14_AND_ORIGINAL_FIRST_NORMAL_ALL15_PASS",
+  "normal1_not_rerun": true,
+  "original_failed_parser_and_release_preserved": true,
+  "actual_last_native": {
+    "event": "native_completion_ack",
+    "operation": "current-producer-late-finish-paired-race",
+    "pid": 4117261,
+    "pgid": 4117261,
+    "starttime": "17267749",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false,
+    "owned_raw_fsync_close_ack": true
+  },
+  "all15_native_actual0_Wait_currentgroupAbsent_rawfirstClose_ACK_v2postfsync_source26": true,
+  "current26_manifest": "/tmp/lerna-04-ticket06-execution/late-put-formatted-26-manifest.json",
+  "current26_manifest_sha256": "df707faeff172b1e817d124d8813da2ae9f1d1e3da90daf782263d3ddbbd47bc",
+  "current_test_sha256": "c9a098141d23cda9c40d210539384d7cfb17b0d6b4f0222c16d70577308ff7e5",
+  "actual_post_paths": [
+    "/tmp/lerna-04-ticket06-execution/current-producer-durable-normal-control-postchecks.json",
+    "/tmp/lerna-04-ticket06-execution/current-producer-durable-original-fault-postchecks.json",
+    "/tmp/lerna-04-ticket06-execution/current-producer-durable-paired-race-postchecks.json",
+    "/tmp/lerna-04-ticket06-execution/current-producer-precommit-normal-control-postchecks.json",
+    "/tmp/lerna-04-ticket06-execution/current-producer-precommit-original-fault-postchecks.json",
+    "/tmp/lerna-04-ticket06-execution/current-producer-precommit-paired-race-postchecks.json",
+    "/tmp/lerna-04-ticket06-execution/current-producer-postcommit-normal-control-postchecks.json",
+    "/tmp/lerna-04-ticket06-execution/current-producer-postcommit-original-fault-postchecks.json",
+    "/tmp/lerna-04-ticket06-execution/current-producer-postcommit-paired-race-postchecks.json",
+    "/tmp/lerna-04-ticket06-execution/current-producer-policy-orphan-normal-control-postchecks.json",
+    "/tmp/lerna-04-ticket06-execution/current-producer-policy-orphan-original-fault-postchecks.json",
+    "/tmp/lerna-04-ticket06-execution/current-producer-policy-orphan-paired-race-postchecks.json",
+    "/tmp/lerna-04-ticket06-execution/current-producer-late-finish-normal-control-postchecks.json",
+    "/tmp/lerna-04-ticket06-execution/current-producer-late-finish-original-fault-postchecks.json",
+    "/tmp/lerna-04-ticket06-execution/current-producer-late-finish-paired-race-postchecks.json"
+  ],
+  "new_actual_killed_scopes_UNKNOWN_permanent": 8,
+  "old8_unknown_unchanged_permanent": true,
+  "owned_ledger_lines": 341,
+  "no_fmt_source_retry_other_tests_audit_commit_push": true,
+  "whole_ticket_claimed": true,
+  "detailed_summary_path_pending": "/tmp/lerna-04-ticket06-execution/current-producer-regression-v2-actual-summary.json"
+}

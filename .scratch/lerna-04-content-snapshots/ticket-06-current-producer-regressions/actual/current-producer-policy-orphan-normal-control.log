@@ -1,0 +1,8 @@
+=== RUN   TestContentSIGKILLWithCurrentSaveWithdrawalRecoversOriginalOrphanDuty
+=== RUN   TestContentSIGKILLWithCurrentSaveWithdrawalRecoversOriginalOrphanDuty/normal_release
+    content_process_recovery_test.go:894: Content child native pid=4113650 pgid=4113572 start=17252712 generation=1
+--- PASS: TestContentSIGKILLWithCurrentSaveWithdrawalRecoversOriginalOrphanDuty (0.51s)
+    --- PASS: TestContentSIGKILLWithCurrentSaveWithdrawalRecoversOriginalOrphanDuty/normal_release (0.51s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/component	0.523s
+NATIVE_COMPLETION_ACK {"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "current-producer-policy-orphan-normal-control", "pgid": 4113572, "pid": 4113572, "starttime": "17252618", "timed_out": false}

@@ -1,0 +1,28 @@
+{
+  "kind": "STATIC finite metadata completed after actual immediate Race STOP_RELEASE",
+  "release": "/tmp/lerna-ci-partition-durable-race-execution/sharedrace-release.json",
+  "release_sha256": "6b9f578e09be3684514ed9484c9c3dd89614f70a9df12f7961287eb12eb47a00",
+  "raw": "/tmp/lerna-ci-partition-durable-race-execution/partition-shared-race.log",
+  "raw_sha256": "27504b39e046d3af94884242ee94507db667ef709aefb05084c4fb59debb2f71",
+  "source_pre": "/tmp/lerna-ci-partition-durable-race-execution/sharedrace-source-prelaunch.json",
+  "source_pre_sha256": "3b515ea02b6107e0c80658c527ae047d5299409be07e10f25ce0627a1e1cd8c7",
+  "source_post": "/tmp/lerna-ci-partition-durable-race-execution/sharedrace-source-postlaunch.json",
+  "source_post_sha256": "50892e3c7bff5cb13fd0d94e8b1ed48e9d501ef35f2b19735720ce2711b3963b",
+  "scope_sidecar": "/tmp/lerna-ci-partition-durable-race-execution/sharedrace-owned-scope-sidecar-v2.json",
+  "scope_sidecar_sha256": "9439e9f962732fde0698fcd6a397e45292270b9fe0c2faa1e586ec1422867a2d",
+  "protected_unknown_inventory": "/tmp/lerna-ci-partition-durable-race-execution/protected-unknown-inventory.json",
+  "protected_unknown_inventory_sha256": "10f48ff2a80d1b298c5bfdae486ee26704b0484af640621b534f08b49b4622ca",
+  "selector_proof": "/tmp/lerna-ci-partition-durable-race-execution/sharedrace-selector-proof.json",
+  "selector_proof_sha256": "96bd3b67f83ee62cc6f8314d59c08fed1d142cd65376ddaac69be765e9e801f4",
+  "actual_scope_original_interval": [
+    1,
+    294
+  ],
+  "release_line": 295,
+  "actual_counter": 41,
+  "LOCAL_RELEASE_already_actual": true,
+  "not_another_native_run": true,
+  "previous_completion": "/tmp/lerna-ci-partition-durable-race-execution/sharedrace-static-evidence-completion.json",
+  "previous_completion_sha256": "2d4eda04ee5ac758018e705ceb1797dc5b50b6a3a12de7f209510be77b556885",
+  "uppercase_Event_records_classified_from_original_bytes": true
+}

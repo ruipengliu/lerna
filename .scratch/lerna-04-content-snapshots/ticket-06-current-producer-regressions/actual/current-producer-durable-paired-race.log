@@ -1,0 +1,13 @@
+=== RUN   TestContentSIGKILLAfterDurableObjectsRecoversOriginalPublication
+=== RUN   TestContentSIGKILLAfterDurableObjectsRecoversOriginalPublication/normal_release
+    content_process_recovery_test.go:511: Content child native pid=4105387 pgid=4105287 start=17221043 generation=1
+=== RUN   TestContentSIGKILLAfterDurableObjectsRecoversOriginalPublication/SIGKILL_then_original_Job_recovery
+    content_process_recovery_test.go:511: Content child native pid=4105446 pgid=4105287 start=17221204 generation=1
+    content_process_recovery_test.go:563: Content child native pid=4105552 pgid=4105287 start=17221726 generation=2
+    world.go:202: retained exact Content schema/root: historical child native Close UNKNOWN; actual Wait is separate
+--- PASS: TestContentSIGKILLAfterDurableObjectsRecoversOriginalPublication (8.64s)
+    --- PASS: TestContentSIGKILLAfterDurableObjectsRecoversOriginalPublication/normal_release (1.93s)
+    --- PASS: TestContentSIGKILLAfterDurableObjectsRecoversOriginalPublication/SIGKILL_then_original_Job_recovery (6.70s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/component	9.694s
+NATIVE_COMPLETION_ACK {"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "current-producer-durable-paired-race", "pgid": 4105287, "pid": 4105287, "starttime": "17220837", "timed_out": false}

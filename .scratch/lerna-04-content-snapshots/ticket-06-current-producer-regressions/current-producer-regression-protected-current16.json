@@ -1,0 +1,387 @@
+{
+  "status": "STATIC_EXACT_LSTAT_FROM_ACTUAL_LEDGER_FIRSTCLOSE_UNKNOWN_NO_PG_OR_CLEANUP",
+  "historical_old8_original_inventory_path": "/tmp/lerna-worktrees/content-snapshots-06/.scratch/lerna-04-content-snapshots/ticket-06-policy-orphan-qualification/protected-eight-unknown-scopes.json",
+  "historical_old8_inventory_sha256": "ca1e8d9da3bc5b44544e5accdcae6276f00e834556c324d42b20befb88945864",
+  "historical_firstClose_not_supplemented": true,
+  "all_current16_exact_protected": [
+    {
+      "origin": "historical_original8",
+      "schema": "lerna_test_a77911089367a14459f3d9e8",
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-4136084765",
+      "device": 33,
+      "inode": 410968,
+      "mode": "0700",
+      "native_first_store_and_object_close": "UNKNOWN_PERMANENTLY_RETAIN",
+      "current_exact_original_directory": true,
+      "cleanup": "PROHIBITED",
+      "current_pg_catalog": "NOT_OBSERVED_IN_THIS_STATIC_METADATA"
+    },
+    {
+      "origin": "historical_original8",
+      "schema": "lerna_test_c79770996c493281433e9ff1",
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-403060689",
+      "device": 33,
+      "inode": 412800,
+      "mode": "0700",
+      "native_first_store_and_object_close": "UNKNOWN_PERMANENTLY_RETAIN",
+      "current_exact_original_directory": true,
+      "cleanup": "PROHIBITED",
+      "current_pg_catalog": "NOT_OBSERVED_IN_THIS_STATIC_METADATA"
+    },
+    {
+      "origin": "historical_original8",
+      "schema": "lerna_test_e7119ccdb081fbe3f1bbf03c",
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-4013822289",
+      "device": 33,
+      "inode": 418085,
+      "mode": "0700",
+      "native_first_store_and_object_close": "UNKNOWN_PERMANENTLY_RETAIN",
+      "current_exact_original_directory": true,
+      "cleanup": "PROHIBITED",
+      "current_pg_catalog": "NOT_OBSERVED_IN_THIS_STATIC_METADATA"
+    },
+    {
+      "origin": "historical_original8",
+      "schema": "lerna_test_16e9679776e1a666b76b47d6",
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-283551839",
+      "device": 33,
+      "inode": 418493,
+      "mode": "0700",
+      "native_first_store_and_object_close": "UNKNOWN_PERMANENTLY_RETAIN",
+      "current_exact_original_directory": true,
+      "cleanup": "PROHIBITED",
+      "current_pg_catalog": "NOT_OBSERVED_IN_THIS_STATIC_METADATA"
+    },
+    {
+      "origin": "historical_original8",
+      "schema": "lerna_test_c2f794d660d6f7e336c377b4",
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-2029374551",
+      "device": 33,
+      "inode": 423714,
+      "mode": "0700",
+      "native_first_store_and_object_close": "UNKNOWN_PERMANENTLY_RETAIN",
+      "current_exact_original_directory": true,
+      "cleanup": "PROHIBITED",
+      "current_pg_catalog": "NOT_OBSERVED_IN_THIS_STATIC_METADATA"
+    },
+    {
+      "origin": "historical_original8",
+      "schema": "lerna_test_f991ad1c96ea361e8f2a3490",
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-3499575554",
+      "device": 33,
+      "inode": 424086,
+      "mode": "0700",
+      "native_first_store_and_object_close": "UNKNOWN_PERMANENTLY_RETAIN",
+      "current_exact_original_directory": true,
+      "cleanup": "PROHIBITED",
+      "current_pg_catalog": "NOT_OBSERVED_IN_THIS_STATIC_METADATA"
+    },
+    {
+      "origin": "historical_original8",
+      "schema": "lerna_test_19c2e383adb12e48ac55afed",
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-3364467673",
+      "device": 33,
+      "inode": 451764,
+      "mode": "0700",
+      "native_first_store_and_object_close": "UNKNOWN_PERMANENTLY_RETAIN",
+      "current_exact_original_directory": true,
+      "cleanup": "PROHIBITED",
+      "current_pg_catalog": "NOT_OBSERVED_IN_THIS_STATIC_METADATA"
+    },
+    {
+      "origin": "historical_original8",
+      "schema": "lerna_test_5aa1dba26c48dcc1e55eb965",
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-3028872266",
+      "device": 33,
+      "inode": 452726,
+      "mode": "0700",
+      "native_first_store_and_object_close": "UNKNOWN_PERMANENTLY_RETAIN",
+      "current_exact_original_directory": true,
+      "cleanup": "PROHIBITED",
+      "current_pg_catalog": "NOT_OBSERVED_IN_THIS_STATIC_METADATA"
+    },
+    {
+      "origin": "currentproducer_actual_new8",
+      "schema": "lerna_test_911a1f5960c093373aafe2d8",
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-2511088488",
+      "device": 33,
+      "inode": 478014,
+      "mode": "0700",
+      "native_first_store_and_object_close": "UNKNOWN_PERMANENTLY_RETAIN",
+      "current_exact_original_directory": true,
+      "cleanup": "PROHIBITED",
+      "current_pg_catalog": "NOT_OBSERVED_IN_THIS_STATIC_METADATA",
+      "children": [
+        {
+          "generation": 1,
+          "pre_start_owner_registered": true,
+          "first_store_close": "UNKNOWN",
+          "first_object_close": "UNKNOWN",
+          "close_observation": "ACTUAL_STICKY_ORIGINAL_OBSERVATION",
+          "pid": 4104516,
+          "pgid": 4104414,
+          "starttime": "17217497",
+          "pre_open_registered_before_permission": true,
+          "retained": true
+        },
+        {
+          "generation": 2,
+          "pre_start_owner_registered": true,
+          "first_store_close": "ACK",
+          "first_object_close": "ACK",
+          "close_observation": "ACTUAL_STICKY_ORIGINAL_OBSERVATION",
+          "pid": 4104631,
+          "pgid": 4104414,
+          "starttime": "17218003",
+          "pre_open_registered_before_permission": true,
+          "retained": false
+        }
+      ]
+    },
+    {
+      "origin": "currentproducer_actual_new8",
+      "schema": "lerna_test_88645d7035aeab5751b9d5f3",
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-753981788",
+      "device": 33,
+      "inode": 478335,
+      "mode": "0700",
+      "native_first_store_and_object_close": "UNKNOWN_PERMANENTLY_RETAIN",
+      "current_exact_original_directory": true,
+      "cleanup": "PROHIBITED",
+      "current_pg_catalog": "NOT_OBSERVED_IN_THIS_STATIC_METADATA",
+      "children": [
+        {
+          "generation": 1,
+          "pre_start_owner_registered": true,
+          "first_store_close": "UNKNOWN",
+          "first_object_close": "UNKNOWN",
+          "close_observation": "ACTUAL_STICKY_ORIGINAL_OBSERVATION",
+          "pid": 4105446,
+          "pgid": 4105287,
+          "starttime": "17221204",
+          "pre_open_registered_before_permission": true,
+          "retained": true
+        },
+        {
+          "generation": 2,
+          "pre_start_owner_registered": true,
+          "first_store_close": "ACK",
+          "first_object_close": "ACK",
+          "close_observation": "ACTUAL_STICKY_ORIGINAL_OBSERVATION",
+          "pid": 4105552,
+          "pgid": 4105287,
+          "starttime": "17221726",
+          "pre_open_registered_before_permission": true,
+          "retained": false
+        }
+      ]
+    },
+    {
+      "origin": "currentproducer_actual_new8",
+      "schema": "lerna_test_6a50e824aede768770812f18",
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-1399548342",
+      "device": 33,
+      "inode": 479008,
+      "mode": "0700",
+      "native_first_store_and_object_close": "UNKNOWN_PERMANENTLY_RETAIN",
+      "current_exact_original_directory": true,
+      "cleanup": "PROHIBITED",
+      "current_pg_catalog": "NOT_OBSERVED_IN_THIS_STATIC_METADATA",
+      "children": [
+        {
+          "generation": 1,
+          "pre_start_owner_registered": true,
+          "first_store_close": "UNKNOWN",
+          "first_object_close": "UNKNOWN",
+          "close_observation": "ACTUAL_STICKY_ORIGINAL_OBSERVATION",
+          "pid": 4108224,
+          "pgid": 4108168,
+          "starttime": "17232949",
+          "pre_open_registered_before_permission": true,
+          "retained": true
+        },
+        {
+          "generation": 2,
+          "pre_start_owner_registered": true,
+          "first_store_close": "ACK",
+          "first_object_close": "ACK",
+          "close_observation": "ACTUAL_STICKY_ORIGINAL_OBSERVATION",
+          "pid": 4108370,
+          "pgid": 4108168,
+          "starttime": "17233468",
+          "pre_open_registered_before_permission": true,
+          "retained": false
+        }
+      ]
+    },
+    {
+      "origin": "currentproducer_actual_new8",
+      "schema": "lerna_test_3e82942edc73296f43be9510",
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-1484034955",
+      "device": 33,
+      "inode": 479335,
+      "mode": "0700",
+      "native_first_store_and_object_close": "UNKNOWN_PERMANENTLY_RETAIN",
+      "current_exact_original_directory": true,
+      "cleanup": "PROHIBITED",
+      "current_pg_catalog": "NOT_OBSERVED_IN_THIS_STATIC_METADATA",
+      "children": [
+        {
+          "generation": 1,
+          "pre_start_owner_registered": true,
+          "first_store_close": "UNKNOWN",
+          "first_object_close": "UNKNOWN",
+          "close_observation": "ACTUAL_STICKY_ORIGINAL_OBSERVATION",
+          "pid": 4109251,
+          "pgid": 4109067,
+          "starttime": "17237045",
+          "pre_open_registered_before_permission": true,
+          "retained": true
+        },
+        {
+          "generation": 2,
+          "pre_start_owner_registered": true,
+          "first_store_close": "ACK",
+          "first_object_close": "ACK",
+          "close_observation": "ACTUAL_STICKY_ORIGINAL_OBSERVATION",
+          "pid": 4109382,
+          "pgid": 4109067,
+          "starttime": "17237562",
+          "pre_open_registered_before_permission": true,
+          "retained": false
+        }
+      ]
+    },
+    {
+      "origin": "currentproducer_actual_new8",
+      "schema": "lerna_test_db6d5f454d14611b68899c92",
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-3836418164",
+      "device": 33,
+      "inode": 479983,
+      "mode": "0700",
+      "native_first_store_and_object_close": "UNKNOWN_PERMANENTLY_RETAIN",
+      "current_exact_original_directory": true,
+      "cleanup": "PROHIBITED",
+      "current_pg_catalog": "NOT_OBSERVED_IN_THIS_STATIC_METADATA",
+      "children": [
+        {
+          "generation": 1,
+          "pre_start_owner_registered": true,
+          "first_store_close": "UNKNOWN",
+          "first_object_close": "UNKNOWN",
+          "close_observation": "ACTUAL_STICKY_ORIGINAL_OBSERVATION",
+          "pid": 4111480,
+          "pgid": 4111407,
+          "starttime": "17246130",
+          "pre_open_registered_before_permission": true,
+          "retained": true
+        }
+      ]
+    },
+    {
+      "origin": "currentproducer_actual_new8",
+      "schema": "lerna_test_6b159a9d3ca960f281f41c24",
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-667109751",
+      "device": 33,
+      "inode": 480297,
+      "mode": "0700",
+      "native_first_store_and_object_close": "UNKNOWN_PERMANENTLY_RETAIN",
+      "current_exact_original_directory": true,
+      "cleanup": "PROHIBITED",
+      "current_pg_catalog": "NOT_OBSERVED_IN_THIS_STATIC_METADATA",
+      "children": [
+        {
+          "generation": 1,
+          "pre_start_owner_registered": true,
+          "first_store_close": "UNKNOWN",
+          "first_object_close": "UNKNOWN",
+          "close_observation": "ACTUAL_STICKY_ORIGINAL_OBSERVATION",
+          "pid": 4112273,
+          "pgid": 4112111,
+          "starttime": "17249275",
+          "pre_open_registered_before_permission": true,
+          "retained": true
+        }
+      ]
+    },
+    {
+      "origin": "currentproducer_actual_new8",
+      "schema": "lerna_test_3e0545deee979130abe21272",
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-3288104960",
+      "device": 33,
+      "inode": 480912,
+      "mode": "0700",
+      "native_first_store_and_object_close": "UNKNOWN_PERMANENTLY_RETAIN",
+      "current_exact_original_directory": true,
+      "cleanup": "PROHIBITED",
+      "current_pg_catalog": "NOT_OBSERVED_IN_THIS_STATIC_METADATA",
+      "children": [
+        {
+          "generation": 1,
+          "pre_start_owner_registered": true,
+          "first_store_close": "UNKNOWN",
+          "first_object_close": "UNKNOWN",
+          "close_observation": "ACTUAL_STICKY_ORIGINAL_OBSERVATION",
+          "pid": 4114242,
+          "pgid": 4114188,
+          "starttime": "17255057",
+          "pre_open_registered_before_permission": true,
+          "retained": true
+        },
+        {
+          "generation": 2,
+          "pre_start_owner_registered": true,
+          "first_store_close": "ACK",
+          "first_object_close": "ACK",
+          "close_observation": "ACTUAL_STICKY_ORIGINAL_OBSERVATION",
+          "pid": 4114370,
+          "pgid": 4114188,
+          "starttime": "17255569",
+          "pre_open_registered_before_permission": true,
+          "retained": false
+        }
+      ]
+    },
+    {
+      "origin": "currentproducer_actual_new8",
+      "schema": "lerna_test_00daeb37fcf91bc92833136c",
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-1117642246",
+      "device": 33,
+      "inode": 481226,
+      "mode": "0700",
+      "native_first_store_and_object_close": "UNKNOWN_PERMANENTLY_RETAIN",
+      "current_exact_original_directory": true,
+      "cleanup": "PROHIBITED",
+      "current_pg_catalog": "NOT_OBSERVED_IN_THIS_STATIC_METADATA",
+      "children": [
+        {
+          "generation": 1,
+          "pre_start_owner_registered": true,
+          "first_store_close": "UNKNOWN",
+          "first_object_close": "UNKNOWN",
+          "close_observation": "ACTUAL_STICKY_ORIGINAL_OBSERVATION",
+          "pid": 4115019,
+          "pgid": 4114888,
+          "starttime": "17258158",
+          "pre_open_registered_before_permission": true,
+          "retained": true
+        },
+        {
+          "generation": 2,
+          "pre_start_owner_registered": true,
+          "first_store_close": "ACK",
+          "first_object_close": "ACK",
+          "close_observation": "ACTUAL_STICKY_ORIGINAL_OBSERVATION",
+          "pid": 4115148,
+          "pgid": 4114888,
+          "starttime": "17258680",
+          "pre_open_registered_before_permission": true,
+          "retained": false
+        }
+      ]
+    }
+  ],
+  "count": 16,
+  "new_actual_currentproducer_killed_count": 8,
+  "scope_erasure_and_kernel_absence_never_logicalClose_ACK": true
+}

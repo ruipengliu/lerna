@@ -1,0 +1,290 @@
+//go:build integration
+
+package component_test
+
+import (
+	"context"
+	"errors"
+	fixture "github.com/ruipengliu/lerna/conformance/internal/decisionfixture"
+	v "github.com/ruipengliu/lerna/contract/v1_1"
+	compiler "github.com/ruipengliu/lerna/domain/task/context"
+	"reflect"
+	"strconv"
+	"sync"
+	"testing"
+	"time"
+)
+
+type budgetActorResult struct {
+	attempt compiler.CompileAttempt
+	read    compiler.ReadReservation
+	err     error
+}
+
+func launchBudgetActor(t *testing.T, w *fixture.ContextWorld, ctx context.Context, call func() budgetActorResult) (<-chan budgetActorResult, <-chan struct{}) {
+	t.Helper()
+	result := make(chan budgetActorResult, 1)
+	done := make(chan struct{})
+	if err := w.Fixture.BorrowWorkerExit(done); err != nil {
+		close(done)
+		t.Fatal(err)
+	}
+	go func() {
+		defer close(done)
+		result <- call()
+	}()
+	return result, done
+}
+
+func joinBudgetActor(t *testing.T, ctx context.Context, result <-chan budgetActorResult, done <-chan struct{}) budgetActorResult {
+	t.Helper()
+	var value budgetActorResult
+	select {
+	case value = <-result:
+	case <-ctx.Done():
+		t.Fatal("budget actor result unconfirmed", ctx.Err())
+	}
+	select {
+	case <-done:
+	case <-ctx.Done():
+		t.Fatal("budget actor native exit unconfirmed", ctx.Err())
+	}
+	return value
+}
+
+func TestContentContextBudgetLockWaitRejectsOriginalDeadlineAfterRealLock(t *testing.T) {
+	t.Run("normal", func(t *testing.T) {
+		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+		defer cancel()
+		w := fixture.NewContextWorld(t, ctx)
+		bundle, err := w.Compile(ctx)
+		if err != nil {
+			t.Fatal(err)
+		}
+		completeContextDecision(t, ctx, w, bundle)
+	})
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+	w := fixture.NewContextWorldWithInput(t, ctx, func(in *compiler.Input) {
+		in.Request.Payload.Deadline = v.Time(time.Now().UTC().Add(2 * time.Second).Truncate(time.Microsecond).Format("2006-01-02T15:04:05.000000Z"))
+	})
+	deadline, err := time.Parse("2006-01-02T15:04:05.000000Z", string(w.Input.Request.Payload.Deadline))
+	if err != nil {
+		t.Fatal(err)
+	}
+	peer, err := w.OpenCompileBudgetPeer(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	// Warm this exact real contender in the same original caller, without
+	// refreshing either the original two-second deadline or TrustedUntil.
+	warm, err := peer.Dispatcher.ObserveInput(ctx, "context-input")
+	if err != nil || !reflect.DeepEqual(warm, w.Input) {
+		t.Fatal("original deadline peer normal warm Input", err)
+	}
+	warm.Goal = "caller-only mutation"
+	again, err := peer.Dispatcher.ObserveInput(ctx, "context-input")
+	if err != nil || !reflect.DeepEqual(again, w.Input) {
+		t.Fatal("original deadline peer return alias", err)
+	}
+	held := make(chan fixture.CompileBudgetLockObservation, 1)
+	release := make(chan struct{})
+	var once sync.Once
+	unlock := func() { once.Do(func() { close(release) }) }
+	t.Cleanup(unlock)
+	locker, lockerDone := launchBudgetActor(t, w, ctx, func() budgetActorResult {
+		return budgetActorResult{err: w.Dispatcher.HoldCompileBudgetLock(ctx, w.Input.Request.Payload.SnapshotRef, held, release)}
+	})
+	select {
+	case observation := <-held:
+		if !observation.At.Before(deadline) {
+			t.Fatal("original deadline expired before the actual root lock control")
+		}
+	case <-ctx.Done():
+		t.Fatal(ctx.Err())
+	}
+	// The existing lock_timeout remains one second. Start the contender close
+	// enough to the original due that it can acquire the real lock after due.
+	start := time.NewTimer(time.Until(deadline.Add(-400 * time.Millisecond)))
+	defer start.Stop()
+	select {
+	case <-start.C:
+	case <-ctx.Done():
+		t.Fatal(ctx.Err())
+	}
+	actor, actorDone := launchBudgetActor(t, w, ctx, func() budgetActorResult {
+		a, e := peer.Dispatcher.BeginCompile(ctx, "context-input", w.Input, w.Subject)
+		return budgetActorResult{attempt: a, err: e}
+	})
+	if err = w.Dispatcher.WaitCompileBudgetLock(ctx, peer.BackendPID, w.Input.Request.Payload.SnapshotRef); err != nil {
+		t.Fatal("actual native peer did not wait on the exact original root lock", err)
+	}
+	finish := time.NewTimer(time.Until(deadline.Add(20 * time.Millisecond)))
+	defer finish.Stop()
+	select {
+	case <-finish.C:
+	case <-ctx.Done():
+		t.Fatal(ctx.Err())
+	}
+	unlock()
+	if result := joinBudgetActor(t, ctx, locker, lockerDone); result.err != nil {
+		t.Fatal("actual root locker did not complete", result.err)
+	}
+	result := joinBudgetActor(t, ctx, actor, actorDone)
+	var refusal *compiler.BudgetError
+	if !errors.Is(result.err, compiler.ErrBudget) || !errors.As(result.err, &refusal) || refusal.Reason != compiler.BudgetExpired || !reflect.DeepEqual(result.attempt, compiler.CompileAttempt{}) {
+		t.Fatal("post-lock current DB time admitted work after the original deadline", result.err)
+	}
+	if err = peer.Close(); err != nil {
+		t.Fatal(err)
+	}
+	budget, err := w.Dispatcher.ObserveCompileBudget(ctx, w.Input.Request.Payload.SnapshotRef, "", 64)
+	if err != nil || budget.Rounds != 0 || budget.Reserved != 0 || budget.Confirmed != 0 || budget.Unknown != 0 || len(budget.Reads) != 0 || budget.Tuple.Request.Payload.Deadline != w.Input.Request.Payload.Deadline {
+		t.Fatal("expired admission changed or renewed the original budget", err)
+	}
+	assertContextNoDispatchFacts(t, ctx, w)
+	w.Reopen(ctx)
+	assertContextNoDispatchFacts(t, ctx, w)
+	fixed, err := w.Dispatcher.ObserveCompileBudget(ctx, w.Input.Request.Payload.SnapshotRef, "", 64)
+	if err != nil || !reflect.DeepEqual(budget, fixed) {
+		t.Fatal("reopen renewed an expired original deadline", err)
+	}
+	t.Logf("real native waiter backend=%d expired original deadline=%s rounds=%d reserved=%d", peer.BackendPID, budget.Tuple.Request.Payload.Deadline, budget.Rounds, budget.Reserved)
+}
+
+func TestContentContextConcurrentBeginAdmitsOnlyLastOriginalRound(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+	w := fixture.NewContextWorld(t, ctx)
+	for i := 1; i <= 2; i++ {
+		attempt, err := w.Dispatcher.BeginCompile(ctx, "context-input", w.Input, w.Subject)
+		if err != nil || string(attempt.Ordinal) != strconv.Itoa(i) {
+			t.Fatal("legal original admission control failed", err)
+		}
+	}
+	peers := make([]*fixture.CompileBudgetPeer, 2)
+	for i := range peers {
+		var err error
+		peers[i], err = w.OpenCompileBudgetPeer(ctx)
+		if err != nil {
+			t.Fatal(err)
+		}
+	}
+	start := make(chan struct{})
+	results := make([]<-chan budgetActorResult, 2)
+	exits := make([]<-chan struct{}, 2)
+	for i, peer := range peers {
+		results[i], exits[i] = launchBudgetActor(t, w, ctx, func() budgetActorResult {
+			select {
+			case <-start:
+			case <-ctx.Done():
+				return budgetActorResult{err: ctx.Err()}
+			}
+			a, e := peer.Dispatcher.BeginCompile(ctx, "context-input", w.Input, w.Subject)
+			return budgetActorResult{attempt: a, err: e}
+		})
+	}
+	close(start)
+	accepted, refused := 0, 0
+	for i := range results {
+		result := joinBudgetActor(t, ctx, results[i], exits[i])
+		if result.err == nil {
+			accepted++
+			if result.attempt.Ordinal != "3" || result.attempt.SnapshotRef != w.Input.Request.Payload.SnapshotRef {
+				t.Fatal("last-slot winner changed original attempt identity")
+			}
+		} else {
+			var cause *compiler.BudgetError
+			if !errors.Is(result.err, compiler.ErrBudget) || !errors.As(result.err, &cause) || cause.Reason != compiler.BudgetRounds {
+				t.Fatal("real last-slot loser did not return precise exhausted rounds", result.err)
+			}
+			refused++
+		}
+		if err := peers[i].Close(); err != nil {
+			t.Fatal(err)
+		}
+	}
+	budget, err := w.Dispatcher.ObserveCompileBudget(ctx, w.Input.Request.Payload.SnapshotRef, "", 64)
+	if err != nil || accepted != 1 || refused != 1 || budget.Rounds != 3 || budget.Reserved != 0 || len(budget.Reads) != 0 {
+		t.Fatal("concurrent original admissions exceeded the last slot", err)
+	}
+	assertContextNoDispatchFacts(t, ctx, w)
+	w.Reopen(ctx)
+	fixed, err := w.Dispatcher.ObserveCompileBudget(ctx, w.Input.Request.Payload.SnapshotRef, "", 64)
+	if err != nil || !reflect.DeepEqual(budget, fixed) {
+		t.Fatal("concurrent original round state reset at reopen", err)
+	}
+	assertContextNoDispatchFacts(t, ctx, w)
+	t.Logf("actual original last-round contenders=%d accepted=%d refused=%d rounds=%d", len(peers), accepted, refused, budget.Rounds)
+}
+
+func TestContentContextConcurrentReserveAdmitsOnlyOriginalSixBytes(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+	w := fixture.NewContextWorldWithInput(t, ctx, func(in *compiler.Input) { in.Policy.ReadBudget = "6" })
+	attempt, err := w.Dispatcher.BeginCompile(ctx, "context-input", w.Input, w.Subject)
+	if err != nil {
+		t.Fatal("legal original reservation control failed", err)
+	}
+	peers := make([]*fixture.CompileBudgetPeer, 2)
+	for i := range peers {
+		peers[i], err = w.OpenCompileBudgetPeer(ctx)
+		if err != nil {
+			t.Fatal(err)
+		}
+	}
+	start := make(chan struct{})
+	results := make([]<-chan budgetActorResult, 2)
+	exits := make([]<-chan struct{}, 2)
+	for i, peer := range peers {
+		readID := v.Revision(strconv.Itoa(i + 1))
+		results[i], exits[i] = launchBudgetActor(t, w, ctx, func() budgetActorResult {
+			select {
+			case <-start:
+			case <-ctx.Done():
+				return budgetActorResult{err: ctx.Err()}
+			}
+			r, e := peer.Dispatcher.ReserveRead(ctx, attempt, readID, w.Input.Materials[0].Ref, w.Input.Purpose, w.Subject)
+			return budgetActorResult{read: r, err: e}
+		})
+	}
+	close(start)
+	reader := &compileReadObserver{ProcessingContent: w.Content}
+	accepted, refused := 0, 0
+	var winner compiler.ReadReservation
+	for i := range results {
+		result := joinBudgetActor(t, ctx, results[i], exits[i])
+		if result.err == nil {
+			accepted++
+			winner = result.read
+			read, e := reader.ReadForProcessing(ctx, &w.Subject, result.read.Ref, result.read.Purpose, 6)
+			if e != nil || string(read.Bytes) != "alpha\n" || read.Ref != w.Input.Materials[0].Ref {
+				t.Fatal("winning original reservation failed real current processing", e)
+			}
+			if e = peers[i].Dispatcher.ConfirmRead(ctx, result.read, read.Ref, int64(len(read.Bytes)), w.Subject); e != nil {
+				t.Fatal(e)
+			}
+		} else {
+			var cause *compiler.BudgetError
+			if !errors.Is(result.err, compiler.ErrBudget) || !errors.As(result.err, &cause) || cause.Reason != compiler.BudgetReadBytes {
+				t.Fatal("real quota loser did not return precise read-byte exhaustion", result.err)
+			}
+			refused++
+		}
+		if err = peers[i].Close(); err != nil {
+			t.Fatal(err)
+		}
+	}
+	budget, err := w.Dispatcher.ObserveCompileBudget(ctx, w.Input.Request.Payload.SnapshotRef, "", 64)
+	if err != nil || accepted != 1 || refused != 1 || len(reader.refs) != 1 || budget.Rounds != 1 || budget.Reserved != 6 || budget.Confirmed != 6 || budget.Unknown != 0 || len(budget.Reads) != 1 || !budget.Reads[0].Confirmed || !reflect.DeepEqual(budget.Reads[0].Reservation, winner) || budget.Tuple.Policy.ReadBudget != "6" {
+		t.Fatal("concurrent actual read reservations exceeded the original six bytes", err)
+	}
+	assertContextNoDispatchFacts(t, ctx, w)
+	w.Reopen(ctx)
+	fixed, err := w.Dispatcher.ObserveCompileBudget(ctx, w.Input.Request.Payload.SnapshotRef, "", 64)
+	if err != nil || !reflect.DeepEqual(budget, fixed) {
+		t.Fatal("original read quota reset after native peer close and reopen", err)
+	}
+	assertContextNoDispatchFacts(t, ctx, w)
+	t.Logf("actual original read contenders=%d accepted=%d refused=%d reserved=%d confirmed=%d physical_reads=%d", len(peers), accepted, refused, budget.Reserved, budget.Confirmed, len(reader.refs))
+}

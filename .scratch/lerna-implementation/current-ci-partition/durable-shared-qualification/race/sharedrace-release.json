@@ -1,0 +1,354 @@
+{
+  "kind": "actual first-failure wholeRace immediate STOP_RELEASE; finite scope census follows STATIC only",
+  "head": "d0fcc61264904070ce94e1146f07327a0ef9b2aa",
+  "native": {
+    "event": "native_completion_ack",
+    "operation": "partition-shared-race",
+    "pid": 4094347,
+    "pgid": 4094347,
+    "starttime": "17177230",
+    "exit": 2,
+    "group_absent": true,
+    "timed_out": false,
+    "owned_raw_fsync_close_ack": true
+  },
+  "actual_owner_session": 49161,
+  "actual_owner_tool_exit": 2,
+  "original_owner_Wait_confirmed": true,
+  "current_whole_group_absent": true,
+  "whole_noTimeout": true,
+  "actual_Go_calls": 5,
+  "executed_go_children": [
+    {
+      "operation": "go-child-0036",
+      "stage": "env CGO_ENABLED",
+      "prelaunch": {
+        "event": "owned_go_child_start_ack",
+        "operation": "go-child-0036",
+        "parent_operation": "partition-shared-race",
+        "pid": 4094350,
+        "pgid": 4094347,
+        "starttime": "17177248",
+        "root": "/tmp/lerna-ci-partition-durable-race-execution",
+        "argv": [
+          "/home/agent/.local/toolchains/go1.27.1/bin/go",
+          "env",
+          "CGO_ENABLED"
+        ],
+        "original_whole_deadline_monotonic": 173217.30429753,
+        "remaining_whole_seconds": 1444.8173081790155
+      },
+      "outcome": {
+        "event": "owned_go_child_completion_ack",
+        "operation": "go-child-0036",
+        "parent_operation": "partition-shared-race",
+        "pid": 4094350,
+        "pgid": 4094347,
+        "starttime": "17177248",
+        "exit": 0,
+        "actual_wait_confirmed": true,
+        "original_pid_generation_absent": true,
+        "timed_out": false,
+        "original_whole_deadline_monotonic": 173217.30429753,
+        "shared_group_absence_checked_only_after_whole_wait": true
+      }
+    },
+    {
+      "operation": "go-child-0037",
+      "stage": "env GOOS",
+      "prelaunch": {
+        "event": "owned_go_child_start_ack",
+        "operation": "go-child-0037",
+        "parent_operation": "partition-shared-race",
+        "pid": 4094356,
+        "pgid": 4094347,
+        "starttime": "17177281",
+        "root": "/tmp/lerna-ci-partition-durable-race-execution",
+        "argv": [
+          "/home/agent/.local/toolchains/go1.27.1/bin/go",
+          "env",
+          "GOOS"
+        ],
+        "original_whole_deadline_monotonic": 173217.30429753,
+        "remaining_whole_seconds": 1444.4866844470089
+      },
+      "outcome": {
+        "event": "owned_go_child_completion_ack",
+        "operation": "go-child-0037",
+        "parent_operation": "partition-shared-race",
+        "pid": 4094356,
+        "pgid": 4094347,
+        "starttime": "17177281",
+        "exit": 0,
+        "actual_wait_confirmed": true,
+        "original_pid_generation_absent": true,
+        "timed_out": false,
+        "original_whole_deadline_monotonic": 173217.30429753,
+        "shared_group_absence_checked_only_after_whole_wait": true
+      }
+    },
+    {
+      "operation": "go-child-0038",
+      "stage": "Recovery race",
+      "prelaunch": {
+        "event": "owned_go_child_start_ack",
+        "operation": "go-child-0038",
+        "parent_operation": "partition-shared-race",
+        "pid": 4094369,
+        "pgid": 4094347,
+        "starttime": "17177313",
+        "root": "/tmp/lerna-ci-partition-durable-race-execution",
+        "argv": [
+          "/home/agent/.local/toolchains/go1.27.1/bin/go",
+          "test",
+          "-p=1",
+          "-count=1",
+          "-race",
+          "-tags=integration",
+          "-timeout=120s",
+          "./conformance/recovery/..."
+        ],
+        "original_whole_deadline_monotonic": 173217.30429753,
+        "remaining_whole_seconds": 1444.1677398270112
+      },
+      "outcome": {
+        "event": "owned_go_child_completion_ack",
+        "operation": "go-child-0038",
+        "parent_operation": "partition-shared-race",
+        "pid": 4094369,
+        "pgid": 4094347,
+        "starttime": "17177313",
+        "exit": 0,
+        "actual_wait_confirmed": true,
+        "original_pid_generation_absent": true,
+        "timed_out": false,
+        "original_whole_deadline_monotonic": 173217.30429753,
+        "shared_group_absence_checked_only_after_whole_wait": true
+      }
+    },
+    {
+      "operation": "go-child-0039",
+      "stage": "Component discovery",
+      "prelaunch": {
+        "event": "owned_go_child_start_ack",
+        "operation": "go-child-0039",
+        "parent_operation": "partition-shared-race",
+        "pid": 4097493,
+        "pgid": 4094347,
+        "starttime": "17187654",
+        "root": "/tmp/lerna-ci-partition-durable-race-execution",
+        "argv": [
+          "/home/agent/.local/toolchains/go1.27.1/bin/go",
+          "test",
+          "-p=1",
+          "-count=1",
+          "-tags=integration",
+          "-timeout=120s",
+          "./conformance/component",
+          "-list",
+          "."
+        ],
+        "original_whole_deadline_monotonic": 173217.30429753,
+        "remaining_whole_seconds": 1340.7554018369992
+      },
+      "outcome": {
+        "event": "owned_go_child_completion_ack",
+        "operation": "go-child-0039",
+        "parent_operation": "partition-shared-race",
+        "pid": 4097493,
+        "pgid": 4094347,
+        "starttime": "17187654",
+        "exit": 0,
+        "actual_wait_confirmed": true,
+        "original_pid_generation_absent": true,
+        "timed_out": false,
+        "original_whole_deadline_monotonic": 173217.30429753,
+        "shared_group_absence_checked_only_after_whole_wait": true
+      }
+    },
+    {
+      "operation": "go-child-0040",
+      "stage": "closure race",
+      "prelaunch": {
+        "event": "owned_go_child_start_ack",
+        "operation": "go-child-0040",
+        "parent_operation": "partition-shared-race",
+        "pid": 4097574,
+        "pgid": 4094347,
+        "starttime": "17187805",
+        "root": "/tmp/lerna-ci-partition-durable-race-execution",
+        "argv": [
+          "/home/agent/.local/toolchains/go1.27.1/bin/go",
+          "test",
+          "-p=1",
+          "-count=1",
+          "-race",
+          "-tags=integration",
+          "-timeout=120s",
+          "./conformance/component",
+          "-run",
+          "^(TestContentFullClosureIncludesIntermediateVersionsAndExact64Bound)$"
+        ],
+        "original_whole_deadline_monotonic": 173217.30429753,
+        "remaining_whole_seconds": 1339.248216300999
+      },
+      "outcome": {
+        "event": "owned_go_child_completion_ack",
+        "operation": "go-child-0040",
+        "parent_operation": "partition-shared-race",
+        "pid": 4097574,
+        "pgid": 4094347,
+        "starttime": "17187805",
+        "exit": 1,
+        "actual_wait_confirmed": true,
+        "original_pid_generation_absent": true,
+        "timed_out": false,
+        "original_whole_deadline_monotonic": 173217.30429753,
+        "shared_group_absence_checked_only_after_whole_wait": true
+      }
+    }
+  ],
+  "counter_before": 36,
+  "counter_after": 41,
+  "counter_after_sha256": "7960bdff1c310d73093dbdf340bf441f12aeee93bdb238217419ff9df6f70ac1",
+  "one_original_whole_deadline": 173217.30429753,
+  "whole1445_pkg120_business_limits_unchanged": true,
+  "first_failure": {
+    "test": "TestContentFullClosureIncludesIntermediateVersionsAndExact64Bound",
+    "business_context_seconds": 60,
+    "message": "timeout: context deadline exceeded",
+    "test_seconds": 60.1,
+    "package_seconds": 60.17,
+    "Go_exit": 1,
+    "make_exit": 2,
+    "not_package120_timeout": true
+  },
+  "Recovery_race_actual_PASS_seconds": 101.199,
+  "fresh_discovery_actual0_reported201": true,
+  "only_closure1_selector_actual_invoked_after_discovery": true,
+  "all7groups_201_execution_not_qualified": true,
+  "Content97_Durable60_groups_not_started": true,
+  "missing_tail": [
+    {
+      "operation": "go-child-0041",
+      "stage": "content_a race",
+      "not_executed": true
+    },
+    {
+      "operation": "go-child-0042",
+      "stage": "content_b race",
+      "not_executed": true
+    },
+    {
+      "operation": "go-child-0043",
+      "stage": "content_c race",
+      "not_executed": true
+    },
+    {
+      "operation": "go-child-0044",
+      "stage": "durable_a race",
+      "not_executed": true
+    },
+    {
+      "operation": "go-child-0045",
+      "stage": "durable_b race",
+      "not_executed": true
+    },
+    {
+      "operation": "go-child-0046",
+      "stage": "other race",
+      "not_executed": true
+    },
+    {
+      "operation": "go-child-0047",
+      "stage": "fixture three packages race",
+      "not_executed": true
+    }
+  ],
+  "raw": "/tmp/lerna-ci-partition-durable-race-execution/partition-shared-race.log",
+  "raw_sha256": "27504b39e046d3af94884242ee94507db667ef709aefb05084c4fb59debb2f71",
+  "raw_lines": 63,
+  "FULL_raw_human_read": true,
+  "raw_firstClose_fsyncACK": true,
+  "source_post": "/tmp/lerna-ci-partition-durable-race-execution/sharedrace-source-postlaunch.json",
+  "source_post_sha256": "50892e3c7bff5cb13fd0d94e8b1ed48e9d501ef35f2b19735720ce2711b3963b",
+  "protected_historical_UNKNOWNs": [
+    {
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-local-lifetime-4236457110",
+      "device": 33,
+      "inode": 431541,
+      "exists": true,
+      "observation": "current read-only FS identity after original native Wait; not original pre-effect inode ACK",
+      "original_Close_UNKNOWN": "original historical SIGKILL Close UNKNOWN",
+      "no_cleanup_adoption_or_Close_backfill": true
+    },
+    {
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-local-lifetime-3810108689",
+      "device": 33,
+      "inode": 473830,
+      "exists": true,
+      "observation": "current read-only FS identity after original native Wait; not original pre-effect inode ACK",
+      "original_Close_UNKNOWN": "normal original ledger1074 SIGKILL before actual Store.Close",
+      "no_cleanup_adoption_or_Close_backfill": true
+    }
+  ],
+  "old4ledger_prefixes": [
+    {
+      "path": "/tmp/lerna-current-ci-partition-execution",
+      "device": 33,
+      "inode": 415239,
+      "mode": "0o700",
+      "ledger_lines": 1436,
+      "ledger_bytes": 166092,
+      "ledger_sha256": "5f81464f298a3257b040dec29ba250717b08dcdfcfc2f773452f8c095f1bd99d",
+      "counter_next": 15,
+      "counter_sha256": "65aade1cee42cbab5ce894a8e810d15d50c8d25eb346cda85f66c62f1bbee7b0",
+      "no_scope_adoption_or_cleanup_or_Close_backfill": true
+    },
+    {
+      "path": "/tmp/lerna-current-ci-partition-after-run-execution",
+      "device": 33,
+      "inode": 453685,
+      "mode": "0o700",
+      "ledger_lines": 982,
+      "ledger_bytes": 130502,
+      "ledger_sha256": "874a198ff51e6d3a68c2a2dcf74d1e324a7defb6d357aebea5e882a743dca178",
+      "counter_next": 24,
+      "counter_sha256": "cc6564169687edec5dbe5b39324240e6b6ea9fb6973faf958874e3ba59d69cf4",
+      "no_scope_adoption_or_cleanup_or_Close_backfill": true
+    },
+    {
+      "path": "/tmp/lerna-ci-partition-durable-mechanical",
+      "device": 33,
+      "inode": 459929,
+      "mode": "0o700",
+      "ledger_lines": 159,
+      "ledger_bytes": 16245,
+      "ledger_sha256": "4f3fb50817b94b628c7162735394c0e10816e0f1131ead414db1b507ab29c1bc",
+      "counter_next": null,
+      "counter_sha256": null,
+      "no_scope_adoption_or_cleanup_or_Close_backfill": true
+    },
+    {
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution",
+      "device": 33,
+      "inode": 465377,
+      "mode": "0o700",
+      "ledger_lines": 1082,
+      "ledger_bytes": 143441,
+      "ledger_sha256": "63ee2eff0905490b8240dc4a507e32a85438eacb16935e85cd859aa9b73ec772",
+      "counter_next": 36,
+      "counter_sha256": "e455edd6ba7c49777a65e1a786cb6c2ba0044179991a1f93592640374d446d13",
+      "no_scope_adoption_or_cleanup_or_Close_backfill": true
+    }
+  ],
+  "owned_original_scope_interval_1based": [
+    1,
+    294
+  ],
+  "owned_ledger_beforeRelease_sha256": "a8e91489d0ed5512b25cc3a0c96aeb1c88d4275bb0026d7d08a39d6c46bc9610",
+  "scope_census_pending_STATIC_only": true,
+  "no_retry_repair_sourcechange_merge_push_other_native": true,
+  "STATIC_STOP": true,
+  "LOCAL_RELEASE": true
+}

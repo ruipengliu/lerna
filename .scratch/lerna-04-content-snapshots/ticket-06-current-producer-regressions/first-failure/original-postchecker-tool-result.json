@@ -1,0 +1,7 @@
+{
+  "chunk_id": "e56e66",
+  "wall_time_seconds": 0.000035736,
+  "exit_code": 1,
+  "original_token_count": 212,
+  "output": "Traceback (most recent call last):\n  File \"<stdin>\", line 18, in <module>\nAssertionError\n=== RUN   TestContentSIGKILLAfterDurableObjectsRecoversOriginalPublication\n=== RUN   TestContentSIGKILLAfterDurableObjectsRecoversOriginalPublication/normal_release\n    content_process_recovery_test.go:511: Content child native pid=4078262 pgid=4078161 start=17103311 generation=1\n--- PASS: TestContentSIGKILLAfterDurableObjectsRecoversOriginalPublication (0.38s)\n    --- PASS: TestContentSIGKILLAfterDurableObjectsRecoversOriginalPublication/normal_release (0.38s)\nPASS\nok  \tgithub.com/ruipengliu/lerna/conformance/component\t0.396s\nNATIVE_COMPLETION_ACK {\"event\": \"native_completion_ack\", \"exit\": 0, \"group_absent\": true, \"operation\": \"current-producer-durable-normal-control\", \"pgid\": 4078161, \"pid\": 4078161, \"starttime\": \"17103157\", \"timed_out\": false}\n"
+}

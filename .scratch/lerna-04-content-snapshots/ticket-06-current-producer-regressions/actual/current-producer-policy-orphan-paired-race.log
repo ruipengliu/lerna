@@ -1,0 +1,14 @@
+=== RUN   TestContentSIGKILLWithCurrentSaveWithdrawalRecoversOriginalOrphanDuty
+=== RUN   TestContentSIGKILLWithCurrentSaveWithdrawalRecoversOriginalOrphanDuty/normal_release
+    content_process_recovery_test.go:894: Content child native pid=4114987 pgid=4114888 start=17257968 generation=1
+=== RUN   TestContentSIGKILLWithCurrentSaveWithdrawalRecoversOriginalOrphanDuty/SIGKILL_then_current_save_withdrawal
+    content_process_recovery_test.go:894: Content child native pid=4115019 pgid=4114888 start=17258158 generation=1
+    content_process_recovery_test.go:994: Content child native pid=4115148 pgid=4114888 start=17258680 generation=2
+    content_process_recovery_test.go:1106: original staging erased; independent primary full bytes remain
+    world.go:202: retained exact Content schema/root: historical child native Close UNKNOWN; actual Wait is separate
+--- PASS: TestContentSIGKILLWithCurrentSaveWithdrawalRecoversOriginalOrphanDuty (9.20s)
+    --- PASS: TestContentSIGKILLWithCurrentSaveWithdrawalRecoversOriginalOrphanDuty/normal_release (2.07s)
+    --- PASS: TestContentSIGKILLWithCurrentSaveWithdrawalRecoversOriginalOrphanDuty/SIGKILL_then_current_save_withdrawal (7.13s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/component	10.259s
+NATIVE_COMPLETION_ACK {"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "current-producer-policy-orphan-paired-race", "pgid": 4114888, "pid": 4114888, "starttime": "17257823", "timed_out": false}

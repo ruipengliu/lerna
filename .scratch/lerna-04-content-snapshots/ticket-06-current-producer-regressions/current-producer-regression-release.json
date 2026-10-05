@@ -1,0 +1,42 @@
+{
+  "status": "STOP_RELEASED_FIRST_POSTCHECKER_MECHANICAL_ASSERTION_FAILURE_CANCEL_REMAINING14",
+  "attempted_operations": [
+    "current-producer-durable-normal-control"
+  ],
+  "native_actual": {
+    "event": "native_completion_ack",
+    "operation": "current-producer-durable-normal-control",
+    "pid": 4078161,
+    "pgid": 4078161,
+    "starttime": "17103157",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false,
+    "owned_raw_fsync_close_ack": true
+  },
+  "independent_current_group_absent": true,
+  "actual_native_business_test": "PASS_ORIGINAL_NORMAL_FULL_TEST_AT_C9A; exit0 is not postchecker success",
+  "first_failure": {
+    "stage": "postchecks raw package footer parser",
+    "tool_exit": 1,
+    "type": "AssertionError",
+    "script_line": 18,
+    "incorrect_check": "'\\nok\\t' in raw text",
+    "actual_footer_prefix": "ok  \\t",
+    "classification": "MECHANICAL_EVIDENCE_CHECKER_FAILURE_NOT_BUSINESS_RED",
+    "no_repair_retry": true
+  },
+  "raw_path": "/tmp/lerna-04-ticket06-execution/current-producer-durable-normal-control.log",
+  "raw_bytes": 757,
+  "raw_sha256": "e2e64001e0c79297cae150a9d45f6f1d0409c0e7691c010de618ab23e00fd36e",
+  "prelaunch_path": "/tmp/lerna-04-ticket06-execution/current-producer-durable-normal-control-prelaunch.json",
+  "prelaunch_sha256": "2ac64623465863a99b57e609bf810d0039e22b03ab5bccf53aa9b7156cba5f7c",
+  "outcome_path": "/tmp/lerna-04-ticket06-execution/current-producer-durable-normal-control-outcome.json",
+  "outcome_sha256": "088a5c4932824530040f5afe1eafccc6d89afdcf9eb1479fb84932e8240ab6c5",
+  "remaining14_authorizations_cancelled_on_first_post_failure": true,
+  "postchecks_artifact_not_created": true,
+  "only_one_actual_Go_command_no_fmt_source_retry_or_other_tests": true,
+  "whole_ticket_claimed": true,
+  "resource_audit_not_performed": true,
+  "old8_firstClose_unknown_remains_permanent": true
+}

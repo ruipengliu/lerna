@@ -1,0 +1,11 @@
+{
+  "event": "native_completion_ack",
+  "operation": "partition-shared-race",
+  "pid": 4094347,
+  "pgid": 4094347,
+  "starttime": "17177230",
+  "exit": 2,
+  "group_absent": true,
+  "timed_out": false,
+  "owned_raw_fsync_close_ack": true
+}

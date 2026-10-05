@@ -1,0 +1,39 @@
+{
+  "base": "dadd801cfd11ca038f0496872941097f10ebe507",
+  "head": "c11fd2092875417d039914f8ecbd083a7a846d3a",
+  "worktree": "/tmp/lerna-worktrees/content-snapshots-06",
+  "commands": [
+    "git diff dadd801cfd11ca038f0496872941097f10ebe507...HEAD -- conformance/component/content_process_recovery_test.go conformance/internal/contentfixture/process_borrow.go conformance/internal/contentfixture/world.go",
+    "git diff HEAD -- conformance/component/content_process_recovery_test.go conformance/internal/contentfixture/process_borrow.go conformance/internal/contentfixture/world.go"
+  ],
+  "commits": "c11fd20 test(content): qualify original live worker finish across body fence\nd9dce0c test(content): recover original orphan after save withdrawal\n60f6c65 test(content): qualify committed publication reply loss\n3d60d1e test: qualify Content rollback at real publication precommit gate\n1dd6311 docs: preserve paired race Content process recovery qualification\n99cd825 docs: preserve first Content process tracer provenance\n4620ac3 test: qualify durable Content process recovery normal and SIGKILL\n",
+  "source3": {
+    "conformance/component/content_process_recovery_test.go": {
+      "bytes": 79561,
+      "sha256": "c9a098141d23cda9c40d210539384d7cfb17b0d6b4f0222c16d70577308ff7e5"
+    },
+    "conformance/internal/contentfixture/process_borrow.go": {
+      "bytes": 4979,
+      "sha256": "ed46b35916b9e1577e4ca1e0ddaf411e3de9407b51cb6ed38f8425406766e972"
+    },
+    "conformance/internal/contentfixture/world.go": {
+      "bytes": 6607,
+      "sha256": "3e38d89f988422eacfa1b6e22e25905cec1db246d418177e34eaf5758b6fc14d"
+    }
+  },
+  "diffs": {
+    "committed-source.diff": {
+      "bytes": 69485,
+      "sha256": "27fb4e2116427eeb7747cf7a5a5b7ae3465b41a1f1f47b48ab6c5b35f572e85c"
+    },
+    "wip-source.diff": {
+      "bytes": 29557,
+      "sha256": "e091749a6a78fe0c5ea41848044c68f74491d44db1d935aba225579c4312d523"
+    },
+    "whole-source.diff": {
+      "bytes": 88489,
+      "sha256": "2b8b6d3427fc8522056d9d23b993f0b3cbf06ee1b83e94d2aeaf023dc9cae7f0"
+    }
+  },
+  "qualification": "Current producer first normal actualPASS; remaining14 scheduled after soleLOCAL release; earlier frozen verticals and current latePut qualified. Reviews code scope independent; final checks/audit/integration pending."
+}

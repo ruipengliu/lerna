@@ -1,0 +1,1858 @@
+{
+  "status": "ACTUAL_CURRENT_PRODUCER_ORIGINAL5_PARENTS_15_COMMANDS_ALL_PASS_STOP_RELEASED",
+  "worktree": "/tmp/lerna-worktrees/content-snapshots-06",
+  "head": "c11fd2092875417d039914f8ecbd083a7a846d3a",
+  "only_modified_test_source": {
+    "path": "conformance/component/content_process_recovery_test.go",
+    "bytes": 79561,
+    "sha256": "c9a098141d23cda9c40d210539384d7cfb17b0d6b4f0222c16d70577308ff7e5"
+  },
+  "current26_formatted_manifest": {
+    "path": "/tmp/lerna-04-ticket06-execution/late-put-formatted-26-manifest.json",
+    "sha256": "df707faeff172b1e817d124d8813da2ae9f1d1e3da90daf782263d3ddbbd47bc"
+  },
+  "finalsource26_byteequals_frozen_snapshot": [
+    {
+      "path": "conformance/internal/contentfixture/world.go",
+      "bytes": 6607,
+      "sha256": "3e38d89f988422eacfa1b6e22e25905cec1db246d418177e34eaf5758b6fc14d"
+    },
+    {
+      "path": "conformance/internal/contentfixture/process_borrow.go",
+      "bytes": 4979,
+      "sha256": "ed46b35916b9e1577e4ca1e0ddaf411e3de9407b51cb6ed38f8425406766e972"
+    },
+    {
+      "path": "conformance/component/content_process_recovery_test.go",
+      "bytes": 79561,
+      "sha256": "c9a098141d23cda9c40d210539384d7cfb17b0d6b4f0222c16d70577308ff7e5"
+    },
+    {
+      "path": "domain/content/service.go",
+      "bytes": 33783,
+      "sha256": "ffefc916fa8e08e2a39f2264a12090eb7aa2ecf020b7da63e270aff3e925a477"
+    },
+    {
+      "path": "domain/content/ports.go",
+      "bytes": 5618,
+      "sha256": "51066cd99f2c79e8a5fc3f7b336cb0706f161899361681c99f8e6feff5454f90"
+    },
+    {
+      "path": "domain/content/lifecycle.go",
+      "bytes": 23932,
+      "sha256": "0708c4eb51e28ab9b7a3210981e408ae2310511e9728ee2bf46ba87fc0802699"
+    },
+    {
+      "path": "domain/content/identity.go",
+      "bytes": 1533,
+      "sha256": "e093a7918be9af0aeaec08c62b472de1141314812a71e3da386583237bbf60f0"
+    },
+    {
+      "path": "adapters/objectstore/local/store_linux.go",
+      "bytes": 10790,
+      "sha256": "ea678add4d594d5cdd8dbfa50d29684ba998686cf649c58c19313391da298fe0"
+    },
+    {
+      "path": "adapters/postgres/content/store.go",
+      "bytes": 777,
+      "sha256": "e1da8da60b48d85c5d668ac88a0d33da3c824603b93bc01e5dd821def34fa69d"
+    },
+    {
+      "path": "adapters/postgres/content/facts.go",
+      "bytes": 10970,
+      "sha256": "e56785902e481eafdaa7904f44fabc44770d77f3d605da93906df827fe8a42d5"
+    },
+    {
+      "path": "conformance/internal/testkit/process/child.go",
+      "bytes": 10242,
+      "sha256": "edf4cdce78c92c0150d7075cecc02e742b84a55fd910b3cb25adec6079a3be25"
+    },
+    {
+      "path": "conformance/internal/testkit/process/pipes.go",
+      "bytes": 3022,
+      "sha256": "93cc1bd3b23817e453817abc18988c39e4300fa252d74890531650f53096401d"
+    },
+    {
+      "path": "conformance/component/content_publication_test.go",
+      "bytes": 8105,
+      "sha256": "8f762b685f7df3470e13b2e3d7c1a89026bb8d90e3bf6b9efb44257e400430e9"
+    },
+    {
+      "path": "conformance/component/content_orphan_test.go",
+      "bytes": 6789,
+      "sha256": "1732b6f28a4f83c698035b33e6da09b6dc8ae779a8f6895a4953b24086e2ba9f"
+    },
+    {
+      "path": "adapters/postgres/content/migrations/0001_content.sql",
+      "bytes": 3682,
+      "sha256": "00363b79dafb6eb1f373be9ef08e915fe23cc3db0fa55345e8ae6c051ce0c1ed"
+    },
+    {
+      "path": "adapters/postgres/content/migrations/0002_source_policies.sql",
+      "bytes": 2585,
+      "sha256": "99519565ff1146d7cfc468413b449538c6ba71335e86edc8fd447a3bbff922a8"
+    },
+    {
+      "path": "adapters/postgres/content/migrations/0003_body_cleanup.sql",
+      "bytes": 2497,
+      "sha256": "92739b464b8661e26befe092028f20802b586e42bf1578bd9811dcf240c5b58f"
+    },
+    {
+      "path": "domain/content/management.go",
+      "bytes": 37419,
+      "sha256": "c6fa3aa3dfee98ab82b873aa9d37e4c4725133390147e2d0aff04be49e3606ad"
+    },
+    {
+      "path": "domain/content/policy_cleanup.go",
+      "bytes": 9846,
+      "sha256": "b11a31ac64bd405a194d4a9fc393f3f4065e6d986969a6fed26742557d267730"
+    },
+    {
+      "path": "domain/content/orphan.go",
+      "bytes": 532,
+      "sha256": "065e383d7ee4a5f44a861edabb159c591a17fe4dd71637dc2935799681d7ad99"
+    },
+    {
+      "path": "domain/content/erasure.go",
+      "bytes": 1293,
+      "sha256": "2cc7fbb842ebd8ab5c64b5aea147e51c679727bee2f52c11500aa4fe12d45e9b"
+    },
+    {
+      "path": "adapters/postgres/content/management.go",
+      "bytes": 20480,
+      "sha256": "83012672bfb97efd82d63516dfb20437172db736b5f34e758e8806287fd1ba62"
+    },
+    {
+      "path": "adapters/postgres/content/policy_cleanup.go",
+      "bytes": 7113,
+      "sha256": "839ef482fb52736a8d214d7bfef0b12eeb359e571117bdcc94c09d59dcb06548"
+    },
+    {
+      "path": "adapters/postgres/content/lifecycle.go",
+      "bytes": 13952,
+      "sha256": "ad64ffe1dc4c86af93430bb8f6c4a9f0159a3cf539c40aeef233afff0aea640e"
+    },
+    {
+      "path": "adapters/postgres/content/policy.go",
+      "bytes": 4834,
+      "sha256": "3cb31490a70e0141daa24b4766295ea1a57598194877eda6f19e58371a2d45d9"
+    },
+    {
+      "path": "adapters/objectstore/local/erasure_linux.go",
+      "bytes": 10068,
+      "sha256": "5673f9b8bebdc96fd9f3d551d8dd31850b3b96c54e9363fcf7780c05be558bb4"
+    }
+  ],
+  "all15_native_actual0_realWait_currentgroupAbsent_rawfirstClose_ACK_per_command_source26_fsynchronous_post": true,
+  "normal1_not_rerun": true,
+  "first_postchecker_mechanical_failure_honestly_preserved": {
+    "release": "/tmp/lerna-04-ticket06-execution/current-producer-regression-release.json",
+    "release_sha256": "5502620475d39b518e4f2a3de2daca57576bc6f6f0873563f910a2a0dc15838a",
+    "original_script": "/tmp/lerna-06-current-producer-postchecker-first-failure/original-postchecker-stdin.py",
+    "original_script_sha256": "f3a96697f31bf115e554cfd901a44f14a3ae053570722892c9d115ea385e5672",
+    "v2checker": "/tmp/lerna-06-current-producer-postchecker-v2/checker.py",
+    "v2checker_sha256": "f561182fd565162ccb90951f31d37cff6cb4ca6adc6f7ec95537e6663b1f9214",
+    "first_existing_raw_only_metadata_requalified_no_native_retry": true
+  },
+  "operations": [
+    {
+      "sequence": 1,
+      "operation": "current-producer-durable-normal-control",
+      "parent": "TestContentSIGKILLAfterDurableObjectsRecoversOriginalPublication",
+      "phase": "normal_control",
+      "original_native_argv": [
+        "go",
+        "test",
+        "-tags=integration",
+        "-v",
+        "-count=1",
+        "-p=1",
+        "-mod=readonly",
+        "-timeout=120s",
+        "./conformance/component",
+        "-run",
+        "^TestContentSIGKILLAfterDurableObjectsRecoversOriginalPublication$/^normal_release$"
+      ],
+      "raw": "/tmp/lerna-04-ticket06-execution/current-producer-durable-normal-control.log",
+      "raw_bytes": 757,
+      "raw_lines": 8,
+      "raw_sha256": "e2e64001e0c79297cae150a9d45f6f1d0409c0e7691c010de618ab23e00fd36e",
+      "prelaunch": "/tmp/lerna-04-ticket06-execution/current-producer-durable-normal-control-prelaunch.json",
+      "prelaunch_sha256": "2ac64623465863a99b57e609bf810d0039e22b03ab5bccf53aa9b7156cba5f7c",
+      "outcome": "/tmp/lerna-04-ticket06-execution/current-producer-durable-normal-control-outcome.json",
+      "outcome_sha256": "088a5c4932824530040f5afe1eafccc6d89afdcf9eb1479fb84932e8240ab6c5",
+      "postchecks": "/tmp/lerna-04-ticket06-execution/current-producer-durable-normal-control-postchecks.json",
+      "postchecks_sha256": "55df6401400d849007f138bdbc7cc2c3ebee2653dd01a2531719aad22e5d68ef",
+      "native_actual": {
+        "event": "native_completion_ack",
+        "operation": "current-producer-durable-normal-control",
+        "pid": 4078161,
+        "pgid": 4078161,
+        "starttime": "17103157",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false,
+        "owned_raw_fsync_close_ack": true
+      },
+      "independent_current_group_absent_after_entire_segment": true,
+      "actual_full_selected_target_pass": [
+        "normal_release"
+      ],
+      "ledger_interval": [
+        194,
+        200
+      ],
+      "source26_unchanged_each_post": true,
+      "scopes": [
+        {
+          "schema": "lerna_test_3b7e58c98b0dd14033326d22",
+          "children": [
+            {
+              "generation": 1,
+              "pre_start_owner_registered": true,
+              "first_store_close": "ACK",
+              "first_object_close": "ACK",
+              "close_observation": "ACTUAL_STICKY_ORIGINAL_OBSERVATION",
+              "pid": 4078262,
+              "pgid": 4078161,
+              "starttime": "17103311",
+              "pre_open_registered_before_permission": true,
+              "retained": false
+            }
+          ],
+          "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-998867185",
+          "device": 33,
+          "inode": 474884,
+          "historical_firstClose_unknown": false,
+          "actual_child_Wait_and_parent_Stop_assertions": "ORIGINAL_SELECTED_TEST_FULL_PASS_AT_FROZEN_SOURCE; ledger records actual firstClose separately",
+          "current_root": "ABSENT_AFTER_ORDINARY_FIXTURE_CLEANUP",
+          "ordinary_fixture_cleanup": "NO_REPORTED_ERROR_AND_ROOT_ABSENT; PG_CATALOG_NOT_YET_INDEPENDENTLY_AUDITED"
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "operation": "current-producer-durable-original-fault",
+      "parent": "TestContentSIGKILLAfterDurableObjectsRecoversOriginalPublication",
+      "phase": "fault_only",
+      "original_native_argv": [
+        "go",
+        "test",
+        "-tags=integration",
+        "-v",
+        "-count=1",
+        "-p=1",
+        "-mod=readonly",
+        "-timeout=120s",
+        "./conformance/component",
+        "-run",
+        "^TestContentSIGKILLAfterDurableObjectsRecoversOriginalPublication$/^SIGKILL_then_original_Job_recovery$"
+      ],
+      "raw": "/tmp/lerna-04-ticket06-execution/current-producer-durable-original-fault.log",
+      "raw_bytes": 1030,
+      "raw_lines": 10,
+      "raw_sha256": "e1c0c7cc59c34e5b3288322790b687a9390bf268435d0880e7c9eeca8df19fe6",
+      "prelaunch": "/tmp/lerna-04-ticket06-execution/current-producer-durable-original-fault-prelaunch.json",
+      "prelaunch_sha256": "9023976ead6a38ea3e4803ff5ae7e19e102a8bbf67f129eb0c52fdf50c6d4a84",
+      "outcome": "/tmp/lerna-04-ticket06-execution/current-producer-durable-original-fault-outcome.json",
+      "outcome_sha256": "a55fe0f85d6e95ee7f530bde0cf9da605e5fd5c2c42a4f6b9f8fc04ae4664b6b",
+      "postchecks": "/tmp/lerna-04-ticket06-execution/current-producer-durable-original-fault-postchecks.json",
+      "postchecks_sha256": "3dfc66b4f452d2a7601350d61547aa865bef2cca67eafba6df3c70beb94445af",
+      "native_actual": {
+        "event": "native_completion_ack",
+        "operation": "current-producer-durable-original-fault",
+        "pid": 4104414,
+        "pgid": 4104414,
+        "starttime": "17217338",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false,
+        "owned_raw_fsync_close_ack": true
+      },
+      "independent_current_group_absent_after_entire_segment": true,
+      "actual_full_selected_target_pass": [
+        "SIGKILL_then_original_Job_recovery"
+      ],
+      "ledger_interval": [
+        201,
+        210
+      ],
+      "source26_unchanged_each_post": true,
+      "scopes": [
+        {
+          "schema": "lerna_test_911a1f5960c093373aafe2d8",
+          "children": [
+            {
+              "generation": 1,
+              "pre_start_owner_registered": true,
+              "first_store_close": "UNKNOWN",
+              "first_object_close": "UNKNOWN",
+              "close_observation": "ACTUAL_STICKY_ORIGINAL_OBSERVATION",
+              "pid": 4104516,
+              "pgid": 4104414,
+              "starttime": "17217497",
+              "pre_open_registered_before_permission": true,
+              "retained": true
+            },
+            {
+              "generation": 2,
+              "pre_start_owner_registered": true,
+              "first_store_close": "ACK",
+              "first_object_close": "ACK",
+              "close_observation": "ACTUAL_STICKY_ORIGINAL_OBSERVATION",
+              "pid": 4104631,
+              "pgid": 4104414,
+              "starttime": "17218003",
+              "pre_open_registered_before_permission": true,
+              "retained": false
+            }
+          ],
+          "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-2511088488",
+          "device": 33,
+          "inode": 478014,
+          "historical_firstClose_unknown": true,
+          "actual_child_Wait_and_parent_Stop_assertions": "ORIGINAL_SELECTED_TEST_FULL_PASS_AT_FROZEN_SOURCE; ledger records actual firstClose separately",
+          "current_root": "EXACT_ORIGINAL_ROOT_RETAINED",
+          "current_device": 33,
+          "current_inode": 478014,
+          "current_mode": "0700",
+          "cleanup": "PROHIBITED_STICKY_NATIVE_FIRST_CLOSE_UNKNOWN"
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "operation": "current-producer-durable-paired-race",
+      "parent": "TestContentSIGKILLAfterDurableObjectsRecoversOriginalPublication",
+      "phase": "paired_race",
+      "original_native_argv": [
+        "go",
+        "test",
+        "-race",
+        "-tags=integration",
+        "-v",
+        "-count=1",
+        "-p=1",
+        "-mod=readonly",
+        "-timeout=120s",
+        "./conformance/component",
+        "-run",
+        "^TestContentSIGKILLAfterDurableObjectsRecoversOriginalPublication$"
+      ],
+      "raw": "/tmp/lerna-04-ticket06-execution/current-producer-durable-paired-race.log",
+      "raw_bytes": 1335,
+      "raw_lines": 13,
+      "raw_sha256": "328dfcb2a1416bfe28cf3fb076d432dbdd58ddbf6623cf47cc1cccf5dac1306d",
+      "prelaunch": "/tmp/lerna-04-ticket06-execution/current-producer-durable-paired-race-prelaunch.json",
+      "prelaunch_sha256": "5d63226a13b061899f989a6f0b177dc1c788e85c1e7bde2eaedd6e1f2ed65c80",
+      "outcome": "/tmp/lerna-04-ticket06-execution/current-producer-durable-paired-race-outcome.json",
+      "outcome_sha256": "dc21ded6b8e922668d5d46ec49af14e9f8aa052c4e69f5dfea7ab50e80a2670d",
+      "postchecks": "/tmp/lerna-04-ticket06-execution/current-producer-durable-paired-race-postchecks.json",
+      "postchecks_sha256": "8054e33b5ec839a395959fa26564bbcde02693e08a670f41550def318ff0a2bb",
+      "native_actual": {
+        "event": "native_completion_ack",
+        "operation": "current-producer-durable-paired-race",
+        "pid": 4105287,
+        "pgid": 4105287,
+        "starttime": "17220837",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false,
+        "owned_raw_fsync_close_ack": true
+      },
+      "independent_current_group_absent_after_entire_segment": true,
+      "actual_full_selected_target_pass": [
+        "normal_release",
+        "SIGKILL_then_original_Job_recovery"
+      ],
+      "ledger_interval": [
+        211,
+        225
+      ],
+      "source26_unchanged_each_post": true,
+      "scopes": [
+        {
+          "schema": "lerna_test_06f2b27855c7b44b2379a1fc",
+          "children": [
+            {
+              "generation": 1,
+              "pre_start_owner_registered": true,
+              "first_store_close": "ACK",
+              "first_object_close": "ACK",
+              "close_observation": "ACTUAL_STICKY_ORIGINAL_OBSERVATION",
+              "pid": 4105387,
+              "pgid": 4105287,
+              "starttime": "17221043",
+              "pre_open_registered_before_permission": true,
+              "retained": false
+            }
+          ],
+          "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-2114095998",
+          "device": 33,
+          "inode": 478330,
+          "historical_firstClose_unknown": false,
+          "actual_child_Wait_and_parent_Stop_assertions": "ORIGINAL_SELECTED_TEST_FULL_PASS_AT_FROZEN_SOURCE; ledger records actual firstClose separately",
+          "current_root": "ABSENT_AFTER_ORDINARY_FIXTURE_CLEANUP",
+          "ordinary_fixture_cleanup": "NO_REPORTED_ERROR_AND_ROOT_ABSENT; PG_CATALOG_NOT_YET_INDEPENDENTLY_AUDITED"
+        },
+        {
+          "schema": "lerna_test_88645d7035aeab5751b9d5f3",
+          "children": [
+            {
+              "generation": 1,
+              "pre_start_owner_registered": true,
+              "first_store_close": "UNKNOWN",
+              "first_object_close": "UNKNOWN",
+              "close_observation": "ACTUAL_STICKY_ORIGINAL_OBSERVATION",
+              "pid": 4105446,
+              "pgid": 4105287,
+              "starttime": "17221204",
+              "pre_open_registered_before_permission": true,
+              "retained": true
+            },
+            {
+              "generation": 2,
+              "pre_start_owner_registered": true,
+              "first_store_close": "ACK",
+              "first_object_close": "ACK",
+              "close_observation": "ACTUAL_STICKY_ORIGINAL_OBSERVATION",
+              "pid": 4105552,
+              "pgid": 4105287,
+              "starttime": "17221726",
+              "pre_open_registered_before_permission": true,
+              "retained": false
+            }
+          ],
+          "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-753981788",
+          "device": 33,
+          "inode": 478335,
+          "historical_firstClose_unknown": true,
+          "actual_child_Wait_and_parent_Stop_assertions": "ORIGINAL_SELECTED_TEST_FULL_PASS_AT_FROZEN_SOURCE; ledger records actual firstClose separately",
+          "current_root": "EXACT_ORIGINAL_ROOT_RETAINED",
+          "current_device": 33,
+          "current_inode": 478335,
+          "current_mode": "0700",
+          "cleanup": "PROHIBITED_STICKY_NATIVE_FIRST_CLOSE_UNKNOWN"
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "operation": "current-producer-precommit-normal-control",
+      "parent": "TestContentSIGKILLBeforePublicationCommitRecoversOriginalStaging",
+      "phase": "normal_control",
+      "original_native_argv": [
+        "go",
+        "test",
+        "-tags=integration",
+        "-v",
+        "-count=1",
+        "-p=1",
+        "-mod=readonly",
+        "-timeout=120s",
+        "./conformance/component",
+        "-run",
+        "^TestContentSIGKILLBeforePublicationCommitRecoversOriginalStaging$/^normal_release$"
+      ],
+      "raw": "/tmp/lerna-04-ticket06-execution/current-producer-precommit-normal-control.log",
+      "raw_bytes": 759,
+      "raw_lines": 8,
+      "raw_sha256": "90d4f212009bad65f2c79d1f2f65137295b861c920ace534d6249e869613e5d2",
+      "prelaunch": "/tmp/lerna-04-ticket06-execution/current-producer-precommit-normal-control-prelaunch.json",
+      "prelaunch_sha256": "8a88d65b2866d34759fa2dc4f2b38547c1178a110e7a9b923403eb8145dd6b8e",
+      "outcome": "/tmp/lerna-04-ticket06-execution/current-producer-precommit-normal-control-outcome.json",
+      "outcome_sha256": "206a7ee67537989b0315f8f0fcef3841707eabf123c486bc27da2f9a467d69ca",
+      "postchecks": "/tmp/lerna-04-ticket06-execution/current-producer-precommit-normal-control-postchecks.json",
+      "postchecks_sha256": "ac212cf83d21ad159b4b13eac1e8ed358873e3e07e6cf22681506d2a624e3556",
+      "native_actual": {
+        "event": "native_completion_ack",
+        "operation": "current-producer-precommit-normal-control",
+        "pid": 4107055,
+        "pgid": 4107055,
+        "starttime": "17228335",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false,
+        "owned_raw_fsync_close_ack": true
+      },
+      "independent_current_group_absent_after_entire_segment": true,
+      "actual_full_selected_target_pass": [
+        "normal_release"
+      ],
+      "ledger_interval": [
+        226,
+        232
+      ],
+      "source26_unchanged_each_post": true,
+      "scopes": [
+        {
+          "schema": "lerna_test_486408314c4b3c8836ac4e12",
+          "children": [
+            {
+              "generation": 1,
+              "pre_start_owner_registered": true,
+              "first_store_close": "ACK",
+              "first_object_close": "ACK",
+              "close_observation": "ACTUAL_STICKY_ORIGINAL_OBSERVATION",
+              "pid": 4107152,
+              "pgid": 4107055,
+              "starttime": "17228456",
+              "pre_open_registered_before_permission": true,
+              "retained": false
+            }
+          ],
+          "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-371804015",
+          "device": 33,
+          "inode": 478685,
+          "historical_firstClose_unknown": false,
+          "actual_child_Wait_and_parent_Stop_assertions": "ORIGINAL_SELECTED_TEST_FULL_PASS_AT_FROZEN_SOURCE; ledger records actual firstClose separately",
+          "current_root": "ABSENT_AFTER_ORDINARY_FIXTURE_CLEANUP",
+          "ordinary_fixture_cleanup": "NO_REPORTED_ERROR_AND_ROOT_ABSENT; PG_CATALOG_NOT_YET_INDEPENDENTLY_AUDITED"
+        }
+      ]
+    },
+    {
+      "sequence": 5,
+      "operation": "current-producer-precommit-original-fault",
+      "parent": "TestContentSIGKILLBeforePublicationCommitRecoversOriginalStaging",
+      "phase": "fault_only",
+      "original_native_argv": [
+        "go",
+        "test",
+        "-tags=integration",
+        "-v",
+        "-count=1",
+        "-p=1",
+        "-mod=readonly",
+        "-timeout=120s",
+        "./conformance/component",
+        "-run",
+        "^TestContentSIGKILLBeforePublicationCommitRecoversOriginalStaging$/^SIGKILL_before_publication_commit$"
+      ],
+      "raw": "/tmp/lerna-04-ticket06-execution/current-producer-precommit-original-fault.log",
+      "raw_bytes": 1030,
+      "raw_lines": 10,
+      "raw_sha256": "f4c1e72fa06a421254850d34974a891f9bd6be19c624536059fd1ad7bb85eb3c",
+      "prelaunch": "/tmp/lerna-04-ticket06-execution/current-producer-precommit-original-fault-prelaunch.json",
+      "prelaunch_sha256": "8c0000f47a532a71ffcd94b6a935713887ac33aac78f7ab6d2346241ce77a84f",
+      "outcome": "/tmp/lerna-04-ticket06-execution/current-producer-precommit-original-fault-outcome.json",
+      "outcome_sha256": "b19a26835e2913dc6c42273ebc110bfcc4e2bc9162f94e35c9d3b85bf6414af2",
+      "postchecks": "/tmp/lerna-04-ticket06-execution/current-producer-precommit-original-fault-postchecks.json",
+      "postchecks_sha256": "e4c6cee0cf9164f97f32502ff0e492be8558fbe57ea4625579253cc081dfe3c6",
+      "native_actual": {
+        "event": "native_completion_ack",
+        "operation": "current-producer-precommit-original-fault",
+        "pid": 4108168,
+        "pgid": 4108168,
+        "starttime": "17232845",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false,
+        "owned_raw_fsync_close_ack": true
+      },
+      "independent_current_group_absent_after_entire_segment": true,
+      "actual_full_selected_target_pass": [
+        "SIGKILL_before_publication_commit"
+      ],
+      "ledger_interval": [
+        233,
+        242
+      ],
+      "source26_unchanged_each_post": true,
+      "scopes": [
+        {
+          "schema": "lerna_test_6a50e824aede768770812f18",
+          "children": [
+            {
+              "generation": 1,
+              "pre_start_owner_registered": true,
+              "first_store_close": "UNKNOWN",
+              "first_object_close": "UNKNOWN",
+              "close_observation": "ACTUAL_STICKY_ORIGINAL_OBSERVATION",
+              "pid": 4108224,
+              "pgid": 4108168,
+              "starttime": "17232949",
+              "pre_open_registered_before_permission": true,
+              "retained": true
+            },
+            {
+              "generation": 2,
+              "pre_start_owner_registered": true,
+              "first_store_close": "ACK",
+              "first_object_close": "ACK",
+              "close_observation": "ACTUAL_STICKY_ORIGINAL_OBSERVATION",
+              "pid": 4108370,
+              "pgid": 4108168,
+              "starttime": "17233468",
+              "pre_open_registered_before_permission": true,
+              "retained": false
+            }
+          ],
+          "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-1399548342",
+          "device": 33,
+          "inode": 479008,
+          "historical_firstClose_unknown": true,
+          "actual_child_Wait_and_parent_Stop_assertions": "ORIGINAL_SELECTED_TEST_FULL_PASS_AT_FROZEN_SOURCE; ledger records actual firstClose separately",
+          "current_root": "EXACT_ORIGINAL_ROOT_RETAINED",
+          "current_device": 33,
+          "current_inode": 479008,
+          "current_mode": "0700",
+          "cleanup": "PROHIBITED_STICKY_NATIVE_FIRST_CLOSE_UNKNOWN"
+        }
+      ]
+    },
+    {
+      "sequence": 6,
+      "operation": "current-producer-precommit-paired-race",
+      "parent": "TestContentSIGKILLBeforePublicationCommitRecoversOriginalStaging",
+      "phase": "paired_race",
+      "original_native_argv": [
+        "go",
+        "test",
+        "-race",
+        "-tags=integration",
+        "-v",
+        "-count=1",
+        "-p=1",
+        "-mod=readonly",
+        "-timeout=120s",
+        "./conformance/component",
+        "-run",
+        "^TestContentSIGKILLBeforePublicationCommitRecoversOriginalStaging$"
+      ],
+      "raw": "/tmp/lerna-04-ticket06-execution/current-producer-precommit-paired-race.log",
+      "raw_bytes": 1335,
+      "raw_lines": 13,
+      "raw_sha256": "a90d2af8161c7d2375db60fe7c180626409480ef17c25056712a9b9dbffa90f9",
+      "prelaunch": "/tmp/lerna-04-ticket06-execution/current-producer-precommit-paired-race-prelaunch.json",
+      "prelaunch_sha256": "20168794f4efc7ecd908165cc58e5267a29b89ed8dfe4fa903e91363deac00c7",
+      "outcome": "/tmp/lerna-04-ticket06-execution/current-producer-precommit-paired-race-outcome.json",
+      "outcome_sha256": "de8b1e0791f83708badbec0f3748c0839843906961859c121fb6af1fb8e5e6d4",
+      "postchecks": "/tmp/lerna-04-ticket06-execution/current-producer-precommit-paired-race-postchecks.json",
+      "postchecks_sha256": "3609da4a99c4ff4b7a18c4851bc6415a29fcfa0a19dc8c4c51835153b0af5dd1",
+      "native_actual": {
+        "event": "native_completion_ack",
+        "operation": "current-producer-precommit-paired-race",
+        "pid": 4109067,
+        "pgid": 4109067,
+        "starttime": "17236675",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false,
+        "owned_raw_fsync_close_ack": true
+      },
+      "independent_current_group_absent_after_entire_segment": true,
+      "actual_full_selected_target_pass": [
+        "normal_release",
+        "SIGKILL_before_publication_commit"
+      ],
+      "ledger_interval": [
+        243,
+        257
+      ],
+      "source26_unchanged_each_post": true,
+      "scopes": [
+        {
+          "schema": "lerna_test_db85903513e438a1ff7e4304",
+          "children": [
+            {
+              "generation": 1,
+              "pre_start_owner_registered": true,
+              "first_store_close": "ACK",
+              "first_object_close": "ACK",
+              "close_observation": "ACTUAL_STICKY_ORIGINAL_OBSERVATION",
+              "pid": 4109192,
+              "pgid": 4109067,
+              "starttime": "17236888",
+              "pre_open_registered_before_permission": true,
+              "retained": false
+            }
+          ],
+          "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-2534261937",
+          "device": 33,
+          "inode": 479330,
+          "historical_firstClose_unknown": false,
+          "actual_child_Wait_and_parent_Stop_assertions": "ORIGINAL_SELECTED_TEST_FULL_PASS_AT_FROZEN_SOURCE; ledger records actual firstClose separately",
+          "current_root": "ABSENT_AFTER_ORDINARY_FIXTURE_CLEANUP",
+          "ordinary_fixture_cleanup": "NO_REPORTED_ERROR_AND_ROOT_ABSENT; PG_CATALOG_NOT_YET_INDEPENDENTLY_AUDITED"
+        },
+        {
+          "schema": "lerna_test_3e82942edc73296f43be9510",
+          "children": [
+            {
+              "generation": 1,
+              "pre_start_owner_registered": true,
+              "first_store_close": "UNKNOWN",
+              "first_object_close": "UNKNOWN",
+              "close_observation": "ACTUAL_STICKY_ORIGINAL_OBSERVATION",
+              "pid": 4109251,
+              "pgid": 4109067,
+              "starttime": "17237045",
+              "pre_open_registered_before_permission": true,
+              "retained": true
+            },
+            {
+              "generation": 2,
+              "pre_start_owner_registered": true,
+              "first_store_close": "ACK",
+              "first_object_close": "ACK",
+              "close_observation": "ACTUAL_STICKY_ORIGINAL_OBSERVATION",
+              "pid": 4109382,
+              "pgid": 4109067,
+              "starttime": "17237562",
+              "pre_open_registered_before_permission": true,
+              "retained": false
+            }
+          ],
+          "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-1484034955",
+          "device": 33,
+          "inode": 479335,
+          "historical_firstClose_unknown": true,
+          "actual_child_Wait_and_parent_Stop_assertions": "ORIGINAL_SELECTED_TEST_FULL_PASS_AT_FROZEN_SOURCE; ledger records actual firstClose separately",
+          "current_root": "EXACT_ORIGINAL_ROOT_RETAINED",
+          "current_device": 33,
+          "current_inode": 479335,
+          "current_mode": "0700",
+          "cleanup": "PROHIBITED_STICKY_NATIVE_FIRST_CLOSE_UNKNOWN"
+        }
+      ]
+    },
+    {
+      "sequence": 7,
+      "operation": "current-producer-postcommit-normal-control",
+      "parent": "TestContentSIGKILLAfterPublicationCommitRetainsOriginalPublishedFact",
+      "phase": "normal_control",
+      "original_native_argv": [
+        "go",
+        "test",
+        "-tags=integration",
+        "-v",
+        "-count=1",
+        "-p=1",
+        "-mod=readonly",
+        "-timeout=120s",
+        "./conformance/component",
+        "-run",
+        "^TestContentSIGKILLAfterPublicationCommitRetainsOriginalPublishedFact$/^normal_release$"
+      ],
+      "raw": "/tmp/lerna-04-ticket06-execution/current-producer-postcommit-normal-control.log",
+      "raw_bytes": 776,
+      "raw_lines": 8,
+      "raw_sha256": "c401d87f5e3a9bc66c7ece93e383c13a359945cf995827ec7ab8b965241829f8",
+      "prelaunch": "/tmp/lerna-04-ticket06-execution/current-producer-postcommit-normal-control-prelaunch.json",
+      "prelaunch_sha256": "edef53592b8944f9d968f8f3753005a34a2b2c0b1a84d806606eb189adab5492",
+      "outcome": "/tmp/lerna-04-ticket06-execution/current-producer-postcommit-normal-control-outcome.json",
+      "outcome_sha256": "62cd612239b7716f335f9519201c5fe4b8a8fc01de8b34cf81a35e02ed2495c1",
+      "postchecks": "/tmp/lerna-04-ticket06-execution/current-producer-postcommit-normal-control-postchecks.json",
+      "postchecks_sha256": "69d69dc506b63e298b485edf5af31c5ebe34ff08cea072b567ac79325a35e6b9",
+      "native_actual": {
+        "event": "native_completion_ack",
+        "operation": "current-producer-postcommit-normal-control",
+        "pid": 4110506,
+        "pgid": 4110506,
+        "starttime": "17242688",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false,
+        "owned_raw_fsync_close_ack": true
+      },
+      "independent_current_group_absent_after_entire_segment": true,
+      "actual_full_selected_target_pass": [
+        "normal_release"
+      ],
+      "ledger_interval": [
+        258,
+        264
+      ],
+      "source26_unchanged_each_post": true,
+      "scopes": [
+        {
+          "schema": "lerna_test_df4eacaafb93c79fd6c2ac2f",
+          "children": [
+            {
+              "generation": 1,
+              "pre_start_owner_registered": true,
+              "first_store_close": "ACK",
+              "first_object_close": "ACK",
+              "close_observation": "ACTUAL_STICKY_ORIGINAL_OBSERVATION",
+              "pid": 4110588,
+              "pgid": 4110506,
+              "starttime": "17242805",
+              "pre_open_registered_before_permission": true,
+              "retained": false
+            }
+          ],
+          "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-1248274164",
+          "device": 33,
+          "inode": 479671,
+          "historical_firstClose_unknown": false,
+          "actual_child_Wait_and_parent_Stop_assertions": "ORIGINAL_SELECTED_TEST_FULL_PASS_AT_FROZEN_SOURCE; ledger records actual firstClose separately",
+          "current_root": "ABSENT_AFTER_ORDINARY_FIXTURE_CLEANUP",
+          "ordinary_fixture_cleanup": "NO_REPORTED_ERROR_AND_ROOT_ABSENT; PG_CATALOG_NOT_YET_INDEPENDENTLY_AUDITED"
+        }
+      ]
+    },
+    {
+      "sequence": 8,
+      "operation": "current-producer-postcommit-original-fault",
+      "parent": "TestContentSIGKILLAfterPublicationCommitRetainsOriginalPublishedFact",
+      "phase": "fault_only",
+      "original_native_argv": [
+        "go",
+        "test",
+        "-tags=integration",
+        "-v",
+        "-count=1",
+        "-p=1",
+        "-mod=readonly",
+        "-timeout=120s",
+        "./conformance/component",
+        "-run",
+        "^TestContentSIGKILLAfterPublicationCommitRetainsOriginalPublishedFact$/^SIGKILL_after_publication_commit_before_reply$"
+      ],
+      "raw": "/tmp/lerna-04-ticket06-execution/current-producer-postcommit-original-fault.log",
+      "raw_bytes": 955,
+      "raw_lines": 9,
+      "raw_sha256": "dc400d789925851578c2dd5b86e5e343b583b0e3a2f44697c5d05775cc2b0897",
+      "prelaunch": "/tmp/lerna-04-ticket06-execution/current-producer-postcommit-original-fault-prelaunch.json",
+      "prelaunch_sha256": "c630fed0e2120f22b04dfb0cf58df497098f0b637a858bb1d384634946384a8d",
+      "outcome": "/tmp/lerna-04-ticket06-execution/current-producer-postcommit-original-fault-outcome.json",
+      "outcome_sha256": "a15a5b4fb7da1fa450d3647efbc84fe7e83776b8ed2e5e063a4ac8ac6e4945ea",
+      "postchecks": "/tmp/lerna-04-ticket06-execution/current-producer-postcommit-original-fault-postchecks.json",
+      "postchecks_sha256": "8c5c4129d3dd081619de1f5d7dd9f9c2b37be9fbb16afb96e7660712b4102e04",
+      "native_actual": {
+        "event": "native_completion_ack",
+        "operation": "current-producer-postcommit-original-fault",
+        "pid": 4111407,
+        "pgid": 4111407,
+        "starttime": "17246010",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false,
+        "owned_raw_fsync_close_ack": true
+      },
+      "independent_current_group_absent_after_entire_segment": true,
+      "actual_full_selected_target_pass": [
+        "SIGKILL_after_publication_commit_before_reply"
+      ],
+      "ledger_interval": [
+        265,
+        271
+      ],
+      "source26_unchanged_each_post": true,
+      "scopes": [
+        {
+          "schema": "lerna_test_db6d5f454d14611b68899c92",
+          "children": [
+            {
+              "generation": 1,
+              "pre_start_owner_registered": true,
+              "first_store_close": "UNKNOWN",
+              "first_object_close": "UNKNOWN",
+              "close_observation": "ACTUAL_STICKY_ORIGINAL_OBSERVATION",
+              "pid": 4111480,
+              "pgid": 4111407,
+              "starttime": "17246130",
+              "pre_open_registered_before_permission": true,
+              "retained": true
+            }
+          ],
+          "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-3836418164",
+          "device": 33,
+          "inode": 479983,
+          "historical_firstClose_unknown": true,
+          "actual_child_Wait_and_parent_Stop_assertions": "ORIGINAL_SELECTED_TEST_FULL_PASS_AT_FROZEN_SOURCE; ledger records actual firstClose separately",
+          "current_root": "EXACT_ORIGINAL_ROOT_RETAINED",
+          "current_device": 33,
+          "current_inode": 479983,
+          "current_mode": "0700",
+          "cleanup": "PROHIBITED_STICKY_NATIVE_FIRST_CLOSE_UNKNOWN"
+        }
+      ]
+    },
+    {
+      "sequence": 9,
+      "operation": "current-producer-postcommit-paired-race",
+      "parent": "TestContentSIGKILLAfterPublicationCommitRetainsOriginalPublishedFact",
+      "phase": "paired_race",
+      "original_native_argv": [
+        "go",
+        "test",
+        "-race",
+        "-tags=integration",
+        "-v",
+        "-count=1",
+        "-p=1",
+        "-mod=readonly",
+        "-timeout=120s",
+        "./conformance/component",
+        "-run",
+        "^TestContentSIGKILLAfterPublicationCommitRetainsOriginalPublishedFact$"
+      ],
+      "raw": "/tmp/lerna-04-ticket06-execution/current-producer-postcommit-paired-race.log",
+      "raw_bytes": 1268,
+      "raw_lines": 12,
+      "raw_sha256": "f88bf3324ce0c375b286b36e73c3f70056c9f1666c37994e34fe5cb6cfc06503",
+      "prelaunch": "/tmp/lerna-04-ticket06-execution/current-producer-postcommit-paired-race-prelaunch.json",
+      "prelaunch_sha256": "5469a3e594eb63c551a9cb1c202f70e887c0904105d46e2a353b28fa22454aa6",
+      "outcome": "/tmp/lerna-04-ticket06-execution/current-producer-postcommit-paired-race-outcome.json",
+      "outcome_sha256": "9985a63fe7d7e64e42a31c90dddfa1b961fe87db5a401c5725b0417a0921458a",
+      "postchecks": "/tmp/lerna-04-ticket06-execution/current-producer-postcommit-paired-race-postchecks.json",
+      "postchecks_sha256": "a3092f799fb693fc1fdbd3be5d303d710a6d567a3ab4cfbb21c46f8140050983",
+      "native_actual": {
+        "event": "native_completion_ack",
+        "operation": "current-producer-postcommit-paired-race",
+        "pid": 4112111,
+        "pgid": 4112111,
+        "starttime": "17248976",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false,
+        "owned_raw_fsync_close_ack": true
+      },
+      "independent_current_group_absent_after_entire_segment": true,
+      "actual_full_selected_target_pass": [
+        "normal_release",
+        "SIGKILL_after_publication_commit_before_reply"
+      ],
+      "ledger_interval": [
+        272,
+        283
+      ],
+      "source26_unchanged_each_post": true,
+      "scopes": [
+        {
+          "schema": "lerna_test_c8f3b71696b69ca6600a47ce",
+          "children": [
+            {
+              "generation": 1,
+              "pre_start_owner_registered": true,
+              "first_store_close": "ACK",
+              "first_object_close": "ACK",
+              "close_observation": "ACTUAL_STICKY_ORIGINAL_OBSERVATION",
+              "pid": 4112214,
+              "pgid": 4112111,
+              "starttime": "17249116",
+              "pre_open_registered_before_permission": true,
+              "retained": false
+            }
+          ],
+          "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-2493967970",
+          "device": 33,
+          "inode": 480292,
+          "historical_firstClose_unknown": false,
+          "actual_child_Wait_and_parent_Stop_assertions": "ORIGINAL_SELECTED_TEST_FULL_PASS_AT_FROZEN_SOURCE; ledger records actual firstClose separately",
+          "current_root": "ABSENT_AFTER_ORDINARY_FIXTURE_CLEANUP",
+          "ordinary_fixture_cleanup": "NO_REPORTED_ERROR_AND_ROOT_ABSENT; PG_CATALOG_NOT_YET_INDEPENDENTLY_AUDITED"
+        },
+        {
+          "schema": "lerna_test_6b159a9d3ca960f281f41c24",
+          "children": [
+            {
+              "generation": 1,
+              "pre_start_owner_registered": true,
+              "first_store_close": "UNKNOWN",
+              "first_object_close": "UNKNOWN",
+              "close_observation": "ACTUAL_STICKY_ORIGINAL_OBSERVATION",
+              "pid": 4112273,
+              "pgid": 4112111,
+              "starttime": "17249275",
+              "pre_open_registered_before_permission": true,
+              "retained": true
+            }
+          ],
+          "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-667109751",
+          "device": 33,
+          "inode": 480297,
+          "historical_firstClose_unknown": true,
+          "actual_child_Wait_and_parent_Stop_assertions": "ORIGINAL_SELECTED_TEST_FULL_PASS_AT_FROZEN_SOURCE; ledger records actual firstClose separately",
+          "current_root": "EXACT_ORIGINAL_ROOT_RETAINED",
+          "current_device": 33,
+          "current_inode": 480297,
+          "current_mode": "0700",
+          "cleanup": "PROHIBITED_STICKY_NATIVE_FIRST_CLOSE_UNKNOWN"
+        }
+      ]
+    },
+    {
+      "sequence": 10,
+      "operation": "current-producer-policy-orphan-normal-control",
+      "parent": "TestContentSIGKILLWithCurrentSaveWithdrawalRecoversOriginalOrphanDuty",
+      "phase": "normal_control",
+      "original_native_argv": [
+        "go",
+        "test",
+        "-tags=integration",
+        "-v",
+        "-count=1",
+        "-p=1",
+        "-mod=readonly",
+        "-timeout=120s",
+        "./conformance/component",
+        "-run",
+        "^TestContentSIGKILLWithCurrentSaveWithdrawalRecoversOriginalOrphanDuty$/^normal_release$"
+      ],
+      "raw": "/tmp/lerna-04-ticket06-execution/current-producer-policy-orphan-normal-control.log",
+      "raw_bytes": 783,
+      "raw_lines": 8,
+      "raw_sha256": "2daaade5b7cc09ad888b742ce718762c59c4b41dc17c3118d1107eda77c5e808",
+      "prelaunch": "/tmp/lerna-04-ticket06-execution/current-producer-policy-orphan-normal-control-prelaunch.json",
+      "prelaunch_sha256": "a9ad743d00e6d3198fb1ba02aee2d03a3c8dd2ade1553dc6e3b9348543ce96b5",
+      "outcome": "/tmp/lerna-04-ticket06-execution/current-producer-policy-orphan-normal-control-outcome.json",
+      "outcome_sha256": "a086e71f931a3cdab0aa0b4d1f9827bfcdf55a63b3fa31422fc66791fb81baac",
+      "postchecks": "/tmp/lerna-04-ticket06-execution/current-producer-policy-orphan-normal-control-postchecks.json",
+      "postchecks_sha256": "7fcc1fe36e2845f2741728eeff8ae98a5ed18a55f8cf5fc96c747e72342f1ff5",
+      "native_actual": {
+        "event": "native_completion_ack",
+        "operation": "current-producer-policy-orphan-normal-control",
+        "pid": 4113572,
+        "pgid": 4113572,
+        "starttime": "17252618",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false,
+        "owned_raw_fsync_close_ack": true
+      },
+      "independent_current_group_absent_after_entire_segment": true,
+      "actual_full_selected_target_pass": [
+        "normal_release"
+      ],
+      "ledger_interval": [
+        284,
+        290
+      ],
+      "source26_unchanged_each_post": true,
+      "scopes": [
+        {
+          "schema": "lerna_test_a70753b4b891ed676c5cb740",
+          "children": [
+            {
+              "generation": 1,
+              "pre_start_owner_registered": true,
+              "first_store_close": "ACK",
+              "first_object_close": "ACK",
+              "close_observation": "ACTUAL_STICKY_ORIGINAL_OBSERVATION",
+              "pid": 4113650,
+              "pgid": 4113572,
+              "starttime": "17252712",
+              "pre_open_registered_before_permission": true,
+              "retained": false
+            }
+          ],
+          "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-10721605",
+          "device": 33,
+          "inode": 480609,
+          "historical_firstClose_unknown": false,
+          "actual_child_Wait_and_parent_Stop_assertions": "ORIGINAL_SELECTED_TEST_FULL_PASS_AT_FROZEN_SOURCE; ledger records actual firstClose separately",
+          "current_root": "ABSENT_AFTER_ORDINARY_FIXTURE_CLEANUP",
+          "ordinary_fixture_cleanup": "NO_REPORTED_ERROR_AND_ROOT_ABSENT; PG_CATALOG_NOT_YET_INDEPENDENTLY_AUDITED"
+        }
+      ]
+    },
+    {
+      "sequence": 11,
+      "operation": "current-producer-policy-orphan-original-fault",
+      "parent": "TestContentSIGKILLWithCurrentSaveWithdrawalRecoversOriginalOrphanDuty",
+      "phase": "fault_only",
+      "original_native_argv": [
+        "go",
+        "test",
+        "-tags=integration",
+        "-v",
+        "-count=1",
+        "-p=1",
+        "-mod=readonly",
+        "-timeout=120s",
+        "./conformance/component",
+        "-run",
+        "^TestContentSIGKILLWithCurrentSaveWithdrawalRecoversOriginalOrphanDuty$/^SIGKILL_then_current_save_withdrawal$"
+      ],
+      "raw": "/tmp/lerna-04-ticket06-execution/current-producer-policy-orphan-original-fault.log",
+      "raw_bytes": 1166,
+      "raw_lines": 11,
+      "raw_sha256": "c1b35106dcfb056781a7c75134d8b891952094cc7667a1fccadb684b2158398a",
+      "prelaunch": "/tmp/lerna-04-ticket06-execution/current-producer-policy-orphan-original-fault-prelaunch.json",
+      "prelaunch_sha256": "35b968631de7414a94b3ee805ea107347822a96efe5eee1fb27d886c66a31fcc",
+      "outcome": "/tmp/lerna-04-ticket06-execution/current-producer-policy-orphan-original-fault-outcome.json",
+      "outcome_sha256": "bb372147e4362c70ff65957db41e2b8f574a53812006b8a92cc76b1aebe8c4a6",
+      "postchecks": "/tmp/lerna-04-ticket06-execution/current-producer-policy-orphan-original-fault-postchecks.json",
+      "postchecks_sha256": "4258a9678174cad9937114f199dda3d14d8bb7aad34216c85a068c73501bd191",
+      "native_actual": {
+        "event": "native_completion_ack",
+        "operation": "current-producer-policy-orphan-original-fault",
+        "pid": 4114188,
+        "pgid": 4114188,
+        "starttime": "17254943",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false,
+        "owned_raw_fsync_close_ack": true
+      },
+      "independent_current_group_absent_after_entire_segment": true,
+      "actual_full_selected_target_pass": [
+        "SIGKILL_then_current_save_withdrawal"
+      ],
+      "ledger_interval": [
+        291,
+        300
+      ],
+      "source26_unchanged_each_post": true,
+      "scopes": [
+        {
+          "schema": "lerna_test_3e0545deee979130abe21272",
+          "children": [
+            {
+              "generation": 1,
+              "pre_start_owner_registered": true,
+              "first_store_close": "UNKNOWN",
+              "first_object_close": "UNKNOWN",
+              "close_observation": "ACTUAL_STICKY_ORIGINAL_OBSERVATION",
+              "pid": 4114242,
+              "pgid": 4114188,
+              "starttime": "17255057",
+              "pre_open_registered_before_permission": true,
+              "retained": true
+            },
+            {
+              "generation": 2,
+              "pre_start_owner_registered": true,
+              "first_store_close": "ACK",
+              "first_object_close": "ACK",
+              "close_observation": "ACTUAL_STICKY_ORIGINAL_OBSERVATION",
+              "pid": 4114370,
+              "pgid": 4114188,
+              "starttime": "17255569",
+              "pre_open_registered_before_permission": true,
+              "retained": false
+            }
+          ],
+          "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-3288104960",
+          "device": 33,
+          "inode": 480912,
+          "historical_firstClose_unknown": true,
+          "actual_child_Wait_and_parent_Stop_assertions": "ORIGINAL_SELECTED_TEST_FULL_PASS_AT_FROZEN_SOURCE; ledger records actual firstClose separately",
+          "current_root": "EXACT_ORIGINAL_ROOT_RETAINED",
+          "current_device": 33,
+          "current_inode": 480912,
+          "current_mode": "0700",
+          "cleanup": "PROHIBITED_STICKY_NATIVE_FIRST_CLOSE_UNKNOWN"
+        }
+      ]
+    },
+    {
+      "sequence": 12,
+      "operation": "current-producer-policy-orphan-paired-race",
+      "parent": "TestContentSIGKILLWithCurrentSaveWithdrawalRecoversOriginalOrphanDuty",
+      "phase": "paired_race",
+      "original_native_argv": [
+        "go",
+        "test",
+        "-race",
+        "-tags=integration",
+        "-v",
+        "-count=1",
+        "-p=1",
+        "-mod=readonly",
+        "-timeout=120s",
+        "./conformance/component",
+        "-run",
+        "^TestContentSIGKILLWithCurrentSaveWithdrawalRecoversOriginalOrphanDuty$"
+      ],
+      "raw": "/tmp/lerna-04-ticket06-execution/current-producer-policy-orphan-paired-race.log",
+      "raw_bytes": 1482,
+      "raw_lines": 14,
+      "raw_sha256": "20f99596aa1c8e0cf7f8c11568d57b895e7b6209679afc1b47dca7370314bf68",
+      "prelaunch": "/tmp/lerna-04-ticket06-execution/current-producer-policy-orphan-paired-race-prelaunch.json",
+      "prelaunch_sha256": "0c5fbf5c70c3c298ba46ec760cf32e2aa8265ae644f71f75b3d66a17c09b2caa",
+      "outcome": "/tmp/lerna-04-ticket06-execution/current-producer-policy-orphan-paired-race-outcome.json",
+      "outcome_sha256": "00adbd014718490557b078a61d42a909cdb249f7f940a45e9dcbc9cc2ff87603",
+      "postchecks": "/tmp/lerna-04-ticket06-execution/current-producer-policy-orphan-paired-race-postchecks.json",
+      "postchecks_sha256": "384e1a397e903a893a01187dc39659dd1e63a019eb7ca64b004fd6f150a47648",
+      "native_actual": {
+        "event": "native_completion_ack",
+        "operation": "current-producer-policy-orphan-paired-race",
+        "pid": 4114888,
+        "pgid": 4114888,
+        "starttime": "17257823",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false,
+        "owned_raw_fsync_close_ack": true
+      },
+      "independent_current_group_absent_after_entire_segment": true,
+      "actual_full_selected_target_pass": [
+        "normal_release",
+        "SIGKILL_then_current_save_withdrawal"
+      ],
+      "ledger_interval": [
+        301,
+        315
+      ],
+      "source26_unchanged_each_post": true,
+      "scopes": [
+        {
+          "schema": "lerna_test_4a31b0f4d331c87076d908e0",
+          "children": [
+            {
+              "generation": 1,
+              "pre_start_owner_registered": true,
+              "first_store_close": "ACK",
+              "first_object_close": "ACK",
+              "close_observation": "ACTUAL_STICKY_ORIGINAL_OBSERVATION",
+              "pid": 4114987,
+              "pgid": 4114888,
+              "starttime": "17257968",
+              "pre_open_registered_before_permission": true,
+              "retained": false
+            }
+          ],
+          "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-3108476912",
+          "device": 33,
+          "inode": 481221,
+          "historical_firstClose_unknown": false,
+          "actual_child_Wait_and_parent_Stop_assertions": "ORIGINAL_SELECTED_TEST_FULL_PASS_AT_FROZEN_SOURCE; ledger records actual firstClose separately",
+          "current_root": "ABSENT_AFTER_ORDINARY_FIXTURE_CLEANUP",
+          "ordinary_fixture_cleanup": "NO_REPORTED_ERROR_AND_ROOT_ABSENT; PG_CATALOG_NOT_YET_INDEPENDENTLY_AUDITED"
+        },
+        {
+          "schema": "lerna_test_00daeb37fcf91bc92833136c",
+          "children": [
+            {
+              "generation": 1,
+              "pre_start_owner_registered": true,
+              "first_store_close": "UNKNOWN",
+              "first_object_close": "UNKNOWN",
+              "close_observation": "ACTUAL_STICKY_ORIGINAL_OBSERVATION",
+              "pid": 4115019,
+              "pgid": 4114888,
+              "starttime": "17258158",
+              "pre_open_registered_before_permission": true,
+              "retained": true
+            },
+            {
+              "generation": 2,
+              "pre_start_owner_registered": true,
+              "first_store_close": "ACK",
+              "first_object_close": "ACK",
+              "close_observation": "ACTUAL_STICKY_ORIGINAL_OBSERVATION",
+              "pid": 4115148,
+              "pgid": 4114888,
+              "starttime": "17258680",
+              "pre_open_registered_before_permission": true,
+              "retained": false
+            }
+          ],
+          "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-1117642246",
+          "device": 33,
+          "inode": 481226,
+          "historical_firstClose_unknown": true,
+          "actual_child_Wait_and_parent_Stop_assertions": "ORIGINAL_SELECTED_TEST_FULL_PASS_AT_FROZEN_SOURCE; ledger records actual firstClose separately",
+          "current_root": "EXACT_ORIGINAL_ROOT_RETAINED",
+          "current_device": 33,
+          "current_inode": 481226,
+          "current_mode": "0700",
+          "cleanup": "PROHIBITED_STICKY_NATIVE_FIRST_CLOSE_UNKNOWN"
+        }
+      ]
+    },
+    {
+      "sequence": 13,
+      "operation": "current-producer-late-finish-normal-control",
+      "parent": "TestContentOriginalWorkerCannotFinishAcrossOriginalBodyFence",
+      "phase": "normal_control",
+      "original_native_argv": [
+        "go",
+        "test",
+        "-tags=integration",
+        "-v",
+        "-count=1",
+        "-p=1",
+        "-mod=readonly",
+        "-timeout=120s",
+        "./conformance/component",
+        "-run",
+        "^TestContentOriginalWorkerCannotFinishAcrossOriginalBodyFence$/^normal_release$"
+      ],
+      "raw": "/tmp/lerna-04-ticket06-execution/current-producer-late-finish-normal-control.log",
+      "raw_bytes": 894,
+      "raw_lines": 9,
+      "raw_sha256": "e3beed2fafd639d2a75ce39b2035a5bb9b6fefa60dd0c1656b052cd2df867700",
+      "prelaunch": "/tmp/lerna-04-ticket06-execution/current-producer-late-finish-normal-control-prelaunch.json",
+      "prelaunch_sha256": "c7103b32a50795a32da137879a58a961ee535b03188b1251ac5e3df8495ba1bf",
+      "outcome": "/tmp/lerna-04-ticket06-execution/current-producer-late-finish-normal-control-outcome.json",
+      "outcome_sha256": "9933a43bdd9b8b51aa1736ac255a7a1655abbec5a0097cae078a01e1db8e231b",
+      "postchecks": "/tmp/lerna-04-ticket06-execution/current-producer-late-finish-normal-control-postchecks.json",
+      "postchecks_sha256": "dada26ac5f68ed8d4b3a981ba8961fb0f973dd97a28c409dc3a05dc82e09e84a",
+      "native_actual": {
+        "event": "native_completion_ack",
+        "operation": "current-producer-late-finish-normal-control",
+        "pid": 4115932,
+        "pgid": 4115932,
+        "starttime": "17262342",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false,
+        "owned_raw_fsync_close_ack": true
+      },
+      "independent_current_group_absent_after_entire_segment": true,
+      "actual_full_selected_target_pass": [
+        "normal_release"
+      ],
+      "ledger_interval": [
+        316,
+        322
+      ],
+      "source26_unchanged_each_post": true,
+      "scopes": [
+        {
+          "schema": "lerna_test_8fb88309cd5f8f190c3ffd9c",
+          "children": [
+            {
+              "generation": 1,
+              "pre_start_owner_registered": true,
+              "first_store_close": "ACK",
+              "first_object_close": "ACK",
+              "close_observation": "ACTUAL_STICKY_ORIGINAL_OBSERVATION",
+              "pid": 4116033,
+              "pgid": 4115932,
+              "starttime": "17262445",
+              "pre_open_registered_before_permission": true,
+              "retained": false
+            }
+          ],
+          "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-1629820",
+          "device": 33,
+          "inode": 481548,
+          "historical_firstClose_unknown": false,
+          "actual_child_Wait_and_parent_Stop_assertions": "ORIGINAL_SELECTED_TEST_FULL_PASS_AT_FROZEN_SOURCE; ledger records actual firstClose separately",
+          "current_root": "ABSENT_AFTER_ORDINARY_FIXTURE_CLEANUP",
+          "ordinary_fixture_cleanup": "NO_REPORTED_ERROR_AND_ROOT_ABSENT; PG_CATALOG_NOT_YET_INDEPENDENTLY_AUDITED"
+        }
+      ]
+    },
+    {
+      "sequence": 14,
+      "operation": "current-producer-late-finish-original-fault",
+      "parent": "TestContentOriginalWorkerCannotFinishAcrossOriginalBodyFence",
+      "phase": "fault_only",
+      "original_native_argv": [
+        "go",
+        "test",
+        "-tags=integration",
+        "-v",
+        "-count=1",
+        "-p=1",
+        "-mod=readonly",
+        "-timeout=120s",
+        "./conformance/component",
+        "-run",
+        "^TestContentOriginalWorkerCannotFinishAcrossOriginalBodyFence$/^original_fence_before_late_finish$"
+      ],
+      "raw": "/tmp/lerna-04-ticket06-execution/current-producer-late-finish-original-fault.log",
+      "raw_bytes": 1082,
+      "raw_lines": 10,
+      "raw_sha256": "0e6b70d3b3d6fa27e743e2decf68fd056db91bb5c34de8b9a85d0da0fe5c74e1",
+      "prelaunch": "/tmp/lerna-04-ticket06-execution/current-producer-late-finish-original-fault-prelaunch.json",
+      "prelaunch_sha256": "23e02b4a770c8cc4ade3bc9a2f2e8b9c8ea5b13fe829c954dd098627d8380190",
+      "outcome": "/tmp/lerna-04-ticket06-execution/current-producer-late-finish-original-fault-outcome.json",
+      "outcome_sha256": "5859ad81294e9d4fc2fe6f89c6089370b47ef00ef4b18276ec04ad1e549cc148",
+      "postchecks": "/tmp/lerna-04-ticket06-execution/current-producer-late-finish-original-fault-postchecks.json",
+      "postchecks_sha256": "89c1c5d5592b577b81b44bc48a3c59a0e43e6c2aaadcb9b920508fdaa86c5684",
+      "native_actual": {
+        "event": "native_completion_ack",
+        "operation": "current-producer-late-finish-original-fault",
+        "pid": 4116610,
+        "pgid": 4116610,
+        "starttime": "17265097",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false,
+        "owned_raw_fsync_close_ack": true
+      },
+      "independent_current_group_absent_after_entire_segment": true,
+      "actual_full_selected_target_pass": [
+        "original_fence_before_late_finish"
+      ],
+      "ledger_interval": [
+        323,
+        329
+      ],
+      "source26_unchanged_each_post": true,
+      "scopes": [
+        {
+          "schema": "lerna_test_d7b56ca6645aa88f1b4ae195",
+          "children": [
+            {
+              "generation": 1,
+              "pre_start_owner_registered": true,
+              "first_store_close": "ACK",
+              "first_object_close": "ACK",
+              "close_observation": "ACTUAL_STICKY_ORIGINAL_OBSERVATION",
+              "pid": 4116712,
+              "pgid": 4116610,
+              "starttime": "17265198",
+              "pre_open_registered_before_permission": true,
+              "retained": false
+            }
+          ],
+          "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-3181406271",
+          "device": 33,
+          "inode": 481855,
+          "historical_firstClose_unknown": false,
+          "actual_child_Wait_and_parent_Stop_assertions": "ORIGINAL_SELECTED_TEST_FULL_PASS_AT_FROZEN_SOURCE; ledger records actual firstClose separately",
+          "current_root": "ABSENT_AFTER_ORDINARY_FIXTURE_CLEANUP",
+          "ordinary_fixture_cleanup": "NO_REPORTED_ERROR_AND_ROOT_ABSENT; PG_CATALOG_NOT_YET_INDEPENDENTLY_AUDITED"
+        }
+      ]
+    },
+    {
+      "sequence": 15,
+      "operation": "current-producer-late-finish-paired-race",
+      "parent": "TestContentOriginalWorkerCannotFinishAcrossOriginalBodyFence",
+      "phase": "paired_race",
+      "original_native_argv": [
+        "go",
+        "test",
+        "-race",
+        "-tags=integration",
+        "-v",
+        "-count=1",
+        "-p=1",
+        "-mod=readonly",
+        "-timeout=120s",
+        "./conformance/component",
+        "-run",
+        "^TestContentOriginalWorkerCannotFinishAcrossOriginalBodyFence$"
+      ],
+      "raw": "/tmp/lerna-04-ticket06-execution/current-producer-late-finish-paired-race.log",
+      "raw_bytes": 1528,
+      "raw_lines": 14,
+      "raw_sha256": "c4d05ac55042ba314c433ad1dafc9f95e17c11018e6396a71679ec434e368ddf",
+      "prelaunch": "/tmp/lerna-04-ticket06-execution/current-producer-late-finish-paired-race-prelaunch.json",
+      "prelaunch_sha256": "cdf17b5c1ffecdeb00c210a9ca62098b551e92f23b16c664e20a8b6eb51673af",
+      "outcome": "/tmp/lerna-04-ticket06-execution/current-producer-late-finish-paired-race-outcome.json",
+      "outcome_sha256": "7ac680e091dd1d7a30b021a6fd401ad06861884a82c46459c32506baa74b34d9",
+      "postchecks": "/tmp/lerna-04-ticket06-execution/current-producer-late-finish-paired-race-postchecks.json",
+      "postchecks_sha256": "709be93254138ae2d7be91895376fd5c7c84c7eecb8036c04443bb5b35fdbcf6",
+      "native_actual": {
+        "event": "native_completion_ack",
+        "operation": "current-producer-late-finish-paired-race",
+        "pid": 4117261,
+        "pgid": 4117261,
+        "starttime": "17267749",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false,
+        "owned_raw_fsync_close_ack": true
+      },
+      "independent_current_group_absent_after_entire_segment": true,
+      "actual_full_selected_target_pass": [
+        "normal_release",
+        "original_fence_before_late_finish"
+      ],
+      "ledger_interval": [
+        330,
+        341
+      ],
+      "source26_unchanged_each_post": true,
+      "scopes": [
+        {
+          "schema": "lerna_test_f51a61b96bd2a51e5e36cbcd",
+          "children": [
+            {
+              "generation": 1,
+              "pre_start_owner_registered": true,
+              "first_store_close": "ACK",
+              "first_object_close": "ACK",
+              "close_observation": "ACTUAL_STICKY_ORIGINAL_OBSERVATION",
+              "pid": 4117342,
+              "pgid": 4117261,
+              "starttime": "17267885",
+              "pre_open_registered_before_permission": true,
+              "retained": false
+            }
+          ],
+          "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-3949415822",
+          "device": 33,
+          "inode": 482161,
+          "historical_firstClose_unknown": false,
+          "actual_child_Wait_and_parent_Stop_assertions": "ORIGINAL_SELECTED_TEST_FULL_PASS_AT_FROZEN_SOURCE; ledger records actual firstClose separately",
+          "current_root": "ABSENT_AFTER_ORDINARY_FIXTURE_CLEANUP",
+          "ordinary_fixture_cleanup": "NO_REPORTED_ERROR_AND_ROOT_ABSENT; PG_CATALOG_NOT_YET_INDEPENDENTLY_AUDITED"
+        },
+        {
+          "schema": "lerna_test_fa59596031078047a18d9900",
+          "children": [
+            {
+              "generation": 1,
+              "pre_start_owner_registered": true,
+              "first_store_close": "ACK",
+              "first_object_close": "ACK",
+              "close_observation": "ACTUAL_STICKY_ORIGINAL_OBSERVATION",
+              "pid": 4117400,
+              "pgid": 4117261,
+              "starttime": "17268047",
+              "pre_open_registered_before_permission": true,
+              "retained": false
+            }
+          ],
+          "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-1344980382",
+          "device": 33,
+          "inode": 482165,
+          "historical_firstClose_unknown": false,
+          "actual_child_Wait_and_parent_Stop_assertions": "ORIGINAL_SELECTED_TEST_FULL_PASS_AT_FROZEN_SOURCE; ledger records actual firstClose separately",
+          "current_root": "ABSENT_AFTER_ORDINARY_FIXTURE_CLEANUP",
+          "ordinary_fixture_cleanup": "NO_REPORTED_ERROR_AND_ROOT_ABSENT; PG_CATALOG_NOT_YET_INDEPENDENTLY_AUDITED"
+        }
+      ]
+    }
+  ],
+  "original_raw_pre_out_post_artifact_pins": [
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-durable-normal-control.log",
+      "bytes": 757,
+      "sha256": "e2e64001e0c79297cae150a9d45f6f1d0409c0e7691c010de618ab23e00fd36e"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-durable-normal-control-prelaunch.json",
+      "bytes": 647,
+      "sha256": "2ac64623465863a99b57e609bf810d0039e22b03ab5bccf53aa9b7156cba5f7c"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-durable-normal-control-outcome.json",
+      "bytes": 257,
+      "sha256": "088a5c4932824530040f5afe1eafccc6d89afdcf9eb1479fb84932e8240ab6c5"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-durable-normal-control-postchecks.json",
+      "bytes": 7819,
+      "sha256": "55df6401400d849007f138bdbc7cc2c3ebee2653dd01a2531719aad22e5d68ef"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-durable-original-fault.log",
+      "bytes": 1030,
+      "sha256": "e1c0c7cc59c34e5b3288322790b687a9390bf268435d0880e7c9eeca8df19fe6"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-durable-original-fault-prelaunch.json",
+      "bytes": 667,
+      "sha256": "9023976ead6a38ea3e4803ff5ae7e19e102a8bbf67f129eb0c52fdf50c6d4a84"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-durable-original-fault-outcome.json",
+      "bytes": 257,
+      "sha256": "a55fe0f85d6e95ee7f530bde0cf9da605e5fd5c2c42a4f6b9f8fc04ae4664b6b"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-durable-original-fault-postchecks.json",
+      "bytes": 9754,
+      "sha256": "3dfc66b4f452d2a7601350d61547aa865bef2cca67eafba6df3c70beb94445af"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-durable-paired-race.log",
+      "bytes": 1335,
+      "sha256": "328dfcb2a1416bfe28cf3fb076d432dbdd58ddbf6623cf47cc1cccf5dac1306d"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-durable-paired-race-prelaunch.json",
+      "bytes": 640,
+      "sha256": "5d63226a13b061899f989a6f0b177dc1c788e85c1e7bde2eaedd6e1f2ed65c80"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-durable-paired-race-outcome.json",
+      "bytes": 254,
+      "sha256": "dc21ded6b8e922668d5d46ec49af14e9f8aa052c4e69f5dfea7ab50e80a2670d"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-durable-paired-race-postchecks.json",
+      "bytes": 10776,
+      "sha256": "8054e33b5ec839a395959fa26564bbcde02693e08a670f41550def318ff0a2bb"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-precommit-normal-control.log",
+      "bytes": 759,
+      "sha256": "90d4f212009bad65f2c79d1f2f65137295b861c920ace534d6249e869613e5d2"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-precommit-normal-control-prelaunch.json",
+      "bytes": 649,
+      "sha256": "8a88d65b2866d34759fa2dc4f2b38547c1178a110e7a9b923403eb8145dd6b8e"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-precommit-normal-control-outcome.json",
+      "bytes": 259,
+      "sha256": "206a7ee67537989b0315f8f0fcef3841707eabf123c486bc27da2f9a467d69ca"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-precommit-normal-control-postchecks.json",
+      "bytes": 7823,
+      "sha256": "ac212cf83d21ad159b4b13eac1e8ed358873e3e07e6cf22681506d2a624e3556"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-precommit-original-fault.log",
+      "bytes": 1030,
+      "sha256": "f4c1e72fa06a421254850d34974a891f9bd6be19c624536059fd1ad7bb85eb3c"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-precommit-original-fault-prelaunch.json",
+      "bytes": 668,
+      "sha256": "8c0000f47a532a71ffcd94b6a935713887ac33aac78f7ab6d2346241ce77a84f"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-precommit-original-fault-outcome.json",
+      "bytes": 259,
+      "sha256": "b19a26835e2913dc6c42273ebc110bfcc4e2bc9162f94e35c9d3b85bf6414af2"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-precommit-original-fault-postchecks.json",
+      "bytes": 9757,
+      "sha256": "e4c6cee0cf9164f97f32502ff0e492be8558fbe57ea4625579253cc081dfe3c6"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-precommit-paired-race.log",
+      "bytes": 1335,
+      "sha256": "a90d2af8161c7d2375db60fe7c180626409480ef17c25056712a9b9dbffa90f9"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-precommit-paired-race-prelaunch.json",
+      "bytes": 642,
+      "sha256": "20168794f4efc7ecd908165cc58e5267a29b89ed8dfe4fa903e91363deac00c7"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-precommit-paired-race-outcome.json",
+      "bytes": 256,
+      "sha256": "de8b1e0791f83708badbec0f3748c0839843906961859c121fb6af1fb8e5e6d4"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-precommit-paired-race-postchecks.json",
+      "bytes": 10781,
+      "sha256": "3609da4a99c4ff4b7a18c4851bc6415a29fcfa0a19dc8c4c51835153b0af5dd1"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-postcommit-normal-control.log",
+      "bytes": 776,
+      "sha256": "c401d87f5e3a9bc66c7ece93e383c13a359945cf995827ec7ab8b965241829f8"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-postcommit-normal-control-prelaunch.json",
+      "bytes": 654,
+      "sha256": "edef53592b8944f9d968f8f3753005a34a2b2c0b1a84d806606eb189adab5492"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-postcommit-normal-control-outcome.json",
+      "bytes": 260,
+      "sha256": "62cd612239b7716f335f9519201c5fe4b8a8fc01de8b34cf81a35e02ed2495c1"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-postcommit-normal-control-postchecks.json",
+      "bytes": 7830,
+      "sha256": "69d69dc506b63e298b485edf5af31c5ebe34ff08cea072b567ac79325a35e6b9"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-postcommit-original-fault.log",
+      "bytes": 955,
+      "sha256": "dc400d789925851578c2dd5b86e5e343b583b0e3a2f44697c5d05775cc2b0897"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-postcommit-original-fault-prelaunch.json",
+      "bytes": 685,
+      "sha256": "c630fed0e2120f22b04dfb0cf58df497098f0b637a858bb1d384634946384a8d"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-postcommit-original-fault-outcome.json",
+      "bytes": 260,
+      "sha256": "a15a5b4fb7da1fa450d3647efbc84fe7e83776b8ed2e5e063a4ac8ac6e4945ea"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-postcommit-original-fault-postchecks.json",
+      "bytes": 8947,
+      "sha256": "8c5c4129d3dd081619de1f5d7dd9f9c2b37be9fbb16afb96e7660712b4102e04"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-postcommit-paired-race.log",
+      "bytes": 1268,
+      "sha256": "f88bf3324ce0c375b286b36e73c3f70056c9f1666c37994e34fe5cb6cfc06503"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-postcommit-paired-race-prelaunch.json",
+      "bytes": 647,
+      "sha256": "5469a3e594eb63c551a9cb1c202f70e887c0904105d46e2a353b28fa22454aa6"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-postcommit-paired-race-outcome.json",
+      "bytes": 257,
+      "sha256": "9985a63fe7d7e64e42a31c90dddfa1b961fe87db5a401c5725b0417a0921458a"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-postcommit-paired-race-postchecks.json",
+      "bytes": 9971,
+      "sha256": "a3092f799fb693fc1fdbd3be5d303d710a6d567a3ab4cfbb21c46f8140050983"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-policy-orphan-normal-control.log",
+      "bytes": 783,
+      "sha256": "2daaade5b7cc09ad888b742ce718762c59c4b41dc17c3118d1107eda77c5e808"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-policy-orphan-normal-control-prelaunch.json",
+      "bytes": 658,
+      "sha256": "a9ad743d00e6d3198fb1ba02aee2d03a3c8dd2ade1553dc6e3b9348543ce96b5"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-policy-orphan-normal-control-outcome.json",
+      "bytes": 263,
+      "sha256": "a086e71f931a3cdab0aa0b4d1f9827bfcdf55a63b3fa31422fc66791fb81baac"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-policy-orphan-normal-control-postchecks.json",
+      "bytes": 7836,
+      "sha256": "7fcc1fe36e2845f2741728eeff8ae98a5ed18a55f8cf5fc96c747e72342f1ff5"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-policy-orphan-original-fault.log",
+      "bytes": 1166,
+      "sha256": "c1b35106dcfb056781a7c75134d8b891952094cc7667a1fccadb684b2158398a"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-policy-orphan-original-fault-prelaunch.json",
+      "bytes": 680,
+      "sha256": "35b968631de7414a94b3ee805ea107347822a96efe5eee1fb27d886c66a31fcc"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-policy-orphan-original-fault-outcome.json",
+      "bytes": 263,
+      "sha256": "bb372147e4362c70ff65957db41e2b8f574a53812006b8a92cc76b1aebe8c4a6"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-policy-orphan-original-fault-postchecks.json",
+      "bytes": 9774,
+      "sha256": "4258a9678174cad9937114f199dda3d14d8bb7aad34216c85a068c73501bd191"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-policy-orphan-paired-race.log",
+      "bytes": 1482,
+      "sha256": "20f99596aa1c8e0cf7f8c11568d57b895e7b6209679afc1b47dca7370314bf68"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-policy-orphan-paired-race-prelaunch.json",
+      "bytes": 651,
+      "sha256": "0c5fbf5c70c3c298ba46ec760cf32e2aa8265ae644f71f75b3d66a17c09b2caa"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-policy-orphan-paired-race-outcome.json",
+      "bytes": 260,
+      "sha256": "00adbd014718490557b078a61d42a909cdb249f7f940a45e9dcbc9cc2ff87603"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-policy-orphan-paired-race-postchecks.json",
+      "bytes": 10798,
+      "sha256": "384e1a397e903a893a01187dc39659dd1e63a019eb7ca64b004fd6f150a47648"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-late-finish-normal-control.log",
+      "bytes": 894,
+      "sha256": "e3beed2fafd639d2a75ce39b2035a5bb9b6fefa60dd0c1656b052cd2df867700"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-late-finish-normal-control-prelaunch.json",
+      "bytes": 647,
+      "sha256": "c7103b32a50795a32da137879a58a961ee535b03188b1251ac5e3df8495ba1bf"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-late-finish-normal-control-outcome.json",
+      "bytes": 261,
+      "sha256": "9933a43bdd9b8b51aa1736ac255a7a1655abbec5a0097cae078a01e1db8e231b"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-late-finish-normal-control-postchecks.json",
+      "bytes": 7822,
+      "sha256": "dada26ac5f68ed8d4b3a981ba8961fb0f973dd97a28c409dc3a05dc82e09e84a"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-late-finish-original-fault.log",
+      "bytes": 1082,
+      "sha256": "0e6b70d3b3d6fa27e743e2decf68fd056db91bb5c34de8b9a85d0da0fe5c74e1"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-late-finish-original-fault-prelaunch.json",
+      "bytes": 666,
+      "sha256": "23e02b4a770c8cc4ade3bc9a2f2e8b9c8ea5b13fe829c954dd098627d8380190"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-late-finish-original-fault-outcome.json",
+      "bytes": 261,
+      "sha256": "5859ad81294e9d4fc2fe6f89c6089370b47ef00ef4b18276ec04ad1e549cc148"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-late-finish-original-fault-postchecks.json",
+      "bytes": 7846,
+      "sha256": "89c1c5d5592b577b81b44bc48a3c59a0e43e6c2aaadcb9b920508fdaa86c5684"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-late-finish-paired-race.log",
+      "bytes": 1528,
+      "sha256": "c4d05ac55042ba314c433ad1dafc9f95e17c11018e6396a71679ec434e368ddf"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-late-finish-paired-race-prelaunch.json",
+      "bytes": 640,
+      "sha256": "cdf17b5c1ffecdeb00c210a9ca62098b551e92f23b16c664e20a8b6eb51673af"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-late-finish-paired-race-outcome.json",
+      "bytes": 258,
+      "sha256": "7ac680e091dd1d7a30b021a6fd401ad06861884a82c46459c32506baa74b34d9"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-late-finish-paired-race-postchecks.json",
+      "bytes": 8870,
+      "sha256": "709be93254138ae2d7be91895376fd5c7c84c7eecb8036c04443bb5b35fdbcf6"
+    }
+  ],
+  "concatenated_original15raw": {
+    "path": "/tmp/lerna-04-ticket06-execution/current-producer-regression-full-original15-raw.log",
+    "bytes": 16180,
+    "lines": 157,
+    "sha256": "cd39b2bc0df1fe025fbb62edacdc7719888097ea92873508895647324ac8d1b9",
+    "exact_original_concatenation_no_inserted_headers": true
+  },
+  "actual_owned_ledger": {
+    "path": "/tmp/lerna-04-ticket06-execution/owned-scopes.log",
+    "lines": 341,
+    "bytes": 53548,
+    "sha256": "35e3bc35e73e93cc31696b5f9a7d927bb343f13df6177f8f49093fc5ced6a013",
+    "original200prefix_unchanged": true,
+    "segment194_through341": {
+      "path": "/tmp/lerna-04-ticket06-execution/current-producer-regression-ledger-194-through-341.log",
+      "bytes": 22515,
+      "sha256": "a2d8f664d21918b2df2ad77cd7335d6547d41c32af12f3063d3d1847121e6752",
+      "equals_all15_original_interval_concatenation": true
+    }
+  },
+  "all20_new_scopes": 20,
+  "all26_actual_child_generations": 26,
+  "actual_new_killed_generations_firstClose_UNKNOWN": 8,
+  "all_current_protected_UNKNOWN": 16,
+  "protected_current16_path": "/tmp/lerna-04-ticket06-execution/current-producer-regression-protected-current16.json",
+  "normal12_scope_root_absence_separate_from_PG_resource_audit": true,
+  "current_pg_resource_audit": "NOT_EXECUTED",
+  "no_scope_UNKNOWN_cleanup_or_originalClose_supplement": true,
+  "no_fmt_source_new_tests_other_native_audit_commit_push": true,
+  "budgets_original_unchanged": {
+    "outer_per_native": 120,
+    "go_per_command": 120,
+    "caller": 30,
+    "child": 20,
+    "original_Claim": 5,
+    "original_io_Work": 4,
+    "Publish": 20,
+    "management": 20,
+    "Tx": 3,
+    "statement": 2,
+    "lock": 1,
+    "KillWait_EOF_Stop": 3
+  },
+  "release": "/tmp/lerna-04-ticket06-execution/current-producer-regression-v2-release.json",
+  "release_sha256": "65bb2f542629ad9f15462ce55bcbf8684c4090db3e18989e24344e8f8fc49a8d",
+  "whole_ticket": "CLAIMED_NOT_FORMALLY_ACCEPTED_FINAL_CHECKS_REVIEW_AUDIT_INTEGRATION_SYNC_PENDING"
+}

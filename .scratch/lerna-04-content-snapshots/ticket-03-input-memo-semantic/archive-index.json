@@ -1,0 +1,110 @@
+{
+  "observed_utc": "2026-10-05T13:09:30.259932+00:00",
+  "original_entries": [
+    {
+      "source": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-semantic-qualification-static/commands-static.json",
+      "destination_relative": "commands-static.json",
+      "bytes": 4584,
+      "sha256": "659d24e3b7a87360c2df26b9c5c392689935e0ccd5c27a0d40387af75ab768d9"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-semantic-qualification-static/actor-resource-and-deadline-plan.json",
+      "destination_relative": "actor-resource-and-deadline-plan.json",
+      "bytes": 4197,
+      "sha256": "a37e7ba6a39666fb9c5818ec924765e6b210fb5bd403a8530a480d40042182f4"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-semantic-qualification-static/test-only-overlay-static.json",
+      "destination_relative": "test-only-overlay-static.json",
+      "bytes": 868,
+      "sha256": "211de07ea05b1048faa9379e34632116f128f1becce8a5e52f929e107fb2bf5e"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-semantic-qualification-static/source-manifest-static.json",
+      "destination_relative": "source-manifest-static.json",
+      "bytes": 59108,
+      "sha256": "f996c0968ee7a9ea090b53844a0480aa9e5fa8dbcb25d34907f145c93c65192b"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-semantic-qualification-static/formatted-source-manifest.json",
+      "destination_relative": "formatted-source-manifest.json",
+      "bytes": 57077,
+      "sha256": "e41a06b03367d045fc777d582b525e44838cd45c34dfe02350ee74a175e82897"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-semantic-qualification-static/all-test-only.diff",
+      "destination_relative": "all-test-only.diff",
+      "bytes": 10342,
+      "sha256": "3c56a79440c40d7cf3b911c075850ac3742ce9b014d9417f49bd8f3b7df72671"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-semantic-qualification-static/actual-three-test-format.diff",
+      "destination_relative": "actual-three-test-format.diff",
+      "bytes": 8551,
+      "sha256": "37852ff998f5877b17b64f3aa86ef80b076c405d4791093d48050bc3e53418de"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-semantic-qualification-static/semantic-results.json",
+      "destination_relative": "semantic-results.json",
+      "bytes": 7921,
+      "sha256": "2a8d6e3f20400b09e7fdcdafa74152351836a1063afb3b13df141fc3d7956d63"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-semantic-qualification-static/semantic-results.md",
+      "destination_relative": "semantic-results.md",
+      "bytes": 2507,
+      "sha256": "db504e8a56267f8b52845e75cc2ef6f8bdb63c2c95cc81d29613570186c79f73"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-semantic-qualification-static/content_context_compile_budget_test.go.txt",
+      "destination_relative": "content_context_compile_budget_test.go.txt",
+      "bytes": 25773,
+      "sha256": "bb3bbb6ba5ffdf6d7d132e3e13d28ec6822ef15e6e50d9b5fd88fdf5e0d81646"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-semantic-qualification-static/content_context_budget_concurrency_test.go.txt",
+      "destination_relative": "content_context_budget_concurrency_test.go.txt",
+      "bytes": 11435,
+      "sha256": "f8e5a5bf1b3c7866a6dd3d70aac21cb77e185f2e40572067cf8cf7b9264a0cec"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-semantic-qualification-static/content_processing_policy_lock_timeout_test.go.txt",
+      "destination_relative": "content_processing_policy_lock_timeout_test.go.txt",
+      "bytes": 6336,
+      "sha256": "044d15bfd6f724f01da6df04d5cb405d745b72bcbf57e32e67cd00bedf34bd44"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/context-input-memo-semantic-format.log",
+      "destination_relative": "raw/context-input-memo-semantic-format.log",
+      "bytes": 39,
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/context-input-memo-semantic-normal.log",
+      "destination_relative": "raw/context-input-memo-semantic-normal.log",
+      "bytes": 8106,
+      "sha256": "864c61cd44f4fda1b5e5f41337d92417ed509c45c816460f4d2679d0436fb2b6"
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/context-input-memo-semantic-race.log",
+      "destination_relative": "raw/context-input-memo-semantic-race.log",
+      "bytes": 8106,
+      "sha256": "0dc6cf6a990a381998e184f1986c97801c3b1a79bca1ec04bd83c2bd6db3031e"
+    },
+    {
+      "source": "/tmp/lerna-03-input-memo-semantic-next-decision.md",
+      "destination_relative": "adopted-semantic-decision.md",
+      "bytes": 8030,
+      "sha256": "70150ca46e75c20b3bf97421b846d5e5a92ca27063c67bc7ff127665d85d701a"
+    }
+  ],
+  "original_file_count": 16,
+  "original_bytes": 222980,
+  "original_actual_outcome_ref": {
+    "path": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-semantic-qualification-static/semantic-qualification-actual-outcome.json",
+    "bytes": 533374,
+    "sha256": "7ba81569ce457b27ced5fa8a2a65d491a413d38239624871251e908821defe3b"
+  },
+  "no_binary_or_repeated_source332_payload": "source332pins preserved once; source products already prior mechanical archive",
+  "compact_provenance_created_by_root": true
+}

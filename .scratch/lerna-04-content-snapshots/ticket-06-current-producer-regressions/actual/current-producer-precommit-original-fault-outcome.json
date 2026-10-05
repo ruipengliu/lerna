@@ -1,0 +1,11 @@
+{
+  "event": "native_completion_ack",
+  "operation": "current-producer-precommit-original-fault",
+  "pid": 4108168,
+  "pgid": 4108168,
+  "starttime": "17232845",
+  "exit": 0,
+  "group_absent": true,
+  "timed_out": false,
+  "owned_raw_fsync_close_ack": true
+}

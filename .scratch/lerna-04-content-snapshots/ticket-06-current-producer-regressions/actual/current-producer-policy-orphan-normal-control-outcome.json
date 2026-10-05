@@ -1,0 +1,11 @@
+{
+  "event": "native_completion_ack",
+  "operation": "current-producer-policy-orphan-normal-control",
+  "pid": 4113572,
+  "pgid": 4113572,
+  "starttime": "17252618",
+  "exit": 0,
+  "group_absent": true,
+  "timed_out": false,
+  "owned_raw_fsync_close_ack": true
+}

@@ -1,0 +1,11 @@
+{
+  "root": "/tmp/lerna-ci-partition-durable-normal-execution",
+  "device": 33,
+  "inode": 465377,
+  "mode": "0700",
+  "purpose": "STATIC future ONEsharednormal at fixedd0 qualified6; soleLOCAL native grant pending",
+  "new_ledger_next_line": 1,
+  "not_old_ledger_continuation": true,
+  "counter_inherited_byteexact_next24": true,
+  "unknown_historical_scopes_adopted": false
+}

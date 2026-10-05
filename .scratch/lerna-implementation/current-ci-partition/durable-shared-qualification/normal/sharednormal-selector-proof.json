@@ -1,0 +1,1317 @@
+{
+  "kind": "fresh sharednormal actual registered7 selector unions and original Go-list consumed by script; no extra discovery",
+  "head": "d0fcc61264904070ce94e1146f07327a0ef9b2aa",
+  "actual_discovery": {
+    "operation": "go-child-0027",
+    "stage": "Component discovery",
+    "prelaunch": {
+      "event": "owned_go_child_start_ack",
+      "operation": "go-child-0027",
+      "parent_operation": "partition-shared-normal",
+      "pid": 4051142,
+      "pgid": 4049229,
+      "starttime": "16994865",
+      "root": "/tmp/lerna-ci-partition-durable-normal-execution",
+      "argv": [
+        "/home/agent/.local/toolchains/go1.27.1/bin/go",
+        "test",
+        "-p=1",
+        "-count=1",
+        "-tags=integration",
+        "-timeout=120s",
+        "./conformance/component",
+        "-list",
+        "."
+      ],
+      "original_whole_deadline_monotonic": 171348.891428474,
+      "remaining_whole_seconds": 1400.2394314319827
+    },
+    "outcome": {
+      "event": "owned_go_child_completion_ack",
+      "operation": "go-child-0027",
+      "parent_operation": "partition-shared-normal",
+      "pid": 4051142,
+      "pgid": 4049229,
+      "starttime": "16994865",
+      "exit": 0,
+      "actual_wait_confirmed": true,
+      "original_pid_generation_absent": true,
+      "timed_out": false,
+      "original_whole_deadline_monotonic": 171348.891428474,
+      "shared_group_absence_checked_only_after_whole_wait": true
+    }
+  },
+  "actual_groups": [
+    {
+      "operation": "go-child-0028",
+      "stage": "closure normal",
+      "selector": "^(TestContentFullClosureIncludesIntermediateVersionsAndExact64Bound)$",
+      "names": [
+        "TestContentFullClosureIncludesIntermediateVersionsAndExact64Bound"
+      ],
+      "count": 1
+    },
+    {
+      "operation": "go-child-0029",
+      "stage": "content_a normal",
+      "selector": "^(TestContentExpiredOriginalAcceptedCapStartsCleanupDespiteCurrentWideRenewal|TestContentAssociationCannotExtendObservedRetention|TestContentActualStagingAndPrimaryErasureAllowsOnlyAuthorizedGone|TestContentEveryOriginalAttemptPagePreservesUnknownSameKeyResidual|TestContentOriginalPolicyAndHolderPagesResumeWithoutErasingOtherSavingBasis|TestContentHiddenAncestorControlsCurrentDerivedUse|TestContentPublicationFinalTransactionChecksHiddenAncestorAfterRealObjectWrite|TestContentLostActualErasureReplyRetainsOriginalDutyAndRecoversAfterConfirmedDefer|TestContentDeclaredBytesAndVersionCannotChange|TestContentFailedStagingStillConsumesExplicitByteLimit|TestContentFirstSealCannotAdoptAnEmptyConfiguredRoot|TestContentCommandReplayAndExactVersionIdentities|TestContentLaterAdmissionInheritsOriginalAncestorExpiry|TestContentSameSubjectIDAliasRetainsOriginalFullSavingBinding|TestContentLegacyWholeRecordRaceRefusesStaleBindingAndReplaysOriginalQualification|TestContentLegacyBackfillRestoresOriginalExpiryAndFailedHolderResponsibilities|TestContentTrustedManagementSealsUseAndReopensResponsibility|TestContentNaturalRetentionExpiryHasDurableOriginalMaintenance|TestContentAcceptedRequestCapHasOriginalExpiryMaintenance|TestContentManagerPolicyPassesFullExpiredCleanupPageWithoutChangingOriginalDuties|TestContentPublishedReferenceWinsOrphanSelectionWithoutCreatingCleanup|TestContentClosureActionIntersectionKeepsIndependentFlags|TestContentPolicyPortClockFollowsLockedRow|TestContentExplicitPolicyAndTrustedPrincipalFailClosed|TestContentLateAdmissionExtraCauseCannotFixRejection|TestContentCommitUnknownKeepsAcceptedAndLateRejectedTruth|TestContentProcessingDeadlineRechecksAllChangesAtFinalDecision|TestContentCorrectBytesDurablyAccepted|TestContentReadVersionWaitCannotReuseAdmissionClock|TestContentReturnedBytesRequireCurrentReadAndDisclose|TestContentExpiredOriginalClaimCannotStartObjectIO|TestContentIndependentSecondaryOfflineRetainsOriginalCleanupResponsibility|TestContentReferenceRetainsExactVersionAndLength)$",
+      "names": [
+        "TestContentExpiredOriginalAcceptedCapStartsCleanupDespiteCurrentWideRenewal",
+        "TestContentAssociationCannotExtendObservedRetention",
+        "TestContentActualStagingAndPrimaryErasureAllowsOnlyAuthorizedGone",
+        "TestContentEveryOriginalAttemptPagePreservesUnknownSameKeyResidual",
+        "TestContentOriginalPolicyAndHolderPagesResumeWithoutErasingOtherSavingBasis",
+        "TestContentHiddenAncestorControlsCurrentDerivedUse",
+        "TestContentPublicationFinalTransactionChecksHiddenAncestorAfterRealObjectWrite",
+        "TestContentLostActualErasureReplyRetainsOriginalDutyAndRecoversAfterConfirmedDefer",
+        "TestContentDeclaredBytesAndVersionCannotChange",
+        "TestContentFailedStagingStillConsumesExplicitByteLimit",
+        "TestContentFirstSealCannotAdoptAnEmptyConfiguredRoot",
+        "TestContentCommandReplayAndExactVersionIdentities",
+        "TestContentLaterAdmissionInheritsOriginalAncestorExpiry",
+        "TestContentSameSubjectIDAliasRetainsOriginalFullSavingBinding",
+        "TestContentLegacyWholeRecordRaceRefusesStaleBindingAndReplaysOriginalQualification",
+        "TestContentLegacyBackfillRestoresOriginalExpiryAndFailedHolderResponsibilities",
+        "TestContentTrustedManagementSealsUseAndReopensResponsibility",
+        "TestContentNaturalRetentionExpiryHasDurableOriginalMaintenance",
+        "TestContentAcceptedRequestCapHasOriginalExpiryMaintenance",
+        "TestContentManagerPolicyPassesFullExpiredCleanupPageWithoutChangingOriginalDuties",
+        "TestContentPublishedReferenceWinsOrphanSelectionWithoutCreatingCleanup",
+        "TestContentClosureActionIntersectionKeepsIndependentFlags",
+        "TestContentPolicyPortClockFollowsLockedRow",
+        "TestContentExplicitPolicyAndTrustedPrincipalFailClosed",
+        "TestContentLateAdmissionExtraCauseCannotFixRejection",
+        "TestContentCommitUnknownKeepsAcceptedAndLateRejectedTruth",
+        "TestContentProcessingDeadlineRechecksAllChangesAtFinalDecision",
+        "TestContentCorrectBytesDurablyAccepted",
+        "TestContentReadVersionWaitCannotReuseAdmissionClock",
+        "TestContentReturnedBytesRequireCurrentReadAndDisclose",
+        "TestContentExpiredOriginalClaimCannotStartObjectIO",
+        "TestContentIndependentSecondaryOfflineRetainsOriginalCleanupResponsibility",
+        "TestContentReferenceRetainsExactVersionAndLength"
+      ],
+      "count": 33
+    },
+    {
+      "operation": "go-child-0030",
+      "stage": "content_b normal",
+      "selector": "^(TestContentOriginalAdmissionCleanupDeadlineSurvivesCurrentTargetPolicyLockWait|TestContentReplayRechecksReaderAfterCommandLock|TestContentTrustedSealSurvivesReopenAndPreservesOriginalReceipt|TestContentOriginalCleanupDeadlineCannotBeExtendedByCurrentPolicyLockWait|TestContentLockWaitCannotReuseExpiredAdmissionClock|TestContentClosureDeduplicatesSharedAncestorAndRejectsForeignOwners|TestContentDelegatedLifecyclePassesOtherSavingSubjectFullPageWithoutChangingOriginalDuties|TestContentLaterWorkPassesOneExpiredCleanupResponsibility|TestContentPublishedDamageAndMissingNeverRepairOnQuery|TestContentNoClobberExistingBytesMustMatchBeforePublication|TestContentAuthoritativeErasureStopsNewPrimaryHolderClaimsAndKeepsOldHistory|TestContentEmptyBytesBinaryAndFiniteRanges|TestContentNaturalSourceAndTargetChecksCurrentRenewalWithoutErasingRevoke|TestContentMultipleAncestorsKeepIndependentEarlierAdmissionDue|TestContentLegacyCommittedBindingReplyLossRecoversOnlyByOriginalQualification|TestContentLegacyPolicyPagesDoNotTruncateAt64OrResetOnReopen|TestContentPolicyPropagationAllDescendantPagesRecoverFrozenWatermark|TestContentPolicyAndCleanupResponsibilityRollbackTogether|TestContentManagementStepRechecksTrustedDeadlineAfterPageLocks|TestContentDerivedGoneRequiresCurrentExactMetadataForReaderAndEveryAncestor|TestContentNaturalPolicyPhaseCannotUndoOriginalErasureAcknowledgement|TestContentPolicyActionVectorsFailClosed|TestContentRestoredSaveBasisMakesOriginalCleanupNotRequiredWithoutSealing|TestContentDirectSourcesRequireSeparateReadProcessSaveAndRetention|TestContentPostScheduleAliasPreservesOriginalCapOnRollback|TestContentAdmissionReaderExpiryCannotDiscloseAfterWait|TestContentHistoricalTighteningClassifiesNewCapAtCurrentTime|TestContentCurrentSavePolicyStopsObjectWrite|TestContentCommandWaitRechecksReaderAndAdmission|TestContentReadAdmissionDeadlineDoesNotBecomeCompletionDeadline|TestContentCleanupScanKeepsMalformedDeadlineParseCauseBeforePage|TestContentTargetReadPoliciesBindExactPublishedDeclaration)$",
+      "names": [
+        "TestContentOriginalAdmissionCleanupDeadlineSurvivesCurrentTargetPolicyLockWait",
+        "TestContentReplayRechecksReaderAfterCommandLock",
+        "TestContentTrustedSealSurvivesReopenAndPreservesOriginalReceipt",
+        "TestContentOriginalCleanupDeadlineCannotBeExtendedByCurrentPolicyLockWait",
+        "TestContentLockWaitCannotReuseExpiredAdmissionClock",
+        "TestContentClosureDeduplicatesSharedAncestorAndRejectsForeignOwners",
+        "TestContentDelegatedLifecyclePassesOtherSavingSubjectFullPageWithoutChangingOriginalDuties",
+        "TestContentLaterWorkPassesOneExpiredCleanupResponsibility",
+        "TestContentPublishedDamageAndMissingNeverRepairOnQuery",
+        "TestContentNoClobberExistingBytesMustMatchBeforePublication",
+        "TestContentAuthoritativeErasureStopsNewPrimaryHolderClaimsAndKeepsOldHistory",
+        "TestContentEmptyBytesBinaryAndFiniteRanges",
+        "TestContentNaturalSourceAndTargetChecksCurrentRenewalWithoutErasingRevoke",
+        "TestContentMultipleAncestorsKeepIndependentEarlierAdmissionDue",
+        "TestContentLegacyCommittedBindingReplyLossRecoversOnlyByOriginalQualification",
+        "TestContentLegacyPolicyPagesDoNotTruncateAt64OrResetOnReopen",
+        "TestContentPolicyPropagationAllDescendantPagesRecoverFrozenWatermark",
+        "TestContentPolicyAndCleanupResponsibilityRollbackTogether",
+        "TestContentManagementStepRechecksTrustedDeadlineAfterPageLocks",
+        "TestContentDerivedGoneRequiresCurrentExactMetadataForReaderAndEveryAncestor",
+        "TestContentNaturalPolicyPhaseCannotUndoOriginalErasureAcknowledgement",
+        "TestContentPolicyActionVectorsFailClosed",
+        "TestContentRestoredSaveBasisMakesOriginalCleanupNotRequiredWithoutSealing",
+        "TestContentDirectSourcesRequireSeparateReadProcessSaveAndRetention",
+        "TestContentPostScheduleAliasPreservesOriginalCapOnRollback",
+        "TestContentAdmissionReaderExpiryCannotDiscloseAfterWait",
+        "TestContentHistoricalTighteningClassifiesNewCapAtCurrentTime",
+        "TestContentCurrentSavePolicyStopsObjectWrite",
+        "TestContentCommandWaitRechecksReaderAndAdmission",
+        "TestContentReadAdmissionDeadlineDoesNotBecomeCompletionDeadline",
+        "TestContentCleanupScanKeepsMalformedDeadlineParseCauseBeforePage",
+        "TestContentTargetReadPoliciesBindExactPublishedDeclaration"
+      ],
+      "count": 32
+    },
+    {
+      "operation": "go-child-0031",
+      "stage": "content_c normal",
+      "selector": "^(TestContentNewAssociationRequiresCurrentDirectSourceAdmission|TestContentAssociationKeepsPreparingCapacityAndFailedHistory|TestContentDecodedByteBoundHasRealNormalPublication|TestContentOriginalCleanupPageCASRollsBackEarlierQualificationsAfterConcurrentConsumer|TestContentPublicationWaitCannotReuseExpiredPolicyClock|TestContentHiddenAncestorPurposeIntersectionAndOriginalCapSurviveFurtherDerivation|TestContentDirectReadPermissionsAreCurrentAndSeparate|TestContentLaterWorkPassesFullExpiredCleanupPageWithoutChangingOriginalDuties|TestContentOldReadersPreserveLosslessFactsAndUnavailable|TestContentWrongPhysicalRootCannotAcknowledgeOriginalHolderErasure|TestContentLateSuccessfulPutCannotRestoreErasedPrimaryHolderFact|TestContentInheritedExpiredCapConsumesItsExactAdmissionTargetWithoutDeletingLiveAncestor|TestContentRenewalResidualDoesNotPretendFutureMaintenanceCoverage|TestContentLegacyOriginalQualificationCutoffRollsBackBindingAndAttemptWrites|TestContentStoppedOriginalLegacyScopeBindsOnlyAfterPositiveWriterClose|TestContentActualExpiredOldWriterArchiveRetainsAncestorResponsibilities|TestContentFiveActionsAreIndependentCurrentQualification|TestContentMalformedPolicyBindingRegistersActualSourceResponsibility|TestContentExpiredMaintenanceBudgetRetainsKnownHolderWithoutClaimingComplete|TestContentOrphanSealWinsBeforeLatePublicationAndPreservesLiveVersion|TestContentClosureRecordWaitRechecksPolicyBeforeMetadata|TestContentClosurePolicyIntersectionUsesClockAfterRealPolicyLock|TestContentCurrentSaveWithdrawalStartsOriginalSealAndRealCleanupConsumer|TestContentPostScheduleAdmissionRollsBackLateVersion|TestContentLateAdmissionRespectsCompetingOriginalCommand|TestContentProcessingDeadlineAfterNativeDescendantLock|TestContentDelayedHistoricalPageHandsOffOriginalNaturalValidUntil|TestContentReadPolicyWaitRespectsAdmissionForEveryObservation|TestContentLastDirectSourceWaitCannotReuseReadAdmission|TestContentTemporaryFailureKeepsNarrowedRetentionAfterReopen|TestContentSecondaryNativeRemovalFailureRetainsOriginalResponsibility|TestContentTargetAuthorizationPrecedesExistenceAndMismatchObservation)$",
+      "names": [
+        "TestContentNewAssociationRequiresCurrentDirectSourceAdmission",
+        "TestContentAssociationKeepsPreparingCapacityAndFailedHistory",
+        "TestContentDecodedByteBoundHasRealNormalPublication",
+        "TestContentOriginalCleanupPageCASRollsBackEarlierQualificationsAfterConcurrentConsumer",
+        "TestContentPublicationWaitCannotReuseExpiredPolicyClock",
+        "TestContentHiddenAncestorPurposeIntersectionAndOriginalCapSurviveFurtherDerivation",
+        "TestContentDirectReadPermissionsAreCurrentAndSeparate",
+        "TestContentLaterWorkPassesFullExpiredCleanupPageWithoutChangingOriginalDuties",
+        "TestContentOldReadersPreserveLosslessFactsAndUnavailable",
+        "TestContentWrongPhysicalRootCannotAcknowledgeOriginalHolderErasure",
+        "TestContentLateSuccessfulPutCannotRestoreErasedPrimaryHolderFact",
+        "TestContentInheritedExpiredCapConsumesItsExactAdmissionTargetWithoutDeletingLiveAncestor",
+        "TestContentRenewalResidualDoesNotPretendFutureMaintenanceCoverage",
+        "TestContentLegacyOriginalQualificationCutoffRollsBackBindingAndAttemptWrites",
+        "TestContentStoppedOriginalLegacyScopeBindsOnlyAfterPositiveWriterClose",
+        "TestContentActualExpiredOldWriterArchiveRetainsAncestorResponsibilities",
+        "TestContentFiveActionsAreIndependentCurrentQualification",
+        "TestContentMalformedPolicyBindingRegistersActualSourceResponsibility",
+        "TestContentExpiredMaintenanceBudgetRetainsKnownHolderWithoutClaimingComplete",
+        "TestContentOrphanSealWinsBeforeLatePublicationAndPreservesLiveVersion",
+        "TestContentClosureRecordWaitRechecksPolicyBeforeMetadata",
+        "TestContentClosurePolicyIntersectionUsesClockAfterRealPolicyLock",
+        "TestContentCurrentSaveWithdrawalStartsOriginalSealAndRealCleanupConsumer",
+        "TestContentPostScheduleAdmissionRollsBackLateVersion",
+        "TestContentLateAdmissionRespectsCompetingOriginalCommand",
+        "TestContentProcessingDeadlineAfterNativeDescendantLock",
+        "TestContentDelayedHistoricalPageHandsOffOriginalNaturalValidUntil",
+        "TestContentReadPolicyWaitRespectsAdmissionForEveryObservation",
+        "TestContentLastDirectSourceWaitCannotReuseReadAdmission",
+        "TestContentTemporaryFailureKeepsNarrowedRetentionAfterReopen",
+        "TestContentSecondaryNativeRemovalFailureRetainsOriginalResponsibility",
+        "TestContentTargetAuthorizationPrecedesExistenceAndMismatchObservation"
+      ],
+      "count": 32
+    },
+    {
+      "operation": "go-child-0032",
+      "stage": "durable_a normal",
+      "selector": "^(TestDurableControlRealSourceFailureIsDependencyUnavailable|TestDurableControlProofBindsPrincipalIssuerAndOriginalIdentity|TestDurableControlSeparatesAcceptBeforeExecutionAndContextDeadlines|TestDurableControlOriginalCommandPrecedesMethodAndClosedBindingConflicts|TestDurableControlCancelsWithoutOrdinaryCapacityAndFencesOldClaim|TestDurableCancelBeforeDecideSurvivesBothOwnersReopen|TestDurableCancelBeforeFinishPreservesPublishedUnadoptedBytes|TestDurableControlPreparedV2StopsFinishAfterProposalReadback|TestDurableControlStopReceiptAndJobShareTransactionRecovery|TestDurableDecisionStartIsOnePermissionAndUnknownWorkConsumesOriginalLimit|TestDurableDecisionOriginalLimitsGateStartAndWholePreparedOutput|TestDurableDecisionAuthorityCannotRewriteFixedCommandInput|TestDurableDecisionInterruptedComputedOutputRetainsUnknownAllowance|TestDurableDecisionCannotCompleteWithDifferentPublisherReference|TestDurableDecisionRollbackAndTokenIsolation|TestDurableDecisionOriginalReplaySurvivesAcceptanceCutoff|TestDurableDecisionStartFencesClaimAndRequiresRecordedStart|TestDurableDecisionMissingPoolPreservesOriginalIdentity|TestDurableProposalNativeSourceFailureRetainsDependencyMeaning|TestDurableProposalOriginalLimitsMatrix|TestDurableProposalRuleVersionRetainsUnknownCaseMeaning|TestDurableProposalDeltaOnlyHasNoInventedArtifact|TestDurableProposalInputRequestIsClarificationWithReadableSchema|TestDurableProposalCannotContinueCompletesWithoutTaskVerdict|TestDurableProposalRejectsValidBindingRefsInWrongArgumentPair|TestDurableProposalReplacementMustUseCurrentConditionRevision|TestDurableDecisionReadDistinguishesAbsenceAndActualStoreUnavailable|TestDurableRuleProposalSurvivesReopen|TestDurableDecisionCommitReplyLossPreservesPreparedAndCompletedFacts|TestDurableDecisionPreparedPublicationCannotCrossOriginalDeadline)$",
+      "names": [
+        "TestDurableControlRealSourceFailureIsDependencyUnavailable",
+        "TestDurableControlProofBindsPrincipalIssuerAndOriginalIdentity",
+        "TestDurableControlSeparatesAcceptBeforeExecutionAndContextDeadlines",
+        "TestDurableControlOriginalCommandPrecedesMethodAndClosedBindingConflicts",
+        "TestDurableControlCancelsWithoutOrdinaryCapacityAndFencesOldClaim",
+        "TestDurableCancelBeforeDecideSurvivesBothOwnersReopen",
+        "TestDurableCancelBeforeFinishPreservesPublishedUnadoptedBytes",
+        "TestDurableControlPreparedV2StopsFinishAfterProposalReadback",
+        "TestDurableControlStopReceiptAndJobShareTransactionRecovery",
+        "TestDurableDecisionStartIsOnePermissionAndUnknownWorkConsumesOriginalLimit",
+        "TestDurableDecisionOriginalLimitsGateStartAndWholePreparedOutput",
+        "TestDurableDecisionAuthorityCannotRewriteFixedCommandInput",
+        "TestDurableDecisionInterruptedComputedOutputRetainsUnknownAllowance",
+        "TestDurableDecisionCannotCompleteWithDifferentPublisherReference",
+        "TestDurableDecisionRollbackAndTokenIsolation",
+        "TestDurableDecisionOriginalReplaySurvivesAcceptanceCutoff",
+        "TestDurableDecisionStartFencesClaimAndRequiresRecordedStart",
+        "TestDurableDecisionMissingPoolPreservesOriginalIdentity",
+        "TestDurableProposalNativeSourceFailureRetainsDependencyMeaning",
+        "TestDurableProposalOriginalLimitsMatrix",
+        "TestDurableProposalRuleVersionRetainsUnknownCaseMeaning",
+        "TestDurableProposalDeltaOnlyHasNoInventedArtifact",
+        "TestDurableProposalInputRequestIsClarificationWithReadableSchema",
+        "TestDurableProposalCannotContinueCompletesWithoutTaskVerdict",
+        "TestDurableProposalRejectsValidBindingRefsInWrongArgumentPair",
+        "TestDurableProposalReplacementMustUseCurrentConditionRevision",
+        "TestDurableDecisionReadDistinguishesAbsenceAndActualStoreUnavailable",
+        "TestDurableRuleProposalSurvivesReopen",
+        "TestDurableDecisionCommitReplyLossPreservesPreparedAndCompletedFacts",
+        "TestDurableDecisionPreparedPublicationCannotCrossOriginalDeadline"
+      ],
+      "count": 30
+    },
+    {
+      "operation": "go-child-0033",
+      "stage": "durable_b normal",
+      "selector": "^(TestDurableControlExpiredProofReplayRequiresCurrentAccess|TestDurableControlReadsRealSnapshotFloorAndForbidsExpectedRevision|TestDurableControlFinishCommitsBeforeConcurrentCancelPreservingOriginalFacts|TestDurableControlResourceLimitsRetainFailureAndAllowExactCounterpart|TestDurableControlDeadlineMaintenanceClosesBeyondOnePageAtZeroQuota|TestDurableCancelStopsNextPublicationAfterArtifactReadback|TestDurableControlPreparedV2StopsNextPublicationAfterArtifactReadback|TestDurableControlPreservesTerminalFactsAndOrdersRevisions|TestDurableDecisionPreparedRecoversLostPublicationWithoutSecondFee|TestDurableDecisionConcurrentStartAndCumulativeUnknownUsage|TestDurableDecisionAuthorityCannotRewriteFullDelegatedSubject|TestDurableDecisionOriginalReceiptSurvivesComponentConfigurationChange|TestDurableDecisionPreparedBeforePublicationResumesWithoutNewStart|TestDurableDecisionTwoIdentitiesAndFixedLegacyView|TestDurableDecisionCrossTenantAndOwnerAuthorization|TestDurableDecisionPoolCoversNonAnchorDeadlineAtZeroQuota|TestDurableDecisionLastQueueSlotAcrossStoreInstances|TestDurableDecisionTenantQuotaCombinesTwoOwners|TestDurableProposalImmutableCaseBindingSurvivesRejectedReseed|TestDurableProposalPreparedV2RecoversActualReplyLoss|TestDurableProposalCandidateSourceEvidenceUsesAllowedPurpose|TestDurableProposalFourIndependentActions|TestDurableProposalDeltaWithCandidatePreservesBothSuggestions|TestDurableProposalFixedDependsOnOutputFailsThroughPublicCodec|TestDurableProposalArgumentsRequireSourcePurposeConsumption|TestDurableProposalBoundedInvalidOutputMatrix|TestDurableDecisionFinishFencesExpiredClaimAfterBothPublications|TestDurableDecisionStartRollbackKeepsOriginalAllowance|TestDurableDecisionSnapshotLockAndManifestConsumeInputBound|TestDurableDecisionPreparedCannotRefreshOriginalExpiredPermission)$",
+      "names": [
+        "TestDurableControlExpiredProofReplayRequiresCurrentAccess",
+        "TestDurableControlReadsRealSnapshotFloorAndForbidsExpectedRevision",
+        "TestDurableControlFinishCommitsBeforeConcurrentCancelPreservingOriginalFacts",
+        "TestDurableControlResourceLimitsRetainFailureAndAllowExactCounterpart",
+        "TestDurableControlDeadlineMaintenanceClosesBeyondOnePageAtZeroQuota",
+        "TestDurableCancelStopsNextPublicationAfterArtifactReadback",
+        "TestDurableControlPreparedV2StopsNextPublicationAfterArtifactReadback",
+        "TestDurableControlPreservesTerminalFactsAndOrdersRevisions",
+        "TestDurableDecisionPreparedRecoversLostPublicationWithoutSecondFee",
+        "TestDurableDecisionConcurrentStartAndCumulativeUnknownUsage",
+        "TestDurableDecisionAuthorityCannotRewriteFullDelegatedSubject",
+        "TestDurableDecisionOriginalReceiptSurvivesComponentConfigurationChange",
+        "TestDurableDecisionPreparedBeforePublicationResumesWithoutNewStart",
+        "TestDurableDecisionTwoIdentitiesAndFixedLegacyView",
+        "TestDurableDecisionCrossTenantAndOwnerAuthorization",
+        "TestDurableDecisionPoolCoversNonAnchorDeadlineAtZeroQuota",
+        "TestDurableDecisionLastQueueSlotAcrossStoreInstances",
+        "TestDurableDecisionTenantQuotaCombinesTwoOwners",
+        "TestDurableProposalImmutableCaseBindingSurvivesRejectedReseed",
+        "TestDurableProposalPreparedV2RecoversActualReplyLoss",
+        "TestDurableProposalCandidateSourceEvidenceUsesAllowedPurpose",
+        "TestDurableProposalFourIndependentActions",
+        "TestDurableProposalDeltaWithCandidatePreservesBothSuggestions",
+        "TestDurableProposalFixedDependsOnOutputFailsThroughPublicCodec",
+        "TestDurableProposalArgumentsRequireSourcePurposeConsumption",
+        "TestDurableProposalBoundedInvalidOutputMatrix",
+        "TestDurableDecisionFinishFencesExpiredClaimAfterBothPublications",
+        "TestDurableDecisionStartRollbackKeepsOriginalAllowance",
+        "TestDurableDecisionSnapshotLockAndManifestConsumeInputBound",
+        "TestDurableDecisionPreparedCannotRefreshOriginalExpiredPermission"
+      ],
+      "count": 30
+    },
+    {
+      "operation": "go-child-0034",
+      "stage": "other normal",
+      "selector": "^(TestPublicErrorsAreClosedAndClassifiable|TestEnvelopeAcceptsDefinedFutureMethodWithoutOfferingExecution|TestCommandGetRetainsOriginalIdentitySeparateFromQuery|TestCommandGetRequiresExactTargetAndRejectsWriteRevision|TestProgrammableEnvelopeCannotSmuggleJSONNumbers|TestUnknownVersionAndMethodCannotDowngrade|TestSharedCommandFixtures|TestProgrammaticPayloadAlsoEnforcesContainerDepth|TestPublicErrorProjectionCannotDiscloseLocalCause|TestProgrammaticPayloadRejectsValuesOutsideJSON|TestCancelledBeforeInputHasExactZeroObservations|TestFixedDecisionInputTypedRoundtrip|TestDecisionDigestAndIsolatedInventory|TestCompletedDecisionContractNegotiatesAllMethods|TestCompletedDecisionContractRefusesInexactNegotiation|TestCommandDigestMatchesIndependentGolden|TestDigestDoesNotGrantExecutionForFixtureMethods|TestNegotiationAdvertisesOnlyCompletedCommandGet|TestNegotiationAcceptsExactMethodSchemas|TestNegotiationSharedRefusals|TestNegotiationThenAuthenticatedQueryPreservesReceiptAndCurrentProgress|TestNegotiationSchemaDigestIndependentGoldens|TestNegotiationDoesNotOpenDesignedBusinessMethods|TestAuthenticatedQueryOpaqueRefusalAndNormalControl|TestAuthenticatedQuerySnapshotsCallerWireAndTrustedBinding|TestAuthenticatedQuerySharedFixtures|TestAuthenticatedQueryCancellationIsAReadFaultNotAuthorizationRefusal|TestAuthenticatedQueryFixedOwnerSurvivesDirectoryAndDefaultChangesReadOnly|TestAuthenticatedQueryRequiresFiniteContextAndKeepsStartCutoff|TestAuthenticatedQuery11SharedFixtures|TestReadOnlyFactsDoNotReinterpretFixedReceipt|TestReadOnlyFactsSeparateAbsenceAndUnavailability|TestReturnedReadCannotMutateRetainedFactRevision|TestSharedResponseFixtures|TestClosedReceiptRoundtrip|TestResponseEncodingValidatesOriginalIdentity|TestRevisionRetainsExactLargeInteger|TestValueBoundaryRejectsTruncationAndMalformedJSON|TestPublicJSONBoundaryPreservesUnicodeAndRejectsAmbiguity|TestSharedValueFixtures|TestEncodingCannotReplaceInvalidUnicode|TestRawJSONBodyAndDepthLimits|TestCommandEncodingPreservesCompactUnicodeAtBodyLimit)$",
+      "names": [
+        "TestPublicErrorsAreClosedAndClassifiable",
+        "TestEnvelopeAcceptsDefinedFutureMethodWithoutOfferingExecution",
+        "TestCommandGetRetainsOriginalIdentitySeparateFromQuery",
+        "TestCommandGetRequiresExactTargetAndRejectsWriteRevision",
+        "TestProgrammableEnvelopeCannotSmuggleJSONNumbers",
+        "TestUnknownVersionAndMethodCannotDowngrade",
+        "TestSharedCommandFixtures",
+        "TestProgrammaticPayloadAlsoEnforcesContainerDepth",
+        "TestPublicErrorProjectionCannotDiscloseLocalCause",
+        "TestProgrammaticPayloadRejectsValuesOutsideJSON",
+        "TestCancelledBeforeInputHasExactZeroObservations",
+        "TestFixedDecisionInputTypedRoundtrip",
+        "TestDecisionDigestAndIsolatedInventory",
+        "TestCompletedDecisionContractNegotiatesAllMethods",
+        "TestCompletedDecisionContractRefusesInexactNegotiation",
+        "TestCommandDigestMatchesIndependentGolden",
+        "TestDigestDoesNotGrantExecutionForFixtureMethods",
+        "TestNegotiationAdvertisesOnlyCompletedCommandGet",
+        "TestNegotiationAcceptsExactMethodSchemas",
+        "TestNegotiationSharedRefusals",
+        "TestNegotiationThenAuthenticatedQueryPreservesReceiptAndCurrentProgress",
+        "TestNegotiationSchemaDigestIndependentGoldens",
+        "TestNegotiationDoesNotOpenDesignedBusinessMethods",
+        "TestAuthenticatedQueryOpaqueRefusalAndNormalControl",
+        "TestAuthenticatedQuerySnapshotsCallerWireAndTrustedBinding",
+        "TestAuthenticatedQuerySharedFixtures",
+        "TestAuthenticatedQueryCancellationIsAReadFaultNotAuthorizationRefusal",
+        "TestAuthenticatedQueryFixedOwnerSurvivesDirectoryAndDefaultChangesReadOnly",
+        "TestAuthenticatedQueryRequiresFiniteContextAndKeepsStartCutoff",
+        "TestAuthenticatedQuery11SharedFixtures",
+        "TestReadOnlyFactsDoNotReinterpretFixedReceipt",
+        "TestReadOnlyFactsSeparateAbsenceAndUnavailability",
+        "TestReturnedReadCannotMutateRetainedFactRevision",
+        "TestSharedResponseFixtures",
+        "TestClosedReceiptRoundtrip",
+        "TestResponseEncodingValidatesOriginalIdentity",
+        "TestRevisionRetainsExactLargeInteger",
+        "TestValueBoundaryRejectsTruncationAndMalformedJSON",
+        "TestPublicJSONBoundaryPreservesUnicodeAndRejectsAmbiguity",
+        "TestSharedValueFixtures",
+        "TestEncodingCannotReplaceInvalidUnicode",
+        "TestRawJSONBodyAndDepthLimits",
+        "TestCommandEncodingPreservesCompactUnicodeAtBodyLimit"
+      ],
+      "count": 43
+    }
+  ],
+  "actual_complete201_exactonce": true,
+  "literal97_order_and33_32_32_exact": true,
+  "literal60_order_and30_30_exact": true,
+  "all201_current_declaration_set_exact": true,
+  "declarations": {
+    "TestPublicErrorsAreClosedAndClassifiable": {
+      "path": "conformance/component/commands_test.go",
+      "line": 12,
+      "file_sha256": "451f50be187cacee17e2a142854f812c5f06c84784d1c7ab9f6b571b0205240a"
+    },
+    "TestEnvelopeAcceptsDefinedFutureMethodWithoutOfferingExecution": {
+      "path": "conformance/component/commands_test.go",
+      "line": 30,
+      "file_sha256": "451f50be187cacee17e2a142854f812c5f06c84784d1c7ab9f6b571b0205240a"
+    },
+    "TestCommandGetRetainsOriginalIdentitySeparateFromQuery": {
+      "path": "conformance/component/commands_test.go",
+      "line": 42,
+      "file_sha256": "451f50be187cacee17e2a142854f812c5f06c84784d1c7ab9f6b571b0205240a"
+    },
+    "TestCommandGetRequiresExactTargetAndRejectsWriteRevision": {
+      "path": "conformance/component/commands_test.go",
+      "line": 52,
+      "file_sha256": "451f50be187cacee17e2a142854f812c5f06c84784d1c7ab9f6b571b0205240a"
+    },
+    "TestProgrammableEnvelopeCannotSmuggleJSONNumbers": {
+      "path": "conformance/component/commands_test.go",
+      "line": 68,
+      "file_sha256": "451f50be187cacee17e2a142854f812c5f06c84784d1c7ab9f6b571b0205240a"
+    },
+    "TestUnknownVersionAndMethodCannotDowngrade": {
+      "path": "conformance/component/commands_test.go",
+      "line": 82,
+      "file_sha256": "451f50be187cacee17e2a142854f812c5f06c84784d1c7ab9f6b571b0205240a"
+    },
+    "TestSharedCommandFixtures": {
+      "path": "conformance/component/commands_test.go",
+      "line": 97,
+      "file_sha256": "451f50be187cacee17e2a142854f812c5f06c84784d1c7ab9f6b571b0205240a"
+    },
+    "TestProgrammaticPayloadAlsoEnforcesContainerDepth": {
+      "path": "conformance/component/commands_test.go",
+      "line": 139,
+      "file_sha256": "451f50be187cacee17e2a142854f812c5f06c84784d1c7ab9f6b571b0205240a"
+    },
+    "TestPublicErrorProjectionCannotDiscloseLocalCause": {
+      "path": "conformance/component/commands_test.go",
+      "line": 149,
+      "file_sha256": "451f50be187cacee17e2a142854f812c5f06c84784d1c7ab9f6b571b0205240a"
+    },
+    "TestProgrammaticPayloadRejectsValuesOutsideJSON": {
+      "path": "conformance/component/commands_test.go",
+      "line": 160,
+      "file_sha256": "451f50be187cacee17e2a142854f812c5f06c84784d1c7ab9f6b571b0205240a"
+    },
+    "TestContentExpiredOriginalAcceptedCapStartsCleanupDespiteCurrentWideRenewal": {
+      "path": "conformance/component/content_accepted_cap_cleanup_test.go",
+      "line": 18,
+      "file_sha256": "249b79b2f5767a28eefab6094ab1d5475f5d626b52aac745b59449617a226163"
+    },
+    "TestContentOriginalAdmissionCleanupDeadlineSurvivesCurrentTargetPolicyLockWait": {
+      "path": "conformance/component/content_admission_cleanup_deadline_test.go",
+      "line": 19,
+      "file_sha256": "9ede2d770844efcf36a0122747b04eda4b1eb31dd4f80f71218525b36a6b823a"
+    },
+    "TestContentNewAssociationRequiresCurrentDirectSourceAdmission": {
+      "path": "conformance/component/content_association_test.go",
+      "line": 15,
+      "file_sha256": "edca48742b3bf07185b71819aeaec2db226f6f7466cc0975261658ce111ca0f3"
+    },
+    "TestContentAssociationCannotExtendObservedRetention": {
+      "path": "conformance/component/content_association_test.go",
+      "line": 68,
+      "file_sha256": "edca48742b3bf07185b71819aeaec2db226f6f7466cc0975261658ce111ca0f3"
+    },
+    "TestContentReplayRechecksReaderAfterCommandLock": {
+      "path": "conformance/component/content_association_test.go",
+      "line": 120,
+      "file_sha256": "edca48742b3bf07185b71819aeaec2db226f6f7466cc0975261658ce111ca0f3"
+    },
+    "TestContentAssociationKeepsPreparingCapacityAndFailedHistory": {
+      "path": "conformance/component/content_association_test.go",
+      "line": 178,
+      "file_sha256": "edca48742b3bf07185b71819aeaec2db226f6f7466cc0975261658ce111ca0f3"
+    },
+    "TestContentActualStagingAndPrimaryErasureAllowsOnlyAuthorizedGone": {
+      "path": "conformance/component/content_body_erasure_test.go",
+      "line": 16,
+      "file_sha256": "e17e865d24efa74893d5231a955bf492bacf7bcd7ac774d598729ce4a8cf0b9d"
+    },
+    "TestContentTrustedSealSurvivesReopenAndPreservesOriginalReceipt": {
+      "path": "conformance/component/content_body_seal_test.go",
+      "line": 25,
+      "file_sha256": "b134f0e50e99e371beb688caabc25bb4bdde6eacf40d587f79387be3b9960419"
+    },
+    "TestContentDecodedByteBoundHasRealNormalPublication": {
+      "path": "conformance/component/content_bounds_test.go",
+      "line": 17,
+      "file_sha256": "b5b72d4defa280b43fc75b58f1c0edb69dac15eec4af74b9bf9a4593f52367ff"
+    },
+    "TestContentEveryOriginalAttemptPagePreservesUnknownSameKeyResidual": {
+      "path": "conformance/component/content_cleanup_attempt_pages_test.go",
+      "line": 43,
+      "file_sha256": "c499291b00ba238c1a7f93592a311323cf2c64a9b1ec077d11b3d5d1ac5c28ef"
+    },
+    "TestContentOriginalCleanupDeadlineCannotBeExtendedByCurrentPolicyLockWait": {
+      "path": "conformance/component/content_cleanup_deadline_wait_test.go",
+      "line": 19,
+      "file_sha256": "378a5711960db4b88b57d3b9d2e0ac55ba68a719bb0f5077142ec83b45f87532"
+    },
+    "TestContentOriginalCleanupPageCASRollsBackEarlierQualificationsAfterConcurrentConsumer": {
+      "path": "conformance/component/content_cleanup_page_cas_test.go",
+      "line": 64,
+      "file_sha256": "97cbdbb7b3c54c8320366d434db5291284627b133961c3f848e300ffd435cd38"
+    },
+    "TestContentOriginalPolicyAndHolderPagesResumeWithoutErasingOtherSavingBasis": {
+      "path": "conformance/component/content_cleanup_pages_test.go",
+      "line": 20,
+      "file_sha256": "490226af9770309958ff10dbb5f7594a407df64550be10b7c8e9c0cab9b686d4"
+    },
+    "TestContentLockWaitCannotReuseExpiredAdmissionClock": {
+      "path": "conformance/component/content_clock_test.go",
+      "line": 24,
+      "file_sha256": "972323a1543138aa6af51d4e8797aac6caa541eff5f7e2860778933e181e71e0"
+    },
+    "TestContentPublicationWaitCannotReuseExpiredPolicyClock": {
+      "path": "conformance/component/content_clock_test.go",
+      "line": 95,
+      "file_sha256": "972323a1543138aa6af51d4e8797aac6caa541eff5f7e2860778933e181e71e0"
+    },
+    "TestContentHiddenAncestorControlsCurrentDerivedUse": {
+      "path": "conformance/component/content_closure_test.go",
+      "line": 17,
+      "file_sha256": "3eaa3327a4798bf90574c3e2312773350028a1779727c6797428d12041372d31"
+    },
+    "TestContentFullClosureIncludesIntermediateVersionsAndExact64Bound": {
+      "path": "conformance/component/content_closure_test.go",
+      "line": 103,
+      "file_sha256": "3eaa3327a4798bf90574c3e2312773350028a1779727c6797428d12041372d31"
+    },
+    "TestContentClosureDeduplicatesSharedAncestorAndRejectsForeignOwners": {
+      "path": "conformance/component/content_closure_test.go",
+      "line": 163,
+      "file_sha256": "3eaa3327a4798bf90574c3e2312773350028a1779727c6797428d12041372d31"
+    },
+    "TestContentHiddenAncestorPurposeIntersectionAndOriginalCapSurviveFurtherDerivation": {
+      "path": "conformance/component/content_closure_test.go",
+      "line": 209,
+      "file_sha256": "3eaa3327a4798bf90574c3e2312773350028a1779727c6797428d12041372d31"
+    },
+    "TestContentPublicationFinalTransactionChecksHiddenAncestorAfterRealObjectWrite": {
+      "path": "conformance/component/content_closure_test.go",
+      "line": 317,
+      "file_sha256": "3eaa3327a4798bf90574c3e2312773350028a1779727c6797428d12041372d31"
+    },
+    "TestContentDelegatedLifecyclePassesOtherSavingSubjectFullPageWithoutChangingOriginalDuties": {
+      "path": "conformance/component/content_delegated_cleanup_backlog_test.go",
+      "line": 25,
+      "file_sha256": "85d9951fd44c08b374730f8c95d464e8e8efb5726cfb5ec1df20977689bf6995"
+    },
+    "TestContentDirectReadPermissionsAreCurrentAndSeparate": {
+      "path": "conformance/component/content_direct_read_test.go",
+      "line": 48,
+      "file_sha256": "8bb5b0e3c6ebde7208e15c5a95ed31bc1611fe1e73fa4be5fed9d0decf744864"
+    },
+    "TestContentLostActualErasureReplyRetainsOriginalDutyAndRecoversAfterConfirmedDefer": {
+      "path": "conformance/component/content_erasure_reply_loss_test.go",
+      "line": 39,
+      "file_sha256": "4fc23f158cc50451ebf092694ec4dda109e5339c7bb4680f1a0b2427959c0566"
+    },
+    "TestContentLaterWorkPassesOneExpiredCleanupResponsibility": {
+      "path": "conformance/component/content_expired_backlog_test.go",
+      "line": 21,
+      "file_sha256": "60f817d14355d1565f744be850f9309d1ae0c2d0f7190be0e204929d0823823b"
+    },
+    "TestContentLaterWorkPassesFullExpiredCleanupPageWithoutChangingOriginalDuties": {
+      "path": "conformance/component/content_expired_backlog_test.go",
+      "line": 25,
+      "file_sha256": "60f817d14355d1565f744be850f9309d1ae0c2d0f7190be0e204929d0823823b"
+    },
+    "TestContentDeclaredBytesAndVersionCannotChange": {
+      "path": "conformance/component/content_faults_test.go",
+      "line": 26,
+      "file_sha256": "8af24cb63b6c2024600209bca22629d86519abc16174ff72b0f0dff282ca7fed"
+    },
+    "TestContentPublishedDamageAndMissingNeverRepairOnQuery": {
+      "path": "conformance/component/content_faults_test.go",
+      "line": 67,
+      "file_sha256": "8af24cb63b6c2024600209bca22629d86519abc16174ff72b0f0dff282ca7fed"
+    },
+    "TestContentOldReadersPreserveLosslessFactsAndUnavailable": {
+      "path": "conformance/component/content_faults_test.go",
+      "line": 144,
+      "file_sha256": "8af24cb63b6c2024600209bca22629d86519abc16174ff72b0f0dff282ca7fed"
+    },
+    "TestContentFailedStagingStillConsumesExplicitByteLimit": {
+      "path": "conformance/component/content_faults_test.go",
+      "line": 209,
+      "file_sha256": "8af24cb63b6c2024600209bca22629d86519abc16174ff72b0f0dff282ca7fed"
+    },
+    "TestContentNoClobberExistingBytesMustMatchBeforePublication": {
+      "path": "conformance/component/content_faults_test.go",
+      "line": 236,
+      "file_sha256": "8af24cb63b6c2024600209bca22629d86519abc16174ff72b0f0dff282ca7fed"
+    },
+    "TestContentWrongPhysicalRootCannotAcknowledgeOriginalHolderErasure": {
+      "path": "conformance/component/content_holder_binding_test.go",
+      "line": 16,
+      "file_sha256": "22780dc0001a9f9d3edd49e11ad5f02fb30ba2f5ee414ff171ce2bcc05cf3e65"
+    },
+    "TestContentFirstSealCannotAdoptAnEmptyConfiguredRoot": {
+      "path": "conformance/component/content_holder_binding_test.go",
+      "line": 80,
+      "file_sha256": "22780dc0001a9f9d3edd49e11ad5f02fb30ba2f5ee414ff171ce2bcc05cf3e65"
+    },
+    "TestContentAuthoritativeErasureStopsNewPrimaryHolderClaimsAndKeepsOldHistory": {
+      "path": "conformance/component/content_holder_fact_test.go",
+      "line": 18,
+      "file_sha256": "144a77defbb00e6f624115613242550c4d2bab530ec5a833afb024300381c5e6"
+    },
+    "TestContentLateSuccessfulPutCannotRestoreErasedPrimaryHolderFact": {
+      "path": "conformance/component/content_holder_fact_test.go",
+      "line": 109,
+      "file_sha256": "144a77defbb00e6f624115613242550c4d2bab530ec5a833afb024300381c5e6"
+    },
+    "TestContentCommandReplayAndExactVersionIdentities": {
+      "path": "conformance/component/content_identity_test.go",
+      "line": 57,
+      "file_sha256": "1d472ab10112292ddbb6cc0a222d666924a8a95738e3ac6eca3595371f1d8e07"
+    },
+    "TestContentEmptyBytesBinaryAndFiniteRanges": {
+      "path": "conformance/component/content_identity_test.go",
+      "line": 128,
+      "file_sha256": "1d472ab10112292ddbb6cc0a222d666924a8a95738e3ac6eca3595371f1d8e07"
+    },
+    "TestContentInheritedExpiredCapConsumesItsExactAdmissionTargetWithoutDeletingLiveAncestor": {
+      "path": "conformance/component/content_inherited_cap_cleanup_test.go",
+      "line": 48,
+      "file_sha256": "d0a611406bb99910fca5fdfae083396cbfe3680db356dea5406b9448371e192e"
+    },
+    "TestContentLaterAdmissionInheritsOriginalAncestorExpiry": {
+      "path": "conformance/component/content_inherited_expiry_test.go",
+      "line": 15,
+      "file_sha256": "f6b1cfd8d8f7f0b742750c499bfa368af1e37021f06cf6a73dec8b197e9ac3cf"
+    },
+    "TestContentNaturalSourceAndTargetChecksCurrentRenewalWithoutErasingRevoke": {
+      "path": "conformance/component/content_inherited_expiry_test.go",
+      "line": 120,
+      "file_sha256": "f6b1cfd8d8f7f0b742750c499bfa368af1e37021f06cf6a73dec8b197e9ac3cf"
+    },
+    "TestContentRenewalResidualDoesNotPretendFutureMaintenanceCoverage": {
+      "path": "conformance/component/content_inherited_expiry_test.go",
+      "line": 220,
+      "file_sha256": "f6b1cfd8d8f7f0b742750c499bfa368af1e37021f06cf6a73dec8b197e9ac3cf"
+    },
+    "TestContentSameSubjectIDAliasRetainsOriginalFullSavingBinding": {
+      "path": "conformance/component/content_inherited_expiry_test.go",
+      "line": 290,
+      "file_sha256": "f6b1cfd8d8f7f0b742750c499bfa368af1e37021f06cf6a73dec8b197e9ac3cf"
+    },
+    "TestContentMultipleAncestorsKeepIndependentEarlierAdmissionDue": {
+      "path": "conformance/component/content_inherited_expiry_test.go",
+      "line": 368,
+      "file_sha256": "f6b1cfd8d8f7f0b742750c499bfa368af1e37021f06cf6a73dec8b197e9ac3cf"
+    },
+    "TestContentLegacyOriginalQualificationCutoffRollsBackBindingAndAttemptWrites": {
+      "path": "conformance/component/content_legacy_binding_cutoff_test.go",
+      "line": 59,
+      "file_sha256": "cb91aa867bb5672bc80d73c12b59a2310409fdad58650c6f5f7af2bec6873012"
+    },
+    "TestContentLegacyWholeRecordRaceRefusesStaleBindingAndReplaysOriginalQualification": {
+      "path": "conformance/component/content_legacy_binding_race_test.go",
+      "line": 43,
+      "file_sha256": "14a7246c09ceb69312146f463feff821f8aec3c25d4f7097fc26f59d5587b74c"
+    },
+    "TestContentLegacyCommittedBindingReplyLossRecoversOnlyByOriginalQualification": {
+      "path": "conformance/component/content_legacy_binding_reply_test.go",
+      "line": 47,
+      "file_sha256": "22c8e0750e9d29430cf7d4539e0cea37ce11c417b0781efea8c8cccb36a6b960"
+    },
+    "TestContentStoppedOriginalLegacyScopeBindsOnlyAfterPositiveWriterClose": {
+      "path": "conformance/component/content_legacy_binding_test.go",
+      "line": 20,
+      "file_sha256": "11f8a1934db40063a721a3c4ef16bce975a4c6b3314b214ccc828c8d6e9bd195"
+    },
+    "TestContentLegacyBackfillRestoresOriginalExpiryAndFailedHolderResponsibilities": {
+      "path": "conformance/component/content_legacy_test.go",
+      "line": 15,
+      "file_sha256": "565b72b5718329780203d1bd90afde5fd9a77542c19de5a787f9a88830942cd5"
+    },
+    "TestContentLegacyPolicyPagesDoNotTruncateAt64OrResetOnReopen": {
+      "path": "conformance/component/content_legacy_test.go",
+      "line": 87,
+      "file_sha256": "565b72b5718329780203d1bd90afde5fd9a77542c19de5a787f9a88830942cd5"
+    },
+    "TestContentActualExpiredOldWriterArchiveRetainsAncestorResponsibilities": {
+      "path": "conformance/component/content_legacy_test.go",
+      "line": 146,
+      "file_sha256": "565b72b5718329780203d1bd90afde5fd9a77542c19de5a787f9a88830942cd5"
+    },
+    "TestContentTrustedManagementSealsUseAndReopensResponsibility": {
+      "path": "conformance/component/content_management_test.go",
+      "line": 18,
+      "file_sha256": "1e0ccc830978bee2ee546f8285e00a444da15b49616bb06c1eaf708c91f213b0"
+    },
+    "TestContentPolicyPropagationAllDescendantPagesRecoverFrozenWatermark": {
+      "path": "conformance/component/content_management_test.go",
+      "line": 89,
+      "file_sha256": "1e0ccc830978bee2ee546f8285e00a444da15b49616bb06c1eaf708c91f213b0"
+    },
+    "TestContentFiveActionsAreIndependentCurrentQualification": {
+      "path": "conformance/component/content_management_test.go",
+      "line": 182,
+      "file_sha256": "1e0ccc830978bee2ee546f8285e00a444da15b49616bb06c1eaf708c91f213b0"
+    },
+    "TestContentNaturalRetentionExpiryHasDurableOriginalMaintenance": {
+      "path": "conformance/component/content_management_test.go",
+      "line": 246,
+      "file_sha256": "1e0ccc830978bee2ee546f8285e00a444da15b49616bb06c1eaf708c91f213b0"
+    },
+    "TestContentPolicyAndCleanupResponsibilityRollbackTogether": {
+      "path": "conformance/component/content_management_test.go",
+      "line": 297,
+      "file_sha256": "1e0ccc830978bee2ee546f8285e00a444da15b49616bb06c1eaf708c91f213b0"
+    },
+    "TestContentMalformedPolicyBindingRegistersActualSourceResponsibility": {
+      "path": "conformance/component/content_management_test.go",
+      "line": 338,
+      "file_sha256": "1e0ccc830978bee2ee546f8285e00a444da15b49616bb06c1eaf708c91f213b0"
+    },
+    "TestContentAcceptedRequestCapHasOriginalExpiryMaintenance": {
+      "path": "conformance/component/content_management_test.go",
+      "line": 404,
+      "file_sha256": "1e0ccc830978bee2ee546f8285e00a444da15b49616bb06c1eaf708c91f213b0"
+    },
+    "TestContentManagementStepRechecksTrustedDeadlineAfterPageLocks": {
+      "path": "conformance/component/content_management_test.go",
+      "line": 469,
+      "file_sha256": "1e0ccc830978bee2ee546f8285e00a444da15b49616bb06c1eaf708c91f213b0"
+    },
+    "TestContentExpiredMaintenanceBudgetRetainsKnownHolderWithoutClaimingComplete": {
+      "path": "conformance/component/content_management_test.go",
+      "line": 524,
+      "file_sha256": "1e0ccc830978bee2ee546f8285e00a444da15b49616bb06c1eaf708c91f213b0"
+    },
+    "TestContentManagerPolicyPassesFullExpiredCleanupPageWithoutChangingOriginalDuties": {
+      "path": "conformance/component/content_manager_expired_backlog_test.go",
+      "line": 27,
+      "file_sha256": "81bc5d898d4c0275fd0a1aa9b7047716fe633cd9ee4fabc669cd46d92f1b8ed6"
+    },
+    "TestContentDerivedGoneRequiresCurrentExactMetadataForReaderAndEveryAncestor": {
+      "path": "conformance/component/content_metadata_scope_test.go",
+      "line": 18,
+      "file_sha256": "d2a7e97d60adfb843ce192c586dd6809932a49fc4fbe92ffce29be02afbe2a44"
+    },
+    "TestContentOrphanSealWinsBeforeLatePublicationAndPreservesLiveVersion": {
+      "path": "conformance/component/content_orphan_test.go",
+      "line": 18,
+      "file_sha256": "1732b6f28a4f83c698035b33e6da09b6dc8ae779a8f6895a4953b24086e2ba9f"
+    },
+    "TestContentPublishedReferenceWinsOrphanSelectionWithoutCreatingCleanup": {
+      "path": "conformance/component/content_orphan_test.go",
+      "line": 120,
+      "file_sha256": "1732b6f28a4f83c698035b33e6da09b6dc8ae779a8f6895a4953b24086e2ba9f"
+    },
+    "TestContentNaturalPolicyPhaseCannotUndoOriginalErasureAcknowledgement": {
+      "path": "conformance/component/content_policy_ack_history_test.go",
+      "line": 14,
+      "file_sha256": "4a72f5e4c1f0c37c0ea0e3c303bfbb02b3a27fedd6dbbba5ad408cf8b5480055"
+    },
+    "TestContentClosureRecordWaitRechecksPolicyBeforeMetadata": {
+      "path": "conformance/component/content_policy_actions_test.go",
+      "line": 41,
+      "file_sha256": "698ddd4d06ebcd0f286f253589564510362d8d59a8c6f82b29b6d0709bdc76b3"
+    },
+    "TestContentClosureActionIntersectionKeepsIndependentFlags": {
+      "path": "conformance/component/content_policy_actions_test.go",
+      "line": 121,
+      "file_sha256": "698ddd4d06ebcd0f286f253589564510362d8d59a8c6f82b29b6d0709bdc76b3"
+    },
+    "TestContentPolicyActionVectorsFailClosed": {
+      "path": "conformance/component/content_policy_actions_test.go",
+      "line": 171,
+      "file_sha256": "698ddd4d06ebcd0f286f253589564510362d8d59a8c6f82b29b6d0709bdc76b3"
+    },
+    "TestContentClosurePolicyIntersectionUsesClockAfterRealPolicyLock": {
+      "path": "conformance/component/content_policy_actions_test.go",
+      "line": 203,
+      "file_sha256": "698ddd4d06ebcd0f286f253589564510362d8d59a8c6f82b29b6d0709bdc76b3"
+    },
+    "TestContentPolicyPortClockFollowsLockedRow": {
+      "path": "conformance/component/content_policy_actions_test.go",
+      "line": 285,
+      "file_sha256": "698ddd4d06ebcd0f286f253589564510362d8d59a8c6f82b29b6d0709bdc76b3"
+    },
+    "TestContentRestoredSaveBasisMakesOriginalCleanupNotRequiredWithoutSealing": {
+      "path": "conformance/component/content_policy_cleanup_test.go",
+      "line": 18,
+      "file_sha256": "2d414b98703cedd19da608c27b58450199fa780d1aed71ea55b1d6a718c107fc"
+    },
+    "TestContentCurrentSaveWithdrawalStartsOriginalSealAndRealCleanupConsumer": {
+      "path": "conformance/component/content_policy_cleanup_test.go",
+      "line": 92,
+      "file_sha256": "2d414b98703cedd19da608c27b58450199fa780d1aed71ea55b1d6a718c107fc"
+    },
+    "TestContentExplicitPolicyAndTrustedPrincipalFailClosed": {
+      "path": "conformance/component/content_policy_test.go",
+      "line": 15,
+      "file_sha256": "b05bcc993fb9d0d7a3007335a6a6e09ad0e27f517d0b95535ee28420b68ea63c"
+    },
+    "TestContentDirectSourcesRequireSeparateReadProcessSaveAndRetention": {
+      "path": "conformance/component/content_policy_test.go",
+      "line": 96,
+      "file_sha256": "b05bcc993fb9d0d7a3007335a6a6e09ad0e27f517d0b95535ee28420b68ea63c"
+    },
+    "TestContentPostScheduleAdmissionRollsBackLateVersion": {
+      "path": "conformance/component/content_post_schedule_test.go",
+      "line": 51,
+      "file_sha256": "6126694c60ce6a4050694c90dfc7cb0904a33fbdd8000b289ea7cec8730a7aa4"
+    },
+    "TestContentLateAdmissionExtraCauseCannotFixRejection": {
+      "path": "conformance/component/content_post_schedule_test.go",
+      "line": 168,
+      "file_sha256": "6126694c60ce6a4050694c90dfc7cb0904a33fbdd8000b289ea7cec8730a7aa4"
+    },
+    "TestContentPostScheduleAliasPreservesOriginalCapOnRollback": {
+      "path": "conformance/component/content_post_schedule_test.go",
+      "line": 198,
+      "file_sha256": "6126694c60ce6a4050694c90dfc7cb0904a33fbdd8000b289ea7cec8730a7aa4"
+    },
+    "TestContentLateAdmissionRespectsCompetingOriginalCommand": {
+      "path": "conformance/component/content_post_schedule_test.go",
+      "line": 312,
+      "file_sha256": "6126694c60ce6a4050694c90dfc7cb0904a33fbdd8000b289ea7cec8730a7aa4"
+    },
+    "TestContentCommitUnknownKeepsAcceptedAndLateRejectedTruth": {
+      "path": "conformance/component/content_post_schedule_test.go",
+      "line": 391,
+      "file_sha256": "6126694c60ce6a4050694c90dfc7cb0904a33fbdd8000b289ea7cec8730a7aa4"
+    },
+    "TestContentAdmissionReaderExpiryCannotDiscloseAfterWait": {
+      "path": "conformance/component/content_post_schedule_test.go",
+      "line": 464,
+      "file_sha256": "6126694c60ce6a4050694c90dfc7cb0904a33fbdd8000b289ea7cec8730a7aa4"
+    },
+    "TestContentProcessingDeadlineAfterNativeDescendantLock": {
+      "path": "conformance/component/content_processing_deadline_test.go",
+      "line": 17,
+      "file_sha256": "f7c7f7a4c2ccad23551bbb3ad21868156aa13722a4e9ab83233cbf32e243e05c"
+    },
+    "TestContentProcessingDeadlineRechecksAllChangesAtFinalDecision": {
+      "path": "conformance/component/content_processing_deadline_test.go",
+      "line": 131,
+      "file_sha256": "f7c7f7a4c2ccad23551bbb3ad21868156aa13722a4e9ab83233cbf32e243e05c"
+    },
+    "TestContentHistoricalTighteningClassifiesNewCapAtCurrentTime": {
+      "path": "conformance/component/content_processing_deadline_test.go",
+      "line": 198,
+      "file_sha256": "f7c7f7a4c2ccad23551bbb3ad21868156aa13722a4e9ab83233cbf32e243e05c"
+    },
+    "TestContentDelayedHistoricalPageHandsOffOriginalNaturalValidUntil": {
+      "path": "conformance/component/content_processing_deadline_test.go",
+      "line": 242,
+      "file_sha256": "f7c7f7a4c2ccad23551bbb3ad21868156aa13722a4e9ab83233cbf32e243e05c"
+    },
+    "TestContentCorrectBytesDurablyAccepted": {
+      "path": "conformance/component/content_publication_test.go",
+      "line": 60,
+      "file_sha256": "8f762b685f7df3470e13b2e3d7c1a89026bb8d90e3bf6b9efb44257e400430e9"
+    },
+    "TestContentCurrentSavePolicyStopsObjectWrite": {
+      "path": "conformance/component/content_publication_test.go",
+      "line": 140,
+      "file_sha256": "8f762b685f7df3470e13b2e3d7c1a89026bb8d90e3bf6b9efb44257e400430e9"
+    },
+    "TestContentReadPolicyWaitRespectsAdmissionForEveryObservation": {
+      "path": "conformance/component/content_read_clock_test.go",
+      "line": 56,
+      "file_sha256": "800f6b46d4a3bad3298edaf7a108b5380d406cc986b5d1defa9febd812f5c3b8"
+    },
+    "TestContentReadVersionWaitCannotReuseAdmissionClock": {
+      "path": "conformance/component/content_read_clock_test.go",
+      "line": 143,
+      "file_sha256": "800f6b46d4a3bad3298edaf7a108b5380d406cc986b5d1defa9febd812f5c3b8"
+    },
+    "TestContentCommandWaitRechecksReaderAndAdmission": {
+      "path": "conformance/component/content_read_clock_test.go",
+      "line": 193,
+      "file_sha256": "800f6b46d4a3bad3298edaf7a108b5380d406cc986b5d1defa9febd812f5c3b8"
+    },
+    "TestContentLastDirectSourceWaitCannotReuseReadAdmission": {
+      "path": "conformance/component/content_read_clock_test.go",
+      "line": 287,
+      "file_sha256": "800f6b46d4a3bad3298edaf7a108b5380d406cc986b5d1defa9febd812f5c3b8"
+    },
+    "TestContentReturnedBytesRequireCurrentReadAndDisclose": {
+      "path": "conformance/component/content_read_gate_test.go",
+      "line": 35,
+      "file_sha256": "528c6ed96d3af4ed6457e1c0602806ccda64035d5d9c3fd96763e8b48fea63a8"
+    },
+    "TestContentReadAdmissionDeadlineDoesNotBecomeCompletionDeadline": {
+      "path": "conformance/component/content_read_gate_test.go",
+      "line": 138,
+      "file_sha256": "528c6ed96d3af4ed6457e1c0602806ccda64035d5d9c3fd96763e8b48fea63a8"
+    },
+    "TestContentTemporaryFailureKeepsNarrowedRetentionAfterReopen": {
+      "path": "conformance/component/content_retry_test.go",
+      "line": 40,
+      "file_sha256": "7448ce6a956ca29d8f8ebd6601199442f8b6c072406bfc2b472f253812e9d50d"
+    },
+    "TestContentExpiredOriginalClaimCannotStartObjectIO": {
+      "path": "conformance/component/content_retry_test.go",
+      "line": 138,
+      "file_sha256": "7448ce6a956ca29d8f8ebd6601199442f8b6c072406bfc2b472f253812e9d50d"
+    },
+    "TestContentCleanupScanKeepsMalformedDeadlineParseCauseBeforePage": {
+      "path": "conformance/component/content_scan_deadline_test.go",
+      "line": 25,
+      "file_sha256": "7f12df34684283e4e69c5bacff08f5d75a3d46643315beaa5130809190b68461"
+    },
+    "TestContentSecondaryNativeRemovalFailureRetainsOriginalResponsibility": {
+      "path": "conformance/component/content_secondary_native_failure_test.go",
+      "line": 17,
+      "file_sha256": "6408b241d6082317e3a6749d6df0c0567028355b24587a322e29b97e33d811f7"
+    },
+    "TestContentIndependentSecondaryOfflineRetainsOriginalCleanupResponsibility": {
+      "path": "conformance/component/content_secondary_test.go",
+      "line": 16,
+      "file_sha256": "8aeed0a0b5ab1413512d3277a466249637584753d294b52cd0a27cc721c474a2"
+    },
+    "TestContentTargetReadPoliciesBindExactPublishedDeclaration": {
+      "path": "conformance/component/content_target_policy_test.go",
+      "line": 15,
+      "file_sha256": "d22816ffde4eebc10614f7d4b9a1459a292ed75cafc40ec9eb483b8813896e37"
+    },
+    "TestContentTargetAuthorizationPrecedesExistenceAndMismatchObservation": {
+      "path": "conformance/component/content_target_policy_test.go",
+      "line": 118,
+      "file_sha256": "d22816ffde4eebc10614f7d4b9a1459a292ed75cafc40ec9eb483b8813896e37"
+    },
+    "TestCancelledBeforeInputHasExactZeroObservations": {
+      "path": "conformance/component/control_contract_test.go",
+      "line": 15,
+      "file_sha256": "f2fa343b21b65190911a68101ec63921a7102837b04eb680d5f9efb967ab93e9"
+    },
+    "TestFixedDecisionInputTypedRoundtrip": {
+      "path": "conformance/component/decision_contract_test.go",
+      "line": 11,
+      "file_sha256": "3694c81c29c85db6cde5cc28ba249f9105adc1c8006d7d27fba8d94921d27db1"
+    },
+    "TestDecisionDigestAndIsolatedInventory": {
+      "path": "conformance/component/decision_contract_test.go",
+      "line": 33,
+      "file_sha256": "3694c81c29c85db6cde5cc28ba249f9105adc1c8006d7d27fba8d94921d27db1"
+    },
+    "TestCompletedDecisionContractNegotiatesAllMethods": {
+      "path": "conformance/component/decision_negotiation_test.go",
+      "line": 58,
+      "file_sha256": "c55c5c0e1b7012719e5307d73185c5be5f540ea2bc3a8921b7cd66289dfff42b"
+    },
+    "TestCompletedDecisionContractRefusesInexactNegotiation": {
+      "path": "conformance/component/decision_negotiation_test.go",
+      "line": 89,
+      "file_sha256": "c55c5c0e1b7012719e5307d73185c5be5f540ea2bc3a8921b7cd66289dfff42b"
+    },
+    "TestCommandDigestMatchesIndependentGolden": {
+      "path": "conformance/component/digests_test.go",
+      "line": 12,
+      "file_sha256": "abdffcdc234721f1e6c488b548a8f003a9657d17e1da9f903d41be1ebdfdc5c5"
+    },
+    "TestDigestDoesNotGrantExecutionForFixtureMethods": {
+      "path": "conformance/component/digests_test.go",
+      "line": 51,
+      "file_sha256": "abdffcdc234721f1e6c488b548a8f003a9657d17e1da9f903d41be1ebdfdc5c5"
+    },
+    "TestDurableControlRealSourceFailureIsDependencyUnavailable": {
+      "path": "conformance/component/durable_control_boundary_test.go",
+      "line": 29,
+      "file_sha256": "4210e35b66a5339dc694be80cf269a08a3c7430894104abdfc21bde6273eb3f8"
+    },
+    "TestDurableControlExpiredProofReplayRequiresCurrentAccess": {
+      "path": "conformance/component/durable_control_boundary_test.go",
+      "line": 63,
+      "file_sha256": "4210e35b66a5339dc694be80cf269a08a3c7430894104abdfc21bde6273eb3f8"
+    },
+    "TestDurableControlProofBindsPrincipalIssuerAndOriginalIdentity": {
+      "path": "conformance/component/durable_control_boundary_test.go",
+      "line": 124,
+      "file_sha256": "4210e35b66a5339dc694be80cf269a08a3c7430894104abdfc21bde6273eb3f8"
+    },
+    "TestDurableControlReadsRealSnapshotFloorAndForbidsExpectedRevision": {
+      "path": "conformance/component/durable_control_boundary_test.go",
+      "line": 222,
+      "file_sha256": "4210e35b66a5339dc694be80cf269a08a3c7430894104abdfc21bde6273eb3f8"
+    },
+    "TestDurableControlSeparatesAcceptBeforeExecutionAndContextDeadlines": {
+      "path": "conformance/component/durable_control_deadline_test.go",
+      "line": 51,
+      "file_sha256": "0256954ce62f444e23e18c5fc2e695ba3748991b409525653480404488a4e4ec"
+    },
+    "TestDurableControlFinishCommitsBeforeConcurrentCancelPreservingOriginalFacts": {
+      "path": "conformance/component/durable_control_finish_test.go",
+      "line": 84,
+      "file_sha256": "1b0d670d80c721cad905a255166f4a6cf5cc96f703508e62c49e7bb932f45ad3"
+    },
+    "TestDurableControlOriginalCommandPrecedesMethodAndClosedBindingConflicts": {
+      "path": "conformance/component/durable_control_identity_test.go",
+      "line": 15,
+      "file_sha256": "8ec29cad4171df195598dcbcb96df50efd8c42865be5336cdec0e04f89670d3b"
+    },
+    "TestDurableControlResourceLimitsRetainFailureAndAllowExactCounterpart": {
+      "path": "conformance/component/durable_control_limits_test.go",
+      "line": 64,
+      "file_sha256": "61129b7da99eb99dd5170150857e7e2d37688e51f05c522dce6277241d7a1b1f"
+    },
+    "TestDurableControlCancelsWithoutOrdinaryCapacityAndFencesOldClaim": {
+      "path": "conformance/component/durable_control_pool_test.go",
+      "line": 19,
+      "file_sha256": "1225f13a0184fd5683afba4b4a33ee85940aed453cbe26bc4374d9470fe144ff"
+    },
+    "TestDurableControlDeadlineMaintenanceClosesBeyondOnePageAtZeroQuota": {
+      "path": "conformance/component/durable_control_pool_test.go",
+      "line": 152,
+      "file_sha256": "1225f13a0184fd5683afba4b4a33ee85940aed453cbe26bc4374d9470fe144ff"
+    },
+    "TestDurableCancelBeforeDecideSurvivesBothOwnersReopen": {
+      "path": "conformance/component/durable_control_test.go",
+      "line": 18,
+      "file_sha256": "bff3f1c96028fc6fd1a605405f7e97b5adcc758e99bb836ef349e52a565a92f7"
+    },
+    "TestDurableCancelStopsNextPublicationAfterArtifactReadback": {
+      "path": "conformance/component/durable_control_test.go",
+      "line": 214,
+      "file_sha256": "bff3f1c96028fc6fd1a605405f7e97b5adcc758e99bb836ef349e52a565a92f7"
+    },
+    "TestDurableCancelBeforeFinishPreservesPublishedUnadoptedBytes": {
+      "path": "conformance/component/durable_control_test.go",
+      "line": 218,
+      "file_sha256": "bff3f1c96028fc6fd1a605405f7e97b5adcc758e99bb836ef349e52a565a92f7"
+    },
+    "TestDurableControlPreparedV2StopsNextPublicationAfterArtifactReadback": {
+      "path": "conformance/component/durable_control_test.go",
+      "line": 226,
+      "file_sha256": "bff3f1c96028fc6fd1a605405f7e97b5adcc758e99bb836ef349e52a565a92f7"
+    },
+    "TestDurableControlPreparedV2StopsFinishAfterProposalReadback": {
+      "path": "conformance/component/durable_control_test.go",
+      "line": 230,
+      "file_sha256": "bff3f1c96028fc6fd1a605405f7e97b5adcc758e99bb836ef349e52a565a92f7"
+    },
+    "TestDurableControlPreservesTerminalFactsAndOrdersRevisions": {
+      "path": "conformance/component/durable_control_test.go",
+      "line": 431,
+      "file_sha256": "bff3f1c96028fc6fd1a605405f7e97b5adcc758e99bb836ef349e52a565a92f7"
+    },
+    "TestDurableControlStopReceiptAndJobShareTransactionRecovery": {
+      "path": "conformance/component/durable_control_tx_test.go",
+      "line": 54,
+      "file_sha256": "1f48c66b2c735c5e7962d4e39e9b2ae3cc3b0180bfff929570d79f54e561e0ea"
+    },
+    "TestDurableDecisionPreparedRecoversLostPublicationWithoutSecondFee": {
+      "path": "conformance/component/durable_decision_accounting_test.go",
+      "line": 63,
+      "file_sha256": "aba21af8e104e53bd323f7a75ce2c61b9cea45fbeee6e0b0abecaac6a0fd4ec9"
+    },
+    "TestDurableDecisionStartIsOnePermissionAndUnknownWorkConsumesOriginalLimit": {
+      "path": "conformance/component/durable_decision_accounting_test.go",
+      "line": 148,
+      "file_sha256": "aba21af8e104e53bd323f7a75ce2c61b9cea45fbeee6e0b0abecaac6a0fd4ec9"
+    },
+    "TestDurableDecisionConcurrentStartAndCumulativeUnknownUsage": {
+      "path": "conformance/component/durable_decision_accounting_test.go",
+      "line": 207,
+      "file_sha256": "aba21af8e104e53bd323f7a75ce2c61b9cea45fbeee6e0b0abecaac6a0fd4ec9"
+    },
+    "TestDurableDecisionOriginalLimitsGateStartAndWholePreparedOutput": {
+      "path": "conformance/component/durable_decision_accounting_test.go",
+      "line": 264,
+      "file_sha256": "aba21af8e104e53bd323f7a75ce2c61b9cea45fbeee6e0b0abecaac6a0fd4ec9"
+    },
+    "TestDurableDecisionAuthorityCannotRewriteFullDelegatedSubject": {
+      "path": "conformance/component/durable_decision_admission_boundary_test.go",
+      "line": 26,
+      "file_sha256": "d1bfb9fec35c1a8744f1a9e9ec3980320b2757ad1bb26e2d6b95ff1e8fbd48cf"
+    },
+    "TestDurableDecisionAuthorityCannotRewriteFixedCommandInput": {
+      "path": "conformance/component/durable_decision_admission_boundary_test.go",
+      "line": 107,
+      "file_sha256": "d1bfb9fec35c1a8744f1a9e9ec3980320b2757ad1bb26e2d6b95ff1e8fbd48cf"
+    },
+    "TestDurableDecisionOriginalReceiptSurvivesComponentConfigurationChange": {
+      "path": "conformance/component/durable_decision_admission_boundary_test.go",
+      "line": 143,
+      "file_sha256": "d1bfb9fec35c1a8744f1a9e9ec3980320b2757ad1bb26e2d6b95ff1e8fbd48cf"
+    },
+    "TestDurableDecisionInterruptedComputedOutputRetainsUnknownAllowance": {
+      "path": "conformance/component/durable_decision_handoff_test.go",
+      "line": 50,
+      "file_sha256": "be0690cca894309b2a715290449760296c6da90d7225c34a817c752fdec6d24c"
+    },
+    "TestDurableDecisionPreparedBeforePublicationResumesWithoutNewStart": {
+      "path": "conformance/component/durable_decision_handoff_test.go",
+      "line": 135,
+      "file_sha256": "be0690cca894309b2a715290449760296c6da90d7225c34a817c752fdec6d24c"
+    },
+    "TestDurableDecisionCannotCompleteWithDifferentPublisherReference": {
+      "path": "conformance/component/durable_decision_handoff_test.go",
+      "line": 208,
+      "file_sha256": "be0690cca894309b2a715290449760296c6da90d7225c34a817c752fdec6d24c"
+    },
+    "TestDurableDecisionTwoIdentitiesAndFixedLegacyView": {
+      "path": "conformance/component/durable_decision_identity_test.go",
+      "line": 47,
+      "file_sha256": "256565a9315b5b0e858e56a3ef9143a862a788ddfc87343669e3926527f4df0f"
+    },
+    "TestDurableDecisionRollbackAndTokenIsolation": {
+      "path": "conformance/component/durable_decision_identity_test.go",
+      "line": 161,
+      "file_sha256": "256565a9315b5b0e858e56a3ef9143a862a788ddfc87343669e3926527f4df0f"
+    },
+    "TestDurableDecisionCrossTenantAndOwnerAuthorization": {
+      "path": "conformance/component/durable_decision_identity_test.go",
+      "line": 231,
+      "file_sha256": "256565a9315b5b0e858e56a3ef9143a862a788ddfc87343669e3926527f4df0f"
+    },
+    "TestDurableDecisionOriginalReplaySurvivesAcceptanceCutoff": {
+      "path": "conformance/component/durable_decision_identity_test.go",
+      "line": 262,
+      "file_sha256": "256565a9315b5b0e858e56a3ef9143a862a788ddfc87343669e3926527f4df0f"
+    },
+    "TestDurableDecisionPoolCoversNonAnchorDeadlineAtZeroQuota": {
+      "path": "conformance/component/durable_decision_pool_test.go",
+      "line": 19,
+      "file_sha256": "b9dd5cbbfbe25359d4ddfed1f1c92d61d58fc35941bcb1b69fa43e3d0cf3dcb4"
+    },
+    "TestDurableDecisionStartFencesClaimAndRequiresRecordedStart": {
+      "path": "conformance/component/durable_decision_pool_test.go",
+      "line": 90,
+      "file_sha256": "b9dd5cbbfbe25359d4ddfed1f1c92d61d58fc35941bcb1b69fa43e3d0cf3dcb4"
+    },
+    "TestDurableDecisionLastQueueSlotAcrossStoreInstances": {
+      "path": "conformance/component/durable_decision_pool_test.go",
+      "line": 135,
+      "file_sha256": "b9dd5cbbfbe25359d4ddfed1f1c92d61d58fc35941bcb1b69fa43e3d0cf3dcb4"
+    },
+    "TestDurableDecisionMissingPoolPreservesOriginalIdentity": {
+      "path": "conformance/component/durable_decision_pool_test.go",
+      "line": 231,
+      "file_sha256": "b9dd5cbbfbe25359d4ddfed1f1c92d61d58fc35941bcb1b69fa43e3d0cf3dcb4"
+    },
+    "TestDurableDecisionTenantQuotaCombinesTwoOwners": {
+      "path": "conformance/component/durable_decision_pool_test.go",
+      "line": 292,
+      "file_sha256": "b9dd5cbbfbe25359d4ddfed1f1c92d61d58fc35941bcb1b69fa43e3d0cf3dcb4"
+    },
+    "TestDurableProposalNativeSourceFailureRetainsDependencyMeaning": {
+      "path": "conformance/component/durable_decision_proposal_boundary_test.go",
+      "line": 47,
+      "file_sha256": "89e1029702e8f80307d043d07d4f1e6bf0428d1f77089d8756927e0108d9cd15"
+    },
+    "TestDurableProposalImmutableCaseBindingSurvivesRejectedReseed": {
+      "path": "conformance/component/durable_decision_proposal_boundary_test.go",
+      "line": 106,
+      "file_sha256": "89e1029702e8f80307d043d07d4f1e6bf0428d1f77089d8756927e0108d9cd15"
+    },
+    "TestDurableProposalOriginalLimitsMatrix": {
+      "path": "conformance/component/durable_decision_proposal_boundary_test.go",
+      "line": 230,
+      "file_sha256": "89e1029702e8f80307d043d07d4f1e6bf0428d1f77089d8756927e0108d9cd15"
+    },
+    "TestDurableProposalPreparedV2RecoversActualReplyLoss": {
+      "path": "conformance/component/durable_decision_proposal_boundary_test.go",
+      "line": 325,
+      "file_sha256": "89e1029702e8f80307d043d07d4f1e6bf0428d1f77089d8756927e0108d9cd15"
+    },
+    "TestDurableProposalRuleVersionRetainsUnknownCaseMeaning": {
+      "path": "conformance/component/durable_decision_proposal_boundary_test.go",
+      "line": 416,
+      "file_sha256": "89e1029702e8f80307d043d07d4f1e6bf0428d1f77089d8756927e0108d9cd15"
+    },
+    "TestDurableProposalCandidateSourceEvidenceUsesAllowedPurpose": {
+      "path": "conformance/component/durable_decision_proposal_boundary_test.go",
+      "line": 454,
+      "file_sha256": "89e1029702e8f80307d043d07d4f1e6bf0428d1f77089d8756927e0108d9cd15"
+    },
+    "TestDurableProposalDeltaOnlyHasNoInventedArtifact": {
+      "path": "conformance/component/durable_decision_proposals_test.go",
+      "line": 124,
+      "file_sha256": "316f14c9df0a707ac498879900f3ff17de77c1971e990f097ea424bcbcfdb4b7"
+    },
+    "TestDurableProposalFourIndependentActions": {
+      "path": "conformance/component/durable_decision_proposals_test.go",
+      "line": 192,
+      "file_sha256": "316f14c9df0a707ac498879900f3ff17de77c1971e990f097ea424bcbcfdb4b7"
+    },
+    "TestDurableProposalInputRequestIsClarificationWithReadableSchema": {
+      "path": "conformance/component/durable_decision_proposals_test.go",
+      "line": 255,
+      "file_sha256": "316f14c9df0a707ac498879900f3ff17de77c1971e990f097ea424bcbcfdb4b7"
+    },
+    "TestDurableProposalDeltaWithCandidatePreservesBothSuggestions": {
+      "path": "conformance/component/durable_decision_proposals_test.go",
+      "line": 314,
+      "file_sha256": "316f14c9df0a707ac498879900f3ff17de77c1971e990f097ea424bcbcfdb4b7"
+    },
+    "TestDurableProposalCannotContinueCompletesWithoutTaskVerdict": {
+      "path": "conformance/component/durable_decision_proposals_test.go",
+      "line": 380,
+      "file_sha256": "316f14c9df0a707ac498879900f3ff17de77c1971e990f097ea424bcbcfdb4b7"
+    },
+    "TestDurableProposalFixedDependsOnOutputFailsThroughPublicCodec": {
+      "path": "conformance/component/durable_decision_proposals_test.go",
+      "line": 436,
+      "file_sha256": "316f14c9df0a707ac498879900f3ff17de77c1971e990f097ea424bcbcfdb4b7"
+    },
+    "TestDurableProposalRejectsValidBindingRefsInWrongArgumentPair": {
+      "path": "conformance/component/durable_decision_proposals_test.go",
+      "line": 440,
+      "file_sha256": "316f14c9df0a707ac498879900f3ff17de77c1971e990f097ea424bcbcfdb4b7"
+    },
+    "TestDurableProposalArgumentsRequireSourcePurposeConsumption": {
+      "path": "conformance/component/durable_decision_proposals_test.go",
+      "line": 444,
+      "file_sha256": "316f14c9df0a707ac498879900f3ff17de77c1971e990f097ea424bcbcfdb4b7"
+    },
+    "TestDurableProposalReplacementMustUseCurrentConditionRevision": {
+      "path": "conformance/component/durable_decision_proposals_test.go",
+      "line": 448,
+      "file_sha256": "316f14c9df0a707ac498879900f3ff17de77c1971e990f097ea424bcbcfdb4b7"
+    },
+    "TestDurableProposalBoundedInvalidOutputMatrix": {
+      "path": "conformance/component/durable_decision_proposals_test.go",
+      "line": 452,
+      "file_sha256": "316f14c9df0a707ac498879900f3ff17de77c1971e990f097ea424bcbcfdb4b7"
+    },
+    "TestDurableDecisionReadDistinguishesAbsenceAndActualStoreUnavailable": {
+      "path": "conformance/component/durable_decision_read_finish_test.go",
+      "line": 17,
+      "file_sha256": "d2343308cc10d41be9936064ca6ccfa18b707010ba1a762e4fa06281ef1be0b6"
+    },
+    "TestDurableDecisionFinishFencesExpiredClaimAfterBothPublications": {
+      "path": "conformance/component/durable_decision_read_finish_test.go",
+      "line": 79,
+      "file_sha256": "d2343308cc10d41be9936064ca6ccfa18b707010ba1a762e4fa06281ef1be0b6"
+    },
+    "TestDurableRuleProposalSurvivesReopen": {
+      "path": "conformance/component/durable_decision_test.go",
+      "line": 15,
+      "file_sha256": "8f3f7d11ab3800862e5ad4735e577fe5cf37b1acf52a5c591f42077a96433232"
+    },
+    "TestDurableDecisionStartRollbackKeepsOriginalAllowance": {
+      "path": "conformance/component/durable_decision_tx_boundary_test.go",
+      "line": 72,
+      "file_sha256": "0a7d234033082e7f67c4a6c547083201178abbcc4af4436b86dbf5e249499236"
+    },
+    "TestDurableDecisionCommitReplyLossPreservesPreparedAndCompletedFacts": {
+      "path": "conformance/component/durable_decision_tx_boundary_test.go",
+      "line": 102,
+      "file_sha256": "0a7d234033082e7f67c4a6c547083201178abbcc4af4436b86dbf5e249499236"
+    },
+    "TestDurableDecisionSnapshotLockAndManifestConsumeInputBound": {
+      "path": "conformance/component/durable_decision_tx_boundary_test.go",
+      "line": 188,
+      "file_sha256": "0a7d234033082e7f67c4a6c547083201178abbcc4af4436b86dbf5e249499236"
+    },
+    "TestDurableDecisionPreparedPublicationCannotCrossOriginalDeadline": {
+      "path": "conformance/component/durable_decision_tx_boundary_test.go",
+      "line": 239,
+      "file_sha256": "0a7d234033082e7f67c4a6c547083201178abbcc4af4436b86dbf5e249499236"
+    },
+    "TestDurableDecisionPreparedCannotRefreshOriginalExpiredPermission": {
+      "path": "conformance/component/durable_decision_tx_boundary_test.go",
+      "line": 308,
+      "file_sha256": "0a7d234033082e7f67c4a6c547083201178abbcc4af4436b86dbf5e249499236"
+    },
+    "TestNegotiationAdvertisesOnlyCompletedCommandGet": {
+      "path": "conformance/component/negotiation_test.go",
+      "line": 21,
+      "file_sha256": "5539fd416e9cab3aadb6aa57e98a4c030609ed51773c90ff86dffb4799ef9122"
+    },
+    "TestNegotiationAcceptsExactMethodSchemas": {
+      "path": "conformance/component/negotiation_test.go",
+      "line": 32,
+      "file_sha256": "5539fd416e9cab3aadb6aa57e98a4c030609ed51773c90ff86dffb4799ef9122"
+    },
+    "TestNegotiationSharedRefusals": {
+      "path": "conformance/component/negotiation_test.go",
+      "line": 41,
+      "file_sha256": "5539fd416e9cab3aadb6aa57e98a4c030609ed51773c90ff86dffb4799ef9122"
+    },
+    "TestNegotiationThenAuthenticatedQueryPreservesReceiptAndCurrentProgress": {
+      "path": "conformance/component/negotiation_test.go",
+      "line": 72,
+      "file_sha256": "5539fd416e9cab3aadb6aa57e98a4c030609ed51773c90ff86dffb4799ef9122"
+    },
+    "TestNegotiationSchemaDigestIndependentGoldens": {
+      "path": "conformance/component/negotiation_test.go",
+      "line": 251,
+      "file_sha256": "5539fd416e9cab3aadb6aa57e98a4c030609ed51773c90ff86dffb4799ef9122"
+    },
+    "TestNegotiationDoesNotOpenDesignedBusinessMethods": {
+      "path": "conformance/component/negotiation_test.go",
+      "line": 289,
+      "file_sha256": "5539fd416e9cab3aadb6aa57e98a4c030609ed51773c90ff86dffb4799ef9122"
+    },
+    "TestAuthenticatedQueryOpaqueRefusalAndNormalControl": {
+      "path": "conformance/component/query_test.go",
+      "line": 69,
+      "file_sha256": "b53518fe86b88c02e6415853d9adbbd9f05338dc74309db50134ed4a478ec10f"
+    },
+    "TestAuthenticatedQuerySnapshotsCallerWireAndTrustedBinding": {
+      "path": "conformance/component/query_test.go",
+      "line": 96,
+      "file_sha256": "b53518fe86b88c02e6415853d9adbbd9f05338dc74309db50134ed4a478ec10f"
+    },
+    "TestAuthenticatedQuerySharedFixtures": {
+      "path": "conformance/component/query_test.go",
+      "line": 133,
+      "file_sha256": "b53518fe86b88c02e6415853d9adbbd9f05338dc74309db50134ed4a478ec10f"
+    },
+    "TestAuthenticatedQueryCancellationIsAReadFaultNotAuthorizationRefusal": {
+      "path": "conformance/component/query_test.go",
+      "line": 201,
+      "file_sha256": "b53518fe86b88c02e6415853d9adbbd9f05338dc74309db50134ed4a478ec10f"
+    },
+    "TestAuthenticatedQueryFixedOwnerSurvivesDirectoryAndDefaultChangesReadOnly": {
+      "path": "conformance/component/query_test.go",
+      "line": 214,
+      "file_sha256": "b53518fe86b88c02e6415853d9adbbd9f05338dc74309db50134ed4a478ec10f"
+    },
+    "TestAuthenticatedQueryRequiresFiniteContextAndKeepsStartCutoff": {
+      "path": "conformance/component/query_test.go",
+      "line": 282,
+      "file_sha256": "b53518fe86b88c02e6415853d9adbbd9f05338dc74309db50134ed4a478ec10f"
+    },
+    "TestAuthenticatedQuery11SharedFixtures": {
+      "path": "conformance/component/query_v1_1_test.go",
+      "line": 80,
+      "file_sha256": "ba3b0f1f23997ce7164e2c918c20f723148a52649a507e97b8975078f8853920"
+    },
+    "TestReadOnlyFactsDoNotReinterpretFixedReceipt": {
+      "path": "conformance/component/readfacts_test.go",
+      "line": 29,
+      "file_sha256": "1fcc242e0301073e5652595c057182ba6badfe4e1c653de786e810e75ae07414"
+    },
+    "TestReadOnlyFactsSeparateAbsenceAndUnavailability": {
+      "path": "conformance/component/readfacts_test.go",
+      "line": 57,
+      "file_sha256": "1fcc242e0301073e5652595c057182ba6badfe4e1c653de786e810e75ae07414"
+    },
+    "TestReturnedReadCannotMutateRetainedFactRevision": {
+      "path": "conformance/component/readfacts_test.go",
+      "line": 101,
+      "file_sha256": "1fcc242e0301073e5652595c057182ba6badfe4e1c653de786e810e75ae07414"
+    },
+    "TestSharedResponseFixtures": {
+      "path": "conformance/component/receipts_test.go",
+      "line": 10,
+      "file_sha256": "6278fdc089f3e9565fb2a734179d03af9e84c6d7237bd7d533f1e6223b5ea21f"
+    },
+    "TestClosedReceiptRoundtrip": {
+      "path": "conformance/component/receipts_test.go",
+      "line": 35,
+      "file_sha256": "6278fdc089f3e9565fb2a734179d03af9e84c6d7237bd7d533f1e6223b5ea21f"
+    },
+    "TestResponseEncodingValidatesOriginalIdentity": {
+      "path": "conformance/component/receipts_test.go",
+      "line": 55,
+      "file_sha256": "6278fdc089f3e9565fb2a734179d03af9e84c6d7237bd7d533f1e6223b5ea21f"
+    },
+    "TestRevisionRetainsExactLargeInteger": {
+      "path": "conformance/component/values_test.go",
+      "line": 11,
+      "file_sha256": "0a054da17f71c90d0b288efe2330606c0932c56c27cb810a4f4b9076c155681c"
+    },
+    "TestContentReferenceRetainsExactVersionAndLength": {
+      "path": "conformance/component/values_test.go",
+      "line": 25,
+      "file_sha256": "0a054da17f71c90d0b288efe2330606c0932c56c27cb810a4f4b9076c155681c"
+    },
+    "TestValueBoundaryRejectsTruncationAndMalformedJSON": {
+      "path": "conformance/component/values_test.go",
+      "line": 44,
+      "file_sha256": "0a054da17f71c90d0b288efe2330606c0932c56c27cb810a4f4b9076c155681c"
+    },
+    "TestPublicJSONBoundaryPreservesUnicodeAndRejectsAmbiguity": {
+      "path": "conformance/component/values_test.go",
+      "line": 54,
+      "file_sha256": "0a054da17f71c90d0b288efe2330606c0932c56c27cb810a4f4b9076c155681c"
+    },
+    "TestSharedValueFixtures": {
+      "path": "conformance/component/values_test.go",
+      "line": 71,
+      "file_sha256": "0a054da17f71c90d0b288efe2330606c0932c56c27cb810a4f4b9076c155681c"
+    },
+    "TestEncodingCannotReplaceInvalidUnicode": {
+      "path": "conformance/component/values_test.go",
+      "line": 98,
+      "file_sha256": "0a054da17f71c90d0b288efe2330606c0932c56c27cb810a4f4b9076c155681c"
+    },
+    "TestRawJSONBodyAndDepthLimits": {
+      "path": "conformance/component/values_test.go",
+      "line": 110,
+      "file_sha256": "0a054da17f71c90d0b288efe2330606c0932c56c27cb810a4f4b9076c155681c"
+    },
+    "TestCommandEncodingPreservesCompactUnicodeAtBodyLimit": {
+      "path": "conformance/component/values_test.go",
+      "line": 125,
+      "file_sha256": "0a054da17f71c90d0b288efe2330606c0932c56c27cb810a4f4b9076c155681c"
+    }
+  },
+  "all7_invocations_actual_exit0": true,
+  "originalGo_list_stdout_consumed_not_separatelycaptured": true,
+  "not_oldtail_inherited": true
+}

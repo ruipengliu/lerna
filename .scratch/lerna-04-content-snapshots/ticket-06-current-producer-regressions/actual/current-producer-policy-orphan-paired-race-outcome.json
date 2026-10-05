@@ -1,0 +1,11 @@
+{
+  "event": "native_completion_ack",
+  "operation": "current-producer-policy-orphan-paired-race",
+  "pid": 4114888,
+  "pgid": 4114888,
+  "starttime": "17257823",
+  "exit": 0,
+  "group_absent": true,
+  "timed_out": false,
+  "owned_raw_fsync_close_ack": true
+}

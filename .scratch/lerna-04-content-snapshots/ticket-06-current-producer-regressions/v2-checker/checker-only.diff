@@ -1,0 +1,36 @@
+--- /tmp/lerna-06-current-producer-postchecker-first-failure/original-postchecker-stdin.py
++++ /tmp/lerna-06-current-producer-postchecker-v2/checker.py
+@@ -15,13 +15,31 @@
+ assert absent
+ assert b'DATA RACE' not in raw and b'FAIL' not in raw
+ parent=op['parent']; text=raw.decode()
+-assert '=== RUN   '+parent+'\n' in text and '--- PASS: '+parent+' (' in text and '\nok\t' in text
++# Go emits standard variable spaces/tabs after ok; preserve exact package identity,
++# one final package summary and full original target PASS, without rerunning Go.
++lines=text.splitlines()
++assert sum(line=='=== RUN   '+parent for line in lines)==1
++assert sum(line.startswith('--- PASS: '+parent+' (') for line in lines)==1
++package='github.com/ruipengliu/lerna/conformance/component'
++package_lines=[line for line in lines if line.split()[:1]==['ok']]
++assert len(package_lines)==1
++package_fields=package_lines[0].split()
++assert len(package_fields)==3 and package_fields[0]=='ok' and package_fields[1]==package
++# count1 is uncached; the unique actual package duration is a finite Go seconds token.
++import re
++assert re.fullmatch(r'[0-9]+(?:\.[0-9]+)?s',package_fields[2])
++nonempty=[line for line in lines if line.strip()]
++assert len(nonempty)>=2 and nonempty[-2]==package_lines[0]
++assert nonempty[-1].startswith('NATIVE_COMPLETION_ACK ')
++raw_completion=json.loads(nonempty[-1].removeprefix('NATIVE_COMPLETION_ACK '))
++assert raw_completion=={key:value for key,value in out.items() if key!='owned_raw_fsync_close_ack'}
++assert nonempty.count('PASS')==1
+ if op['phase']=='paired_race':
+  original=json.loads(Path('/tmp/lerna-04-ticket06-late-put-static/source-commands.json').read_bytes())['affected_existing_exact_commands'][idx//3]
+  selected=[original[k][-1].split('/^')[1].removesuffix('$') for k in ['normal_control','fault_only']]
+ else: selected=[op['native_argv'][-1].split('/^')[1].removesuffix('$')]
+ for case in selected:
+- assert '=== RUN   '+parent+'/'+case+'\n' in text and '--- PASS: '+parent+'/'+case+' (' in text,case
++ assert sum(line=='=== RUN   '+parent+'/'+case for line in lines)==1 and sum(line.lstrip().startswith('--- PASS: '+parent+'/'+case+' (') for line in lines)==1,case
+ source=[]
+ for e in facts['current26']:
+  b=(wt/e['path']).read_bytes(); assert len(b)==e['bytes'] and sha(b)==e['sha256'] and b==(ex/'late-put-source-formatted'/e['path']).read_bytes()

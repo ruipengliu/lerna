@@ -1,0 +1,150 @@
+//go:build integration
+
+package component_test
+
+import (
+	"context"
+	"errors"
+	"reflect"
+	"testing"
+	"time"
+
+	"github.com/jackc/pgx/v5/pgconn"
+	fixture "github.com/ruipengliu/lerna/conformance/internal/contentfixture"
+	v "github.com/ruipengliu/lerna/contract/v1_2"
+	"github.com/ruipengliu/lerna/domain/content"
+)
+
+// This qualifier observes the original real policy query's lock_timeout cause;
+// it is neither a network transport fault nor a private permission oracle.
+func TestContentProcessingAncestorPolicyLockTimeoutPreservesNativeCause(t *testing.T) {
+	for _, fault := range []bool{false, true} {
+		name := "normal-release"
+		if fault {
+			name = "native-lock-timeout"
+		}
+		t.Run(name, func(t *testing.T) {
+			ctx, cancel := context.WithTimeout(context.Background(), 12*time.Second)
+			defer cancel()
+			w := fixture.New(t, ctx)
+			service := contentService(t, w)
+			wide := time.Now().UTC().Add(time.Hour)
+			manager, err := content.NewManager(content.ManagementConfig{Owner: contentOwner, Store: w.Store(), TrustedSubject: contentPrincipal, TrustedUntil: wide, PageSize: 2, WorkBudget: time.Minute})
+			if err != nil {
+				t.Fatal(err)
+			}
+			if err = w.Store().InstallFixtureCommandReader(ctx, contentOwner, contentPrincipal, wide); err != nil {
+				t.Fatal(err)
+			}
+			refs := []v.ContentRef{alphaRef, alphaRef}
+			refs[1].ContentID = "processing-policy-lock-target"
+			requests := make([]v.ContentPutRequest, len(refs))
+			receipts := make([]v.CommandReceipt, len(refs))
+			for i, ref := range refs {
+				policy := content.FixturePolicy{Ref: ref, Subject: contentPrincipal, Purpose: "verification", Revision: 1, ValidUntil: wide, RetainUntil: wide, Read: true, Process: true, Save: true, Disclose: true}
+				if _, err = manager.InstallPolicy(ctx, &contentPrincipal, policy, 0); err != nil {
+					t.Fatal(err)
+				}
+				requests[i] = contentPut(t, ref, string(ref.ContentID), "YWxwaGEK")
+				if i > 0 {
+					requests[i].Payload.Sources = []v.ContentRef{refs[0]}
+				}
+				receipts[i] = putContentRequest(t, ctx, service, requests[i])
+				if _, ok := receipts[i].AsAccepted(); !ok {
+					t.Fatal("normal chain publication refused", receipts[i])
+				}
+				if _, err = service.Step(ctx); err != nil {
+					t.Fatal(err)
+				}
+				assertContentBody(t, ctx, service, ref, nil, "alpha\n")
+			}
+			before, err := service.ReadForProcessing(ctx, &contentPrincipal, refs[1], "verification", 6)
+			if err != nil || before.Ref != refs[1] || string(before.Bytes) != "alpha\n" || !reflect.DeepEqual(before.Sources, []v.ContentRef{refs[0]}) {
+				t.Fatal("full processing normal counterpart", err, before)
+			}
+			// Target qualification first succeeds; the exact ancestor CheckPolicy
+			// query in registeredClosure then waits on this real original row.
+			release, waitBlocked := w.HoldPolicy(ctx, refs[0])
+			type result struct {
+				read content.ProcessingRead
+				err  error
+			}
+			done := make(chan result, 1)
+			finished := make(chan struct{})
+			// Register finite ownership before the goroutine can take effect.
+			joinContentRead(t, w, release, finished)
+			go func() {
+				defer close(finished)
+				read, readErr := service.ReadForProcessing(ctx, &contentPrincipal, refs[1], "verification", 6)
+				done <- result{read, readErr}
+			}()
+			if err = waitBlocked(ctx); err != nil {
+				t.Fatal("actual ancestor policy waiter missing", err)
+			}
+			if !fault {
+				if err = release(); err != nil {
+					t.Fatal("normal policy holder first Close unconfirmed", err)
+				}
+			}
+			// Fault branch retains the lock until the configured original one-
+			// second SQL lock_timeout returns naturally; no sleeps/cancel/renewal.
+			var got result
+			select {
+			case got = <-done:
+			case <-ctx.Done():
+				t.Fatal("original processing actor result unconfirmed", ctx.Err())
+			}
+			select {
+			case <-finished:
+			case <-ctx.Done():
+				t.Fatal("original processing actor exit unconfirmed", ctx.Err())
+			}
+			callerErr := ctx.Err()
+			if err = release(); err != nil {
+				t.Fatal("policy holder/observer original first Close unconfirmed", err)
+			}
+			if callerErr != nil {
+				t.Fatal("caller expired instead of live native SQL refusal", callerErr)
+			}
+			var native *pgconn.PgError
+			hasNative := errors.As(got.err, &native)
+			code := ""
+			if hasNative {
+				code = native.Code
+			}
+			// Complete original public bytes/receipt/history and recovery facts
+			// before asserting the query error classification.
+			assertOriginal := func() {
+				t.Helper()
+				for i, ref := range refs {
+					assertContentBody(t, ctx, service, ref, nil, "alpha\n")
+					if replay := putContentRequest(t, ctx, service, requests[i]); !reflect.DeepEqual(replay, receipts[i]) {
+						t.Fatal("SQL refusal changed fixed original receipt", ref)
+					}
+					command, commandErr := service.GetCommand(ctx, contentCommandGetWire(t, requests[i].CommandID), &contentPrincipal)
+					found, foundOK := command.AsFound()
+					progress, published := found.Progress.AsContent()
+					if commandErr != nil || !foundOK || !published || progress.Publication != "published" || progress.ContentRef != ref || !reflect.DeepEqual(found.Receipt, receipts[i]) {
+						t.Fatal("SQL refusal changed original published history/receipt", ref, commandErr, command)
+					}
+				}
+				recovered, recoverErr := service.ReadForProcessing(ctx, &contentPrincipal, refs[1], "verification", 6)
+				if recoverErr != nil || !reflect.DeepEqual(recovered, before) {
+					t.Fatal("full processing did not recover after original lock release", recoverErr, recovered)
+				}
+			}
+			assertOriginal()
+			w.Reopen(ctx)
+			service = contentService(t, w)
+			assertOriginal()
+			t.Logf("actual ancestor policy blocked=true fault=%t native_cause=%T SQLSTATE=%s caller_live=%t actor_joined=true original_release_ACK=true read_zero=%t", fault, got.err, code, callerErr == nil, reflect.DeepEqual(got.read, content.ProcessingRead{}))
+			if fault {
+				if !hasNative || code != "55P03" || errors.Is(got.err, context.Canceled) || errors.Is(got.err, context.DeadlineExceeded) || !reflect.DeepEqual(got.read, content.ProcessingRead{}) {
+					t.Error("original native policy lock_timeout cause or empty processing result lost", got.err, got.read)
+				}
+			} else if got.err != nil || !reflect.DeepEqual(got.read, before) {
+				t.Error("normal locked ancestor processing changed", got.err, got.read)
+			}
+		})
+	}
+}

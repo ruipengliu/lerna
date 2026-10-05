@@ -1,0 +1,7 @@
+{
+  "Replace": {
+    "/tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_context_compile_budget_test.go": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-semantic-qualification-static/content_context_compile_budget_test.go.txt",
+    "/tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_context_budget_concurrency_test.go": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-semantic-qualification-static/content_context_budget_concurrency_test.go.txt",
+    "/tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_processing_policy_lock_timeout_test.go": "/workspace/lerna-content-03-137311247276/input-decode-memo-test-first-static/input-memo-semantic-qualification-static/content_processing_policy_lock_timeout_test.go.txt"
+  }
+}

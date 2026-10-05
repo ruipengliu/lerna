@@ -1,0 +1,63 @@
+OWNED_GO_CHILD_COMPLETION_ACK {"actual_wait_confirmed": true, "event": "owned_go_child_completion_ack", "exit": 0, "operation": "go-child-0036", "original_pid_generation_absent": true, "original_whole_deadline_monotonic": 173217.30429753, "parent_operation": "partition-shared-race", "pgid": 4094347, "pid": 4094350, "shared_group_absence_checked_only_after_whole_wait": true, "starttime": "17177248", "timed_out": false}
+OWNED_GO_CHILD_COMPLETION_ACK {"actual_wait_confirmed": true, "event": "owned_go_child_completion_ack", "exit": 0, "operation": "go-child-0037", "original_pid_generation_absent": true, "original_whole_deadline_monotonic": 173217.30429753, "parent_operation": "partition-shared-race", "pgid": 4094347, "pid": 4094356, "shared_group_absence_checked_only_after_whole_wait": true, "starttime": "17177281", "timed_out": false}
+psql --version
+psql (PostgreSQL) 17.11 (Debian 17.11-0+deb13u1)
+cd conformance/fixtures/durable-work/pg-v1 && sha256sum -c SHA256SUMS
+0001_admission.sql: OK
+commands.json: OK
+database.sql: OK
+writer-observation.json: OK
+writer-revision.txt: OK
+cd conformance/fixtures/durable-work/sqlite-v1 && sha256sum -c SHA256SUMS
+0001_admission.sql: OK
+commands.json: OK
+database.sqlite: OK
+writer-observation.json: OK
+writer-revision.txt: OK
+cd conformance/fixtures/durable-work/pg-v2 && sha256sum -c SHA256SUMS
+0001_admission.sql: OK
+0002_claims.sql: OK
+README.md: OK
+database.sql: OK
+migrations.json: OK
+writer-observation.json: OK
+writer-revision.txt: OK
+writer-schema.txt: OK
+../v2-writer.go.txt: OK
+cd conformance/fixtures/durable-work/sqlite-v2 && sha256sum -c SHA256SUMS
+0001_admission.sql: OK
+0002_claims.sql: OK
+README.md: OK
+database.sqlite: OK
+migrations.json: OK
+writer-observation.json: OK
+writer-revision.txt: OK
+../v2-writer.go.txt: OK
+go test -p=1 -count=1 -race -tags=integration -timeout=120s ./conformance/recovery/...
+ok  	github.com/ruipengliu/lerna/conformance/recovery	101.199s
+OWNED_GO_CHILD_COMPLETION_ACK {"actual_wait_confirmed": true, "event": "owned_go_child_completion_ack", "exit": 0, "operation": "go-child-0038", "original_pid_generation_absent": true, "original_whole_deadline_monotonic": 173217.30429753, "parent_operation": "partition-shared-race", "pgid": 4094347, "pid": 4094369, "shared_group_absence_checked_only_after_whole_wait": true, "starttime": "17177313", "timed_out": false}
+bash scripts/test-component-integration-race.sh
+OWNED_GO_CHILD_COMPLETION_ACK {"actual_wait_confirmed": true, "event": "owned_go_child_completion_ack", "exit": 0, "operation": "go-child-0039", "original_pid_generation_absent": true, "original_whole_deadline_monotonic": 173217.30429753, "parent_operation": "partition-shared-race", "pgid": 4094347, "pid": 4097493, "shared_group_absence_checked_only_after_whole_wait": true, "starttime": "17187654", "timed_out": false}
+Component integration race: 201 runnables (1 closure, 97 content, 60 durable, 43 other)
+Component integration race: running closure (1 runnables)
+--- FAIL: TestContentFullClosureIncludesIntermediateVersionsAndExact64Bound (60.10s)
+    content_closure_test.go:132: timeout: context deadline exceeded
+    content_closure_test.go:120: closure timing i=64 stage=install current=14.071497ms install=1.695832257s put=34.979533563s step=23.135417728s
+    content_closure_test.go:124: closure port put/Now calls=4480 logical_actions=0 elapsed=2.908671214s
+    content_closure_test.go:124: closure port put/CheckPolicy calls=2080 logical_actions=6112 elapsed=2.661288864s
+    content_closure_test.go:124: closure port put/LockVersion calls=2144 logical_actions=0 elapsed=4.472614994s
+    content_closure_test.go:124: closure port put/ScheduleRetention calls=64 logical_actions=0 elapsed=19.350320266s
+    content_closure_test.go:124: closure port step/Now calls=8448 logical_actions=0 elapsed=5.560025182s
+    content_closure_test.go:124: closure port step/CheckPolicy calls=4160 logical_actions=12224 elapsed=5.093695068s
+    content_closure_test.go:124: closure port step/LockVersion calls=4096 logical_actions=0 elapsed=9.024945878s
+    content_closure_test.go:124: closure port step/ScheduleRetention calls=0 logical_actions=0 elapsed=0s
+    content_closure_test.go:124: closure port get/Now calls=0 logical_actions=0 elapsed=0s
+    content_closure_test.go:124: closure port get/CheckPolicy calls=0 logical_actions=0 elapsed=0s
+    content_closure_test.go:124: closure port get/LockVersion calls=0 logical_actions=0 elapsed=0s
+    content_closure_test.go:124: closure port get/ScheduleRetention calls=0 logical_actions=0 elapsed=0s
+FAIL
+FAIL	github.com/ruipengliu/lerna/conformance/component	60.170s
+FAIL
+OWNED_GO_CHILD_COMPLETION_ACK {"actual_wait_confirmed": true, "event": "owned_go_child_completion_ack", "exit": 1, "operation": "go-child-0040", "original_pid_generation_absent": true, "original_whole_deadline_monotonic": 173217.30429753, "parent_operation": "partition-shared-race", "pgid": 4094347, "pid": 4097574, "shared_group_absence_checked_only_after_whole_wait": true, "starttime": "17187805", "timed_out": false}
+make: *** [Makefile:42: test-integration-race] Error 1
+NATIVE_COMPLETION_ACK {"event": "native_completion_ack", "exit": 2, "group_absent": true, "operation": "partition-shared-race", "pgid": 4094347, "pid": 4094347, "starttime": "17177230", "timed_out": false}

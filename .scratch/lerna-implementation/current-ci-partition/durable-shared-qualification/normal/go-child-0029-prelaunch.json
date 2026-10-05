@@ -1,0 +1,22 @@
+{
+  "event": "owned_go_child_start_ack",
+  "operation": "go-child-0029",
+  "parent_operation": "partition-shared-normal",
+  "pid": 4051701,
+  "pgid": 4049229,
+  "starttime": "16996928",
+  "root": "/tmp/lerna-ci-partition-durable-normal-execution",
+  "argv": [
+    "/home/agent/.local/toolchains/go1.27.1/bin/go",
+    "test",
+    "-p=1",
+    "-count=1",
+    "-tags=integration",
+    "-timeout=120s",
+    "./conformance/component",
+    "-run",
+    "^(TestContentExpiredOriginalAcceptedCapStartsCleanupDespiteCurrentWideRenewal|TestContentAssociationCannotExtendObservedRetention|TestContentActualStagingAndPrimaryErasureAllowsOnlyAuthorizedGone|TestContentEveryOriginalAttemptPagePreservesUnknownSameKeyResidual|TestContentOriginalPolicyAndHolderPagesResumeWithoutErasingOtherSavingBasis|TestContentHiddenAncestorControlsCurrentDerivedUse|TestContentPublicationFinalTransactionChecksHiddenAncestorAfterRealObjectWrite|TestContentLostActualErasureReplyRetainsOriginalDutyAndRecoversAfterConfirmedDefer|TestContentDeclaredBytesAndVersionCannotChange|TestContentFailedStagingStillConsumesExplicitByteLimit|TestContentFirstSealCannotAdoptAnEmptyConfiguredRoot|TestContentCommandReplayAndExactVersionIdentities|TestContentLaterAdmissionInheritsOriginalAncestorExpiry|TestContentSameSubjectIDAliasRetainsOriginalFullSavingBinding|TestContentLegacyWholeRecordRaceRefusesStaleBindingAndReplaysOriginalQualification|TestContentLegacyBackfillRestoresOriginalExpiryAndFailedHolderResponsibilities|TestContentTrustedManagementSealsUseAndReopensResponsibility|TestContentNaturalRetentionExpiryHasDurableOriginalMaintenance|TestContentAcceptedRequestCapHasOriginalExpiryMaintenance|TestContentManagerPolicyPassesFullExpiredCleanupPageWithoutChangingOriginalDuties|TestContentPublishedReferenceWinsOrphanSelectionWithoutCreatingCleanup|TestContentClosureActionIntersectionKeepsIndependentFlags|TestContentPolicyPortClockFollowsLockedRow|TestContentExplicitPolicyAndTrustedPrincipalFailClosed|TestContentLateAdmissionExtraCauseCannotFixRejection|TestContentCommitUnknownKeepsAcceptedAndLateRejectedTruth|TestContentProcessingDeadlineRechecksAllChangesAtFinalDecision|TestContentCorrectBytesDurablyAccepted|TestContentReadVersionWaitCannotReuseAdmissionClock|TestContentReturnedBytesRequireCurrentReadAndDisclose|TestContentExpiredOriginalClaimCannotStartObjectIO|TestContentIndependentSecondaryOfflineRetainsOriginalCleanupResponsibility|TestContentReferenceRetainsExactVersionAndLength)$"
+  ],
+  "original_whole_deadline_monotonic": 171348.891428474,
+  "remaining_whole_seconds": 1379.6018271159846
+}
