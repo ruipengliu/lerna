@@ -32,6 +32,12 @@ type Module struct {
 func (m *Module) Register() {
 	m.Domain.HandleCommand(ports.CommandSetBudget,
 		func() proto.Message { return &lernav1.SetBudgetCommand{} }, m.handleSet)
+	m.Domain.HandleCommand(ports.CommandReportUsage,
+		func() proto.Message { return &lernav1.UsageReport{} }, m.handleReportUsage)
+	m.Domain.HandleCommand(ports.CommandCloseReservation,
+		func() proto.Message { return &lernav1.CloseReservationCommand{} }, m.handleCloseReservation)
+	m.Domain.HandleCommand(ports.CommandIngestBill,
+		func() proto.Message { return &lernav1.UsageReport{} }, m.handleIngestBill)
 }
 
 func (m *Module) handleSet(_ context.Context, tx *durable.Tx, in durable.Incoming) (durable.Outcome, error) {
@@ -252,7 +258,53 @@ func (m *Module) View(ctx context.Context, user string) (*lernav1.BudgetView, er
 			b.Deficit = max(0, b.GetUsed()+b.GetHeld()-b.GetLimit())
 			v.Budgets = append(v.Budgets, b)
 		}
-		return rows.Err()
+		if err := rows.Err(); err != nil {
+			return err
+		}
+		_ = rows.Close()
+		for _, b := range v.Budgets {
+			q := `SELECT COUNT(*) FROM billing_sources WHERE user_id = ? AND status = 'UNKNOWN'`
+			args := []any{user}
+			if b.GetScope() == lernav1.BudgetScope_BUDGET_SCOPE_TASK {
+				q += ` AND task_id = ?`
+				args = append(args, b.GetTaskId())
+			}
+			if err := tx.QueryRow(q, args...).Scan(&b.UnknownSources); err != nil {
+				return err
+			}
+		}
+		srows, err := tx.Query(`SELECT source_id, operation_id, task_id, native_id, status, max_amount, portion FROM billing_sources
+			WHERE user_id = ? ORDER BY created_at, source_id`, user)
+		if err != nil {
+			return err
+		}
+		defer func() { _ = srows.Close() }()
+		for srows.Next() {
+			sv := &lernav1.BillingSourceView{}
+			if err := srows.Scan(&sv.SourceId, &sv.OperationId, &sv.TaskId, &sv.NativeId, &sv.Status, &sv.Amount, &sv.Held); err != nil {
+				return err
+			}
+			if sv.GetStatus() != sourceFinal {
+				v.UnresolvedSources = append(v.UnresolvedSources, sv.GetSourceId())
+			}
+			v.Sources = append(v.Sources, sv)
+		}
+		if err := srows.Err(); err != nil {
+			return err
+		}
+		urows, err := tx.Query(`SELECT report_id FROM unmatched_bills WHERE user_id = ? ORDER BY created_at`, user)
+		if err != nil {
+			return err
+		}
+		defer func() { _ = urows.Close() }()
+		for urows.Next() {
+			var id string
+			if err := urows.Scan(&id); err != nil {
+				return err
+			}
+			v.UnmatchedBills = append(v.UnmatchedBills, id)
+		}
+		return urows.Err()
 	})
 	return v, err
 }

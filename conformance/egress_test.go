@@ -156,26 +156,42 @@ func TestStartGateChecksTheCredential(t *testing.T) {
 	rejectedWith(t, rec, err, lernav1.ErrorCode_ERROR_CODE_PERMISSION_DENIED)
 }
 
-// 每个新的发送身份占用一次发送额度；用完之后开始门禁拒绝。
+// 每个新的发送身份占用一次发送额度；同一发送身份不重复占用；用完之后开始门禁拒绝，
+// 真实的执行路径也过不了开始门禁，从未发出的动作以内部封闭证明收尾。
 //
 // 规则：开始-5、G10
 func TestStartGateOccupiesSendQuota(t *testing.T) {
 	h := harness.New(t)
-	h.Reasoner.Policy = scripted.ActOnly
+	h.Reasoner.Policy = proposeOnce
 	h.GrantStanding("mockapi.put")
 	h.SubmitGoal(harness.NewID(), "g", apiPutDraft("k1", "v1"))
-	h.MustRun()
-	// 幂等能力准入时分配 2 次发送额度，正常路径已用 1 次。
+	for i := 0; i < 50 && h.Count(host.DomainAdjudication, `SELECT COUNT(*) FROM admissions`) == 0; i++ {
+		if _, err := h.Host.RunOnce(context.Background()); err != nil {
+			t.Fatal(err)
+		}
+	}
+	// 幂等能力准入时分配 2 次发送额度。
 	rec, err := startCmd(h, t, func(c *lernav1.StartSendCommand) { c.AttemptId = "x1" })
 	if err != nil || rec.GetDecision() != lernav1.Decision_DECISION_ACCEPTED {
-		t.Fatalf("second send within quota: %v %v", rec, err)
+		t.Fatalf("first send within quota: %v %v", rec, err)
 	}
 	again, err := startCmd(h, t, func(c *lernav1.StartSendCommand) { c.AttemptId = "x1" })
 	if err != nil || again.GetCommitPosition() != rec.GetCommitPosition() {
 		t.Fatalf("the same send identity must not occupy the quota twice: %v", err)
 	}
-	rec, err = startCmd(h, t, func(c *lernav1.StartSendCommand) { c.AttemptId = "x2" })
+	if rec, err = startCmd(h, t, func(c *lernav1.StartSendCommand) { c.AttemptId = "x2" }); err != nil || rec.GetDecision() != lernav1.Decision_DECISION_ACCEPTED {
+		t.Fatalf("second send within quota: %v %v", rec, err)
+	}
+	rec, err = startCmd(h, t, func(c *lernav1.StartSendCommand) { c.AttemptId = "x3" })
 	rejectedWith(t, rec, err, lernav1.ErrorCode_ERROR_CODE_BUDGET_EXCEEDED)
+	h.MustRun()
+	if h.API.Received() != 0 {
+		t.Fatalf("with the quota used up the real send must not start; target got %d", h.API.Received())
+	}
+	op := operation(t, h)
+	if op.GetEffect() != lernav1.EffectOutcome_EFFECT_OUTCOME_NOT_APPLIED || op.GetLifecycle() != lernav1.OperationLifecycle_OPERATION_LIFECYCLE_SETTLED {
+		t.Fatalf("never-dispatched operation settles NOT_APPLIED: %v", op)
+	}
 }
 
 // 规则：G5
@@ -193,4 +209,12 @@ func TestMockAPIDeclaresCapabilitiesPerClass(t *testing.T) {
 			t.Fatalf("%s: must declare its external effect and cost ceiling", class)
 		}
 	}
+}
+
+// proposeOnce 只在还没有任何动作时提议一次。
+func proposeOnce(ctx context.Context, snap *lernav1.ContextSnapshot, m ports.ModelCaller) (*lernav1.Proposal, error) {
+	if len(snap.GetProgress()) > 0 {
+		return nil, scripted.ErrNothingToDo
+	}
+	return scripted.ActOnly(ctx, snap, m)
 }

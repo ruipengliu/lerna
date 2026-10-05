@@ -504,6 +504,12 @@ type UsageReport struct {
 	EvidenceRefs  []string `protobuf:"bytes,14,rep,name=evidence_refs,json=evidenceRefs,proto3" json:"evidence_refs,omitempty"`
 	TaskId        string   `protobuf:"bytes,15,opt,name=task_id,json=taskId,proto3" json:"task_id,omitempty"`
 	ReservationId string   `protobuf:"bytes,16,opt,name=reservation_id,json=reservationId,proto3" json:"reservation_id,omitempty"`
+	// 内部来源标识：出口之前由执行管理按发送固定；供应商身份返回后登记为别名。
+	SourceId string `protobuf:"bytes,17,opt,name=source_id,json=sourceId,proto3" json:"source_id,omitempty"`
+	// 供应商侧的原生计费实例（别名），例如请求标识。
+	NativeId string `protobuf:"bytes,18,opt,name=native_id,json=nativeId,proto3" json:"native_id,omitempty"`
+	// 账单携带的调用方外部键，用于把迟到账单关联回原尝试。
+	ExternalKey   string `protobuf:"bytes,19,opt,name=external_key,json=externalKey,proto3" json:"external_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -650,18 +656,215 @@ func (x *UsageReport) GetReservationId() string {
 	return ""
 }
 
-type BudgetView struct {
-	state   protoimpl.MessageState `protogen:"open.v1"`
-	Budgets []*Budget              `protobuf:"bytes,1,rep,name=budgets,proto3" json:"budgets,omitempty"`
-	// 未知或未结清的计费来源。
-	UnresolvedSources []string `protobuf:"bytes,2,rep,name=unresolved_sources,json=unresolvedSources,proto3" json:"unresolved_sources,omitempty"`
+func (x *UsageReport) GetSourceId() string {
+	if x != nil {
+		return x.SourceId
+	}
+	return ""
+}
+
+func (x *UsageReport) GetNativeId() string {
+	if x != nil {
+		return x.NativeId
+	}
+	return ""
+}
+
+func (x *UsageReport) GetExternalKey() string {
+	if x != nil {
+		return x.ExternalKey
+	}
+	return ""
+}
+
+// 动作收尾后关闭预留（预算 2.4）：出口没有发生、以后也不会发生的部分释放；
+// 已进入"可能已发出"、费用未知的发送继续占用。
+type CloseReservationCommand struct {
+	state       protoimpl.MessageState `protogen:"open.v1"`
+	UserId      string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	TaskId      string                 `protobuf:"bytes,2,opt,name=task_id,json=taskId,proto3" json:"task_id,omitempty"`
+	OperationId string                 `protobuf:"bytes,3,opt,name=operation_id,json=operationId,proto3" json:"operation_id,omitempty"`
+	// 全部可能已发出的发送对应的内部来源。
+	DispatchedSources []string `protobuf:"bytes,4,rep,name=dispatched_sources,json=dispatchedSources,proto3" json:"dispatched_sources,omitempty"`
+	Reason            string   `protobuf:"bytes,5,opt,name=reason,proto3" json:"reason,omitempty"`
 	unknownFields     protoimpl.UnknownFields
 	sizeCache         protoimpl.SizeCache
 }
 
+func (x *CloseReservationCommand) Reset() {
+	*x = CloseReservationCommand{}
+	mi := &file_lerna_v1_budget_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CloseReservationCommand) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CloseReservationCommand) ProtoMessage() {}
+
+func (x *CloseReservationCommand) ProtoReflect() protoreflect.Message {
+	mi := &file_lerna_v1_budget_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CloseReservationCommand.ProtoReflect.Descriptor instead.
+func (*CloseReservationCommand) Descriptor() ([]byte, []int) {
+	return file_lerna_v1_budget_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *CloseReservationCommand) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *CloseReservationCommand) GetTaskId() string {
+	if x != nil {
+		return x.TaskId
+	}
+	return ""
+}
+
+func (x *CloseReservationCommand) GetOperationId() string {
+	if x != nil {
+		return x.OperationId
+	}
+	return ""
+}
+
+func (x *CloseReservationCommand) GetDispatchedSources() []string {
+	if x != nil {
+		return x.DispatchedSources
+	}
+	return nil
+}
+
+func (x *CloseReservationCommand) GetReason() string {
+	if x != nil {
+		return x.Reason
+	}
+	return ""
+}
+
+// 计费来源的视图。
+type BillingSourceView struct {
+	state       protoimpl.MessageState `protogen:"open.v1"`
+	SourceId    string                 `protobuf:"bytes,1,opt,name=source_id,json=sourceId,proto3" json:"source_id,omitempty"`
+	OperationId string                 `protobuf:"bytes,2,opt,name=operation_id,json=operationId,proto3" json:"operation_id,omitempty"`
+	TaskId      string                 `protobuf:"bytes,3,opt,name=task_id,json=taskId,proto3" json:"task_id,omitempty"`
+	NativeId    string                 `protobuf:"bytes,4,opt,name=native_id,json=nativeId,proto3" json:"native_id,omitempty"`
+	// FINAL、PROVISIONAL、UNKNOWN。
+	Status        string `protobuf:"bytes,5,opt,name=status,proto3" json:"status,omitempty"`
+	Amount        int64  `protobuf:"varint,6,opt,name=amount,proto3" json:"amount,omitempty"`
+	Held          int64  `protobuf:"varint,7,opt,name=held,proto3" json:"held,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BillingSourceView) Reset() {
+	*x = BillingSourceView{}
+	mi := &file_lerna_v1_budget_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BillingSourceView) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BillingSourceView) ProtoMessage() {}
+
+func (x *BillingSourceView) ProtoReflect() protoreflect.Message {
+	mi := &file_lerna_v1_budget_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BillingSourceView.ProtoReflect.Descriptor instead.
+func (*BillingSourceView) Descriptor() ([]byte, []int) {
+	return file_lerna_v1_budget_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *BillingSourceView) GetSourceId() string {
+	if x != nil {
+		return x.SourceId
+	}
+	return ""
+}
+
+func (x *BillingSourceView) GetOperationId() string {
+	if x != nil {
+		return x.OperationId
+	}
+	return ""
+}
+
+func (x *BillingSourceView) GetTaskId() string {
+	if x != nil {
+		return x.TaskId
+	}
+	return ""
+}
+
+func (x *BillingSourceView) GetNativeId() string {
+	if x != nil {
+		return x.NativeId
+	}
+	return ""
+}
+
+func (x *BillingSourceView) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
+func (x *BillingSourceView) GetAmount() int64 {
+	if x != nil {
+		return x.Amount
+	}
+	return 0
+}
+
+func (x *BillingSourceView) GetHeld() int64 {
+	if x != nil {
+		return x.Held
+	}
+	return 0
+}
+
+type BudgetView struct {
+	state   protoimpl.MessageState `protogen:"open.v1"`
+	Budgets []*Budget              `protobuf:"bytes,1,rep,name=budgets,proto3" json:"budgets,omitempty"`
+	// 未知或未结清的计费来源。
+	UnresolvedSources []string             `protobuf:"bytes,2,rep,name=unresolved_sources,json=unresolvedSources,proto3" json:"unresolved_sources,omitempty"`
+	Sources           []*BillingSourceView `protobuf:"bytes,3,rep,name=sources,proto3" json:"sources,omitempty"`
+	// 无法关联到任何来源、等待核对的账单。
+	UnmatchedBills []string `protobuf:"bytes,4,rep,name=unmatched_bills,json=unmatchedBills,proto3" json:"unmatched_bills,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
 func (x *BudgetView) Reset() {
 	*x = BudgetView{}
-	mi := &file_lerna_v1_budget_proto_msgTypes[5]
+	mi := &file_lerna_v1_budget_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -673,7 +876,7 @@ func (x *BudgetView) String() string {
 func (*BudgetView) ProtoMessage() {}
 
 func (x *BudgetView) ProtoReflect() protoreflect.Message {
-	mi := &file_lerna_v1_budget_proto_msgTypes[5]
+	mi := &file_lerna_v1_budget_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -686,7 +889,7 @@ func (x *BudgetView) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BudgetView.ProtoReflect.Descriptor instead.
 func (*BudgetView) Descriptor() ([]byte, []int) {
-	return file_lerna_v1_budget_proto_rawDescGZIP(), []int{5}
+	return file_lerna_v1_budget_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *BudgetView) GetBudgets() []*Budget {
@@ -699,6 +902,20 @@ func (x *BudgetView) GetBudgets() []*Budget {
 func (x *BudgetView) GetUnresolvedSources() []string {
 	if x != nil {
 		return x.UnresolvedSources
+	}
+	return nil
+}
+
+func (x *BudgetView) GetSources() []*BillingSourceView {
+	if x != nil {
+		return x.Sources
+	}
+	return nil
+}
+
+func (x *BudgetView) GetUnmatchedBills() []string {
+	if x != nil {
+		return x.UnmatchedBills
 	}
 	return nil
 }
@@ -738,7 +955,7 @@ const file_lerna_v1_budget_proto_rawDesc = "" +
 	"\x16expected_limit_version\x18\x04 \x01(\x03R\x14expectedLimitVersion\"S\n" +
 	"\x0fSetBudgetResult\x12\x1b\n" +
 	"\tbudget_id\x18\x01 \x01(\tR\bbudgetId\x12#\n" +
-	"\rlimit_version\x18\x02 \x01(\x03R\flimitVersion\"\x8f\x04\n" +
+	"\rlimit_version\x18\x02 \x01(\x03R\flimitVersion\"\xec\x04\n" +
 	"\vUsageReport\x12\x1b\n" +
 	"\treport_id\x18\x01 \x01(\tR\breportId\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\tR\x06userId\x12!\n" +
@@ -757,11 +974,30 @@ const file_lerna_v1_budget_proto_rawDesc = "" +
 	"\rprice_version\x18\r \x01(\tR\fpriceVersion\x12#\n" +
 	"\revidence_refs\x18\x0e \x03(\tR\fevidenceRefs\x12\x17\n" +
 	"\atask_id\x18\x0f \x01(\tR\x06taskId\x12%\n" +
-	"\x0ereservation_id\x18\x10 \x01(\tR\rreservationId\"g\n" +
+	"\x0ereservation_id\x18\x10 \x01(\tR\rreservationId\x12\x1b\n" +
+	"\tsource_id\x18\x11 \x01(\tR\bsourceId\x12\x1b\n" +
+	"\tnative_id\x18\x12 \x01(\tR\bnativeId\x12!\n" +
+	"\fexternal_key\x18\x13 \x01(\tR\vexternalKey\"\xb5\x01\n" +
+	"\x17CloseReservationCommand\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x17\n" +
+	"\atask_id\x18\x02 \x01(\tR\x06taskId\x12!\n" +
+	"\foperation_id\x18\x03 \x01(\tR\voperationId\x12-\n" +
+	"\x12dispatched_sources\x18\x04 \x03(\tR\x11dispatchedSources\x12\x16\n" +
+	"\x06reason\x18\x05 \x01(\tR\x06reason\"\xcd\x01\n" +
+	"\x11BillingSourceView\x12\x1b\n" +
+	"\tsource_id\x18\x01 \x01(\tR\bsourceId\x12!\n" +
+	"\foperation_id\x18\x02 \x01(\tR\voperationId\x12\x17\n" +
+	"\atask_id\x18\x03 \x01(\tR\x06taskId\x12\x1b\n" +
+	"\tnative_id\x18\x04 \x01(\tR\bnativeId\x12\x16\n" +
+	"\x06status\x18\x05 \x01(\tR\x06status\x12\x16\n" +
+	"\x06amount\x18\x06 \x01(\x03R\x06amount\x12\x12\n" +
+	"\x04held\x18\a \x01(\x03R\x04held\"\xc7\x01\n" +
 	"\n" +
 	"BudgetView\x12*\n" +
 	"\abudgets\x18\x01 \x03(\v2\x10.lerna.v1.BudgetR\abudgets\x12-\n" +
-	"\x12unresolved_sources\x18\x02 \x03(\tR\x11unresolvedSources*Y\n" +
+	"\x12unresolved_sources\x18\x02 \x03(\tR\x11unresolvedSources\x125\n" +
+	"\asources\x18\x03 \x03(\v2\x1b.lerna.v1.BillingSourceViewR\asources\x12'\n" +
+	"\x0funmatched_bills\x18\x04 \x03(\tR\x0eunmatchedBills*Y\n" +
 	"\vBudgetScope\x12\x1c\n" +
 	"\x18BUDGET_SCOPE_UNSPECIFIED\x10\x00\x12\x15\n" +
 	"\x11BUDGET_SCOPE_USER\x10\x01\x12\x15\n" +
@@ -786,27 +1022,30 @@ func file_lerna_v1_budget_proto_rawDescGZIP() []byte {
 }
 
 var file_lerna_v1_budget_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
-var file_lerna_v1_budget_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_lerna_v1_budget_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_lerna_v1_budget_proto_goTypes = []any{
-	(BudgetScope)(0),         // 0: lerna.v1.BudgetScope
-	(Measurement)(0),         // 1: lerna.v1.Measurement
-	(*Budget)(nil),           // 2: lerna.v1.Budget
-	(*BudgetBasis)(nil),      // 3: lerna.v1.BudgetBasis
-	(*SetBudgetCommand)(nil), // 4: lerna.v1.SetBudgetCommand
-	(*SetBudgetResult)(nil),  // 5: lerna.v1.SetBudgetResult
-	(*UsageReport)(nil),      // 6: lerna.v1.UsageReport
-	(*BudgetView)(nil),       // 7: lerna.v1.BudgetView
+	(BudgetScope)(0),                // 0: lerna.v1.BudgetScope
+	(Measurement)(0),                // 1: lerna.v1.Measurement
+	(*Budget)(nil),                  // 2: lerna.v1.Budget
+	(*BudgetBasis)(nil),             // 3: lerna.v1.BudgetBasis
+	(*SetBudgetCommand)(nil),        // 4: lerna.v1.SetBudgetCommand
+	(*SetBudgetResult)(nil),         // 5: lerna.v1.SetBudgetResult
+	(*UsageReport)(nil),             // 6: lerna.v1.UsageReport
+	(*CloseReservationCommand)(nil), // 7: lerna.v1.CloseReservationCommand
+	(*BillingSourceView)(nil),       // 8: lerna.v1.BillingSourceView
+	(*BudgetView)(nil),              // 9: lerna.v1.BudgetView
 }
 var file_lerna_v1_budget_proto_depIdxs = []int32{
 	0, // 0: lerna.v1.Budget.scope:type_name -> lerna.v1.BudgetScope
 	0, // 1: lerna.v1.SetBudgetCommand.scope:type_name -> lerna.v1.BudgetScope
 	1, // 2: lerna.v1.UsageReport.measurement:type_name -> lerna.v1.Measurement
 	2, // 3: lerna.v1.BudgetView.budgets:type_name -> lerna.v1.Budget
-	4, // [4:4] is the sub-list for method output_type
-	4, // [4:4] is the sub-list for method input_type
-	4, // [4:4] is the sub-list for extension type_name
-	4, // [4:4] is the sub-list for extension extendee
-	0, // [0:4] is the sub-list for field type_name
+	8, // 4: lerna.v1.BudgetView.sources:type_name -> lerna.v1.BillingSourceView
+	5, // [5:5] is the sub-list for method output_type
+	5, // [5:5] is the sub-list for method input_type
+	5, // [5:5] is the sub-list for extension type_name
+	5, // [5:5] is the sub-list for extension extendee
+	0, // [0:5] is the sub-list for field type_name
 }
 
 func init() { file_lerna_v1_budget_proto_init() }
@@ -820,7 +1059,7 @@ func file_lerna_v1_budget_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_lerna_v1_budget_proto_rawDesc), len(file_lerna_v1_budget_proto_rawDesc)),
 			NumEnums:      2,
-			NumMessages:   6,
+			NumMessages:   8,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

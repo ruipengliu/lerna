@@ -114,7 +114,10 @@ func (a *Adapter) Execute(_ context.Context, req *lernav1.ExecuteRequest) (*lern
 // Query 按原尝试查询；不重新执行原动作。"查无记录"保持未知，除非目标给出终局依据。
 func (a *Adapter) Query(_ context.Context, req *lernav1.QueryRequest) (*lernav1.ExecutionReport, error) {
 	q := a.Target.Query(req.GetAttemptId())
-	rep := &lernav1.ExecutionReport{AdapterVersion: Version, ObservedAt: timestamppb.New(a.Target.now())}
+	rep := &lernav1.ExecutionReport{AdapterVersion: Version, ObservedAt: timestamppb.New(a.Target.now()),
+		// 查询不收费：零费用有依据（模拟目标的计费约定）。
+		Usage: []*lernav1.UsageItem{{BillingSource: a.ID, NativeId: "query:" + req.GetAttemptId() + ":" + fmt.Sprint(req.GetSendSeq()),
+			Unit: "micro_usd", Amount: 0, Final: true}}}
 	switch {
 	case !q.Supported:
 		rep.Status = lernav1.ExecutionStatus_EXECUTION_STATUS_UNSUPPORTED

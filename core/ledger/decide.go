@@ -2,10 +2,12 @@ package ledger
 
 import (
 	"context"
+	"strconv"
 
 	"google.golang.org/protobuf/proto"
 
 	lernav1 "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1"
+	"github.com/ruipengliu/lerna/contracts/ports"
 	"github.com/ruipengliu/lerna/core/durable"
 )
 
@@ -153,10 +155,88 @@ func (m *Module) recoveryPlan(_ *durable.Tx, _ *opState, op *lernav1.Operation) 
 	return durable.Done(), nil
 }
 
-// afterObserve 在保存观察的事务中登记后续交接（P7）。
-func (m *Module) afterObserve(*durable.Tx, *lernav1.Operation, *sendRow, *lernav1.Observation, *lernav1.ExecutionReport) error {
+// sourceID 是一次发送的内部计费来源：出口之前就由发送身份固定，供应商身份返回后登记为别名。
+func sourceID(attemptID string, purpose lernav1.SendPurpose, seq int32, item int) string {
+	return "send:" + attemptID + ":" + purpose.String() + ":" + strconv.Itoa(int(seq)) + ":" + strconv.Itoa(item)
+}
+
+// afterObserve 在保存观察的同一事务中登记用量交接（P7）：用量交预算，按计费来源去重；
+// 没有拿到用量时记为未知，不按零继续。
+func (m *Module) afterObserve(tx *durable.Tx, op *lernav1.Operation, s *sendRow, o *lernav1.Observation, rep *lernav1.ExecutionReport) error {
+	it, err := loadIntent(tx, op.GetUserId(), op.GetOperationId())
+	if err != nil {
+		return err
+	}
+	items := rep.GetUsage()
+	if len(items) == 0 {
+		items = []*lernav1.UsageItem{{Unknown: true}}
+	}
+	ext := ""
+	if a := attemptOf(tx, op.GetUserId(), s.attemptID); a != "" {
+		ext = a
+	}
+	for i, u := range items {
+		r := &lernav1.UsageReport{
+			ReportId:       "usage:" + o.GetObservationId() + ":" + strconv.Itoa(i),
+			UserId:         op.GetUserId(),
+			OperationId:    op.GetOperationId(),
+			AttemptId:      s.attemptID,
+			SendSeq:        s.seq,
+			BillingSource:  u.GetBillingSource(),
+			SourceRevision: u.GetSourceRevision(),
+			Measurement:    lernav1.Measurement_MEASUREMENT_CUMULATIVE,
+			Unit:           u.GetUnit(),
+			Amount:         u.GetAmount(),
+			Final:          u.GetFinal(),
+			Unknown:        u.GetUnknown(),
+			PriceVersion:   u.GetPriceVersion(),
+			EvidenceRefs:   []string{o.GetObservationId()},
+			TaskId:         op.GetTaskId(),
+			ReservationId:  it.GetBudgetBasis().GetReservationId(),
+			SourceId:       sourceID(s.attemptID, s.purpose, s.seq, i),
+			NativeId:       u.GetNativeId(),
+			ExternalKey:    ext,
+		}
+		if err := tx.EnqueueHandoff(durable.Handoff{
+			ID:        r.GetReportId(),
+			User:      op.GetUserId(),
+			Target:    m.AdjudicationDomain,
+			Kind:      ports.CommandReportUsage,
+			Payload:   r,
+			IntentRef: op.GetOperationId(),
+		}); err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
-// afterSettle 在动作收尾的事务中登记后续交接。
-func (m *Module) afterSettle(*durable.Tx, *lernav1.Operation) error { return nil }
+func attemptOf(tx *durable.Tx, user, attemptID string) string {
+	var key string
+	_ = tx.QueryRow(`SELECT external_key FROM attempts WHERE user_id = ? AND attempt_id = ?`, user, attemptID).Scan(&key)
+	return key
+}
+
+// afterSettle 在动作收尾的同一事务中请求预算关闭预留：从未发出的部分释放，可能已发出、
+// 费用尚未确定的发送继续占用。
+func (m *Module) afterSettle(tx *durable.Tx, op *lernav1.Operation) error {
+	st, err := loadState(tx, op.GetUserId(), op.GetOperationId())
+	if err != nil {
+		return err
+	}
+	cmd := &lernav1.CloseReservationCommand{UserId: op.GetUserId(), TaskId: op.GetTaskId(), OperationId: op.GetOperationId(),
+		Reason: "operation settled"}
+	for _, s := range st.sends {
+		if s.dispatchPossible {
+			cmd.DispatchedSources = append(cmd.DispatchedSources, sourceID(s.attemptID, s.purpose, s.seq, 0))
+		}
+	}
+	return tx.EnqueueHandoff(durable.Handoff{
+		ID:        "close-reservation:" + op.GetOperationId(),
+		User:      op.GetUserId(),
+		Target:    m.AdjudicationDomain,
+		Kind:      ports.CommandCloseReservation,
+		Payload:   cmd,
+		IntentRef: op.GetOperationId(),
+	})
+}

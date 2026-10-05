@@ -89,10 +89,42 @@ message UsageReport {
   repeated string evidence_refs = 14;
   string task_id = 15;
   string reservation_id = 16;
+  // 内部来源标识：出口之前由执行管理按发送固定；供应商身份返回后登记为别名。
+  string source_id = 17;
+  // 供应商侧的原生计费实例（别名），例如请求标识。
+  string native_id = 18;
+  // 账单携带的调用方外部键，用于把迟到账单关联回原尝试。
+  string external_key = 19;
+}
+
+// 动作收尾后关闭预留（预算 2.4）：出口没有发生、以后也不会发生的部分释放；
+// 已进入"可能已发出"、费用未知的发送继续占用。
+message CloseReservationCommand {
+  string user_id = 1;
+  string task_id = 2;
+  string operation_id = 3;
+  // 全部可能已发出的发送对应的内部来源。
+  repeated string dispatched_sources = 4;
+  string reason = 5;
+}
+
+// 计费来源的视图。
+message BillingSourceView {
+  string source_id = 1;
+  string operation_id = 2;
+  string task_id = 3;
+  string native_id = 4;
+  // FINAL、PROVISIONAL、UNKNOWN。
+  string status = 5;
+  int64 amount = 6;
+  int64 held = 7;
 }
 
 message BudgetView {
   repeated Budget budgets = 1;
   // 未知或未结清的计费来源。
   repeated string unresolved_sources = 2;
+  repeated BillingSourceView sources = 3;
+  // 无法关联到任何来源、等待核对的账单。
+  repeated string unmatched_bills = 4;
 }

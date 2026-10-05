@@ -316,3 +316,35 @@ func (h *Harness) Count(domainID, query string, args ...any) int {
 
 // NewID 返回一个新的命令标识。
 func NewID() string { return ids.New() }
+
+// Bill 以受信计费接入的身份回报一张供应商账单（模拟供应商的账单推送）。
+func (h *Harness) Bill(reportID string, rep *lernav1.UsageReport) *lernav1.Receipt {
+	h.T.Helper()
+	rep.ReportId = reportID
+	rep.UserId = User
+	env, err := durable.NewEnvelope(&lernav1.CommandIdentity{
+		UserId: User, IssuerId: "billing.mockapi", TargetDomainId: host.DomainAdjudication, CommandId: reportID,
+	}, ports.CommandIngestBill, rep)
+	if err != nil {
+		h.T.Fatal(err)
+	}
+	var rec *lernav1.Receipt
+	if err := h.guard(func() error {
+		var err error
+		rec, err = h.Host.Adjudication.Execute(context.Background(), env)
+		return err
+	}); err != nil {
+		h.T.Fatalf("bill: %v", err)
+	}
+	return rec
+}
+
+// Budgets 返回用户的预算视图。
+func (h *Harness) Budgets() *lernav1.BudgetView {
+	h.T.Helper()
+	v, err := h.Client().Budget(context.Background(), User)
+	if err != nil {
+		h.T.Fatal(err)
+	}
+	return v
+}

@@ -34,6 +34,10 @@ const (
 	CommandReportUsage = "budget.report_usage"
 	// CommandSealDispatch 是封闭尚未开始的派发（执行管理）。
 	CommandSealDispatch = "ledger.seal_dispatch"
+	// CommandCloseReservation 是动作收尾后关闭预留（预算）。
+	CommandCloseReservation = "budget.close_reservation"
+	// CommandIngestBill 是受信的计费接入回报供应商账单（预算）。
+	CommandIngestBill = "budget.ingest_bill"
 )
 
 // ContractVersion 是 M1 运行的唯一契约版本（核心契约 9：单版本运行）。

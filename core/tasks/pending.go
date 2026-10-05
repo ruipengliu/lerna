@@ -7,6 +7,7 @@ import (
 	lernav1 "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1"
 	"github.com/ruipengliu/lerna/contracts/ids"
 	"github.com/ruipengliu/lerna/contracts/ports"
+	"github.com/ruipengliu/lerna/core/budget"
 	"github.com/ruipengliu/lerna/core/durable"
 	"github.com/ruipengliu/lerna/core/sessions"
 )
@@ -47,5 +48,7 @@ func (m *Module) onCoreWorkUpdate(*durable.Tx, *lernav1.Task, *lernav1.Operation
 	return nil
 }
 
-// afterClose 在任务关闭的事务中登记后续工作。
-func (m *Module) afterClose(*durable.Tx, *lernav1.Task) error { return nil }
+// afterClose 在任务关闭的事务中关闭任务预算：不再接受新消耗，但仍接受已发生的费用。
+func (m *Module) afterClose(tx *durable.Tx, t *lernav1.Task) error {
+	return budget.CloseTaskBudget(tx, t.GetUserId(), t.GetTaskId())
+}
