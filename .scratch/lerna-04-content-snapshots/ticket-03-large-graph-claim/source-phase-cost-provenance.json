@@ -1,0 +1,8 @@
+{
+  "source": "/tmp/lerna-04-ticket-03-source-phase-cost-decision.md",
+  "archive": ".scratch/lerna-04-content-snapshots/ticket-03-large-graph-claim/source-phase-cost-decision.md",
+  "bytes": 10122,
+  "sha256": "2fd1bbec21428652caf21ab4817bffef7c5f0d432552826b727ba2266aa5bc5f",
+  "authority": "existing gpt-6-astra high decision agent; root full-read and adopted",
+  "scope": "single original-bounds subphase diagnostic only; no product optimization approved"
+}

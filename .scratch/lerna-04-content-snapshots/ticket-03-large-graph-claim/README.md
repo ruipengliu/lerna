@@ -7,3 +7,5 @@
 ## 原界独占诊断的实际结果
 
 [完整结果](diagnostic/results.md)、[原日志](diagnostic/original-race.log)、[五文件 overlay manifest](diagnostic/overlay-manifest.json) 与 [逐文件原字节来源](diagnostic/provenance.json)归档了真实失败：原 5 秒 Claim 在计算材料读取期间到期，尚未 Prepared 或 worker 发布。调用方原 30 秒尚有余量；嵌套计时不相加，数据库、解码及物理读取的子成本仍未知。该证据没有产品优化或期限放宽结论，也不重写旧共享负载失败的原因。
+
+[下一步子成本决定](source-phase-cost-decision.md)采用一次相同原界的有限诊断，拆分实际Current及Content读取端口；旧overlay不覆盖。该决定暂未选择产品缓存、索引或任何删门措施。原日志尾部空格原字节保留，以本目录精确文件属性豁免日志空白检查，SHA保持不变。
