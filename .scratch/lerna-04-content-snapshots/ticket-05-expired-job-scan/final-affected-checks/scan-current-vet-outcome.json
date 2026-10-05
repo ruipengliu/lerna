@@ -1,0 +1,32 @@
+{
+  "kind": "actual affected-check result",
+  "operation_index": 1,
+  "name": "scan-current-vet",
+  "log": "/tmp/lerna-04-ticket05-execution/scan-current-vet.log",
+  "raw_sha256": "06915656369e79bd0d89cee1462872a793932442f8a138dd2d49b29866884791",
+  "wrapper_exit": 0,
+  "elapsed_seconds": 1.815,
+  "start_ack": [
+    {
+      "event": "native_start_ack",
+      "pid": 3544000,
+      "pgid": 3544000,
+      "starttime": "14863389",
+      "deadline_seconds": 120
+    }
+  ],
+  "completion_ack": {
+    "pid": 3544000,
+    "pgid": 3544000,
+    "starttime": "14863389",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false
+  },
+  "resource_records": [],
+  "run_count": 0,
+  "pass_count": 0,
+  "fail_lines": [],
+  "package_results": [],
+  "prelaunch": "/tmp/lerna-04-ticket05-execution/scan-current-final-checks/scan-current-vet-prelaunch.json"
+}

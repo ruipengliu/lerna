@@ -1,0 +1,32 @@
+{
+  "kind": "actual affected-check result",
+  "operation_index": 19,
+  "name": "scan-current-linux-process-put-erasure-normal",
+  "log": "/tmp/lerna-04-ticket05-execution/scan-current-linux-process-put-erasure-normal.log",
+  "raw_sha256": "1662f77870a5bcc235a20fd0d31d4743d239d0ad5acbaadb59014b5866f1ebd9",
+  "wrapper_exit": 0,
+  "elapsed_seconds": 0.706,
+  "start_ack": [
+    {
+      "event": "native_start_ack",
+      "pid": 3550742,
+      "pgid": 3550742,
+      "starttime": "14884182",
+      "deadline_seconds": 120
+    }
+  ],
+  "completion_ack": {
+    "pid": 3550742,
+    "pgid": 3550742,
+    "starttime": "14884182",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false
+  },
+  "resource_records": [],
+  "run_count": 1,
+  "pass_count": 1,
+  "fail_lines": [],
+  "package_results": [],
+  "prelaunch": "/tmp/lerna-04-ticket05-execution/scan-current-final-checks/scan-current-linux-process-put-erasure-normal-prelaunch.json"
+}

@@ -1,0 +1,5 @@
+=== RUN   TestContentOriginalPolicyAndHolderPagesResumeWithoutErasingOtherSavingBasis
+--- PASS: TestContentOriginalPolicyAndHolderPagesResumeWithoutErasingOtherSavingBasis (2.68s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/component	3.733s
+NATIVE_COMPLETION_ACK {"pid": 3551930, "pgid": 3551930, "starttime": "14886240", "exit": 0, "group_absent": true, "timed_out": false}

@@ -1,0 +1,58 @@
+{
+  "STATIC_only_future_separate_root_grants": true,
+  "workdir": "/tmp/lerna-worktrees/content-snapshots-03",
+  "locked_environment": "source /workspace/.lerna-env/env.sh; GOTOOLCHAIN=local GOFLAGS=-mod=readonly",
+  "supervisor": "/workspace/lerna-content-03-137311247276/run-native.py",
+  "normal_build": [
+    "go",
+    "test",
+    "-c",
+    "-p",
+    "1",
+    "-tags=integration",
+    "-overlay=/workspace/lerna-content-03-137311247276/large-graph-single-read-identity-overlay/overlay.json",
+    "-o",
+    "/workspace/lerna-content-03-137311247276/large-graph-single-read-identity-overlay/component-normal.test",
+    "./conformance/component"
+  ],
+  "race_build": [
+    "go",
+    "test",
+    "-race",
+    "-c",
+    "-p",
+    "1",
+    "-tags=integration",
+    "-overlay=/workspace/lerna-content-03-137311247276/large-graph-single-read-identity-overlay/overlay.json",
+    "-o",
+    "/workspace/lerna-content-03-137311247276/large-graph-single-read-identity-overlay/component-race.test",
+    "./conformance/component"
+  ],
+  "normal_business": [
+    "/workspace/lerna-content-03-137311247276/large-graph-single-read-identity-overlay/component-normal.test",
+    "-test.v",
+    "-test.run=^(TestContentContextReachableClosure64And65IncludesIntermediateVersions|TestContentContextStaticModeMaximumReachable62Materials|TestContentContextSingleContentBoundHasHonestLayerAndNoDispatch|TestContentContextDuplicateSelectorRoleRefusesBeforeOriginalInputReplacement)$",
+    "-test.count=1",
+    "-test.timeout=120s"
+  ],
+  "race_business": [
+    "/workspace/lerna-content-03-137311247276/large-graph-single-read-identity-overlay/component-race.test",
+    "-test.v",
+    "-test.run=^(TestContentContextReachableClosure64And65IncludesIntermediateVersions|TestContentContextStaticModeMaximumReachable62Materials|TestContentContextSingleContentBoundHasHonestLayerAndNoDispatch|TestContentContextDuplicateSelectorRoleRefusesBeforeOriginalInputReplacement)$",
+    "-test.count=1",
+    "-test.timeout=120s"
+  ],
+  "original_budgets": {
+    "caller_seconds": 30,
+    "claim_seconds": 5,
+    "go_seconds": 120,
+    "outer_seconds": 120,
+    "run_count": 1
+  },
+  "refresh_pins_after_qualification_format_required": true,
+  "binary_identity_before_business_required": true,
+  "no_profile_labels_preheat_retry_renew_budget_change": true,
+  "business_unrun": true,
+  "normal_binary_missing": true,
+  "race_binary_missing": true
+}

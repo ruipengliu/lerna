@@ -1,0 +1,19 @@
+=== RUN   TestContentAssociationKeepsPreparingCapacityAndFailedHistory
+--- PASS: TestContentAssociationKeepsPreparingCapacityAndFailedHistory (0.67s)
+=== RUN   TestContentPublicationFinalTransactionChecksHiddenAncestorAfterRealObjectWrite
+=== RUN   TestContentPublicationFinalTransactionChecksHiddenAncestorAfterRealObjectWrite/permitted
+=== RUN   TestContentPublicationFinalTransactionChecksHiddenAncestorAfterRealObjectWrite/ancestor-process-revoked
+--- PASS: TestContentPublicationFinalTransactionChecksHiddenAncestorAfterRealObjectWrite (0.53s)
+    --- PASS: TestContentPublicationFinalTransactionChecksHiddenAncestorAfterRealObjectWrite/permitted (0.26s)
+    --- PASS: TestContentPublicationFinalTransactionChecksHiddenAncestorAfterRealObjectWrite/ancestor-process-revoked (0.27s)
+=== RUN   TestContentLaterAdmissionInheritsOriginalAncestorExpiry
+--- PASS: TestContentLaterAdmissionInheritsOriginalAncestorExpiry (2.16s)
+=== RUN   TestContentLegacyBackfillRestoresOriginalExpiryAndFailedHolderResponsibilities
+--- PASS: TestContentLegacyBackfillRestoresOriginalExpiryAndFailedHolderResponsibilities (0.18s)
+=== RUN   TestContentLegacyPolicyPagesDoNotTruncateAt64OrResetOnReopen
+--- PASS: TestContentLegacyPolicyPagesDoNotTruncateAt64OrResetOnReopen (0.64s)
+=== RUN   TestContentActualExpiredOldWriterArchiveRetainsAncestorResponsibilities
+--- PASS: TestContentActualExpiredOldWriterArchiveRetainsAncestorResponsibilities (0.50s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/component	4.699s
+NATIVE_COMPLETION_ACK {"pid": 3546942, "pgid": 3546942, "starttime": "14870708", "exit": 0, "group_absent": true, "timed_out": false}

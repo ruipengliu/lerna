@@ -1,0 +1,364 @@
+{
+  "kind": "root independent complete machine audit, not human full-read claim",
+  "all27_actual_exit_zero_wait_group_absent_no_timeout": true,
+  "all27_original_argv_and_prelaunch_and_ledger_scope_intervals_verified": true,
+  "all15_snapshot_worktree_and_commit_blobs_match": true,
+  "all_run_pass_name_multisets_equal": true,
+  "sidecar_original_outcomes_immutable": true,
+  "historical_logical_Close_unknown_not_recertified": true,
+  "native_released": true,
+  "operations": [
+    {
+      "name": "scan-current-format",
+      "pid": 3543955,
+      "starttime": "14863364",
+      "all_run_pass": 0,
+      "ledger_interval": [
+        1031,
+        1032
+      ],
+      "scope_count": 0,
+      "raw_sha256": "0d0c179bd530915336472b9dcf64087e194a8bf7d166c97fc0402b4e15e6a64d",
+      "machine_complete_audit": true
+    },
+    {
+      "name": "scan-current-vet",
+      "pid": 3544000,
+      "starttime": "14863389",
+      "all_run_pass": 0,
+      "ledger_interval": [
+        1033,
+        1034
+      ],
+      "scope_count": 0,
+      "raw_sha256": "06915656369e79bd0d89cee1462872a793932442f8a138dd2d49b29866884791",
+      "machine_complete_audit": true
+    },
+    {
+      "name": "scan-current-go-normal",
+      "pid": 3544157,
+      "starttime": "14863571",
+      "all_run_pass": 472,
+      "ledger_interval": [
+        1035,
+        1068
+      ],
+      "scope_count": 32,
+      "raw_sha256": "8ee30287c54f03cc345b0d7574432ccaf141a7fd198253bf823be7aea34e9604",
+      "machine_complete_audit": true
+    },
+    {
+      "name": "scan-current-go-race",
+      "pid": 3544761,
+      "starttime": "14864264",
+      "all_run_pass": 472,
+      "ledger_interval": [
+        1069,
+        1102
+      ],
+      "scope_count": 32,
+      "raw_sha256": "d6f4f47e91b102c079d845537741c1aa699730bd3ed695ee23d151019fe284ce",
+      "machine_complete_audit": true
+    },
+    {
+      "name": "scan-current-baseline-1-normal",
+      "pid": 3546259,
+      "starttime": "14868692",
+      "all_run_pass": 8,
+      "ledger_interval": [
+        1103,
+        1119
+      ],
+      "scope_count": 15,
+      "raw_sha256": "8c2f901dcedbe36ad071b4b53fe577df99d723f38077b2975544ce16df2424c8",
+      "machine_complete_audit": true
+    },
+    {
+      "name": "scan-current-baseline-2-normal",
+      "pid": 3546380,
+      "starttime": "14868938",
+      "all_run_pass": 28,
+      "ledger_interval": [
+        1120,
+        1165
+      ],
+      "scope_count": 44,
+      "raw_sha256": "d8fe3a2ec71f2638265fcce8a0397a2ca13b375b0d62b2bbef05075390240d1f",
+      "machine_complete_audit": true
+    },
+    {
+      "name": "scan-current-baseline-3-normal",
+      "pid": 3546616,
+      "starttime": "14869526",
+      "all_run_pass": 16,
+      "ledger_interval": [
+        1166,
+        1199
+      ],
+      "scope_count": 32,
+      "raw_sha256": "bf8f6e33ecb47f2dd6f3d768659752af12751a903daa17dff29efa3c72f1ec16",
+      "machine_complete_audit": true
+    },
+    {
+      "name": "scan-current-baseline-4-normal",
+      "pid": 3546942,
+      "starttime": "14870708",
+      "all_run_pass": 8,
+      "ledger_interval": [
+        1200,
+        1218
+      ],
+      "scope_count": 17,
+      "raw_sha256": "dffd9fde004aacd90d8faa292b8690a36313d7fdc38c80417eba33dc41b58d2b",
+      "machine_complete_audit": true
+    },
+    {
+      "name": "scan-current-baseline-1-race",
+      "pid": 3547159,
+      "starttime": "14871250",
+      "all_run_pass": 8,
+      "ledger_interval": [
+        1219,
+        1235
+      ],
+      "scope_count": 15,
+      "raw_sha256": "c5d9ca1d02f84d2737fc2833ede3e5a622173424e00c1b9464a2793c1f0cebbc",
+      "machine_complete_audit": true
+    },
+    {
+      "name": "scan-current-baseline-2-race",
+      "pid": 3547420,
+      "starttime": "14872129",
+      "all_run_pass": 28,
+      "ledger_interval": [
+        1236,
+        1281
+      ],
+      "scope_count": 44,
+      "raw_sha256": "3272261535865726fc995f0e1092777514482b2111c40f282b57af8017c50220",
+      "machine_complete_audit": true
+    },
+    {
+      "name": "scan-current-baseline-3-race",
+      "pid": 3547905,
+      "starttime": "14873836",
+      "all_run_pass": 16,
+      "ledger_interval": [
+        1282,
+        1315
+      ],
+      "scope_count": 32,
+      "raw_sha256": "ab2348f89d86c52d591ca169395d3290c03b40083da41049338e5857546392ae",
+      "machine_complete_audit": true
+    },
+    {
+      "name": "scan-current-baseline-4-race",
+      "pid": 3548332,
+      "starttime": "14875218",
+      "all_run_pass": 8,
+      "ledger_interval": [
+        1316,
+        1334
+      ],
+      "scope_count": 17,
+      "raw_sha256": "ce6f1609227d59ecd9e94c4f48f9323ea8c0727d34d00864fc5166e0ece00810",
+      "machine_complete_audit": true
+    },
+    {
+      "name": "scan-current-consumer-1-normal",
+      "pid": 3548619,
+      "starttime": "14876252",
+      "all_run_pass": 4,
+      "ledger_interval": [
+        1335,
+        1344
+      ],
+      "scope_count": 8,
+      "raw_sha256": "73d9a0ae8e5a87daa9eb72a9c7f87c6b10a73e0360be5e0a1467300aa5979862",
+      "machine_complete_audit": true
+    },
+    {
+      "name": "scan-current-consumer-2-normal",
+      "pid": 3548802,
+      "starttime": "14876904",
+      "all_run_pass": 7,
+      "ledger_interval": [
+        1345,
+        1364
+      ],
+      "scope_count": 18,
+      "raw_sha256": "04449b47f744656b63faf860d7f2d2a6d7480523a39ff56af94c9b066c664bfc",
+      "machine_complete_audit": true
+    },
+    {
+      "name": "scan-current-consumer-1-race",
+      "pid": 3549204,
+      "starttime": "14878338",
+      "all_run_pass": 4,
+      "ledger_interval": [
+        1365,
+        1374
+      ],
+      "scope_count": 8,
+      "raw_sha256": "3ce3634615e8f2ba7e5e2e7fa2ec3c381b869cf28b469f9cb229cdead0714520",
+      "machine_complete_audit": true
+    },
+    {
+      "name": "scan-current-consumer-2-race",
+      "pid": 3549415,
+      "starttime": "14879070",
+      "all_run_pass": 7,
+      "ledger_interval": [
+        1375,
+        1394
+      ],
+      "scope_count": 18,
+      "raw_sha256": "11f6fbdebbadcf0b53388a4b83b7f0ed3eab592587dfe5536dfdacdc8a533f0f",
+      "machine_complete_audit": true
+    },
+    {
+      "name": "scan-current-frozen-sql-hashes",
+      "pid": 3549860,
+      "starttime": "14880698",
+      "all_run_pass": 0,
+      "ledger_interval": [
+        1395,
+        1396
+      ],
+      "scope_count": 0,
+      "raw_sha256": "dc7217c80a4412feb797ef31d8898f8a4f7d5a703e8ef63eb52c639012ba9d85",
+      "machine_complete_audit": true
+    },
+    {
+      "name": "scan-current-fresh-low-control-normal",
+      "pid": 3549862,
+      "starttime": "14880703",
+      "all_run_pass": 1,
+      "ledger_interval": [
+        1397,
+        1400
+      ],
+      "scope_count": 2,
+      "raw_sha256": "e5f2cbf44830a71c7e8fb52c611e32fb5f91a0281f02933d5e7ccab89c899464",
+      "machine_complete_audit": true
+    },
+    {
+      "name": "scan-current-fresh-low-control-race",
+      "pid": 3550262,
+      "starttime": "14882342",
+      "all_run_pass": 1,
+      "ledger_interval": [
+        1401,
+        1404
+      ],
+      "scope_count": 2,
+      "raw_sha256": "8356f9f8b1ff154bedb7905f45528ad21c6e83ab81b5597bbbe4cff2812d396b",
+      "machine_complete_audit": true
+    },
+    {
+      "name": "scan-current-linux-process-put-erasure-normal",
+      "pid": 3550742,
+      "starttime": "14884182",
+      "all_run_pass": 1,
+      "ledger_interval": [
+        1405,
+        1411
+      ],
+      "scope_count": 5,
+      "raw_sha256": "1662f77870a5bcc235a20fd0d31d4743d239d0ad5acbaadb59014b5866f1ebd9",
+      "machine_complete_audit": true
+    },
+    {
+      "name": "scan-current-linux-process-put-erasure-race",
+      "pid": 3550810,
+      "starttime": "14884254",
+      "all_run_pass": 1,
+      "ledger_interval": [
+        1412,
+        1418
+      ],
+      "scope_count": 5,
+      "raw_sha256": "d665b1e52899ae1bdaa64aa4b0e797452ea5a0780bfa924cf99d9718ed61ac02",
+      "machine_complete_audit": true
+    },
+    {
+      "name": "scan-current-frozen-original-writer-normal",
+      "pid": 3550983,
+      "starttime": "14884572",
+      "all_run_pass": 1,
+      "ledger_interval": [
+        1419,
+        1435
+      ],
+      "scope_count": 15,
+      "raw_sha256": "0be48f41f4070e4672051b2de3edd59f40af745cfc680c3d0299aac28d56c589",
+      "machine_complete_audit": true
+    },
+    {
+      "name": "scan-current-frozen-original-writer-race",
+      "pid": 3551225,
+      "starttime": "14884951",
+      "all_run_pass": 1,
+      "ledger_interval": [
+        1436,
+        1452
+      ],
+      "scope_count": 15,
+      "raw_sha256": "73da5413d019b23f321becc6b51fe60682656d2883d86c70d6be42b66eae9645",
+      "machine_complete_audit": true
+    },
+    {
+      "name": "scan-current-three-original-migrations-normal",
+      "pid": 3551584,
+      "starttime": "14885617",
+      "all_run_pass": 1,
+      "ledger_interval": [
+        1453,
+        1457
+      ],
+      "scope_count": 3,
+      "raw_sha256": "ac8efa0f676de199e119fa51f5e1f2b6f007853077d469414753cb16835c369d",
+      "machine_complete_audit": true
+    },
+    {
+      "name": "scan-current-three-original-migrations-race",
+      "pid": 3551683,
+      "starttime": "14885741",
+      "all_run_pass": 1,
+      "ledger_interval": [
+        1458,
+        1462
+      ],
+      "scope_count": 3,
+      "raw_sha256": "2e56d9836f2ea83f4b97e004ca9a71d3a8945a5c635cd52024997b51535e172d",
+      "machine_complete_audit": true
+    },
+    {
+      "name": "scan-current-original-policy-holder-pages-normal",
+      "pid": 3551807,
+      "starttime": "14886008",
+      "all_run_pass": 1,
+      "ledger_interval": [
+        1463,
+        1468
+      ],
+      "scope_count": 4,
+      "raw_sha256": "8964fe39b8698477a91ca3a0ff0c1e190c48e0c323a34a83352dddef1be703d6",
+      "machine_complete_audit": true
+    },
+    {
+      "name": "scan-current-original-policy-holder-pages-race",
+      "pid": 3551930,
+      "starttime": "14886240",
+      "all_run_pass": 1,
+      "ledger_interval": [
+        1469,
+        1474
+      ],
+      "scope_count": 4,
+      "raw_sha256": "88ea343472e1df3948518f1338e09f6ce3f1929619a6214ec34034056539c200",
+      "machine_complete_audit": true
+    }
+  ],
+  "human_raw_read_scope": "25 shortraw logs fully read; 2module1035line logs first12/final10 excerpts. All27raw and complete929line batch/3134line sidecar machine audited; not claimed humanFULL."
+}

@@ -1,0 +1,31 @@
+{
+  "phase": "public_normal",
+  "identity": {
+    "pid": 3555011,
+    "pgid": 3555011,
+    "starttime": "14899641",
+    "started_ns": 1791180758066494186,
+    "args": [
+      "go",
+      "test",
+      "-v",
+      "-tags=integration",
+      "-p",
+      "1",
+      "-count=1",
+      "-timeout=120s",
+      "-run=^TestContentProcessingRechecksHiddenAncestorAfterRealObjectRead$",
+      "./conformance/component"
+    ]
+  },
+  "actual_exit": 0,
+  "actual_wait": true,
+  "group_absent_rechecked": true,
+  "raw_log": "/workspace/lerna-content-03-137311247276/context-single-read-identity-public-normal.log",
+  "raw_bytes": 650,
+  "raw_lines": 9,
+  "raw_sha256": "1bfc6d8bdbad1eab022ba47e17bc9cb5092803d4d139c23ba23584bc24941d84",
+  "raw_output_ownFD_flush_fsync_Close": "ACK",
+  "noTimeout": true,
+  "original_profile_descriptor_Close": "UNKNOWN"
+}

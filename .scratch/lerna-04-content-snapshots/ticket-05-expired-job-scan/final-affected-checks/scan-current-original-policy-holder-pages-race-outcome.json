@@ -1,0 +1,32 @@
+{
+  "kind": "actual affected-check result",
+  "operation_index": 26,
+  "name": "scan-current-original-policy-holder-pages-race",
+  "log": "/tmp/lerna-04-ticket05-execution/scan-current-original-policy-holder-pages-race.log",
+  "raw_sha256": "88ea343472e1df3948518f1338e09f6ce3f1929619a6214ec34034056539c200",
+  "wrapper_exit": 0,
+  "elapsed_seconds": 4.625,
+  "start_ack": [
+    {
+      "event": "native_start_ack",
+      "pid": 3551930,
+      "pgid": 3551930,
+      "starttime": "14886240",
+      "deadline_seconds": 120
+    }
+  ],
+  "completion_ack": {
+    "pid": 3551930,
+    "pgid": 3551930,
+    "starttime": "14886240",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false
+  },
+  "resource_records": [],
+  "run_count": 1,
+  "pass_count": 1,
+  "fail_lines": [],
+  "package_results": [],
+  "prelaunch": "/tmp/lerna-04-ticket05-execution/scan-current-final-checks/scan-current-original-policy-holder-pages-race-prelaunch.json"
+}

@@ -1,0 +1,19 @@
+{
+  "axis": "Standards",
+  "baseline": "1a4e1d2d704261a59491dfc6e0c5d26b80ec5107",
+  "head": "8db74e3dfd2677adb37fbdd13bd93e76b61b5eb7",
+  "hard_violations": [],
+  "heuristics": [
+    {
+      "priority": 3,
+      "smell": "possible Duplicated Code",
+      "file": "conformance/component/content_delegated_cleanup_backlog_test.go",
+      "line": 18,
+      "other_file": "conformance/component/content_manager_expired_backlog_test.go",
+      "other_line": 18,
+      "acceptance_blocker": false,
+      "description": "Identical four-field duty records could share a package-private test-support value; preserve distinct scenario policy/subject/deadline setup."
+    }
+  ],
+  "native_operations_performed": false
+}

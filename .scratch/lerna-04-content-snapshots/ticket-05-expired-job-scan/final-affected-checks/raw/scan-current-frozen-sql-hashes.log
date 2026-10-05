@@ -1,0 +1,4 @@
+00363b79dafb6eb1f373be9ef08e915fe23cc3db0fa55345e8ae6c051ce0c1ed  adapters/postgres/content/migrations/0001_content.sql
+99519565ff1146d7cfc468413b449538c6ba71335e86edc8fd447a3bbff922a8  adapters/postgres/content/migrations/0002_source_policies.sql
+92739b464b8661e26befe092028f20802b586e42bf1578bd9811dcf240c5b58f  adapters/postgres/content/migrations/0003_body_cleanup.sql
+NATIVE_COMPLETION_ACK {"pid": 3549860, "pgid": 3549860, "starttime": "14880698", "exit": 0, "group_absent": true, "timed_out": false}

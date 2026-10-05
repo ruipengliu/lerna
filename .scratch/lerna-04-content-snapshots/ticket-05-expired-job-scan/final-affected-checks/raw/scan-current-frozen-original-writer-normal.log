@@ -1,0 +1,5 @@
+=== RUN   TestContentStoppedOriginalLegacyScopeBindsOnlyAfterPositiveWriterClose
+--- PASS: TestContentStoppedOriginalLegacyScopeBindsOnlyAfterPositiveWriterClose (3.01s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/component	3.031s
+NATIVE_COMPLETION_ACK {"pid": 3550983, "pgid": 3550983, "starttime": "14884572", "exit": 0, "group_absent": true, "timed_out": false}

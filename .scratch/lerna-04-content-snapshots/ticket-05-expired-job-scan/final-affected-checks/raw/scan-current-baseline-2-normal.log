@@ -1,0 +1,59 @@
+=== RUN   TestContentNewAssociationRequiresCurrentDirectSourceAdmission
+=== RUN   TestContentNewAssociationRequiresCurrentDirectSourceAdmission/process
+=== RUN   TestContentNewAssociationRequiresCurrentDirectSourceAdmission/save
+--- PASS: TestContentNewAssociationRequiresCurrentDirectSourceAdmission (0.77s)
+    --- PASS: TestContentNewAssociationRequiresCurrentDirectSourceAdmission/process (0.47s)
+    --- PASS: TestContentNewAssociationRequiresCurrentDirectSourceAdmission/save (0.30s)
+=== RUN   TestContentDirectReadPermissionsAreCurrentAndSeparate
+=== RUN   TestContentDirectReadPermissionsAreCurrentAndSeparate/read
+=== RUN   TestContentDirectReadPermissionsAreCurrentAndSeparate/disclose
+=== RUN   TestContentDirectReadPermissionsAreCurrentAndSeparate/during-read
+=== RUN   TestContentDirectReadPermissionsAreCurrentAndSeparate/during-disclose
+=== RUN   TestContentDirectReadPermissionsAreCurrentAndSeparate/expired
+=== RUN   TestContentDirectReadPermissionsAreCurrentAndSeparate/process-save-control
+--- PASS: TestContentDirectReadPermissionsAreCurrentAndSeparate (1.86s)
+    --- PASS: TestContentDirectReadPermissionsAreCurrentAndSeparate/read (0.27s)
+    --- PASS: TestContentDirectReadPermissionsAreCurrentAndSeparate/disclose (0.26s)
+    --- PASS: TestContentDirectReadPermissionsAreCurrentAndSeparate/during-read (0.29s)
+    --- PASS: TestContentDirectReadPermissionsAreCurrentAndSeparate/during-disclose (0.29s)
+    --- PASS: TestContentDirectReadPermissionsAreCurrentAndSeparate/expired (0.44s)
+    --- PASS: TestContentDirectReadPermissionsAreCurrentAndSeparate/process-save-control (0.31s)
+=== RUN   TestContentDirectSourcesRequireSeparateReadProcessSaveAndRetention
+=== RUN   TestContentDirectSourcesRequireSeparateReadProcessSaveAndRetention/read
+=== RUN   TestContentDirectSourcesRequireSeparateReadProcessSaveAndRetention/process
+=== RUN   TestContentDirectSourcesRequireSeparateReadProcessSaveAndRetention/save
+--- PASS: TestContentDirectSourcesRequireSeparateReadProcessSaveAndRetention (0.71s)
+    --- PASS: TestContentDirectSourcesRequireSeparateReadProcessSaveAndRetention/read (0.23s)
+    --- PASS: TestContentDirectSourcesRequireSeparateReadProcessSaveAndRetention/process (0.25s)
+    --- PASS: TestContentDirectSourcesRequireSeparateReadProcessSaveAndRetention/save (0.23s)
+=== RUN   TestContentReturnedBytesRequireCurrentReadAndDisclose
+=== RUN   TestContentReturnedBytesRequireCurrentReadAndDisclose/read
+=== RUN   TestContentReturnedBytesRequireCurrentReadAndDisclose/disclose
+--- PASS: TestContentReturnedBytesRequireCurrentReadAndDisclose (0.34s)
+    --- PASS: TestContentReturnedBytesRequireCurrentReadAndDisclose/read (0.16s)
+    --- PASS: TestContentReturnedBytesRequireCurrentReadAndDisclose/disclose (0.18s)
+=== RUN   TestContentTargetReadPoliciesBindExactPublishedDeclaration
+=== RUN   TestContentTargetReadPoliciesBindExactPublishedDeclaration/hash/before-read
+=== RUN   TestContentTargetReadPoliciesBindExactPublishedDeclaration/hash/after-native-read
+=== RUN   TestContentTargetReadPoliciesBindExactPublishedDeclaration/media/before-read
+=== RUN   TestContentTargetReadPoliciesBindExactPublishedDeclaration/media/after-native-read
+=== RUN   TestContentTargetReadPoliciesBindExactPublishedDeclaration/length/before-read
+=== RUN   TestContentTargetReadPoliciesBindExactPublishedDeclaration/length/after-native-read
+--- PASS: TestContentTargetReadPoliciesBindExactPublishedDeclaration (1.10s)
+    --- PASS: TestContentTargetReadPoliciesBindExactPublishedDeclaration/hash/before-read (0.19s)
+    --- PASS: TestContentTargetReadPoliciesBindExactPublishedDeclaration/hash/after-native-read (0.18s)
+    --- PASS: TestContentTargetReadPoliciesBindExactPublishedDeclaration/media/before-read (0.15s)
+    --- PASS: TestContentTargetReadPoliciesBindExactPublishedDeclaration/media/after-native-read (0.19s)
+    --- PASS: TestContentTargetReadPoliciesBindExactPublishedDeclaration/length/before-read (0.20s)
+    --- PASS: TestContentTargetReadPoliciesBindExactPublishedDeclaration/length/after-native-read (0.19s)
+=== RUN   TestContentTargetAuthorizationPrecedesExistenceAndMismatchObservation
+=== RUN   TestContentTargetAuthorizationPrecedesExistenceAndMismatchObservation/existing-other-request
+=== RUN   TestContentTargetAuthorizationPrecedesExistenceAndMismatchObservation/existing-policy-request
+=== RUN   TestContentTargetAuthorizationPrecedesExistenceAndMismatchObservation/absent
+--- PASS: TestContentTargetAuthorizationPrecedesExistenceAndMismatchObservation (0.45s)
+    --- PASS: TestContentTargetAuthorizationPrecedesExistenceAndMismatchObservation/existing-other-request (0.17s)
+    --- PASS: TestContentTargetAuthorizationPrecedesExistenceAndMismatchObservation/existing-policy-request (0.17s)
+    --- PASS: TestContentTargetAuthorizationPrecedesExistenceAndMismatchObservation/absent (0.11s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/component	5.231s
+NATIVE_COMPLETION_ACK {"pid": 3546380, "pgid": 3546380, "starttime": "14868938", "exit": 0, "group_absent": true, "timed_out": false}

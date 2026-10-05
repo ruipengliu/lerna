@@ -1,0 +1,32 @@
+{
+  "kind": "actual affected-check result",
+  "operation_index": 7,
+  "name": "scan-current-baseline-4-normal",
+  "log": "/tmp/lerna-04-ticket05-execution/scan-current-baseline-4-normal.log",
+  "raw_sha256": "dffd9fde004aacd90d8faa292b8690a36313d7fdc38c80417eba33dc41b58d2b",
+  "wrapper_exit": 0,
+  "elapsed_seconds": 5.418,
+  "start_ack": [
+    {
+      "event": "native_start_ack",
+      "pid": 3546942,
+      "pgid": 3546942,
+      "starttime": "14870708",
+      "deadline_seconds": 120
+    }
+  ],
+  "completion_ack": {
+    "pid": 3546942,
+    "pgid": 3546942,
+    "starttime": "14870708",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false
+  },
+  "resource_records": [],
+  "run_count": 8,
+  "pass_count": 6,
+  "fail_lines": [],
+  "package_results": [],
+  "prelaunch": "/tmp/lerna-04-ticket05-execution/scan-current-final-checks/scan-current-baseline-4-normal-prelaunch.json"
+}

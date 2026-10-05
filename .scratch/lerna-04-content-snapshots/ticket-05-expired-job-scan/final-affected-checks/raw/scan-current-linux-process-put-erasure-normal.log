@@ -1,0 +1,6 @@
+=== RUN   TestCrossProcessPutFinishesBeforeOriginalErasure
+PASS
+--- PASS: TestCrossProcessPutFinishesBeforeOriginalErasure (0.04s)
+PASS
+ok  	github.com/ruipengliu/lerna/adapters/objectstore/local	0.046s
+NATIVE_COMPLETION_ACK {"pid": 3550742, "pgid": 3550742, "starttime": "14884182", "exit": 0, "group_absent": true, "timed_out": false}

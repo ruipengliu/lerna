@@ -1,0 +1,5 @@
+=== RUN   TestContentMigrationEmptyRepeatAndChecksum
+--- PASS: TestContentMigrationEmptyRepeatAndChecksum (0.12s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/internal/contentfixture	0.136s
+NATIVE_COMPLETION_ACK {"pid": 3551584, "pgid": 3551584, "starttime": "14885617", "exit": 0, "group_absent": true, "timed_out": false}

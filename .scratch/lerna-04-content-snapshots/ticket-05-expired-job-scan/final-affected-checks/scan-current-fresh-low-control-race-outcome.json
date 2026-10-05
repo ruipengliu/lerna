@@ -1,0 +1,32 @@
+{
+  "kind": "actual affected-check result",
+  "operation_index": 18,
+  "name": "scan-current-fresh-low-control-race",
+  "log": "/tmp/lerna-04-ticket05-execution/scan-current-fresh-low-control-race.log",
+  "raw_sha256": "8356f9f8b1ff154bedb7905f45528ad21c6e83ab81b5597bbbe4cff2812d396b",
+  "wrapper_exit": 0,
+  "elapsed_seconds": 18.411,
+  "start_ack": [
+    {
+      "event": "native_start_ack",
+      "pid": 3550262,
+      "pgid": 3550262,
+      "starttime": "14882342",
+      "deadline_seconds": 120
+    }
+  ],
+  "completion_ack": {
+    "pid": 3550262,
+    "pgid": 3550262,
+    "starttime": "14882342",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false
+  },
+  "resource_records": [],
+  "run_count": 1,
+  "pass_count": 1,
+  "fail_lines": [],
+  "package_results": [],
+  "prelaunch": "/tmp/lerna-04-ticket05-execution/scan-current-final-checks/scan-current-fresh-low-control-race-prelaunch.json"
+}

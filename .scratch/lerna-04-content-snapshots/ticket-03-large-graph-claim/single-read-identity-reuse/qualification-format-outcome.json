@@ -1,0 +1,27 @@
+{
+  "phase": "format",
+  "identity": {
+    "pid": 3554930,
+    "pgid": 3554930,
+    "starttime": "14899552",
+    "started_ns": 1791180757174703346,
+    "args": [
+      "gofmt",
+      "-w",
+      "/tmp/lerna-worktrees/content-snapshots-03/domain/content/closure.go",
+      "/tmp/lerna-worktrees/content-snapshots-03/domain/content/processing.go",
+      "/tmp/lerna-worktrees/content-snapshots-03/domain/content/closure_identity_memo_test.go",
+      "/tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_processing_ancestor_read_gate_test.go"
+    ]
+  },
+  "actual_exit": 0,
+  "actual_wait": true,
+  "group_absent_rechecked": true,
+  "raw_log": "/workspace/lerna-content-03-137311247276/context-single-read-identity-format.log",
+  "raw_bytes": 39,
+  "raw_lines": 1,
+  "raw_sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+  "raw_output_ownFD_flush_fsync_Close": "ACK",
+  "noTimeout": true,
+  "original_profile_descriptor_Close": "UNKNOWN"
+}

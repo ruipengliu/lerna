@@ -1,0 +1,14 @@
+{
+  "scope": "complete independent machine audit of two build provenance files, full human read of both39B raw; not full human619line provenance claim",
+  "manifest_sha256": "f9492989728dd437749023e766057d2a904c82637120b06233705ed30def89ec",
+  "all5_original_replacements_byte_equal": true,
+  "all12_current_compiled_and2_excluded_source_pins_verified": true,
+  "all7_source_pins_before_and_after_build_verified": true,
+  "normal_binary_sha256": "e4209f5ed4262997a83683ffa90cdc9c4ca2408d15b6bf48754a6aa8d2f4c2be",
+  "race_binary_sha256": "223e8c7c3fbb1baedac6ad4998b65b74bf3edee69075e83cbf13bbba913453bd",
+  "binary_devino_bytes_verified": true,
+  "both_build_wait_group_absence_independently_verified": true,
+  "business_status_at_archive": "not executed; separate grant now issued",
+  "no_executables_committed": true,
+  "historical_unknown_not_recertified": true
+}

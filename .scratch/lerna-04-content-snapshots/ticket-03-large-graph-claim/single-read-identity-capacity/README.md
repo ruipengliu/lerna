@@ -1,0 +1,5 @@
+# Future original4B single-read pure identity capacity
+
+STATIC only. Five owned replacements byteequal the qualified original nonprofile overlay. All original budgets/setup/inputs/oracles/refusal cases/twoPublish+twoReadback/Completed tails retained; no CPU labels or publication phase detail. Maps do not cover product closure/processing/memo/dispatcher/source/peer/frozenworker. Fresh source includes singleRead pure identity lifespan and two accepted new controls; old0514/c421 binaries are never reused.
+
+Only after explicit root grants qualification fmt/controls and success: refresh actual formatted-source pins, independent normal/race builds separately supervised outer120; read/hash/fsync/Close actual binary identities then root accepts each before originalbusiness grants. No build/business executed yet. Original30caller/5Claim/Go120/outer120/count1, no preheat/retry/renew/newCPU. Any failure preserves full actual raw/firstphase/unknown responsibility and STOP/RELEASE; no automaticfix/matrix. Previous source cutoffs/failures/profileCloseUNKNOWN remain unchanged.

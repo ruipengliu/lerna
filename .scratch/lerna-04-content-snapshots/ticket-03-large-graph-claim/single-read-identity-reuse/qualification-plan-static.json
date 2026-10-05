@@ -1,0 +1,96 @@
+{
+  "STATIC_only_no_qualification_execution": true,
+  "product_files_only": [
+    "domain/content/closure.go",
+    "domain/content/processing.go"
+  ],
+  "before_source_artifacts": [
+    "closure.go.before",
+    "processing.go.before"
+  ],
+  "exact_decision": "3807311cb6dcc72a47cdfc922180002ba737bf07dfbdfccc335fa0bfd075bf05",
+  "prior_lifespan_decision": "/tmp/lerna-03-actual-cpu-next-decision.md (2adc), unchanged archive; this revision explicitly only pure identity lifetime",
+  "existing_business_RED": "context-final-capacity-b-closure-identity-race.log SHA7b48cbb7e9e0a8900f6fa9b514791d21f35538c85d17a9fd369fbe171bfefe6b; do not rerun unchanged RED",
+  "proposed_new_test_files_not_in_worktree": [
+    {
+      "owned_proposal": "/workspace/lerna-content-03-137311247276/single-read-identity-reuse/closure_identity_memo_test.go.proposed",
+      "target": "domain/content/closure_identity_memo_test.go",
+      "scope": "mechanical private pure memo; full same tuple/different metadata strict validation, failed refs not cached, success \u226465/full fallback original ID and no new business rejection; existing independent identity fixture golden reused"
+    },
+    {
+      "owned_proposal": "/workspace/lerna-content-03-137311247276/single-read-identity-reuse/content_processing_ancestor_read_gate_test.go.proposed",
+      "target": "conformance/component/content_processing_ancestor_read_gate_test.go",
+      "scope": "public consumer ReadForProcessing with actual native Objects.Read plus finite heldContentRead barrier; hidden ancestor Process withdrawal via trusted Manager vs permitted normal; actual actor join, exact returned bytes/full refs vs zero result ErrProcessingForbidden, independent public Read/Disclose, original receipt/history, fresh read after reopen"
+    }
+  ],
+  "commands_after_explicit_grants": {
+    "pure_normal": [
+      "go",
+      "test",
+      "-count=1",
+      "-p",
+      "1",
+      "-run=^(TestIndependentVersionIdentityGolden|TestClosureIdentityMemoPreservesFullRefValidationAndFiniteSuccess)$",
+      "./domain/content"
+    ],
+    "public_normal": [
+      "go",
+      "test",
+      "-tags=integration",
+      "-p",
+      "1",
+      "-count=1",
+      "-timeout=120s",
+      "-run=^TestContentProcessingRechecksHiddenAncestorAfterRealObjectRead$",
+      "./conformance/component"
+    ],
+    "public_race": [
+      "go",
+      "test",
+      "-race",
+      "-tags=integration",
+      "-p",
+      "1",
+      "-count=1",
+      "-timeout=120s",
+      "-run=^TestContentProcessingRechecksHiddenAncestorAfterRealObjectRead$",
+      "./conformance/component"
+    ]
+  },
+  "execution_requirements": "explicit root soleLOCAL grants, lockedGo/readonly, supervised outer120, fresh exact logs/native identities, true setup failures stop (not fake RED), current 5WIP source prepin after format; no budget increase/retry",
+  "capacity_after_controls": "prepare NEW overlay of original5 low-overhead mappings (original inputs/oracles); no existing0514/c421 binary reuse after new source. Independent normal/race binaries exact current newly formatted sourcehashes; root pins builds then grants original4B normal/race separately. Originalcaller30/Claim5/Go120/outer120/count1/no profile/preheat/retry, all original63/62 materials+twoPublish+twoRead/Completed/publictails unchanged.",
+  "existing_coverage_inventory": {
+    "identity": "domain/content/identity_test.go TestIndependentVersionIdentityGolden independent original fixture",
+    "closure": "conformance/component/content_closure_test.go diamond/shared/owner/self+actual afterPut hidden ancestor Process; not processing postRead so new paired test necessary",
+    "same_tuple_current_full_ref": "content_target_policy_test.go current full-ref metadata exact gates, retained affected suite",
+    "processing_existing": "content_context_processing_test.go independent read/process/disclose/remaining controls (between separate reads), does not cover same-call postI/O",
+    "native_read_gate": "content_read_gate_test.go heldContentRead original finite actual native I/O+release/context helper; direct/public read/disclose gate tests do not cover ReadForProcessing Process action",
+    "64_65": "original4B TestContentContextReachableClosure64And65IncludesIntermediateVersions and static62 retained, no altered limits/new fake count public port",
+    "clock": "content_processing_deadline/read_clock/read_gate controls retained affected paths; no extra matrix now"
+  },
+  "remaining_authority_limits": "actual test/source read-only review pending; no fmt/Go/DB/build/native, no semantic/capacity acceptance, original UNKNOWN profileFD/resource facts retained",
+  "all_current_changed_paths": [
+    " M conformance/internal/decisionfixture/context_dispatch.go",
+    " M domain/content/closure.go",
+    " M domain/content/processing.go",
+    "?? conformance/component/content_context_publication_cause_test.go",
+    "?? conformance/internal/decisionfixture/context_publication_probe.go"
+  ],
+  "source_pins": {
+    "domain/content/closure.go": "8897d39b01c1872bf9a5ccf1bbdc9f6105e375e6418781c7ce9574c35b56bab5",
+    "domain/content/processing.go": "4a4440cb921001d3edb3d2e829f49b5e684c60d31e0603bcfe9b76a8d6283c30",
+    "conformance/internal/decisionfixture/context_dispatch.go": "5c2b8d472fdbe458b9affb9a9543db3359c85c0dfa90d5357bea843995e624fb",
+    "conformance/component/content_context_publication_cause_test.go": "e944e3439eabe84936eb166e1966b178166fd7e1f7b8a1972139b96b9b2768d0",
+    "conformance/internal/decisionfixture/context_publication_probe.go": "39051536517c23e30d1c80e919824d9c509e2d773a8e0568fe786fe82f9d5517",
+    "domain/content/identity.go": "e093a7918be9af0aeaec08c62b472de1141314812a71e3da386583237bbf60f0",
+    "adapters/content/decision/source.go": "f3342f0bfefabd1adeb59d8fa8566e4af70dfb64ea41185aa721386a04a3df27",
+    "adapters/postgres/content/facts.go": "8d53cb773a4711ff9866f5974b399de96eec137d82a92b97886c0825802cb069",
+    "adapters/postgres/content/policy.go": "3cb31490a70e0141daa24b4766295ea1a57598194877eda6f19e58371a2d45d9",
+    "adapters/content/decision/publisher.go": "aaee89f0653a4172062f32a0305a59867f35a77938125147dda73ca9e54d55d0"
+  },
+  "proposed_test_hashes": {
+    "closure_identity_memo_test.go.proposed": "8ff52181b901145e0f58e9261a55db815a7debef8d2d393e41159e95e928b72d",
+    "content_processing_ancestor_read_gate_test.go.proposed": "472bba1f3322b6c213db503fbc028b2c5d5106bd607a9f1a6aa437ced97b5a76"
+  },
+  "test_refinement": "All actor cleanup registered before reader launch; one original policy hour before3publications through actual trusted Manager, Rev2 clone changes only Revision/Process; reopen normal exactfull2sources plus publicGet/fixedreceipt/history tails. No altered20/3join/5work/120 deadlines."
+}

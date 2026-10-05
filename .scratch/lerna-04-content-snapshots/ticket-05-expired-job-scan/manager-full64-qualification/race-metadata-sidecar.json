@@ -1,0 +1,11 @@
+{
+  "kind": "precise metadata sidecar only; original Manager race outcome bytes immutable",
+  "original_outcome": "/tmp/lerna-05-manager-expired-race-outcome.json",
+  "original_outcome_sha256": "906e3f6f84b932c480e38647b9fb6a2bd7b48f42adefe5118b9a7b294ffff6b3",
+  "clarification_of_delegated_consumer_test_written_or_executed_false": "The Manager race executed no delegated selector RUN. At that race prelaunch the delegated85d995 test source was already written, normal-qualified6.510 and an additional compiled package dependency. The copied false field must not be interpreted as delegated source not written / not previously qualified.",
+  "delegated_source_sha256": "85d9951fd44c08b374730f8c95d464e8e8efb5726cfb5ec1df20977689bf6995",
+  "delegated_selector_RUN_during_Manager_race": false,
+  "delegated_source_written_by_Manager_race": true,
+  "delegated_normal_qualified_before_Manager_race": true,
+  "Manager_slot_continued_to_separate_delegated_operation_then_global_RELEASE": "/tmp/lerna-05-two-qualification-races-release.json"
+}

@@ -1,0 +1,17 @@
+=== RUN   TestContentOriginalAdmissionCleanupDeadlineSurvivesCurrentTargetPolicyLockWait
+=== RUN   TestContentOriginalAdmissionCleanupDeadlineSurvivesCurrentTargetPolicyLockWait/release-within-original-admission-budget
+=== RUN   TestContentOriginalAdmissionCleanupDeadlineSurvivesCurrentTargetPolicyLockWait/release-after-original-admission-deadline
+--- PASS: TestContentOriginalAdmissionCleanupDeadlineSurvivesCurrentTargetPolicyLockWait (5.44s)
+    --- PASS: TestContentOriginalAdmissionCleanupDeadlineSurvivesCurrentTargetPolicyLockWait/release-within-original-admission-budget (2.53s)
+    --- PASS: TestContentOriginalAdmissionCleanupDeadlineSurvivesCurrentTargetPolicyLockWait/release-after-original-admission-deadline (2.91s)
+=== RUN   TestContentOriginalCleanupDeadlineCannotBeExtendedByCurrentPolicyLockWait
+=== RUN   TestContentOriginalCleanupDeadlineCannotBeExtendedByCurrentPolicyLockWait/release-within-original-budget
+=== RUN   TestContentOriginalCleanupDeadlineCannotBeExtendedByCurrentPolicyLockWait/release-after-original-deadline
+--- PASS: TestContentOriginalCleanupDeadlineCannotBeExtendedByCurrentPolicyLockWait (5.31s)
+    --- PASS: TestContentOriginalCleanupDeadlineCannotBeExtendedByCurrentPolicyLockWait/release-within-original-budget (2.38s)
+    --- PASS: TestContentOriginalCleanupDeadlineCannotBeExtendedByCurrentPolicyLockWait/release-after-original-deadline (2.93s)
+=== RUN   TestContentInheritedExpiredCapConsumesItsExactAdmissionTargetWithoutDeletingLiveAncestor
+--- PASS: TestContentInheritedExpiredCapConsumesItsExactAdmissionTargetWithoutDeletingLiveAncestor (2.52s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/component	13.282s
+NATIVE_COMPLETION_ACK {"pid": 3548802, "pgid": 3548802, "starttime": "14876904", "exit": 0, "group_absent": true, "timed_out": false}

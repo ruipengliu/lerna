@@ -1,0 +1,9 @@
+=== RUN   TestContentProcessingRechecksHiddenAncestorAfterRealObjectRead
+=== RUN   TestContentProcessingRechecksHiddenAncestorAfterRealObjectRead/permitted
+=== RUN   TestContentProcessingRechecksHiddenAncestorAfterRealObjectRead/ancestor-process-withdrawn
+--- PASS: TestContentProcessingRechecksHiddenAncestorAfterRealObjectRead (0.76s)
+    --- PASS: TestContentProcessingRechecksHiddenAncestorAfterRealObjectRead/permitted (0.42s)
+    --- PASS: TestContentProcessingRechecksHiddenAncestorAfterRealObjectRead/ancestor-process-withdrawn (0.34s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/component	0.770s
+NATIVE_EXIT status=0 group_absent=True

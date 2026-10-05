@@ -1,0 +1,27 @@
+{
+  "status": "pre-effect phase registered",
+  "argv": [
+    "go",
+    "test",
+    "-v",
+    "-count=1",
+    "-p",
+    "1",
+    "-timeout=120s",
+    "-run=^(TestIndependentVersionIdentityGolden|TestClosureIdentityMemoPreservesFullRefValidationAndFiniteSuccess)$",
+    "./domain/content"
+  ],
+  "source_sha256": {
+    "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_dispatch.go": "5c2b8d472fdbe458b9affb9a9543db3359c85c0dfa90d5357bea843995e624fb",
+    "/tmp/lerna-worktrees/content-snapshots-03/domain/content/closure.go": "8897d39b01c1872bf9a5ccf1bbdc9f6105e375e6418781c7ce9574c35b56bab5",
+    "/tmp/lerna-worktrees/content-snapshots-03/domain/content/processing.go": "4a4440cb921001d3edb3d2e829f49b5e684c60d31e0603bcfe9b76a8d6283c30",
+    "/tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_context_publication_cause_test.go": "e944e3439eabe84936eb166e1966b178166fd7e1f7b8a1972139b96b9b2768d0",
+    "/tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_processing_ancestor_read_gate_test.go": "3f21849ec87141726000b210e64cdc9562a0f85feeb78665fa27d02cbe5adcc4",
+    "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_publication_probe.go": "39051536517c23e30d1c80e919824d9c509e2d773a8e0568fe786fe82f9d5517",
+    "/tmp/lerna-worktrees/content-snapshots-03/domain/content/closure_identity_memo_test.go": "c8152b534e0f4d3b915c8d545f41068d3717a0cd4470f14da74586ca98e41283"
+  },
+  "log": "/workspace/lerna-content-03-137311247276/context-single-read-identity-pure-normal.log",
+  "wrapper": "/workspace/lerna-content-03-137311247276/run-native.py",
+  "outer_seconds": 120,
+  "registered_ns": 1791180757207851156
+}

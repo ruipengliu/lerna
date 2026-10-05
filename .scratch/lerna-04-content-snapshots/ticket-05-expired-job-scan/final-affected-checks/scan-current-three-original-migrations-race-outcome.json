@@ -1,0 +1,32 @@
+{
+  "kind": "actual affected-check result",
+  "operation_index": 24,
+  "name": "scan-current-three-original-migrations-race",
+  "log": "/tmp/lerna-04-ticket05-execution/scan-current-three-original-migrations-race.log",
+  "raw_sha256": "2e56d9836f2ea83f4b97e004ca9a71d3a8945a5c635cd52024997b51535e172d",
+  "wrapper_exit": 0,
+  "elapsed_seconds": 2.669,
+  "start_ack": [
+    {
+      "event": "native_start_ack",
+      "pid": 3551683,
+      "pgid": 3551683,
+      "starttime": "14885741",
+      "deadline_seconds": 120
+    }
+  ],
+  "completion_ack": {
+    "pid": 3551683,
+    "pgid": 3551683,
+    "starttime": "14885741",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false
+  },
+  "resource_records": [],
+  "run_count": 1,
+  "pass_count": 1,
+  "fail_lines": [],
+  "package_results": [],
+  "prelaunch": "/tmp/lerna-04-ticket05-execution/scan-current-final-checks/scan-current-three-original-migrations-race-prelaunch.json"
+}

@@ -1,0 +1,30 @@
+{
+  "status": "pre-effect registered",
+  "registered_ns": 1791180757134843062,
+  "head": "28e3a468c86d4323d3b497836de23bb311a58952",
+  "source7_before_sha256": {
+    "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_dispatch.go": "5c2b8d472fdbe458b9affb9a9543db3359c85c0dfa90d5357bea843995e624fb",
+    "/tmp/lerna-worktrees/content-snapshots-03/domain/content/closure.go": "8897d39b01c1872bf9a5ccf1bbdc9f6105e375e6418781c7ce9574c35b56bab5",
+    "/tmp/lerna-worktrees/content-snapshots-03/domain/content/processing.go": "4a4440cb921001d3edb3d2e829f49b5e684c60d31e0603bcfe9b76a8d6283c30",
+    "/tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_context_publication_cause_test.go": "e944e3439eabe84936eb166e1966b178166fd7e1f7b8a1972139b96b9b2768d0",
+    "/tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_processing_ancestor_read_gate_test.go": "472bba1f3322b6c213db503fbc028b2c5d5106bd607a9f1a6aa437ced97b5a76",
+    "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_publication_probe.go": "39051536517c23e30d1c80e919824d9c509e2d773a8e0568fe786fe82f9d5517",
+    "/tmp/lerna-worktrees/content-snapshots-03/domain/content/closure_identity_memo_test.go": "8ff52181b901145e0f58e9261a55db815a7debef8d2d393e41159e95e928b72d"
+  },
+  "exact_commands_sha256": "2803676623543f316359cdb7762888917811f4c5d8edc1184b57c066d283e56d",
+  "fourfile_preformat_saved": "/workspace/lerna-content-03-137311247276/single-read-identity-reuse/qualification-preformat",
+  "phase_order": [
+    "format",
+    "pure_normal",
+    "public_normal",
+    "public_race"
+  ],
+  "stop_first_failure": true,
+  "original_budgets": {
+    "caller": 20,
+    "actor_join": 3,
+    "publication_work": 5
+  },
+  "original_profile_descriptor_Close": "UNKNOWN",
+  "no_capacity_build_business": true
+}

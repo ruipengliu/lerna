@@ -1,0 +1,154 @@
+{
+  "status": "pre-effect independent build registered",
+  "registered_ns": 1791181398090376576,
+  "actual_argv": [
+    "go",
+    "test",
+    "-c",
+    "-p",
+    "1",
+    "-tags=integration",
+    "-overlay=/workspace/lerna-content-03-137311247276/large-graph-single-read-identity-overlay/overlay.json",
+    "-o",
+    "/workspace/lerna-content-03-137311247276/large-graph-single-read-identity-overlay/component-normal.test",
+    "./conformance/component"
+  ],
+  "workdir": "/tmp/lerna-worktrees/content-snapshots-03",
+  "locked_environment": "source /workspace/.lerna-env/env.sh; GOTOOLCHAIN=local GOFLAGS=-mod=readonly",
+  "map_sha256": "4e6e38ad53cf35f41f71b5706043b811cf13452e7cec2e15a23070c2309000f9",
+  "manifest_sha256": "f9492989728dd437749023e766057d2a904c82637120b06233705ed30def89ec",
+  "source7_sha256": {
+    "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_dispatch.go": "5c2b8d472fdbe458b9affb9a9543db3359c85c0dfa90d5357bea843995e624fb",
+    "/tmp/lerna-worktrees/content-snapshots-03/domain/content/closure.go": "8897d39b01c1872bf9a5ccf1bbdc9f6105e375e6418781c7ce9574c35b56bab5",
+    "/tmp/lerna-worktrees/content-snapshots-03/domain/content/processing.go": "4a4440cb921001d3edb3d2e829f49b5e684c60d31e0603bcfe9b76a8d6283c30",
+    "/tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_context_publication_cause_test.go": "e944e3439eabe84936eb166e1966b178166fd7e1f7b8a1972139b96b9b2768d0",
+    "/tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_processing_ancestor_read_gate_test.go": "3f21849ec87141726000b210e64cdc9562a0f85feeb78665fa27d02cbe5adcc4",
+    "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_publication_probe.go": "39051536517c23e30d1c80e919824d9c509e2d773a8e0568fe786fe82f9d5517",
+    "/tmp/lerna-worktrees/content-snapshots-03/domain/content/closure_identity_memo_test.go": "c8152b534e0f4d3b915c8d545f41068d3717a0cd4470f14da74586ca98e41283"
+  },
+  "current_compiled_source_pins": [
+    {
+      "path": "/tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_context_binding_decode_test.go",
+      "sha256": "be01bd66705d9baef855fbdb77aaab704757f99cbabbc8050bdbd0d855bda75a",
+      "bytes": 9009,
+      "device": 33,
+      "inode": 364825,
+      "overlay_replaced": false
+    },
+    {
+      "path": "/tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_context_publication_cause_test.go",
+      "sha256": "e944e3439eabe84936eb166e1966b178166fd7e1f7b8a1972139b96b9b2768d0",
+      "bytes": 7278,
+      "device": 33,
+      "inode": 382211,
+      "overlay_replaced": false
+    },
+    {
+      "path": "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_binding_decode.go",
+      "sha256": "457b065fb760a264f0c687f82275c1dd73af3414191cccee1bba80b527f04779",
+      "bytes": 3570,
+      "device": 33,
+      "inode": 364282,
+      "overlay_replaced": false
+    },
+    {
+      "path": "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_budget_probe.go",
+      "sha256": "d600be93226932cdad26fa81a35ed44d383de37bf5e984a23b67f643502ade2e",
+      "bytes": 5125,
+      "device": 33,
+      "inode": 344623,
+      "overlay_replaced": false
+    },
+    {
+      "path": "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_dispatch.go",
+      "sha256": "5c2b8d472fdbe458b9affb9a9543db3359c85c0dfa90d5357bea843995e624fb",
+      "bytes": 23388,
+      "device": 33,
+      "inode": 317693,
+      "overlay_replaced": false
+    },
+    {
+      "path": "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_publication_probe.go",
+      "sha256": "39051536517c23e30d1c80e919824d9c509e2d773a8e0568fe786fe82f9d5517",
+      "bytes": 2457,
+      "device": 33,
+      "inode": 382210,
+      "overlay_replaced": false
+    },
+    {
+      "path": "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/source.go",
+      "sha256": "2698e49c206097583867ababbeba87a8c20942ed58b4606b6a8fc98fefbc7684",
+      "bytes": 19753,
+      "device": 33,
+      "inode": 312623,
+      "overlay_replaced": false
+    },
+    {
+      "path": "/tmp/lerna-worktrees/content-snapshots-03/domain/content/closure.go",
+      "sha256": "8897d39b01c1872bf9a5ccf1bbdc9f6105e375e6418781c7ce9574c35b56bab5",
+      "bytes": 7391,
+      "device": 33,
+      "inode": 313008,
+      "overlay_replaced": false
+    },
+    {
+      "path": "/tmp/lerna-worktrees/content-snapshots-03/domain/content/identity.go",
+      "sha256": "e093a7918be9af0aeaec08c62b472de1141314812a71e3da386583237bbf60f0",
+      "bytes": 1533,
+      "device": 33,
+      "inode": 313009,
+      "overlay_replaced": false
+    },
+    {
+      "path": "/tmp/lerna-worktrees/content-snapshots-03/domain/content/processing.go",
+      "sha256": "4a4440cb921001d3edb3d2e829f49b5e684c60d31e0603bcfe9b76a8d6283c30",
+      "bytes": 4224,
+      "device": 33,
+      "inode": 314888,
+      "overlay_replaced": false
+    },
+    {
+      "path": "/tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_processing_ancestor_read_gate_test.go",
+      "sha256": "3f21849ec87141726000b210e64cdc9562a0f85feeb78665fa27d02cbe5adcc4",
+      "bytes": 5847,
+      "device": 33,
+      "inode": 391473,
+      "overlay_replaced": false
+    },
+    {
+      "path": "/tmp/lerna-worktrees/content-snapshots-03/components/decision_engine/worker.go",
+      "sha256": "663d0c96eae83a4175c66f2ceaf3b87688d9a8199d3998e647eff4868eb0ff27",
+      "bytes": 31783,
+      "device": 33,
+      "inode": 312439,
+      "overlay_replaced": false,
+      "frozen_worker": true
+    }
+  ],
+  "excluded_mechanical_source_pins": [
+    {
+      "path": "/tmp/lerna-worktrees/content-snapshots-03/domain/content/closure_identity_memo_test.go",
+      "sha256": "c8152b534e0f4d3b915c8d545f41068d3717a0cd4470f14da74586ca98e41283",
+      "bytes": 3060,
+      "device": 33,
+      "inode": 391472,
+      "scope": "Go domain test package only"
+    },
+    {
+      "path": "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_binding_decode_test.go",
+      "sha256": "2333886aa9349e9c1e13d0c8b3a87165ba4742287b21f25fa240fc092ed00f8d",
+      "bytes": 10116,
+      "overlay_replaced": false,
+      "exclude_from_component_binary": true,
+      "qualification_scope": "dependency-package mechanical tests, not part of component go test -c",
+      "device": 33,
+      "inode": 364386
+    }
+  ],
+  "binary_absent_before": true,
+  "binary_path": "/workspace/lerna-content-03-137311247276/large-graph-single-read-identity-overlay/component-normal.test",
+  "raw_path": "/workspace/lerna-content-03-137311247276/context-final-capacity-b-single-read-identity-build-normal.log",
+  "outer_seconds": 120,
+  "business_unrun": true,
+  "no_source_fmt_changes": true
+}

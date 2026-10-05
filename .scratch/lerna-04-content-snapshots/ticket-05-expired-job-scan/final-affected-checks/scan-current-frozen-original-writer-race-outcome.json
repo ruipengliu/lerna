@@ -1,0 +1,32 @@
+{
+  "kind": "actual affected-check result",
+  "operation_index": 22,
+  "name": "scan-current-frozen-original-writer-race",
+  "log": "/tmp/lerna-04-ticket05-execution/scan-current-frozen-original-writer-race.log",
+  "raw_sha256": "73da5413d019b23f321becc6b51fe60682656d2883d86c70d6be42b66eae9645",
+  "wrapper_exit": 0,
+  "elapsed_seconds": 6.695,
+  "start_ack": [
+    {
+      "event": "native_start_ack",
+      "pid": 3551225,
+      "pgid": 3551225,
+      "starttime": "14884951",
+      "deadline_seconds": 120
+    }
+  ],
+  "completion_ack": {
+    "pid": 3551225,
+    "pgid": 3551225,
+    "starttime": "14884951",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false
+  },
+  "resource_records": [],
+  "run_count": 1,
+  "pass_count": 1,
+  "fail_lines": [],
+  "package_results": [],
+  "prelaunch": "/tmp/lerna-04-ticket05-execution/scan-current-final-checks/scan-current-frozen-original-writer-race-prelaunch.json"
+}
