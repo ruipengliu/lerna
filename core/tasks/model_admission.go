@@ -92,11 +92,11 @@ func (s *Service) AdmitModelCall(ctx context.Context, caller *v1.Caller, c *v1.A
 				return nil, command.Fail("BLOCKING_OPERATION")
 			}
 		}
-		cap, e := s.QueryCapability(tx, caller, call.CapabilityRef)
+		cap, e := s.QueryCurrentCapability(tx, caller, call.CapabilityRef)
 		if e != nil {
 			return nil, e
 		}
-		if cap == nil || cap.MaxSends != r.MaxPhysicalSends || cap.MaxSends != 1 {
+		if cap == nil || !proto.Equal(cap.Ref, call.CapabilityRef) || cap.MaxSends != r.MaxPhysicalSends || cap.MaxSends != 1 {
 			return nil, command.Fail("CAPABILITY_INVALID")
 		}
 		ref := command.NewRef(s.user, s.domain, "admission", "lerna.v1.Admission")

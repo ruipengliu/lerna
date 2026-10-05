@@ -108,7 +108,7 @@ func (s *Store) LoadBillingSourceVersion(ctx context.Context, r *v1.Ref) (*v1.Bi
 func (s *Store) AllReservations(ctx context.Context) ([]*v1.Reservation, error) {
 	var result []*v1.Reservation
 	e := s.read(ctx, func(q querier) error {
-		rows, e := q.QueryContext(ctx, "SELECT record FROM reservations WHERE user_id=? AND domain_id=?", s.user, s.domain)
+		rows, e := q.QueryContext(ctx, "SELECT record FROM send_reservations WHERE user_id=? AND domain_id=?", s.user, s.domain)
 		if e != nil {
 			return e
 		}

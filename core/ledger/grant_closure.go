@@ -52,18 +52,29 @@ func (s *Service) CloseForGrantRevocation(ctx context.Context, caller *v1.Caller
 		if e != nil {
 			return nil, e
 		}
-		if op == nil || op.Execution == nil || !proto.Equal(op.Execution.Attempt.Ref.Name, b.AttemptId) || op.Execution.Send.SendSeq != b.SendSeq || !proto.Equal(op.AdmissionRef, b.AdmissionRef) || op.Execution.CallDescriptor.Digest != b.DescriptorDigest {
+		if op == nil || op.Execution == nil || !proto.Equal(op.Execution.Attempt.Ref.Name, b.AttemptId) || !proto.Equal(op.AdmissionRef, b.AdmissionRef) || op.Execution.CallDescriptor.Digest != b.DescriptorDigest {
 			return nil, command.Fail("CREDENTIAL_BINDING_MISMATCH")
 		}
 		x := op.Execution
-		possible := x.Send.Phase != "REGISTERED" && x.Send.Phase != "CLOSED"
-		closure := &v1.GrantExitClosure{Ref: command.NewRef(s.user, s.domain, "grant-exit-closure", "lerna.v1.GrantExitClosure"), CredentialRef: c.CredentialRef, RevocationRef: c.RevocationRef, OperationId: b.OperationId, SendRef: proto.Clone(x.Send.Ref).(*v1.Ref), PhysicalSendWasPossible: possible}
+		var send *v1.PhysicalSend
+		for _, candidate := range append([]*v1.PhysicalSend{x.Send}, x.PreviousSends...) {
+			if candidate.SendSeq == b.SendSeq {
+				send = candidate
+			}
+		}
+		if send == nil {
+			return nil, command.Fail("CREDENTIAL_BINDING_MISMATCH")
+		}
+		possible := send.Phase != "REGISTERED" && send.Phase != "CLOSED"
+		closure := &v1.GrantExitClosure{Ref: command.NewRef(s.user, s.domain, "grant-exit-closure", "lerna.v1.GrantExitClosure"), CredentialRef: c.CredentialRef, RevocationRef: c.RevocationRef, OperationId: b.OperationId, SendRef: proto.Clone(send.Ref).(*v1.Ref), PhysicalSendWasPossible: possible}
 		op.Ref.Revision++
 		op.Dispatch = "SEALED"
 		op.ClosureEvidenceRefs = append(op.ClosureEvidenceRefs, closure.Ref)
 		if !possible {
-			x.Send.Ref.Revision++
-			x.Send.Phase = "CLOSED"
+			send.Ref.Revision++
+			send.Phase = "CLOSED"
+		}
+		if !executionMayHaveSent(x) {
 			x.Attempt.Ref.Revision++
 			x.Attempt.Phase = "CLOSED"
 			op.AttemptRefs = []*v1.Ref{x.Attempt.Ref}

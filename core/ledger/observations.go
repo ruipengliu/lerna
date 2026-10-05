@@ -43,15 +43,19 @@ func (s *Service) AcceptObservation(ctx context.Context, caller *v1.Caller, c *v
 		if e != nil {
 			return nil, e
 		}
-		if op == nil || op.Execution == nil || !proto.Equal(op.Execution.Send.ObservationRef, o.Ref) || c.Header.Identity.CommandId != "observe:"+o.Ref.Name.LocalId {
+		if op == nil || op.Execution == nil {
+			return nil, command.Fail("INVALID_OBSERVATION")
+		}
+		send := executionSend(op.Execution, o.SendRef)
+		if send == nil || !proto.Equal(send.ObservationRef, o.Ref) || !proto.Equal(send.Ref, o.SendRef) || send.Phase != "DISPATCH_POSSIBLE" || !proto.Equal(send.AttemptId, o.AttemptId) || c.Header.Identity.CommandId != "observe:"+o.Ref.Name.LocalId {
 			return nil, command.Fail("INVALID_OBSERVATION")
 		}
 		if e = s.store.(observationStore).SaveLedgerObservation(tx, o); e != nil {
 			return nil, e
 		}
 		x := op.Execution
-		x.Send.Ref.Revision++
-		x.Send.Phase = "OBSERVED"
+		send.Ref.Revision++
+		send.Phase = "OBSERVED"
 		x.Attempt.Ref.Revision++
 		x.Attempt.Phase = "OBSERVED"
 		op.Ref.Revision++

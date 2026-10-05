@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strconv"
 	"sync"
 	"time"
 )
@@ -97,7 +98,7 @@ func (t *Target) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	t.mu.Lock()
 	defer t.mu.Unlock()
 	t.requests = append(t.requests, Request{Method: r.Method, ExternalKey: key, Attempt: r.Header.Get("Lerna-Attempt"), Send: r.Header.Get("Lerna-Send"), User: r.Header.Get("Lerna-User"), Operation: r.Header.Get("Lerna-Operation"), BodyDigest: digest, ReceivedAtUnixNano: time.Now().UnixNano()})
-	if r.Method == "GET" && t.mode == "queryable" {
+	if r.Method == "GET" && (t.mode == "queryable" || t.mode == "idempotent-queryable") {
 		if t.queryBehavior == "drop" {
 			if h, ok := w.(http.Hijacker); ok {
 				conn, _, e := h.Hijack()
@@ -163,17 +164,42 @@ func (t *Target) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "unsupported", http.StatusMethodNotAllowed)
 		return
 	}
+	if t.mode == "idempotent-expiring" {
+		expiry, err := strconv.ParseInt(r.Header.Get("Lerna-Key-Valid-Until"), 10, 64)
+		if err != nil || expiry <= 0 {
+			http.Error(w, "missing immutable key expiry", 400)
+			return
+		}
+		if time.Now().UnixMilli() >= expiry {
+			http.Error(w, "key expired", http.StatusGone)
+			return
+		}
+	}
 	if t.behavior == "reject" || t.rejected[key] {
 		_ = json.NewEncoder(w).Encode(map[string]any{"protocol": "lerna-simulator-v1", "external_key": key, "attempt_id": key, "applied": false, "terminal": true})
 		return
 	}
 	for _, effect := range t.effects {
-		if t.mode == "idempotent" && effect.ExternalKey == key {
+		if (t.mode == "idempotent" || t.mode == "idempotent-expiring" || t.mode == "idempotent-queryable") && effect.ExternalKey == key {
 			if effect.BodyDigest != digest {
 				http.Error(w, "key payload mismatch", http.StatusConflict)
 				return
 			}
 			t.respond(w, key, effect.AppliedAtUnixNano)
+			return
+		}
+	}
+	if t.mode == "idempotent" || t.mode == "idempotent-expiring" || t.mode == "idempotent-queryable" {
+		for _, pending := range t.pending {
+			if pending.ExternalKey != key {
+				continue
+			}
+			if pending.BodyDigest != digest {
+				http.Error(w, "key payload mismatch", http.StatusConflict)
+				return
+			}
+			// 已接受的原键仍在执行；重复请求不能排队第二个效果。
+			_ = json.NewEncoder(w).Encode(map[string]any{"protocol": "lerna-simulator-v1", "external_key": key, "attempt_id": key, "applied": false, "terminal": false})
 			return
 		}
 	}

@@ -55,12 +55,12 @@ func (s *Service) StartExecution(ctx context.Context, caller *v1.Caller, c *v1.S
 		if c.Header.Identity.CommandId != "start:"+send.Name.LocalId {
 			return nil, command.Fail("INVALID_START_IDENTITY")
 		}
-		// 开始-2：首次开始以准入的控制与输入依据为围栏。
+		// 开始-2：首次开始比较原控制代次；已核验的安全重发服从当前控制。
 		task, e := s.QueryTask(tx, caller, a.TaskId)
 		if e != nil {
 			return nil, e
 		}
-		if task == nil || task.ControlGeneration != a.ControlGeneration {
+		if task == nil || (c.Binding.SendSeq == 1 && task.ControlGeneration != a.ControlGeneration) {
 			return nil, command.Fail("STALE_GENERATION")
 		}
 		preparation, e := s.checkModelAdmission(tx, caller, a)

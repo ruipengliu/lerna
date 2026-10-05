@@ -71,7 +71,10 @@ func (s *Store) LoadSnapshot(ctx context.Context, r *v1.Ref) (*v1.ContextSnapsho
 	return p, e
 }
 func (s *Store) SaveCapability(ctx context.Context, c *v1.Capability) error {
-	return s.saveRecord(ctx, "adjudication", "INSERT INTO capabilities VALUES(?,?,?,?)", c, c.Ref.Name.UserId, c.Ref.Name.AuthorityDomainId, c.Ref.Name.LocalId)
+	if e := s.saveRecord(ctx, "adjudication", "INSERT INTO capability_versions VALUES(?,?,?,?,?)", c, c.Ref.Name.UserId, c.Ref.Name.AuthorityDomainId, c.Ref.Name.LocalId, c.Ref.Revision); e != nil {
+		return e
+	}
+	return s.saveRecord(ctx, "adjudication", "INSERT INTO capabilities VALUES(?,?,?,?) ON CONFLICT(user_id,domain_id,id) DO UPDATE SET record=excluded.record", c, c.Ref.Name.UserId, c.Ref.Name.AuthorityDomainId, c.Ref.Name.LocalId)
 }
 func (s *Store) LoadCapability(ctx context.Context, r *v1.Ref) (*v1.Capability, error) {
 	c := new(v1.Capability)
@@ -147,4 +150,13 @@ func (s *Store) LoadProposal(ctx context.Context, r *v1.Ref) (*v1.Proposal, erro
 		return nil, e
 	}
 	return p, e
+}
+
+func (s *Store) LoadCapabilityVersion(ctx context.Context, r *v1.Ref) (*v1.Capability, error) {
+	c := new(v1.Capability)
+	ok, e := s.load(ctx, c, "SELECT record FROM capability_versions WHERE user_id=? AND domain_id=? AND id=? AND revision=?", r.Name.UserId, r.Name.AuthorityDomainId, r.Name.LocalId, r.Revision)
+	if !ok {
+		return nil, e
+	}
+	return c, e
 }

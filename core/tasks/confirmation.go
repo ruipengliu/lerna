@@ -47,7 +47,7 @@ func (s *Service) RequestAdmissionConfirmation(ctx context.Context, caller *v1.C
 		if e != nil {
 			return nil, e
 		}
-		if cap == nil {
+		if cap == nil || !proto.Equal(cap.Ref, p.Proposal.Step.CapabilityRef) {
 			return nil, command.Fail("CAPABILITY_INVALID")
 		}
 		step := p.Proposal.Step

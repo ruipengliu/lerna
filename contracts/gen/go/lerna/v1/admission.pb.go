@@ -22,22 +22,23 @@ const (
 )
 
 type Capability struct {
-	state              protoimpl.MessageState `protogen:"open.v1"`
-	Ref                *Ref                   `protobuf:"bytes,1,opt,name=ref,proto3" json:"ref,omitempty"`
-	Action             string                 `protobuf:"bytes,2,opt,name=action,proto3" json:"action,omitempty"`
-	Resource           string                 `protobuf:"bytes,3,opt,name=resource,proto3" json:"resource,omitempty"`
-	UseRight           string                 `protobuf:"bytes,4,opt,name=use_right,json=useRight,proto3" json:"use_right,omitempty"`
-	ProcessingPurpose  string                 `protobuf:"bytes,5,opt,name=processing_purpose,json=processingPurpose,proto3" json:"processing_purpose,omitempty"`
-	ExecutorEndpointId string                 `protobuf:"bytes,6,opt,name=executor_endpoint_id,json=executorEndpointId,proto3" json:"executor_endpoint_id,omitempty"`
-	AdapterRef         *Ref                   `protobuf:"bytes,7,opt,name=adapter_ref,json=adapterRef,proto3" json:"adapter_ref,omitempty"`
-	Unit               string                 `protobuf:"bytes,8,opt,name=unit,proto3" json:"unit,omitempty"`
-	FeeCeiling         *int64                 `protobuf:"varint,9,opt,name=fee_ceiling,json=feeCeiling,proto3,oneof" json:"fee_ceiling,omitempty"`
-	RateBasisRef       *Ref                   `protobuf:"bytes,10,opt,name=rate_basis_ref,json=rateBasisRef,proto3" json:"rate_basis_ref,omitempty"`
-	MaxSends           uint32                 `protobuf:"varint,11,opt,name=max_sends,json=maxSends,proto3" json:"max_sends,omitempty"`
-	Nonbillable        bool                   `protobuf:"varint,12,opt,name=nonbillable,proto3" json:"nonbillable,omitempty"`
-	ApprovedBy         *CommandIdentity       `protobuf:"bytes,13,opt,name=approved_by,json=approvedBy,proto3" json:"approved_by,omitempty"`
-	unknownFields      protoimpl.UnknownFields
-	sizeCache          protoimpl.SizeCache
+	state                  protoimpl.MessageState `protogen:"open.v1"`
+	Ref                    *Ref                   `protobuf:"bytes,1,opt,name=ref,proto3" json:"ref,omitempty"`
+	Action                 string                 `protobuf:"bytes,2,opt,name=action,proto3" json:"action,omitempty"`
+	Resource               string                 `protobuf:"bytes,3,opt,name=resource,proto3" json:"resource,omitempty"`
+	UseRight               string                 `protobuf:"bytes,4,opt,name=use_right,json=useRight,proto3" json:"use_right,omitempty"`
+	ProcessingPurpose      string                 `protobuf:"bytes,5,opt,name=processing_purpose,json=processingPurpose,proto3" json:"processing_purpose,omitempty"`
+	ExecutorEndpointId     string                 `protobuf:"bytes,6,opt,name=executor_endpoint_id,json=executorEndpointId,proto3" json:"executor_endpoint_id,omitempty"`
+	AdapterRef             *Ref                   `protobuf:"bytes,7,opt,name=adapter_ref,json=adapterRef,proto3" json:"adapter_ref,omitempty"`
+	Unit                   string                 `protobuf:"bytes,8,opt,name=unit,proto3" json:"unit,omitempty"`
+	FeeCeiling             *int64                 `protobuf:"varint,9,opt,name=fee_ceiling,json=feeCeiling,proto3,oneof" json:"fee_ceiling,omitempty"`
+	RateBasisRef           *Ref                   `protobuf:"bytes,10,opt,name=rate_basis_ref,json=rateBasisRef,proto3" json:"rate_basis_ref,omitempty"`
+	MaxSends               uint32                 `protobuf:"varint,11,opt,name=max_sends,json=maxSends,proto3" json:"max_sends,omitempty"`
+	Nonbillable            bool                   `protobuf:"varint,12,opt,name=nonbillable,proto3" json:"nonbillable,omitempty"`
+	ApprovedBy             *CommandIdentity       `protobuf:"bytes,13,opt,name=approved_by,json=approvedBy,proto3" json:"approved_by,omitempty"`
+	IdempotencyRetentionMs int64                  `protobuf:"varint,20,opt,name=idempotency_retention_ms,json=idempotencyRetentionMs,proto3" json:"idempotency_retention_ms,omitempty"`
+	unknownFields          protoimpl.UnknownFields
+	sizeCache              protoimpl.SizeCache
 }
 
 func (x *Capability) Reset() {
@@ -161,10 +162,18 @@ func (x *Capability) GetApprovedBy() *CommandIdentity {
 	return nil
 }
 
+func (x *Capability) GetIdempotencyRetentionMs() int64 {
+	if x != nil {
+		return x.IdempotencyRetentionMs
+	}
+	return 0
+}
+
 type ConfigureCapabilityCommand struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Header        *CommandHeader         `protobuf:"bytes,1,opt,name=header,proto3" json:"header,omitempty"`
 	Capability    *Capability            `protobuf:"bytes,2,opt,name=capability,proto3" json:"capability,omitempty"`
+	Replaces      *Ref                   `protobuf:"bytes,3,opt,name=replaces,proto3" json:"replaces,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -209,6 +218,13 @@ func (x *ConfigureCapabilityCommand) GetHeader() *CommandHeader {
 func (x *ConfigureCapabilityCommand) GetCapability() *Capability {
 	if x != nil {
 		return x.Capability
+	}
+	return nil
+}
+
+func (x *ConfigureCapabilityCommand) GetReplaces() *Ref {
+	if x != nil {
+		return x.Replaces
 	}
 	return nil
 }
@@ -605,7 +621,7 @@ var File_lerna_v1_admission_proto protoreflect.FileDescriptor
 
 const file_lerna_v1_admission_proto_rawDesc = "" +
 	"\n" +
-	"\x18lerna/v1/admission.proto\x12\blerna.v1\x1a\x18lerna/v1/authority.proto\x1a\x16lerna/v1/closure.proto\x1a\x17lerna/v1/identity.proto\x1a\x17lerna/v1/planning.proto\x1a\x19lerna/v1/submission.proto\"\x89\x04\n" +
+	"\x18lerna/v1/admission.proto\x12\blerna.v1\x1a\x18lerna/v1/authority.proto\x1a\x16lerna/v1/closure.proto\x1a\x17lerna/v1/identity.proto\x1a\x17lerna/v1/planning.proto\x1a\x19lerna/v1/submission.proto\"\xc3\x04\n" +
 	"\n" +
 	"Capability\x12\x1f\n" +
 	"\x03ref\x18\x01 \x01(\v2\r.lerna.v1.RefR\x03ref\x12\x16\n" +
@@ -624,13 +640,15 @@ const file_lerna_v1_admission_proto_rawDesc = "" +
 	"\tmax_sends\x18\v \x01(\rR\bmaxSends\x12 \n" +
 	"\vnonbillable\x18\f \x01(\bR\vnonbillable\x12:\n" +
 	"\vapproved_by\x18\r \x01(\v2\x19.lerna.v1.CommandIdentityR\n" +
-	"approvedByB\x0e\n" +
-	"\f_fee_ceiling\"\x83\x01\n" +
+	"approvedBy\x128\n" +
+	"\x18idempotency_retention_ms\x18\x14 \x01(\x03R\x16idempotencyRetentionMsB\x0e\n" +
+	"\f_fee_ceiling\"\xae\x01\n" +
 	"\x1aConfigureCapabilityCommand\x12/\n" +
 	"\x06header\x18\x01 \x01(\v2\x17.lerna.v1.CommandHeaderR\x06header\x124\n" +
 	"\n" +
 	"capability\x18\x02 \x01(\v2\x14.lerna.v1.CapabilityR\n" +
-	"capability\"\xe6\t\n" +
+	"capability\x12)\n" +
+	"\breplaces\x18\x03 \x01(\v2\r.lerna.v1.RefR\breplaces\"\xe6\t\n" +
 	"\tAdmission\x12\x1f\n" +
 	"\x03ref\x18\x01 \x01(\v2\r.lerna.v1.RefR\x03ref\x12%\n" +
 	"\x06origin\x18\x02 \x01(\v2\r.lerna.v1.RefR\x06origin\x12\x17\n" +
@@ -708,37 +726,38 @@ var file_lerna_v1_admission_proto_depIdxs = []int32{
 	6,  // 3: lerna.v1.Capability.approved_by:type_name -> lerna.v1.CommandIdentity
 	7,  // 4: lerna.v1.ConfigureCapabilityCommand.header:type_name -> lerna.v1.CommandHeader
 	0,  // 5: lerna.v1.ConfigureCapabilityCommand.capability:type_name -> lerna.v1.Capability
-	5,  // 6: lerna.v1.Admission.ref:type_name -> lerna.v1.Ref
-	5,  // 7: lerna.v1.Admission.origin:type_name -> lerna.v1.Ref
-	8,  // 8: lerna.v1.Admission.task_id:type_name -> lerna.v1.GlobalName
-	9,  // 9: lerna.v1.Admission.ancestor_controls:type_name -> lerna.v1.AncestorControl
-	10, // 10: lerna.v1.Admission.memory_dependencies:type_name -> lerna.v1.MemoryDependency
-	8,  // 11: lerna.v1.Admission.operation_id:type_name -> lerna.v1.GlobalName
-	5,  // 12: lerna.v1.Admission.grant_refs:type_name -> lerna.v1.Ref
-	11, // 13: lerna.v1.Admission.budget_basis:type_name -> lerna.v1.BudgetBasis
-	5,  // 14: lerna.v1.Admission.confirmation_ref:type_name -> lerna.v1.Ref
-	5,  // 15: lerna.v1.Admission.parameters_ref:type_name -> lerna.v1.Ref
-	5,  // 16: lerna.v1.Admission.capability_ref:type_name -> lerna.v1.Ref
-	5,  // 17: lerna.v1.Admission.grant_use_ref:type_name -> lerna.v1.Ref
-	6,  // 18: lerna.v1.Admission.handoff_identity:type_name -> lerna.v1.CommandIdentity
-	0,  // 19: lerna.v1.Admission.capability_snapshot:type_name -> lerna.v1.Capability
-	5,  // 20: lerna.v1.Admission.content_refs:type_name -> lerna.v1.Ref
-	12, // 21: lerna.v1.Admission.query_subject:type_name -> lerna.v1.QuerySubject
-	7,  // 22: lerna.v1.AdmitCommand.header:type_name -> lerna.v1.CommandHeader
-	8,  // 23: lerna.v1.AdmitCommand.task_id:type_name -> lerna.v1.GlobalName
-	5,  // 24: lerna.v1.AdmitCommand.proposal_ref:type_name -> lerna.v1.Ref
-	5,  // 25: lerna.v1.AdmitCommand.grant_ref:type_name -> lerna.v1.Ref
-	5,  // 26: lerna.v1.AdmitCommand.confirmation_ref:type_name -> lerna.v1.Ref
-	5,  // 27: lerna.v1.Handoff.ref:type_name -> lerna.v1.Ref
-	5,  // 28: lerna.v1.Handoff.admission_ref:type_name -> lerna.v1.Ref
-	6,  // 29: lerna.v1.Handoff.identity:type_name -> lerna.v1.CommandIdentity
-	5,  // 30: lerna.v1.Handoff.job_ref:type_name -> lerna.v1.Ref
-	13, // 31: lerna.v1.Handoff.recipient_receipt:type_name -> lerna.v1.CommandReceipt
-	32, // [32:32] is the sub-list for method output_type
-	32, // [32:32] is the sub-list for method input_type
-	32, // [32:32] is the sub-list for extension type_name
-	32, // [32:32] is the sub-list for extension extendee
-	0,  // [0:32] is the sub-list for field type_name
+	5,  // 6: lerna.v1.ConfigureCapabilityCommand.replaces:type_name -> lerna.v1.Ref
+	5,  // 7: lerna.v1.Admission.ref:type_name -> lerna.v1.Ref
+	5,  // 8: lerna.v1.Admission.origin:type_name -> lerna.v1.Ref
+	8,  // 9: lerna.v1.Admission.task_id:type_name -> lerna.v1.GlobalName
+	9,  // 10: lerna.v1.Admission.ancestor_controls:type_name -> lerna.v1.AncestorControl
+	10, // 11: lerna.v1.Admission.memory_dependencies:type_name -> lerna.v1.MemoryDependency
+	8,  // 12: lerna.v1.Admission.operation_id:type_name -> lerna.v1.GlobalName
+	5,  // 13: lerna.v1.Admission.grant_refs:type_name -> lerna.v1.Ref
+	11, // 14: lerna.v1.Admission.budget_basis:type_name -> lerna.v1.BudgetBasis
+	5,  // 15: lerna.v1.Admission.confirmation_ref:type_name -> lerna.v1.Ref
+	5,  // 16: lerna.v1.Admission.parameters_ref:type_name -> lerna.v1.Ref
+	5,  // 17: lerna.v1.Admission.capability_ref:type_name -> lerna.v1.Ref
+	5,  // 18: lerna.v1.Admission.grant_use_ref:type_name -> lerna.v1.Ref
+	6,  // 19: lerna.v1.Admission.handoff_identity:type_name -> lerna.v1.CommandIdentity
+	0,  // 20: lerna.v1.Admission.capability_snapshot:type_name -> lerna.v1.Capability
+	5,  // 21: lerna.v1.Admission.content_refs:type_name -> lerna.v1.Ref
+	12, // 22: lerna.v1.Admission.query_subject:type_name -> lerna.v1.QuerySubject
+	7,  // 23: lerna.v1.AdmitCommand.header:type_name -> lerna.v1.CommandHeader
+	8,  // 24: lerna.v1.AdmitCommand.task_id:type_name -> lerna.v1.GlobalName
+	5,  // 25: lerna.v1.AdmitCommand.proposal_ref:type_name -> lerna.v1.Ref
+	5,  // 26: lerna.v1.AdmitCommand.grant_ref:type_name -> lerna.v1.Ref
+	5,  // 27: lerna.v1.AdmitCommand.confirmation_ref:type_name -> lerna.v1.Ref
+	5,  // 28: lerna.v1.Handoff.ref:type_name -> lerna.v1.Ref
+	5,  // 29: lerna.v1.Handoff.admission_ref:type_name -> lerna.v1.Ref
+	6,  // 30: lerna.v1.Handoff.identity:type_name -> lerna.v1.CommandIdentity
+	5,  // 31: lerna.v1.Handoff.job_ref:type_name -> lerna.v1.Ref
+	13, // 32: lerna.v1.Handoff.recipient_receipt:type_name -> lerna.v1.CommandReceipt
+	33, // [33:33] is the sub-list for method output_type
+	33, // [33:33] is the sub-list for method input_type
+	33, // [33:33] is the sub-list for extension type_name
+	33, // [33:33] is the sub-list for extension extendee
+	0,  // [0:33] is the sub-list for field type_name
 }
 
 func init() { file_lerna_v1_admission_proto_init() }

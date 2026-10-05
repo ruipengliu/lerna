@@ -24,11 +24,11 @@ func (s *Service) closureConfirmationAdmission(ctx context.Context, c *v1.Caller
 	if task == nil {
 		return nil, command.Fail("NOT_FOUND")
 	}
-	cap, e := s.QueryCapability(ctx, c, w.CapabilityRef)
+	cap, e := s.QueryCurrentCapability(ctx, c, w.CapabilityRef)
 	if e != nil {
 		return nil, e
 	}
-	if cap == nil {
+	if cap == nil || !proto.Equal(cap.Ref, w.CapabilityRef) {
 		return nil, command.Fail("CAPABILITY_INVALID")
 	}
 	return &v1.Admission{TaskId: task.TaskId, Origin: w.Ref, GrantRefs: []*v1.Ref{w.GrantRef}, RequirementsVersion: task.RequirementsVersion, InputVersion: task.InputVersion, ControlGeneration: task.ControlGeneration, StepId: w.Ref.Name.LocalId, CapabilitySnapshot: cap, ParametersRef: w.ParametersRef, QuerySubject: w.QuerySubject, WorkCategory: "CLOSURE"}, nil

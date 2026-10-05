@@ -9,6 +9,7 @@ import (
 )
 
 type StartFacts interface {
+	QueryCurrentCapability(context.Context, *v1.Caller, *v1.Ref) (*v1.Capability, error)
 	QueryAdmission(context.Context, *v1.Caller, *v1.Ref) (*v1.Admission, error)
 	QueryStart(context.Context, *v1.Caller, *v1.Ref) (*v1.StartRecord, error)
 	QueryStartReceipt(context.Context, *v1.Caller, *v1.CommandIdentity) (*v1.ReceiptQuery, error)
@@ -68,6 +69,11 @@ func (s *Service) RecordDispatch(ctx context.Context, caller *v1.Caller, c *v1.D
 		if e != nil {
 			return nil, e
 		}
+		if x.Send.SendSeq > 1 {
+			if e = s.validateResend(tx, caller, op, now); e != nil {
+				return nil, e
+			}
+		}
 		x.Send.Ref.Revision++
 		x.Send.Phase = "DISPATCH_POSSIBLE"
 		x.Send.StartReceipt = c.StartReceipt
@@ -78,7 +84,9 @@ func (s *Service) RecordDispatch(ctx context.Context, caller *v1.Caller, c *v1.D
 		x.Send.LeaseUntilUnixMs = job.LeaseUntilUnixMs
 		x.Attempt.Ref.Revision++
 		x.Attempt.Phase = "DISPATCH_POSSIBLE"
-		x.Attempt.FirstPossibleSendAtUnixMs = now
+		if x.Attempt.FirstPossibleSendAtUnixMs == 0 {
+			x.Attempt.FirstPossibleSendAtUnixMs = now
+		}
 		op.AttemptRefs = []*v1.Ref{x.Attempt.Ref}
 		op.StartReceiptObtained = true
 		op.Ref.Revision++

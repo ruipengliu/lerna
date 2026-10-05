@@ -38,9 +38,12 @@ func (s *Service) modelConfirmationAdmission(ctx context.Context, caller *v1.Cal
 	if e != nil {
 		return nil, nil, e
 	}
-	cap, e := s.QueryCapability(ctx, caller, call.CapabilityRef)
+	cap, e := s.QueryCurrentCapability(ctx, caller, call.CapabilityRef)
 	if e != nil {
 		return nil, nil, e
+	}
+	if cap == nil || !proto.Equal(cap.Ref, call.CapabilityRef) {
+		return nil, nil, command.Fail("CAPABILITY_INVALID")
 	}
 	return &v1.Admission{TaskId: request.TaskId, Origin: call.Ref, GrantRefs: []*v1.Ref{grant}, RequirementsVersion: snap.RequirementsVersion, InputVersion: snap.InputVersion, ControlGeneration: snap.ControlGeneration, StepId: fmt.Sprintf("model:%d", call.Position), CapabilitySnapshot: cap, ParametersRef: call.InputRef, ContentRefs: call.InputRefs}, snap, nil
 }

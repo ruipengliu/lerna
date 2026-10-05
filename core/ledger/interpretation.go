@@ -76,21 +76,10 @@ func (s *Service) InterpretObservation(ctx context.Context, caller *v1.Caller, c
 		}
 		op.Ref.Revision++
 		op.Effect.Ref.Revision++
-		// 任何相反证据都保留原始版本，并将当前结论退回冲突未知。
-		if finding.Reason == "EVIDENCE_CONFLICT" {
-			op.Effect.EvidenceConflict = true
+		if e = s.projectPhysicalEvidence(tx, op, finding); e != nil {
+			return nil, e
 		}
-		if op.Effect.Outcome != "UNKNOWN" && finding.Outcome != "UNKNOWN" && op.Effect.Outcome != finding.Outcome {
-			op.Effect.EvidenceConflict = true
-		}
-		if op.Effect.EvidenceConflict {
-			op.Effect.Outcome = "UNKNOWN"
-			op.Effect.LateEffect = "MAY_OCCUR"
-		} else {
-			op.Effect.Outcome = finding.Outcome
-			op.Effect.LateEffect = finding.LateEffect
-		}
-		if finding.Outcome != "UNKNOWN" && finding.LateEffect == "RULED_OUT" && !op.Effect.EvidenceConflict {
+		if op.Effect.LateEffect == "RULED_OUT" && !op.Effect.EvidenceConflict {
 			op.Dispatch = "SEALED"
 			op.Lifecycle = "SETTLED"
 		} else {
@@ -102,7 +91,7 @@ func (s *Service) InterpretObservation(ctx context.Context, caller *v1.Caller, c
 			return nil, e
 		}
 		for _, j := range jobs {
-			if j.JobType != "EXECUTE_OPERATION" {
+			if j.JobType != "EXECUTE_OPERATION" || (op.Lifecycle != "SETTLED" && !proto.Equal(raw.SendRef.Name, op.Execution.Send.Ref.Name)) {
 				continue
 			}
 			j.Ref.Revision++

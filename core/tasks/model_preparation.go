@@ -193,11 +193,11 @@ func (s *Service) PrepareModelCall(ctx context.Context, caller *v1.Caller, c *v1
 		if e != nil {
 			return nil, e
 		}
-		cap, e := s.QueryCapability(tx, caller, c.CapabilityRef)
+		cap, e := s.QueryCurrentCapability(tx, caller, c.CapabilityRef)
 		if e != nil {
 			return nil, e
 		}
-		if cap == nil || cap.Action != "MODEL_INFER" || cap.AdapterRef.GetName().GetLocalId() != "model-reference-v1" || cap.MaxSends != 1 {
+		if cap == nil || !proto.Equal(cap.Ref, c.CapabilityRef) || cap.Action != "MODEL_INFER" || cap.AdapterRef.GetName().GetLocalId() != "model-reference-v1" || cap.MaxSends != 1 {
 			return nil, command.Fail("CAPABILITY_INVALID")
 		}
 		known := false
@@ -272,7 +272,7 @@ func (s *Service) PrepareModelCall(ctx context.Context, caller *v1.Caller, c *v1
 		}
 		inputs = append(inputs, modelInput{Ref: input, Body: command.ContentBytes(body)})
 	}
-	body, e := s.encodeModelInput(ctx, snap, settings, call.CapabilityRef, inputs)
+	body, e := s.encodeModelInput(ctx, caller, snap, settings, call.CapabilityRef, inputs)
 	if e != nil {
 		return nil, e
 	}
@@ -316,7 +316,7 @@ type modelInput struct {
 	Body []byte  `json:"body"`
 }
 
-func (s *Service) encodeModelInput(ctx context.Context, snap *v1.ContextSnapshot, settings *v1.ModelSettings, capability *v1.Ref, inputs []modelInput) ([]byte, error) {
+func (s *Service) encodeModelInput(ctx context.Context, caller *v1.Caller, snap *v1.ContextSnapshot, settings *v1.ModelSettings, capability *v1.Ref, inputs []modelInput) ([]byte, error) {
 	facts := []json.RawMessage{}
 	add := func(m proto.Message) error {
 		b, e := protojson.Marshal(m)
@@ -341,7 +341,7 @@ func (s *Service) encodeModelInput(ctx context.Context, snap *v1.ContextSnapshot
 		}
 	}
 	for _, ref := range snap.CapabilityRefs {
-		cap, e := s.store.LoadCapability(ctx, ref)
+		cap, e := s.QueryCapability(ctx, caller, ref)
 		if e != nil {
 			return nil, e
 		}

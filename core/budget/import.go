@@ -9,6 +9,7 @@ import (
 )
 
 type BillingExecution interface {
+	QuerySendExecution(context.Context, *v1.Caller, *v1.GlobalName, *v1.Ref) (*v1.Execution, error)
 	QueryExecution(context.Context, *v1.Caller, *v1.GlobalName) (*v1.Execution, error)
 	QuerySend(context.Context, *v1.Caller, *v1.Ref) (*v1.PhysicalSend, error)
 }
@@ -40,7 +41,7 @@ func (s *Service) ImportBill(ctx context.Context, caller *v1.Caller, c *v1.Impor
 		if send == nil {
 			return nil, command.Fail("NOT_FOUND")
 		}
-		x, e := execution.QueryExecution(tx, caller, source.OperationId)
+		x, e := execution.QuerySendExecution(tx, caller, source.OperationId, c.SendRef)
 		if e != nil {
 			return nil, e
 		}
