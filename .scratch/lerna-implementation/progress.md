@@ -6,6 +6,8 @@
 
 ## 当前状态
 
+2026-10-05 04:13 UTC：切片01–03已完整退出；切片04仍15/41AC，票03/05在独立工作树修正，尚未接受或合入，完整1.2 profile关闭。03当前28e原容量normal通过、race失败，一次CPU采样和七视图已保存并推送1f5f5a5，下一窄优化正在依据实测作Astra决定；独立审查的错误cause修正待TDD。05真实64过期积压首business red已成立，窄候选扫描修复仅静态准备，同原green/race和损坏记录边界待验证。05–22依真实整片退出推进，全部授权持续有效。下面逐条保留历史检查点，不用旧通过替代新源码资格。
+
 2026-10-05 02:01 UTC，05[最小未知资格门](../lerna-04-content-snapshots/ticket-05-expired-accepted-cap/unknown-source-gates/README.md)普通2.392s／race3.893s通过；原真实PG操作后机械missing source／currentpolicy sentinel使完整原pending／无seal／三正文保持，plain原consumer同正常尾段成功。首包compileFAIL由旧目录oracle三声明遗漏，原日志保留，仅声明修复。资格partial4735abc与15文件24case精确正文／缺失及knownempty lock整改partial1a4e1d2分别clean固定；24case只编译，最终执行待授，static coverage24unique／26callsite／缺漏0。
 
 03合法政策／控制反例普通3.272s末尾失败：normalCompleted、B Process当前撤权拒绝／公开读正常／重开与取消原Applied、实际一次Decide拒／RuleStarts0／Inputnil及重开保持均已执行。再次Cancel实际被Reopen get-only当前目的权限拒绝；此前VerifyControl假设已撤回，实际原因经冻结顺序和build全文核准。原[失败日志及因果](../lerna-04-content-snapshots/ticket-03-large-graph-claim/binding-decode-qualification/current-repair-provenance.json)保留，race未跑；只修测试为精确当前forbidden和真实command.get历史Applied字节查询，不恢复Cancel权限。当前SOLE LOCAL仅授该test修正正常→race，05仅准备已审最终检查；whole04仍15/41、完整1.2关闭。
@@ -329,3 +331,5 @@ root全文读取[Astra六票复核](../lerna-04-content-snapshots/published-tick
 2026-10-05，05真实64积压首businessred18.131s/1/absence已成立：[原源码、预登记计划及实际日志](../lerna-04-content-snapshots/ticket-05-expired-job-scan/README.md)。64原合法封闭到期并重开后，新准确版本已accepted、四推进仍preparing、独立bodymissing；live/policy尾未执行。root全文采用后只授Content-own两窄扫描口/三消费者的静态最小修正，冻结runtime/schema/旧expired职责字节期限不改，新green/race/边界及审查待。03CPU新5overlay静态准备中，未native采样，whole04仍15/41。
 
 2026-10-05，03一次原B CPU采样实际exit1/absence，七个只读pprof视图均实际0/absence；root全文原159行和全部视图并核对profile/log哈希，见[准确测量](../lerna-04-content-snapshots/ticket-03-large-graph-claim/worker-cpu-measurement/README.md)。两个大图仍失败，本次closure caller截止、static原Prepared后首次Publish领取截止，阶段与未采样失败分列；标签6.80/总62.18CPU、offCPU未知、不相加cum。原profileFD Close UNKNOWN保留。Astra只读决定下一等价优化，未授权第二产品fix或重跑；05窄扫描静态核对损坏记录不隐去，whole04仍15/41/profile OFF。
+
+2026-10-05，root全文采用[Astra实测后唯一局部优化](../lerna-04-content-snapshots/ticket-03-large-graph-claim/worker-cpu-measurement/adopted-next-decision.md)：只单次registeredClosure内fullRef成功纯身份计算复用<=65项，满不缓存而不新增拒绝；排序/visit原顺序和所有PG权限/锁/clock/两Tx保持。03只静态实施，新非profile原B正常/race尚未跑；独立causeP2反例分列。whole04仍15/41。

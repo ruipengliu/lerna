@@ -9,3 +9,7 @@ ONE采样native3299533/start13781792/session30305实际exit1/absence。root全�
 Go标准testing CPU原文件描述符的逻辑Close为UNKNOWN；独立资格FD的fsync/Close、native Wait及组absence不能替代原CloseACK。原profile/dev27/ino560161/SHA427bbc保持，所有未知范围保留，无cleanup。
 
 编译provenance中的business_unrun/profile_missing是编译时事实；实际采样结果在profile-outcome。原STATIC命令清单不是授权或执行结果。全部原overlay/diff、采样和只读视图按准确字节保存；进一步必要修正等待真实热点裁决及单独TDD验证。
+
+## 实测后的采用决定
+
+root全文读取并采用[Astra下一窄决定](adopted-next-decision.md)，准确SHA2adc632b。仅单次registeredClosure栈内fullRef→成功VersionIdentity ID的<=65项复用，满只不保存；同排序/visit原位置与错误顺序保持，PG所有独立验证/授权/锁/时钟/两Tx不省。原race容量已是business red，不再制造人工red或profile。当前只授权静态最小实现，没有新green或容量接受；收益不得用嵌套cum相减预言。
