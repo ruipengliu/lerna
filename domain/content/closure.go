@@ -100,6 +100,9 @@ func (s *Service) registeredClosure(ctx context.Context, tx runtime.Tx, target v
 		if record == nil || record.Ref != ref || record.Publication != "published" {
 			return refusal("source_unavailable")
 		}
+		if len(actions) > 0 && record.BodySeal != nil {
+			return refusal("forbidden")
+		}
 		if len(actions) > 0 {
 			if !now.Before(cutoff(record.CurrentRetainUntil)) {
 				return refusal("expired")
@@ -210,6 +213,9 @@ func (s *Service) AuthorizeUse(ctx context.Context, subject *v.SubjectBinding, r
 		}
 		if record == nil || record.Ref != ref || record.Publication != "published" {
 			return refusal("source_unavailable")
+		}
+		if record.BodySeal != nil {
+			return refusal("forbidden")
 		}
 		sources, err := s.registeredClosure(ctx, tx, ref, record.Sources, principal, purpose, []string{action})
 		if err != nil {

@@ -75,3 +75,8 @@ Depends on: [01](../lerna-01-command-contracts/spec.md)、[02](../lerna-02-durab
 ## 切片04来源政策票接受并整合
 
 2026-10-04，票02七AC resolved，交付651036/产品4c621/工具5c024，正式merge6f88740双parents及完整tree等于worker；[逐AC证据](ticket-02-exit-evidence.md)保留所有实际测试/审查与unknown范围。完整170 normal/race每模式一次，fixture/Decision/base race/locked check/module verify通过；最终双轴0hard/1可选P3 KEEP、Spec a0b0c0、架构0necessary。5 schemas/8 roots、旧Z与空selector per-Close unknown保留，未cleanup。当前15/41，whole04 in-progress、完整1.2广告OFF；03/05直接前置已满足。新准确push CI待核，旧首票7c CI不替代新源。
+
+
+## 票05 root接受与worker状态同步（实际整合交付待完成）
+
+2026-10-05，root接受票05源码8db74e3的七AC，准确核定文档94e9c28与 [逐AC退出证据](ticket-05-exit-evidence.md)记录当前27检查、双轴0hard／Spec0、无必要产品修正及真实只读资源观察。worker已normal merge root94e9并同步 [票05](issues/05-body-cleanup-and-holders.md) 七项勾选／resolved，15份已资格源码／SQL／test字节不变。本worker本地票状态累计22/41；实际交付回integration的merge仍待root执行，不冒root已合入。whole04仍in-progress、profile1.2广告OFF；新准确push／CI随后记录，票06只依赖本票实际交付，无整片CI隐藏依赖。历史两个原logical Close UNKNOWN继续保留。

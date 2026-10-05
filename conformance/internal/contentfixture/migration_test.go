@@ -16,12 +16,22 @@ func TestContentMigrationEmptyRepeatAndChecksum(t *testing.T) {
 	defer cancel()
 	w := New(t, ctx)
 	const expected = "sha256:00363b79dafb6eb1f373be9ef08e915fe23cc3db0fa55345e8ae6c051ce0c1ed"
+	expectedChecksums := []string{
+		expected,
+		"sha256:99519565ff1146d7cfc468413b449538c6ba71335e86edc8fd447a3bbff922a8",
+		"sha256:92739b464b8661e26befe092028f20802b586e42bf1578bd9811dcf240c5b58f",
+	}
 	if err := w.Store().Migrate(ctx); err != nil {
 		t.Fatal("repeat migration", err)
 	}
 	versions, err := w.Store().MigrationVersions(ctx)
-	if err != nil || len(versions) != 2 || versions[0].Version != 1 || versions[0].Checksum != expected {
+	if err != nil || len(versions) != 3 {
 		t.Fatal("empty/repeat migration lost fixed checksum", err)
+	}
+	for i, checksum := range expectedChecksums {
+		if versions[i].Version != int64(i+1) || versions[i].Checksum != checksum {
+			t.Fatal("empty/repeat migration changed an original numbered SQL checksum", versions[i].Version)
+		}
 	}
 	// Infrastructure corruption seam: no business table is an oracle.
 	db, err := sql.Open("pgx", w.Config.DSN)
@@ -56,7 +66,12 @@ func TestContentMigrationEmptyRepeatAndChecksum(t *testing.T) {
 		t.Fatal("normal checksum reopen refused", err)
 	}
 	versions, err = w.Store().MigrationVersions(ctx)
-	if err != nil || len(versions) != 2 || versions[0].Checksum != expected {
+	if err != nil || len(versions) != 3 {
 		t.Fatal(errors.Join(err, errors.New("restored checksum not durable")))
+	}
+	for i, checksum := range expectedChecksums {
+		if versions[i].Version != int64(i+1) || versions[i].Checksum != checksum {
+			t.Fatal("restored reopen changed an original numbered SQL checksum", versions[i].Version)
+		}
 	}
 }

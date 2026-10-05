@@ -8,7 +8,6 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
-	"sort"
 	"strconv"
 	"time"
 
@@ -35,7 +34,7 @@ func New(config Config) (*Service, error) {
 	if _, err := v.Encode(config.Owner); err != nil {
 		return nil, err
 	}
-	if config.Store == nil || config.Objects == nil || config.Limits.MaxPreparingVersions < 1 || config.Limits.MaxPreparingVersions > 4096 || config.Limits.MaxStagingBytes < 1 || config.Limits.MaxStagingBytes > 1<<30 || config.Limits.Lease <= 0 || config.Limits.Lease > 5*time.Minute || config.Limits.WorkTimeout <= 0 || config.Limits.WorkTimeout > config.Limits.Lease || config.PublishBudget <= 0 || config.PublishBudget > 24*time.Hour || config.MaxPublicationAttempts < 1 || config.MaxPublicationAttempts > 16 || config.Worker == "" || len(config.Worker) > 128 {
+	if config.Store == nil || config.Objects == nil || config.Objects.Binding() == "" || config.Limits.MaxPreparingVersions < 1 || config.Limits.MaxPreparingVersions > 4096 || config.Limits.MaxStagingBytes < 1 || config.Limits.MaxStagingBytes > 1<<30 || config.Limits.Lease <= 0 || config.Limits.Lease > 5*time.Minute || config.Limits.WorkTimeout <= 0 || config.Limits.WorkTimeout > config.Limits.Lease || config.PublishBudget <= 0 || config.PublishBudget > 24*time.Hour || config.MaxPublicationAttempts < 1 || config.MaxPublicationAttempts > 16 || config.Worker == "" || len(config.Worker) > 128 {
 		return nil, errors.New("explicit finite Content storage, limits, publication policy and worker required")
 	}
 	return &Service{config: config}, nil
@@ -216,6 +215,9 @@ func (s *Service) Put(ctx context.Context, raw []byte, subject *v.SubjectBinding
 		if policy.Ref != request.Payload.ContentRef {
 			return reject("forbidden")
 		}
+		if record != nil && record.BodySeal != nil {
+			return reject("forbidden")
+		}
 		sources, err := s.registeredClosure(ctx, tx, request.Payload.ContentRef, request.Payload.Sources, principal, string(request.Payload.Purpose), []string{"read", "process", "save"})
 		if err != nil {
 			if code, ok := qualificationCode(err); ok {
@@ -265,7 +267,7 @@ func (s *Service) Put(ctx context.Context, raw []byte, subject *v.SubjectBinding
 			reason := v.ErrorCode("")
 			if !now.Before(cutoff(request.AcceptBefore)) || !now.Before(effective) {
 				reason = "expired"
-			} else if !now.Before(policyBefore) {
+			} else if !now.Before(policyBefore) || current.BodySeal != nil {
 				reason = "forbidden"
 			}
 			if reason == "" {
@@ -317,7 +319,7 @@ func (s *Service) Put(ctx context.Context, raw []byte, subject *v.SubjectBinding
 			return err
 		}
 		deadline := earlier(effective, now.Add(s.config.PublishBudget))
-		record = &Record{Ref: request.Payload.ContentRef, Sources: append([]v.ContentRef{}, request.Payload.Sources...), Purpose: string(request.Payload.Purpose), Subject: principal, TupleDigest: tuple, ObjectID: id, ObjectKey: key, RequestedRetainUntil: request.Payload.RetainUntil, EffectiveRetainUntil: wireTime(effective), CurrentRetainUntil: wireTime(effective), AdmittedAt: wireTime(now), PublishDeadline: wireTime(deadline), Publication: "preparing", Revision: 1, StagingHolder: true, Bytes: bytes, MaxPublicationAttempts: s.config.MaxPublicationAttempts}
+		record = &Record{PrimaryHolderBinding: s.config.Objects.Binding(), Ref: request.Payload.ContentRef, Sources: append([]v.ContentRef{}, request.Payload.Sources...), Purpose: string(request.Payload.Purpose), Subject: principal, TupleDigest: tuple, ObjectID: id, ObjectKey: key, RequestedRetainUntil: request.Payload.RetainUntil, EffectiveRetainUntil: wireTime(effective), CurrentRetainUntil: wireTime(effective), AdmittedAt: wireTime(now), PublishDeadline: wireTime(deadline), Publication: "preparing", Revision: 1, StagingHolder: true, Bytes: bytes, MaxPublicationAttempts: s.config.MaxPublicationAttempts}
 		if bytes == nil {
 			record.Bytes = []byte{}
 		}
@@ -398,6 +400,121 @@ func (s *Service) Put(ctx context.Context, raw []byte, subject *v.SubjectBinding
 	return v.NewTransportOutcomeReceived(v.TransportOutcomeReceived{Receipt: fixed}), nil
 }
 func (s *Service) Get(ctx context.Context, raw []byte, subject *v.SubjectBinding) (v.ContentGetResponse, error) {
+	body, err := s.getBody(ctx, raw, subject)
+	if err != nil {
+		return body, err
+	}
+	denied, rejected := body.AsRejected()
+	if !rejected || (denied.Reason != "forbidden" && denied.Reason != "expired") {
+		return body, nil
+	}
+	request, err := v.DecodeGet(raw)
+	if err != nil {
+		return v.ContentGetResponse{}, err
+	}
+	principal, ok := trustedSubject(subject, s.config.Owner)
+	if !ok || request.Payload.ContentRef.Owner != s.config.Owner || !finite(ctx) {
+		return body, nil
+	}
+	metadata, qualified, err := s.getMetadata(ctx, request, principal)
+	if err != nil {
+		return v.NewContentGetResponseUnavailable(v.ContentGetResponseUnavailable{ContentRef: request.Payload.ContentRef, Reason: "dependency_unavailable"}), nil
+	}
+	if !qualified {
+		return body, nil
+	}
+	return metadata, nil
+}
+
+func (s *Service) getMetadata(ctx context.Context, request v.ContentGetRequest, subject v.SubjectBinding) (v.ContentGetResponse, bool, error) {
+	var result v.ContentGetResponse
+	qualified := false
+	ref := request.Payload.ContentRef
+	deny := func(reason v.ErrorCode) {
+		result = v.NewContentGetResponseRejected(v.ContentGetResponseRejected{Reason: reason})
+	}
+	err := s.config.Store.Within(ctx, owner(s.config.Owner), func(ctx context.Context, tx runtime.Tx) error {
+		now, err := s.config.Store.Now(ctx, tx)
+		if err != nil {
+			return err
+		}
+		policy, err := s.config.Store.CheckMetadataPolicy(ctx, tx, subject, ref, string(request.Payload.Purpose), now)
+		if err != nil {
+			return err
+		}
+		if policy == nil {
+			return nil
+		}
+		qualified = true
+		record, err := s.config.Store.LockVersion(ctx, tx, ref)
+		if err != nil {
+			return err
+		}
+		now, err = s.config.Store.Now(ctx, tx)
+		if err != nil {
+			return err
+		}
+		if !now.Before(cutoff(request.AcceptBefore)) || !now.Before(policy.ValidUntil) {
+			deny("expired")
+			return nil
+		}
+		actual := ref
+		if record != nil {
+			actual = record.Ref
+		}
+		// Minimal metadata has its own exact current qualification. Even a
+		// gone/not_found distinction cannot precede this actual declaration gate.
+		if policy.Ref != actual {
+			deny("forbidden")
+			return nil
+		}
+		if record == nil {
+			result = v.NewContentGetResponseNotFound(v.ContentGetResponseNotFound{ContentRef: ref})
+			return nil
+		}
+		if record.Ref != ref {
+			deny("integrity")
+			return nil
+		}
+		before := policy.ValidUntil
+		sources, err := s.registeredClosure(ctx, tx, record.Ref, record.Sources, subject, string(request.Payload.Purpose), nil)
+		if err != nil {
+			if _, ok := qualificationCode(err); ok {
+				deny("forbidden")
+				return nil
+			}
+			return err
+		}
+		for _, source := range sources.refs {
+			metadata, err := s.config.Store.CheckMetadataPolicy(ctx, tx, subject, source, string(request.Payload.Purpose), now)
+			if err != nil {
+				return err
+			}
+			if metadata == nil || metadata.Ref != source {
+				deny("forbidden")
+				return nil
+			}
+			before = earlier(before, metadata.ValidUntil)
+		}
+		now, err = s.config.Store.Now(ctx, tx)
+		if err != nil {
+			return err
+		}
+		if !now.Before(cutoff(request.AcceptBefore)) || !now.Before(before) {
+			deny("expired")
+			return nil
+		}
+		if record.BodySeal == nil || !record.BodyGone {
+			deny("forbidden")
+			return nil
+		}
+		result = v.NewContentGetResponseGone(v.ContentGetResponseGone{ContentRef: ref, EvidenceAvailable: false})
+		return nil
+	})
+	return result, qualified, err
+}
+
+func (s *Service) getBody(ctx context.Context, raw []byte, subject *v.SubjectBinding) (v.ContentGetResponse, error) {
 	request, err := v.DecodeGet(raw)
 	if err != nil {
 		return v.ContentGetResponse{}, err
@@ -485,6 +602,11 @@ func (s *Service) Get(ctx context.Context, raw []byte, subject *v.SubjectBinding
 			record = nil
 			return nil
 		}
+		if record.BodySeal != nil {
+			result = denied("forbidden")
+			record = nil
+			return nil
+		}
 		now, err = s.config.Store.Now(ctx, tx)
 		if err != nil {
 			return err
@@ -540,7 +662,12 @@ func (s *Service) Get(ctx context.Context, raw []byte, subject *v.SubjectBinding
 	length, _ := strconv.ParseInt(string(ref.ByteLength), 10, 64)
 	bounded, cancel := context.WithDeadline(ctx, readBefore)
 	defer cancel()
-	bytes, err := s.config.Objects.Read(bounded, record.ObjectKey, ref.Hash, length)
+	var bytes []byte
+	if record.PrimaryHolderBinding == "" || record.PrimaryHolderBinding != s.config.Objects.Binding() {
+		err = ErrHolderBinding
+	} else {
+		bytes, err = s.config.Objects.Read(bounded, record.ObjectKey, ref.Hash, length)
+	}
 	if err == nil {
 		err = bounded.Err()
 	}
@@ -686,69 +813,73 @@ func (s *Service) Step(ctx context.Context) (bool, error) {
 		if err != nil {
 			return err
 		}
-		jobs, err := s.config.Store.Scan(ctx, tx, now, 64)
-		if err != nil {
-			return err
-		}
-		// Publication gets a bounded first pass, preserving the existing Step seam.
-		sort.SliceStable(jobs, func(i, j int) bool { return jobs[i].Phase == "publish" && jobs[j].Phase != "publish" })
-		for _, job := range jobs {
-			record, err := s.config.Store.LockObject(ctx, tx, string(job.Object.ID))
+		// At most two bounded pages: publication first, then policy maintenance.
+		for _, phase := range []string{"publish", "policy_propagation"} {
+			jobs, err := s.config.Store.ScanContentPhase(ctx, tx, now, phase, 64)
 			if err != nil {
 				return err
 			}
-			if record == nil || record.ValidateIdentity() != nil || record.ObjectID != string(job.Object.ID) || job.Object.Kind != "content" || (job.Phase != "publish" && job.Phase != "policy_propagation") {
-				return runtime.ErrScope
-			}
-			if job.Phase == "policy_propagation" {
-				worked, err := s.config.Store.AdvancePolicyJob(ctx, tx, job, *record, s.config.Worker, s.config.Limits.Lease, s.config.PublishBudget)
-				if worked {
-					maintenance = true
-					return err
-				}
+			for _, job := range jobs {
+				record, err := s.config.Store.LockObject(ctx, tx, string(job.Object.ID))
 				if err != nil {
 					return err
 				}
-				continue
+				if record == nil || record.ValidateIdentity() != nil || record.ObjectID != string(job.Object.ID) || job.Object.Kind != "content" || job.Phase != phase {
+					return runtime.ErrScope
+				}
+				if job.Phase == "policy_propagation" {
+					worked, err := s.config.Store.AdvancePolicyJob(ctx, tx, job, *record, s.config.Worker, s.config.Limits.Lease, s.config.PublishBudget)
+					if worked {
+						maintenance = true
+						return err
+					}
+					if err != nil {
+						return err
+					}
+					continue
+				}
+				current, ioBefore, failure, err := s.publicationPolicy(ctx, tx, *record, now)
+				if err != nil {
+					return err
+				}
+				now, err = s.config.Store.Now(ctx, tx)
+				if err != nil {
+					return err
+				}
+				if record.Attempts >= record.MaxPublicationAttempts && failure == "" {
+					failure = "dependency_unavailable"
+				}
+				until := earlier(now.Add(s.config.Limits.Lease), ioBefore)
+				if failure != "" {
+					until = now.Add(s.config.Limits.Lease)
+				}
+				claim, err = s.config.Store.Claim(ctx, tx, job, s.config.Worker, now, until)
+				if err != nil {
+					return err
+				}
+				if claim == nil {
+					continue
+				}
+				record.CurrentRetainUntil = wireTime(current)
+				record.IODeadline = wireTime(ioBefore)
+				if failure != "" {
+					record.Publication = "failed"
+					record.Failure = failure
+					record.CleanupPending = true
+				} else {
+					record.Attempts++
+				}
+				record.AttemptKey = fmt.Sprintf("%s.%d.tmp", record.ObjectKey, claim.Epoch)
+				record.Revision++
+				if err = s.config.Store.SaveVersion(ctx, tx, *record); err != nil {
+					return err
+				}
+				if err = s.config.Store.SavePublicationAttempt(ctx, tx, *record); err != nil {
+					return err
+				}
+				selected = record
+				return nil
 			}
-			current, ioBefore, failure, err := s.publicationPolicy(ctx, tx, *record, now)
-			if err != nil {
-				return err
-			}
-			now, err = s.config.Store.Now(ctx, tx)
-			if err != nil {
-				return err
-			}
-			if record.Attempts >= record.MaxPublicationAttempts && failure == "" {
-				failure = "dependency_unavailable"
-			}
-			until := earlier(now.Add(s.config.Limits.Lease), ioBefore)
-			if failure != "" {
-				until = now.Add(s.config.Limits.Lease)
-			}
-			claim, err = s.config.Store.Claim(ctx, tx, job, s.config.Worker, now, until)
-			if err != nil {
-				return err
-			}
-			if claim == nil {
-				continue
-			}
-			record.CurrentRetainUntil = wireTime(current)
-			record.IODeadline = wireTime(ioBefore)
-			if failure != "" {
-				record.Publication = "failed"
-				record.Failure = failure
-				record.CleanupPending = true
-			} else {
-				record.Attempts++
-			}
-			record.AttemptKey = fmt.Sprintf("%s.%d.tmp", record.ObjectKey, claim.Epoch)
-			record.Revision++
-			if err = s.config.Store.SaveVersion(ctx, tx, *record); err != nil {
-				return err
-			}
-			selected = record
-			break
 		}
 		return nil
 	})
@@ -761,6 +892,9 @@ func (s *Service) Step(ctx context.Context) (bool, error) {
 	length, _ := strconv.ParseInt(string(selected.Ref.ByteLength), 10, 64)
 	if selected.Publication == "preparing" {
 		ioErr = bounded.Err()
+		if ioErr == nil && (selected.PrimaryHolderBinding == "" || selected.PrimaryHolderBinding != s.config.Objects.Binding()) {
+			ioErr = ErrHolderBinding
+		}
 		if ioErr == nil {
 			ioErr = s.config.Objects.Put(bounded, selected.ObjectKey, selected.AttemptKey, selected.Ref.Hash, length, selected.Bytes)
 		}
@@ -817,7 +951,7 @@ func (s *Service) Step(ctx context.Context) (bool, error) {
 			record.Publication = "failed"
 			record.Failure = failure
 			record.CleanupPending = true
-			record.ObjectHolder = ioErr == nil
+			record.ObjectHolder = ioErr == nil && !record.BodyGone
 		} else {
 			record.Publication = "published"
 			record.ObjectHolder = true
@@ -841,6 +975,12 @@ func (s *Service) publicationPolicy(ctx context.Context, tx runtime.Tx, record R
 	}
 	if policy == nil || policy.Ref != record.Ref {
 		return current, ioBefore, "forbidden", nil
+	}
+	if record.BodySeal != nil {
+		return current, ioBefore, "forbidden", nil
+	}
+	if record.PrimaryHolderBinding == "" || record.PrimaryHolderBinding != s.config.Objects.Binding() {
+		return current, ioBefore, "", ErrHolderBinding
 	}
 	current = earlier(current, policy.RetainUntil)
 	ioBefore = earlier(ioBefore, policy.ValidUntil)

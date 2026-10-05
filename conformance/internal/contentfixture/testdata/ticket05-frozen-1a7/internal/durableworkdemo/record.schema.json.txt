@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_version",
+    "profile",
+    "method",
+    "command_id",
+    "target",
+    "payload",
+    "accept_before"
+  ],
+  "properties": {
+    "contract_version": { "const": "host-durable-work-1" },
+    "profile": { "const": "host" },
+    "method": { "const": "durable_work.record" },
+    "command_id": { "type": "string" },
+    "accept_before": { "type": "string" },
+    "expected_revision": { "type": "string" },
+    "trace_context": { "type": "object" },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tenant_id", "owner_id", "kind", "id"],
+      "properties": {
+        "tenant_id": { "type": "string" },
+        "owner_id": { "type": "string" },
+        "kind": { "const": "durable_work" },
+        "id": { "type": "string" }
+      }
+    },
+    "payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text"],
+      "properties": { "text": { "type": "string", "maxLength": 65536 } }
+    }
+  }
+}

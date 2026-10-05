@@ -80,15 +80,16 @@ func TestContentPublishedDamageAndMissingNeverRepairOnQuery(t *testing.T) {
 				t.Fatal(err)
 			}
 			assertContentBody(t, ctx, service, alphaRef, nil, "alpha\n")
-			entries, err := os.ReadDir(w.Directory)
-			if err != nil || len(entries) != 1 {
-				t.Fatal("normal final object absent", err)
+			assertExactContentObjects(t, w.Directory, map[v.ContentRef]string{alphaRef: "alpha\n"})
+			_, key, err := content.VersionIdentity(alphaRef)
+			if err != nil {
+				t.Fatal(err)
 			}
-			path := filepath.Join(w.Directory, entries[0].Name())
+			path := filepath.Join(w.Directory, key)
 			reason := "dependency_unavailable"
 			if fault == "damage" {
 				reason = "integrity"
-				w.WriteIndependentObject(entries[0].Name(), []byte("wrong\n"))
+				w.WriteIndependentObject(key, []byte("wrong\n"))
 			} else {
 				err = os.Remove(path)
 			}
@@ -229,10 +230,7 @@ func TestContentFailedStagingStillConsumesExplicitByteLimit(t *testing.T) {
 		t.Fatal(err)
 	}
 	requireRejection(t, putContentRequest(t, ctx, service, contentPut(t, other, "while-failed-staging-retained", "YWxwaGEK")), "input_over_limit")
-	entries, err := os.ReadDir(w.Directory)
-	if err != nil || len(entries) != 0 {
-		t.Fatal("bounded refusal unexpectedly installed bytes", err)
-	}
+	assertExactContentObjects(t, w.Directory, nil, alphaRef, other)
 }
 
 func TestContentNoClobberExistingBytesMustMatchBeforePublication(t *testing.T) {

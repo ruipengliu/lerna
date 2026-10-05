@@ -8,8 +8,6 @@ import (
 	"errors"
 	fixture "github.com/ruipengliu/lerna/conformance/internal/contentfixture"
 	v "github.com/ruipengliu/lerna/contract/v1_2"
-	"os"
-	"path/filepath"
 	"testing"
 	"time"
 )
@@ -120,24 +118,7 @@ func TestContentCommandReplayAndExactVersionIdentities(t *testing.T) {
 	}
 	assertContentBody(t, ctx, service, alphaRef, nil, "alpha\n")
 	assertContentBody(t, ctx, service, beta, nil, "beta\n")
-	entries, err := os.ReadDir(w.Directory)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if len(entries) != 2 {
-		t.Fatal("two exact versions did not produce independent objects")
-	}
-	bodies := map[string]bool{}
-	for _, entry := range entries {
-		data, err := os.ReadFile(filepath.Join(w.Directory, entry.Name()))
-		if err != nil {
-			t.Fatal(err)
-		}
-		bodies[string(data)] = true
-	}
-	if !bodies["alpha\n"] || !bodies["beta\n"] {
-		t.Fatal("independent object bytes lost an exact version")
-	}
+	assertExactContentObjects(t, w.Directory, map[v.ContentRef]string{alphaRef: "alpha\n", beta: "beta\n"})
 	replayed := putContentRequest(t, ctx, service, request)
 	c, _ := v.Encode(replayed)
 	if string(c) != string(a) {

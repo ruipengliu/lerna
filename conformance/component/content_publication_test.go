@@ -8,8 +8,6 @@ import (
 	fixture "github.com/ruipengliu/lerna/conformance/internal/contentfixture"
 	v "github.com/ruipengliu/lerna/contract/v1_2"
 	"github.com/ruipengliu/lerna/domain/content"
-	"os"
-	"path/filepath"
 	"testing"
 	"time"
 )
@@ -110,17 +108,7 @@ func TestContentCorrectBytesDurablyAccepted(t *testing.T) {
 	if err != nil || string(bytes) != "alpha\n" || published.ContentRef != alphaRef {
 		t.Fatal("published bytes differ from independent original alpha bytes")
 	}
-	entries, err := os.ReadDir(world.Directory)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if len(entries) != 1 {
-		t.Fatalf("normal install left %d entries", len(entries))
-	}
-	independent, err := os.ReadFile(filepath.Join(world.Directory, entries[0].Name()))
-	if err != nil || string(independent) != "alpha\n" {
-		t.Fatal("independent filesystem bytes differ")
-	}
+	assertExactContentObjects(t, world.Directory, map[v.ContentRef]string{alphaRef: "alpha\n"})
 	world.Reopen(ctx)
 	service = contentService(t, world)
 	original, err := service.GetCommand(ctx, contentCommandGetWire(t, request.CommandID), &contentPrincipal)
@@ -187,13 +175,7 @@ func TestContentCurrentSavePolicyStopsObjectWrite(t *testing.T) {
 	if !ok || failed.Reason != "forbidden" {
 		t.Fatal("current denied save reported usable publication")
 	}
-	entries, err := os.ReadDir(w.Directory)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if len(entries) != 0 {
-		t.Fatal("current save denial still wrote real object bytes")
-	}
+	assertExactContentObjects(t, w.Directory, nil, alphaRef)
 	original, err := service.GetCommand(ctx, contentCommandGetWire(t, request.CommandID), &contentPrincipal)
 	if err != nil {
 		t.Fatal(err)

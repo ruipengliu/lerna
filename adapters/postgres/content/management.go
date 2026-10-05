@@ -322,7 +322,15 @@ func readDescendantsPage(rows *sql.Rows, limit int) (out []v.ContentRef, next st
 	return out, next, nil
 }
 func (s *Store) SaveResponsibility(ctx context.Context, token runtime.Tx, responsibility d.CleanupResponsibility) error {
-	tx, err := s.core.LocalSQL(ctx, token)
+	// Only the qualified all-holder lifecycle ACK port can originate erased.
+	if responsibility.BodyCleanup == "erased" || responsibility.ChangeKey == "" || len(responsibility.ChangeKey) > 128 || responsibility.Purpose == "" {
+		return runtime.ErrScope
+	}
+	subject, _, err := subjectKey(responsibility.Subject)
+	if err != nil {
+		return err
+	}
+	tx, err := s.core.SQL(ctx, token, commonOwner(responsibility.Ref.Owner))
 	if err != nil {
 		return err
 	}
@@ -340,7 +348,11 @@ func (s *Store) SaveResponsibility(ctx context.Context, token runtime.Tx, respon
 		if err = json.Unmarshal(previousBody, &previous); err != nil {
 			return err
 		}
-		if previous.Ref != responsibility.Ref {
+		previousSubject, _, err := subjectKey(previous.Subject)
+		if err != nil {
+			return err
+		}
+		if previous.ChangeKey != responsibility.ChangeKey || previous.Ref != responsibility.Ref || previousSubject != subject || previous.Purpose != responsibility.Purpose {
 			return runtime.ErrScope
 		}
 		if previous.BodyCleanup == "pending" {
@@ -355,6 +367,17 @@ func (s *Store) SaveResponsibility(ctx context.Context, token runtime.Tx, respon
 			if previous.AttemptKey != "" {
 				responsibility.AttemptKey = previous.AttemptKey
 			}
+		} else if previous.BodyCleanup == "erased" {
+			if previous.Residual != "" {
+				return runtime.ErrScope
+			}
+			responsibility.BodyCleanup = previous.BodyCleanup
+			responsibility.Residual = previous.Residual
+			responsibility.Reason = previous.Reason
+			responsibility.AttemptKey = previous.AttemptKey
+			responsibility.Publication = previous.Publication
+			responsibility.StagingHolder = responsibility.StagingHolder || previous.StagingHolder
+			responsibility.ObjectHolder = responsibility.ObjectHolder || previous.ObjectHolder
 		}
 		if previous.Deadline.Before(responsibility.Deadline) {
 			responsibility.Deadline = previous.Deadline

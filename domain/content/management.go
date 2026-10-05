@@ -783,7 +783,7 @@ func (m *Manager) Step(ctx context.Context, subject *v.SubjectBinding) (bool, er
 		if err != nil {
 			return err
 		}
-		jobs, err := m.config.Store.Scan(ctx, tx, now, 64)
+		jobs, err := m.config.Store.ScanContentPhase(ctx, tx, now, "policy_propagation", 64)
 		if err != nil {
 			return err
 		}

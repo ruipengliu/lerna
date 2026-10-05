@@ -9,8 +9,6 @@ import (
 	"errors"
 	fixture "github.com/ruipengliu/lerna/conformance/internal/contentfixture"
 	v "github.com/ruipengliu/lerna/contract/v1_2"
-	"os"
-	"path/filepath"
 	"strings"
 	"testing"
 	"time"
@@ -59,12 +57,5 @@ func TestContentDecodedByteBoundHasRealNormalPublication(t *testing.T) {
 	}
 	assertContentBody(t, ctx, service, ref, nil, original)
 	assertContentBody(t, ctx, service, ref, &v.ContentRange{Offset: "262144", Length: "0"}, "")
-	entries, err := os.ReadDir(w.Directory)
-	if err != nil || len(entries) != 1 {
-		t.Fatal("bounded publication did not install exactly one object", err)
-	}
-	bytes, err := os.ReadFile(filepath.Join(w.Directory, entries[0].Name()))
-	if err != nil || string(bytes) != original {
-		t.Fatal("native bytes truncated at decoded bound", err)
-	}
+	assertExactContentObjects(t, w.Directory, map[v.ContentRef]string{ref: original})
 }

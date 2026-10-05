@@ -7,7 +7,6 @@ import (
 	fixture "github.com/ruipengliu/lerna/conformance/internal/contentfixture"
 	v "github.com/ruipengliu/lerna/contract/v1_2"
 	"github.com/ruipengliu/lerna/domain/content"
-	"os"
 	"testing"
 	"time"
 )
@@ -83,10 +82,7 @@ func TestContentLockWaitCannotReuseExpiredAdmissionClock(t *testing.T) {
 	case <-ctx.Done():
 		t.Fatal(ctx.Err())
 	}
-	entries, err := os.ReadDir(w.Directory)
-	if err != nil || len(entries) != 0 {
-		t.Fatal("expired admission wrote bytes", err)
-	}
+	assertExactContentObjects(t, w.Directory, nil, alphaRef)
 	// A new, finite deadline succeeds after the exact lock's real release.
 	if _, ok := putContentRequest(t, ctx, service, contentPut(t, alphaRef, "normal-after-wait", "YWxwaGEK")).AsAccepted(); !ok {
 		t.Fatal("normal control refused")
@@ -148,12 +144,9 @@ func TestContentPublicationWaitCannotReuseExpiredPolicyClock(t *testing.T) {
 	case <-ctx.Done():
 		t.Fatal(ctx.Err())
 	}
-	entries, err := os.ReadDir(w.Directory)
-	if err != nil || len(entries) != 0 {
-		t.Fatal("expired policy still started real object bytes", err)
-	}
+	assertExactContentObjects(t, w.Directory, nil, alphaRef)
 	// Only a new policy restores reading; historical failure stays failed.
-	if err = w.Store().InstallFixturePolicy(ctx, content.FixturePolicy{Ref: alphaRef, Subject: contentPrincipal, Purpose: "verification", Revision: 3, ValidUntil: wide, RetainUntil: wide, Read: true, Process: true, Save: true, Disclose: true}, 2); err != nil {
+	if err := w.Store().InstallFixturePolicy(ctx, content.FixturePolicy{Ref: alphaRef, Subject: contentPrincipal, Purpose: "verification", Revision: 3, ValidUntil: wide, RetainUntil: wide, Read: true, Process: true, Save: true, Disclose: true}, 2); err != nil {
 		t.Fatal(err)
 	}
 	view, err := service.Get(ctx, contentGetWire(t, alphaRef, nil), &contentPrincipal)

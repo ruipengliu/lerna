@@ -17,6 +17,9 @@ var migration string
 //go:embed migrations/0002_source_policies.sql
 var sourceMigration string
 
+//go:embed migrations/0003_body_cleanup.sql
+var bodyMigration string
+
 type MigrationVersion struct {
 	Version  int64
 	Checksum string
@@ -41,7 +44,7 @@ func (s *Store) Migrate(ctx context.Context) error {
 		if _, err = tx.ExecContext(ctx, `CREATE TABLE IF NOT EXISTS content_schema_migrations(version bigint PRIMARY KEY,checksum text NOT NULL)`); err != nil {
 			return err
 		}
-		for i, text := range []string{migration, sourceMigration} {
+		for i, text := range []string{migration, sourceMigration, bodyMigration} {
 			version := i + 1
 			sum := sha256.Sum256([]byte(text))
 			wanted := "sha256:" + hex.EncodeToString(sum[:])
