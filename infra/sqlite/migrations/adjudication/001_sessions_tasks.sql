@@ -20,6 +20,7 @@ CREATE TABLE session_inputs (
     request_id     TEXT    NOT NULL DEFAULT '',
     body           TEXT    NOT NULL,
     requirements   BLOB,
+    task_budget    INTEGER NOT NULL DEFAULT 0,
     content_ref    TEXT    NOT NULL DEFAULT '',
     routing_status INTEGER NOT NULL,
     recorded_at    INTEGER NOT NULL,

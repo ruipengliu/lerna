@@ -13,6 +13,26 @@ import (
 const (
 	CommandCreateSession = "sessions.create_session"
 	CommandSubmitInput   = "sessions.submit_input"
+	CommandIssueGrant    = "grants.issue_grant"
+	CommandRevokeGrant   = "grants.revoke_grant"
+	CommandSetBudget     = "budget.set_budget"
+)
+
+// 核心模块之间的跨域命令（R7 交接）。它们是跨进程命令，属于公共契约；
+// 只能由核心的固定服务命名空间发出，不承载扩展发起的请求。
+const (
+	// CommandAdmit 是任务编排对提议中一步的准入（裁决域内部命令）。
+	CommandAdmit = "tasks.admit"
+	// CommandAcceptIntent 把已准入的动作意图交给执行管理（持久点 6）。
+	CommandAcceptIntent = "ledger.accept_intent"
+	// CommandOperationUpdate 是执行管理向任务编排的变化通知。
+	CommandOperationUpdate = "tasks.operation_update"
+	// CommandStartSend 是出口 P4 的开始门禁（裁决域）。
+	CommandStartSend = "tasks.start_send"
+	// CommandReportUsage 是出口 P7 的用量回报（预算）。
+	CommandReportUsage = "budget.report_usage"
+	// CommandSealDispatch 是封闭尚未开始的派发（执行管理）。
+	CommandSealDispatch = "ledger.seal_dispatch"
 )
 
 // ContractVersion 是 M1 运行的唯一契约版本（核心契约 9：单版本运行）。

@@ -1,0 +1,98 @@
+syntax = "proto3";
+
+package lerna.v1;
+
+option go_package = "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1;lernav1";
+
+// 预算范围：用户或当前任务。
+enum BudgetScope {
+  BUDGET_SCOPE_UNSPECIFIED = 0;
+  BUDGET_SCOPE_USER = 1;
+  BUDGET_SCOPE_TASK = 2;
+}
+
+// 预算（核心契约 2.3、预算 2.1）：额度、预留和实耗分开记录。M1 只有一个维度。
+message Budget {
+  string user_id = 1;
+  string budget_id = 2;
+  BudgetScope scope = 3;
+  string task_id = 4;
+  string unit = 5;
+  // L：已授予的额度。
+  int64 limit = 6;
+  int64 limit_version = 7;
+  // U：已消耗的额度（按计费来源的最大可信金额累加）。
+  int64 used = 8;
+  // H：尚未确定或尚未结清的预留。
+  int64 held = 9;
+  // A：可用于新准入的额度 max(0, L − U − H)。
+  int64 available = 10;
+  // 超支缺口 max(0, U + H − L)。
+  int64 deficit = 11;
+  // 未知费用的来源数：费用不明时记为未知，不按零继续。
+  int32 unknown_sources = 12;
+  bool closed = 13;
+}
+
+// 预算依据（核心契约 2.3）：准入时保存。
+message BudgetBasis {
+  repeated string budget_ids = 1;
+  string unit = 2;
+  // 本次调用的费用上界；上界未知的调用不准入。
+  int64 ceiling = 3;
+  string reservation_id = 4;
+  // 预留的总额：上界 × (发送额度 + 核对额度)。
+  int64 reserved = 5;
+  string rate_basis_ref = 6;
+}
+
+// 设定额度（预算 3：调整额度）。
+message SetBudgetCommand {
+  BudgetScope scope = 1;
+  string task_id = 2;
+  int64 limit = 3;
+  // 预期的额度版本；0 表示新建。
+  int64 expected_limit_version = 4;
+}
+
+message SetBudgetResult {
+  string budget_id = 1;
+  int64 limit_version = 2;
+}
+
+// 用量计量方式（核心契约 2.3）。
+enum Measurement {
+  MEASUREMENT_UNSPECIFIED = 0;
+  MEASUREMENT_CUMULATIVE = 1;
+  MEASUREMENT_INCREMENT = 2;
+  MEASUREMENT_CORRECTION = 3;
+  MEASUREMENT_REFUND = 4;
+}
+
+// 用量回报（核心契约 2.3）：按计费来源去重，不得只按动作去重。
+message UsageReport {
+  string report_id = 1;
+  string user_id = 2;
+  string operation_id = 3;
+  string attempt_id = 4;
+  int32 send_seq = 5;
+  // 规范的来源身份：供应商计费命名空间 + 原生计费实例 + 费用项目。
+  string billing_source = 6;
+  int64 source_revision = 7;
+  Measurement measurement = 8;
+  string unit = 9;
+  int64 amount = 10;
+  bool final = 11;
+  // 费用不明：记为未知，而不是零。
+  bool unknown = 12;
+  string price_version = 13;
+  repeated string evidence_refs = 14;
+  string task_id = 15;
+  string reservation_id = 16;
+}
+
+message BudgetView {
+  repeated Budget budgets = 1;
+  // 未知或未结清的计费来源。
+  repeated string unresolved_sources = 2;
+}

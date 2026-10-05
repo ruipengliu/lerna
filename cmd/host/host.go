@@ -13,7 +13,10 @@ import (
 	"github.com/ruipengliu/lerna/contracts/errs"
 	lernav1 "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1"
 	"github.com/ruipengliu/lerna/contracts/ports"
+	"github.com/ruipengliu/lerna/core/budget"
 	"github.com/ruipengliu/lerna/core/durable"
+	"github.com/ruipengliu/lerna/core/grants"
+	"github.com/ruipengliu/lerna/core/ledger"
 	"github.com/ruipengliu/lerna/core/sessions"
 	"github.com/ruipengliu/lerna/core/tasks"
 	"github.com/ruipengliu/lerna/infra/sqlite"
@@ -22,6 +25,9 @@ import (
 // 稳定的负责域标识：逻辑标识，不是进程地址。
 const (
 	DomainAdjudication = "adjudication"
+	DomainLedger       = "ledger"
+	// EndpointLocal 是本机执行端点。
+	EndpointLocal = "local"
 )
 
 // Config 是宿主的装配配置。
@@ -34,6 +40,10 @@ type Config struct {
 	Clock durable.Clock
 	// Instance 是本进程实例的身份；进程重启后必须换新。
 	Instance string
+	// Reasoner 是推理实现；测试 harness 替换为脚本化推理。
+	Reasoner ports.Reasoner
+	// Executors 是受审查的参考执行适配器；测试 harness 替换出口目标。
+	Executors []ports.Executor
 }
 
 // Host 是装配好的单进程宿主。
@@ -45,8 +55,13 @@ type Host struct {
 	workers []*durable.Worker
 
 	Adjudication *durable.Domain
+	Ledger       *durable.Domain
 	Sessions     *sessions.Module
 	Tasks        *tasks.Module
+	Grants       *grants.Module
+	Budget       *budget.Module
+	LedgerModule *ledger.Module
+	Catalog      *Catalog
 }
 
 // Open 打开数据目录并装配全部模块。
@@ -59,11 +74,27 @@ func Open(cfg Config) (*Host, error) {
 	if err != nil {
 		return nil, err
 	}
+	led, err := h.openDomain(DomainLedger, "ledger")
+	if err != nil {
+		return nil, err
+	}
 	h.Adjudication = adj
-	h.Tasks = &tasks.Module{Domain: adj}
+	h.Ledger = led
+	h.Catalog, err = NewCatalog(cfg.Executors, DomainLedger, EndpointLocal)
+	if err != nil {
+		_ = h.Close()
+		return nil, err
+	}
+	h.Tasks = &tasks.Module{Domain: adj, Reasoner: cfg.Reasoner, Catalog: h.Catalog}
 	h.Sessions = &sessions.Module{Domain: adj, Tasks: h.Tasks}
+	h.Grants = &grants.Module{Domain: adj}
+	h.Budget = &budget.Module{Domain: adj}
+	h.LedgerModule = &ledger.Module{Domain: led, Endpoint: EndpointLocal}
 	h.Tasks.Register()
 	h.Sessions.Register()
+	h.Grants.Register()
+	h.Budget.Register()
+	h.LedgerModule.Register()
 	return h, nil
 }
 

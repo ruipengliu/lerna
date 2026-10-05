@@ -14,6 +14,8 @@ import (
 	"github.com/ruipengliu/lerna/contracts/errs"
 	lernav1 "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1"
 	"github.com/ruipengliu/lerna/contracts/ids"
+	"github.com/ruipengliu/lerna/contracts/ports"
+	"github.com/ruipengliu/lerna/core/budget"
 	"github.com/ruipengliu/lerna/core/durable"
 	"github.com/ruipengliu/lerna/core/sessions"
 )
@@ -25,12 +27,19 @@ const (
 
 // Module 是任务编排模块，绑定裁决域。
 type Module struct {
-	Domain *durable.Domain
+	Domain   *durable.Domain
+	Reasoner ports.Reasoner
+	Catalog  Catalog
 }
 
-// Register 登记任务编排的工作。
+// Register 登记任务编排的命令、工作和交接回执处理。
 func (m *Module) Register() {
 	m.Domain.HandleJob(JobCreateTask, m.createTask)
+	m.Domain.HandleJob(JobPropose, m.propose)
+	m.Domain.HandleJob(JobAdjudicate, m.adjudicate)
+	m.Domain.HandleCommand(ports.CommandAdmit,
+		func() proto.Message { return &lernav1.AdmitProposalCommand{} }, m.handleAdmit)
+	m.Domain.OnHandoffReceipt(ports.CommandAcceptIntent, m.onIntentReceipt)
 }
 
 // NewGoal 实现 sessions.TaskPort：在保存输入的同一事务中校验完成条件，登记建立任务的工作。
@@ -63,7 +72,8 @@ func (m *Module) createTask(ctx context.Context, c *durable.Claim) error {
 			return durable.Transition{}, err
 		}
 		var reqBlob []byte
-		if err := tx.QueryRow(`SELECT requirements FROM session_inputs WHERE user_id = ? AND input_id = ?`, c.User, inputID).Scan(&reqBlob); err != nil {
+		var taskBudget int64
+		if err := tx.QueryRow(`SELECT requirements, task_budget FROM session_inputs WHERE user_id = ? AND input_id = ?`, c.User, inputID).Scan(&reqBlob, &taskBudget); err != nil {
 			return durable.Transition{}, err
 		}
 		draft := &lernav1.RequirementSetDraft{}
@@ -134,6 +144,14 @@ func (m *Module) createTask(ctx context.Context, c *durable.Claim) error {
 		}
 		if err := sessions.LinkTask(tx, c.User, sessionID, taskID); err != nil {
 			return durable.Transition{}, err
+		}
+		if err := budget.EnsureTaskBudget(tx, c.User, taskID, taskBudget); err != nil {
+			return durable.Transition{}, err
+		}
+		if set.GetStatus() == lernav1.RequirementSetStatus_REQUIREMENT_SET_STATUS_ACCEPTED {
+			if err := m.requestProposal(tx, t); err != nil {
+				return durable.Transition{}, err
+			}
 		}
 		return durable.Done(), nil
 	})
@@ -264,6 +282,9 @@ func (m *Module) View(ctx context.Context, user, taskID string) (*lernav1.TaskVi
 		}
 		v.Task = t
 		if v.Requirements, err = loadRequirementSet(tx, user, taskID, t.GetRequirementsVersion()); err != nil {
+			return err
+		}
+		if v.Operations, err = loadOperationViews(tx, user, taskID); err != nil {
 			return err
 		}
 		v.Phase = Phase(t, v.GetResult())

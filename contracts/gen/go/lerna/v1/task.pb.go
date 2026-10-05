@@ -2418,6 +2418,352 @@ func (x *TaskView) GetProposals() []*Proposal {
 	return nil
 }
 
+// 准入命令（任务编排 3.2"准入提议"）：核心对提议中的一步执行准入门禁。
+type AdmitProposalCommand struct {
+	state      protoimpl.MessageState `protogen:"open.v1"`
+	TaskId     string                 `protobuf:"bytes,1,opt,name=task_id,json=taskId,proto3" json:"task_id,omitempty"`
+	ProposalId string                 `protobuf:"bytes,2,opt,name=proposal_id,json=proposalId,proto3" json:"proposal_id,omitempty"`
+	StepId     string                 `protobuf:"bytes,3,opt,name=step_id,json=stepId,proto3" json:"step_id,omitempty"`
+	// 同一提议的第几次裁决；前提变化后必须用新的命令标识。
+	Attempt       int32 `protobuf:"varint,4,opt,name=attempt,proto3" json:"attempt,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AdmitProposalCommand) Reset() {
+	*x = AdmitProposalCommand{}
+	mi := &file_lerna_v1_task_proto_msgTypes[19]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AdmitProposalCommand) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AdmitProposalCommand) ProtoMessage() {}
+
+func (x *AdmitProposalCommand) ProtoReflect() protoreflect.Message {
+	mi := &file_lerna_v1_task_proto_msgTypes[19]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AdmitProposalCommand.ProtoReflect.Descriptor instead.
+func (*AdmitProposalCommand) Descriptor() ([]byte, []int) {
+	return file_lerna_v1_task_proto_rawDescGZIP(), []int{19}
+}
+
+func (x *AdmitProposalCommand) GetTaskId() string {
+	if x != nil {
+		return x.TaskId
+	}
+	return ""
+}
+
+func (x *AdmitProposalCommand) GetProposalId() string {
+	if x != nil {
+		return x.ProposalId
+	}
+	return ""
+}
+
+func (x *AdmitProposalCommand) GetStepId() string {
+	if x != nil {
+		return x.StepId
+	}
+	return ""
+}
+
+func (x *AdmitProposalCommand) GetAttempt() int32 {
+	if x != nil {
+		return x.Attempt
+	}
+	return 0
+}
+
+type AdmitProposalResult struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	OperationId   string                 `protobuf:"bytes,1,opt,name=operation_id,json=operationId,proto3" json:"operation_id,omitempty"`
+	AdmissionId   string                 `protobuf:"bytes,2,opt,name=admission_id,json=admissionId,proto3" json:"admission_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AdmitProposalResult) Reset() {
+	*x = AdmitProposalResult{}
+	mi := &file_lerna_v1_task_proto_msgTypes[20]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AdmitProposalResult) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AdmitProposalResult) ProtoMessage() {}
+
+func (x *AdmitProposalResult) ProtoReflect() protoreflect.Message {
+	mi := &file_lerna_v1_task_proto_msgTypes[20]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AdmitProposalResult.ProtoReflect.Descriptor instead.
+func (*AdmitProposalResult) Descriptor() ([]byte, []int) {
+	return file_lerna_v1_task_proto_rawDescGZIP(), []int{20}
+}
+
+func (x *AdmitProposalResult) GetOperationId() string {
+	if x != nil {
+		return x.OperationId
+	}
+	return ""
+}
+
+func (x *AdmitProposalResult) GetAdmissionId() string {
+	if x != nil {
+		return x.AdmissionId
+	}
+	return ""
+}
+
+// 准入记录（核心契约 2.3）：记录准入依据，不保存效果。
+type AdmissionRecord struct {
+	state       protoimpl.MessageState `protogen:"open.v1"`
+	AdmissionId string                 `protobuf:"bytes,1,opt,name=admission_id,json=admissionId,proto3" json:"admission_id,omitempty"`
+	UserId      string                 `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	TaskId      string                 `protobuf:"bytes,3,opt,name=task_id,json=taskId,proto3" json:"task_id,omitempty"`
+	// 来源：提议中的一步（proposal:<id>/<step>），或核心安排的工作。
+	Origin              string            `protobuf:"bytes,4,opt,name=origin,proto3" json:"origin,omitempty"`
+	RequirementsVersion int64             `protobuf:"varint,5,opt,name=requirements_version,json=requirementsVersion,proto3" json:"requirements_version,omitempty"`
+	InputVersion        int64             `protobuf:"varint,6,opt,name=input_version,json=inputVersion,proto3" json:"input_version,omitempty"`
+	ControlGeneration   int64             `protobuf:"varint,7,opt,name=control_generation,json=controlGeneration,proto3" json:"control_generation,omitempty"`
+	OperationId         string            `protobuf:"bytes,8,opt,name=operation_id,json=operationId,proto3" json:"operation_id,omitempty"`
+	LedgerDomainId      string            `protobuf:"bytes,9,opt,name=ledger_domain_id,json=ledgerDomainId,proto3" json:"ledger_domain_id,omitempty"`
+	ExecutorEndpointId  string            `protobuf:"bytes,10,opt,name=executor_endpoint_id,json=executorEndpointId,proto3" json:"executor_endpoint_id,omitempty"`
+	GrantRefs           []string          `protobuf:"bytes,11,rep,name=grant_refs,json=grantRefs,proto3" json:"grant_refs,omitempty"`
+	BudgetRef           string            `protobuf:"bytes,12,opt,name=budget_ref,json=budgetRef,proto3" json:"budget_ref,omitempty"`
+	Ceiling             int64             `protobuf:"varint,13,opt,name=ceiling,proto3" json:"ceiling,omitempty"`
+	Reserved            int64             `protobuf:"varint,14,opt,name=reserved,proto3" json:"reserved,omitempty"`
+	ConfirmationRef     string            `protobuf:"bytes,15,opt,name=confirmation_ref,json=confirmationRef,proto3" json:"confirmation_ref,omitempty"`
+	Parameters          map[string]string `protobuf:"bytes,16,rep,name=parameters,proto3" json:"parameters,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	CapabilityId        string            `protobuf:"bytes,17,opt,name=capability_id,json=capabilityId,proto3" json:"capability_id,omitempty"`
+	CapabilityVersion   string            `protobuf:"bytes,18,opt,name=capability_version,json=capabilityVersion,proto3" json:"capability_version,omitempty"`
+	SendQuota           int32             `protobuf:"varint,19,opt,name=send_quota,json=sendQuota,proto3" json:"send_quota,omitempty"`
+	QueryQuota          int32             `protobuf:"varint,20,opt,name=query_quota,json=queryQuota,proto3" json:"query_quota,omitempty"`
+	// 模型调用：提议请求和调用位置。
+	ModelRequestId    string `protobuf:"bytes,21,opt,name=model_request_id,json=modelRequestId,proto3" json:"model_request_id,omitempty"`
+	ModelCallPosition int32  `protobuf:"varint,22,opt,name=model_call_position,json=modelCallPosition,proto3" json:"model_call_position,omitempty"`
+	// 工作类别：TARGET（目标推进）、PREPARE（准备）、CLOSURE（收尾）。
+	WorkClass     string `protobuf:"bytes,23,opt,name=work_class,json=workClass,proto3" json:"work_class,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AdmissionRecord) Reset() {
+	*x = AdmissionRecord{}
+	mi := &file_lerna_v1_task_proto_msgTypes[21]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AdmissionRecord) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AdmissionRecord) ProtoMessage() {}
+
+func (x *AdmissionRecord) ProtoReflect() protoreflect.Message {
+	mi := &file_lerna_v1_task_proto_msgTypes[21]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AdmissionRecord.ProtoReflect.Descriptor instead.
+func (*AdmissionRecord) Descriptor() ([]byte, []int) {
+	return file_lerna_v1_task_proto_rawDescGZIP(), []int{21}
+}
+
+func (x *AdmissionRecord) GetAdmissionId() string {
+	if x != nil {
+		return x.AdmissionId
+	}
+	return ""
+}
+
+func (x *AdmissionRecord) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *AdmissionRecord) GetTaskId() string {
+	if x != nil {
+		return x.TaskId
+	}
+	return ""
+}
+
+func (x *AdmissionRecord) GetOrigin() string {
+	if x != nil {
+		return x.Origin
+	}
+	return ""
+}
+
+func (x *AdmissionRecord) GetRequirementsVersion() int64 {
+	if x != nil {
+		return x.RequirementsVersion
+	}
+	return 0
+}
+
+func (x *AdmissionRecord) GetInputVersion() int64 {
+	if x != nil {
+		return x.InputVersion
+	}
+	return 0
+}
+
+func (x *AdmissionRecord) GetControlGeneration() int64 {
+	if x != nil {
+		return x.ControlGeneration
+	}
+	return 0
+}
+
+func (x *AdmissionRecord) GetOperationId() string {
+	if x != nil {
+		return x.OperationId
+	}
+	return ""
+}
+
+func (x *AdmissionRecord) GetLedgerDomainId() string {
+	if x != nil {
+		return x.LedgerDomainId
+	}
+	return ""
+}
+
+func (x *AdmissionRecord) GetExecutorEndpointId() string {
+	if x != nil {
+		return x.ExecutorEndpointId
+	}
+	return ""
+}
+
+func (x *AdmissionRecord) GetGrantRefs() []string {
+	if x != nil {
+		return x.GrantRefs
+	}
+	return nil
+}
+
+func (x *AdmissionRecord) GetBudgetRef() string {
+	if x != nil {
+		return x.BudgetRef
+	}
+	return ""
+}
+
+func (x *AdmissionRecord) GetCeiling() int64 {
+	if x != nil {
+		return x.Ceiling
+	}
+	return 0
+}
+
+func (x *AdmissionRecord) GetReserved() int64 {
+	if x != nil {
+		return x.Reserved
+	}
+	return 0
+}
+
+func (x *AdmissionRecord) GetConfirmationRef() string {
+	if x != nil {
+		return x.ConfirmationRef
+	}
+	return ""
+}
+
+func (x *AdmissionRecord) GetParameters() map[string]string {
+	if x != nil {
+		return x.Parameters
+	}
+	return nil
+}
+
+func (x *AdmissionRecord) GetCapabilityId() string {
+	if x != nil {
+		return x.CapabilityId
+	}
+	return ""
+}
+
+func (x *AdmissionRecord) GetCapabilityVersion() string {
+	if x != nil {
+		return x.CapabilityVersion
+	}
+	return ""
+}
+
+func (x *AdmissionRecord) GetSendQuota() int32 {
+	if x != nil {
+		return x.SendQuota
+	}
+	return 0
+}
+
+func (x *AdmissionRecord) GetQueryQuota() int32 {
+	if x != nil {
+		return x.QueryQuota
+	}
+	return 0
+}
+
+func (x *AdmissionRecord) GetModelRequestId() string {
+	if x != nil {
+		return x.ModelRequestId
+	}
+	return ""
+}
+
+func (x *AdmissionRecord) GetModelCallPosition() int32 {
+	if x != nil {
+		return x.ModelCallPosition
+	}
+	return 0
+}
+
+func (x *AdmissionRecord) GetWorkClass() string {
+	if x != nil {
+		return x.WorkClass
+	}
+	return ""
+}
+
 var File_lerna_v1_task_proto protoreflect.FileDescriptor
 
 const file_lerna_v1_task_proto_rawDesc = "" +
@@ -2603,7 +2949,51 @@ const file_lerna_v1_task_proto_rawDesc = "" +
 	"\x06rounds\x18\x04 \x03(\v2\x1b.lerna.v1.VerificationRoundR\x06rounds\x12(\n" +
 	"\x06result\x18\x05 \x01(\v2\x10.lerna.v1.ResultR\x06result\x12\x14\n" +
 	"\x05phase\x18\x06 \x01(\tR\x05phase\x120\n" +
-	"\tproposals\x18\a \x03(\v2\x12.lerna.v1.ProposalR\tproposals*c\n" +
+	"\tproposals\x18\a \x03(\v2\x12.lerna.v1.ProposalR\tproposals\"\x83\x01\n" +
+	"\x14AdmitProposalCommand\x12\x17\n" +
+	"\atask_id\x18\x01 \x01(\tR\x06taskId\x12\x1f\n" +
+	"\vproposal_id\x18\x02 \x01(\tR\n" +
+	"proposalId\x12\x17\n" +
+	"\astep_id\x18\x03 \x01(\tR\x06stepId\x12\x18\n" +
+	"\aattempt\x18\x04 \x01(\x05R\aattempt\"[\n" +
+	"\x13AdmitProposalResult\x12!\n" +
+	"\foperation_id\x18\x01 \x01(\tR\voperationId\x12!\n" +
+	"\fadmission_id\x18\x02 \x01(\tR\vadmissionId\"\xba\a\n" +
+	"\x0fAdmissionRecord\x12!\n" +
+	"\fadmission_id\x18\x01 \x01(\tR\vadmissionId\x12\x17\n" +
+	"\auser_id\x18\x02 \x01(\tR\x06userId\x12\x17\n" +
+	"\atask_id\x18\x03 \x01(\tR\x06taskId\x12\x16\n" +
+	"\x06origin\x18\x04 \x01(\tR\x06origin\x121\n" +
+	"\x14requirements_version\x18\x05 \x01(\x03R\x13requirementsVersion\x12#\n" +
+	"\rinput_version\x18\x06 \x01(\x03R\finputVersion\x12-\n" +
+	"\x12control_generation\x18\a \x01(\x03R\x11controlGeneration\x12!\n" +
+	"\foperation_id\x18\b \x01(\tR\voperationId\x12(\n" +
+	"\x10ledger_domain_id\x18\t \x01(\tR\x0eledgerDomainId\x120\n" +
+	"\x14executor_endpoint_id\x18\n" +
+	" \x01(\tR\x12executorEndpointId\x12\x1d\n" +
+	"\n" +
+	"grant_refs\x18\v \x03(\tR\tgrantRefs\x12\x1d\n" +
+	"\n" +
+	"budget_ref\x18\f \x01(\tR\tbudgetRef\x12\x18\n" +
+	"\aceiling\x18\r \x01(\x03R\aceiling\x12\x1a\n" +
+	"\breserved\x18\x0e \x01(\x03R\breserved\x12)\n" +
+	"\x10confirmation_ref\x18\x0f \x01(\tR\x0fconfirmationRef\x12I\n" +
+	"\n" +
+	"parameters\x18\x10 \x03(\v2).lerna.v1.AdmissionRecord.ParametersEntryR\n" +
+	"parameters\x12#\n" +
+	"\rcapability_id\x18\x11 \x01(\tR\fcapabilityId\x12-\n" +
+	"\x12capability_version\x18\x12 \x01(\tR\x11capabilityVersion\x12\x1d\n" +
+	"\n" +
+	"send_quota\x18\x13 \x01(\x05R\tsendQuota\x12\x1f\n" +
+	"\vquery_quota\x18\x14 \x01(\x05R\n" +
+	"queryQuota\x12(\n" +
+	"\x10model_request_id\x18\x15 \x01(\tR\x0emodelRequestId\x12.\n" +
+	"\x13model_call_position\x18\x16 \x01(\x05R\x11modelCallPosition\x12\x1d\n" +
+	"\n" +
+	"work_class\x18\x17 \x01(\tR\tworkClass\x1a=\n" +
+	"\x0fParametersEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01*c\n" +
 	"\rTaskLifecycle\x12\x1e\n" +
 	"\x1aTASK_LIFECYCLE_UNSPECIFIED\x10\x00\x12\x17\n" +
 	"\x13TASK_LIFECYCLE_OPEN\x10\x01\x12\x19\n" +
@@ -2679,7 +3069,7 @@ func file_lerna_v1_task_proto_rawDescGZIP() []byte {
 }
 
 var file_lerna_v1_task_proto_enumTypes = make([]protoimpl.EnumInfo, 12)
-var file_lerna_v1_task_proto_msgTypes = make([]protoimpl.MessageInfo, 23)
+var file_lerna_v1_task_proto_msgTypes = make([]protoimpl.MessageInfo, 27)
 var file_lerna_v1_task_proto_goTypes = []any{
 	(TaskLifecycle)(0),             // 0: lerna.v1.TaskLifecycle
 	(TaskControl)(0),               // 1: lerna.v1.TaskControl
@@ -2712,14 +3102,18 @@ var file_lerna_v1_task_proto_goTypes = []any{
 	(*Uncertainty)(nil),            // 28: lerna.v1.Uncertainty
 	(*Result)(nil),                 // 29: lerna.v1.Result
 	(*TaskView)(nil),               // 30: lerna.v1.TaskView
-	nil,                            // 31: lerna.v1.VerificationRule.ParamsEntry
-	nil,                            // 32: lerna.v1.RequirementSetDraft.TemplateParamsEntry
-	nil,                            // 33: lerna.v1.PlanStep.ArgumentsEntry
-	nil,                            // 34: lerna.v1.OperationView.ArgumentsEntry
-	(*timestamppb.Timestamp)(nil),  // 35: google.protobuf.Timestamp
-	(EffectOutcome)(0),             // 36: lerna.v1.EffectOutcome
-	(LateEffect)(0),                // 37: lerna.v1.LateEffect
-	(DispatchState)(0),             // 38: lerna.v1.DispatchState
+	(*AdmitProposalCommand)(nil),   // 31: lerna.v1.AdmitProposalCommand
+	(*AdmitProposalResult)(nil),    // 32: lerna.v1.AdmitProposalResult
+	(*AdmissionRecord)(nil),        // 33: lerna.v1.AdmissionRecord
+	nil,                            // 34: lerna.v1.VerificationRule.ParamsEntry
+	nil,                            // 35: lerna.v1.RequirementSetDraft.TemplateParamsEntry
+	nil,                            // 36: lerna.v1.PlanStep.ArgumentsEntry
+	nil,                            // 37: lerna.v1.OperationView.ArgumentsEntry
+	nil,                            // 38: lerna.v1.AdmissionRecord.ParametersEntry
+	(*timestamppb.Timestamp)(nil),  // 39: google.protobuf.Timestamp
+	(EffectOutcome)(0),             // 40: lerna.v1.EffectOutcome
+	(LateEffect)(0),                // 41: lerna.v1.LateEffect
+	(DispatchState)(0),             // 42: lerna.v1.DispatchState
 }
 var file_lerna_v1_task_proto_depIdxs = []int32{
 	3,  // 0: lerna.v1.WaitingOn.kind:type_name -> lerna.v1.WaitingKind
@@ -2727,17 +3121,17 @@ var file_lerna_v1_task_proto_depIdxs = []int32{
 	1,  // 2: lerna.v1.Task.control:type_name -> lerna.v1.TaskControl
 	2,  // 3: lerna.v1.Task.progress:type_name -> lerna.v1.TaskProgress
 	12, // 4: lerna.v1.Task.waiting_on:type_name -> lerna.v1.WaitingOn
-	35, // 5: lerna.v1.Task.created_at:type_name -> google.protobuf.Timestamp
+	39, // 5: lerna.v1.Task.created_at:type_name -> google.protobuf.Timestamp
 	6,  // 6: lerna.v1.VerificationRule.kind:type_name -> lerna.v1.VerificationRuleKind
-	31, // 7: lerna.v1.VerificationRule.params:type_name -> lerna.v1.VerificationRule.ParamsEntry
+	34, // 7: lerna.v1.VerificationRule.params:type_name -> lerna.v1.VerificationRule.ParamsEntry
 	14, // 8: lerna.v1.Requirement.rule:type_name -> lerna.v1.VerificationRule
 	5,  // 9: lerna.v1.Requirement.source:type_name -> lerna.v1.RequirementSource
 	15, // 10: lerna.v1.RequirementSet.requirements:type_name -> lerna.v1.Requirement
 	7,  // 11: lerna.v1.RequirementSet.status:type_name -> lerna.v1.RequirementSetStatus
 	8,  // 12: lerna.v1.RequirementSet.acceptance_source:type_name -> lerna.v1.AcceptanceSource
-	32, // 13: lerna.v1.RequirementSetDraft.template_params:type_name -> lerna.v1.RequirementSetDraft.TemplateParamsEntry
+	35, // 13: lerna.v1.RequirementSetDraft.template_params:type_name -> lerna.v1.RequirementSetDraft.TemplateParamsEntry
 	15, // 14: lerna.v1.RequirementSetDraft.explicit:type_name -> lerna.v1.Requirement
-	33, // 15: lerna.v1.PlanStep.arguments:type_name -> lerna.v1.PlanStep.ArgumentsEntry
+	36, // 15: lerna.v1.PlanStep.arguments:type_name -> lerna.v1.PlanStep.ArgumentsEntry
 	18, // 16: lerna.v1.ActionBody.steps:type_name -> lerna.v1.PlanStep
 	15, // 17: lerna.v1.ModifyRequirementsBody.requirements:type_name -> lerna.v1.Requirement
 	10, // 18: lerna.v1.RequirementJudgement.verdict:type_name -> lerna.v1.Verdict
@@ -2747,31 +3141,32 @@ var file_lerna_v1_task_proto_depIdxs = []int32{
 	20, // 22: lerna.v1.Proposal.ask_user:type_name -> lerna.v1.AskUserBody
 	21, // 23: lerna.v1.Proposal.modify_requirements:type_name -> lerna.v1.ModifyRequirementsBody
 	23, // 24: lerna.v1.Proposal.completion:type_name -> lerna.v1.CompletionBody
-	36, // 25: lerna.v1.OperationView.effect:type_name -> lerna.v1.EffectOutcome
-	37, // 26: lerna.v1.OperationView.late_effect:type_name -> lerna.v1.LateEffect
-	38, // 27: lerna.v1.OperationView.dispatch:type_name -> lerna.v1.DispatchState
-	34, // 28: lerna.v1.OperationView.arguments:type_name -> lerna.v1.OperationView.ArgumentsEntry
+	40, // 25: lerna.v1.OperationView.effect:type_name -> lerna.v1.EffectOutcome
+	41, // 26: lerna.v1.OperationView.late_effect:type_name -> lerna.v1.LateEffect
+	42, // 27: lerna.v1.OperationView.dispatch:type_name -> lerna.v1.DispatchState
+	37, // 28: lerna.v1.OperationView.arguments:type_name -> lerna.v1.OperationView.ArgumentsEntry
 	11, // 29: lerna.v1.VerificationRound.status:type_name -> lerna.v1.VerificationStatus
 	14, // 30: lerna.v1.RequirementEvaluation.rule:type_name -> lerna.v1.VerificationRule
 	5,  // 31: lerna.v1.RequirementEvaluation.source:type_name -> lerna.v1.RequirementSource
 	10, // 32: lerna.v1.RequirementEvaluation.verdict:type_name -> lerna.v1.Verdict
-	36, // 33: lerna.v1.Uncertainty.effect:type_name -> lerna.v1.EffectOutcome
-	37, // 34: lerna.v1.Uncertainty.late_effect:type_name -> lerna.v1.LateEffect
+	40, // 33: lerna.v1.Uncertainty.effect:type_name -> lerna.v1.EffectOutcome
+	41, // 34: lerna.v1.Uncertainty.late_effect:type_name -> lerna.v1.LateEffect
 	4,  // 35: lerna.v1.Result.outcome:type_name -> lerna.v1.TaskOutcome
 	27, // 36: lerna.v1.Result.requirement_evaluations:type_name -> lerna.v1.RequirementEvaluation
 	28, // 37: lerna.v1.Result.uncertainties:type_name -> lerna.v1.Uncertainty
-	35, // 38: lerna.v1.Result.closed_at:type_name -> google.protobuf.Timestamp
+	39, // 38: lerna.v1.Result.closed_at:type_name -> google.protobuf.Timestamp
 	13, // 39: lerna.v1.TaskView.task:type_name -> lerna.v1.Task
 	16, // 40: lerna.v1.TaskView.requirements:type_name -> lerna.v1.RequirementSet
 	25, // 41: lerna.v1.TaskView.operations:type_name -> lerna.v1.OperationView
 	26, // 42: lerna.v1.TaskView.rounds:type_name -> lerna.v1.VerificationRound
 	29, // 43: lerna.v1.TaskView.result:type_name -> lerna.v1.Result
 	24, // 44: lerna.v1.TaskView.proposals:type_name -> lerna.v1.Proposal
-	45, // [45:45] is the sub-list for method output_type
-	45, // [45:45] is the sub-list for method input_type
-	45, // [45:45] is the sub-list for extension type_name
-	45, // [45:45] is the sub-list for extension extendee
-	0,  // [0:45] is the sub-list for field type_name
+	38, // 45: lerna.v1.AdmissionRecord.parameters:type_name -> lerna.v1.AdmissionRecord.ParametersEntry
+	46, // [46:46] is the sub-list for method output_type
+	46, // [46:46] is the sub-list for method input_type
+	46, // [46:46] is the sub-list for extension type_name
+	46, // [46:46] is the sub-list for extension extendee
+	0,  // [0:46] is the sub-list for field type_name
 }
 
 func init() { file_lerna_v1_task_proto_init() }
@@ -2792,7 +3187,7 @@ func file_lerna_v1_task_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_lerna_v1_task_proto_rawDesc), len(file_lerna_v1_task_proto_rawDesc)),
 			NumEnums:      12,
-			NumMessages:   23,
+			NumMessages:   27,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

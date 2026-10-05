@@ -1260,11 +1260,405 @@ func (x *OperationRecord) GetObservations() []*Observation {
 	return nil
 }
 
+// 动作意图（核心契约 2.3 准入记录的交接部分）：裁决域交给执行管理（R7）。
+type OperationIntent struct {
+	state              protoimpl.MessageState `protogen:"open.v1"`
+	UserId             string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	OperationId        string                 `protobuf:"bytes,2,opt,name=operation_id,json=operationId,proto3" json:"operation_id,omitempty"`
+	TaskId             string                 `protobuf:"bytes,3,opt,name=task_id,json=taskId,proto3" json:"task_id,omitempty"`
+	AdmissionRef       string                 `protobuf:"bytes,4,opt,name=admission_ref,json=admissionRef,proto3" json:"admission_ref,omitempty"`
+	LedgerDomainId     string                 `protobuf:"bytes,5,opt,name=ledger_domain_id,json=ledgerDomainId,proto3" json:"ledger_domain_id,omitempty"`
+	ExecutorEndpointId string                 `protobuf:"bytes,6,opt,name=executor_endpoint_id,json=executorEndpointId,proto3" json:"executor_endpoint_id,omitempty"`
+	AdapterRef         string                 `protobuf:"bytes,7,opt,name=adapter_ref,json=adapterRef,proto3" json:"adapter_ref,omitempty"`
+	Capability         *CapabilityDeclaration `protobuf:"bytes,8,opt,name=capability,proto3" json:"capability,omitempty"`
+	Parameters         map[string]string      `protobuf:"bytes,9,rep,name=parameters,proto3" json:"parameters,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	RequestDigest      []byte                 `protobuf:"bytes,10,opt,name=request_digest,json=requestDigest,proto3" json:"request_digest,omitempty"`
+	// 已准入的实际发送额度与核对查询额度。
+	SendQuota         int32        `protobuf:"varint,11,opt,name=send_quota,json=sendQuota,proto3" json:"send_quota,omitempty"`
+	QueryQuota        int32        `protobuf:"varint,12,opt,name=query_quota,json=queryQuota,proto3" json:"query_quota,omitempty"`
+	ControlGeneration int64        `protobuf:"varint,13,opt,name=control_generation,json=controlGeneration,proto3" json:"control_generation,omitempty"`
+	Origin            string       `protobuf:"bytes,14,opt,name=origin,proto3" json:"origin,omitempty"`
+	GrantRefs         []string     `protobuf:"bytes,15,rep,name=grant_refs,json=grantRefs,proto3" json:"grant_refs,omitempty"`
+	BudgetBasis       *BudgetBasis `protobuf:"bytes,16,opt,name=budget_basis,json=budgetBasis,proto3" json:"budget_basis,omitempty"`
+	CredentialRef     string       `protobuf:"bytes,17,opt,name=credential_ref,json=credentialRef,proto3" json:"credential_ref,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
+}
+
+func (x *OperationIntent) Reset() {
+	*x = OperationIntent{}
+	mi := &file_lerna_v1_ledger_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *OperationIntent) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*OperationIntent) ProtoMessage() {}
+
+func (x *OperationIntent) ProtoReflect() protoreflect.Message {
+	mi := &file_lerna_v1_ledger_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use OperationIntent.ProtoReflect.Descriptor instead.
+func (*OperationIntent) Descriptor() ([]byte, []int) {
+	return file_lerna_v1_ledger_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *OperationIntent) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *OperationIntent) GetOperationId() string {
+	if x != nil {
+		return x.OperationId
+	}
+	return ""
+}
+
+func (x *OperationIntent) GetTaskId() string {
+	if x != nil {
+		return x.TaskId
+	}
+	return ""
+}
+
+func (x *OperationIntent) GetAdmissionRef() string {
+	if x != nil {
+		return x.AdmissionRef
+	}
+	return ""
+}
+
+func (x *OperationIntent) GetLedgerDomainId() string {
+	if x != nil {
+		return x.LedgerDomainId
+	}
+	return ""
+}
+
+func (x *OperationIntent) GetExecutorEndpointId() string {
+	if x != nil {
+		return x.ExecutorEndpointId
+	}
+	return ""
+}
+
+func (x *OperationIntent) GetAdapterRef() string {
+	if x != nil {
+		return x.AdapterRef
+	}
+	return ""
+}
+
+func (x *OperationIntent) GetCapability() *CapabilityDeclaration {
+	if x != nil {
+		return x.Capability
+	}
+	return nil
+}
+
+func (x *OperationIntent) GetParameters() map[string]string {
+	if x != nil {
+		return x.Parameters
+	}
+	return nil
+}
+
+func (x *OperationIntent) GetRequestDigest() []byte {
+	if x != nil {
+		return x.RequestDigest
+	}
+	return nil
+}
+
+func (x *OperationIntent) GetSendQuota() int32 {
+	if x != nil {
+		return x.SendQuota
+	}
+	return 0
+}
+
+func (x *OperationIntent) GetQueryQuota() int32 {
+	if x != nil {
+		return x.QueryQuota
+	}
+	return 0
+}
+
+func (x *OperationIntent) GetControlGeneration() int64 {
+	if x != nil {
+		return x.ControlGeneration
+	}
+	return 0
+}
+
+func (x *OperationIntent) GetOrigin() string {
+	if x != nil {
+		return x.Origin
+	}
+	return ""
+}
+
+func (x *OperationIntent) GetGrantRefs() []string {
+	if x != nil {
+		return x.GrantRefs
+	}
+	return nil
+}
+
+func (x *OperationIntent) GetBudgetBasis() *BudgetBasis {
+	if x != nil {
+		return x.BudgetBasis
+	}
+	return nil
+}
+
+func (x *OperationIntent) GetCredentialRef() string {
+	if x != nil {
+		return x.CredentialRef
+	}
+	return ""
+}
+
+type AcceptIntentResult struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	OperationId    string                 `protobuf:"bytes,1,opt,name=operation_id,json=operationId,proto3" json:"operation_id,omitempty"`
+	LedgerRevision int64                  `protobuf:"varint,2,opt,name=ledger_revision,json=ledgerRevision,proto3" json:"ledger_revision,omitempty"`
+	// 控制范围已被封闭：接纳为"禁止执行"。
+	Sealed        bool `protobuf:"varint,3,opt,name=sealed,proto3" json:"sealed,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AcceptIntentResult) Reset() {
+	*x = AcceptIntentResult{}
+	mi := &file_lerna_v1_ledger_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AcceptIntentResult) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AcceptIntentResult) ProtoMessage() {}
+
+func (x *AcceptIntentResult) ProtoReflect() protoreflect.Message {
+	mi := &file_lerna_v1_ledger_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AcceptIntentResult.ProtoReflect.Descriptor instead.
+func (*AcceptIntentResult) Descriptor() ([]byte, []int) {
+	return file_lerna_v1_ledger_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *AcceptIntentResult) GetOperationId() string {
+	if x != nil {
+		return x.OperationId
+	}
+	return ""
+}
+
+func (x *AcceptIntentResult) GetLedgerRevision() int64 {
+	if x != nil {
+		return x.LedgerRevision
+	}
+	return 0
+}
+
+func (x *AcceptIntentResult) GetSealed() bool {
+	if x != nil {
+		return x.Sealed
+	}
+	return false
+}
+
+// 执行管理向任务编排的变化通知（R7）：通知只是事实的转交，任务编排按修订接纳。
+type OperationUpdate struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	UserId         string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	TaskId         string                 `protobuf:"bytes,2,opt,name=task_id,json=taskId,proto3" json:"task_id,omitempty"`
+	OperationId    string                 `protobuf:"bytes,3,opt,name=operation_id,json=operationId,proto3" json:"operation_id,omitempty"`
+	LedgerRevision int64                  `protobuf:"varint,4,opt,name=ledger_revision,json=ledgerRevision,proto3" json:"ledger_revision,omitempty"`
+	Effect         EffectOutcome          `protobuf:"varint,5,opt,name=effect,proto3,enum=lerna.v1.EffectOutcome" json:"effect,omitempty"`
+	LateEffect     LateEffect             `protobuf:"varint,6,opt,name=late_effect,json=lateEffect,proto3,enum=lerna.v1.LateEffect" json:"late_effect,omitempty"`
+	Dispatch       DispatchState          `protobuf:"varint,7,opt,name=dispatch,proto3,enum=lerna.v1.DispatchState" json:"dispatch,omitempty"`
+	Settled        bool                   `protobuf:"varint,8,opt,name=settled,proto3" json:"settled,omitempty"`
+	// 是否已取得开始回执（P4）。
+	Started        bool              `protobuf:"varint,9,opt,name=started,proto3" json:"started,omitempty"`
+	EvidenceRefs   []string          `protobuf:"bytes,10,rep,name=evidence_refs,json=evidenceRefs,proto3" json:"evidence_refs,omitempty"`
+	Observed       map[string]string `protobuf:"bytes,11,rep,name=observed,proto3" json:"observed,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	ReconcileState ReconcileState    `protobuf:"varint,12,opt,name=reconcile_state,json=reconcileState,proto3,enum=lerna.v1.ReconcileState" json:"reconcile_state,omitempty"`
+	PauseReason    string            `protobuf:"bytes,13,opt,name=pause_reason,json=pauseReason,proto3" json:"pause_reason,omitempty"`
+	// 模型调用：输出内容引用与正文。
+	OutputRef     string `protobuf:"bytes,14,opt,name=output_ref,json=outputRef,proto3" json:"output_ref,omitempty"`
+	Output        string `protobuf:"bytes,15,opt,name=output,proto3" json:"output,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *OperationUpdate) Reset() {
+	*x = OperationUpdate{}
+	mi := &file_lerna_v1_ledger_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *OperationUpdate) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*OperationUpdate) ProtoMessage() {}
+
+func (x *OperationUpdate) ProtoReflect() protoreflect.Message {
+	mi := &file_lerna_v1_ledger_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use OperationUpdate.ProtoReflect.Descriptor instead.
+func (*OperationUpdate) Descriptor() ([]byte, []int) {
+	return file_lerna_v1_ledger_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *OperationUpdate) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *OperationUpdate) GetTaskId() string {
+	if x != nil {
+		return x.TaskId
+	}
+	return ""
+}
+
+func (x *OperationUpdate) GetOperationId() string {
+	if x != nil {
+		return x.OperationId
+	}
+	return ""
+}
+
+func (x *OperationUpdate) GetLedgerRevision() int64 {
+	if x != nil {
+		return x.LedgerRevision
+	}
+	return 0
+}
+
+func (x *OperationUpdate) GetEffect() EffectOutcome {
+	if x != nil {
+		return x.Effect
+	}
+	return EffectOutcome_EFFECT_OUTCOME_UNSPECIFIED
+}
+
+func (x *OperationUpdate) GetLateEffect() LateEffect {
+	if x != nil {
+		return x.LateEffect
+	}
+	return LateEffect_LATE_EFFECT_UNSPECIFIED
+}
+
+func (x *OperationUpdate) GetDispatch() DispatchState {
+	if x != nil {
+		return x.Dispatch
+	}
+	return DispatchState_DISPATCH_STATE_UNSPECIFIED
+}
+
+func (x *OperationUpdate) GetSettled() bool {
+	if x != nil {
+		return x.Settled
+	}
+	return false
+}
+
+func (x *OperationUpdate) GetStarted() bool {
+	if x != nil {
+		return x.Started
+	}
+	return false
+}
+
+func (x *OperationUpdate) GetEvidenceRefs() []string {
+	if x != nil {
+		return x.EvidenceRefs
+	}
+	return nil
+}
+
+func (x *OperationUpdate) GetObserved() map[string]string {
+	if x != nil {
+		return x.Observed
+	}
+	return nil
+}
+
+func (x *OperationUpdate) GetReconcileState() ReconcileState {
+	if x != nil {
+		return x.ReconcileState
+	}
+	return ReconcileState_RECONCILE_STATE_UNSPECIFIED
+}
+
+func (x *OperationUpdate) GetPauseReason() string {
+	if x != nil {
+		return x.PauseReason
+	}
+	return ""
+}
+
+func (x *OperationUpdate) GetOutputRef() string {
+	if x != nil {
+		return x.OutputRef
+	}
+	return ""
+}
+
+func (x *OperationUpdate) GetOutput() string {
+	if x != nil {
+		return x.Output
+	}
+	return ""
+}
+
 var File_lerna_v1_ledger_proto protoreflect.FileDescriptor
 
 const file_lerna_v1_ledger_proto_rawDesc = "" +
 	"\n" +
-	"\x15lerna/v1/ledger.proto\x12\blerna.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x19lerna/v1/capability.proto\"\x99\n" +
+	"\x15lerna/v1/ledger.proto\x12\blerna.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x15lerna/v1/budget.proto\x1a\x19lerna/v1/capability.proto\"\x99\n" +
 	"\n" +
 	"\tOperation\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\x12!\n" +
@@ -1372,7 +1766,63 @@ const file_lerna_v1_ledger_proto_rawDesc = "" +
 	"\toperation\x18\x01 \x01(\v2\x13.lerna.v1.OperationR\toperation\x12-\n" +
 	"\battempts\x18\x02 \x03(\v2\x11.lerna.v1.AttemptR\battempts\x12$\n" +
 	"\x05sends\x18\x03 \x03(\v2\x0e.lerna.v1.SendR\x05sends\x129\n" +
-	"\fobservations\x18\x04 \x03(\v2\x15.lerna.v1.ObservationR\fobservations*\x9c\x01\n" +
+	"\fobservations\x18\x04 \x03(\v2\x15.lerna.v1.ObservationR\fobservations\"\x81\x06\n" +
+	"\x0fOperationIntent\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\x12!\n" +
+	"\foperation_id\x18\x02 \x01(\tR\voperationId\x12\x17\n" +
+	"\atask_id\x18\x03 \x01(\tR\x06taskId\x12#\n" +
+	"\radmission_ref\x18\x04 \x01(\tR\fadmissionRef\x12(\n" +
+	"\x10ledger_domain_id\x18\x05 \x01(\tR\x0eledgerDomainId\x120\n" +
+	"\x14executor_endpoint_id\x18\x06 \x01(\tR\x12executorEndpointId\x12\x1f\n" +
+	"\vadapter_ref\x18\a \x01(\tR\n" +
+	"adapterRef\x12?\n" +
+	"\n" +
+	"capability\x18\b \x01(\v2\x1f.lerna.v1.CapabilityDeclarationR\n" +
+	"capability\x12I\n" +
+	"\n" +
+	"parameters\x18\t \x03(\v2).lerna.v1.OperationIntent.ParametersEntryR\n" +
+	"parameters\x12%\n" +
+	"\x0erequest_digest\x18\n" +
+	" \x01(\fR\rrequestDigest\x12\x1d\n" +
+	"\n" +
+	"send_quota\x18\v \x01(\x05R\tsendQuota\x12\x1f\n" +
+	"\vquery_quota\x18\f \x01(\x05R\n" +
+	"queryQuota\x12-\n" +
+	"\x12control_generation\x18\r \x01(\x03R\x11controlGeneration\x12\x16\n" +
+	"\x06origin\x18\x0e \x01(\tR\x06origin\x12\x1d\n" +
+	"\n" +
+	"grant_refs\x18\x0f \x03(\tR\tgrantRefs\x128\n" +
+	"\fbudget_basis\x18\x10 \x01(\v2\x15.lerna.v1.BudgetBasisR\vbudgetBasis\x12%\n" +
+	"\x0ecredential_ref\x18\x11 \x01(\tR\rcredentialRef\x1a=\n" +
+	"\x0fParametersEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"x\n" +
+	"\x12AcceptIntentResult\x12!\n" +
+	"\foperation_id\x18\x01 \x01(\tR\voperationId\x12'\n" +
+	"\x0fledger_revision\x18\x02 \x01(\x03R\x0eledgerRevision\x12\x16\n" +
+	"\x06sealed\x18\x03 \x01(\bR\x06sealed\"\xa4\x05\n" +
+	"\x0fOperationUpdate\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x17\n" +
+	"\atask_id\x18\x02 \x01(\tR\x06taskId\x12!\n" +
+	"\foperation_id\x18\x03 \x01(\tR\voperationId\x12'\n" +
+	"\x0fledger_revision\x18\x04 \x01(\x03R\x0eledgerRevision\x12/\n" +
+	"\x06effect\x18\x05 \x01(\x0e2\x17.lerna.v1.EffectOutcomeR\x06effect\x125\n" +
+	"\vlate_effect\x18\x06 \x01(\x0e2\x14.lerna.v1.LateEffectR\n" +
+	"lateEffect\x123\n" +
+	"\bdispatch\x18\a \x01(\x0e2\x17.lerna.v1.DispatchStateR\bdispatch\x12\x18\n" +
+	"\asettled\x18\b \x01(\bR\asettled\x12\x18\n" +
+	"\astarted\x18\t \x01(\bR\astarted\x12#\n" +
+	"\revidence_refs\x18\n" +
+	" \x03(\tR\fevidenceRefs\x12C\n" +
+	"\bobserved\x18\v \x03(\v2'.lerna.v1.OperationUpdate.ObservedEntryR\bobserved\x12A\n" +
+	"\x0freconcile_state\x18\f \x01(\x0e2\x18.lerna.v1.ReconcileStateR\x0ereconcileState\x12!\n" +
+	"\fpause_reason\x18\r \x01(\tR\vpauseReason\x12\x1d\n" +
+	"\n" +
+	"output_ref\x18\x0e \x01(\tR\toutputRef\x12\x16\n" +
+	"\x06output\x18\x0f \x01(\tR\x06output\x1a;\n" +
+	"\rObservedEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01*\x9c\x01\n" +
 	"\x12OperationLifecycle\x12#\n" +
 	"\x1fOPERATION_LIFECYCLE_UNSPECIFIED\x10\x00\x12 \n" +
 	"\x1cOPERATION_LIFECYCLE_ACCEPTED\x10\x01\x12\x1e\n" +
@@ -1428,7 +1878,7 @@ func file_lerna_v1_ledger_proto_rawDescGZIP() []byte {
 }
 
 var file_lerna_v1_ledger_proto_enumTypes = make([]protoimpl.EnumInfo, 8)
-var file_lerna_v1_ledger_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
+var file_lerna_v1_ledger_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
 var file_lerna_v1_ledger_proto_goTypes = []any{
 	(OperationLifecycle)(0),       // 0: lerna.v1.OperationLifecycle
 	(DispatchState)(0),            // 1: lerna.v1.DispatchState
@@ -1444,42 +1894,56 @@ var file_lerna_v1_ledger_proto_goTypes = []any{
 	(*Observation)(nil),           // 11: lerna.v1.Observation
 	(*Effect)(nil),                // 12: lerna.v1.Effect
 	(*OperationRecord)(nil),       // 13: lerna.v1.OperationRecord
-	nil,                           // 14: lerna.v1.Operation.ParametersEntry
-	nil,                           // 15: lerna.v1.Observation.FieldsEntry
-	(*CapabilityDeclaration)(nil), // 16: lerna.v1.CapabilityDeclaration
-	(*timestamppb.Timestamp)(nil), // 17: google.protobuf.Timestamp
+	(*OperationIntent)(nil),       // 14: lerna.v1.OperationIntent
+	(*AcceptIntentResult)(nil),    // 15: lerna.v1.AcceptIntentResult
+	(*OperationUpdate)(nil),       // 16: lerna.v1.OperationUpdate
+	nil,                           // 17: lerna.v1.Operation.ParametersEntry
+	nil,                           // 18: lerna.v1.Observation.FieldsEntry
+	nil,                           // 19: lerna.v1.OperationIntent.ParametersEntry
+	nil,                           // 20: lerna.v1.OperationUpdate.ObservedEntry
+	(*CapabilityDeclaration)(nil), // 21: lerna.v1.CapabilityDeclaration
+	(*timestamppb.Timestamp)(nil), // 22: google.protobuf.Timestamp
+	(*BudgetBasis)(nil),           // 23: lerna.v1.BudgetBasis
 }
 var file_lerna_v1_ledger_proto_depIdxs = []int32{
-	14, // 0: lerna.v1.Operation.parameters:type_name -> lerna.v1.Operation.ParametersEntry
-	16, // 1: lerna.v1.Operation.capability_snapshot:type_name -> lerna.v1.CapabilityDeclaration
+	17, // 0: lerna.v1.Operation.parameters:type_name -> lerna.v1.Operation.ParametersEntry
+	21, // 1: lerna.v1.Operation.capability_snapshot:type_name -> lerna.v1.CapabilityDeclaration
 	0,  // 2: lerna.v1.Operation.lifecycle:type_name -> lerna.v1.OperationLifecycle
 	1,  // 3: lerna.v1.Operation.dispatch:type_name -> lerna.v1.DispatchState
 	3,  // 4: lerna.v1.Operation.effect:type_name -> lerna.v1.EffectOutcome
 	4,  // 5: lerna.v1.Operation.late_effect:type_name -> lerna.v1.LateEffect
 	5,  // 6: lerna.v1.Operation.reconcile_state:type_name -> lerna.v1.ReconcileState
-	17, // 7: lerna.v1.Operation.next_reconcile_at:type_name -> google.protobuf.Timestamp
-	17, // 8: lerna.v1.Attempt.key_valid_until:type_name -> google.protobuf.Timestamp
+	22, // 7: lerna.v1.Operation.next_reconcile_at:type_name -> google.protobuf.Timestamp
+	22, // 8: lerna.v1.Attempt.key_valid_until:type_name -> google.protobuf.Timestamp
 	2,  // 9: lerna.v1.Attempt.phase:type_name -> lerna.v1.AttemptPhase
-	17, // 10: lerna.v1.Attempt.first_possible_send_at:type_name -> google.protobuf.Timestamp
+	22, // 10: lerna.v1.Attempt.first_possible_send_at:type_name -> google.protobuf.Timestamp
 	6,  // 11: lerna.v1.Send.purpose:type_name -> lerna.v1.SendPurpose
-	17, // 12: lerna.v1.Send.dispatch_possible_at:type_name -> google.protobuf.Timestamp
+	22, // 12: lerna.v1.Send.dispatch_possible_at:type_name -> google.protobuf.Timestamp
 	6,  // 13: lerna.v1.Observation.purpose:type_name -> lerna.v1.SendPurpose
 	7,  // 14: lerna.v1.Observation.source:type_name -> lerna.v1.ObservationSource
 	3,  // 15: lerna.v1.Observation.claimed_effect:type_name -> lerna.v1.EffectOutcome
-	17, // 16: lerna.v1.Observation.observed_at:type_name -> google.protobuf.Timestamp
-	15, // 17: lerna.v1.Observation.fields:type_name -> lerna.v1.Observation.FieldsEntry
+	22, // 16: lerna.v1.Observation.observed_at:type_name -> google.protobuf.Timestamp
+	18, // 17: lerna.v1.Observation.fields:type_name -> lerna.v1.Observation.FieldsEntry
 	3,  // 18: lerna.v1.Effect.outcome:type_name -> lerna.v1.EffectOutcome
 	4,  // 19: lerna.v1.Effect.late_effect:type_name -> lerna.v1.LateEffect
-	17, // 20: lerna.v1.Effect.next_reconcile_at:type_name -> google.protobuf.Timestamp
+	22, // 20: lerna.v1.Effect.next_reconcile_at:type_name -> google.protobuf.Timestamp
 	8,  // 21: lerna.v1.OperationRecord.operation:type_name -> lerna.v1.Operation
 	9,  // 22: lerna.v1.OperationRecord.attempts:type_name -> lerna.v1.Attempt
 	10, // 23: lerna.v1.OperationRecord.sends:type_name -> lerna.v1.Send
 	11, // 24: lerna.v1.OperationRecord.observations:type_name -> lerna.v1.Observation
-	25, // [25:25] is the sub-list for method output_type
-	25, // [25:25] is the sub-list for method input_type
-	25, // [25:25] is the sub-list for extension type_name
-	25, // [25:25] is the sub-list for extension extendee
-	0,  // [0:25] is the sub-list for field type_name
+	21, // 25: lerna.v1.OperationIntent.capability:type_name -> lerna.v1.CapabilityDeclaration
+	19, // 26: lerna.v1.OperationIntent.parameters:type_name -> lerna.v1.OperationIntent.ParametersEntry
+	23, // 27: lerna.v1.OperationIntent.budget_basis:type_name -> lerna.v1.BudgetBasis
+	3,  // 28: lerna.v1.OperationUpdate.effect:type_name -> lerna.v1.EffectOutcome
+	4,  // 29: lerna.v1.OperationUpdate.late_effect:type_name -> lerna.v1.LateEffect
+	1,  // 30: lerna.v1.OperationUpdate.dispatch:type_name -> lerna.v1.DispatchState
+	20, // 31: lerna.v1.OperationUpdate.observed:type_name -> lerna.v1.OperationUpdate.ObservedEntry
+	5,  // 32: lerna.v1.OperationUpdate.reconcile_state:type_name -> lerna.v1.ReconcileState
+	33, // [33:33] is the sub-list for method output_type
+	33, // [33:33] is the sub-list for method input_type
+	33, // [33:33] is the sub-list for extension type_name
+	33, // [33:33] is the sub-list for extension extendee
+	0,  // [0:33] is the sub-list for field type_name
 }
 
 func init() { file_lerna_v1_ledger_proto_init() }
@@ -1487,6 +1951,7 @@ func file_lerna_v1_ledger_proto_init() {
 	if File_lerna_v1_ledger_proto != nil {
 		return
 	}
+	file_lerna_v1_budget_proto_init()
 	file_lerna_v1_capability_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -1494,7 +1959,7 @@ func file_lerna_v1_ledger_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_lerna_v1_ledger_proto_rawDesc), len(file_lerna_v1_ledger_proto_rawDesc)),
 			NumEnums:      8,
-			NumMessages:   8,
+			NumMessages:   13,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

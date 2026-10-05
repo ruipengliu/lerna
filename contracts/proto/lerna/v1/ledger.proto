@@ -3,6 +3,7 @@ syntax = "proto3";
 package lerna.v1;
 
 import "google/protobuf/timestamp.proto";
+import "lerna/v1/budget.proto";
 import "lerna/v1/capability.proto";
 
 option go_package = "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1;lernav1";
@@ -174,4 +175,54 @@ message OperationRecord {
   repeated Attempt attempts = 2;
   repeated Send sends = 3;
   repeated Observation observations = 4;
+}
+
+// 动作意图（核心契约 2.3 准入记录的交接部分）：裁决域交给执行管理（R7）。
+message OperationIntent {
+  string user_id = 1;
+  string operation_id = 2;
+  string task_id = 3;
+  string admission_ref = 4;
+  string ledger_domain_id = 5;
+  string executor_endpoint_id = 6;
+  string adapter_ref = 7;
+  CapabilityDeclaration capability = 8;
+  map<string, string> parameters = 9;
+  bytes request_digest = 10;
+  // 已准入的实际发送额度与核对查询额度。
+  int32 send_quota = 11;
+  int32 query_quota = 12;
+  int64 control_generation = 13;
+  string origin = 14;
+  repeated string grant_refs = 15;
+  BudgetBasis budget_basis = 16;
+  string credential_ref = 17;
+}
+
+message AcceptIntentResult {
+  string operation_id = 1;
+  int64 ledger_revision = 2;
+  // 控制范围已被封闭：接纳为"禁止执行"。
+  bool sealed = 3;
+}
+
+// 执行管理向任务编排的变化通知（R7）：通知只是事实的转交，任务编排按修订接纳。
+message OperationUpdate {
+  string user_id = 1;
+  string task_id = 2;
+  string operation_id = 3;
+  int64 ledger_revision = 4;
+  EffectOutcome effect = 5;
+  LateEffect late_effect = 6;
+  DispatchState dispatch = 7;
+  bool settled = 8;
+  // 是否已取得开始回执（P4）。
+  bool started = 9;
+  repeated string evidence_refs = 10;
+  map<string, string> observed = 11;
+  ReconcileState reconcile_state = 12;
+  string pause_reason = 13;
+  // 模型调用：输出内容引用与正文。
+  string output_ref = 14;
+  string output = 15;
 }

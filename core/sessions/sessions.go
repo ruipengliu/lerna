@@ -85,6 +85,9 @@ func (m *Module) handleSubmitInput(_ context.Context, tx *durable.Tx, in durable
 		if cmd.GetText() == "" {
 			return durable.Outcome{}, errs.New(lernav1.ErrorCode_ERROR_CODE_INVALID_INPUT, "new goal needs text")
 		}
+		if cmd.GetTaskBudget() < 0 {
+			return durable.Outcome{}, errs.New(lernav1.ErrorCode_ERROR_CODE_INVALID_INPUT, "task budget must not be negative")
+		}
 		rec, err := appendInput(tx, user, sid, cmd)
 		if err != nil {
 			return durable.Outcome{}, err
@@ -153,9 +156,9 @@ func appendInput(tx *durable.Tx, user, sid string, cmd *lernav1.SubmitInputComma
 		RecordedAt:    timestamppb.New(tx.Now()),
 	}
 	_, err := tx.Exec(`INSERT INTO session_inputs (user_id, input_id, session_id, session_seq, input_kind, task_id,
-		request_id, body, requirements, routing_status, recorded_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+		request_id, body, requirements, task_budget, routing_status, recorded_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
 		user, rec.GetInputId(), sid, seq, int32(rec.GetInputKind()), rec.GetTaskId(), rec.GetRequestId(),
-		cmd.GetText(), reqBlob, int32(rec.GetRoutingStatus()), tx.NowMs())
+		cmd.GetText(), reqBlob, cmd.GetTaskBudget(), int32(rec.GetRoutingStatus()), tx.NowMs())
 	return rec, err
 }
 

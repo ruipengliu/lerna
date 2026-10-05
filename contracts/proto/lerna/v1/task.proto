@@ -314,3 +314,47 @@ message TaskView {
   string phase = 6;
   repeated Proposal proposals = 7;
 }
+
+// 准入命令（任务编排 3.2"准入提议"）：核心对提议中的一步执行准入门禁。
+message AdmitProposalCommand {
+  string task_id = 1;
+  string proposal_id = 2;
+  string step_id = 3;
+  // 同一提议的第几次裁决；前提变化后必须用新的命令标识。
+  int32 attempt = 4;
+}
+
+message AdmitProposalResult {
+  string operation_id = 1;
+  string admission_id = 2;
+}
+
+// 准入记录（核心契约 2.3）：记录准入依据，不保存效果。
+message AdmissionRecord {
+  string admission_id = 1;
+  string user_id = 2;
+  string task_id = 3;
+  // 来源：提议中的一步（proposal:<id>/<step>），或核心安排的工作。
+  string origin = 4;
+  int64 requirements_version = 5;
+  int64 input_version = 6;
+  int64 control_generation = 7;
+  string operation_id = 8;
+  string ledger_domain_id = 9;
+  string executor_endpoint_id = 10;
+  repeated string grant_refs = 11;
+  string budget_ref = 12;
+  int64 ceiling = 13;
+  int64 reserved = 14;
+  string confirmation_ref = 15;
+  map<string, string> parameters = 16;
+  string capability_id = 17;
+  string capability_version = 18;
+  int32 send_quota = 19;
+  int32 query_quota = 20;
+  // 模型调用：提议请求和调用位置。
+  string model_request_id = 21;
+  int32 model_call_position = 22;
+  // 工作类别：TARGET（目标推进）、PREPARE（准备）、CLOSURE（收尾）。
+  string work_class = 23;
+}

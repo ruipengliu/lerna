@@ -180,8 +180,10 @@ type SubmitInputCommand struct {
 	// 分支与历史编辑：M1 不支持。
 	ForkFromMessageId string `protobuf:"bytes,12,opt,name=fork_from_message_id,json=forkFromMessageId,proto3" json:"fork_from_message_id,omitempty"`
 	EditMessageId     string `protobuf:"bytes,13,opt,name=edit_message_id,json=editMessageId,proto3" json:"edit_message_id,omitempty"`
-	unknownFields     protoimpl.UnknownFields
-	sizeCache         protoimpl.SizeCache
+	// 新目标：当前任务的明确费用上限（预算单位）。
+	TaskBudget    int64 `protobuf:"varint,14,opt,name=task_budget,json=taskBudget,proto3" json:"task_budget,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *SubmitInputCommand) Reset() {
@@ -305,6 +307,13 @@ func (x *SubmitInputCommand) GetEditMessageId() string {
 	return ""
 }
 
+func (x *SubmitInputCommand) GetTaskBudget() int64 {
+	if x != nil {
+		return x.TaskBudget
+	}
+	return 0
+}
+
 // 提交输入的结果：明确区分"已记录"和"任务已接纳"。
 type SubmitInputResult struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -390,7 +399,7 @@ const file_lerna_v1_commands_proto_rawDesc = "" +
 	"\x14CreateSessionCommand\"4\n" +
 	"\x13CreateSessionResult\x12\x1d\n" +
 	"\n" +
-	"session_id\x18\x01 \x01(\tR\tsessionId\"\xc3\x04\n" +
+	"session_id\x18\x01 \x01(\tR\tsessionId\"\xe4\x04\n" +
 	"\x12SubmitInputCommand\x12\x1d\n" +
 	"\n" +
 	"session_id\x18\x01 \x01(\tR\tsessionId\x122\n" +
@@ -408,7 +417,9 @@ const file_lerna_v1_commands_proto_rawDesc = "" +
 	" \x01(\fR\x11intentFingerprint\x12/\n" +
 	"\acontrol\x18\v \x01(\x0e2\x15.lerna.v1.ControlKindR\acontrol\x12/\n" +
 	"\x14fork_from_message_id\x18\f \x01(\tR\x11forkFromMessageId\x12&\n" +
-	"\x0fedit_message_id\x18\r \x01(\tR\reditMessageId\"\xc7\x01\n" +
+	"\x0fedit_message_id\x18\r \x01(\tR\reditMessageId\x12\x1f\n" +
+	"\vtask_budget\x18\x0e \x01(\x03R\n" +
+	"taskBudget\"\xc7\x01\n" +
 	"\x11SubmitInputResult\x12\x1d\n" +
 	"\n" +
 	"session_id\x18\x01 \x01(\tR\tsessionId\x12\x19\n" +

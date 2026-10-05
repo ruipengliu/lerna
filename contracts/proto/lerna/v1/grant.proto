@@ -1,0 +1,125 @@
+syntax = "proto3";
+
+package lerna.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1;lernav1";
+
+// 操作权利（ADR 0002）：读取、保存、同步、行动，分别授权。
+enum UseRight {
+  USE_RIGHT_UNSPECIFIED = 0;
+  USE_RIGHT_READ = 1;
+  USE_RIGHT_SAVE = 2;
+  USE_RIGHT_SYNC = 3;
+  USE_RIGHT_ACT = 4;
+}
+
+// 处理目的（ADR 0002）：缺省不等于全部。M1 只支持 CURRENT_TASK。
+enum ProcessingPurpose {
+  PROCESSING_PURPOSE_UNSPECIFIED = 0;
+  PROCESSING_PURPOSE_CURRENT_TASK = 1;
+  PROCESSING_PURPOSE_PERSONALIZATION = 2;
+  PROCESSING_PURPOSE_DIAGNOSIS = 3;
+  PROCESSING_PURPOSE_EVALUATION = 4;
+  PROCESSING_PURPOSE_IMPROVEMENT = 5;
+}
+
+// 授权控制状态（核心契约 2.5）：ACTIVE → REVOKED。
+enum GrantStatus {
+  GRANT_STATUS_UNSPECIFIED = 0;
+  GRANT_STATUS_ACTIVE = 1;
+  GRANT_STATUS_REVOKED = 2;
+}
+
+// 撤销完成状态：PENDING → COMPLETE。
+enum RevocationCompletion {
+  REVOCATION_COMPLETION_UNSPECIFIED = 0;
+  REVOCATION_COMPLETION_PENDING = 1;
+  REVOCATION_COMPLETION_COMPLETE = 2;
+}
+
+// 使用方式：单次（上限为 1）或持续。
+enum UseMode {
+  USE_MODE_UNSPECIFIED = 0;
+  USE_MODE_SINGLE = 1;
+  USE_MODE_STANDING = 2;
+}
+
+// 许可子句（授权 2.1）：子句内部各项限制取交集；一份授权是若干完整子句的并集。
+message GrantClause {
+  // 资源：能力标识（目标系统和动作族）。
+  string resource = 1;
+  // 动作：语义版本内的显式枚举，例如 invoke、query。
+  repeated string actions = 2;
+  repeated UseRight use_rights = 3;
+  repeated ProcessingPurpose processing_purposes = 4;
+  // 参数范围：精确值。为空表示该参数不受约束（必须在子句中显式列出受约束的参数）。
+  map<string, string> param_equals = 5;
+  // 运行范围：限定任务；为空表示本用户的任意任务。
+  string task_id = 6;
+}
+
+// 授权（核心契约 2.3、授权 2.1）。
+message Grant {
+  string user_id = 1;
+  string grant_id = 2;
+  string subject_ref = 3;
+  repeated GrantClause clauses = 4;
+  string semantic_version = 5;
+  google.protobuf.Timestamp valid_from = 6;
+  google.protobuf.Timestamp valid_until = 7;
+  UseMode use_mode = 8;
+  // 持续授权的明确次数上限；0 表示不限次数（仍受期限和预算约束）。
+  int32 max_admissions = 9;
+  string use_pool_id = 10;
+  // 派生来源：M1 不支持委派，必须为空。
+  string parent_grant_ref = 11;
+  int64 revocation_epoch = 12;
+  GrantStatus status = 13;
+  RevocationCompletion revocation_completion = 14;
+  // 签发依据：用户事件或确认引用。
+  string issuer_ref = 15;
+  int64 state_version = 16;
+  // 计算值，不存储为状态。
+  int32 uses = 17;
+  bool expired = 18;
+}
+
+// 签发授权（授权 3.1）：由可信的用户事件发起。
+message IssueGrantCommand {
+  repeated GrantClause clauses = 1;
+  UseMode use_mode = 2;
+  int32 max_admissions = 3;
+  google.protobuf.Timestamp valid_from = 4;
+  google.protobuf.Timestamp valid_until = 5;
+  // 派生来源；M1 返回"不支持"。
+  string parent_grant_ref = 6;
+  // 组合多个来源；M1 返回"不支持"。
+  repeated string combine_from = 7;
+  // 授权确认（GRANT_ISSUANCE）；为空时命令本身就是用户事件。
+  string confirmation_id = 8;
+}
+
+message IssueGrantResult {
+  string grant_id = 1;
+}
+
+// 撤销授权（授权 3.1）。
+message RevokeGrantCommand {
+  string grant_id = 1;
+}
+
+// 撤销进度：被接纳 ≠ 完全生效。
+message RevocationProgress {
+  string grant_id = 1;
+  GrantStatus status = 2;
+  RevocationCompletion completion = 3;
+  // 尚未封闭、可能仍会开始的出口（动作标识）。
+  repeated string open_operations = 4;
+}
+
+message GrantView {
+  Grant grant = 1;
+  RevocationProgress revocation = 2;
+}

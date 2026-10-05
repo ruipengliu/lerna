@@ -1,0 +1,112 @@
+syntax = "proto3";
+
+package lerna.v1;
+
+import "lerna/v1/capability.proto";
+import "lerna/v1/ledger.proto";
+import "lerna/v1/task.proto";
+
+option go_package = "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1;lernav1";
+
+// 快照中的一条进展：已准入的动作及其效果（推理接口 2.1）。
+// 还没收到回报不等于没有执行。
+message ProgressItem {
+  string operation_id = 1;
+  string capability_id = 2;
+  map<string, string> arguments = 3;
+  EffectOutcome effect = 4;
+  LateEffect late_effect = 5;
+  bool settled = 6;
+  // 证据引用：观察标识。
+  repeated string evidence_refs = 7;
+  string origin = 8;
+  // 观察到的结构化结果（例如读回内容的摘要），不含正文副本。
+  map<string, string> observed = 9;
+}
+
+// 调用限制（推理接口 2.1）。两个调用上限分开计算。
+message ReasonerLimits {
+  int32 call_positions = 1;
+  int32 actual_sends = 2;
+  int32 plan_length = 3;
+}
+
+// 上下文快照（核心契约 2.3、推理接口 2.1）：固定材料版本和事实依据，不携带行动权限。
+message ContextSnapshot {
+  string snapshot_id = 1;
+  string user_id = 2;
+  string task_id = 3;
+  string goal_ref = 4;
+  // 目标正文（M1 只用合成数据）。
+  string goal_text = 5;
+  int64 requirements_version = 6;
+  repeated Requirement requirements = 7;
+  int64 input_version = 8;
+  int64 control_generation = 9;
+  int64 planning_generation = 10;
+  // 已接纳但尚未处理的、会改变任务依据的输入。
+  repeated string unprocessed_inputs = 11;
+  // 核心按持久来源指定的本次请求用途。
+  repeated string allowed_purposes = 12;
+  repeated ProgressItem progress = 13;
+  repeated string content_refs = 14;
+  // 能力目录：版本和候选能力的参数约定。
+  string capability_catalog_version = 15;
+  repeated CapabilityDeclaration capabilities = 16;
+  ReasonerLimits limits = 17;
+  // 最近一轮被拒绝的完成核验给出的缺口。
+  repeated string gaps = 18;
+  // 用户对提问的回答（按时间顺序）。
+  repeated string answers = 19;
+}
+
+// 提议请求（推理接口 2.2）：推理实际收到的部分。
+message ProposalRequest {
+  string request_id = 1;
+  string task_id = 2;
+  string snapshot_id = 3;
+  bytes snapshot_digest = 4;
+  int64 planning_generation = 5;
+  ReasonerLimits limits = 6;
+}
+
+// 一条模型输入消息。
+message ModelMessage {
+  string role = 1;
+  string content = 2;
+}
+
+// 受信宿主封存的完整调用描述（推理接口 3）：模型、参数、全部实际输入。
+// 准入之后不得再改变；同位置不同描述报冲突。
+message ModelCallDescription {
+  string provider = 1;
+  string model = 2;
+  repeated ModelMessage messages = 3;
+  int32 max_output_tokens = 4;
+  double temperature = 5;
+  // 全部实际输入的内容引用。
+  repeated string input_refs = 6;
+}
+
+// 模型调用位置的结果。
+enum ModelCallStatus {
+  MODEL_CALL_STATUS_UNSPECIFIED = 0;
+  // 已准入、等待发送或回报；推理应结束本次求解，核心有结果后重新运行。
+  MODEL_CALL_STATUS_PENDING = 1;
+  MODEL_CALL_STATUS_COMPLETED = 2;
+  // 发送结果未知：原调用的未知和费用继续由执行管理和预算核对。
+  MODEL_CALL_STATUS_UNKNOWN = 3;
+  // 准入被拒绝（例如预算不足）。
+  MODEL_CALL_STATUS_REJECTED = 4;
+  // 模型明确返回错误（已收到完整回报）。
+  MODEL_CALL_STATUS_FAILED = 5;
+}
+
+message ModelCallResult {
+  int32 position = 1;
+  ModelCallStatus status = 2;
+  string output = 3;
+  string operation_id = 4;
+  string output_ref = 5;
+  string diagnostic = 6;
+}

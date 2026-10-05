@@ -13,6 +13,10 @@ import (
 	"time"
 
 	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/types/known/timestamppb"
+
+	"github.com/ruipengliu/lerna/adapters/mockapi"
+	"github.com/ruipengliu/lerna/conformance/scripted"
 
 	"github.com/ruipengliu/lerna/cmd/host"
 	"github.com/ruipengliu/lerna/contracts/errs"
@@ -37,6 +41,10 @@ type Harness struct {
 	Dir   string
 	Clock *Clock
 	Host  *host.Host
+	// API 是默认的模拟 API（幂等型），独立于宿主存在，重启后仍记录真实收到的调用。
+	API *mockapi.Target
+	// Reasoner 是默认的脚本化推理。
+	Reasoner *scripted.Reasoner
 	// CrashedAt 是最近一次注入崩溃的点；为空表示宿主在运行。
 	CrashedAt string
 	gen       int
@@ -50,7 +58,10 @@ type Option func(*host.Config)
 func New(t testing.TB, opts ...Option) *Harness {
 	t.Helper()
 	h := &Harness{T: t, Dir: t.TempDir(), Clock: NewClock(), options: opts}
+	h.API = mockapi.NewTarget(mockapi.Idempotent, h.Clock.Now)
+	h.Reasoner = scripted.New(nil)
 	h.start()
+	h.SetUserBudget(1_000_000)
 	t.Cleanup(func() {
 		if h.Host != nil {
 			_ = h.Host.Close()
@@ -63,10 +74,12 @@ func (h *Harness) start() {
 	h.T.Helper()
 	h.gen++
 	cfg := host.Config{
-		Dir:      h.Dir,
-		UserID:   User,
-		Clock:    h.Clock,
-		Instance: fmt.Sprintf("proc-%d", h.gen),
+		Dir:       h.Dir,
+		UserID:    User,
+		Clock:     h.Clock,
+		Instance:  fmt.Sprintf("proc-%d", h.gen),
+		Reasoner:  h.Reasoner,
+		Executors: []ports.Executor{mockapi.New("mockapi", h.API)},
 	}
 	for _, o := range h.options {
 		o(&cfg)
@@ -166,8 +179,37 @@ func (h *Harness) SubmitGoal(commandID, text string, draft *lernav1.RequirementS
 		InputKind:    lernav1.InputKind_INPUT_KIND_NEW_GOAL,
 		Text:         text,
 		Requirements: draft,
+		TaskBudget:   TaskBudget,
 	}, res)
 	return res
+}
+
+// TaskBudget 是 SubmitGoal 给每个任务设定的明确费用上限。
+const TaskBudget = 100_000
+
+// SetUserBudget 设定用户级的明确费用上限。
+func (h *Harness) SetUserBudget(limit int64) {
+	h.T.Helper()
+	h.MustAccept(NewID(), ports.CommandSetBudget, &lernav1.SetBudgetCommand{
+		Scope: lernav1.BudgetScope_BUDGET_SCOPE_USER, Limit: limit,
+	}, nil)
+}
+
+// GrantStanding 签发一份覆盖 capability 调用的持续授权（处理目的：当前任务）。
+func (h *Harness) GrantStanding(capability string) string {
+	h.T.Helper()
+	res := &lernav1.IssueGrantResult{}
+	h.MustAccept(NewID(), ports.CommandIssueGrant, &lernav1.IssueGrantCommand{
+		Clauses: []*lernav1.GrantClause{{
+			Resource:           capability,
+			Actions:            []string{"invoke", "query"},
+			UseRights:          []lernav1.UseRight{lernav1.UseRight_USE_RIGHT_ACT, lernav1.UseRight_USE_RIGHT_READ},
+			ProcessingPurposes: []lernav1.ProcessingPurpose{lernav1.ProcessingPurpose_PROCESSING_PURPOSE_CURRENT_TASK},
+		}},
+		UseMode:    lernav1.UseMode_USE_MODE_STANDING,
+		ValidUntil: timestamppb.New(h.Clock.Now().Add(30 * 24 * time.Hour)),
+	}, res)
+	return res.GetGrantId()
 }
 
 // Query 用原命令身份查询回执。

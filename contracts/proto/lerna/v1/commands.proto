@@ -41,6 +41,8 @@ message SubmitInputCommand {
   // 分支与历史编辑：M1 不支持。
   string fork_from_message_id = 12;
   string edit_message_id = 13;
+  // 新目标：当前任务的明确费用上限（预算单位）。
+  int64 task_budget = 14;
 }
 
 enum ControlKind {

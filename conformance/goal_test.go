@@ -131,7 +131,7 @@ func TestWrongIdentityIsRejected(t *testing.T) {
 	if _, err := h.Client().Task(context.Background(), "u-other", "t"); !errs.Is(err, lernav1.ErrorCode_ERROR_CODE_PERMISSION_DENIED) {
 		t.Fatalf("query for other user: %v", err)
 	}
-	if n := h.Count(host.DomainAdjudication, `SELECT COUNT(*) FROM command_receipts`); n != 0 {
+	if n := h.Count(host.DomainAdjudication, `SELECT COUNT(*) FROM command_receipts WHERE command_kind = ?`, ports.CommandSubmitInput); n != 0 {
 		t.Fatalf("rejected identities must leave no receipt, got %d", n)
 	}
 }

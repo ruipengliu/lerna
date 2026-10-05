@@ -1,0 +1,96 @@
+syntax = "proto3";
+
+package lerna.v1;
+
+import "google/protobuf/timestamp.proto";
+import "lerna/v1/ledger.proto";
+
+option go_package = "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1;lernav1";
+
+// 执行输入（执行适配器接口 2.2）。
+message ExecuteRequest {
+  string user_id = 1;
+  string task_id = 2;
+  string operation_id = 3;
+  string attempt_id = 4;
+  int32 send_seq = 5;
+  string capability_id = 6;
+  map<string, string> arguments = 7;
+  // 外部键：在第一次出口前持久保存，必须显式传给目标系统。
+  string external_key = 8;
+  // 出口凭据：不透明引用，由出口闸门核验。
+  string credential_ref = 9;
+  bytes request_digest = 10;
+}
+
+// 查询输入：只按原尝试查询，不重新执行原动作。
+message QueryRequest {
+  string user_id = 1;
+  string operation_id = 2;
+  string attempt_id = 3;
+  string external_key = 4;
+  string capability_id = 5;
+  map<string, string> arguments = 6;
+  int32 send_seq = 7;
+  string credential_ref = 8;
+}
+
+// 执行情况（执行适配器接口 2.3）。
+enum ExecutionStatus {
+  EXECUTION_STATUS_UNSPECIFIED = 0;
+  EXECUTION_STATUS_NOT_EXECUTED = 1;
+  EXECUTION_STATUS_ACCEPTED = 2;
+  EXECUTION_STATUS_IN_PROGRESS = 3;
+  EXECUTION_STATUS_FINISHED = 4;
+  EXECUTION_STATUS_UNKNOWN = 5;
+  // 查询：查无记录（不等于未生效）。
+  EXECUTION_STATUS_NOT_FOUND = 6;
+  // 查询：目标不支持查询。
+  EXECUTION_STATUS_UNSUPPORTED = 7;
+  // 目标限流（429）：不由适配器自行重发。
+  EXECUTION_STATUS_RATE_LIMITED = 8;
+}
+
+// 限流类别：速率、并发和资源冲突。
+enum RateLimitKind {
+  RATE_LIMIT_KIND_UNSPECIFIED = 0;
+  RATE_LIMIT_KIND_RATE = 1;
+  RATE_LIMIT_KIND_CONCURRENCY = 2;
+  RATE_LIMIT_KIND_RESOURCE_CONFLICT = 3;
+}
+
+// 一项用量（执行回报中的用量部分）。
+message UsageItem {
+  string billing_source = 1;
+  // 供应商侧的原生计费实例，例如请求标识。
+  string native_id = 2;
+  string unit = 3;
+  int64 amount = 4;
+  // 是否为最终值；false 表示暂报。
+  bool final = 5;
+  bool unknown = 6;
+  string price_version = 7;
+  int64 source_revision = 8;
+}
+
+// 执行回报和证据（执行适配器接口 2.3）。适配器只回报，不写效果。
+message ExecutionReport {
+  string adapter_version = 1;
+  ExecutionStatus status = 2;
+  // 适配器的效果主张；核心保存主张和自己的裁决。
+  EffectOutcome claimed_effect = 3;
+  // 适配器认为目标处理已结束、不会迟到生效（候选终局依据）。
+  bool claims_terminal = 4;
+  // 目标侧回执或业务标识。
+  string target_receipt = 5;
+  string protocol_result = 6;
+  map<string, string> fields = 7;
+  string resource_version = 8;
+  repeated UsageItem usage = 9;
+  RateLimitKind rate_limit = 10;
+  int64 retry_after_ms = 11;
+  string diagnostic = 12;
+  google.protobuf.Timestamp observed_at = 13;
+  // 正文：例如模型输出或读取的文件内容；由内容治理登记。
+  string body = 14;
+}
