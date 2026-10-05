@@ -1,0 +1,87 @@
+syntax = "proto3";
+package lerna.v1;
+
+import "lerna/v1/authority.proto";
+import "lerna/v1/identity.proto";
+import "lerna/v1/planning.proto";
+import "lerna/v1/submission.proto";
+
+option go_package = "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1;lernav1";
+message ConditionFinding {
+  Requirement condition = 1;
+  string source = 2;
+  Ref source_input_ref = 3;
+  string conclusion = 4;
+  string gap = 5;
+  repeated Ref evidence_refs = 6;
+  Ref operation_ref = 7;
+}
+message Verification {
+  Ref ref = 1;
+  GlobalName task_id = 2;
+  uint64 round = 3;
+  string status = 4;
+  Ref requirements_ref = 5;
+  uint64 requirements_version = 6;
+  uint64 input_version = 7;
+  uint64 control_generation = 8;
+  Ref proposal_ref = 9;
+  repeated Ref admission_refs = 10;
+  repeated Ref operation_refs = 11;
+  repeated CompletionEvidence candidates = 12;
+  repeated ConditionFinding conditions = 13;
+  repeated string gaps = 14;
+  string ended_reason = 15;
+  int64 started_at_unix_ms = 16;
+  int64 finished_at_unix_ms = 17;
+  repeated Ref closure_intent_refs = 18;
+}
+message Result {
+  Ref ref = 1;
+  GlobalName task_id = 2;
+  string outcome = 3;
+  string close_reason = 4;
+  Ref verification_ref = 5;
+  Ref requirements_ref = 6;
+  repeated ConditionFinding conditions = 7;
+  repeated Ref operation_refs = 8;
+  repeated Ref unknown_operation_refs = 9;
+  Budget usage_snapshot = 10;
+  int64 closed_at_unix_ms = 11;
+  repeated Ref reservation_refs = 12;
+}
+message BeginCompletionCommand {
+  CommandHeader header = 1;
+  GlobalName task_id = 2;
+  Ref proposal_ref = 3;
+}
+message RecheckCompletionCommand {
+  CommandHeader header = 1;
+  Ref verification_ref = 2;
+}
+message CloseCompletionCommand {
+  CommandHeader header = 1;
+  Ref intent_ref = 2;
+  Ref verification_ref = 3;
+  Ref admission_ref = 4;
+  GlobalName operation_id = 5;
+  string executor_endpoint_id = 6;
+}
+message CompletionClosureIntent {
+  Ref ref = 1;
+  GlobalName task_id = 2;
+  CloseCompletionCommand command = 3;
+  Ref job_ref = 4;
+  CommandReceipt recipient_receipt = 5;
+}
+message CompletionSeal {
+  Ref ref = 1;
+  Ref intent_ref = 2;
+  Ref verification_ref = 3;
+  Ref admission_ref = 4;
+  GlobalName operation_id = 5;
+  string executor_endpoint_id = 6;
+  bool no_send_proven = 7;
+  Ref operation_ref = 8;
+  bool physical_send_was_possible = 9;
+}

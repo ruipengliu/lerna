@@ -144,6 +144,10 @@ func TestSafeResendSkipsAdmissionGeneration(t *testing.T) { ... }
 | `tasks.admit` | 使用记录、两级预留、提议消费、准入意图、交接 outbox、待办与原决定 |
 | `ledger.accept` | 独立执行管理域的原交接回执、动作与执行待办 |
 | `tasks.handoff_receipt` | 源域保存对方原回执并在领取围栏下完成待办 |
+| `tasks.verification` | 本轮冻结、完整准入清单、准确封闭 outbox、工作与原决定 |
+| `ledger.completion_seal` | 执行域准确封闭、迟到意图墓碑、已有动作状态与原回执 |
+| `tasks.completion_receipt` | 源域封闭回执与领取围栏下的工作完成 |
+| `tasks.completion` | 核验裁决、冻结释放、成功 Result 与任务终态 |
 
 新增事务必须传入固定名称、登记到同一表，并补充对应故障用例。故障套件检查未登记的事务和无调用点的登记项，普通构建只编译空边界，不包含故障计划、登记表或配置 API。`make test-fault` 仅运行 `conformance/fault/` 中带 `fault` 标签的测试。
 

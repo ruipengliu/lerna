@@ -174,7 +174,7 @@ func (s *Service) applyJob(ctx context.Context, c *v1.JobCommand, now int64) ([]
 				return nil, command.Fail("INVALID_INPUT")
 			}
 			// DECIDE_GOAL 的完成必须与原命令决定同事务，不能绕过事实写入方。
-			if (j.JobType == "DECIDE_GOAL" || (j.Module == "tasks" && j.JobType == "DELIVER_HANDOFF") || (j.Module == "ledger" && j.JobType == "EXECUTE_OPERATION")) && c.NextState == "COMPLETED" {
+			if (j.JobType == "DECIDE_GOAL" || (j.Module == "tasks" && (j.JobType == "DELIVER_HANDOFF" || j.JobType == "DELIVER_COMPLETION_CLOSURE")) || (j.Module == "ledger" && j.JobType == "EXECUTE_OPERATION")) && c.NextState == "COMPLETED" {
 				return nil, command.Fail("UNSUPPORTED_FEATURE")
 			}
 			j.State = c.NextState
@@ -186,7 +186,7 @@ func (s *Service) applyJob(ctx context.Context, c *v1.JobCommand, now int64) ([]
 		if (j.JobType == "DECIDE_GOAL" || j.Module == "ledger" && j.JobType == "EXECUTE_OPERATION") && (c.NextState == "CLOSED" || c.SpecificationRef != nil) {
 			return nil, command.Fail("UNSUPPORTED_FEATURE")
 		}
-		if j.Module == "tasks" && j.JobType == "DELIVER_HANDOFF" && (c.NextState == "CLOSED" || c.SpecificationRef != nil && !proto.Equal(c.SpecificationRef, j.SpecificationRef)) {
+		if j.Module == "tasks" && (j.JobType == "DELIVER_HANDOFF" || j.JobType == "DELIVER_COMPLETION_CLOSURE") && (c.NextState == "CLOSED" || c.SpecificationRef != nil && !proto.Equal(c.SpecificationRef, j.SpecificationRef)) {
 			return nil, command.Fail("UNSUPPORTED_FEATURE")
 		}
 		if c.Module != j.Module {

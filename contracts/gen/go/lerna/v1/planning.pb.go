@@ -97,6 +97,110 @@ func (x *CommandHeader) GetMustUnderstand() []string {
 	return nil
 }
 
+type TargetRecordAssertion struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	CapabilityRef *Ref                   `protobuf:"bytes,1,opt,name=capability_ref,json=capabilityRef,proto3" json:"capability_ref,omitempty"`
+	ParametersRef *Ref                   `protobuf:"bytes,2,opt,name=parameters_ref,json=parametersRef,proto3" json:"parameters_ref,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *TargetRecordAssertion) Reset() {
+	*x = TargetRecordAssertion{}
+	mi := &file_lerna_v1_planning_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TargetRecordAssertion) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TargetRecordAssertion) ProtoMessage() {}
+
+func (x *TargetRecordAssertion) ProtoReflect() protoreflect.Message {
+	mi := &file_lerna_v1_planning_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TargetRecordAssertion.ProtoReflect.Descriptor instead.
+func (*TargetRecordAssertion) Descriptor() ([]byte, []int) {
+	return file_lerna_v1_planning_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *TargetRecordAssertion) GetCapabilityRef() *Ref {
+	if x != nil {
+		return x.CapabilityRef
+	}
+	return nil
+}
+
+func (x *TargetRecordAssertion) GetParametersRef() *Ref {
+	if x != nil {
+		return x.ParametersRef
+	}
+	return nil
+}
+
+type CompletionEvidence struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	ConditionId   string                 `protobuf:"bytes,1,opt,name=condition_id,json=conditionId,proto3" json:"condition_id,omitempty"`
+	OperationId   *GlobalName            `protobuf:"bytes,2,opt,name=operation_id,json=operationId,proto3" json:"operation_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CompletionEvidence) Reset() {
+	*x = CompletionEvidence{}
+	mi := &file_lerna_v1_planning_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CompletionEvidence) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CompletionEvidence) ProtoMessage() {}
+
+func (x *CompletionEvidence) ProtoReflect() protoreflect.Message {
+	mi := &file_lerna_v1_planning_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CompletionEvidence.ProtoReflect.Descriptor instead.
+func (*CompletionEvidence) Descriptor() ([]byte, []int) {
+	return file_lerna_v1_planning_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *CompletionEvidence) GetConditionId() string {
+	if x != nil {
+		return x.ConditionId
+	}
+	return ""
+}
+
+func (x *CompletionEvidence) GetOperationId() *GlobalName {
+	if x != nil {
+		return x.OperationId
+	}
+	return nil
+}
+
 type Requirement struct {
 	state            protoimpl.MessageState `protogen:"open.v1"`
 	ConditionId      string                 `protobuf:"bytes,1,opt,name=condition_id,json=conditionId,proto3" json:"condition_id,omitempty"`
@@ -104,13 +208,14 @@ type Requirement struct {
 	Necessary        bool                   `protobuf:"varint,3,opt,name=necessary,proto3" json:"necessary,omitempty"`
 	VerificationRule string                 `protobuf:"bytes,4,opt,name=verification_rule,json=verificationRule,proto3" json:"verification_rule,omitempty"`
 	RuleVersion      uint32                 `protobuf:"varint,5,opt,name=rule_version,json=ruleVersion,proto3" json:"rule_version,omitempty"`
+	TargetRecord     *TargetRecordAssertion `protobuf:"bytes,6,opt,name=target_record,json=targetRecord,proto3" json:"target_record,omitempty"`
 	unknownFields    protoimpl.UnknownFields
 	sizeCache        protoimpl.SizeCache
 }
 
 func (x *Requirement) Reset() {
 	*x = Requirement{}
-	mi := &file_lerna_v1_planning_proto_msgTypes[1]
+	mi := &file_lerna_v1_planning_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -122,7 +227,7 @@ func (x *Requirement) String() string {
 func (*Requirement) ProtoMessage() {}
 
 func (x *Requirement) ProtoReflect() protoreflect.Message {
-	mi := &file_lerna_v1_planning_proto_msgTypes[1]
+	mi := &file_lerna_v1_planning_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -135,7 +240,7 @@ func (x *Requirement) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Requirement.ProtoReflect.Descriptor instead.
 func (*Requirement) Descriptor() ([]byte, []int) {
-	return file_lerna_v1_planning_proto_rawDescGZIP(), []int{1}
+	return file_lerna_v1_planning_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *Requirement) GetConditionId() string {
@@ -173,6 +278,13 @@ func (x *Requirement) GetRuleVersion() uint32 {
 	return 0
 }
 
+func (x *Requirement) GetTargetRecord() *TargetRecordAssertion {
+	if x != nil {
+		return x.TargetRecord
+	}
+	return nil
+}
+
 type Requirements struct {
 	state               protoimpl.MessageState `protogen:"open.v1"`
 	Ref                 *Ref                   `protobuf:"bytes,1,opt,name=ref,proto3" json:"ref,omitempty"`
@@ -189,7 +301,7 @@ type Requirements struct {
 
 func (x *Requirements) Reset() {
 	*x = Requirements{}
-	mi := &file_lerna_v1_planning_proto_msgTypes[2]
+	mi := &file_lerna_v1_planning_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -201,7 +313,7 @@ func (x *Requirements) String() string {
 func (*Requirements) ProtoMessage() {}
 
 func (x *Requirements) ProtoReflect() protoreflect.Message {
-	mi := &file_lerna_v1_planning_proto_msgTypes[2]
+	mi := &file_lerna_v1_planning_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -214,7 +326,7 @@ func (x *Requirements) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Requirements.ProtoReflect.Descriptor instead.
 func (*Requirements) Descriptor() ([]byte, []int) {
-	return file_lerna_v1_planning_proto_rawDescGZIP(), []int{2}
+	return file_lerna_v1_planning_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *Requirements) GetRef() *Ref {
@@ -294,7 +406,7 @@ type ContextSnapshot struct {
 
 func (x *ContextSnapshot) Reset() {
 	*x = ContextSnapshot{}
-	mi := &file_lerna_v1_planning_proto_msgTypes[3]
+	mi := &file_lerna_v1_planning_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -306,7 +418,7 @@ func (x *ContextSnapshot) String() string {
 func (*ContextSnapshot) ProtoMessage() {}
 
 func (x *ContextSnapshot) ProtoReflect() protoreflect.Message {
-	mi := &file_lerna_v1_planning_proto_msgTypes[3]
+	mi := &file_lerna_v1_planning_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -319,7 +431,7 @@ func (x *ContextSnapshot) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ContextSnapshot.ProtoReflect.Descriptor instead.
 func (*ContextSnapshot) Descriptor() ([]byte, []int) {
-	return file_lerna_v1_planning_proto_rawDescGZIP(), []int{3}
+	return file_lerna_v1_planning_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *ContextSnapshot) GetRef() *Ref {
@@ -423,7 +535,7 @@ type AncestorControl struct {
 
 func (x *AncestorControl) Reset() {
 	*x = AncestorControl{}
-	mi := &file_lerna_v1_planning_proto_msgTypes[4]
+	mi := &file_lerna_v1_planning_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -435,7 +547,7 @@ func (x *AncestorControl) String() string {
 func (*AncestorControl) ProtoMessage() {}
 
 func (x *AncestorControl) ProtoReflect() protoreflect.Message {
-	mi := &file_lerna_v1_planning_proto_msgTypes[4]
+	mi := &file_lerna_v1_planning_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -448,7 +560,7 @@ func (x *AncestorControl) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AncestorControl.ProtoReflect.Descriptor instead.
 func (*AncestorControl) Descriptor() ([]byte, []int) {
-	return file_lerna_v1_planning_proto_rawDescGZIP(), []int{4}
+	return file_lerna_v1_planning_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *AncestorControl) GetTaskRef() *Ref {
@@ -475,7 +587,7 @@ type MemoryDependency struct {
 
 func (x *MemoryDependency) Reset() {
 	*x = MemoryDependency{}
-	mi := &file_lerna_v1_planning_proto_msgTypes[5]
+	mi := &file_lerna_v1_planning_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -487,7 +599,7 @@ func (x *MemoryDependency) String() string {
 func (*MemoryDependency) ProtoMessage() {}
 
 func (x *MemoryDependency) ProtoReflect() protoreflect.Message {
-	mi := &file_lerna_v1_planning_proto_msgTypes[5]
+	mi := &file_lerna_v1_planning_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -500,7 +612,7 @@ func (x *MemoryDependency) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MemoryDependency.ProtoReflect.Descriptor instead.
 func (*MemoryDependency) Descriptor() ([]byte, []int) {
-	return file_lerna_v1_planning_proto_rawDescGZIP(), []int{5}
+	return file_lerna_v1_planning_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *MemoryDependency) GetMemoryRef() *Ref {
@@ -532,7 +644,7 @@ type ActionStep struct {
 
 func (x *ActionStep) Reset() {
 	*x = ActionStep{}
-	mi := &file_lerna_v1_planning_proto_msgTypes[6]
+	mi := &file_lerna_v1_planning_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -544,7 +656,7 @@ func (x *ActionStep) String() string {
 func (*ActionStep) ProtoMessage() {}
 
 func (x *ActionStep) ProtoReflect() protoreflect.Message {
-	mi := &file_lerna_v1_planning_proto_msgTypes[6]
+	mi := &file_lerna_v1_planning_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -557,7 +669,7 @@ func (x *ActionStep) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ActionStep.ProtoReflect.Descriptor instead.
 func (*ActionStep) Descriptor() ([]byte, []int) {
-	return file_lerna_v1_planning_proto_rawDescGZIP(), []int{6}
+	return file_lerna_v1_planning_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *ActionStep) GetStepId() string {
@@ -622,13 +734,14 @@ type Proposal struct {
 	ReasonerRef         *Ref                   `protobuf:"bytes,9,opt,name=reasoner_ref,json=reasonerRef,proto3" json:"reasoner_ref,omitempty"`
 	Kind                string                 `protobuf:"bytes,10,opt,name=kind,proto3" json:"kind,omitempty"`
 	Step                *ActionStep            `protobuf:"bytes,11,opt,name=step,proto3" json:"step,omitempty"`
+	CompletionEvidence  []*CompletionEvidence  `protobuf:"bytes,12,rep,name=completion_evidence,json=completionEvidence,proto3" json:"completion_evidence,omitempty"`
 	unknownFields       protoimpl.UnknownFields
 	sizeCache           protoimpl.SizeCache
 }
 
 func (x *Proposal) Reset() {
 	*x = Proposal{}
-	mi := &file_lerna_v1_planning_proto_msgTypes[7]
+	mi := &file_lerna_v1_planning_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -640,7 +753,7 @@ func (x *Proposal) String() string {
 func (*Proposal) ProtoMessage() {}
 
 func (x *Proposal) ProtoReflect() protoreflect.Message {
-	mi := &file_lerna_v1_planning_proto_msgTypes[7]
+	mi := &file_lerna_v1_planning_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -653,7 +766,7 @@ func (x *Proposal) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Proposal.ProtoReflect.Descriptor instead.
 func (*Proposal) Descriptor() ([]byte, []int) {
-	return file_lerna_v1_planning_proto_rawDescGZIP(), []int{7}
+	return file_lerna_v1_planning_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *Proposal) GetRef() *Ref {
@@ -733,6 +846,13 @@ func (x *Proposal) GetStep() *ActionStep {
 	return nil
 }
 
+func (x *Proposal) GetCompletionEvidence() []*CompletionEvidence {
+	if x != nil {
+		return x.CompletionEvidence
+	}
+	return nil
+}
+
 type PlanningState struct {
 	state                             protoimpl.MessageState `protogen:"open.v1"`
 	TaskId                            *GlobalName            `protobuf:"bytes,1,opt,name=task_id,json=taskId,proto3" json:"task_id,omitempty"`
@@ -744,13 +864,15 @@ type PlanningState struct {
 	VerificationFreeze                uint64                 `protobuf:"varint,7,opt,name=verification_freeze,json=verificationFreeze,proto3" json:"verification_freeze,omitempty"`
 	RejectedVerificationOperations    []*Ref                 `protobuf:"bytes,8,rep,name=rejected_verification_operations,json=rejectedVerificationOperations,proto3" json:"rejected_verification_operations,omitempty"`
 	SupersededVerificationGenerations []uint64               `protobuf:"varint,9,rep,packed,name=superseded_verification_generations,json=supersededVerificationGenerations,proto3" json:"superseded_verification_generations,omitempty"`
+	VerificationRound                 uint64                 `protobuf:"varint,10,opt,name=verification_round,json=verificationRound,proto3" json:"verification_round,omitempty"`
+	VerificationRef                   *Ref                   `protobuf:"bytes,11,opt,name=verification_ref,json=verificationRef,proto3" json:"verification_ref,omitempty"`
 	unknownFields                     protoimpl.UnknownFields
 	sizeCache                         protoimpl.SizeCache
 }
 
 func (x *PlanningState) Reset() {
 	*x = PlanningState{}
-	mi := &file_lerna_v1_planning_proto_msgTypes[8]
+	mi := &file_lerna_v1_planning_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -762,7 +884,7 @@ func (x *PlanningState) String() string {
 func (*PlanningState) ProtoMessage() {}
 
 func (x *PlanningState) ProtoReflect() protoreflect.Message {
-	mi := &file_lerna_v1_planning_proto_msgTypes[8]
+	mi := &file_lerna_v1_planning_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -775,7 +897,7 @@ func (x *PlanningState) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PlanningState.ProtoReflect.Descriptor instead.
 func (*PlanningState) Descriptor() ([]byte, []int) {
-	return file_lerna_v1_planning_proto_rawDescGZIP(), []int{8}
+	return file_lerna_v1_planning_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *PlanningState) GetTaskId() *GlobalName {
@@ -841,6 +963,20 @@ func (x *PlanningState) GetSupersededVerificationGenerations() []uint64 {
 	return nil
 }
 
+func (x *PlanningState) GetVerificationRound() uint64 {
+	if x != nil {
+		return x.VerificationRound
+	}
+	return 0
+}
+
+func (x *PlanningState) GetVerificationRef() *Ref {
+	if x != nil {
+		return x.VerificationRef
+	}
+	return nil
+}
+
 type AcceptRequirementsCommand struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Header        *CommandHeader         `protobuf:"bytes,1,opt,name=header,proto3" json:"header,omitempty"`
@@ -854,7 +990,7 @@ type AcceptRequirementsCommand struct {
 
 func (x *AcceptRequirementsCommand) Reset() {
 	*x = AcceptRequirementsCommand{}
-	mi := &file_lerna_v1_planning_proto_msgTypes[9]
+	mi := &file_lerna_v1_planning_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -866,7 +1002,7 @@ func (x *AcceptRequirementsCommand) String() string {
 func (*AcceptRequirementsCommand) ProtoMessage() {}
 
 func (x *AcceptRequirementsCommand) ProtoReflect() protoreflect.Message {
-	mi := &file_lerna_v1_planning_proto_msgTypes[9]
+	mi := &file_lerna_v1_planning_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -879,7 +1015,7 @@ func (x *AcceptRequirementsCommand) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AcceptRequirementsCommand.ProtoReflect.Descriptor instead.
 func (*AcceptRequirementsCommand) Descriptor() ([]byte, []int) {
-	return file_lerna_v1_planning_proto_rawDescGZIP(), []int{9}
+	return file_lerna_v1_planning_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *AcceptRequirementsCommand) GetHeader() *CommandHeader {
@@ -927,7 +1063,7 @@ type RequestProposalCommand struct {
 
 func (x *RequestProposalCommand) Reset() {
 	*x = RequestProposalCommand{}
-	mi := &file_lerna_v1_planning_proto_msgTypes[10]
+	mi := &file_lerna_v1_planning_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -939,7 +1075,7 @@ func (x *RequestProposalCommand) String() string {
 func (*RequestProposalCommand) ProtoMessage() {}
 
 func (x *RequestProposalCommand) ProtoReflect() protoreflect.Message {
-	mi := &file_lerna_v1_planning_proto_msgTypes[10]
+	mi := &file_lerna_v1_planning_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -952,7 +1088,7 @@ func (x *RequestProposalCommand) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RequestProposalCommand.ProtoReflect.Descriptor instead.
 func (*RequestProposalCommand) Descriptor() ([]byte, []int) {
-	return file_lerna_v1_planning_proto_rawDescGZIP(), []int{10}
+	return file_lerna_v1_planning_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *RequestProposalCommand) GetHeader() *CommandHeader {
@@ -979,7 +1115,7 @@ type ReceiveProposalCommand struct {
 
 func (x *ReceiveProposalCommand) Reset() {
 	*x = ReceiveProposalCommand{}
-	mi := &file_lerna_v1_planning_proto_msgTypes[11]
+	mi := &file_lerna_v1_planning_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -991,7 +1127,7 @@ func (x *ReceiveProposalCommand) String() string {
 func (*ReceiveProposalCommand) ProtoMessage() {}
 
 func (x *ReceiveProposalCommand) ProtoReflect() protoreflect.Message {
-	mi := &file_lerna_v1_planning_proto_msgTypes[11]
+	mi := &file_lerna_v1_planning_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1004,7 +1140,7 @@ func (x *ReceiveProposalCommand) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ReceiveProposalCommand.ProtoReflect.Descriptor instead.
 func (*ReceiveProposalCommand) Descriptor() ([]byte, []int) {
-	return file_lerna_v1_planning_proto_rawDescGZIP(), []int{11}
+	return file_lerna_v1_planning_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *ReceiveProposalCommand) GetHeader() *CommandHeader {
@@ -1031,13 +1167,20 @@ const file_lerna_v1_planning_proto_rawDesc = "" +
 	"\x10contract_version\x18\x02 \x01(\rR\x0fcontractVersion\x12\x1b\n" +
 	"\tschema_id\x18\x03 \x01(\tR\bschemaId\x12/\n" +
 	"\x13fingerprint_version\x18\x04 \x01(\rR\x12fingerprintVersion\x12'\n" +
-	"\x0fmust_understand\x18\x05 \x03(\tR\x0emustUnderstand\"\xd6\x01\n" +
+	"\x0fmust_understand\x18\x05 \x03(\tR\x0emustUnderstand\"\x83\x01\n" +
+	"\x15TargetRecordAssertion\x124\n" +
+	"\x0ecapability_ref\x18\x01 \x01(\v2\r.lerna.v1.RefR\rcapabilityRef\x124\n" +
+	"\x0eparameters_ref\x18\x02 \x01(\v2\r.lerna.v1.RefR\rparametersRef\"p\n" +
+	"\x12CompletionEvidence\x12!\n" +
+	"\fcondition_id\x18\x01 \x01(\tR\vconditionId\x127\n" +
+	"\foperation_id\x18\x02 \x01(\v2\x14.lerna.v1.GlobalNameR\voperationId\"\x9c\x02\n" +
 	"\vRequirement\x12!\n" +
 	"\fcondition_id\x18\x01 \x01(\tR\vconditionId\x126\n" +
 	"\x0fdescription_ref\x18\x02 \x01(\v2\r.lerna.v1.RefR\x0edescriptionRef\x12\x1c\n" +
 	"\tnecessary\x18\x03 \x01(\bR\tnecessary\x12+\n" +
 	"\x11verification_rule\x18\x04 \x01(\tR\x10verificationRule\x12!\n" +
-	"\frule_version\x18\x05 \x01(\rR\vruleVersion\"\x85\x03\n" +
+	"\frule_version\x18\x05 \x01(\rR\vruleVersion\x12D\n" +
+	"\rtarget_record\x18\x06 \x01(\v2\x1f.lerna.v1.TargetRecordAssertionR\ftargetRecord\"\x85\x03\n" +
 	"\fRequirements\x12\x1f\n" +
 	"\x03ref\x18\x01 \x01(\v2\r.lerna.v1.RefR\x03ref\x12-\n" +
 	"\atask_id\x18\x02 \x01(\v2\x14.lerna.v1.GlobalNameR\x06taskId\x121\n" +
@@ -1082,7 +1225,7 @@ const file_lerna_v1_planning_proto_rawDesc = "" +
 	"\fdependencies\x18\x04 \x03(\v2\r.lerna.v1.RefR\fdependencies\x12K\n" +
 	"\x13memory_dependencies\x18\x05 \x03(\v2\x1a.lerna.v1.MemoryDependencyR\x12memoryDependencies\x120\n" +
 	"\fcontent_refs\x18\x06 \x03(\v2\r.lerna.v1.RefR\vcontentRefs\x12#\n" +
-	"\rwork_category\x18\a \x01(\tR\fworkCategory\"\xf3\x03\n" +
+	"\rwork_category\x18\a \x01(\tR\fworkCategory\"\xc2\x04\n" +
 	"\bProposal\x12\x1f\n" +
 	"\x03ref\x18\x01 \x01(\v2\r.lerna.v1.RefR\x03ref\x12-\n" +
 	"\atask_id\x18\x02 \x01(\v2\x14.lerna.v1.GlobalNameR\x06taskId\x12?\n" +
@@ -1096,7 +1239,8 @@ const file_lerna_v1_planning_proto_rawDesc = "" +
 	"\freasoner_ref\x18\t \x01(\v2\r.lerna.v1.RefR\vreasonerRef\x12\x12\n" +
 	"\x04kind\x18\n" +
 	" \x01(\tR\x04kind\x12(\n" +
-	"\x04step\x18\v \x01(\v2\x14.lerna.v1.ActionStepR\x04step\"\x9e\x04\n" +
+	"\x04step\x18\v \x01(\v2\x14.lerna.v1.ActionStepR\x04step\x12M\n" +
+	"\x13completion_evidence\x18\f \x03(\v2\x1c.lerna.v1.CompletionEvidenceR\x12completionEvidence\"\x87\x05\n" +
 	"\rPlanningState\x12-\n" +
 	"\atask_id\x18\x01 \x01(\v2\x14.lerna.v1.GlobalNameR\x06taskId\x12:\n" +
 	"\frequirements\x18\x02 \x01(\v2\x16.lerna.v1.RequirementsR\frequirements\x125\n" +
@@ -1106,7 +1250,10 @@ const file_lerna_v1_planning_proto_rawDesc = "" +
 	"\x11proposal_consumed\x18\x06 \x01(\bR\x10proposalConsumed\x12/\n" +
 	"\x13verification_freeze\x18\a \x01(\x04R\x12verificationFreeze\x12W\n" +
 	" rejected_verification_operations\x18\b \x03(\v2\r.lerna.v1.RefR\x1erejectedVerificationOperations\x12N\n" +
-	"#superseded_verification_generations\x18\t \x03(\x04R!supersededVerificationGenerations\"\xea\x01\n" +
+	"#superseded_verification_generations\x18\t \x03(\x04R!supersededVerificationGenerations\x12-\n" +
+	"\x12verification_round\x18\n" +
+	" \x01(\x04R\x11verificationRound\x128\n" +
+	"\x10verification_ref\x18\v \x01(\v2\r.lerna.v1.RefR\x0fverificationRef\"\xea\x01\n" +
 	"\x19AcceptRequirementsCommand\x12/\n" +
 	"\x06header\x18\x01 \x01(\v2\x17.lerna.v1.CommandHeaderR\x06header\x12(\n" +
 	"\btask_ref\x18\x02 \x01(\v2\r.lerna.v1.RefR\ataskRef\x12#\n" +
@@ -1134,71 +1281,79 @@ func file_lerna_v1_planning_proto_rawDescGZIP() []byte {
 	return file_lerna_v1_planning_proto_rawDescData
 }
 
-var file_lerna_v1_planning_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
+var file_lerna_v1_planning_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
 var file_lerna_v1_planning_proto_goTypes = []any{
 	(*CommandHeader)(nil),             // 0: lerna.v1.CommandHeader
-	(*Requirement)(nil),               // 1: lerna.v1.Requirement
-	(*Requirements)(nil),              // 2: lerna.v1.Requirements
-	(*ContextSnapshot)(nil),           // 3: lerna.v1.ContextSnapshot
-	(*AncestorControl)(nil),           // 4: lerna.v1.AncestorControl
-	(*MemoryDependency)(nil),          // 5: lerna.v1.MemoryDependency
-	(*ActionStep)(nil),                // 6: lerna.v1.ActionStep
-	(*Proposal)(nil),                  // 7: lerna.v1.Proposal
-	(*PlanningState)(nil),             // 8: lerna.v1.PlanningState
-	(*AcceptRequirementsCommand)(nil), // 9: lerna.v1.AcceptRequirementsCommand
-	(*RequestProposalCommand)(nil),    // 10: lerna.v1.RequestProposalCommand
-	(*ReceiveProposalCommand)(nil),    // 11: lerna.v1.ReceiveProposalCommand
-	(*CommandIdentity)(nil),           // 12: lerna.v1.CommandIdentity
-	(*Ref)(nil),                       // 13: lerna.v1.Ref
-	(*GlobalName)(nil),                // 14: lerna.v1.GlobalName
+	(*TargetRecordAssertion)(nil),     // 1: lerna.v1.TargetRecordAssertion
+	(*CompletionEvidence)(nil),        // 2: lerna.v1.CompletionEvidence
+	(*Requirement)(nil),               // 3: lerna.v1.Requirement
+	(*Requirements)(nil),              // 4: lerna.v1.Requirements
+	(*ContextSnapshot)(nil),           // 5: lerna.v1.ContextSnapshot
+	(*AncestorControl)(nil),           // 6: lerna.v1.AncestorControl
+	(*MemoryDependency)(nil),          // 7: lerna.v1.MemoryDependency
+	(*ActionStep)(nil),                // 8: lerna.v1.ActionStep
+	(*Proposal)(nil),                  // 9: lerna.v1.Proposal
+	(*PlanningState)(nil),             // 10: lerna.v1.PlanningState
+	(*AcceptRequirementsCommand)(nil), // 11: lerna.v1.AcceptRequirementsCommand
+	(*RequestProposalCommand)(nil),    // 12: lerna.v1.RequestProposalCommand
+	(*ReceiveProposalCommand)(nil),    // 13: lerna.v1.ReceiveProposalCommand
+	(*CommandIdentity)(nil),           // 14: lerna.v1.CommandIdentity
+	(*Ref)(nil),                       // 15: lerna.v1.Ref
+	(*GlobalName)(nil),                // 16: lerna.v1.GlobalName
 }
 var file_lerna_v1_planning_proto_depIdxs = []int32{
-	12, // 0: lerna.v1.CommandHeader.identity:type_name -> lerna.v1.CommandIdentity
-	13, // 1: lerna.v1.Requirement.description_ref:type_name -> lerna.v1.Ref
-	13, // 2: lerna.v1.Requirements.ref:type_name -> lerna.v1.Ref
-	14, // 3: lerna.v1.Requirements.task_id:type_name -> lerna.v1.GlobalName
-	1,  // 4: lerna.v1.Requirements.conditions:type_name -> lerna.v1.Requirement
-	12, // 5: lerna.v1.Requirements.accepted_by:type_name -> lerna.v1.CommandIdentity
-	13, // 6: lerna.v1.Requirements.source_input_ref:type_name -> lerna.v1.Ref
-	13, // 7: lerna.v1.ContextSnapshot.ref:type_name -> lerna.v1.Ref
-	13, // 8: lerna.v1.ContextSnapshot.task_ref:type_name -> lerna.v1.Ref
-	13, // 9: lerna.v1.ContextSnapshot.request_ref:type_name -> lerna.v1.Ref
-	13, // 10: lerna.v1.ContextSnapshot.content_refs:type_name -> lerna.v1.Ref
-	13, // 11: lerna.v1.ContextSnapshot.capability_refs:type_name -> lerna.v1.Ref
-	13, // 12: lerna.v1.ContextSnapshot.progress_refs:type_name -> lerna.v1.Ref
-	13, // 13: lerna.v1.ContextSnapshot.requirements_ref:type_name -> lerna.v1.Ref
-	13, // 14: lerna.v1.ContextSnapshot.input_refs:type_name -> lerna.v1.Ref
-	13, // 15: lerna.v1.AncestorControl.task_ref:type_name -> lerna.v1.Ref
-	13, // 16: lerna.v1.MemoryDependency.memory_ref:type_name -> lerna.v1.Ref
-	13, // 17: lerna.v1.ActionStep.capability_ref:type_name -> lerna.v1.Ref
-	13, // 18: lerna.v1.ActionStep.parameters_ref:type_name -> lerna.v1.Ref
-	13, // 19: lerna.v1.ActionStep.dependencies:type_name -> lerna.v1.Ref
-	5,  // 20: lerna.v1.ActionStep.memory_dependencies:type_name -> lerna.v1.MemoryDependency
-	13, // 21: lerna.v1.ActionStep.content_refs:type_name -> lerna.v1.Ref
-	13, // 22: lerna.v1.Proposal.ref:type_name -> lerna.v1.Ref
-	14, // 23: lerna.v1.Proposal.task_id:type_name -> lerna.v1.GlobalName
-	13, // 24: lerna.v1.Proposal.context_snapshot_ref:type_name -> lerna.v1.Ref
-	13, // 25: lerna.v1.Proposal.request_ref:type_name -> lerna.v1.Ref
-	13, // 26: lerna.v1.Proposal.reasoner_ref:type_name -> lerna.v1.Ref
-	6,  // 27: lerna.v1.Proposal.step:type_name -> lerna.v1.ActionStep
-	14, // 28: lerna.v1.PlanningState.task_id:type_name -> lerna.v1.GlobalName
-	2,  // 29: lerna.v1.PlanningState.requirements:type_name -> lerna.v1.Requirements
-	3,  // 30: lerna.v1.PlanningState.snapshot:type_name -> lerna.v1.ContextSnapshot
-	7,  // 31: lerna.v1.PlanningState.proposal:type_name -> lerna.v1.Proposal
-	13, // 32: lerna.v1.PlanningState.admission_refs:type_name -> lerna.v1.Ref
-	13, // 33: lerna.v1.PlanningState.rejected_verification_operations:type_name -> lerna.v1.Ref
-	0,  // 34: lerna.v1.AcceptRequirementsCommand.header:type_name -> lerna.v1.CommandHeader
-	13, // 35: lerna.v1.AcceptRequirementsCommand.task_ref:type_name -> lerna.v1.Ref
-	1,  // 36: lerna.v1.AcceptRequirementsCommand.conditions:type_name -> lerna.v1.Requirement
-	0,  // 37: lerna.v1.RequestProposalCommand.header:type_name -> lerna.v1.CommandHeader
-	14, // 38: lerna.v1.RequestProposalCommand.task_id:type_name -> lerna.v1.GlobalName
-	0,  // 39: lerna.v1.ReceiveProposalCommand.header:type_name -> lerna.v1.CommandHeader
-	7,  // 40: lerna.v1.ReceiveProposalCommand.proposal:type_name -> lerna.v1.Proposal
-	41, // [41:41] is the sub-list for method output_type
-	41, // [41:41] is the sub-list for method input_type
-	41, // [41:41] is the sub-list for extension type_name
-	41, // [41:41] is the sub-list for extension extendee
-	0,  // [0:41] is the sub-list for field type_name
+	14, // 0: lerna.v1.CommandHeader.identity:type_name -> lerna.v1.CommandIdentity
+	15, // 1: lerna.v1.TargetRecordAssertion.capability_ref:type_name -> lerna.v1.Ref
+	15, // 2: lerna.v1.TargetRecordAssertion.parameters_ref:type_name -> lerna.v1.Ref
+	16, // 3: lerna.v1.CompletionEvidence.operation_id:type_name -> lerna.v1.GlobalName
+	15, // 4: lerna.v1.Requirement.description_ref:type_name -> lerna.v1.Ref
+	1,  // 5: lerna.v1.Requirement.target_record:type_name -> lerna.v1.TargetRecordAssertion
+	15, // 6: lerna.v1.Requirements.ref:type_name -> lerna.v1.Ref
+	16, // 7: lerna.v1.Requirements.task_id:type_name -> lerna.v1.GlobalName
+	3,  // 8: lerna.v1.Requirements.conditions:type_name -> lerna.v1.Requirement
+	14, // 9: lerna.v1.Requirements.accepted_by:type_name -> lerna.v1.CommandIdentity
+	15, // 10: lerna.v1.Requirements.source_input_ref:type_name -> lerna.v1.Ref
+	15, // 11: lerna.v1.ContextSnapshot.ref:type_name -> lerna.v1.Ref
+	15, // 12: lerna.v1.ContextSnapshot.task_ref:type_name -> lerna.v1.Ref
+	15, // 13: lerna.v1.ContextSnapshot.request_ref:type_name -> lerna.v1.Ref
+	15, // 14: lerna.v1.ContextSnapshot.content_refs:type_name -> lerna.v1.Ref
+	15, // 15: lerna.v1.ContextSnapshot.capability_refs:type_name -> lerna.v1.Ref
+	15, // 16: lerna.v1.ContextSnapshot.progress_refs:type_name -> lerna.v1.Ref
+	15, // 17: lerna.v1.ContextSnapshot.requirements_ref:type_name -> lerna.v1.Ref
+	15, // 18: lerna.v1.ContextSnapshot.input_refs:type_name -> lerna.v1.Ref
+	15, // 19: lerna.v1.AncestorControl.task_ref:type_name -> lerna.v1.Ref
+	15, // 20: lerna.v1.MemoryDependency.memory_ref:type_name -> lerna.v1.Ref
+	15, // 21: lerna.v1.ActionStep.capability_ref:type_name -> lerna.v1.Ref
+	15, // 22: lerna.v1.ActionStep.parameters_ref:type_name -> lerna.v1.Ref
+	15, // 23: lerna.v1.ActionStep.dependencies:type_name -> lerna.v1.Ref
+	7,  // 24: lerna.v1.ActionStep.memory_dependencies:type_name -> lerna.v1.MemoryDependency
+	15, // 25: lerna.v1.ActionStep.content_refs:type_name -> lerna.v1.Ref
+	15, // 26: lerna.v1.Proposal.ref:type_name -> lerna.v1.Ref
+	16, // 27: lerna.v1.Proposal.task_id:type_name -> lerna.v1.GlobalName
+	15, // 28: lerna.v1.Proposal.context_snapshot_ref:type_name -> lerna.v1.Ref
+	15, // 29: lerna.v1.Proposal.request_ref:type_name -> lerna.v1.Ref
+	15, // 30: lerna.v1.Proposal.reasoner_ref:type_name -> lerna.v1.Ref
+	8,  // 31: lerna.v1.Proposal.step:type_name -> lerna.v1.ActionStep
+	2,  // 32: lerna.v1.Proposal.completion_evidence:type_name -> lerna.v1.CompletionEvidence
+	16, // 33: lerna.v1.PlanningState.task_id:type_name -> lerna.v1.GlobalName
+	4,  // 34: lerna.v1.PlanningState.requirements:type_name -> lerna.v1.Requirements
+	5,  // 35: lerna.v1.PlanningState.snapshot:type_name -> lerna.v1.ContextSnapshot
+	9,  // 36: lerna.v1.PlanningState.proposal:type_name -> lerna.v1.Proposal
+	15, // 37: lerna.v1.PlanningState.admission_refs:type_name -> lerna.v1.Ref
+	15, // 38: lerna.v1.PlanningState.rejected_verification_operations:type_name -> lerna.v1.Ref
+	15, // 39: lerna.v1.PlanningState.verification_ref:type_name -> lerna.v1.Ref
+	0,  // 40: lerna.v1.AcceptRequirementsCommand.header:type_name -> lerna.v1.CommandHeader
+	15, // 41: lerna.v1.AcceptRequirementsCommand.task_ref:type_name -> lerna.v1.Ref
+	3,  // 42: lerna.v1.AcceptRequirementsCommand.conditions:type_name -> lerna.v1.Requirement
+	0,  // 43: lerna.v1.RequestProposalCommand.header:type_name -> lerna.v1.CommandHeader
+	16, // 44: lerna.v1.RequestProposalCommand.task_id:type_name -> lerna.v1.GlobalName
+	0,  // 45: lerna.v1.ReceiveProposalCommand.header:type_name -> lerna.v1.CommandHeader
+	9,  // 46: lerna.v1.ReceiveProposalCommand.proposal:type_name -> lerna.v1.Proposal
+	47, // [47:47] is the sub-list for method output_type
+	47, // [47:47] is the sub-list for method input_type
+	47, // [47:47] is the sub-list for extension type_name
+	47, // [47:47] is the sub-list for extension extendee
+	0,  // [0:47] is the sub-list for field type_name
 }
 
 func init() { file_lerna_v1_planning_proto_init() }
@@ -1214,7 +1369,7 @@ func file_lerna_v1_planning_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_lerna_v1_planning_proto_rawDesc), len(file_lerna_v1_planning_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   12,
+			NumMessages:   14,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

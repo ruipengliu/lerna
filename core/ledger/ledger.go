@@ -20,6 +20,7 @@ type Store interface {
 	LedgerJobs(context.Context, *v1.GlobalName) ([]*v1.Job, error)
 }
 type Service struct {
+	completionClosures         CompletionClosureSource
 	store                      Store
 	user, domain, sourceDomain string
 	work                       ExecutionWork
@@ -85,6 +86,18 @@ func (s *Service) Accept(ctx context.Context, caller *v1.Caller, c *v1.AcceptOpe
 		effect := &v1.Effect{Ref: command.NewRef(s.user, s.domain, "effect", "lerna.v1.Effect"), OperationId: a.OperationId, Outcome: "NOT_APPLIED", LateEffect: "RULED_OUT"}
 		op := &v1.Operation{Ref: &v1.Ref{Name: a.OperationId, Revision: 1, SchemaId: "lerna.v1.Operation"}, AdmissionRef: a.Ref, ExecutorEndpointId: a.ExecutorEndpointId, AdapterRef: a.CapabilitySnapshot.AdapterRef, ParametersRef: a.ParametersRef, CapabilitySnapshot: a.CapabilitySnapshot, Lifecycle: "ACCEPTED", Dispatch: "OPEN", EffectRef: effect.Ref, Effect: effect}
 		job := &v1.Job{Ref: command.NewRef(s.user, s.domain, "job", "lerna.v1.Job"), Module: "ledger", JobType: "EXECUTE_OPERATION", ContractVersion: 1, Responsibility: c.Header.Identity, State: "READY", PurposeKey: "execute:" + a.OperationId.LocalId, SpecificationRef: op.Ref, ExecutorEndpointId: a.ExecutorEndpointId, LedgerDomainId: s.domain}
+		seal, e := s.store.(completionSealStore).CompletionSealForOperation(tx, a.OperationId)
+		if e != nil {
+			return e
+		}
+		if seal != nil {
+			if !proto.Equal(seal.AdmissionRef, a.Ref) {
+				return reject("INVALID_CLOSURE")
+			}
+			op.ClosureEvidenceRefs = append(op.ClosureEvidenceRefs, seal.Ref)
+			applyCompletionNoSend(op)
+			job.State = "COMPLETED"
+		}
 		if e = s.store.SaveOperation(tx, op); e != nil {
 			return e
 		}

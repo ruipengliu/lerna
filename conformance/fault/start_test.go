@@ -56,6 +56,10 @@ func TestStartContentUnavailableRollsBackAndRetriesOriginal(t *testing.T) {
 func prepareStartFault(t *testing.T, h *assembly.Harness, target string) (*v1.Admission, *v1.StartExecutionCommand) {
 	t.Helper()
 	a := admitExecution(t, h, target)
+	return prepareExistingAdmissionStartFault(t, h, a)
+}
+func prepareExistingAdmissionStartFault(t *testing.T, h *assembly.Harness, a *v1.Admission) (*v1.Admission, *v1.StartExecutionCommand) {
+	t.Helper()
 	ctx := context.Background()
 	caller := &v1.Caller{UserId: "u", IssuerId: "host"}
 	claim, e := h.LedgerWork.ExecuteJob(ctx, caller, &v1.JobCommand{Identity: executionHeader("claim").Identity, ContractVersion: 1, Action: "CLAIM", AllowedTypes: []string{"EXECUTE_OPERATION"}, Limit: 1, LeaseMs: 30000, ProcessInstance: "worker"})

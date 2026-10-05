@@ -149,6 +149,21 @@ func (s *Service) validateConditions(ctx context.Context, caller *v1.Caller, con
 		if e := s.content.CheckUsable(ctx, caller, condition.DescriptionRef); e != nil {
 			return e
 		}
+		if scope := condition.TargetRecord; scope != nil {
+			if condition.VerificationRule != "TARGET_RECORD" || scope.CapabilityRef == nil || scope.ParametersRef == nil || command.CheckName(caller, scope.CapabilityRef.Name, s.user, s.domain, "capability") != nil {
+				return command.Fail("INVALID_REQUIREMENTS")
+			}
+			cap, e := s.store.LoadCapability(ctx, scope.CapabilityRef)
+			if e != nil {
+				return e
+			}
+			if cap == nil || !proto.Equal(cap.Ref, scope.CapabilityRef) {
+				return command.Fail("INVALID_REQUIREMENTS")
+			}
+			if e = s.content.CheckUsable(ctx, caller, scope.ParametersRef); e != nil {
+				return e
+			}
+		}
 		seen[condition.ConditionId] = true
 	}
 	return nil

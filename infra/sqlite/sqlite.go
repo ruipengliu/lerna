@@ -30,6 +30,9 @@ var admissionMigration string
 //go:embed migrations/003_session_input.sql
 var sessionInputMigration string
 
+//go:embed migrations/007_completion.sql
+var completionMigration string
+
 //go:embed migrations/006_egress.sql
 var egressMigration string
 
@@ -147,7 +150,7 @@ func (s *Store) configure(ctx context.Context) error {
 	if !s.settings.PowerLossQualified {
 		return fmt.Errorf("unqualified local durability platform: %+v", s.settings)
 	}
-	if _, err := s.conn.ExecContext(ctx, migration+admissionMigration+sessionInputMigration+grantsMigration+egressMigration); err != nil {
+	if _, err := s.conn.ExecContext(ctx, migration+admissionMigration+sessionInputMigration+grantsMigration+egressMigration+completionMigration); err != nil {
 		return err
 	}
 	if _, err := s.conn.ExecContext(ctx, "INSERT OR IGNORE INTO domain_config VALUES(1,?,?,?)", s.user, s.domain, "LOCAL"); err != nil {
