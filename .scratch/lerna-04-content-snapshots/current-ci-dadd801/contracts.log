@@ -1,0 +1,276 @@
+﻿2026-10-05T06:45:33.7179275Z Current runner version: '2.337.0'
+2026-10-05T06:45:33.7197777Z ##[group]Runner Image Provisioner
+2026-10-05T06:45:33.7198323Z Hosted Compute Agent
+2026-10-05T06:45:33.7198675Z Version: 20260901.588
+2026-10-05T06:45:33.7199149Z Commit: f88ec8081b781fac6c440065ac7ff9e710ce3d0b
+2026-10-05T06:45:33.7199588Z Build Date: 2026-09-01T19:56:44Z
+2026-10-05T06:45:33.7200070Z Worker ID: {f2ded183-bbef-41b2-9fb9-c5382838095d}
+2026-10-05T06:45:33.7200499Z Azure Region: westus3
+2026-10-05T06:45:33.7200840Z ##[endgroup]
+2026-10-05T06:45:33.7201834Z ##[group]Operating System
+2026-10-05T06:45:33.7202209Z Ubuntu
+2026-10-05T06:45:33.7202564Z 24.04.5
+2026-10-05T06:45:33.7202892Z LTS
+2026-10-05T06:45:33.7203213Z ##[endgroup]
+2026-10-05T06:45:33.7203620Z ##[group]Runner Image
+2026-10-05T06:45:33.7203990Z Image: ubuntu-24.04
+2026-10-05T06:45:33.7204389Z Version: 20260927.320.1
+2026-10-05T06:45:33.7205138Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260927.320/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-05T06:45:33.7206090Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260927.320
+2026-10-05T06:45:33.7206685Z ##[endgroup]
+2026-10-05T06:45:33.7207373Z ##[group]GITHUB_TOKEN Permissions
+2026-10-05T06:45:33.7208601Z Contents: read
+2026-10-05T06:45:33.7208993Z Metadata: read
+2026-10-05T06:45:33.7209376Z ##[endgroup]
+2026-10-05T06:45:33.7210704Z Secret source: Actions
+2026-10-05T06:45:33.7211321Z Cache mode: write
+2026-10-05T06:45:33.7211868Z Prepare workflow directory
+2026-10-05T06:45:33.7437916Z Prepare all required actions
+2026-10-05T06:45:33.7470585Z Getting action download info
+2026-10-05T06:45:34.0596045Z Download action repository 'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683' (SHA:11bd71901bbe5b1630ceea73d27597364c9af683)
+2026-10-05T06:45:34.3235095Z Download action repository 'actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5' (SHA:d35c59abb061a4a6fb18e82ac0862c26744d6ab5)
+2026-10-05T06:45:35.1929101Z Download action repository 'actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+2026-10-05T06:45:35.6175738Z Complete job name: contracts
+2026-10-05T06:45:35.6741338Z ##[group]Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+2026-10-05T06:45:35.6742590Z with:
+2026-10-05T06:45:35.6743109Z   repository: ruipengliu/lerna
+2026-10-05T06:45:35.6748510Z   token: ***
+2026-10-05T06:45:35.6749018Z   ssh-strict: true
+2026-10-05T06:45:35.6749541Z   ssh-user: git
+2026-10-05T06:45:35.6750078Z   persist-credentials: true
+2026-10-05T06:45:35.6750665Z   clean: true
+2026-10-05T06:45:35.6751204Z   sparse-checkout-cone-mode: true
+2026-10-05T06:45:35.6752001Z   fetch-depth: 1
+2026-10-05T06:45:35.6752618Z   fetch-tags: false
+2026-10-05T06:45:35.6753394Z   show-progress: true
+2026-10-05T06:45:35.6753935Z   lfs: false
+2026-10-05T06:45:35.6754451Z   submodules: false
+2026-10-05T06:45:35.6754993Z   set-safe-directory: true
+2026-10-05T06:45:35.6755702Z ##[endgroup]
+2026-10-05T06:45:35.7496606Z Syncing repository: ruipengliu/lerna
+2026-10-05T06:45:35.7499380Z ##[group]Getting Git version info
+2026-10-05T06:45:35.7500607Z Working directory is '/home/runner/work/lerna/lerna'
+2026-10-05T06:45:35.7502493Z [command]/usr/bin/git version
+2026-10-05T06:45:35.7569410Z git version 2.55.0
+2026-10-05T06:45:35.7582346Z ##[endgroup]
+2026-10-05T06:45:35.7591913Z Temporarily overriding HOME='/home/runner/work/_temp/f5266d40-6453-4d7c-952b-9750f417f30d' before making global git config changes
+2026-10-05T06:45:35.7594440Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-05T06:45:35.7596433Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/lerna/lerna
+2026-10-05T06:45:35.8344049Z Deleting the contents of '/home/runner/work/lerna/lerna'
+2026-10-05T06:45:35.8347397Z ##[group]Initializing the repository
+2026-10-05T06:45:35.8351558Z [command]/usr/bin/git init /home/runner/work/lerna/lerna
+2026-10-05T06:45:35.8849258Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-05T06:45:35.8851475Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-05T06:45:35.8852998Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-05T06:45:35.8853892Z hint: call:
+2026-10-05T06:45:35.8854371Z hint:
+2026-10-05T06:45:35.8855091Z hint: 	git config --global init.defaultBranch <name>
+2026-10-05T06:45:35.8855980Z hint:
+2026-10-05T06:45:35.8856657Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-05T06:45:35.8857749Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-05T06:45:35.8858793Z hint:
+2026-10-05T06:45:35.8859269Z hint: 	git branch -m <name>
+2026-10-05T06:45:35.8859843Z hint:
+2026-10-05T06:45:35.8860570Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-05T06:45:35.8861818Z Initialized empty Git repository in /home/runner/work/lerna/lerna/.git/
+2026-10-05T06:45:35.8863824Z [command]/usr/bin/git remote add origin https://github.com/ruipengliu/lerna
+2026-10-05T06:45:35.9236433Z ##[endgroup]
+2026-10-05T06:45:35.9237782Z ##[group]Disabling automatic garbage collection
+2026-10-05T06:45:35.9239000Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-05T06:45:35.9748959Z ##[endgroup]
+2026-10-05T06:45:35.9749855Z ##[group]Setting up auth
+2026-10-05T06:45:35.9754273Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-05T06:45:35.9785321Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-05T06:45:36.0073827Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-05T06:45:36.0102765Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-05T06:45:36.0281783Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-05T06:45:36.1213565Z ##[endgroup]
+2026-10-05T06:45:36.1214987Z ##[group]Fetching the repository
+2026-10-05T06:45:36.1222956Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +dadd801cfd11ca038f0496872941097f10ebe507:refs/remotes/origin/codex/lerna-implementation
+2026-10-05T06:45:37.6974496Z From https://github.com/ruipengliu/lerna
+2026-10-05T06:45:37.6975127Z  * [new ref]         dadd801cfd11ca038f0496872941097f10ebe507 -> origin/codex/lerna-implementation
+2026-10-05T06:45:37.6977791Z ##[endgroup]
+2026-10-05T06:45:37.6978158Z ##[group]Determining the checkout info
+2026-10-05T06:45:37.6979603Z ##[endgroup]
+2026-10-05T06:45:37.6986932Z [command]/usr/bin/git sparse-checkout disable
+2026-10-05T06:45:37.7711719Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-05T06:45:37.8007677Z ##[group]Checking out the ref
+2026-10-05T06:45:37.8012420Z [command]/usr/bin/git checkout --progress --force -B codex/lerna-implementation refs/remotes/origin/codex/lerna-implementation
+2026-10-05T06:45:37.9028193Z Switched to a new branch 'codex/lerna-implementation'
+2026-10-05T06:45:37.9030186Z branch 'codex/lerna-implementation' set up to track 'origin/codex/lerna-implementation'.
+2026-10-05T06:45:37.9040347Z ##[endgroup]
+2026-10-05T06:45:37.9083941Z [command]/usr/bin/git log -1 --format=%H
+2026-10-05T06:45:37.9106939Z dadd801cfd11ca038f0496872941097f10ebe507
+2026-10-05T06:45:37.9361699Z ##[group]Run actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5
+2026-10-05T06:45:37.9361951Z with:
+2026-10-05T06:45:37.9362065Z   go-version: 1.27.1
+2026-10-05T06:45:37.9362183Z   cache: true
+2026-10-05T06:45:37.9362296Z   check-latest: false
+2026-10-05T06:45:37.9363718Z   token: ***
+2026-10-05T06:45:37.9363832Z ##[endgroup]
+2026-10-05T06:45:38.0174212Z Setup go version spec 1.27.1
+2026-10-05T06:45:38.0179350Z Attempting to download 1.27.1...
+2026-10-05T06:45:38.0251968Z (node:2062) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-05T06:45:38.0252566Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-05T06:45:38.9608433Z matching 1.27.1...
+2026-10-05T06:45:38.9627322Z Acquiring 1.27.1 from https://github.com/actions/go-versions/releases/download/1.27.1-33583469715/go-1.27.1-linux-x64.tar.gz
+2026-10-05T06:45:39.4069278Z Extracting Go...
+2026-10-05T06:45:39.4147748Z [command]/usr/bin/tar xz --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/2530bf62-0c74-4a30-9fd0-053569ac0b9a -f /home/runner/work/_temp/6e7be6e7-09e5-450e-b527-00ec16702f05
+2026-10-05T06:45:40.7226858Z Successfully extracted go to /home/runner/work/_temp/2530bf62-0c74-4a30-9fd0-053569ac0b9a
+2026-10-05T06:45:40.7227220Z Adding to the cache ...
+2026-10-05T06:45:44.9808183Z Successfully cached go to /opt/hostedtoolcache/go/1.27.1/x64
+2026-10-05T06:45:44.9809896Z Added go to the path
+2026-10-05T06:45:44.9812153Z Successfully set up Go version 1.27.1
+2026-10-05T06:45:44.9988188Z [command]/opt/hostedtoolcache/go/1.27.1/x64/bin/go env GOMODCACHE
+2026-10-05T06:45:45.0024889Z [command]/opt/hostedtoolcache/go/1.27.1/x64/bin/go env GOCACHE
+2026-10-05T06:45:45.0060296Z /home/runner/go/pkg/mod
+2026-10-05T06:45:45.0073742Z /home/runner/.cache/go-build
+2026-10-05T06:45:45.2219957Z Cache hit for: setup-go-Linux-x64-ubuntu24-go-1.27.1-6e6ea99592014c407a9e5c547b56d6c5c633b25a0a4d5cd88a735c865fb89158
+2026-10-05T06:45:45.2292087Z (node:2062) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-05T06:45:46.4661838Z Received 38835367 of 59806887 (64.9%), 37.1 MBs/sec
+2026-10-05T06:45:46.7456182Z Received 59806887 of 59806887 (100.0%), 44.6 MBs/sec
+2026-10-05T06:45:46.7456598Z Cache Size: ~57 MB (59806887 B)
+2026-10-05T06:45:46.7502895Z [command]/usr/bin/tar -xf /home/runner/work/_temp/a6394b25-c5da-40a0-a3b5-ccfe2beb286e/cache.tzst -P -C /home/runner/work/lerna/lerna --use-compress-program unzstd
+2026-10-05T06:45:47.0444121Z Cache restored successfully
+2026-10-05T06:45:47.0476656Z Cache restored from key: setup-go-Linux-x64-ubuntu24-go-1.27.1-6e6ea99592014c407a9e5c547b56d6c5c633b25a0a4d5cd88a735c865fb89158
+2026-10-05T06:45:47.0502728Z go version go1.27.1 linux/amd64
+2026-10-05T06:45:47.0502940Z 
+2026-10-05T06:45:47.0503256Z ##[group]go env
+2026-10-05T06:45:47.0607379Z AR='ar'
+2026-10-05T06:45:47.0607598Z CC='gcc'
+2026-10-05T06:45:47.0607788Z CGO_CFLAGS='-O2 -g'
+2026-10-05T06:45:47.0608030Z CGO_CPPFLAGS=''
+2026-10-05T06:45:47.0608226Z CGO_CXXFLAGS='-O2 -g'
+2026-10-05T06:45:47.0608429Z CGO_ENABLED='1'
+2026-10-05T06:45:47.0608615Z CGO_FFLAGS='-O2 -g'
+2026-10-05T06:45:47.0608806Z CGO_LDFLAGS='-O2 -g'
+2026-10-05T06:45:47.0609025Z CXX='g++'
+2026-10-05T06:45:47.0609201Z GCCGO='gccgo'
+2026-10-05T06:45:47.0609400Z GO111MODULE=''
+2026-10-05T06:45:47.0609579Z GOAMD64='v1'
+2026-10-05T06:45:47.0609777Z GOARCH='amd64'
+2026-10-05T06:45:47.0609958Z GOAUTH='netrc'
+2026-10-05T06:45:47.0610156Z GOBIN='/home/runner/go/bin'
+2026-10-05T06:45:47.0610402Z GOCACHE='/home/runner/.cache/go-build'
+2026-10-05T06:45:47.0610668Z GOCACHEPROG=''
+2026-10-05T06:45:47.0610851Z GODEBUG=''
+2026-10-05T06:45:47.0611064Z GOENV='/home/runner/.config/go/env'
+2026-10-05T06:45:47.0611293Z GOEXE=''
+2026-10-05T06:45:47.0611605Z GOEXPERIMENT=''
+2026-10-05T06:45:47.0611792Z GOFIPS140='off'
+2026-10-05T06:45:47.0612252Z GOFLAGS=''
+2026-10-05T06:45:47.0612821Z GOGCCFLAGS='-fPIC -m64 -pthread -Wl,--no-gc-sections -fmessage-length=0 -ffile-prefix-map=/tmp/go-build3100143333=/tmp/go-build -gno-record-gcc-switches'
+2026-10-05T06:45:47.0613189Z GOHOSTARCH='amd64'
+2026-10-05T06:45:47.0613317Z GOHOSTOS='linux'
+2026-10-05T06:45:47.0613436Z GOINSECURE=''
+2026-10-05T06:45:47.0613574Z GOMOD='/home/runner/work/lerna/lerna/go.mod'
+2026-10-05T06:45:47.0613885Z GOMODCACHE='/home/runner/go/pkg/mod'
+2026-10-05T06:45:47.0614036Z GONOPROXY=''
+2026-10-05T06:45:47.0614149Z GONOSUMDB=''
+2026-10-05T06:45:47.0614260Z GOOS='linux'
+2026-10-05T06:45:47.0614376Z GOPACKAGESDRIVER=''
+2026-10-05T06:45:47.0614508Z GOPATH='/home/runner/go'
+2026-10-05T06:45:47.0614640Z GOPRIVATE=''
+2026-10-05T06:45:47.0614808Z GOPROXY='https://proxy.golang.org,direct'
+2026-10-05T06:45:47.0614999Z GOROOT='/opt/hostedtoolcache/go/1.27.1/x64'
+2026-10-05T06:45:47.0615167Z GOSUMDB='sum.golang.org'
+2026-10-05T06:45:47.0615305Z GOTELEMETRY='local'
+2026-10-05T06:45:47.0615475Z GOTELEMETRYDIR='/home/runner/.config/go/telemetry'
+2026-10-05T06:45:47.0615647Z GOTMPDIR=''
+2026-10-05T06:45:47.0615762Z GOTOOLCHAIN='auto'
+2026-10-05T06:45:47.0615947Z GOTOOLDIR='/opt/hostedtoolcache/go/1.27.1/x64/pkg/tool/linux_amd64'
+2026-10-05T06:45:47.0616141Z GOVCS=''
+2026-10-05T06:45:47.0616255Z GOVERSION='go1.27.1'
+2026-10-05T06:45:47.0616379Z GOWORK=''
+2026-10-05T06:45:47.0616497Z PKG_CONFIG='pkg-config'
+2026-10-05T06:45:47.0616587Z 
+2026-10-05T06:45:47.0616820Z ##[endgroup]
+2026-10-05T06:45:47.0851182Z ##[group]Run actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+2026-10-05T06:45:47.0851612Z with:
+2026-10-05T06:45:47.0851769Z   node-version: 24.19.0
+2026-10-05T06:45:47.0851897Z   always-auth: false
+2026-10-05T06:45:47.0852020Z   check-latest: false
+2026-10-05T06:45:47.0853507Z   token: ***
+2026-10-05T06:45:47.0853622Z ##[endgroup]
+2026-10-05T06:45:47.1752118Z Attempting to download 24.19.0...
+2026-10-05T06:45:47.1820142Z (node:2123) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-05T06:45:47.1820549Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-05T06:45:48.1224220Z Acquiring 24.19.0 - x64 from https://github.com/actions/node-versions/releases/download/24.19.0-30872449280/node-24.19.0-linux-x64.tar.gz
+2026-10-05T06:45:48.6580132Z Extracting ...
+2026-10-05T06:45:48.6666073Z [command]/usr/bin/tar xz --strip 1 --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/d4621256-3e2d-40f3-a6ab-ba95c56a533d -f /home/runner/work/_temp/c4b02545-2300-474c-97ba-68bf6bfd5561
+2026-10-05T06:45:49.7341163Z Adding to the cache ...
+2026-10-05T06:45:51.5097243Z ##[group]Environment details
+2026-10-05T06:45:51.6686090Z node: v24.19.0
+2026-10-05T06:45:51.6686351Z npm: 11.17.0
+2026-10-05T06:45:51.6686522Z yarn: 1.22.22
+2026-10-05T06:45:51.6686962Z ##[endgroup]
+2026-10-05T06:45:51.6819878Z ##[group]Run npm install --global pnpm@12.8.1
+2026-10-05T06:45:51.6820110Z [36;1mnpm install --global pnpm@12.8.1[0m
+2026-10-05T06:45:51.7096866Z shell: /usr/bin/bash -e {0}
+2026-10-05T06:45:51.7097044Z ##[endgroup]
+2026-10-05T06:45:53.2288591Z 
+2026-10-05T06:45:53.2296475Z added 2 packages in 1s
+2026-10-05T06:45:53.2299710Z npm warn allow-scripts 1 package has install scripts not yet covered by allowScripts:
+2026-10-05T06:45:53.2300798Z npm warn allow-scripts   pnpm@12.8.1 (preinstall: node install.js; postinstall: node install.js)
+2026-10-05T06:45:53.2301284Z npm warn allow-scripts
+2026-10-05T06:45:53.2302479Z npm warn allow-scripts Run `npm install -g --allow-scripts=pnpm` to allow these scripts once, or `npm config set allow-scripts=pnpm --location=user` to allow them for all global installs.
+2026-10-05T06:45:53.2674535Z ##[group]Run make bootstrap
+2026-10-05T06:45:53.2674746Z [36;1mmake bootstrap[0m
+2026-10-05T06:45:53.2731858Z shell: /usr/bin/bash -e {0}
+2026-10-05T06:45:53.2732017Z ##[endgroup]
+2026-10-05T06:45:53.2822919Z node scripts/bootstrap.mjs
+2026-10-05T06:45:53.5023046Z all modules verified
+2026-10-05T06:45:53.5172518Z Scope: all 2 workspace projects
+2026-10-05T06:45:53.5253357Z ? Verifying lockfile against supply-chain policies (29 entries)...
+2026-10-05T06:45:53.9549090Z Downloading @typescript/typescript-linux-x64@7.0.2: 0.00 B/9.66 MB
+2026-10-05T06:45:54.0972660Z Packages are hard linked from the content-addressable store to the virtual store.
+2026-10-05T06:45:54.0973581Z   Content-addressable store is at: /home/runner/.local/share/pnpm/store/v11
+2026-10-05T06:45:54.0974400Z   Virtual store is at:             node_modules/.pnpm
+2026-10-05T06:45:54.3323400Z ✓ Lockfile passes supply-chain policies (29 entries in 806ms)
+2026-10-05T06:45:54.3324012Z Lockfile is up to date, resolution step is skipped
+2026-10-05T06:45:54.3329871Z Packages: +10
+2026-10-05T06:45:54.3330158Z ++++++++++
+2026-10-05T06:45:54.3386242Z Progress: resolved 10, reused 0, downloaded 10, added 10, done
+2026-10-05T06:45:54.3553679Z 
+2026-10-05T06:45:54.3554100Z devDependencies:
+2026-10-05T06:45:54.3554370Z + @types/node 24.10.1
+2026-10-05T06:45:54.3554586Z + prettier 3.6.2
+2026-10-05T06:45:54.3554783Z + typescript 7.0.2
+2026-10-05T06:45:54.3554861Z 
+2026-10-05T06:45:54.3683955Z Done in 856ms using pnpm v12.8.1
+2026-10-05T06:45:54.4214863Z Locked toolchains and dependencies verified.
+2026-10-05T06:45:54.4277635Z ##[group]Run make check
+2026-10-05T06:45:54.4277799Z [36;1mmake check[0m
+2026-10-05T06:45:54.4331003Z shell: /usr/bin/bash -e {0}
+2026-10-05T06:45:54.4331176Z ##[endgroup]
+2026-10-05T06:45:54.4429153Z node scripts/check-go-format.mjs
+2026-10-05T06:45:54.5709489Z file:///home/runner/work/lerna/lerna/scripts/check-go-format.mjs:35
+2026-10-05T06:45:54.5709959Z   if (unformatted) throw new Error(`Run make fmt: ${unformatted}`);
+2026-10-05T06:45:54.5710545Z                          ^
+2026-10-05T06:45:54.5710788Z 
+2026-10-05T06:45:54.5711259Z Error: Run make fmt: ./.scratch/lerna-04-content-snapshots/ticket-05-expired-job-scan/current-resource-audit/audit.go
+2026-10-05T06:45:54.5712342Z ./.scratch/lerna-04-content-snapshots/ticket-05-expired-job-scan/manager-full64-qualification/source-preformat-content_manager_expired_backlog_test.go
+2026-10-05T06:45:54.5712844Z 
+2026-10-05T06:45:54.5713149Z     at file:///home/runner/work/lerna/lerna/scripts/check-go-format.mjs:35:26
+2026-10-05T06:45:54.5713740Z     at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+2026-10-05T06:45:54.5714052Z     at async node:internal/modules/esm/loader:643:26
+2026-10-05T06:45:54.5714382Z     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+2026-10-05T06:45:54.5714565Z 
+2026-10-05T06:45:54.5714626Z Node.js v24.19.0
+2026-10-05T06:45:54.5730557Z make: *** [Makefile:15: lint] Error 1
+2026-10-05T06:45:54.5743816Z ##[error]Process completed with exit code 2.
+2026-10-05T06:45:54.5866365Z Post job cleanup.
+2026-10-05T06:45:54.6413629Z [command]/usr/bin/git version
+2026-10-05T06:45:54.6446023Z git version 2.55.0
+2026-10-05T06:45:54.6473529Z Temporarily overriding HOME='/home/runner/work/_temp/a016488e-60e3-4d52-abc3-f2ec6ee7100c' before making global git config changes
+2026-10-05T06:45:54.6474144Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-05T06:45:54.6474687Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/lerna/lerna
+2026-10-05T06:45:54.6505561Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-05T06:45:54.6534611Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-05T06:45:54.6746564Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-05T06:45:54.6793330Z http.https://github.com/.extraheader
+2026-10-05T06:45:54.6804204Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-10-05T06:45:54.6847992Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-05T06:45:54.7159426Z Cleaning up orphan processes
+2026-10-05T06:45:54.7370127Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683, actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5, actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+

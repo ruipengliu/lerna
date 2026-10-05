@@ -1,0 +1,25 @@
+{
+  "head": "dadd801cfd11ca038f0496872941097f10ebe507",
+  "run_id": 37274041977,
+  "url": "https://github.com/ruipengliu/lerna/actions/runs/37274041977",
+  "event": "push",
+  "status": "completed",
+  "conclusion": "failure",
+  "updated_at": "2026-10-05T06:47:25Z",
+  "logs": {
+    "contracts": {
+      "job_id": 111647010832,
+      "sha256": "3424e63f21fc6d84ee85475e14fb7963109876382fe3a2daa211280ec97d2e5f",
+      "lines": 276
+    },
+    "durable": {
+      "job_id": 111647010943,
+      "sha256": "d6e73fd698cc7bbe13def0b9569c1045831b6f4ad1681db7b08c940e87bfb091",
+      "lines": 462
+    }
+  },
+  "source": "GitHub connector github_fetch all push collection; specialized fetch_commit_workflow_runs only PR and returned empty; combined commit statuses empty; CLI403 not treated as unavailable CI",
+  "redaction": "credentials/DSN URI/token pattern redacted before disk; these are sanitized byte snapshots, not original remote raw SHA",
+  "failure_scope": "contracts lint archive audit.go unformatted; Recovery PGPoolRunReservedLaneProgress normal cancellation bad connection; component/race not executed; no capacity inference",
+  "root_reading": "machine full credential-pattern sanitization; human full relevant failure excerpts, not full setup/container logs"
+}
