@@ -321,3 +321,5 @@ root全文读取[Astra六票复核](../lerna-04-content-snapshots/published-tick
 2026-10-05，03准确28e的原四容量B正常模式ONE实际0/absence，root全文核[独立二进制与原日志](../lerna-04-content-snapshots/ticket-03-large-graph-claim/binding-reuse-capacity/README.md)。两大图均真实Prepared/Completed COMMIT和两次产物publish/readback，原5sClaim内结束；caller30/lease5/120不变。当前只授独立race编译，race业务及当前受影响peer/整票/资源/CI尚待；不能据normal接受七AC。
 
 2026-10-05，03同原四B竞态ONE实际exit1/absence：closure64在实际processing失败无Prepared，static62已首次真实Prepared COMMIT却在首次Publish的PrepareContent失败，无completed/readback；[原日志与准确身份](../lerna-04-content-snapshots/ticket-03-large-graph-claim/binding-reuse-capacity/README.md)均保存。原30/5/120不改，单语法memo不足。root FULL读新阶段后交Astra只读评估下一最小等价修正；03未accept。LOCAL明确释放后只授05fmt与独立低积压正常对照，64积压首red尚未执行。
+
+2026-10-05，03固定28e[独立两轴](../lerna-04-content-snapshots/ticket-03-review-28e3a46/README.md)：Standards一P2错误cause丢失、零可选；Spec a0b0c0。root全文采用必要cause修正方向与Astra下一只读决定：只一次当前原完整B阶段标签CPU采样，粗wall不能断言SQL根因，尚无第二产品优化或七AC接受。05低积压初次count1失败在准备阶段重开观察DeepEqual；V2未接纳，不能当调度red。原log/源码保留，只授公开tuple诊断一次，原bounds不改。

@@ -1,0 +1,59 @@
+{
+  "first_low": {
+    "pid": 3279876,
+    "starttime": "13698741",
+    "session": 40596,
+    "exit": 1,
+    "group_absent": true,
+    "no_timeout": true,
+    "duration": "15.339s"
+  },
+  "diagnostic_low": {
+    "pid": 3285295,
+    "starttime": "13720476",
+    "session": 91471,
+    "exit": 1,
+    "group_absent": true,
+    "no_timeout": true,
+    "duration": "15.408s"
+  },
+  "diagnostic_fact": "Complete public before/after JSON bytes equal; same StartedAt instant Local vs UTC internal location; same deadline instant, same holders. Neither invocation admitted V2 or reached target starvation oracle.",
+  "repair": "Root adopted test-only whole public JSON byte equality with Marshal-error refusal. No fields removed, product unchanged, original initial bounds unchanged. New positive control and 64 first business red still pending.",
+  "logs": [
+    {
+      "name": "expired-backlog-format.log",
+      "bytes": 134,
+      "sha256": "688fea447bb0151f2387211aa337c117e47735fde68b9ab55afc683b17a8c430"
+    },
+    {
+      "name": "expired-backlog-low-control-diagnostic-source.go",
+      "bytes": 8748,
+      "sha256": "6f7ab31c35aaa38af0ed06359257bf623c34793db9c1be86799c9eb2f2143c62"
+    },
+    {
+      "name": "expired-backlog-low-control-diagnostic-source.json",
+      "bytes": 310,
+      "sha256": "e3ca8c0dcaf147d08ceb7bb5b5eaee94cb437bc5664b657d72d442ce332d4f01"
+    },
+    {
+      "name": "expired-backlog-low-control-diagnostic.log",
+      "bytes": 4321,
+      "sha256": "b0777979dd2c62a3820f70204a18a4f1e42970ba6f4cce69bf36743b38e5fd80"
+    },
+    {
+      "name": "expired-backlog-low-control-failed-source.go",
+      "bytes": 8084,
+      "sha256": "28eb405c20056cd284a20c39c1cea13199b195b25453a0672ada964d84fa4935"
+    },
+    {
+      "name": "expired-backlog-low-control-failed-source.json",
+      "bytes": 374,
+      "sha256": "f4e0bfa0e9998aa0cc8d2bc6de44aeba9b60f596f3899f1f38a09c51a75be4d7"
+    },
+    {
+      "name": "expired-backlog-low-control.log",
+      "bytes": 462,
+      "sha256": "0163163ba886d16ea6ef623c87bf84063d94b277941b3ba6726576a10d9c8437"
+    }
+  ]
+}
