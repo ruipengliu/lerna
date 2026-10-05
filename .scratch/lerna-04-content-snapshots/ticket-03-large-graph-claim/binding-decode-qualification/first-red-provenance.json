@@ -1,0 +1,16 @@
+{
+  "source": "/workspace/lerna-content-03-137311247276/context-binding-decode-reuse-red.log",
+  "archive": "first-mechanical-red.log",
+  "bytes": 294,
+  "sha256": "2377acef79849e64f1278d2b3a0e708d3f37e814cd56d44b4f2197a6c4f40cfc",
+  "scope": "exact cold/hot representation CPU seam only; original result equality and caller mutation isolation preceded actual duplicate-decode count failure",
+  "native": {
+    "pid": 3177697,
+    "pgid": 3177697,
+    "starttime": "13270091",
+    "exit": 1,
+    "group_absent": true
+  },
+  "go_package_seconds": 0.009,
+  "root_review": "FULL original completed log read; owner explicit RELEASE; no business red or capacity green"
+}

@@ -1,0 +1,9 @@
+=== RUN   TestContentOriginalAdmissionCleanupDeadlineSurvivesCurrentTargetPolicyLockWait
+=== RUN   TestContentOriginalAdmissionCleanupDeadlineSurvivesCurrentTargetPolicyLockWait/release-within-original-admission-budget
+=== RUN   TestContentOriginalAdmissionCleanupDeadlineSurvivesCurrentTargetPolicyLockWait/release-after-original-admission-deadline
+--- PASS: TestContentOriginalAdmissionCleanupDeadlineSurvivesCurrentTargetPolicyLockWait (5.86s)
+    --- PASS: TestContentOriginalAdmissionCleanupDeadlineSurvivesCurrentTargetPolicyLockWait/release-within-original-admission-budget (2.84s)
+    --- PASS: TestContentOriginalAdmissionCleanupDeadlineSurvivesCurrentTargetPolicyLockWait/release-after-original-admission-deadline (3.02s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/component	6.905s
+NATIVE_COMPLETION_ACK {"pid": 3176452, "pgid": 3176452, "starttime": "13264854", "exit": 0, "group_absent": true, "timed_out": false}

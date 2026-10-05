@@ -1,0 +1,6 @@
+--- FAIL: TestContextBindingDecodeReusesOnlyExactFreshRowBytes (0.00s)
+    context_binding_decode_test.go:59: identical fresh row repeated strict decode: got 2, want 1
+FAIL
+FAIL	github.com/ruipengliu/lerna/conformance/internal/decisionfixture	0.009s
+FAIL
+NATIVE_EXIT status=1 group_absent=True
