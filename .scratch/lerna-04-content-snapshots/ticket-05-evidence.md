@@ -768,3 +768,33 @@ RELEASE/no pending。旧unknowns不触，当前产品fixed bb6e1f2/35df18e未修
 没有新产品red/green变更。运行时另外replyloss/cutoff三个静态WIP包编译但
 未执行；本partial只固定该case源码/evidence，不称另两例已qualification、
 PGcommit_unknown、原时钟cutoff回滚、七AC已accept。两后续最小义务继续。
+
+
+### Legacy 真实已提交回填的返回 reply loss 恢复（partial）
+
+`TestContentLegacyCommittedBindingReplyLossRecoversOnlyByOriginalQualification`
+在新own原scope真实冻结writer正常/显式CloseWait后，typed机械decorator
+完全委托原Store：准确Version1 empty→binding CAS实际成功，原Within实际
+返回nil确认commit后才一次丢RETURN reply。调用者独立见loss error/真实
+commit marker；这不是PG原生commit错误或commit_unknown。没有换root/qID/
+digest/期限、换Command或rePut。实际World.Reopen使用原fixedq观察binding/
+provenance/ref/pub，两原版本正常read，固定receipt/pub保持。之后新协议
+原Seal/deadline、真实全部holder/all原登记attempt清理、独立原body和全部
+捕获attempt缺失，真实再Reopen allACK、V2正常及原receipt/pub保持执行。
+
+| `/tmp/lerna-04-ticket05-execution/` 日志 | 实际结果 |
+| --- | --- |
+| `legacy-committed-reply-loss-first-run.log` | -v exactnormal PASS2.316s，3107805/start12966595/exit0/groupAbsent/noTimeout。 |
+| `legacy-committed-reply-loss-race.log` | -v sameexactrace PASS3.832s（case2.79），3109232/start12971889/exit0/groupAbsent/noTimeout；三原SQLsha完整，组合exit0。 |
+
+normal scope `lerna_test_3156572eed72d417c8f25f1b` / objects989245160
+(dev33/inode358745)，compiler3107950/start12966881、producer3108109/
+start12967060；race scope `lerna_test_50df380efb931ea300e833f7` /
+objects1534808723(dev33/inode359238)，compiler3109407/start12972349、producer
+3109586/start12972529。每个compiler/producer实际exit0/Wait/groupAbsent、
+compilercontrolClose ACK和原producer显式Objects/Store/witness/gate Close/
+原FD关闭分列成立，原owned ledger全frames保存。原caller20/15clip/5+6/
+Go30/wrapper120不变，sessions79601/90319实际完成，显式RELEASE/no pending。
+这是已有协议直接failure/recovery qualification，无新业务red/product变更；
+cutoff两个静态WIP编译但未执行，初次700ms截止整Tx回滚仍未claim。未知旧
+scopes保留，七AC未accept。

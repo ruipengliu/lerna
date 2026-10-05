@@ -205,3 +205,11 @@ unavailable/SealBinding拒绝/原bytesreceiptpub保持。实际重开同fixedq�
 SQLsha准确，全部原CloseWait+actualjoin确认，现产品无改动。这不是PG原生
 CAS故障，也不替commitreturnedreplyloss或初始shortcutoff回滚；它们静态
 包编译但未执行，后续分别qualification。
+
+
+Legacy实际已成功commit后一次RETURN reply loss已独立资格：原Within nil之后
+机械丢回执，实际重开同fixedq observe原binding/provenance、两个原版本正常，
+随后真实全holder/全部原actualattempt清理/独立缺失/再Reopen allACK与V2/
+receipt/pub保持。exact2.316/race3.832、三SQLsha及原oldCloseWait/actualjoin
+均准确。此仅confirmedcommit返回replyloss，非PGcommit_unknown/native失败；
+初次shortcutoff整Tx回滚仍独立未运行。
