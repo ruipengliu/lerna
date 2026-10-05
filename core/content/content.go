@@ -11,10 +11,10 @@ import (
 )
 
 type Store interface {
-	StageContent(context.Context, *v1.Content, string) (*v1.Ref, error)
 	ReadContent(context.Context, *v1.Ref) (*v1.Content, error)
 }
 type Service struct {
+	facts        AssociationFacts
 	store        Store
 	work         ObservationWork
 	ledger       ObservationLedger
@@ -31,7 +31,22 @@ func (s *Service) Stage(ctx context.Context, caller *v1.Caller, c *v1.SubmitGoal
 	if err := command.CheckIdentity(caller, c.Identity, s.user, c.Identity.TargetDomainId); err != nil {
 		return nil, err
 	}
-	return s.store.StageContent(ctx, &v1.Content{Ref: command.NewRef(s.user, s.domain, "content", "lerna.v1.Content"), Text: c.Goal, Source: c.Identity, MediaType: "text/plain", Status: "AVAILABLE", ProcessingPurposes: []string{"CURRENT_TASK"}}, command.FingerprintV1(c))
+	h := observationHeader(s.user, caller.IssuerId, s.domain, "stage:"+command.SemanticFingerprint("source", c.Identity))
+	r, e := s.work.Execute(ctx, caller, h, command.FingerprintV1(c), "content.stage", func(tx context.Context) (*v1.Ref, error) {
+		v := &v1.Content{Ref: command.NewRef(s.user, s.domain, "content", "lerna.v1.Content"), Source: c.Identity, MediaType: "text/plain", ProcessingPurposes: []string{"CURRENT_TASK"}, Kind: "USER_INPUT", ContentVersion: 1, SourceDescriptor: &v1.ContentSourceDescriptor{Kind: "USER_INPUT", Locator: c.Identity.CommandId, AcquisitionMethod: "AUTHENTICATED_COMMAND", ProviderVersion: "local-v1"}}
+		v.ContentId = v.Ref.Name.LocalId
+		return v.Ref, s.prepareRegistration(tx, v, []byte(c.Goal), c.Identity)
+	})
+	if e != nil {
+		return nil, e
+	}
+	if r.Decision != v1.Decision_DECISION_ACCEPTED {
+		return nil, &command.Failure{Detail: r.Error}
+	}
+	if e = s.ProcessRegistrations(ctx, caller); e != nil {
+		return nil, e
+	}
+	return r.ResultRef, nil
 }
 func (s *Service) Read(ctx context.Context, caller *v1.Caller, ref *v1.Ref) (*v1.Content, error) {
 	if ref == nil {
@@ -43,7 +58,10 @@ func (s *Service) Read(ctx context.Context, caller *v1.Caller, ref *v1.Ref) (*v1
 	if ref.Revision != 1 || ref.SchemaId != "lerna.v1.Content" {
 		return nil, command.Fail("UNSUPPORTED_CONTRACT")
 	}
-	v, e := s.store.ReadContent(ctx, ref)
+	v, e := s.readRegistered(ctx, ref)
+	if e == nil && v == nil {
+		v, e = s.store.ReadContent(ctx, ref)
+	}
 	if v != nil && !proto.Equal(v.Ref, ref) {
 		return nil, command.Fail("INVALID_REFERENCE")
 	}

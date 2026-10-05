@@ -1,0 +1,3 @@
+CREATE TABLE IF NOT EXISTS content_registrations (user_id TEXT NOT NULL, id TEXT NOT NULL, content_id TEXT NOT NULL, content_version INTEGER NOT NULL, record BLOB NOT NULL, PRIMARY KEY(user_id,id), UNIQUE(user_id,content_id,content_version));
+CREATE TABLE IF NOT EXISTS content_bodies (user_id TEXT NOT NULL, id TEXT NOT NULL, issuer_id TEXT NOT NULL, domain_id TEXT NOT NULL, command_id TEXT NOT NULL, body BLOB NOT NULL, receipt BLOB NOT NULL, PRIMARY KEY(user_id,id), UNIQUE(user_id,issuer_id,domain_id,command_id));
+CREATE TABLE IF NOT EXISTS content_derivations (user_id TEXT NOT NULL, id TEXT NOT NULL, record BLOB NOT NULL, PRIMARY KEY(user_id,id));

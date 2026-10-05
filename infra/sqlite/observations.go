@@ -30,9 +30,6 @@ func (w *ContentWork) Position(ctx context.Context) (uint64, int64, error) {
 func (w *ContentWork) SaveReceipt(ctx context.Context, r *v1.CommandReceipt) error {
 	return w.saveRecord(ctx, "content", "INSERT INTO command_receipts VALUES(?,?,?,?,?)", r, r.Identity.UserId, r.Identity.IssuerId, r.Identity.TargetDomainId, r.Identity.CommandId)
 }
-func (s *Store) SaveObservationContent(ctx context.Context, c *v1.Content) error {
-	return s.saveRecord(ctx, "content", "INSERT INTO content VALUES(?,?,?,?,?,?,?)", c, c.Ref.Name.UserId, c.Ref.Name.AuthorityDomainId, c.Ref.Name.LocalId, c.Source.IssuerId, c.Source.CommandId, "")
-}
 func (s *Store) SaveObservationHandoff(ctx context.Context, h *v1.ObservationHandoff) error {
 	r := h.Observation.Ref
 	return s.saveRecord(ctx, "content", "INSERT INTO content_observations VALUES(?,?,?,?) ON CONFLICT(user_id,domain_id,id) DO UPDATE SET record=excluded.record", h, r.Name.UserId, r.Name.AuthorityDomainId, r.Name.LocalId)

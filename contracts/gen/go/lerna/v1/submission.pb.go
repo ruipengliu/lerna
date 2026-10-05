@@ -1533,18 +1533,34 @@ func (x *Session) GetTaskRefs() []*Ref {
 }
 
 type Content struct {
-	state              protoimpl.MessageState `protogen:"open.v1"`
-	Ref                *Ref                   `protobuf:"bytes,1,opt,name=ref,proto3" json:"ref,omitempty"`
-	Text               string                 `protobuf:"bytes,2,opt,name=text,proto3" json:"text,omitempty"`
-	Source             *CommandIdentity       `protobuf:"bytes,3,opt,name=source,proto3" json:"source,omitempty"`
-	AcquiredAtUnixMs   int64                  `protobuf:"varint,4,opt,name=acquired_at_unix_ms,json=acquiredAtUnixMs,proto3" json:"acquired_at_unix_ms,omitempty"`
-	DerivedFrom        []*Ref                 `protobuf:"bytes,5,rep,name=derived_from,json=derivedFrom,proto3" json:"derived_from,omitempty"`
-	MediaType          string                 `protobuf:"bytes,6,opt,name=media_type,json=mediaType,proto3" json:"media_type,omitempty"`
-	Status             string                 `protobuf:"bytes,7,opt,name=status,proto3" json:"status,omitempty"`
-	ProcessingPurposes []string               `protobuf:"bytes,8,rep,name=processing_purposes,json=processingPurposes,proto3" json:"processing_purposes,omitempty"`
-	RawBody            []byte                 `protobuf:"bytes,9,opt,name=raw_body,json=rawBody,proto3" json:"raw_body,omitempty"`
-	unknownFields      protoimpl.UnknownFields
-	sizeCache          protoimpl.SizeCache
+	state               protoimpl.MessageState   `protogen:"open.v1"`
+	Ref                 *Ref                     `protobuf:"bytes,1,opt,name=ref,proto3" json:"ref,omitempty"`
+	Text                string                   `protobuf:"bytes,2,opt,name=text,proto3" json:"text,omitempty"`
+	Source              *CommandIdentity         `protobuf:"bytes,3,opt,name=source,proto3" json:"source,omitempty"`
+	AcquiredAtUnixMs    int64                    `protobuf:"varint,4,opt,name=acquired_at_unix_ms,json=acquiredAtUnixMs,proto3" json:"acquired_at_unix_ms,omitempty"`
+	DerivedFrom         []*Ref                   `protobuf:"bytes,5,rep,name=derived_from,json=derivedFrom,proto3" json:"derived_from,omitempty"`
+	MediaType           string                   `protobuf:"bytes,6,opt,name=media_type,json=mediaType,proto3" json:"media_type,omitempty"`
+	Status              string                   `protobuf:"bytes,7,opt,name=status,proto3" json:"status,omitempty"`
+	ProcessingPurposes  []string                 `protobuf:"bytes,8,rep,name=processing_purposes,json=processingPurposes,proto3" json:"processing_purposes,omitempty"`
+	RawBody             []byte                   `protobuf:"bytes,9,opt,name=raw_body,json=rawBody,proto3" json:"raw_body,omitempty"`
+	ContentId           string                   `protobuf:"bytes,10,opt,name=content_id,json=contentId,proto3" json:"content_id,omitempty"`
+	ContentVersion      uint64                   `protobuf:"varint,11,opt,name=content_version,json=contentVersion,proto3" json:"content_version,omitempty"`
+	PreviousVersionRefs []*Ref                   `protobuf:"bytes,12,rep,name=previous_version_refs,json=previousVersionRefs,proto3" json:"previous_version_refs,omitempty"`
+	SourceDescriptor    *ContentSourceDescriptor `protobuf:"bytes,13,opt,name=source_descriptor,json=sourceDescriptor,proto3" json:"source_descriptor,omitempty"`
+	LocationRef         *Ref                     `protobuf:"bytes,14,opt,name=location_ref,json=locationRef,proto3" json:"location_ref,omitempty"`
+	Digest              string                   `protobuf:"bytes,15,opt,name=digest,proto3" json:"digest,omitempty"`
+	ByteSize            uint64                   `protobuf:"varint,16,opt,name=byte_size,json=byteSize,proto3" json:"byte_size,omitempty"`
+	PublishStatus       string                   `protobuf:"bytes,17,opt,name=publish_status,json=publishStatus,proto3" json:"publish_status,omitempty"`
+	UseStatus           string                   `protobuf:"bytes,18,opt,name=use_status,json=useStatus,proto3" json:"use_status,omitempty"`
+	CleanupStatus       string                   `protobuf:"bytes,19,opt,name=cleanup_status,json=cleanupStatus,proto3" json:"cleanup_status,omitempty"`
+	TaskId              *GlobalName              `protobuf:"bytes,20,opt,name=task_id,json=taskId,proto3" json:"task_id,omitempty"`
+	OperationId         *GlobalName              `protobuf:"bytes,21,opt,name=operation_id,json=operationId,proto3" json:"operation_id,omitempty"`
+	AttemptId           *GlobalName              `protobuf:"bytes,22,opt,name=attempt_id,json=attemptId,proto3" json:"attempt_id,omitempty"`
+	ProducerRef         *Ref                     `protobuf:"bytes,23,opt,name=producer_ref,json=producerRef,proto3" json:"producer_ref,omitempty"`
+	Kind                string                   `protobuf:"bytes,24,opt,name=kind,proto3" json:"kind,omitempty"`
+	DigestAlgorithm     string                   `protobuf:"bytes,25,opt,name=digest_algorithm,json=digestAlgorithm,proto3" json:"digest_algorithm,omitempty"`
+	unknownFields       protoimpl.UnknownFields
+	sizeCache           protoimpl.SizeCache
 }
 
 func (x *Content) Reset() {
@@ -1640,6 +1656,202 @@ func (x *Content) GetRawBody() []byte {
 	return nil
 }
 
+func (x *Content) GetContentId() string {
+	if x != nil {
+		return x.ContentId
+	}
+	return ""
+}
+
+func (x *Content) GetContentVersion() uint64 {
+	if x != nil {
+		return x.ContentVersion
+	}
+	return 0
+}
+
+func (x *Content) GetPreviousVersionRefs() []*Ref {
+	if x != nil {
+		return x.PreviousVersionRefs
+	}
+	return nil
+}
+
+func (x *Content) GetSourceDescriptor() *ContentSourceDescriptor {
+	if x != nil {
+		return x.SourceDescriptor
+	}
+	return nil
+}
+
+func (x *Content) GetLocationRef() *Ref {
+	if x != nil {
+		return x.LocationRef
+	}
+	return nil
+}
+
+func (x *Content) GetDigest() string {
+	if x != nil {
+		return x.Digest
+	}
+	return ""
+}
+
+func (x *Content) GetByteSize() uint64 {
+	if x != nil {
+		return x.ByteSize
+	}
+	return 0
+}
+
+func (x *Content) GetPublishStatus() string {
+	if x != nil {
+		return x.PublishStatus
+	}
+	return ""
+}
+
+func (x *Content) GetUseStatus() string {
+	if x != nil {
+		return x.UseStatus
+	}
+	return ""
+}
+
+func (x *Content) GetCleanupStatus() string {
+	if x != nil {
+		return x.CleanupStatus
+	}
+	return ""
+}
+
+func (x *Content) GetTaskId() *GlobalName {
+	if x != nil {
+		return x.TaskId
+	}
+	return nil
+}
+
+func (x *Content) GetOperationId() *GlobalName {
+	if x != nil {
+		return x.OperationId
+	}
+	return nil
+}
+
+func (x *Content) GetAttemptId() *GlobalName {
+	if x != nil {
+		return x.AttemptId
+	}
+	return nil
+}
+
+func (x *Content) GetProducerRef() *Ref {
+	if x != nil {
+		return x.ProducerRef
+	}
+	return nil
+}
+
+func (x *Content) GetKind() string {
+	if x != nil {
+		return x.Kind
+	}
+	return ""
+}
+
+func (x *Content) GetDigestAlgorithm() string {
+	if x != nil {
+		return x.DigestAlgorithm
+	}
+	return ""
+}
+
+type ContentSourceDescriptor struct {
+	state             protoimpl.MessageState `protogen:"open.v1"`
+	Kind              string                 `protobuf:"bytes,1,opt,name=kind,proto3" json:"kind,omitempty"`
+	Locator           string                 `protobuf:"bytes,2,opt,name=locator,proto3" json:"locator,omitempty"`
+	AcquisitionMethod string                 `protobuf:"bytes,3,opt,name=acquisition_method,json=acquisitionMethod,proto3" json:"acquisition_method,omitempty"`
+	ProviderVersion   string                 `protobuf:"bytes,4,opt,name=provider_version,json=providerVersion,proto3" json:"provider_version,omitempty"`
+	SourceTimeUnixMs  int64                  `protobuf:"varint,5,opt,name=source_time_unix_ms,json=sourceTimeUnixMs,proto3" json:"source_time_unix_ms,omitempty"`
+	ObservationRef    *Ref                   `protobuf:"bytes,6,opt,name=observation_ref,json=observationRef,proto3" json:"observation_ref,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
+}
+
+func (x *ContentSourceDescriptor) Reset() {
+	*x = ContentSourceDescriptor{}
+	mi := &file_lerna_v1_submission_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ContentSourceDescriptor) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ContentSourceDescriptor) ProtoMessage() {}
+
+func (x *ContentSourceDescriptor) ProtoReflect() protoreflect.Message {
+	mi := &file_lerna_v1_submission_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ContentSourceDescriptor.ProtoReflect.Descriptor instead.
+func (*ContentSourceDescriptor) Descriptor() ([]byte, []int) {
+	return file_lerna_v1_submission_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *ContentSourceDescriptor) GetKind() string {
+	if x != nil {
+		return x.Kind
+	}
+	return ""
+}
+
+func (x *ContentSourceDescriptor) GetLocator() string {
+	if x != nil {
+		return x.Locator
+	}
+	return ""
+}
+
+func (x *ContentSourceDescriptor) GetAcquisitionMethod() string {
+	if x != nil {
+		return x.AcquisitionMethod
+	}
+	return ""
+}
+
+func (x *ContentSourceDescriptor) GetProviderVersion() string {
+	if x != nil {
+		return x.ProviderVersion
+	}
+	return ""
+}
+
+func (x *ContentSourceDescriptor) GetSourceTimeUnixMs() int64 {
+	if x != nil {
+		return x.SourceTimeUnixMs
+	}
+	return 0
+}
+
+func (x *ContentSourceDescriptor) GetObservationRef() *Ref {
+	if x != nil {
+		return x.ObservationRef
+	}
+	return nil
+}
+
 type PendingGoal struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Command       *SubmitGoalCommand     `protobuf:"bytes,1,opt,name=command,proto3" json:"command,omitempty"`
@@ -1650,7 +1862,7 @@ type PendingGoal struct {
 
 func (x *PendingGoal) Reset() {
 	*x = PendingGoal{}
-	mi := &file_lerna_v1_submission_proto_msgTypes[11]
+	mi := &file_lerna_v1_submission_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1662,7 +1874,7 @@ func (x *PendingGoal) String() string {
 func (*PendingGoal) ProtoMessage() {}
 
 func (x *PendingGoal) ProtoReflect() protoreflect.Message {
-	mi := &file_lerna_v1_submission_proto_msgTypes[11]
+	mi := &file_lerna_v1_submission_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1675,7 +1887,7 @@ func (x *PendingGoal) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PendingGoal.ProtoReflect.Descriptor instead.
 func (*PendingGoal) Descriptor() ([]byte, []int) {
-	return file_lerna_v1_submission_proto_rawDescGZIP(), []int{11}
+	return file_lerna_v1_submission_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *PendingGoal) GetCommand() *SubmitGoalCommand {
@@ -1718,7 +1930,7 @@ type Job struct {
 
 func (x *Job) Reset() {
 	*x = Job{}
-	mi := &file_lerna_v1_submission_proto_msgTypes[12]
+	mi := &file_lerna_v1_submission_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1730,7 +1942,7 @@ func (x *Job) String() string {
 func (*Job) ProtoMessage() {}
 
 func (x *Job) ProtoReflect() protoreflect.Message {
-	mi := &file_lerna_v1_submission_proto_msgTypes[12]
+	mi := &file_lerna_v1_submission_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1743,7 +1955,7 @@ func (x *Job) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Job.ProtoReflect.Descriptor instead.
 func (*Job) Descriptor() ([]byte, []int) {
-	return file_lerna_v1_submission_proto_rawDescGZIP(), []int{12}
+	return file_lerna_v1_submission_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *Job) GetRef() *Ref {
@@ -1896,7 +2108,7 @@ type JobCommand struct {
 
 func (x *JobCommand) Reset() {
 	*x = JobCommand{}
-	mi := &file_lerna_v1_submission_proto_msgTypes[13]
+	mi := &file_lerna_v1_submission_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1908,7 +2120,7 @@ func (x *JobCommand) String() string {
 func (*JobCommand) ProtoMessage() {}
 
 func (x *JobCommand) ProtoReflect() protoreflect.Message {
-	mi := &file_lerna_v1_submission_proto_msgTypes[13]
+	mi := &file_lerna_v1_submission_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1921,7 +2133,7 @@ func (x *JobCommand) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use JobCommand.ProtoReflect.Descriptor instead.
 func (*JobCommand) Descriptor() ([]byte, []int) {
-	return file_lerna_v1_submission_proto_rawDescGZIP(), []int{13}
+	return file_lerna_v1_submission_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *JobCommand) GetIdentity() *CommandIdentity {
@@ -2150,7 +2362,7 @@ const file_lerna_v1_submission_proto_rawDesc = "" +
 	"\x12last_committed_seq\x18\x03 \x01(\x04R\x10lastCommittedSeq\x12\x1a\n" +
 	"\brevision\x18\x04 \x01(\x04R\brevision\x12.\n" +
 	"\x06inputs\x18\x05 \x03(\v2\x16.lerna.v1.SessionInputR\x06inputs\x12*\n" +
-	"\ttask_refs\x18\x06 \x03(\v2\r.lerna.v1.RefR\btaskRefs\"\xd5\x02\n" +
+	"\ttask_refs\x18\x06 \x03(\v2\r.lerna.v1.RefR\btaskRefs\"\x92\b\n" +
 	"\aContent\x12\x1f\n" +
 	"\x03ref\x18\x01 \x01(\v2\r.lerna.v1.RefR\x03ref\x12\x12\n" +
 	"\x04text\x18\x02 \x01(\tR\x04text\x121\n" +
@@ -2161,7 +2373,34 @@ const file_lerna_v1_submission_proto_rawDesc = "" +
 	"media_type\x18\x06 \x01(\tR\tmediaType\x12\x16\n" +
 	"\x06status\x18\a \x01(\tR\x06status\x12/\n" +
 	"\x13processing_purposes\x18\b \x03(\tR\x12processingPurposes\x12\x19\n" +
-	"\braw_body\x18\t \x01(\fR\arawBody\"t\n" +
+	"\braw_body\x18\t \x01(\fR\arawBody\x12\x1d\n" +
+	"\n" +
+	"content_id\x18\n" +
+	" \x01(\tR\tcontentId\x12'\n" +
+	"\x0fcontent_version\x18\v \x01(\x04R\x0econtentVersion\x12A\n" +
+	"\x15previous_version_refs\x18\f \x03(\v2\r.lerna.v1.RefR\x13previousVersionRefs\x12N\n" +
+	"\x11source_descriptor\x18\r \x01(\v2!.lerna.v1.ContentSourceDescriptorR\x10sourceDescriptor\x120\n" +
+	"\flocation_ref\x18\x0e \x01(\v2\r.lerna.v1.RefR\vlocationRef\x12\x16\n" +
+	"\x06digest\x18\x0f \x01(\tR\x06digest\x12\x1b\n" +
+	"\tbyte_size\x18\x10 \x01(\x04R\bbyteSize\x12%\n" +
+	"\x0epublish_status\x18\x11 \x01(\tR\rpublishStatus\x12\x1d\n" +
+	"\n" +
+	"use_status\x18\x12 \x01(\tR\tuseStatus\x12%\n" +
+	"\x0ecleanup_status\x18\x13 \x01(\tR\rcleanupStatus\x12-\n" +
+	"\atask_id\x18\x14 \x01(\v2\x14.lerna.v1.GlobalNameR\x06taskId\x127\n" +
+	"\foperation_id\x18\x15 \x01(\v2\x14.lerna.v1.GlobalNameR\voperationId\x123\n" +
+	"\n" +
+	"attempt_id\x18\x16 \x01(\v2\x14.lerna.v1.GlobalNameR\tattemptId\x120\n" +
+	"\fproducer_ref\x18\x17 \x01(\v2\r.lerna.v1.RefR\vproducerRef\x12\x12\n" +
+	"\x04kind\x18\x18 \x01(\tR\x04kind\x12)\n" +
+	"\x10digest_algorithm\x18\x19 \x01(\tR\x0fdigestAlgorithm\"\x88\x02\n" +
+	"\x17ContentSourceDescriptor\x12\x12\n" +
+	"\x04kind\x18\x01 \x01(\tR\x04kind\x12\x18\n" +
+	"\alocator\x18\x02 \x01(\tR\alocator\x12-\n" +
+	"\x12acquisition_method\x18\x03 \x01(\tR\x11acquisitionMethod\x12)\n" +
+	"\x10provider_version\x18\x04 \x01(\tR\x0fproviderVersion\x12-\n" +
+	"\x13source_time_unix_ms\x18\x05 \x01(\x03R\x10sourceTimeUnixMs\x126\n" +
+	"\x0fobservation_ref\x18\x06 \x01(\v2\r.lerna.v1.RefR\x0eobservationRef\"t\n" +
 	"\vPendingGoal\x125\n" +
 	"\acommand\x18\x01 \x01(\v2\x1b.lerna.v1.SubmitGoalCommandR\acommand\x12.\n" +
 	"\vcontent_ref\x18\x02 \x01(\v2\r.lerna.v1.RefR\n" +
@@ -2265,37 +2504,38 @@ func file_lerna_v1_submission_proto_rawDescGZIP() []byte {
 }
 
 var file_lerna_v1_submission_proto_enumTypes = make([]protoimpl.EnumInfo, 9)
-var file_lerna_v1_submission_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
+var file_lerna_v1_submission_proto_msgTypes = make([]protoimpl.MessageInfo, 15)
 var file_lerna_v1_submission_proto_goTypes = []any{
-	(ReceiptPhase)(0),         // 0: lerna.v1.ReceiptPhase
-	(Decision)(0),             // 1: lerna.v1.Decision
-	(ReceiptQueryState)(0),    // 2: lerna.v1.ReceiptQueryState
-	(ErrorCategory)(0),        // 3: lerna.v1.ErrorCategory
-	(CommandAcceptance)(0),    // 4: lerna.v1.CommandAcceptance
-	(TaskLifecycle)(0),        // 5: lerna.v1.TaskLifecycle
-	(TaskControl)(0),          // 6: lerna.v1.TaskControl
-	(TaskProgress)(0),         // 7: lerna.v1.TaskProgress
-	(RequirementsStatus)(0),   // 8: lerna.v1.RequirementsStatus
-	(*Caller)(nil),            // 9: lerna.v1.Caller
-	(*Ref)(nil),               // 10: lerna.v1.Ref
-	(*CommandIdentity)(nil),   // 11: lerna.v1.CommandIdentity
-	(*SubmitGoalCommand)(nil), // 12: lerna.v1.SubmitGoalCommand
-	(*ContractError)(nil),     // 13: lerna.v1.ContractError
-	(*CommandReceipt)(nil),    // 14: lerna.v1.CommandReceipt
-	(*ReceiptQuery)(nil),      // 15: lerna.v1.ReceiptQuery
-	(*Task)(nil),              // 16: lerna.v1.Task
-	(*SessionInput)(nil),      // 17: lerna.v1.SessionInput
-	(*Session)(nil),           // 18: lerna.v1.Session
-	(*Content)(nil),           // 19: lerna.v1.Content
-	(*PendingGoal)(nil),       // 20: lerna.v1.PendingGoal
-	(*Job)(nil),               // 21: lerna.v1.Job
-	(*JobCommand)(nil),        // 22: lerna.v1.JobCommand
-	(*GlobalName)(nil),        // 23: lerna.v1.GlobalName
+	(ReceiptPhase)(0),               // 0: lerna.v1.ReceiptPhase
+	(Decision)(0),                   // 1: lerna.v1.Decision
+	(ReceiptQueryState)(0),          // 2: lerna.v1.ReceiptQueryState
+	(ErrorCategory)(0),              // 3: lerna.v1.ErrorCategory
+	(CommandAcceptance)(0),          // 4: lerna.v1.CommandAcceptance
+	(TaskLifecycle)(0),              // 5: lerna.v1.TaskLifecycle
+	(TaskControl)(0),                // 6: lerna.v1.TaskControl
+	(TaskProgress)(0),               // 7: lerna.v1.TaskProgress
+	(RequirementsStatus)(0),         // 8: lerna.v1.RequirementsStatus
+	(*Caller)(nil),                  // 9: lerna.v1.Caller
+	(*Ref)(nil),                     // 10: lerna.v1.Ref
+	(*CommandIdentity)(nil),         // 11: lerna.v1.CommandIdentity
+	(*SubmitGoalCommand)(nil),       // 12: lerna.v1.SubmitGoalCommand
+	(*ContractError)(nil),           // 13: lerna.v1.ContractError
+	(*CommandReceipt)(nil),          // 14: lerna.v1.CommandReceipt
+	(*ReceiptQuery)(nil),            // 15: lerna.v1.ReceiptQuery
+	(*Task)(nil),                    // 16: lerna.v1.Task
+	(*SessionInput)(nil),            // 17: lerna.v1.SessionInput
+	(*Session)(nil),                 // 18: lerna.v1.Session
+	(*Content)(nil),                 // 19: lerna.v1.Content
+	(*ContentSourceDescriptor)(nil), // 20: lerna.v1.ContentSourceDescriptor
+	(*PendingGoal)(nil),             // 21: lerna.v1.PendingGoal
+	(*Job)(nil),                     // 22: lerna.v1.Job
+	(*JobCommand)(nil),              // 23: lerna.v1.JobCommand
+	(*GlobalName)(nil),              // 24: lerna.v1.GlobalName
 }
 var file_lerna_v1_submission_proto_depIdxs = []int32{
-	23, // 0: lerna.v1.Ref.name:type_name -> lerna.v1.GlobalName
+	24, // 0: lerna.v1.Ref.name:type_name -> lerna.v1.GlobalName
 	11, // 1: lerna.v1.SubmitGoalCommand.identity:type_name -> lerna.v1.CommandIdentity
-	23, // 2: lerna.v1.SubmitGoalCommand.session:type_name -> lerna.v1.GlobalName
+	24, // 2: lerna.v1.SubmitGoalCommand.session:type_name -> lerna.v1.GlobalName
 	3,  // 3: lerna.v1.ContractError.category:type_name -> lerna.v1.ErrorCategory
 	4,  // 4: lerna.v1.ContractError.command_acceptance:type_name -> lerna.v1.CommandAcceptance
 	10, // 5: lerna.v1.ContractError.related_refs:type_name -> lerna.v1.Ref
@@ -2308,12 +2548,12 @@ var file_lerna_v1_submission_proto_depIdxs = []int32{
 	10, // 12: lerna.v1.CommandReceipt.job_ref:type_name -> lerna.v1.Ref
 	13, // 13: lerna.v1.CommandReceipt.error:type_name -> lerna.v1.ContractError
 	10, // 14: lerna.v1.CommandReceipt.input_ref:type_name -> lerna.v1.Ref
-	21, // 15: lerna.v1.CommandReceipt.jobs:type_name -> lerna.v1.Job
+	22, // 15: lerna.v1.CommandReceipt.jobs:type_name -> lerna.v1.Job
 	10, // 16: lerna.v1.CommandReceipt.result_ref:type_name -> lerna.v1.Ref
 	2,  // 17: lerna.v1.ReceiptQuery.state:type_name -> lerna.v1.ReceiptQueryState
 	14, // 18: lerna.v1.ReceiptQuery.receipt:type_name -> lerna.v1.CommandReceipt
 	13, // 19: lerna.v1.ReceiptQuery.error:type_name -> lerna.v1.ContractError
-	23, // 20: lerna.v1.Task.task_id:type_name -> lerna.v1.GlobalName
+	24, // 20: lerna.v1.Task.task_id:type_name -> lerna.v1.GlobalName
 	10, // 21: lerna.v1.Task.goal_ref:type_name -> lerna.v1.Ref
 	5,  // 22: lerna.v1.Task.lifecycle:type_name -> lerna.v1.TaskLifecycle
 	6,  // 23: lerna.v1.Task.control:type_name -> lerna.v1.TaskControl
@@ -2321,34 +2561,42 @@ var file_lerna_v1_submission_proto_depIdxs = []int32{
 	8,  // 25: lerna.v1.Task.requirements_status:type_name -> lerna.v1.RequirementsStatus
 	10, // 26: lerna.v1.Task.parent_task_ref:type_name -> lerna.v1.Ref
 	10, // 27: lerna.v1.Task.result_ref:type_name -> lerna.v1.Ref
-	23, // 28: lerna.v1.SessionInput.input_id:type_name -> lerna.v1.GlobalName
-	23, // 29: lerna.v1.SessionInput.task_id:type_name -> lerna.v1.GlobalName
+	24, // 28: lerna.v1.SessionInput.input_id:type_name -> lerna.v1.GlobalName
+	24, // 29: lerna.v1.SessionInput.task_id:type_name -> lerna.v1.GlobalName
 	10, // 30: lerna.v1.SessionInput.content_ref:type_name -> lerna.v1.Ref
 	11, // 31: lerna.v1.SessionInput.command_identity:type_name -> lerna.v1.CommandIdentity
 	10, // 32: lerna.v1.SessionInput.request_ref:type_name -> lerna.v1.Ref
 	11, // 33: lerna.v1.SessionInput.depends_on:type_name -> lerna.v1.CommandIdentity
 	10, // 34: lerna.v1.SessionInput.confirmation_ref:type_name -> lerna.v1.Ref
-	23, // 35: lerna.v1.Session.session_id:type_name -> lerna.v1.GlobalName
+	24, // 35: lerna.v1.Session.session_id:type_name -> lerna.v1.GlobalName
 	17, // 36: lerna.v1.Session.inputs:type_name -> lerna.v1.SessionInput
 	10, // 37: lerna.v1.Session.task_refs:type_name -> lerna.v1.Ref
 	10, // 38: lerna.v1.Content.ref:type_name -> lerna.v1.Ref
 	11, // 39: lerna.v1.Content.source:type_name -> lerna.v1.CommandIdentity
 	10, // 40: lerna.v1.Content.derived_from:type_name -> lerna.v1.Ref
-	12, // 41: lerna.v1.PendingGoal.command:type_name -> lerna.v1.SubmitGoalCommand
-	10, // 42: lerna.v1.PendingGoal.content_ref:type_name -> lerna.v1.Ref
-	10, // 43: lerna.v1.Job.ref:type_name -> lerna.v1.Ref
-	11, // 44: lerna.v1.Job.responsibility:type_name -> lerna.v1.CommandIdentity
-	20, // 45: lerna.v1.Job.goal:type_name -> lerna.v1.PendingGoal
-	10, // 46: lerna.v1.Job.specification_ref:type_name -> lerna.v1.Ref
-	11, // 47: lerna.v1.JobCommand.identity:type_name -> lerna.v1.CommandIdentity
-	10, // 48: lerna.v1.JobCommand.job_ref:type_name -> lerna.v1.Ref
-	10, // 49: lerna.v1.JobCommand.specification_ref:type_name -> lerna.v1.Ref
-	21, // 50: lerna.v1.JobCommand.job:type_name -> lerna.v1.Job
-	51, // [51:51] is the sub-list for method output_type
-	51, // [51:51] is the sub-list for method input_type
-	51, // [51:51] is the sub-list for extension type_name
-	51, // [51:51] is the sub-list for extension extendee
-	0,  // [0:51] is the sub-list for field type_name
+	10, // 41: lerna.v1.Content.previous_version_refs:type_name -> lerna.v1.Ref
+	20, // 42: lerna.v1.Content.source_descriptor:type_name -> lerna.v1.ContentSourceDescriptor
+	10, // 43: lerna.v1.Content.location_ref:type_name -> lerna.v1.Ref
+	24, // 44: lerna.v1.Content.task_id:type_name -> lerna.v1.GlobalName
+	24, // 45: lerna.v1.Content.operation_id:type_name -> lerna.v1.GlobalName
+	24, // 46: lerna.v1.Content.attempt_id:type_name -> lerna.v1.GlobalName
+	10, // 47: lerna.v1.Content.producer_ref:type_name -> lerna.v1.Ref
+	10, // 48: lerna.v1.ContentSourceDescriptor.observation_ref:type_name -> lerna.v1.Ref
+	12, // 49: lerna.v1.PendingGoal.command:type_name -> lerna.v1.SubmitGoalCommand
+	10, // 50: lerna.v1.PendingGoal.content_ref:type_name -> lerna.v1.Ref
+	10, // 51: lerna.v1.Job.ref:type_name -> lerna.v1.Ref
+	11, // 52: lerna.v1.Job.responsibility:type_name -> lerna.v1.CommandIdentity
+	21, // 53: lerna.v1.Job.goal:type_name -> lerna.v1.PendingGoal
+	10, // 54: lerna.v1.Job.specification_ref:type_name -> lerna.v1.Ref
+	11, // 55: lerna.v1.JobCommand.identity:type_name -> lerna.v1.CommandIdentity
+	10, // 56: lerna.v1.JobCommand.job_ref:type_name -> lerna.v1.Ref
+	10, // 57: lerna.v1.JobCommand.specification_ref:type_name -> lerna.v1.Ref
+	22, // 58: lerna.v1.JobCommand.job:type_name -> lerna.v1.Job
+	59, // [59:59] is the sub-list for method output_type
+	59, // [59:59] is the sub-list for method input_type
+	59, // [59:59] is the sub-list for extension type_name
+	59, // [59:59] is the sub-list for extension extendee
+	0,  // [0:59] is the sub-list for field type_name
 }
 
 func init() { file_lerna_v1_submission_proto_init() }
@@ -2366,7 +2614,7 @@ func file_lerna_v1_submission_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_lerna_v1_submission_proto_rawDesc), len(file_lerna_v1_submission_proto_rawDesc)),
 			NumEnums:      9,
-			NumMessages:   14,
+			NumMessages:   15,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
