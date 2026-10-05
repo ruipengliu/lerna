@@ -21,10 +21,10 @@ $(PROTO):
 	GOBIN=$(dir $(PROTO)) go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.36.12
 
 fmt: $(IMPORTS)
-	find . -name '*.go' -not -path './.git/*' -not -path './contracts/gen/*' -exec $(IMPORTS) -w {} +
+	git ls-files -z --cached --others --exclude-standard -- '*.go' ':!:contracts/gen/**' | xargs -0 $(IMPORTS) -w
 
 check-fmt: $(IMPORTS)
-	@files=$$(find . -name '*.go' -not -path './.git/*' -not -path './contracts/gen/*' -exec $(IMPORTS) -l {} +); test -z "$$files" || { echo "Run make fmt:"; echo "$$files"; exit 1; }
+	@files=$$(git ls-files -z --cached --others --exclude-standard -- '*.go' ':!:contracts/gen/**' | xargs -0 $(IMPORTS) -l) || exit $$?; test -z "$$files" || { echo "Run make fmt:"; echo "$$files"; exit 1; }
 
 lint: $(BUF) $(LINT)
 	$(LINT) run
