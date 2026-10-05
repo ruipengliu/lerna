@@ -57,6 +57,10 @@ func (c *CLI) Run(ctx context.Context, args []string) error {
 		return c.confirm(ctx, args[1:])
 	case "budget":
 		return c.budget(ctx, args[1:])
+	case "modify":
+		return c.modify(ctx, args[1:])
+	case "answer":
+		return c.answer(ctx, args[1:])
 	case "run":
 		return c.settle(ctx)
 	case "help", "-h", "--help":
@@ -83,6 +87,10 @@ func (c *CLI) usage() {
   revoke <授权>                   撤销授权：新准入立即被拒绝，出口封闭后才算完成
   confirm --session 会话 [--deny] <确认标识>
                                  回应核心生成的确认事项
+  modify --session 会话 --task 任务 [--template 模板 --param k=v ... | --keep] 说明
+                                 修改运行中的任务
+  answer --session 会话 [--template 模板 --param k=v ... | --keep] <提问标识> 回答
+                                 回答核心的提问
   budget [set --limit N [--version V]]
                                  查看或设定用户级费用上限
   run                            推进待办工作

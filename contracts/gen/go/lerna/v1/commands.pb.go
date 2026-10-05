@@ -181,7 +181,11 @@ type SubmitInputCommand struct {
 	ForkFromMessageId string `protobuf:"bytes,12,opt,name=fork_from_message_id,json=forkFromMessageId,proto3" json:"fork_from_message_id,omitempty"`
 	EditMessageId     string `protobuf:"bytes,13,opt,name=edit_message_id,json=editMessageId,proto3" json:"edit_message_id,omitempty"`
 	// 新目标：当前任务的明确费用上限（预算单位）。
-	TaskBudget    int64 `protobuf:"varint,14,opt,name=task_budget,json=taskBudget,proto3" json:"task_budget,omitempty"`
+	TaskBudget int64 `protobuf:"varint,14,opt,name=task_budget,json=taskBudget,proto3" json:"task_budget,omitempty"`
+	// 修改或回答：用户确认现有条件集仍然适用（可信输入，无需改条件）。
+	KeepRequirements bool `protobuf:"varint,15,opt,name=keep_requirements,json=keepRequirements,proto3" json:"keep_requirements,omitempty"`
+	// 显式的因果前提：此前输入的标识；不依赖网络到达顺序。
+	DependsOn     []string `protobuf:"bytes,16,rep,name=depends_on,json=dependsOn,proto3" json:"depends_on,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -314,6 +318,20 @@ func (x *SubmitInputCommand) GetTaskBudget() int64 {
 	return 0
 }
 
+func (x *SubmitInputCommand) GetKeepRequirements() bool {
+	if x != nil {
+		return x.KeepRequirements
+	}
+	return false
+}
+
+func (x *SubmitInputCommand) GetDependsOn() []string {
+	if x != nil {
+		return x.DependsOn
+	}
+	return nil
+}
+
 // 提交输入的结果：明确区分"已记录"和"任务已接纳"。
 type SubmitInputResult struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -399,7 +417,7 @@ const file_lerna_v1_commands_proto_rawDesc = "" +
 	"\x14CreateSessionCommand\"4\n" +
 	"\x13CreateSessionResult\x12\x1d\n" +
 	"\n" +
-	"session_id\x18\x01 \x01(\tR\tsessionId\"\xe4\x04\n" +
+	"session_id\x18\x01 \x01(\tR\tsessionId\"\xb0\x05\n" +
 	"\x12SubmitInputCommand\x12\x1d\n" +
 	"\n" +
 	"session_id\x18\x01 \x01(\tR\tsessionId\x122\n" +
@@ -419,7 +437,10 @@ const file_lerna_v1_commands_proto_rawDesc = "" +
 	"\x14fork_from_message_id\x18\f \x01(\tR\x11forkFromMessageId\x12&\n" +
 	"\x0fedit_message_id\x18\r \x01(\tR\reditMessageId\x12\x1f\n" +
 	"\vtask_budget\x18\x0e \x01(\x03R\n" +
-	"taskBudget\"\xc7\x01\n" +
+	"taskBudget\x12+\n" +
+	"\x11keep_requirements\x18\x0f \x01(\bR\x10keepRequirements\x12\x1d\n" +
+	"\n" +
+	"depends_on\x18\x10 \x03(\tR\tdependsOn\"\xc7\x01\n" +
 	"\x11SubmitInputResult\x12\x1d\n" +
 	"\n" +
 	"session_id\x18\x01 \x01(\tR\tsessionId\x12\x19\n" +

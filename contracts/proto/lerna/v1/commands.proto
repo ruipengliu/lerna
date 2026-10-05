@@ -43,6 +43,10 @@ message SubmitInputCommand {
   string edit_message_id = 13;
   // 新目标：当前任务的明确费用上限（预算单位）。
   int64 task_budget = 14;
+  // 修改或回答：用户确认现有条件集仍然适用（可信输入，无需改条件）。
+  bool keep_requirements = 15;
+  // 显式的因果前提：此前输入的标识；不依赖网络到达顺序。
+  repeated string depends_on = 16;
 }
 
 enum ControlKind {

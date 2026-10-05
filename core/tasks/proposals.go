@@ -142,6 +142,25 @@ func (m *Module) buildSnapshot(tx *durable.Tx, t *lernav1.Task) (*lernav1.Contex
 		snap.CapabilityCatalogVersion = m.Catalog.Version()
 		snap.Capabilities = m.Catalog.All()
 	}
+	if snap.Answers, err = sessions.TaskAnswers(tx, t.GetUserId(), t.GetTaskId()); err != nil {
+		return nil, err
+	}
+	rows, err := tx.Query(`SELECT input_id FROM task_inputs WHERE user_id = ? AND task_id = ? AND input_version > ? AND changes_basis = 1
+		ORDER BY task_input_seq`, t.GetUserId(), t.GetTaskId(), set.GetBoundInputVersion())
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		var id string
+		if err := rows.Scan(&id); err != nil {
+			_ = rows.Close()
+			return nil, err
+		}
+		snap.UnprocessedInputs = append(snap.UnprocessedInputs, id)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
 	rounds, err := loadRounds(tx, t.GetUserId(), t.GetTaskId())
 	if err != nil {
 		return nil, err

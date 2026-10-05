@@ -24,6 +24,24 @@ type TaskPort interface {
 	NewGoal(tx *durable.Tx, in GoalInput) error
 	// ConfirmationResponded 通知任务编排：用户回应了一个动作确认。
 	ConfirmationResponded(tx *durable.Tx, c *lernav1.Confirmation) error
+	// AcceptInput 在同一事务中由任务编排接纳一条修改或回答；任务拒绝时整条输入不被记录。
+	AcceptInput(tx *durable.Tx, in TaskInput) error
+}
+
+// TaskInput 是投递给任务的修改或回答。
+type TaskInput struct {
+	User                        string
+	SessionID                   string
+	InputID                     string
+	Kind                        lernav1.InputKind
+	TaskID                      string
+	Text                        string
+	Requirements                *lernav1.RequirementSetDraft
+	KeepRequirements            bool
+	ExpectedRequirementsVersion int64
+	ExpectedInputVersion        int64
+	// Request 是回答所针对的输入请求。
+	Request *lernav1.InputRequest
 }
 
 // GoalInput 是已持久保存的新目标输入。
@@ -92,7 +110,19 @@ func (m *Module) handleSubmitInput(_ context.Context, tx *durable.Tx, in durable
 	} else if !ok {
 		return durable.Outcome{}, errs.New(lernav1.ErrorCode_ERROR_CODE_INVALID_INPUT, "session %s not found", sid)
 	}
+	for _, dep := range cmd.GetDependsOn() {
+		var n int
+		if err := tx.QueryRow(`SELECT COUNT(*) FROM session_inputs WHERE user_id = ? AND input_id = ?`, user, dep).Scan(&n); err != nil {
+			return durable.Outcome{}, err
+		}
+		if n == 0 {
+			// 依赖未满足：不写决定，原命令可以在前提到达后重试。
+			return durable.Outcome{}, errs.New(lernav1.ErrorCode_ERROR_CODE_DEPENDENCY_UNAVAILABLE, "input %s this input depends on is not recorded yet", dep)
+		}
+	}
 	switch cmd.GetInputKind() {
+	case lernav1.InputKind_INPUT_KIND_MODIFY_TASK, lernav1.InputKind_INPUT_KIND_ANSWER:
+		return m.handleTaskInput(tx, user, sid, cmd)
 	case lernav1.InputKind_INPUT_KIND_NEW_GOAL:
 		if cmd.GetText() == "" {
 			return durable.Outcome{}, errs.New(lernav1.ErrorCode_ERROR_CODE_INVALID_INPUT, "new goal needs text")
@@ -314,3 +344,88 @@ func (m *Module) View(ctx context.Context, user, sid string) (*lernav1.SessionVi
 }
 
 func msTime(ms int64) time.Time { return time.UnixMilli(ms) }
+
+// handleTaskInput 记录一条修改或回答，并在同一事务中交给任务编排接纳。输入默认只投递给一个任务，
+// 目标必须明确；修改带上提交时看到的版本，防止基于旧任务上下文的修改被静默套用。
+func (m *Module) handleTaskInput(tx *durable.Tx, user, sid string, cmd *lernav1.SubmitInputCommand) (durable.Outcome, error) {
+	var req *lernav1.InputRequest
+	if cmd.GetInputKind() == lernav1.InputKind_INPUT_KIND_ANSWER {
+		if cmd.GetRequestId() == "" {
+			return durable.Outcome{}, errs.New(lernav1.ErrorCode_ERROR_CODE_INVALID_INPUT, "an answer needs request_id")
+		}
+		r := &lernav1.InputRequest{UserId: user, RequestId: cmd.GetRequestId()}
+		var open, cb int
+		err := tx.QueryRow(`SELECT session_id, task_id, question, changes_basis, open FROM input_requests WHERE user_id = ? AND request_id = ?`,
+			user, cmd.GetRequestId()).Scan(&r.SessionId, &r.TaskId, &r.Question, &cb, &open)
+		if errors.Is(err, sql.ErrNoRows) {
+			return durable.Outcome{}, errs.New(lernav1.ErrorCode_ERROR_CODE_INVALID_INPUT, "input request %s not found", cmd.GetRequestId())
+		}
+		if err != nil {
+			return durable.Outcome{}, err
+		}
+		if open == 0 {
+			// 第一个有效回答生效；修改答案使用新的输入。
+			return durable.Outcome{}, errs.New(lernav1.ErrorCode_ERROR_CODE_INVALID_INPUT, "input request %s was already answered", cmd.GetRequestId())
+		}
+		if r.GetSessionId() != sid {
+			return durable.Outcome{}, errs.New(lernav1.ErrorCode_ERROR_CODE_INVALID_INPUT, "input request %s belongs to another session", r.GetRequestId())
+		}
+		r.ChangesBasis = cb == 1
+		r.Open = true
+		req = r
+		cmd.TaskId = r.GetTaskId()
+	}
+	if cmd.GetTaskId() == "" {
+		return durable.Outcome{}, errs.New(lernav1.ErrorCode_ERROR_CODE_INVALID_INPUT, "a task input needs an explicit task_id")
+	}
+	var linked int
+	if err := tx.QueryRow(`SELECT COUNT(*) FROM session_tasks WHERE user_id = ? AND session_id = ? AND task_id = ?`,
+		user, sid, cmd.GetTaskId()).Scan(&linked); err != nil {
+		return durable.Outcome{}, err
+	}
+	if linked == 0 {
+		return durable.Outcome{}, errs.New(lernav1.ErrorCode_ERROR_CODE_INVALID_INPUT, "task %s is not associated with session %s", cmd.GetTaskId(), sid)
+	}
+	rec, err := appendInput(tx, user, sid, cmd)
+	if err != nil {
+		return durable.Outcome{}, err
+	}
+	if req != nil {
+		if _, err := tx.Exec(`UPDATE input_requests SET open = 0, answer_input_id = ? WHERE user_id = ? AND request_id = ?`,
+			rec.GetInputId(), user, req.GetRequestId()); err != nil {
+			return durable.Outcome{}, err
+		}
+	}
+	if err := m.Tasks.AcceptInput(tx, TaskInput{
+		User: user, SessionID: sid, InputID: rec.GetInputId(), Kind: cmd.GetInputKind(), TaskID: cmd.GetTaskId(),
+		Text: cmd.GetText(), Requirements: cmd.GetRequirements(), KeepRequirements: cmd.GetKeepRequirements(),
+		ExpectedRequirementsVersion: cmd.GetExpectedRequirementsVersion(), ExpectedInputVersion: cmd.GetExpectedInputVersion(),
+		Request: req,
+	}); err != nil {
+		return durable.Outcome{}, err
+	}
+	if err := MarkInputAccepted(tx, user, rec.GetInputId(), cmd.GetTaskId()); err != nil {
+		return durable.Outcome{}, err
+	}
+	rec.RoutingStatus = lernav1.RoutingStatus_ROUTING_STATUS_TASK_ACCEPTED
+	return outcome(rec), nil
+}
+
+// TaskAnswers 返回任务收到的回答正文，按会话顺序。
+func TaskAnswers(tx *durable.Tx, user, taskID string) ([]string, error) {
+	rows, err := tx.Query(`SELECT body FROM session_inputs WHERE user_id = ? AND task_id = ? AND input_kind = ? ORDER BY recorded_at, session_seq`,
+		user, taskID, int32(lernav1.InputKind_INPUT_KIND_ANSWER))
+	if err != nil {
+		return nil, err
+	}
+	defer func() { _ = rows.Close() }()
+	var out []string
+	for rows.Next() {
+		var b string
+		if err := rows.Scan(&b); err != nil {
+			return nil, err
+		}
+		out = append(out, b)
+	}
+	return out, rows.Err()
+}
