@@ -1,0 +1,210 @@
+--- /workspace/lerna-content-03-137311247276/large-graph-single-read-identity-overlay/context_claim_diagnostics.go
++++ /workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/context_claim_diagnostics.go
+@@ -31,20 +31,26 @@
+ 	Total, Max time.Duration
+ }
+ type ContextClaimDiagnostics struct {
+-	mu         sync.Mutex
+-	start      time.Time
+-	ctx        context.Context
+-	events     []claimDiagnosticEvent
+-	critical   []claimDiagnosticEvent
+-	dropped    int
+-	firstCause error
+-	first      *claimDiagnosticEvent
+-	totals     map[string]claimDiagnosticAggregate
+-	lastGate   map[string]claimDiagnosticEvent
++	mu                                           sync.Mutex
++	start                                        time.Time
++	ctx                                          context.Context
++	events                                       []claimDiagnosticEvent
++	critical                                     []claimDiagnosticEvent
++	dropped                                      int
++	firstCause                                   error
++	first                                        *claimDiagnosticEvent
++	totals                                       map[string]claimDiagnosticAggregate
++	lastGate                                     map[string]claimDiagnosticEvent
++	qualificationCase                            string
++	qualification                                [7][3][13]qualificationAggregate
++	qualificationDropped, qualificationAmbiguous int
++	qualificationHookCalls                       int
++	qualificationHookElapsed                     time.Duration
+ }
+ 
+ func NewContextClaimDiagnostics(t *testing.T, ctx context.Context) *ContextClaimDiagnostics {
+ 	d := &ContextClaimDiagnostics{start: time.Now(), ctx: ctx, events: make([]claimDiagnosticEvent, 0, 448), critical: make([]claimDiagnosticEvent, 0, 64), totals: map[string]claimDiagnosticAggregate{}, lastGate: map[string]claimDiagnosticEvent{}}
++	d.qualificationCase = t.Name()
+ 	d.Mark("phase.testcase-start")
+ 	t.Cleanup(func() { d.summary(t) })
+ 	return d
+@@ -145,6 +151,7 @@
+ 	for _, k := range keys {
+ 		print("last_gate", d.lastGate[k])
+ 	}
++	d.qualificationSummary(t)
+ }
+ func (w *ContextWorld) DiagnosticStage(ctx context.Context, kind string, start time.Time, err error) {
+ 	if w.diagnostics != nil {
+@@ -248,18 +255,21 @@
+ }
+ 
+ func (s claimDiagnosticSource) ReadSnapshot(ctx context.Context, ref v.SnapshotRef, p engine.Permission, remaining int64) (engine.Snapshot, error) {
++	ctx = content.WithContentQualificationObserver(ctx, s.d, "shell")
+ 	start := time.Now()
+ 	out, err := s.Source.ReadSnapshot(ctx, ref, p, remaining)
+ 	s.d.observe("source.Snapshot", start, err, fmt.Sprintf("bytes=%d materials=%d", len(out.Raw), len(out.MaterialRefs)))
+ 	return out, err
+ }
+ func (s claimDiagnosticSource) ReadFixtureLock(ctx context.Context, ref v.InstallLockRef, p engine.Permission, remaining int64) (engine.FixtureLock, error) {
++	ctx = content.WithContentQualificationObserver(ctx, s.d, "lock")
+ 	start := time.Now()
+ 	out, err := s.Source.ReadFixtureLock(ctx, ref, p, remaining)
+ 	s.d.observe("source.Lock", start, err, fmt.Sprintf("lock_bytes=%d manifest_bytes=%d", len(out.Raw), len(out.ManifestRaw)))
+ 	return out, err
+ }
+ func (s claimDiagnosticSource) ReadMaterial(ctx context.Context, ref v.ContentRef, purpose string, p engine.Permission, remaining int64) ([]byte, error) {
++	ctx = content.WithContentQualificationObserver(ctx, s.d, "material")
+ 	start := time.Now()
+ 	out, err := s.Source.ReadMaterial(ctx, ref, purpose, p, remaining)
+ 	s.d.observe("source.Material", start, err, fmt.Sprintf("bytes=%d", len(out)))
+@@ -278,12 +288,14 @@
+ 	return out, err
+ }
+ func (s claimDiagnosticPublisher) Publish(ctx context.Context, key string, b []byte, refs []v.ContentRef, p engine.Permission) (v.ContentRef, error) {
++	ctx = content.WithContentQualificationObserver(ctx, s.d, "worker-verification")
+ 	start := time.Now()
+ 	out, err := s.Publisher.Publish(ctx, key, b, refs, p)
+ 	s.d.observe("publisher.Publish", start, err, fmt.Sprintf("bytes=%d sources=%d", len(b), len(refs)))
+ 	return out, err
+ }
+ func (s claimDiagnosticPublisher) ReadPublished(ctx context.Context, ref v.ContentRef, p engine.Permission) ([]byte, error) {
++	ctx = content.WithContentQualificationObserver(ctx, s.d, "outer-readback")
+ 	start := time.Now()
+ 	out, err := s.Publisher.ReadPublished(ctx, ref, p)
+ 	s.d.observe("publisher.ReadPublished", start, err, fmt.Sprintf("bytes=%d", len(out)))
+@@ -296,8 +308,11 @@
+ }
+ 
+ func (s claimDiagnosticContent) ReadForProcessing(ctx context.Context, subject *c.SubjectBinding, ref c.ContentRef, purpose string, remaining int64) (content.ProcessingRead, error) {
++	ctx = content.WithContentQualificationPhase(ctx, "read")
++	qualificationStart := content.BeginContentQualification(ctx, "read.total")
+ 	start := time.Now()
+ 	out, err := s.Content.ReadForProcessing(ctx, subject, ref, purpose, remaining)
++	content.EndContentQualification(ctx, "read.total", qualificationStart, err)
+ 	s.d.observe("content.ReadForProcessing", start, err, fmt.Sprintf("bytes=%d sources=%d", len(out.Bytes), len(out.Sources)))
+ 	return out, err
+ }
+@@ -349,3 +364,113 @@
+ 	s.d.observe("access.PrepareContent", start, err, "")
+ 	return err
+ }
++
++type qualificationAggregate struct {
++	Attempted, Completed, ErrorReturns int
++	Total, Max                         time.Duration
++	FirstCause                         string
++}
++
++var qualificationRoles = [7]string{"shell", "mandatory", "lock", "manifest", "material", "worker-verification", "outer-readback"}
++var qualificationPhases = [3]string{"pre", "post", "read"}
++var qualificationStages = [13]string{"lock.identity_key", "lock.advisory_sql", "lock.row_sql", "lock.decode_validate", "policy.subject_prep", "policy.locked_sql", "policy.decode_actions", "now.sql", "callback", "within", "objects.read", "integrity", "read.total"}
++
++func qualificationIndex(role, phase, stage string) (int, int, int) {
++	r, p, s := -1, -1, -1
++	for i, v := range qualificationRoles {
++		if v == role {
++			r = i
++			break
++		}
++	}
++	for i, v := range qualificationPhases {
++		if v == phase {
++			p = i
++			break
++		}
++	}
++	for i, v := range qualificationStages {
++		if v == stage {
++			s = i
++			break
++		}
++	}
++	return r, p, s
++}
++func (d *ContextClaimDiagnostics) BeginContentQualification(role, phase, stage string) {
++	if d == nil {
++		return
++	}
++	started := time.Now()
++	d.mu.Lock()
++	defer d.mu.Unlock()
++	r, p, s := qualificationIndex(role, phase, stage)
++	if r < 0 || p < 0 || s < 0 {
++		d.qualificationDropped++
++		d.qualificationAmbiguous++
++	} else {
++		d.qualification[r][p][s].Attempted++
++	}
++	d.qualificationHookCalls++
++	d.qualificationHookElapsed += time.Since(started)
++}
++func (d *ContextClaimDiagnostics) EndContentQualification(role, phase, stage string, elapsed time.Duration, err error) {
++	if d == nil {
++		return
++	}
++	started := time.Now()
++	d.mu.Lock()
++	defer d.mu.Unlock()
++	r, p, s := qualificationIndex(role, phase, stage)
++	if r < 0 || p < 0 || s < 0 {
++		d.qualificationDropped++
++		d.qualificationAmbiguous++
++	} else {
++		a := &d.qualification[r][p][s]
++		a.Completed++
++		a.Total += elapsed
++		if elapsed > a.Max {
++			a.Max = elapsed
++		}
++		if err != nil {
++			a.ErrorReturns++
++			if a.FirstCause == "" {
++				a.FirstCause = claimCause(err)
++			}
++		}
++	}
++	d.qualificationHookCalls++
++	d.qualificationHookElapsed += time.Since(started)
++}
++func (d *ContextClaimDiagnostics) qualificationSummary(t *testing.T) {
++	t.Logf("QUAL_SQL case=%s fixed_slots=273 hooks=%d recorder_hook_wall=%s dropped=%d ambiguous=%d overhead_outside_recorder_unknown=true no_parent_child_sum=true", d.qualificationCase, d.qualificationHookCalls, d.qualificationHookElapsed, d.qualificationDropped, d.qualificationAmbiguous)
++	for r, role := range qualificationRoles {
++		for p, phase := range qualificationPhases {
++			var serial, sqlCallWall, localLeafWall time.Duration
++			for s, stage := range qualificationStages {
++				a := d.qualification[r][p][s]
++				if a.Attempted == 0 && a.Completed == 0 {
++					continue
++				}
++				first := a.FirstCause
++				if first == "" {
++					first = "nil"
++				}
++				t.Logf("QUAL_SQL case=%s role=%s phase=%s stage=%s attempted=%d completed=%d error_returns=%d wall=%s max=%s first_cause=%s", d.qualificationCase, role, phase, stage, a.Attempted, a.Completed, a.ErrorReturns, a.Total, a.Max, first)
++				if s < 8 {
++					serial += a.Total
++					if s == 1 || s == 2 || s == 5 || s == 7 {
++						sqlCallWall += a.Total
++					} else {
++						localLeafWall += a.Total
++					}
++				}
++			}
++			callback := d.qualification[r][p][8]
++			within := d.qualification[r][p][9]
++			if callback.Attempted > 0 || within.Attempted > 0 {
++				t.Logf("QUAL_SQL case=%s role=%s phase=%s derived_serial_leaf_wall=%s sql_call_wall=%s local_leaf_wall=%s callback_remaining=%s within_minus_callback=%s residual_not_proven_SQLwait=true SQLwall_not_server_execution=true includes_original_argument_evaluation=true callback_remaining_includes_observer_unknown=true callback_attempted=%d callback_completed=%d within_attempted=%d within_completed=%d", d.qualificationCase, role, phase, serial, sqlCallWall, localLeafWall, callback.Total-serial, within.Total-callback.Total, callback.Attempted, callback.Completed, within.Attempted, within.Completed)
++			}
++		}
++	}
++}

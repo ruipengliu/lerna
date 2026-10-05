@@ -1,0 +1,10 @@
+=== RUN   TestContentSIGKILLBeforePublicationCommitRecoversOriginalStaging
+=== RUN   TestContentSIGKILLBeforePublicationCommitRecoversOriginalStaging/SIGKILL_before_publication_commit
+    content_process_recovery_test.go:557: Content child native pid=3703496 pgid=3703416 start=15544025 generation=1
+    content_process_recovery_test.go:630: Content child native pid=3703641 pgid=3703416 start=15544535 generation=2
+    world.go:202: retained exact Content schema/root: historical child native Close UNKNOWN; actual Wait is separate
+--- PASS: TestContentSIGKILLBeforePublicationCommitRecoversOriginalStaging (5.52s)
+    --- PASS: TestContentSIGKILLBeforePublicationCommitRecoversOriginalStaging/SIGKILL_before_publication_commit (5.52s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/component	5.534s
+NATIVE_COMPLETION_ACK {"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "precommit-sigkill-fault", "pgid": 3703416, "pid": 3703416, "starttime": "15543891", "timed_out": false}

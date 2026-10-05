@@ -1,0 +1,696 @@
+[
+  {
+    "phase": "processing_control-normal",
+    "original_owned_scope_interval": "process_group 3816379 3816379 /workspace/lerna-content-03-137311247276\npostgres lerna_test_7da701a19512e4c0aec3d591\npostgres lerna_test_954389a25d784c4561cdf89b\npostgres lerna_test_7192b38555666eed5a63f4d7\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-1706401747 27 562006\npostgres lerna_test_f3d396ea3a031ccdbcbde784\npostgres lerna_test_a04eec633a1cd4f84e6a6213\npostgres lerna_test_c49945d150f372af5554d0b9\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-1935908887 27 562006\npostgres lerna_test_52ccc29c722df3e6eadf0501\npostgres lerna_test_0c2d52bda151c1aa38ae0cdf\npostgres lerna_test_85e84105baf23f4765bfb675\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-2717891080 27 562006\npostgres lerna_test_dfd9479d3dd5ee43577c159c\npostgres lerna_test_d3bb678bf9077c00e9a190a1\npostgres lerna_test_2c22c56abe1c26f582247a5f\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-3534196600 27 562006\npostgres lerna_test_a8f3a9e174d611aa3b0511bd\npostgres lerna_test_0c00b21df1986d98b2135024\npostgres lerna_test_ea66a8a51295244ed36f1f73\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-2852004276 27 562006\ncompile_budget_peer 0 lerna_test_a8f3a9e174d611aa3b0511bd native_open_before_start\ncompile_budget_peer 628219 lerna_test_a8f3a9e174d611aa3b0511bd native_open_confirmed\ncompile_budget_peer 628219 lerna_test_a8f3a9e174d611aa3b0511bd native_close_confirmed\npostgres lerna_test_38c0163a86233e504886ee0b\npostgres lerna_test_31d076094917e70b6ab2758b\npostgres lerna_test_dba9568e9424c5241bef89a3\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-1717804859 27 562006\npostgres lerna_test_424f1e35e0d46f0bc9ae8460\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-852337955 27 562006\npostgres lerna_test_d90453b12ed6dff4ef603877\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-231172544 27 562006\npostgres lerna_test_851e6b0612209631b8eb6163\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-1394105284 27 562006\npostgres lerna_test_1b33b6b980a50f7227ff81ce\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-562635474 27 562006\npostgres lerna_test_78ceeebb3ab09b29cca26571\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-3555522957 27 562006\npostgres lerna_test_8666d811449646f2e1e17064\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-1052951876 27 562006\npostgres lerna_test_68f04e8ed8ccae502e261b2b\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-960131234 27 562006\npg_policy_connections lerna_test_68f04e8ed8ccae502e261b2b\npg_policy_holder lerna_test_68f04e8ed8ccae502e261b2b 628275\npostgres lerna_test_24d0c90e8c9ad2af6f61def3\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-3165260121 27 562006\npg_policy_connections lerna_test_24d0c90e8c9ad2af6f61def3\npg_policy_holder lerna_test_24d0c90e8c9ad2af6f61def3 628286\npostgres lerna_test_192aff71e69ee53f153ac207\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-928694370 27 562006\npg_policy_connections lerna_test_192aff71e69ee53f153ac207\npg_policy_holder lerna_test_192aff71e69ee53f153ac207 628291\npostgres lerna_test_9138c06b6554c1c541105db3\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-183990309 27 562006\npg_policy_connections lerna_test_9138c06b6554c1c541105db3\npg_policy_holder lerna_test_9138c06b6554c1c541105db3 628295\npostgres lerna_test_eca571aefd14f2e0cee12287\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-2834653664 27 562006\npg_policy_connections lerna_test_eca571aefd14f2e0cee12287\npg_policy_holder lerna_test_eca571aefd14f2e0cee12287 628307\npostgres lerna_test_d219f56e504f4bacad383360\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-1707129980 27 562006\npg_policy_connections lerna_test_d219f56e504f4bacad383360\npg_policy_holder lerna_test_d219f56e504f4bacad383360 628311\npostgres lerna_test_ae068650955fb66008caa5be\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-3580934557 27 562006\npg_policy_connections lerna_test_ae068650955fb66008caa5be\npg_policy_holder lerna_test_ae068650955fb66008caa5be 628315\nnative_exit 3816379 3816379 status=0 group_absent=True\n",
+    "registered_schema_count": 31,
+    "registered_schemas": [
+      "lerna_test_7da701a19512e4c0aec3d591",
+      "lerna_test_954389a25d784c4561cdf89b",
+      "lerna_test_7192b38555666eed5a63f4d7",
+      "lerna_test_f3d396ea3a031ccdbcbde784",
+      "lerna_test_a04eec633a1cd4f84e6a6213",
+      "lerna_test_c49945d150f372af5554d0b9",
+      "lerna_test_52ccc29c722df3e6eadf0501",
+      "lerna_test_0c2d52bda151c1aa38ae0cdf",
+      "lerna_test_85e84105baf23f4765bfb675",
+      "lerna_test_dfd9479d3dd5ee43577c159c",
+      "lerna_test_d3bb678bf9077c00e9a190a1",
+      "lerna_test_2c22c56abe1c26f582247a5f",
+      "lerna_test_a8f3a9e174d611aa3b0511bd",
+      "lerna_test_0c00b21df1986d98b2135024",
+      "lerna_test_ea66a8a51295244ed36f1f73",
+      "lerna_test_38c0163a86233e504886ee0b",
+      "lerna_test_31d076094917e70b6ab2758b",
+      "lerna_test_dba9568e9424c5241bef89a3",
+      "lerna_test_424f1e35e0d46f0bc9ae8460",
+      "lerna_test_d90453b12ed6dff4ef603877",
+      "lerna_test_851e6b0612209631b8eb6163",
+      "lerna_test_1b33b6b980a50f7227ff81ce",
+      "lerna_test_78ceeebb3ab09b29cca26571",
+      "lerna_test_8666d811449646f2e1e17064",
+      "lerna_test_68f04e8ed8ccae502e261b2b",
+      "lerna_test_24d0c90e8c9ad2af6f61def3",
+      "lerna_test_192aff71e69ee53f153ac207",
+      "lerna_test_9138c06b6554c1c541105db3",
+      "lerna_test_eca571aefd14f2e0cee12287",
+      "lerna_test_d219f56e504f4bacad383360",
+      "lerna_test_ae068650955fb66008caa5be"
+    ],
+    "registered_objectroots": [
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-1706401747",
+        "registered_device": 27,
+        "registered_inode": 562006,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-1935908887",
+        "registered_device": 27,
+        "registered_inode": 562006,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-2717891080",
+        "registered_device": 27,
+        "registered_inode": 562006,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-3534196600",
+        "registered_device": 27,
+        "registered_inode": 562006,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-2852004276",
+        "registered_device": 27,
+        "registered_inode": 562006,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-1717804859",
+        "registered_device": 27,
+        "registered_inode": 562006,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-852337955",
+        "registered_device": 27,
+        "registered_inode": 562006,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-231172544",
+        "registered_device": 27,
+        "registered_inode": 562006,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-1394105284",
+        "registered_device": 27,
+        "registered_inode": 562006,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-562635474",
+        "registered_device": 27,
+        "registered_inode": 562006,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-3555522957",
+        "registered_device": 27,
+        "registered_inode": 562006,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-1052951876",
+        "registered_device": 27,
+        "registered_inode": 562006,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-960131234",
+        "registered_device": 27,
+        "registered_inode": 562006,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-3165260121",
+        "registered_device": 27,
+        "registered_inode": 562006,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-928694370",
+        "registered_device": 27,
+        "registered_inode": 562006,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-183990309",
+        "registered_device": 27,
+        "registered_inode": 562006,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-2834653664",
+        "registered_device": 27,
+        "registered_inode": 562006,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-1707129980",
+        "registered_device": 27,
+        "registered_inode": 562006,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-3580934557",
+        "registered_device": 27,
+        "registered_inode": 562006,
+        "current_readonly_path_exists": false
+      }
+    ],
+    "limits": "Native actualWait/groupabsence versus original resource logicalClose/holderACK are separate; current path absence alone proves no original logicalClose. No SQL query/cleanup probe/extra effects."
+  },
+  {
+    "phase": "processing_control-race",
+    "original_owned_scope_interval": "process_group 3816940 3816940 /workspace/lerna-content-03-137311247276\npostgres lerna_test_bf090a76578ada0ed02c2e2a\npostgres lerna_test_9c962478280d62d8533cb5a3\npostgres lerna_test_3a339a548a64c95020d6b13d\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-1454448946 27 562063\npostgres lerna_test_df329c6ca3f51f531ed9d204\npostgres lerna_test_3d74faf68fc70d97e8d7b77e\npostgres lerna_test_15f86d4f6f5f79d580596f1e\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-3754160601 27 562063\npostgres lerna_test_a73b38c0f49d8f137a79e8af\npostgres lerna_test_7d44854f06552b01f6ee0008\npostgres lerna_test_1e8779f6613479cb6ef4cfba\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-1032639222 27 562063\npostgres lerna_test_b4a54cd5dffb9a53c99ce464\npostgres lerna_test_ea4967e68727b4198e757fbb\npostgres lerna_test_eae0ab2a64d01caee64913af\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-1646583963 27 562063\npostgres lerna_test_10c31b9d149a0eb99ae2580b\npostgres lerna_test_956892973573976a2b323bcc\npostgres lerna_test_c3c65213f2d8fe5d0112d242\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-3547919867 27 562063\ncompile_budget_peer 0 lerna_test_10c31b9d149a0eb99ae2580b native_open_before_start\ncompile_budget_peer 628410 lerna_test_10c31b9d149a0eb99ae2580b native_open_confirmed\ncompile_budget_peer 628410 lerna_test_10c31b9d149a0eb99ae2580b native_close_confirmed\npostgres lerna_test_196a116897957b0f200dff6e\npostgres lerna_test_20a3b7cef7763f68b0513cf0\npostgres lerna_test_e799cec2024a2d8095879d9c\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-3198021342 27 562104\npostgres lerna_test_07582f95ce3d9a99f834bde9\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-2919726742 27 562104\npostgres lerna_test_946619d9446e0d487ef13937\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-136776251 27 562104\npostgres lerna_test_f35975bd5211bcafccdc0bac\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-1707733307 27 562104\npostgres lerna_test_92d302bc13c050756dea1a1a\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-3215789530 27 562104\npostgres lerna_test_2a4decc32b9f4d1d850e5966\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-4137357411 27 562104\npostgres lerna_test_f2a074c3f4074180c9330a6d\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-3248924656 27 562104\npostgres lerna_test_ae3ca0c9b1bbafc1fb4f875a\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-972761166 27 562104\npg_policy_connections lerna_test_ae3ca0c9b1bbafc1fb4f875a\npg_policy_holder lerna_test_ae3ca0c9b1bbafc1fb4f875a 628491\npostgres lerna_test_323bd779b796c92e76da5ef6\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-2776121787 27 562104\npg_policy_connections lerna_test_323bd779b796c92e76da5ef6\npg_policy_holder lerna_test_323bd779b796c92e76da5ef6 628495\npostgres lerna_test_cc6fe5d169ee9f660bd422fb\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-199436920 27 562104\npg_policy_connections lerna_test_cc6fe5d169ee9f660bd422fb\npg_policy_holder lerna_test_cc6fe5d169ee9f660bd422fb 628499\npostgres lerna_test_142d3f796ae3f191491c87c2\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-1881378911 27 562104\npg_policy_connections lerna_test_142d3f796ae3f191491c87c2\npg_policy_holder lerna_test_142d3f796ae3f191491c87c2 628511\npostgres lerna_test_773e57af3f79da0982b1ac48\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-2610402971 27 562104\npg_policy_connections lerna_test_773e57af3f79da0982b1ac48\npg_policy_holder lerna_test_773e57af3f79da0982b1ac48 628515\npostgres lerna_test_4ee28b0547860e7cb968b1e3\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-631916923 27 562104\npg_policy_connections lerna_test_4ee28b0547860e7cb968b1e3\npg_policy_holder lerna_test_4ee28b0547860e7cb968b1e3 628519\npostgres lerna_test_e38ae0b99baeed9f71994fe0\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-1987808775 27 562104\npg_policy_connections lerna_test_e38ae0b99baeed9f71994fe0\npg_policy_holder lerna_test_e38ae0b99baeed9f71994fe0 628531\nnative_exit 3816940 3816940 status=0 group_absent=True\n",
+    "registered_schema_count": 31,
+    "registered_schemas": [
+      "lerna_test_bf090a76578ada0ed02c2e2a",
+      "lerna_test_9c962478280d62d8533cb5a3",
+      "lerna_test_3a339a548a64c95020d6b13d",
+      "lerna_test_df329c6ca3f51f531ed9d204",
+      "lerna_test_3d74faf68fc70d97e8d7b77e",
+      "lerna_test_15f86d4f6f5f79d580596f1e",
+      "lerna_test_a73b38c0f49d8f137a79e8af",
+      "lerna_test_7d44854f06552b01f6ee0008",
+      "lerna_test_1e8779f6613479cb6ef4cfba",
+      "lerna_test_b4a54cd5dffb9a53c99ce464",
+      "lerna_test_ea4967e68727b4198e757fbb",
+      "lerna_test_eae0ab2a64d01caee64913af",
+      "lerna_test_10c31b9d149a0eb99ae2580b",
+      "lerna_test_956892973573976a2b323bcc",
+      "lerna_test_c3c65213f2d8fe5d0112d242",
+      "lerna_test_196a116897957b0f200dff6e",
+      "lerna_test_20a3b7cef7763f68b0513cf0",
+      "lerna_test_e799cec2024a2d8095879d9c",
+      "lerna_test_07582f95ce3d9a99f834bde9",
+      "lerna_test_946619d9446e0d487ef13937",
+      "lerna_test_f35975bd5211bcafccdc0bac",
+      "lerna_test_92d302bc13c050756dea1a1a",
+      "lerna_test_2a4decc32b9f4d1d850e5966",
+      "lerna_test_f2a074c3f4074180c9330a6d",
+      "lerna_test_ae3ca0c9b1bbafc1fb4f875a",
+      "lerna_test_323bd779b796c92e76da5ef6",
+      "lerna_test_cc6fe5d169ee9f660bd422fb",
+      "lerna_test_142d3f796ae3f191491c87c2",
+      "lerna_test_773e57af3f79da0982b1ac48",
+      "lerna_test_4ee28b0547860e7cb968b1e3",
+      "lerna_test_e38ae0b99baeed9f71994fe0"
+    ],
+    "registered_objectroots": [
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-1454448946",
+        "registered_device": 27,
+        "registered_inode": 562063,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-3754160601",
+        "registered_device": 27,
+        "registered_inode": 562063,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-1032639222",
+        "registered_device": 27,
+        "registered_inode": 562063,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-1646583963",
+        "registered_device": 27,
+        "registered_inode": 562063,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-3547919867",
+        "registered_device": 27,
+        "registered_inode": 562063,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-3198021342",
+        "registered_device": 27,
+        "registered_inode": 562104,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-2919726742",
+        "registered_device": 27,
+        "registered_inode": 562104,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-136776251",
+        "registered_device": 27,
+        "registered_inode": 562104,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-1707733307",
+        "registered_device": 27,
+        "registered_inode": 562104,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-3215789530",
+        "registered_device": 27,
+        "registered_inode": 562104,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-4137357411",
+        "registered_device": 27,
+        "registered_inode": 562104,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-3248924656",
+        "registered_device": 27,
+        "registered_inode": 562104,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-972761166",
+        "registered_device": 27,
+        "registered_inode": 562104,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-2776121787",
+        "registered_device": 27,
+        "registered_inode": 562104,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-199436920",
+        "registered_device": 27,
+        "registered_inode": 562104,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-1881378911",
+        "registered_device": 27,
+        "registered_inode": 562104,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-2610402971",
+        "registered_device": 27,
+        "registered_inode": 562104,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-631916923",
+        "registered_device": 27,
+        "registered_inode": 562104,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-1987808775",
+        "registered_device": 27,
+        "registered_inode": 562104,
+        "current_readonly_path_exists": false
+      }
+    ],
+    "limits": "Native actualWait/groupabsence versus original resource logicalClose/holderACK are separate; current path absence alone proves no original logicalClose. No SQL query/cleanup probe/extra effects."
+  },
+  {
+    "phase": "shared_consumers-normal",
+    "original_owned_scope_interval": "process_group 3817764 3817764 /workspace/lerna-content-03-137311247276\npostgres lerna_test_521a66b94f168a84cf238a5d\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-1917814169 27 562369\npg_policy_connections lerna_test_521a66b94f168a84cf238a5d\npg_policy_holder lerna_test_521a66b94f168a84cf238a5d 628551\npostgres lerna_test_54d8c5fec3c4f177d89c5947\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-614917023 27 562369\npg_policy_connections lerna_test_54d8c5fec3c4f177d89c5947\npg_policy_holder lerna_test_54d8c5fec3c4f177d89c5947 628564\npostgres lerna_test_bc1264f8055dd643a457b6a4\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-1444417288 27 562369\npg_policy_connections lerna_test_bc1264f8055dd643a457b6a4\npg_policy_holder lerna_test_bc1264f8055dd643a457b6a4 628586\npostgres lerna_test_a928fcb359865c778a62e543\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-1420754598 27 562369\npg_policy_connections lerna_test_a928fcb359865c778a62e543\npg_policy_holder lerna_test_a928fcb359865c778a62e543 628599\npostgres lerna_test_dee733ea1c666d11a709bd58\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-2660382955 27 562369\npg_policy_connections lerna_test_dee733ea1c666d11a709bd58\npg_policy_holder lerna_test_dee733ea1c666d11a709bd58 628604\npostgres lerna_test_53dc774e45343e9f6b0000d5\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-2917906935 27 562369\npostgres lerna_test_f4b9729c870dfccd569842f7\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-4129279262 27 562369\npostgres lerna_test_23e8fdb9f2db69e21f5b331e\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-2204346543 27 562369\npostgres lerna_test_09d7c4e2efd88af8fb521094\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-4214222711 27 562369\npostgres lerna_test_51211cea16fd9a4ab5e42922\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-1228818831 27 562369\npostgres lerna_test_a93c769d6ea41786f42c81a8\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-868492023 27 562017\npostgres lerna_test_20f447c7e213992260b9cc2e\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-1353298932 27 562017\npostgres lerna_test_ee9143f2660e72af9039e88f\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-1402867279 27 562017\npostgres lerna_test_3014e37ae4595e9208b14942\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-3991034866 27 562017\npostgres lerna_test_2112566f749096a18f8d0fbd\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-1732420689 27 562017\npostgres lerna_test_3eaac8a87479c21ffa404bb3\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-3780860956 27 562017\npostgres lerna_test_79bad8f878cf78de19df80d3\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-1347829632 27 562017\npostgres lerna_test_8caddb682a3be9ab99fab561\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-3580249298 27 562017\npostgres lerna_test_95e26f769a0902635c26b69a\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-1507922563 27 562017\npostgres lerna_test_f1bd5c6762da9ca7a261ec0a\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-3300743365 27 562007\npostgres lerna_test_e9fdae912f729597a060c497\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-498048733 27 562007\npostgres lerna_test_f1ade761be6a7edfad4a3035\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-1247182090 27 562007\npostgres lerna_test_c0a0775d7d9a28d65c8443e9\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-4011663766 27 562007\npostgres lerna_test_3dd8caee3a9a13a3348ba1e4\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-3549599618 27 562007\npostgres lerna_test_d1237966de4037d603b17142\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-1099564160 27 562007\npostgres lerna_test_cb11a9fe5aae8299bf905bea\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-2871506727 27 562011\nnative_exit 3817764 3817764 status=0 group_absent=True\n",
+    "registered_schema_count": 26,
+    "registered_schemas": [
+      "lerna_test_521a66b94f168a84cf238a5d",
+      "lerna_test_54d8c5fec3c4f177d89c5947",
+      "lerna_test_bc1264f8055dd643a457b6a4",
+      "lerna_test_a928fcb359865c778a62e543",
+      "lerna_test_dee733ea1c666d11a709bd58",
+      "lerna_test_53dc774e45343e9f6b0000d5",
+      "lerna_test_f4b9729c870dfccd569842f7",
+      "lerna_test_23e8fdb9f2db69e21f5b331e",
+      "lerna_test_09d7c4e2efd88af8fb521094",
+      "lerna_test_51211cea16fd9a4ab5e42922",
+      "lerna_test_a93c769d6ea41786f42c81a8",
+      "lerna_test_20f447c7e213992260b9cc2e",
+      "lerna_test_ee9143f2660e72af9039e88f",
+      "lerna_test_3014e37ae4595e9208b14942",
+      "lerna_test_2112566f749096a18f8d0fbd",
+      "lerna_test_3eaac8a87479c21ffa404bb3",
+      "lerna_test_79bad8f878cf78de19df80d3",
+      "lerna_test_8caddb682a3be9ab99fab561",
+      "lerna_test_95e26f769a0902635c26b69a",
+      "lerna_test_f1bd5c6762da9ca7a261ec0a",
+      "lerna_test_e9fdae912f729597a060c497",
+      "lerna_test_f1ade761be6a7edfad4a3035",
+      "lerna_test_c0a0775d7d9a28d65c8443e9",
+      "lerna_test_3dd8caee3a9a13a3348ba1e4",
+      "lerna_test_d1237966de4037d603b17142",
+      "lerna_test_cb11a9fe5aae8299bf905bea"
+    ],
+    "registered_objectroots": [
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-1917814169",
+        "registered_device": 27,
+        "registered_inode": 562369,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-614917023",
+        "registered_device": 27,
+        "registered_inode": 562369,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-1444417288",
+        "registered_device": 27,
+        "registered_inode": 562369,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-1420754598",
+        "registered_device": 27,
+        "registered_inode": 562369,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-2660382955",
+        "registered_device": 27,
+        "registered_inode": 562369,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-2917906935",
+        "registered_device": 27,
+        "registered_inode": 562369,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-4129279262",
+        "registered_device": 27,
+        "registered_inode": 562369,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-2204346543",
+        "registered_device": 27,
+        "registered_inode": 562369,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-4214222711",
+        "registered_device": 27,
+        "registered_inode": 562369,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-1228818831",
+        "registered_device": 27,
+        "registered_inode": 562369,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-868492023",
+        "registered_device": 27,
+        "registered_inode": 562017,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-1353298932",
+        "registered_device": 27,
+        "registered_inode": 562017,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-1402867279",
+        "registered_device": 27,
+        "registered_inode": 562017,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-3991034866",
+        "registered_device": 27,
+        "registered_inode": 562017,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-1732420689",
+        "registered_device": 27,
+        "registered_inode": 562017,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-3780860956",
+        "registered_device": 27,
+        "registered_inode": 562017,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-1347829632",
+        "registered_device": 27,
+        "registered_inode": 562017,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-3580249298",
+        "registered_device": 27,
+        "registered_inode": 562017,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-1507922563",
+        "registered_device": 27,
+        "registered_inode": 562017,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-3300743365",
+        "registered_device": 27,
+        "registered_inode": 562007,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-498048733",
+        "registered_device": 27,
+        "registered_inode": 562007,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-1247182090",
+        "registered_device": 27,
+        "registered_inode": 562007,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-4011663766",
+        "registered_device": 27,
+        "registered_inode": 562007,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-3549599618",
+        "registered_device": 27,
+        "registered_inode": 562007,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-1099564160",
+        "registered_device": 27,
+        "registered_inode": 562007,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-2871506727",
+        "registered_device": 27,
+        "registered_inode": 562011,
+        "current_readonly_path_exists": false
+      }
+    ],
+    "limits": "Native actualWait/groupabsence versus original resource logicalClose/holderACK are separate; current path absence alone proves no original logicalClose. No SQL query/cleanup probe/extra effects."
+  },
+  {
+    "phase": "shared_consumers-race",
+    "original_owned_scope_interval": "process_group 3818375 3818375 /workspace/lerna-content-03-137311247276\npostgres lerna_test_b07bdd6b47f20ffd7e05f562\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-1715867393 27 562671\npg_policy_connections lerna_test_b07bdd6b47f20ffd7e05f562\npg_policy_holder lerna_test_b07bdd6b47f20ffd7e05f562 628722\npostgres lerna_test_5d88bbabf5e37cdcfd4d0edb\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-2488491236 27 562671\npg_policy_connections lerna_test_5d88bbabf5e37cdcfd4d0edb\npg_policy_holder lerna_test_5d88bbabf5e37cdcfd4d0edb 628735\npostgres lerna_test_a36227ddf4627dab2d952686\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-2751996513 27 562671\npg_policy_connections lerna_test_a36227ddf4627dab2d952686\npg_policy_holder lerna_test_a36227ddf4627dab2d952686 628756\npostgres lerna_test_e57abc87d1f9e9d026521543\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-773462606 27 562671\npg_policy_connections lerna_test_e57abc87d1f9e9d026521543\npg_policy_holder lerna_test_e57abc87d1f9e9d026521543 628769\npostgres lerna_test_0e0f95f911b65b71f48dd1ef\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-1148644741 27 562070\npg_policy_connections lerna_test_0e0f95f911b65b71f48dd1ef\npg_policy_holder lerna_test_0e0f95f911b65b71f48dd1ef 628782\npostgres lerna_test_310ed12529899e3c3f27914a\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-4125992286 27 562070\npostgres lerna_test_82166f8eaf5c155414fa53e7\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-1757642828 27 562070\npostgres lerna_test_c088fe49562aa89897d4a10c\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-3376251100 27 562070\npostgres lerna_test_645b1190cf3a2677c2232011\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-2514292296 27 562070\npostgres lerna_test_36298fa21edcadb7c0659b9f\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-2561775492 27 562070\npostgres lerna_test_8bc46926d34fe23f96425d94\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-3132283148 27 562068\npostgres lerna_test_0c71e0ba8d201f61ed811b7f\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-1890239300 27 562068\npostgres lerna_test_258aeb094a28b6b19d4a1ebb\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-2976499351 27 562068\npostgres lerna_test_a29e29f2c5a0946267057bd2\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-1945863907 27 562068\npostgres lerna_test_8d2136812e3c7354c349fe42\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-2684362901 27 562068\npostgres lerna_test_b6a72cf87ed8be430a5a7633\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-2343103972 27 562068\npostgres lerna_test_5f4621d250d2943b96837125\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-1791856913 27 562068\npostgres lerna_test_4cf236c8ad0186d2536447cf\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-2434150469 27 562068\npostgres lerna_test_f8b195318acb384f110f3f49\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-3591707441 27 562065\npostgres lerna_test_93f2a5af14efdf9601244352\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-4142347331 27 562065\npostgres lerna_test_60f531b4c6a44d8e94476537\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-993721402 27 562065\npostgres lerna_test_e2f2a4effd184b0e6bc04dca\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-1189994949 27 562065\npostgres lerna_test_73f108da8fee1af6525d8580\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-443614261 27 562065\npostgres lerna_test_c570d242ca2cc072c704c476\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-1649923695 27 561422\npostgres lerna_test_c3fc81a1bcef8254300ccb3c\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-1746829988 27 561423\npostgres lerna_test_54f713729905455cb6c331fe\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-2575137358 27 561413\nnative_exit 3818375 3818375 status=0 group_absent=True\n",
+    "registered_schema_count": 26,
+    "registered_schemas": [
+      "lerna_test_b07bdd6b47f20ffd7e05f562",
+      "lerna_test_5d88bbabf5e37cdcfd4d0edb",
+      "lerna_test_a36227ddf4627dab2d952686",
+      "lerna_test_e57abc87d1f9e9d026521543",
+      "lerna_test_0e0f95f911b65b71f48dd1ef",
+      "lerna_test_310ed12529899e3c3f27914a",
+      "lerna_test_82166f8eaf5c155414fa53e7",
+      "lerna_test_c088fe49562aa89897d4a10c",
+      "lerna_test_645b1190cf3a2677c2232011",
+      "lerna_test_36298fa21edcadb7c0659b9f",
+      "lerna_test_8bc46926d34fe23f96425d94",
+      "lerna_test_0c71e0ba8d201f61ed811b7f",
+      "lerna_test_258aeb094a28b6b19d4a1ebb",
+      "lerna_test_a29e29f2c5a0946267057bd2",
+      "lerna_test_8d2136812e3c7354c349fe42",
+      "lerna_test_b6a72cf87ed8be430a5a7633",
+      "lerna_test_5f4621d250d2943b96837125",
+      "lerna_test_4cf236c8ad0186d2536447cf",
+      "lerna_test_f8b195318acb384f110f3f49",
+      "lerna_test_93f2a5af14efdf9601244352",
+      "lerna_test_60f531b4c6a44d8e94476537",
+      "lerna_test_e2f2a4effd184b0e6bc04dca",
+      "lerna_test_73f108da8fee1af6525d8580",
+      "lerna_test_c570d242ca2cc072c704c476",
+      "lerna_test_c3fc81a1bcef8254300ccb3c",
+      "lerna_test_54f713729905455cb6c331fe"
+    ],
+    "registered_objectroots": [
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-1715867393",
+        "registered_device": 27,
+        "registered_inode": 562671,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-2488491236",
+        "registered_device": 27,
+        "registered_inode": 562671,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-2751996513",
+        "registered_device": 27,
+        "registered_inode": 562671,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-773462606",
+        "registered_device": 27,
+        "registered_inode": 562671,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-1148644741",
+        "registered_device": 27,
+        "registered_inode": 562070,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-4125992286",
+        "registered_device": 27,
+        "registered_inode": 562070,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-1757642828",
+        "registered_device": 27,
+        "registered_inode": 562070,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-3376251100",
+        "registered_device": 27,
+        "registered_inode": 562070,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-2514292296",
+        "registered_device": 27,
+        "registered_inode": 562070,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-2561775492",
+        "registered_device": 27,
+        "registered_inode": 562070,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-3132283148",
+        "registered_device": 27,
+        "registered_inode": 562068,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-1890239300",
+        "registered_device": 27,
+        "registered_inode": 562068,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-2976499351",
+        "registered_device": 27,
+        "registered_inode": 562068,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-1945863907",
+        "registered_device": 27,
+        "registered_inode": 562068,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-2684362901",
+        "registered_device": 27,
+        "registered_inode": 562068,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-2343103972",
+        "registered_device": 27,
+        "registered_inode": 562068,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-1791856913",
+        "registered_device": 27,
+        "registered_inode": 562068,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-2434150469",
+        "registered_device": 27,
+        "registered_inode": 562068,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-3591707441",
+        "registered_device": 27,
+        "registered_inode": 562065,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-4142347331",
+        "registered_device": 27,
+        "registered_inode": 562065,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-993721402",
+        "registered_device": 27,
+        "registered_inode": 562065,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-1189994949",
+        "registered_device": 27,
+        "registered_inode": 562065,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-443614261",
+        "registered_device": 27,
+        "registered_inode": 562065,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-1649923695",
+        "registered_device": 27,
+        "registered_inode": 561422,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-1746829988",
+        "registered_device": 27,
+        "registered_inode": 561423,
+        "current_readonly_path_exists": false
+      },
+      {
+        "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-2575137358",
+        "registered_device": 27,
+        "registered_inode": 561413,
+        "current_readonly_path_exists": false
+      }
+    ],
+    "limits": "Native actualWait/groupabsence versus original resource logicalClose/holderACK are separate; current path absence alone proves no original logicalClose. No SQL query/cleanup probe/extra effects."
+  }
+]

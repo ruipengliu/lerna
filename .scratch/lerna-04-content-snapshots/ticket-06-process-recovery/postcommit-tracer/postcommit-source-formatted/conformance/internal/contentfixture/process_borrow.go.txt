@@ -1,0 +1,140 @@
+package contentfixture
+
+import (
+	"context"
+	"errors"
+	"fmt"
+	"regexp"
+	"time"
+
+	process "github.com/ruipengliu/lerna/conformance/internal/testkit/process"
+	v "github.com/ruipengliu/lerna/contract/v1_2"
+)
+
+// ProcessScope describes only this parent's existing acknowledged Content scope.
+// It carries neither credentials nor schema/root creation or deletion authority.
+type ProcessScope struct {
+	Schema        string
+	Directory     string
+	Device, Inode uint64
+	Binding       string
+	Owner         v.OwnerRef
+}
+
+type borrowedContentChild struct {
+	child               *process.Child
+	nativeCloseACK      bool
+	nativeCloseObserved bool
+}
+
+func (w *World) ProcessScope(owner v.OwnerRef) ProcessScope {
+	return ProcessScope{Schema: w.Config.Schema, Directory: w.Directory, Device: w.device, Inode: w.inode, Binding: w.Objects.Binding(), Owner: owner}
+}
+
+// BorrowChild records every generation before Start, including partial New.
+// Stop confirms parent pipes and actual Wait, never the child's DB/object Close.
+func (w *World) BorrowChild(child *process.Child) error {
+	if child == nil || w.closing || len(w.children) >= 16 {
+		return errors.New("invalid Content child borrow")
+	}
+	for _, old := range w.children {
+		if old.child == child {
+			return errors.New("Content child already borrowed")
+		}
+	}
+	w.children = append(w.children, borrowedContentChild{child: child})
+	return w.register(fmt.Sprintf("content_child_holder %s generation=%d native_close=UNKNOWN", w.Config.Schema, len(w.children)))
+}
+
+var processStartTick = regexp.MustCompile(`^[1-9][0-9]{0,19}$`)
+
+// RegisterChildIdentity runs after the child's pre-open frame and before its
+// parent sends permission to open the already-created PG/object scope.
+func (w *World) RegisterChildIdentity(child *process.Child, pid, pgid int, start string) error {
+	if w.closing || pid < 1 || pgid < 1 || !processStartTick.MatchString(start) {
+		return errors.New("invalid Content child identity")
+	}
+	for i, old := range w.children {
+		if old.child == child {
+			return w.register(fmt.Sprintf("content_child_native %s generation=%d pid=%d pgid=%d start=%s", w.Config.Schema, i+1, pid, pgid, start))
+		}
+	}
+	return errors.New("Content child identity has no pre-start owner")
+}
+
+// AcknowledgeChildNativeClose is used only after the actual producer close
+// frame confirms both first Store.Close and Objects.Close. Killed generations
+// retain their unknown state permanently, even after another generation closes.
+func (w *World) AcknowledgeChildNativeClose(child *process.Child) error {
+	for i := range w.children {
+		if w.children[i].child == child {
+			if w.children[i].nativeCloseObserved {
+				return errors.New("Content child first native Close observation is sticky")
+			}
+			if err := w.register(fmt.Sprintf("content_child_close %s generation=%d store=ACK objects=ACK", w.Config.Schema, i+1)); err != nil {
+				return err
+			}
+			w.children[i].nativeCloseObserved = true
+			w.children[i].nativeCloseACK = true
+			return nil
+		}
+	}
+	return errors.New("Content child close ACK has no owner")
+}
+
+// RetainChildNativeClose permanently records absent first native Close evidence
+// for the exact killed generation. A successor's ACK cannot change this entry.
+func (w *World) RetainChildNativeClose(child *process.Child) error {
+	for i := range w.children {
+		if w.children[i].child == child {
+			if w.children[i].nativeCloseObserved {
+				return errors.New("Content child first native Close observation is sticky")
+			}
+			w.children[i].nativeCloseObserved = true
+			return w.register(fmt.Sprintf("content_child_close %s generation=%d store=UNKNOWN objects=UNKNOWN retained=true", w.Config.Schema, i+1))
+		}
+	}
+	return errors.New("Content unknown child close has no owner")
+}
+
+func (w *World) hasUnknownChildNativeClose() bool {
+	for _, child := range w.children {
+		if !child.nativeCloseACK {
+			return true
+		}
+	}
+	return false
+}
+
+func (w *World) joinChildren(ctx context.Context) error {
+	bounded, cancel := context.WithTimeout(ctx, 3*time.Second)
+	defer cancel()
+	var errs []error
+	for _, child := range w.children {
+		done, waitErr := child.child.Wait(bounded)
+		if !done {
+			errs = append(errs, errors.Join(errors.New("Content child exit unknown"), waitErr))
+			continue
+		}
+		// Raw Wait cause remains historical. Stop alone acknowledges expected SIGKILL
+		// and confirms the parent pipes; a nonnil Wait cause is not unknown exit.
+		done, err := child.child.Stop(bounded)
+		if !done || err != nil {
+			errs = append(errs, errors.Join(errors.New("Content child pipe close or exit cause"), err))
+		}
+	}
+	return errors.Join(errs...)
+}
+
+func (w *World) stopChildren() error {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+	var errs []error
+	for _, child := range w.children {
+		done, err := child.child.Stop(ctx)
+		if !done || err != nil {
+			errs = append(errs, errors.Join(errors.New("Content borrowed child closure unconfirmed"), err))
+		}
+	}
+	return errors.Join(errs...)
+}

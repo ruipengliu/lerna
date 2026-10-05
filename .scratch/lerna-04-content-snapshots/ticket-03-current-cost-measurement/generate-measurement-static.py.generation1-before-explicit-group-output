@@ -1,0 +1,239 @@
+from pathlib import Path
+import json,hashlib,difflib,os
+wt=Path('/tmp/lerna-worktrees/content-snapshots-03');root=Path('/workspace/lerna-content-03-137311247276');out=root/'large-graph-integrated-qualification-sql-overlay';base=root/'large-graph-single-read-identity-overlay'
+inputs={'processing.go':'domain/content/processing.go','content_source.go':'adapters/content/decision/source.go','facts.go':'adapters/postgres/content/facts.go','policy.go':'adapters/postgres/content/policy.go','pgstore_core.go':'adapters/postgres/internal/pgstore/core.go','context_claim_diagnostics.go':None}
+original={k:(wt/v).read_text() if v else (base/k).read_text() for k,v in inputs.items()};text=dict(original);ledger={k:[] for k in inputs}
+def edit(k,old,new,n=1):
+ assert text[k].count(old)==n,(k,old,text[k].count(old),n)
+ text[k]=text[k].replace(old,new);ledger[k].append({'old':old,'new':new,'count':n})
+def afterline(k,predicate,addition):
+ lines=text[k].splitlines(True);hits=[line for line in lines if predicate(line)];assert len(hits)==1,(k,predicate,len(hits));edit(k,hits[0],hits[0]+addition)
+helpers='''// Temporary measurement-only overlay: these context labels select counters.
+// They contain no authority, ref/body cache, budget, deadline, or current fact.
+type ContentQualificationObserver interface {
+	BeginContentQualification(role, phase, stage string)
+	EndContentQualification(role, phase, stage string, elapsed time.Duration, err error)
+}
+type contentQualificationKey struct{}
+type contentQualificationLabels struct {
+	observer ContentQualificationObserver
+	role, phase string
+}
+func WithContentQualificationObserver(ctx context.Context, observer ContentQualificationObserver, role string) context.Context {
+	return context.WithValue(ctx, contentQualificationKey{}, contentQualificationLabels{observer: observer, role: role})
+}
+func WithContentQualificationRole(ctx context.Context, role string) context.Context {
+	if labels, ok := ctx.Value(contentQualificationKey{}).(contentQualificationLabels); ok {
+		labels.role = role
+		return context.WithValue(ctx, contentQualificationKey{}, labels)
+	}
+	return ctx
+}
+func WithContentQualificationPhase(ctx context.Context, phase string) context.Context {
+	if labels, ok := ctx.Value(contentQualificationKey{}).(contentQualificationLabels); ok {
+		labels.phase = phase
+		return context.WithValue(ctx, contentQualificationKey{}, labels)
+	}
+	return ctx
+}
+func ContentQualificationActive(ctx context.Context) bool {
+	labels, ok := ctx.Value(contentQualificationKey{}).(contentQualificationLabels)
+	return ok && labels.observer != nil && labels.phase != ""
+}
+func BeginContentQualification(ctx context.Context, stage string) time.Time {
+	if labels, ok := ctx.Value(contentQualificationKey{}).(contentQualificationLabels); ok && labels.observer != nil && labels.phase != "" {
+		labels.observer.BeginContentQualification(labels.role, labels.phase, stage)
+		return time.Now()
+	}
+	return time.Time{}
+}
+func EndContentQualification(ctx context.Context, stage string, start time.Time, err error) {
+	if start.IsZero() { return }
+	if labels, ok := ctx.Value(contentQualificationKey{}).(contentQualificationLabels); ok && labels.observer != nil && labels.phase != "" {
+		labels.observer.EndContentQualification(labels.role, labels.phase, stage, time.Since(start), err)
+	}
+}
+
+'''
+edit('processing.go','var ErrProcessingLimit =',helpers+'var ErrProcessingLimit =')
+edit('processing.go','\tobserve := func(ctx context.Context, tx runtime.Tx) error {','''	observationPhase := "pre"
+	observe := func(ctx context.Context, tx runtime.Tx) (observationErr error) {
+		ctx = WithContentQualificationPhase(ctx, observationPhase)
+		callbackStart := BeginContentQualification(ctx, "callback")
+		defer func() { EndContentQualification(ctx, "callback", callbackStart, observationErr) }()''')
+old='''	if err = s.config.Store.Within(ctx, owner(s.config.Owner), observe); err != nil {
+		return ProcessingRead{}, err
+	}'''
+# Preserve each original call and branch once; insert measurement around them.
+assert text['processing.go'].count(old)==2
+first='''	preQualificationContext := WithContentQualificationPhase(ctx, "pre")
+	preWithinStart := BeginContentQualification(preQualificationContext, "within")
+	if err = s.config.Store.Within(ctx, owner(s.config.Owner), observe); err != nil {
+		EndContentQualification(preQualificationContext, "within", preWithinStart, err)
+		return ProcessingRead{}, err
+	}
+	EndContentQualification(preQualificationContext, "within", preWithinStart, nil)'''
+# Two exact occurrences need positional transforms for inverse proof.
+text['processing.go']=text['processing.go'].replace(old,first,1);ledger['processing.go'].append({'old':old,'new':first,'count':1,'positional_original':True})
+second='''	observationPhase = "post"
+	postQualificationContext := WithContentQualificationPhase(ctx, "post")
+	postWithinStart := BeginContentQualification(postQualificationContext, "within")
+	if err = s.config.Store.Within(ctx, owner(s.config.Owner), observe); err != nil {
+		EndContentQualification(postQualificationContext, "within", postWithinStart, err)
+		return ProcessingRead{}, err
+	}
+	EndContentQualification(postQualificationContext, "within", postWithinStart, nil)'''
+# The original now still occurs inside first instrumentation too; replace last one only.
+pos=text['processing.go'].rfind(old);assert pos>=0
+text['processing.go']=text['processing.go'][:pos]+second+text['processing.go'][pos+len(old):];ledger['processing.go'].append({'old':old,'new':second,'count':1,'positional_original':True})
+edit('processing.go','\tbody, err := s.config.Objects.Read(bounded, objectKey, ref.Hash, length)','\tobjectsStart := BeginContentQualification(ctx, "objects.read")\n\tbody, err := s.config.Objects.Read(bounded, objectKey, ref.Hash, length)\n\tEndContentQualification(ctx, "objects.read", objectsStart, err)')
+edit('processing.go','\tif err = bounded.Err(); err != nil {','\tintegrityStart := BeginContentQualification(ctx, "integrity")\n\tif err = bounded.Err(); err != nil {\n\t\tEndContentQualification(ctx, "integrity", integrityStart, err)')
+edit('processing.go','\tif int64(len(body)) != length || processingHash(body) != ref.Hash {\n\t\treturn ProcessingRead{}, ErrObjectIntegrity\n\t}', '\tif int64(len(body)) != length || processingHash(body) != ref.Hash {\n\t\tEndContentQualification(ctx, "integrity", integrityStart, ErrObjectIntegrity)\n\t\treturn ProcessingRead{}, ErrObjectIntegrity\n\t}\n\tEndContentQualification(ctx, "integrity", integrityStart, nil)')
+# Exact roles on the four real physical Source reads, plus material.
+edit('content_source.go','\tcompiler "github.com/ruipengliu/lerna/domain/task/context"','\tcompiler "github.com/ruipengliu/lerna/domain/task/context"\n\tcontentdomain "github.com/ruipengliu/lerna/domain/content"')
+for expression,role in [('a.read(ctx, binding.Bundle.Shell.Ref, remaining)','shell'),('a.read(ctx, binding.Bundle.Mandatory.Ref, 262144)','mandatory'),('a.read(ctx, binding.Bundle.Lock.Ref, remaining)','lock'),('a.read(ctx, binding.Bundle.Manifest.Ref, remaining-int64(len(lockRaw)))','manifest'),('a.read(ctx, exact, remaining)','material')]:
+ edit('content_source.go',expression,expression.replace('a.read(ctx,','a.read(contentdomain.WithContentQualificationRole(ctx, "'+role+'"),'))
+# PG exact LockVersion leaf partitions. Original early-return/order remain.
+edit('facts.go','\t"github.com/ruipengliu/lerna/runtime"','\t"github.com/ruipengliu/lerna/runtime"\n\t"github.com/ruipengliu/lerna/adapters/postgres/internal/pgstore"')
+edit('facts.go','\treturn s.core.Now(ctx, token)','\tif d.ContentQualificationActive(ctx) {\n\t\tctx = pgstore.WithNowSQLObserver(ctx, contentNowSQLObserver{ctx: ctx})\n\t}\n\treturn s.core.Now(ctx, token)')
+bridge='''// Temporary bridge to the exact Core.Now QueryRow/Scan; no domain import in Core.
+type contentNowSQLObserver struct { ctx context.Context }
+func (o contentNowSQLObserver) BeginNowSQL() time.Time { return d.BeginContentQualification(o.ctx, "now.sql") }
+func (o contentNowSQLObserver) EndNowSQL(start time.Time, err error) { d.EndContentQualification(o.ctx, "now.sql", start, err) }
+
+'''
+edit('facts.go','func (s *Store) LockCommand(',bridge+'func (s *Store) LockCommand(')
+edit('facts.go','func (s *Store) LockVersion(ctx context.Context, token runtime.Tx, ref v.ContentRef) (*d.Record, error) {','func (s *Store) LockVersion(ctx context.Context, token runtime.Tx, ref v.ContentRef) (lockRecord *d.Record, lockErr error) {')
+edit('facts.go','\tid, expectedObjectKey, err := d.VersionIdentity(ref)','\tidentityKeyStart := d.BeginContentQualification(ctx, "lock.identity_key")\n\tid, expectedObjectKey, err := d.VersionIdentity(ref)')
+edit('facts.go','\tid, expectedObjectKey, err := d.VersionIdentity(ref)\n\tif err != nil {','\tid, expectedObjectKey, err := d.VersionIdentity(ref)\n\tif err != nil {\n\t\td.EndContentQualification(ctx, "lock.identity_key", identityKeyStart, err)')
+afterline('facts.go',lambda x:'json.Marshal([]string{s.schema, string(ref.Owner.TenantID), string(ref.Owner.OwnerID), id})' in x,'\td.EndContentQualification(ctx, "lock.identity_key", identityKeyStart, nil)\n\tadvisoryStart := d.BeginContentQualification(ctx, "lock.advisory_sql")\n')
+lines=text['facts.go'].splitlines(True);adv=next(x for x in lines if 'pg_advisory_xact_lock(2,hashtext($1))' in x)
+edit('facts.go',adv+'\t\treturn nil, err\n\t}',adv+'\t\td.EndContentQualification(ctx, "lock.advisory_sql", advisoryStart, err)\n\t\treturn nil, err\n\t}\n\td.EndContentQualification(ctx, "lock.advisory_sql", advisoryStart, nil)')
+row=next(x for x in text['facts.go'].splitlines(True) if 'Scan(&body, &staging, &objectID, &keyStored, &tuple, &publication, &revision, &seal, &gone, &binding)' in x)
+edit('facts.go',row,'\trowStart := d.BeginContentQualification(ctx, "lock.row_sql")\n'+row+'\td.EndContentQualification(ctx, "lock.row_sql", rowStart, err)\n')
+# Scope decode start only inside LockVersion, not other record decoders.
+start=text['facts.go'].index('func (s *Store) LockVersion(');end=text['facts.go'].index('func (s *Store) LockObject(',start);block=text['facts.go'][start:end];old='\tvar record d.Record\n';assert block.count(old)==1
+new='\tdecodeStart := d.BeginContentQualification(ctx, "lock.decode_validate")\n\tdefer func() { d.EndContentQualification(ctx, "lock.decode_validate", decodeStart, lockErr) }()\n\tvar record d.Record\n';changed=block.replace(old,new);edit('facts.go',block,changed)
+# PG CheckPolicy leaf partitions including actual materialized locked row/clock.
+edit('policy.go','func (s *Store) CheckPolicy(ctx context.Context, token runtime.Tx, subject v.SubjectBinding, ref v.ContentRef, purpose string, actions []string, now time.Time) (*contentdomain.FixturePolicy, error) {','func (s *Store) CheckPolicy(ctx context.Context, token runtime.Tx, subject v.SubjectBinding, ref v.ContentRef, purpose string, actions []string, now time.Time) (policyRecord *contentdomain.FixturePolicy, policyErr error) {')
+start=text['policy.go'].index('func (s *Store) CheckPolicy(');end=text['policy.go'].index('func (s *Store) InstallFixtureCommandReader(',start);block=text['policy.go'][start:end]
+block2=block.replace('\tkey, _, err := subjectKey(subject)','\tsubjectStart := contentdomain.BeginContentQualification(ctx, "policy.subject_prep")\n\tkey, _, err := subjectKey(subject)\n\tcontentdomain.EndContentQualification(ctx, "policy.subject_prep", subjectStart, err)',1)
+row=next(x for x in block2.splitlines(True) if 'Scan(&body, &now)' in x);block2=block2.replace(row,'\tpolicySQLStart := contentdomain.BeginContentQualification(ctx, "policy.locked_sql")\n'+row+'\tcontentdomain.EndContentQualification(ctx, "policy.locked_sql", policySQLStart, err)\n',1)
+block2=block2.replace('\tvar policy contentdomain.FixturePolicy\n','\tpolicyDecodeStart := contentdomain.BeginContentQualification(ctx, "policy.decode_actions")\n\tdefer func() { contentdomain.EndContentQualification(ctx, "policy.decode_actions", policyDecodeStart, policyErr) }()\n\tvar policy contentdomain.FixturePolicy\n',1);edit('policy.go',block,block2)
+# The Core observer changes only exact Now query timing. No pool/Within/SQL edits.
+corehelper='''// Temporary measurement-only observer for the original Now SQL call.
+type NowSQLObserver interface {
+	BeginNowSQL() time.Time
+	EndNowSQL(time.Time, error)
+}
+type nowSQLObserverKey struct{}
+func WithNowSQLObserver(ctx context.Context, observer NowSQLObserver) context.Context {
+	return context.WithValue(ctx, nowSQLObserverKey{}, observer)
+}
+
+'''
+edit('pgstore_core.go','func (s *Core) Now(',corehelper+'func (s *Core) Now(')
+row=next(x for x in text['pgstore_core.go'].splitlines(True) if 'QueryRowContext(ctx, `SELECT clock_timestamp()`).Scan(&now)' in x)
+edit('pgstore_core.go',row,'\tobserver, observed := ctx.Value(nowSQLObserverKey{}).(NowSQLObserver)\n\tvar nowSQLStart time.Time\n\tif observed { nowSQLStart = observer.BeginNowSQL() }\n'+row+'\tif observed { observer.EndNowSQL(nowSQLStart, err) }\n')
+# Recorder wiring preserves all old observers and direct original calls once.
+edit('context_claim_diagnostics.go','\tlastGate   map[string]claimDiagnosticEvent','\tlastGate   map[string]claimDiagnosticEvent') if False else None
+# Exact field insertion uses an already unique existing field line.
+line=next(x for x in text['context_claim_diagnostics.go'].splitlines(True) if 'lastGate ' in x and 'map[string]claimDiagnosticEvent' in x)
+edit('context_claim_diagnostics.go',line,line+'\tqualificationCase string\n\tqualification [7][3][13]qualificationAggregate\n\tqualificationDropped, qualificationAmbiguous int\n\tqualificationHookCalls int\n\tqualificationHookElapsed time.Duration\n')
+edit('context_claim_diagnostics.go','\td.Mark("phase.testcase-start")','\td.qualificationCase = t.Name()\n\td.Mark("phase.testcase-start")')
+# Existing summary already holds d.mu; fixed snapshot formatting happens only in its cleanup after Step/test returns.
+last='''	for _, k := range keys {
+		print("last_gate", d.lastGate[k])
+	}
+}''';edit('context_claim_diagnostics.go',last,last[:-1]+'\td.qualificationSummary(t)\n}')
+for method,role in [('ReadSnapshot','shell'),('ReadFixtureLock','lock'),('ReadMaterial','material')]:
+ line=next(x for x in text['context_claim_diagnostics.go'].splitlines(True) if 'func (s claimDiagnosticSource) '+method+'(' in x);edit('context_claim_diagnostics.go',line,line+'\tctx = content.WithContentQualificationObserver(ctx, s.d, "'+role+'")\n')
+for method,role in [('Publish','worker-verification'),('ReadPublished','outer-readback')]:
+ line=next(x for x in text['context_claim_diagnostics.go'].splitlines(True) if 'func (s claimDiagnosticPublisher) '+method+'(' in x);edit('context_claim_diagnostics.go',line,line+'\tctx = content.WithContentQualificationObserver(ctx, s.d, "'+role+'")\n')
+line=next(x for x in text['context_claim_diagnostics.go'].splitlines(True) if 'func (s claimDiagnosticContent) ReadForProcessing(' in x);edit('context_claim_diagnostics.go',line,line+'\tctx = content.WithContentQualificationPhase(ctx, "read")\n\tqualificationStart := content.BeginContentQualification(ctx, "read.total")\n')
+line='\tout, err := s.Content.ReadForProcessing(ctx, subject, ref, purpose, remaining)\n';edit('context_claim_diagnostics.go',line,line+'\tcontent.EndContentQualification(ctx, "read.total", qualificationStart, err)\n')
+# Fixed counters, no per-row storage/logs/body, no goroutine/SQL. Fully finite roles/phases/categories.
+recorder='''
+type qualificationAggregate struct {
+	Attempted, Completed, ErrorReturns int
+	Total, Max time.Duration
+	FirstCause string
+}
+var qualificationRoles = [7]string{"shell", "mandatory", "lock", "manifest", "material", "worker-verification", "outer-readback"}
+var qualificationPhases = [3]string{"pre", "post", "read"}
+var qualificationStages = [13]string{"lock.identity_key", "lock.advisory_sql", "lock.row_sql", "lock.decode_validate", "policy.subject_prep", "policy.locked_sql", "policy.decode_actions", "now.sql", "callback", "within", "objects.read", "integrity", "read.total"}
+func qualificationIndex(role, phase, stage string) (int, int, int) {
+	r, p, s := -1, -1, -1
+	for i, v := range qualificationRoles { if v == role { r = i; break } }
+	for i, v := range qualificationPhases { if v == phase { p = i; break } }
+	for i, v := range qualificationStages { if v == stage { s = i; break } }
+	return r, p, s
+}
+func (d *ContextClaimDiagnostics) BeginContentQualification(role, phase, stage string) {
+	if d == nil { return }
+	started := time.Now()
+	d.mu.Lock()
+	defer d.mu.Unlock()
+	r, p, s := qualificationIndex(role, phase, stage)
+	if r < 0 || p < 0 || s < 0 { d.qualificationDropped++; d.qualificationAmbiguous++ } else { d.qualification[r][p][s].Attempted++ }
+	d.qualificationHookCalls++
+	d.qualificationHookElapsed += time.Since(started)
+}
+func (d *ContextClaimDiagnostics) EndContentQualification(role, phase, stage string, elapsed time.Duration, err error) {
+	if d == nil { return }
+	started := time.Now()
+	d.mu.Lock()
+	defer d.mu.Unlock()
+	r, p, s := qualificationIndex(role, phase, stage)
+	if r < 0 || p < 0 || s < 0 { d.qualificationDropped++; d.qualificationAmbiguous++ } else {
+		a := &d.qualification[r][p][s]
+		a.Completed++
+		a.Total += elapsed
+		if elapsed > a.Max { a.Max = elapsed }
+		if err != nil { a.ErrorReturns++; if a.FirstCause == "" { a.FirstCause = claimCause(err) } }
+	}
+	d.qualificationHookCalls++
+	d.qualificationHookElapsed += time.Since(started)
+}
+func (d *ContextClaimDiagnostics) qualificationSummary(t *testing.T) {
+	t.Logf("QUAL_SQL case=%s fixed_slots=273 hooks=%d recorder_hook_wall=%s dropped=%d ambiguous=%d overhead_outside_recorder_unknown=true no_parent_child_sum=true", d.qualificationCase, d.qualificationHookCalls, d.qualificationHookElapsed, d.qualificationDropped, d.qualificationAmbiguous)
+	for r, role := range qualificationRoles {
+		for p, phase := range qualificationPhases {
+			var serial time.Duration
+			for s, stage := range qualificationStages {
+				a := d.qualification[r][p][s]
+				if a.Attempted == 0 && a.Completed == 0 { continue }
+				first := a.FirstCause
+				if first == "" { first = "nil" }
+				t.Logf("QUAL_SQL case=%s role=%s phase=%s stage=%s attempted=%d completed=%d error_returns=%d wall=%s max=%s first_cause=%s", d.qualificationCase, role, phase, stage, a.Attempted, a.Completed, a.ErrorReturns, a.Total, a.Max, first)
+				if s < 8 { serial += a.Total }
+			}
+			callback := d.qualification[r][p][8]
+			within := d.qualification[r][p][9]
+			if callback.Attempted > 0 || within.Attempted > 0 {
+				t.Logf("QUAL_SQL case=%s role=%s phase=%s derived_serial_leaf_wall=%s callback_remaining=%s within_minus_callback=%s residual_not_proven_SQLwait=true callback_attempted=%d callback_completed=%d within_attempted=%d within_completed=%d", d.qualificationCase, role, phase, serial, callback.Total-serial, within.Total-callback.Total, callback.Attempted, callback.Completed, within.Attempted, within.Completed)
+			}
+		}
+	}
+}
+'''
+edit('context_claim_diagnostics.go',text['context_claim_diagnostics.go'],text['context_claim_diagnostics.go']+recorder)
+# Reverse all exact edits yields complete original bytes, including both memo sources.
+proof=[]
+for k in inputs:
+ reconstructed=text[k]
+ for e in reversed(ledger[k]):
+  assert reconstructed.count(e['new'])==e['count'],(k,'inverse count',reconstructed.count(e['new']),e['count'])
+  reconstructed=reconstructed.replace(e['new'],e['old'])
+ assert reconstructed==original[k],(k,'inverse byte mismatch')
+ (out/k).write_text(text[k]);(out/(k+'.preformat-source')).write_text(text[k]);(out/(k+'.original-source')).write_text(original[k]);(out/(k+'.diff')).write_text(''.join(difflib.unified_diff(original[k].splitlines(True),text[k].splitlines(True),fromfile=inputs[k] or str(base/k),tofile=str(out/k))))
+ (out/(k+'.transforms.json')).write_text(json.dumps(ledger[k],indent=2)+'\n')
+ proof.append({'file':k,'original_path':str(wt/inputs[k]) if inputs[k] else str(base/k),'original_sha256':hashlib.sha256(original[k].encode()).hexdigest(),'replacement_sha256':hashlib.sha256(text[k].encode()).hexdigest(),'inverse_full_original_byte_equal':True,'operation_count':len(ledger[k]),'scope':'only temporary measurement; original statements/SQL/returns/callorder restored byteexact by inverse'})
+for name in ['context_world.go','content_context_closure_test.go','content_context_material_reachable_test.go','content_context_test.go']:
+ (out/name).write_bytes((base/name).read_bytes());assert(out/name).read_bytes()==(base/name).read_bytes()
+(out/'measurement-inverse-proof.json').write_text(json.dumps({'STATIC_only_no_fmt_build_native':True,'six_files':proof,'four_original_base_replacements_byte_equal':True,'memo_closure_not_mapped':True,'memo_processing_original_reconstructed_exact_current_b5caf':True,'NowSQL_exactQueryRowScan_only':'pgstore.Core.Within/pool/settings unchanged; SQL statement and Scan targets preserved'},indent=2)+'\n')
+for p in out.iterdir():
+ if p.is_file():
+  with p.open('rb') as f:os.fsync(f.fileno())
+fd=os.open(out,os.O_DIRECTORY);os.fsync(fd);os.close(fd)
+print(json.dumps({'directory':str(out),'proof_sha256':hashlib.sha256((out/'measurement-inverse-proof.json').read_bytes()).hexdigest(),'files':proof},indent=2))

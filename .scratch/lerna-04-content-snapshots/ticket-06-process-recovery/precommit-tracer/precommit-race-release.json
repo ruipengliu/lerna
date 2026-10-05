@@ -1,0 +1,21 @@
+{
+  "status": "STOP_RELEASED",
+  "actual_precommit_paired_race_pass": true,
+  "native_actual": {
+    "event": "native_completion_ack",
+    "operation": "precommit-paired-race",
+    "pid": 3706145,
+    "pgid": 3706145,
+    "starttime": "15555468",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false,
+    "owned_raw_fsync_close_ack": true
+  },
+  "formatted_source_pins_17_unchanged": true,
+  "manifest_sha256": "52f1179b491b0e1c2dcdaee74f910b9bb88c37dd5871e700a1a79c5377fd2a39",
+  "raw_log_sha256": "8fa39fae0da232399741fe6da7d404d1003c55ac953daa9f59a13ad4b279480b",
+  "ledger_lines": 69,
+  "other_tracer_unexecuted": true,
+  "killed_original_child_native_first_close": "UNKNOWN_PERMANENTLY_RETAIN_EXACT_SCOPE"
+}

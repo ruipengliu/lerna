@@ -1,0 +1,32 @@
+{
+  "status": "STOP_RELEASED",
+  "actual_precommit_normal_only_pass": true,
+  "native_actual": {
+    "event": "native_completion_ack",
+    "operation": "precommit-normal-control",
+    "pid": 3698205,
+    "pgid": 3698205,
+    "starttime": "15521567",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false,
+    "owned_raw_fsync_close_ack": true
+  },
+  "formatted_source_pins_17_unchanged": true,
+  "manifest_sha256": "52f1179b491b0e1c2dcdaee74f910b9bb88c37dd5871e700a1a79c5377fd2a39",
+  "raw_log_sha256": "37ba7a62c429d411272a5387a31825e5ef130e11329d78735b7351a9158343f0",
+  "ledger_lines": 44,
+  "precommit_fault_race_unexecuted": true,
+  "other_tracer_unexecuted": true,
+  "format_native_actual": {
+    "event": "native_completion_ack",
+    "operation": "precommit-format",
+    "pid": 3697349,
+    "pgid": 3697349,
+    "starttime": "15517882",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false,
+    "owned_raw_fsync_close_ack": true
+  }
+}

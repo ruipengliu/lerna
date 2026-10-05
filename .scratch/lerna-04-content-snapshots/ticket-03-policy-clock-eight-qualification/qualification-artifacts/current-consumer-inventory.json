@@ -1,0 +1,171 @@
+{
+  "CheckPolicy_occurrences14": [
+    {
+      "path": "adapters/postgres/content/policy.go",
+      "line": 34,
+      "source_line": "func (s *Store) CheckPolicy(ctx context.Context, token runtime.Tx, subject v.SubjectBinding, ref v.ContentRef, purpose string, actions []string) (*contentdomain.FixturePolicy, error) {"
+    },
+    {
+      "path": "conformance/component/content_closure_test.go",
+      "line": 81,
+      "source_line": "func (r *closureTimingRepository) CheckPolicy(ctx context.Context, tx runtime.Tx, subject v.SubjectBinding, ref v.ContentRef, purpose string, actions []string) (*content.FixturePolicy, error) {"
+    },
+    {
+      "path": "conformance/component/content_closure_test.go",
+      "line": 90,
+      "source_line": "\treturn r.Repository.CheckPolicy(ctx, tx, subject, ref, purpose, actions)"
+    },
+    {
+      "path": "conformance/component/content_policy_actions_test.go",
+      "line": 179,
+      "source_line": "\t\t\t\tpolicy, err := w.Store().CheckPolicy(ctx, tx, contentPrincipal, alphaRef, \"verification\", actions)"
+    },
+    {
+      "path": "conformance/component/content_policy_actions_test.go",
+      "line": 304,
+      "source_line": "\t\t\t\t\tp, err = w.Store().CheckPolicy(ctx, tx, contentPrincipal, alphaRef, \"verification\", []string{\"read\", \"process\", \"save\"})"
+    },
+    {
+      "path": "domain/content/closure.go",
+      "line": 92,
+      "source_line": "\t\t\tp, err := s.config.Store.CheckPolicy(ctx, tx, subject, ref, purpose, actions)"
+    },
+    {
+      "path": "domain/content/closure.go",
+      "line": 218,
+      "source_line": "\t\tp, err := s.config.Store.CheckPolicy(ctx, tx, principal, ref, purpose, []string{action})"
+    },
+    {
+      "path": "domain/content/policy_cleanup.go",
+      "line": 78,
+      "source_line": "\t\t\tpolicy, err := l.store.CheckPolicy(ctx, tx, original.Subject, original.Ref, original.Purpose, []string{\"save\"})"
+    },
+    {
+      "path": "domain/content/ports.go",
+      "line": 98,
+      "source_line": "\tCheckPolicy(context.Context, runtime.Tx, v.SubjectBinding, v.ContentRef, string, []string) (*FixturePolicy, error)"
+    },
+    {
+      "path": "domain/content/processing.go",
+      "line": 52,
+      "source_line": "\t\tp, err := s.config.Store.CheckPolicy(ctx, tx, principal, ref, purpose, []string{\"read\", \"process\"})"
+    },
+    {
+      "path": "domain/content/secondary.go",
+      "line": 47,
+      "source_line": "\tpolicy, err := l.store.CheckPolicy(ctx, tx, l.config.TrustedSubject, request.Ref, request.Purpose, []string{\"read\", \"save\", \"sync\"})"
+    },
+    {
+      "path": "domain/content/service.go",
+      "line": 166,
+      "source_line": "\t\tpolicy, err := s.config.Store.CheckPolicy(ctx, tx, principal, request.Payload.ContentRef, string(request.Payload.Purpose), []string{\"save\"})"
+    },
+    {
+      "path": "domain/content/service.go",
+      "line": 548,
+      "source_line": "\t\t\tpolicy, err := s.config.Store.CheckPolicy(ctx, tx, principal, ref, string(request.Payload.Purpose), []string{action})"
+    },
+    {
+      "path": "domain/content/service.go",
+      "line": 972,
+      "source_line": "\tpolicy, err := s.config.Store.CheckPolicy(ctx, tx, record.Subject, record.Ref, record.Purpose, []string{\"save\"})"
+    }
+  ],
+  "production_call_sites8": true,
+  "production_implementation1": "adapters/postgres/content/policy.go",
+  "explicit_decorator1": "closureTimingRepository",
+  "direct_test_call_sites2": true,
+  "interface1": "domain/content/ports.go",
+  "shared_closure_occurrences": [
+    {
+      "path": "domain/content/closure.go",
+      "line": 51,
+      "source_line": "func (s *Service) registeredClosure(ctx context.Context, tx runtime.Tx, target v.ContentRef, roots []v.ContentRef, subject v.SubjectBinding, purpose string, actions []string) (closureObservation, error) {"
+    },
+    {
+      "path": "domain/content/closure.go",
+      "line": 52,
+      "source_line": "\treturn s.registeredClosureWithIdentities(ctx, tx, target, roots, subject, purpose, actions, make(closureIdentityMemo, 65))"
+    },
+    {
+      "path": "domain/content/closure.go",
+      "line": 55,
+      "source_line": "func (s *Service) registeredClosureWithIdentities(ctx context.Context, tx runtime.Tx, target v.ContentRef, roots []v.ContentRef, subject v.SubjectBinding, purpose string, actions []string, identities closureIdentityMemo) (closureObservation, error) {"
+    },
+    {
+      "path": "domain/content/closure.go",
+      "line": 238,
+      "source_line": "\t\tsources, err := s.registeredClosure(ctx, tx, ref, record.Sources, principal, purpose, []string{action})"
+    },
+    {
+      "path": "domain/content/management.go",
+      "line": 162,
+      "source_line": "\t\t\trefs, err := service.registeredClosure(ctx, tx, record.Ref, record.Sources, record.Subject, record.Purpose, nil)"
+    },
+    {
+      "path": "domain/content/management.go",
+      "line": 616,
+      "source_line": "\trefs, err := service.registeredClosure(ctx, tx, record.Ref, record.Sources, record.Subject, record.Purpose, nil)"
+    },
+    {
+      "path": "domain/content/management.go",
+      "line": 873,
+      "source_line": "\t\t\t\trefs, err := service.registeredClosure(ctx, tx, target.Ref, target.Sources, target.Subject, target.Purpose, nil)"
+    },
+    {
+      "path": "domain/content/policy_cleanup.go",
+      "line": 121,
+      "source_line": "\t\t\tstructure, err := service.registeredClosure(ctx, tx, record.Ref, record.Sources, record.Subject, record.Purpose, nil)"
+    },
+    {
+      "path": "domain/content/policy_cleanup.go",
+      "line": 169,
+      "source_line": "\t\t\tsources, err := service.registeredClosure(ctx, tx, record.Ref, record.Sources, record.Subject, record.Purpose, []string{\"save\"})"
+    },
+    {
+      "path": "domain/content/processing.go",
+      "line": 87,
+      "source_line": "\t\tclosure, err := s.registeredClosureWithIdentities(ctx, tx, ref, r.Sources, principal, purpose, []string{\"read\", \"process\"}, identities)"
+    },
+    {
+      "path": "domain/content/secondary.go",
+      "line": 79,
+      "source_line": "\tsources, err := service.registeredClosure(ctx, tx, record.Ref, record.Sources, record.Subject, record.Purpose, []string{\"read\", \"save\", \"sync\"})"
+    },
+    {
+      "path": "domain/content/service.go",
+      "line": 221,
+      "source_line": "\t\tsources, err := s.registeredClosure(ctx, tx, request.Payload.ContentRef, request.Payload.Sources, principal, string(request.Payload.Purpose), []string{\"read\", \"process\", \"save\"})"
+    },
+    {
+      "path": "domain/content/service.go",
+      "line": 480,
+      "source_line": "\t\tsources, err := s.registeredClosure(ctx, tx, record.Ref, record.Sources, subject, string(request.Payload.Purpose), nil)"
+    },
+    {
+      "path": "domain/content/service.go",
+      "line": 623,
+      "source_line": "\t\tsources, err := s.registeredClosure(ctx, tx, record.Ref, record.Sources, principal, string(request.Payload.Purpose), []string{\"read\", \"disclose\"})"
+    },
+    {
+      "path": "domain/content/service.go",
+      "line": 987,
+      "source_line": "\tsources, err := s.registeredClosure(ctx, tx, record.Ref, record.Sources, record.Subject, record.Purpose, []string{\"read\", \"process\", \"save\"})"
+    }
+  ],
+  "removed_production_clock_sites_only": [
+    "processing.observe immediately before CheckPolicy",
+    "registeredClosureWithIdentities action-bearing visit immediately before CheckPolicy"
+  ],
+  "unchanged_other_clocks": [
+    "AuthorizeUse initial and final",
+    "publicPut/admission/reader/record/final",
+    "publicGet admission and record/final",
+    "publication record/final and Claim clocks",
+    "secondary initial and record/final",
+    "policy cleanup original candidate and post-record/final",
+    "processing post-record and entireclosure-final in each of bothfresh Tx"
+  ],
+  "direct_policy_test_preparations": "Two standalone test-only Now preparations formerly used exclusively as removed CheckPolicy argument are deleted mechanically; original locked-policy actions/oracles/600ms policies/12s contexts/joins remain.",
+  "fault_coverage_truth": "No existing Content explicit CheckPolicy/Now fault injector found; only diagnostic Timing decorator overrides them. Root explicitly adopts honest coverage limitation and existing meaningful qualifiers; no new decorator/matrix/PGcancel test. No injected transport-error qualification claimed."
+}

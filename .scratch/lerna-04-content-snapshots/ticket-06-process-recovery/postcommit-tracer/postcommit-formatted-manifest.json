@@ -1,0 +1,97 @@
+{
+  "base": "dadd801cfd11ca038f0496872941097f10ebe507",
+  "worktree": "/tmp/lerna-worktrees/content-snapshots-06",
+  "status": "POSTCOMMIT_FORMATTED_ACTUAL_FMT0_WAIT_ABSENCE_BEFORE_NORMAL",
+  "paths": [
+    {
+      "path": "conformance/internal/contentfixture/world.go",
+      "bytes": 6607,
+      "sha256": "3e38d89f988422eacfa1b6e22e25905cec1db246d418177e34eaf5758b6fc14d"
+    },
+    {
+      "path": "conformance/internal/contentfixture/process_borrow.go",
+      "bytes": 4979,
+      "sha256": "ed46b35916b9e1577e4ca1e0ddaf411e3de9407b51cb6ed38f8425406766e972"
+    },
+    {
+      "path": "conformance/component/content_process_recovery_test.go",
+      "bytes": 30509,
+      "sha256": "938efc560014fe2d958293bdc82aab4c16da889bc1d05ac23b318ff84798f7e1"
+    },
+    {
+      "path": "domain/content/service.go",
+      "bytes": 33783,
+      "sha256": "ffefc916fa8e08e2a39f2264a12090eb7aa2ecf020b7da63e270aff3e925a477"
+    },
+    {
+      "path": "domain/content/ports.go",
+      "bytes": 5618,
+      "sha256": "51066cd99f2c79e8a5fc3f7b336cb0706f161899361681c99f8e6feff5454f90"
+    },
+    {
+      "path": "domain/content/lifecycle.go",
+      "bytes": 23932,
+      "sha256": "0708c4eb51e28ab9b7a3210981e408ae2310511e9728ee2bf46ba87fc0802699"
+    },
+    {
+      "path": "domain/content/identity.go",
+      "bytes": 1533,
+      "sha256": "e093a7918be9af0aeaec08c62b472de1141314812a71e3da386583237bbf60f0"
+    },
+    {
+      "path": "adapters/objectstore/local/store_linux.go",
+      "bytes": 10790,
+      "sha256": "ea678add4d594d5cdd8dbfa50d29684ba998686cf649c58c19313391da298fe0"
+    },
+    {
+      "path": "adapters/postgres/content/store.go",
+      "bytes": 777,
+      "sha256": "e1da8da60b48d85c5d668ac88a0d33da3c824603b93bc01e5dd821def34fa69d"
+    },
+    {
+      "path": "adapters/postgres/content/facts.go",
+      "bytes": 10970,
+      "sha256": "e56785902e481eafdaa7904f44fabc44770d77f3d605da93906df827fe8a42d5"
+    },
+    {
+      "path": "conformance/internal/testkit/process/child.go",
+      "bytes": 10242,
+      "sha256": "edf4cdce78c92c0150d7075cecc02e742b84a55fd910b3cb25adec6079a3be25"
+    },
+    {
+      "path": "conformance/internal/testkit/process/pipes.go",
+      "bytes": 3022,
+      "sha256": "93cc1bd3b23817e453817abc18988c39e4300fa252d74890531650f53096401d"
+    },
+    {
+      "path": "conformance/component/content_publication_test.go",
+      "bytes": 8105,
+      "sha256": "8f762b685f7df3470e13b2e3d7c1a89026bb8d90e3bf6b9efb44257e400430e9"
+    },
+    {
+      "path": "conformance/component/content_orphan_test.go",
+      "bytes": 6789,
+      "sha256": "1732b6f28a4f83c698035b33e6da09b6dc8ae779a8f6895a4953b24086e2ba9f"
+    },
+    {
+      "path": "adapters/postgres/content/migrations/0001_content.sql",
+      "bytes": 3682,
+      "sha256": "00363b79dafb6eb1f373be9ef08e915fe23cc3db0fa55345e8ae6c051ce0c1ed"
+    },
+    {
+      "path": "adapters/postgres/content/migrations/0002_source_policies.sql",
+      "bytes": 2585,
+      "sha256": "99519565ff1146d7cfc468413b449538c6ba71335e86edc8fd447a3bbff922a8"
+    },
+    {
+      "path": "adapters/postgres/content/migrations/0003_body_cleanup.sql",
+      "bytes": 2497,
+      "sha256": "92739b464b8661e26befe092028f20802b586e42bf1578bd9811dcf240c5b58f"
+    }
+  ],
+  "lifetime_refinement": "all generations attempted; Wait confirmation separate cause; explicit sticky killed first-native-Close UNKNOWN",
+  "base_qualified_source_commit": "3d60d1ef899ccbf9cd4f35fc43f5e057f04c7b70",
+  "only_changed_source": "conformance/component/content_process_recovery_test.go",
+  "unchanged_product_sql_fixture_process_sources": 16,
+  "private_failure_diagnostics": "only closeframe bounded CauseClass; fixed errors.Is classes and <=128B actual type per step/objects_close/store_close, maximum36 strings; parent failure only; no error strings/DSN/SQL/body"
+}

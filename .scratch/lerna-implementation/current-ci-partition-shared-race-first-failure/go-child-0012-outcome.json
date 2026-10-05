@@ -1,0 +1,14 @@
+{
+  "event": "owned_go_child_completion_ack",
+  "operation": "go-child-0012",
+  "parent_operation": "partition-shared-race",
+  "pid": 3829699,
+  "pgid": 3829696,
+  "starttime": "16069972",
+  "exit": 0,
+  "actual_wait_confirmed": true,
+  "original_pid_generation_absent": true,
+  "timed_out": false,
+  "original_whole_deadline_monotonic": 162144.659992109,
+  "shared_group_absence_checked_only_after_whole_wait": true
+}

@@ -1,0 +1,83 @@
+{
+  "all331_current_and_original_snapshot_SHA_verified": true,
+  "exact_changed9_and_unchanged322": true,
+  "files": {
+    "adapters/postgres/content/policy.go": {
+      "old_sha256": "3cb31490a70e0141daa24b4766295ea1a57598194877eda6f19e58371a2d45d9",
+      "current_sha256": "650d0325388217df4c93362da7876f7f62b9789baa7053d594f6a33225596182",
+      "exact_inverse_restores_qualified_old_whole_file": true,
+      "byte_edit_blocks": 2,
+      "old_Now_call_source_occurrences": 0,
+      "current_Now_call_source_occurrences": 0
+    },
+    "conformance/component/content_closure_test.go": {
+      "old_sha256": "3eaa3327a4798bf90574c3e2312773350028a1779727c6797428d12041372d31",
+      "current_sha256": "40599313a9ca95e32157abca57d4b34bff225eec251db793e4e5b95da90d504a",
+      "exact_inverse_restores_qualified_old_whole_file": true,
+      "byte_edit_blocks": 2,
+      "old_Now_call_source_occurrences": 1,
+      "current_Now_call_source_occurrences": 1
+    },
+    "conformance/component/content_policy_actions_test.go": {
+      "old_sha256": "698ddd4d06ebcd0f286f253589564510362d8d59a8c6f82b29b6d0709bdc76b3",
+      "current_sha256": "edb23011e64515a5a85098461307908fcc554f7b8838e908a8c505d95a546d73",
+      "exact_inverse_restores_qualified_old_whole_file": true,
+      "byte_edit_blocks": 7,
+      "old_Now_call_source_occurrences": 2,
+      "current_Now_call_source_occurrences": 0
+    },
+    "domain/content/closure.go": {
+      "old_sha256": "97447424e7765960288b878b9b3b0b37496b2e863a21946b769c22e0322e5c3f",
+      "current_sha256": "2dc73e9e85b9efab3760218da62a56ed90eb8eda2f7d671468cf83e80bf6d1c2",
+      "exact_inverse_restores_qualified_old_whole_file": true,
+      "byte_edit_blocks": 3,
+      "old_Now_call_source_occurrences": 4,
+      "current_Now_call_source_occurrences": 3
+    },
+    "domain/content/policy_cleanup.go": {
+      "old_sha256": "b11a31ac64bd405a194d4a9fc393f3f4065e6d986969a6fed26742557d267730",
+      "current_sha256": "87d8b3badf512eee41948e9ceafb2112bdd90ae2542c7c7cc0b484138562d29c",
+      "exact_inverse_restores_qualified_old_whole_file": true,
+      "byte_edit_blocks": 1,
+      "old_Now_call_source_occurrences": 5,
+      "current_Now_call_source_occurrences": 5
+    },
+    "domain/content/ports.go": {
+      "old_sha256": "51066cd99f2c79e8a5fc3f7b336cb0706f161899361681c99f8e6feff5454f90",
+      "current_sha256": "8ec7ffb399423c0b0b283d5b8f05a583405106b5993d706a3773353fab69fc8d",
+      "exact_inverse_restores_qualified_old_whole_file": true,
+      "byte_edit_blocks": 2,
+      "old_Now_call_source_occurrences": 0,
+      "current_Now_call_source_occurrences": 0
+    },
+    "domain/content/processing.go": {
+      "old_sha256": "b5cafb6ac64f96d7ff4a9bf119aaea7f47e50a2f1d78d4a15471f9b24c4f476a",
+      "current_sha256": "c01386301858c71432457591b8e122ab03b765d1cb796a5c91c58445f7195c9e",
+      "exact_inverse_restores_qualified_old_whole_file": true,
+      "byte_edit_blocks": 3,
+      "old_Now_call_source_occurrences": 3,
+      "current_Now_call_source_occurrences": 2
+    },
+    "domain/content/secondary.go": {
+      "old_sha256": "4841f3e43e2e470a85a62f76b9aabe8cb47935dc53b93c8bc789220587883d98",
+      "current_sha256": "e4fc2efbd849a75bf20621c620d2edf98570c2142b2a170bb625be16416cd221",
+      "exact_inverse_restores_qualified_old_whole_file": true,
+      "byte_edit_blocks": 1,
+      "old_Now_call_source_occurrences": 7,
+      "current_Now_call_source_occurrences": 7
+    },
+    "domain/content/service.go": {
+      "old_sha256": "ffefc916fa8e08e2a39f2264a12090eb7aa2ecf020b7da63e270aff3e925a477",
+      "current_sha256": "512d207517b159f1cf37223b2fbb49b2f7b6d3b645c0b4de7e67b052c90c9c3e",
+      "exact_inverse_restores_qualified_old_whole_file": true,
+      "byte_edit_blocks": 3,
+      "old_Now_call_source_occurrences": 22,
+      "current_Now_call_source_occurrences": 22
+    }
+  },
+  "total_production_Now_deleted_exact2": true,
+  "other_production_Now_occurrences_unchanged": true,
+  "whole_adapter_inverse_signature_and_local_scan_only": true,
+  "scope_limit": "Mechanical wholefile byte inverses and complete SQL/adapter equality are checks of exact stated deltas, not executed syntax/type tests or empirical semantic/performance equivalence.",
+  "native_operations_run": 0
+}

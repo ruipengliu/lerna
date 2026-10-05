@@ -1,0 +1,158 @@
+{
+  "STATIC_ONLY_no_native_grant": true,
+  "workdir": "/tmp/lerna-worktrees/content-snapshots-03",
+  "supervisor": "/workspace/lerna-content-03-137311247276/run-native.py",
+  "supervisor_sha256": "82c4e6a19e1aaabbd4a2412f89eb54c0b1690221f92d3ea826b05ca455a2042e",
+  "outer_seconds": 120,
+  "locked_environment": "source /workspace/.lerna-env/env.sh; GOTOOLCHAIN=local GOFLAGS=-mod=readonly",
+  "format9_only_after_root_grant": [
+    "gofmt",
+    "-w",
+    "/tmp/lerna-worktrees/content-snapshots-03/adapters/postgres/content/policy.go",
+    "/tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_closure_test.go",
+    "/tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_policy_actions_test.go",
+    "/tmp/lerna-worktrees/content-snapshots-03/domain/content/closure.go",
+    "/tmp/lerna-worktrees/content-snapshots-03/domain/content/policy_cleanup.go",
+    "/tmp/lerna-worktrees/content-snapshots-03/domain/content/ports.go",
+    "/tmp/lerna-worktrees/content-snapshots-03/domain/content/processing.go",
+    "/tmp/lerna-worktrees/content-snapshots-03/domain/content/secondary.go",
+    "/tmp/lerna-worktrees/content-snapshots-03/domain/content/service.go"
+  ],
+  "qualified_existing_selectors": {
+    "policy_clock": [
+      "TestContentPolicyPortClockFollowsLockedRow",
+      "TestContentPolicyActionVectorsFailClosed",
+      "TestContentClosureActionIntersectionKeepsIndependentFlags",
+      "TestContentClosurePolicyIntersectionUsesClockAfterRealPolicyLock",
+      "TestContentClosureRecordWaitRechecksPolicyBeforeMetadata"
+    ],
+    "processing_control": [
+      "TestContentProcessingRejectsTargetBodySeal",
+      "TestContentProcessingSealedAncestorAfterRealObjectRead",
+      "TestContentProcessingRechecksHiddenAncestorAfterRealObjectRead",
+      "TestContentContextProcessingUsesIndependentReadProcessGate",
+      "TestContentContextDecodedBindingPreservesCurrentPolicyAndWorkerControl",
+      "TestContentContextInputRevisionKeepsOriginalRoundsAndRejectsWiderTuple",
+      "TestContentContextBudgetLockWaitRejectsOriginalDeadlineAfterRealLock",
+      "TestContentReadPolicyWaitRespectsAdmissionForEveryObservation",
+      "TestContentReadVersionWaitCannotReuseAdmissionClock",
+      "TestContentLastDirectSourceWaitCannotReuseReadAdmission"
+    ],
+    "shared_consumers": [
+      "TestContentCorrectBytesDurablyAccepted",
+      "TestContentDirectSourcesRequireSeparateReadProcessSaveAndRetention",
+      "TestContentClosureDeduplicatesSharedAncestorAndRejectsForeignOwners",
+      "TestContentHiddenAncestorPurposeIntersectionAndOriginalCapSurviveFurtherDerivation",
+      "TestContentPublicationFinalTransactionChecksHiddenAncestorAfterRealObjectWrite",
+      "TestContentPublicationWaitCannotReuseExpiredPolicyClock",
+      "TestContentPostScheduleAdmissionRollsBackLateVersion",
+      "TestContentRestoredSaveBasisMakesOriginalCleanupNotRequiredWithoutSealing",
+      "TestContentCurrentSaveWithdrawalStartsOriginalSealAndRealCleanupConsumer",
+      "TestContentIndependentSecondaryOfflineRetainsOriginalCleanupResponsibility",
+      "TestContentOriginalCleanupDeadlineCannotBeExtendedByCurrentPolicyLockWait",
+      "TestContentOriginalAdmissionCleanupDeadlineSurvivesCurrentTargetPolicyLockWait",
+      "TestContentDerivedGoneRequiresCurrentExactMetadataForReaderAndEveryAncestor"
+    ]
+  },
+  "proposed_argv_pending_root_separate_grant": {
+    "policy_clock-normal": [
+      "go",
+      "test",
+      "-v",
+      "-tags=integration",
+      "-p",
+      "1",
+      "-count=1",
+      "-timeout=120s",
+      "-run=^(TestContentPolicyPortClockFollowsLockedRow|TestContentPolicyActionVectorsFailClosed|TestContentClosureActionIntersectionKeepsIndependentFlags|TestContentClosurePolicyIntersectionUsesClockAfterRealPolicyLock|TestContentClosureRecordWaitRechecksPolicyBeforeMetadata)$",
+      "./conformance/component"
+    ],
+    "policy_clock-race": [
+      "go",
+      "test",
+      "-v",
+      "-race",
+      "-tags=integration",
+      "-p",
+      "1",
+      "-count=1",
+      "-timeout=120s",
+      "-run=^(TestContentPolicyPortClockFollowsLockedRow|TestContentPolicyActionVectorsFailClosed|TestContentClosureActionIntersectionKeepsIndependentFlags|TestContentClosurePolicyIntersectionUsesClockAfterRealPolicyLock|TestContentClosureRecordWaitRechecksPolicyBeforeMetadata)$",
+      "./conformance/component"
+    ],
+    "processing_control-normal": [
+      "go",
+      "test",
+      "-v",
+      "-tags=integration",
+      "-p",
+      "1",
+      "-count=1",
+      "-timeout=120s",
+      "-run=^(TestContentProcessingRejectsTargetBodySeal|TestContentProcessingSealedAncestorAfterRealObjectRead|TestContentProcessingRechecksHiddenAncestorAfterRealObjectRead|TestContentContextProcessingUsesIndependentReadProcessGate|TestContentContextDecodedBindingPreservesCurrentPolicyAndWorkerControl|TestContentContextInputRevisionKeepsOriginalRoundsAndRejectsWiderTuple|TestContentContextBudgetLockWaitRejectsOriginalDeadlineAfterRealLock|TestContentReadPolicyWaitRespectsAdmissionForEveryObservation|TestContentReadVersionWaitCannotReuseAdmissionClock|TestContentLastDirectSourceWaitCannotReuseReadAdmission)$",
+      "./conformance/component"
+    ],
+    "processing_control-race": [
+      "go",
+      "test",
+      "-v",
+      "-race",
+      "-tags=integration",
+      "-p",
+      "1",
+      "-count=1",
+      "-timeout=120s",
+      "-run=^(TestContentProcessingRejectsTargetBodySeal|TestContentProcessingSealedAncestorAfterRealObjectRead|TestContentProcessingRechecksHiddenAncestorAfterRealObjectRead|TestContentContextProcessingUsesIndependentReadProcessGate|TestContentContextDecodedBindingPreservesCurrentPolicyAndWorkerControl|TestContentContextInputRevisionKeepsOriginalRoundsAndRejectsWiderTuple|TestContentContextBudgetLockWaitRejectsOriginalDeadlineAfterRealLock|TestContentReadPolicyWaitRespectsAdmissionForEveryObservation|TestContentReadVersionWaitCannotReuseAdmissionClock|TestContentLastDirectSourceWaitCannotReuseReadAdmission)$",
+      "./conformance/component"
+    ],
+    "shared_consumers-normal": [
+      "go",
+      "test",
+      "-v",
+      "-tags=integration",
+      "-p",
+      "1",
+      "-count=1",
+      "-timeout=120s",
+      "-run=^(TestContentCorrectBytesDurablyAccepted|TestContentDirectSourcesRequireSeparateReadProcessSaveAndRetention|TestContentClosureDeduplicatesSharedAncestorAndRejectsForeignOwners|TestContentHiddenAncestorPurposeIntersectionAndOriginalCapSurviveFurtherDerivation|TestContentPublicationFinalTransactionChecksHiddenAncestorAfterRealObjectWrite|TestContentPublicationWaitCannotReuseExpiredPolicyClock|TestContentPostScheduleAdmissionRollsBackLateVersion|TestContentRestoredSaveBasisMakesOriginalCleanupNotRequiredWithoutSealing|TestContentCurrentSaveWithdrawalStartsOriginalSealAndRealCleanupConsumer|TestContentIndependentSecondaryOfflineRetainsOriginalCleanupResponsibility|TestContentOriginalCleanupDeadlineCannotBeExtendedByCurrentPolicyLockWait|TestContentOriginalAdmissionCleanupDeadlineSurvivesCurrentTargetPolicyLockWait|TestContentDerivedGoneRequiresCurrentExactMetadataForReaderAndEveryAncestor)$",
+      "./conformance/component"
+    ],
+    "shared_consumers-race": [
+      "go",
+      "test",
+      "-v",
+      "-race",
+      "-tags=integration",
+      "-p",
+      "1",
+      "-count=1",
+      "-timeout=120s",
+      "-run=^(TestContentCorrectBytesDurablyAccepted|TestContentDirectSourcesRequireSeparateReadProcessSaveAndRetention|TestContentClosureDeduplicatesSharedAncestorAndRejectsForeignOwners|TestContentHiddenAncestorPurposeIntersectionAndOriginalCapSurviveFurtherDerivation|TestContentPublicationFinalTransactionChecksHiddenAncestorAfterRealObjectWrite|TestContentPublicationWaitCannotReuseExpiredPolicyClock|TestContentPostScheduleAdmissionRollsBackLateVersion|TestContentRestoredSaveBasisMakesOriginalCleanupNotRequiredWithoutSealing|TestContentCurrentSaveWithdrawalStartsOriginalSealAndRealCleanupConsumer|TestContentIndependentSecondaryOfflineRetainsOriginalCleanupResponsibility|TestContentOriginalCleanupDeadlineCannotBeExtendedByCurrentPolicyLockWait|TestContentOriginalAdmissionCleanupDeadlineSurvivesCurrentTargetPolicyLockWait|TestContentDerivedGoneRequiresCurrentExactMetadataForReaderAndEveryAncestor)$",
+      "./conformance/component"
+    ],
+    "pure-normal": [
+      "go",
+      "test",
+      "-v",
+      "-count=1",
+      "-p",
+      "1",
+      "-timeout=120s",
+      "-run=^(TestIndependentVersionIdentityGolden|TestClosureIdentityMemoPreservesFullRefValidationAndFiniteSuccess)$",
+      "./domain/content"
+    ]
+  },
+  "future_exact_logs": {
+    "policy_clock-normal": "/workspace/lerna-content-03-137311247276/context-policy-clock-policy_clock-normal.log",
+    "policy_clock-race": "/workspace/lerna-content-03-137311247276/context-policy-clock-policy_clock-race.log",
+    "processing_control-normal": "/workspace/lerna-content-03-137311247276/context-policy-clock-processing_control-normal.log",
+    "processing_control-race": "/workspace/lerna-content-03-137311247276/context-policy-clock-processing_control-race.log",
+    "shared_consumers-normal": "/workspace/lerna-content-03-137311247276/context-policy-clock-shared_consumers-normal.log",
+    "shared_consumers-race": "/workspace/lerna-content-03-137311247276/context-policy-clock-shared_consumers-race.log",
+    "pure-normal": "/workspace/lerna-content-03-137311247276/context-policy-clock-pure-normal.log",
+    "format": "/workspace/lerna-content-03-137311247276/context-policy-clock-format.log"
+  },
+  "ordered_gates": "Root FULL candidate/diffs/manifest then explicit soleLOCAL grant only. Proposed format9->rebind331 formattedpins->pureN->policyN/R->processingN/R->sharedN/R; each operation separately binds source, stopsFIRSTfailure, no sourcefix/retry/extra scopes automatically. Root can explicitly narrow/select operations; STATIC plans grant none.",
+  "budgets": "Every existing test keeps its own original finite caller/join/work/policy/Seal deadlines; no global20 override (some old locktests12/15/20 or scalar30). Target/ancestor existing20/3join/5work/fixed60/initialhour remain. Go/outer120,count1,p1/v/read-only. Capacity30caller/Claim5 remains separate later original4B normal then ifPASS race.",
+  "future_capacity_scope": "No new measured overlay, compiler invocation or business now. After finite semantic controls and separate root source review, fresh original5 map byteequal originalinputs, independent normal/race binaries; separate original4B N, only ifPASS R as adopted7cd decision. Current measured binary427 cannot be reused for changed source."
+}

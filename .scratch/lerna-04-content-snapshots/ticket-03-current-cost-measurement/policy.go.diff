@@ -1,0 +1,34 @@
+--- adapters/postgres/content/policy.go
++++ /workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/policy.go
+@@ -31,17 +31,21 @@
+ 	return contentdomain.InstallFixturePolicy(ctx, s, policy, expected)
+ }
+ 
+-func (s *Store) CheckPolicy(ctx context.Context, token runtime.Tx, subject v.SubjectBinding, ref v.ContentRef, purpose string, actions []string, now time.Time) (*contentdomain.FixturePolicy, error) {
++func (s *Store) CheckPolicy(ctx context.Context, token runtime.Tx, subject v.SubjectBinding, ref v.ContentRef, purpose string, actions []string, now time.Time) (policyRecord *contentdomain.FixturePolicy, policyErr error) {
+ 	tx, err := s.core.SQL(ctx, token, commonOwner(ref.Owner))
+ 	if err != nil {
+ 		return nil, err
+ 	}
++	subjectStart := contentdomain.BeginContentQualification(ctx, "policy.subject_prep")
+ 	key, _, err := subjectKey(subject)
++	contentdomain.EndContentQualification(ctx, "policy.subject_prep", subjectStart, err)
+ 	if err != nil {
+ 		return nil, err
+ 	}
+ 	var body []byte
++	policySQLStart := contentdomain.BeginContentQualification(ctx, "policy.locked_sql")
+ 	err = tx.QueryRowContext(ctx, `WITH locked_policy AS MATERIALIZED (SELECT body FROM `+s.core.Table("content_fixture_policies")+` WHERE tenant_id=$1 AND owner_id=$2 AND subject_key=$3 AND content_id=$4 AND version=$5 AND purpose=$6 FOR SHARE) SELECT body,clock_timestamp() FROM locked_policy`, ref.Owner.TenantID, ref.Owner.OwnerID, key, ref.ContentID, ref.Version, purpose).Scan(&body, &now)
++	contentdomain.EndContentQualification(ctx, "policy.locked_sql", policySQLStart, err)
+ 	if errors.Is(err, sql.ErrNoRows) {
+ 		return nil, nil
+ 	}
+@@ -51,6 +55,8 @@
+ 	// The MATERIALIZED locked row is obtained before the outer volatile clock
+ 	// projection. Keep clock_timestamp outside LockRows; transaction or statement
+ 	// timestamps, and independent clock CTEs, can precede the actual lock wait.
++	policyDecodeStart := contentdomain.BeginContentQualification(ctx, "policy.decode_actions")
++	defer func() { contentdomain.EndContentQualification(ctx, "policy.decode_actions", policyDecodeStart, policyErr) }()
+ 	var policy contentdomain.FixturePolicy
+ 	if err = json.Unmarshal(body, &policy); err != nil {
+ 		return nil, err

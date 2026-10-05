@@ -1,0 +1,448 @@
+--- domain/content/processing.go
++++ /workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/processing.go
+@@ -11,6 +11,52 @@
+ 	v "github.com/ruipengliu/lerna/contract/v1_2"
+ 	"github.com/ruipengliu/lerna/runtime"
+ )
++
++// Temporary measurement-only overlay: these context labels select counters.
++// They contain no authority, ref/body cache, budget, deadline, or current fact.
++type ContentQualificationObserver interface {
++	BeginContentQualification(role, phase, stage string)
++	EndContentQualification(role, phase, stage string, elapsed time.Duration, err error)
++}
++type contentQualificationKey struct{}
++type contentQualificationLabels struct {
++	observer ContentQualificationObserver
++	role, phase string
++}
++func WithContentQualificationObserver(ctx context.Context, observer ContentQualificationObserver, role string) context.Context {
++	return context.WithValue(ctx, contentQualificationKey{}, contentQualificationLabels{observer: observer, role: role})
++}
++func WithContentQualificationRole(ctx context.Context, role string) context.Context {
++	if labels, ok := ctx.Value(contentQualificationKey{}).(contentQualificationLabels); ok {
++		labels.role = role
++		return context.WithValue(ctx, contentQualificationKey{}, labels)
++	}
++	return ctx
++}
++func WithContentQualificationPhase(ctx context.Context, phase string) context.Context {
++	if labels, ok := ctx.Value(contentQualificationKey{}).(contentQualificationLabels); ok {
++		labels.phase = phase
++		return context.WithValue(ctx, contentQualificationKey{}, labels)
++	}
++	return ctx
++}
++func ContentQualificationActive(ctx context.Context) bool {
++	labels, ok := ctx.Value(contentQualificationKey{}).(contentQualificationLabels)
++	return ok && labels.observer != nil && labels.phase != ""
++}
++func BeginContentQualification(ctx context.Context, stage string) time.Time {
++	if labels, ok := ctx.Value(contentQualificationKey{}).(contentQualificationLabels); ok && labels.observer != nil && labels.phase != "" {
++		labels.observer.BeginContentQualification(labels.role, labels.phase, stage)
++		return time.Now()
++	}
++	return time.Time{}
++}
++func EndContentQualification(ctx context.Context, stage string, start time.Time, err error) {
++	if start.IsZero() { return }
++	if labels, ok := ctx.Value(contentQualificationKey{}).(contentQualificationLabels); ok && labels.observer != nil && labels.phase != "" {
++		labels.observer.EndContentQualification(labels.role, labels.phase, stage, time.Since(start), err)
++	}
++}
+ 
+ var ErrProcessingLimit = errors.New("content processing exceeds remaining byte limit")
+ var ErrProcessingForbidden = errors.New("content processing forbidden")
+@@ -46,7 +92,11 @@
+ 	var objectKey string
+ 	var before time.Time
+ 	identities := make(closureIdentityMemo, 65)
+-	observe := func(ctx context.Context, tx runtime.Tx) error {
++	observationPhase := "pre"
++	observe := func(ctx context.Context, tx runtime.Tx) (observationErr error) {
++		ctx = WithContentQualificationPhase(ctx, observationPhase)
++		callbackStart := BeginContentQualification(ctx, "callback")
++		defer func() { EndContentQualification(ctx, "callback", callbackStart, observationErr) }()
+ 		// Each observation rebuilds its closure. No private records or permission
+ 		// from the first transaction are used as authority by the second one.
+ 		now, err := s.config.Store.Now(ctx, tx)
+@@ -115,24 +165,39 @@
+ 		out.RetainUntil = bound
+ 		return nil
+ 	}
++	preQualificationContext := WithContentQualificationPhase(ctx, "pre")
++	preWithinStart := BeginContentQualification(preQualificationContext, "within")
+ 	if err = s.config.Store.Within(ctx, owner(s.config.Owner), observe); err != nil {
+-		return ProcessingRead{}, err
+-	}
++		EndContentQualification(preQualificationContext, "within", preWithinStart, err)
++		return ProcessingRead{}, err
++	}
++	EndContentQualification(preQualificationContext, "within", preWithinStart, nil)
+ 	bounded, cancel := context.WithDeadline(ctx, before)
+ 	defer cancel()
++	objectsStart := BeginContentQualification(ctx, "objects.read")
+ 	body, err := s.config.Objects.Read(bounded, objectKey, ref.Hash, length)
++	EndContentQualification(ctx, "objects.read", objectsStart, err)
+ 	if err != nil {
+ 		return ProcessingRead{}, err
+ 	}
++	integrityStart := BeginContentQualification(ctx, "integrity")
+ 	if err = bounded.Err(); err != nil {
++		EndContentQualification(ctx, "integrity", integrityStart, err)
+ 		return ProcessingRead{}, err
+ 	}
+ 	if int64(len(body)) != length || processingHash(body) != ref.Hash {
++		EndContentQualification(ctx, "integrity", integrityStart, ErrObjectIntegrity)
+ 		return ProcessingRead{}, ErrObjectIntegrity
+ 	}
++	EndContentQualification(ctx, "integrity", integrityStart, nil)
++	observationPhase = "post"
++	postQualificationContext := WithContentQualificationPhase(ctx, "post")
++	postWithinStart := BeginContentQualification(postQualificationContext, "within")
+ 	if err = s.config.Store.Within(ctx, owner(s.config.Owner), observe); err != nil {
+-		return ProcessingRead{}, err
+-	}
++		EndContentQualification(postQualificationContext, "within", postWithinStart, err)
++		return ProcessingRead{}, err
++	}
++	EndContentQualification(postQualificationContext, "within", postWithinStart, nil)
+ 	out.Ref = ref
+ 	out.Bytes = body
+ 	return out, nil
+--- adapters/content/decision/source.go
++++ /workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/content_source.go
+@@ -9,6 +9,7 @@
+ 	v "github.com/ruipengliu/lerna/contract/v1_1"
+ 	c "github.com/ruipengliu/lerna/contract/v1_2"
+ 	compiler "github.com/ruipengliu/lerna/domain/task/context"
++	contentdomain "github.com/ruipengliu/lerna/domain/content"
+ 	"io"
+ 	"reflect"
+ 	"slices"
+@@ -55,7 +56,7 @@
+ 	if err != nil {
+ 		return out, err
+ 	}
+-	raw, err := a.read(ctx, binding.Bundle.Shell.Ref, remaining)
++	raw, err := a.read(contentdomain.WithContentQualificationRole(ctx, "shell"), binding.Bundle.Shell.Ref, remaining)
+ 	if err != nil {
+ 		return out, err
+ 	}
+@@ -64,7 +65,7 @@
+ 	}
+ 	// Mandatory validation is an additional actual bounded Content read. It is
+ 	// deliberately outside frozen DecisionUsage's shell/lock/manifest/material sum.
+-	mandatory, err := a.read(ctx, binding.Bundle.Mandatory.Ref, 262144)
++	mandatory, err := a.read(contentdomain.WithContentQualificationRole(ctx, "mandatory"), binding.Bundle.Mandatory.Ref, 262144)
+ 	if err != nil {
+ 		return engine.Snapshot{}, err
+ 	}
+@@ -105,7 +106,7 @@
+ 	if !slices.Contains(binding.Bundle.Materials, exact) {
+ 		return nil, engine.ErrForbidden
+ 	}
+-	return a.read(ctx, exact, remaining)
++	return a.read(contentdomain.WithContentQualificationRole(ctx, "material"), exact, remaining)
+ }
+ func (a *Adapter) ReadFixtureLock(ctx context.Context, ref v.InstallLockRef, p engine.Permission, remaining int64) (engine.FixtureLock, error) {
+ 	var out engine.FixtureLock
+@@ -116,11 +117,11 @@
+ 	if ref != binding.Input.Request.Payload.ComponentRef.InstallLockRef {
+ 		return out, engine.ErrForbidden
+ 	}
+-	lockRaw, err := a.read(ctx, binding.Bundle.Lock.Ref, remaining)
++	lockRaw, err := a.read(contentdomain.WithContentQualificationRole(ctx, "lock"), binding.Bundle.Lock.Ref, remaining)
+ 	if err != nil {
+ 		return out, err
+ 	}
+-	manifestRaw, err := a.read(ctx, binding.Bundle.Manifest.Ref, remaining-int64(len(lockRaw)))
++	manifestRaw, err := a.read(contentdomain.WithContentQualificationRole(ctx, "manifest"), binding.Bundle.Manifest.Ref, remaining-int64(len(lockRaw)))
+ 	if err != nil {
+ 		return out, err
+ 	}
+--- adapters/postgres/content/facts.go
++++ /workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/facts.go
+@@ -9,6 +9,7 @@
+ 	v "github.com/ruipengliu/lerna/contract/v1_2"
+ 	d "github.com/ruipengliu/lerna/domain/content"
+ 	"github.com/ruipengliu/lerna/runtime"
++	"github.com/ruipengliu/lerna/adapters/postgres/internal/pgstore"
+ 	"time"
+ )
+ 
+@@ -16,8 +17,16 @@
+ 	return s.core.Within(ctx, owner, fn)
+ }
+ func (s *Store) Now(ctx context.Context, token runtime.Tx) (time.Time, error) {
++	if d.ContentQualificationActive(ctx) {
++		ctx = pgstore.WithNowSQLObserver(ctx, contentNowSQLObserver{ctx: ctx})
++	}
+ 	return s.core.Now(ctx, token)
+ }
++// Temporary bridge to the exact Core.Now QueryRow/Scan; no domain import in Core.
++type contentNowSQLObserver struct { ctx context.Context }
++func (o contentNowSQLObserver) BeginNowSQL() time.Time { return d.BeginContentQualification(o.ctx, "now.sql") }
++func (o contentNowSQLObserver) EndNowSQL(start time.Time, err error) { d.EndContentQualification(o.ctx, "now.sql", start, err) }
++
+ func (s *Store) LockCommand(ctx context.Context, token runtime.Tx, ref v.CommandRef) (*d.CommandRecord, error) {
+ 	tx, err := s.core.SQL(ctx, token, commonOwner(ref.Owner))
+ 	if err != nil {
+@@ -81,30 +90,40 @@
+ 	_, err = tx.ExecContext(ctx, `INSERT INTO `+s.core.Table("command_receipts")+`(tenant_id,owner_id,command_id,contract_version,digest,metadata,receipt)VALUES($1,$2,$3,'1.2.0',$4,$5,$6)`, ref.Owner.TenantID, ref.Owner.OwnerID, ref.CommandID, record.Digest, metadata, receipt)
+ 	return err
+ }
+-func (s *Store) LockVersion(ctx context.Context, token runtime.Tx, ref v.ContentRef) (*d.Record, error) {
+-	tx, err := s.core.SQL(ctx, token, commonOwner(ref.Owner))
+-	if err != nil {
+-		return nil, err
+-	}
++func (s *Store) LockVersion(ctx context.Context, token runtime.Tx, ref v.ContentRef) (lockRecord *d.Record, lockErr error) {
++	tx, err := s.core.SQL(ctx, token, commonOwner(ref.Owner))
++	if err != nil {
++		return nil, err
++	}
++	identityKeyStart := d.BeginContentQualification(ctx, "lock.identity_key")
+ 	id, expectedObjectKey, err := d.VersionIdentity(ref)
+ 	if err != nil {
++		d.EndContentQualification(ctx, "lock.identity_key", identityKeyStart, err)
+ 		return nil, err
+ 	}
+ 	key, _ := json.Marshal([]string{s.schema, string(ref.Owner.TenantID), string(ref.Owner.OwnerID), id})
++	d.EndContentQualification(ctx, "lock.identity_key", identityKeyStart, nil)
++	advisoryStart := d.BeginContentQualification(ctx, "lock.advisory_sql")
+ 	if _, err = tx.ExecContext(ctx, `SELECT pg_advisory_xact_lock(2,hashtext($1))`, string(key)); err != nil {
+-		return nil, err
+-	}
++		d.EndContentQualification(ctx, "lock.advisory_sql", advisoryStart, err)
++		return nil, err
++	}
++	d.EndContentQualification(ctx, "lock.advisory_sql", advisoryStart, nil)
+ 	var body, staging, seal []byte
+ 	var objectID, keyStored, tuple, publication, binding string
+ 	var revision int64
+ 	var gone bool
++	rowStart := d.BeginContentQualification(ctx, "lock.row_sql")
+ 	err = tx.QueryRowContext(ctx, `SELECT body,staging,object_id,object_key,tuple_digest,publication,revision,body_seal,body_gone,primary_holder_binding FROM `+s.core.Table("content_versions")+` WHERE tenant_id=$1 AND owner_id=$2 AND content_id=$3 AND version=$4 FOR UPDATE`, ref.Owner.TenantID, ref.Owner.OwnerID, ref.ContentID, ref.Version).Scan(&body, &staging, &objectID, &keyStored, &tuple, &publication, &revision, &seal, &gone, &binding)
++	d.EndContentQualification(ctx, "lock.row_sql", rowStart, err)
+ 	if errors.Is(err, sql.ErrNoRows) {
+ 		return nil, nil
+ 	}
+ 	if err != nil {
+ 		return nil, err
+ 	}
++	decodeStart := d.BeginContentQualification(ctx, "lock.decode_validate")
++	defer func() { d.EndContentQualification(ctx, "lock.decode_validate", decodeStart, lockErr) }()
+ 	var record d.Record
+ 	if err = json.Unmarshal(body, &record); err != nil {
+ 		return nil, err
+--- adapters/postgres/content/policy.go
++++ /workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/policy.go
+@@ -31,17 +31,21 @@
+ 	return contentdomain.InstallFixturePolicy(ctx, s, policy, expected)
+ }
+ 
+-func (s *Store) CheckPolicy(ctx context.Context, token runtime.Tx, subject v.SubjectBinding, ref v.ContentRef, purpose string, actions []string, now time.Time) (*contentdomain.FixturePolicy, error) {
++func (s *Store) CheckPolicy(ctx context.Context, token runtime.Tx, subject v.SubjectBinding, ref v.ContentRef, purpose string, actions []string, now time.Time) (policyRecord *contentdomain.FixturePolicy, policyErr error) {
+ 	tx, err := s.core.SQL(ctx, token, commonOwner(ref.Owner))
+ 	if err != nil {
+ 		return nil, err
+ 	}
++	subjectStart := contentdomain.BeginContentQualification(ctx, "policy.subject_prep")
+ 	key, _, err := subjectKey(subject)
++	contentdomain.EndContentQualification(ctx, "policy.subject_prep", subjectStart, err)
+ 	if err != nil {
+ 		return nil, err
+ 	}
+ 	var body []byte
++	policySQLStart := contentdomain.BeginContentQualification(ctx, "policy.locked_sql")
+ 	err = tx.QueryRowContext(ctx, `WITH locked_policy AS MATERIALIZED (SELECT body FROM `+s.core.Table("content_fixture_policies")+` WHERE tenant_id=$1 AND owner_id=$2 AND subject_key=$3 AND content_id=$4 AND version=$5 AND purpose=$6 FOR SHARE) SELECT body,clock_timestamp() FROM locked_policy`, ref.Owner.TenantID, ref.Owner.OwnerID, key, ref.ContentID, ref.Version, purpose).Scan(&body, &now)
++	contentdomain.EndContentQualification(ctx, "policy.locked_sql", policySQLStart, err)
+ 	if errors.Is(err, sql.ErrNoRows) {
+ 		return nil, nil
+ 	}
+@@ -51,6 +55,8 @@
+ 	// The MATERIALIZED locked row is obtained before the outer volatile clock
+ 	// projection. Keep clock_timestamp outside LockRows; transaction or statement
+ 	// timestamps, and independent clock CTEs, can precede the actual lock wait.
++	policyDecodeStart := contentdomain.BeginContentQualification(ctx, "policy.decode_actions")
++	defer func() { contentdomain.EndContentQualification(ctx, "policy.decode_actions", policyDecodeStart, policyErr) }()
+ 	var policy contentdomain.FixturePolicy
+ 	if err = json.Unmarshal(body, &policy); err != nil {
+ 		return nil, err
+--- adapters/postgres/internal/pgstore/core.go
++++ /workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/pgstore_core.go
+@@ -165,13 +165,27 @@
+ 	}
+ 	return nil
+ }
++// Temporary measurement-only observer for the original Now SQL call.
++type NowSQLObserver interface {
++	BeginNowSQL() time.Time
++	EndNowSQL(time.Time, error)
++}
++type nowSQLObserverKey struct{}
++func WithNowSQLObserver(ctx context.Context, observer NowSQLObserver) context.Context {
++	return context.WithValue(ctx, nowSQLObserverKey{}, observer)
++}
++
+ func (s *Core) Now(ctx context.Context, token runtime.Tx) (time.Time, error) {
+ 	tx, err := s.LocalSQL(ctx, token)
+ 	if err != nil {
+ 		return time.Time{}, err
+ 	}
+ 	var now time.Time
++	observer, observed := ctx.Value(nowSQLObserverKey{}).(NowSQLObserver)
++	var nowSQLStart time.Time
++	if observed { nowSQLStart = observer.BeginNowSQL() }
+ 	err = tx.QueryRowContext(ctx, `SELECT clock_timestamp()`).Scan(&now)
++	if observed { observer.EndNowSQL(nowSQLStart, err) }
+ 	return now, err
+ }
+ 
+--- /workspace/lerna-content-03-137311247276/large-graph-single-read-identity-overlay/context_claim_diagnostics.go
++++ /workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/context_claim_diagnostics.go
+@@ -41,10 +41,16 @@
+ 	first      *claimDiagnosticEvent
+ 	totals     map[string]claimDiagnosticAggregate
+ 	lastGate   map[string]claimDiagnosticEvent
++	qualificationCase string
++	qualification [7][3][13]qualificationAggregate
++	qualificationDropped, qualificationAmbiguous int
++	qualificationHookCalls int
++	qualificationHookElapsed time.Duration
+ }
+ 
+ func NewContextClaimDiagnostics(t *testing.T, ctx context.Context) *ContextClaimDiagnostics {
+ 	d := &ContextClaimDiagnostics{start: time.Now(), ctx: ctx, events: make([]claimDiagnosticEvent, 0, 448), critical: make([]claimDiagnosticEvent, 0, 64), totals: map[string]claimDiagnosticAggregate{}, lastGate: map[string]claimDiagnosticEvent{}}
++	d.qualificationCase = t.Name()
+ 	d.Mark("phase.testcase-start")
+ 	t.Cleanup(func() { d.summary(t) })
+ 	return d
+@@ -145,6 +151,7 @@
+ 	for _, k := range keys {
+ 		print("last_gate", d.lastGate[k])
+ 	}
++	d.qualificationSummary(t)
+ }
+ func (w *ContextWorld) DiagnosticStage(ctx context.Context, kind string, start time.Time, err error) {
+ 	if w.diagnostics != nil {
+@@ -248,18 +255,21 @@
+ }
+ 
+ func (s claimDiagnosticSource) ReadSnapshot(ctx context.Context, ref v.SnapshotRef, p engine.Permission, remaining int64) (engine.Snapshot, error) {
++	ctx = content.WithContentQualificationObserver(ctx, s.d, "shell")
+ 	start := time.Now()
+ 	out, err := s.Source.ReadSnapshot(ctx, ref, p, remaining)
+ 	s.d.observe("source.Snapshot", start, err, fmt.Sprintf("bytes=%d materials=%d", len(out.Raw), len(out.MaterialRefs)))
+ 	return out, err
+ }
+ func (s claimDiagnosticSource) ReadFixtureLock(ctx context.Context, ref v.InstallLockRef, p engine.Permission, remaining int64) (engine.FixtureLock, error) {
++	ctx = content.WithContentQualificationObserver(ctx, s.d, "lock")
+ 	start := time.Now()
+ 	out, err := s.Source.ReadFixtureLock(ctx, ref, p, remaining)
+ 	s.d.observe("source.Lock", start, err, fmt.Sprintf("lock_bytes=%d manifest_bytes=%d", len(out.Raw), len(out.ManifestRaw)))
+ 	return out, err
+ }
+ func (s claimDiagnosticSource) ReadMaterial(ctx context.Context, ref v.ContentRef, purpose string, p engine.Permission, remaining int64) ([]byte, error) {
++	ctx = content.WithContentQualificationObserver(ctx, s.d, "material")
+ 	start := time.Now()
+ 	out, err := s.Source.ReadMaterial(ctx, ref, purpose, p, remaining)
+ 	s.d.observe("source.Material", start, err, fmt.Sprintf("bytes=%d", len(out)))
+@@ -278,12 +288,14 @@
+ 	return out, err
+ }
+ func (s claimDiagnosticPublisher) Publish(ctx context.Context, key string, b []byte, refs []v.ContentRef, p engine.Permission) (v.ContentRef, error) {
++	ctx = content.WithContentQualificationObserver(ctx, s.d, "worker-verification")
+ 	start := time.Now()
+ 	out, err := s.Publisher.Publish(ctx, key, b, refs, p)
+ 	s.d.observe("publisher.Publish", start, err, fmt.Sprintf("bytes=%d sources=%d", len(b), len(refs)))
+ 	return out, err
+ }
+ func (s claimDiagnosticPublisher) ReadPublished(ctx context.Context, ref v.ContentRef, p engine.Permission) ([]byte, error) {
++	ctx = content.WithContentQualificationObserver(ctx, s.d, "outer-readback")
+ 	start := time.Now()
+ 	out, err := s.Publisher.ReadPublished(ctx, ref, p)
+ 	s.d.observe("publisher.ReadPublished", start, err, fmt.Sprintf("bytes=%d", len(out)))
+@@ -296,8 +308,11 @@
+ }
+ 
+ func (s claimDiagnosticContent) ReadForProcessing(ctx context.Context, subject *c.SubjectBinding, ref c.ContentRef, purpose string, remaining int64) (content.ProcessingRead, error) {
++	ctx = content.WithContentQualificationPhase(ctx, "read")
++	qualificationStart := content.BeginContentQualification(ctx, "read.total")
+ 	start := time.Now()
+ 	out, err := s.Content.ReadForProcessing(ctx, subject, ref, purpose, remaining)
++	content.EndContentQualification(ctx, "read.total", qualificationStart, err)
+ 	s.d.observe("content.ReadForProcessing", start, err, fmt.Sprintf("bytes=%d sources=%d", len(out.Bytes), len(out.Sources)))
+ 	return out, err
+ }
+@@ -349,3 +364,69 @@
+ 	s.d.observe("access.PrepareContent", start, err, "")
+ 	return err
+ }
++
++type qualificationAggregate struct {
++	Attempted, Completed, ErrorReturns int
++	Total, Max time.Duration
++	FirstCause string
++}
++var qualificationRoles = [7]string{"shell", "mandatory", "lock", "manifest", "material", "worker-verification", "outer-readback"}
++var qualificationPhases = [3]string{"pre", "post", "read"}
++var qualificationStages = [13]string{"lock.identity_key", "lock.advisory_sql", "lock.row_sql", "lock.decode_validate", "policy.subject_prep", "policy.locked_sql", "policy.decode_actions", "now.sql", "callback", "within", "objects.read", "integrity", "read.total"}
++func qualificationIndex(role, phase, stage string) (int, int, int) {
++	r, p, s := -1, -1, -1
++	for i, v := range qualificationRoles { if v == role { r = i; break } }
++	for i, v := range qualificationPhases { if v == phase { p = i; break } }
++	for i, v := range qualificationStages { if v == stage { s = i; break } }
++	return r, p, s
++}
++func (d *ContextClaimDiagnostics) BeginContentQualification(role, phase, stage string) {
++	if d == nil { return }
++	started := time.Now()
++	d.mu.Lock()
++	defer d.mu.Unlock()
++	r, p, s := qualificationIndex(role, phase, stage)
++	if r < 0 || p < 0 || s < 0 { d.qualificationDropped++; d.qualificationAmbiguous++ } else { d.qualification[r][p][s].Attempted++ }
++	d.qualificationHookCalls++
++	d.qualificationHookElapsed += time.Since(started)
++}
++func (d *ContextClaimDiagnostics) EndContentQualification(role, phase, stage string, elapsed time.Duration, err error) {
++	if d == nil { return }
++	started := time.Now()
++	d.mu.Lock()
++	defer d.mu.Unlock()
++	r, p, s := qualificationIndex(role, phase, stage)
++	if r < 0 || p < 0 || s < 0 { d.qualificationDropped++; d.qualificationAmbiguous++ } else {
++		a := &d.qualification[r][p][s]
++		a.Completed++
++		a.Total += elapsed
++		if elapsed > a.Max { a.Max = elapsed }
++		if err != nil { a.ErrorReturns++; if a.FirstCause == "" { a.FirstCause = claimCause(err) } }
++	}
++	d.qualificationHookCalls++
++	d.qualificationHookElapsed += time.Since(started)
++}
++func (d *ContextClaimDiagnostics) qualificationSummary(t *testing.T) {
++	t.Logf("QUAL_SQL case=%s fixed_slots=273 hooks=%d recorder_hook_wall=%s dropped=%d ambiguous=%d overhead_outside_recorder_unknown=true no_parent_child_sum=true", d.qualificationCase, d.qualificationHookCalls, d.qualificationHookElapsed, d.qualificationDropped, d.qualificationAmbiguous)
++	for r, role := range qualificationRoles {
++		for p, phase := range qualificationPhases {
++			var serial, sqlCallWall, localLeafWall time.Duration
++			for s, stage := range qualificationStages {
++				a := d.qualification[r][p][s]
++				if a.Attempted == 0 && a.Completed == 0 { continue }
++				first := a.FirstCause
++				if first == "" { first = "nil" }
++				t.Logf("QUAL_SQL case=%s role=%s phase=%s stage=%s attempted=%d completed=%d error_returns=%d wall=%s max=%s first_cause=%s", d.qualificationCase, role, phase, stage, a.Attempted, a.Completed, a.ErrorReturns, a.Total, a.Max, first)
++				if s < 8 {
++					serial += a.Total
++					if s == 1 || s == 2 || s == 5 || s == 7 { sqlCallWall += a.Total } else { localLeafWall += a.Total }
++				}
++			}
++			callback := d.qualification[r][p][8]
++			within := d.qualification[r][p][9]
++			if callback.Attempted > 0 || within.Attempted > 0 {
++				t.Logf("QUAL_SQL case=%s role=%s phase=%s derived_serial_leaf_wall=%s sql_call_wall=%s local_leaf_wall=%s callback_remaining=%s within_minus_callback=%s residual_not_proven_SQLwait=true SQLwall_not_server_execution=true includes_original_argument_evaluation=true callback_remaining_includes_observer_unknown=true callback_attempted=%d callback_completed=%d within_attempted=%d within_completed=%d", d.qualificationCase, role, phase, serial, sqlCallWall, localLeafWall, callback.Total-serial, within.Total-callback.Total, callback.Attempted, callback.Completed, within.Attempted, within.Completed)
++			}
++		}
++	}
++}

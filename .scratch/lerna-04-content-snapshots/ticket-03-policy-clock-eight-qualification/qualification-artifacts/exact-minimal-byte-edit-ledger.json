@@ -1,0 +1,212 @@
+{
+  "adapters/postgres/content/policy.go": [
+    {
+      "old_start": 1022,
+      "old_end": 1037,
+      "current_start": 1022,
+      "current_end": 1022,
+      "old_bytes_b64": "LCBub3cgdGltZS5UaW1l",
+      "current_bytes_b64": ""
+    },
+    {
+      "old_start": 1265,
+      "old_end": 1265,
+      "current_start": 1250,
+      "current_end": 1269,
+      "old_bytes_b64": "",
+      "current_bytes_b64": "ZQoJdmFyIG5vdyB0aW1lLlRpbQ=="
+    }
+  ],
+  "conformance/component/content_closure_test.go": [
+    {
+      "old_start": 2637,
+      "old_end": 2652,
+      "current_start": 2637,
+      "current_end": 2637,
+      "old_bytes_b64": "LCBub3cgdGltZS5UaW1l",
+      "current_bytes_b64": ""
+    },
+    {
+      "old_start": 2954,
+      "old_end": 2959,
+      "current_start": 2939,
+      "current_end": 2939,
+      "old_bytes_b64": "LCBub3c=",
+      "current_bytes_b64": ""
+    }
+  ],
+  "conformance/component/content_policy_actions_test.go": [
+    {
+      "old_start": 6749,
+      "old_end": 6830,
+      "current_start": 6749,
+      "current_end": 6749,
+      "old_bytes_b64": "bm93LCBlcnIgOj0gdy5TdG9yZSgpLk5vdyhjdHgsIHR4KQoJCQkJaWYgZXJyICE9IG5pbCB7CgkJCQkJcmV0dXJuIGVycgoJCQkJfQoJCQkJ",
+      "current_bytes_b64": ""
+    },
+    {
+      "old_start": 6927,
+      "old_end": 6932,
+      "current_start": 6846,
+      "current_end": 6846,
+      "old_bytes_b64": "LCBub3c=",
+      "current_bytes_b64": ""
+    },
+    {
+      "old_start": 11253,
+      "old_end": 11257,
+      "current_start": 11167,
+      "current_end": 11170,
+      "old_bytes_b64": "bm93LA==",
+      "current_bytes_b64": "dmFy"
+    },
+    {
+      "old_start": 11262,
+      "old_end": 11296,
+      "current_start": 11175,
+      "current_end": 11175,
+      "old_bytes_b64": "Oj0gdy5TdG9yZSgpLk5vdyhjdHgsIHR4KQoJCQkJCWlmIA==",
+      "current_bytes_b64": ""
+    },
+    {
+      "old_start": 11299,
+      "old_end": 11315,
+      "current_start": 11178,
+      "current_end": 11179,
+      "old_bytes_b64": "ICE9IG5pbCB7CgkJCQkJCQ==",
+      "current_bytes_b64": "bw=="
+    },
+    {
+      "old_start": 11316,
+      "old_end": 11332,
+      "current_start": 11180,
+      "current_end": 11180,
+      "old_bytes_b64": "ZXR1cm4gZXJyCgkJCQkJfQ==",
+      "current_bytes_b64": ""
+    },
+    {
+      "old_start": 11457,
+      "old_end": 11462,
+      "current_start": 11305,
+      "current_end": 11305,
+      "old_bytes_b64": "LCBub3c=",
+      "current_bytes_b64": ""
+    }
+  ],
+  "domain/content/closure.go": [
+    {
+      "old_start": 2844,
+      "old_end": 2953,
+      "current_start": 2844,
+      "current_end": 2844,
+      "old_bytes_b64": "aWYgbGVuKGFjdGlvbnMpID4gMCB7CgkJCW5vdywgZXJyID0gcy5jb25maWcuU3RvcmUuTm93KGN0eCwgdHgpCgkJCWlmIGVyciAhPSBuaWwgewoJCQkJcmV0dXJuIGVycgoJCQl9CgkJfQoJCQ==",
+      "current_bytes_b64": ""
+    },
+    {
+      "old_start": 3082,
+      "old_end": 3087,
+      "current_start": 2973,
+      "current_end": 2973,
+      "old_bytes_b64": "LCBub3c=",
+      "current_bytes_b64": ""
+    },
+    {
+      "old_start": 6553,
+      "old_end": 6558,
+      "current_start": 6439,
+      "current_end": 6439,
+      "old_bytes_b64": "LCBub3c=",
+      "current_bytes_b64": ""
+    }
+  ],
+  "domain/content/policy_cleanup.go": [
+    {
+      "old_start": 3062,
+      "old_end": 3067,
+      "current_start": 3062,
+      "current_end": 3062,
+      "old_bytes_b64": "LCBub3c=",
+      "current_bytes_b64": ""
+    }
+  ],
+  "domain/content/ports.go": [
+    {
+      "old_start": 4821,
+      "old_end": 4821,
+      "current_start": 4821,
+      "current_end": 5049,
+      "old_bytes_b64": "",
+      "current_bytes_b64": "Ly8gQ2hlY2tQb2xpY3kgbG9ja3MgdGhlIGN1cnJlbnQgcG9saWN5IGFuZCBldmFsdWF0ZXMgaXRzIGFjdGlvbnMgdXNpbmcgdGhlCgkvLyBvd25lcidzIGN1cnJlbnQgY2xvY2sgc2FtcGxlZCBhZnRlciB0aGF0IGxvY2suIFF1ZXJ5IG9yIGNsb2NrIGVycm9ycyBtdXN0CgkvLyBwcm9wYWdhdGU7IGFic2VuY2Ugb3IgZGVuaWFsIHJldHVybnMgbmlsIHdpdGhvdXQgcmV1c2FibGUgYXV0aG9yaXR5LgoJ"
+    },
+    {
+      "old_start": 4910,
+      "old_end": 4921,
+      "current_start": 5138,
+      "current_end": 5138,
+      "old_bytes_b64": "LCB0aW1lLlRpbWU=",
+      "current_bytes_b64": ""
+    }
+  ],
+  "domain/content/processing.go": [
+    {
+      "old_start": 1795,
+      "old_end": 1873,
+      "current_start": 1795,
+      "current_end": 1795,
+      "old_bytes_b64": "bm93LCBlcnIgOj0gcy5jb25maWcuU3RvcmUuTm93KGN0eCwgdHgpCgkJaWYgZXJyICE9IG5pbCB7CgkJCXJldHVybiBlcnIKCQl9CgkJ",
+      "current_bytes_b64": ""
+    },
+    {
+      "old_start": 1971,
+      "old_end": 1976,
+      "current_start": 1893,
+      "current_end": 1893,
+      "old_bytes_b64": "LCBub3c=",
+      "current_bytes_b64": ""
+    },
+    {
+      "old_start": 2167,
+      "old_end": 2167,
+      "current_start": 2084,
+      "current_end": 2085,
+      "old_bytes_b64": "",
+      "current_bytes_b64": "Og=="
+    }
+  ],
+  "domain/content/secondary.go": [
+    {
+      "old_start": 1532,
+      "old_end": 1537,
+      "current_start": 1532,
+      "current_end": 1532,
+      "old_bytes_b64": "LCBub3c=",
+      "current_bytes_b64": ""
+    }
+  ],
+  "domain/content/service.go": [
+    {
+      "old_start": 5959,
+      "old_end": 5964,
+      "current_start": 5959,
+      "current_end": 5959,
+      "old_bytes_b64": "LCBub3c=",
+      "current_bytes_b64": ""
+    },
+    {
+      "old_start": 18616,
+      "old_end": 18621,
+      "current_start": 18611,
+      "current_end": 18611,
+      "old_bytes_b64": "LCBub3c=",
+      "current_bytes_b64": ""
+    },
+    {
+      "old_start": 32558,
+      "old_end": 32563,
+      "current_start": 32548,
+      "current_end": 32548,
+      "old_bytes_b64": "LCBub3c=",
+      "current_bytes_b64": ""
+    }
+  ]
+}

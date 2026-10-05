@@ -1,0 +1,26 @@
+[
+  {
+    "original": "/tmp/lerna-04-ticket06-policy-recovery-static/plan.md",
+    "archive": "plan.md",
+    "bytes": 9269,
+    "sha256": "8a70682736be2298cd1b290e89b432bd3459214aa732e6b16c3f8390643927a8"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-policy-recovery-static/commands.json",
+    "archive": "commands.json",
+    "bytes": 1654,
+    "sha256": "3ff28c1abd4321cea83f2020eac3442a6d0ff95c3f053c3cad38e9d91a0343e6"
+  },
+  {
+    "original": "/tmp/lerna-04-ticket06-policy-recovery-static/current-ports-manifest.json",
+    "archive": "current-ports-manifest.json",
+    "bytes": 5426,
+    "sha256": "a9da8b979742219d949cadf9470649d00658eacd285de764407448aa91d49818"
+  },
+  {
+    "original": "/tmp/lerna-06-policy-orphan-next-decision.md",
+    "archive": "lerna-06-policy-orphan-next-decision.md",
+    "bytes": 6721,
+    "sha256": "8050f4f0fa0e7241fc04d143856174756738a00391d9e9ab8a337e4a8bd5bfe6"
+  }
+]

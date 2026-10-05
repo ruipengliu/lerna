@@ -1,0 +1,14 @@
+{
+  "STATIC_only_no_fmt_build_Go_DB": true,
+  "new_directory": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay",
+  "device": 27,
+  "inode": 560462,
+  "mode": "0o700",
+  "bound_snapshot": "b28b2e3+qualified processingb5caf/closure974474+newtarget/ancestor tests current331",
+  "old_draft_immutable": "large-graph-current-qualification-sql-overlay files and original generator remain untouched; pre-sync invalid cutoff retained",
+  "generator_before_sha256": "08287445af660c4d565bbf985ff31541b36d90b2df0606bb376e1f410d49235e",
+  "generator_new_sha256": "f073d42200796c8655a0d922016524b89bca8014fa5db094c6e1c70beb7f82b2",
+  "static_generator_changes": "new ownedpath/currentPGfacts 10 Scan destinations/default inverse labelcurrentb5; SQLstage interval start after recorder.Begin so SQL leaf timing excludes that Begin overhead; remaining callback/residual explicitlyincludes observer overhead and original argument evaluation limitation.",
+  "generator_generation1_sha256": "e14f3f0105189c6ffe4826cfd8e6a759d188acbab6bc92c8820c25a145731179",
+  "static_generation2_only_reason": "Explicit disjoint SQL-call/local-leaf aggregates from same fixed stage counters; SQLwall is notserverexecution and includes original argument evaluation; callback residual includes observer overhead. No new timedcalls or productchanges."
+}

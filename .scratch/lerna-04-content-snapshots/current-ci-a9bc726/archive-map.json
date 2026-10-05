@@ -1,0 +1,14 @@
+[
+  {
+    "original": "/tmp/lerna-a9bc726-ci-contracts.log",
+    "archive": "contracts-sanitized.log",
+    "bytes": 44274,
+    "sha256": "dd6f409a754abe3b84f423d37647d6639550d6deab0604475ea6b7bdfbc1ba1f"
+  },
+  {
+    "original": "/tmp/lerna-a9bc726-ci-durable-admission.log",
+    "archive": "durable-admission-sanitized.log",
+    "bytes": 51745,
+    "sha256": "4f0518687bbc2f6afdfe3ab19c2b04477ed0a4b42917ed3fdc70e7d7afc5ab2b"
+  }
+]

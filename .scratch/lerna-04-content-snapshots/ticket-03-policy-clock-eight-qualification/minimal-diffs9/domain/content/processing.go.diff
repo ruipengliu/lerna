@@ -1,0 +1,24 @@
+--- before-qualified/domain/content/processing.go
++++ candidate/domain/content/processing.go
+@@ -49,11 +49,7 @@
+ 	observe := func(ctx context.Context, tx runtime.Tx) error {
+ 		// Each observation rebuilds its closure. No private records or permission
+ 		// from the first transaction are used as authority by the second one.
+-		now, err := s.config.Store.Now(ctx, tx)
+-		if err != nil {
+-			return err
+-		}
+-		p, err := s.config.Store.CheckPolicy(ctx, tx, principal, ref, purpose, []string{"read", "process"}, now)
++		p, err := s.config.Store.CheckPolicy(ctx, tx, principal, ref, purpose, []string{"read", "process"})
+ 		if err != nil {
+ 			return err
+ 		}
+@@ -64,7 +60,7 @@
+ 		if err != nil {
+ 			return err
+ 		}
+-		now, err = s.config.Store.Now(ctx, tx)
++		now, err := s.config.Store.Now(ctx, tx)
+ 		if err != nil {
+ 			return err
+ 		}

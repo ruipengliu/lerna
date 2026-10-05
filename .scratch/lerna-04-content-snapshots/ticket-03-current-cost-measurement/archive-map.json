@@ -1,0 +1,588 @@
+{
+  "artifact_count": 97,
+  "excluded_binary": "32MB binary preserved at original owned path; exact identity/provenance archived, not copied",
+  "records": [
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/README.md",
+      "archive": "README.original.md",
+      "sha256": "ac404997aabf222d573947086948ad750529eb6ef3804995d881f2aa2250c901",
+      "bytes": 6073
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/README.md.before-authorized-format",
+      "archive": "README.md.before-authorized-format",
+      "sha256": "40faa07db056e2d092eaa7db9066f7bba0d9bad98b250ff91ea028b9cc0d7be6",
+      "bytes": 5035
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/actual-format-reversal-blocks.json",
+      "archive": "actual-format-reversal-blocks.json",
+      "sha256": "dea0d91f675daf50ba2309a6906eda39b0e3073a4419f0e31def86423de1f4e6",
+      "bytes": 19004
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/all-actual-format-only.diff",
+      "archive": "all-actual-format-only.diff",
+      "sha256": "a9908fc475873308ef806f7a0f78482f77618f4d031a934b5800555850f390ea",
+      "bytes": 9989
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/all-measurement-only.diff",
+      "archive": "all-measurement-only.diff",
+      "sha256": "73ab5c5282296d34d035811098d85c1d88874e585ff26b2316ccbca9cf206e5e",
+      "bytes": 22747
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/all-measurement-only.formatted.diff",
+      "archive": "all-measurement-only.formatted.diff",
+      "sha256": "092627a1900fb12d250ede1a6ef17a7314918257383b7f4d146b6d6d1b4d165d",
+      "bytes": 24291
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/commands-static.json",
+      "archive": "commands-static.json",
+      "sha256": "3ab957f7d9f86a227386ee1523d9eee9b6da4f8ac5a92e8294cf20dda7ec183f",
+      "bytes": 4111
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/content_context_closure_test.go",
+      "archive": "content_context_closure_test.go.txt",
+      "sha256": "c668eacce37c9363cccaa243e2c484951582a872652d1a875c1281362a5c4e43",
+      "bytes": 4558
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/content_context_closure_test.go.actual-format.diff",
+      "archive": "content_context_closure_test.go.actual-format.diff",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/content_context_closure_test.go.before-authorized-format",
+      "archive": "content_context_closure_test.go.before-authorized-format",
+      "sha256": "c668eacce37c9363cccaa243e2c484951582a872652d1a875c1281362a5c4e43",
+      "bytes": 4558
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/content_context_material_reachable_test.go",
+      "archive": "content_context_material_reachable_test.go.txt",
+      "sha256": "4223c74583ac7ecace18402ec114708e7a43bbf1593da47bbc675e3a6617e7f2",
+      "bytes": 3369
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/content_context_material_reachable_test.go.actual-format.diff",
+      "archive": "content_context_material_reachable_test.go.actual-format.diff",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/content_context_material_reachable_test.go.before-authorized-format",
+      "archive": "content_context_material_reachable_test.go.before-authorized-format",
+      "sha256": "4223c74583ac7ecace18402ec114708e7a43bbf1593da47bbc675e3a6617e7f2",
+      "bytes": 3369
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/content_context_test.go",
+      "archive": "content_context_test.go.txt",
+      "sha256": "9f1bdc9e8757057ed09836a9d8aee213825e3fe1484c1a86966a4cce2911189f",
+      "bytes": 18517
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/content_context_test.go.actual-format.diff",
+      "archive": "content_context_test.go.actual-format.diff",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/content_context_test.go.before-authorized-format",
+      "archive": "content_context_test.go.before-authorized-format",
+      "sha256": "9f1bdc9e8757057ed09836a9d8aee213825e3fe1484c1a86966a4cce2911189f",
+      "bytes": 18517
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/content_source.go",
+      "archive": "content_source.go.txt",
+      "sha256": "3c6b586d1c3c9c74c2070ae7bfd1213fb84d8bd93488ad06c7375aa9328f2bcc",
+      "bytes": 5795
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/content_source.go.actual-format.diff",
+      "archive": "content_source.go.actual-format.diff",
+      "sha256": "baaa09735ce8f7dcbc31fcb92c3bf4d0a2428094494ff80a0bbb2c6bfd21c509",
+      "bytes": 466
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/content_source.go.before-authorized-format",
+      "archive": "content_source.go.before-authorized-format",
+      "sha256": "c265f1ae920b34998693657ac2a4e2f45f4f32ee93cc270b373f9b90ce0d976b",
+      "bytes": 5795
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/content_source.go.diff",
+      "archive": "content_source.go.diff",
+      "sha256": "6ba95b81dbee81b0f57d795b1d3e33bc7a0dae2723746b9308a3bbb8cae3a102",
+      "bytes": 2201
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/content_source.go.formatted-measurement.diff",
+      "archive": "content_source.go.formatted-measurement.diff",
+      "sha256": "1bb20e4b3b4b359c30caa4f7105ff31fe0d5acb99adf5dde50858a1e2f100a56",
+      "bytes": 2298
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/content_source.go.original-source",
+      "archive": "content_source.go.original-source",
+      "sha256": "f3342f0bfefabd1adeb59d8fa8566e4af70dfb64ea41185aa721386a04a3df27",
+      "bytes": 5461
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/content_source.go.preformat-source",
+      "archive": "content_source.go.preformat-source",
+      "sha256": "c265f1ae920b34998693657ac2a4e2f45f4f32ee93cc270b373f9b90ce0d976b",
+      "bytes": 5795
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/content_source.go.transforms.json",
+      "archive": "content_source.go.transforms.json",
+      "sha256": "7137ac731b4199eb150b99b446e2390125fcc41fcafc54e1f8e53eb7fce0c463",
+      "bytes": 1287
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/context_claim_diagnostics.go",
+      "archive": "context_claim_diagnostics.go.txt",
+      "sha256": "530751b81eb21f2d0acc153ba8d5c628ba7fd1b0f70d5dfc9994fadb33164309",
+      "bytes": 18499
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/context_claim_diagnostics.go.actual-format.diff",
+      "archive": "context_claim_diagnostics.go.actual-format.diff",
+      "sha256": "c4b9f8ecdae145f92d02c72e1356cc5a99136eb79193f4dd1a53c8a58a14c2ef",
+      "bytes": 5544
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/context_claim_diagnostics.go.before-authorized-format",
+      "archive": "context_claim_diagnostics.go.before-authorized-format",
+      "sha256": "82607587a3d2f285a4ed8d24c642935c0aa7d5daa9bc6db89553e85950f7746d",
+      "bytes": 17903
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/context_claim_diagnostics.go.diff",
+      "archive": "context_claim_diagnostics.go.diff",
+      "sha256": "0def59ba6e4db9e7802f925b2d96f717d1fa7c0fa0224a6c325aea3feaa68691",
+      "bytes": 8114
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/context_claim_diagnostics.go.diff.generation1-before-explicit-group-output",
+      "archive": "context_claim_diagnostics.go.diff.generation1-before-explicit-group-output",
+      "sha256": "8cfcad56fd18f8054a384916216a48d94d5972d0e9d2b173715421410f3f4e68",
+      "bytes": 7777
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/context_claim_diagnostics.go.formatted-measurement.diff",
+      "archive": "context_claim_diagnostics.go.formatted-measurement.diff",
+      "sha256": "2b977005503c5fee57ed8ab70cfa1bce92138b44a2047a90237c065ca1c1af38",
+      "bytes": 9321
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/context_claim_diagnostics.go.generation1-before-explicit-group-output",
+      "archive": "context_claim_diagnostics.go.generation1-before-explicit-group-output",
+      "sha256": "29b6dcd346f9f542efbdf30d862870543e273dfae1b55e6fbda69b24912508ff",
+      "bytes": 17569
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/context_claim_diagnostics.go.original-source",
+      "archive": "context_claim_diagnostics.go.original-source",
+      "sha256": "573ae56fe178fb5f1cfa8898575ab5ca141f22077383173b383635e4a7b743e9",
+      "bytes": 13261
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/context_claim_diagnostics.go.preformat-source",
+      "archive": "context_claim_diagnostics.go.preformat-source",
+      "sha256": "82607587a3d2f285a4ed8d24c642935c0aa7d5daa9bc6db89553e85950f7746d",
+      "bytes": 17903
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/context_claim_diagnostics.go.transforms.json",
+      "archive": "context_claim_diagnostics.go.transforms.json",
+      "sha256": "011ecdd3a1ddcd038b8433f159c416f38487dd3a3b02b84fdf097a9ee0500048",
+      "bytes": 37786
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/context_claim_diagnostics.go.transforms.json.generation1-before-explicit-group-output",
+      "archive": "context_claim_diagnostics.go.transforms.json.generation1-before-explicit-group-output",
+      "sha256": "81752b0a23870f8bc8eae9a8185f2eb7a1d548da4e0f71db2b2eb13f207a562a",
+      "bytes": 37435
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/context_world.go",
+      "archive": "context_world.go.txt",
+      "sha256": "e37d876a734b2639a044ae931e8066b9844a8c88e8a213f6d3a32c2db0421612",
+      "bytes": 11298
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/context_world.go.actual-format.diff",
+      "archive": "context_world.go.actual-format.diff",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/context_world.go.before-authorized-format",
+      "archive": "context_world.go.before-authorized-format",
+      "sha256": "e37d876a734b2639a044ae931e8066b9844a8c88e8a213f6d3a32c2db0421612",
+      "bytes": 11298
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/cost-attribution-plan.json",
+      "archive": "cost-attribution-plan.json",
+      "sha256": "bbe7f3d489770c467be4ecf74b0cafe08e9c130066c233029d723d48aa0bb5a8",
+      "bytes": 3567
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/facts.go",
+      "archive": "facts.go.txt",
+      "sha256": "a02e9ece118e28b75342a306d510c4b6c1bea581197054782ca58be5e8f30109",
+      "bytes": 12299
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/facts.go.actual-format.diff",
+      "archive": "facts.go.actual-format.diff",
+      "sha256": "be4f287dd4d1c57b9c279ca0f74281688ac00e6bf18ea42b2bc501f690183f7f",
+      "bytes": 1379
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/facts.go.before-authorized-format",
+      "archive": "facts.go.before-authorized-format",
+      "sha256": "32c8b7a390f46143b0f1d3d3c7ae29be1b1c362c5828e4af0f6e9b676f1bf6ce",
+      "bytes": 12296
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/facts.go.diff",
+      "archive": "facts.go.diff",
+      "sha256": "098e35b7f6136764cc68b3e365889bf04134f47e5a13c62243a57b6746e80db8",
+      "bytes": 3878
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/facts.go.formatted-measurement.diff",
+      "archive": "facts.go.formatted-measurement.diff",
+      "sha256": "2e60c39fc0877e70488b566932ec1e730bfce9746be3d526ce4ade7624619dde",
+      "bytes": 3962
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/facts.go.original-source",
+      "archive": "facts.go.original-source",
+      "sha256": "e56785902e481eafdaa7904f44fabc44770d77f3d605da93906df827fe8a42d5",
+      "bytes": 10970
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/facts.go.preformat-source",
+      "archive": "facts.go.preformat-source",
+      "sha256": "32c8b7a390f46143b0f1d3d3c7ae29be1b1c362c5828e4af0f6e9b676f1bf6ce",
+      "bytes": 12296
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/facts.go.transforms.json",
+      "archive": "facts.go.transforms.json",
+      "sha256": "2e93248a27e18c18bdeb2d5832025f4635a1797865d425df307deab4654f5b2e",
+      "bytes": 10065
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/format-actual-outcome.final-reviewed.json",
+      "archive": "format-actual-outcome.final-reviewed.json",
+      "sha256": "b42bef91e69467a6b4052ae422bc6351b778701746fc23d8d840411fe44b0a9e",
+      "bytes": 68719
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/format-actual-outcome.json",
+      "archive": "format-actual-outcome.json",
+      "sha256": "ed3af96597bc9537550b1c356c4aebffeba9196709853e44ac120ca22dbc46e1",
+      "bytes": 68067
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/format-prelaunch-registration.json",
+      "archive": "format-prelaunch-registration.json",
+      "sha256": "54344a4e123b32d5e3e97bed078be9176d09492331c8205425f18564b4f1c940",
+      "bytes": 56054
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/generate-measurement-static.py",
+      "archive": "generate-measurement-static.py",
+      "sha256": "f073d42200796c8655a0d922016524b89bca8014fa5db094c6e1c70beb7f82b2",
+      "bytes": 21516
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/generate-measurement-static.py.generation1-before-explicit-group-output",
+      "archive": "generate-measurement-static.py.generation1-before-explicit-group-output",
+      "sha256": "e14f3f0105189c6ffe4826cfd8e6a759d188acbab6bc92c8820c25a145731179",
+      "bytes": 21182
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/inverse-proof.before-authorized-format.json",
+      "archive": "inverse-proof.before-authorized-format.json",
+      "sha256": "f8fc0cf89ef1b7cc91310f7338b5f5006bf4fb35ead1d66cd9662e81bde236a2",
+      "bytes": 3576
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/manifest-static.before-authorized-format.json",
+      "archive": "manifest-static.before-authorized-format.json",
+      "sha256": "9d6035613dfb3e587d8e95c2c8776244f98fac752169e6e6463367f16e9deffd",
+      "bytes": 93415
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/manifest-static.json",
+      "archive": "manifest-static.json",
+      "sha256": "d957493c46349aca0351aabc930af80daeb38a5a9a6da2400cfe23dac0ade36e",
+      "bytes": 109404
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/measurement-inverse-proof.formatted.json",
+      "archive": "measurement-inverse-proof.formatted.json",
+      "sha256": "fd47f140a6dcde1b1510d28a70d75db14aafc4ece91d59a47999e1b9e8a57707",
+      "bytes": 8948
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/measurement-inverse-proof.json",
+      "archive": "measurement-inverse-proof.json",
+      "sha256": "f8fc0cf89ef1b7cc91310f7338b5f5006bf4fb35ead1d66cd9662e81bde236a2",
+      "bytes": 3576
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/measurement-inverse-proof.json.generation1-before-explicit-group-output",
+      "archive": "measurement-inverse-proof.json.generation1-before-explicit-group-output",
+      "sha256": "497d19fb03db8d33aa077dcac3cc4f3d069029099f1b4674f5bdcb3b59e82d80",
+      "bytes": 3576
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/one-race-business-actual-outcome.json",
+      "archive": "one-race-business-actual-outcome.json",
+      "sha256": "16a4abdb2f0270390a93b8d0389e58f3e722bbca286db34c662eb87f243d8229",
+      "bytes": 149211
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/one-race-business-actual-outcome.reviewed.json",
+      "archive": "one-race-business-actual-outcome.reviewed.json",
+      "sha256": "a29f6fbf30e296ad5ee32e92f757e636028bf0fef6d93ae646fe29c7af30cf40",
+      "bytes": 150935
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/one-race-business-actual-outcome.reviewed.json.before-positive-counterpart-clarification",
+      "archive": "one-race-business-actual-outcome.reviewed.json.before-positive-counterpart-clarification",
+      "sha256": "24edde1e8a29b376bfab033d976bad40a1fec065eaea3f1c3c3df1b01b21d91b",
+      "bytes": 150935
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/one-race-business-cost-results.json",
+      "archive": "one-race-business-cost-results.json",
+      "sha256": "9fe9aa6bdba9f7bf56c0191cedfabc40a335626394dd0e11b89f1663bc2b9d9d",
+      "bytes": 484218
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/one-race-business-prelaunch-registration.json",
+      "archive": "one-race-business-prelaunch-registration.json",
+      "sha256": "fbe39749386473bc0e9c2d46bbde711ffd75cc4e4d777116b8d679385b982689",
+      "bytes": 72028
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/one-race-business-resource-interval-facts.json",
+      "archive": "one-race-business-resource-interval-facts.json",
+      "sha256": "63ee49d230c9a89f51369d47d38527d197c71bf84e155a222799b4b47707bca9",
+      "bytes": 3457
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/one-race-business-results.md",
+      "archive": "one-race-business-results.md",
+      "sha256": "788e0a50d6c80952effca506fadd32615ed4340f21ab1c06a03749cea5d36024",
+      "bytes": 9431
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/one-race-business-results.md.before-positive-counterpart-clarification",
+      "archive": "one-race-business-results.md.before-positive-counterpart-clarification",
+      "sha256": "8588a7f3714e203e433c95c1c1e2ba93ac03d98e78b8d3fa12539a2727dab565",
+      "bytes": 9152
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/overlay.json",
+      "archive": "overlay.json",
+      "sha256": "fa2a193a8fd0c0fddebc16e26eb2316c58591fc12f82a369c3601c7e93607713",
+      "bytes": 2118
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/pgstore_core.go",
+      "archive": "pgstore_core.go.txt",
+      "sha256": "740a2875af6ffb60f093b5c67cb3b971af4b9c6a42e7bd1ee7f19463e6bc4461",
+      "bytes": 7443
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/pgstore_core.go.actual-format.diff",
+      "archive": "pgstore_core.go.actual-format.diff",
+      "sha256": "e85a50dcd39955d240b9327faec1838fd7223f037f3f6bbeb49013d998fceaa3",
+      "bytes": 933
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/pgstore_core.go.before-authorized-format",
+      "archive": "pgstore_core.go.before-authorized-format",
+      "sha256": "f0c41856f5b89c54d1c6814095b6bbf1d82a553b9969441787f33710d5033c18",
+      "bytes": 7435
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/pgstore_core.go.diff",
+      "archive": "pgstore_core.go.diff",
+      "sha256": "b7edde4feadd6065752f96923895db5bc7787eaa6c822f243b39b7b22d3feda9",
+      "bytes": 1041
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/pgstore_core.go.formatted-measurement.diff",
+      "archive": "pgstore_core.go.formatted-measurement.diff",
+      "sha256": "9bd9a7ce710071f3f348728907ecca56593adeb3956d1e9517e304d920e59ed9",
+      "bytes": 1097
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/pgstore_core.go.original-source",
+      "archive": "pgstore_core.go.original-source",
+      "sha256": "6a7a494bcb33bb03e0b3844b33829f2bd4a3954326a3f05d4737e5ba75c19499",
+      "bytes": 6886
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/pgstore_core.go.preformat-source",
+      "archive": "pgstore_core.go.preformat-source",
+      "sha256": "f0c41856f5b89c54d1c6814095b6bbf1d82a553b9969441787f33710d5033c18",
+      "bytes": 7435
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/pgstore_core.go.transforms.json",
+      "archive": "pgstore_core.go.transforms.json",
+      "sha256": "57a3252737b80a34fea307042f8ac6496ddb878ade808e9cd8f022aa19393a93",
+      "bytes": 863
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/policy.go",
+      "archive": "policy.go.txt",
+      "sha256": "a437e536e9b8199ae031c94af58805f86ff9b50e19468b943a0c237d4a3ee4a2",
+      "bytes": 5412
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/policy.go.actual-format.diff",
+      "archive": "policy.go.actual-format.diff",
+      "sha256": "d4180d2d93d81d0a05e818de0461e89c5e049a243b426c15f7837de1b80f78fa",
+      "bytes": 688
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/policy.go.before-authorized-format",
+      "archive": "policy.go.before-authorized-format",
+      "sha256": "cfd86e6efa9826ecb57f90c604470859a7a8bb6566b8096b2ed3f00a5673a201",
+      "bytes": 5409
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/policy.go.diff",
+      "archive": "policy.go.diff",
+      "sha256": "22a83aa3a6a0e1b90b79b891053ed82e87f70e6f784fc59f0c513d5999b886e3",
+      "bytes": 2243
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/policy.go.formatted-measurement.diff",
+      "archive": "policy.go.formatted-measurement.diff",
+      "sha256": "91e1cf1dcc37b58ca39634b68d07ae49e90f603f3aa81287e1078718c09137bc",
+      "bytes": 2291
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/policy.go.original-source",
+      "archive": "policy.go.original-source",
+      "sha256": "3cb31490a70e0141daa24b4766295ea1a57598194877eda6f19e58371a2d45d9",
+      "bytes": 4834
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/policy.go.preformat-source",
+      "archive": "policy.go.preformat-source",
+      "sha256": "cfd86e6efa9826ecb57f90c604470859a7a8bb6566b8096b2ed3f00a5673a201",
+      "bytes": 5409
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/policy.go.transforms.json",
+      "archive": "policy.go.transforms.json",
+      "sha256": "62efde36e5756c5f77c11244ffd9871f247b3cf920a8afba967bff174cc2d268",
+      "bytes": 5768
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/processing.go",
+      "archive": "processing.go.txt",
+      "sha256": "f38c89aea27aa74787e965d2e7c9ac0a2527a348306f4802675eb15940428841",
+      "bytes": 7825
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/processing.go.actual-format.diff",
+      "archive": "processing.go.actual-format.diff",
+      "sha256": "c1a63873974894a311dfcc79e47fe07cc7c7842bd0801b2ec0aa5f8b4a47c59b",
+      "bytes": 979
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/processing.go.before-authorized-format",
+      "archive": "processing.go.before-authorized-format",
+      "sha256": "da9c7f8c72c8abe19199ad4e6d46fc4832e9d45bf7495b5f7f9d96b04bb25cd5",
+      "bytes": 7818
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/processing.go.diff",
+      "archive": "processing.go.diff",
+      "sha256": "b68e8187ae33f223213e6086a3f58d67e2c533ad9ccfe5b8b1634f05fd375af8",
+      "bytes": 5270
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/processing.go.formatted-measurement.diff",
+      "archive": "processing.go.formatted-measurement.diff",
+      "sha256": "2e3775aa0c2c230263feaaa7a92a14ddae198e24521f4bed8e782ce1c630986b",
+      "bytes": 5322
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/processing.go.original-source",
+      "archive": "processing.go.original-source",
+      "sha256": "b5cafb6ac64f96d7ff4a9bf119aaea7f47e50a2f1d78d4a15471f9b24c4f476a",
+      "bytes": 4286
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/processing.go.preformat-source",
+      "archive": "processing.go.preformat-source",
+      "sha256": "da9c7f8c72c8abe19199ad4e6d46fc4832e9d45bf7495b5f7f9d96b04bb25cd5",
+      "bytes": 7818
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/processing.go.transforms.json",
+      "archive": "processing.go.transforms.json",
+      "sha256": "994521473dd64d4d36af43f1c1ee92ffe780ffee7d661ba5f78c05f6525f29e2",
+      "bytes": 5273
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/race-binary-provenance.json",
+      "archive": "race-binary-provenance.json",
+      "sha256": "914f4eddb06ca0ef2aa35175dd229d813c4864a2995f9f06c98d508a0313aada",
+      "bytes": 142510
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/race-binary-static-toolchain-facts.json",
+      "archive": "race-binary-static-toolchain-facts.json",
+      "sha256": "9dbc3c1af68a74c66bd0294071a3fe4dd9f05351c9b044292fc43765d8bf90ad",
+      "bytes": 593
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/race-build-actual-outcome.json",
+      "archive": "race-build-actual-outcome.json",
+      "sha256": "fb38d3ce6f5c9b041454c9322945ee5cae3192bdbc1340e5a52c0a1fe9c46d41",
+      "bytes": 146797
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/race-build-prelaunch-registration.json",
+      "archive": "race-build-prelaunch-registration.json",
+      "sha256": "206851667ef4edaca225eefe46186c49ed50761879013ecd8fecb9441b6edcd1",
+      "bytes": 71258
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/root-static-registration.json",
+      "archive": "root-static-registration.json",
+      "sha256": "152ec2fa3e3f2927fc3e9b0dac19ce9dd23f2af0c231b7054fd991447a96c615",
+      "bytes": 1360
+    },
+    {
+      "original": "/workspace/lerna-content-03-137311247276/context-integrated-qualification-sql-original4b-race.log",
+      "archive": "context-integrated-qualification-sql-original4b-race.log",
+      "sha256": "4056da40ced0f8c23c4eb7ca66130d521bdbf7549588e206edbc396724e4a439",
+      "bytes": 94488
+    }
+  ]
+}

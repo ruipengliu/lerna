@@ -1,0 +1,11 @@
+{
+  "event": "native_completion_ack",
+  "operation": "precommit-sigkill-fault",
+  "pid": 3703416,
+  "pgid": 3703416,
+  "starttime": "15543891",
+  "exit": 0,
+  "group_absent": true,
+  "timed_out": false,
+  "owned_raw_fsync_close_ack": true
+}

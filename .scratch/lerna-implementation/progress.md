@@ -6,6 +6,12 @@
 
 ## 当前状态
 
+2026-10-05 09:58 UTC：03[政策时钟八阶段语义资格](../lerna-04-content-snapshots/ticket-03-policy-clock-eight-qualification/ROOT-README.md)普通／竞态全通过，root 核 331 源及 390 行原日志；两个独立新容量构建和原四 B 普通全部通过，两个大图真实 Prepared／Completed COMMIT、两次 Publish／ReadPublished及原公开尾完成，竞态容量在途，正例 numeric fee／positive reopen 不冒称额外覆盖。Run 固定3570180的两机械控制、真实 blocked SQL N/R、原18受影响检查、make check／完整模块 race 和有限只读资源审计均通过；原15 schema／26 backend／133 paths／126进程登记无当前残留，审计 firstClose／rollback 真正返回，原 six incomplete／sticky false／unbound 身份不补，实际整合交付和新 CI 待做。固定三组[首次共享 race](current-ci-partition-shared-race-first-failure/README.md)在旧 Run reserved-progress driverbadconnection 失败，原44行及缺失的 Component／fixture尾保留；不重跑旧fa4源。准确[a9bc726 CI](../lerna-04-content-snapshots/current-ci-a9bc726/README.md)两个 job／23步骤成功，仍原49／48两组，不证明新候选。06新增 policy/orphan 初次正常因漏独立 Command reader 在 Put 前拒绝；原 setupfail 保留，仅补原caller deadline的一处夹具后正常全尾通过，真实 SIGKILL 与其 race 待验证。whole04 仍22/41、完整1.2关闭，全部22授权持续。
+
+2026-10-05 08:58 UTC：06[真实提交后回执丢失](../lerna-04-content-snapshots/ticket-06-process-recovery/postcommit-tracer/README.md)正常.362s／真实SIGKILL.323s／配对竞态3.639s全通过，原published fact／固定receipt／完整alpha6／独立key和重开尾执行，不再Step；两新增killed firstClose UNKNOWN精确scope永久保留。Run当前固定3570180的[两独立轴](current-ci-repair-decisions/README.md)Standards0硬性／1可选P3保留、Spec代码三类0；真实SQL正常释放.505s／调用方取消.562s全公开尾通过，新竞态／原受影响检查与交付仍待。03采用7cd75实测最小修正：仅去除被policy锁后时钟覆盖的前置Now，当前只静态实施、不预测容量通过。三组候选固定fa4共享普通已完成六Component组，最后fixtures在途，尚无整体通过声明。whole04仍22/41、完整1.2关闭、全22授权持续。
+
+2026-10-05 08:48 UTC：[当前源码一次大图成本测量](../lerna-04-content-snapshots/ticket-03-current-cost-measurement/README.md)原4B竞态actual exit1，原30s caller／5s Claim／120s不变。closure64仅41次材料Content读取完成，第42次Access.Current超时；static62完成62次材料及两次Plan后Claim到期；两者未进入Prepared／worker发布／Completed及成功公开尾。Root全文408行并独立核331源、10替换、binary、230实际成本单元；后续最小修复方向待基于实测决定。06[真实提交前资格](../lerna-04-content-snapshots/ticket-06-process-recovery/precommit-tracer/README.md)普通／SIGKILL／配对竞态均通过，提交后正常释放也通过，提交后SIGKILL与其余AC待做。Run真实SQL首资格失败是opaque DSN夹具被原scope拒绝；原失败保留，已采用只改夹具的准确可解析DSN及实际三连接准备，当前修正版正常／取消验证中。固定三组真实Go发现为201项／97 Content且精确33／32／32；完整共享集成待。[准确75f0429 CI](../lerna-04-content-snapshots/current-ci-75f0429/README.md)普通成功、原第二组竞态120.035s超时，新候选未在该head。票03／06仍claimed，whole04仍22/41，完整1.2关闭，全部22切片授权继续。
+
 2026-10-05 08:01 UTC：[准确7f656d9 CI](../lerna-04-content-snapshots/current-ci-7f656d9/README.md)的基础检查和普通集成成功，竞态 Content 第二组达到120.039s总包期限，后续尾未执行。固定三组候选的97项机械首RED→GREEN和第三组立即失败／原status43保留均通过，真实共享集成待验证。Run修复的caller取消及caller保持存活两对普通／竞态控制通过，原PG／SQLite与真实blocked SQL资格待补；不冒称已复现旧CI的driver根因。03[目标及隐藏祖先封闭资格](../lerna-04-content-snapshots/ticket-03-processing-body-seal/README.md)普通／竞态通过，root独立机器核330／331源；当前成本测量重新绑定中，旧大图竞态失败不撤回。06[真实首耐久场景](../lerna-04-content-snapshots/ticket-06-process-recovery/first-durable-tracer/README.md)普通／SIGKILL／配对竞态通过；随后真实提交前场景普通0.389s／SIGKILL5.534s通过，其竞态及其余AC仍待。票03／06未接受，whole04仍22/41，完整1.2关闭，全部22切片授权继续。
 
 2026-10-05 07:05 UTC：已核准确 dadd801 push CI37274041977 实际 failure，见[原日志与范围](../lerna-04-content-snapshots/current-ci-dadd801/README.md)。两归档预格式源码仅保字节改后缀，Run 正常取消丢原因另开必要修复票；不撤销05原本地源码资格，也不假整体CI通过。03 clean b28b已合入dadd，330源静态绑定核准，真实target BodySeal反例准备后先运行RED；06前置实际满足并已claimed，当前唯一LOCAL给三源fmt及一次真实normal_release对照，fault/race未授。whole04仍22/41、完整1.2关闭，全部22切片授权继续。
@@ -246,7 +252,6 @@ PG 首票检查点 `e5f26b87fb8914dc16bb6837abff6607a50cddb1` 的真实远端 [C
 
 02/03/06直接依赖已全部resolved，root已正式claimed三个独立票，采用实际首票API及规则兼容、控制、生命周期决定；分别在新worktree/branch按TDD实施。当前已完成仍为01/04/05的21/42AC，不广告完整profile，不关闭whole03。构建与数据库槽独占；新票特殊恢复归自身，全部42AC后root负责整片审查、架构、支持清单、最终CI与安全工作树清理。
 
-
 ## 切片03进程恢复票正式整合
 
 06六AC已resolved；实际代码a5005ab、独立退出文档6904b2d，经merger正式合入58f8f0f855d4e0bce1bc7dda9be4e000ad0d2385。两个父提交准确、完整tree等于worker、双方clean。真实Source发布后／Decision完成事务提交前后、target COMMIT前后、pending迟到与同seed隔离重演均有正常／SIGKILL边界证据，见[最终交接](../lerna-03-deterministic-harness/ticket-06-api-handoff.md#最终检查与本票退出)。
@@ -254,7 +259,6 @@ PG 首票检查点 `e5f26b87fb8914dc16bb6837abff6607a50cddb1` 的真实远端 [C
 审查原前代holder丢失及同gate正常对照问题经原implementer修正；Standards复核0hard／0smell，Spec a0／b0／c0，固定15commits／24paths。修后makecheck和完整base-race实际exit0，模块校验及当前六manifest共27＋71＋3逐项通过。184外部target目录、44recovery目录、118PG与另列六local-only目录全absent；工具cache首次非空guard失败保留，准确工具退出／登记后仅清理自己的已检查cache与空overlay。旧未知PG／CID／其他票未确认构建责任不动，不声称全环境zero或断电／生产耐久。
 
 当前27/42AC完成，02／03仍claimed并独立实现，整片03未退出。全部工作树保留至whole03，完整profile仍未广告。新push的准确CI待核验；04–22只有条件草案，后续仍按真实整片依赖继续。
-
 
 ## 切片03有界候选正式整合
 
@@ -271,7 +275,6 @@ merger正式合入cad6905ed64bde26883ef226455ebe1e221e97c2，parents949c392＋5b
 两个实际旧writer升级及两阶段进程恢复结果尚属于该工作树，最终双prepared合流、
 完整profile、整片两轴／架构／CI由root在实际组合后确认。04–22仍仅条件准备。
 
-
 ## 切片03取消与限额票正式整合
 
 03八AC resolved，受测源882e97b596ac2baa034881766041944b0da2e05e、纯文档交付8385b9b1aed0832b7ef9cfd75312eff6f84ae4ec，正式merge4b94cb65da2a7118e68f4cef7563793b8c97430f的parents为5bc＋8385，完整tree16f27d8与worker相同。原终态／回执与单调Stop分离，真实两种并发提交顺序、nilInput先到取消、原资源／期限及双prepared每次发布门禁完整通过；见[八AC证据](../lerna-03-deterministic-harness/ticket-03-exit-evidence.md)。
@@ -280,18 +283,15 @@ merger正式合入cad6905ed64bde26883ef226455ebe1e221e97c2，parents949c392＋5b
 
 前检查点5bc的[准确CI37189797348](../lerna-03-deterministic-harness/ci-verification.md#02准确5bc检查点的真实ci)已真实success，只证明当时83夹具／旧两迁移等范围；不替代882取消／Source0002／Decision0003／89夹具组合。当前42/42子AC不等于whole03退出。先完成准确完整profile及新的有限CI入口，再由root执行整片审查／架构／push／最终CI；04–22继续依真实whole依赖，不因子AC完成而提前启动。
 
-
 ## 切片03完整profile与整体审查检查点
 
 2026-10-04，正式整合391b4d8的whole tree与交付1aa21fc一致，准确parents3845110+1aa21fc。三项广告flag实际生成后，1.1 command.get与三个Decision方法准确协商开放；原1.0和158旧fixtures冻结、89新版原payload未变。本地新shared入口实际串行Recoveryrace79.934s、动态全部104Component=60项102.204s+44项11.633s、Source28.271s，nativefinalexit0，期限仍120s。完整两轴[报告](../lerna-03-deterministic-harness/code-review.md)最终0，历史绝对链接P2已闭合；[架构](../lerna-03-deterministic-harness/architecture-review.md)0必要新重构。
 
 [本地证据](../lerna-03-deterministic-harness/whole-exit-evidence.md)严格区分6bf受测与五项空白/文档followup、589ACK中的414uniquePG及122SQLite/32Target/3archive/6groups全absent、自身overlay/cache197保留和历史未知资源保护。原整包Component120.073失败继续保留。此处不引用旧5bcCI证明新源码；本次准确push CI待核，Implementation继续in-progress。
 
-
 ## 切片03完整退出
 
 2026-10-04，准确47ebce1 CI37194868564两job/全部steps/实际日志success，104动态分组/Recovery/Source范围已核，[完整退出](../lerna-03-deterministic-harness/exit-evidence.md)保存各证据。414PG/122SQLite/32Target/3archive/6groups全absent；197确切缓存/3空目录清理、自身overlayabsent、10worktrees正常移除/分支保留；旧3540/失名PG/CID保留。历史pending和失败不改写，03正式completed，04按最终API复核再发布。
-
 
 ## 切片04正式实施
 
@@ -310,7 +310,6 @@ root全文读取[Astra六票复核](../lerna-04-content-snapshots/published-tick
 2026-10-04，首票准确7c0bce5 CI37207013464已success，root读取两个job全部steps和完整日志：35Node/44TS/158+89+101两序双向、Recovery normal23.346/race52.987、动态133 Component正常52.653及race60组61.550＋73组24.421、Source13.205/16.724、Contentfixture0.053/1.178、Local0.048/1.065，54条旧manifest实际OK。见[CI](../lerna-04-content-snapshots/ci-verification.md)。02正在独立worktree实施，新代码不在7cCI内；whole04继续8/41。
 
 2026-10-04，04票02继续claimed。隐藏祖先撤销场景已实际business red→green（Component0.363/0.563s，native1/0且group absent）；管理入口初始red是API缺失编译失败，不冒称业务red。两处旧预期调整及准确fullRef责任分类已由授权Astra high裁决、root采用[决定](../lerna-04-content-snapshots/ticket-02-oracle-decisions.md)，实现与完整验证仍待。唯一LOCAL执行owner仍02；root未并发构建/测试/DB，whole04保持8/41。
-
 
 ## 切片04来源政策票接受并整合
 

@@ -1,0 +1,35 @@
+--- facts.go.before-format
++++ facts.go.actual-formatted
+@@ -5,11 +5,11 @@
+ 	"database/sql"
+ 	"encoding/json"
+ 	"errors"
++	"github.com/ruipengliu/lerna/adapters/postgres/internal/pgstore"
+ 	"github.com/ruipengliu/lerna/contract"
+ 	v "github.com/ruipengliu/lerna/contract/v1_2"
+ 	d "github.com/ruipengliu/lerna/domain/content"
+ 	"github.com/ruipengliu/lerna/runtime"
+-	"github.com/ruipengliu/lerna/adapters/postgres/internal/pgstore"
+ 	"time"
+ )
+ 
+@@ -22,10 +22,16 @@
+ 	}
+ 	return s.core.Now(ctx, token)
+ }
++
+ // Temporary bridge to the exact Core.Now QueryRow/Scan; no domain import in Core.
+-type contentNowSQLObserver struct { ctx context.Context }
+-func (o contentNowSQLObserver) BeginNowSQL() time.Time { return d.BeginContentQualification(o.ctx, "now.sql") }
+-func (o contentNowSQLObserver) EndNowSQL(start time.Time, err error) { d.EndContentQualification(o.ctx, "now.sql", start, err) }
++type contentNowSQLObserver struct{ ctx context.Context }
++
++func (o contentNowSQLObserver) BeginNowSQL() time.Time {
++	return d.BeginContentQualification(o.ctx, "now.sql")
++}
++func (o contentNowSQLObserver) EndNowSQL(start time.Time, err error) {
++	d.EndContentQualification(o.ctx, "now.sql", start, err)
++}
+ 
+ func (s *Store) LockCommand(ctx context.Context, token runtime.Tx, ref v.CommandRef) (*d.CommandRecord, error) {
+ 	tx, err := s.core.SQL(ctx, token, commonOwner(ref.Owner))

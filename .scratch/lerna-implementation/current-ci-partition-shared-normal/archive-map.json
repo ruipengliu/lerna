@@ -1,0 +1,206 @@
+[
+  {
+    "original": "/tmp/lerna-current-ci-partition-execution/shared-normal-qualification/go-child-0001-outcome.json",
+    "archive": "go-child-0001-outcome.json",
+    "bytes": 421,
+    "sha256": "aa7af7f3887432daaff46bb81c205175b7c87dc6478f755ea528dadb6fb76b7f"
+  },
+  {
+    "original": "/tmp/lerna-current-ci-partition-execution/shared-normal-qualification/go-child-0001-prelaunch.json",
+    "archive": "go-child-0001-prelaunch.json",
+    "bytes": 447,
+    "sha256": "b2bd30dd910b420513e4beb9eb5bbe72f357f5adec8341e40b897bc81aa27903"
+  },
+  {
+    "original": "/tmp/lerna-current-ci-partition-execution/shared-normal-qualification/go-child-0002-outcome.json",
+    "archive": "go-child-0002-outcome.json",
+    "bytes": 421,
+    "sha256": "835042c872001f234cda5d0879f6d58204738dac33f5f56aef7b386d3cc7c2ac"
+  },
+  {
+    "original": "/tmp/lerna-current-ci-partition-execution/shared-normal-qualification/go-child-0002-prelaunch.json",
+    "archive": "go-child-0002-prelaunch.json",
+    "bytes": 440,
+    "sha256": "5c1c1ee29f4395c5af82243ec340629726b7111c37ecc2274037070f3eeb81b8"
+  },
+  {
+    "original": "/tmp/lerna-current-ci-partition-execution/shared-normal-qualification/go-child-0003-outcome.json",
+    "archive": "go-child-0003-outcome.json",
+    "bytes": 421,
+    "sha256": "d5eb99cff10d4c1ef5d30ffde340650e64e9293f679edbb821427ad533ef4bb9"
+  },
+  {
+    "original": "/tmp/lerna-current-ci-partition-execution/shared-normal-qualification/go-child-0003-prelaunch.json",
+    "archive": "go-child-0003-prelaunch.json",
+    "bytes": 524,
+    "sha256": "e8123dec55b4ea9863dc8dcf0fb93babf82edba42d50a6b014b99c8c0216f97d"
+  },
+  {
+    "original": "/tmp/lerna-current-ci-partition-execution/shared-normal-qualification/go-child-0004-outcome.json",
+    "archive": "go-child-0004-outcome.json",
+    "bytes": 421,
+    "sha256": "dad2ba38a167eaba7cef81aa59a8924c38df046644a9cb90a2cc920aa21c5e80"
+  },
+  {
+    "original": "/tmp/lerna-current-ci-partition-execution/shared-normal-qualification/go-child-0004-prelaunch.json",
+    "archive": "go-child-0004-prelaunch.json",
+    "bytes": 556,
+    "sha256": "b8cf53ce14814c479c4bb4348b8e970f7c881686bcdc3530c316720f2bb6e4ef"
+  },
+  {
+    "original": "/tmp/lerna-current-ci-partition-execution/shared-normal-qualification/go-child-0005-outcome.json",
+    "archive": "go-child-0005-outcome.json",
+    "bytes": 421,
+    "sha256": "97ea38ba875d0860164cc53828ee6f5ec3d3676e30760cb042a82966c0ee7443"
+  },
+  {
+    "original": "/tmp/lerna-current-ci-partition-execution/shared-normal-qualification/go-child-0005-prelaunch.json",
+    "archive": "go-child-0005-prelaunch.json",
+    "bytes": 623,
+    "sha256": "08b1a9a4ee4ca0cee005cbbad0b95475de8d7a36dce8396435ee8e44f988dc0d"
+  },
+  {
+    "original": "/tmp/lerna-current-ci-partition-execution/shared-normal-qualification/go-child-0006-outcome.json",
+    "archive": "go-child-0006-outcome.json",
+    "bytes": 421,
+    "sha256": "fe3bc6610a95ed92cc99575f1304dc5876655ee673def53855a1b4741fcef74f"
+  },
+  {
+    "original": "/tmp/lerna-current-ci-partition-execution/shared-normal-qualification/go-child-0006-prelaunch.json",
+    "archive": "go-child-0006-prelaunch.json",
+    "bytes": 2577,
+    "sha256": "6d5a42f1ffb63f474e0ca541f352dcb6941f8867c4f7579539b16ba1a8f43420"
+  },
+  {
+    "original": "/tmp/lerna-current-ci-partition-execution/shared-normal-qualification/go-child-0007-outcome.json",
+    "archive": "go-child-0007-outcome.json",
+    "bytes": 421,
+    "sha256": "24303caaeb8a9a5c1a1c98b17a8d0ae7607a3ac43d577f3169a09f5f5c80ee8f"
+  },
+  {
+    "original": "/tmp/lerna-current-ci-partition-execution/shared-normal-qualification/go-child-0007-prelaunch.json",
+    "archive": "go-child-0007-prelaunch.json",
+    "bytes": 2578,
+    "sha256": "4f449fbc09f229f87384805fe18701cf89454afedc8a5560d51b17f55a6296a3"
+  },
+  {
+    "original": "/tmp/lerna-current-ci-partition-execution/shared-normal-qualification/go-child-0008-outcome.json",
+    "archive": "go-child-0008-outcome.json",
+    "bytes": 421,
+    "sha256": "1b58af492ce86dd1cfd8cda03f936e46c8dc14b8ce2c1c317dd11a6fc7b1a037"
+  },
+  {
+    "original": "/tmp/lerna-current-ci-partition-execution/shared-normal-qualification/go-child-0008-prelaunch.json",
+    "archive": "go-child-0008-prelaunch.json",
+    "bytes": 2672,
+    "sha256": "0e0e93825a9b63d1c404aadc44e4d8431b2b8019f06205dfc1ca2a960297cede"
+  },
+  {
+    "original": "/tmp/lerna-current-ci-partition-execution/shared-normal-qualification/go-child-0009-outcome.json",
+    "archive": "go-child-0009-outcome.json",
+    "bytes": 421,
+    "sha256": "fed9ec378210cf3295111cb55a9cb0d6f8abe051e08358fde6f14fe9162eda55"
+  },
+  {
+    "original": "/tmp/lerna-current-ci-partition-execution/shared-normal-qualification/go-child-0009-prelaunch.json",
+    "archive": "go-child-0009-prelaunch.json",
+    "bytes": 4187,
+    "sha256": "e6e0decb7efd338e2ea4b0b64c473fa58f09ac82764297628ff2cf657a425d54"
+  },
+  {
+    "original": "/tmp/lerna-current-ci-partition-execution/shared-normal-qualification/go-child-0010-outcome.json",
+    "archive": "go-child-0010-outcome.json",
+    "bytes": 421,
+    "sha256": "d8ce2adcd746a276b11cc38d3b4b3166e931bdca968e1d318e5bef403a064f59"
+  },
+  {
+    "original": "/tmp/lerna-current-ci-partition-execution/shared-normal-qualification/go-child-0010-prelaunch.json",
+    "archive": "go-child-0010-prelaunch.json",
+    "bytes": 2582,
+    "sha256": "ff68238b390792de618ea5ed6694dceed337a7c587702b3aa37418458103982f"
+  },
+  {
+    "original": "/tmp/lerna-current-ci-partition-execution/shared-normal-qualification/go-child-0011-outcome.json",
+    "archive": "go-child-0011-outcome.json",
+    "bytes": 421,
+    "sha256": "f12de77dca95c04166e262ec3d1e2ec8e926e91977428e638175ce7de9467d98"
+  },
+  {
+    "original": "/tmp/lerna-current-ci-partition-execution/shared-normal-qualification/go-child-0011-prelaunch.json",
+    "archive": "go-child-0011-prelaunch.json",
+    "bytes": 630,
+    "sha256": "b690091cfafae8595e260f3e0d4fe6708709cbae33fea3441c4e48a2244b9fbf"
+  },
+  {
+    "original": "/tmp/lerna-current-ci-partition-execution/shared-normal-qualification/module-go-source-inventory.json",
+    "archive": "module-go-source-inventory.json",
+    "bytes": 45995,
+    "sha256": "643bcc0da9997cf91f38fb6e01dafbb44176d87dc4afd8339d6913bac9dd646e"
+  },
+  {
+    "original": "/tmp/lerna-current-ci-partition-execution/shared-normal-qualification/partition-shared-normal-outcome.json",
+    "archive": "partition-shared-normal-outcome.json",
+    "bytes": 241,
+    "sha256": "b15ed5aea38809cbacf97d1949bfbe54de7b8d7b4cb327709c0ce1dc3eb92e69"
+  },
+  {
+    "original": "/tmp/lerna-current-ci-partition-execution/shared-normal-qualification/partition-shared-normal-prelaunch.json",
+    "archive": "partition-shared-normal-prelaunch.json",
+    "bytes": 477,
+    "sha256": "e71c0ffb24468dc0fec1567d4ab3cdc7f50842a7fcc036fd939360019f84d494"
+  },
+  {
+    "original": "/tmp/lerna-current-ci-partition-execution/shared-normal-qualification/partition-shared-normal-sanitized.log",
+    "archive": "partition-shared-normal-sanitized.log",
+    "bytes": 7235,
+    "sha256": "eb837b008c2938b41d17aa54a77c7335be94548142d5267ae00f4ad71103de6b"
+  },
+  {
+    "original": "/tmp/lerna-current-ci-partition-execution/shared-normal-qualification/partition-shared-normal.log",
+    "archive": "partition-shared-normal.log",
+    "bytes": 7235,
+    "sha256": "eb837b008c2938b41d17aa54a77c7335be94548142d5267ae00f4ad71103de6b"
+  },
+  {
+    "original": "/tmp/lerna-current-ci-partition-execution/shared-normal-qualification/register-go-child.py",
+    "archive": "register-go-child.py",
+    "bytes": 5929,
+    "sha256": "4f99e917e4abe29d9a091991a92c60105c50d1f9eb51092ad85320727af987fd"
+  },
+  {
+    "original": "/tmp/lerna-current-ci-partition-execution/shared-normal-qualification/run-shared.py",
+    "archive": "run-shared.py",
+    "bytes": 5581,
+    "sha256": "ecb27b5f69bd93219c07b04dd7f8a425b0609897fefc1d430bfcfb1a21ee0157"
+  },
+  {
+    "original": "/tmp/lerna-current-ci-partition-execution/shared-normal-qualification/shared-normal-final-review.json",
+    "archive": "shared-normal-final-review.json",
+    "bytes": 1085,
+    "sha256": "608ca6ca2683c5067cf875bb042f8e9618a60ab4f56bd98b3b73ca25462add2d"
+  },
+  {
+    "original": "/tmp/lerna-current-ci-partition-execution/shared-normal-qualification/shared-normal-owned-scope-sidecar.json",
+    "archive": "shared-normal-owned-scope-sidecar.json",
+    "bytes": 117654,
+    "sha256": "e21b8840e16785fc34ed8f432c3bfe0f017c362800d65619f511294c49916cda"
+  },
+  {
+    "original": "/tmp/lerna-current-ci-partition-execution/shared-normal-qualification/shared-normal-owned-scopes-sanitized.log",
+    "archive": "shared-normal-owned-scopes-sanitized.log",
+    "bytes": 135276,
+    "sha256": "d42bd871ca78d448aa8d2259bece7f919d52b2e1a95bece23f2ac15530fb7336"
+  },
+  {
+    "original": "/tmp/lerna-current-ci-partition-execution/shared-normal-qualification/shared-normal-release.json",
+    "archive": "shared-normal-release.json",
+    "bytes": 54140,
+    "sha256": "6a2fc53faba9dd3470a790e45da005ec9cb358a8bddfd899715c46b6c189753d"
+  },
+  {
+    "original": "/tmp/lerna-current-ci-partition-execution/shared-normal-qualification/source-controller-manifest.json",
+    "archive": "source-controller-manifest.json",
+    "bytes": 5840,
+    "sha256": "91663bef03ae12f400e9aa3cc3ba6c385b320494f891d7c35581ab23cfeb6629"
+  }
+]

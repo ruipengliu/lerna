@@ -1,0 +1,11 @@
+{
+  "event": "native_completion_ack",
+  "operation": "precommit-format",
+  "pid": 3697349,
+  "pgid": 3697349,
+  "starttime": "15517882",
+  "exit": 0,
+  "group_absent": true,
+  "timed_out": false,
+  "owned_raw_fsync_close_ack": true
+}

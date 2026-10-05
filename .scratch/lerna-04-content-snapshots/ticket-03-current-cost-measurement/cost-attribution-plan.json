@@ -1,0 +1,57 @@
+{
+  "STATIC_only": true,
+  "case_dimension": "exactoriginaltest/subtest owner t.Name from existingContextClaimDiagnostics, no inferred timestamps",
+  "role_dimension": [
+    "shell",
+    "mandatory",
+    "lock",
+    "manifest",
+    "material",
+    "worker-verification",
+    "outer-readback"
+  ],
+  "phase_dimension": [
+    "pre",
+    "post",
+    "read"
+  ],
+  "stages": [
+    "lock.identity_key",
+    "lock.advisory_sql",
+    "lock.row_sql",
+    "lock.decode_validate",
+    "policy.subject_prep",
+    "policy.locked_sql",
+    "policy.decode_actions",
+    "now.sql",
+    "callback",
+    "within",
+    "objects.read",
+    "integrity",
+    "read.total"
+  ],
+  "groups": {
+    "SQLcall_leaf_disjoint": [
+      1,
+      2,
+      5,
+      7
+    ],
+    "local_leaf_disjoint": [
+      0,
+      3,
+      4,
+      6
+    ],
+    "serial_sum": "sum exactly first8 mutuallyserial childstage totals; excludes callback/Within/read.total/Objects/integrity",
+    "callback_remaining": "callback inclusive wall minus serialfirst8; includes originalCore.SQL/prep/closurememo/refchecks/freshclockcomparison +observer overhead. Not pureCPU or independentlycausal cost. May be negative/incomplete dueobserver/error/incomplete attribution; retainactualvalue and attempted/completed.",
+    "Within_minus_callback": "boundary residual: originalBeginTx/set_config/ctxcheck/commit/rollback/error paths plus instrumentation; not proven DBwait. Callback unattempted whenboundaryfails counts preserved."
+  },
+  "error_semantics": "Begin incrementsattempt, End incrementscompleted+errorReturns and firsttypedcause. SQLNoRows is an actualSQLerror even if existingcallee maps it to nil/missingrecord; do not recast SQLsuccess by methodreturn. Undefined role/phase/stage incrementsdropped/ambiguous hooks, not inferred read count. ErrorwhereEndnotreturned preservesattempted>completed; no fakezero stage.",
+  "overhead": "one recorderHookWall perBegin/End includesmutex acquisition/lookup/update/causefmt untilbeforedeferredunlock; outsidehelperctx.WithValue/time.Now/dispatch/unlock and goroutine scheduler costs UNKNOWN. Hookwall is an overlapping diagnostic counter, never added to parents/serialSQL aggregate. Labels/timing can shift actualClaim5 failurephase; do not retrofit oldcapacity outcomes.",
+  "flush": "only existingSummary(testCleanup after originalStep/test has returned) underexisting d.mu; no perrow log, I/O, SQL, CPUprofile, background samplers or effectful control. Maxnonemptycellrows273 plus21derived+1header perexistingowner. Ownercount exactoriginalfixturecases knownfinite; full rawalwayspreserved.",
+  "ownership": "source labels roleactuala.read; workerPublisher.Publish verification vsouterReadPublished readback distinct; Content.ReadForProcessing setsread then observepre/post fresh phase; no authority/ref/context cache changes; originalDeadline/Cancel flow inherited unchanged byWithValue.",
+  "pre_effect": "freshrootACK/source331/original5/10mapping/newformattedproof/supervisor82c4+exactracebinaryhash/devino beforebusinessgrant; nativePIDPGIDtickregisteredfsyncbeforegate; perfixture exactschema/objectrootdevino ledgerbeforeeffects; noDsndata/logbody",
+  "complete": "actualWait/status/nativeEOF/groupabsence +fulldiagnostics/classifyfirsttypedphase/missingtails/actualscopeClose responsibilities; explicitSTOP RELEASE, noautomaticretry/fix/extraGo",
+  "no_acceptance": "measurementpass/fail only samplescurrentcost; neither deterministicperf proof nor ticketcapacity/wholeAC acceptance. Earlierfailedresults/Prepared/possibleeffects/allUNKNOWNClose retained."
+}

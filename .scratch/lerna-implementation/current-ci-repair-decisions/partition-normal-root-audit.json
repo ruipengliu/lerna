@@ -1,0 +1,13 @@
+{
+  "root_read": "65 raw lines complete, release full machine parsed",
+  "all11_child_prelaunch_outcomes_identity_single_deadline": "PASS",
+  "exact201_selectors_once": "PASS",
+  "literal97_groups_33_32_32": "PASS",
+  "current283_and5qualified_pins": "PASS",
+  "immutable4controllers": "PASS",
+  "counter_1_to12": "PASS",
+  "current_whole_PGID_absence": "PASS",
+  "native_by_root": false,
+  "race_complete": false,
+  "firstClose_inferred_from_exit": false
+}

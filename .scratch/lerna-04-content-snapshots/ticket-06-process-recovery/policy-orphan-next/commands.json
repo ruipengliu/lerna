@@ -1,0 +1,63 @@
+{
+  "status": "PLAN_ONLY_NO_TEST_SOURCE_NO_NATIVE_GRANT",
+  "ownroot": "/tmp/lerna-04-ticket06-execution",
+  "ownroot_identity": [
+    33,
+    407243,
+    "0700"
+  ],
+  "runner_sha256": "90a808a0e3cf3a3a62441818dd0f87392a763b5ebdeef9ec2d5f2b5abc3e8d6d",
+  "one_format": [
+    "gofmt",
+    "-w",
+    "conformance/component/content_process_recovery_test.go"
+  ],
+  "normal_control": [
+    "go",
+    "test",
+    "-tags=integration",
+    "-v",
+    "-count=1",
+    "-p=1",
+    "-mod=readonly",
+    "-timeout=120s",
+    "./conformance/component",
+    "-run",
+    "^TestContentSIGKILLWithCurrentSaveWithdrawalRecoversOriginalOrphanDuty$/^normal_release$"
+  ],
+  "fault_only": [
+    "go",
+    "test",
+    "-tags=integration",
+    "-v",
+    "-count=1",
+    "-p=1",
+    "-mod=readonly",
+    "-timeout=120s",
+    "./conformance/component",
+    "-run",
+    "^TestContentSIGKILLWithCurrentSaveWithdrawalRecoversOriginalOrphanDuty$/^SIGKILL_then_current_save_withdrawal$"
+  ],
+  "paired_race": [
+    "go",
+    "test",
+    "-race",
+    "-tags=integration",
+    "-v",
+    "-count=1",
+    "-p=1",
+    "-mod=readonly",
+    "-timeout=120s",
+    "./conformance/component",
+    "-run",
+    "^TestContentSIGKILLWithCurrentSaveWithdrawalRecoversOriginalOrphanDuty$"
+  ],
+  "outer_seconds": 120,
+  "sequential_individual_root_grants_required": true,
+  "first_failure_stop": true,
+  "caller_seconds": 30,
+  "child_seconds": 20,
+  "management_work_budget_seconds": 20,
+  "management_trusted_until": "same original caller deadline established before effect; no refresh on Reopen",
+  "cleanup_deadline": "same original actual PolicyChange.Deadline, not refreshed orphan deadline"
+}

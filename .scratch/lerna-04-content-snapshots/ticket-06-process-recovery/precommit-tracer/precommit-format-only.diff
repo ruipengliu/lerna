@@ -1,0 +1,460 @@
+--- precommit-before-format/conformance/component/content_process_recovery_test.go
++++ precommit-formatted/conformance/component/content_process_recovery_test.go
+@@ -44,7 +44,7 @@
+ 	LeaseUntil                                    time.Time
+ 	ObjectKey, Attempt                            string
+ 	Worked, Failed, StoreCloseACK, ObjectCloseACK bool
+-	CauseClass []string
++	CauseClass                                    []string
+ }
+ 
+ func publicationProcessService(store content.Repository, objects content.Objects, worker string) (*content.Service, error) {
+@@ -56,7 +56,7 @@
+ type contentProcessStore struct {
+ 	*pgcontent.Store
+ 	claim *runtime.Claim
+-	cfg contentProcessConfig
++	cfg   contentProcessConfig
+ 	pipes *process.Inherited
+ }
+ 
+@@ -73,47 +73,69 @@
+ // completed Record. Its lifetime is exactly this original Within invocation.
+ type contentPublicationMarkerKey struct{}
+ type contentPublicationMarker struct {
+- record *content.Record
+- complete bool
+-}
+-
+-func (s *contentProcessStore) Within(ctx context.Context, owner contract.OwnerRef, fn func(context.Context,runtime.Tx) error) error {
+- if s.cfg.Gate!="published_before_commit" {
+-  return s.Store.Within(ctx,owner,fn)
+- }
+- marker:=&contentPublicationMarker{}
+- return s.Store.Within(ctx,owner,func(txctx context.Context,tx runtime.Tx) error {
+-  txctx=context.WithValue(txctx,contentPublicationMarkerKey{},marker)
+-  if err:=fn(txctx,tx);err!=nil {return err}
+-  if marker.record==nil {return nil}
+-  if !marker.complete || s.claim==nil {return errors.New("original Content final callback did not Complete original Claim")}
+-  frame:=contentProcessFrame{Scenario:s.cfg.Scenario,Generation:s.cfg.Generation,Stage:s.cfg.Gate,LeaseUntil:s.claim.LeaseUntil,ObjectKey:marker.record.ObjectKey,Attempt:marker.record.AttemptKey}
+-  // The genuine callback (SaveVersion + Complete) has returned nil; original
+-  // Core.Within has not Commit yet. Its unchanged short Tx3 context owns gate.
+-  if err:=s.pipes.Emit(txctx,frame);err!=nil {return err}
+-  var release contentProcessFrame
+-  if err:=s.pipes.Receive(txctx,&release);err!=nil {return err}
+-  if release.Scenario!=s.cfg.Scenario || release.Generation!=s.cfg.Generation || release.Stage!="release" {return errors.New("wrong original Content precommit release")}
+-  return nil
+- })
+-}
+-
+-func (s *contentProcessStore) SaveVersion(ctx context.Context,tx runtime.Tx,record content.Record) error {
+- if err:=s.Store.SaveVersion(ctx,tx,record);err!=nil {return err}
+- marker,ok:=ctx.Value(contentPublicationMarkerKey{}).(*contentPublicationMarker)
+- if !ok || record.Ref!=s.cfg.Ref || record.Publication!="published" {return nil}
+- copied:=record
+- marker.record=&copied
+- return nil
+-}
+-
+-func (s *contentProcessStore) Complete(ctx context.Context,tx runtime.Tx,claim runtime.Claim,now time.Time) error {
+- if err:=s.Store.Complete(ctx,tx,claim,now);err!=nil {return err}
+- marker,ok:=ctx.Value(contentPublicationMarkerKey{}).(*contentPublicationMarker)
+- if !ok || marker.record==nil {return nil}
+- if s.claim==nil || !reflect.DeepEqual(*s.claim,claim) {return errors.New("Content final Complete did not use full original Claim")}
+- marker.complete=true
+- return nil
++	record   *content.Record
++	complete bool
++}
++
++func (s *contentProcessStore) Within(ctx context.Context, owner contract.OwnerRef, fn func(context.Context, runtime.Tx) error) error {
++	if s.cfg.Gate != "published_before_commit" {
++		return s.Store.Within(ctx, owner, fn)
++	}
++	marker := &contentPublicationMarker{}
++	return s.Store.Within(ctx, owner, func(txctx context.Context, tx runtime.Tx) error {
++		txctx = context.WithValue(txctx, contentPublicationMarkerKey{}, marker)
++		if err := fn(txctx, tx); err != nil {
++			return err
++		}
++		if marker.record == nil {
++			return nil
++		}
++		if !marker.complete || s.claim == nil {
++			return errors.New("original Content final callback did not Complete original Claim")
++		}
++		frame := contentProcessFrame{Scenario: s.cfg.Scenario, Generation: s.cfg.Generation, Stage: s.cfg.Gate, LeaseUntil: s.claim.LeaseUntil, ObjectKey: marker.record.ObjectKey, Attempt: marker.record.AttemptKey}
++		// The genuine callback (SaveVersion + Complete) has returned nil; original
++		// Core.Within has not Commit yet. Its unchanged short Tx3 context owns gate.
++		if err := s.pipes.Emit(txctx, frame); err != nil {
++			return err
++		}
++		var release contentProcessFrame
++		if err := s.pipes.Receive(txctx, &release); err != nil {
++			return err
++		}
++		if release.Scenario != s.cfg.Scenario || release.Generation != s.cfg.Generation || release.Stage != "release" {
++			return errors.New("wrong original Content precommit release")
++		}
++		return nil
++	})
++}
++
++func (s *contentProcessStore) SaveVersion(ctx context.Context, tx runtime.Tx, record content.Record) error {
++	if err := s.Store.SaveVersion(ctx, tx, record); err != nil {
++		return err
++	}
++	marker, ok := ctx.Value(contentPublicationMarkerKey{}).(*contentPublicationMarker)
++	if !ok || record.Ref != s.cfg.Ref || record.Publication != "published" {
++		return nil
++	}
++	copied := record
++	marker.record = &copied
++	return nil
++}
++
++func (s *contentProcessStore) Complete(ctx context.Context, tx runtime.Tx, claim runtime.Claim, now time.Time) error {
++	if err := s.Store.Complete(ctx, tx, claim, now); err != nil {
++		return err
++	}
++	marker, ok := ctx.Value(contentPublicationMarkerKey{}).(*contentPublicationMarker)
++	if !ok || marker.record == nil {
++		return nil
++	}
++	if s.claim == nil || !reflect.DeepEqual(*s.claim, claim) {
++		return errors.New("Content final Complete did not use full original Claim")
++	}
++	marker.complete = true
++	return nil
+ }
+ 
+ type contentProcessObjects struct {
+@@ -183,26 +205,39 @@
+ // Private bounded diagnostic classes preserve recognizable causes without
+ // transporting original error text, SQL, credentials, paths or body content.
+ func contentProcessCauseClasses(err error) []string {
+- if err==nil {return nil}
+- classes:=[]string{}
+- known:=[]struct{cause error;name string}{
+-  {context.Canceled,"context_canceled"},
+-  {context.DeadlineExceeded,"context_deadline"},
+-  {runtime.ErrClaim,"original_claim_invalid"},
+-  {runtime.ErrCommitUnknown,"commit_unknown"},
+-  {runtime.ErrScope,"scope_invalid"},
+-  {content.ErrObjectIntegrity,"object_integrity"},
+-  {content.ErrHolderBinding,"holder_binding"},
+-  {content.ErrUnavailable,"content_unavailable"},
+-  {local.ErrCloseTimeout,"native_drain_unconfirmed"},
+-  {os.ErrClosed,"native_fd_closed"},
+-  {syscall.EIO,"native_io"},
+- }
+- for _,kind:=range known {if errors.Is(err,kind.cause) {classes=append(classes,kind.name)}}
+- kind:=fmt.Sprintf("%T",err)
+- if len(kind)>128 {kind="type_exceeds_private_diagnostic_bound"}
+- if len(classes)==0 {classes=append(classes,"unknown_cause")}
+- return append(classes,"type:"+kind)
++	if err == nil {
++		return nil
++	}
++	classes := []string{}
++	known := []struct {
++		cause error
++		name  string
++	}{
++		{context.Canceled, "context_canceled"},
++		{context.DeadlineExceeded, "context_deadline"},
++		{runtime.ErrClaim, "original_claim_invalid"},
++		{runtime.ErrCommitUnknown, "commit_unknown"},
++		{runtime.ErrScope, "scope_invalid"},
++		{content.ErrObjectIntegrity, "object_integrity"},
++		{content.ErrHolderBinding, "holder_binding"},
++		{content.ErrUnavailable, "content_unavailable"},
++		{local.ErrCloseTimeout, "native_drain_unconfirmed"},
++		{os.ErrClosed, "native_fd_closed"},
++		{syscall.EIO, "native_io"},
++	}
++	for _, kind := range known {
++		if errors.Is(err, kind.cause) {
++			classes = append(classes, kind.name)
++		}
++	}
++	kind := fmt.Sprintf("%T", err)
++	if len(kind) > 128 {
++		kind = "type_exceeds_private_diagnostic_bound"
++	}
++	if len(classes) == 0 {
++		classes = append(classes, "unknown_cause")
++	}
++	return append(classes, "type:"+kind)
+ }
+ 
+ func TestContentPublicationProcess(t *testing.T) {
+@@ -261,16 +296,25 @@
+ 	// Report actual first Close results for this generation. A SIGKILL bypasses
+ 	// this defer and the parent must preserve native Close UNKNOWN forever.
+ 	defer func() {
+-		var objectCloseErr,storeCloseErr error
+-		if objects != nil {objectCloseErr=objects.Close()}
+-		if store != nil {storeCloseErr=store.Close()}
+-		objectClosed:=objectCloseErr==nil
+-		storeClosed:=storeCloseErr==nil
++		var objectCloseErr, storeCloseErr error
++		if objects != nil {
++			objectCloseErr = objects.Close()
++		}
++		if store != nil {
++			storeCloseErr = store.Close()
++		}
++		objectClosed := objectCloseErr == nil
++		storeClosed := storeCloseErr == nil
+ 		var causes []string
+-		for _,boundary:=range []struct{name string;cause error}{{"step",err},{"objects_close",objectCloseErr},{"store_close",storeCloseErr}} {
+-		 for _,kind:=range contentProcessCauseClasses(boundary.cause) {causes=append(causes,boundary.name+":"+kind)}
+-		}
+-		result := contentProcessFrame{Scenario: cfg.Scenario, Generation: cfg.Generation, Stage: "closed", Worked: worked, Failed: failed, StoreCloseACK: storeClosed, ObjectCloseACK: objectClosed, CauseClass:causes}
++		for _, boundary := range []struct {
++			name  string
++			cause error
++		}{{"step", err}, {"objects_close", objectCloseErr}, {"store_close", storeCloseErr}} {
++			for _, kind := range contentProcessCauseClasses(boundary.cause) {
++				causes = append(causes, boundary.name+":"+kind)
++			}
++		}
++		result := contentProcessFrame{Scenario: cfg.Scenario, Generation: cfg.Generation, Stage: "closed", Worked: worked, Failed: failed, StoreCloseACK: storeClosed, ObjectCloseACK: objectClosed, CauseClass: causes}
+ 		if pipes.Respond(ctx, result) != nil {
+ 			t.Error("child actual native Close frame unavailable")
+ 		}
+@@ -291,7 +335,7 @@
+ 		failed = true
+ 		t.Fatal("child original Content holder unavailable")
+ 	}
+-	observedStore := &contentProcessStore{Store: store, cfg:cfg, pipes:pipes}
++	observedStore := &contentProcessStore{Store: store, cfg: cfg, pipes: pipes}
+ 	observedObjects := &contentProcessObjects{Store: objects, store: observedStore, cfg: cfg, pipes: pipes}
+ 	service, err := publicationProcessService(observedStore, observedObjects, "publication-child-"+strconv.Itoa(cfg.Generation))
+ 	if err != nil {
+@@ -299,11 +343,11 @@
+ 		t.Fatal("child Content service unavailable")
+ 	}
+ 	frame.Stage = "configured"
+-	if err=pipes.Emit(ctx,frame);err!=nil {
+-		failed=true
++	if err = pipes.Emit(ctx, frame); err != nil {
++		failed = true
+ 		t.Fatal("child configured frame unavailable")
+ 	}
+-	if err=pipes.Receive(ctx,&permit);err!=nil || permit.Stage != "run" || permit.Scenario != cfg.Scenario || permit.Generation != cfg.Generation {
++	if err = pipes.Receive(ctx, &permit); err != nil || permit.Stage != "run" || permit.Scenario != cfg.Scenario || permit.Generation != cfg.Generation {
+ 		failed = true
+ 		t.Fatal("child original Job permission unavailable")
+ 	}
+@@ -365,7 +409,7 @@
+ 		t.Fatal("actual native close reply:", err)
+ 	}
+ 	if closed.Stage != "closed" || closed.Scenario != "original-content-publication" || closed.Generation != generation || closed.Failed || !closed.Worked || !closed.StoreCloseACK || !closed.ObjectCloseACK {
+-		t.Fatalf("original child work/first native Close failed: cause_class=%v",closed.CauseClass)
++		t.Fatalf("original child work/first native Close failed: cause_class=%v", closed.CauseClass)
+ 	}
+ 	if err := w.AcknowledgeChildNativeClose(child); err != nil {
+ 		t.Fatal(err)
+@@ -487,79 +531,127 @@
+ }
+ 
+ func TestContentSIGKILLBeforePublicationCommitRecoversOriginalStaging(t *testing.T) {
+- for _,kill:=range []bool{false,true} {
+-  name:="normal_release"
+-  if kill {name="SIGKILL_before_publication_commit"}
+-  t.Run(name,func(t *testing.T){
+-   ctx,cancel:=context.WithTimeout(context.Background(),30*time.Second)
+-   defer cancel()
+-   w:=fixture.New(t,ctx)
+-   installContentPolicy(t,ctx,w,alphaRef)
+-   service,err:=publicationProcessService(w.Store(),w.Objects,"original-precommit-parent")
+-   if err!=nil {t.Fatal(err)}
+-   request:=contentPut(t,alphaRef,"original-precommit-publication","YWxwaGEK")
+-   receipt:=putContentRequest(t,ctx,service,request)
+-   if _,ok:=receipt.AsAccepted();!ok {t.Fatal("normal original precommit publication not accepted")}
+-   fixed,err:=v.Encode(receipt)
+-   if err!=nil {t.Fatal(err)}
+-   child:=startContentPublicationChild(t,ctx,w,"published_before_commit",1)
+-   var gate contentProcessFrame
+-   if err=child.Event(ctx,&gate);err!=nil {t.Fatal("real original callback-before-COMMIT gate:",err)}
+-   // The exact Version row is locked in the short genuine final transaction.
+-   // Release or kill immediately: no public Get/byte IO consumes that window.
+-   if !kill {
+-    if err=child.Send(ctx,contentProcessFrame{Scenario:"original-content-publication",Generation:1,Stage:"release"});err!=nil {t.Fatal(err)}
+-    finishContentPublicationChild(t,ctx,w,child,1)
+-   } else {
+-    cutoff,stop:=context.WithTimeout(ctx,3*time.Second)
+-    defer stop()
+-    if err=child.KillWait(cutoff);err!=nil {t.Fatal("actual original precommit SIGKILL/Wait:",err)}
+-    if err=w.RetainChildNativeClose(child);err!=nil {t.Fatal(err)}
+-    var lost contentProcessFrame
+-    if err=child.Reply(cutoff,&lost);!errors.Is(err,io.EOF) {t.Fatal("precommit SIGKILL reply not EOF:",err)}
+-    confirmed,closeErr:=child.Stop(cutoff)
+-    if !confirmed || closeErr!=nil {t.Fatal("precommit killed physical pipes:",closeErr)}
+-   }
+-   _,key,err:=content.VersionIdentity(alphaRef)
+-   if err!=nil || gate.Stage!="published_before_commit" || gate.Scenario!="original-content-publication" || gate.Generation!=1 || gate.ObjectKey!=key || gate.Attempt=="" || gate.LeaseUntil.IsZero() {t.Fatal("original precommit gate identity mismatch")}
+-   body,err:=os.ReadFile(filepath.Join(w.Directory,key))
+-   if err!=nil || string(body)!="alpha\n" {t.Fatal("original precommit durable independent full bytes absent")}
+-   if kill {
+-    // Real Wait/EOF precedes public observation, so this is actual rollback,
+-    // not a reading timeout on a Version lock or an in-memory record oracle.
+-    w.Reopen(ctx)
+-    service,err=publicationProcessService(w.Store(),w.Objects,"precommit-rollback-observer")
+-    if err!=nil {t.Fatal(err)}
+-    view,err:=service.Get(ctx,contentGetWire(t,alphaRef,nil),&contentPrincipal)
+-    if err!=nil {t.Fatal(err)}
+-    if _,ok:=view.AsPreparing();!ok {t.Fatal("killed uncommitted callback leaked published metadata")}
+-    original,err:=service.GetCommand(ctx,contentCommandGetWire(t,request.CommandID),&contentPrincipal)
+-    if err!=nil {t.Fatal(err)}
+-    found,ok:=original.AsFound()
+-    if !ok {t.Fatal("actual rollback lost original fixed receipt")}
+-    current,err:=v.Encode(found.Receipt)
+-    progress,hasProgress:=found.Progress.AsContent()
+-    if err!=nil || string(current)!=string(fixed) || !hasProgress || progress.Publication!="preparing" || progress.ContentRef!=alphaRef {t.Fatal("actual rollback changed original receipt/preparing progress")}
+-    timer:=time.NewTimer(time.Until(gate.LeaseUntil.Add(time.Millisecond)))
+-    defer timer.Stop()
+-    select {case <-timer.C:case <-ctx.Done():t.Fatal(ctx.Err())}
+-    successor:=startContentPublicationChild(t,ctx,w,"",2)
+-    finishContentPublicationChild(t,ctx,w,successor,2)
+-   }
+-   w.Reopen(ctx)
+-   service,err=publicationProcessService(w.Store(),w.Objects,"precommit-final-observer")
+-   if err!=nil {t.Fatal(err)}
+-   assertContentBody(t,ctx,service,alphaRef,nil,"alpha\n")
+-   original,err:=service.GetCommand(ctx,contentCommandGetWire(t,request.CommandID),&contentPrincipal)
+-   if err!=nil {t.Fatal(err)}
+-   found,ok:=original.AsFound()
+-   if !ok {t.Fatal("original precommit receipt lost on final reopen")}
+-   current,err:=v.Encode(found.Receipt)
+-   progress,hasProgress:=found.Progress.AsContent()
+-   if err!=nil || string(current)!=string(fixed) || !hasProgress || progress.Publication!="published" || progress.ContentRef!=alphaRef {t.Fatal("precommit recovery changed original receipt/final publication")}
+-   assertExactContentObjects(t,w.Directory,map[v.ContentRef]string{alphaRef:"alpha\n"})
+-  })
+- }
++	for _, kill := range []bool{false, true} {
++		name := "normal_release"
++		if kill {
++			name = "SIGKILL_before_publication_commit"
++		}
++		t.Run(name, func(t *testing.T) {
++			ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
++			defer cancel()
++			w := fixture.New(t, ctx)
++			installContentPolicy(t, ctx, w, alphaRef)
++			service, err := publicationProcessService(w.Store(), w.Objects, "original-precommit-parent")
++			if err != nil {
++				t.Fatal(err)
++			}
++			request := contentPut(t, alphaRef, "original-precommit-publication", "YWxwaGEK")
++			receipt := putContentRequest(t, ctx, service, request)
++			if _, ok := receipt.AsAccepted(); !ok {
++				t.Fatal("normal original precommit publication not accepted")
++			}
++			fixed, err := v.Encode(receipt)
++			if err != nil {
++				t.Fatal(err)
++			}
++			child := startContentPublicationChild(t, ctx, w, "published_before_commit", 1)
++			var gate contentProcessFrame
++			if err = child.Event(ctx, &gate); err != nil {
++				t.Fatal("real original callback-before-COMMIT gate:", err)
++			}
++			// The exact Version row is locked in the short genuine final transaction.
++			// Release or kill immediately: no public Get/byte IO consumes that window.
++			if !kill {
++				if err = child.Send(ctx, contentProcessFrame{Scenario: "original-content-publication", Generation: 1, Stage: "release"}); err != nil {
++					t.Fatal(err)
++				}
++				finishContentPublicationChild(t, ctx, w, child, 1)
++			} else {
++				cutoff, stop := context.WithTimeout(ctx, 3*time.Second)
++				defer stop()
++				if err = child.KillWait(cutoff); err != nil {
++					t.Fatal("actual original precommit SIGKILL/Wait:", err)
++				}
++				if err = w.RetainChildNativeClose(child); err != nil {
++					t.Fatal(err)
++				}
++				var lost contentProcessFrame
++				if err = child.Reply(cutoff, &lost); !errors.Is(err, io.EOF) {
++					t.Fatal("precommit SIGKILL reply not EOF:", err)
++				}
++				confirmed, closeErr := child.Stop(cutoff)
++				if !confirmed || closeErr != nil {
++					t.Fatal("precommit killed physical pipes:", closeErr)
++				}
++			}
++			_, key, err := content.VersionIdentity(alphaRef)
++			if err != nil || gate.Stage != "published_before_commit" || gate.Scenario != "original-content-publication" || gate.Generation != 1 || gate.ObjectKey != key || gate.Attempt == "" || gate.LeaseUntil.IsZero() {
++				t.Fatal("original precommit gate identity mismatch")
++			}
++			body, err := os.ReadFile(filepath.Join(w.Directory, key))
++			if err != nil || string(body) != "alpha\n" {
++				t.Fatal("original precommit durable independent full bytes absent")
++			}
++			if kill {
++				// Real Wait/EOF precedes public observation, so this is actual rollback,
++				// not a reading timeout on a Version lock or an in-memory record oracle.
++				w.Reopen(ctx)
++				service, err = publicationProcessService(w.Store(), w.Objects, "precommit-rollback-observer")
++				if err != nil {
++					t.Fatal(err)
++				}
++				view, err := service.Get(ctx, contentGetWire(t, alphaRef, nil), &contentPrincipal)
++				if err != nil {
++					t.Fatal(err)
++				}
++				if _, ok := view.AsPreparing(); !ok {
++					t.Fatal("killed uncommitted callback leaked published metadata")
++				}
++				original, err := service.GetCommand(ctx, contentCommandGetWire(t, request.CommandID), &contentPrincipal)
++				if err != nil {
++					t.Fatal(err)
++				}
++				found, ok := original.AsFound()
++				if !ok {
++					t.Fatal("actual rollback lost original fixed receipt")
++				}
++				current, err := v.Encode(found.Receipt)
++				progress, hasProgress := found.Progress.AsContent()
++				if err != nil || string(current) != string(fixed) || !hasProgress || progress.Publication != "preparing" || progress.ContentRef != alphaRef {
++					t.Fatal("actual rollback changed original receipt/preparing progress")
++				}
++				timer := time.NewTimer(time.Until(gate.LeaseUntil.Add(time.Millisecond)))
++				defer timer.Stop()
++				select {
++				case <-timer.C:
++				case <-ctx.Done():
++					t.Fatal(ctx.Err())
++				}
++				successor := startContentPublicationChild(t, ctx, w, "", 2)
++				finishContentPublicationChild(t, ctx, w, successor, 2)
++			}
++			w.Reopen(ctx)
++			service, err = publicationProcessService(w.Store(), w.Objects, "precommit-final-observer")
++			if err != nil {
++				t.Fatal(err)
++			}
++			assertContentBody(t, ctx, service, alphaRef, nil, "alpha\n")
++			original, err := service.GetCommand(ctx, contentCommandGetWire(t, request.CommandID), &contentPrincipal)
++			if err != nil {
++				t.Fatal(err)
++			}
++			found, ok := original.AsFound()
++			if !ok {
++				t.Fatal("original precommit receipt lost on final reopen")
++			}
++			current, err := v.Encode(found.Receipt)
++			progress, hasProgress := found.Progress.AsContent()
++			if err != nil || string(current) != string(fixed) || !hasProgress || progress.Publication != "published" || progress.ContentRef != alphaRef {
++				t.Fatal("precommit recovery changed original receipt/final publication")
++			}
++			assertExactContentObjects(t, w.Directory, map[v.ContentRef]string{alphaRef: "alpha\n"})
++		})
++	}
+ }
+ 
+ var _ content.Repository = (*contentProcessStore)(nil)

@@ -1,0 +1,65 @@
+{
+  "STATIC_only_future_separate_root_grants": true,
+  "workdir": "/tmp/lerna-worktrees/content-snapshots-03",
+  "locked_environment": "source /workspace/.lerna-env/env.sh; GOTOOLCHAIN=local GOFLAGS=-mod=readonly",
+  "supervisor": "/workspace/lerna-content-03-137311247276/run-native.py",
+  "supervisor_sha256": "82c4e6a19e1aaabbd4a2412f89eb54c0b1690221f92d3ea826b05ca455a2042e",
+  "format_only10_owned_replacements_pending_grant": [
+    "gofmt",
+    "-w",
+    "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/context_world.go",
+    "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/context_claim_diagnostics.go",
+    "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/content_context_closure_test.go",
+    "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/content_context_material_reachable_test.go",
+    "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/content_context_test.go",
+    "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/processing.go",
+    "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/content_source.go",
+    "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/facts.go",
+    "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/policy.go",
+    "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/pgstore_core.go"
+  ],
+  "race_build_pending_separate_grant": [
+    "go",
+    "test",
+    "-race",
+    "-c",
+    "-p",
+    "1",
+    "-tags=integration",
+    "-overlay=/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/overlay.json",
+    "-o",
+    "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/component-integrated-qualification-sql-race.test",
+    "./conformance/component"
+  ],
+  "one_original4B_race_business_pending_separate_grant": [
+    "/workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/component-integrated-qualification-sql-race.test",
+    "-test.v",
+    "-test.run=^(TestContentContextReachableClosure64And65IncludesIntermediateVersions|TestContentContextStaticModeMaximumReachable62Materials|TestContentContextSingleContentBoundHasHonestLayerAndNoDispatch|TestContentContextDuplicateSelectorRoleRefusesBeforeOriginalInputReplacement)$",
+    "-test.count=1",
+    "-test.timeout=120s"
+  ],
+  "original_budgets": {
+    "caller_seconds": 30,
+    "claim_seconds": 5,
+    "go_seconds": 120,
+    "outer_seconds": 120,
+    "count": 1
+  },
+  "log_paths_future": {
+    "format": "/workspace/lerna-content-03-137311247276/context-integrated-qualification-sql-format.log",
+    "race_build": "/workspace/lerna-content-03-137311247276/context-integrated-qualification-sql-build-race.log",
+    "one_race_business": "/workspace/lerna-content-03-137311247276/context-integrated-qualification-sql-original4b-race.log"
+  },
+  "stage_gates": [
+    "rootFULL preformat10map/331source/all6diff/inverse/costplan before any fmt",
+    "owned10fmt only; source331 frozen; refresh accurate formatted proof/mappings/manifest",
+    "ONE independent currentracebinarycompile readonly/integrationp1/outer120; realPID/tick/Wait/groupabsence/sourceprovenance",
+    "rootFULL actualbinary hash/readFDfsyncClose/devino/source/map before separate soleLOCAL businessgrant",
+    "ONE fouroriginalselectors race directexactbinary freshoriginalfixtures; original rejects/setup/inputs/oracles/30/5/120 unchanged",
+    "capture fullfinite raw typedfirstphase/attempted+completed/error counts/drop/ambiguity/actualWait/groupabsence, thenSTOP RELEASE regardless result",
+    "next optimization or extra businessqualification only after root/Astra actualsampledecision"
+  ],
+  "no_profile_sampler_HTTP_preheat_retry_renew_budgetchange": true,
+  "one_race_sampling_only": true,
+  "native_unrun": true
+}

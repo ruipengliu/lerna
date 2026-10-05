@@ -1,0 +1,28 @@
+{"argv": ["gofmt", "-w", "conformance/component/content_process_recovery_test.go"], "deadline_seconds": 120, "event": "native_start_ack", "operation": "postcommit-format", "pgid": 3760029, "pid": 3760029, "root": "/tmp/lerna-04-ticket06-execution", "starttime": "15790976"}
+{"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "postcommit-format", "owned_raw_fsync_close_ack": true, "pgid": 3760029, "pid": 3760029, "starttime": "15790976", "timed_out": false}
+{"argv": ["bash", "-c", ". /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local GOFLAGS=-mod=readonly; exec \"$@\"", "owned-locked", "go", "test", "-tags=integration", "-v", "-count=1", "-p=1", "-mod=readonly", "-timeout=120s", "./conformance/component", "-run", "^TestContentSIGKILLAfterPublicationCommitRetainsOriginalPublishedFact$/^normal_release$"], "deadline_seconds": 120, "event": "native_start_ack", "operation": "postcommit-normal-control", "pgid": 3760631, "pid": 3760631, "root": "/tmp/lerna-04-ticket06-execution", "starttime": "15793710"}
+postgres lerna_test_7c490a67114ee236acd6e3b1
+objects /tmp/lerna-04-ticket06-execution/lerna-content-objects-1387287227 33 422333
+content_child_holder lerna_test_7c490a67114ee236acd6e3b1 generation=1 native_close=UNKNOWN
+content_child_native lerna_test_7c490a67114ee236acd6e3b1 generation=1 pid=3760796 pgid=3760631 start=15794178
+content_child_close lerna_test_7c490a67114ee236acd6e3b1 generation=1 store=ACK objects=ACK
+{"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "postcommit-normal-control", "owned_raw_fsync_close_ack": true, "pgid": 3760631, "pid": 3760631, "starttime": "15793710", "timed_out": false}
+{"argv": ["bash", "-c", ". /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local GOFLAGS=-mod=readonly; exec \"$@\"", "owned-locked", "go", "test", "-tags=integration", "-v", "-count=1", "-p=1", "-mod=readonly", "-timeout=120s", "./conformance/component", "-run", "^TestContentSIGKILLAfterPublicationCommitRetainsOriginalPublishedFact$/^SIGKILL_after_publication_commit_before_reply$"], "deadline_seconds": 120, "event": "native_start_ack", "operation": "postcommit-sigkill-fault", "pgid": 3769041, "pid": 3769041, "root": "/tmp/lerna-04-ticket06-execution", "starttime": "15830448"}
+postgres lerna_test_c2f794d660d6f7e336c377b4
+objects /tmp/lerna-04-ticket06-execution/lerna-content-objects-2029374551 33 423714
+content_child_holder lerna_test_c2f794d660d6f7e336c377b4 generation=1 native_close=UNKNOWN
+content_child_native lerna_test_c2f794d660d6f7e336c377b4 generation=1 pid=3769114 pgid=3769041 start=15830553
+content_child_close lerna_test_c2f794d660d6f7e336c377b4 generation=1 store=UNKNOWN objects=UNKNOWN retained=true
+{"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "postcommit-sigkill-fault", "owned_raw_fsync_close_ack": true, "pgid": 3769041, "pid": 3769041, "starttime": "15830448", "timed_out": false}
+{"argv": ["bash", "-c", ". /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local GOFLAGS=-mod=readonly; exec \"$@\"", "owned-locked", "go", "test", "-race", "-tags=integration", "-v", "-count=1", "-p=1", "-mod=readonly", "-timeout=120s", "./conformance/component", "-run", "^TestContentSIGKILLAfterPublicationCommitRetainsOriginalPublishedFact$"], "deadline_seconds": 120, "event": "native_start_ack", "operation": "postcommit-paired-race", "pgid": 3770896, "pid": 3770896, "root": "/tmp/lerna-04-ticket06-execution", "starttime": "15838349"}
+postgres lerna_test_f22e9acc40978267b5ca8c25
+objects /tmp/lerna-04-ticket06-execution/lerna-content-objects-4185093059 33 424081
+content_child_holder lerna_test_f22e9acc40978267b5ca8c25 generation=1 native_close=UNKNOWN
+content_child_native lerna_test_f22e9acc40978267b5ca8c25 generation=1 pid=3771171 pgid=3770896 start=15839185
+content_child_close lerna_test_f22e9acc40978267b5ca8c25 generation=1 store=ACK objects=ACK
+postgres lerna_test_f991ad1c96ea361e8f2a3490
+objects /tmp/lerna-04-ticket06-execution/lerna-content-objects-3499575554 33 424086
+content_child_holder lerna_test_f991ad1c96ea361e8f2a3490 generation=1 native_close=UNKNOWN
+content_child_native lerna_test_f991ad1c96ea361e8f2a3490 generation=1 pid=3771209 pgid=3770896 start=15839357
+content_child_close lerna_test_f991ad1c96ea361e8f2a3490 generation=1 store=UNKNOWN objects=UNKNOWN retained=true
+{"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "postcommit-paired-race", "owned_raw_fsync_close_ack": true, "pgid": 3770896, "pid": 3770896, "starttime": "15838349", "timed_out": false}

@@ -1,0 +1,11 @@
+--- before-qualified/domain/content/policy_cleanup.go
++++ candidate/domain/content/policy_cleanup.go
+@@ -75,7 +75,7 @@
+ 			if err != nil {
+ 				return err
+ 			}
+-			policy, err := l.store.CheckPolicy(ctx, tx, original.Subject, original.Ref, original.Purpose, []string{"save"}, now)
++			policy, err := l.store.CheckPolicy(ctx, tx, original.Subject, original.Ref, original.Purpose, []string{"save"})
+ 			if err != nil {
+ 				return err
+ 			}

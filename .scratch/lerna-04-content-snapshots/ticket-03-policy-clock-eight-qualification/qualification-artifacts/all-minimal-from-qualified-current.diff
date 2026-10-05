@@ -1,0 +1,185 @@
+--- before-qualified/adapters/postgres/content/policy.go
++++ candidate/adapters/postgres/content/policy.go
+@@ -31,7 +31,7 @@
+ 	return contentdomain.InstallFixturePolicy(ctx, s, policy, expected)
+ }
+ 
+-func (s *Store) CheckPolicy(ctx context.Context, token runtime.Tx, subject v.SubjectBinding, ref v.ContentRef, purpose string, actions []string, now time.Time) (*contentdomain.FixturePolicy, error) {
++func (s *Store) CheckPolicy(ctx context.Context, token runtime.Tx, subject v.SubjectBinding, ref v.ContentRef, purpose string, actions []string) (*contentdomain.FixturePolicy, error) {
+ 	tx, err := s.core.SQL(ctx, token, commonOwner(ref.Owner))
+ 	if err != nil {
+ 		return nil, err
+@@ -41,6 +41,7 @@
+ 		return nil, err
+ 	}
+ 	var body []byte
++	var now time.Time
+ 	err = tx.QueryRowContext(ctx, `WITH locked_policy AS MATERIALIZED (SELECT body FROM `+s.core.Table("content_fixture_policies")+` WHERE tenant_id=$1 AND owner_id=$2 AND subject_key=$3 AND content_id=$4 AND version=$5 AND purpose=$6 FOR SHARE) SELECT body,clock_timestamp() FROM locked_policy`, ref.Owner.TenantID, ref.Owner.OwnerID, key, ref.ContentID, ref.Version, purpose).Scan(&body, &now)
+ 	if errors.Is(err, sql.ErrNoRows) {
+ 		return nil, nil
+--- before-qualified/conformance/component/content_closure_test.go
++++ candidate/conformance/component/content_closure_test.go
+@@ -78,7 +78,7 @@
+ 	defer r.measure("Now", started)
+ 	return r.Repository.Now(ctx, tx)
+ }
+-func (r *closureTimingRepository) CheckPolicy(ctx context.Context, tx runtime.Tx, subject v.SubjectBinding, ref v.ContentRef, purpose string, actions []string, now time.Time) (*content.FixturePolicy, error) {
++func (r *closureTimingRepository) CheckPolicy(ctx context.Context, tx runtime.Tx, subject v.SubjectBinding, ref v.ContentRef, purpose string, actions []string) (*content.FixturePolicy, error) {
+ 	started := time.Now()
+ 	defer func() {
+ 		r.measure("CheckPolicy", started)
+@@ -87,7 +87,7 @@
+ 		stat.actions += len(actions)
+ 		r.timings[key] = stat
+ 	}()
+-	return r.Repository.CheckPolicy(ctx, tx, subject, ref, purpose, actions, now)
++	return r.Repository.CheckPolicy(ctx, tx, subject, ref, purpose, actions)
+ }
+ func (r *closureTimingRepository) LockVersion(ctx context.Context, tx runtime.Tx, ref v.ContentRef) (*content.Record, error) {
+ 	started := time.Now()
+--- before-qualified/conformance/component/content_policy_actions_test.go
++++ candidate/conformance/component/content_policy_actions_test.go
+@@ -176,11 +176,7 @@
+ 	for _, actions := range [][]string{{"read", "process", "save"}, {"read", "disclose"}, nil, {}, {"read", "read"}, {"unknown"}, {"read", "process", "save", "sync", "disclose", "read"}} {
+ 		t.Run(fmt.Sprint(actions), func(t *testing.T) {
+ 			err := w.Store().Within(ctx, contract.OwnerRef{TenantID: contract.ID(contentOwner.TenantID), OwnerID: contract.ID(contentOwner.OwnerID)}, func(ctx context.Context, tx runtime.Tx) error {
+-				now, err := w.Store().Now(ctx, tx)
+-				if err != nil {
+-					return err
+-				}
+-				policy, err := w.Store().CheckPolicy(ctx, tx, contentPrincipal, alphaRef, "verification", actions, now)
++				policy, err := w.Store().CheckPolicy(ctx, tx, contentPrincipal, alphaRef, "verification", actions)
+ 				if err != nil {
+ 					return err
+ 				}
+@@ -304,11 +300,8 @@
+ 				defer close(finished)
+ 				var p *content.FixturePolicy
+ 				err := w.Store().Within(ctx, contract.OwnerRef{TenantID: contract.ID(contentOwner.TenantID), OwnerID: contract.ID(contentOwner.OwnerID)}, func(ctx context.Context, tx runtime.Tx) error {
+-					now, err := w.Store().Now(ctx, tx)
+-					if err != nil {
+-						return err
+-					}
+-					p, err = w.Store().CheckPolicy(ctx, tx, contentPrincipal, alphaRef, "verification", []string{"read", "process", "save"}, now)
++					var err error
++					p, err = w.Store().CheckPolicy(ctx, tx, contentPrincipal, alphaRef, "verification", []string{"read", "process", "save"})
+ 					return err
+ 				})
+ 				done <- struct {
+--- before-qualified/domain/content/closure.go
++++ candidate/domain/content/closure.go
+@@ -87,15 +87,9 @@
+ 			return refusal("input_over_limit")
+ 		}
+ 		var now time.Time
+-		if len(actions) > 0 {
+-			now, err = s.config.Store.Now(ctx, tx)
+-			if err != nil {
+-				return err
+-			}
+-		}
+ 		var policy *FixturePolicy
+ 		if len(actions) > 0 {
+-			p, err := s.config.Store.CheckPolicy(ctx, tx, subject, ref, purpose, actions, now)
++			p, err := s.config.Store.CheckPolicy(ctx, tx, subject, ref, purpose, actions)
+ 			if err != nil {
+ 				return err
+ 			}
+@@ -221,7 +215,7 @@
+ 		if err != nil {
+ 			return err
+ 		}
+-		p, err := s.config.Store.CheckPolicy(ctx, tx, principal, ref, purpose, []string{action}, now)
++		p, err := s.config.Store.CheckPolicy(ctx, tx, principal, ref, purpose, []string{action})
+ 		if err != nil {
+ 			return err
+ 		}
+--- before-qualified/domain/content/policy_cleanup.go
++++ candidate/domain/content/policy_cleanup.go
+@@ -75,7 +75,7 @@
+ 			if err != nil {
+ 				return err
+ 			}
+-			policy, err := l.store.CheckPolicy(ctx, tx, original.Subject, original.Ref, original.Purpose, []string{"save"}, now)
++			policy, err := l.store.CheckPolicy(ctx, tx, original.Subject, original.Ref, original.Purpose, []string{"save"})
+ 			if err != nil {
+ 				return err
+ 			}
+--- before-qualified/domain/content/ports.go
++++ candidate/domain/content/ports.go
+@@ -92,7 +92,10 @@
+ 	// not a deferred qualification. Decorators must forward them unchanged.
+ 	ScheduleRetention(context.Context, runtime.Tx, *FixturePolicy, Record, []Record, time.Duration) error
+ 	AdvancePolicyJob(context.Context, runtime.Tx, runtime.Job, Record, string, time.Duration, time.Duration) (bool, error)
+-	CheckPolicy(context.Context, runtime.Tx, v.SubjectBinding, v.ContentRef, string, []string, time.Time) (*FixturePolicy, error)
++	// CheckPolicy locks the current policy and evaluates its actions using the
++	// owner's current clock sampled after that lock. Query or clock errors must
++	// propagate; absence or denial returns nil without reusable authority.
++	CheckPolicy(context.Context, runtime.Tx, v.SubjectBinding, v.ContentRef, string, []string) (*FixturePolicy, error)
+ 	CheckMetadataPolicy(context.Context, runtime.Tx, v.SubjectBinding, v.ContentRef, string, time.Time) (*MetadataPolicy, error)
+ 	CheckCommandReader(context.Context, runtime.Tx, v.SubjectBinding, time.Time) (bool, error)
+ 	CheckCapacity(context.Context, runtime.Tx, Limits, int64) (bool, error)
+--- before-qualified/domain/content/processing.go
++++ candidate/domain/content/processing.go
+@@ -49,11 +49,7 @@
+ 	observe := func(ctx context.Context, tx runtime.Tx) error {
+ 		// Each observation rebuilds its closure. No private records or permission
+ 		// from the first transaction are used as authority by the second one.
+-		now, err := s.config.Store.Now(ctx, tx)
+-		if err != nil {
+-			return err
+-		}
+-		p, err := s.config.Store.CheckPolicy(ctx, tx, principal, ref, purpose, []string{"read", "process"}, now)
++		p, err := s.config.Store.CheckPolicy(ctx, tx, principal, ref, purpose, []string{"read", "process"})
+ 		if err != nil {
+ 			return err
+ 		}
+@@ -64,7 +60,7 @@
+ 		if err != nil {
+ 			return err
+ 		}
+-		now, err = s.config.Store.Now(ctx, tx)
++		now, err := s.config.Store.Now(ctx, tx)
+ 		if err != nil {
+ 			return err
+ 		}
+--- before-qualified/domain/content/secondary.go
++++ candidate/domain/content/secondary.go
+@@ -44,7 +44,7 @@
+ 	if err != nil {
+ 		return nil, time.Time{}, err
+ 	}
+-	policy, err := l.store.CheckPolicy(ctx, tx, l.config.TrustedSubject, request.Ref, request.Purpose, []string{"read", "save", "sync"}, now)
++	policy, err := l.store.CheckPolicy(ctx, tx, l.config.TrustedSubject, request.Ref, request.Purpose, []string{"read", "save", "sync"})
+ 	if err != nil {
+ 		return nil, time.Time{}, err
+ 	}
+--- before-qualified/domain/content/service.go
++++ candidate/domain/content/service.go
+@@ -163,7 +163,7 @@
+ 		if !now.Before(cutoff(request.AcceptBefore)) {
+ 			return reject("expired")
+ 		}
+-		policy, err := s.config.Store.CheckPolicy(ctx, tx, principal, request.Payload.ContentRef, string(request.Payload.Purpose), []string{"save"}, now)
++		policy, err := s.config.Store.CheckPolicy(ctx, tx, principal, request.Payload.ContentRef, string(request.Payload.Purpose), []string{"save"})
+ 		if err != nil {
+ 			return err
+ 		}
+@@ -545,7 +545,7 @@
+ 		}
+ 		var targetPolicyRefs [2]v.ContentRef
+ 		for index, action := range []string{"read", "disclose"} {
+-			policy, err := s.config.Store.CheckPolicy(ctx, tx, principal, ref, string(request.Payload.Purpose), []string{action}, now)
++			policy, err := s.config.Store.CheckPolicy(ctx, tx, principal, ref, string(request.Payload.Purpose), []string{action})
+ 			if err != nil {
+ 				return err
+ 			}
+@@ -969,7 +969,7 @@
+ func (s *Service) publicationPolicy(ctx context.Context, tx runtime.Tx, record Record, now time.Time) (time.Time, time.Time, v.ErrorCode, error) {
+ 	current := cutoff(record.CurrentRetainUntil)
+ 	ioBefore := earlier(current, cutoff(record.PublishDeadline))
+-	policy, err := s.config.Store.CheckPolicy(ctx, tx, record.Subject, record.Ref, record.Purpose, []string{"save"}, now)
++	policy, err := s.config.Store.CheckPolicy(ctx, tx, record.Subject, record.Ref, record.Purpose, []string{"save"})
+ 	if err != nil {
+ 		return current, ioBefore, "", err
+ 	}

@@ -1,0 +1,20 @@
+--- before-qualified/conformance/component/content_closure_test.go
++++ candidate/conformance/component/content_closure_test.go
+@@ -78,7 +78,7 @@
+ 	defer r.measure("Now", started)
+ 	return r.Repository.Now(ctx, tx)
+ }
+-func (r *closureTimingRepository) CheckPolicy(ctx context.Context, tx runtime.Tx, subject v.SubjectBinding, ref v.ContentRef, purpose string, actions []string, now time.Time) (*content.FixturePolicy, error) {
++func (r *closureTimingRepository) CheckPolicy(ctx context.Context, tx runtime.Tx, subject v.SubjectBinding, ref v.ContentRef, purpose string, actions []string) (*content.FixturePolicy, error) {
+ 	started := time.Now()
+ 	defer func() {
+ 		r.measure("CheckPolicy", started)
+@@ -87,7 +87,7 @@
+ 		stat.actions += len(actions)
+ 		r.timings[key] = stat
+ 	}()
+-	return r.Repository.CheckPolicy(ctx, tx, subject, ref, purpose, actions, now)
++	return r.Repository.CheckPolicy(ctx, tx, subject, ref, purpose, actions)
+ }
+ func (r *closureTimingRepository) LockVersion(ctx context.Context, tx runtime.Tx, ref v.ContentRef) (*content.Record, error) {
+ 	started := time.Now()

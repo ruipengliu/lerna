@@ -1,0 +1,57 @@
+The one integrated-source measured original4B race completed with exit 1; LOCAL is STOP / RELEASE. All 408 raw lines were personally read in four finite untruncated chunks. There was no supervisor/test timeout, DATA RACE report, retry, product edit, normal run, new profile, or extra qualification.
+
+Native PID/PGID 3744673, starttick 15722102; original Wait/exit ACK is `NATIVE_EXIT status=1 group_absent=True`. The original group is empty after completion. Original caller30/Claim5/Go+outer120/count1/four selectors were unchanged. Binary 427b035349c92fe4ae120bc467c5ad19891f00f61e4c2e551eeea8e0070d6fca (32238250B/dev27/ino560903/0700) and all331 source/10replacement/mapfa2/manifestd957/commands3ab/strict82 pins matched before and after.
+
+| Original scenario | Actual result and phase |
+| --- | --- |
+| Reachable closure64 | FAIL29.57s. Compile/bind13.608377516s; dispatch Accepted then Running COMMIT. Step5.064379405s. Snapshot1.091101376s, Lock1.106910938s. 41 successful Content material reads; the 42nd Source.Material fails in Access.Current before Content begins. No Plan recorded. |
+| Closure65 rejection | PASS14.77s. Expected typed *errors.joinError/context_overflow at compile/bind14.526818775s (4.362168772s duration). Original no-dispatch/binding/receipt and reopen observation oracle passed. No measured Content role hooks; this does not mean global compilation cost is zero. |
+| Static62 materials | FAIL23.32s. Compile/bind11.810003834s; dispatch Accepted then Running COMMIT. Snapshot1.238187330s, Lock1.121158690s; all62 Materials and two Plans succeeded. Step5.138071023s. |
+| Single Content bound | PASS12.08s: original200000=9.80s and262144=2.28s; original bounded refusal/no-dispatch oracles passed. No QUAL_SQL owner header; no zero-cost claim. |
+| Duplicate selector-role refusal | PASS0.77s, original pre-input-replacement refusal oracle. No QUAL_SQL owner header; no zero-cost claim. |
+
+Closure64 first observed error is Access.Current at29.494807994s, duration541.465µs, typed *pgconn.errTimeout/context_deadline, caller remaining505.146706ms. Its Source.Material wrapper ends29.49490937s,644.488µs, same cause and zero bytes. The final ValidateClaim at29.507231906s takes662.229µs, typed *errors.errorString/claim, original lease delta−11.86ms and caller remaining492.722794ms. The 5s claim context can expire while the original30s caller remains; the short failed Current/Validate calls do not alone explain accumulated step wall. All recorded Content child stages are successful: this timeout occurs before Content qualification hooks.
+
+Static62 first observed error is final ValidateClaim at23.260976347s,859.661µs, typed *errors.errorString/claim, original lease delta−67.582ms and caller remaining6.739016409s. Material62 and Plan2 completed before it. The final step ends23.261298835s. No earlier Content child error was recorded.
+
+In both failed decision cases, the last observed decision saves are Accepted(prepared=false) COMMIT then Running(prepared=false) COMMIT. No Prepared save, worker Publisher.Publish, worker publication verification, outer ReadPublished, or Completed save was attempted in the recorded phase. Step failure terminates completeContextDecision before its public Get/Completed/candidate/exact artifact byte checks; static63 processed-ref projection and final byte/fee/receipt/reopen positive tails are likewise not executed. Compile-published source setup and Content.Put/Step/GetCommand aggregates are separate from worker artifact publication. No durable-current-state assertion or all-holder ACK is inferred from the last observed save.
+
+All three diagnostic owners use fixed273 cells each. Closure64 emitted115 nonempty cells, static62 emitted115, closure65 emitted0. Every emitted attempted count equals completed, and all emitted error_returns=0/first_cause=nil. Dropped=0/ambiguous=0 for all three. Closure hooks16398, recorder-only wall43.658005ms; static hooks14760, recorder-only wall40.369603ms. These recorder walls exclude timestamp/dispatch/unlock/scheduling; total measurement overhead remains UNKNOWN.
+
+The following role sums combine pre and post mutually serial children only. Read total is an inclusive parent shown for context, never added to those children. Rows with no recorded attempt are explicitly unexecuted measured reads rather than measured zero global cost. Units are milliseconds; full integer-ns/per-phase/all273 cells and first causes remain in one-race-business-cost-results.json.
+
+| Case / role | completed reads | inclusive Read | SQL leaves | local leaves | callback remainder | Within−callback boundary | object Read | integrity |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| closure64/shell | 1 | 438.083952 | 253.837181 | 140.433041 | 35.581724 | 6.430290 | 1.117244 | 0.015717 |
+| closure64/mandatory | 1 | 507.002565 | 278.989025 | 141.142877 | 38.352148 | 46.396845 | 1.396640 | 0.047603 |
+| closure64/lock | 1 | 513.866952 | 305.949754 | 155.969482 | 41.023296 | 9.742845 | 0.457478 | 0.008404 |
+| closure64/manifest | 1 | 491.104333 | 296.994944 | 150.715094 | 35.347015 | 5.810959 | 1.180789 | 0.016246 |
+| closure64/material | 41 | 1887.602189 | 1091.145689 | 393.243643 | 112.576044 | 236.813759 | 25.469183 | 0.329912 |
+| static62/shell | 1 | 490.260559 | 319.525358 | 131.043218 | 29.056374 | 9.038109 | 0.561896 | 0.016258 |
+| static62/mandatory | 1 | 575.034315 | 366.952722 | 155.373822 | 40.998190 | 9.602522 | 1.400073 | 0.045511 |
+| static62/lock | 1 | 490.611709 | 313.400624 | 140.879590 | 30.070785 | 4.988898 | 0.480888 | 0.005767 |
+| static62/manifest | 1 | 544.627980 | 345.198187 | 161.041358 | 31.807641 | 5.130940 | 0.747951 | 0.016618 |
+| static62/material | 62 | 1378.887274 | 659.475389 | 246.415549 | 66.084053 | 335.173236 | 35.533707 | 0.467481 |
+
+Worker-verification and outer-readback each have no recorded read in both cases; their zero registered cells match missing publication phases. Closure65 has no recorded read of any role. This finite partial failure output cannot predict full-success costs or compare equal work across both cases (closure completed41 material reads, static62).
+
+The child stage totals below sum mutually serial leaf cells across successful measured roles/pre+post, excluding callback/Within/Read/object parents. Count is attempted=completed; all actual error_returns are zero. Units are milliseconds.
+
+| Stage | closure64 count / wall | static62 count / wall |
+| --- | ---: | ---: |
+| lock.identity_key | 866 / 310.229954 | 754 / 271.859425 |
+| lock.advisory_sql | 866 / 317.597020 | 754 / 301.714323 |
+| lock.row_sql | 866 / 479.102887 | 754 / 444.952233 |
+| lock.decode_validate | 866 / 345.591384 | 754 / 259.251960 |
+| policy.subject_prep | 866 / 159.659593 | 754 / 147.743165 |
+| policy.locked_sql | 866 / 522.381802 | 754 / 456.555041 |
+| policy.decode_actions | 866 / 166.023206 | 754 / 155.898987 |
+| now.sql | 1822 / 907.834884 | 1640 / 801.330683 |
+
+SQL leaf wall includes original argument evaluation and driver/network/server wait, not server execution. Local leaves are wall rather than CPU, including identity/decode/validation/preparation work. Callback remainder contains uncategorized traversal/context/helper/observer effects, not pure CPU. Within−callback is a transaction boundary residual, not proven SQL wait. No parent+child summation, arbitrary zero-cost inference, memo proposal, or causal performance acceptance follows from this sample. Full pre/post rows preserve each actual partition separately.
+
+Resource ownership interval contains18 freshly registered original fixture schemas and six object-root paths. First object inode560578, later distinct sequential paths reuse inode560575 on dev27; this reuse is recorded rather than treated as one fixture. Registration belongs to original fixtures before their effects. Native exit/Wait/groupabsence is independently observed; current read-only stat finds all six object paths absent. No PG cleanup query or cleanup action was performed. Those facts do not retroactively ACK logical Close, all holders, old possible effects, or the original testing CPU-profile descriptor. Profile logicalClose UNKNOWN and all previous failures remain immutable.
+
+Artifacts (absolute base /workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay): one-race-business-prelaunch-registration.json; one-race-business-actual-outcome.json (original complete/pre-review fact preserved); one-race-business-actual-outcome.reviewed.json; one-race-business-cost-results.json; one-race-business-resource-interval-facts.json; one-race-business-results.md. Raw is /workspace/lerna-content-03-137311247276/context-integrated-qualification-sql-original4b-race.log,408lines94488B,SHA4056da40ced0f8c23c4eb7ca66130d521bdbf7549588e206edbc396724e4a439. Separate runner/native ledger facts remain in native-identities.jsonl and owned-scopes.log.
+
+STOP / RELEASE LOCAL after the sole authorized run. No next native action authorized. This measurement remains failed capacity evidence; semantic pure/read-gate/targetSeal/ancestorSeal qualifications remain separately recorded passes.

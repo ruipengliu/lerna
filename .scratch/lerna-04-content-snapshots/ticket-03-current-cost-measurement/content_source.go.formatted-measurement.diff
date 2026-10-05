@@ -1,0 +1,51 @@
+--- /tmp/lerna-worktrees/content-snapshots-03/adapters/content/decision/source.go
++++ /workspace/lerna-content-03-137311247276/large-graph-integrated-qualification-sql-overlay/content_source.go
+@@ -8,6 +8,7 @@
+ 	engine "github.com/ruipengliu/lerna/components/decision_engine"
+ 	v "github.com/ruipengliu/lerna/contract/v1_1"
+ 	c "github.com/ruipengliu/lerna/contract/v1_2"
++	contentdomain "github.com/ruipengliu/lerna/domain/content"
+ 	compiler "github.com/ruipengliu/lerna/domain/task/context"
+ 	"io"
+ 	"reflect"
+@@ -55,7 +56,7 @@
+ 	if err != nil {
+ 		return out, err
+ 	}
+-	raw, err := a.read(ctx, binding.Bundle.Shell.Ref, remaining)
++	raw, err := a.read(contentdomain.WithContentQualificationRole(ctx, "shell"), binding.Bundle.Shell.Ref, remaining)
+ 	if err != nil {
+ 		return out, err
+ 	}
+@@ -64,7 +65,7 @@
+ 	}
+ 	// Mandatory validation is an additional actual bounded Content read. It is
+ 	// deliberately outside frozen DecisionUsage's shell/lock/manifest/material sum.
+-	mandatory, err := a.read(ctx, binding.Bundle.Mandatory.Ref, 262144)
++	mandatory, err := a.read(contentdomain.WithContentQualificationRole(ctx, "mandatory"), binding.Bundle.Mandatory.Ref, 262144)
+ 	if err != nil {
+ 		return engine.Snapshot{}, err
+ 	}
+@@ -105,7 +106,7 @@
+ 	if !slices.Contains(binding.Bundle.Materials, exact) {
+ 		return nil, engine.ErrForbidden
+ 	}
+-	return a.read(ctx, exact, remaining)
++	return a.read(contentdomain.WithContentQualificationRole(ctx, "material"), exact, remaining)
+ }
+ func (a *Adapter) ReadFixtureLock(ctx context.Context, ref v.InstallLockRef, p engine.Permission, remaining int64) (engine.FixtureLock, error) {
+ 	var out engine.FixtureLock
+@@ -116,11 +117,11 @@
+ 	if ref != binding.Input.Request.Payload.ComponentRef.InstallLockRef {
+ 		return out, engine.ErrForbidden
+ 	}
+-	lockRaw, err := a.read(ctx, binding.Bundle.Lock.Ref, remaining)
++	lockRaw, err := a.read(contentdomain.WithContentQualificationRole(ctx, "lock"), binding.Bundle.Lock.Ref, remaining)
+ 	if err != nil {
+ 		return out, err
+ 	}
+-	manifestRaw, err := a.read(ctx, binding.Bundle.Manifest.Ref, remaining-int64(len(lockRaw)))
++	manifestRaw, err := a.read(contentdomain.WithContentQualificationRole(ctx, "manifest"), binding.Bundle.Manifest.Ref, remaining-int64(len(lockRaw)))
+ 	if err != nil {
+ 		return out, err
+ 	}

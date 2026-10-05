@@ -1,0 +1,28 @@
+--- before-qualified/domain/content/closure.go
++++ candidate/domain/content/closure.go
+@@ -87,15 +87,9 @@
+ 			return refusal("input_over_limit")
+ 		}
+ 		var now time.Time
+-		if len(actions) > 0 {
+-			now, err = s.config.Store.Now(ctx, tx)
+-			if err != nil {
+-				return err
+-			}
+-		}
+ 		var policy *FixturePolicy
+ 		if len(actions) > 0 {
+-			p, err := s.config.Store.CheckPolicy(ctx, tx, subject, ref, purpose, actions, now)
++			p, err := s.config.Store.CheckPolicy(ctx, tx, subject, ref, purpose, actions)
+ 			if err != nil {
+ 				return err
+ 			}
+@@ -221,7 +215,7 @@
+ 		if err != nil {
+ 			return err
+ 		}
+-		p, err := s.config.Store.CheckPolicy(ctx, tx, principal, ref, purpose, []string{action}, now)
++		p, err := s.config.Store.CheckPolicy(ctx, tx, principal, ref, purpose, []string{action})
+ 		if err != nil {
+ 			return err
+ 		}

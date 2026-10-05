@@ -1,0 +1,24 @@
+{
+  "status": "STOP_RELEASED",
+  "actual_precommit_fault_only_pass": true,
+  "native_actual": {
+    "event": "native_completion_ack",
+    "operation": "precommit-sigkill-fault",
+    "pid": 3703416,
+    "pgid": 3703416,
+    "starttime": "15543891",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false,
+    "owned_raw_fsync_close_ack": true
+  },
+  "formatted_source_pins_17_unchanged": true,
+  "manifest_sha256": "52f1179b491b0e1c2dcdaee74f910b9bb88c37dd5871e700a1a79c5377fd2a39",
+  "raw_log_sha256": "7cb9ce5c433554a9e6f015fd9e811e84dbb59890874609d16eba4fc0350c00b5",
+  "ledger_lines": 54,
+  "precommit_race_unexecuted": true,
+  "other_tracer_unexecuted": true,
+  "rollback_public_observation": "ORIGINAL_PREPARING_FIXED_RECEIPT_PROGRESS_AFTER_REAL_SIGKILL_WAIT_EOF",
+  "original_claim_expiry": "NATURAL_LEASE_UNTIL_PLUS_1MS",
+  "killed_original_child_native_first_close": "UNKNOWN_PERMANENTLY_RETAIN_EXACT_SCOPE"
+}

@@ -1,0 +1,8 @@
+=== RUN   TestContentSIGKILLBeforePublicationCommitRecoversOriginalStaging
+=== RUN   TestContentSIGKILLBeforePublicationCommitRecoversOriginalStaging/normal_release
+    content_process_recovery_test.go:557: Content child native pid=3698391 pgid=3698205 start=15522007 generation=1
+--- PASS: TestContentSIGKILLBeforePublicationCommitRecoversOriginalStaging (0.37s)
+    --- PASS: TestContentSIGKILLBeforePublicationCommitRecoversOriginalStaging/normal_release (0.37s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/component	0.389s
+NATIVE_COMPLETION_ACK {"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "precommit-normal-control", "pgid": 3698205, "pid": 3698205, "starttime": "15521567", "timed_out": false}

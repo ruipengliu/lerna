@@ -1,0 +1,6 @@
+{
+  "old_current_queryrow_complete_source_line_byteequal": true,
+  "line_sha256": "99e9e87c64126577e74c8eefa5459e98f3b037b818317fa03617acdc1dd62753",
+  "method": "Exact byte comparison of original complete QueryRowContext SQL+arguments+Scan line, not whitespace-normalized; only method signature and newlocal scan destination differ in adapter.",
+  "locked_MATERIALIZED_FOR_SHARE_then_outer_clock_unchanged": true
+}

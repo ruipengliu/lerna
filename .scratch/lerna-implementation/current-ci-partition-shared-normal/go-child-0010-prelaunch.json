@@ -1,0 +1,22 @@
+{
+  "event": "owned_go_child_start_ack",
+  "operation": "go-child-0010",
+  "parent_operation": "partition-shared-normal",
+  "pid": 3783436,
+  "pgid": 3773218,
+  "starttime": "15879507",
+  "root": "/tmp/lerna-current-ci-partition-execution",
+  "argv": [
+    "/home/agent/.local/toolchains/go1.27.1/bin/go",
+    "test",
+    "-p=1",
+    "-count=1",
+    "-tags=integration",
+    "-timeout=120s",
+    "./conformance/component",
+    "-run",
+    "^(TestPublicErrorsAreClosedAndClassifiable|TestEnvelopeAcceptsDefinedFutureMethodWithoutOfferingExecution|TestCommandGetRetainsOriginalIdentitySeparateFromQuery|TestCommandGetRequiresExactTargetAndRejectsWriteRevision|TestProgrammableEnvelopeCannotSmuggleJSONNumbers|TestUnknownVersionAndMethodCannotDowngrade|TestSharedCommandFixtures|TestProgrammaticPayloadAlsoEnforcesContainerDepth|TestPublicErrorProjectionCannotDiscloseLocalCause|TestProgrammaticPayloadRejectsValuesOutsideJSON|TestCancelledBeforeInputHasExactZeroObservations|TestFixedDecisionInputTypedRoundtrip|TestDecisionDigestAndIsolatedInventory|TestCompletedDecisionContractNegotiatesAllMethods|TestCompletedDecisionContractRefusesInexactNegotiation|TestCommandDigestMatchesIndependentGolden|TestDigestDoesNotGrantExecutionForFixtureMethods|TestNegotiationAdvertisesOnlyCompletedCommandGet|TestNegotiationAcceptsExactMethodSchemas|TestNegotiationSharedRefusals|TestNegotiationThenAuthenticatedQueryPreservesReceiptAndCurrentProgress|TestNegotiationSchemaDigestIndependentGoldens|TestNegotiationDoesNotOpenDesignedBusinessMethods|TestAuthenticatedQueryOpaqueRefusalAndNormalControl|TestAuthenticatedQuerySnapshotsCallerWireAndTrustedBinding|TestAuthenticatedQuerySharedFixtures|TestAuthenticatedQueryCancellationIsAReadFaultNotAuthorizationRefusal|TestAuthenticatedQueryFixedOwnerSurvivesDirectoryAndDefaultChangesReadOnly|TestAuthenticatedQueryRequiresFiniteContextAndKeepsStartCutoff|TestAuthenticatedQuery11SharedFixtures|TestReadOnlyFactsDoNotReinterpretFixedReceipt|TestReadOnlyFactsSeparateAbsenceAndUnavailability|TestReturnedReadCannotMutateRetainedFactRevision|TestSharedResponseFixtures|TestClosedReceiptRoundtrip|TestResponseEncodingValidatesOriginalIdentity|TestRevisionRetainsExactLargeInteger|TestValueBoundaryRejectsTruncationAndMalformedJSON|TestPublicJSONBoundaryPreservesUnicodeAndRejectsAmbiguity|TestSharedValueFixtures|TestEncodingCannotReplaceInvalidUnicode|TestRawJSONBodyAndDepthLimits|TestCommandEncodingPreservesCompactUnicodeAtBodyLimit)$"
+  ],
+  "original_whole_deadline_monotonic": 159927.303240098,
+  "remaining_whole_seconds": 1132.2242379969975
+}

@@ -1,0 +1,39 @@
+[
+  {
+    "old": "var ErrProcessingLimit =",
+    "new": "// Temporary measurement-only overlay: these context labels select counters.\n// They contain no authority, ref/body cache, budget, deadline, or current fact.\ntype ContentQualificationObserver interface {\n\tBeginContentQualification(role, phase, stage string)\n\tEndContentQualification(role, phase, stage string, elapsed time.Duration, err error)\n}\ntype contentQualificationKey struct{}\ntype contentQualificationLabels struct {\n\tobserver ContentQualificationObserver\n\trole, phase string\n}\nfunc WithContentQualificationObserver(ctx context.Context, observer ContentQualificationObserver, role string) context.Context {\n\treturn context.WithValue(ctx, contentQualificationKey{}, contentQualificationLabels{observer: observer, role: role})\n}\nfunc WithContentQualificationRole(ctx context.Context, role string) context.Context {\n\tif labels, ok := ctx.Value(contentQualificationKey{}).(contentQualificationLabels); ok {\n\t\tlabels.role = role\n\t\treturn context.WithValue(ctx, contentQualificationKey{}, labels)\n\t}\n\treturn ctx\n}\nfunc WithContentQualificationPhase(ctx context.Context, phase string) context.Context {\n\tif labels, ok := ctx.Value(contentQualificationKey{}).(contentQualificationLabels); ok {\n\t\tlabels.phase = phase\n\t\treturn context.WithValue(ctx, contentQualificationKey{}, labels)\n\t}\n\treturn ctx\n}\nfunc ContentQualificationActive(ctx context.Context) bool {\n\tlabels, ok := ctx.Value(contentQualificationKey{}).(contentQualificationLabels)\n\treturn ok && labels.observer != nil && labels.phase != \"\"\n}\nfunc BeginContentQualification(ctx context.Context, stage string) time.Time {\n\tif labels, ok := ctx.Value(contentQualificationKey{}).(contentQualificationLabels); ok && labels.observer != nil && labels.phase != \"\" {\n\t\tlabels.observer.BeginContentQualification(labels.role, labels.phase, stage)\n\t\treturn time.Now()\n\t}\n\treturn time.Time{}\n}\nfunc EndContentQualification(ctx context.Context, stage string, start time.Time, err error) {\n\tif start.IsZero() { return }\n\tif labels, ok := ctx.Value(contentQualificationKey{}).(contentQualificationLabels); ok && labels.observer != nil && labels.phase != \"\" {\n\t\tlabels.observer.EndContentQualification(labels.role, labels.phase, stage, time.Since(start), err)\n\t}\n}\n\nvar ErrProcessingLimit =",
+    "count": 1
+  },
+  {
+    "old": "\tobserve := func(ctx context.Context, tx runtime.Tx) error {",
+    "new": "\tobservationPhase := \"pre\"\n\tobserve := func(ctx context.Context, tx runtime.Tx) (observationErr error) {\n\t\tctx = WithContentQualificationPhase(ctx, observationPhase)\n\t\tcallbackStart := BeginContentQualification(ctx, \"callback\")\n\t\tdefer func() { EndContentQualification(ctx, \"callback\", callbackStart, observationErr) }()",
+    "count": 1
+  },
+  {
+    "old": "\tif err = s.config.Store.Within(ctx, owner(s.config.Owner), observe); err != nil {\n\t\treturn ProcessingRead{}, err\n\t}",
+    "new": "\tpreQualificationContext := WithContentQualificationPhase(ctx, \"pre\")\n\tpreWithinStart := BeginContentQualification(preQualificationContext, \"within\")\n\tif err = s.config.Store.Within(ctx, owner(s.config.Owner), observe); err != nil {\n\t\tEndContentQualification(preQualificationContext, \"within\", preWithinStart, err)\n\t\treturn ProcessingRead{}, err\n\t}\n\tEndContentQualification(preQualificationContext, \"within\", preWithinStart, nil)",
+    "count": 1,
+    "positional_original": true
+  },
+  {
+    "old": "\tif err = s.config.Store.Within(ctx, owner(s.config.Owner), observe); err != nil {\n\t\treturn ProcessingRead{}, err\n\t}",
+    "new": "\tobservationPhase = \"post\"\n\tpostQualificationContext := WithContentQualificationPhase(ctx, \"post\")\n\tpostWithinStart := BeginContentQualification(postQualificationContext, \"within\")\n\tif err = s.config.Store.Within(ctx, owner(s.config.Owner), observe); err != nil {\n\t\tEndContentQualification(postQualificationContext, \"within\", postWithinStart, err)\n\t\treturn ProcessingRead{}, err\n\t}\n\tEndContentQualification(postQualificationContext, \"within\", postWithinStart, nil)",
+    "count": 1,
+    "positional_original": true
+  },
+  {
+    "old": "\tbody, err := s.config.Objects.Read(bounded, objectKey, ref.Hash, length)",
+    "new": "\tobjectsStart := BeginContentQualification(ctx, \"objects.read\")\n\tbody, err := s.config.Objects.Read(bounded, objectKey, ref.Hash, length)\n\tEndContentQualification(ctx, \"objects.read\", objectsStart, err)",
+    "count": 1
+  },
+  {
+    "old": "\tif err = bounded.Err(); err != nil {",
+    "new": "\tintegrityStart := BeginContentQualification(ctx, \"integrity\")\n\tif err = bounded.Err(); err != nil {\n\t\tEndContentQualification(ctx, \"integrity\", integrityStart, err)",
+    "count": 1
+  },
+  {
+    "old": "\tif int64(len(body)) != length || processingHash(body) != ref.Hash {\n\t\treturn ProcessingRead{}, ErrObjectIntegrity\n\t}",
+    "new": "\tif int64(len(body)) != length || processingHash(body) != ref.Hash {\n\t\tEndContentQualification(ctx, \"integrity\", integrityStart, ErrObjectIntegrity)\n\t\treturn ProcessingRead{}, ErrObjectIntegrity\n\t}\n\tEndContentQualification(ctx, \"integrity\", integrityStart, nil)",
+    "count": 1
+  }
+]

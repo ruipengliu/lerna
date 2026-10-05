@@ -1,0 +1,55 @@
+{
+  "raw_interval_preserved": "process_group 3744673 3744673 /workspace/lerna-content-03-137311247276\npostgres lerna_test_957de549b18945560a017630\npostgres lerna_test_04d161cba895af3c219ad7e4\npostgres lerna_test_9b197c48ea0e05dbe8813537\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-1960662065 27 560578\npostgres lerna_test_524326d69d5cf4f3d873651c\npostgres lerna_test_9e1cac48933c8dbca8ab05ca\npostgres lerna_test_d46bede65f8832523453126a\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-2934631594 27 560575\npostgres lerna_test_6885bddc2cf0365251d796b4\npostgres lerna_test_42f58076e7d6538af5d55535\npostgres lerna_test_69265f2d6d777cc81100a33f\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-2226434616 27 560575\npostgres lerna_test_c447f7a673a8c620bf8bf540\npostgres lerna_test_41ad69936d9c684c93f737f2\npostgres lerna_test_0c7956ec3c94c1b48f39cb8c\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-2428959053 27 560575\npostgres lerna_test_73c34752688a676e4b7692d2\npostgres lerna_test_6db870be129bbea17a3162d8\npostgres lerna_test_ff1d016397a1b1b11e9ec4ab\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-2059924742 27 560575\npostgres lerna_test_128a8d3d4797ae52dad60e93\npostgres lerna_test_4c78bb283fe205dc8e7c8499\npostgres lerna_test_ebf6dcb3802bbfe152c698b6\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-2223778152 27 560575\nnative_exit 3744673 3744673 status=1 group_absent=True\n",
+  "ownership": "Original fixture registration owns six fresh fixture resource groups; source unchanged. Interval order identifies groups, not inferred successful business tails.",
+  "object_current_path_facts": [
+    {
+      "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-1960662065",
+      "registered_device": 27,
+      "registered_inode": 560578,
+      "current_readonly_stat": {
+        "exists": false
+      }
+    },
+    {
+      "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-2934631594",
+      "registered_device": 27,
+      "registered_inode": 560575,
+      "current_readonly_stat": {
+        "exists": false
+      }
+    },
+    {
+      "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-2226434616",
+      "registered_device": 27,
+      "registered_inode": 560575,
+      "current_readonly_stat": {
+        "exists": false
+      }
+    },
+    {
+      "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-2428959053",
+      "registered_device": 27,
+      "registered_inode": 560575,
+      "current_readonly_stat": {
+        "exists": false
+      }
+    },
+    {
+      "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-2059924742",
+      "registered_device": 27,
+      "registered_inode": 560575,
+      "current_readonly_stat": {
+        "exists": false
+      }
+    },
+    {
+      "registered_path": "/workspace/lerna-content-03-137311247276/lerna-content-objects-2223778152",
+      "registered_device": 27,
+      "registered_inode": 560575,
+      "current_readonly_stat": {
+        "exists": false
+      }
+    }
+  ],
+  "scope_ack_limit": "Actual native Wait/groupabsence is acknowledged. Read-only current path absence is not original logical Close/all holder ACK/PGschema cleanup ACK. No SQL cleanup probe or cleanup action performed."
+}

@@ -1,0 +1,3257 @@
+{
+  "kind": "actual shared-normal complete original ledger interval STATIC audit; no PG/catalog effects",
+  "interval_1based": [
+    106,
+    1166
+  ],
+  "interval_lines": 1061,
+  "record_type_counts": {
+    "native_start_ack": 1,
+    "owned_go_child_start_ack": 11,
+    "owned_go_child_completion_ack": 11,
+    "postgres": 596,
+    "sqlite": 122,
+    "objects": 180,
+    "fixture_unregistered_attempt_duty": 1,
+    "fixture_unregistered_attempt_inode": 1,
+    "fixture_unregistered_attempt_owner_removal": 1,
+    "frozen_content_build_scope": 4,
+    "frozen_content_compiler_prestart": 4,
+    "frozen_content_compiler_start_ack": 4,
+    "frozen_content_compiler_completion": 4,
+    "frozen_content_compiler_artifact": 4,
+    "legacy_original_prestart_duty": 4,
+    "legacy_original_start_ack": 4,
+    "legacy_original_published": 4,
+    "legacy_original_completion": 4,
+    "legacy_exact_scope_qualified": 4,
+    "pg_legacy_restore_connection": 3,
+    "pg_policy_connections": 29,
+    "pg_policy_holder": 32,
+    "fixture_object_file": 4,
+    "pg_scan_deadline_fault": 1,
+    "legacy_initial_short_upgrade_authorization": 1,
+    "fixture_nonempty_object": 1,
+    "directory": 3,
+    "process_group": 6,
+    "pg_migration_connection": 1,
+    "fixture_close_control": 3,
+    "object_child_prestart_duty": 3,
+    "object_child_start_ack": 3,
+    "object_child_logical_close_ack": 2,
+    "object_child_kernel_completion": 3,
+    "object_child_logical_close_unknown": 1,
+    "native_completion_ack": 1
+  },
+  "postgres_registration_records": 596,
+  "postgres_unique_schema_count": 584,
+  "postgres_unique_schemas": [
+    "lerna_test_00281b5bb812be34c097b8c6",
+    "lerna_test_005bd6420d109a531ffc2cd1",
+    "lerna_test_00b3917ddd19bacb68edc76e",
+    "lerna_test_00bcc290f210bc63f0be5962",
+    "lerna_test_00fd1748c87349cc2d7ba54b",
+    "lerna_test_010d0f5f4ea778ff01af4e24",
+    "lerna_test_013fb31e52c9790b7742d82f",
+    "lerna_test_01deb92e22282bed3c4ed565",
+    "lerna_test_023a66c1787703836bd81b10",
+    "lerna_test_030407d4e43b13d205f54108",
+    "lerna_test_035a96d8403aaf90ad056926",
+    "lerna_test_037a56a7201be5cd7aff397e",
+    "lerna_test_045a895af0e80ca9ca5237a5",
+    "lerna_test_04928bc797dc153bc5e4864c",
+    "lerna_test_057f66babd9a58c014121804",
+    "lerna_test_06417579a162e3114a429b3b",
+    "lerna_test_065970f1a179866f21046116",
+    "lerna_test_06c8bbde95a2e1c36a179651",
+    "lerna_test_06e2017cc9ec5330480c5b43",
+    "lerna_test_07a36bfeb164c42cb358a733",
+    "lerna_test_07d6eb6264277ced042c1a2e",
+    "lerna_test_07f67727868dda2d8ad71e11",
+    "lerna_test_08437feb66075cf139bc1704",
+    "lerna_test_086f0f89d6f025d8f7669dd8",
+    "lerna_test_08bf30baf99b94d022c044f2",
+    "lerna_test_08edb56113154bcdc2619f20",
+    "lerna_test_09441f4d71eef1838b7cf987",
+    "lerna_test_09a6a9bde74294d5347cc1a5",
+    "lerna_test_09be2c0a3323b8494ba7b7f4",
+    "lerna_test_0a16fb9f7569f2a52fd93fbb",
+    "lerna_test_0a371ac0c5ae7b5b9e9bd9b8",
+    "lerna_test_0b44b55b38b2750804dfd303",
+    "lerna_test_0b8f117c9b0b21e764aeb50f",
+    "lerna_test_0cc3aadffbc3f19508b9e120",
+    "lerna_test_0cd4e52a5e773555811a4e52",
+    "lerna_test_0d3e9f81dbeac2ce78d9a3a7",
+    "lerna_test_0d44c9ca11bee42b61e4937b",
+    "lerna_test_0d4ecf2503e225fe1a674af9",
+    "lerna_test_0d95f9cdc8f4ea45804cfcf4",
+    "lerna_test_0da512d544a2d4b79413fbf1",
+    "lerna_test_0da92a08a4de3460f15885f9",
+    "lerna_test_0dc0510a844daa99c913f837",
+    "lerna_test_0df121b986596d5733ee6a05",
+    "lerna_test_0df405886bd8dfc73312ff4a",
+    "lerna_test_0ee0a5f812642d843d0d5754",
+    "lerna_test_0f4766c6dae6d0bc923518e4",
+    "lerna_test_0f560646db2ebcbc2f14b6a3",
+    "lerna_test_0f6994f57c444978df1ebcb2",
+    "lerna_test_118433c8715a7df2a639dd96",
+    "lerna_test_132db18056970cdfdff3ba99",
+    "lerna_test_13aee238d349f8e4663f92c0",
+    "lerna_test_1463ce98d394253f909b86d5",
+    "lerna_test_14c05a48db5ff9436bd9d5a5",
+    "lerna_test_14e6976f5e0c90ed1e9899ce",
+    "lerna_test_1500555f20aa57d8e37000d0",
+    "lerna_test_15aea3c2e5327f0f2bce7c06",
+    "lerna_test_15b09c206c684b181df8ae6e",
+    "lerna_test_15d6fa82cf41f214cd11460d",
+    "lerna_test_1651684f77d02251e6ae64e5",
+    "lerna_test_171e5203d7dcf0fdaa8a13ca",
+    "lerna_test_171f629f2fd021070c3003e3",
+    "lerna_test_17862a396cb9d1f4f9ae3e11",
+    "lerna_test_17abef79fae96f9e3ca644e6",
+    "lerna_test_1899447942d35b7451312124",
+    "lerna_test_19a50120595650da50a5bb84",
+    "lerna_test_1a7aea6f1cb48a98742b5cfd",
+    "lerna_test_1aadbaeb2bcc99acf86c36f5",
+    "lerna_test_1b9771aba8e3a53afe419a29",
+    "lerna_test_1bb34b635cd84b1bbf3fb62e",
+    "lerna_test_1cb0528d58e7813e72070b4f",
+    "lerna_test_1cd1be85872adb5b6e1c4f51",
+    "lerna_test_1d3ea99651df6e2bf0d14faa",
+    "lerna_test_1f40e51552d61c84fb148049",
+    "lerna_test_1ff23d9d17c373846ce98546",
+    "lerna_test_20313c688b6ef06982ef7469",
+    "lerna_test_2097f815a27315d732fb8c7a",
+    "lerna_test_20ca55003f441f40641ccb70",
+    "lerna_test_2108a500538c93f85ce43a42",
+    "lerna_test_217a4f0ae5a25f49d0a5c534",
+    "lerna_test_2196f949daa7616ccb8179d2",
+    "lerna_test_227e9e2c89e7f94788443ca4",
+    "lerna_test_22f044234e912d68ad998707",
+    "lerna_test_23903f4bdda177af03c3c4fa",
+    "lerna_test_23cb71b1eb7bd9689f27a797",
+    "lerna_test_24ea1ad57fcae974c179eec3",
+    "lerna_test_25318344a0a3a978a1e01cfa",
+    "lerna_test_258262296d42d642495a9dbc",
+    "lerna_test_2612c815ade2589ffcabeb60",
+    "lerna_test_266c36887a461f9bccee38bc",
+    "lerna_test_2676cd2e2542f3564e078ac8",
+    "lerna_test_2734fdd422e30c9187076bef",
+    "lerna_test_27d13d6e5333c013204889bf",
+    "lerna_test_27f0d0ff607edd61e5d8a45f",
+    "lerna_test_297c7dfe3ba23b8fa1e28404",
+    "lerna_test_29a61aa5c9ee9b2673c675fa",
+    "lerna_test_29fb47f0288bef15acd0e6d5",
+    "lerna_test_2b0307299ae4d168041cefb4",
+    "lerna_test_2bd9d7e1a7d2d8bdcfca2ecb",
+    "lerna_test_2c0efff164a1557e97c89f6a",
+    "lerna_test_2e2004ed9841a0ce84a0c061",
+    "lerna_test_2ee434232d24f3d5136142ef",
+    "lerna_test_2f3081e1bf2545c56b8e5ba7",
+    "lerna_test_2f3fadaafe0b4db430ad16b9",
+    "lerna_test_2f684f11420e71a3e3cc579a",
+    "lerna_test_2fa8695ac934c48e3bd77300",
+    "lerna_test_318e9c9c67d7d55d775608d0",
+    "lerna_test_3206e483f780b70b54250c92",
+    "lerna_test_321e999a158795d2fc2a7ecc",
+    "lerna_test_33d04492bafcce4e788f8269",
+    "lerna_test_3401c553d8d71c92d50ebeef",
+    "lerna_test_34033709d223a89b77ccc7b9",
+    "lerna_test_3405530bc3dd99a9f8897dfd",
+    "lerna_test_345484a56f4903f6174d0314",
+    "lerna_test_352d9f1ab82f2c255ed0a6d9",
+    "lerna_test_353cc69de444594a61d11797",
+    "lerna_test_35ca97d1652a0e305e9ecf96",
+    "lerna_test_368f3bdd9300f4f65ef9477b",
+    "lerna_test_36a73adffb22039fda2d3280",
+    "lerna_test_36be7507c4ac2d98455bfdf6",
+    "lerna_test_36d0d6c94fd1430feac6aeb4",
+    "lerna_test_370709cde386afc34f7b88a7",
+    "lerna_test_3735a43623b7373029fca81b",
+    "lerna_test_377b363b3286c62139218ab0",
+    "lerna_test_37d3c4c011631bbc33f973e0",
+    "lerna_test_3958a9d58c1e0c88648a82dc",
+    "lerna_test_399672e13d07b82172f1db02",
+    "lerna_test_39f4d3e8e5448bc5c732abe1",
+    "lerna_test_3b0e2ef9e9252aaf72274ce0",
+    "lerna_test_3b4e0db15470db309eda380c",
+    "lerna_test_3c5084f0c792d2de1949ec95",
+    "lerna_test_3cd2b897ddfc07ec5c786bb6",
+    "lerna_test_3d4eb76ef18c02515478ab80",
+    "lerna_test_3da0329e959e88f680041e0f",
+    "lerna_test_3df8cc9458d24d18f03c5243",
+    "lerna_test_3e73c1889c06b9808557c5ec",
+    "lerna_test_3f642433fc8fe39664ac1ad1",
+    "lerna_test_400bf61c2d10abe65fc8bf0d",
+    "lerna_test_407a08261632909daed6158b",
+    "lerna_test_407e67211f047a9e90a6f0f5",
+    "lerna_test_418857bf8ef86fa9b15644b6",
+    "lerna_test_4228455c6b9712e88de3fe0d",
+    "lerna_test_42362ad68fd83d4e2873d098",
+    "lerna_test_425758a54a4636bdda5e9417",
+    "lerna_test_42a352681ea9754e4485168e",
+    "lerna_test_436947a764e69727d8e51726",
+    "lerna_test_45589624aee668349e7b0213",
+    "lerna_test_458220518e8d12e44d0b87b9",
+    "lerna_test_45b4b016ca52624a80a1c784",
+    "lerna_test_45f8731e9585f2ff87fd6ec8",
+    "lerna_test_460c88d8ec300b50e0b6713e",
+    "lerna_test_46abcd4a66be0e686222bdda",
+    "lerna_test_46c84fe65f698139c1bb69d9",
+    "lerna_test_47b1e898378d4c32c9caf6dd",
+    "lerna_test_483c33a79b80167c46915c74",
+    "lerna_test_48562c2f2d8915ae62082fca",
+    "lerna_test_48dd17830800744b86c6191c",
+    "lerna_test_49ed42a7f4c7cced5f906b22",
+    "lerna_test_4ab77638736cd3e2b1d260fc",
+    "lerna_test_4b4da6bb7b2b442c097f5364",
+    "lerna_test_4cb047d97687714faa7c122b",
+    "lerna_test_4cb4c6decbc5aa5ff28ae9e0",
+    "lerna_test_4d86875a219005b01719b94e",
+    "lerna_test_4d8f36e12b4c6b33dec4e0fc",
+    "lerna_test_4da0ee7afa0ae978a46f2991",
+    "lerna_test_4e20edebfc88cb80426a21bb",
+    "lerna_test_4f580e3977efa2f852474b37",
+    "lerna_test_4f7e83a58564f8842cba97e1",
+    "lerna_test_4f7facc84f56f230730d2bbe",
+    "lerna_test_50144cb979c1f9494e6f1cac",
+    "lerna_test_50311d543fe5b59ee70ab554",
+    "lerna_test_504e6f0f460642d3aac75a7f",
+    "lerna_test_50edf9cb469c8a5f31c94d8b",
+    "lerna_test_50ef0ce69e391889882bcc51",
+    "lerna_test_515b91104ff07a7c9ce57faa",
+    "lerna_test_51a24d30936cf2f60629aa8c",
+    "lerna_test_523cafca1425c7dd1886dba8",
+    "lerna_test_5301324a11c6b62c216ed5e6",
+    "lerna_test_536e6aeeca2f8da920597bb6",
+    "lerna_test_53a12f2321e4a1019ba5d163",
+    "lerna_test_54172455423c6fe79656eeaf",
+    "lerna_test_545d46c900947911e668c1f7",
+    "lerna_test_548312598e5e112aab612aa6",
+    "lerna_test_55345cbf5bafa37d2afc9dfe",
+    "lerna_test_5599d59f71afa1403734a0be",
+    "lerna_test_56ab5dc58495b6ad8fdce214",
+    "lerna_test_57af2051205b1131921450fe",
+    "lerna_test_57d4e613918bd0153920a60d",
+    "lerna_test_5821f778f6f1387299ba05d7",
+    "lerna_test_586522d94d5ad0ce0b74bf64",
+    "lerna_test_58b35a237240e7d9b9a627c9",
+    "lerna_test_59c28e1c3cf034739cbd3e03",
+    "lerna_test_5a2b0b2b876bd67bcad6c599",
+    "lerna_test_5a66e2d23b78c7f088d4b04b",
+    "lerna_test_5ad5006cb997589bd064b6fc",
+    "lerna_test_5b05ba99a2513ede414a0515",
+    "lerna_test_5b5e89411d900cb74ef6b7de",
+    "lerna_test_5b85987231d87a280cf1b315",
+    "lerna_test_5baaf7c4ddebfc4ec9e260cb",
+    "lerna_test_5c6ae0d50bb7a5a7c79464a4",
+    "lerna_test_5ca8caa468ca94eef848b48a",
+    "lerna_test_5ce4db1faa49bd7c657f4d90",
+    "lerna_test_5d281088b6842ad9ff1fe9b5",
+    "lerna_test_5dde4b9186bfc90502ba8c15",
+    "lerna_test_5de3df2de34d9ba4704bac6e",
+    "lerna_test_5e44e9a40aa578ca1d14a932",
+    "lerna_test_5e7a347f22ceb1d5df2cc1fe",
+    "lerna_test_5ecdcb6b9cf6fe0e0500ab5d",
+    "lerna_test_5ee6f11b963675ab376e2a45",
+    "lerna_test_5f2853a52da7491a46e5426f",
+    "lerna_test_5f2e8d1d3683fc612e6a167f",
+    "lerna_test_5f6d211d4e183384b9274252",
+    "lerna_test_5f98ed4045c5563bea9cad7c",
+    "lerna_test_5fa106c4dc5a96781e9c3e8b",
+    "lerna_test_606729ba27327cd488b951e5",
+    "lerna_test_607c07106b2cab800df7476e",
+    "lerna_test_6085819c782304e6f1fd9d01",
+    "lerna_test_60c29664e3523da293fc801d",
+    "lerna_test_6130c32099d839ef74b160ec",
+    "lerna_test_614e6b5535cadcd6c4c984d2",
+    "lerna_test_62b6123e61c51b30fe2ec50c",
+    "lerna_test_6317e55357c21f1593572d33",
+    "lerna_test_635c9552b59a3a5016d92551",
+    "lerna_test_63d0d406b4b22686a99c45e9",
+    "lerna_test_641b1a1b872a9e0efd6ccb37",
+    "lerna_test_6439a8f874b205ea81eb29e7",
+    "lerna_test_646a423b5970629d0af97611",
+    "lerna_test_6471039f30385a0b05f4135f",
+    "lerna_test_647f591705a6f595ba98b531",
+    "lerna_test_653d04cf2542ba745d65c967",
+    "lerna_test_653d43088878ec4626994f44",
+    "lerna_test_65ae52ca31cd0d1e68474e33",
+    "lerna_test_6663ccec04e119f4228a0400",
+    "lerna_test_6752791a25e72daa52a3dd90",
+    "lerna_test_680af64c28424ff147cbe751",
+    "lerna_test_6985cd35c5192b8a9e4afb02",
+    "lerna_test_6a824c5410edc0a62e74975c",
+    "lerna_test_6b055a3c918d8b45a2d7e69c",
+    "lerna_test_6c557034fc1dc7577ee2ba7d",
+    "lerna_test_6ddfd61e2903b965db4ad902",
+    "lerna_test_6f323fa39fa02c87c1dae411",
+    "lerna_test_6f496bb1abe484b4cad3f65c",
+    "lerna_test_6fd1448db59d70426a359579",
+    "lerna_test_7028543459ae37b489e2a592",
+    "lerna_test_708448c3cfe04addadf35aaa",
+    "lerna_test_713a08ea577a08b76886e42d",
+    "lerna_test_713ba6db9567cc7fbcc19921",
+    "lerna_test_7234823637075b6b51ff8067",
+    "lerna_test_72d2df4d8381ed4209270e34",
+    "lerna_test_73795beac2151d3a674c0bf4",
+    "lerna_test_73d3e3b37cbb1e1b7f9d0dd1",
+    "lerna_test_763bb71dc5dda0d3fdf50690",
+    "lerna_test_764252d0408414099d95c2b9",
+    "lerna_test_765227ba0cdb1d86a8313be6",
+    "lerna_test_76d01487be861244c6dc1b5f",
+    "lerna_test_76ffb9a1355259d4afd5bb49",
+    "lerna_test_7751f0eac067cc14792d0c7b",
+    "lerna_test_780dd21f90ef2cf96e2d42ec",
+    "lerna_test_786b70c76a3d6e398fd8eefb",
+    "lerna_test_7874c960ceefa9777af0a96f",
+    "lerna_test_78b101d0909216ff827131f0",
+    "lerna_test_794064f49a2e1cb170e0ca38",
+    "lerna_test_7978e7ab4335937600af2eb4",
+    "lerna_test_79bd822642039f3e8cc51e35",
+    "lerna_test_7a4de596c510d6839bb82363",
+    "lerna_test_7bbb5ccc5fff009019fbe3aa",
+    "lerna_test_7c5bcc63fa73f7547ec1ff6e",
+    "lerna_test_7d14cd0cfab01c4cd0ef0f53",
+    "lerna_test_7d8eec32b80aab7d9ad5ac44",
+    "lerna_test_7dea4355904fefe27a2de1dc",
+    "lerna_test_7e93fa5c6891f194a952b2da",
+    "lerna_test_7f1bf2ee8fb032adc92ec1b0",
+    "lerna_test_7f4e74d8a907ebfb821ecfeb",
+    "lerna_test_7f8f4055d951dda9d1135e05",
+    "lerna_test_80b1221830d3272e55406322",
+    "lerna_test_81afb9ad03cc9e3af46d090d",
+    "lerna_test_8224b9ba91d8177174290edc",
+    "lerna_test_824e1ebff72b8b0e9fc2bf2d",
+    "lerna_test_839c25e29f0a1e996267b68a",
+    "lerna_test_83a7ad6bf28d0d4ab3544e5d",
+    "lerna_test_83e588b6828f52870e843d01",
+    "lerna_test_83e8c647631b44258151e3eb",
+    "lerna_test_84aba87d73e5ce5167abe017",
+    "lerna_test_84f834b9a2852a22198a6a68",
+    "lerna_test_851a8550c96c8ca251888973",
+    "lerna_test_85fb277abe0a58d220ab5fd4",
+    "lerna_test_8605f1e3ad8490006fa29cec",
+    "lerna_test_8644917d2602e80e2d160b50",
+    "lerna_test_864a003d530f6850ecfeb1f5",
+    "lerna_test_873338efa249d1dd09f870bd",
+    "lerna_test_874f5a6d16e911ab32a43f5e",
+    "lerna_test_8753568e61f73fe380e38530",
+    "lerna_test_8838ccfc53e9879c310c9841",
+    "lerna_test_89e2dde58e36d324f36674c4",
+    "lerna_test_8a25b435fac5f6909c87c10c",
+    "lerna_test_8a571cc81ebe5843771c2d9d",
+    "lerna_test_8a5dc1f7b80d7f6e4ea01204",
+    "lerna_test_8a5fa7867e5565e0ba62598f",
+    "lerna_test_8a7e961ffdfbc2731f78b9d4",
+    "lerna_test_8a9b4eab97e8323c7cea9890",
+    "lerna_test_8ae1197e64f988472d4848f3",
+    "lerna_test_8bcc24f3ff6d10e868b713ee",
+    "lerna_test_8c1d6904c0a2c24239a2943d",
+    "lerna_test_8c54559cc2061d3f605c9056",
+    "lerna_test_8ccac5f9d9d5904206e6f74b",
+    "lerna_test_8cf4c3805f9bf65385a1e5d6",
+    "lerna_test_8d2c810ea5e5955b5bee5ae6",
+    "lerna_test_8d5b9289584b3572a2c80ce1",
+    "lerna_test_8db20e30c1b5e4a756164915",
+    "lerna_test_8dc9019e8372d4ce8a88da7c",
+    "lerna_test_8fbf54ff4ea3a7efd7cc1572",
+    "lerna_test_90cc35d9f9dd8b1ae81fbb83",
+    "lerna_test_90e730381454bbfa508bba6a",
+    "lerna_test_90fe33fe1f6bd1b54cc75e88",
+    "lerna_test_9179175e3a34ca5cdf962e96",
+    "lerna_test_91a646e488bab13c25d4f0f0",
+    "lerna_test_91d941f65711daaa042bc3fb",
+    "lerna_test_92140dd64b61830aaa5af21d",
+    "lerna_test_93285bd525d89d449338e229",
+    "lerna_test_932a9d8be7b811db08ad9ff7",
+    "lerna_test_93c08b418008ecb05eda5905",
+    "lerna_test_944dc134262310c4324f2d9c",
+    "lerna_test_945d96a16d87cd0fe80e3c6a",
+    "lerna_test_94b016daf298461ce099b118",
+    "lerna_test_94cc4a7f32c559f446b2243c",
+    "lerna_test_951133d86b8087e2da9cbc37",
+    "lerna_test_9540352d7fc4fbe750fed9a1",
+    "lerna_test_960e410d91ec5f353627ac83",
+    "lerna_test_96bbcd7c2de3028db118dfd9",
+    "lerna_test_973f50d8e8d3389b2f30c856",
+    "lerna_test_977ecf338a6a81aa39fee8b2",
+    "lerna_test_986c366a9467408ebc1c44d3",
+    "lerna_test_98b2592436c3f22fbf585fc7",
+    "lerna_test_98b4c600f055652118750535",
+    "lerna_test_98eea9258b5264d74c627dec",
+    "lerna_test_995350c40e676e759318331f",
+    "lerna_test_99d9c4f5712e75f597971131",
+    "lerna_test_9a3f351cc712188d9d31fd6d",
+    "lerna_test_9ac76d13f6acb9b83f8c77cb",
+    "lerna_test_9b5c42b05d9d854004891b0b",
+    "lerna_test_9bbf75ef389ddf26016a7c23",
+    "lerna_test_9c982a18460d4fd6af7451e3",
+    "lerna_test_9ca9306dc505de0a52c13fa4",
+    "lerna_test_9caf222ec7f42b9d37c19133",
+    "lerna_test_9ccc059587122914970716bb",
+    "lerna_test_9d444c8b619f61517a7592a9",
+    "lerna_test_9fe1accaec0b721d9e61fc1b",
+    "lerna_test_a046c7b8798e8cd0ea4266e1",
+    "lerna_test_a04e82d8dc1d3d76021e5b34",
+    "lerna_test_a0843596e8d940c415d5fc61",
+    "lerna_test_a0b637961f3bc6952e93a1e1",
+    "lerna_test_a0e3f2a9c77b078462bc7c9b",
+    "lerna_test_a1643f43afd8e21b5c233ca1",
+    "lerna_test_a185278580aa53c843ff494b",
+    "lerna_test_a228fd266fe98a524d2ec005",
+    "lerna_test_a27d498107bcab6f1d3138c9",
+    "lerna_test_a2e244c814ff2ea8f59ec853",
+    "lerna_test_a31fd48bd817769d436c03f8",
+    "lerna_test_a39a5f9207d0ca55017b5023",
+    "lerna_test_a3b9020e88e12d7a7ad82356",
+    "lerna_test_a46cf7f5f651c71ead4112b4",
+    "lerna_test_a4adfa45bd72cc73a0b52872",
+    "lerna_test_a716e933a72409d983b18632",
+    "lerna_test_a719108bf4630f8973d1b865",
+    "lerna_test_a72ab230a7c66542376f6460",
+    "lerna_test_a73eaf8b82136f0be6849dca",
+    "lerna_test_a7ad743ca24d331cb2a85844",
+    "lerna_test_a7b2c4ba194cea2f7d85d672",
+    "lerna_test_a80414aebb86aba6b7f4fd75",
+    "lerna_test_a84c4428a97aec4f6e77469c",
+    "lerna_test_a87164064a1ed0260ea86298",
+    "lerna_test_a8c2a2b458f8a79847b51af8",
+    "lerna_test_a9253ee252c906c188bcde35",
+    "lerna_test_a9597ab504d3c8058388cd7c",
+    "lerna_test_aa2e3756c69b64c059702841",
+    "lerna_test_aa5d8f1961d2bd2dc11bbd02",
+    "lerna_test_aa918898c3a9aa0454a66d02",
+    "lerna_test_aa9fa46d9718a7af0c58c1ab",
+    "lerna_test_aad0ece523a306692c86c5cf",
+    "lerna_test_aada8574e2958dde7e873b81",
+    "lerna_test_ab101ff49f6661b674c0645f",
+    "lerna_test_ab2d26454b0d982a6e70d5bf",
+    "lerna_test_ab880545855bad2b545e62c7",
+    "lerna_test_abc7314f7df15de884c0c03e",
+    "lerna_test_abf08500aa919ac4a56526c6",
+    "lerna_test_abf6a3756534ebaeebbe287a",
+    "lerna_test_ac0ac3f4a249bfe8a702f78d",
+    "lerna_test_ac4aa300884a05868c8187fa",
+    "lerna_test_ace8e6f53aa553824b922b16",
+    "lerna_test_acf45efc5c4947421242d9e9",
+    "lerna_test_ae790c7f634ac8833a87b3a4",
+    "lerna_test_ae90632196885a248d5b552e",
+    "lerna_test_aef564eb94c6546b3186ea6e",
+    "lerna_test_af2b3b5844ecdf2e8af56ce7",
+    "lerna_test_af340bceb57803cf1e8c6fc0",
+    "lerna_test_af367e6c9121feb63f175357",
+    "lerna_test_b04aa8dbe0f37c1a9fc7e756",
+    "lerna_test_b0903128d5f6a80860a96bae",
+    "lerna_test_b09d9abee215ab9c68f311e5",
+    "lerna_test_b0a7adb0a4eb10453f5aef98",
+    "lerna_test_b0f78c534cb64bfcd6af8a94",
+    "lerna_test_b115482639d5ca120b84520f",
+    "lerna_test_b20cdd5893f4c45e0148e2e6",
+    "lerna_test_b2f55c230daa2edfa23d73d1",
+    "lerna_test_b336ebefb6b7ed883350c63a",
+    "lerna_test_b37990e0d300e2f4ed134a9d",
+    "lerna_test_b45f73fe8e16f27ab87b4bbb",
+    "lerna_test_b481ee48be9c79a50b38cb2f",
+    "lerna_test_b4d0f73271c48bcf7b3b7695",
+    "lerna_test_b593ea3b25e57d8f28523b68",
+    "lerna_test_b597b1a33b7af1459458c1b9",
+    "lerna_test_b5b9b4118badaadc8450b9ea",
+    "lerna_test_b5cd566dd31992e5f30f6783",
+    "lerna_test_b6668051e455b212f4dcc60d",
+    "lerna_test_b68c1d540ba6db672dbf75b9",
+    "lerna_test_b691efceeb7d13c53ec94e2f",
+    "lerna_test_b6d2e1a226925f6a2be59075",
+    "lerna_test_b6d664d8358990458c0449bf",
+    "lerna_test_b6e7dc1f09d5841740d08e99",
+    "lerna_test_b6fa2db0e6cd83aa7eb0c0d4",
+    "lerna_test_b7e71f006c4b5dcea17ed6ee",
+    "lerna_test_b8ed50c12f4eba31f1c93851",
+    "lerna_test_b9ac1bcb27d093335111ffa2",
+    "lerna_test_baa44187ca721013895dc3a4",
+    "lerna_test_bb4cf70b5059f7ce453dfe50",
+    "lerna_test_bb79870aade24805db0b1e97",
+    "lerna_test_bbabec30b7e4baef4a2f83cb",
+    "lerna_test_bbf794400454d615b3b26b09",
+    "lerna_test_bd24c0847bcc2601446708a3",
+    "lerna_test_bdd44a9a74c57f56bae8c97a",
+    "lerna_test_be29c7e4e2df85d86b60862a",
+    "lerna_test_be8fcd3642fc74f102f380ea",
+    "lerna_test_bebd5afe0eb7c5b29c8030ec",
+    "lerna_test_bf00a87624bb8e23ca3b5c00",
+    "lerna_test_bfbb713205b1249731fa686b",
+    "lerna_test_c027fdf6c29ec2d1bc84f4fe",
+    "lerna_test_c0958314631233b7b69ff748",
+    "lerna_test_c0dfb55c2f5be892071f71c0",
+    "lerna_test_c114a37866d3e42d0f60a97e",
+    "lerna_test_c14a1cfd9dd11a98eb5ebdbf",
+    "lerna_test_c19adb281270dba8e861fa8a",
+    "lerna_test_c1c27dd4ec1cc590c4e7d542",
+    "lerna_test_c253321d217cd1c50e3dbdae",
+    "lerna_test_c2f6912f21b443bf632ef5e3",
+    "lerna_test_c4313710e2032d3d1e9847c3",
+    "lerna_test_c554f35dbe34d3c0e0c5d266",
+    "lerna_test_c58130062578c4ecc9031423",
+    "lerna_test_c620b2a2cba8f75dc8ef36b9",
+    "lerna_test_c6220769f7172925537759cd",
+    "lerna_test_c682eced7560c606cc577012",
+    "lerna_test_c6a6c356d4b2b4bb5e05d9d8",
+    "lerna_test_c71775687fe59a46fcb98753",
+    "lerna_test_c771b5144edabe91e3d14f50",
+    "lerna_test_c7d192ca63077b738e97c71e",
+    "lerna_test_c7e07d2cca73276c5a7dc06e",
+    "lerna_test_c91a968090d31bed44a971df",
+    "lerna_test_c9715508ee15ac3b9ab27f37",
+    "lerna_test_c9add18fc3d28213dddb6f90",
+    "lerna_test_caaaf700be4ef374995dc57f",
+    "lerna_test_cb12f844a172b79e62c473a6",
+    "lerna_test_cb9a688f61315851e6071ebe",
+    "lerna_test_cbfd5e8c3af5a6a2b5fee7ad",
+    "lerna_test_cc12711fd74074bd591f9e60",
+    "lerna_test_cc1850ff7f72d9522b503040",
+    "lerna_test_cc3073bb6e70595d2b7d99f1",
+    "lerna_test_cc67238f8ec80d1fa27bc15b",
+    "lerna_test_ccccc477dbb35f923e685cae",
+    "lerna_test_cd06f023145e55cc6d6a3db1",
+    "lerna_test_cd556c3f15463952b33011af",
+    "lerna_test_ce314eaa9b1cbf2c7e82c9d9",
+    "lerna_test_ce5641fea90e77389eeb9e72",
+    "lerna_test_cea522f93daad3314beb95a5",
+    "lerna_test_cf6cbac880bc4686602436e8",
+    "lerna_test_cf6cc3e9a1ea6f51c05682a2",
+    "lerna_test_cfd4e191f78866a108bc9e9c",
+    "lerna_test_d0365ae505bc8a3c8a8ee8e9",
+    "lerna_test_d0cce30a254b89b06d27ff82",
+    "lerna_test_d12426c49214c8566961a84c",
+    "lerna_test_d1359796fb0518e7d4755029",
+    "lerna_test_d194d0e5be78233094af3977",
+    "lerna_test_d1b683ddb498ce687d70c702",
+    "lerna_test_d2a044bb6882835205761eba",
+    "lerna_test_d3306faf599c91b24e722a03",
+    "lerna_test_d4139043ecee22ac5b4707c1",
+    "lerna_test_d43d96fbff26db7efba69ba2",
+    "lerna_test_d52e86263b2ea526fffcb3ae",
+    "lerna_test_d5e237936cc4b89c02ad7492",
+    "lerna_test_d6c50bd149cfb4bffb9f8d45",
+    "lerna_test_d6cc8fe15f2f044584042ee5",
+    "lerna_test_d7bef2aa1133f0d439430243",
+    "lerna_test_d86d1ca53be1d1a9e710a69d",
+    "lerna_test_d8827a8bd4661e2fa6fba940",
+    "lerna_test_d8e996eea152798a6fd75fa4",
+    "lerna_test_d8f45b51c25f9b92323c4592",
+    "lerna_test_d91f9b847d785051dfd49dc0",
+    "lerna_test_d95abb389d0976fe9a858cb0",
+    "lerna_test_da87cbfce12d7a418e18616b",
+    "lerna_test_db318867a6d16f348a744c90",
+    "lerna_test_dbbd2efadb69e127b4434884",
+    "lerna_test_dbdf3cb6847d47af35220307",
+    "lerna_test_dc6a3571240b0d7d7208692a",
+    "lerna_test_dd03454085c098b97bee843d",
+    "lerna_test_deba0eb36c54d5c209a390f9",
+    "lerna_test_df80aab8469e7542578b2584",
+    "lerna_test_e07d93667afd19a90cebd446",
+    "lerna_test_e0bf1975eba5c9770bc92e2a",
+    "lerna_test_e0c3f9c9ddaa403195b253d0",
+    "lerna_test_e0fb26a7fb14cdecbcce4640",
+    "lerna_test_e18fe2565b3668cbe37064ff",
+    "lerna_test_e2149a2b7aa6b06c33ceef17",
+    "lerna_test_e29acaaef6873033fa866f71",
+    "lerna_test_e303b9b33bbf668bb8ed2bc3",
+    "lerna_test_e33af51db71618da221621ea",
+    "lerna_test_e344abb8f2161d798b97ae1b",
+    "lerna_test_e44c5d35798d7e528b943cf2",
+    "lerna_test_e457722cc9c73615b1f6aa8a",
+    "lerna_test_e5117b06aa5bc8bd5c7d9d4b",
+    "lerna_test_e527a3e6868b5e4b93df8040",
+    "lerna_test_e571a7136fdfe39fbb9d0d08",
+    "lerna_test_e5b8adcfd894f2a561b1814e",
+    "lerna_test_e630cc752959fee0ff8f3d9d",
+    "lerna_test_e6417b6214177c4b96ee6171",
+    "lerna_test_e660ad5f4c619234c22fa03a",
+    "lerna_test_e75f3008c6f56590b6b4d1aa",
+    "lerna_test_e7e5c63e1f165591d9c436bb",
+    "lerna_test_e879ded26bedc689f10ab9aa",
+    "lerna_test_e87a16164c7eefbf2b9767d9",
+    "lerna_test_e8952712e7a432d22edca240",
+    "lerna_test_e9ec50232383b93540e7cbc9",
+    "lerna_test_ea6ae4191ded5ca1dbcd4766",
+    "lerna_test_eab6fcaf3ab852f792ccfc8e",
+    "lerna_test_ead3864a988ef12133bc82c0",
+    "lerna_test_ebc4dcaec5d802f92fe1c1a2",
+    "lerna_test_ebfae4d44dd407caec852ff9",
+    "lerna_test_ec3fffc93dec8b967d23e960",
+    "lerna_test_ed43647fa7e152523bee5d4b",
+    "lerna_test_ef92b8f90e09a838d7cdc285",
+    "lerna_test_efef9c32e00514202bcda4e5",
+    "lerna_test_eff0181e0effc9f6d76a2b08",
+    "lerna_test_f0467750752f78207338d089",
+    "lerna_test_f18ebd154d60693205c6937a",
+    "lerna_test_f19ba553b91e00c041a41df0",
+    "lerna_test_f19bb8c4382cde3238d963e3",
+    "lerna_test_f1b763ad325802da156fe266",
+    "lerna_test_f1b9409ca0842ae30bb5ba1c",
+    "lerna_test_f1c7c5faf22b941d52a5e8fc",
+    "lerna_test_f23b8c625baae9ecdac292c0",
+    "lerna_test_f26ce44e7c1b4fc3443a48d0",
+    "lerna_test_f2e4a07fe1a3cbc37d9a8e61",
+    "lerna_test_f39149325b2c224efe8090e4",
+    "lerna_test_f394a4f3a942b7cb870e6193",
+    "lerna_test_f3e5a62e2a9574a48f1a7c55",
+    "lerna_test_f510a84a555acba2ee1daf29",
+    "lerna_test_f51c82f08bd35c7a299ebf5d",
+    "lerna_test_f52c3e813ca6d0952087ac83",
+    "lerna_test_f54560c6e60fa117892d9c4f",
+    "lerna_test_f5bfa31b7ac60851539aca8b",
+    "lerna_test_f5f1f567710ca44ff7551b98",
+    "lerna_test_f6050583f86b7deb2b136cf6",
+    "lerna_test_f6d7708e20af1ad4decd82be",
+    "lerna_test_f6f819b0d038540ec210f562",
+    "lerna_test_f7c62d15eebbef8a866ab792",
+    "lerna_test_f7d0b0223932f35b46484be8",
+    "lerna_test_f7e5781d2640c710635e73ed",
+    "lerna_test_f7ec8f343e035566daa8ec34",
+    "lerna_test_f850e7c180db0c7179d77850",
+    "lerna_test_f8ba1817d5ca2407b4d8717d",
+    "lerna_test_f8f227a57df22ebcfd84c98c",
+    "lerna_test_f967b5b6d82ccb588e4af59e",
+    "lerna_test_f96d6d9bd8f8e228c916e9e4",
+    "lerna_test_f9e500d6c2c6f2df9de6e73d",
+    "lerna_test_f9f1b9016fe0979b89dc8ba1",
+    "lerna_test_fa6c7ccbea27b7cf0f2c0cf4",
+    "lerna_test_faea4ea832a49e81a0a0d3d2",
+    "lerna_test_faf0dcff720632681d908717",
+    "lerna_test_fb2c0e2b325ebe1886f05316",
+    "lerna_test_fc567f46dfee7cef22a490b2",
+    "lerna_test_fcc8ee63a99fb24e667f5014",
+    "lerna_test_fd68fbfec1217f617b6c0c4b",
+    "lerna_test_fd6fcc5a3aed6b86970ba5fe",
+    "lerna_test_fe4138bc13ee90d5cd94cfe2",
+    "lerna_test_fec33b882b93af1aeca7d745",
+    "lerna_test_ff5792dc935bed2190133d52",
+    "lerna_test_ff6793f02643aea48c2027b1",
+    "lerna_test_ffd39d9a33df689b2a5f85c7"
+  ],
+  "postgres_catalog_current_absence_not_queried": true,
+  "filesystem_registration_records": [
+    {
+      "kind": "sqlite",
+      "line_1based": 152,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-2915499644",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 153,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-2411124708",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 154,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-965488669",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 155,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-566341383",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 156,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-3956468907",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 157,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-2474276747",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 158,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-3975948282",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 159,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-4076252648",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 160,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-376196351",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 161,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-3338321513",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 162,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-1160596644",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 163,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-2959813598",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 164,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-413799406",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 165,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-1433422051",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 166,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-804863927",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 167,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-1840145891",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 168,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-3984754367",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 169,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-2067173543",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 170,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-2136382210",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 171,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-2784421847",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 172,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-3898048483",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 173,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-1650053522",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 174,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-1607381385",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 175,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-1244278084",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 176,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-1440456291",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 177,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-1617833597",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 197,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-1203191720",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 198,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-1581370636",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 205,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-3630368165",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 206,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-156148052",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 208,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-3691391619",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 209,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-1013360148",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 211,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-1466457448",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 212,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-3225530634",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 214,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-1977190108",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 222,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-654982705",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 225,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-230000876",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 226,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-179537711",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 228,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-1113441080",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 230,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-1481506379",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 235,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-3475458224",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 236,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-2691044526",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 237,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-2541915919",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 238,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-3235094728",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 242,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-1884025502",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 243,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-1062627495",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 244,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-2821541752",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 246,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-426815571",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 248,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-3534536672",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 250,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-1183522343",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 254,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-3680130523",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 255,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-46452534",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 257,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-4048932454",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 261,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-828870908",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 262,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-809109562",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 264,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-421058812",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 266,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-185986082",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 268,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-120423861",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 270,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-1804737206",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 275,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-3471275776",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 276,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-1301046370",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 277,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-3740559024",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 278,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-475414262",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 279,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-1866271885",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 280,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-456835200",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 282,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-2331937600",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 284,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-2902855878",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 287,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-805686312",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 288,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-2883665684",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 289,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-393376791",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 291,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-983144148",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 293,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-977982869",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 295,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-3292860299",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 298,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-3058826761",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 299,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-2788118825",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 303,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-2620553660",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 304,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-955244273",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 305,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-1272995350",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 307,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-3837075179",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 311,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-653121684",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 312,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-1005768943",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 313,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-4199702862",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 316,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-4124190737",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 317,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-1141993365",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 318,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-3003623468",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 319,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-3370520414",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 320,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-3066913790",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 321,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-977259922",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 322,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-3474821888",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 323,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-3653295066",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 324,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-3798038687",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 325,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-861849805",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 326,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-1163190448",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 327,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-3137203543",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 328,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-2737835372",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 329,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-1698593559",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 330,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-2531650201",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 331,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-2224367044",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 332,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-3370689805",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 333,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-1448671288",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 334,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-799111419",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 335,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-882196472",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 336,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-2318243379",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 337,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-1250894423",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 338,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-3859113849",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 339,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-3733838362",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 354,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-3538211790",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 355,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-1239965126",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 356,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-1548226889",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 357,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-1101404827",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 358,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-1017050205",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 359,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-4292374977",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 360,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-1597275120",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 361,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-2844567893",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 362,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-3817964085",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 363,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-4167894962",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 364,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-2737715157",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 365,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-2055023493",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 366,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-2762708128",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 367,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-3283696819",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 369,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-341563130",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "sqlite",
+      "line_1based": 371,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-owned-fixture-2351990860",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 379,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-2244826595",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 426083,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 383,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-794330854",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 426660,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 385,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-3456539974",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 426689,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 387,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-3436619103",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 426693,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 389,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-3860488337",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 426696,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 391,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-2183202634",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 426700,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 396,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-836665031",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 426711,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 398,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-2511548859",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 426712,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 400,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-2045984714",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 426733,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 402,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-2093219008",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 426740,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 404,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-2073122130",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 426750,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 406,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-931864298",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 426759,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 408,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-3817090119",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 426763,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 410,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-3201457845",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 426766,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 412,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-2987303977",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 426767,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 414,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-315116464",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 426771,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 416,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-3311559880",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 426773,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 418,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-3756990999",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 426779,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 420,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-1173898582",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 426786,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 422,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-2009628075",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 426791,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 434,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-971477475",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 426953,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 437,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-2262114235",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 426956,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 439,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-891556535",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 426959,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 441,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-2137461815",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 426966,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 443,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-3579656946",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 426971,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 445,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-1904215558",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 427123,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 447,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-1923745937",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 427129,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 449,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-4142733962",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 427136,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 451,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-2221598811",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 427143,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 453,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-2746764400",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 427150,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 455,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-4009150928",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 427157,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 457,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-1636758675",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 427165,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 459,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-3608270274",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 427172,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 464,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-1004267272",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 427173,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 469,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-3005011880",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 427175,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 471,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-3851182899",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 427178,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 473,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-2698482448",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 427179,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 475,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-3921573247",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 427183,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 477,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-3955795718",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 427185,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 479,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-279985793",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 427192,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 481,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-1419997661",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 427195,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 485,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-3380803778",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 427199,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 487,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-3934922737",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 427202,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 489,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-1847880593",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 427205,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 491,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-2505510818",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 427209,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 493,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-1114657675",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 427210,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 497,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-3606547811",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 427493,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 501,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-1182209498",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 427504,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 505,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-3369568608",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 427513,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 509,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-3032112954",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 427516,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 511,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-1613584959",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 427519,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 515,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-3047652393",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 427528,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 519,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-513600072",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 427536,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 523,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-1076394443",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 427539,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 525,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-130070355",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 427548,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 527,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-3942720302",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 427688,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 529,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-2912290752",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 427711,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 532,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-2068651555",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 427716,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 534,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-4231920210",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 427722,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 537,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-3300840584",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 427726,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 540,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-2460003325",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 427730,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 542,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-3708913562",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 427734,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 544,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-2542980310",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 427741,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 546,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-966807965",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 427748,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 548,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-1633450497",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 427755,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 550,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-4085477930",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 427764,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 562,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-3639276228",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 427927,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 565,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-2892316792",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 427932,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 567,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-677910035",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 428068,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 570,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-2785755424",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 428071,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 572,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-1789692030",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 428079,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 574,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-2150040332",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 428088,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 576,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-552208657",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 428094,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 578,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-2599079770",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 428095,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 580,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-2856830892",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 428099,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 582,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-1625226546",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 428104,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 584,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-3480347522",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 428109,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 586,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-901764145",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 428114,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 588,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-2181116888",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 428119,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 590,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-1548412516",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 428124,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 592,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-1731727537",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 428127,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 596,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-49305781",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 428129,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 598,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-2000593701",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 428130,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 600,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-2765382823",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 428132,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 602,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-1292374907",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 428139,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 604,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-3428523177",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 428147,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 606,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-3569116203",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 428148,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 610,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-3782676173",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 428152,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 614,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-621131717",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 428155,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 618,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-1530100724",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 428159,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 622,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-1272228043",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 428162,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 624,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-1487959211",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 428166,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 627,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-3426737204",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 428174,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 629,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-2417499443",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 428177,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 631,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-128033456",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 428180,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 633,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-2539796267",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 428183,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 635,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-1645429472",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 428186,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 637,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-3426656364",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 428189,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 641,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-1498496069",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 428468,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 643,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-2351877228",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 428476,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 645,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-3874540462",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 428483,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 647,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-3291373381",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 428485,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 649,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-1037653915",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 428488,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 651,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-3050499220",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 428498,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 655,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-2296376308",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 428501,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 657,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-1944812280",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 428513,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 659,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-298915794",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 428520,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 661,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-1010038473",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 428527,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 663,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-2591103669",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 428535,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 665,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-3239030248",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 428542,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 667,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-2986427956",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 428553,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 669,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-3847370462",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 428560,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 671,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-3318182999",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 428714,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 673,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-3022406195",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 428719,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 675,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-3858338714",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 428722,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 677,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-1427252468",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 428724,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 679,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-2941094518",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 428728,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 681,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-397533096",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 428740,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 683,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-2251039337",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 428747,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 696,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-2052149303",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 428910,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 708,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-2500285163",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 429074,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 711,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-2107479396",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 429077,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 714,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-2922985336",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 429085,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 716,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-941480132",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 429088,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 718,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-551612636",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 429091,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 720,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-624702512",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 429095,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 722,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-722623123",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 429098,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 724,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-4002185822",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 429101,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 726,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-2245776706",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 429108,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 728,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-3247782815",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 429116,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 730,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-1694996471",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 429123,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 732,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-1808365288",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 429128,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 734,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-3949952178",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 429134,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 738,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-991197432",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 429138,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 742,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-2454467466",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 429142,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 746,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-1474267083",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 429145,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 750,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-2364899731",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 429149,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 754,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-3030694192",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 429154,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 758,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-2064196961",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 429158,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 760,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-3884132353",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 429163,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 762,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-767164873",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 429166,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 764,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-1985787764",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 429168,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 766,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-944107309",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 429171,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 768,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-3534214910",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 429173,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 770,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-935696266",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 429178,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 772,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-147260778",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 429182,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 774,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-2129908286",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 429185,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 776,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-4170444604",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 429187,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 778,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-848742840",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 429191,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 780,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-3511214142",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 429195,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 782,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-177688425",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 429202,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 786,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-2740329622",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 429209,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 788,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-1901599628",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 429217,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 792,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-3113234175",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 429225,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 794,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-298590537",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 429232,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 796,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-1501596752",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 429239,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 798,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-967205674",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 429247,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 800,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-3985727967",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 429255,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 804,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-2593591551",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 429256,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 808,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-3801662384",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 429257,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 812,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-245697137",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 429259,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 816,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-799009544",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 429263,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 820,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-1925245689",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 429266,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 824,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-3710639571",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 429274,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 826,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-4018521680",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 429278,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 828,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-697263487",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 429279,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 831,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-2192278336",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 429287,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 833,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-3575185299",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 429290,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 835,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-2374721415",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 429294,
+      "current_exists": false
+    },
+    {
+      "kind": "directory",
+      "line_1based": 1072,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-03-legacy-upgrade-2023873177",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "directory",
+      "line_1based": 1087,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-03-legacy-upgrade-3461361869",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "directory",
+      "line_1based": 1114,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-03-legacy-upgrade-471183516",
+      "logical_first_close_not_inferred_from_absence": true,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 1138,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-objects-7262020",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 431521,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 1140,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-fixture-close-2899617894",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 431522,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 1142,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-fixture-close-3903872519",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 431523,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 1144,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-content-fixture-close-1358195867",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 431524,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 1146,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-local-lifetime-1239295943",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 431535,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 1151,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-local-lifetime-4236457110",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 431541,
+      "current_exists": true,
+      "current_device": 33,
+      "current_inode": 431541
+    },
+    {
+      "kind": "objects",
+      "line_1based": 1160,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-local-lifetime-625833144",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 431547,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 1161,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-local-lifetime-2633918823",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 431551,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 1162,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-local-lifetime-289419226",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 431552,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 1163,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-local-lifetime-2944466674",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 431556,
+      "current_exists": false
+    },
+    {
+      "kind": "objects",
+      "line_1based": 1164,
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-local-lifetime-325320483",
+      "logical_first_close_not_inferred_from_absence": true,
+      "registered_device": 33,
+      "registered_inode": 431559,
+      "current_exists": false
+    }
+  ],
+  "filesystem_registered_current_existing_count": 1,
+  "known_sticky_unknown_logical_close_scopes": [
+    {
+      "event": "object_child_logical_close_unknown",
+      "line_1based": 1159,
+      "root": "/tmp/lerna-current-ci-partition-execution/lerna-local-lifetime-4236457110",
+      "pid": 3785013,
+      "pgid": 3785013,
+      "starttime": "15882148",
+      "cause": "SIGKILL before actual Store.Close",
+      "cleanup_allowed": false,
+      "current_exists": true,
+      "current_device": 33,
+      "current_inode": 431541,
+      "logical_close_sticky_unknown": true
+    }
+  ],
+  "explicit_close_and_kernel_witnesses": [
+    {
+      "event": "fixture_close_control",
+      "line_1based": 1141,
+      "witness": {
+        "raw_line_sha256": "20e3c9f0052e80feb1d8a0925558bf43496afb1ac3150bcaf7e37b7dcb326888"
+      },
+      "requalifies_other_original_entity": false
+    },
+    {
+      "event": "fixture_close_control",
+      "line_1based": 1143,
+      "witness": {
+        "raw_line_sha256": "7c70d64e14b3709feea722044fa34995b4ded6b7fa165637a7b18bc98fd92fd9"
+      },
+      "requalifies_other_original_entity": false
+    },
+    {
+      "event": "fixture_close_control",
+      "line_1based": 1145,
+      "witness": {
+        "raw_line_sha256": "f4c2c6b4ce5b8d12dd29d1d6851fad7bfec36bd85b26e69497dcdbb73e69f458"
+      },
+      "requalifies_other_original_entity": false
+    },
+    {
+      "event": "object_child_logical_close_ack",
+      "line_1based": 1149,
+      "witness": {
+        "actual_store_close_returned_nil": true,
+        "event": "object_child_logical_close_ack",
+        "mode": "put-stop",
+        "pgid": 3785008,
+        "pid": 3785008,
+        "root": "/tmp/lerna-current-ci-partition-execution/lerna-local-lifetime-1239295943",
+        "starttime": "15882145"
+      },
+      "requalifies_other_original_entity": false
+    },
+    {
+      "event": "object_child_kernel_completion",
+      "line_1based": 1150,
+      "witness": {
+        "event": "object_child_kernel_completion",
+        "exit": 0,
+        "group_absent": true,
+        "logical_close_inferred": false,
+        "mode": "put-stop",
+        "pgid": 3785008,
+        "pid": 3785008,
+        "root": "/tmp/lerna-current-ci-partition-execution/lerna-local-lifetime-1239295943",
+        "starttime": "15882145"
+      },
+      "requalifies_other_original_entity": false
+    },
+    {
+      "event": "object_child_logical_close_ack",
+      "line_1based": 1156,
+      "witness": {
+        "actual_store_close_returned_nil": true,
+        "event": "object_child_logical_close_ack",
+        "mode": "late-put",
+        "pgid": 3785020,
+        "pid": 3785020,
+        "root": "/tmp/lerna-current-ci-partition-execution/lerna-local-lifetime-4236457110",
+        "starttime": "15882150"
+      },
+      "requalifies_other_original_entity": false
+    },
+    {
+      "event": "object_child_kernel_completion",
+      "line_1based": 1157,
+      "witness": {
+        "event": "object_child_kernel_completion",
+        "exit": 0,
+        "group_absent": true,
+        "logical_close_inferred": false,
+        "mode": "late-put",
+        "pgid": 3785020,
+        "pid": 3785020,
+        "root": "/tmp/lerna-current-ci-partition-execution/lerna-local-lifetime-4236457110",
+        "starttime": "15882150"
+      },
+      "requalifies_other_original_entity": false
+    },
+    {
+      "event": "object_child_kernel_completion",
+      "line_1based": 1158,
+      "witness": {
+        "event": "object_child_kernel_completion",
+        "exit": -1,
+        "group_absent": true,
+        "logical_close_inferred": false,
+        "mode": "erase-stop",
+        "pgid": 3785013,
+        "pid": 3785013,
+        "root": "/tmp/lerna-current-ci-partition-execution/lerna-local-lifetime-4236457110",
+        "starttime": "15882148"
+      },
+      "requalifies_other_original_entity": false
+    }
+  ],
+  "whole_exit0_or_group_absence_does_not_certify_logical_first_close": true,
+  "historical_unknown_scopes_not_adopted_or_touched": true,
+  "no_cleanup_or_drop_or_pg_query_performed": true,
+  "original_ledger_sha256": "f5c2201147dda5fb560a6d2bd0e1472c0d35f83b82bf248849f826ff7ea3d53b"
+}

@@ -1,0 +1,33 @@
+--- pgstore_core.go.before-format
++++ pgstore_core.go.actual-formatted
+@@ -165,12 +165,14 @@
+ 	}
+ 	return nil
+ }
++
+ // Temporary measurement-only observer for the original Now SQL call.
+ type NowSQLObserver interface {
+ 	BeginNowSQL() time.Time
+ 	EndNowSQL(time.Time, error)
+ }
+ type nowSQLObserverKey struct{}
++
+ func WithNowSQLObserver(ctx context.Context, observer NowSQLObserver) context.Context {
+ 	return context.WithValue(ctx, nowSQLObserverKey{}, observer)
+ }
+@@ -183,9 +185,13 @@
+ 	var now time.Time
+ 	observer, observed := ctx.Value(nowSQLObserverKey{}).(NowSQLObserver)
+ 	var nowSQLStart time.Time
+-	if observed { nowSQLStart = observer.BeginNowSQL() }
++	if observed {
++		nowSQLStart = observer.BeginNowSQL()
++	}
+ 	err = tx.QueryRowContext(ctx, `SELECT clock_timestamp()`).Scan(&now)
+-	if observed { observer.EndNowSQL(nowSQLStart, err) }
++	if observed {
++		observer.EndNowSQL(nowSQLStart, err)
++	}
+ 	return now, err
+ }
+ 

@@ -1,0 +1,165 @@
+{
+  "kind": "actual ONE shared race firstFAIL in Recovery; STOP LOCAL Release without retry or fix",
+  "fixed_source_head": "fa4ad6acfa58927000c830619da55598a0f9a506",
+  "native": {
+    "event": "native_completion_ack",
+    "operation": "partition-shared-race",
+    "pid": 3829696,
+    "pgid": 3829696,
+    "starttime": "16069966",
+    "exit": 2,
+    "group_absent": true,
+    "timed_out": false,
+    "owned_raw_fsync_close_ack": true
+  },
+  "executed_go_children": [
+    {
+      "operation": "go-child-0012",
+      "prelaunch": {
+        "event": "owned_go_child_start_ack",
+        "operation": "go-child-0012",
+        "parent_operation": "partition-shared-race",
+        "pid": 3829699,
+        "pgid": 3829696,
+        "starttime": "16069972",
+        "root": "/tmp/lerna-current-ci-partition-execution",
+        "argv": [
+          "/home/agent/.local/toolchains/go1.27.1/bin/go",
+          "env",
+          "CGO_ENABLED"
+        ],
+        "original_whole_deadline_monotonic": 162144.659992109,
+        "remaining_whole_seconds": 1444.9326536379813
+      },
+      "outcome": {
+        "event": "owned_go_child_completion_ack",
+        "operation": "go-child-0012",
+        "parent_operation": "partition-shared-race",
+        "pid": 3829699,
+        "pgid": 3829696,
+        "starttime": "16069972",
+        "exit": 0,
+        "actual_wait_confirmed": true,
+        "original_pid_generation_absent": true,
+        "timed_out": false,
+        "original_whole_deadline_monotonic": 162144.659992109,
+        "shared_group_absence_checked_only_after_whole_wait": true
+      }
+    },
+    {
+      "operation": "go-child-0013",
+      "prelaunch": {
+        "event": "owned_go_child_start_ack",
+        "operation": "go-child-0013",
+        "parent_operation": "partition-shared-race",
+        "pid": 3829705,
+        "pgid": 3829696,
+        "starttime": "16069981",
+        "root": "/tmp/lerna-current-ci-partition-execution",
+        "argv": [
+          "/home/agent/.local/toolchains/go1.27.1/bin/go",
+          "env",
+          "GOOS"
+        ],
+        "original_whole_deadline_monotonic": 162144.659992109,
+        "remaining_whole_seconds": 1444.8424399099895
+      },
+      "outcome": {
+        "event": "owned_go_child_completion_ack",
+        "operation": "go-child-0013",
+        "parent_operation": "partition-shared-race",
+        "pid": 3829705,
+        "pgid": 3829696,
+        "starttime": "16069981",
+        "exit": 0,
+        "actual_wait_confirmed": true,
+        "original_pid_generation_absent": true,
+        "timed_out": false,
+        "original_whole_deadline_monotonic": 162144.659992109,
+        "shared_group_absence_checked_only_after_whole_wait": true
+      }
+    },
+    {
+      "operation": "go-child-0014",
+      "prelaunch": {
+        "event": "owned_go_child_start_ack",
+        "operation": "go-child-0014",
+        "parent_operation": "partition-shared-race",
+        "pid": 3829718,
+        "pgid": 3829696,
+        "starttime": "16069994",
+        "root": "/tmp/lerna-current-ci-partition-execution",
+        "argv": [
+          "/home/agent/.local/toolchains/go1.27.1/bin/go",
+          "test",
+          "-p=1",
+          "-count=1",
+          "-race",
+          "-tags=integration",
+          "-timeout=120s",
+          "./conformance/recovery/..."
+        ],
+        "original_whole_deadline_monotonic": 162144.659992109,
+        "remaining_whole_seconds": 1444.7154051589896
+      },
+      "outcome": {
+        "event": "owned_go_child_completion_ack",
+        "operation": "go-child-0014",
+        "parent_operation": "partition-shared-race",
+        "pid": 3829718,
+        "pgid": 3829696,
+        "starttime": "16069994",
+        "exit": 1,
+        "actual_wait_confirmed": true,
+        "original_pid_generation_absent": true,
+        "timed_out": false,
+        "original_whole_deadline_monotonic": 162144.659992109,
+        "shared_group_absence_checked_only_after_whole_wait": true
+      }
+    }
+  ],
+  "executed_go_exit_statuses": [
+    0,
+    0,
+    1
+  ],
+  "whole_make_original_exit": 2,
+  "last_real_executed_stage": "Recovery race package FAIL90.418s",
+  "expected11_go_calls_not_completed": true,
+  "not_executed_tails": [
+    "Component Go discovery",
+    "closure race",
+    "content_a race",
+    "content_b race",
+    "content_c race",
+    "durable race",
+    "other race",
+    "decisionfixture/contentfixture/objectstore three-package race tail"
+  ],
+  "missing_go_child_numbers": [
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22
+  ],
+  "whole_not_timed_out": true,
+  "original_pkg120_not_increased": true,
+  "counter_authorized_12_to15": true,
+  "all283_module_and5qualified_pins_unchanged_after": true,
+  "immutable4_controllers_unchanged": true,
+  "whole_current_group_absent": true,
+  "raw_sha256": "1f2e4a2b67aa9fda8f9a42e8ed19414eedb988aafff1213ceade367c48668554",
+  "raw_lines": 44,
+  "sanitized_raw_sha256": "1f2e4a2b67aa9fda8f9a42e8ed19414eedb988aafff1213ceade367c48668554",
+  "sanitization_changed_bytes": false,
+  "full_raw_human_read_pending": true,
+  "normal_known_unknown_scope_retained_identity33_431541": true,
+  "logical_first_close_never_inferred_from_wait": true,
+  "owned_resource_ledger_interval_audit_pending": true,
+  "no_retry_fix_native_extra_merge_or_format": true,
+  "native_slot_released": true
+}

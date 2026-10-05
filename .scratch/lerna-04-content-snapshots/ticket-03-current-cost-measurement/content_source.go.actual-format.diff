@@ -1,0 +1,12 @@
+--- content_source.go.before-format
++++ content_source.go.actual-formatted
+@@ -8,8 +8,8 @@
+ 	engine "github.com/ruipengliu/lerna/components/decision_engine"
+ 	v "github.com/ruipengliu/lerna/contract/v1_1"
+ 	c "github.com/ruipengliu/lerna/contract/v1_2"
++	contentdomain "github.com/ruipengliu/lerna/domain/content"
+ 	compiler "github.com/ruipengliu/lerna/domain/task/context"
+-	contentdomain "github.com/ruipengliu/lerna/domain/content"
+ 	"io"
+ 	"reflect"
+ 	"slices"
