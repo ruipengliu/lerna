@@ -286,7 +286,7 @@ SQLite 的 WAL 允许读写并行，但同一个库同时只有一个写入者�
 
 **配置值不等于屏障。**`PRAGMA synchronous` 只决定何时调用 VFS 的同步；用哪种同步原语是另一回事。在 macOS 默认 Unix VFS 上，`synchronous=FULL` 不会启用 `F_FULLFSYNC`，还需要单独设置 `fullfsync=ON`（[同步标志](https://sqlite.org/c3ref/c_sync_dataonly.html)、[fullfsync](https://sqlite.org/pragma.html#pragma_fullfsync)）；普通 `fsync` 可能只把数据推到设备缓存（[Apple fsync](https://developer.apple.com/library/archive/documentation/System/Conceptual/ManPages_iPhoneOS/man2/fsync.2.html)）。
 
-**平台准入表。**本地档的"掉电"覆盖只对准入表中列出的组合成立。准入表由部署层维护，数据库与[文件适配器](../adapters/file.md)共用，每个组合记录：
+**平台准入表。**本地档的"掉电"覆盖只对准入表中列出的组合成立。准入表由[部署层](deployment.md#11-本地档平台准入表)维护，数据库与[文件适配器](../adapters/file.md)共用，每个组合记录：
 
 | 字段 | 内容 |
 | --- | --- |
@@ -295,6 +295,8 @@ SQLite 的 WAL 允许读写并行，但同一个库同时只有一个写入者�
 | 文件 | 文件替换和目录同步使用的原语 |
 | 覆盖 | 进程崩溃、掉电分别声明；介质永久丢失始终不覆盖 |
 | 证据 | 验证方法、日期和结果；杀进程测试不得记作掉电验证 |
+
+macOS 的受信 VFS 必须核验每次 FULL 同步实际调用 `F_FULLFSYNC` 且成功；不得将默认 Unix VFS 在失败后回退的 `fsync` 当作完整设备屏障。必要的目录屏障也必须显式检查，不得接受被 SQLite 忽略的目录同步错误。注册或核验失败返回存储错误，不返回接纳确认。
 
 每条写连接（含连接池新建的连接、迁移脚本和恢复连接）打开时核验实际设置，不符则拒绝写入关键责任。屏障不可用、同步报错或平台组合不在准入表中时，不开放依赖掉电保证的能力。M1 只在一个开发平台组合上验证；端侧平台在 M3 逐个加入。
 
