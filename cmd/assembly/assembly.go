@@ -36,7 +36,7 @@ func Open(path, user, domain string) (*Harness, error) {
 	t := tasks.New(s, user, domain).WithDecisions(d)
 	c := content.New(s, user, domain+"/content")
 	h := &Harness{Sessions: sessions.New(s, d, t, c, user, domain), Tasks: t, Durable: d, Content: c, store: s}
-	h.Grants = grants.New(s, d, user, domain, "host")
+	h.Grants = grants.New(s, d, user, domain, "host").WithAdmissions(t)
 	h.Budget = budget.New(s, d, user, domain, "host")
 	h.Ledger = ledger.New(s, user, domain+"/ledger", domain)
 	t.WithAdmission(h.Grants, h.Budget, c, h.Sessions, d, h.Ledger).WithHandoffs(d, h.Ledger)

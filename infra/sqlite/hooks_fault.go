@@ -22,7 +22,7 @@ const (
 
 // FaultPoints 是持久化点的统一登记表；新增事务必须在此登记。
 func FaultPoints() []string {
-	return []string{"content.stage", "durable.submit", "durable.decide", "durable.jobs", "tasks.planning", "grants.configure", "budget.configure", "tasks.admit", "ledger.accept", "tasks.handoff_receipt"}
+	return []string{"content.stage", "durable.submit", "durable.decide", "durable.jobs", "tasks.planning", "grants.configure", "grants.credential", "budget.configure", "tasks.admit", "ledger.accept", "tasks.handoff_receipt"}
 }
 func registered(point string) bool {
 	for _, p := range FaultPoints() {
