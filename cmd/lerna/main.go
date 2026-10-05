@@ -29,6 +29,6 @@ func run() error {
 		return err
 	}
 	defer h.Close()
-	cli := interaction.CLI{Sessions: h.Sessions, Tasks: h.Tasks, Durable: h.Durable, Caller: &v1.Caller{UserId: *user, IssuerId: *issuer}, Domain: *domain}
+	cli := interaction.CLI{Content: h.Content, Sessions: h.Sessions, Tasks: h.Tasks, Durable: h.Durable, Caller: &v1.Caller{UserId: *user, IssuerId: *issuer}, Domain: *domain}
 	return cli.Run(context.Background(), flag.Args(), os.Stdout)
 }

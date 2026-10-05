@@ -27,6 +27,7 @@ message Requirements {
   string source = 5;
   repeated Requirement conditions = 6;
   CommandIdentity accepted_by = 7;
+  Ref source_input_ref = 8;
 }
 message ContextSnapshot {
   Ref ref = 1;
@@ -41,6 +42,7 @@ message ContextSnapshot {
   repeated Ref capability_refs = 10;
   repeated Ref progress_refs = 11;
   Ref requirements_ref = 12;
+  repeated Ref input_refs = 13;
 }
 message AncestorControl {
   Ref task_ref = 1;
@@ -81,6 +83,7 @@ message PlanningState {
   bool proposal_consumed = 6;
   uint64 verification_freeze = 7;
   repeated Ref rejected_verification_operations = 8;
+  repeated uint64 superseded_verification_generations = 9;
 }
 message AcceptRequirementsCommand {
   CommandHeader header = 1;
