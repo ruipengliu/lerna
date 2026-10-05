@@ -1,0 +1,10 @@
+# github.com/ruipengliu/lerna/conformance/component_test [github.com/ruipengliu/lerna/conformance/component.test]
+conformance/component/content_clock_test.go:149:5: undefined: err
+conformance/component/content_clock_test.go:150:11: undefined: err
+conformance/component/content_legacy_test.go:219:8: undefined: err
+conformance/component/content_legacy_test.go:220:11: undefined: err
+conformance/component/content_legacy_test.go:230:8: undefined: err
+conformance/component/content_legacy_test.go:231:11: undefined: err
+FAIL	github.com/ruipengliu/lerna/conformance/component [build failed]
+FAIL
+NATIVE_COMPLETION_ACK {"pid": 3187323, "pgid": 3187323, "starttime": "13310616", "exit": 1, "group_absent": true, "timed_out": false}

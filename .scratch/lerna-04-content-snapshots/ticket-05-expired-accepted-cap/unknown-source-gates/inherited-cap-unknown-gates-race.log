@@ -1,0 +1,5 @@
+=== RUN   TestContentInheritedExpiredCapConsumesItsExactAdmissionTargetWithoutDeletingLiveAncestor
+--- PASS: TestContentInheritedExpiredCapConsumesItsExactAdmissionTargetWithoutDeletingLiveAncestor (2.85s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/component	3.893s
+NATIVE_COMPLETION_ACK {"pid": 3191680, "pgid": 3191680, "starttime": "13329410", "exit": 0, "group_absent": true, "timed_out": false}

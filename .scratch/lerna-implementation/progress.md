@@ -6,6 +6,10 @@
 
 ## 当前状态
 
+2026-10-05 02:01 UTC，05[最小未知资格门](../lerna-04-content-snapshots/ticket-05-expired-accepted-cap/unknown-source-gates/README.md)普通2.392s／race3.893s通过；原真实PG操作后机械missing source／currentpolicy sentinel使完整原pending／无seal／三正文保持，plain原consumer同正常尾段成功。首包compileFAIL由旧目录oracle三声明遗漏，原日志保留，仅声明修复。资格partial4735abc与15文件24case精确正文／缺失及knownempty lock整改partial1a4e1d2分别clean固定；24case只编译，最终执行待授，static coverage24unique／26callsite／缺漏0。
+
+03合法政策／控制反例普通3.272s末尾失败：normalCompleted、B Process当前撤权拒绝／公开读正常／重开与取消原Applied、实际一次Decide拒／RuleStarts0／Inputnil及重开保持均已执行。再次Cancel实际被Reopen get-only当前目的权限拒绝；此前VerifyControl假设已撤回，实际原因经冻结顺序和build全文核准。原[失败日志及因果](../lerna-04-content-snapshots/ticket-03-large-graph-claim/binding-decode-qualification/current-repair-provenance.json)保留，race未跑；只修测试为精确当前forbidden和真实command.get历史Applied字节查询，不恢复Cancel权限。当前SOLE LOCAL仅授该test修正正常→race，05仅准备已审最终检查；whole04仍15/41、完整1.2关闭。
+
 2026-10-05 01:47 UTC，03 Binding单条表示复用五项机械资格普通0.028s／race1.209s通过，包含冷热原值、完整深拷贝／nil-empty、scope／locator／字节变更、原strict错误／非metadata和并发独立返回。实际Current反例普通3.426s装配失败：独立正常Completed1.71s，goal／control在原bound Snapshot的InstallInput ErrChanged，尚未到撤权Current／重开断言；race未运行。原[日志与范围](../lerna-04-content-snapshots/ticket-03-large-graph-claim/binding-decode-qualification/unit-and-setup-provenance.json)保留，root先前静态审查也漏掉原禁止；不放宽bound guard、不把setup失败称业务red。03仅静态改用合法当前控制／权限反例。
 
 三native实际Wait／absence后释放，唯一LOCAL现授05最小missing结构／currentpolicy错误机械观察的准确原AdmissionTarget测试普通→race，原身份／期限／正文及正常尾段保持。whole04仍15/41，完整1.2关闭，两票未正式接受／合并。
