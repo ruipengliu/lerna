@@ -1,0 +1,34 @@
+{
+  "status": "actual offline one-view completed",
+  "actual_exit": 0,
+  "actual_wait": true,
+  "group_absent_rechecked": true,
+  "identity": {
+    "pid": 3507329,
+    "pgid": 3507329,
+    "starttime": "14701529",
+    "started_ns": 1791178776950925168,
+    "args": [
+      "go",
+      "tool",
+      "pprof",
+      "-traces",
+      "-sample_index=cpu",
+      "-unit=ns",
+      "-tagfocus=phase=^decision_step$",
+      "-focus=^github\\.com/ruipengliu/lerna/adapters/content/decision\\.\\(\\*Adapter\\)\\.(ReadSnapshot|ReadFixtureLock)$",
+      "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/component-profile-race.test",
+      "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/worker-cpu.pprof"
+    ]
+  },
+  "raw_path": "/workspace/lerna-content-03-137311247276/context-final-capacity-b-worker-cpu-source-traces.log",
+  "raw_sha256": "f610d853b0a43883351415deedb0f90a33b6620c37d01dae70ea84f7babfc26e",
+  "raw_bytes": 472556,
+  "raw_lines": 6058,
+  "complete_raw_within_registered_bound": true,
+  "prelaunch_registration_sha256": "f2e8c0c9c1ae28a3b0fbf355376ccf6997291ad24b5413db41e31ede76c8e34f",
+  "original_testing_CPU_descriptor_logicalClose": "UNKNOWN",
+  "separate_owned_raw_output_fd_flush_fsync_Close": "ACK",
+  "parser_status": "NOT RUN; inspect actual finite raw first",
+  "sole_LOCAL": "STOP / RELEASE after actual join and absence"
+}

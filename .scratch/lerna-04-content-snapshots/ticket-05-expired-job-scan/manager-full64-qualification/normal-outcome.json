@@ -1,0 +1,46 @@
+{
+  "kind": "actual ONE public Manager behind full64 original expired body responsibilities normal complete tail",
+  "prelaunch_manifest": "/tmp/lerna-04-ticket05-execution/manager-expired-first-normal-source/manifest.json",
+  "preformat_test_sha256": "2b36441f2245057e3cffdc5365d61891eb8f358a9ef6b29a22c0f5d50edb044f",
+  "test_sha256": "81bc5d898d4c0275fd0a1aa9b7047716fe633cd9ee4fabc669cd46d92f1b8ed6",
+  "format_difference": "one indentation tab on a continued comment only",
+  "format": {
+    "pid": 3495146,
+    "pgid": 3495146,
+    "starttime": "14648084",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false
+  },
+  "pid": 3495830,
+  "pgid": 3495830,
+  "starttime": "14651192",
+  "exit": 0,
+  "group_absent": true,
+  "timed_out": false,
+  "tool_session": 11514,
+  "go_seconds": 19.681,
+  "case_seconds": 19.67,
+  "log": "/tmp/lerna-04-ticket05-execution/manager-expired-first-normal.log",
+  "log_sha256": "1dd4eec199a9536964ada036ceed3da69fbfc7ea9b8ee07421d4bf7075510b2c",
+  "schema": "lerna_test_a0e085fa52383284ea333314",
+  "object_root": {
+    "path": "/tmp/lerna-04-ticket05-execution/lerna-content-objects-3158398028",
+    "device": 33,
+    "inode": 388291
+  },
+  "actual_tail": {
+    "full64_original_published_seals_expiry_real_reopen_complete_observations_bodies_receipts_history": true,
+    "later_independent_source_and_real_derived_child_normal_counterpart": true,
+    "actual_Manager_install_save_false_with_original_CAS_and_SaveForbidden": true,
+    "within4_Manager_Steps_original_key_watermark_and_full_Change_except5_legitimate_naturalExpiry_transition_fields": true,
+    "two_original_pending_holder_unconfirmed_responsibilities_preserved_original_source_duty_policy_deadlines_and_SaveActions": true,
+    "second_real_reopen_whole_PropagationObservation_and_all64_complete_old_duties_alpha_receipts_history": true,
+    "later_published_bodies_and_history_preserved_SaveForbidden": true
+  },
+  "new_policy_body_Seal_or_allACK_or_erasure_executed": false,
+  "race_executed": false,
+  "delegated_consumer_test_written_or_executed": false,
+  "sourcefix_applied": false,
+  "native_released": true
+}

@@ -1,0 +1,5 @@
+=== RUN   TestContentDelegatedLifecyclePassesOtherSavingSubjectFullPageWithoutChangingOriginalDuties
+--- PASS: TestContentDelegatedLifecyclePassesOtherSavingSubjectFullPageWithoutChangingOriginalDuties (6.50s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/component	6.510s
+NATIVE_COMPLETION_ACK {"pid": 3511127, "pgid": 3511127, "starttime": "14718304", "exit": 0, "group_absent": true, "timed_out": false}

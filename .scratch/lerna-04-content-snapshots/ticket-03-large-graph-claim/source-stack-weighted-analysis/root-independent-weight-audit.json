@@ -1,0 +1,83 @@
+{
+  "raw_complete_bytes": 472556,
+  "raw_sha256": "f610d853b0a43883351415deedb0f90a33b6620c37d01dae70ea84f7babfc26e",
+  "all_sample_rows_independently_checked": 189,
+  "matched_cpu_ns": 1890000000,
+  "disjoint_totals": [
+    {
+      "case": "closure64",
+      "source": "ReadFixtureLock",
+      "category": "Access-inclusive",
+      "cpu_ns": 20000000
+    },
+    {
+      "case": "closure64",
+      "source": "ReadFixtureLock",
+      "category": "Content-inclusive",
+      "cpu_ns": 490000000
+    },
+    {
+      "case": "closure64",
+      "source": "ReadFixtureLock",
+      "category": "Source-other-inclusive",
+      "cpu_ns": 10000000
+    },
+    {
+      "case": "closure64",
+      "source": "ReadSnapshot",
+      "category": "Access-inclusive",
+      "cpu_ns": 20000000
+    },
+    {
+      "case": "closure64",
+      "source": "ReadSnapshot",
+      "category": "Content-inclusive",
+      "cpu_ns": 440000000
+    },
+    {
+      "case": "closure64",
+      "source": "ReadSnapshot",
+      "category": "Source-other-inclusive",
+      "cpu_ns": 40000000
+    },
+    {
+      "case": "static62",
+      "source": "ReadFixtureLock",
+      "category": "Access-inclusive",
+      "cpu_ns": 10000000
+    },
+    {
+      "case": "static62",
+      "source": "ReadFixtureLock",
+      "category": "Content-inclusive",
+      "cpu_ns": 390000000
+    },
+    {
+      "case": "static62",
+      "source": "ReadFixtureLock",
+      "category": "Source-other-inclusive",
+      "cpu_ns": 10000000
+    },
+    {
+      "case": "static62",
+      "source": "ReadSnapshot",
+      "category": "Access-inclusive",
+      "cpu_ns": 10000000
+    },
+    {
+      "case": "static62",
+      "source": "ReadSnapshot",
+      "category": "Content-inclusive",
+      "cpu_ns": 420000000
+    },
+    {
+      "case": "static62",
+      "source": "ReadSnapshot",
+      "category": "Source-other-inclusive",
+      "cpu_ns": 30000000
+    }
+  ],
+  "not_current_source_performance": true,
+  "raw_human_read_scope": "header/first80/final40; complete semantic frame/weight/label validation by this machine audit, not human FULL6058",
+  "not_logical_Close_proof": true
+}

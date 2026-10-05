@@ -1,0 +1,66 @@
+{
+  "verified_current_pins": 14,
+  "source_plan_manifest_normal_raw_outcome_FULL_read": true,
+  "format_actual_diff_empty": true,
+  "original_groups_independently_verified_absent": [
+    3510349,
+    3511127
+  ],
+  "not_individual_Close_proof": true,
+  "files": [
+    {
+      "source": "/tmp/lerna-04-ticket05-execution/delegated-cleanup-first-normal-source/manifest.json",
+      "archive": "source-manifest.json",
+      "sha256": "10ffd758b2e4ae2d6166fc7d0fb5fc0e51f875fb018e23d15ef59a7a3b7333a1",
+      "bytes": 4280
+    },
+    {
+      "source": "/tmp/lerna-04-ticket05-execution/delegated-cleanup-first-normal-source/content_delegated_cleanup_backlog_test.go",
+      "archive": "source-content_delegated_cleanup_backlog_test.go",
+      "sha256": "85d9951fd44c08b374730f8c95d464e8e8efb5726cfb5ec1df20977689bf6995",
+      "bytes": 11121
+    },
+    {
+      "source": "/tmp/lerna-04-ticket05-execution/delegated-cleanup-first-normal-source/format.diff",
+      "archive": "source-format.diff",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "/tmp/lerna-04-ticket05-execution/delegated-cleanup-first-normal-source/preformat-manifest.json",
+      "archive": "source-preformat-manifest.json",
+      "sha256": "d4331316597ada3a46a1d3df4e2bdb538a6339f685231bfb61d85054ce114cc4",
+      "bytes": 3874
+    },
+    {
+      "source": "/tmp/lerna-04-ticket05-execution/delegated-cleanup-first-normal-source/preformat-content_delegated_cleanup_backlog_test.go",
+      "archive": "source-preformat-content_delegated_cleanup_backlog_test.go",
+      "sha256": "85d9951fd44c08b374730f8c95d464e8e8efb5726cfb5ec1df20977689bf6995",
+      "bytes": 11121
+    },
+    {
+      "source": "/tmp/lerna-04-ticket05-execution/delegated-cleanup-first-normal.log",
+      "archive": "normal.log",
+      "sha256": "09200072e0f1c5acbedf72244392590b9a5ffc2653a5be879b5df0b41a10bfbd",
+      "bytes": 411
+    },
+    {
+      "source": "/tmp/lerna-04-ticket05-execution/delegated-cleanup-first-format.log",
+      "archive": "format.log",
+      "sha256": "ee01959a8acbc4860f072e49bc2187698d05efdd23ab36fdb110d20ea2ba42d0",
+      "bytes": 134
+    },
+    {
+      "source": "/tmp/lerna-05-delegated-cleanup-first-normal-outcome.json",
+      "archive": "normal-outcome.json",
+      "sha256": "5b98732eae8f98fc2a977ce48392091b0fec98752eb90e6aa981478fc3659873",
+      "bytes": 2059
+    },
+    {
+      "source": "/tmp/lerna-05-delegated-cleanup-static-v2/plan.md",
+      "archive": "adopted-static-plan.md",
+      "sha256": "d3e94fc6fea31ee4638dde72bd8177bc12b0ac1b3c58a70f5bbb434cfc9a74a7",
+      "bytes": 6510
+    }
+  ]
+}

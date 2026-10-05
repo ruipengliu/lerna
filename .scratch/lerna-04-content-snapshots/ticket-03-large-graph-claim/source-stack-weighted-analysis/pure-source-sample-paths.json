@@ -1,0 +1,294 @@
+{
+  "derived_from_weighted_result_sha256": "fb56be1ad93d2c322a8d9d979d3fd168a67fc9fc8a6902592770ee1ef723e2fa",
+  "sample_rows": 9,
+  "cpu_ns": 90000000,
+  "samples": [
+    {
+      "cpu_ns": 10000000,
+      "labels": {
+        "case": "closure64",
+        "phase": "decision_step"
+      },
+      "source": "github.com/ruipengliu/lerna/adapters/content/decision.(*Adapter).ReadSnapshot",
+      "disjoint_bucket": "mandatory.typed-decode-subtree",
+      "leaf_to_root_frames": [
+        "runtime.raceread",
+        "encoding/json/jsontext.(*decoderState).consumeObject",
+        "encoding/json/jsontext.(*decoderState).consumeValue",
+        "encoding/json/jsontext.(*decoderState).consumeObject",
+        "encoding/json/jsontext.(*decoderState).consumeValue",
+        "encoding/json/jsontext.(*decoderState).consumeObject",
+        "encoding/json/jsontext.(*decoderState).consumeValue",
+        "encoding/json/jsontext.(*decoderState).consumeArray",
+        "encoding/json/jsontext.(*decoderState).consumeValue",
+        "encoding/json/jsontext.(*decoderState).consumeObject",
+        "encoding/json/jsontext.(*decoderState).consumeValue",
+        "encoding/json/jsontext.(*decoderState).consumeObject",
+        "encoding/json/jsontext.(*decoderState).consumeValue",
+        "encoding/json/jsontext.(*decoderState).CheckNextValue",
+        "encoding/json/v2.unmarshalDecode",
+        "encoding/json/v2.Unmarshal",
+        "encoding/json.(*Decoder).Decode",
+        "github.com/ruipengliu/lerna/domain/task/context.DecodeMandatory",
+        "github.com/ruipengliu/lerna/adapters/content/decision.(*Adapter).ReadSnapshot",
+        "github.com/ruipengliu/lerna/conformance/internal/decisionfixture.claimDiagnosticSource.ReadSnapshot",
+        "github.com/ruipengliu/lerna/components/decision_engine.(*Service).calculate",
+        "github.com/ruipengliu/lerna/components/decision_engine.(*Service).RunClaim",
+        "github.com/ruipengliu/lerna/components/decision_engine.(*Service).Step",
+        "github.com/ruipengliu/lerna/conformance/component_test.completeContextDecision.func1",
+        "runtime/pprof.Do",
+        "github.com/ruipengliu/lerna/conformance/component_test.completeContextDecision",
+        "github.com/ruipengliu/lerna/conformance/component_test.TestContentContextReachableClosure64And65IncludesIntermediateVersions.func1",
+        "testing.tRunner"
+      ]
+    },
+    {
+      "cpu_ns": 10000000,
+      "labels": {
+        "case": "closure64",
+        "phase": "decision_step"
+      },
+      "source": "github.com/ruipengliu/lerna/adapters/content/decision.(*Adapter).ReadSnapshot",
+      "disjoint_bucket": "mandatory.EncodeMandatory.strict-output-parse-subtree",
+      "leaf_to_root_frames": [
+        "runtime.mallocgc",
+        "runtime.slicebytetostring",
+        "encoding/json.(*Decoder).Token",
+        "github.com/ruipengliu/lerna/contract/v1_1.parseValue",
+        "github.com/ruipengliu/lerna/contract/v1_1.parseValue",
+        "github.com/ruipengliu/lerna/contract/v1_1.parseValue",
+        "github.com/ruipengliu/lerna/contract/v1_1.parseValue",
+        "github.com/ruipengliu/lerna/contract/v1_1.parseJSON",
+        "github.com/ruipengliu/lerna/domain/task/context.EncodeMandatory",
+        "github.com/ruipengliu/lerna/domain/task/context.DecodeMandatory",
+        "github.com/ruipengliu/lerna/adapters/content/decision.(*Adapter).ReadSnapshot",
+        "github.com/ruipengliu/lerna/conformance/internal/decisionfixture.claimDiagnosticSource.ReadSnapshot",
+        "github.com/ruipengliu/lerna/components/decision_engine.(*Service).calculate",
+        "github.com/ruipengliu/lerna/components/decision_engine.(*Service).RunClaim",
+        "github.com/ruipengliu/lerna/components/decision_engine.(*Service).Step",
+        "github.com/ruipengliu/lerna/conformance/component_test.completeContextDecision.func1",
+        "runtime/pprof.Do",
+        "github.com/ruipengliu/lerna/conformance/component_test.completeContextDecision",
+        "github.com/ruipengliu/lerna/conformance/component_test.TestContentContextReachableClosure64And65IncludesIntermediateVersions.func1",
+        "testing.tRunner"
+      ]
+    },
+    {
+      "cpu_ns": 10000000,
+      "labels": {
+        "case": "closure64",
+        "phase": "decision_step"
+      },
+      "source": "github.com/ruipengliu/lerna/adapters/content/decision.(*Adapter).ReadSnapshot",
+      "disjoint_bucket": "snapshot.ToRule-subtree",
+      "leaf_to_root_frames": [
+        "github.com/santhosh-tekuri/jsonschema/v6.(*validator).validateVal",
+        "github.com/santhosh-tekuri/jsonschema/v6.(*validator).objValidate",
+        "github.com/santhosh-tekuri/jsonschema/v6.(*validator).validate",
+        "github.com/santhosh-tekuri/jsonschema/v6.(*Schema).validate",
+        "github.com/ruipengliu/lerna/contract/v1_1.Validate",
+        "github.com/ruipengliu/lerna/contract/v1_1.Encode[go.shape.struct { Owner github.com/ruipengliu/lerna/contract/gen/go/v1_1.OwnerRef \"json:\\\"owner\\\"\"; ContentID github.com/ruipengliu/lerna/contract/gen/go/v1_1.ID \"json:\\\"content_id\\\"\"; Version github.com/ruipengliu/lerna/contract/gen/go/v1_1.Revision \"json:\\\"version\\\"\"; Hash string \"json:\\\"hash\\\"\"; MediaType string \"json:\\\"media_type\\\"\"; ByteLength github.com/ruipengliu/lerna/contract/gen/go/v1_1.Revision \"json:\\\"byte_length\\\"\" }]",
+        "github.com/ruipengliu/lerna/adapters/content/decision.ToRule",
+        "github.com/ruipengliu/lerna/adapters/content/decision.(*Adapter).snapshot",
+        "github.com/ruipengliu/lerna/adapters/content/decision.(*Adapter).ReadSnapshot",
+        "github.com/ruipengliu/lerna/conformance/internal/decisionfixture.claimDiagnosticSource.ReadSnapshot",
+        "github.com/ruipengliu/lerna/components/decision_engine.(*Service).calculate",
+        "github.com/ruipengliu/lerna/components/decision_engine.(*Service).RunClaim",
+        "github.com/ruipengliu/lerna/components/decision_engine.(*Service).Step",
+        "github.com/ruipengliu/lerna/conformance/component_test.completeContextDecision.func1",
+        "runtime/pprof.Do",
+        "github.com/ruipengliu/lerna/conformance/component_test.completeContextDecision",
+        "github.com/ruipengliu/lerna/conformance/component_test.TestContentContextReachableClosure64And65IncludesIntermediateVersions.func1",
+        "testing.tRunner"
+      ]
+    },
+    {
+      "cpu_ns": 10000000,
+      "labels": {
+        "case": "closure64",
+        "phase": "decision_step"
+      },
+      "source": "github.com/ruipengliu/lerna/adapters/content/decision.(*Adapter).ReadSnapshot",
+      "disjoint_bucket": "snapshot.ToRule-subtree",
+      "leaf_to_root_frames": [
+        "internal/runtime/maps.(*Iter).Next",
+        "runtime.mapIterNext",
+        "github.com/santhosh-tekuri/jsonschema/v6.(*validator).objValidate",
+        "github.com/santhosh-tekuri/jsonschema/v6.(*validator).validate",
+        "github.com/santhosh-tekuri/jsonschema/v6.(*validator).validateSelf",
+        "github.com/santhosh-tekuri/jsonschema/v6.(*validator).validateRef",
+        "github.com/santhosh-tekuri/jsonschema/v6.(*validator).validate",
+        "github.com/santhosh-tekuri/jsonschema/v6.(*validator).validateVal",
+        "github.com/santhosh-tekuri/jsonschema/v6.(*validator).objValidate",
+        "github.com/santhosh-tekuri/jsonschema/v6.(*validator).validate",
+        "github.com/santhosh-tekuri/jsonschema/v6.(*Schema).validate",
+        "github.com/ruipengliu/lerna/contract/v1_1.Validate",
+        "github.com/ruipengliu/lerna/contract/v1_1.Encode[go.shape.struct { Owner github.com/ruipengliu/lerna/contract/gen/go/v1_1.OwnerRef \"json:\\\"owner\\\"\"; ContentID github.com/ruipengliu/lerna/contract/gen/go/v1_1.ID \"json:\\\"content_id\\\"\"; Version github.com/ruipengliu/lerna/contract/gen/go/v1_1.Revision \"json:\\\"version\\\"\"; Hash string \"json:\\\"hash\\\"\"; MediaType string \"json:\\\"media_type\\\"\"; ByteLength github.com/ruipengliu/lerna/contract/gen/go/v1_1.Revision \"json:\\\"byte_length\\\"\" }]",
+        "github.com/ruipengliu/lerna/adapters/content/decision.ToRule",
+        "github.com/ruipengliu/lerna/adapters/content/decision.(*Adapter).snapshot",
+        "github.com/ruipengliu/lerna/adapters/content/decision.(*Adapter).ReadSnapshot",
+        "github.com/ruipengliu/lerna/conformance/internal/decisionfixture.claimDiagnosticSource.ReadSnapshot",
+        "github.com/ruipengliu/lerna/components/decision_engine.(*Service).calculate",
+        "github.com/ruipengliu/lerna/components/decision_engine.(*Service).RunClaim",
+        "github.com/ruipengliu/lerna/components/decision_engine.(*Service).Step",
+        "github.com/ruipengliu/lerna/conformance/component_test.completeContextDecision.func1",
+        "runtime/pprof.Do",
+        "github.com/ruipengliu/lerna/conformance/component_test.completeContextDecision",
+        "github.com/ruipengliu/lerna/conformance/component_test.TestContentContextReachableClosure64And65IncludesIntermediateVersions.func1",
+        "testing.tRunner"
+      ]
+    },
+    {
+      "cpu_ns": 10000000,
+      "labels": {
+        "case": "closure64",
+        "phase": "decision_step"
+      },
+      "source": "github.com/ruipengliu/lerna/adapters/content/decision.(*Adapter).ReadFixtureLock",
+      "disjoint_bucket": "snapshot.ToRule-subtree",
+      "leaf_to_root_frames": [
+        "regexp/syntax.(*Inst).MatchRunePos",
+        "regexp.(*Regexp).doOnePass",
+        "regexp.(*Regexp).find",
+        "regexp.(*Regexp).MatchString",
+        "github.com/santhosh-tekuri/jsonschema/v6.(*validator).strValidate",
+        "github.com/santhosh-tekuri/jsonschema/v6.(*validator).validate",
+        "github.com/santhosh-tekuri/jsonschema/v6.(*validator).validateVal",
+        "github.com/santhosh-tekuri/jsonschema/v6.(*validator).objValidate",
+        "github.com/santhosh-tekuri/jsonschema/v6.(*validator).validate",
+        "github.com/santhosh-tekuri/jsonschema/v6.(*Schema).validate",
+        "github.com/ruipengliu/lerna/contract/v1_2.Validate",
+        "github.com/ruipengliu/lerna/contract/v1_2.Encode[go.shape.struct { Owner github.com/ruipengliu/lerna/contract/gen/go/v1_2.OwnerRef \"json:\\\"owner\\\"\"; ContentID github.com/ruipengliu/lerna/contract/gen/go/v1_2.ID \"json:\\\"content_id\\\"\"; Version string \"json:\\\"version\\\"\"; Hash string \"json:\\\"hash\\\"\"; MediaType string \"json:\\\"media_type\\\"\"; ByteLength github.com/ruipengliu/lerna/contract/gen/go/v1_2.Revision \"json:\\\"byte_length\\\"\" }]",
+        "github.com/ruipengliu/lerna/adapters/content/decision.ToRule",
+        "github.com/ruipengliu/lerna/adapters/content/decision.(*Adapter).snapshot",
+        "github.com/ruipengliu/lerna/adapters/content/decision.(*Adapter).ReadFixtureLock",
+        "github.com/ruipengliu/lerna/conformance/internal/decisionfixture.claimDiagnosticSource.ReadFixtureLock",
+        "github.com/ruipengliu/lerna/components/decision_engine.(*Service).calculate",
+        "github.com/ruipengliu/lerna/components/decision_engine.(*Service).RunClaim",
+        "github.com/ruipengliu/lerna/components/decision_engine.(*Service).Step",
+        "github.com/ruipengliu/lerna/conformance/component_test.completeContextDecision.func1",
+        "runtime/pprof.Do",
+        "github.com/ruipengliu/lerna/conformance/component_test.completeContextDecision",
+        "github.com/ruipengliu/lerna/conformance/component_test.TestContentContextReachableClosure64And65IncludesIntermediateVersions.func1",
+        "testing.tRunner"
+      ]
+    },
+    {
+      "cpu_ns": 10000000,
+      "labels": {
+        "case": "static62",
+        "phase": "decision_step"
+      },
+      "source": "github.com/ruipengliu/lerna/adapters/content/decision.(*Adapter).ReadSnapshot",
+      "disjoint_bucket": "mandatory.typed-decode-subtree",
+      "leaf_to_root_frames": [
+        "encoding/json/jsontext.(*decoderState).consumeValue",
+        "encoding/json/jsontext.(*decoderState).consumeObject",
+        "encoding/json/jsontext.(*decoderState).consumeValue",
+        "encoding/json/jsontext.(*decoderState).consumeArray",
+        "encoding/json/jsontext.(*decoderState).consumeValue",
+        "encoding/json/jsontext.(*decoderState).consumeObject",
+        "encoding/json/jsontext.(*decoderState).consumeValue",
+        "encoding/json/jsontext.(*decoderState).ReadValue",
+        "encoding/json.(*Decoder).Decode",
+        "github.com/ruipengliu/lerna/domain/task/context.DecodeMandatory",
+        "github.com/ruipengliu/lerna/adapters/content/decision.(*Adapter).ReadSnapshot",
+        "github.com/ruipengliu/lerna/conformance/internal/decisionfixture.claimDiagnosticSource.ReadSnapshot",
+        "github.com/ruipengliu/lerna/components/decision_engine.(*Service).calculate",
+        "github.com/ruipengliu/lerna/components/decision_engine.(*Service).RunClaim",
+        "github.com/ruipengliu/lerna/components/decision_engine.(*Service).Step",
+        "github.com/ruipengliu/lerna/conformance/component_test.completeContextDecision.func1",
+        "runtime/pprof.Do",
+        "github.com/ruipengliu/lerna/conformance/component_test.completeContextDecision",
+        "github.com/ruipengliu/lerna/conformance/component_test.TestContentContextStaticModeMaximumReachable62Materials",
+        "testing.tRunner"
+      ]
+    },
+    {
+      "cpu_ns": 10000000,
+      "labels": {
+        "case": "static62",
+        "phase": "decision_step"
+      },
+      "source": "github.com/ruipengliu/lerna/adapters/content/decision.(*Adapter).ReadSnapshot",
+      "disjoint_bucket": "snapshot.ToRule-subtree",
+      "leaf_to_root_frames": [
+        "internal/runtime/maps.(*Iter).Next",
+        "runtime.mapIterNext",
+        "github.com/ruipengliu/lerna/contract/v1_2.writeCanonical",
+        "github.com/ruipengliu/lerna/contract/v1_2.writeCanonical",
+        "github.com/ruipengliu/lerna/contract/v1_2.Encode[go.shape.struct { Owner github.com/ruipengliu/lerna/contract/gen/go/v1_2.OwnerRef \"json:\\\"owner\\\"\"; ContentID github.com/ruipengliu/lerna/contract/gen/go/v1_2.ID \"json:\\\"content_id\\\"\"; Version string \"json:\\\"version\\\"\"; Hash string \"json:\\\"hash\\\"\"; MediaType string \"json:\\\"media_type\\\"\"; ByteLength github.com/ruipengliu/lerna/contract/gen/go/v1_2.Revision \"json:\\\"byte_length\\\"\" }]",
+        "github.com/ruipengliu/lerna/adapters/content/decision.ToRule",
+        "github.com/ruipengliu/lerna/adapters/content/decision.(*Adapter).snapshot",
+        "github.com/ruipengliu/lerna/adapters/content/decision.(*Adapter).ReadSnapshot",
+        "github.com/ruipengliu/lerna/conformance/internal/decisionfixture.claimDiagnosticSource.ReadSnapshot",
+        "github.com/ruipengliu/lerna/components/decision_engine.(*Service).calculate",
+        "github.com/ruipengliu/lerna/components/decision_engine.(*Service).RunClaim",
+        "github.com/ruipengliu/lerna/components/decision_engine.(*Service).Step",
+        "github.com/ruipengliu/lerna/conformance/component_test.completeContextDecision.func1",
+        "runtime/pprof.Do",
+        "github.com/ruipengliu/lerna/conformance/component_test.completeContextDecision",
+        "github.com/ruipengliu/lerna/conformance/component_test.TestContentContextStaticModeMaximumReachable62Materials",
+        "testing.tRunner"
+      ]
+    },
+    {
+      "cpu_ns": 10000000,
+      "labels": {
+        "case": "static62",
+        "phase": "decision_step"
+      },
+      "source": "github.com/ruipengliu/lerna/adapters/content/decision.(*Adapter).ReadSnapshot",
+      "disjoint_bucket": "snapshot.ToRule-subtree",
+      "leaf_to_root_frames": [
+        "unicode/utf8.ValidString",
+        "github.com/ruipengliu/lerna/contract/v1_2.wireValue",
+        "github.com/ruipengliu/lerna/contract/v1_2.wireValue",
+        "github.com/ruipengliu/lerna/contract/v1_2.wireValue",
+        "github.com/ruipengliu/lerna/contract/v1_2.wireValue",
+        "github.com/ruipengliu/lerna/contract/v1_2.Validate",
+        "github.com/ruipengliu/lerna/contract/v1_2.Encode[go.shape.struct { Owner github.com/ruipengliu/lerna/contract/gen/go/v1_2.OwnerRef \"json:\\\"owner\\\"\"; ContentID github.com/ruipengliu/lerna/contract/gen/go/v1_2.ID \"json:\\\"content_id\\\"\"; Version string \"json:\\\"version\\\"\"; Hash string \"json:\\\"hash\\\"\"; MediaType string \"json:\\\"media_type\\\"\"; ByteLength github.com/ruipengliu/lerna/contract/gen/go/v1_2.Revision \"json:\\\"byte_length\\\"\" }]",
+        "github.com/ruipengliu/lerna/adapters/content/decision.ToRule",
+        "github.com/ruipengliu/lerna/adapters/content/decision.(*Adapter).snapshot",
+        "github.com/ruipengliu/lerna/adapters/content/decision.(*Adapter).ReadSnapshot",
+        "github.com/ruipengliu/lerna/conformance/internal/decisionfixture.claimDiagnosticSource.ReadSnapshot",
+        "github.com/ruipengliu/lerna/components/decision_engine.(*Service).calculate",
+        "github.com/ruipengliu/lerna/components/decision_engine.(*Service).RunClaim",
+        "github.com/ruipengliu/lerna/components/decision_engine.(*Service).Step",
+        "github.com/ruipengliu/lerna/conformance/component_test.completeContextDecision.func1",
+        "runtime/pprof.Do",
+        "github.com/ruipengliu/lerna/conformance/component_test.completeContextDecision",
+        "github.com/ruipengliu/lerna/conformance/component_test.TestContentContextStaticModeMaximumReachable62Materials",
+        "testing.tRunner"
+      ]
+    },
+    {
+      "cpu_ns": 10000000,
+      "labels": {
+        "case": "static62",
+        "phase": "decision_step"
+      },
+      "source": "github.com/ruipengliu/lerna/adapters/content/decision.(*Adapter).ReadFixtureLock",
+      "disjoint_bucket": "snapshot.ToRule-subtree",
+      "leaf_to_root_frames": [
+        "github.com/santhosh-tekuri/jsonschema/v6.(*validator).objValidate",
+        "github.com/santhosh-tekuri/jsonschema/v6.(*validator).validate",
+        "github.com/santhosh-tekuri/jsonschema/v6.(*Schema).validate",
+        "github.com/ruipengliu/lerna/contract/v1_1.Validate",
+        "github.com/ruipengliu/lerna/contract/v1_1.Encode[go.shape.struct { Owner github.com/ruipengliu/lerna/contract/gen/go/v1_1.OwnerRef \"json:\\\"owner\\\"\"; ContentID github.com/ruipengliu/lerna/contract/gen/go/v1_1.ID \"json:\\\"content_id\\\"\"; Version github.com/ruipengliu/lerna/contract/gen/go/v1_1.Revision \"json:\\\"version\\\"\"; Hash string \"json:\\\"hash\\\"\"; MediaType string \"json:\\\"media_type\\\"\"; ByteLength github.com/ruipengliu/lerna/contract/gen/go/v1_1.Revision \"json:\\\"byte_length\\\"\" }]",
+        "github.com/ruipengliu/lerna/adapters/content/decision.ToRule",
+        "github.com/ruipengliu/lerna/adapters/content/decision.(*Adapter).snapshot",
+        "github.com/ruipengliu/lerna/adapters/content/decision.(*Adapter).ReadFixtureLock",
+        "github.com/ruipengliu/lerna/conformance/internal/decisionfixture.claimDiagnosticSource.ReadFixtureLock",
+        "github.com/ruipengliu/lerna/components/decision_engine.(*Service).calculate",
+        "github.com/ruipengliu/lerna/components/decision_engine.(*Service).RunClaim",
+        "github.com/ruipengliu/lerna/components/decision_engine.(*Service).Step",
+        "github.com/ruipengliu/lerna/conformance/component_test.completeContextDecision.func1",
+        "runtime/pprof.Do",
+        "github.com/ruipengliu/lerna/conformance/component_test.completeContextDecision",
+        "github.com/ruipengliu/lerna/conformance/component_test.TestContentContextStaticModeMaximumReachable62Materials",
+        "testing.tRunner"
+      ]
+    }
+  ]
+}

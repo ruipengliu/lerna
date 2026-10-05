@@ -1,0 +1,88 @@
+{
+  "raw_human_read_scope": "header/first80/final40; NOT FULL6058",
+  "full_machine_audit_sample_weights_labels_stacks": 189,
+  "all_189_derived_rows_exact_to_complete_raw": true,
+  "original_binary_profile_SHA_dev_inode_still_match": true,
+  "original_analysis_group_independently_absent": 3507329,
+  "original_CPU_FD_logical_Close_UNKNOWN_retained": true,
+  "files": [
+    {
+      "source": "/workspace/lerna-content-03-137311247276/source-stack-weighted-analysis/classify-traces.py",
+      "archive": "classify-traces.py",
+      "sha256": "1c383da33ae21487d84d4a6e97f066707ea9cb512a9a65bc24cd19bae38c73c7",
+      "bytes": 5657
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/source-stack-weighted-analysis/weighted-source-stacks.json",
+      "archive": "weighted-source-stacks.json",
+      "sha256": "fb56be1ad93d2c322a8d9d979d3fd168a67fc9fc8a6902592770ee1ef723e2fa",
+      "bytes": 510305
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/source-stack-weighted-analysis/results.md",
+      "archive": "results.md",
+      "sha256": "e03636dfb7076f24f4cb4679694507ad2c14008e43daffa6282e87ae1821afb5",
+      "bytes": 4051
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/source-stack-weighted-analysis/prelaunch-registration.json",
+      "archive": "prelaunch-registration.json",
+      "sha256": "f2e8c0c9c1ae28a3b0fbf355376ccf6997291ad24b5413db41e31ede76c8e34f",
+      "bytes": 1433
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/source-stack-weighted-analysis/classify-traces-pre-output-format.py",
+      "archive": "classify-traces-pre-output-format.py",
+      "sha256": "7c19198e194d1ec9580014c0b6fab9cbad82556075546ae674c682b48b9c3f29",
+      "bytes": 5515
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/source-stack-weighted-analysis/commands-static.json",
+      "archive": "commands-static.json",
+      "sha256": "9db19b1543d9954d3514507cc616d855492b9b16a58bb10e6e58f60ad7aabeb5",
+      "bytes": 5077
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/source-stack-weighted-analysis/pure-source-sample-paths.json",
+      "archive": "pure-source-sample-paths.json",
+      "sha256": "d18769ce89e30c7890cf2e6f7e4e91437dbbb11f95210190712f49e16431f184",
+      "bytes": 19449
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/source-stack-weighted-analysis/analysis-outcome-before-parser-cutoff.json",
+      "archive": "analysis-outcome-before-parser-cutoff.json",
+      "sha256": "c7998f529cacfc278f74575c2ec2608d0e4f46842a8eba483d4d2d9913f8c89d",
+      "bytes": 1393
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/source-stack-weighted-analysis/README.md",
+      "archive": "README.md",
+      "sha256": "cea7f802777ce374ac4fafa96979ce9833e2550ba06cc66ed8046a1e30b5748f",
+      "bytes": 2858
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/source-stack-weighted-analysis/analysis-outcome.json",
+      "archive": "analysis-outcome.json",
+      "sha256": "2ac5645ad805e729b63e7b6318d72f6607342109a349424f2f7e91841dbde4d2",
+      "bytes": 2630
+    },
+    {
+      "source": "/workspace/lerna-content-03-137311247276/context-final-capacity-b-worker-cpu-source-traces.log",
+      "archive": "source-traces.log",
+      "sha256": "f610d853b0a43883351415deedb0f90a33b6620c37d01dae70ea84f7babfc26e",
+      "bytes": 472556
+    },
+    {
+      "source": "/tmp/lerna-root-source-traces-audit.json",
+      "archive": "root-independent-weight-audit.json",
+      "sha256": "d5f227b80d3b3d70e76e3b25cc7cefe6f9ad6160a6236caf90c7077dd0a06269",
+      "bytes": 2110
+    },
+    {
+      "source": "/tmp/lerna-root-existing-profile-source-equivalence.json",
+      "archive": "root-source-equivalence.json",
+      "sha256": "82c6b646f722f1107b3c12547bed7d67cc8bd9ca20a4a5aeb00330a1dfdd9ab4",
+      "bytes": 1611
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+--- preformat
++++ postformat
+@@ -86,7 +86,7 @@
+ 		}
+ 	}
+ 	// Propagation's normal terminal transition schedules the already fixed
+-// natural expiry. Original cleanup responsibilities keep the policy deadline.
++	// natural expiry. Original cleanup responsibilities keep the policy deadline.
+ 	expectedChange := change
+ 	expectedChange.State = "scheduled"
+ 	expectedChange.Phase = "natural_expiry"

@@ -1,0 +1,38 @@
+{
+  "status": "pre-effect registered",
+  "registered_ns": 1791178776900927962,
+  "plan_sha256": "9db19b1543d9954d3514507cc616d855492b9b16a58bb10e6e58f60ad7aabeb5",
+  "argv": [
+    "go",
+    "tool",
+    "pprof",
+    "-traces",
+    "-sample_index=cpu",
+    "-unit=ns",
+    "-tagfocus=phase=^decision_step$",
+    "-focus=^github\\.com/ruipengliu/lerna/adapters/content/decision\\.\\(\\*Adapter\\)\\.(ReadSnapshot|ReadFixtureLock)$",
+    "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/component-profile-race.test",
+    "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/worker-cpu.pprof"
+  ],
+  "artifact_pins": [
+    {
+      "path": "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/component-profile-race.test",
+      "sha256": "963905c078cebcbe55e4c64765d8f75aa4dcf1f88ec1d1d4452b889b64615cf3",
+      "bytes": 29010781,
+      "device": 27,
+      "inode": 560459,
+      "mode": "0o700"
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/worker-cpu.pprof",
+      "sha256": "427bbc672bad5cf520934ed2e31116f75eca4991572fd5ecd0c3f7c3a4ff31e6",
+      "bytes": 144298,
+      "device": 27,
+      "inode": 560161,
+      "mode": "0o600"
+    }
+  ],
+  "no_business_resources": true,
+  "original_testing_CPU_descriptor_logicalClose": "UNKNOWN",
+  "actual_native_identity": "wrapper gate records PID/tick before Go execution"
+}
