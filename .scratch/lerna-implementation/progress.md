@@ -327,3 +327,5 @@ root全文读取[Astra六票复核](../lerna-04-content-snapshots/published-tick
 2026-10-05，05低积压count1正常15.464s实际0/absence，完整V2/live全holderACK/独立物理缺失/旧expired职责正文与固定回执history尾均执行，[原源与原日志](../lerna-04-content-snapshots/ticket-05-expired-job-scan/README.md)保存。只有test-only公开编码等值修正，产品未改。root只授独立64首red（初始15s seal、caller90、四Step、120不变），未授权产品fix或race。
 
 2026-10-05，05真实64积压首businessred18.131s/1/absence已成立：[原源码、预登记计划及实际日志](../lerna-04-content-snapshots/ticket-05-expired-job-scan/README.md)。64原合法封闭到期并重开后，新准确版本已accepted、四推进仍preparing、独立bodymissing；live/policy尾未执行。root全文采用后只授Content-own两窄扫描口/三消费者的静态最小修正，冻结runtime/schema/旧expired职责字节期限不改，新green/race/边界及审查待。03CPU新5overlay静态准备中，未native采样，whole04仍15/41。
+
+2026-10-05，03一次原B CPU采样实际exit1/absence，七个只读pprof视图均实际0/absence；root全文原159行和全部视图并核对profile/log哈希，见[准确测量](../lerna-04-content-snapshots/ticket-03-large-graph-claim/worker-cpu-measurement/README.md)。两个大图仍失败，本次closure caller截止、static原Prepared后首次Publish领取截止，阶段与未采样失败分列；标签6.80/总62.18CPU、offCPU未知、不相加cum。原profileFD Close UNKNOWN保留。Astra只读决定下一等价优化，未授权第二产品fix或重跑；05窄扫描静态核对损坏记录不隐去，whole04仍15/41/profile OFF。

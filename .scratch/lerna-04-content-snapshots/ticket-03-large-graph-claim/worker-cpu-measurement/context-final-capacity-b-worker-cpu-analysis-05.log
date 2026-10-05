@@ -1,0 +1,42 @@
+File: component-profile-race.test
+Build ID: 806ee56983405ac712e9bc3da0d9c152c518a73f
+Type: cpu
+Time: 2026-10-05 03:06:19 UTC
+Duration: 78.40s, Total samples = 62.18s (79.31%)
+Active filters:
+   tagfocus=case=closure64
+Showing nodes accounting for 1.16s, 1.87% of 62.18s total
+Dropped 87 nodes (cum <= 0.31s)
+Showing top 30 nodes out of 188
+      flat  flat%   sum%        cum   cum%
+         0     0%     0%      1.18s  1.90%  runtime._System
+         0     0%     0%      1.11s  1.79%  github.com/ruipengliu/lerna/components/decision_engine.(*Service).Step
+         0     0%     0%      1.11s  1.79%  github.com/ruipengliu/lerna/conformance/component_test.TestContentContextReachableClosure64And65IncludesIntermediateVersions.func1
+         0     0%     0%      1.11s  1.79%  github.com/ruipengliu/lerna/conformance/component_test.completeContextDecision
+         0     0%     0%      1.11s  1.79%  github.com/ruipengliu/lerna/conformance/component_test.completeContextDecision.func1
+         0     0%     0%      1.11s  1.79%  runtime/pprof.Do
+         0     0%     0%      1.11s  1.79%  testing.tRunner
+         0     0%     0%      1.09s  1.75%  github.com/ruipengliu/lerna/components/decision_engine.(*Service).RunClaim
+         0     0%     0%      1.09s  1.75%  github.com/ruipengliu/lerna/components/decision_engine.(*Service).calculate
+         0     0%     0%         1s  1.61%  github.com/ruipengliu/lerna/adapters/content/decision.(*Adapter).read
+         0     0%     0%         1s  1.61%  github.com/ruipengliu/lerna/adapters/postgres/content.(*Store).Within
+         0     0%     0%         1s  1.61%  github.com/ruipengliu/lerna/adapters/postgres/internal/pgstore.(*Core).Within
+         0     0%     0%         1s  1.61%  github.com/ruipengliu/lerna/conformance/internal/decisionfixture.claimDiagnosticContent.ReadForProcessing
+         0     0%     0%         1s  1.61%  github.com/ruipengliu/lerna/domain/content.(*Service).ReadForProcessing
+         0     0%     0%      0.99s  1.59%  github.com/ruipengliu/lerna/domain/content.(*Service).ReadForProcessing.func1
+         0     0%     0%      0.98s  1.58%  github.com/ruipengliu/lerna/domain/content.(*Service).registeredClosure
+         0     0%     0%      0.92s  1.48%  github.com/ruipengliu/lerna/domain/content.(*Service).registeredClosure.func1
+     0.65s  1.05%  1.05%      0.65s  1.05%  __tsan_read
+         0     0%  1.05%      0.54s  0.87%  github.com/ruipengliu/lerna/domain/content.VersionIdentity
+         0     0%  1.05%      0.52s  0.84%  github.com/ruipengliu/lerna/adapters/content/decision.(*Adapter).ReadFixtureLock
+         0     0%  1.05%      0.52s  0.84%  github.com/ruipengliu/lerna/conformance/internal/decisionfixture.claimDiagnosticSource.ReadFixtureLock
+         0     0%  1.05%      0.51s  0.82%  github.com/ruipengliu/lerna/contract/v1_2.Encode[go.shape.struct { Owner github.com/ruipengliu/lerna/contract/gen/go/v1_2.OwnerRef "json:\"owner\""; ContentID github.com/ruipengliu/lerna/contract/gen/go/v1_2.ID "json:\"content_id\""; Version string "json:\"version\""; Hash string "json:\"hash\""; MediaType string "json:\"media_type\""; ByteLength github.com/ruipengliu/lerna/contract/gen/go/v1_2.Revision "json:\"byte_length\"" }]
+     0.51s  0.82%  1.87%      0.51s  0.82%  racecall
+         0     0%  1.87%      0.50s   0.8%  github.com/ruipengliu/lerna/adapters/content/decision.(*Adapter).ReadSnapshot
+         0     0%  1.87%      0.50s   0.8%  github.com/ruipengliu/lerna/conformance/internal/decisionfixture.claimDiagnosticSource.ReadSnapshot
+         0     0%  1.87%      0.28s  0.45%  github.com/ruipengliu/lerna/adapters/postgres/content.(*Store).LockVersion
+         0     0%  1.87%      0.23s  0.37%  github.com/ruipengliu/lerna/contract/v1_2.Validate
+         0     0%  1.87%      0.22s  0.35%  github.com/ruipengliu/lerna/domain/content.sortRefs
+         0     0%  1.87%      0.18s  0.29%  encoding/json/v2.Unmarshal
+         0     0%  1.87%      0.17s  0.27%  encoding/json/v2.unmarshalDecode
+NATIVE_EXIT status=0 group_absent=True

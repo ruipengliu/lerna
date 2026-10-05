@@ -1,0 +1,40 @@
+--- /tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_context_material_reachable_test.go
++++ /workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/content_context_material_reachable_test.go
+@@ -18,7 +18,8 @@
+ 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+ 	defer cancel()
+ 	// The independent static policy and complete-read bound are fixed at Install.
+-	w := fixture.NewContextWorldWithInput(t, ctx, func(in *compiler.Input) {
++	trace := fixture.NewContextClaimDiagnostics(t, ctx)
++	w := fixture.NewContextWorldWithInputDiagnostic(t, ctx, func(in *compiler.Input) {
+ 		in.Policy.Capacity = "524288"
+ 		in.Policy.OutputReserve = "131072"
+ 		in.Policy.ReadBudget = "262144" // all processed sources are selected
+@@ -26,7 +27,7 @@
+ 		in.Request.Payload.Limits.MaxOutputBytes = "131072"
+ 		in.Materials = in.Materials[:1]
+ 		in.Policy.SelectionVersion = ""
+-	})
++	}, trace)
+ 	w.Input.Revision = "2"
+ 	// This explicit static declaration makes no claim that B chose materials.
+ 	// All61 processed upstream sources are directly selected.
+@@ -37,6 +38,7 @@
+ 		publishContextSource(t, ctx, w, ref, []byte("alpha\n"), []c.ContentRef{})
+ 		w.Input.Materials = append(w.Input.Materials, compiler.Material{Ref: ref, Selected: true, Role: "additional"})
+ 	}
++	trace.Mark("phase.all-upstream-sources-published")
+ 	if err := w.Dispatcher.InstallInput(ctx, "context-input", w.Input, "1"); err != nil {
+ 		t.Fatal(err)
+ 	}
+@@ -47,7 +49,10 @@
+ 	if len(bundle.Materials) != 62 || len(bundle.Processed) != 61 {
+ 		t.Fatal("static reachable62 direct materials projection lost", len(bundle.Materials), len(bundle.Processed))
+ 	}
++	lockStart := time.Now()
++	trace.Mark("phase.independent-lock-observation-start")
+ 	lock, err := w.Content.ReadForProcessing(ctx, &w.Subject, bundle.Lock.Ref, w.Input.Purpose, 262144)
++	trace.Stage(ctx, "phase.independent-lock-observation-end", lockStart, err)
+ 	if err != nil || len(lock.Sources) != 64 {
+ 		t.Fatal("maximum reachable static graph's true closure differs", err, len(lock.Sources))
+ 	}

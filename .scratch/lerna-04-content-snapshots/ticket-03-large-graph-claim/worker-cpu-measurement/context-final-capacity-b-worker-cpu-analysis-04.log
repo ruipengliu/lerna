@@ -1,0 +1,42 @@
+File: component-profile-race.test
+Build ID: 806ee56983405ac712e9bc3da0d9c152c518a73f
+Type: cpu
+Time: 2026-10-05 03:06:19 UTC
+Duration: 78.40s, Total samples = 62.18s (79.31%)
+Active filters:
+   tagfocus=case=closure64
+Showing nodes accounting for 2.18s, 3.51% of 62.18s total
+Dropped 87 nodes (cum <= 0.31s)
+Showing top 30 nodes out of 188
+      flat  flat%   sum%        cum   cum%
+     0.65s  1.05%  1.05%      0.65s  1.05%  __tsan_read
+     0.51s  0.82%  1.87%      0.51s  0.82%  racecall
+     0.12s  0.19%  2.06%      0.12s  0.19%  __tsan::MemoryAccessRangeT
+     0.09s  0.14%  2.20%      0.09s  0.14%  runtime.raceread
+     0.08s  0.13%  2.33%      0.10s  0.16%  runtime.checkptrBase
+     0.07s  0.11%  2.44%      0.07s  0.11%  __tsan_write
+     0.05s  0.08%  2.52%      0.05s  0.08%  __tsan::MetaMap::GetSync
+     0.05s  0.08%  2.61%      0.05s  0.08%  internal/runtime/syscall/linux.Syscall6
+     0.05s  0.08%  2.69%      0.05s  0.08%  racecalladdr
+     0.04s 0.064%  2.75%      0.11s  0.18%  runtime.newobject
+     0.03s 0.048%  2.80%      0.03s 0.048%  __tsan_func_enter
+     0.03s 0.048%  2.85%      0.03s 0.048%  __tsan_go_atomic64_compare_exchange
+     0.03s 0.048%  2.89%      0.08s  0.13%  encoding/json/jsontext.(*decoderState).ReadToken
+     0.03s 0.048%  2.94%      0.03s 0.048%  internal/runtime/maps.(*Iter).Next
+     0.03s 0.048%  2.99%      0.16s  0.26%  runtime.mallocgc
+     0.03s 0.048%  3.04%      0.08s  0.13%  runtime.mallocgcSmallScanNoHeader
+     0.03s 0.048%  3.09%      0.03s 0.048%  runtime.write1
+     0.02s 0.032%  3.12%      0.02s 0.032%  __tsan::TraceSwitchPart
+     0.02s 0.032%  3.15%      0.02s 0.032%  __tsan_go_atomic32_compare_exchange
+     0.02s 0.032%  3.18%      0.02s 0.032%  __tsan_go_atomic32_fetch_add
+     0.02s 0.032%  3.22%      0.02s 0.032%  __tsan_go_atomic64_load
+     0.02s 0.032%  3.25%      0.02s 0.032%  encoding/json/jsontext.(*decoderState).PeekKind
+     0.02s 0.032%  3.28%      0.04s 0.064%  encoding/json/jsontext.(*decoderState).ReadValue
+     0.02s 0.032%  3.31%      0.15s  0.24%  github.com/santhosh-tekuri/jsonschema/v6.(*validator).validate
+     0.02s 0.032%  3.35%      0.07s  0.11%  reflect.implements
+     0.02s 0.032%  3.38%      0.03s 0.048%  regexp/syntax.(*Inst).MatchRunePos
+     0.02s 0.032%  3.41%      0.02s 0.032%  runtime.(*mspan).writeHeapBitsSmall
+     0.02s 0.032%  3.44%      0.11s  0.18%  runtime.checkptrStraddles
+     0.02s 0.032%  3.47%      0.02s 0.032%  runtime.findObject
+     0.02s 0.032%  3.51%      0.02s 0.032%  runtime.mallocgcSmallNoscan
+NATIVE_EXIT status=0 group_absent=True

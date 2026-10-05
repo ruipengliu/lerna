@@ -1,0 +1,123 @@
+--- /tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_world.go
++++ /workspace/lerna-content-03-137311247276/large-graph-worker-cpu-overlay/context_world.go
+@@ -2,8 +2,11 @@
+ 
+ import (
+ 	"context"
++	"crypto/sha256"
+ 	"encoding/base64"
++	"encoding/hex"
+ 	"errors"
++	"fmt"
+ 	adapter "github.com/ruipengliu/lerna/adapters/content/decision"
+ 	engine "github.com/ruipengliu/lerna/components/decision_engine"
+ 	cf "github.com/ruipengliu/lerna/conformance/internal/contentfixture"
+@@ -11,6 +14,7 @@
+ 	c "github.com/ruipengliu/lerna/contract/v1_2"
+ 	"github.com/ruipengliu/lerna/domain/content"
+ 	compiler "github.com/ruipengliu/lerna/domain/task/context"
++	"github.com/ruipengliu/lerna/runtime"
+ 	"strconv"
+ 	"testing"
+ 	"time"
+@@ -27,6 +31,7 @@
+ 	Adapter      *adapter.Adapter
+ 	Fixture      *World
+ 	ContentWorld *cf.World
++	diagnostics  *ContextClaimDiagnostics
+ 	t            *testing.T
+ 	trustedUntil time.Time
+ }
+@@ -38,8 +43,17 @@
+ // NewContextWorldWithInput fixes explicit fixture policy/limits before the first
+ // trusted installation; later revisions cannot widen the original budget tuple.
+ func NewContextWorldWithInput(t *testing.T, ctx context.Context, configure func(*compiler.Input)) *ContextWorld {
++	return newContextWorldWithDiagnostic(t, ctx, configure, nil)
++}
++func NewContextWorldWithInputDiagnostic(t *testing.T, ctx context.Context, configure func(*compiler.Input), d *ContextClaimDiagnostics) *ContextWorld {
++	return newContextWorldWithDiagnostic(t, ctx, configure, d)
++}
++func newContextWorldWithDiagnostic(t *testing.T, ctx context.Context, configure func(*compiler.Input), d *ContextClaimDiagnostics) *ContextWorld {
+ 	t.Helper()
+-	w := &ContextWorld{t: t, Fixture: NewWorld(t, ctx), ContentWorld: cf.New(t, ctx), trustedUntil: time.Now().UTC().Add(time.Hour).Truncate(time.Microsecond)}
++	w := &ContextWorld{diagnostics: d, t: t, Fixture: NewWorld(t, ctx), ContentWorld: cf.New(t, ctx), trustedUntil: time.Now().UTC().Add(time.Hour).Truncate(time.Microsecond)}
++	if d != nil {
++		d.Mark("phase.owners-established")
++	}
+ 	scene := w.Fixture.Scenario()
+ 	w.Principal = scene.Subject
+ 	w.Subject = c.SubjectBinding{TenantID: c.ID(scene.Subject.TenantID), SubjectID: c.ID(scene.Subject.SubjectID), DelegationChain: []c.DelegatedSubject{}}
+@@ -64,6 +78,14 @@
+ 	if configure != nil {
+ 		configure(&w.Input)
+ 	}
++	if d != nil {
++		raw, err := v.Encode(w.Input.Request.Payload)
++		if err != nil {
++			t.Fatal(err)
++		}
++		digest := sha256.Sum256(raw)
++		d.observe("phase.original-bounds", time.Now(), nil, fmt.Sprintf("payload_sha256=%s caller=30s lease=5s input=%s output=%s capacity=%s reserve=%s read=%s original_deadline=%s", hex.EncodeToString(digest[:]), w.Input.Request.Payload.Limits.MaxInputBytes, w.Input.Request.Payload.Limits.MaxOutputBytes, w.Input.Policy.Capacity, w.Input.Policy.OutputReserve, w.Input.Policy.ReadBudget, w.Input.Request.Payload.Deadline))
++	}
+ 	w.build(ctx)
+ 	if err := w.Dispatcher.InstallInput(ctx, "context-input", w.Input, "0"); err != nil {
+ 		t.Fatal(err)
+@@ -94,6 +116,9 @@
+ 		if _, err = w.Content.Step(ctx); err != nil {
+ 			t.Fatal(err)
+ 		}
++	}
++	if d != nil {
++		d.Mark("phase.initial-primary-selector-published")
+ 	}
+ 	return w
+ }
+@@ -112,12 +137,26 @@
+ 		w.t.Fatal(err)
+ 	}
+ 	w.Dispatcher = &ContextDispatcher{Store: w.Fixture.Source(), TrustedSubject: w.Principal, TrustedUntil: w.trustedUntil, ContentOwner: owner, Policies: manager}
+-	w.Adapter, err = adapter.New(adapter.Config{Owner: owner, Subject: w.Subject, Purpose: "rule.input", Content: w.Content, Access: w.Dispatcher})
++	var contentPort adapter.Content = w.Content
++	var accessPort adapter.Access = w.Dispatcher
++	if w.diagnostics != nil {
++		contentPort = claimDiagnosticContent{Content: contentPort, d: w.diagnostics}
++		accessPort = claimDiagnosticAccess{Access: accessPort, d: w.diagnostics}
++	}
++	w.Adapter, err = adapter.New(adapter.Config{Owner: owner, Subject: w.Subject, Purpose: "rule.input", Content: contentPort, Access: accessPort})
+ 	if err != nil {
+ 		w.t.Fatal(err)
+ 	}
+ 	decisionOwner := v.OwnerRef{TenantID: w.Input.Request.Target.TenantID, OwnerID: w.Input.Request.Target.OwnerID}
+-	w.Decision, err = engine.New(engine.Config{Owner: decisionOwner, Store: w.Fixture.Store(), Authority: w.Dispatcher, ControlAuthority: w.Fixture.Source(), Source: w.Adapter, Publisher: w.Adapter, Component: w.Input.Request.Payload.ComponentRef, Worker: "context-decision-worker", Lease: 5 * time.Second, PoolControl: true})
++	var decisionStore engine.Store = w.Fixture.Store()
++	var decisionSource engine.Source = w.Adapter
++	var decisionPublisher engine.Publisher = w.Adapter
++	if w.diagnostics != nil {
++		decisionStore = &claimDiagnosticStore{Store: decisionStore, d: w.diagnostics, active: map[runtime.Tx]*claimDiagnosticTx{}}
++		decisionSource = claimDiagnosticSource{Source: decisionSource, d: w.diagnostics}
++		decisionPublisher = claimDiagnosticPublisher{Publisher: decisionPublisher, d: w.diagnostics}
++	}
++	w.Decision, err = engine.New(engine.Config{Owner: decisionOwner, Store: decisionStore, Authority: w.Dispatcher, ControlAuthority: w.Fixture.Source(), Source: decisionSource, Publisher: decisionPublisher, Component: w.Input.Request.Payload.ComponentRef, Worker: "context-decision-worker", Lease: 5 * time.Second, PoolControl: true})
+ 	if err != nil {
+ 		w.t.Fatal(err)
+ 	}
+@@ -136,7 +175,10 @@
+ 		}
+ 	}
+ }
+-func (w *ContextWorld) Compile(ctx context.Context) (compiler.Bundle, error) {
++func (w *ContextWorld) Compile(ctx context.Context) (bundle compiler.Bundle, err error) {
++	start := time.Now()
++	w.DiagnosticStage(ctx, "phase.compile-start", start, nil)
++	defer func() { w.DiagnosticStage(ctx, "phase.compile-and-bind-end", start, err) }()
+ 	c := compiler.Compiler{Current: w.Dispatcher, Content: w.Content, Assembly: w.Adapter, Subject: w.Subject}
+ 	in, bundle, err := c.Compile(ctx, "context-input")
+ 	if err != nil {
+@@ -145,6 +187,7 @@
+ 		}
+ 		return bundle, err
+ 	}
++	w.DiagnosticStage(ctx, "phase.compile-published-pre-bind", time.Now(), nil)
+ 	if err = w.Dispatcher.Bind(ctx, "context-input", in, bundle); err != nil {
+ 		return bundle, err
+ 	}

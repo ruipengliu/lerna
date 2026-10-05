@@ -1,0 +1,40 @@
+File: component-profile-race.test
+Build ID: 806ee56983405ac712e9bc3da0d9c152c518a73f
+Type: cpu
+Time: 2026-10-05 03:06:19 UTC
+Duration: 78.40s, Total samples = 62.18s (79.31%)
+Showing nodes accounting for 23.03s, 37.04% of 62.18s total
+Dropped 993 nodes (cum <= 0.31s)
+Showing top 30 nodes out of 257
+      flat  flat%   sum%        cum   cum%
+         0     0%     0%     22.69s 36.49%  runtime._System
+         0     0%     0%     22.35s 35.94%  testing.tRunner
+         0     0%     0%     16.08s 25.86%  github.com/ruipengliu/lerna/adapters/postgres/internal/pgstore.(*Core).Within
+         0     0%     0%     15.83s 25.46%  github.com/ruipengliu/lerna/adapters/postgres/content.(*Store).Within
+         0     0%     0%     12.86s 20.68%  github.com/ruipengliu/lerna/conformance/component_test.TestContentContextReachableClosure64And65IncludesIntermediateVersions.func1
+    11.65s 18.74% 18.74%     11.65s 18.74%  racecall
+    11.26s 18.11% 36.84%     11.26s 18.11%  __tsan_read
+         0     0% 36.84%     10.87s 17.48%  github.com/ruipengliu/lerna/conformance/internal/decisionfixture.(*ContextWorld).Compile
+         0     0% 36.84%     10.85s 17.45%  github.com/ruipengliu/lerna/domain/task/context.(*Compiler).Compile
+     0.01s 0.016% 36.86%      9.26s 14.89%  github.com/ruipengliu/lerna/domain/content.(*Service).registeredClosure
+         0     0% 36.86%      8.49s 13.65%  github.com/ruipengliu/lerna/domain/content.(*Service).registeredClosure.func1
+         0     0% 36.86%      7.48s 12.03%  github.com/ruipengliu/lerna/adapters/content/decision.(*Adapter).publishObject
+         0     0% 36.86%      7.26s 11.68%  github.com/ruipengliu/lerna/conformance/component_test.TestContentContextStaticModeMaximumReachable62Materials
+         0     0% 36.86%      7.04s 11.32%  github.com/ruipengliu/lerna/adapters/content/decision.(*Adapter).PublishBundle
+         0     0% 36.86%      6.96s 11.19%  github.com/ruipengliu/lerna/domain/content.(*Service).ReadForProcessing
+     0.01s 0.016% 36.88%      6.54s 10.52%  github.com/ruipengliu/lerna/domain/content.(*Service).ReadForProcessing.func1
+         0     0% 36.88%      5.93s  9.54%  github.com/ruipengliu/lerna/conformance/component_test.publishContextSource
+         0     0% 36.88%      5.48s  8.81%  github.com/ruipengliu/lerna/domain/content.(*Service).Put
+         0     0% 36.88%      5.36s  8.62%  github.com/ruipengliu/lerna/domain/task/context.(*budgetReader).ReadForProcessing
+     0.03s 0.048% 36.93%      5.35s  8.60%  database/sql.withLock
+     0.01s 0.016% 36.94%      5.32s  8.56%  github.com/ruipengliu/lerna/contract/v1_2.Encode[go.shape.struct { Owner github.com/ruipengliu/lerna/contract/gen/go/v1_2.OwnerRef "json:\"owner\""; ContentID github.com/ruipengliu/lerna/contract/gen/go/v1_2.ID "json:\"content_id\""; Version string "json:\"version\""; Hash string "json:\"hash\""; MediaType string "json:\"media_type\""; ByteLength github.com/ruipengliu/lerna/contract/gen/go/v1_2.Revision "json:\"byte_length\"" }]
+         0     0% 36.94%      4.77s  7.67%  github.com/ruipengliu/lerna/domain/content.VersionIdentity
+     0.01s 0.016% 36.96%      4.66s  7.49%  github.com/ruipengliu/lerna/domain/content.(*Service).Put.func1
+         0     0% 36.96%      4.22s  6.79%  github.com/ruipengliu/lerna/conformance/component_test.completeContextDecision
+     0.02s 0.032% 36.99%      4.04s  6.50%  database/sql.(*Tx).QueryContext
+         0     0% 36.99%      4.02s  6.47%  github.com/ruipengliu/lerna/contract/v1_2.Validate
+     0.01s 0.016% 37.01%      4.01s  6.45%  database/sql.(*DB).queryDC
+     0.01s 0.016% 37.02%      3.88s  6.24%  github.com/jackc/pgx/v5/pgconn.(*PgConn).ExecStatement
+         0     0% 37.02%      3.64s  5.85%  github.com/ruipengliu/lerna/domain/content.(*Service).Step
+     0.01s 0.016% 37.04%      3.61s  5.81%  github.com/jackc/pgx/v5/pgconn.(*PgConn).execExtendedSuffix
+NATIVE_EXIT status=0 group_absent=True

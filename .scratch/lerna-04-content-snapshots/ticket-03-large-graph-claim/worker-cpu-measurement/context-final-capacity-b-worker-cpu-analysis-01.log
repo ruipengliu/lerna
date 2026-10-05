@@ -1,0 +1,8 @@
+ case: Total 6.80s of 62.18s (10.94%)
+       3.97s ( 6.38%): static62
+       2.83s ( 4.55%): closure64
+
+ phase: Total 6.80s of 62.18s (10.94%)
+        6.80s (10.94%): decision_step
+
+NATIVE_EXIT status=0 group_absent=True
