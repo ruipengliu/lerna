@@ -1,0 +1,16 @@
+{
+  "observed_utc": "2026-10-05T11:29:38.815090+00:00",
+  "original_and_copy_exact_files": 67,
+  "bytes": 3159046,
+  "root_FULL_race_lines": 320,
+  "root_machine_input_scopes": 6,
+  "nonempty_cost_cells": 154,
+  "all_attempted_completed_noerror_false_dropped_ambiguity_open": true,
+  "root_independent_all331_before_clone_fix": true,
+  "root_independent_formed8": true,
+  "root_independent_source_and_binary_before_equals_post": true,
+  "original_ambiguous_index_preserved": "dbfea80143589d44ec98320354c1a915ad24ea2db98dca46abf2b7503280c4ff",
+  "corrected_index": "6674f9ab391080090a32c8204d40e5e6fc9e0cba3864ff1b96f025e97a5f3de9",
+  "capacity_pass": false,
+  "original_unknown_not_backfilled": true
+}

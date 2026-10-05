@@ -1,0 +1,391 @@
+package decisionfixture
+
+import (
+	"bytes"
+	"context"
+	"database/sql"
+	_ "embed"
+	"errors"
+	"fmt"
+	v "github.com/ruipengliu/lerna/contract/v1_1"
+	c "github.com/ruipengliu/lerna/contract/v1_2"
+	compiler "github.com/ruipengliu/lerna/domain/task/context"
+	"reflect"
+	"strconv"
+	"time"
+)
+
+//go:embed migrations/0004_compile_budget.sql
+var compileBudgetMigration string
+
+func (s *Store) migrateCompileBudget(ctx context.Context) error {
+	return s.within(ctx, func(ctx context.Context, tx *sql.Tx, _ time.Time) error {
+		if _, err := tx.ExecContext(ctx, `SELECT pg_advisory_xact_lock(1786614101,hashtext($1))`, s.cfg.Schema); err != nil {
+			return err
+		}
+		var checksum string
+		err := tx.QueryRowContext(ctx, `SELECT checksum FROM `+s.table("fixture_migrations")+` WHERE version=4`).Scan(&checksum)
+		if err == nil {
+			if checksum != digest([]byte(compileBudgetMigration)) {
+				return errors.New("fixture compile budget migration checksum mismatch")
+			}
+			return nil
+		}
+		if !errors.Is(err, sql.ErrNoRows) {
+			return err
+		}
+		if _, err = tx.ExecContext(ctx, fmt.Sprintf(compileBudgetMigration, s.table("fixture_compile_budgets"), s.table("fixture_compile_attempts"), s.table("fixture_compile_reads"))); err != nil {
+			return err
+		}
+		_, err = tx.ExecContext(ctx, `INSERT INTO `+s.table("fixture_migrations")+` VALUES(4,$1)`, digest([]byte(compileBudgetMigration)))
+		return err
+	})
+}
+
+type CompileBudgetTuple struct {
+	Owner       v.OwnerRef              `json:"owner"`
+	Subject     v.SubjectBinding        `json:"subject"`
+	Request     v.DecisionDecideRequest `json:"original_request"`
+	Purpose     string                  `json:"purpose"`
+	RetainUntil v.Time                  `json:"retain_until"`
+	Policy      compiler.Policy         `json:"policy"`
+	MaxRounds   v.Revision              `json:"max_rounds"`
+}
+type compileBudgetRoot struct {
+	Tuple    CompileBudgetTuple
+	Rounds   int
+	Reserved int64
+}
+
+func (d *ContextDispatcher) compileTuple(in compiler.Input) CompileBudgetTuple {
+	return CompileBudgetTuple{Owner: in.Owner, Subject: d.TrustedSubject, Request: in.Request, Purpose: in.Purpose, RetainUntil: in.RetainUntil, Policy: in.Policy, MaxRounds: "3"}
+}
+func (d *ContextDispatcher) lockCompileBudget(ctx context.Context, tx *sql.Tx, ref v.SnapshotRef) (*compileBudgetRoot, error) {
+	k, err := key(ref)
+	if err != nil {
+		return nil, err
+	}
+	if _, err = tx.ExecContext(ctx, `SELECT pg_advisory_xact_lock(1786614105,hashtext($1))`, d.Store.cfg.Schema+"/"+k); err != nil {
+		return nil, err
+	}
+	var body []byte
+	var root compileBudgetRoot
+	if err = tx.QueryRowContext(ctx, `SELECT tuple_body,rounds,reserved FROM `+d.Store.table("fixture_compile_budgets")+` WHERE snapshot_key=$1 FOR UPDATE`, k).Scan(&body, &root.Rounds, &root.Reserved); err != nil {
+		return nil, err
+	}
+	if err = closedJSON(body, &root.Tuple); err != nil {
+		return nil, err
+	}
+	return &root, nil
+}
+func (d *ContextDispatcher) budgetTime(ctx context.Context, tx *sql.Tx, tuple CompileBudgetTuple) error {
+	if err := d.trusted(ctx, tx); err != nil {
+		return err
+	}
+	var now time.Time
+	if err := tx.QueryRowContext(ctx, `SELECT clock_timestamp()`).Scan(&now); err != nil {
+		return err
+	}
+	for _, t := range []v.Time{tuple.Request.AcceptBefore, tuple.Request.Payload.Deadline, tuple.RetainUntil} {
+		until, err := time.Parse("2006-01-02T15:04:05.000000Z", string(t))
+		if err != nil || !now.Before(until) {
+			return &compiler.BudgetError{Reason: compiler.BudgetExpired}
+		}
+	}
+	return nil
+}
+func (d *ContextDispatcher) installCompileBudget(ctx context.Context, tx *sql.Tx, in compiler.Input, root *compileBudgetRoot, priorInput bool) error {
+	tuple := d.compileTuple(in)
+	if err := d.budgetTime(ctx, tx, tuple); err != nil {
+		return err
+	}
+	if root != nil {
+		if !reflect.DeepEqual(root.Tuple, tuple) {
+			return &compiler.BudgetError{Reason: compiler.BudgetTuple}
+		}
+		k, err := key(in.Request.Payload.SnapshotRef)
+		if err != nil {
+			return err
+		}
+		var bound bool
+		if err = tx.QueryRowContext(ctx, `SELECT EXISTS(SELECT 1 FROM `+d.Store.table("fixture_context_bindings")+` WHERE snapshot_key=$1)`, k).Scan(&bound); err != nil {
+			return err
+		}
+		if bound {
+			return compiler.ErrChanged
+		}
+		return nil
+	}
+	if priorInput {
+		return &compiler.BudgetError{Reason: compiler.BudgetHistoricalUnknown}
+	}
+	k, err := key(in.Request.Payload.SnapshotRef)
+	if err != nil {
+		return err
+	}
+	body, err := jsonBytes(tuple)
+	if err != nil {
+		return err
+	}
+	_, err = tx.ExecContext(ctx, `INSERT INTO `+d.Store.table("fixture_compile_budgets")+`(snapshot_key,tuple_body,rounds,reserved)VALUES($1,$2,0,0)`, k, body)
+	return err
+}
+func (d *ContextDispatcher) budgetSubject(subject c.SubjectBinding) bool {
+	converted := v.SubjectBinding{TenantID: v.ID(subject.TenantID), SubjectID: v.ID(subject.SubjectID), DelegationChain: []v.DelegatedSubject{}}
+	for _, p := range subject.DelegationChain {
+		converted.DelegationChain = append(converted.DelegationChain, v.DelegatedSubject{TenantID: v.ID(p.TenantID), SubjectID: v.ID(p.SubjectID)})
+	}
+	return reflect.DeepEqual(converted, d.TrustedSubject)
+}
+func (d *ContextDispatcher) BeginCompile(ctx context.Context, id string, in compiler.Input, subject c.SubjectBinding) (compiler.CompileAttempt, error) {
+	var attempt compiler.CompileAttempt
+	if !d.budgetSubject(subject) || id == "" || len(id) > 128 {
+		return attempt, &compiler.BudgetError{Reason: compiler.BudgetTuple}
+	}
+	if err := compiler.ValidateCompileIdentity(in); err != nil {
+		return attempt, err
+	}
+	inputBody, err := jsonBytes(in)
+	if err != nil {
+		return attempt, err
+	}
+	err = d.Store.within(ctx, func(ctx context.Context, tx *sql.Tx, _ time.Time) error {
+		root, e := d.lockCompileBudget(ctx, tx, in.Request.Payload.SnapshotRef)
+		if errors.Is(e, sql.ErrNoRows) {
+			return &compiler.BudgetError{Reason: compiler.BudgetHistoricalUnknown}
+		}
+		if e != nil {
+			return e
+		}
+		if !reflect.DeepEqual(root.Tuple, d.compileTuple(in)) {
+			return &compiler.BudgetError{Reason: compiler.BudgetTuple}
+		}
+		current, e := d.input(ctx, tx, id, inputRoleBeginCompile)
+		if e != nil {
+			return e
+		}
+		if !d.inputRepresentationEqual(inputRoleBeginCompile, inputStageFullCompare, current, in) || current.Control.State != "running" {
+			return compiler.ErrChanged
+		}
+		if e = d.budgetTime(ctx, tx, root.Tuple); e != nil {
+			return e
+		}
+		k, e := key(in.Request.Payload.SnapshotRef)
+		if e != nil {
+			return e
+		}
+		var bound bool
+		if e = tx.QueryRowContext(ctx, `SELECT EXISTS(SELECT 1 FROM `+d.Store.table("fixture_context_bindings")+` WHERE snapshot_key=$1)`, k).Scan(&bound); e != nil {
+			return e
+		}
+		if bound {
+			return &compiler.BudgetError{Reason: compiler.BudgetTuple}
+		}
+		if root.Rounds >= 3 {
+			return &compiler.BudgetError{Reason: compiler.BudgetRounds}
+		}
+		attempt = compiler.CompileAttempt{SnapshotRef: in.Request.Payload.SnapshotRef, InputID: id, InputRevision: in.Revision, InputDigest: digest(inputBody), Ordinal: v.Revision(strconv.Itoa(root.Rounds + 1)), Deadline: root.Tuple.Request.Payload.Deadline}
+		body, e := jsonBytes(attempt)
+		if e != nil {
+			return e
+		}
+		if _, e = tx.ExecContext(ctx, `INSERT INTO `+d.Store.table("fixture_compile_attempts")+` VALUES($1,$2,$3)`, k, root.Rounds+1, body); e != nil {
+			return e
+		}
+		if _, e = tx.ExecContext(ctx, `UPDATE `+d.Store.table("fixture_compile_budgets")+` SET rounds=rounds+1 WHERE snapshot_key=$1`, k); e != nil {
+			return e
+		}
+		return d.budgetTime(ctx, tx, root.Tuple)
+	})
+	if err != nil {
+		return compiler.CompileAttempt{}, err
+	}
+	return attempt, nil
+}
+func (d *ContextDispatcher) currentAttempt(ctx context.Context, tx *sql.Tx, a compiler.CompileAttempt, subject c.SubjectBinding, inputRole int) (*compileBudgetRoot, string, error) {
+	if !d.budgetSubject(subject) {
+		return nil, "", &compiler.BudgetError{Reason: compiler.BudgetTuple}
+	}
+	root, err := d.lockCompileBudget(ctx, tx, a.SnapshotRef)
+	if err != nil {
+		return nil, "", err
+	}
+	in, err := d.input(ctx, tx, a.InputID, inputRole)
+	if err != nil {
+		return nil, "", err
+	}
+	inputEncodeToken := d.inputRepresentation.begin(inputRole, inputStageJSONBytes)
+	body, err := jsonBytes(in)
+	d.inputRepresentation.end(inputEncodeToken, err, false)
+	if err != nil {
+		return nil, "", err
+	}
+	if !d.inputRepresentationEqual(inputRole, inputStageTupleCompare, root.Tuple, d.compileTuple(in)) || in.Revision != a.InputRevision || d.inputRepresentationDigest(inputRole, body) != a.InputDigest || in.Control.State != "running" {
+		return nil, "", compiler.ErrChanged
+	}
+	k, err := key(a.SnapshotRef)
+	if err != nil {
+		return nil, "", err
+	}
+	var saved []byte
+	if err = tx.QueryRowContext(ctx, `SELECT body FROM `+d.Store.table("fixture_compile_attempts")+` WHERE snapshot_key=$1 AND ordinal=$2 FOR UPDATE`, k, string(a.Ordinal)).Scan(&saved); err != nil {
+		return nil, "", err
+	}
+	expected, err := jsonBytes(a)
+	if err != nil {
+		return nil, "", err
+	}
+	if !bytes.Equal(saved, expected) {
+		return nil, "", &compiler.BudgetError{Reason: compiler.BudgetTuple}
+	}
+	if err = d.budgetTime(ctx, tx, root.Tuple); err != nil {
+		return nil, "", err
+	}
+	return root, k, nil
+}
+func (d *ContextDispatcher) ReserveRead(ctx context.Context, a compiler.CompileAttempt, id v.Revision, ref c.ContentRef, purpose string, subject c.SubjectBinding) (compiler.ReadReservation, error) {
+	var reservation compiler.ReadReservation
+	if _, err := c.Encode(ref); err != nil {
+		return reservation, err
+	}
+	n, err := strconv.ParseInt(string(ref.ByteLength), 10, 64)
+	if err != nil || n < 0 || n > 262144 {
+		return reservation, &compiler.BudgetError{Reason: compiler.BudgetReadBytes}
+	}
+	seq, err := strconv.Atoi(string(id))
+	if err != nil || seq < 1 || seq > 67 || strconv.Itoa(seq) != string(id) {
+		return reservation, &compiler.BudgetError{Reason: compiler.BudgetReadReused}
+	}
+	err = d.Store.within(ctx, func(ctx context.Context, tx *sql.Tx, _ time.Time) error {
+		root, k, e := d.currentAttempt(ctx, tx, a, subject, inputRoleReserveRead)
+		if e != nil {
+			return e
+		}
+		if purpose != root.Tuple.Purpose {
+			return &compiler.BudgetError{Reason: compiler.BudgetTuple}
+		}
+		var exists bool
+		if e = tx.QueryRowContext(ctx, `SELECT EXISTS(SELECT 1 FROM `+d.Store.table("fixture_compile_reads")+` WHERE snapshot_key=$1 AND ordinal=$2 AND read_id=$3)`, k, string(a.Ordinal), seq).Scan(&exists); e != nil {
+			return e
+		}
+		if exists {
+			return &compiler.BudgetError{Reason: compiler.BudgetReadReused}
+		}
+		limit, e := strconv.ParseInt(string(root.Tuple.Policy.ReadBudget), 10, 64)
+		if e != nil || root.Reserved > limit || n > limit-root.Reserved {
+			return &compiler.BudgetError{Reason: compiler.BudgetReadBytes}
+		}
+		reservation = compiler.ReadReservation{Attempt: a, ReadID: id, Ref: ref, Purpose: purpose}
+		body, e := jsonBytes(reservation)
+		if e != nil {
+			return e
+		}
+		if _, e = tx.ExecContext(ctx, `INSERT INTO `+d.Store.table("fixture_compile_reads")+` VALUES($1,$2,$3,$4,false,$5)`, k, string(a.Ordinal), seq, n, body); e != nil {
+			return e
+		}
+		if _, e = tx.ExecContext(ctx, `UPDATE `+d.Store.table("fixture_compile_budgets")+` SET reserved=reserved+$2 WHERE snapshot_key=$1`, k, n); e != nil {
+			return e
+		}
+		return d.budgetTime(ctx, tx, root.Tuple)
+	})
+	if err != nil {
+		return compiler.ReadReservation{}, err
+	}
+	return reservation, nil
+}
+func (d *ContextDispatcher) ConfirmRead(ctx context.Context, r compiler.ReadReservation, ref c.ContentRef, bytesRead int64, subject c.SubjectBinding) error {
+	if ref != r.Ref || strconv.FormatInt(bytesRead, 10) != string(ref.ByteLength) {
+		return &compiler.BudgetError{Reason: compiler.BudgetConfirmation}
+	}
+	return d.Store.within(ctx, func(ctx context.Context, tx *sql.Tx, _ time.Time) error {
+		root, k, err := d.currentAttempt(ctx, tx, r.Attempt, subject, inputRoleConfirmRead)
+		if err != nil {
+			return err
+		}
+		var body []byte
+		var reserved int64
+		if err = tx.QueryRowContext(ctx, `SELECT body,bytes FROM `+d.Store.table("fixture_compile_reads")+` WHERE snapshot_key=$1 AND ordinal=$2 AND read_id=$3 FOR UPDATE`, k, string(r.Attempt.Ordinal), string(r.ReadID)).Scan(&body, &reserved); err != nil {
+			return err
+		}
+		expected, err := jsonBytes(r)
+		if err != nil {
+			return err
+		}
+		if !bytes.Equal(expected, body) || bytesRead != reserved {
+			return &compiler.BudgetError{Reason: compiler.BudgetConfirmation}
+		}
+		if _, err = tx.ExecContext(ctx, `UPDATE `+d.Store.table("fixture_compile_reads")+` SET confirmed=true WHERE snapshot_key=$1 AND ordinal=$2 AND read_id=$3`, k, string(r.Attempt.Ordinal), string(r.ReadID)); err != nil {
+			return err
+		}
+		return d.budgetTime(ctx, tx, root.Tuple)
+	})
+}
+
+type CompileReadObservation struct {
+	Reservation compiler.ReadReservation
+	Confirmed   bool
+}
+type CompileBudgetObservation struct {
+	Tuple                        CompileBudgetTuple
+	Rounds                       int
+	Reserved, Confirmed, Unknown int64
+	Reads                        []CompileReadObservation
+	Next                         string
+}
+
+func (d *ContextDispatcher) ObserveCompileBudget(ctx context.Context, ref v.SnapshotRef, cursor string, limit int) (CompileBudgetObservation, error) {
+	var out CompileBudgetObservation
+	if limit < 1 || limit > 64 {
+		return out, &compiler.BudgetError{Reason: compiler.BudgetTuple}
+	}
+	start := 0
+	if cursor != "" {
+		var err error
+		start, err = strconv.Atoi(cursor)
+		if err != nil || start < 0 || start > 201 || strconv.Itoa(start) != cursor {
+			return out, &compiler.BudgetError{Reason: compiler.BudgetTuple}
+		}
+	}
+	err := d.Store.within(ctx, func(ctx context.Context, tx *sql.Tx, _ time.Time) error {
+		if err := d.trusted(ctx, tx); err != nil {
+			return err
+		}
+		root, err := d.lockCompileBudget(ctx, tx, ref)
+		if err != nil {
+			return err
+		}
+		out.Tuple, out.Rounds, out.Reserved = root.Tuple, root.Rounds, root.Reserved
+		k, err := key(ref)
+		if err != nil {
+			return err
+		}
+		if err = tx.QueryRowContext(ctx, `SELECT COALESCE(SUM(bytes) FILTER(WHERE confirmed),0) FROM `+d.Store.table("fixture_compile_reads")+` WHERE snapshot_key=$1`, k).Scan(&out.Confirmed); err != nil {
+			return err
+		}
+		out.Unknown = out.Reserved - out.Confirmed
+		rows, err := tx.QueryContext(ctx, `SELECT body,confirmed FROM `+d.Store.table("fixture_compile_reads")+` WHERE snapshot_key=$1 ORDER BY ordinal,read_id OFFSET $2 LIMIT $3`, k, start, limit+1)
+		if err != nil {
+			return err
+		}
+		for rows.Next() {
+			var body []byte
+			var read CompileReadObservation
+			if err = rows.Scan(&body, &read.Confirmed); err != nil {
+				return errors.Join(err, rows.Close())
+			}
+			if err = closedJSON(body, &read.Reservation); err != nil {
+				return errors.Join(err, rows.Close())
+			}
+			out.Reads = append(out.Reads, read)
+		}
+		if err = errors.Join(rows.Err(), rows.Close()); err != nil {
+			return err
+		}
+		if len(out.Reads) > limit {
+			out.Reads = out.Reads[:limit]
+			out.Next = strconv.Itoa(start + limit)
+		}
+		return d.trusted(ctx, tx)
+	})
+	return out, err
+}

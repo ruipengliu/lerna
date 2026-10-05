@@ -1,0 +1,528 @@
+{
+  "STATIC_only_no_repository_mutation_or_native": true,
+  "proposed_repository_directory": ".scratch/lerna-04-content-snapshots/ticket-03-fresh-input-representation-measurement",
+  "copy_entries": [
+    {
+      "payload_path": "artifacts/README.md",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/README.md",
+      "sha256": "d971ddb3561df94f85634e12bd0a7f3d9d4d046f225554e919829a4c8a938d75",
+      "bytes": 3465
+    },
+    {
+      "payload_path": "artifacts/all-actual-format.diff",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/all-actual-format.diff",
+      "sha256": "282bf755331a2fb709510801bcb02712db1e9ee48ee8d97e9f53781f67335b2d",
+      "bytes": 6260
+    },
+    {
+      "payload_path": "artifacts/all-measurement-only.diff",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/all-measurement-only.diff",
+      "sha256": "8522cd2fe9c415d4d0a2174987e3469fa8f80dd11b33e8f331c310d67f6aeef8",
+      "bytes": 16123
+    },
+    {
+      "payload_path": "artifacts/commands-static.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/commands-static.json",
+      "sha256": "7b41430974feb84f12a14d0535476b589df6d20a700f5c035a555c3a8e76bb12",
+      "bytes": 3188
+    },
+    {
+      "payload_path": "artifacts/content_context_closure_test.go.txt",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/content_context_closure_test.go",
+      "sha256": "c668eacce37c9363cccaa243e2c484951582a872652d1a875c1281362a5c4e43",
+      "bytes": 4558
+    },
+    {
+      "payload_path": "artifacts/content_context_material_reachable_test.go.txt",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/content_context_material_reachable_test.go",
+      "sha256": "4223c74583ac7ecace18402ec114708e7a43bbf1593da47bbc675e3a6617e7f2",
+      "bytes": 3369
+    },
+    {
+      "payload_path": "artifacts/content_context_test.go.txt",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/content_context_test.go",
+      "sha256": "94f76122ebbb7e8240eab1c027576f15b1349ddaa66853368d78178ec13347aa",
+      "bytes": 18675
+    },
+    {
+      "payload_path": "artifacts/context_budget.go.txt",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/context_budget.go",
+      "sha256": "343cc42a71cf1afc34316139216bde089cef1b00456c6d755de4f2f2430f9d8a",
+      "bytes": 14894
+    },
+    {
+      "payload_path": "artifacts/context_claim_diagnostics.go.txt",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/context_claim_diagnostics.go",
+      "sha256": "573ae56fe178fb5f1cfa8898575ab5ca141f22077383173b383635e4a7b743e9",
+      "bytes": 13261
+    },
+    {
+      "payload_path": "artifacts/context_dispatch.go.txt",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/context_dispatch.go",
+      "sha256": "548a0016f6af04716c742ff48eabffc0c1ef09d85f175fdbf14f837a79f14a8d",
+      "bytes": 24156
+    },
+    {
+      "payload_path": "artifacts/context_input_representation_observer.go.txt",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/context_input_representation_observer.go",
+      "sha256": "046c3af2ffc6c2b6efb6aa98d4a793ed01ec9bc69c7308470c275f604e4744c3",
+      "bytes": 5108
+    },
+    {
+      "payload_path": "artifacts/context_world.go.txt",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/context_world.go",
+      "sha256": "b69954a8448179b4505b5b4d12d38be82ab8d1ed2a78f104a08d06609c9429ca",
+      "bytes": 11631
+    },
+    {
+      "payload_path": "artifacts/cost-storage-and-attribution-plan.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/cost-storage-and-attribution-plan.json",
+      "sha256": "5754721b08451b12ee3608e6bf00d28cb635a3618f549e5b15117def0c5b9505",
+      "bytes": 5166
+    },
+    {
+      "payload_path": "artifacts/format-actual-outcome.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/format-actual-outcome.json",
+      "sha256": "9e318b79d38df652ba2601355211fdf2f1d3610f152edf2cc7b72029903253c3",
+      "bytes": 215235
+    },
+    {
+      "payload_path": "artifacts/format-build-actual-outcome.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/format-build-actual-outcome.json",
+      "sha256": "6d88a5827319a57d3a373168d41158a9f4a9cb45d724f809523b5210572a86d2",
+      "bytes": 594599
+    },
+    {
+      "payload_path": "artifacts/format-build-before-effects-source-pins.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/format-build-before-effects-source-pins.json",
+      "sha256": "839cf91ea18691081ebba10946b5dff0b633a9b1dea02c51412ce0b067bd133c",
+      "bytes": 68706
+    },
+    {
+      "payload_path": "artifacts/format-build-results.md",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/format-build-results.md",
+      "sha256": "0c94697d3bcee6f85d517e320521db2523221778445be09968bd028b088ce690",
+      "bytes": 2531
+    },
+    {
+      "payload_path": "artifacts/format-composite-inverse-proof.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/format-composite-inverse-proof.json",
+      "sha256": "7f8db62d91506c74f729c9f5d728834ad74589dcb0522e48635d7892a739ccd0",
+      "bytes": 3456
+    },
+    {
+      "payload_path": "artifacts/format-content_context_closure_test.go-byte-patch.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/format-content_context_closure_test.go-byte-patch.json",
+      "sha256": "a2d8d14f292b2338555bd4c4afaca580cb9584b6965bee156e2047e9d49e1887",
+      "bytes": 6321
+    },
+    {
+      "payload_path": "artifacts/format-content_context_material_reachable_test.go-byte-patch.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/format-content_context_material_reachable_test.go-byte-patch.json",
+      "sha256": "201c250c4990d546a45721857b8bc3974e087a7fb70dcc62ce1161f18a83db1c",
+      "bytes": 4654
+    },
+    {
+      "payload_path": "artifacts/format-content_context_test.go-byte-patch.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/format-content_context_test.go-byte-patch.json",
+      "sha256": "e8d40e56f9bfd0018cc8ec3438289a81a1266c9577e3a5a4c5f03736dbdbe9a1",
+      "bytes": 24673
+    },
+    {
+      "payload_path": "artifacts/format-context_budget.go-byte-patch.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/format-context_budget.go-byte-patch.json",
+      "sha256": "085ef1c4f98e441cbcf2fbb86338fc87d2e4ca691fbdda04fb8ba4f47aec65e5",
+      "bytes": 20117
+    },
+    {
+      "payload_path": "artifacts/format-context_claim_diagnostics.go-byte-patch.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/format-context_claim_diagnostics.go-byte-patch.json",
+      "sha256": "b04673adb15379c77c83caec170f63fd98420182b2205b6b821e08fb75e7dbdf",
+      "bytes": 17806
+    },
+    {
+      "payload_path": "artifacts/format-context_dispatch.go-byte-patch.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/format-context_dispatch.go-byte-patch.json",
+      "sha256": "57cd977a8dcbc16a0bdabb0bcd8aac18dbbd2ded2c4404c9479cf6b542be66bb",
+      "bytes": 33275
+    },
+    {
+      "payload_path": "artifacts/format-context_input_representation_observer.go-byte-patch.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/format-context_input_representation_observer.go-byte-patch.json",
+      "sha256": "7358c5259efeef8dfa23941ce4a56c0aa9b3b0a673c9711bdc704e1478d05bf6",
+      "bytes": 9343
+    },
+    {
+      "payload_path": "artifacts/format-context_world.go-byte-patch.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/format-context_world.go-byte-patch.json",
+      "sha256": "9bf2b0e19cf5c19b44c1f222971fe48189f4edd8bad7b9a16889911076d2ffb2",
+      "bytes": 15473
+    },
+    {
+      "payload_path": "artifacts/format-prelaunch.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/format-prelaunch.json",
+      "sha256": "2f4fda247489f802fb85ec6ff53998ac01dc2b1f95349bc87f777169d4fdd2c4",
+      "bytes": 73373
+    },
+    {
+      "payload_path": "artifacts/formatted-source-manifest.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/formatted-source-manifest.json",
+      "sha256": "2d2e033fdfa98744dd44de72344dc1f224f8e7188ae1849f6f93292aadf35e28",
+      "bytes": 59032
+    },
+    {
+      "payload_path": "artifacts/manifest-static.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/manifest-static.json",
+      "sha256": "b000eb4172caac97b8753228bdd7ba9c770c2e9086981c8023876c88747137d2",
+      "bytes": 79445
+    },
+    {
+      "payload_path": "artifacts/measurement-byte-edit-ledger.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/measurement-byte-edit-ledger.json",
+      "sha256": "bfb1e4cfe01a405dcdc5eb7747e811bc513d33ddf52ab7965045b5964feb9746",
+      "bytes": 58336
+    },
+    {
+      "payload_path": "artifacts/measurement-inverse-proof.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/measurement-inverse-proof.json",
+      "sha256": "d6faa740c8ea761a6c9eda21615f0eab4a53cfdea38f0f0a3adb47fd89490b7e",
+      "bytes": 58129
+    },
+    {
+      "payload_path": "artifacts/one-race-input-representation-cost-results.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/one-race-input-representation-cost-results.json",
+      "sha256": "727c7d679ce79e37541e77400d3bc19d065d7883f7e8002bedeb4896e57ed420",
+      "bytes": 61650
+    },
+    {
+      "payload_path": "artifacts/one-race-measurement-actual-outcome.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/one-race-measurement-actual-outcome.json",
+      "sha256": "df10393ea7def7ca4ebef6e1ab9895ae2787d30e71a5ae9f7d00aad09afa65f3",
+      "bytes": 284782
+    },
+    {
+      "payload_path": "artifacts/one-race-measurement-actual-outcome.reviewed.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/one-race-measurement-actual-outcome.reviewed.json",
+      "sha256": "a84b1595eaef1cfbfcf3956fabf934e4df332956309c2f608c5cfd1ae31c06bd",
+      "bytes": 298331
+    },
+    {
+      "payload_path": "artifacts/one-race-measurement-beforeeffects-binary-binding.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/one-race-measurement-beforeeffects-binary-binding.json",
+      "sha256": "9ab76b63ef1268ebb7fbbe027edd1e93625cbd4d4275b373491e6991a08c0e88",
+      "bytes": 137554
+    },
+    {
+      "payload_path": "artifacts/one-race-measurement-resource-interval-facts.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/one-race-measurement-resource-interval-facts.json",
+      "sha256": "80b706886334750ef529f861fb6c917da6348ce62ee9c74ed5b3c99c93fc2218",
+      "bytes": 2471
+    },
+    {
+      "payload_path": "artifacts/one-race-measurement-results.md",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/one-race-measurement-results.md",
+      "sha256": "09723cf8ce92db6f363317a27a0b6a450ebadfa5de917ef4e4903b39b8df313d",
+      "bytes": 5117
+    },
+    {
+      "payload_path": "artifacts/overlay.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/overlay.json",
+      "sha256": "d1426bbb91538247c7fef84b90234bba86eaaddcdd33ec7e03c6be7c54a14734",
+      "bytes": 1841
+    },
+    {
+      "payload_path": "artifacts/race-build-actual-provenance.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/race-build-actual-provenance.json",
+      "sha256": "c8c5d84f06a55324a23c0fcb2989b013bd34bba812d217680bd686c09db6675f",
+      "bytes": 281973
+    },
+    {
+      "payload_path": "artifacts/race-build-effective-named-source-bindings.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/race-build-effective-named-source-bindings.json",
+      "sha256": "a59b579c0cfc970562b272545099d5e2a7d7f8090bf49cbfc53790c5d1bf0cb0",
+      "bytes": 6845
+    },
+    {
+      "payload_path": "artifacts/race_build-prelaunch.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/race_build-prelaunch.json",
+      "sha256": "9a4f4b2410b8dffde58ef6396ed3284966bb0186e4f9cd5c8cacea9b29b61112",
+      "bytes": 137414
+    },
+    {
+      "payload_path": "artifacts/race_business-prelaunch.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/race_business-prelaunch.json",
+      "sha256": "d9afebf46f5c23fc72d7ad3d6c3660869cb679d1e560eccc93964782b4305db4",
+      "bytes": 137525
+    },
+    {
+      "payload_path": "artifacts/before/content_context_closure_test.go.txt",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/before/content_context_closure_test.go",
+      "sha256": "c668eacce37c9363cccaa243e2c484951582a872652d1a875c1281362a5c4e43",
+      "bytes": 4558
+    },
+    {
+      "payload_path": "artifacts/before/content_context_closure_test.go.accepted5-to-current.ndiff.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/before/content_context_closure_test.go.accepted5-to-current.ndiff.json",
+      "sha256": "105ddd3f1557a8d397bca074e1772e73ebc6994cce58276d599bbd1d12264861",
+      "bytes": 5844
+    },
+    {
+      "payload_path": "artifacts/before/content_context_material_reachable_test.go.txt",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/before/content_context_material_reachable_test.go",
+      "sha256": "4223c74583ac7ecace18402ec114708e7a43bbf1593da47bbc675e3a6617e7f2",
+      "bytes": 3369
+    },
+    {
+      "payload_path": "artifacts/before/content_context_material_reachable_test.go.accepted5-to-current.ndiff.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/before/content_context_material_reachable_test.go.accepted5-to-current.ndiff.json",
+      "sha256": "c419f910446b9dbe964da6eab702e219874405ae97c6d73bd6ed60069b696533",
+      "bytes": 4277
+    },
+    {
+      "payload_path": "artifacts/before/content_context_test.go.txt",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/before/content_context_test.go",
+      "sha256": "9f1bdc9e8757057ed09836a9d8aee213825e3fe1484c1a86966a4cce2911189f",
+      "bytes": 18517
+    },
+    {
+      "payload_path": "artifacts/before/content_context_test.go.accepted5-to-current.ndiff.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/before/content_context_test.go.accepted5-to-current.ndiff.json",
+      "sha256": "604bf0cf42bc3800d1d78d380b92b8ffe2807d0b0c9c1dbb5051a0b34bf8d9ea",
+      "bytes": 22831
+    },
+    {
+      "payload_path": "artifacts/before/context_budget.go.txt",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/before/context_budget.go",
+      "sha256": "b3ad33bb1ed9c89dc079afedb81dc9e43420a0609cb2b87422d1bb009ec9078d",
+      "bytes": 14532
+    },
+    {
+      "payload_path": "artifacts/before/context_budget.go.accepted5-to-current.ndiff.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/before/context_budget.go.accepted5-to-current.ndiff.json",
+      "sha256": "c1f0ffe82cd5759b3192c57421639bd38e767ec40dfc08c67b5f95d62a2eb94d",
+      "bytes": 17983
+    },
+    {
+      "payload_path": "artifacts/before/context_claim_diagnostics.go.txt",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/before/context_claim_diagnostics.go",
+      "sha256": "573ae56fe178fb5f1cfa8898575ab5ca141f22077383173b383635e4a7b743e9",
+      "bytes": 13261
+    },
+    {
+      "payload_path": "artifacts/before/context_claim_diagnostics.go.accepted5-to-current.ndiff.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/before/context_claim_diagnostics.go.accepted5-to-current.ndiff.json",
+      "sha256": "76f925da248d693fb47607d369a643109a98e402f6b25ced6c303aab41336647",
+      "bytes": 16210
+    },
+    {
+      "payload_path": "artifacts/before/context_dispatch.go.txt",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/before/context_dispatch.go",
+      "sha256": "5c2b8d472fdbe458b9affb9a9543db3359c85c0dfa90d5357bea843995e624fb",
+      "bytes": 23388
+    },
+    {
+      "payload_path": "artifacts/before/context_dispatch.go.accepted5-to-current.ndiff.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/before/context_dispatch.go.accepted5-to-current.ndiff.json",
+      "sha256": "668a998e345f6fddf95dfd3b11ec0e9710e45dc1d41c87d7066eff1ac8dbd81f",
+      "bytes": 29213
+    },
+    {
+      "payload_path": "artifacts/before/context_world.go.txt",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/before/context_world.go",
+      "sha256": "e37d876a734b2639a044ae931e8066b9844a8c88e8a213f6d3a32c2db0421612",
+      "bytes": 11298
+    },
+    {
+      "payload_path": "artifacts/before/context_world.go.accepted5-to-current.ndiff.json",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/before/context_world.go.accepted5-to-current.ndiff.json",
+      "sha256": "bbf41ae818dc8211a67b77e980954018555d14229c5fef11caab9f600f8e9bde",
+      "bytes": 14331
+    },
+    {
+      "payload_path": "artifacts/before-format/context_dispatch.go.txt",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/before-format/context_dispatch.go",
+      "sha256": "5ce754374978963febcfe4719777106682260f3f844f60bf90d50f2ef3b93745",
+      "bytes": 24126
+    },
+    {
+      "payload_path": "artifacts/before-format/context_input_representation_observer.go.txt",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/before-format/context_input_representation_observer.go",
+      "sha256": "8a092e94dce50a48221fa03c43f256c956f4f819ed899f6553d72b47da7f4c84",
+      "bytes": 4928
+    },
+    {
+      "payload_path": "artifacts/before-format/context_world.go.txt",
+      "original_path": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/before-format/context_world.go",
+      "sha256": "93f698c9b80eadb30220dc4536927cae76bf51b375f72188785f68c7cfc0b4df",
+      "bytes": 11540
+    },
+    {
+      "payload_path": "raw/format.log",
+      "original_path": "/workspace/lerna-content-03-137311247276/context-fresh-input-representation-format.log",
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+      "bytes": 39
+    },
+    {
+      "payload_path": "raw/race-build.log",
+      "original_path": "/workspace/lerna-content-03-137311247276/context-fresh-input-representation-race-build.log",
+      "sha256": "06fd0fb39d0bdfb3f54e74e92f4b1fc2bc3357b9656c6e029ae3375d6766cba2",
+      "bytes": 39
+    },
+    {
+      "payload_path": "raw/original4b-race.log",
+      "original_path": "/workspace/lerna-content-03-137311247276/context-fresh-input-representation-original4b-race.log",
+      "sha256": "b7c026475cf661881fa5e420560a482b2ca1fde924a723040f63338bb32d9a15",
+      "bytes": 60072
+    },
+    {
+      "payload_path": "adopted-decisions/lerna-03-policy-clock-capacity-next-decision.md",
+      "original_path": "/tmp/lerna-03-policy-clock-capacity-next-decision.md",
+      "sha256": "00e699d62e4981763dc0672c30e784cd6443797fce9c0240457bffd9fdb3c0c5",
+      "bytes": 8658
+    },
+    {
+      "payload_path": "adopted-decisions/lerna-03-fresh-input-cost-next-decision.md",
+      "original_path": "/tmp/lerna-03-fresh-input-cost-next-decision.md",
+      "sha256": "7b885e575ed8e7f163622fe903cb1d8cb2476f9628553024a1661ed87975a9d5",
+      "bytes": 8599
+    },
+    {
+      "payload_path": "adopted-decisions/lerna-03-input-memo-tdd-next-decision.md",
+      "original_path": "/tmp/lerna-03-input-memo-tdd-next-decision.md",
+      "sha256": "94ab886c0c7d9b4a649482caf6477b2cb4e18f7e08a96ee7cbe378ba4bc3250f",
+      "bytes": 5301
+    },
+    {
+      "payload_path": "derived/three-actual-native-identities.jsonl",
+      "original_path": "/workspace/lerna-content-03-137311247276/fresh-input-measured-race-compact-archive-proposal-v2/captured-prefix/native-identities.jsonl.measured-interval",
+      "derived_readonly": true,
+      "selection_exact_pids": [
+        3941966,
+        3942003,
+        3948276
+      ],
+      "sha256": "a6c18bd56edea2282991681ae83e4488544c13aea0d87aba7d7242feccd41636",
+      "bytes": 2096,
+      "original_appendable_ledger_reference_only": "/workspace/lerna-content-03-137311247276/native-identities.jsonl",
+      "derived_immutable_capture": true,
+      "original_byte_interval": [
+        77169,
+        79265
+      ]
+    },
+    {
+      "payload_path": "ARCHIVE-SCOPE.json",
+      "generated_static_readonly_summary": true,
+      "sha256": "825bbcaf4f6bdcf572ccf5d881e5be21a046a21263bc84eb1e90b19a2dd510ce",
+      "bytes": 4175,
+      "original_path": "/workspace/lerna-content-03-137311247276/fresh-input-measured-race-compact-archive-proposal/payload/ARCHIVE-SCOPE.json"
+    }
+  ],
+  "reference_entries": [
+    {
+      "path": "/workspace/lerna-content-03-137311247276/policy-clock-eight-qualification-compact-archive-proposal/archive-proposal-index.json",
+      "sha256": "5575dd0cbff0c7b08b9cb7e7bd60edd45397dfaf5cc65b6e88b61c51502d074a",
+      "bytes": 101027,
+      "copy_omitted_reason": "Existing compact qualification/capacity history or root/supervisor facts; immutable original referenced, no repeated source/binary/history copy"
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/policy-clock-fresh-build-normal-race-compact-archive-proposal/archive-proposal-index.json",
+      "sha256": "1e72b730bf1f01675117a505b831084fdf4a15ad73892b37d1752a21e682d37e",
+      "bytes": 18751,
+      "copy_omitted_reason": "Existing compact qualification/capacity history or root/supervisor facts; immutable original referenced, no repeated source/binary/history copy"
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/static-generation-first-partial-failure.json",
+      "sha256": "c905c2cd5f61a2ab50845ec92b2a20e7efb29a8b9269b2b30769957336c1b3f5",
+      "bytes": 472,
+      "copy_omitted_reason": "Existing compact qualification/capacity history or root/supervisor facts; immutable original referenced, no repeated source/binary/history copy"
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/root-ack.json",
+      "sha256": "aaeb140f7460811096413c6e846532c06bf0c42e90e8a5f6b03cc8da0484dd6c",
+      "bytes": 83,
+      "copy_omitted_reason": "Existing compact qualification/capacity history or root/supervisor facts; immutable original referenced, no repeated source/binary/history copy"
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/run-native.py",
+      "sha256": "82c4e6a19e1aaabbd4a2412f89eb54c0b1690221f92d3ea826b05ca455a2042e",
+      "bytes": 2304,
+      "copy_omitted_reason": "Existing compact qualification/capacity history or root/supervisor facts; immutable original referenced, no repeated source/binary/history copy"
+    }
+  ],
+  "payload_files": 67,
+  "payload_bytes": 3159046,
+  "source_go_bytes_saved_as_go_txt": true,
+  "binary_profile_excluded": true,
+  "original_source_artifacts_unchanged": true,
+  "historical_UNKNOWN_not_rewritten": true,
+  "revision": 2,
+  "preserved_original_index": {
+    "path": "/workspace/lerna-content-03-137311247276/fresh-input-measured-race-compact-archive-proposal/archive-proposal-index.json",
+    "sha256": "dbfea80143589d44ec98320354c1a915ad24ea2db98dca46abf2b7503280c4ff",
+    "bytes": 25173
+  },
+  "captured_prefix_provenance": {
+    "path": "/workspace/lerna-content-03-137311247276/fresh-input-measured-race-compact-archive-proposal-v2/append-mismatch-and-exact-prefix-provenance.json",
+    "sha256": "01b086d27027f07368a70bafcd905d4a71973b8c215dc680c177026168c7100e",
+    "bytes": 3771
+  },
+  "captured_prefix_files": {
+    "native-identities.jsonl": {
+      "original_appendable_path": "/workspace/lerna-content-03-137311247276/native-identities.jsonl",
+      "current_full_at_static_snapshot": {
+        "sha256": "3dc2bede78ddae40ade3148f29dc5f5b5cb59634d615750d46b5974dc28da762",
+        "bytes": 79917
+      },
+      "captured_prefix_before_Binding_append": {
+        "path": "/workspace/lerna-content-03-137311247276/fresh-input-measured-race-compact-archive-proposal-v2/captured-prefix/native-identities.jsonl.pre-Binding-prefix",
+        "byte_interval": [
+          0,
+          79265
+        ],
+        "sha256": "58dbfaac867673fb079a4c55c75085d317b1ea701eef8a28c55e36aee555ac0e",
+        "bytes": 79265
+      },
+      "prefix_hash_claim": "Computed now from exact old byte range; no historical full-global hash had been recorded, so not advertised as a prior full-file hash ACK.",
+      "captured_measured_interval": {
+        "path": "/workspace/lerna-content-03-137311247276/fresh-input-measured-race-compact-archive-proposal-v2/captured-prefix/native-identities.jsonl.measured-interval",
+        "byte_interval": [
+          77169,
+          79265
+        ],
+        "sha256": "a6c18bd56edea2282991681ae83e4488544c13aea0d87aba7d7242feccd41636",
+        "bytes": 2096
+      },
+      "later_append_bytes": 652
+    },
+    "owned-scopes.log": {
+      "original_appendable_path": "/workspace/lerna-content-03-137311247276/owned-scopes.log",
+      "current_full_at_static_snapshot": {
+        "sha256": "624d265890e27643c599764ef3adae2d7825390aa6850b631fc934070254464d",
+        "bytes": 148107
+      },
+      "captured_prefix_before_Binding_append": {
+        "path": "/workspace/lerna-content-03-137311247276/fresh-input-measured-race-compact-archive-proposal-v2/captured-prefix/owned-scopes.log.pre-Binding-prefix",
+        "byte_interval": [
+          0,
+          147855
+        ],
+        "sha256": "a44e39c9c04b775b5f41096471601dda5015be50021195a9c65ddb5908e8e474",
+        "bytes": 147855
+      },
+      "prefix_hash_claim": "Computed now from exact old byte range; no historical full-global hash had been recorded, so not advertised as a prior full-file hash ACK.",
+      "captured_measured_interval": {
+        "path": "/workspace/lerna-content-03-137311247276/fresh-input-measured-race-compact-archive-proposal-v2/captured-prefix/owned-scopes.log.measured-interval",
+        "byte_interval": [
+          146110,
+          147855
+        ],
+        "sha256": "7d2e3a9e6599be65a544c92d25b38bbc68a99fef0e28d51eb983297143cac53a",
+        "bytes": 1745
+      },
+      "later_append_bytes": 252
+    }
+  },
+  "all67_copyentries_now_immutable_sources": true,
+  "original_derived_path_mismatch_preserved": true
+}

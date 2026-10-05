@@ -1,0 +1,14 @@
+{
+  "event": "native_start_ack",
+  "operation": "late-finish-format",
+  "pid": 3967979,
+  "pgid": 3967979,
+  "starttime": "16636553",
+  "root": "/tmp/lerna-04-ticket06-execution",
+  "argv": [
+    "gofmt",
+    "-w",
+    "conformance/component/content_process_recovery_test.go"
+  ],
+  "deadline_seconds": 120
+}

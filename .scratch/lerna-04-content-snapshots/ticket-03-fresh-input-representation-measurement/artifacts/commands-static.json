@@ -1,0 +1,52 @@
+{
+  "STATIC_only_no_native_grant": true,
+  "workdir": "/tmp/lerna-worktrees/content-snapshots-03",
+  "locked_environment": "source /workspace/.lerna-env/env.sh; GOTOOLCHAIN=local GOFLAGS=-mod=readonly",
+  "supervisor": "/workspace/lerna-content-03-137311247276/run-native.py",
+  "supervisor_sha256": "82c4e6a19e1aaabbd4a2412f89eb54c0b1690221f92d3ea826b05ca455a2042e",
+  "original_budgets": {
+    "caller_seconds": 30,
+    "claim_seconds": 5,
+    "go_seconds": 120,
+    "outer_seconds": 120,
+    "run_count": 1
+  },
+  "format": [
+    "gofmt",
+    "-w",
+    "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/context_world.go",
+    "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/context_claim_diagnostics.go",
+    "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/content_context_closure_test.go",
+    "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/content_context_material_reachable_test.go",
+    "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/content_context_test.go",
+    "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/context_dispatch.go",
+    "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/context_budget.go",
+    "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/context_input_representation_observer.go"
+  ],
+  "race_build": [
+    "go",
+    "test",
+    "-race",
+    "-c",
+    "-p",
+    "1",
+    "-tags=integration",
+    "-overlay=/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/overlay.json",
+    "-o",
+    "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/component-fresh-input-representation-race.test",
+    "./conformance/component"
+  ],
+  "race_business": [
+    "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/component-fresh-input-representation-race.test",
+    "-test.v",
+    "-test.run=^(TestContentContextReachableClosure64And65IncludesIntermediateVersions|TestContentContextStaticModeMaximumReachable62Materials|TestContentContextSingleContentBoundHasHonestLayerAndNoDispatch|TestContentContextDuplicateSelectorRoleRefusesBeforeOriginalInputReplacement)$",
+    "-test.count=1",
+    "-test.timeout=120s"
+  ],
+  "future_exact_logs": {
+    "format": "/workspace/lerna-content-03-137311247276/context-fresh-input-representation-format.log",
+    "race_build": "/workspace/lerna-content-03-137311247276/context-fresh-input-representation-race-build.log",
+    "race_business": "/workspace/lerna-content-03-137311247276/context-fresh-input-representation-original4b-race.log"
+  },
+  "bounds": "One fresh measured original4B race only, original allsetup/inputs/publicoracles/caller30/Claim5/count1/Goouter120. No normal/warmup/retry/profile/SQLmatrix/product memo/source change. Format/build separately require root explicit sole LOCAL after fullreview. Raw allcases finite; original failure does not create newdiagnostic permission."
+}

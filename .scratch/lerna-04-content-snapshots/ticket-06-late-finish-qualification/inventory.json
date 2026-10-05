@@ -1,0 +1,141 @@
+{
+  "status": "COMPACT_ORIGINALS_PARTIAL_QUALIFICATION_NOT_WHOLE_ACCEPTANCE",
+  "base": "d9dce0c3840f558c544750c92bfba2b6329ad8af",
+  "items": [
+    {
+      "file": "README.md",
+      "bytes": 3770,
+      "sha256": "e050299c04b0b893bc0feecbc379706cf337ad0a07295759ae48519248aef502"
+    },
+    {
+      "file": "adopted-decision.md",
+      "bytes": 6733,
+      "sha256": "18228f088069236e7e75f9e8f32f8bca1d6a3e49c460a341a014a1536c91121b"
+    },
+    {
+      "file": "candidate-unformatted-26-manifest.json",
+      "bytes": 6033,
+      "sha256": "a0babbc304198fe0c9869c955da616541ddf2d1d14562338b4a30e311efb1801"
+    },
+    {
+      "file": "late-finish-fault-postchecks.json",
+      "bytes": 7096,
+      "sha256": "d2ffbf0aa9033118219d68e6aba00ce2e087b0968b7e2c564fd384aa83f72cdc"
+    },
+    {
+      "file": "late-finish-fault-release.json",
+      "bytes": 1126,
+      "sha256": "711acb5028d3aca5458048e2f3c4cd4a0f234a4b9cea251514b1387ad7220034"
+    },
+    {
+      "file": "late-finish-format-facts.json",
+      "bytes": 899,
+      "sha256": "f4ebde048f4e24f5371cf2c3c6fd33443f58a01e5675b39c5bb612c788f12559"
+    },
+    {
+      "file": "late-finish-format-only.diff",
+      "bytes": 27465,
+      "sha256": "b4a59293d572f8a861f6250f31aa0bf9820cd7bb328f35119db50f5ca715f946"
+    },
+    {
+      "file": "late-finish-format-outcome.json",
+      "bytes": 236,
+      "sha256": "55d5f5c3e3f6784f0299d55baa559321ad9a6e581ede6512b55e6053565bb68a"
+    },
+    {
+      "file": "late-finish-format-prelaunch.json",
+      "bytes": 309,
+      "sha256": "5696c057176573f6528a84598262402707bc5e8ab5f098219734c31080104853"
+    },
+    {
+      "file": "late-finish-format.log",
+      "bytes": 203,
+      "sha256": "24435bd3df2535e39803149a81b8cbb6c0dc2c26a42a2cedde8459bb97804a53"
+    },
+    {
+      "file": "late-finish-formatted-26-manifest.json",
+      "bytes": 6305,
+      "sha256": "bbc855b582b9ee1ff30e7fca018f517b345abaec6befc83d6a71ccbcc060cca4"
+    },
+    {
+      "file": "late-finish-normal-control-outcome.json",
+      "bytes": 244,
+      "sha256": "62cf9b058822680a712cfc56dcfc07eda8d9189fe1b6a3d8874520098a034b6f"
+    },
+    {
+      "file": "late-finish-normal-control-prelaunch.json",
+      "bytes": 630,
+      "sha256": "4dce7dad509c1eaabea472dff0fa67254b09fad0a22a748eb6de99d90f822bc4"
+    },
+    {
+      "file": "late-finish-normal-control.log",
+      "bytes": 877,
+      "sha256": "ffd0fa3fc924525342264eb283da5eb5b4386656845bbefbf384299866e4769d"
+    },
+    {
+      "file": "late-finish-normal-postchecks.json",
+      "bytes": 7472,
+      "sha256": "c52db07934b56fc9290b5282aaddf0f82b648645b55c232c208d90ffc732a898"
+    },
+    {
+      "file": "late-finish-normal-release.json",
+      "bytes": 1401,
+      "sha256": "6ce2a8d2ccd7b2c49c87b4fcf2a22fe43eb760dc4edf57e57252adc06f21fb83"
+    },
+    {
+      "file": "late-finish-original-fence-fault-outcome.json",
+      "bytes": 250,
+      "sha256": "fe942a4605c8f2bfbb92fd88ee9d10903776ba5c647260b1730508372dfa1408"
+    },
+    {
+      "file": "late-finish-original-fence-fault-prelaunch.json",
+      "bytes": 655,
+      "sha256": "c55e56fbaaf9b92f6f25bf1db77b53e498fcec0bca54407d6916d9214c40c693"
+    },
+    {
+      "file": "late-finish-original-fence-fault.log",
+      "bytes": 1071,
+      "sha256": "3d7373b7d2fb48e710cbc1ed9205748c77ebdd1bb57830a79b0aef804a32ddd1"
+    },
+    {
+      "file": "late-finish-paired-race-outcome.json",
+      "bytes": 241,
+      "sha256": "a86b3137a5e4a22a4d31e0da041bcc8d7cca3145d69c6bd1c3c6f1f811c88242"
+    },
+    {
+      "file": "late-finish-paired-race-prelaunch.json",
+      "bytes": 623,
+      "sha256": "a473fd7a6ecf60fa1ba8a050f4268ab7ea43f785a2d64efd8eb20ca29bc86cd3"
+    },
+    {
+      "file": "late-finish-paired-race.log",
+      "bytes": 1511,
+      "sha256": "85b15121343e810935caa3a971165c0ed7d766dd54d3091d1247e10bb5a00888"
+    },
+    {
+      "file": "late-finish-race-postchecks.json",
+      "bytes": 7232,
+      "sha256": "737a3551630df334780a808c8812f18911dbac20d0f308c6d2736c25e045bf00"
+    },
+    {
+      "file": "late-finish-race-release.json",
+      "bytes": 1111,
+      "sha256": "ed4b05e4635de534e313bca8d218bf1f0d9288ae2c38fb3faab036fe9ecdbc79"
+    },
+    {
+      "file": "original-ledger-138-through-165.log",
+      "bytes": 4506,
+      "sha256": "3269ed367db708ceb497191fb2363f6d0a724216cc0a05e794439de6b6d5bd88"
+    },
+    {
+      "file": "qualified-test-only.diff",
+      "bytes": 14383,
+      "sha256": "5cecc6e68017c599dd727c829e4349983e8c6783b774937a4291c04fd54c71da"
+    },
+    {
+      "file": "source-commands.json",
+      "bytes": 2132,
+      "sha256": "8a23155bda75b44ec5e28ae0e282f3d1a5689f55cdb38d804ef78eac019ee38f"
+    }
+  ]
+}

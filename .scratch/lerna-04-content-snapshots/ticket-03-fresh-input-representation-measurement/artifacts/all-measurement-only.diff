@@ -1,0 +1,439 @@
+--- accepted-baseline/context_world.go
++++ new-input-measurement/context_world.go
+@@ -32,6 +32,7 @@
+ 	Fixture      *World
+ 	ContentWorld *cf.World
+ 	diagnostics  *ContextClaimDiagnostics
++	inputRepresentation *inputRepresentationCosts
+ 	t            *testing.T
+ 	trustedUntil time.Time
+ }
+@@ -51,6 +52,7 @@
+ func newContextWorldWithDiagnostic(t *testing.T, ctx context.Context, configure func(*compiler.Input), d *ContextClaimDiagnostics) *ContextWorld {
+ 	t.Helper()
+ 	w := &ContextWorld{diagnostics: d, t: t, Fixture: NewWorld(t, ctx), ContentWorld: cf.New(t, ctx), trustedUntil: time.Now().UTC().Add(time.Hour).Truncate(time.Microsecond)}
++	w.inputRepresentation = newInputRepresentationCosts(t)
+ 	if d != nil {
+ 		d.Mark("phase.owners-established")
+ 	}
+@@ -137,6 +139,7 @@
+ 		w.t.Fatal(err)
+ 	}
+ 	w.Dispatcher = &ContextDispatcher{Store: w.Fixture.Source(), TrustedSubject: w.Principal, TrustedUntil: w.trustedUntil, ContentOwner: owner, Policies: manager}
++	w.Dispatcher.inputRepresentation = w.inputRepresentation
+ 	var contentPort adapter.Content = w.Content
+ 	var accessPort adapter.Access = w.Dispatcher
+ 	if w.diagnostics != nil {
+@@ -176,6 +179,8 @@
+ 	}
+ }
+ func (w *ContextWorld) Compile(ctx context.Context) (bundle compiler.Bundle, err error) {
++	inputPhaseDone := w.InputRepresentationPhase("compile")
++	defer inputPhaseDone()
+ 	start := time.Now()
+ 	w.DiagnosticStage(ctx, "phase.compile-start", start, nil)
+ 	defer func() { w.DiagnosticStage(ctx, "phase.compile-and-bind-end", start, err) }()
+--- accepted-baseline/content_context_test.go
++++ new-input-measurement/content_context_test.go
+@@ -181,14 +181,18 @@
+ 	t.Helper()
+ 	dispatchStart := time.Now()
+ 	w.DiagnosticStage(ctx, "phase.dispatch-start", dispatchStart, nil)
++	inputDispatchDone := w.InputRepresentationPhase("dispatch")
+ 	sent, dispatchErr := w.Dispatcher.Step(ctx, w.Boundary)
++	inputDispatchDone()
+ 	w.DiagnosticStage(ctx, "phase.dispatch-end", dispatchStart, dispatchErr)
+ 	if dispatchErr != nil || !sent {
+ 		t.Fatal("normal real Component send failed", sent, dispatchErr)
+ 	}
+ 	stepStart := time.Now()
+ 	w.DiagnosticStage(ctx, "phase.decision-step-start", stepStart, nil)
++	inputWorkerDone := w.InputRepresentationPhase("worker")
+ 	step, err := w.Decision.Step(ctx)
++	inputWorkerDone()
+ 	w.DiagnosticStage(ctx, "phase.decision-step-end", stepStart, err)
+ 	if err != nil || step.Processed != 1 {
+ 		t.Fatal("normal real rule step failed", step, err)
+--- accepted-baseline/context_dispatch.go
++++ new-input-measurement/context_dispatch.go
+@@ -59,6 +59,7 @@
+ }
+ type ContextDispatcher struct {
+ 	bindingDecode  bindingDecodeMemo
++	inputRepresentation *inputRepresentationCosts
+ 	Store          *Store
+ 	TrustedSubject v.SubjectBinding
+ 	TrustedUntil   time.Time
+@@ -158,14 +159,18 @@
+ 		return err
+ 	})
+ }
+-func (d *ContextDispatcher) input(ctx context.Context, tx *sql.Tx, id string) (compiler.Input, error) {
++func (d *ContextDispatcher) input(ctx context.Context, tx *sql.Tx, id string, inputRole int) (compiler.Input, error) {
+ 	var in compiler.Input
+ 	var body []byte
++	inputScanToken := d.inputRepresentation.begin(inputRole, inputStageScan)
+ 	err := tx.QueryRowContext(ctx, `SELECT body FROM `+d.Store.table("fixture_context_inputs")+` WHERE input_id=$1 FOR UPDATE`, id).Scan(&body)
++	d.inputRepresentation.end(inputScanToken, err, false)
+ 	if err != nil {
+ 		return in, err
+ 	}
++	inputDecodeToken := d.inputRepresentation.begin(inputRole, inputStageClosedJSON)
+ 	err = closedJSON(body, &in)
++	d.inputRepresentation.end(inputDecodeToken, err, false)
+ 	return in, err
+ }
+ func (d *ContextDispatcher) ObserveInput(ctx context.Context, id string) (compiler.Input, error) {
+@@ -175,7 +180,7 @@
+ 			return err
+ 		}
+ 		var err error
+-		out, err = d.input(ctx, tx, id)
++		out, err = d.input(ctx, tx, id, inputRoleObserveInput)
+ 		if err != nil {
+ 			return err
+ 		}
+@@ -221,11 +226,11 @@
+ 		if err := d.trusted(ctx, tx); err != nil {
+ 			return err
+ 		}
+-		current, err := d.input(ctx, tx, id)
+-		if err != nil {
+-			return err
+-		}
+-		if !reflect.DeepEqual(current, in) || current.Control.State != "running" {
++		current, err := d.input(ctx, tx, id, inputRoleBind)
++		if err != nil {
++			return err
++		}
++		if !d.inputRepresentationEqual(inputRoleBind, inputStageFullCompare, current, in) || current.Control.State != "running" {
+ 			return compiler.ErrChanged
+ 		}
+ 		var old []byte
+@@ -258,7 +263,7 @@
+ 		return err
+ 	})
+ }
+-func (d *ContextDispatcher) binding(ctx context.Context, tx *sql.Tx, column string, value string) (adapter.Binding, string, error) {
++func (d *ContextDispatcher) binding(ctx context.Context, tx *sql.Tx, column string, value string, inputRole int) (adapter.Binding, string, error) {
+ 	var out adapter.Binding
+ 	var body []byte
+ 	var id string
+@@ -270,11 +275,11 @@
+ 	if err != nil {
+ 		return out, id, err
+ 	}
+-	current, err := d.input(ctx, tx, id)
++	current, err := d.input(ctx, tx, id, inputRole)
+ 	if err != nil {
+ 		return out, id, err
+ 	}
+-	if !reflect.DeepEqual(current, out.Input) || current.Control.State != "running" {
++	if !d.inputRepresentationEqual(inputRole, inputStageFullCompare, current, out.Input) || current.Control.State != "running" {
+ 		return out, id, engine.ErrForbidden
+ 	}
+ 	if err = d.trusted(ctx, tx); err != nil {
+@@ -293,7 +298,7 @@
+ 			return err
+ 		}
+ 		var err error
+-		out, _, err = d.binding(ctx, tx, "snapshot_key", k)
++		out, _, err = d.binding(ctx, tx, "snapshot_key", k, inputRoleBinding)
+ 		if err != nil {
+ 			return err
+ 		}
+@@ -318,7 +323,7 @@
+ 			return err
+ 		}
+ 		var err error
+-		out, _, err = d.binding(ctx, tx, "permission_key", k)
++		out, _, err = d.binding(ctx, tx, "permission_key", k, inputRoleCurrent)
+ 		if err != nil {
+ 			return err
+ 		}
+@@ -342,7 +347,7 @@
+ 		if err := d.trusted(ctx, tx); err != nil {
+ 			return err
+ 		}
+-		bound, _, err := d.binding(ctx, tx, "decision_key", k)
++		bound, _, err := d.binding(ctx, tx, "decision_key", k, inputRoleAuthorize)
+ 		if err != nil {
+ 			return err
+ 		}
+@@ -376,11 +381,11 @@
+ 		if err != nil {
+ 			return err
+ 		}
+-		current, err := d.input(ctx, tx, id)
+-		if err != nil {
+-			return err
+-		}
+-		if !reflect.DeepEqual(current, in) || current.Control.State != "running" {
++		current, err := d.input(ctx, tx, id, inputRoleStagePublication)
++		if err != nil {
++			return err
++		}
++		if !d.inputRepresentationEqual(inputRoleStagePublication, inputStageFullCompare, current, in) || current.Control.State != "running" {
+ 			return compiler.ErrChanged
+ 		}
+ 		if _, err = tx.ExecContext(ctx, `SELECT pg_advisory_xact_lock(1786614105,hashtext($1))`, d.Store.cfg.Schema+"/"+commandKey); err != nil {
+@@ -433,7 +438,7 @@
+ 		if err := d.trusted(ctx, tx); err != nil {
+ 			return err
+ 		}
+-		in, err := d.input(ctx, tx, id)
++		in, err := d.input(ctx, tx, id, inputRoleRecordFailure)
+ 		if err != nil {
+ 			return err
+ 		}
+@@ -451,7 +456,7 @@
+ 		if err := d.trusted(ctx, tx); err != nil {
+ 			return err
+ 		}
+-		in, err := d.input(ctx, tx, id)
++		in, err := d.input(ctx, tx, id, inputRoleObserve)
+ 		if err != nil {
+ 			return err
+ 		}
+@@ -584,7 +589,7 @@
+ 		if err := tx.QueryRowContext(ctx, `SELECT input_id FROM `+d.Store.table("fixture_context_bindings")+` WHERE snapshot_key=$1`, snap).Scan(&id); err != nil {
+ 			return err
+ 		}
+-		current, err := d.input(ctx, tx, id)
++		current, err := d.input(ctx, tx, id, inputRoleDispatch)
+ 		if err != nil {
+ 			return err
+ 		}
+@@ -594,7 +599,7 @@
+ 		if gen != generation || state != "queued" && state != "unknown" || !now.Before(lease) {
+ 			return engine.ErrForbidden
+ 		}
+-		if !reflect.DeepEqual(current, in) || current.Control.State != "running" || !now.Before(deadline) || attempts >= 3 {
++		if !d.inputRepresentationEqual(inputRoleDispatch, inputStageFullCompare, current, in) || current.Control.State != "running" || !now.Before(deadline) || attempts >= 3 {
+ 			_, err = tx.ExecContext(ctx, `UPDATE `+d.Store.table("fixture_context_dispatch")+` SET state='closed',lease_until=NULL WHERE snapshot_key=$1`, snap)
+ 			return err
+ 		}
+--- accepted-baseline/context_budget.go
++++ new-input-measurement/context_budget.go
+@@ -160,11 +160,11 @@
+ 		if !reflect.DeepEqual(root.Tuple, d.compileTuple(in)) {
+ 			return &compiler.BudgetError{Reason: compiler.BudgetTuple}
+ 		}
+-		current, e := d.input(ctx, tx, id)
+-		if e != nil {
+-			return e
+-		}
+-		if !reflect.DeepEqual(current, in) || current.Control.State != "running" {
++		current, e := d.input(ctx, tx, id, inputRoleBeginCompile)
++		if e != nil {
++			return e
++		}
++		if !d.inputRepresentationEqual(inputRoleBeginCompile, inputStageFullCompare, current, in) || current.Control.State != "running" {
+ 			return compiler.ErrChanged
+ 		}
+ 		if e = d.budgetTime(ctx, tx, root.Tuple); e != nil {
+@@ -202,7 +202,7 @@
+ 	}
+ 	return attempt, nil
+ }
+-func (d *ContextDispatcher) currentAttempt(ctx context.Context, tx *sql.Tx, a compiler.CompileAttempt, subject c.SubjectBinding) (*compileBudgetRoot, string, error) {
++func (d *ContextDispatcher) currentAttempt(ctx context.Context, tx *sql.Tx, a compiler.CompileAttempt, subject c.SubjectBinding, inputRole int) (*compileBudgetRoot, string, error) {
+ 	if !d.budgetSubject(subject) {
+ 		return nil, "", &compiler.BudgetError{Reason: compiler.BudgetTuple}
+ 	}
+@@ -210,15 +210,17 @@
+ 	if err != nil {
+ 		return nil, "", err
+ 	}
+-	in, err := d.input(ctx, tx, a.InputID)
+-	if err != nil {
+-		return nil, "", err
+-	}
++	in, err := d.input(ctx, tx, a.InputID, inputRole)
++	if err != nil {
++		return nil, "", err
++	}
++	inputEncodeToken := d.inputRepresentation.begin(inputRole, inputStageJSONBytes)
+ 	body, err := jsonBytes(in)
+-	if err != nil {
+-		return nil, "", err
+-	}
+-	if !reflect.DeepEqual(root.Tuple, d.compileTuple(in)) || in.Revision != a.InputRevision || digest(body) != a.InputDigest || in.Control.State != "running" {
++	d.inputRepresentation.end(inputEncodeToken, err, false)
++	if err != nil {
++		return nil, "", err
++	}
++	if !d.inputRepresentationEqual(inputRole, inputStageTupleCompare, root.Tuple, d.compileTuple(in)) || in.Revision != a.InputRevision || d.inputRepresentationDigest(inputRole, body) != a.InputDigest || in.Control.State != "running" {
+ 		return nil, "", compiler.ErrChanged
+ 	}
+ 	k, err := key(a.SnapshotRef)
+@@ -255,7 +257,7 @@
+ 		return reservation, &compiler.BudgetError{Reason: compiler.BudgetReadReused}
+ 	}
+ 	err = d.Store.within(ctx, func(ctx context.Context, tx *sql.Tx, _ time.Time) error {
+-		root, k, e := d.currentAttempt(ctx, tx, a, subject)
++		root, k, e := d.currentAttempt(ctx, tx, a, subject, inputRoleReserveRead)
+ 		if e != nil {
+ 			return e
+ 		}
+@@ -296,7 +298,7 @@
+ 		return &compiler.BudgetError{Reason: compiler.BudgetConfirmation}
+ 	}
+ 	return d.Store.within(ctx, func(ctx context.Context, tx *sql.Tx, _ time.Time) error {
+-		root, k, err := d.currentAttempt(ctx, tx, r.Attempt, subject)
++		root, k, err := d.currentAttempt(ctx, tx, r.Attempt, subject, inputRoleConfirmRead)
+ 		if err != nil {
+ 			return err
+ 		}
+--- current-absent/context_input_representation_observer.go
++++ new-owned-measurement/context_input_representation_observer.go
+@@ -0,0 +1,149 @@
++package decisionfixture
++
++// Owned measurement only: no SQL, body output, context change or authority value.
++import (
++	"reflect"
++	"sync"
++	"testing"
++	"time"
++)
++
++const (
++	inputPhaseOther = iota
++	inputPhaseCompile
++	inputPhaseDispatch
++	inputPhaseWorker
++	inputPhaseCount
++)
++const (
++	inputRoleObserveInput = iota
++	inputRoleBind
++	inputRoleBinding
++	inputRoleCurrent
++	inputRoleAuthorize
++	inputRoleStagePublication
++	inputRoleRecordFailure
++	inputRoleObserve
++	inputRoleDispatch
++	inputRoleBeginCompile
++	inputRoleReserveRead
++	inputRoleConfirmRead
++	inputRoleCount
++)
++const (
++	inputStageScan = iota
++	inputStageClosedJSON
++	inputStageJSONBytes
++	inputStageDigest
++	inputStageFullCompare
++	inputStageTupleCompare
++	inputStageCount
++)
++
++var inputPhaseNames = [inputPhaseCount]string{"other", "compile", "dispatch", "worker"}
++var inputRoleNames = [inputRoleCount]string{"observe_input", "bind", "binding", "current", "authorize", "stage_publication", "record_failure", "observe", "dispatch_input", "begin_compile", "reserve_read", "confirm_read"}
++var inputStageNames = [inputStageCount]string{"input_scan_sql_wall", "input_closed_json", "input_json_bytes", "input_digest", "full_input_compare", "attempt_tuple_compare"}
++
++type inputRepresentationCell struct {
++	Attempted, Completed, Errors, False uint64
++	Wall, Max time.Duration
++	FirstCause string
++}
++type inputRepresentationToken struct {
++	phase, role, stage int
++	start time.Time
++	valid bool
++}
++type inputRepresentationCosts struct {
++	mu sync.Mutex
++	phase, depth int
++	dropped, ambiguity uint64
++	cells [inputPhaseCount][inputRoleCount][inputStageCount]inputRepresentationCell
++}
++
++func newInputRepresentationCosts(t *testing.T) *inputRepresentationCosts {
++	p := &inputRepresentationCosts{}
++	t.Cleanup(func() { p.summary(t) })
++	return p
++}
++func (p *inputRepresentationCosts) enter(phase int) func() {
++	if p == nil { return func() {} }
++	p.mu.Lock()
++	previous := p.phase
++	if phase < 0 || phase >= inputPhaseCount { p.dropped++; phase = inputPhaseOther }
++	if p.depth != 0 { p.ambiguity++ }
++	p.phase = phase
++	p.depth++
++	p.mu.Unlock()
++	return func() {
++		p.mu.Lock()
++		if p.depth <= 0 || p.phase != phase { p.ambiguity++ } else { p.depth--; p.phase = previous }
++		p.mu.Unlock()
++	}
++}
++func (p *inputRepresentationCosts) begin(role, stage int) inputRepresentationToken {
++	if p == nil { return inputRepresentationToken{} }
++	p.mu.Lock()
++	phase := p.phase
++	if role < 0 || role >= inputRoleCount || stage < 0 || stage >= inputStageCount || phase < 0 || phase >= inputPhaseCount {
++		p.dropped++
++		p.mu.Unlock()
++		return inputRepresentationToken{}
++	}
++	if p.depth > 1 { p.ambiguity++ }
++	p.cells[phase][role][stage].Attempted++
++	p.mu.Unlock()
++	return inputRepresentationToken{phase: phase, role: role, stage: stage, start: time.Now(), valid: true}
++}
++func (p *inputRepresentationCosts) end(token inputRepresentationToken, err error, falseResult bool) {
++	if p == nil || !token.valid { return }
++	wall := time.Since(token.start)
++	p.mu.Lock()
++	c := &p.cells[token.phase][token.role][token.stage]
++	c.Completed++
++	c.Wall += wall
++	if wall > c.Max { c.Max = wall }
++	if falseResult { c.False++ }
++	if err != nil {
++		c.Errors++
++		if c.FirstCause == "" { c.FirstCause = claimCause(err) }
++	}
++	p.mu.Unlock()
++}
++func (p *inputRepresentationCosts) summary(t *testing.T) {
++	p.mu.Lock()
++	defer p.mu.Unlock()
++	t.Logf("INPUT_REP scope=%s slots=288 dropped=%d ambiguity=%d open_phase_depth=%d observer_overhead=UNKNOWN wall_not_CPU=true sql_wall_not_server_time=true", t.Name(), p.dropped, p.ambiguity, p.depth)
++	for phase := 0; phase < inputPhaseCount; phase++ {
++		for role := 0; role < inputRoleCount; role++ {
++			for stage := 0; stage < inputStageCount; stage++ {
++				c := p.cells[phase][role][stage]
++				if c.Attempted == 0 { continue }
++				cause := c.FirstCause
++				if cause == "" { cause = "nil" }
++				t.Logf("INPUT_REP cell phase=%s role=%s stage=%s attempted=%d completed=%d errors=%d false=%d wall_ns=%d max_ns=%d first_cause=%s", inputPhaseNames[phase], inputRoleNames[role], inputStageNames[stage], c.Attempted, c.Completed, c.Errors, c.False, c.Wall.Nanoseconds(), c.Max.Nanoseconds(), cause)
++			}
++		}
++	}
++}
++
++func (d *ContextDispatcher) inputRepresentationEqual(role, stage int, left, right any) bool {
++	token := d.inputRepresentation.begin(role, stage)
++	equal := reflect.DeepEqual(left, right)
++	d.inputRepresentation.end(token, nil, !equal)
++	return equal
++}
++func (d *ContextDispatcher) inputRepresentationDigest(role int, body []byte) string {
++	token := d.inputRepresentation.begin(role, inputStageDigest)
++	value := digest(body)
++	d.inputRepresentation.end(token, nil, false)
++	return value
++}
++func (w *ContextWorld) InputRepresentationPhase(phase string) func() {
++	switch phase {
++	case "compile": return w.inputRepresentation.enter(inputPhaseCompile)
++	case "dispatch": return w.inputRepresentation.enter(inputPhaseDispatch)
++	case "worker": return w.inputRepresentation.enter(inputPhaseWorker)
++	default: return w.inputRepresentation.enter(-1)
++	}
++}

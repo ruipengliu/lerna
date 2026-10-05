@@ -1,0 +1,28 @@
+{
+  "status": "STOP_RELEASED",
+  "actual_one_first_order_fault_only_pass": true,
+  "native_actual": {
+    "event": "native_completion_ack",
+    "operation": "late-finish-original-fence-fault",
+    "pid": 3976602,
+    "pgid": 3976602,
+    "starttime": "16674526",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false,
+    "owned_raw_fsync_close_ack": true
+  },
+  "independent_current_group_absent": true,
+  "source26_matches_formatted_snapshot_and_manifest": true,
+  "formatted_manifest_sha256": "bbc855b582b9ee1ff30e7fca018f517b345abaec6befc83d6a71ccbcc060cca4",
+  "raw_sha256": "3d7373b7d2fb48e710cbc1ed9205748c77ebdd1bb57830a79b0aef804a32ddd1",
+  "postchecks_path": "/tmp/lerna-04-ticket06-execution/late-finish-fault-postchecks.json",
+  "postchecks_sha256": "d2ffbf0aa9033118219d68e6aba00ce2e087b0968b7e2c564fd384aa83f72cdc",
+  "actual_Q_qualification_pass_not_wrapper_receive_result": true,
+  "same_original_live_child_native_first_close_ACK": true,
+  "no_new_unknown_scope": true,
+  "historical8unknown_untouched": true,
+  "ledger_lines": 153,
+  "race_not_run": true,
+  "no_source_fmt_or_other_native": true
+}

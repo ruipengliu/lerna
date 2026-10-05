@@ -1,0 +1,1 @@
+NATIVE_COMPLETION_ACK {"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "late-finish-format", "pgid": 3967979, "pid": 3967979, "starttime": "16636553", "timed_out": false}

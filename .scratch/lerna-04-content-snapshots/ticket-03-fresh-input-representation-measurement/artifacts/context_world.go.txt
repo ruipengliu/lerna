@@ -1,0 +1,206 @@
+package decisionfixture
+
+import (
+	"context"
+	"crypto/sha256"
+	"encoding/base64"
+	"encoding/hex"
+	"errors"
+	"fmt"
+	adapter "github.com/ruipengliu/lerna/adapters/content/decision"
+	engine "github.com/ruipengliu/lerna/components/decision_engine"
+	cf "github.com/ruipengliu/lerna/conformance/internal/contentfixture"
+	v "github.com/ruipengliu/lerna/contract/v1_1"
+	c "github.com/ruipengliu/lerna/contract/v1_2"
+	"github.com/ruipengliu/lerna/domain/content"
+	compiler "github.com/ruipengliu/lerna/domain/task/context"
+	"github.com/ruipengliu/lerna/runtime"
+	"strconv"
+	"testing"
+	"time"
+)
+
+type ContextWorld struct {
+	Input               compiler.Input
+	Subject             c.SubjectBinding
+	Principal           v.SubjectBinding
+	Content             *content.Service
+	Decision            *engine.Service
+	Dispatcher          *ContextDispatcher
+	Boundary            *ContextEntryObserver
+	Adapter             *adapter.Adapter
+	Fixture             *World
+	ContentWorld        *cf.World
+	diagnostics         *ContextClaimDiagnostics
+	inputRepresentation *inputRepresentationCosts
+	t                   *testing.T
+	trustedUntil        time.Time
+}
+
+func NewContextWorld(t *testing.T, ctx context.Context) *ContextWorld {
+	return NewContextWorldWithInput(t, ctx, nil)
+}
+
+// NewContextWorldWithInput fixes explicit fixture policy/limits before the first
+// trusted installation; later revisions cannot widen the original budget tuple.
+func NewContextWorldWithInput(t *testing.T, ctx context.Context, configure func(*compiler.Input)) *ContextWorld {
+	return newContextWorldWithDiagnostic(t, ctx, configure, nil)
+}
+func NewContextWorldWithInputDiagnostic(t *testing.T, ctx context.Context, configure func(*compiler.Input), d *ContextClaimDiagnostics) *ContextWorld {
+	return newContextWorldWithDiagnostic(t, ctx, configure, d)
+}
+func newContextWorldWithDiagnostic(t *testing.T, ctx context.Context, configure func(*compiler.Input), d *ContextClaimDiagnostics) *ContextWorld {
+	t.Helper()
+	w := &ContextWorld{diagnostics: d, t: t, Fixture: NewWorld(t, ctx), ContentWorld: cf.New(t, ctx), trustedUntil: time.Now().UTC().Add(time.Hour).Truncate(time.Microsecond)}
+	w.inputRepresentation = newInputRepresentationCosts(t)
+	if d != nil {
+		d.Mark("phase.owners-established")
+	}
+	scene := w.Fixture.Scenario()
+	w.Principal = scene.Subject
+	w.Subject = c.SubjectBinding{TenantID: c.ID(scene.Subject.TenantID), SubjectID: c.ID(scene.Subject.SubjectID), DelegationChain: []c.DelegatedSubject{}}
+	owner := w.Fixture.Source().owner
+	deadline := v.Time(time.Now().UTC().Add(2 * time.Minute).Truncate(time.Microsecond).Format("2006-01-02T15:04:05.000000Z"))
+	request := scene.Request
+	request.CommandID = "context-command"
+	request.Target.ID = "context-decision"
+	request.Payload.DecisionID = request.Target.ID
+	request.Payload.SnapshotRef.ID = "context-snapshot"
+	request.Payload.TaskRef.ID = "context-task"
+	request.Payload.ComponentRef.InstallLockRef.ID = "context-lock"
+	request.AcceptBefore = deadline
+	request.Payload.Deadline = deadline
+	request.Payload.Limits = v.DecisionLimits{MaxInputBytes: "65536", MaxOutputBytes: "8192", MaxRuleSteps: "1", MaxActions: "1", MaxCost: v.Amount{Unit: "fixture", IntegerValue: "1"}}
+	sourceOwner := c.OwnerRef{TenantID: w.Subject.TenantID, OwnerID: "context-content"}
+	primaryBody := []byte("alpha\n")
+	selectorBody := []byte("include-primary\n")
+	primary := c.ContentRef{Owner: sourceOwner, ContentID: "context-primary", Version: "1", Hash: digest(primaryBody), MediaType: "text/plain", ByteLength: c.Revision(strconv.Itoa(len(primaryBody)))}
+	selector := c.ContentRef{Owner: sourceOwner, ContentID: "context-selector", Version: "1", Hash: digest(selectorBody), MediaType: "text/plain", ByteLength: c.Revision(strconv.Itoa(len(selectorBody)))}
+	w.Input = compiler.Input{Owner: owner, Revision: "1", ObservedAt: v.Time(time.Now().UTC().Truncate(time.Microsecond).Format("2006-01-02T15:04:05.000000Z")), Goal: "完整报告：保留目标与准确来源。", Constraints: []string{"全文保留必要约束，不抹去unknown效果。"}, GoalRevision: "1", Conditions: []compiler.Condition{{Ref: v.RequirementRef{TenantID: owner.TenantID, OwnerID: owner.OwnerID, Kind: "requirement", ID: "context-condition-a", Revision: "1"}, Text: "准确回读原材料", Necessary: true, State: "unknown", Gaps: []string{"尚未核验"}}, {Ref: v.RequirementRef{TenantID: owner.TenantID, OwnerID: owner.OwnerID, Kind: "requirement", ID: "context-condition-b", Revision: "1"}, Text: "全文保留必要条件", Necessary: true, State: "unknown", Gaps: []string{}}}, Control: compiler.Control{State: "running", Revision: "1", Restrictions: []string{"有限fixture资格"}}, Budget: compiler.Budget{Unit: "fixture", Total: "10", Occupied: "2", Remaining: "8", Revision: "1", Unknown: []string{"原操作费用unknown"}}, Unresolved: []compiler.Responsibility{{ID: "context-unknown", OperationRef: v.ObjectRef{TenantID: owner.TenantID, OwnerID: owner.OwnerID, Kind: "operation", ID: "context-original-operation"}, RemoteAccepted: "unknown", Effect: "unknown", MayApplyLater: true, Cost: "unknown"}}, Progress: []string{"已固定准确输入"}, Materials: []compiler.Material{{Ref: primary, Selected: true, Role: "primary"}, {Ref: selector, Selected: false, Role: "selection"}}, Omitted: []string{}, Gaps: []string{"原效果仍未关闭"}, Purpose: "rule.input", RetainUntil: deadline, Policy: compiler.Policy{Version: compiler.ByteStrategy, SelectionVersion: compiler.SelectionVersion, Capacity: "65536", OutputReserve: "8192", ReadBudget: "65536"}, Request: request}
+	if configure != nil {
+		configure(&w.Input)
+	}
+	if d != nil {
+		raw, err := v.Encode(w.Input.Request.Payload)
+		if err != nil {
+			t.Fatal(err)
+		}
+		digest := sha256.Sum256(raw)
+		d.observe("phase.original-bounds", time.Now(), nil, fmt.Sprintf("payload_sha256=%s caller=30s lease=5s input=%s output=%s capacity=%s reserve=%s read=%s original_deadline=%s", hex.EncodeToString(digest[:]), w.Input.Request.Payload.Limits.MaxInputBytes, w.Input.Request.Payload.Limits.MaxOutputBytes, w.Input.Policy.Capacity, w.Input.Policy.OutputReserve, w.Input.Policy.ReadBudget, w.Input.Request.Payload.Deadline))
+	}
+	w.build(ctx)
+	if err := w.Dispatcher.InstallInput(ctx, "context-input", w.Input, "0"); err != nil {
+		t.Fatal(err)
+	}
+	for i, ref := range []c.ContentRef{primary, selector} {
+		if err := w.Dispatcher.PrepareContent(ctx, w.Input, ref); err != nil {
+			t.Fatal(err)
+		}
+		body := primaryBody
+		if i == 1 {
+			body = selectorBody
+		}
+		raw, err := c.Encode(c.ContentPutRequest{ContractVersion: c.Version, Profile: "content", CommandID: c.ID("seed-" + string(ref.ContentID)), Target: c.ContentTarget{TenantID: sourceOwner.TenantID, OwnerID: sourceOwner.OwnerID, Kind: "content", ID: ref.ContentID}, Method: "content.put", AcceptBefore: c.Time(deadline), Payload: c.ContentPutPayload{ContentRef: ref, Sources: []c.ContentRef{}, Purpose: "rule.input", RetainUntil: c.Time(deadline), BytesBase64: base64.StdEncoding.EncodeToString(body)}})
+		if err != nil {
+			t.Fatal(err)
+		}
+		response, err := w.Content.Put(ctx, raw, &w.Subject)
+		if err != nil {
+			t.Fatal(err)
+		}
+		received, ok := response.AsReceived()
+		if !ok {
+			t.Fatal("source not received")
+		}
+		if _, ok = received.Receipt.AsAccepted(); !ok {
+			t.Fatal("source not accepted")
+		}
+		if _, err = w.Content.Step(ctx); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if d != nil {
+		d.Mark("phase.initial-primary-selector-published")
+	}
+	return w
+}
+func (w *ContextWorld) build(ctx context.Context) {
+	var err error
+	owner := c.OwnerRef{TenantID: w.Subject.TenantID, OwnerID: "context-content"}
+	w.Content, err = content.New(content.Config{Owner: owner, Store: w.ContentWorld.Store(), Objects: w.ContentWorld.Objects, Limits: content.Limits{MaxPreparingVersions: 16, MaxStagingBytes: 4 * 262144, Lease: time.Minute, WorkTimeout: 5 * time.Second}, PublishBudget: time.Minute, MaxPublicationAttempts: 3, Worker: "context-content-worker"})
+	if err != nil {
+		w.t.Fatal(err)
+	}
+	manager, err := content.NewManager(content.ManagementConfig{Owner: owner, Store: w.ContentWorld.Store(), TrustedSubject: w.Subject, TrustedUntil: w.trustedUntil, PageSize: 64, WorkBudget: time.Minute})
+	if err != nil {
+		w.t.Fatal(err)
+	}
+	if err = w.ContentWorld.Store().InstallFixtureCommandReader(ctx, owner, w.Subject, w.trustedUntil); err != nil {
+		w.t.Fatal(err)
+	}
+	w.Dispatcher = &ContextDispatcher{Store: w.Fixture.Source(), TrustedSubject: w.Principal, TrustedUntil: w.trustedUntil, ContentOwner: owner, Policies: manager}
+	w.Dispatcher.inputRepresentation = w.inputRepresentation
+	var contentPort adapter.Content = w.Content
+	var accessPort adapter.Access = w.Dispatcher
+	if w.diagnostics != nil {
+		contentPort = claimDiagnosticContent{Content: contentPort, d: w.diagnostics}
+		accessPort = claimDiagnosticAccess{Access: accessPort, d: w.diagnostics}
+	}
+	w.Adapter, err = adapter.New(adapter.Config{Owner: owner, Subject: w.Subject, Purpose: "rule.input", Content: contentPort, Access: accessPort})
+	if err != nil {
+		w.t.Fatal(err)
+	}
+	decisionOwner := v.OwnerRef{TenantID: w.Input.Request.Target.TenantID, OwnerID: w.Input.Request.Target.OwnerID}
+	var decisionStore engine.Store = w.Fixture.Store()
+	var decisionSource engine.Source = w.Adapter
+	var decisionPublisher engine.Publisher = w.Adapter
+	if w.diagnostics != nil {
+		decisionStore = &claimDiagnosticStore{Store: decisionStore, d: w.diagnostics, active: map[runtime.Tx]*claimDiagnosticTx{}}
+		decisionSource = claimDiagnosticSource{Source: decisionSource, d: w.diagnostics}
+		decisionPublisher = claimDiagnosticPublisher{Publisher: decisionPublisher, d: w.diagnostics}
+	}
+	w.Decision, err = engine.New(engine.Config{Owner: decisionOwner, Store: decisionStore, Authority: w.Dispatcher, ControlAuthority: w.Fixture.Source(), Source: decisionSource, Publisher: decisionPublisher, Component: w.Input.Request.Payload.ComponentRef, Worker: "context-decision-worker", Lease: 5 * time.Second, PoolControl: true})
+	if err != nil {
+		w.t.Fatal(err)
+	}
+	if w.Boundary == nil {
+		w.Boundary, err = NewContextEntryObserver(w.Decision, 3)
+	} else {
+		err = w.Boundary.Reopen(w.Decision)
+	}
+	if err != nil {
+		w.t.Fatal(err)
+	}
+	ref := w.Input.Request.Target
+	for _, access := range []engine.ControlAccess{{Subject: w.Principal, DecisionOwner: decisionOwner, DecisionRef: &ref, Purposes: []string{"get"}, ValidUntil: w.trustedUntil}, {Subject: w.Principal, DecisionOwner: decisionOwner, Purposes: []string{"command.get"}, ValidUntil: w.trustedUntil}} {
+		if err = w.Fixture.Source().SeedControlAccess(ctx, access); err != nil {
+			w.t.Fatal(err)
+		}
+	}
+}
+func (w *ContextWorld) Compile(ctx context.Context) (bundle compiler.Bundle, err error) {
+	inputPhaseDone := w.InputRepresentationPhase("compile")
+	defer inputPhaseDone()
+	start := time.Now()
+	w.DiagnosticStage(ctx, "phase.compile-start", start, nil)
+	defer func() { w.DiagnosticStage(ctx, "phase.compile-and-bind-end", start, err) }()
+	c := compiler.Compiler{Current: w.Dispatcher, Content: w.Content, Assembly: w.Adapter, Subject: w.Subject}
+	in, bundle, err := c.Compile(ctx, "context-input")
+	if err != nil {
+		if errors.Is(err, compiler.ErrOverflow) {
+			err = errors.Join(err, w.Dispatcher.RecordFailure(ctx, "context-input", in.Revision, "context_overflow"))
+		}
+		return bundle, err
+	}
+	w.DiagnosticStage(ctx, "phase.compile-published-pre-bind", time.Now(), nil)
+	if err = w.Dispatcher.Bind(ctx, "context-input", in, bundle); err != nil {
+		return bundle, err
+	}
+	return bundle, nil
+}
+func (w *ContextWorld) Reopen(ctx context.Context) {
+	w.t.Helper()
+	w.Fixture.Reopen(ctx)
+	w.ContentWorld.Reopen(ctx)
+	w.build(ctx)
+}

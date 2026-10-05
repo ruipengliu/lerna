@@ -1,0 +1,38 @@
+{
+  "status": "STOP_RELEASED",
+  "actual_fmt_normal_only_pass": true,
+  "native_actual": {
+    "event": "native_completion_ack",
+    "operation": "late-finish-normal-control",
+    "pid": 3969133,
+    "pgid": 3969133,
+    "starttime": "16641553",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false,
+    "owned_raw_fsync_close_ack": true
+  },
+  "format_native_actual": {
+    "event": "native_completion_ack",
+    "operation": "late-finish-format",
+    "pid": 3967979,
+    "pgid": 3967979,
+    "starttime": "16636553",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false,
+    "owned_raw_fsync_close_ack": true
+  },
+  "independent_current_group_absence_both": true,
+  "current_source26_matches_formatted_snapshot_and_manifest": true,
+  "formatted_manifest_sha256": "bbc855b582b9ee1ff30e7fca018f517b345abaec6befc83d6a71ccbcc060cca4",
+  "normal_raw_sha256": "ffd0fa3fc924525342264eb283da5eb5b4386656845bbefbf384299866e4769d",
+  "postchecks_path": "/tmp/lerna-04-ticket06-execution/late-finish-normal-postchecks.json",
+  "postchecks_sha256": "c52db07934b56fc9290b5282aaddf0f82b648645b55c232c208d90ffc732a898",
+  "ledger_lines": 146,
+  "historical_eight_unknown_preserved": true,
+  "new_normal_native_first_close_ACK": true,
+  "conservative_original_window_pass_not_wrapper_receive_measurement": true,
+  "fault_race_unexecuted": true,
+  "no_new_source_or_native_after_normal": true
+}

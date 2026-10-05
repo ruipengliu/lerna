@@ -1,0 +1,12 @@
+{
+  "Replace": {
+    "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_world.go": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/context_world.go",
+    "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_claim_diagnostics.go": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/context_claim_diagnostics.go",
+    "/tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_context_closure_test.go": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/content_context_closure_test.go",
+    "/tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_context_material_reachable_test.go": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/content_context_material_reachable_test.go",
+    "/tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_context_test.go": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/content_context_test.go",
+    "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_dispatch.go": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/context_dispatch.go",
+    "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_budget.go": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/context_budget.go",
+    "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_input_representation_observer.go": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/context_input_representation_observer.go"
+  }
+}

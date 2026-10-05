@@ -1,0 +1,63 @@
+{
+  "exact8_composite_inverse": [
+    {
+      "file": "context_world.go",
+      "format_byte_patch_inverse_prefmt_exact": true,
+      "measurement_inverse_baseline_exact": true,
+      "accepted_layer_inverse_current331_target": "6a8b7860a40ba8b784248f181f7abd4e6b069360dc68c33deff7f0f1c79f4f69",
+      "limit": "Exact recorded formatter bytes, no generalized whitespace/semicolon stripping, no semantic inference from formatting."
+    },
+    {
+      "file": "context_claim_diagnostics.go",
+      "format_byte_patch_inverse_prefmt_exact": true,
+      "measurement_inverse_baseline_exact": true,
+      "accepted_layer_inverse_current331_target": "absent original virtual helper",
+      "limit": "Exact recorded formatter bytes, no generalized whitespace/semicolon stripping, no semantic inference from formatting."
+    },
+    {
+      "file": "content_context_closure_test.go",
+      "format_byte_patch_inverse_prefmt_exact": true,
+      "measurement_inverse_baseline_exact": true,
+      "accepted_layer_inverse_current331_target": "f81d009ee03ce5d359b61e007b7b77ffbf6b7331254cb3e1b524c30fdf984f7f",
+      "limit": "Exact recorded formatter bytes, no generalized whitespace/semicolon stripping, no semantic inference from formatting."
+    },
+    {
+      "file": "content_context_material_reachable_test.go",
+      "format_byte_patch_inverse_prefmt_exact": true,
+      "measurement_inverse_baseline_exact": true,
+      "accepted_layer_inverse_current331_target": "588abece65e26259626dabc885b399c98d26f1855e17e94f010df223d3ae1d43",
+      "limit": "Exact recorded formatter bytes, no generalized whitespace/semicolon stripping, no semantic inference from formatting."
+    },
+    {
+      "file": "content_context_test.go",
+      "format_byte_patch_inverse_prefmt_exact": true,
+      "measurement_inverse_baseline_exact": true,
+      "accepted_layer_inverse_current331_target": "25b705aeda43e55b923710d621f39eb7298d214bce9101c18fd523777504698b",
+      "limit": "Exact recorded formatter bytes, no generalized whitespace/semicolon stripping, no semantic inference from formatting."
+    },
+    {
+      "file": "context_dispatch.go",
+      "format_byte_patch_inverse_prefmt_exact": true,
+      "measurement_inverse_baseline_exact": true,
+      "accepted_layer_inverse_current331_target": "5c2b8d472fdbe458b9affb9a9543db3359c85c0dfa90d5357bea843995e624fb",
+      "limit": "Exact recorded formatter bytes, no generalized whitespace/semicolon stripping, no semantic inference from formatting."
+    },
+    {
+      "file": "context_budget.go",
+      "format_byte_patch_inverse_prefmt_exact": true,
+      "measurement_inverse_baseline_exact": true,
+      "accepted_layer_inverse_current331_target": "b3ad33bb1ed9c89dc079afedb81dc9e43420a0609cb2b87422d1bb009ec9078d",
+      "limit": "Exact recorded formatter bytes, no generalized whitespace/semicolon stripping, no semantic inference from formatting."
+    },
+    {
+      "file": "context_input_representation_observer.go",
+      "format_byte_patch_inverse_prefmt_exact": true,
+      "measurement_inverse_baseline_exact": true,
+      "accepted_layer_inverse_current331_target": "absent owned-only helper",
+      "limit": "Exact recorded formatter bytes, no generalized whitespace/semicolon stripping, no semantic inference from formatting."
+    }
+  ],
+  "original_source331_unchanged": true,
+  "full_format_diff_sha256": "282bf755331a2fb709510801bcb02712db1e9ee48ee8d97e9f53781f67335b2d",
+  "full_format_diff_bytes": 6260
+}

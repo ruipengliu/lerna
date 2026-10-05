@@ -1,0 +1,75 @@
+{
+  "status": "STATIC one bounded observation of Input representation, not optimization or native permission",
+  "case_scopes": [
+    "closure64",
+    "closure65",
+    "static62",
+    "singleContent200000",
+    "singleContent262144",
+    "duplicateSelector"
+  ],
+  "scope_count": 6,
+  "fixed_cells_per_scope": 288,
+  "cell_axes": {
+    "phase": [
+      "other",
+      "compile",
+      "dispatch",
+      "worker"
+    ],
+    "literal_role": [
+      "observe_input",
+      "bind",
+      "binding",
+      "current",
+      "authorize",
+      "stage_publication",
+      "record_failure",
+      "observe",
+      "dispatch_input",
+      "begin_compile",
+      "reserve_read",
+      "confirm_read"
+    ],
+    "stage": [
+      "input_scan_sql_wall",
+      "input_closed_json",
+      "input_json_bytes",
+      "input_digest",
+      "full_input_compare",
+      "attempt_tuple_compare"
+    ]
+  },
+  "phase_ownership": {
+    "compile": "Only enter/defer-close around actual w.Compile body, includes durable Begin/Reserve/Confirm + original assembly/Bind calls; no timestamps/context inference.",
+    "dispatch": "Only enter/end around original w.Dispatcher.Step in completeContextDecision.",
+    "worker": "Only enter/end around original w.Decision.Step in completeContextDecision; public Get/body observations after Step go back to other.",
+    "other": "All original setup/observe/failure/reopen/other paths outside the three explicit caller scopes; remains separate, not silently assigned worker."
+  },
+  "record_fields": [
+    "attempted",
+    "completed",
+    "errors",
+    "falseResult",
+    "wall_ns",
+    "max_ns",
+    "first_typed_cause"
+  ],
+  "no_per_input_events_or_body_output": true,
+  "begin_end_qualification": "Token captures explicit phase+role+stage; counts attempted before original operation. Only real returned operation increments completed; errors preserve original error value/path; compare false is separate from an error. Incomplete counts remain visible.",
+  "stages_actual_calls": {
+    "input_scan_sql_wall": "Original exact SELECT body ... FOR UPDATE QueryRowContext.Scan statement, unchanged arguments and transaction. Wall includes client/network/lockwait/scan, not server execution.",
+    "input_closed_json": "Original closedJSON(body,&in), unchanged strict ParseJSON+typed unknown-field rejection+EOF validation.",
+    "input_json_bytes": "Original currentAttempt jsonBytes(in), unchanged original successful canonical serialization and finite bound; errors return before tuple/digest check as before.",
+    "input_digest": "Original currentAttempt digest(body) SHA256+hex. Wrapper invokes exactly once only when original earlier Tuple/full/revision conditions permit.",
+    "full_input_compare": "Original reflect.DeepEqual current vs in/out.Input in Bind/binding/StagePublication/dispatch/BeginCompile. Remaining Control/deadline/attempt guards stay in original OR order.",
+    "attempt_tuple_compare": "Original currentAttempt reflect.DeepEqual(root.Tuple,d.compileTuple(in)); not a full Input comparison. No later tuple/revision/control/digest check moved before this guard."
+  },
+  "short_circuit_proof": "CurrentAttempt order remains original tuple DeepEqual -> only if equal revision -> only if unchanged digest(body) -> only if equal control. Input jsonBytes is still before original guards and its error returns untouched. Full Input compare before currentControl in each original clause; dispatch gen/state/lease guard stays before fullInput guard. Compare/hash helpers return unchanged actual values, no extra original call.",
+  "error_limits": "FirstCause uses existing claimCause type+errors.Is classification, not Error string/body; comparison false does not fabricate a typed business cause. No promise this counter closes retained-Now/transport failure coverage gap.",
+  "output_bounds": "Only nonempty fixed cells, max6*(288+1)=1734 new lines; original coarse summary retained. No perinput maps/events/background jobs/newSQL/matrix.",
+  "drop_ambiguity": "Invalid role/stage/phase increments dropped; nested/concurrent phase depth increments ambiguity and open depth reported at summary. Any actual drop/ambiguity/unmatched counts must be qualified, never zero-cost inferred.",
+  "cost_interpretation": "Stage timed intervals are serial within each actual input path, but parent Current/Reserve/Confirm/compiler/Step totals are inclusive and overlap. SQL wall not CPU/server time; adding original parents to children invalid. Timer/begin/end/mutex/false bookkeeping/phase changes and summary IO have totaloverhead UNKNOWN, may change observed failure phase. New sample never rewrites old raw.",
+  "boundaries_preserved": "Original30caller,5Claim,120Go/outer,count1; all original setup/publication/Input/fullrefs/control/tuple/digest/strictJSON/budgets/readcharge/clock/admission/BodySeal/Gone/realIO/hash/transaction/error-return/oracles; no product memo/cache/shortcut/pool/SQLfusion/clockdelete.",
+  "qualification_limit": "Measurement neither accepts failed capacity nor authorizes next product change, extra native or fake retry. Original CPU descriptorClose UNKNOWN and static failedPut possibleeffect UNKNOWN persist."
+}

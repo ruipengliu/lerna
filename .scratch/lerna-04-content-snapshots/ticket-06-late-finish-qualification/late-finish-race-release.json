@@ -1,0 +1,28 @@
+{
+  "status": "STOP_RELEASED",
+  "actual_one_paired_race_pass": true,
+  "native_actual": {
+    "event": "native_completion_ack",
+    "operation": "late-finish-paired-race",
+    "pid": 3981027,
+    "pgid": 3981027,
+    "starttime": "16693732",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false,
+    "owned_raw_fsync_close_ack": true
+  },
+  "independent_current_group_absent": true,
+  "no_DATA_RACE": true,
+  "formatted26_manifest_sha256": "bbc855b582b9ee1ff30e7fca018f517b345abaec6befc83d6a71ccbcc060cca4",
+  "current26_snapshot_and_manifest_match": true,
+  "raw_sha256": "85b15121343e810935caa3a971165c0ed7d766dd54d3091d1247e10bb5a00888",
+  "postchecks_path": "/tmp/lerna-04-ticket06-execution/late-finish-race-postchecks.json",
+  "postchecks_sha256": "737a3551630df334780a808c8812f18911dbac20d0f308c6d2736c25e045bf00",
+  "actual_both_Q_qualification_pass_not_wrapper_receive_result": true,
+  "actual_both_child_first_native_close_ACK": true,
+  "no_new_unknown_scope": true,
+  "historical8unknown_untouched": true,
+  "ledger_lines": 165,
+  "secondorder_other_native_source_fmt_unexecuted": true
+}

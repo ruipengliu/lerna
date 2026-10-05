@@ -1,0 +1,202 @@
+--- prefmt/context_world.go
++++ formatted/context_world.go
+@@ -21,20 +21,20 @@
+ )
+ 
+ type ContextWorld struct {
+-	Input        compiler.Input
+-	Subject      c.SubjectBinding
+-	Principal    v.SubjectBinding
+-	Content      *content.Service
+-	Decision     *engine.Service
+-	Dispatcher   *ContextDispatcher
+-	Boundary     *ContextEntryObserver
+-	Adapter      *adapter.Adapter
+-	Fixture      *World
+-	ContentWorld *cf.World
+-	diagnostics  *ContextClaimDiagnostics
++	Input               compiler.Input
++	Subject             c.SubjectBinding
++	Principal           v.SubjectBinding
++	Content             *content.Service
++	Decision            *engine.Service
++	Dispatcher          *ContextDispatcher
++	Boundary            *ContextEntryObserver
++	Adapter             *adapter.Adapter
++	Fixture             *World
++	ContentWorld        *cf.World
++	diagnostics         *ContextClaimDiagnostics
+ 	inputRepresentation *inputRepresentationCosts
+-	t            *testing.T
+-	trustedUntil time.Time
++	t                   *testing.T
++	trustedUntil        time.Time
+ }
+ 
+ func NewContextWorld(t *testing.T, ctx context.Context) *ContextWorld {
+--- prefmt/context_dispatch.go
++++ formatted/context_dispatch.go
+@@ -58,13 +58,13 @@
+ 	InstallPolicy(context.Context, *c.SubjectBinding, content.FixturePolicy, int64) (content.PolicyChange, error)
+ }
+ type ContextDispatcher struct {
+-	bindingDecode  bindingDecodeMemo
++	bindingDecode       bindingDecodeMemo
+ 	inputRepresentation *inputRepresentationCosts
+-	Store          *Store
+-	TrustedSubject v.SubjectBinding
+-	TrustedUntil   time.Time
+-	ContentOwner   c.OwnerRef
+-	Policies       ContextPolicyInstaller
++	Store               *Store
++	TrustedSubject      v.SubjectBinding
++	TrustedUntil        time.Time
++	ContentOwner        c.OwnerRef
++	Policies            ContextPolicyInstaller
+ }
+ 
+ // ContextComponent is the fixture consumer's exact public send boundary.
+--- prefmt/context_input_representation_observer.go
++++ formatted/context_input_representation_observer.go
+@@ -46,19 +46,19 @@
+ 
+ type inputRepresentationCell struct {
+ 	Attempted, Completed, Errors, False uint64
+-	Wall, Max time.Duration
+-	FirstCause string
++	Wall, Max                           time.Duration
++	FirstCause                          string
+ }
+ type inputRepresentationToken struct {
+ 	phase, role, stage int
+-	start time.Time
+-	valid bool
++	start              time.Time
++	valid              bool
+ }
+ type inputRepresentationCosts struct {
+-	mu sync.Mutex
+-	phase, depth int
++	mu                 sync.Mutex
++	phase, depth       int
+ 	dropped, ambiguity uint64
+-	cells [inputPhaseCount][inputRoleCount][inputStageCount]inputRepresentationCell
++	cells              [inputPhaseCount][inputRoleCount][inputStageCount]inputRepresentationCell
+ }
+ 
+ func newInputRepresentationCosts(t *testing.T) *inputRepresentationCosts {
+@@ -67,22 +67,36 @@
+ 	return p
+ }
+ func (p *inputRepresentationCosts) enter(phase int) func() {
+-	if p == nil { return func() {} }
++	if p == nil {
++		return func() {}
++	}
+ 	p.mu.Lock()
+ 	previous := p.phase
+-	if phase < 0 || phase >= inputPhaseCount { p.dropped++; phase = inputPhaseOther }
+-	if p.depth != 0 { p.ambiguity++ }
++	if phase < 0 || phase >= inputPhaseCount {
++		p.dropped++
++		phase = inputPhaseOther
++	}
++	if p.depth != 0 {
++		p.ambiguity++
++	}
+ 	p.phase = phase
+ 	p.depth++
+ 	p.mu.Unlock()
+ 	return func() {
+ 		p.mu.Lock()
+-		if p.depth <= 0 || p.phase != phase { p.ambiguity++ } else { p.depth--; p.phase = previous }
++		if p.depth <= 0 || p.phase != phase {
++			p.ambiguity++
++		} else {
++			p.depth--
++			p.phase = previous
++		}
+ 		p.mu.Unlock()
+ 	}
+ }
+ func (p *inputRepresentationCosts) begin(role, stage int) inputRepresentationToken {
+-	if p == nil { return inputRepresentationToken{} }
++	if p == nil {
++		return inputRepresentationToken{}
++	}
+ 	p.mu.Lock()
+ 	phase := p.phase
+ 	if role < 0 || role >= inputRoleCount || stage < 0 || stage >= inputStageCount || phase < 0 || phase >= inputPhaseCount {
+@@ -90,23 +104,33 @@
+ 		p.mu.Unlock()
+ 		return inputRepresentationToken{}
+ 	}
+-	if p.depth > 1 { p.ambiguity++ }
++	if p.depth > 1 {
++		p.ambiguity++
++	}
+ 	p.cells[phase][role][stage].Attempted++
+ 	p.mu.Unlock()
+ 	return inputRepresentationToken{phase: phase, role: role, stage: stage, start: time.Now(), valid: true}
+ }
+ func (p *inputRepresentationCosts) end(token inputRepresentationToken, err error, falseResult bool) {
+-	if p == nil || !token.valid { return }
++	if p == nil || !token.valid {
++		return
++	}
+ 	wall := time.Since(token.start)
+ 	p.mu.Lock()
+ 	c := &p.cells[token.phase][token.role][token.stage]
+ 	c.Completed++
+ 	c.Wall += wall
+-	if wall > c.Max { c.Max = wall }
+-	if falseResult { c.False++ }
++	if wall > c.Max {
++		c.Max = wall
++	}
++	if falseResult {
++		c.False++
++	}
+ 	if err != nil {
+ 		c.Errors++
+-		if c.FirstCause == "" { c.FirstCause = claimCause(err) }
++		if c.FirstCause == "" {
++			c.FirstCause = claimCause(err)
++		}
+ 	}
+ 	p.mu.Unlock()
+ }
+@@ -118,9 +142,13 @@
+ 		for role := 0; role < inputRoleCount; role++ {
+ 			for stage := 0; stage < inputStageCount; stage++ {
+ 				c := p.cells[phase][role][stage]
+-				if c.Attempted == 0 { continue }
++				if c.Attempted == 0 {
++					continue
++				}
+ 				cause := c.FirstCause
+-				if cause == "" { cause = "nil" }
++				if cause == "" {
++					cause = "nil"
++				}
+ 				t.Logf("INPUT_REP cell phase=%s role=%s stage=%s attempted=%d completed=%d errors=%d false=%d wall_ns=%d max_ns=%d first_cause=%s", inputPhaseNames[phase], inputRoleNames[role], inputStageNames[stage], c.Attempted, c.Completed, c.Errors, c.False, c.Wall.Nanoseconds(), c.Max.Nanoseconds(), cause)
+ 			}
+ 		}
+@@ -141,9 +169,13 @@
+ }
+ func (w *ContextWorld) InputRepresentationPhase(phase string) func() {
+ 	switch phase {
+-	case "compile": return w.inputRepresentation.enter(inputPhaseCompile)
+-	case "dispatch": return w.inputRepresentation.enter(inputPhaseDispatch)
+-	case "worker": return w.inputRepresentation.enter(inputPhaseWorker)
+-	default: return w.inputRepresentation.enter(-1)
++	case "compile":
++		return w.inputRepresentation.enter(inputPhaseCompile)
++	case "dispatch":
++		return w.inputRepresentation.enter(inputPhaseDispatch)
++	case "worker":
++		return w.inputRepresentation.enter(inputPhaseWorker)
++	default:
++		return w.inputRepresentation.enter(-1)
+ 	}
+ }

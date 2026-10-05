@@ -1,0 +1,124 @@
+{
+  "status": "STATIC clarification of original metadata vs actual formatted file byte pins; no rewrite of original manifests/prelaunch/outcomes",
+  "original_static_manifest_sha256": "b000eb4172caac97b8753228bdd7ba9c770c2e9086981c8023876c88747137d2",
+  "formatted_manifest_sha256": "2d2e033fdfa98744dd44de72344dc1f224f8e7188ae1849f6f93292aadf35e28",
+  "named12_current_effective_binding": [
+    {
+      "current_original_pin": {
+        "path": "/tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_context_binding_decode_test.go",
+        "sha256": "be01bd66705d9baef855fbdb77aaab704757f99cbabbc8050bdbd0d855bda75a",
+        "bytes": 9009
+      },
+      "scope": "Named source binding only; not an exhaustive actual Go list or assertion of import reachability beyond the approved build plan.",
+      "effective_owned_overlay_formatted_pin": null
+    },
+    {
+      "current_original_pin": {
+        "path": "/tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_context_publication_cause_test.go",
+        "sha256": "e944e3439eabe84936eb166e1966b178166fd7e1f7b8a1972139b96b9b2768d0",
+        "bytes": 7278
+      },
+      "scope": "Named source binding only; not an exhaustive actual Go list or assertion of import reachability beyond the approved build plan.",
+      "effective_owned_overlay_formatted_pin": null
+    },
+    {
+      "current_original_pin": {
+        "path": "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_binding_decode.go",
+        "sha256": "457b065fb760a264f0c687f82275c1dd73af3414191cccee1bba80b527f04779",
+        "bytes": 3570
+      },
+      "scope": "Named source binding only; not an exhaustive actual Go list or assertion of import reachability beyond the approved build plan.",
+      "effective_owned_overlay_formatted_pin": null
+    },
+    {
+      "current_original_pin": {
+        "path": "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_budget_probe.go",
+        "sha256": "d600be93226932cdad26fa81a35ed44d383de37bf5e984a23b67f643502ade2e",
+        "bytes": 5125
+      },
+      "scope": "Named source binding only; not an exhaustive actual Go list or assertion of import reachability beyond the approved build plan.",
+      "effective_owned_overlay_formatted_pin": null
+    },
+    {
+      "current_original_pin": {
+        "path": "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_dispatch.go",
+        "sha256": "5c2b8d472fdbe458b9affb9a9543db3359c85c0dfa90d5357bea843995e624fb",
+        "bytes": 23388
+      },
+      "scope": "Named source binding only; not an exhaustive actual Go list or assertion of import reachability beyond the approved build plan.",
+      "effective_owned_overlay_formatted_pin": {
+        "original": "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_dispatch.go",
+        "replacement": "/workspace/lerna-content-03-137311247276/large-graph-fresh-input-representation-overlay/context_dispatch.go",
+        "sha256": "548a0016f6af04716c742ff48eabffc0c1ef09d85f175fdbf14f837a79f14a8d",
+        "bytes": 24156,
+        "beforefmt_sha256": "5ce754374978963febcfe4719777106682260f3f844f60bf90d50f2ef3b93745",
+        "changed_by_formatter": true
+      }
+    },
+    {
+      "current_original_pin": {
+        "path": "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/context_publication_probe.go",
+        "sha256": "39051536517c23e30d1c80e919824d9c509e2d773a8e0568fe786fe82f9d5517",
+        "bytes": 2457
+      },
+      "scope": "Named source binding only; not an exhaustive actual Go list or assertion of import reachability beyond the approved build plan.",
+      "effective_owned_overlay_formatted_pin": null
+    },
+    {
+      "current_original_pin": {
+        "path": "/tmp/lerna-worktrees/content-snapshots-03/conformance/internal/decisionfixture/source.go",
+        "sha256": "2698e49c206097583867ababbeba87a8c20942ed58b4606b6a8fc98fefbc7684",
+        "bytes": 19753
+      },
+      "scope": "Named source binding only; not an exhaustive actual Go list or assertion of import reachability beyond the approved build plan.",
+      "effective_owned_overlay_formatted_pin": null
+    },
+    {
+      "current_original_pin": {
+        "path": "/tmp/lerna-worktrees/content-snapshots-03/domain/content/closure.go",
+        "sha256": "2dc73e9e85b9efab3760218da62a56ed90eb8eda2f7d671468cf83e80bf6d1c2",
+        "bytes": 7422
+      },
+      "scope": "Named source binding only; not an exhaustive actual Go list or assertion of import reachability beyond the approved build plan.",
+      "effective_owned_overlay_formatted_pin": null
+    },
+    {
+      "current_original_pin": {
+        "path": "/tmp/lerna-worktrees/content-snapshots-03/domain/content/identity.go",
+        "sha256": "e093a7918be9af0aeaec08c62b472de1141314812a71e3da386583237bbf60f0",
+        "bytes": 1533
+      },
+      "scope": "Named source binding only; not an exhaustive actual Go list or assertion of import reachability beyond the approved build plan.",
+      "effective_owned_overlay_formatted_pin": null
+    },
+    {
+      "current_original_pin": {
+        "path": "/tmp/lerna-worktrees/content-snapshots-03/domain/content/processing.go",
+        "sha256": "c01386301858c71432457591b8e122ab03b765d1cb796a5c91c58445f7195c9e",
+        "bytes": 4204
+      },
+      "scope": "Named source binding only; not an exhaustive actual Go list or assertion of import reachability beyond the approved build plan.",
+      "effective_owned_overlay_formatted_pin": null
+    },
+    {
+      "current_original_pin": {
+        "path": "/tmp/lerna-worktrees/content-snapshots-03/conformance/component/content_processing_ancestor_read_gate_test.go",
+        "sha256": "3f21849ec87141726000b210e64cdc9562a0f85feeb78665fa27d02cbe5adcc4",
+        "bytes": 5847
+      },
+      "scope": "Named source binding only; not an exhaustive actual Go list or assertion of import reachability beyond the approved build plan.",
+      "effective_owned_overlay_formatted_pin": null
+    },
+    {
+      "current_original_pin": {
+        "path": "/tmp/lerna-worktrees/content-snapshots-03/components/decision_engine/worker.go",
+        "sha256": "663d0c96eae83a4175c66f2ceaf3b87688d9a8199d3998e647eff4868eb0ff27",
+        "bytes": 31783
+      },
+      "scope": "Named source binding only; not an exhaustive actual Go list or assertion of import reachability beyond the approved build plan.",
+      "effective_owned_overlay_formatted_pin": null
+    }
+  ],
+  "newhelper_and_original5_are_bound_by_formatted8": true,
+  "limit": "Any original static actual_overlay_replacement field records its pre-format bytes. The formatted8 table is the effective supplied overlay during the actual build. All original331 source bytes stayed unchanged."
+}

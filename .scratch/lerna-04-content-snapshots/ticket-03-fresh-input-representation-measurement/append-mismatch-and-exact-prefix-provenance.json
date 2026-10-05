@@ -1,0 +1,75 @@
+{
+  "STATIC_only_no_native_or_product_edit": true,
+  "original_proposal_index": {
+    "path": "/workspace/lerna-content-03-137311247276/fresh-input-measured-race-compact-archive-proposal/archive-proposal-index.json",
+    "sha256": "dbfea80143589d44ec98320354c1a915ad24ea2db98dca46abf2b7503280c4ff",
+    "bytes": 25173
+  },
+  "original_payload_67_unchanged_verified": true,
+  "original_source_binding_error_preserved": "Original derived selected-identity artifact2096B was labelled original_path=full appendable journal. These are never byteequal even before later append. The later Binding formatter/test appended652 identity bytes and252 scope bytes; both facts are retained and are metadata binding errors/natural append, not product failure.",
+  "exact_original_selected_hash_verified": {
+    "sha256": "a6c18bd56edea2282991681ae83e4488544c13aea0d87aba7d7242feccd41636",
+    "bytes": 2096
+  },
+  "exact_phase_scope_interval_reconstruction": true,
+  "ledger_captures": {
+    "native-identities.jsonl": {
+      "original_appendable_path": "/workspace/lerna-content-03-137311247276/native-identities.jsonl",
+      "current_full_at_static_snapshot": {
+        "sha256": "3dc2bede78ddae40ade3148f29dc5f5b5cb59634d615750d46b5974dc28da762",
+        "bytes": 79917
+      },
+      "captured_prefix_before_Binding_append": {
+        "path": "/workspace/lerna-content-03-137311247276/fresh-input-measured-race-compact-archive-proposal-v2/captured-prefix/native-identities.jsonl.pre-Binding-prefix",
+        "byte_interval": [
+          0,
+          79265
+        ],
+        "sha256": "58dbfaac867673fb079a4c55c75085d317b1ea701eef8a28c55e36aee555ac0e",
+        "bytes": 79265
+      },
+      "prefix_hash_claim": "Computed now from exact old byte range; no historical full-global hash had been recorded, so not advertised as a prior full-file hash ACK.",
+      "captured_measured_interval": {
+        "path": "/workspace/lerna-content-03-137311247276/fresh-input-measured-race-compact-archive-proposal-v2/captured-prefix/native-identities.jsonl.measured-interval",
+        "byte_interval": [
+          77169,
+          79265
+        ],
+        "sha256": "a6c18bd56edea2282991681ae83e4488544c13aea0d87aba7d7242feccd41636",
+        "bytes": 2096
+      },
+      "later_append_bytes": 652
+    },
+    "owned-scopes.log": {
+      "original_appendable_path": "/workspace/lerna-content-03-137311247276/owned-scopes.log",
+      "current_full_at_static_snapshot": {
+        "sha256": "624d265890e27643c599764ef3adae2d7825390aa6850b631fc934070254464d",
+        "bytes": 148107
+      },
+      "captured_prefix_before_Binding_append": {
+        "path": "/workspace/lerna-content-03-137311247276/fresh-input-measured-race-compact-archive-proposal-v2/captured-prefix/owned-scopes.log.pre-Binding-prefix",
+        "byte_interval": [
+          0,
+          147855
+        ],
+        "sha256": "a44e39c9c04b775b5f41096471601dda5015be50021195a9c65ddb5908e8e474",
+        "bytes": 147855
+      },
+      "prefix_hash_claim": "Computed now from exact old byte range; no historical full-global hash had been recorded, so not advertised as a prior full-file hash ACK.",
+      "captured_measured_interval": {
+        "path": "/workspace/lerna-content-03-137311247276/fresh-input-measured-race-compact-archive-proposal-v2/captured-prefix/owned-scopes.log.measured-interval",
+        "byte_interval": [
+          146110,
+          147855
+        ],
+        "sha256": "7d2e3a9e6599be65a544c92d25b38bbc68a99fef0e28d51eb983297143cac53a",
+        "bytes": 1745
+      },
+      "later_append_bytes": 252
+    }
+  },
+  "all_copy_entry_source_to_payload_verified": 67,
+  "all_old_payload_bytes_preserved": true,
+  "historical_FD_Close_and_effect_UNKNOWN_unchanged": true,
+  "no_old_index_or_source_overwrite": true
+}

@@ -1,0 +1,69 @@
+{
+  "proposal_only_no_repository_mutation": true,
+  "raw_scope": "exact 3 finite raws: fmt1 + build1 + measuredrace320 =322lines; nativegroup Wait/absence and owned raw/reading FDs separate from historical responsibilities",
+  "actual_result": "format0/build0; original4B race1. closure64 beforePrepared failed during final Material ReadForProcessing; static62 realPrepared COMMIT then firstPut genericerror with cause/effect UNKNOWN; original65/bodylimit/duplicate controls completed. No capacity accept.",
+  "identities": {
+    "format": {
+      "pid": 3941966,
+      "tick": "16518779"
+    },
+    "race_build": {
+      "pid": 3942003,
+      "tick": "16518805"
+    },
+    "race_business": {
+      "pid": 3948276,
+      "tick": "16546665"
+    }
+  },
+  "source_binding": "current frozen331, original five coarse observers + exact three narrow measurement maps; source snapshots only seven mapped baselines/eight owned replacements, not entire331 or binaries",
+  "proof": "complete inverse ledger + accepted-coarse-to-current ndiffs + original format byte patches + changed three prefmt bodies allow original byte reconstruction. Unchanged format before-files use identical formed bytes. Paths remain byteexact original bindings; index maps originals to archive payload.",
+  "UNKNOWN_preserved": [
+    "original Go output FD logicalClose UNKNOWN",
+    "historical standard testing CPU descriptor logicalClose UNKNOWN",
+    "static first Put cause and possibleeffect UNKNOWN",
+    "observer total cost UNKNOWN",
+    "per-resource holder/Close responsibilities not inferred from process absence"
+  ],
+  "history_references": [
+    {
+      "path": "/workspace/lerna-content-03-137311247276/policy-clock-eight-qualification-compact-archive-proposal/archive-proposal-index.json",
+      "sha256": "5575dd0cbff0c7b08b9cb7e7bd60edd45397dfaf5cc65b6e88b61c51502d074a",
+      "bytes": 101027,
+      "copy_omitted_reason": "Existing compact qualification/capacity history or root/supervisor facts; immutable original referenced, no repeated source/binary/history copy"
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/policy-clock-fresh-build-normal-race-compact-archive-proposal/archive-proposal-index.json",
+      "sha256": "1e72b730bf1f01675117a505b831084fdf4a15ad73892b37d1752a21e682d37e",
+      "bytes": 18751,
+      "copy_omitted_reason": "Existing compact qualification/capacity history or root/supervisor facts; immutable original referenced, no repeated source/binary/history copy"
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/large-graph-policy-clock-ownership-overlay/static-generation-first-partial-failure.json",
+      "sha256": "c905c2cd5f61a2ab50845ec92b2a20e7efb29a8b9269b2b30769957336c1b3f5",
+      "bytes": 472,
+      "copy_omitted_reason": "Existing compact qualification/capacity history or root/supervisor facts; immutable original referenced, no repeated source/binary/history copy"
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/root-ack.json",
+      "sha256": "aaeb140f7460811096413c6e846532c06bf0c42e90e8a5f6b03cc8da0484dd6c",
+      "bytes": 83,
+      "copy_omitted_reason": "Existing compact qualification/capacity history or root/supervisor facts; immutable original referenced, no repeated source/binary/history copy"
+    },
+    {
+      "path": "/workspace/lerna-content-03-137311247276/run-native.py",
+      "sha256": "82c4e6a19e1aaabbd4a2412f89eb54c0b1690221f92d3ea826b05ca455a2042e",
+      "bytes": 2304,
+      "copy_omitted_reason": "Existing compact qualification/capacity history or root/supervisor facts; immutable original referenced, no repeated source/binary/history copy"
+    }
+  ],
+  "excluded": [
+    "32MB racebinary",
+    "all historical binaries/CPUprofiles",
+    "whole331 source bytes",
+    "historical failure raw duplicate copies",
+    "already archived eight qualification sources/raw/ACK",
+    "previous compact original N/R capacity evidence duplicate copies"
+  ],
+  "decision_scope": "7b885 Input success syntax memo recommendation + 94ab real Binding pointer RED then new Input compile RED; neither product implementation nor native qualification granted by archive"
+}

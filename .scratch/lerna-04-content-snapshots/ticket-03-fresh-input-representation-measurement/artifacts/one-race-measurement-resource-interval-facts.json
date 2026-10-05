@@ -1,0 +1,13 @@
+{
+  "original_exact_interval": "process_group 3948276 3948276 /workspace/lerna-content-03-137311247276\npostgres lerna_test_e5dc90586969941a139cae4e\npostgres lerna_test_294a0c3f8224e93b9207d381\npostgres lerna_test_1eaab6723d6530ad30a7ec04\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-3881092721 27 1179978\npostgres lerna_test_c2bf57c9ab157cf633f1a8f1\npostgres lerna_test_41d6df1acce1ad1ee01478f5\npostgres lerna_test_8826ff7085e3a00058fb4aed\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-3341957226 27 1179978\npostgres lerna_test_e1770ca7e4946bfeb6875152\npostgres lerna_test_24ca4e4b6003b34025a82804\npostgres lerna_test_ae667ff5710c5d5997240a85\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-3265110710 27 1179978\npostgres lerna_test_84192a61429562b60ef82adf\npostgres lerna_test_0b8ab65ef56c239fa6c16573\npostgres lerna_test_53ca00c725aa35e915433ce9\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-1934029837 27 1179978\npostgres lerna_test_1101431cb3a143ecf1236d6f\npostgres lerna_test_6eede26ff68f342c3b13b594\npostgres lerna_test_5b78fc6336d72d2ab75ba296\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-1907487769 27 1179978\npostgres lerna_test_a1d4eb0f0c00044e5398af0a\npostgres lerna_test_cedd5d10826d5534bac39efc\npostgres lerna_test_75dd91d521dae2c3f497e8d3\nobjects /workspace/lerna-content-03-137311247276/lerna-content-objects-465106680 27 1179978\nnative_exit 3948276 3948276 status=1 group_absent=True\n",
+  "postgres_schema_registrations": 18,
+  "object_root_devino_registrations": [
+    "objects /workspace/lerna-content-03-137311247276/lerna-content-objects-3881092721 27 1179978",
+    "objects /workspace/lerna-content-03-137311247276/lerna-content-objects-3341957226 27 1179978",
+    "objects /workspace/lerna-content-03-137311247276/lerna-content-objects-3265110710 27 1179978",
+    "objects /workspace/lerna-content-03-137311247276/lerna-content-objects-1934029837 27 1179978",
+    "objects /workspace/lerna-content-03-137311247276/lerna-content-objects-1907487769 27 1179978",
+    "objects /workspace/lerna-content-03-137311247276/lerna-content-objects-465106680 27 1179978"
+  ],
+  "scope_limit": "Exact original pre-effect schema/root registration interval; actual Wait/groupabsence and own binary/read/raw FD Close are separate from holder or fixture logicalClose. No probes, SQL, cleanup or retroUNKNOWN ACK."
+}

@@ -1,0 +1,16 @@
+{
+  "observed_utc": "2026-10-05T11:24:51.960447+00:00",
+  "checkpoint": "c11fd2092875417d039914f8ecbd083a7a846d3a",
+  "inventory_items_original_and_copy_exact": 27,
+  "copied_files_with_inventory": 28,
+  "root_FULL_raw": [
+    1,
+    9,
+    10,
+    14
+  ],
+  "root_FULL_format_diff": true,
+  "current26_and_snapshots_independently_checked": true,
+  "whole_ticket06_accepted": false,
+  "protected8_original_close_unknown_unchanged": true
+}

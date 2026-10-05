@@ -1,0 +1,77 @@
+{
+  "status": "STATIC_SOURCE_APPEND_READY_NOT_FMT_OR_NATIVE_GRANTED",
+  "one_format": [
+    "gofmt",
+    "-w",
+    "conformance/component/content_process_recovery_test.go"
+  ],
+  "normal_control": [
+    "go",
+    "test",
+    "-tags=integration",
+    "-v",
+    "-count=1",
+    "-p=1",
+    "-mod=readonly",
+    "-timeout=120s",
+    "./conformance/component",
+    "-run",
+    "^TestContentOriginalWorkerCannotFinishAcrossOriginalBodyFence$/^normal_release$"
+  ],
+  "adversarial_only": [
+    "go",
+    "test",
+    "-tags=integration",
+    "-v",
+    "-count=1",
+    "-p=1",
+    "-mod=readonly",
+    "-timeout=120s",
+    "./conformance/component",
+    "-run",
+    "^TestContentOriginalWorkerCannotFinishAcrossOriginalBodyFence$/^original_fence_before_late_finish$"
+  ],
+  "paired_race": [
+    "go",
+    "test",
+    "-race",
+    "-tags=integration",
+    "-v",
+    "-count=1",
+    "-p=1",
+    "-mod=readonly",
+    "-timeout=120s",
+    "./conformance/component",
+    "-run",
+    "^TestContentOriginalWorkerCannotFinishAcrossOriginalBodyFence$"
+  ],
+  "outer_seconds": 120,
+  "caller_seconds": 30,
+  "child_seconds": 20,
+  "claim_seconds": 5,
+  "original_io_work_seconds": 4,
+  "publish_budget_seconds": 20,
+  "management_work_budget_seconds": 20,
+  "tx_seconds": 3,
+  "statement_seconds": 2,
+  "lock_seconds": 1,
+  "same_existing_gate": "durable_before_publication",
+  "new_producer_source_in_next_vertical": false,
+  "runner_sha256": "90a808a0e3cf3a3a62441818dd0f87392a763b5ebdeef9ec2d5f2b5abc3e8d6d",
+  "ownroot_identity": [
+    33,
+    407243,
+    "0700"
+  ],
+  "before_qualified_manifest_sha256": "0f42b6aa02006f6b74fd294fd934261466472a52e0e07d3a09b65ba810132e3d",
+  "before_head": "d9dce0c3840f558c544750c92bfba2b6329ad8af",
+  "root_sequential_explicit_grants_required": true,
+  "first_failure_stop": true,
+  "candidate_manifest_sha256": "a0babbc304198fe0c9869c955da616541ddf2d1d14562338b4a30e311efb1801",
+  "new_operation_names": {
+    "one_format": "late-finish-format",
+    "normal_control": "late-finish-normal-control",
+    "adversarial_only": "late-finish-original-fence-fault",
+    "paired_race": "late-finish-paired-race"
+  }
+}

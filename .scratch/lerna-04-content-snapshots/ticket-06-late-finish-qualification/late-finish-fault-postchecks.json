@@ -1,0 +1,196 @@
+{
+  "status": "ACTUAL_FIRST_ORDER_LIVE_WORKER_ONLY_PASS_POSTCHECKED",
+  "sources": [
+    {
+      "path": "conformance/internal/contentfixture/world.go",
+      "bytes": 6607,
+      "sha256": "3e38d89f988422eacfa1b6e22e25905cec1db246d418177e34eaf5758b6fc14d",
+      "match": true
+    },
+    {
+      "path": "conformance/internal/contentfixture/process_borrow.go",
+      "bytes": 4979,
+      "sha256": "ed46b35916b9e1577e4ca1e0ddaf411e3de9407b51cb6ed38f8425406766e972",
+      "match": true
+    },
+    {
+      "path": "conformance/component/content_process_recovery_test.go",
+      "bytes": 60913,
+      "sha256": "5cb4745322f488ef48d196ed617e7ebccecaf77793d4e35e723d3b439a0cef41",
+      "match": true
+    },
+    {
+      "path": "domain/content/service.go",
+      "bytes": 33783,
+      "sha256": "ffefc916fa8e08e2a39f2264a12090eb7aa2ecf020b7da63e270aff3e925a477",
+      "match": true
+    },
+    {
+      "path": "domain/content/ports.go",
+      "bytes": 5618,
+      "sha256": "51066cd99f2c79e8a5fc3f7b336cb0706f161899361681c99f8e6feff5454f90",
+      "match": true
+    },
+    {
+      "path": "domain/content/lifecycle.go",
+      "bytes": 23932,
+      "sha256": "0708c4eb51e28ab9b7a3210981e408ae2310511e9728ee2bf46ba87fc0802699",
+      "match": true
+    },
+    {
+      "path": "domain/content/identity.go",
+      "bytes": 1533,
+      "sha256": "e093a7918be9af0aeaec08c62b472de1141314812a71e3da386583237bbf60f0",
+      "match": true
+    },
+    {
+      "path": "adapters/objectstore/local/store_linux.go",
+      "bytes": 10790,
+      "sha256": "ea678add4d594d5cdd8dbfa50d29684ba998686cf649c58c19313391da298fe0",
+      "match": true
+    },
+    {
+      "path": "adapters/postgres/content/store.go",
+      "bytes": 777,
+      "sha256": "e1da8da60b48d85c5d668ac88a0d33da3c824603b93bc01e5dd821def34fa69d",
+      "match": true
+    },
+    {
+      "path": "adapters/postgres/content/facts.go",
+      "bytes": 10970,
+      "sha256": "e56785902e481eafdaa7904f44fabc44770d77f3d605da93906df827fe8a42d5",
+      "match": true
+    },
+    {
+      "path": "conformance/internal/testkit/process/child.go",
+      "bytes": 10242,
+      "sha256": "edf4cdce78c92c0150d7075cecc02e742b84a55fd910b3cb25adec6079a3be25",
+      "match": true
+    },
+    {
+      "path": "conformance/internal/testkit/process/pipes.go",
+      "bytes": 3022,
+      "sha256": "93cc1bd3b23817e453817abc18988c39e4300fa252d74890531650f53096401d",
+      "match": true
+    },
+    {
+      "path": "conformance/component/content_publication_test.go",
+      "bytes": 8105,
+      "sha256": "8f762b685f7df3470e13b2e3d7c1a89026bb8d90e3bf6b9efb44257e400430e9",
+      "match": true
+    },
+    {
+      "path": "conformance/component/content_orphan_test.go",
+      "bytes": 6789,
+      "sha256": "1732b6f28a4f83c698035b33e6da09b6dc8ae779a8f6895a4953b24086e2ba9f",
+      "match": true
+    },
+    {
+      "path": "adapters/postgres/content/migrations/0001_content.sql",
+      "bytes": 3682,
+      "sha256": "00363b79dafb6eb1f373be9ef08e915fe23cc3db0fa55345e8ae6c051ce0c1ed",
+      "match": true
+    },
+    {
+      "path": "adapters/postgres/content/migrations/0002_source_policies.sql",
+      "bytes": 2585,
+      "sha256": "99519565ff1146d7cfc468413b449538c6ba71335e86edc8fd447a3bbff922a8",
+      "match": true
+    },
+    {
+      "path": "adapters/postgres/content/migrations/0003_body_cleanup.sql",
+      "bytes": 2497,
+      "sha256": "92739b464b8661e26befe092028f20802b586e42bf1578bd9811dcf240c5b58f",
+      "match": true
+    },
+    {
+      "path": "domain/content/management.go",
+      "bytes": 37419,
+      "sha256": "c6fa3aa3dfee98ab82b873aa9d37e4c4725133390147e2d0aff04be49e3606ad",
+      "match": true
+    },
+    {
+      "path": "domain/content/policy_cleanup.go",
+      "bytes": 9846,
+      "sha256": "b11a31ac64bd405a194d4a9fc393f3f4065e6d986969a6fed26742557d267730",
+      "match": true
+    },
+    {
+      "path": "domain/content/orphan.go",
+      "bytes": 532,
+      "sha256": "065e383d7ee4a5f44a861edabb159c591a17fe4dd71637dc2935799681d7ad99",
+      "match": true
+    },
+    {
+      "path": "domain/content/erasure.go",
+      "bytes": 1293,
+      "sha256": "2cc7fbb842ebd8ab5c64b5aea147e51c679727bee2f52c11500aa4fe12d45e9b",
+      "match": true
+    },
+    {
+      "path": "adapters/postgres/content/management.go",
+      "bytes": 20480,
+      "sha256": "83012672bfb97efd82d63516dfb20437172db736b5f34e758e8806287fd1ba62",
+      "match": true
+    },
+    {
+      "path": "adapters/postgres/content/policy_cleanup.go",
+      "bytes": 7113,
+      "sha256": "839ef482fb52736a8d214d7bfef0b12eeb359e571117bdcc94c09d59dcb06548",
+      "match": true
+    },
+    {
+      "path": "adapters/postgres/content/lifecycle.go",
+      "bytes": 13952,
+      "sha256": "ad64ffe1dc4c86af93430bb8f6c4a9f0159a3cf539c40aeef233afff0aea640e",
+      "match": true
+    },
+    {
+      "path": "adapters/postgres/content/policy.go",
+      "bytes": 4834,
+      "sha256": "3cb31490a70e0141daa24b4766295ea1a57598194877eda6f19e58371a2d45d9",
+      "match": true
+    },
+    {
+      "path": "adapters/objectstore/local/erasure_linux.go",
+      "bytes": 10068,
+      "sha256": "5673f9b8bebdc96fd9f3d551d8dd31850b3b96c54e9363fcf7780c05be558bb4",
+      "match": true
+    }
+  ],
+  "native_actual": {
+    "event": "native_completion_ack",
+    "operation": "late-finish-original-fence-fault",
+    "pid": 3976602,
+    "pgid": 3976602,
+    "starttime": "16674526",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false,
+    "owned_raw_fsync_close_ack": true
+  },
+  "independent_current_group_absent": true,
+  "raw_bytes": 1071,
+  "raw_sha256": "3d7373b7d2fb48e710cbc1ed9205748c77ebdd1bb57830a79b0aef804a32ddd1",
+  "prelaunch_sha256": "c55e56fbaaf9b92f6f25bf1db77b53e498fcec0bca54407d6916d9214c40c693",
+  "outcome_sha256": "fe942a4605c8f2bfbb92fd88ee9d10903776ba5c647260b1730508372dfa1408",
+  "case_seconds": 0.56,
+  "package_seconds": 0.603,
+  "conservative_window": "actual test PASS: Q=t0+4 before original Start helper; Trust/realLease>Q; correct original release and actual nativeClose/Wait/Stop beforeQ; no separate wrapperReceive.nil measurement",
+  "scope": {
+    "schema": "lerna_test_d354c00a1ea6b477f9969cc6",
+    "directory": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-2899419728",
+    "device": 33,
+    "inode": 461974,
+    "child_pid": 3976703,
+    "parent_pgid": 3976602,
+    "child_starttime": "16674646",
+    "generation": 1,
+    "original_child_remained_alive": true,
+    "new_worker_or_claim": false,
+    "actual_first_close_ACK": "ledger152 store=ACK objects=ACK",
+    "ordinary_fixture_cleanup": "completed without error, PGcatalog not independently audited"
+  },
+  "public_tails": "preparing/full6/fixedreceipt -> genuine SealOrphan/actual staging transition with primary full6 counterpart -> original all-holder ACK/independent physical fence+absence -> same original live Step+actualCloseWaitStop -> reopen original allACK/independent staging+key+attempt absence/full fixedreceipt failedprogress/bodypermission forbidden/qualified metadataGone evidencefalse/receipt replay unchanged",
+  "protected_eight_unknown_scopes": "untouched; no new stickyUNKNOWN"
+}

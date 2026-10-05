@@ -1,0 +1,466 @@
+--- source-unformatted/conformance/component/content_process_recovery_test.go
++++ source-formatted/conformance/component/content_process_recovery_test.go
+@@ -1114,193 +1114,276 @@
+ }
+ 
+ func TestContentOriginalWorkerCannotFinishAcrossOriginalBodyFence(t *testing.T) {
+- for _, fence := range []bool{false, true} {
+-  name := "normal_release"
+-  if fence { name = "original_fence_before_late_finish" }
+-  t.Run(name, func(t *testing.T) {
+-   ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+-   defer cancel()
+-   originalTrust, _ := ctx.Deadline()
+-   originalSealDeadline := time.Now().Add(20*time.Second)
+-   if originalTrust.Before(originalSealDeadline) { originalSealDeadline = originalTrust }
+-   originalSealDeadline = originalSealDeadline.UTC().Truncate(time.Microsecond)
+-   w := fixture.New(t, ctx)
+-   installContentPolicy(t, ctx, w, alphaRef)
+-   service, err := publicationProcessService(w.Store(), w.Objects, "original-live-finish-parent")
+-   if err != nil { t.Fatal("original live publication service:", contentProcessCauseClasses(err)) }
+-   request := contentPut(t, alphaRef, "original-live-finish-publication", "YWxwaGEK")
+-   receipt := putContentRequest(t, ctx, service, request)
+-   if _, ok := receipt.AsAccepted(); !ok { t.Fatal("original live publication not accepted") }
+-   fixed, err := v.Encode(receipt)
+-   if err != nil { t.Fatal("original live fixed receipt:", contentProcessCauseClasses(err)) }
+-   _, key, err := content.VersionIdentity(alphaRef)
+-   if err != nil { t.Fatal("original live full version identity:", contentProcessCauseClasses(err)) }
+-   assertCommand := func(publication string) {
+-    t.Helper()
+-    result, cause := service.GetCommand(ctx, contentCommandGetWire(t, request.CommandID), &contentPrincipal)
+-    if cause != nil { t.Fatal("original live command observation:", contentProcessCauseClasses(cause)) }
+-    found, ok := result.AsFound()
+-    if !ok { t.Fatal("original live fixed receipt missing") }
+-    encoded, cause := v.Encode(found.Receipt)
+-    progress, present := found.Progress.AsContent()
+-    if cause != nil || string(encoded) != string(fixed) || !present || progress.ContentRef != alphaRef || progress.Publication != publication {
+-     t.Fatal("original live receipt/ref/publication history changed")
+-    }
+-   }
+-   assertOriginalBytes := func() {
+-    t.Helper()
+-    actual, cause := os.ReadFile(filepath.Join(w.Directory, key))
+-    if cause != nil || string(actual) != "alpha\n" { t.Fatal("original live independent complete bytes missing") }
+-   }
+-   management := content.ManagementConfig{Owner: contentOwner, Store: w.Store(), TrustedSubject: contentPrincipal, TrustedUntil: originalTrust, PageSize: 2, WorkBudget: 20*time.Second}
+-   makeLifecycle := func() *content.Lifecycle {
+-    t.Helper()
+-    management.Store = w.Store()
+-    lifecycle, cause := content.NewLifecycle(content.LifecycleConfig{ManagementConfig: management, PrimaryHolderID: "primary", Objects: w.Objects, Worker: "original-live-finish-cleanup"})
+-    if cause != nil { t.Fatal("original live finite lifecycle:", contentProcessCauseClasses(cause)) }
+-    return lifecycle
+-   }
+-   // This parent monotonic lower bound predates the original child's run and
+-   // therefore its actual I/O4 context. It adds no child deadline or authority.
+-   t0 := time.Now()
+-   observationCutoff := t0.Add(4*time.Second)
+-   if !originalTrust.After(observationCutoff) { t.Fatal("original caller does not cover conservative live-finish window") }
+-   child := startContentPublicationChild(t, ctx, w, "durable_before_publication", 1)
+-   var gate contentProcessFrame
+-   if err = child.Event(ctx, &gate); err != nil { t.Fatal("original live durable gate:", contentProcessCauseClasses(err)) }
+-   if gate.Scenario != "original-content-publication" || gate.Generation != 1 || gate.Stage != "durable_before_publication" || gate.ObjectKey != key || gate.Attempt == "" || !gate.LeaseUntil.After(observationCutoff) {
+-    t.Fatal("original live gate identity/lease does not cover conservative original window")
+-   }
+-   requireOriginalWindow := func(stage string) {
+-    t.Helper()
+-    if !time.Now().Before(observationCutoff) { t.Fatal("original live conservative I/O4 observation window expired at", stage) }
+-   }
+-   requireOriginalWindow("durable gate")
+-   assertOriginalBytes()
+-   view, cause := service.Get(ctx, contentGetWire(t, alphaRef, nil), &contentPrincipal)
+-   preparing, ok := view.AsPreparing()
+-   if cause != nil || !ok || preparing.ContentRef != alphaRef { t.Fatal("original installed bytes mistaken for published:", contentProcessCauseClasses(cause)) }
+-   assertCommand("preparing")
+-   if !fence {
+-    requireOriginalWindow("normal release")
+-    if err = child.Send(ctx, contentProcessFrame{Scenario: gate.Scenario, Generation: 1, Stage: "release"}); err != nil { t.Fatal("original live normal release:", contentProcessCauseClasses(err)) }
+-    finishContentPublicationChild(t, ctx, w, child, 1)
+-    requireOriginalWindow("normal actual Close/Wait/Stop")
+-    t.Log("original live worker released and actual native Close/Wait/Stop before conservative original I/O4 cutoff")
+-    w.Reopen(ctx)
+-    service, err = publicationProcessService(w.Store(), w.Objects, "normal-live-finish-reopened-observer")
+-    if err != nil { t.Fatal("normal live reopened service:", contentProcessCauseClasses(err)) }
+-    assertContentBody(t, ctx, service, alphaRef, nil, "alpha\n")
+-    assertCommand("published")
+-    assertOriginalBytes()
+-    assertExactContentObjects(t, w.Directory, map[v.ContentRef]string{alphaRef: "alpha\n"})
+-    return
+-   }
+-   // The genuine original child remains alive at the unchanged durable gate.
+-   // Parent uses its original handles; no live Reopen, Kill or successor.
+-   lifecycle := makeLifecycle()
+-   seal := content.SealRequest{Ref: alphaRef, Purpose: "verification", SealID: "original-live-worker-body-fence", Deadline: originalSealDeadline}
+-   requireOriginalWindow("original seal")
+-   if _, err = lifecycle.SealOrphan(ctx, &contentPrincipal, seal); err != nil { t.Fatal("original live orphan seal:", contentProcessCauseClasses(err)) }
+-   observe := func() content.BodyCleanupObservation {
+-    t.Helper()
+-    observed, cause := lifecycle.Observe(ctx, &contentPrincipal, alphaRef, "")
+-    if cause != nil { t.Fatal("original live seal/holders observer:", contentProcessCauseClasses(cause)) }
+-    actual := observed.Seal
+-    if actual.ID != seal.SealID || actual.Ref != alphaRef || actual.Purpose != "verification" || !reflect.DeepEqual(actual.Subject, contentPrincipal) || actual.PolicyChangeKey != "" || actual.PrimaryHolderID != "primary" || actual.PrimaryHolderBinding != w.Objects.Binding() || !actual.Deadline.Equal(originalSealDeadline) || observed.NextCursor != "" || len(observed.Holders) != 2 {
+-     t.Fatal("original live seal identity/subject/binding/deadline changed")
+-    }
+-    seen := map[string]bool{}
+-    for _, holder := range observed.Holders {
+-     identity := holder.Identity
+-     if identity.Ref != alphaRef || identity.ObjectKey != key || identity.SealID != seal.SealID || !holder.Deadline.Equal(originalSealDeadline) || seen[identity.HolderID] { t.Fatal("original live holder identity/deadline changed") }
+-     seen[identity.HolderID] = true
+-     switch holder.Kind {
+-     case "pg-staging":
+-      if identity.HolderID != "postgres-staging" || identity.Binding != "" || holder.Responsible != "postgres-staging" { t.Fatal("original live staging holder changed") }
+-     case "primary":
+-      if identity.HolderID != "primary" || identity.Binding != w.Objects.Binding() || holder.Responsible != "primary" { t.Fatal("original live primary holder changed") }
+-     default: t.Fatal("original live seal acquired invented holder")
+-     }
+-     if holder.State == "erased" && holder.Reason != "" { t.Fatal("original live erased holder retained current residual") }
+-    }
+-    if !seen["primary"] || !seen["postgres-staging"] { t.Fatal("original live holder responsibility missing") }
+-    return observed
+-   }
+-   state := func(observed content.BodyCleanupObservation, kind string) string {
+-    for _, holder := range observed.Holders { if holder.Kind == kind { return holder.State } }
+-    return ""
+-   }
+-   checkPhysical := func(observed content.BodyCleanupObservation) {
+-    t.Helper()
+-    staging, cause := lifecycle.ObserveStaging(ctx, &contentPrincipal, alphaRef)
+-    if cause != nil || staging.Ref != alphaRef { t.Fatal("original live independent staging observer:", contentProcessCauseClasses(cause)) }
+-    if state(observed, "pg-staging") == "erased" && staging.Present { t.Fatal("original live erased staging remains present") }
+-    if state(observed, "primary") == "erased" {
+-     for _, name := range []string{key, gate.Attempt} {
+-      if _, cause = os.ReadFile(filepath.Join(w.Directory, name)); !errors.Is(cause, os.ErrNotExist) { t.Fatal("original live erased exact body/attempt remains") }
+-     }
+-     for _, holder := range observed.Holders {
+-      if holder.Kind == "primary" {
+-       physical, cause := w.Objects.ObserveErasure(ctx, holder.Identity, "", 2)
+-       if cause != nil || physical.Identity != holder.Identity || !physical.Fenced || !physical.Erased || physical.NextCursor != "" || len(physical.Residual) != 0 { t.Fatal("original live independent physical fence/erasure unconfirmed:", contentProcessCauseClasses(cause)) }
+-      }
+-     }
+-    }
+-   }
+-   observed := observe()
+-   if observed.CleanupComplete || state(observed, "pg-staging") != "pending" || state(observed, "primary") != "pending" { t.Fatal("original live seal falsely acknowledged erasure") }
+-   assertOriginalBytes()
+-   for i := 0; i < 4 && !observed.CleanupComplete; i++ {
+-    requireOriginalWindow("original holder cleanup")
+-    previous := observed
+-    worked, cause := lifecycle.Step(ctx, &contentPrincipal)
+-    if cause != nil { t.Fatal("original live holder effect/residual:", contentProcessCauseClasses(cause)) }
+-    observed = observe()
+-    checkPhysical(observed)
+-    if !worked && !observed.CleanupComplete { t.Fatal("original live cleanup stopped before all-holder ACK") }
+-    // Observe actual holder-id ordering and its unchanged counterpart.
+-    if state(previous, "pg-staging") != "erased" && state(observed, "pg-staging") == "erased" && state(observed, "primary") != "erased" {
+-     assertOriginalBytes()
+-     t.Log("original live staging erased; independent primary complete bytes remain")
+-    }
+-    if state(previous, "primary") != "erased" && state(observed, "primary") == "erased" && state(observed, "pg-staging") != "erased" {
+-     counterpart, cause := lifecycle.ObserveStaging(ctx, &contentPrincipal, alphaRef)
+-     if cause != nil || !counterpart.Present { t.Fatal("original live primary transition rewrote pending staging") }
+-     t.Log("original live primary erased; independent original staging remains")
+-    }
+-   }
+-   if !observed.CleanupComplete || state(observed, "pg-staging") != "erased" || state(observed, "primary") != "erased" { t.Fatal("original live cleanup did not reach genuine all-holder ACK within finite ceiling") }
+-   checkPhysical(observed)
+-   requireOriginalWindow("same original worker release after allACK")
+-   if err = child.Send(ctx, contentProcessFrame{Scenario: gate.Scenario, Generation: 1, Stage: "release"}); err != nil { t.Fatal("same original live worker release:", contentProcessCauseClasses(err)) }
+-   finishContentPublicationChild(t, ctx, w, child, 1)
+-   requireOriginalWindow("same original worker actual Close/Wait/Stop")
+-   // Close(nil) is the actual Step result, not a separately measured wrapper
+-   // Receive(nil). The conservative original window excludes known gate expiry.
+-   t.Log("same original live worker released and actual native Close/Wait/Stop before conservative original I/O4 cutoff after genuine original allACK")
+-   w.Reopen(ctx)
+-   service, err = publicationProcessService(w.Store(), w.Objects, "fenced-live-finish-reopened-observer")
+-   if err != nil { t.Fatal("original live reopened service:", contentProcessCauseClasses(err)) }
+-   lifecycle = makeLifecycle()
+-   observed = observe()
+-   if !observed.CleanupComplete || state(observed, "pg-staging") != "erased" || state(observed, "primary") != "erased" { t.Fatal("late original Finish lost original all-holder ACK") }
+-   checkPhysical(observed)
+-   assertCommand("failed")
+-   view, cause = service.Get(ctx, contentGetWire(t, alphaRef, nil), &contentPrincipal)
+-   denied, rejected := view.AsRejected()
+-   if cause != nil || !rejected || denied.Reason != "forbidden" { t.Fatal("sealed original body permission unexpectedly restored:", contentProcessCauseClasses(cause)) }
+-   metadata := content.MetadataPolicy{Ref: alphaRef, Subject: contentPrincipal, Purpose: "verification", Revision: 1, ValidUntil: originalTrust}
+-   if err = lifecycle.InstallMetadataPolicy(ctx, &contentPrincipal, metadata, 0); err != nil { t.Fatal("original live exact metadata authority:", contentProcessCauseClasses(err)) }
+-   view, cause = service.Get(ctx, contentGetWire(t, alphaRef, nil), &contentPrincipal)
+-   gone, ok := view.AsGone()
+-   if cause != nil || !ok || gone.ContentRef != alphaRef || gone.EvidenceAvailable { t.Fatal("late original Finish escaped qualified Gone:", contentProcessCauseClasses(cause)) }
+-   assertCommand("failed")
+-   replay, cause := v.Encode(putContentRequest(t, ctx, service, request))
+-   if cause != nil || string(replay) != string(fixed) { t.Fatal("late original Finish changed original fixed request receipt") }
+-   checkPhysical(observe())
+-  })
+- }
++	for _, fence := range []bool{false, true} {
++		name := "normal_release"
++		if fence {
++			name = "original_fence_before_late_finish"
++		}
++		t.Run(name, func(t *testing.T) {
++			ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
++			defer cancel()
++			originalTrust, _ := ctx.Deadline()
++			originalSealDeadline := time.Now().Add(20 * time.Second)
++			if originalTrust.Before(originalSealDeadline) {
++				originalSealDeadline = originalTrust
++			}
++			originalSealDeadline = originalSealDeadline.UTC().Truncate(time.Microsecond)
++			w := fixture.New(t, ctx)
++			installContentPolicy(t, ctx, w, alphaRef)
++			service, err := publicationProcessService(w.Store(), w.Objects, "original-live-finish-parent")
++			if err != nil {
++				t.Fatal("original live publication service:", contentProcessCauseClasses(err))
++			}
++			request := contentPut(t, alphaRef, "original-live-finish-publication", "YWxwaGEK")
++			receipt := putContentRequest(t, ctx, service, request)
++			if _, ok := receipt.AsAccepted(); !ok {
++				t.Fatal("original live publication not accepted")
++			}
++			fixed, err := v.Encode(receipt)
++			if err != nil {
++				t.Fatal("original live fixed receipt:", contentProcessCauseClasses(err))
++			}
++			_, key, err := content.VersionIdentity(alphaRef)
++			if err != nil {
++				t.Fatal("original live full version identity:", contentProcessCauseClasses(err))
++			}
++			assertCommand := func(publication string) {
++				t.Helper()
++				result, cause := service.GetCommand(ctx, contentCommandGetWire(t, request.CommandID), &contentPrincipal)
++				if cause != nil {
++					t.Fatal("original live command observation:", contentProcessCauseClasses(cause))
++				}
++				found, ok := result.AsFound()
++				if !ok {
++					t.Fatal("original live fixed receipt missing")
++				}
++				encoded, cause := v.Encode(found.Receipt)
++				progress, present := found.Progress.AsContent()
++				if cause != nil || string(encoded) != string(fixed) || !present || progress.ContentRef != alphaRef || progress.Publication != publication {
++					t.Fatal("original live receipt/ref/publication history changed")
++				}
++			}
++			assertOriginalBytes := func() {
++				t.Helper()
++				actual, cause := os.ReadFile(filepath.Join(w.Directory, key))
++				if cause != nil || string(actual) != "alpha\n" {
++					t.Fatal("original live independent complete bytes missing")
++				}
++			}
++			management := content.ManagementConfig{Owner: contentOwner, Store: w.Store(), TrustedSubject: contentPrincipal, TrustedUntil: originalTrust, PageSize: 2, WorkBudget: 20 * time.Second}
++			makeLifecycle := func() *content.Lifecycle {
++				t.Helper()
++				management.Store = w.Store()
++				lifecycle, cause := content.NewLifecycle(content.LifecycleConfig{ManagementConfig: management, PrimaryHolderID: "primary", Objects: w.Objects, Worker: "original-live-finish-cleanup"})
++				if cause != nil {
++					t.Fatal("original live finite lifecycle:", contentProcessCauseClasses(cause))
++				}
++				return lifecycle
++			}
++			// This parent monotonic lower bound predates the original child's run and
++			// therefore its actual I/O4 context. It adds no child deadline or authority.
++			t0 := time.Now()
++			observationCutoff := t0.Add(4 * time.Second)
++			if !originalTrust.After(observationCutoff) {
++				t.Fatal("original caller does not cover conservative live-finish window")
++			}
++			child := startContentPublicationChild(t, ctx, w, "durable_before_publication", 1)
++			var gate contentProcessFrame
++			if err = child.Event(ctx, &gate); err != nil {
++				t.Fatal("original live durable gate:", contentProcessCauseClasses(err))
++			}
++			if gate.Scenario != "original-content-publication" || gate.Generation != 1 || gate.Stage != "durable_before_publication" || gate.ObjectKey != key || gate.Attempt == "" || !gate.LeaseUntil.After(observationCutoff) {
++				t.Fatal("original live gate identity/lease does not cover conservative original window")
++			}
++			requireOriginalWindow := func(stage string) {
++				t.Helper()
++				if !time.Now().Before(observationCutoff) {
++					t.Fatal("original live conservative I/O4 observation window expired at", stage)
++				}
++			}
++			requireOriginalWindow("durable gate")
++			assertOriginalBytes()
++			view, cause := service.Get(ctx, contentGetWire(t, alphaRef, nil), &contentPrincipal)
++			preparing, ok := view.AsPreparing()
++			if cause != nil || !ok || preparing.ContentRef != alphaRef {
++				t.Fatal("original installed bytes mistaken for published:", contentProcessCauseClasses(cause))
++			}
++			assertCommand("preparing")
++			if !fence {
++				requireOriginalWindow("normal release")
++				if err = child.Send(ctx, contentProcessFrame{Scenario: gate.Scenario, Generation: 1, Stage: "release"}); err != nil {
++					t.Fatal("original live normal release:", contentProcessCauseClasses(err))
++				}
++				finishContentPublicationChild(t, ctx, w, child, 1)
++				requireOriginalWindow("normal actual Close/Wait/Stop")
++				t.Log("original live worker released and actual native Close/Wait/Stop before conservative original I/O4 cutoff")
++				w.Reopen(ctx)
++				service, err = publicationProcessService(w.Store(), w.Objects, "normal-live-finish-reopened-observer")
++				if err != nil {
++					t.Fatal("normal live reopened service:", contentProcessCauseClasses(err))
++				}
++				assertContentBody(t, ctx, service, alphaRef, nil, "alpha\n")
++				assertCommand("published")
++				assertOriginalBytes()
++				assertExactContentObjects(t, w.Directory, map[v.ContentRef]string{alphaRef: "alpha\n"})
++				return
++			}
++			// The genuine original child remains alive at the unchanged durable gate.
++			// Parent uses its original handles; no live Reopen, Kill or successor.
++			lifecycle := makeLifecycle()
++			seal := content.SealRequest{Ref: alphaRef, Purpose: "verification", SealID: "original-live-worker-body-fence", Deadline: originalSealDeadline}
++			requireOriginalWindow("original seal")
++			if _, err = lifecycle.SealOrphan(ctx, &contentPrincipal, seal); err != nil {
++				t.Fatal("original live orphan seal:", contentProcessCauseClasses(err))
++			}
++			observe := func() content.BodyCleanupObservation {
++				t.Helper()
++				observed, cause := lifecycle.Observe(ctx, &contentPrincipal, alphaRef, "")
++				if cause != nil {
++					t.Fatal("original live seal/holders observer:", contentProcessCauseClasses(cause))
++				}
++				actual := observed.Seal
++				if actual.ID != seal.SealID || actual.Ref != alphaRef || actual.Purpose != "verification" || !reflect.DeepEqual(actual.Subject, contentPrincipal) || actual.PolicyChangeKey != "" || actual.PrimaryHolderID != "primary" || actual.PrimaryHolderBinding != w.Objects.Binding() || !actual.Deadline.Equal(originalSealDeadline) || observed.NextCursor != "" || len(observed.Holders) != 2 {
++					t.Fatal("original live seal identity/subject/binding/deadline changed")
++				}
++				seen := map[string]bool{}
++				for _, holder := range observed.Holders {
++					identity := holder.Identity
++					if identity.Ref != alphaRef || identity.ObjectKey != key || identity.SealID != seal.SealID || !holder.Deadline.Equal(originalSealDeadline) || seen[identity.HolderID] {
++						t.Fatal("original live holder identity/deadline changed")
++					}
++					seen[identity.HolderID] = true
++					switch holder.Kind {
++					case "pg-staging":
++						if identity.HolderID != "postgres-staging" || identity.Binding != "" || holder.Responsible != "postgres-staging" {
++							t.Fatal("original live staging holder changed")
++						}
++					case "primary":
++						if identity.HolderID != "primary" || identity.Binding != w.Objects.Binding() || holder.Responsible != "primary" {
++							t.Fatal("original live primary holder changed")
++						}
++					default:
++						t.Fatal("original live seal acquired invented holder")
++					}
++					if holder.State == "erased" && holder.Reason != "" {
++						t.Fatal("original live erased holder retained current residual")
++					}
++				}
++				if !seen["primary"] || !seen["postgres-staging"] {
++					t.Fatal("original live holder responsibility missing")
++				}
++				return observed
++			}
++			state := func(observed content.BodyCleanupObservation, kind string) string {
++				for _, holder := range observed.Holders {
++					if holder.Kind == kind {
++						return holder.State
++					}
++				}
++				return ""
++			}
++			checkPhysical := func(observed content.BodyCleanupObservation) {
++				t.Helper()
++				staging, cause := lifecycle.ObserveStaging(ctx, &contentPrincipal, alphaRef)
++				if cause != nil || staging.Ref != alphaRef {
++					t.Fatal("original live independent staging observer:", contentProcessCauseClasses(cause))
++				}
++				if state(observed, "pg-staging") == "erased" && staging.Present {
++					t.Fatal("original live erased staging remains present")
++				}
++				if state(observed, "primary") == "erased" {
++					for _, name := range []string{key, gate.Attempt} {
++						if _, cause = os.ReadFile(filepath.Join(w.Directory, name)); !errors.Is(cause, os.ErrNotExist) {
++							t.Fatal("original live erased exact body/attempt remains")
++						}
++					}
++					for _, holder := range observed.Holders {
++						if holder.Kind == "primary" {
++							physical, cause := w.Objects.ObserveErasure(ctx, holder.Identity, "", 2)
++							if cause != nil || physical.Identity != holder.Identity || !physical.Fenced || !physical.Erased || physical.NextCursor != "" || len(physical.Residual) != 0 {
++								t.Fatal("original live independent physical fence/erasure unconfirmed:", contentProcessCauseClasses(cause))
++							}
++						}
++					}
++				}
++			}
++			observed := observe()
++			if observed.CleanupComplete || state(observed, "pg-staging") != "pending" || state(observed, "primary") != "pending" {
++				t.Fatal("original live seal falsely acknowledged erasure")
++			}
++			assertOriginalBytes()
++			for i := 0; i < 4 && !observed.CleanupComplete; i++ {
++				requireOriginalWindow("original holder cleanup")
++				previous := observed
++				worked, cause := lifecycle.Step(ctx, &contentPrincipal)
++				if cause != nil {
++					t.Fatal("original live holder effect/residual:", contentProcessCauseClasses(cause))
++				}
++				observed = observe()
++				checkPhysical(observed)
++				if !worked && !observed.CleanupComplete {
++					t.Fatal("original live cleanup stopped before all-holder ACK")
++				}
++				// Observe actual holder-id ordering and its unchanged counterpart.
++				if state(previous, "pg-staging") != "erased" && state(observed, "pg-staging") == "erased" && state(observed, "primary") != "erased" {
++					assertOriginalBytes()
++					t.Log("original live staging erased; independent primary complete bytes remain")
++				}
++				if state(previous, "primary") != "erased" && state(observed, "primary") == "erased" && state(observed, "pg-staging") != "erased" {
++					counterpart, cause := lifecycle.ObserveStaging(ctx, &contentPrincipal, alphaRef)
++					if cause != nil || !counterpart.Present {
++						t.Fatal("original live primary transition rewrote pending staging")
++					}
++					t.Log("original live primary erased; independent original staging remains")
++				}
++			}
++			if !observed.CleanupComplete || state(observed, "pg-staging") != "erased" || state(observed, "primary") != "erased" {
++				t.Fatal("original live cleanup did not reach genuine all-holder ACK within finite ceiling")
++			}
++			checkPhysical(observed)
++			requireOriginalWindow("same original worker release after allACK")
++			if err = child.Send(ctx, contentProcessFrame{Scenario: gate.Scenario, Generation: 1, Stage: "release"}); err != nil {
++				t.Fatal("same original live worker release:", contentProcessCauseClasses(err))
++			}
++			finishContentPublicationChild(t, ctx, w, child, 1)
++			requireOriginalWindow("same original worker actual Close/Wait/Stop")
++			// Close(nil) is the actual Step result, not a separately measured wrapper
++			// Receive(nil). The conservative original window excludes known gate expiry.
++			t.Log("same original live worker released and actual native Close/Wait/Stop before conservative original I/O4 cutoff after genuine original allACK")
++			w.Reopen(ctx)
++			service, err = publicationProcessService(w.Store(), w.Objects, "fenced-live-finish-reopened-observer")
++			if err != nil {
++				t.Fatal("original live reopened service:", contentProcessCauseClasses(err))
++			}
++			lifecycle = makeLifecycle()
++			observed = observe()
++			if !observed.CleanupComplete || state(observed, "pg-staging") != "erased" || state(observed, "primary") != "erased" {
++				t.Fatal("late original Finish lost original all-holder ACK")
++			}
++			checkPhysical(observed)
++			assertCommand("failed")
++			view, cause = service.Get(ctx, contentGetWire(t, alphaRef, nil), &contentPrincipal)
++			denied, rejected := view.AsRejected()
++			if cause != nil || !rejected || denied.Reason != "forbidden" {
++				t.Fatal("sealed original body permission unexpectedly restored:", contentProcessCauseClasses(cause))
++			}
++			metadata := content.MetadataPolicy{Ref: alphaRef, Subject: contentPrincipal, Purpose: "verification", Revision: 1, ValidUntil: originalTrust}
++			if err = lifecycle.InstallMetadataPolicy(ctx, &contentPrincipal, metadata, 0); err != nil {
++				t.Fatal("original live exact metadata authority:", contentProcessCauseClasses(err))
++			}
++			view, cause = service.Get(ctx, contentGetWire(t, alphaRef, nil), &contentPrincipal)
++			gone, ok := view.AsGone()
++			if cause != nil || !ok || gone.ContentRef != alphaRef || gone.EvidenceAvailable {
++				t.Fatal("late original Finish escaped qualified Gone:", contentProcessCauseClasses(cause))
++			}
++			assertCommand("failed")
++			replay, cause := v.Encode(putContentRequest(t, ctx, service, request))
++			if cause != nil || string(replay) != string(fixed) {
++				t.Fatal("late original Finish changed original fixed request receipt")
++			}
++			checkPhysical(observe())
++		})
++	}
+ }
+ 
+ var _ content.Repository = (*contentProcessStore)(nil)

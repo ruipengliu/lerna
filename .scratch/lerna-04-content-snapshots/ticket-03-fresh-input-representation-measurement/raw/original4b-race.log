@@ -1,0 +1,320 @@
+=== RUN   TestContentContextReachableClosure64And65IncludesIntermediateVersions
+=== RUN   TestContentContextReachableClosure64And65IncludesIntermediateVersions/64
+    content_context_closure_test.go:109: normal real rule step failed {0 0001-01-01 00:00:00 +0000 UTC 0s} claim is invalid, expired or replaced
+    context_input_representation_observer.go:140: INPUT_REP scope=TestContentContextReachableClosure64And65IncludesIntermediateVersions/64 slots=288 dropped=0 ambiguity=0 open_phase_depth=0 observer_overhead=UNKNOWN wall_not_CPU=true sql_wall_not_server_time=true
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=observe_input stage=input_scan_sql_wall attempted=1 completed=1 errors=0 false=0 wall_ns=1380010 max_ns=1380010 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=observe_input stage=input_closed_json attempted=1 completed=1 errors=0 false=0 wall_ns=7614189 max_ns=7614189 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=bind stage=input_scan_sql_wall attempted=1 completed=1 errors=0 false=0 wall_ns=392977 max_ns=392977 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=bind stage=input_closed_json attempted=1 completed=1 errors=0 false=0 wall_ns=8714439 max_ns=8714439 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=bind stage=full_input_compare attempted=1 completed=1 errors=0 false=0 wall_ns=295684 max_ns=295684 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=stage_publication stage=input_scan_sql_wall attempted=4 completed=4 errors=0 false=0 wall_ns=2509991 max_ns=1027384 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=stage_publication stage=input_closed_json attempted=4 completed=4 errors=0 false=0 wall_ns=33479441 max_ns=8975425 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=stage_publication stage=full_input_compare attempted=4 completed=4 errors=0 false=0 wall_ns=1305611 max_ns=382083 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=begin_compile stage=input_scan_sql_wall attempted=1 completed=1 errors=0 false=0 wall_ns=589276 max_ns=589276 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=begin_compile stage=input_closed_json attempted=1 completed=1 errors=0 false=0 wall_ns=7247295 max_ns=7247295 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=begin_compile stage=full_input_compare attempted=1 completed=1 errors=0 false=0 wall_ns=256953 max_ns=256953 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=reserve_read stage=input_scan_sql_wall attempted=65 completed=65 errors=0 false=0 wall_ns=39974784 max_ns=1315398 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=reserve_read stage=input_closed_json attempted=65 completed=65 errors=0 false=0 wall_ns=571235573 max_ns=13227451 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=reserve_read stage=input_json_bytes attempted=65 completed=65 errors=0 false=0 wall_ns=94109379 max_ns=3679886 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=reserve_read stage=input_digest attempted=65 completed=65 errors=0 false=0 wall_ns=1625490 max_ns=147929 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=reserve_read stage=attempt_tuple_compare attempted=65 completed=65 errors=0 false=0 wall_ns=2074362 max_ns=173229 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=confirm_read stage=input_scan_sql_wall attempted=65 completed=65 errors=0 false=0 wall_ns=46222674 max_ns=2221539 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=confirm_read stage=input_closed_json attempted=65 completed=65 errors=0 false=0 wall_ns=584723985 max_ns=14691636 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=confirm_read stage=input_json_bytes attempted=65 completed=65 errors=0 false=0 wall_ns=92256419 max_ns=4416049 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=confirm_read stage=input_digest attempted=65 completed=65 errors=0 false=0 wall_ns=1665972 max_ns=254504 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=confirm_read stage=attempt_tuple_compare attempted=65 completed=65 errors=0 false=0 wall_ns=2114357 max_ns=157827 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=dispatch role=authorize stage=input_scan_sql_wall attempted=1 completed=1 errors=0 false=0 wall_ns=1242593 max_ns=1242593 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=dispatch role=authorize stage=input_closed_json attempted=1 completed=1 errors=0 false=0 wall_ns=7245615 max_ns=7245615 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=dispatch role=authorize stage=full_input_compare attempted=1 completed=1 errors=0 false=0 wall_ns=275349 max_ns=275349 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=dispatch role=dispatch_input stage=input_scan_sql_wall attempted=1 completed=1 errors=0 false=0 wall_ns=557508 max_ns=557508 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=dispatch role=dispatch_input stage=input_closed_json attempted=1 completed=1 errors=0 false=0 wall_ns=6944359 max_ns=6944359 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=dispatch role=dispatch_input stage=full_input_compare attempted=1 completed=1 errors=0 false=0 wall_ns=305058 max_ns=305058 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=worker role=binding stage=input_scan_sql_wall attempted=1 completed=1 errors=0 false=0 wall_ns=1109271 max_ns=1109271 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=worker role=binding stage=input_closed_json attempted=1 completed=1 errors=0 false=0 wall_ns=8176420 max_ns=8176420 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=worker role=binding stage=full_input_compare attempted=1 completed=1 errors=0 false=0 wall_ns=281987 max_ns=281987 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=worker role=current stage=input_scan_sql_wall attempted=48 completed=48 errors=0 false=0 wall_ns=43037913 max_ns=3367771 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=worker role=current stage=input_closed_json attempted=48 completed=48 errors=0 false=0 wall_ns=584145614 max_ns=156702172 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=worker role=current stage=full_input_compare attempted=48 completed=48 errors=0 false=0 wall_ns=15554541 max_ns=759971 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=worker role=authorize stage=input_scan_sql_wall attempted=2 completed=2 errors=0 false=0 wall_ns=1056601 max_ns=533771 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=worker role=authorize stage=input_closed_json attempted=2 completed=2 errors=0 false=0 wall_ns=15564746 max_ns=7821025 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=worker role=authorize stage=full_input_compare attempted=2 completed=2 errors=0 false=0 wall_ns=678505 max_ns=347473 first_cause=nil
+    context_claim_diagnostics.go:116: CLAIM_DIAG bounded_events=222 dropped=0 inclusive_totals_do_not_sum=true
+    context_claim_diagnostics.go:118: CLAIM_DIAG first_error kind=content.ReadForProcessing at=27.635163684s duration=1.353599ms caller_remaining=2.364800025s cause=*pgconn.errTimeout:context_deadline bytes=0 sources=0
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.testcase-start at=141.448µs duration=308ns caller_remaining=29.999822261s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.owners-established at=1.029217589s duration=433ns caller_remaining=28.97074612s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.original-bounds at=1.078388264s duration=26.447µs caller_remaining=28.921575445s cause=nil payload_sha256=3ea5156b436c0cbdefbdbe1347e6f908fde7c4e31ec02aef8a8dc81a91f0e1d6 caller=30s lease=5s input=262144 output=131072 capacity=524288 reserve=131072 read=262160 original_deadline=2026-10-05T10:49:09.389697Z
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.initial-primary-selector-published at=1.619142787s duration=275ns caller_remaining=28.380820922s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.all-upstream-sources-published at=9.197918207s duration=318ns caller_remaining=20.802045502s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.compile-start at=9.218755074s duration=469ns caller_remaining=20.781208635s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.compile-published-pre-bind at=21.816004778s duration=530ns caller_remaining=8.183958931s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.compile-and-bind-end at=21.841092997s duration=12.622338392s caller_remaining=8.158870712s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.independent-lock-observation-start at=21.8411243s duration=138ns caller_remaining=8.158839409s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.independent-lock-observation-end at=22.235510281s duration=394.386398ms caller_remaining=7.764453428s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.dispatch-start at=22.236682901s duration=448ns caller_remaining=7.763280808s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=store.SaveDecision at=22.437369475s duration=56.325448ms caller_remaining=7.562594234s cause=nil status=accepted prepared=false sequence=0 input_digest=sha256:467f4ef10450625a284cf0ac3ce6b0d1352e2f9009c0d6065e4f79f5cc6eec7f callback_only=true
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=store.WithinSave at=22.582129582s duration=220.642719ms caller_remaining=7.417834127s cause=nil callback_cause=nil final_cause=nil committed=true save_cause=nil status=accepted prepared=false sequence=0 input_digest=sha256:467f4ef10450625a284cf0ac3ce6b0d1352e2f9009c0d6065e4f79f5cc6eec7f
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.dispatch-end at=22.587491696s duration=350.809243ms caller_remaining=7.412472013s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.decision-step-start at=22.587505177s duration=250ns caller_remaining=7.412458532s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=store.Claim at=22.635347097s duration=1.42642ms caller_remaining=7.364616612s cause=nil job=job-85146e92d9f79f59f152ec1b4e1aec18 epoch=1 revision=1 phase=decide lease_until=2026-10-05T10:47:35.993915Z supplied_now=2026-10-05T10:47:30.993915Z lease_delta=5s
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=store.SaveDecision at=22.673970009s duration=3.240837ms caller_remaining=7.3259937s cause=nil status=running prepared=false sequence=1 input_digest=sha256:467f4ef10450625a284cf0ac3ce6b0d1352e2f9009c0d6065e4f79f5cc6eec7f callback_only=true
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=store.WithinSave at=22.675653755s duration=12.918416ms caller_remaining=7.324309954s cause=nil callback_cause=nil final_cause=nil committed=true save_cause=nil status=running prepared=false sequence=1 input_digest=sha256:467f4ef10450625a284cf0ac3ce6b0d1352e2f9009c0d6065e4f79f5cc6eec7f
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.decision-step-end at=27.646226374s duration=5.058721447s caller_remaining=2.353737335s cause=*errors.errorString:claim 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=content.ReadForProcessing at=27.635163684s duration=1.353599ms caller_remaining=2.364800025s cause=*pgconn.errTimeout:context_deadline bytes=0 sources=0
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=source.Material at=27.635180235s duration=15.278991ms caller_remaining=2.364783474s cause=*errors.joinError:context_deadline:dependency_unavailable bytes=0
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=store.ValidateClaim at=27.645956024s duration=603.341µs caller_remaining=2.354007685s cause=*errors.errorString:claim job=job-85146e92d9f79f59f152ec1b4e1aec18 epoch=1 revision=1 phase=decide lease_until=2026-10-05T10:47:35.993915Z supplied_now=2026-10-05T10:47:36.005107Z lease_delta=-11.192ms
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=store.Within at=27.646210851s duration=10.976131ms caller_remaining=2.353752858s cause=*errors.errorString:claim 
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=access.Binding count=1 inclusive_total=53.433187ms max=53.433187ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=access.Current count=48 inclusive_total=1.041642773s max=175.318451ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=access.PrepareContent count=4 inclusive_total=74.807392ms max=31.424752ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=access.StagePublication count=4 inclusive_total=291.118102ms max=133.611242ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=content.GetCommand count=8 inclusive_total=183.43716ms max=43.74182ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=content.Put count=4 inclusive_total=4.041169027s max=1.186073309s
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=content.ReadForProcessing count=51 inclusive_total=3.652003353s max=500.220298ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=content.Step count=4 inclusive_total=1.804177025s max=503.154613ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.all-upstream-sources-published count=1 inclusive_total=318ns max=318ns
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.compile-and-bind-end count=1 inclusive_total=12.622338392s max=12.622338392s
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.compile-published-pre-bind count=1 inclusive_total=530ns max=530ns
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.compile-start count=1 inclusive_total=469ns max=469ns
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.decision-step-end count=1 inclusive_total=5.058721447s max=5.058721447s
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.decision-step-start count=1 inclusive_total=250ns max=250ns
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.dispatch-end count=1 inclusive_total=350.809243ms max=350.809243ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.dispatch-start count=1 inclusive_total=448ns max=448ns
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.independent-lock-observation-end count=1 inclusive_total=394.386398ms max=394.386398ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.independent-lock-observation-start count=1 inclusive_total=138ns max=138ns
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.initial-primary-selector-published count=1 inclusive_total=275ns max=275ns
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.original-bounds count=1 inclusive_total=26.447µs max=26.447µs
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.owners-established count=1 inclusive_total=433ns max=433ns
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.testcase-start count=1 inclusive_total=308ns max=308ns
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=source.Lock count=1 inclusive_total=971.986837ms max=971.986837ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=source.Material count=47 inclusive_total=2.976032531s max=517.845597ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=source.Snapshot count=1 inclusive_total=1.007786687s max=1.007786687s
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=store.Claim count=1 inclusive_total=1.42642ms max=1.42642ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=store.Now count=14 inclusive_total=8.450087ms max=1.79194ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=store.SaveDecision count=2 inclusive_total=59.566285ms max=56.325448ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=store.ValidateClaim count=4 inclusive_total=2.746616ms max=952.347µs
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=store.ValidatePoolClaim count=2 inclusive_total=2.050434ms max=1.179018ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=store.Within count=10 inclusive_total=285.159707ms max=220.429565ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=store.WithinSave count=2 inclusive_total=233.561135ms max=220.642719ms
+    context_claim_diagnostics.go:118: CLAIM_DIAG last_gate kind=store.ValidateClaim at=27.645956024s duration=603.341µs caller_remaining=2.354007685s cause=*errors.errorString:claim job=job-85146e92d9f79f59f152ec1b4e1aec18 epoch=1 revision=1 phase=decide lease_until=2026-10-05T10:47:35.993915Z supplied_now=2026-10-05T10:47:36.005107Z lease_delta=-11.192ms
+    context_claim_diagnostics.go:118: CLAIM_DIAG last_gate kind=store.ValidatePoolClaim at=22.670661028s duration=871.416µs caller_remaining=7.329302681s cause=nil job=job-85146e92d9f79f59f152ec1b4e1aec18 epoch=1 revision=1 phase=decide lease_until=2026-10-05T10:47:35.993915Z supplied_now=2026-10-05T10:47:31.029465Z lease_delta=4.96445s
+=== RUN   TestContentContextReachableClosure64And65IncludesIntermediateVersions/65
+    context_input_representation_observer.go:140: INPUT_REP scope=TestContentContextReachableClosure64And65IncludesIntermediateVersions/65 slots=288 dropped=0 ambiguity=0 open_phase_depth=0 observer_overhead=UNKNOWN wall_not_CPU=true sql_wall_not_server_time=true
+    context_input_representation_observer.go:152: INPUT_REP cell phase=other role=observe stage=input_scan_sql_wall attempted=5 completed=5 errors=0 false=0 wall_ns=3457387 max_ns=1278534 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=other role=observe stage=input_closed_json attempted=5 completed=5 errors=0 false=0 wall_ns=39106120 max_ns=8749759 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=observe_input stage=input_scan_sql_wall attempted=1 completed=1 errors=0 false=0 wall_ns=957914 max_ns=957914 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=observe_input stage=input_closed_json attempted=1 completed=1 errors=0 false=0 wall_ns=8236424 max_ns=8236424 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=record_failure stage=input_scan_sql_wall attempted=1 completed=1 errors=0 false=0 wall_ns=666285 max_ns=666285 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=record_failure stage=input_closed_json attempted=1 completed=1 errors=0 false=0 wall_ns=8238371 max_ns=8238371 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=begin_compile stage=input_scan_sql_wall attempted=1 completed=1 errors=0 false=0 wall_ns=575045 max_ns=575045 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=begin_compile stage=input_closed_json attempted=1 completed=1 errors=0 false=0 wall_ns=7106604 max_ns=7106604 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=begin_compile stage=full_input_compare attempted=1 completed=1 errors=0 false=0 wall_ns=273170 max_ns=273170 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=reserve_read stage=input_scan_sql_wall attempted=62 completed=62 errors=0 false=0 wall_ns=41353708 max_ns=1873312 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=reserve_read stage=input_closed_json attempted=62 completed=62 errors=0 false=0 wall_ns=529304947 max_ns=13487591 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=reserve_read stage=input_json_bytes attempted=62 completed=62 errors=0 false=0 wall_ns=83630324 max_ns=2580282 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=reserve_read stage=input_digest attempted=62 completed=62 errors=0 false=0 wall_ns=2148023 max_ns=373503 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=reserve_read stage=attempt_tuple_compare attempted=62 completed=62 errors=0 false=0 wall_ns=1993031 max_ns=118198 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=confirm_read stage=input_scan_sql_wall attempted=62 completed=62 errors=0 false=0 wall_ns=41344776 max_ns=3035567 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=confirm_read stage=input_closed_json attempted=62 completed=62 errors=0 false=0 wall_ns=548472230 max_ns=16211327 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=confirm_read stage=input_json_bytes attempted=62 completed=62 errors=0 false=0 wall_ns=87359644 max_ns=3248776 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=confirm_read stage=input_digest attempted=62 completed=62 errors=0 false=0 wall_ns=1851146 max_ns=390393 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=confirm_read stage=attempt_tuple_compare attempted=62 completed=62 errors=0 false=0 wall_ns=2131142 max_ns=149392 first_cause=nil
+    context_claim_diagnostics.go:116: CLAIM_DIAG bounded_events=15 dropped=0 inclusive_totals_do_not_sum=true
+    context_claim_diagnostics.go:118: CLAIM_DIAG first_error kind=phase.compile-and-bind-end at=12.12754406s duration=3.944850159s caller_remaining=17.872414641s cause=*errors.joinError:context_overflow 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.testcase-start at=19.391µs duration=169ns caller_remaining=29.99993931s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.owners-established at=252.944204ms duration=268ns caller_remaining=29.747014497s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.original-bounds at=255.917189ms duration=44.734µs caller_remaining=29.744041512s cause=nil payload_sha256=08724b2d1f204b6199313c2b742452af13dff59f40dd46661712b87f5b36db24 caller=30s lease=5s input=262144 output=131072 capacity=524288 reserve=131072 read=262160 original_deadline=2026-10-05T10:49:36.317410Z
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.initial-primary-selector-published at=445.169217ms duration=396ns caller_remaining=29.554789484s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.all-upstream-sources-published at=8.164144551s duration=304ns caller_remaining=21.83581415s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.compile-start at=8.182694853s duration=952ns caller_remaining=21.817263848s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.compile-and-bind-end at=12.12754406s duration=3.944850159s caller_remaining=17.872414641s cause=*errors.joinError:context_overflow 
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.all-upstream-sources-published count=1 inclusive_total=304ns max=304ns
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.compile-and-bind-end count=1 inclusive_total=3.944850159s max=3.944850159s
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.compile-start count=1 inclusive_total=952ns max=952ns
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.initial-primary-selector-published count=1 inclusive_total=396ns max=396ns
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.original-bounds count=1 inclusive_total=44.734µs max=44.734µs
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.owners-established count=1 inclusive_total=268ns max=268ns
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.testcase-start count=1 inclusive_total=169ns max=169ns
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=store.Now count=4 inclusive_total=1.245537ms max=396.6µs
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=store.Within count=4 inclusive_total=11.889827ms max=3.71701ms
+--- FAIL: TestContentContextReachableClosure64And65IncludesIntermediateVersions (40.05s)
+    --- FAIL: TestContentContextReachableClosure64And65IncludesIntermediateVersions/64 (27.70s)
+    --- PASS: TestContentContextReachableClosure64And65IncludesIntermediateVersions/65 (12.35s)
+=== RUN   TestContentContextStaticModeMaximumReachable62Materials
+    content_context_material_reachable_test.go:69: normal real rule step failed {0 0001-01-01 00:00:00 +0000 UTC 0s} claim is invalid, expired or replaced
+    context_input_representation_observer.go:140: INPUT_REP scope=TestContentContextStaticModeMaximumReachable62Materials slots=288 dropped=0 ambiguity=0 open_phase_depth=0 observer_overhead=UNKNOWN wall_not_CPU=true sql_wall_not_server_time=true
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=observe_input stage=input_scan_sql_wall attempted=1 completed=1 errors=0 false=0 wall_ns=889660 max_ns=889660 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=observe_input stage=input_closed_json attempted=1 completed=1 errors=0 false=0 wall_ns=7511748 max_ns=7511748 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=bind stage=input_scan_sql_wall attempted=1 completed=1 errors=0 false=0 wall_ns=530105 max_ns=530105 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=bind stage=input_closed_json attempted=1 completed=1 errors=0 false=0 wall_ns=9579360 max_ns=9579360 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=bind stage=full_input_compare attempted=1 completed=1 errors=0 false=0 wall_ns=363675 max_ns=363675 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=stage_publication stage=input_scan_sql_wall attempted=4 completed=4 errors=0 false=0 wall_ns=2141898 max_ns=671958 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=stage_publication stage=input_closed_json attempted=4 completed=4 errors=0 false=0 wall_ns=32204072 max_ns=10761736 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=stage_publication stage=full_input_compare attempted=4 completed=4 errors=0 false=0 wall_ns=1176276 max_ns=319843 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=begin_compile stage=input_scan_sql_wall attempted=1 completed=1 errors=0 false=0 wall_ns=534419 max_ns=534419 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=begin_compile stage=input_closed_json attempted=1 completed=1 errors=0 false=0 wall_ns=7176193 max_ns=7176193 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=begin_compile stage=full_input_compare attempted=1 completed=1 errors=0 false=0 wall_ns=338013 max_ns=338013 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=reserve_read stage=input_scan_sql_wall attempted=65 completed=65 errors=0 false=0 wall_ns=45775460 max_ns=3042067 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=reserve_read stage=input_closed_json attempted=65 completed=65 errors=0 false=0 wall_ns=597167717 max_ns=19685127 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=reserve_read stage=input_json_bytes attempted=65 completed=65 errors=0 false=0 wall_ns=108799129 max_ns=4963754 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=reserve_read stage=input_digest attempted=65 completed=65 errors=0 false=0 wall_ns=1994332 max_ns=404602 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=reserve_read stage=attempt_tuple_compare attempted=65 completed=65 errors=0 false=0 wall_ns=2146576 max_ns=88236 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=confirm_read stage=input_scan_sql_wall attempted=65 completed=65 errors=0 false=0 wall_ns=131844142 max_ns=74735718 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=confirm_read stage=input_closed_json attempted=65 completed=65 errors=0 false=0 wall_ns=580273226 max_ns=15119158 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=confirm_read stage=input_json_bytes attempted=65 completed=65 errors=0 false=0 wall_ns=99571235 max_ns=4118396 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=confirm_read stage=input_digest attempted=65 completed=65 errors=0 false=0 wall_ns=1753463 max_ns=295523 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=confirm_read stage=attempt_tuple_compare attempted=65 completed=65 errors=0 false=0 wall_ns=9455168 max_ns=7221436 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=dispatch role=authorize stage=input_scan_sql_wall attempted=1 completed=1 errors=0 false=0 wall_ns=970603 max_ns=970603 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=dispatch role=authorize stage=input_closed_json attempted=1 completed=1 errors=0 false=0 wall_ns=7255535 max_ns=7255535 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=dispatch role=authorize stage=full_input_compare attempted=1 completed=1 errors=0 false=0 wall_ns=261438 max_ns=261438 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=dispatch role=dispatch_input stage=input_scan_sql_wall attempted=1 completed=1 errors=0 false=0 wall_ns=506959 max_ns=506959 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=dispatch role=dispatch_input stage=input_closed_json attempted=1 completed=1 errors=0 false=0 wall_ns=8458022 max_ns=8458022 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=dispatch role=dispatch_input stage=full_input_compare attempted=1 completed=1 errors=0 false=0 wall_ns=338327 max_ns=338327 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=worker role=binding stage=input_scan_sql_wall attempted=1 completed=1 errors=0 false=0 wall_ns=11003467 max_ns=11003467 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=worker role=binding stage=input_closed_json attempted=1 completed=1 errors=0 false=0 wall_ns=10729583 max_ns=10729583 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=worker role=binding stage=full_input_compare attempted=1 completed=1 errors=0 false=0 wall_ns=293079 max_ns=293079 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=worker role=current stage=input_scan_sql_wall attempted=67 completed=67 errors=0 false=0 wall_ns=53861822 max_ns=5103562 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=worker role=current stage=input_closed_json attempted=67 completed=67 errors=0 false=0 wall_ns=596296807 max_ns=19351326 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=worker role=current stage=full_input_compare attempted=67 completed=67 errors=0 false=0 wall_ns=22858763 max_ns=1091537 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=worker role=authorize stage=input_scan_sql_wall attempted=2 completed=2 errors=0 false=0 wall_ns=1442477 max_ns=868904 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=worker role=authorize stage=input_closed_json attempted=2 completed=2 errors=0 false=0 wall_ns=17154061 max_ns=9140771 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=worker role=authorize stage=full_input_compare attempted=2 completed=2 errors=0 false=0 wall_ns=767975 max_ns=496761 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=worker role=stage_publication stage=input_scan_sql_wall attempted=1 completed=1 errors=0 false=0 wall_ns=522325 max_ns=522325 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=worker role=stage_publication stage=input_closed_json attempted=1 completed=1 errors=0 false=0 wall_ns=8560797 max_ns=8560797 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=worker role=stage_publication stage=full_input_compare attempted=1 completed=1 errors=0 false=0 wall_ns=287937 max_ns=287937 first_cause=nil
+    context_claim_diagnostics.go:116: CLAIM_DIAG bounded_events=291 dropped=0 inclusive_totals_do_not_sum=true
+    context_claim_diagnostics.go:118: CLAIM_DIAG first_error kind=content.Put at=22.735487881s duration=176.163541ms caller_remaining=7.26447756s cause=*errors.errorString request_bytes=97488
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.testcase-start at=20.541µs duration=177ns caller_remaining=29.9999449s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.owners-established at=244.703309ms duration=248ns caller_remaining=29.755262132s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.original-bounds at=246.035541ms duration=18.162µs caller_remaining=29.7539299s cause=nil payload_sha256=1b9adb9e59f7d18542d9abbab00119cd2ca410cf8b84ad80259e4688748daec3 caller=30s lease=5s input=262144 output=131072 capacity=524288 reserve=131072 read=262144 original_deadline=2026-10-05T10:49:48.655474Z
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.initial-primary-selector-published at=425.195914ms duration=268ns caller_remaining=29.574769527s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.all-upstream-sources-published at=5.720028305s duration=276ns caller_remaining=24.279937136s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.compile-start at=5.745834753s duration=632ns caller_remaining=24.254130688s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.compile-published-pre-bind at=17.065248813s duration=754ns caller_remaining=12.934716628s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.compile-and-bind-end at=17.092262344s duration=11.346428223s caller_remaining=12.907703097s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.independent-lock-observation-start at=17.09227089s duration=127ns caller_remaining=12.907694551s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.independent-lock-observation-end at=17.484500166s duration=392.22959ms caller_remaining=12.515465275s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.dispatch-start at=17.485613385s duration=618ns caller_remaining=12.514352056s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=store.SaveDecision at=17.624027418s duration=4.202177ms caller_remaining=12.375938023s cause=nil status=accepted prepared=false sequence=0 input_digest=sha256:9ed2001d26f97b1751be582ac8c6b289fddf0e6dcac5e8a1f0e841f3eb86a591 callback_only=true
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=store.WithinSave at=17.638249075s duration=32.8695ms caller_remaining=12.361716366s cause=nil callback_cause=nil final_cause=nil committed=true save_cause=nil status=accepted prepared=false sequence=0 input_digest=sha256:9ed2001d26f97b1751be582ac8c6b289fddf0e6dcac5e8a1f0e841f3eb86a591
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.dispatch-end at=17.642807166s duration=157.194399ms caller_remaining=12.357158275s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.decision-step-start at=17.642811919s duration=227ns caller_remaining=12.357153522s cause=nil 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=store.Claim at=17.708963506s duration=1.630242ms caller_remaining=12.291001935s cause=nil job=job-a2d782dbe5838af80afe691ce559575b epoch=1 revision=1 phase=decide lease_until=2026-10-05T10:48:11.117896Z supplied_now=2026-10-05T10:48:06.117896Z lease_delta=5s
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=store.SaveDecision at=17.755759605s duration=2.859218ms caller_remaining=12.244205836s cause=nil status=running prepared=false sequence=1 input_digest=sha256:9ed2001d26f97b1751be582ac8c6b289fddf0e6dcac5e8a1f0e841f3eb86a591 callback_only=true
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=store.WithinSave at=17.75712272s duration=15.166221ms caller_remaining=12.242842721s cause=nil callback_cause=nil final_cause=nil committed=true save_cause=nil status=running prepared=false sequence=1 input_digest=sha256:9ed2001d26f97b1751be582ac8c6b289fddf0e6dcac5e8a1f0e841f3eb86a591
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=store.SaveDecision at=22.232726816s duration=14.829677ms caller_remaining=7.767238625s cause=nil status=running prepared=true sequence=1 input_digest=sha256:9ed2001d26f97b1751be582ac8c6b289fddf0e6dcac5e8a1f0e841f3eb86a591 callback_only=true
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=store.WithinSave at=22.234685347s duration=59.679642ms caller_remaining=7.765280094s cause=nil callback_cause=nil final_cause=nil committed=true save_cause=nil status=running prepared=true sequence=1 input_digest=sha256:9ed2001d26f97b1751be582ac8c6b289fddf0e6dcac5e8a1f0e841f3eb86a591
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=phase.decision-step-end at=22.771614824s duration=5.128803132s caller_remaining=7.228350617s cause=*errors.errorString:claim 
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=content.Put at=22.735487881s duration=176.163541ms caller_remaining=7.26447756s cause=*errors.errorString request_bytes=97488
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=publisher.Publish at=22.735523307s duration=426.210967ms caller_remaining=7.264442134s cause=*errors.errorString bytes=61120 sources=63
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=store.ValidateClaim at=22.771342041s duration=400.007µs caller_remaining=7.2286234s cause=*errors.errorString:claim job=job-a2d782dbe5838af80afe691ce559575b epoch=1 revision=1 phase=decide lease_until=2026-10-05T10:48:11.117896Z supplied_now=2026-10-05T10:48:11.181463Z lease_delta=-63.567ms
+    context_claim_diagnostics.go:118: CLAIM_DIAG event kind=store.Within at=22.771601815s duration=36.050216ms caller_remaining=7.228363626s cause=*errors.errorString:claim 
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=access.Binding count=1 inclusive_total=77.170322ms max=77.170322ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=access.Current count=67 inclusive_total=1.142926996s max=67.717541ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=access.PrepareContent count=5 inclusive_total=87.85844ms max=24.229306ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=access.StagePublication count=5 inclusive_total=406.383612ms max=137.760225ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=content.GetCommand count=8 inclusive_total=163.954372ms max=26.674792ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=content.Put count=5 inclusive_total=3.843113149s max=1.092131569s
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=content.ReadForProcessing count=66 inclusive_total=2.933862203s max=538.538155ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=content.Step count=4 inclusive_total=1.605813159s max=408.874966ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.all-upstream-sources-published count=1 inclusive_total=276ns max=276ns
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.compile-and-bind-end count=1 inclusive_total=11.346428223s max=11.346428223s
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.compile-published-pre-bind count=1 inclusive_total=754ns max=754ns
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.compile-start count=1 inclusive_total=632ns max=632ns
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.decision-step-end count=1 inclusive_total=5.128803132s max=5.128803132s
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.decision-step-start count=1 inclusive_total=227ns max=227ns
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.dispatch-end count=1 inclusive_total=157.194399ms max=157.194399ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.dispatch-start count=1 inclusive_total=618ns max=618ns
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.independent-lock-observation-end count=1 inclusive_total=392.22959ms max=392.22959ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.independent-lock-observation-start count=1 inclusive_total=127ns max=127ns
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.initial-primary-selector-published count=1 inclusive_total=268ns max=268ns
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.original-bounds count=1 inclusive_total=18.162µs max=18.162µs
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.owners-established count=1 inclusive_total=248ns max=248ns
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=phase.testcase-start count=1 inclusive_total=177ns max=177ns
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=publisher.Plan count=2 inclusive_total=97.149465ms max=49.23079ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=publisher.Publish count=1 inclusive_total=426.210967ms max=426.210967ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=source.Lock count=1 inclusive_total=1.0645482s max=1.0645482s
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=source.Material count=62 inclusive_total=2.260400332s max=479.710261ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=source.Snapshot count=1 inclusive_total=922.028947ms max=922.028947ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=store.Claim count=1 inclusive_total=1.630242ms max=1.630242ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=store.Now count=18 inclusive_total=8.175937ms max=834.43µs
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=store.SaveDecision count=3 inclusive_total=21.891072ms max=14.829677ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=store.ValidateClaim count=8 inclusive_total=5.552898ms max=1.01656ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=store.ValidatePoolClaim count=4 inclusive_total=4.47386ms max=1.282316ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=store.Within count=12 inclusive_total=246.328025ms max=59.660088ms
+    context_claim_diagnostics.go:138: CLAIM_DIAG aggregate kind=store.WithinSave count=3 inclusive_total=107.715363ms max=59.679642ms
+    context_claim_diagnostics.go:118: CLAIM_DIAG last_gate kind=store.ValidateClaim at=22.771342041s duration=400.007µs caller_remaining=7.2286234s cause=*errors.errorString:claim job=job-a2d782dbe5838af80afe691ce559575b epoch=1 revision=1 phase=decide lease_until=2026-10-05T10:48:11.117896Z supplied_now=2026-10-05T10:48:11.181463Z lease_delta=-63.567ms
+    context_claim_diagnostics.go:118: CLAIM_DIAG last_gate kind=store.ValidatePoolClaim at=22.287787253s duration=830.788µs caller_remaining=7.712178188s cause=nil job=job-a2d782dbe5838af80afe691ce559575b epoch=1 revision=1 phase=decide lease_until=2026-10-05T10:48:11.117896Z supplied_now=2026-10-05T10:48:10.697027Z lease_delta=420.869ms
+--- FAIL: TestContentContextStaticModeMaximumReachable62Materials (22.82s)
+=== RUN   TestContentContextSingleContentBoundHasHonestLayerAndNoDispatch
+=== RUN   TestContentContextSingleContentBoundHasHonestLayerAndNoDispatch/200000
+    context_input_representation_observer.go:140: INPUT_REP scope=TestContentContextSingleContentBoundHasHonestLayerAndNoDispatch/200000 slots=288 dropped=0 ambiguity=0 open_phase_depth=0 observer_overhead=UNKNOWN wall_not_CPU=true sql_wall_not_server_time=true
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=observe_input stage=input_scan_sql_wall attempted=1 completed=1 errors=0 false=0 wall_ns=4333336 max_ns=4333336 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=observe_input stage=input_closed_json attempted=1 completed=1 errors=0 false=0 wall_ns=30404678 max_ns=30404678 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=bind stage=input_scan_sql_wall attempted=1 completed=1 errors=0 false=0 wall_ns=2228393 max_ns=2228393 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=bind stage=input_closed_json attempted=1 completed=1 errors=0 false=0 wall_ns=31765841 max_ns=31765841 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=bind stage=full_input_compare attempted=1 completed=1 errors=0 false=0 wall_ns=98970 max_ns=98970 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=stage_publication stage=input_scan_sql_wall attempted=4 completed=4 errors=0 false=0 wall_ns=9719579 max_ns=2672054 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=stage_publication stage=input_closed_json attempted=4 completed=4 errors=0 false=0 wall_ns=108175326 max_ns=32401145 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=stage_publication stage=full_input_compare attempted=4 completed=4 errors=0 false=0 wall_ns=362559 max_ns=93089 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=begin_compile stage=input_scan_sql_wall attempted=1 completed=1 errors=0 false=0 wall_ns=3554281 max_ns=3554281 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=begin_compile stage=input_closed_json attempted=1 completed=1 errors=0 false=0 wall_ns=35921578 max_ns=35921578 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=begin_compile stage=full_input_compare attempted=1 completed=1 errors=0 false=0 wall_ns=91415 max_ns=91415 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=reserve_read stage=input_scan_sql_wall attempted=6 completed=6 errors=0 false=0 wall_ns=18326788 max_ns=4596647 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=reserve_read stage=input_closed_json attempted=6 completed=6 errors=0 false=0 wall_ns=169601936 max_ns=33405927 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=reserve_read stage=input_json_bytes attempted=6 completed=6 errors=0 false=0 wall_ns=28944794 max_ns=5068208 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=reserve_read stage=input_digest attempted=6 completed=6 errors=0 false=0 wall_ns=1222317 max_ns=434981 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=reserve_read stage=attempt_tuple_compare attempted=6 completed=6 errors=0 false=0 wall_ns=203960 max_ns=35676 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=confirm_read stage=input_scan_sql_wall attempted=6 completed=6 errors=0 false=0 wall_ns=15886297 max_ns=2945934 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=confirm_read stage=input_closed_json attempted=6 completed=6 errors=0 false=0 wall_ns=168275417 max_ns=32391533 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=confirm_read stage=input_json_bytes attempted=6 completed=6 errors=0 false=0 wall_ns=46088602 max_ns=13752122 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=confirm_read stage=input_digest attempted=6 completed=6 errors=0 false=0 wall_ns=928788 max_ns=176970 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=confirm_read stage=attempt_tuple_compare attempted=6 completed=6 errors=0 false=0 wall_ns=209585 max_ns=45586 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=dispatch role=authorize stage=input_scan_sql_wall attempted=1 completed=1 errors=0 false=0 wall_ns=2571609 max_ns=2571609 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=dispatch role=authorize stage=input_closed_json attempted=1 completed=1 errors=0 false=0 wall_ns=27444843 max_ns=27444843 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=dispatch role=authorize stage=full_input_compare attempted=1 completed=1 errors=0 false=0 wall_ns=86423 max_ns=86423 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=dispatch role=dispatch_input stage=input_scan_sql_wall attempted=1 completed=1 errors=0 false=0 wall_ns=1784389 max_ns=1784389 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=dispatch role=dispatch_input stage=input_closed_json attempted=1 completed=1 errors=0 false=0 wall_ns=23577268 max_ns=23577268 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=dispatch role=dispatch_input stage=full_input_compare attempted=1 completed=1 errors=0 false=0 wall_ns=105143 max_ns=105143 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=worker role=binding stage=input_scan_sql_wall attempted=1 completed=1 errors=0 false=0 wall_ns=2086256 max_ns=2086256 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=worker role=binding stage=input_closed_json attempted=1 completed=1 errors=0 false=0 wall_ns=28863695 max_ns=28863695 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=worker role=binding stage=full_input_compare attempted=1 completed=1 errors=0 false=0 wall_ns=109546 max_ns=109546 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=worker role=current stage=input_scan_sql_wall attempted=11 completed=11 errors=0 false=0 wall_ns=33895888 max_ns=6886330 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=worker role=current stage=input_closed_json attempted=11 completed=11 errors=0 false=0 wall_ns=303009076 max_ns=35422174 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=worker role=current stage=full_input_compare attempted=11 completed=11 errors=0 false=0 wall_ns=1248274 max_ns=218309 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=worker role=authorize stage=input_scan_sql_wall attempted=2 completed=2 errors=0 false=0 wall_ns=4664994 max_ns=2586502 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=worker role=authorize stage=input_closed_json attempted=2 completed=2 errors=0 false=0 wall_ns=75817646 max_ns=43248415 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=worker role=authorize stage=full_input_compare attempted=2 completed=2 errors=0 false=0 wall_ns=186618 max_ns=93812 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=worker role=stage_publication stage=input_scan_sql_wall attempted=2 completed=2 errors=0 false=0 wall_ns=4006356 max_ns=2065589 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=worker role=stage_publication stage=input_closed_json attempted=2 completed=2 errors=0 false=0 wall_ns=54294172 max_ns=27335915 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=worker role=stage_publication stage=full_input_compare attempted=2 completed=2 errors=0 false=0 wall_ns=186327 max_ns=99831 first_cause=nil
+=== RUN   TestContentContextSingleContentBoundHasHonestLayerAndNoDispatch/262144
+    context_input_representation_observer.go:140: INPUT_REP scope=TestContentContextSingleContentBoundHasHonestLayerAndNoDispatch/262144 slots=288 dropped=0 ambiguity=0 open_phase_depth=0 observer_overhead=UNKNOWN wall_not_CPU=true sql_wall_not_server_time=true
+    context_input_representation_observer.go:152: INPUT_REP cell phase=other role=observe stage=input_scan_sql_wall attempted=2 completed=2 errors=0 false=0 wall_ns=11237809 max_ns=8610984 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=other role=observe stage=input_closed_json attempted=2 completed=2 errors=0 false=0 wall_ns=79788285 max_ns=44256265 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=observe_input stage=input_scan_sql_wall attempted=1 completed=1 errors=0 false=0 wall_ns=4312390 max_ns=4312390 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=observe_input stage=input_closed_json attempted=1 completed=1 errors=0 false=0 wall_ns=48317800 max_ns=48317800 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=begin_compile stage=input_scan_sql_wall attempted=1 completed=1 errors=0 false=0 wall_ns=3298377 max_ns=3298377 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=begin_compile stage=input_closed_json attempted=1 completed=1 errors=0 false=0 wall_ns=39876134 max_ns=39876134 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=begin_compile stage=full_input_compare attempted=1 completed=1 errors=0 false=0 wall_ns=118172 max_ns=118172 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=reserve_read stage=input_scan_sql_wall attempted=2 completed=2 errors=0 false=0 wall_ns=6530177 max_ns=3290118 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=reserve_read stage=input_closed_json attempted=2 completed=2 errors=0 false=0 wall_ns=71602036 max_ns=37902834 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=reserve_read stage=input_json_bytes attempted=2 completed=2 errors=0 false=0 wall_ns=22464792 max_ns=14204125 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=reserve_read stage=input_digest attempted=2 completed=2 errors=0 false=0 wall_ns=540547 max_ns=312920 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=reserve_read stage=attempt_tuple_compare attempted=2 completed=2 errors=0 false=0 wall_ns=279105 max_ns=152844 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=confirm_read stage=input_scan_sql_wall attempted=2 completed=2 errors=0 false=0 wall_ns=7027830 max_ns=3718765 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=confirm_read stage=input_closed_json attempted=2 completed=2 errors=0 false=0 wall_ns=84174778 max_ns=49022052 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=confirm_read stage=input_json_bytes attempted=2 completed=2 errors=0 false=0 wall_ns=13791128 max_ns=7378429 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=confirm_read stage=input_digest attempted=2 completed=2 errors=0 false=0 wall_ns=406185 max_ns=220927 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=compile role=confirm_read stage=attempt_tuple_compare attempted=2 completed=2 errors=0 false=0 wall_ns=78579 max_ns=40747 first_cause=nil
+--- PASS: TestContentContextSingleContentBoundHasHonestLayerAndNoDispatch (9.97s)
+    --- PASS: TestContentContextSingleContentBoundHasHonestLayerAndNoDispatch/200000 (8.52s)
+    --- PASS: TestContentContextSingleContentBoundHasHonestLayerAndNoDispatch/262144 (1.45s)
+=== RUN   TestContentContextDuplicateSelectorRoleRefusesBeforeOriginalInputReplacement
+    context_input_representation_observer.go:140: INPUT_REP scope=TestContentContextDuplicateSelectorRoleRefusesBeforeOriginalInputReplacement slots=288 dropped=0 ambiguity=0 open_phase_depth=0 observer_overhead=UNKNOWN wall_not_CPU=true sql_wall_not_server_time=true
+    context_input_representation_observer.go:152: INPUT_REP cell phase=other role=observe_input stage=input_scan_sql_wall attempted=1 completed=1 errors=0 false=0 wall_ns=786761 max_ns=786761 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=other role=observe_input stage=input_closed_json attempted=1 completed=1 errors=0 false=0 wall_ns=1480090 max_ns=1480090 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=other role=observe stage=input_scan_sql_wall attempted=2 completed=2 errors=0 false=0 wall_ns=1515220 max_ns=1041165 first_cause=nil
+    context_input_representation_observer.go:152: INPUT_REP cell phase=other role=observe stage=input_closed_json attempted=2 completed=2 errors=0 false=0 wall_ns=3318107 max_ns=1796709 first_cause=nil
+--- PASS: TestContentContextDuplicateSelectorRoleRefusesBeforeOriginalInputReplacement (0.72s)
+FAIL
+NATIVE_EXIT status=1 group_absent=True

@@ -1,0 +1,11 @@
+{
+  "event": "native_completion_ack",
+  "operation": "late-finish-format",
+  "pid": 3967979,
+  "pgid": 3967979,
+  "starttime": "16636553",
+  "exit": 0,
+  "group_absent": true,
+  "timed_out": false,
+  "owned_raw_fsync_close_ack": true
+}
