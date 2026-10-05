@@ -1,0 +1,84 @@
+syntax = "proto3";
+package lerna.v1;
+
+import "lerna/v1/identity.proto";
+import "lerna/v1/planning.proto";
+import "lerna/v1/submission.proto";
+
+option go_package = "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1;lernav1";
+
+message CreateSessionCommand {
+  CommandHeader header = 1;
+}
+
+message SubmitInputCommand {
+  CommandHeader header = 1;
+  GlobalName session_id = 2;
+  string input_kind = 3;
+  Ref content_ref = 4;
+  GlobalName task_id = 5;
+  uint64 expected_requirements_version = 6;
+  uint64 expected_input_version = 7;
+  Ref request_ref = 8;
+  string control = 9;
+  uint64 expected_control_generation = 10;
+  repeated CommandIdentity depends_on = 11;
+  uint64 observed_session_seq = 12;
+  repeated Requirement explicit_conditions = 13;
+}
+
+message TaskInputRecord {
+  Ref input_ref = 1;
+  Ref content_ref = 2;
+  uint64 input_version = 3;
+  uint64 task_input_seq = 4;
+  bool changes_basis = 5;
+  string processing_status = 6;
+  CommandIdentity processing_decision = 7;
+  repeated Requirement explicit_conditions = 8;
+}
+message TaskInputHistory {
+  GlobalName task_id = 1;
+  repeated TaskInputRecord inputs = 2;
+}
+message PublishQuestionCommand {
+  CommandHeader header = 1;
+  GlobalName session_id = 2;
+  Ref task_ref = 3;
+  Ref content_ref = 4;
+  bool changes_basis = 5;
+  int64 expires_at_unix_ms = 6;
+}
+message Question {
+  Ref ref = 1;
+  GlobalName session_id = 2;
+  GlobalName task_id = 3;
+  Ref content_ref = 4;
+  bool changes_basis = 5;
+  uint64 requirements_version = 6;
+  uint64 input_version = 7;
+  uint64 control_generation = 8;
+  int64 expires_at_unix_ms = 9;
+  string status = 10;
+  Ref response_input_ref = 11;
+  CommandIdentity published_by = 12;
+}
+message InputDelivery {
+  Ref ref = 1;
+  SubmitInputCommand original_command = 2;
+  SessionInput input = 3;
+  SubmitGoalCommand original_goal_command = 4;
+}
+message RouteInputCommand {
+  CommandHeader header = 1;
+  Ref input_ref = 2;
+}
+message ProcessInputCommand {
+  CommandHeader header = 1;
+  Ref task_ref = 2;
+  uint64 input_version = 3;
+  string outcome = 4;
+  string source = 5;
+  repeated Requirement conditions = 6;
+  Ref source_input_ref = 7;
+}

@@ -2,6 +2,7 @@
 
 | 日期 | 修订说明 |
 | --- | --- |
+| 2026-10-05 | 条件集增加 `source_input_ref`，使较早的待处理输入可以精确引用同任务的后续显式澄清，同时保持绑定版本逐条推进。 |
 | 2026-10-04 | 初版：对象与归属、标识与精确引用、多维状态、命令信封与错误模型、能力声明、版本演进规则。 |
 | 2026-10-04 | 按 `CLAUDE.md` 写作要求和[文档规范](../../conventions.md)修订用语：约束统一为"必须／不得""建议／不建议"，不再使用"应"；"执行端"统一为"执行端点"，发布回滚统一为"回滚"，授权统一用"撤销"。设计内容不变。 |
 | 2026-10-04 | 按[架构评审处理记录](../../../review/archive/round-1/README.md)修订：定义唯一的 `CommandIdentity`，回执分为受理回执和决定回执，查询结果分五种（RV1、RV2）；授权控制状态只保留 `ACTIVE`/`REVOKED`，次数与期限改为计算值（RV3）；Grant 拆分 `use_rights[]` 与 `processing_purposes[]`（RV9）；新增端侧账本连续性记录（RV7）、条件集接纳和完成核验轮次的状态（RV6、RV11）；Result 列出条件来源。 |
@@ -100,6 +101,7 @@ Ref = 全局名字 + revision + schema_id + digest（可选）
 | 对象 | 关键字段 | 唯一写入方与约束 |
 | --- | --- | --- |
 | 任务（Task） | `goal_ref`、`owner_domain_id`、`requirements_version`、`input_version`、`lifecycle`、`control`、`progress`、`waiting_on[]`、`planning_generation`、`parent_task_ref?`、`result_ref?` | 任务编排。负责方从创建到关闭不变；父子关系不转移子任务的责任 |
+| 条件集（Requirements） | `task_id`、`requirements_version`、`bound_input_version`、`source`、`source_input_ref?`、`conditions[]`、`accepted_by` | 任务编排。显式用户条件的 `source_input_ref` 必须绑定本任务已接纳输入的精确版本；使用后续澄清处理早期输入不得跳过输入处理顺序，见[任务编排 2.2](../tasks/README.md#22-条件证据与提议) |
 | 条件（Requirement） | `task_id`、`description_ref`、`necessary`、`verification_rule_ref`、`expected_value_ref?` | 任务编排。修改即新版本，不原地改写；核验规则固定版本 |
 | 上下文快照 | `task_ref`、`requirements_version`、`input_version`、`planning_generation`、`progress_refs[]`、`content_refs[]`、`capability_refs[]`、`retrieval_credential_ref?` | 任务编排。快照不携带行动权限 |
 | 提议（Proposal） | `task_id`、`context_snapshot_ref`、`planning_generation`、`reasoner_ref`、`kind`、`body` | 推理产生，任务编排接收后不可变。`kind` 为行动、修改条件、向用户提问、完成判断之一 |

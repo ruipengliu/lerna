@@ -5,6 +5,8 @@ import (
 	"context"
 	"time"
 
+	"google.golang.org/protobuf/proto"
+
 	"github.com/ruipengliu/lerna/contracts/command"
 	v1 "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1"
 )
@@ -15,15 +17,22 @@ type Store interface {
 	Position(context.Context) (uint64, int64, error)
 }
 type Durable interface {
+	Decisions
 	Pending(context.Context, *v1.Caller) ([]*v1.Job, error)
 	Submit(context.Context, *v1.Caller, *v1.SubmitGoalCommand, *v1.Ref) (*v1.CommandReceipt, error)
 	ExecuteJob(context.Context, *v1.Caller, *v1.JobCommand) (*v1.CommandReceipt, error)
 	Decide(context.Context, *v1.Job, func(context.Context, *v1.PendingGoal) (*v1.Ref, *v1.Ref, error)) error
 }
 type Tasks interface {
+	RecordGoalInTransaction(context.Context, *v1.Caller, *v1.Ref, *v1.SessionInput, []*v1.Requirement) error
+	ControlInTransaction(context.Context, *v1.Caller, *v1.SubmitInputCommand) error
+	AcceptExplicitInTransaction(context.Context, *v1.Caller, *v1.Ref, []*v1.Requirement, *v1.CommandIdentity, *v1.Ref) error
+	QueryTask(context.Context, *v1.Caller, *v1.GlobalName) (*v1.Task, error)
+	AcceptInputInTransaction(context.Context, *v1.Caller, *v1.SubmitInputCommand, *v1.SessionInput, bool) error
 	CreateInTransaction(context.Context, *v1.Ref) (*v1.Ref, error)
 }
 type Content interface {
+	CheckUsable(context.Context, *v1.Caller, *v1.Ref) error
 	Stage(context.Context, *v1.Caller, *v1.SubmitGoalCommand) (*v1.Ref, error)
 }
 type Service struct {
@@ -119,8 +128,20 @@ func (s *Service) accept(ctx context.Context, pending *v1.PendingGoal) (*v1.Ref,
 	session.LastCommittedSeq++
 	session.Revision++
 	session.TaskRefs = append(session.TaskRefs, task)
-	session.Inputs = append(session.Inputs, &v1.SessionInput{InputId: command.NewRef(s.user, s.domain, "input", "lerna.v1.SessionInput").Name, SessionSeq: session.LastCommittedSeq, TaskId: task.Name, InputKind: "GOAL", ContentRef: pending.ContentRef, CommandIdentity: c.Identity, RoutingStatus: "DELIVERED"})
+	input := &v1.SessionInput{InputId: command.NewRef(s.user, s.domain, "input", "lerna.v1.SessionInput").Name, SessionSeq: session.LastCommittedSeq, TaskId: task.Name, InputKind: "GOAL", ContentRef: pending.ContentRef, CommandIdentity: c.Identity, RoutingStatus: "DELIVERED"}
+	if err = s.tasks.RecordGoalInTransaction(ctx, &v1.Caller{UserId: s.user, IssuerId: c.Identity.IssuerId}, task, input, nil); err != nil {
+		return nil, nil, err
+	}
+	session.Inputs = append(session.Inputs, input)
 	if err := s.store.SaveSession(ctx, session); err != nil {
+		return nil, nil, err
+	}
+	ref := &v1.Ref{Name: input.InputId, Revision: 1, SchemaId: "lerna.v1.SessionInput"}
+	// 回查只呈现原语义命令，不暴露认证或诊断字段。
+	original := proto.Clone(c).(*v1.SubmitGoalCommand)
+	original.Credential = ""
+	original.TraceId = ""
+	if err = s.store.(DeliveryStore).SaveInputDelivery(ctx, &v1.InputDelivery{Ref: ref, OriginalGoalCommand: original, Input: input}); err != nil {
 		return nil, nil, err
 	}
 	return &v1.Ref{Name: session.SessionId, Revision: session.Revision, SchemaId: "lerna.v1.Session"}, task, nil

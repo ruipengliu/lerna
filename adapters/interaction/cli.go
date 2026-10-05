@@ -25,6 +25,7 @@ type Durable interface {
 	QueryReceipt(context.Context, *v1.Caller, *v1.CommandIdentity) (*v1.ReceiptQuery, error)
 }
 type CLI struct {
+	Content  Content
 	Sessions Sessions
 	Tasks    Tasks
 	Durable  Durable
@@ -34,7 +35,7 @@ type CLI struct {
 
 func (c CLI) Run(ctx context.Context, args []string, out io.Writer) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: submit --command ID --goal TEXT [--session ID] | receipt ID | task ID | session ID | recover")
+		return fmt.Errorf("usage: submit --command ID --goal TEXT [--session ID] | receipt ID | task ID | session ID | recover | session-create --command ID | input --command ID --session ID --kind KIND [--text TEXT] | question --json FILE | process-input --json FILE | accept-requirements --json FILE | task-inputs ID")
 	}
 	identity := func(id string) *v1.CommandIdentity {
 		return &v1.CommandIdentity{UserId: c.Caller.UserId, IssuerId: c.Caller.IssuerId, TargetDomainId: c.Domain, CommandId: id}
@@ -42,6 +43,10 @@ func (c CLI) Run(ctx context.Context, args []string, out io.Writer) error {
 	var value proto.Message
 	var err error
 	switch args[0] {
+	case "process-input", "accept-requirements", "task-inputs":
+		value, err = c.runTaskInputCommand(ctx, args)
+	case "session-create", "input", "question", "route-input", "query-input", "query-question":
+		value, err = c.runSessionCommand(ctx, args)
 	case "submit":
 		flags := flag.NewFlagSet("submit", flag.ContinueOnError)
 		flags.SetOutput(io.Discard)

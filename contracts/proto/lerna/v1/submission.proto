@@ -148,6 +148,13 @@ message SessionInput {
   Ref content_ref = 5;
   CommandIdentity command_identity = 6;
   string routing_status = 7;
+  Ref request_ref = 8;
+  uint64 expected_requirements_version = 9;
+  uint64 expected_input_version = 10;
+  repeated CommandIdentity depends_on = 11;
+  uint64 observed_session_seq = 12;
+  uint64 task_input_seq = 13;
+  Ref confirmation_ref = 14;
 }
 message Session {
   GlobalName session_id = 1;
