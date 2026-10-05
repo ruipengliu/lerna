@@ -701,3 +701,37 @@ Close ACK分别成立。资格digest0c6745d38013112833f6119007adea9e1d475efa8aa0
 完整原 frames/effects/资格在 `owned-scopes.log` 405–421行；不回填任何历史
 owner02或unknown root。本partial尚未执行legacy CAS竞争/原cutoff跨越/
 PG commit-reply-loss恢复；决定§5这些最小义务继续，七AC均未accept。
+
+
+### 原执行截止跨真实当前 policy 锁等待（partial）
+
+`TestContentOriginalCleanupDeadlineCannotBeExtendedByCurrentPolicyLockWait`
+两个fresh own scopes从首次Manager/Lifecycle固定WorkBudget700ms与2s原
+acceptedcap、当前wideRev2，公开观察原cap+700ms ExpiryDeadline。两边都
+实际published/read alpha与独立V2，并在真实cap+20ms由Manager.Step生成
+原pending/holder_unconfirmed/accepted_retention_expired责任；原Get expired、
+原物理alpha还在。两边原HoldPolicy FORUPDATE均独立见真实consumer blocked。
+
+同装配正常对照实际立即rollback/连接Close放行，原期限内seal、真实staging+
+primary allACK/policyerased与独立原body缺失、实际Reopen后的allACK/V2/固定
+receipt保持。拒绝对照保持原locker到原责任Deadline+20ms才同原positive
+rollback/Close；原consumer实际finish/join后exact原责任tuple保持pending，
+无seal/无active body_cleanup，原alpha独立bytes保留，实际Reopen继续拒绝，
+V2/receipt正常。没有扩大700ms或改stored due/clock/lease；这是已有协议
+直接qualification，没有虚构新red或产品改动。
+
+| `/tmp/lerna-04-ticket05-execution/` 日志 | 实际结果 |
+| --- | --- |
+| `cleanup-deadline-wait-first-run.log` | -v exactnormal packagePASS5.276s，两个实际RUN/subPASS2.36/2.90；PID/PGID3073776/start12821909/nativeexit0/groupAbsent。 |
+| `cleanup-deadline-wait-race.log` | -v sameexact race测试PASS6.552s（sub2.56/2.95），末sha命令误写不存在的0002_dependencies.sql，组合native3074658/start12825369/exit1/groupAbsent；保留失败，不称组合exit0。 |
+| `cleanup-deadline-wait-frozen-hash-repair.log` | 独立机械sha真实0001_content.sql/0002_source_policies.sql/0003_body_cleanup.sql三path，3075435/start12828474/exit0/groupAbsent，三冻结SHA准确；未重跑已green测试。 |
+
+normal ownscopes `lerna_test_3a4a1eb42573e25c2fcb0803` / objects746700952
+(dev33/inode355886) 与 `lerna_test_b73a59e99d1859e69cdc568d` / objects607349708
+(dev33/inode355895)；实际PG locker PID501167/501187分别登记。race ownscopes
+`lerna_test_cd9d6dd91ceb34408c43c064` / objects3985671651(dev33/inode356221)
+及 `lerna_test_1d5793bc2e9b51d42223b7da` / objects2190470251(dev33/inode356229)，
+PG locker501334/501347分别登记。原caller20/Go30/wrapper120/join3及原cap/
+预算/期限保持，三个native无timeout/groupAbsent、consumer实际finished，
+所有操作actualcompleted与显式RELEASE/no pending已报告。此范围不替whole-page
+责任CAS、legacy决定§5回填CAS/cutoff/commitreplyloss或其它cap因果前沿。

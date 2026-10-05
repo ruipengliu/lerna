@@ -186,3 +186,13 @@ compilerFAIL曾shared03B，normal start在B completion范围之后；调度chron
 保留在evidence，不以重跑洗掉。此范围不替决定§5 CAS竞争/cutoff/commit-reply
 loss资格，不声称unknown历史scope升级、非协议旧writer仍活时防写或七AC
 已accept。后续真实资格/最终sourcequalification与root审查继续。
+
+
+原cleanup执行截止已有真实当前policy锁等待qualification：相同首次700ms
+预算/2s acceptedcap两fresh scopes，normal blocked后即时原rollback/Close
+在原期限内真实allACK；cross原责任deadline+20ms后放行保持exactpending、
+无seal/activecleanup与原bytes，真实重开/V2/receipt保持。consumer实际join
+和locker连接Close均确认，不改due/SQLclock/lease或为失败扩大预算。正常
+5.276及race测试6.552通过；race组合末错误sha path native1单列保留，独立
+真实三path hash修复native0，不用绿色测试重跑洗掉失败。其它CAS及legacy
+§5恢复资格仍待独立实际tracer，七AC未accept。
