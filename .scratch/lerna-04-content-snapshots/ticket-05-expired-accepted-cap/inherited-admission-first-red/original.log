@@ -1,0 +1,7 @@
+=== RUN   TestContentInheritedExpiredCapConsumesItsExactAdmissionTargetWithoutDeletingLiveAncestor
+    content_inherited_cap_cleanup_test.go:190: exact original admission target cannot consume definite expired inherited cap transaction scope mismatch or expired
+--- FAIL: TestContentInheritedExpiredCapConsumesItsExactAdmissionTargetWithoutDeletingLiveAncestor (2.21s)
+FAIL
+FAIL	github.com/ruipengliu/lerna/conformance/component	2.223s
+FAIL
+NATIVE_COMPLETION_ACK {"pid": 3136486, "pgid": 3136486, "starttime": "13089058", "exit": 1, "group_absent": true, "timed_out": false}

@@ -6,6 +6,10 @@
 
 ## 当前状态
 
+2026-10-05 01:12 UTC，05整页原责任CAS资格partial `1a52d24a051442cd8ccdd3c3ef01ff7707cc84a7` 普通0.555s／race2.272s通过：公开页固定实际first／second，另一消费者提交second的not_required后，旧页第一条真实写入、第二条真实ManagementConflict，公开完整状态确认整页回滚；fresh同原页恢复／重开、三正文／固定回执／V2保持。随后[祖先上限／准确AdmissionTarget首red](../lerna-04-content-snapshots/ticket-05-expired-accepted-cap/inherited-admission-first-red/README.md)真实2.223s失败：两祖先与target正常、原2s cap续宽仍expired、原责任deadline live及独立原字节保持后，首Consume原admissionKey被拒绝。封存／擦除及红后回执重放尾段未执行；产品未修，Astra high正作最小身份与因果决定。
+
+03新九文件子成本overlay已全文审查，编译期／worker Current混合计时归属在运行前修正；全部原文件及SHA、dev／inode／mode核准，原已运行五文件overlay保持不变。当前唯一LOCAL归03机械格式／独立race二进制编译及一次原B实验，原5s Claim／30s caller／120s外界／业务tuple保持，暂无新测量结论。whole04仍15/41，两票未接受或合并、完整1.2关闭。
+
 2026-10-05 00:56 UTC，旧holder升级[三条故障恢复](../lerna-04-content-snapshots/ticket-05-legacy-holder-binding/qualification/README.md)已分别真实通过普通／race：记录竞争2.273／3.852s；已commit后机械丢返回2.316／3.832s；初次固定700ms资格跨界整Tx回滚2.702／4.133s。完整源码partial `331154b132c5fd631fb8f663e05a12642cd014cd` clean；原qualification、字节、回执／历史和V2保持。六native均实际exit0及group absence，无原界扩大；原producer全部逻辑Close与actualWait先于消费者。最后释放后LOCAL为空，05仅静态准备整页责任真实竞争测试，03仅静态准备已采用子成本新overlay。尚不接受／合并两票或广告完整1.2，仍15/41。
 
 2026-10-05 00:50 UTC，05记录竞争测试partial `2402fd79d5093e0a29605f4e28f2da0c1cac8cac` 普通2.273s／race3.852s通过：真实旧Read后合法Rev2收紧原保存期，旧完整前态CAS精确拒绝；同原qualification与deadline在两次真实重开后恢复绑定，V2／固定回执／发布历史／字节保持。不是新产品修复或伪造业务red；当前继续唯一槽执行提交成功后机械丢返回测试，原截止越界仍待。采用[子阶段成本决定](../lerna-04-content-snapshots/ticket-03-large-graph-claim/source-phase-cost-decision.md)，03仅静态准备新有限overlay，未优化／运行。
