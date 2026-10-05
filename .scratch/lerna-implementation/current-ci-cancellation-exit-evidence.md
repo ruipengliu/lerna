@@ -12,4 +12,4 @@
 
 原dadd801 nativeBadConn CI失败、opaque1027夹具失败和所有raw/旧STATIC版本保持原字节。缺tick、unbound exit、3837808 false ACK、first1027六个不完整身份及历史UNKNOWN保留；当前无登记残留不补原logicalClose。新observer自身firstClose/rollback与nativeWait分别成功，不替代其他责任证明。
 
-接下来正常merge root指定元数据checkpoint，核22源码及锁定入口byteequal，交merger完成primary集成交付。无额外测试或产品修改由此说明授权。
+已正常merge root准确cc46162eb28d622b33f8376d579689ce807f2a63于d59fd3018ec7f5b264ab2588851479e8e940f4ac，双parent为13c130cf与cc46162e。来向全为元数据；22源码、8锁定入口和309档案字节未变；相对root代码只含Run产品及三条测试文件。精确[同步记录](current-ci-cancellation-delivery-sync.json)保存全pin。交merger完成primary集成交付；未push，新CI与issue最后项仍pending。无额外测试或格式化。
