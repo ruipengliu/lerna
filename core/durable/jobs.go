@@ -247,19 +247,36 @@ func (d *Domain) claimReceipt(ctx context.Context, claimID string) ([]Claim, boo
 }
 
 // Renew 续租：必须仍是有效领取；不递增领取代次，不改变工作修订号。
-func (d *Domain) Renew(ctx context.Context, c *Claim) error {
-	return d.Write(ctx, "durable:renew", func(tx *Tx) error {
+// 续租按 renewID 保存回执：同一续租请求重复到达时返回原截止时间，不再延长。
+func (d *Domain) Renew(ctx context.Context, renewID string, c *Claim) (time.Time, error) {
+	var until time.Time
+	err := d.Write(ctx, "durable:renew", func(tx *Tx) error {
+		var ms int64
+		err := tx.QueryRow(`SELECT lease_until FROM renew_receipts WHERE renew_id = ?`, renewID).Scan(&ms)
+		if err == nil {
+			until = time.UnixMilli(ms)
+			return nil
+		}
+		if !errors.Is(err, sql.ErrNoRows) {
+			return err
+		}
 		if err := checkClaim(tx, c); err != nil {
 			return err
 		}
-		until := tx.Now().Add(d.LeaseDuration)
+		until = tx.Now().Add(d.LeaseDuration)
 		if _, err := tx.Exec(`UPDATE jobs SET lease_until = ?, updated_at = ? WHERE job_id = ?`,
 			until.UnixMilli(), tx.NowMs(), c.JobID); err != nil {
 			return err
 		}
-		c.LeaseUntil = until
-		return nil
+		_, err = tx.Exec(`INSERT INTO renew_receipts (renew_id, job_id, claim_epoch, lease_until) VALUES (?, ?, ?, ?)`,
+			renewID, c.JobID, c.Epoch, until.UnixMilli())
+		return err
 	})
+	if err != nil {
+		return time.Time{}, err
+	}
+	c.LeaseUntil = until
+	return until, nil
 }
 
 // Transition 是一次推进之后工作的去向。
