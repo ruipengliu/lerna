@@ -1,0 +1,10 @@
+{
+  "source_count": 330,
+  "blob_and_formattedtest_full_verification": true,
+  "actualexit": 1,
+  "group_current_absent": true,
+  "outcome_sha": "f8e19591a5cc7511ceb25828f10dfc382b76677a741e18434a25ccc5dae37a7e",
+  "raw_sha": "869b7afbe0a93eb9c1421183f2a1dca89637a03fb0841f958d9092d0f0b3e769",
+  "root_reading": "human FULL16raw lines; complete machine prelaunch/outcome330source, not human FULL largeJSON",
+  "classification": "real businessRED; no productfix or green qualified"
+}

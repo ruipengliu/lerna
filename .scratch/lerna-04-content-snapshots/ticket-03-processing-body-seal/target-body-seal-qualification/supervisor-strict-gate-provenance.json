@@ -1,0 +1,15 @@
+{
+  "STATIC_only_no_supervisor_invocation": true,
+  "old_snapshot_path": "/workspace/lerna-content-03-137311247276/target-body-seal-qualification/run-native.py.before-strict-gate",
+  "old_sha256": "dade74a1036a3be928b2930bc826f3ac5d6d2a60805ef98b47b601ad9ce6857f",
+  "current_supervisor_path": "/workspace/lerna-content-03-137311247276/run-native.py",
+  "current_sha256": "82c4e6a19e1aaabbd4a2412f89eb54c0b1690221f92d3ea826b05ca455a2042e",
+  "minimal_diff_path": "/workspace/lerna-content-03-137311247276/target-body-seal-qualification/supervisor-strict-gate-only.diff",
+  "diff_sha256": "1f613019a4bd6de62c302987bca1816212c7d7634f5053cf2ecde5c5f7e7bf51",
+  "static_python_ast_parse": "PASS; not bytecompiled/invoked",
+  "strict_ack_predicate": "read -r gate <&FD && [ \"$gate\" = ack ] && exec \"$@\"",
+  "failure_order": "Registration happens inside try before ack write; failed write/registration closes gate FD, existing child bash exits on missing ack. Wait5; only if timeout kill this actual Popen child then Wait5; groupabsence checked. Original registration exception re-raised; cleanup failure adds note, never success.",
+  "success_native_path": "Original120 Wait/killpg on timeout/groupabsence/native ledger and exit status unchanged. Only fully written exact4-byte ack releases native argv.",
+  "historical_ack_evidence": "Existing raw/provenance/manifest/old run snapshot immutable; no old source or actual native execution facts rewritten.",
+  "ack_write": "Explicit os.write outside assert; exact4 check cannot disappear under Python optimization."
+}

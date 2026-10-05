@@ -1,0 +1,20 @@
+{
+  "event": "native_start_ack",
+  "operation": "first-format",
+  "pid": 3629434,
+  "pgid": 3629434,
+  "starttime": "15223562",
+  "root": "/tmp/lerna-04-ticket06-execution",
+  "argv": [
+    "bash",
+    "-c",
+    ". /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local GOFLAGS=-mod=readonly; exec \"$@\"",
+    "owned-locked",
+    "gofmt",
+    "-w",
+    "conformance/internal/contentfixture/world.go",
+    "conformance/internal/contentfixture/process_borrow.go",
+    "conformance/component/content_process_recovery_test.go"
+  ],
+  "deadline_seconds": 120
+}

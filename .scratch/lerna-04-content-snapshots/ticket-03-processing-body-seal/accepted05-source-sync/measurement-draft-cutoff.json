@@ -1,0 +1,151 @@
+{
+  "no_native": true,
+  "old_authority_pin": "28e HEAD +seven checkpoint source before accepted05",
+  "draft_files": {
+    "processing.go.transforms.json": {
+      "sha256": "0e63027e9a5b162e7729cbb05d676d8cee267b19b1b0fa99bad1a9778d385e11",
+      "bytes": 5293
+    },
+    "processing.go.preformat-source": {
+      "sha256": "af45e45bdfc56509c1985a2e6af92c368e1995965dfdf5d2c566c3b90a693f96",
+      "bytes": 7773
+    },
+    "context_claim_diagnostics.go.preformat-source": {
+      "sha256": "29b6dcd346f9f542efbdf30d862870543e273dfae1b55e6fbda69b24912508ff",
+      "bytes": 17569
+    },
+    "content_source.go.original-source": {
+      "sha256": "f3342f0bfefabd1adeb59d8fa8566e4af70dfb64ea41185aa721386a04a3df27",
+      "bytes": 5461
+    },
+    "processing.go.diff": {
+      "sha256": "4139f734e65c63c1f0bf44a7a3f8029b6b78c7d50873fb48f85fb27cdc5e3a75",
+      "bytes": 5285
+    },
+    "context_world.go": {
+      "sha256": "e37d876a734b2639a044ae931e8066b9844a8c88e8a213f6d3a32c2db0421612",
+      "bytes": 11298
+    },
+    "context_claim_diagnostics.go": {
+      "sha256": "29b6dcd346f9f542efbdf30d862870543e273dfae1b55e6fbda69b24912508ff",
+      "bytes": 17569
+    },
+    "pgstore_core.go": {
+      "sha256": "f0c41856f5b89c54d1c6814095b6bbf1d82a553b9969441787f33710d5033c18",
+      "bytes": 7435
+    },
+    "context_claim_diagnostics.go.diff": {
+      "sha256": "8205ab4928cac0bac2ee76294d850d8f0c84386ffadad2b93c1c692b1bf2ff89",
+      "bytes": 7774
+    },
+    "content_source.go": {
+      "sha256": "c265f1ae920b34998693657ac2a4e2f45f4f32ee93cc270b373f9b90ce0d976b",
+      "bytes": 5795
+    },
+    "pgstore_core.go.diff": {
+      "sha256": "f9d90b07f0034f226ae039308af732b3867f6dd77a80c1fc4be812d05b75fe98",
+      "bytes": 1038
+    },
+    "measurement-inverse-proof.json": {
+      "sha256": "c12b721e8c35db5733755f74e38525b5b83a7a8be0064e424a51aad82a7f07b6",
+      "bytes": 3574
+    },
+    "processing.go": {
+      "sha256": "af45e45bdfc56509c1985a2e6af92c368e1995965dfdf5d2c566c3b90a693f96",
+      "bytes": 7773
+    },
+    "root-static-registration.json": {
+      "sha256": "bb6bf94f9a55969885dd65ffe736d48caf47f7a7034a69f0245b0238d7737fe7",
+      "bytes": 224
+    },
+    "policy.go": {
+      "sha256": "cfd86e6efa9826ecb57f90c604470859a7a8bb6566b8096b2ed3f00a5673a201",
+      "bytes": 5409
+    },
+    "policy.go.diff": {
+      "sha256": "fa607cd875394ae1ec39b84c09c989f1cac423a0e0677143a7ece432e2caf61a",
+      "bytes": 2240
+    },
+    "facts.go.original-source": {
+      "sha256": "8d53cb773a4711ff9866f5974b399de96eec137d82a92b97886c0825802cb069",
+      "bytes": 9213
+    },
+    "facts.go.transforms.json": {
+      "sha256": "9adf478d3e296e6e6e7bc1800709d551d7adc4a0ad76f09db8c295b0eb7f31ee",
+      "bytes": 8687
+    },
+    "content_source.go.diff": {
+      "sha256": "1d370ec19f424528163920dff00d6c287ed6b90088850577e32be6c12ace983d",
+      "bytes": 2198
+    },
+    "pgstore_core.go.original-source": {
+      "sha256": "6a7a494bcb33bb03e0b3844b33829f2bd4a3954326a3f05d4737e5ba75c19499",
+      "bytes": 6886
+    },
+    "pgstore_core.go.transforms.json": {
+      "sha256": "57a3252737b80a34fea307042f8ac6496ddb878ade808e9cd8f022aa19393a93",
+      "bytes": 863
+    },
+    "content_context_closure_test.go": {
+      "sha256": "c668eacce37c9363cccaa243e2c484951582a872652d1a875c1281362a5c4e43",
+      "bytes": 4558
+    },
+    "policy.go.transforms.json": {
+      "sha256": "62efde36e5756c5f77c11244ffd9871f247b3cf920a8afba967bff174cc2d268",
+      "bytes": 5768
+    },
+    "content_source.go.transforms.json": {
+      "sha256": "7137ac731b4199eb150b99b446e2390125fcc41fcafc54e1f8e53eb7fce0c463",
+      "bytes": 1287
+    },
+    "content_context_material_reachable_test.go": {
+      "sha256": "4223c74583ac7ecace18402ec114708e7a43bbf1593da47bbc675e3a6617e7f2",
+      "bytes": 3369
+    },
+    "policy.go.preformat-source": {
+      "sha256": "cfd86e6efa9826ecb57f90c604470859a7a8bb6566b8096b2ed3f00a5673a201",
+      "bytes": 5409
+    },
+    "content_source.go.preformat-source": {
+      "sha256": "c265f1ae920b34998693657ac2a4e2f45f4f32ee93cc270b373f9b90ce0d976b",
+      "bytes": 5795
+    },
+    "content_context_test.go": {
+      "sha256": "9f1bdc9e8757057ed09836a9d8aee213825e3fe1484c1a86966a4cce2911189f",
+      "bytes": 18517
+    },
+    "context_claim_diagnostics.go.original-source": {
+      "sha256": "573ae56fe178fb5f1cfa8898575ab5ca141f22077383173b383635e4a7b743e9",
+      "bytes": 13261
+    },
+    "pgstore_core.go.preformat-source": {
+      "sha256": "f0c41856f5b89c54d1c6814095b6bbf1d82a553b9969441787f33710d5033c18",
+      "bytes": 7435
+    },
+    "processing.go.original-source": {
+      "sha256": "4a4440cb921001d3edb3d2e829f49b5e684c60d31e0603bcfe9b76a8d6283c30",
+      "bytes": 4224
+    },
+    "facts.go.diff": {
+      "sha256": "e734f7aa525fd847eaa3bfaef2fb7462112dce762b37b876e19eeeb2cfa318e6",
+      "bytes": 3777
+    },
+    "context_claim_diagnostics.go.transforms.json": {
+      "sha256": "81752b0a23870f8bc8eae9a8185f2eb7a1d548da4e0f71db2b2eb13f207a562a",
+      "bytes": 37435
+    },
+    "facts.go.preformat-source": {
+      "sha256": "ea469ff6d19e11f0cbfc7751aa92bbf19036942f6b7aef751bfd2b4a295500c2",
+      "bytes": 10539
+    },
+    "facts.go": {
+      "sha256": "ea469ff6d19e11f0cbfc7751aa92bbf19036942f6b7aef751bfd2b4a295500c2",
+      "bytes": 10539
+    },
+    "policy.go.original-source": {
+      "sha256": "3cb31490a70e0141daa24b4766295ea1a57598194877eda6f19e58371a2d45d9",
+      "bytes": 4834
+    }
+  },
+  "future_execution_status": "INVALID for post-sync; old PGfacts replacement would cover accepted05 BodySeal/holder facts. Do not build or run. Keep originals immutable; future fresh plan binds post-sync target gate qualified source."
+}

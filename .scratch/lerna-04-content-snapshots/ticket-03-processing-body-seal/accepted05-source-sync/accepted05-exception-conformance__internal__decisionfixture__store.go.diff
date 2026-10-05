@@ -1,0 +1,13 @@
+diff --git a/conformance/internal/decisionfixture/store.go b/conformance/internal/decisionfixture/store.go
+index a8b13bc..0a2bfd4 100644
+--- a/conformance/internal/decisionfixture/store.go
++++ b/conformance/internal/decisionfixture/store.go
+@@ -150,7 +150,7 @@ var migration string
+ //go:embed migrations/0002_control_access.sql
+ var controlMigration string
+ 
+-func (s *Store) Migrate(ctx context.Context) error {
++func (s *Store) migrateBase(ctx context.Context) error {
+ 	return s.within(ctx, func(ctx context.Context, tx *sql.Tx, _ time.Time) error {
+ 		// The immutable owner-local migration has no dependency on host migrations.
+ 		if _, err := tx.ExecContext(ctx, `SELECT pg_advisory_xact_lock(1786614101,hashtext($1))`, s.cfg.Schema); err != nil {

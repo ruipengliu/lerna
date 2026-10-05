@@ -1,0 +1,10 @@
+{"argv": ["bash", "-c", ". /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local GOFLAGS=-mod=readonly; exec \"$@\"", "owned-locked", "go", "test", "-tags=integration", "-v", "-count=1", "-p=1", "-mod=readonly", "-timeout=120s", "./conformance/component", "-run", "^TestContentSIGKILLAfterDurableObjectsRecoversOriginalPublication$/^SIGKILL_then_original_Job_recovery$"], "deadline_seconds": 120, "event": "native_start_ack", "operation": "durable-sigkill-fault", "pgid": 3639190, "pid": 3639190, "root": "/tmp/lerna-04-ticket06-execution", "starttime": "15265079"}
+postgres lerna_test_a77911089367a14459f3d9e8
+objects /tmp/lerna-04-ticket06-execution/lerna-content-objects-4136084765 33 410968
+content_child_holder lerna_test_a77911089367a14459f3d9e8 generation=1 native_close=UNKNOWN
+content_child_native lerna_test_a77911089367a14459f3d9e8 generation=1 pid=3639297 pgid=3639190 start=15265188
+content_child_close lerna_test_a77911089367a14459f3d9e8 generation=1 store=UNKNOWN objects=UNKNOWN retained=true
+content_child_holder lerna_test_a77911089367a14459f3d9e8 generation=2 native_close=UNKNOWN
+content_child_native lerna_test_a77911089367a14459f3d9e8 generation=2 pid=3639405 pgid=3639190 start=15265695
+content_child_close lerna_test_a77911089367a14459f3d9e8 generation=2 store=ACK objects=ACK
+{"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "durable-sigkill-fault", "owned_raw_fsync_close_ack": true, "pgid": 3639190, "pid": 3639190, "starttime": "15265079", "timed_out": false}

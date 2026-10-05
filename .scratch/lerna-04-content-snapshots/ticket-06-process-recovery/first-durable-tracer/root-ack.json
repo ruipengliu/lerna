@@ -1,0 +1,10 @@
+{
+  "event": "owned_execution_root_ack",
+  "root": "/tmp/lerna-04-ticket06-execution",
+  "device": 33,
+  "inode": 407243,
+  "mode": "0700",
+  "owner_worktree": "/tmp/lerna-worktrees/content-snapshots-06",
+  "base": "dadd801cfd11ca038f0496872941097f10ebe507",
+  "native_effects_started": false
+}

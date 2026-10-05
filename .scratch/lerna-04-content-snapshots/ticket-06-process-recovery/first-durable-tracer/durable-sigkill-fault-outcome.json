@@ -1,0 +1,11 @@
+{
+  "event": "native_completion_ack",
+  "operation": "durable-sigkill-fault",
+  "pid": 3639190,
+  "pgid": 3639190,
+  "starttime": "15265079",
+  "exit": 0,
+  "group_absent": true,
+  "timed_out": false,
+  "owned_raw_fsync_close_ack": true
+}

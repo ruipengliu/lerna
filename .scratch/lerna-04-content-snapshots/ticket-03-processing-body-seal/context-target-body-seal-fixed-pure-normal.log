@@ -1,0 +1,7 @@
+=== RUN   TestClosureIdentityMemoPreservesFullRefValidationAndFiniteSuccess
+--- PASS: TestClosureIdentityMemoPreservesFullRefValidationAndFiniteSuccess (0.02s)
+=== RUN   TestIndependentVersionIdentityGolden
+--- PASS: TestIndependentVersionIdentityGolden (0.01s)
+PASS
+ok  	github.com/ruipengliu/lerna/domain/content	0.044s
+NATIVE_EXIT status=0 group_absent=True

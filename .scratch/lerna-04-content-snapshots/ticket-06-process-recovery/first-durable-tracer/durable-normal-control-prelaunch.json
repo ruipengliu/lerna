@@ -1,0 +1,26 @@
+{
+  "event": "native_start_ack",
+  "operation": "durable-normal-control",
+  "pid": 3630391,
+  "pgid": 3630391,
+  "starttime": "15227863",
+  "root": "/tmp/lerna-04-ticket06-execution",
+  "argv": [
+    "bash",
+    "-c",
+    ". /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local GOFLAGS=-mod=readonly; exec \"$@\"",
+    "owned-locked",
+    "go",
+    "test",
+    "-tags=integration",
+    "-v",
+    "-count=1",
+    "-p=1",
+    "-mod=readonly",
+    "-timeout=120s",
+    "./conformance/component",
+    "-run",
+    "^TestContentSIGKILLAfterDurableObjectsRecoversOriginalPublication$/^normal_release$"
+  ],
+  "deadline_seconds": 120
+}

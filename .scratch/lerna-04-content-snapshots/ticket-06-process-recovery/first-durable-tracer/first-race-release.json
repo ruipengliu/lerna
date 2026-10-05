@@ -1,0 +1,21 @@
+{
+  "status": "STOP_RELEASED",
+  "actual_paired_race_pass": true,
+  "native_actual": {
+    "event": "native_completion_ack",
+    "operation": "durable-paired-race",
+    "pid": 3659350,
+    "pgid": 3659350,
+    "starttime": "15349458",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false,
+    "owned_raw_fsync_close_ack": true
+  },
+  "formatted_source_pins_17_unchanged": true,
+  "manifest_sha256": "3ee4cba86cfc0fccfbc99b584a3e63d98b44ee71ac572af3d95bcf78887312ea",
+  "raw_log_sha256": "b6f7ae37ed907bbce417b88ac36e97973027633876d528cc3bd9ae1ea318f9ad",
+  "scope_lines": 35,
+  "other_tracer_not_executed": true,
+  "killed_generation1_first_native_close": "UNKNOWN_PERMANENTLY_RETAIN_EXACT_SCOPE"
+}

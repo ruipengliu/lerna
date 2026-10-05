@@ -1,0 +1,17 @@
+=== RUN   TestContentProcessingRechecksHiddenAncestorAfterRealObjectRead
+=== RUN   TestContentProcessingRechecksHiddenAncestorAfterRealObjectRead/permitted
+=== RUN   TestContentProcessingRechecksHiddenAncestorAfterRealObjectRead/ancestor-process-withdrawn
+--- PASS: TestContentProcessingRechecksHiddenAncestorAfterRealObjectRead (2.55s)
+    --- PASS: TestContentProcessingRechecksHiddenAncestorAfterRealObjectRead/permitted (1.51s)
+    --- PASS: TestContentProcessingRechecksHiddenAncestorAfterRealObjectRead/ancestor-process-withdrawn (1.04s)
+=== RUN   TestContentProcessingRejectsTargetBodySeal
+=== RUN   TestContentProcessingRejectsTargetBodySeal/seal-before-read
+    content_processing_body_seal_test.go:191: actual sealed processing before-reopen cause=*errors.errorString:content processing forbidden zero=true; reopened cause=*errors.errorString:content processing forbidden zero=true
+=== RUN   TestContentProcessingRejectsTargetBodySeal/seal-after-real-object-read
+    content_processing_body_seal_test.go:191: actual sealed processing before-reopen cause=*errors.errorString:content processing forbidden zero=true; reopened cause=*errors.errorString:content processing forbidden zero=true
+--- PASS: TestContentProcessingRejectsTargetBodySeal (1.00s)
+    --- PASS: TestContentProcessingRejectsTargetBodySeal/seal-before-read (0.43s)
+    --- PASS: TestContentProcessingRejectsTargetBodySeal/seal-after-real-object-read (0.58s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/component	4.625s
+NATIVE_EXIT status=0 group_absent=True

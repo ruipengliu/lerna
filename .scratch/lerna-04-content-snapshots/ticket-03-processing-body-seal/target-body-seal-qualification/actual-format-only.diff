@@ -1,0 +1,339 @@
+--- newtest.before-gofmt
++++ newtest.actual-formatted
+@@ -3,145 +3,198 @@
+ package component_test
+ 
+ import (
+- "context"
+- "errors"
+- "os"
+- "path/filepath"
+- "reflect"
+- "sync"
+- "testing"
+- "time"
+-
+- fixture "github.com/ruipengliu/lerna/conformance/internal/contentfixture"
+- v "github.com/ruipengliu/lerna/contract/v1_2"
+- "github.com/ruipengliu/lerna/domain/content"
++	"context"
++	"errors"
++	"os"
++	"path/filepath"
++	"reflect"
++	"sync"
++	"testing"
++	"time"
++
++	fixture "github.com/ruipengliu/lerna/conformance/internal/contentfixture"
++	v "github.com/ruipengliu/lerna/contract/v1_2"
++	"github.com/ruipengliu/lerna/domain/content"
+ )
+ 
+ func TestContentProcessingRejectsTargetBodySeal(t *testing.T) {
+- for _, duringRead := range []bool{false, true} {
+-  name := "seal-before-read"
+-  if duringRead { name = "seal-after-real-object-read" }
+-  t.Run(name, func(t *testing.T) {
+-   ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+-   defer cancel()
+-   w := fixture.New(t, ctx)
+-   wide := time.Now().UTC().Add(time.Hour)
+-   management := content.ManagementConfig{Owner: contentOwner, Store: w.Store(), TrustedSubject: contentPrincipal, TrustedUntil: wide, PageSize: 2, WorkBudget: time.Minute}
+-   manager, err := content.NewManager(management)
+-   if err != nil { t.Fatal(err) }
+-   policy := content.FixturePolicy{Ref: alphaRef, Subject: contentPrincipal, Purpose: "verification", Revision: 1, ValidUntil: wide, RetainUntil: wide, Read: true, Process: true, Save: true, Disclose: true}
+-   if _, err = manager.InstallPolicy(ctx, &contentPrincipal, policy, 0); err != nil { t.Fatal(err) }
+-   if err = w.Store().InstallFixtureCommandReader(ctx, contentOwner, contentPrincipal, wide); err != nil { t.Fatal(err) }
+-   service := contentService(t, w)
+-   request := contentPut(t, alphaRef, "processing-original-seal", "YWxwaGEK")
+-   original := putContentRequest(t, ctx, service, request)
+-   if _, ok := original.AsAccepted(); !ok { t.Fatal("normal admission refused", original) }
+-   originalWire, err := v.Encode(original)
+-   if err != nil { t.Fatal(err) }
+-   if _, err = service.Step(ctx); err != nil { t.Fatal(err) }
+-   assertContentBody(t, ctx, service, alphaRef, nil, "alpha\n")
+-   normal, err := service.ReadForProcessing(ctx, &contentPrincipal, alphaRef, "verification", 6)
+-   if err != nil || normal.Ref != alphaRef || string(normal.Bytes) != "alpha\n" || len(normal.Sources) != 0 {
+-    t.Fatal("normal actual processing counterpart", err, normal)
+-   }
+-   _, key, err := content.VersionIdentity(alphaRef)
+-   if err != nil { t.Fatal(err) }
+-   physicalBinding := w.Objects.Binding()
+-   // Seal's maintenance deadline is fixed before any failing read is launched.
+-   // Neither policy windows nor this deadline are refreshed after reopening.
+-   seal := content.SealRequest{Ref: alphaRef, Purpose: "verification", SealID: "processing-target-seal", Deadline: time.Now().UTC().Add(time.Minute).Truncate(time.Microsecond)}
+-   lifecycleConfig := content.LifecycleConfig{ManagementConfig: management, PrimaryHolderID: "primary", Objects: w.Objects, Worker: "content-processing-seal-control"}
+-   lifecycle, err := content.NewLifecycle(lifecycleConfig)
+-   if err != nil { t.Fatal(err) }
+-   sealTarget := func() {
+-    t.Helper()
+-    observation, sealErr := lifecycle.Seal(ctx, &contentPrincipal, seal)
+-    if sealErr != nil || observation.Seal.ID != seal.SealID || observation.Seal.Ref != alphaRef || !observation.Seal.Deadline.Equal(seal.Deadline) || observation.CleanupComplete {
+-     t.Fatal("actual original target seal", sealErr, observation)
+-    }
+-   }
+-   var read content.ProcessingRead
+-   var readErr error
+-   if !duringRead {
+-    sealTarget()
+-    // An independent native observation confirms Seal deliberately preceded erasure.
+-    bytes, nativeErr := os.ReadFile(filepath.Join(w.Directory, key))
+-    if nativeErr != nil || string(bytes) != "alpha\n" { t.Fatal("seal-before-read erased actual alpha", nativeErr) }
+-    read, readErr = service.ReadForProcessing(ctx, &contentPrincipal, alphaRef, "verification", 6)
+-   } else {
+-    objects := &heldContentRead{Objects: w.Objects, entered: make(chan struct{}), release: make(chan struct{})}
+-    reader := withPublication(t, w, w.Store(), objects, time.Minute, 5*time.Second)
+-    var once sync.Once
+-    release := func() error { once.Do(func() { close(objects.release) }); return nil }
+-    finished := make(chan struct{})
+-    type result struct { read content.ProcessingRead; err error }
+-    done := make(chan result, 1)
+-    joinContentRead(t, w, release, finished)
+-    go func() {
+-     defer close(finished)
+-     got, gotErr := reader.ReadForProcessing(ctx, &contentPrincipal, alphaRef, "verification", 6)
+-     done <- result{got, gotErr}
+-    }()
+-    select { case <-objects.entered: case <-ctx.Done(): t.Fatal(ctx.Err()) }
+-    // Pre-observation committed and the original native Objects.Read completed;
+-    // the actual trusted Seal commits while no observation Tx spans this gate.
+-    sealTarget()
+-    if err = release(); err != nil { t.Fatal(err) }
+-    select { case got := <-done: read, readErr = got.read, got.err; case <-ctx.Done(): t.Fatal(ctx.Err()) }
+-    select { case <-finished: case <-ctx.Done(): t.Fatal(ctx.Err()) }
+-   }
+-   // Keep the durable/public/reopen tails observable even on the original red.
+-   // A wrong successful ProcessingRead is asserted only after those tails.
+-   assertUnchangedSealed := func() {
+-    t.Helper()
+-    observed, observeErr := lifecycle.Observe(ctx, &contentPrincipal, alphaRef, "")
+-    if observeErr != nil || observed.Seal.ID != seal.SealID || observed.Seal.Ref != alphaRef || !observed.Seal.Deadline.Equal(seal.Deadline) || observed.Seal.PrimaryHolderBinding != physicalBinding || observed.CleanupComplete || observed.NextCursor != "" || len(observed.Holders) != 2 {
+-     t.Fatal("original unclosed seal/holders lost", observeErr, observed)
+-    }
+-    primary, staging := false, false
+-    for _, holder := range observed.Holders {
+-     if holder.Identity.Ref != alphaRef || holder.Identity.ObjectKey != key || holder.Identity.SealID != seal.SealID || !holder.Deadline.Equal(seal.Deadline) || holder.State != "pending" {
+-      t.Fatal("original holder responsibility changed", holder)
+-     }
+-     switch holder.Kind {
+-     case "primary":
+-      primary = holder.Identity.HolderID == "primary" && holder.Identity.Binding == physicalBinding
+-     case "pg-staging":
+-      staging = holder.Identity.HolderID == "postgres-staging"
+-     default: t.Fatal("unexpected original holder", holder)
+-     }
+-    }
+-    if !primary || !staging { t.Fatal("pending primary/staging responsibility missing", observed) }
+-    bytes, nativeErr := os.ReadFile(filepath.Join(w.Directory, key))
+-    if nativeErr != nil || string(bytes) != "alpha\n" { t.Fatal("seal-only native alpha changed", nativeErr) }
+-    view, getErr := service.Get(ctx, contentGetWire(t, alphaRef, nil), &contentPrincipal)
+-    denied, ok := view.AsRejected()
+-    if getErr != nil || !ok || denied.Reason != "forbidden" { t.Fatal("seal-only public Get must be forbidden, not Gone", getErr, view) }
+-    replayWire, encodeErr := v.Encode(putContentRequest(t, ctx, service, request))
+-    if encodeErr != nil || string(replayWire) != string(originalWire) { t.Fatal("seal changed original fixed receipt", encodeErr) }
+-    command, commandErr := service.GetCommand(ctx, contentCommandGetWire(t, request.CommandID), &contentPrincipal)
+-    found, ok := command.AsFound()
+-    progress, hasContent := found.Progress.AsContent()
+-    if commandErr != nil || !ok || !hasContent || progress.Publication != "published" { t.Fatal("seal rewrote original published history", commandErr, command) }
+-   }
+-   // Exact metadata authority cannot turn a mere Seal into Gone. No cleanup
+-   // Step, primary fence/erase, or all-holder acknowledgement occurs here.
+-   if err = lifecycle.InstallMetadataPolicy(ctx, &contentPrincipal, content.MetadataPolicy{Ref: alphaRef, Subject: contentPrincipal, Purpose: "verification", Revision: 1, ValidUntil: wide}, 0); err != nil { t.Fatal(err) }
+-   assertUnchangedSealed()
+-   w.Reopen(ctx)
+-   service = contentService(t, w)
+-   lifecycleConfig.Store, lifecycleConfig.Objects = w.Store(), w.Objects
+-   lifecycle, err = content.NewLifecycle(lifecycleConfig)
+-   if err != nil { t.Fatal(err) }
+-   again, againErr := service.ReadForProcessing(ctx, &contentPrincipal, alphaRef, "verification", 6)
+-   assertUnchangedSealed()
+-   t.Logf("actual sealed processing before-reopen cause=%T:%v zero=%v; reopened cause=%T:%v zero=%v", readErr, readErr, reflect.DeepEqual(read, content.ProcessingRead{}), againErr, againErr, reflect.DeepEqual(again, content.ProcessingRead{}))
+-   if !errors.Is(readErr, content.ErrProcessingForbidden) || !reflect.DeepEqual(read, content.ProcessingRead{}) {
+-    t.Error("original target Seal did not forbid processing with zero result", readErr, read)
+-   }
+-   if !errors.Is(againErr, content.ErrProcessingForbidden) || !reflect.DeepEqual(again, content.ProcessingRead{}) {
+-    t.Error("reopen reused sealed target processing authority", againErr, again)
+-   }
+-  })
+- }
++	for _, duringRead := range []bool{false, true} {
++		name := "seal-before-read"
++		if duringRead {
++			name = "seal-after-real-object-read"
++		}
++		t.Run(name, func(t *testing.T) {
++			ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
++			defer cancel()
++			w := fixture.New(t, ctx)
++			wide := time.Now().UTC().Add(time.Hour)
++			management := content.ManagementConfig{Owner: contentOwner, Store: w.Store(), TrustedSubject: contentPrincipal, TrustedUntil: wide, PageSize: 2, WorkBudget: time.Minute}
++			manager, err := content.NewManager(management)
++			if err != nil {
++				t.Fatal(err)
++			}
++			policy := content.FixturePolicy{Ref: alphaRef, Subject: contentPrincipal, Purpose: "verification", Revision: 1, ValidUntil: wide, RetainUntil: wide, Read: true, Process: true, Save: true, Disclose: true}
++			if _, err = manager.InstallPolicy(ctx, &contentPrincipal, policy, 0); err != nil {
++				t.Fatal(err)
++			}
++			if err = w.Store().InstallFixtureCommandReader(ctx, contentOwner, contentPrincipal, wide); err != nil {
++				t.Fatal(err)
++			}
++			service := contentService(t, w)
++			request := contentPut(t, alphaRef, "processing-original-seal", "YWxwaGEK")
++			original := putContentRequest(t, ctx, service, request)
++			if _, ok := original.AsAccepted(); !ok {
++				t.Fatal("normal admission refused", original)
++			}
++			originalWire, err := v.Encode(original)
++			if err != nil {
++				t.Fatal(err)
++			}
++			if _, err = service.Step(ctx); err != nil {
++				t.Fatal(err)
++			}
++			assertContentBody(t, ctx, service, alphaRef, nil, "alpha\n")
++			normal, err := service.ReadForProcessing(ctx, &contentPrincipal, alphaRef, "verification", 6)
++			if err != nil || normal.Ref != alphaRef || string(normal.Bytes) != "alpha\n" || len(normal.Sources) != 0 {
++				t.Fatal("normal actual processing counterpart", err, normal)
++			}
++			_, key, err := content.VersionIdentity(alphaRef)
++			if err != nil {
++				t.Fatal(err)
++			}
++			physicalBinding := w.Objects.Binding()
++			// Seal's maintenance deadline is fixed before any failing read is launched.
++			// Neither policy windows nor this deadline are refreshed after reopening.
++			seal := content.SealRequest{Ref: alphaRef, Purpose: "verification", SealID: "processing-target-seal", Deadline: time.Now().UTC().Add(time.Minute).Truncate(time.Microsecond)}
++			lifecycleConfig := content.LifecycleConfig{ManagementConfig: management, PrimaryHolderID: "primary", Objects: w.Objects, Worker: "content-processing-seal-control"}
++			lifecycle, err := content.NewLifecycle(lifecycleConfig)
++			if err != nil {
++				t.Fatal(err)
++			}
++			sealTarget := func() {
++				t.Helper()
++				observation, sealErr := lifecycle.Seal(ctx, &contentPrincipal, seal)
++				if sealErr != nil || observation.Seal.ID != seal.SealID || observation.Seal.Ref != alphaRef || !observation.Seal.Deadline.Equal(seal.Deadline) || observation.CleanupComplete {
++					t.Fatal("actual original target seal", sealErr, observation)
++				}
++			}
++			var read content.ProcessingRead
++			var readErr error
++			if !duringRead {
++				sealTarget()
++				// An independent native observation confirms Seal deliberately preceded erasure.
++				bytes, nativeErr := os.ReadFile(filepath.Join(w.Directory, key))
++				if nativeErr != nil || string(bytes) != "alpha\n" {
++					t.Fatal("seal-before-read erased actual alpha", nativeErr)
++				}
++				read, readErr = service.ReadForProcessing(ctx, &contentPrincipal, alphaRef, "verification", 6)
++			} else {
++				objects := &heldContentRead{Objects: w.Objects, entered: make(chan struct{}), release: make(chan struct{})}
++				reader := withPublication(t, w, w.Store(), objects, time.Minute, 5*time.Second)
++				var once sync.Once
++				release := func() error { once.Do(func() { close(objects.release) }); return nil }
++				finished := make(chan struct{})
++				type result struct {
++					read content.ProcessingRead
++					err  error
++				}
++				done := make(chan result, 1)
++				joinContentRead(t, w, release, finished)
++				go func() {
++					defer close(finished)
++					got, gotErr := reader.ReadForProcessing(ctx, &contentPrincipal, alphaRef, "verification", 6)
++					done <- result{got, gotErr}
++				}()
++				select {
++				case <-objects.entered:
++				case <-ctx.Done():
++					t.Fatal(ctx.Err())
++				}
++				// Pre-observation committed and the original native Objects.Read completed;
++				// the actual trusted Seal commits while no observation Tx spans this gate.
++				sealTarget()
++				if err = release(); err != nil {
++					t.Fatal(err)
++				}
++				select {
++				case got := <-done:
++					read, readErr = got.read, got.err
++				case <-ctx.Done():
++					t.Fatal(ctx.Err())
++				}
++				select {
++				case <-finished:
++				case <-ctx.Done():
++					t.Fatal(ctx.Err())
++				}
++			}
++			// Keep the durable/public/reopen tails observable even on the original red.
++			// A wrong successful ProcessingRead is asserted only after those tails.
++			assertUnchangedSealed := func() {
++				t.Helper()
++				observed, observeErr := lifecycle.Observe(ctx, &contentPrincipal, alphaRef, "")
++				if observeErr != nil || observed.Seal.ID != seal.SealID || observed.Seal.Ref != alphaRef || !observed.Seal.Deadline.Equal(seal.Deadline) || observed.Seal.PrimaryHolderBinding != physicalBinding || observed.CleanupComplete || observed.NextCursor != "" || len(observed.Holders) != 2 {
++					t.Fatal("original unclosed seal/holders lost", observeErr, observed)
++				}
++				primary, staging := false, false
++				for _, holder := range observed.Holders {
++					if holder.Identity.Ref != alphaRef || holder.Identity.ObjectKey != key || holder.Identity.SealID != seal.SealID || !holder.Deadline.Equal(seal.Deadline) || holder.State != "pending" {
++						t.Fatal("original holder responsibility changed", holder)
++					}
++					switch holder.Kind {
++					case "primary":
++						primary = holder.Identity.HolderID == "primary" && holder.Identity.Binding == physicalBinding
++					case "pg-staging":
++						staging = holder.Identity.HolderID == "postgres-staging"
++					default:
++						t.Fatal("unexpected original holder", holder)
++					}
++				}
++				if !primary || !staging {
++					t.Fatal("pending primary/staging responsibility missing", observed)
++				}
++				bytes, nativeErr := os.ReadFile(filepath.Join(w.Directory, key))
++				if nativeErr != nil || string(bytes) != "alpha\n" {
++					t.Fatal("seal-only native alpha changed", nativeErr)
++				}
++				view, getErr := service.Get(ctx, contentGetWire(t, alphaRef, nil), &contentPrincipal)
++				denied, ok := view.AsRejected()
++				if getErr != nil || !ok || denied.Reason != "forbidden" {
++					t.Fatal("seal-only public Get must be forbidden, not Gone", getErr, view)
++				}
++				replayWire, encodeErr := v.Encode(putContentRequest(t, ctx, service, request))
++				if encodeErr != nil || string(replayWire) != string(originalWire) {
++					t.Fatal("seal changed original fixed receipt", encodeErr)
++				}
++				command, commandErr := service.GetCommand(ctx, contentCommandGetWire(t, request.CommandID), &contentPrincipal)
++				found, ok := command.AsFound()
++				progress, hasContent := found.Progress.AsContent()
++				if commandErr != nil || !ok || !hasContent || progress.Publication != "published" {
++					t.Fatal("seal rewrote original published history", commandErr, command)
++				}
++			}
++			// Exact metadata authority cannot turn a mere Seal into Gone. No cleanup
++			// Step, primary fence/erase, or all-holder acknowledgement occurs here.
++			if err = lifecycle.InstallMetadataPolicy(ctx, &contentPrincipal, content.MetadataPolicy{Ref: alphaRef, Subject: contentPrincipal, Purpose: "verification", Revision: 1, ValidUntil: wide}, 0); err != nil {
++				t.Fatal(err)
++			}
++			assertUnchangedSealed()
++			w.Reopen(ctx)
++			service = contentService(t, w)
++			lifecycleConfig.Store, lifecycleConfig.Objects = w.Store(), w.Objects
++			lifecycle, err = content.NewLifecycle(lifecycleConfig)
++			if err != nil {
++				t.Fatal(err)
++			}
++			again, againErr := service.ReadForProcessing(ctx, &contentPrincipal, alphaRef, "verification", 6)
++			assertUnchangedSealed()
++			t.Logf("actual sealed processing before-reopen cause=%T:%v zero=%v; reopened cause=%T:%v zero=%v", readErr, readErr, reflect.DeepEqual(read, content.ProcessingRead{}), againErr, againErr, reflect.DeepEqual(again, content.ProcessingRead{}))
++			if !errors.Is(readErr, content.ErrProcessingForbidden) || !reflect.DeepEqual(read, content.ProcessingRead{}) {
++				t.Error("original target Seal did not forbid processing with zero result", readErr, read)
++			}
++			if !errors.Is(againErr, content.ErrProcessingForbidden) || !reflect.DeepEqual(again, content.ProcessingRead{}) {
++				t.Error("reopen reused sealed target processing authority", againErr, again)
++			}
++		})
++	}
+ }

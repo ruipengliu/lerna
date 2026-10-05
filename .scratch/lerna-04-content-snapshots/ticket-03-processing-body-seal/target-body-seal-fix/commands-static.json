@@ -1,0 +1,53 @@
+{
+  "STATIC_only_no_native_grant": true,
+  "workdir": "/tmp/lerna-worktrees/content-snapshots-03",
+  "supervisor": "/workspace/lerna-content-03-137311247276/run-native.py",
+  "supervisor_sha256": "82c4e6a19e1aaabbd4a2412f89eb54c0b1690221f92d3ea826b05ca455a2042e",
+  "locked_environment": "source /workspace/.lerna-env/env.sh; GOTOOLCHAIN=local GOFLAGS=-mod=readonly",
+  "outer_seconds": 120,
+  "format_only_current_changed_product_pending_grant": [
+    "gofmt",
+    "-w",
+    "/tmp/lerna-worktrees/content-snapshots-03/domain/content/processing.go"
+  ],
+  "pure_normal_pending_grant": [
+    "go",
+    "test",
+    "-v",
+    "-count=1",
+    "-p",
+    "1",
+    "-timeout=120s",
+    "-run=^(TestIndependentVersionIdentityGolden|TestClosureIdentityMemoPreservesFullRefValidationAndFiniteSuccess)$",
+    "./domain/content"
+  ],
+  "public_normal_pending_grant": [
+    "go",
+    "test",
+    "-v",
+    "-tags=integration",
+    "-p",
+    "1",
+    "-count=1",
+    "-timeout=120s",
+    "-run=^(TestContentProcessingRejectsTargetBodySeal|TestContentProcessingRechecksHiddenAncestorAfterRealObjectRead)$",
+    "./conformance/component"
+  ],
+  "public_race_if_normal_pass_pending_grant": [
+    "go",
+    "test",
+    "-v",
+    "-race",
+    "-tags=integration",
+    "-p",
+    "1",
+    "-count=1",
+    "-timeout=120s",
+    "-run=^(TestContentProcessingRejectsTargetBodySeal|TestContentProcessingRechecksHiddenAncestorAfterRealObjectRead)$",
+    "./conformance/component"
+  ],
+  "order_proposal": "only current productfmt then pure normal + combined public normal then if PASS public race; exact parent grant determines operations. Stop first failure; no sourcefix/retry/extra control automatically.",
+  "semantic_case_windows": "original20 caller/3 actorjoin/5pubwork/fixed60maintenance; initialwide unchanged; originalcapacity30/Claim5/120 unchanged",
+  "scope": "Target before/real-I/O Seal pair + original permitted/ancestor Process withdrawal. Actual ancestor BodySeal separate later vertical, not claimed qualified by these controls.",
+  "no_capacity_or_026": "No native tests yet and no original4B capacity, CPU/profile, build, SQL measurement, or extra matrices in this grant."
+}

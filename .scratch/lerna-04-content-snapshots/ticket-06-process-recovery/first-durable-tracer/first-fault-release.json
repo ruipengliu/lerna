@@ -1,0 +1,23 @@
+{
+  "status": "STOP_RELEASED",
+  "actual_fault_only_pass": true,
+  "native_actual": {
+    "event": "native_completion_ack",
+    "operation": "durable-sigkill-fault",
+    "pid": 3639190,
+    "pgid": 3639190,
+    "starttime": "15265079",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false,
+    "owned_raw_fsync_close_ack": true
+  },
+  "formatted_source_pins_17_unchanged": true,
+  "manifest_sha256": "3ee4cba86cfc0fccfbc99b584a3e63d98b44ee71ac572af3d95bcf78887312ea",
+  "raw_log_sha256": "25e11ba1532255d1b26ae18aa9e9e01da51a25665ec662d8935e3111630c335c",
+  "scope_lines": 20,
+  "race_other_tracer_not_executed": true,
+  "killed_generation1_first_native_close": "UNKNOWN_PERMANENTLY_RETAIN_EXACT_SCOPE",
+  "successor_actual_first_native_close": "ACK_PER_TEST_AND_OWN_LEDGER",
+  "actual_claim_expiry_wait": "ORIGINAL_LEASE_UNTIL_PLUS_1MS_PER_FROZEN_TEST"
+}

@@ -1,0 +1,8 @@
+=== RUN   TestContentProcessingSealedAncestorAfterRealObjectRead
+    content_processing_ancestor_seal_test.go:184: actual ancestor Seal processing post-I/O cause=*errors.joinError:content processing forbidden
+        forbidden zero=true; reopened cause=*errors.joinError:content processing forbidden
+        forbidden zero=true
+--- PASS: TestContentProcessingSealedAncestorAfterRealObjectRead (0.59s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/component	0.602s
+NATIVE_EXIT status=0 group_absent=True

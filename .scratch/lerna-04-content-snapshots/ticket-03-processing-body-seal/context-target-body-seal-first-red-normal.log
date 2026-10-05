@@ -1,0 +1,16 @@
+=== RUN   TestContentProcessingRejectsTargetBodySeal
+=== RUN   TestContentProcessingRejectsTargetBodySeal/seal-before-read
+    content_processing_body_seal_test.go:191: actual sealed processing before-reopen cause=<nil>:<nil> zero=false; reopened cause=<nil>:<nil> zero=false
+    content_processing_body_seal_test.go:193: original target Seal did not forbid processing with zero result <nil> {{{content-tenant content-owner} alpha 1 sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060 text/plain 6} [97 108 112 104 97 10] [] 2026-10-05 07:41:04.902595 +0000 UTC}
+    content_processing_body_seal_test.go:196: reopen reused sealed target processing authority <nil> {{{content-tenant content-owner} alpha 1 sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060 text/plain 6} [97 108 112 104 97 10] [] 2026-10-05 07:41:04.902595 +0000 UTC}
+=== RUN   TestContentProcessingRejectsTargetBodySeal/seal-after-real-object-read
+    content_processing_body_seal_test.go:191: actual sealed processing before-reopen cause=<nil>:<nil> zero=false; reopened cause=<nil>:<nil> zero=false
+    content_processing_body_seal_test.go:193: original target Seal did not forbid processing with zero result <nil> {{{content-tenant content-owner} alpha 1 sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060 text/plain 6} [97 108 112 104 97 10] [] 2026-10-05 07:41:05.602881 +0000 UTC}
+    content_processing_body_seal_test.go:196: reopen reused sealed target processing authority <nil> {{{content-tenant content-owner} alpha 1 sha256:b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060 text/plain 6} [97 108 112 104 97 10] [] 2026-10-05 07:41:05.602881 +0000 UTC}
+--- FAIL: TestContentProcessingRejectsTargetBodySeal (1.18s)
+    --- FAIL: TestContentProcessingRejectsTargetBodySeal/seal-before-read (0.73s)
+    --- FAIL: TestContentProcessingRejectsTargetBodySeal/seal-after-real-object-read (0.45s)
+FAIL
+FAIL	github.com/ruipengliu/lerna/conformance/component	1.195s
+FAIL
+NATIVE_EXIT status=1 group_absent=True
