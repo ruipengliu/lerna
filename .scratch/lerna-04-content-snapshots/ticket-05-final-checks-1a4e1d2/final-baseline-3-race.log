@@ -1,0 +1,35 @@
+=== RUN   TestContentLockWaitCannotReuseExpiredAdmissionClock
+--- PASS: TestContentLockWaitCannotReuseExpiredAdmissionClock (0.84s)
+=== RUN   TestContentPublicationWaitCannotReuseExpiredPolicyClock
+--- PASS: TestContentPublicationWaitCannotReuseExpiredPolicyClock (0.78s)
+=== RUN   TestContentPostScheduleAdmissionRollsBackLateVersion
+=== RUN   TestContentPostScheduleAdmissionRollsBackLateVersion/accept_before/late=false
+=== RUN   TestContentPostScheduleAdmissionRollsBackLateVersion/accept_before/late=true
+=== RUN   TestContentPostScheduleAdmissionRollsBackLateVersion/target_policy/late=false
+=== RUN   TestContentPostScheduleAdmissionRollsBackLateVersion/target_policy/late=true
+=== RUN   TestContentPostScheduleAdmissionRollsBackLateVersion/ancestor_policy/late=false
+=== RUN   TestContentPostScheduleAdmissionRollsBackLateVersion/ancestor_policy/late=true
+=== RUN   TestContentPostScheduleAdmissionRollsBackLateVersion/retention/late=false
+=== RUN   TestContentPostScheduleAdmissionRollsBackLateVersion/retention/late=true
+--- PASS: TestContentPostScheduleAdmissionRollsBackLateVersion (4.85s)
+    --- PASS: TestContentPostScheduleAdmissionRollsBackLateVersion/accept_before/late=false (0.18s)
+    --- PASS: TestContentPostScheduleAdmissionRollsBackLateVersion/accept_before/late=true (1.01s)
+    --- PASS: TestContentPostScheduleAdmissionRollsBackLateVersion/target_policy/late=false (0.20s)
+    --- PASS: TestContentPostScheduleAdmissionRollsBackLateVersion/target_policy/late=true (0.96s)
+    --- PASS: TestContentPostScheduleAdmissionRollsBackLateVersion/ancestor_policy/late=false (0.30s)
+    --- PASS: TestContentPostScheduleAdmissionRollsBackLateVersion/ancestor_policy/late=true (1.06s)
+    --- PASS: TestContentPostScheduleAdmissionRollsBackLateVersion/retention/late=false (0.19s)
+    --- PASS: TestContentPostScheduleAdmissionRollsBackLateVersion/retention/late=true (0.94s)
+=== RUN   TestContentPostScheduleAliasPreservesOriginalCapOnRollback
+=== RUN   TestContentPostScheduleAliasPreservesOriginalCapOnRollback/late=false
+=== RUN   TestContentPostScheduleAliasPreservesOriginalCapOnRollback/late=true
+--- PASS: TestContentPostScheduleAliasPreservesOriginalCapOnRollback (3.49s)
+    --- PASS: TestContentPostScheduleAliasPreservesOriginalCapOnRollback/late=false (1.75s)
+    --- PASS: TestContentPostScheduleAliasPreservesOriginalCapOnRollback/late=true (1.75s)
+=== RUN   TestContentTemporaryFailureKeepsNarrowedRetentionAfterReopen
+--- PASS: TestContentTemporaryFailureKeepsNarrowedRetentionAfterReopen (1.14s)
+=== RUN   TestContentExpiredOriginalClaimCannotStartObjectIO
+--- PASS: TestContentExpiredOriginalClaimCannotStartObjectIO (0.67s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/component	12.829s
+NATIVE_COMPLETION_ACK {"pid": 3225245, "pgid": 3225245, "starttime": "13461076", "exit": 0, "group_absent": true, "timed_out": false}

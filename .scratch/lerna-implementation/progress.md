@@ -311,3 +311,9 @@ root全文读取[Astra六票复核](../lerna-04-content-snapshots/published-tick
 2026-10-04 20:11 UTC，采用[确定性选择决定](../lerna-04-content-snapshots/ticket-03-selection-strategy/README.md)：单独版本固定选择材料正文语法，实际计算并核对可信Selected；include/omit均保留compiler实际处理及完整来源。原rule/2、字节策略和五动作权限不变，撤权分别验证。该决定无执行声明。
 
 03部分45eb007已在独立WT固定反序集合完整投影修复，真实反序与原normal3.979通过；未完成全部容量/恢复/来源出口。05部分70d746e固定原发布介质FD身份至准确version、seal与清理责任，错误root不能代原holder ACK；exactnormal0.382通过，相关race Component2.758/Local1.116两个测试命令通过。该组合末尾错误迁移文件名导致原native exit1并永久保留，单独正确哈希命令exit0；不把组合改称exit0。首次Seal错root、真实第二holder、跨进程、孤儿竞争及旧版本升级尚待验证。双方部分提交尚未合入主集成；15/41AC与完整profile不广告状态不变。
+
+## 切片04固定检查与调度审阅恢复
+
+2026-10-05，05固定1a4e1d2的17原检查全部实际完成0/absent/noTimeout，root保存[准确命令、原日志与逐项结果](../lerna-04-content-snapshots/ticket-05-final-checks-1a4e1d2/README.md)。整仓Go每模式472具名RUN/PASS，24基线与7消费者每模式匹配；不带integration的整仓检查不证明Linux holder进程协议。原worker协调路径丢失后，以实际完成ACK与17原组当前absence恢复LOCAL空闲，不伪称原owner明确release；历史unknown Close仍保护。
+
+[独立双轴](../lerna-04-content-snapshots/ticket-05-review-1a4e1d2/README.md)发现文档P3及过期mixedScan64遮挡P2。root全文采用Astra准确扫描决定，先准备真实64积压red，再做最小Content消费者候选修正；当前无新业务red。03 clean28e的memo五单元及三公开资格已normal/race通过，新原四容量B仍未运行。03/05恢复implementers只静态准备，native逐段独占授权；15/41、whole04 in-progress、完整1.2广告OFF、所有22切片授权继续。

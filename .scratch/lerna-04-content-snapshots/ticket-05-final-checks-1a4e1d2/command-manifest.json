@@ -1,0 +1,164 @@
+{
+  "kind": "STATIC commands; none launched",
+  "source_sha": "1a4e1d2d704261a59491dfc6e0c5d26b80ec5107",
+  "sequential_only": true,
+  "native_wrapper": "/tmp/lerna-04-ticket05-execution/run-native.py",
+  "expected_operations": 17,
+  "selector_baseline_unique": 24,
+  "selector_consumer_unique": 7,
+  "operations": [
+    {
+      "name": "format",
+      "working_directory": "/tmp/lerna-worktrees/content-snapshots-05",
+      "source_sha": "1a4e1d2d704261a59491dfc6e0c5d26b80ec5107",
+      "native_supervisor_seconds": 120,
+      "shell": "set -e; set -o pipefail; source /workspace/.lerna-env/env.sh; git diff --check; git ls-files -z -- \"*.go\" | xargs -0 gofmt -l > /tmp/lerna-04-ticket05-execution/final-format-files.txt; cat /tmp/lerna-04-ticket05-execution/final-format-files.txt; test ! -s /tmp/lerna-04-ticket05-execution/final-format-files.txt",
+      "log": "/tmp/lerna-04-ticket05-execution/final-format.log",
+      "requires_explicit_parent_grant": true
+    },
+    {
+      "name": "vet",
+      "working_directory": "/tmp/lerna-worktrees/content-snapshots-05",
+      "source_sha": "1a4e1d2d704261a59491dfc6e0c5d26b80ec5107",
+      "native_supervisor_seconds": 120,
+      "shell": "set -e; set -o pipefail; source /workspace/.lerna-env/env.sh; go vet -tags=integration ./...",
+      "log": "/tmp/lerna-04-ticket05-execution/final-vet.log",
+      "requires_explicit_parent_grant": true
+    },
+    {
+      "name": "go-normal",
+      "working_directory": "/tmp/lerna-worktrees/content-snapshots-05",
+      "source_sha": "1a4e1d2d704261a59491dfc6e0c5d26b80ec5107",
+      "native_supervisor_seconds": 120,
+      "shell": "set -e; set -o pipefail; source /workspace/.lerna-env/env.sh; go test -v ./... -count=1 -timeout=120s",
+      "log": "/tmp/lerna-04-ticket05-execution/final-go-normal.log",
+      "requires_explicit_parent_grant": true
+    },
+    {
+      "name": "go-race",
+      "working_directory": "/tmp/lerna-worktrees/content-snapshots-05",
+      "source_sha": "1a4e1d2d704261a59491dfc6e0c5d26b80ec5107",
+      "native_supervisor_seconds": 120,
+      "shell": "set -e; set -o pipefail; source /workspace/.lerna-env/env.sh; go test -v -race ./... -count=1 -timeout=120s",
+      "log": "/tmp/lerna-04-ticket05-execution/final-go-race.log",
+      "requires_explicit_parent_grant": true
+    },
+    {
+      "name": "baseline-1-normal",
+      "working_directory": "/tmp/lerna-worktrees/content-snapshots-05",
+      "source_sha": "1a4e1d2d704261a59491dfc6e0c5d26b80ec5107",
+      "native_supervisor_seconds": 120,
+      "shell": "set -e; set -o pipefail; source /workspace/.lerna-env/env.sh; go test -v -tags=integration ./conformance/component -run '^(TestContentCorrectBytesDurablyAccepted|TestContentCurrentSavePolicyStopsObjectWrite|TestContentDecodedByteBoundHasRealNormalPublication|TestContentCommandReplayAndExactVersionIdentities|TestContentPublishedDamageAndMissingNeverRepairOnQuery|TestContentFailedStagingStillConsumesExplicitByteLimit)$' -count=1 -timeout=120s",
+      "log": "/tmp/lerna-04-ticket05-execution/final-baseline-1-normal.log",
+      "requires_explicit_parent_grant": true
+    },
+    {
+      "name": "baseline-2-normal",
+      "working_directory": "/tmp/lerna-worktrees/content-snapshots-05",
+      "source_sha": "1a4e1d2d704261a59491dfc6e0c5d26b80ec5107",
+      "native_supervisor_seconds": 120,
+      "shell": "set -e; set -o pipefail; source /workspace/.lerna-env/env.sh; go test -v -tags=integration ./conformance/component -run '^(TestContentTargetReadPoliciesBindExactPublishedDeclaration|TestContentTargetAuthorizationPrecedesExistenceAndMismatchObservation|TestContentReturnedBytesRequireCurrentReadAndDisclose|TestContentDirectReadPermissionsAreCurrentAndSeparate|TestContentNewAssociationRequiresCurrentDirectSourceAdmission|TestContentDirectSourcesRequireSeparateReadProcessSaveAndRetention)$' -count=1 -timeout=120s",
+      "log": "/tmp/lerna-04-ticket05-execution/final-baseline-2-normal.log",
+      "requires_explicit_parent_grant": true
+    },
+    {
+      "name": "baseline-3-normal",
+      "working_directory": "/tmp/lerna-worktrees/content-snapshots-05",
+      "source_sha": "1a4e1d2d704261a59491dfc6e0c5d26b80ec5107",
+      "native_supervisor_seconds": 120,
+      "shell": "set -e; set -o pipefail; source /workspace/.lerna-env/env.sh; go test -v -tags=integration ./conformance/component -run '^(TestContentLockWaitCannotReuseExpiredAdmissionClock|TestContentPublicationWaitCannotReuseExpiredPolicyClock|TestContentTemporaryFailureKeepsNarrowedRetentionAfterReopen|TestContentExpiredOriginalClaimCannotStartObjectIO|TestContentPostScheduleAdmissionRollsBackLateVersion|TestContentPostScheduleAliasPreservesOriginalCapOnRollback)$' -count=1 -timeout=120s",
+      "log": "/tmp/lerna-04-ticket05-execution/final-baseline-3-normal.log",
+      "requires_explicit_parent_grant": true
+    },
+    {
+      "name": "baseline-4-normal",
+      "working_directory": "/tmp/lerna-worktrees/content-snapshots-05",
+      "source_sha": "1a4e1d2d704261a59491dfc6e0c5d26b80ec5107",
+      "native_supervisor_seconds": 120,
+      "shell": "set -e; set -o pipefail; source /workspace/.lerna-env/env.sh; go test -v -tags=integration ./conformance/component -run '^(TestContentPublicationFinalTransactionChecksHiddenAncestorAfterRealObjectWrite|TestContentLaterAdmissionInheritsOriginalAncestorExpiry|TestContentAssociationKeepsPreparingCapacityAndFailedHistory|TestContentLegacyBackfillRestoresOriginalExpiryAndFailedHolderResponsibilities|TestContentLegacyPolicyPagesDoNotTruncateAt64OrResetOnReopen|TestContentActualExpiredOldWriterArchiveRetainsAncestorResponsibilities)$' -count=1 -timeout=120s",
+      "log": "/tmp/lerna-04-ticket05-execution/final-baseline-4-normal.log",
+      "requires_explicit_parent_grant": true
+    },
+    {
+      "name": "baseline-1-race",
+      "working_directory": "/tmp/lerna-worktrees/content-snapshots-05",
+      "source_sha": "1a4e1d2d704261a59491dfc6e0c5d26b80ec5107",
+      "native_supervisor_seconds": 120,
+      "shell": "set -e; set -o pipefail; source /workspace/.lerna-env/env.sh; go test -v -race -tags=integration ./conformance/component -run '^(TestContentCorrectBytesDurablyAccepted|TestContentCurrentSavePolicyStopsObjectWrite|TestContentDecodedByteBoundHasRealNormalPublication|TestContentCommandReplayAndExactVersionIdentities|TestContentPublishedDamageAndMissingNeverRepairOnQuery|TestContentFailedStagingStillConsumesExplicitByteLimit)$' -count=1 -timeout=120s",
+      "log": "/tmp/lerna-04-ticket05-execution/final-baseline-1-race.log",
+      "requires_explicit_parent_grant": true
+    },
+    {
+      "name": "baseline-2-race",
+      "working_directory": "/tmp/lerna-worktrees/content-snapshots-05",
+      "source_sha": "1a4e1d2d704261a59491dfc6e0c5d26b80ec5107",
+      "native_supervisor_seconds": 120,
+      "shell": "set -e; set -o pipefail; source /workspace/.lerna-env/env.sh; go test -v -race -tags=integration ./conformance/component -run '^(TestContentTargetReadPoliciesBindExactPublishedDeclaration|TestContentTargetAuthorizationPrecedesExistenceAndMismatchObservation|TestContentReturnedBytesRequireCurrentReadAndDisclose|TestContentDirectReadPermissionsAreCurrentAndSeparate|TestContentNewAssociationRequiresCurrentDirectSourceAdmission|TestContentDirectSourcesRequireSeparateReadProcessSaveAndRetention)$' -count=1 -timeout=120s",
+      "log": "/tmp/lerna-04-ticket05-execution/final-baseline-2-race.log",
+      "requires_explicit_parent_grant": true
+    },
+    {
+      "name": "baseline-3-race",
+      "working_directory": "/tmp/lerna-worktrees/content-snapshots-05",
+      "source_sha": "1a4e1d2d704261a59491dfc6e0c5d26b80ec5107",
+      "native_supervisor_seconds": 120,
+      "shell": "set -e; set -o pipefail; source /workspace/.lerna-env/env.sh; go test -v -race -tags=integration ./conformance/component -run '^(TestContentLockWaitCannotReuseExpiredAdmissionClock|TestContentPublicationWaitCannotReuseExpiredPolicyClock|TestContentTemporaryFailureKeepsNarrowedRetentionAfterReopen|TestContentExpiredOriginalClaimCannotStartObjectIO|TestContentPostScheduleAdmissionRollsBackLateVersion|TestContentPostScheduleAliasPreservesOriginalCapOnRollback)$' -count=1 -timeout=120s",
+      "log": "/tmp/lerna-04-ticket05-execution/final-baseline-3-race.log",
+      "requires_explicit_parent_grant": true
+    },
+    {
+      "name": "baseline-4-race",
+      "working_directory": "/tmp/lerna-worktrees/content-snapshots-05",
+      "source_sha": "1a4e1d2d704261a59491dfc6e0c5d26b80ec5107",
+      "native_supervisor_seconds": 120,
+      "shell": "set -e; set -o pipefail; source /workspace/.lerna-env/env.sh; go test -v -race -tags=integration ./conformance/component -run '^(TestContentPublicationFinalTransactionChecksHiddenAncestorAfterRealObjectWrite|TestContentLaterAdmissionInheritsOriginalAncestorExpiry|TestContentAssociationKeepsPreparingCapacityAndFailedHistory|TestContentLegacyBackfillRestoresOriginalExpiryAndFailedHolderResponsibilities|TestContentLegacyPolicyPagesDoNotTruncateAt64OrResetOnReopen|TestContentActualExpiredOldWriterArchiveRetainsAncestorResponsibilities)$' -count=1 -timeout=120s",
+      "log": "/tmp/lerna-04-ticket05-execution/final-baseline-4-race.log",
+      "requires_explicit_parent_grant": true
+    },
+    {
+      "name": "consumer-1-normal",
+      "working_directory": "/tmp/lerna-worktrees/content-snapshots-05",
+      "source_sha": "1a4e1d2d704261a59491dfc6e0c5d26b80ec5107",
+      "native_supervisor_seconds": 120,
+      "shell": "set -e; set -o pipefail; source /workspace/.lerna-env/env.sh; go test -v -tags=integration ./conformance/component -run '^(TestContentCurrentSaveWithdrawalStartsOriginalSealAndRealCleanupConsumer|TestContentRestoredSaveBasisMakesOriginalCleanupNotRequiredWithoutSealing|TestContentExpiredOriginalAcceptedCapStartsCleanupDespiteCurrentWideRenewal|TestContentOriginalCleanupPageCASRollsBackEarlierQualificationsAfterConcurrentConsumer)$' -count=1 -timeout=120s",
+      "log": "/tmp/lerna-04-ticket05-execution/final-consumer-1-normal.log",
+      "requires_explicit_parent_grant": true
+    },
+    {
+      "name": "consumer-2-normal",
+      "working_directory": "/tmp/lerna-worktrees/content-snapshots-05",
+      "source_sha": "1a4e1d2d704261a59491dfc6e0c5d26b80ec5107",
+      "native_supervisor_seconds": 120,
+      "shell": "set -e; set -o pipefail; source /workspace/.lerna-env/env.sh; go test -v -tags=integration ./conformance/component -run '^(TestContentOriginalCleanupDeadlineCannotBeExtendedByCurrentPolicyLockWait|TestContentInheritedExpiredCapConsumesItsExactAdmissionTargetWithoutDeletingLiveAncestor|TestContentOriginalAdmissionCleanupDeadlineSurvivesCurrentTargetPolicyLockWait)$' -count=1 -timeout=120s",
+      "log": "/tmp/lerna-04-ticket05-execution/final-consumer-2-normal.log",
+      "requires_explicit_parent_grant": true
+    },
+    {
+      "name": "consumer-1-race",
+      "working_directory": "/tmp/lerna-worktrees/content-snapshots-05",
+      "source_sha": "1a4e1d2d704261a59491dfc6e0c5d26b80ec5107",
+      "native_supervisor_seconds": 120,
+      "shell": "set -e; set -o pipefail; source /workspace/.lerna-env/env.sh; go test -v -race -tags=integration ./conformance/component -run '^(TestContentCurrentSaveWithdrawalStartsOriginalSealAndRealCleanupConsumer|TestContentRestoredSaveBasisMakesOriginalCleanupNotRequiredWithoutSealing|TestContentExpiredOriginalAcceptedCapStartsCleanupDespiteCurrentWideRenewal|TestContentOriginalCleanupPageCASRollsBackEarlierQualificationsAfterConcurrentConsumer)$' -count=1 -timeout=120s",
+      "log": "/tmp/lerna-04-ticket05-execution/final-consumer-1-race.log",
+      "requires_explicit_parent_grant": true
+    },
+    {
+      "name": "consumer-2-race",
+      "working_directory": "/tmp/lerna-worktrees/content-snapshots-05",
+      "source_sha": "1a4e1d2d704261a59491dfc6e0c5d26b80ec5107",
+      "native_supervisor_seconds": 120,
+      "shell": "set -e; set -o pipefail; source /workspace/.lerna-env/env.sh; go test -v -race -tags=integration ./conformance/component -run '^(TestContentOriginalCleanupDeadlineCannotBeExtendedByCurrentPolicyLockWait|TestContentInheritedExpiredCapConsumesItsExactAdmissionTargetWithoutDeletingLiveAncestor|TestContentOriginalAdmissionCleanupDeadlineSurvivesCurrentTargetPolicyLockWait)$' -count=1 -timeout=120s",
+      "log": "/tmp/lerna-04-ticket05-execution/final-consumer-2-race.log",
+      "requires_explicit_parent_grant": true
+    },
+    {
+      "name": "frozen-sql-hashes",
+      "working_directory": "/tmp/lerna-worktrees/content-snapshots-05",
+      "source_sha": "1a4e1d2d704261a59491dfc6e0c5d26b80ec5107",
+      "native_supervisor_seconds": 120,
+      "shell": "set -e; set -o pipefail; source /workspace/.lerna-env/env.sh; sha256sum adapters/postgres/content/migrations/0001_content.sql adapters/postgres/content/migrations/0002_source_policies.sql adapters/postgres/content/migrations/0003_body_cleanup.sql",
+      "log": "/tmp/lerna-04-ticket05-execution/final-frozen-sql-hashes.log",
+      "requires_explicit_parent_grant": true
+    }
+  ]
+}

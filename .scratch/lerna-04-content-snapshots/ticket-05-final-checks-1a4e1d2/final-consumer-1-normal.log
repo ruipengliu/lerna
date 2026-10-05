@@ -1,0 +1,11 @@
+=== RUN   TestContentExpiredOriginalAcceptedCapStartsCleanupDespiteCurrentWideRenewal
+--- PASS: TestContentExpiredOriginalAcceptedCapStartsCleanupDespiteCurrentWideRenewal (2.29s)
+=== RUN   TestContentOriginalCleanupPageCASRollsBackEarlierQualificationsAfterConcurrentConsumer
+--- PASS: TestContentOriginalCleanupPageCASRollsBackEarlierQualificationsAfterConcurrentConsumer (0.48s)
+=== RUN   TestContentRestoredSaveBasisMakesOriginalCleanupNotRequiredWithoutSealing
+--- PASS: TestContentRestoredSaveBasisMakesOriginalCleanupNotRequiredWithoutSealing (0.23s)
+=== RUN   TestContentCurrentSaveWithdrawalStartsOriginalSealAndRealCleanupConsumer
+--- PASS: TestContentCurrentSaveWithdrawalStartsOriginalSealAndRealCleanupConsumer (0.28s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/component	3.289s
+NATIVE_COMPLETION_ACK {"pid": 3228190, "pgid": 3228190, "starttime": "13472885", "exit": 0, "group_absent": true, "timed_out": false}
