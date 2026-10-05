@@ -12,7 +12,7 @@ import (
 )
 
 type Store interface {
-	Transaction(context.Context, func(context.Context) error) error
+	Transaction(context.Context, string, func(context.Context) error) error
 	LoadReceipt(context.Context, *v1.CommandIdentity) (*v1.CommandReceipt, error)
 	SaveReceipt(context.Context, *v1.CommandReceipt) error
 	SaveJob(context.Context, *v1.Job) error
@@ -34,7 +34,7 @@ func (s *Service) Submit(ctx context.Context, caller *v1.Caller, c *v1.SubmitGoa
 	}
 	fingerprint := command.FingerprintV1(c)
 	var receipt *v1.CommandReceipt
-	err := s.store.Transaction(ctx, func(tx context.Context) error {
+	err := s.store.Transaction(ctx, "durable.submit", func(tx context.Context) error {
 		old, err := s.store.LoadReceipt(tx, c.Identity)
 		if err != nil {
 			return err
@@ -63,14 +63,17 @@ func (s *Service) Submit(ctx context.Context, caller *v1.Caller, c *v1.SubmitGoa
 		}
 		return s.store.SaveReceipt(tx, receipt)
 	})
-	return receipt, err
+	if err != nil {
+		return nil, err
+	}
+	return receipt, nil
 }
 
 // Decide 在同一事务中调用固定的事实写入方，再保存不可变决定。
 // handler 必须在任何写入前完成全部业务拒绝检查；写入后只能返回导致整笔回滚的暂时性错误。
 // 多参与者需要写入后裁决时，必须先扩展事务保存点，不能直接复用此约定。
 func (s *Service) Decide(ctx context.Context, job *v1.Job, handler func(context.Context, *v1.PendingGoal) (*v1.Ref, *v1.Ref, error)) error {
-	return s.store.Transaction(ctx, func(tx context.Context) error {
+	return s.store.Transaction(ctx, "durable.decide", func(tx context.Context) error {
 		if job == nil || job.Ref == nil || job.Ref.Name == nil || job.Ref.Name.UserId != s.user || job.Ref.Name.AuthorityDomainId != s.domain {
 			return command.Fail("STALE_CLAIM")
 		}
@@ -86,6 +89,7 @@ func (s *Service) Decide(ctx context.Context, job *v1.Job, handler func(context.
 			return err
 		}
 		job = current
+
 		r, err := s.store.LoadReceipt(tx, job.Responsibility)
 		if err != nil {
 			return err

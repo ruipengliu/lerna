@@ -3,6 +3,7 @@ package sessions
 
 import (
 	"context"
+	"time"
 
 	"github.com/ruipengliu/lerna/contracts/command"
 	v1 "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1"
@@ -14,6 +15,7 @@ type Store interface {
 	Position(context.Context) (uint64, int64, error)
 }
 type Durable interface {
+	Pending(context.Context, *v1.Caller) ([]*v1.Job, error)
 	Submit(context.Context, *v1.Caller, *v1.SubmitGoalCommand, *v1.Ref) (*v1.CommandReceipt, error)
 	ExecuteJob(context.Context, *v1.Caller, *v1.JobCommand) (*v1.CommandReceipt, error)
 	Decide(context.Context, *v1.Job, func(context.Context, *v1.PendingGoal) (*v1.Ref, *v1.Ref, error)) error
@@ -128,4 +130,35 @@ func (s *Service) QuerySession(ctx context.Context, caller *v1.Caller, id *v1.Gl
 		return nil, err
 	}
 	return s.store.LoadSession(ctx, id)
+}
+
+// RecoverPending 在启动期限内等待现有领取自然过期，再恢复原目标责任。
+// 等待不持有事务锁；到期后的写入仍由存储时间和领取代次裁决。
+func (s *Service) RecoverPending(ctx context.Context, caller *v1.Caller) error {
+	for {
+		if err := s.ProcessPending(ctx, caller); err != nil {
+			return err
+		}
+		jobs, err := s.durable.Pending(ctx, caller)
+		if err != nil {
+			return err
+		}
+		pending := false
+		for _, job := range jobs {
+			if job.JobType == "DECIDE_GOAL" {
+				pending = true
+				break
+			}
+		}
+		if !pending {
+			return nil
+		}
+		timer := time.NewTimer(25 * time.Millisecond)
+		select {
+		case <-ctx.Done():
+			timer.Stop()
+			return ctx.Err()
+		case <-timer.C:
+		}
+	}
 }

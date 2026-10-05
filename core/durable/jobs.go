@@ -27,7 +27,7 @@ func (s *Service) ExecuteJob(ctx context.Context, caller *v1.Caller, c *v1.JobCo
 	h := sha256.Sum256(b)
 	fingerprint := hex.EncodeToString(h[:])
 	var result *v1.CommandReceipt
-	err := s.store.Transaction(ctx, func(tx context.Context) error {
+	err := s.store.Transaction(ctx, "durable.jobs", func(tx context.Context) error {
 		old, e := s.store.LoadReceipt(tx, c.Identity)
 		if e != nil {
 			return e
