@@ -74,6 +74,8 @@ message Task {
   int64 revision = 14;
   string session_id = 15;
   google.protobuf.Timestamp created_at = 16;
+  // 目标推进冻结：持有冻结的核验轮次号；0 表示没有冻结。
+  int64 frozen_round = 17;
 }
 
 // 条件来源（任务编排 2.2）。
@@ -244,6 +246,12 @@ message OperationView {
   bool started = 10;
   map<string, string> arguments = 11;
   int64 admitted_control_generation = 12;
+  // 观察到的结构化结果（例如读回内容的摘要），来自执行管理的通知。
+  map<string, string> observed = 13;
+  repeated string evidence_refs = 14;
+  // 核对进度与暂停原因。
+  ReconcileState reconcile_state = 15;
+  string pause_reason = 16;
 }
 
 // 核验轮次状态（核心契约 2.5）。
@@ -265,6 +273,8 @@ message VerificationRound {
   repeated string operation_ids = 7;
   repeated string gaps = 8;
   string proposal_id = 9;
+  // 本轮结束的原因（被替代时）。
+  string reason = 10;
 }
 
 // Result 中逐条列出的条件结论（核心契约 2.3）。

@@ -744,8 +744,10 @@ type Task struct {
 	Revision            int64                  `protobuf:"varint,14,opt,name=revision,proto3" json:"revision,omitempty"`
 	SessionId           string                 `protobuf:"bytes,15,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
 	CreatedAt           *timestamppb.Timestamp `protobuf:"bytes,16,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	unknownFields       protoimpl.UnknownFields
-	sizeCache           protoimpl.SizeCache
+	// 目标推进冻结：持有冻结的核验轮次号；0 表示没有冻结。
+	FrozenRound   int64 `protobuf:"varint,17,opt,name=frozen_round,json=frozenRound,proto3" json:"frozen_round,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Task) Reset() {
@@ -888,6 +890,13 @@ func (x *Task) GetCreatedAt() *timestamppb.Timestamp {
 		return x.CreatedAt
 	}
 	return nil
+}
+
+func (x *Task) GetFrozenRound() int64 {
+	if x != nil {
+		return x.FrozenRound
+	}
+	return 0
 }
 
 type VerificationRule struct {
@@ -1795,8 +1804,14 @@ type OperationView struct {
 	Started                   bool              `protobuf:"varint,10,opt,name=started,proto3" json:"started,omitempty"`
 	Arguments                 map[string]string `protobuf:"bytes,11,rep,name=arguments,proto3" json:"arguments,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	AdmittedControlGeneration int64             `protobuf:"varint,12,opt,name=admitted_control_generation,json=admittedControlGeneration,proto3" json:"admitted_control_generation,omitempty"`
-	unknownFields             protoimpl.UnknownFields
-	sizeCache                 protoimpl.SizeCache
+	// 观察到的结构化结果（例如读回内容的摘要），来自执行管理的通知。
+	Observed     map[string]string `protobuf:"bytes,13,rep,name=observed,proto3" json:"observed,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	EvidenceRefs []string          `protobuf:"bytes,14,rep,name=evidence_refs,json=evidenceRefs,proto3" json:"evidence_refs,omitempty"`
+	// 核对进度与暂停原因。
+	ReconcileState ReconcileState `protobuf:"varint,15,opt,name=reconcile_state,json=reconcileState,proto3,enum=lerna.v1.ReconcileState" json:"reconcile_state,omitempty"`
+	PauseReason    string         `protobuf:"bytes,16,opt,name=pause_reason,json=pauseReason,proto3" json:"pause_reason,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *OperationView) Reset() {
@@ -1913,6 +1928,34 @@ func (x *OperationView) GetAdmittedControlGeneration() int64 {
 	return 0
 }
 
+func (x *OperationView) GetObserved() map[string]string {
+	if x != nil {
+		return x.Observed
+	}
+	return nil
+}
+
+func (x *OperationView) GetEvidenceRefs() []string {
+	if x != nil {
+		return x.EvidenceRefs
+	}
+	return nil
+}
+
+func (x *OperationView) GetReconcileState() ReconcileState {
+	if x != nil {
+		return x.ReconcileState
+	}
+	return ReconcileState_RECONCILE_STATE_UNSPECIFIED
+}
+
+func (x *OperationView) GetPauseReason() string {
+	if x != nil {
+		return x.PauseReason
+	}
+	return ""
+}
+
 type VerificationRound struct {
 	state               protoimpl.MessageState `protogen:"open.v1"`
 	TaskId              string                 `protobuf:"bytes,1,opt,name=task_id,json=taskId,proto3" json:"task_id,omitempty"`
@@ -1924,8 +1967,10 @@ type VerificationRound struct {
 	OperationIds        []string               `protobuf:"bytes,7,rep,name=operation_ids,json=operationIds,proto3" json:"operation_ids,omitempty"`
 	Gaps                []string               `protobuf:"bytes,8,rep,name=gaps,proto3" json:"gaps,omitempty"`
 	ProposalId          string                 `protobuf:"bytes,9,opt,name=proposal_id,json=proposalId,proto3" json:"proposal_id,omitempty"`
-	unknownFields       protoimpl.UnknownFields
-	sizeCache           protoimpl.SizeCache
+	// 本轮结束的原因（被替代时）。
+	Reason        string `protobuf:"bytes,10,opt,name=reason,proto3" json:"reason,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *VerificationRound) Reset() {
@@ -2017,6 +2062,13 @@ func (x *VerificationRound) GetGaps() []string {
 func (x *VerificationRound) GetProposalId() string {
 	if x != nil {
 		return x.ProposalId
+	}
+	return ""
+}
+
+func (x *VerificationRound) GetReason() string {
+	if x != nil {
+		return x.Reason
 	}
 	return ""
 }
@@ -2772,7 +2824,7 @@ const file_lerna_v1_task_proto_rawDesc = "" +
 	"\tWaitingOn\x12)\n" +
 	"\x04kind\x18\x01 \x01(\x0e2\x15.lerna.v1.WaitingKindR\x04kind\x12\x10\n" +
 	"\x03ref\x18\x02 \x01(\tR\x03ref\x12\x10\n" +
-	"\x03gap\x18\x03 \x01(\tR\x03gap\"\x98\x05\n" +
+	"\x03gap\x18\x03 \x01(\tR\x03gap\"\xbb\x05\n" +
 	"\x04Task\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x17\n" +
 	"\atask_id\x18\x02 \x01(\tR\x06taskId\x12&\n" +
@@ -2794,7 +2846,8 @@ const file_lerna_v1_task_proto_rawDesc = "" +
 	"\n" +
 	"session_id\x18\x0f \x01(\tR\tsessionId\x129\n" +
 	"\n" +
-	"created_at\x18\x10 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\xa9\x02\n" +
+	"created_at\x18\x10 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x12!\n" +
+	"\ffrozen_round\x18\x11 \x01(\x03R\vfrozenRound\"\xa9\x02\n" +
 	"\x10VerificationRule\x122\n" +
 	"\x04kind\x18\x01 \x01(\x0e2\x1e.lerna.v1.VerificationRuleKindR\x04kind\x12\x18\n" +
 	"\aversion\x18\x02 \x01(\tR\aversion\x12#\n" +
@@ -2881,7 +2934,7 @@ const file_lerna_v1_task_proto_rawDesc = "" +
 	"\n" +
 	"basis_refs\x18\x0f \x03(\tR\tbasisRefs\x12\x12\n" +
 	"\x04gaps\x18\x10 \x03(\tR\x04gapsB\x06\n" +
-	"\x04body\"\xd6\x04\n" +
+	"\x04body\"\xe1\x06\n" +
 	"\rOperationView\x12!\n" +
 	"\foperation_id\x18\x01 \x01(\tR\voperationId\x12#\n" +
 	"\rcapability_id\x18\x02 \x01(\tR\fcapabilityId\x12\x16\n" +
@@ -2896,10 +2949,17 @@ const file_lerna_v1_task_proto_rawDesc = "" +
 	"\astarted\x18\n" +
 	" \x01(\bR\astarted\x12D\n" +
 	"\targuments\x18\v \x03(\v2&.lerna.v1.OperationView.ArgumentsEntryR\targuments\x12>\n" +
-	"\x1badmitted_control_generation\x18\f \x01(\x03R\x19admittedControlGeneration\x1a<\n" +
+	"\x1badmitted_control_generation\x18\f \x01(\x03R\x19admittedControlGeneration\x12A\n" +
+	"\bobserved\x18\r \x03(\v2%.lerna.v1.OperationView.ObservedEntryR\bobserved\x12#\n" +
+	"\revidence_refs\x18\x0e \x03(\tR\fevidenceRefs\x12A\n" +
+	"\x0freconcile_state\x18\x0f \x01(\x0e2\x18.lerna.v1.ReconcileStateR\x0ereconcileState\x12!\n" +
+	"\fpause_reason\x18\x10 \x01(\tR\vpauseReason\x1a<\n" +
 	"\x0eArgumentsEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xde\x02\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\x1a;\n" +
+	"\rObservedEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xf6\x02\n" +
 	"\x11VerificationRound\x12\x17\n" +
 	"\atask_id\x18\x01 \x01(\tR\x06taskId\x12\x19\n" +
 	"\bround_no\x18\x02 \x01(\x03R\aroundNo\x124\n" +
@@ -2910,7 +2970,9 @@ const file_lerna_v1_task_proto_rawDesc = "" +
 	"\roperation_ids\x18\a \x03(\tR\foperationIds\x12\x12\n" +
 	"\x04gaps\x18\b \x03(\tR\x04gaps\x12\x1f\n" +
 	"\vproposal_id\x18\t \x01(\tR\n" +
-	"proposalId\"\x97\x02\n" +
+	"proposalId\x12\x16\n" +
+	"\x06reason\x18\n" +
+	" \x01(\tR\x06reason\"\x97\x02\n" +
 	"\x15RequirementEvaluation\x12%\n" +
 	"\x0erequirement_id\x18\x01 \x01(\tR\rrequirementId\x12 \n" +
 	"\vdescription\x18\x02 \x01(\tR\vdescription\x12.\n" +
@@ -3069,7 +3131,7 @@ func file_lerna_v1_task_proto_rawDescGZIP() []byte {
 }
 
 var file_lerna_v1_task_proto_enumTypes = make([]protoimpl.EnumInfo, 12)
-var file_lerna_v1_task_proto_msgTypes = make([]protoimpl.MessageInfo, 27)
+var file_lerna_v1_task_proto_msgTypes = make([]protoimpl.MessageInfo, 28)
 var file_lerna_v1_task_proto_goTypes = []any{
 	(TaskLifecycle)(0),             // 0: lerna.v1.TaskLifecycle
 	(TaskControl)(0),               // 1: lerna.v1.TaskControl
@@ -3109,11 +3171,13 @@ var file_lerna_v1_task_proto_goTypes = []any{
 	nil,                            // 35: lerna.v1.RequirementSetDraft.TemplateParamsEntry
 	nil,                            // 36: lerna.v1.PlanStep.ArgumentsEntry
 	nil,                            // 37: lerna.v1.OperationView.ArgumentsEntry
-	nil,                            // 38: lerna.v1.AdmissionRecord.ParametersEntry
-	(*timestamppb.Timestamp)(nil),  // 39: google.protobuf.Timestamp
-	(EffectOutcome)(0),             // 40: lerna.v1.EffectOutcome
-	(LateEffect)(0),                // 41: lerna.v1.LateEffect
-	(DispatchState)(0),             // 42: lerna.v1.DispatchState
+	nil,                            // 38: lerna.v1.OperationView.ObservedEntry
+	nil,                            // 39: lerna.v1.AdmissionRecord.ParametersEntry
+	(*timestamppb.Timestamp)(nil),  // 40: google.protobuf.Timestamp
+	(EffectOutcome)(0),             // 41: lerna.v1.EffectOutcome
+	(LateEffect)(0),                // 42: lerna.v1.LateEffect
+	(DispatchState)(0),             // 43: lerna.v1.DispatchState
+	(ReconcileState)(0),            // 44: lerna.v1.ReconcileState
 }
 var file_lerna_v1_task_proto_depIdxs = []int32{
 	3,  // 0: lerna.v1.WaitingOn.kind:type_name -> lerna.v1.WaitingKind
@@ -3121,7 +3185,7 @@ var file_lerna_v1_task_proto_depIdxs = []int32{
 	1,  // 2: lerna.v1.Task.control:type_name -> lerna.v1.TaskControl
 	2,  // 3: lerna.v1.Task.progress:type_name -> lerna.v1.TaskProgress
 	12, // 4: lerna.v1.Task.waiting_on:type_name -> lerna.v1.WaitingOn
-	39, // 5: lerna.v1.Task.created_at:type_name -> google.protobuf.Timestamp
+	40, // 5: lerna.v1.Task.created_at:type_name -> google.protobuf.Timestamp
 	6,  // 6: lerna.v1.VerificationRule.kind:type_name -> lerna.v1.VerificationRuleKind
 	34, // 7: lerna.v1.VerificationRule.params:type_name -> lerna.v1.VerificationRule.ParamsEntry
 	14, // 8: lerna.v1.Requirement.rule:type_name -> lerna.v1.VerificationRule
@@ -3141,32 +3205,34 @@ var file_lerna_v1_task_proto_depIdxs = []int32{
 	20, // 22: lerna.v1.Proposal.ask_user:type_name -> lerna.v1.AskUserBody
 	21, // 23: lerna.v1.Proposal.modify_requirements:type_name -> lerna.v1.ModifyRequirementsBody
 	23, // 24: lerna.v1.Proposal.completion:type_name -> lerna.v1.CompletionBody
-	40, // 25: lerna.v1.OperationView.effect:type_name -> lerna.v1.EffectOutcome
-	41, // 26: lerna.v1.OperationView.late_effect:type_name -> lerna.v1.LateEffect
-	42, // 27: lerna.v1.OperationView.dispatch:type_name -> lerna.v1.DispatchState
+	41, // 25: lerna.v1.OperationView.effect:type_name -> lerna.v1.EffectOutcome
+	42, // 26: lerna.v1.OperationView.late_effect:type_name -> lerna.v1.LateEffect
+	43, // 27: lerna.v1.OperationView.dispatch:type_name -> lerna.v1.DispatchState
 	37, // 28: lerna.v1.OperationView.arguments:type_name -> lerna.v1.OperationView.ArgumentsEntry
-	11, // 29: lerna.v1.VerificationRound.status:type_name -> lerna.v1.VerificationStatus
-	14, // 30: lerna.v1.RequirementEvaluation.rule:type_name -> lerna.v1.VerificationRule
-	5,  // 31: lerna.v1.RequirementEvaluation.source:type_name -> lerna.v1.RequirementSource
-	10, // 32: lerna.v1.RequirementEvaluation.verdict:type_name -> lerna.v1.Verdict
-	40, // 33: lerna.v1.Uncertainty.effect:type_name -> lerna.v1.EffectOutcome
-	41, // 34: lerna.v1.Uncertainty.late_effect:type_name -> lerna.v1.LateEffect
-	4,  // 35: lerna.v1.Result.outcome:type_name -> lerna.v1.TaskOutcome
-	27, // 36: lerna.v1.Result.requirement_evaluations:type_name -> lerna.v1.RequirementEvaluation
-	28, // 37: lerna.v1.Result.uncertainties:type_name -> lerna.v1.Uncertainty
-	39, // 38: lerna.v1.Result.closed_at:type_name -> google.protobuf.Timestamp
-	13, // 39: lerna.v1.TaskView.task:type_name -> lerna.v1.Task
-	16, // 40: lerna.v1.TaskView.requirements:type_name -> lerna.v1.RequirementSet
-	25, // 41: lerna.v1.TaskView.operations:type_name -> lerna.v1.OperationView
-	26, // 42: lerna.v1.TaskView.rounds:type_name -> lerna.v1.VerificationRound
-	29, // 43: lerna.v1.TaskView.result:type_name -> lerna.v1.Result
-	24, // 44: lerna.v1.TaskView.proposals:type_name -> lerna.v1.Proposal
-	38, // 45: lerna.v1.AdmissionRecord.parameters:type_name -> lerna.v1.AdmissionRecord.ParametersEntry
-	46, // [46:46] is the sub-list for method output_type
-	46, // [46:46] is the sub-list for method input_type
-	46, // [46:46] is the sub-list for extension type_name
-	46, // [46:46] is the sub-list for extension extendee
-	0,  // [0:46] is the sub-list for field type_name
+	38, // 29: lerna.v1.OperationView.observed:type_name -> lerna.v1.OperationView.ObservedEntry
+	44, // 30: lerna.v1.OperationView.reconcile_state:type_name -> lerna.v1.ReconcileState
+	11, // 31: lerna.v1.VerificationRound.status:type_name -> lerna.v1.VerificationStatus
+	14, // 32: lerna.v1.RequirementEvaluation.rule:type_name -> lerna.v1.VerificationRule
+	5,  // 33: lerna.v1.RequirementEvaluation.source:type_name -> lerna.v1.RequirementSource
+	10, // 34: lerna.v1.RequirementEvaluation.verdict:type_name -> lerna.v1.Verdict
+	41, // 35: lerna.v1.Uncertainty.effect:type_name -> lerna.v1.EffectOutcome
+	42, // 36: lerna.v1.Uncertainty.late_effect:type_name -> lerna.v1.LateEffect
+	4,  // 37: lerna.v1.Result.outcome:type_name -> lerna.v1.TaskOutcome
+	27, // 38: lerna.v1.Result.requirement_evaluations:type_name -> lerna.v1.RequirementEvaluation
+	28, // 39: lerna.v1.Result.uncertainties:type_name -> lerna.v1.Uncertainty
+	40, // 40: lerna.v1.Result.closed_at:type_name -> google.protobuf.Timestamp
+	13, // 41: lerna.v1.TaskView.task:type_name -> lerna.v1.Task
+	16, // 42: lerna.v1.TaskView.requirements:type_name -> lerna.v1.RequirementSet
+	25, // 43: lerna.v1.TaskView.operations:type_name -> lerna.v1.OperationView
+	26, // 44: lerna.v1.TaskView.rounds:type_name -> lerna.v1.VerificationRound
+	29, // 45: lerna.v1.TaskView.result:type_name -> lerna.v1.Result
+	24, // 46: lerna.v1.TaskView.proposals:type_name -> lerna.v1.Proposal
+	39, // 47: lerna.v1.AdmissionRecord.parameters:type_name -> lerna.v1.AdmissionRecord.ParametersEntry
+	48, // [48:48] is the sub-list for method output_type
+	48, // [48:48] is the sub-list for method input_type
+	48, // [48:48] is the sub-list for extension type_name
+	48, // [48:48] is the sub-list for extension extendee
+	0,  // [0:48] is the sub-list for field type_name
 }
 
 func init() { file_lerna_v1_task_proto_init() }
@@ -3187,7 +3253,7 @@ func file_lerna_v1_task_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_lerna_v1_task_proto_rawDesc), len(file_lerna_v1_task_proto_rawDesc)),
 			NumEnums:      12,
-			NumMessages:   27,
+			NumMessages:   28,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

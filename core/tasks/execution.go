@@ -122,6 +122,10 @@ func (m *Module) handleOperationUpdate(_ context.Context, tx *durable.Tx, in dur
 	if u.GetStarted() {
 		v.Started = true
 	}
+	v.Observed = u.GetObserved()
+	v.EvidenceRefs = u.GetEvidenceRefs()
+	v.ReconcileState = u.GetReconcileState()
+	v.PauseReason = u.GetPauseReason()
 	if err := saveOperationView(tx, user, taskID, v); err != nil {
 		return durable.Outcome{}, err
 	}
@@ -139,6 +143,10 @@ func (m *Module) onOperationProgress(tx *durable.Tx, t *lernav1.Task, v *lernav1
 	}
 	if err := m.onCoreWorkUpdate(tx, t, v, u); err != nil {
 		return err
+	}
+	if t.GetFrozenRound() != 0 {
+		// 核验轮次进行中：动作的新事实交给核验工作重新判断。
+		return tx.WakeJob(t.GetUserId(), verifyPurpose(t.GetTaskId(), t.GetFrozenRound()))
 	}
 	if !v.GetSettled() && v.GetEffect() != lernav1.EffectOutcome_EFFECT_OUTCOME_UNKNOWN {
 		return nil

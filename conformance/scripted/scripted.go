@@ -129,3 +129,12 @@ func rank(p *lernav1.ProgressItem) int {
 		return 1
 	}
 }
+
+// ActOnly 只提议条件需要的动作，从不提议完成：用于让任务停在动作之后。
+func ActOnly(ctx context.Context, snap *lernav1.ContextSnapshot, models ports.ModelCaller) (*lernav1.Proposal, error) {
+	p, err := Default(ctx, snap, models)
+	if err != nil || p.GetKind() == lernav1.ProposalKind_PROPOSAL_KIND_COMPLETION {
+		return nil, ErrNothingToDo
+	}
+	return p, nil
+}

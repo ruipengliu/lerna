@@ -285,31 +285,14 @@ func (m *Module) closeIfNeverDispatched(ctx context.Context, c *durable.Claim, r
 		if err != nil {
 			return durable.Transition{}, err
 		}
+		if st.op.GetLifecycle() == lernav1.OperationLifecycle_OPERATION_LIFECYCLE_SETTLED {
+			return durable.Done(), nil
+		}
 		if st.anyDispatched() {
 			return durable.Transition{}, errs.New(lernav1.ErrorCode_ERROR_CODE_INVARIANT_VIOLATION,
 				"operation %s may have been dispatched; internal closure is not allowed", c.Subject)
 		}
-		op := st.op
-		op.Dispatch = lernav1.DispatchState_DISPATCH_STATE_SEALED
-		if op.GetSealReason() == "" {
-			op.SealReason = reason
-		}
-		op.Effect = lernav1.EffectOutcome_EFFECT_OUTCOME_NOT_APPLIED
-		op.LateEffect = lernav1.LateEffect_LATE_EFFECT_RULED_OUT
-		op.Lifecycle = lernav1.OperationLifecycle_OPERATION_LIFECYCLE_SETTLED
-		op.ClosureEvidenceRefs = append(op.ClosureEvidenceRefs,
-			"internal-closure:"+m.Domain.ID()+"/"+op.GetOperationId()+"@"+strconv.FormatInt(op.GetLedgerRevision()+1, 10))
-		if _, err := tx.Exec(`UPDATE attempts SET phase = ? WHERE user_id = ? AND operation_id = ?`,
-			int32(lernav1.AttemptPhase_ATTEMPT_PHASE_CLOSED), c.User, c.Subject); err != nil {
-			return durable.Transition{}, err
-		}
-		if err := saveOperation(tx, op); err != nil {
-			return durable.Transition{}, err
-		}
-		if err := m.afterSettle(tx, op); err != nil {
-			return durable.Transition{}, err
-		}
-		return durable.Done(), m.notify(tx, op, st)
+		return durable.Done(), m.internalClosure(tx, st, reason)
 	})
 }
 

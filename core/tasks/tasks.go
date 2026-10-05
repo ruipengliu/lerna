@@ -37,6 +37,8 @@ func (m *Module) Register() {
 	m.Domain.HandleJob(JobCreateTask, m.createTask)
 	m.Domain.HandleJob(JobPropose, m.propose)
 	m.Domain.HandleJob(JobAdjudicate, m.adjudicate)
+	m.Domain.HandleJob(JobVerify, m.verify)
+	m.Domain.OnHandoffReceipt(ports.CommandSealDispatch, m.onSealReceipt)
 	m.Domain.HandleCommand(ports.CommandAdmit,
 		func() proto.Message { return &lernav1.AdmitProposalCommand{} }, m.handleAdmit)
 	m.Domain.HandleCommand(ports.CommandStartSend,
@@ -208,10 +210,10 @@ func loadTask(tx *durable.Tx, user, taskID string) (*lernav1.Task, error) {
 	var waiting []byte
 	var created int64
 	err := tx.QueryRow(`SELECT owner_domain_id, session_id, goal_ref, requirements_version, input_version, lifecycle,
-		control, progress, waiting_on, planning_generation, control_generation, revision, result_ref, created_at
+		control, progress, waiting_on, planning_generation, control_generation, revision, result_ref, created_at, frozen_round
 		FROM tasks WHERE user_id = ? AND task_id = ?`, user, taskID).Scan(
 		&t.OwnerDomainId, &t.SessionId, &t.GoalRef, &t.RequirementsVersion, &t.InputVersion, &lifecycle, &control,
-		&progress, &waiting, &t.PlanningGeneration, &t.ControlGeneration, &t.Revision, &t.ResultRef, &created)
+		&progress, &waiting, &t.PlanningGeneration, &t.ControlGeneration, &t.Revision, &t.ResultRef, &created, &t.FrozenRound)
 	if errors.Is(err, sql.ErrNoRows) {
 		return nil, nil
 	}
@@ -289,6 +291,12 @@ func (m *Module) View(ctx context.Context, user, taskID string) (*lernav1.TaskVi
 			return err
 		}
 		if v.Operations, err = loadOperationViews(tx, user, taskID); err != nil {
+			return err
+		}
+		if v.Rounds, err = loadRounds(tx, user, taskID); err != nil {
+			return err
+		}
+		if v.Result, err = loadResult(tx, user, taskID); err != nil {
 			return err
 		}
 		v.Phase = Phase(t, v.GetResult())

@@ -63,7 +63,7 @@ func (c *CLI) Run(ctx context.Context, args []string) error {
 func (c *CLI) usage() {
 	fmt.Fprint(c.Out, `用法：lerna [--data 目录] [--user 用户] <命令>
 
-  goal [--session 会话] [--template 模板 --param k=v ...] [--command-id 标识] 目标文字
+  goal [--session 会话] [--template 模板 --param k=v ...] [--budget 上限] [--command-id 标识] 目标文字
                                  提交新目标；重试同一命令时带上原 --command-id
   session new                    创建一个暂不关联任务的会话
   session show <会话>             查看会话的全量快照
@@ -92,6 +92,7 @@ func (c *CLI) goal(ctx context.Context, args []string) error {
 	session := fs.String("session", "", "会话标识；为空时新建会话")
 	template := fs.String("template", "", "受信任务模板："+"api_put、file_write")
 	cmdID := fs.String("command-id", "", "命令标识；重试同一命令时复用")
+	budget := fs.Int64("budget", 100_000, "当前任务的明确费用上限（micro_usd）")
 	p := params{}
 	fs.Var(p, "param", "模板参数 k=v，可重复")
 	if err := fs.Parse(args); err != nil {
@@ -99,9 +100,10 @@ func (c *CLI) goal(ctx context.Context, args []string) error {
 	}
 	text := strings.Join(fs.Args(), " ")
 	cmd := &lernav1.SubmitInputCommand{
-		SessionId: *session,
-		InputKind: lernav1.InputKind_INPUT_KIND_NEW_GOAL,
-		Text:      text,
+		SessionId:  *session,
+		InputKind:  lernav1.InputKind_INPUT_KIND_NEW_GOAL,
+		Text:       text,
+		TaskBudget: *budget,
 	}
 	if *template != "" {
 		cmd.Requirements = &lernav1.RequirementSetDraft{TemplateId: *template, TemplateParams: p}

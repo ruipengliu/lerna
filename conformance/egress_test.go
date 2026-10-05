@@ -7,6 +7,7 @@ import (
 	"github.com/ruipengliu/lerna/adapters/mockapi"
 	"github.com/ruipengliu/lerna/cmd/host"
 	"github.com/ruipengliu/lerna/conformance/harness"
+	"github.com/ruipengliu/lerna/conformance/scripted"
 	lernav1 "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1"
 	"github.com/ruipengliu/lerna/contracts/ports"
 	"github.com/ruipengliu/lerna/core/durable"
@@ -134,6 +135,7 @@ func rejectedWith(t *testing.T, rec *lernav1.Receipt, err error, code lernav1.Er
 // 规则：开始-1
 func TestStartGateRejectsMismatchedDescription(t *testing.T) {
 	h := harness.New(t)
+	h.Reasoner.Policy = scripted.ActOnly
 	h.GrantStanding("mockapi.put")
 	h.SubmitGoal(harness.NewID(), "g", apiPutDraft("k1", "v1"))
 	h.MustRun()
@@ -146,6 +148,7 @@ func TestStartGateRejectsMismatchedDescription(t *testing.T) {
 // 规则：开始-3
 func TestStartGateChecksTheCredential(t *testing.T) {
 	h := harness.New(t)
+	h.Reasoner.Policy = scripted.ActOnly
 	h.GrantStanding("mockapi.put")
 	h.SubmitGoal(harness.NewID(), "g", apiPutDraft("k1", "v1"))
 	h.MustRun()
@@ -158,6 +161,7 @@ func TestStartGateChecksTheCredential(t *testing.T) {
 // 规则：开始-5、G10
 func TestStartGateOccupiesSendQuota(t *testing.T) {
 	h := harness.New(t)
+	h.Reasoner.Policy = scripted.ActOnly
 	h.GrantStanding("mockapi.put")
 	h.SubmitGoal(harness.NewID(), "g", apiPutDraft("k1", "v1"))
 	h.MustRun()

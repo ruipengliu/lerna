@@ -30,13 +30,6 @@ func (noModels) Call(context.Context, int32, *lernav1.ModelCallDescription) (*le
 	return nil, errors.New("model calls are not available")
 }
 
-// adjudicateCompletion 处理完成提议。
-func (m *Module) adjudicateCompletion(ctx context.Context, c *durable.Claim, p *lernav1.Proposal) error {
-	return m.Domain.Advance(ctx, c, "tasks:completion_pending", func(*durable.Tx) (durable.Transition, error) {
-		return durable.WaitWake("completion gate not available"), nil
-	})
-}
-
 // adjudicateAsk 处理向用户提问的提议：会话持久建立输入请求，任务等待用户。
 func (m *Module) adjudicateAsk(ctx context.Context, c *durable.Claim, p *lernav1.Proposal) error {
 	return m.Domain.Advance(ctx, c, "tasks:ask_user", func(tx *durable.Tx) (durable.Transition, error) {
@@ -65,10 +58,10 @@ func (m *Module) awaitConfirmation(tx *durable.Tx, t *lernav1.Task, p *lernav1.P
 		Ref: p.GetProposalId(), Gap: rej.GetDiagnostic()})
 }
 
-// verificationFrozen 报告是否有完成核验轮次持有目标推进冻结。
-func verificationFrozen(*durable.Tx, *lernav1.Task) (bool, error) { return false, nil }
-
 // onCoreWorkUpdate 处理核心安排的工作（模型调用、核对查询）的进展。
 func (m *Module) onCoreWorkUpdate(*durable.Tx, *lernav1.Task, *lernav1.OperationView, *lernav1.OperationUpdate) error {
 	return nil
 }
+
+// afterClose 在任务关闭的事务中登记后续工作。
+func (m *Module) afterClose(*durable.Tx, *lernav1.Task) error { return nil }

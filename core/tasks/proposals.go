@@ -142,6 +142,14 @@ func (m *Module) buildSnapshot(tx *durable.Tx, t *lernav1.Task) (*lernav1.Contex
 		snap.CapabilityCatalogVersion = m.Catalog.Version()
 		snap.Capabilities = m.Catalog.All()
 	}
+	rounds, err := loadRounds(tx, t.GetUserId(), t.GetTaskId())
+	if err != nil {
+		return nil, err
+	}
+	if n := len(rounds); n > 0 && rounds[n-1].GetStatus() == lernav1.VerificationStatus_VERIFICATION_STATUS_REJECTED {
+		// 完成核验被拒绝：把具体缺口交给推理，按缺口重新规划。
+		snap.Gaps = rounds[n-1].GetGaps()
+	}
 	return snap, nil
 }
 

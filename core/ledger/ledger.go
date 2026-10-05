@@ -33,6 +33,8 @@ type Module struct {
 func (m *Module) Register() {
 	m.Domain.HandleCommand(ports.CommandAcceptIntent,
 		func() proto.Message { return &lernav1.OperationIntent{} }, m.handleAcceptIntent)
+	m.Domain.HandleCommand(ports.CommandSealDispatch,
+		func() proto.Message { return &lernav1.SealDispatchCommand{} }, m.handleSealDispatch)
 	m.Domain.HandleJob(JobExecute, m.execute)
 }
 
@@ -79,12 +81,28 @@ func (m *Module) handleAcceptIntent(_ context.Context, tx *durable.Tx, in durabl
 		Origin:             it.GetOrigin(),
 		HandoffId:          in.Identity().GetCommandId(),
 	}
+	// 封闭先于意图被接纳：迟到的意图仍被接纳为责任，但不会被执行。
+	var sealReason string
+	if err := tx.QueryRow(`SELECT COALESCE(MAX(reason), '') FROM seals WHERE user_id = ? AND operation_id = ?`,
+		it.GetUserId(), it.GetOperationId()).Scan(&sealReason); err != nil {
+		return durable.Outcome{}, err
+	}
 	intentBlob, err := proto.MarshalOptions{Deterministic: true}.Marshal(it)
 	if err != nil {
 		return durable.Outcome{}, err
 	}
 	if err := insertOperation(tx, op, intentBlob); err != nil {
 		return durable.Outcome{}, err
+	}
+	if sealReason != "" {
+		st, err := loadState(tx, op.GetUserId(), op.GetOperationId())
+		if err != nil {
+			return durable.Outcome{}, err
+		}
+		if err := m.internalClosure(tx, st, sealReason); err != nil {
+			return durable.Outcome{}, err
+		}
+		return durable.Outcome{Result: &lernav1.AcceptIntentResult{OperationId: op.GetOperationId(), LedgerRevision: st.op.GetLedgerRevision(), Sealed: true}}, nil
 	}
 	if err := m.afterAccept(tx, op); err != nil {
 		return durable.Outcome{}, err
