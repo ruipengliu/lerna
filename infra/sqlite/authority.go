@@ -39,6 +39,18 @@ func budgetScope(id *v1.GlobalName) string {
 	return "TASK:" + id.LocalId
 }
 func (s *Store) SaveBudget(ctx context.Context, b *v1.Budget) error {
+	old, e := s.LoadBudget(ctx, b.TaskId)
+	if e != nil {
+		return e
+	}
+	if old != nil {
+		if e = s.saveBudgetVersion(ctx, old); e != nil {
+			return e
+		}
+	}
+	if e = s.saveBudgetVersion(ctx, b); e != nil {
+		return e
+	}
 	return s.saveRecord(ctx, "adjudication", "INSERT INTO budgets VALUES(?,?,?,?) ON CONFLICT(user_id,domain_id,scope_id) DO UPDATE SET record=excluded.record", b, b.Ref.Name.UserId, b.Ref.Name.AuthorityDomainId, budgetScope(b.TaskId))
 }
 func (s *Store) LoadBudget(ctx context.Context, id *v1.GlobalName) (*v1.Budget, error) {

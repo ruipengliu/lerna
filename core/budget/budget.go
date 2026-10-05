@@ -23,6 +23,8 @@ type Decisions interface {
 type Service struct {
 	store                       Store
 	usageSource                 UsageSource
+	evidence                    BillingEvidence
+	completionAuthority         CompletionAuthority
 	decisions                   Decisions
 	user, domain, trustedIssuer string
 }
@@ -35,7 +37,7 @@ func (s *Service) Configure(ctx context.Context, caller *v1.Caller, c *v1.Config
 		return nil, e
 	}
 	return s.decisions.Execute(ctx, caller, c.Header, command.SemanticFingerprint("configure-budget", c.TaskId, c.Unit, c.Limit), "budget.configure", func(tx context.Context) (*v1.Ref, error) {
-		if caller.IssuerId != s.trustedIssuer {
+		if !s.trustedCaller(caller) {
 			return nil, command.Fail("PERMISSION_DENIED")
 		}
 		if c.Limit < 0 || c.Unit != "USD_MICRO" {
@@ -53,7 +55,7 @@ func (s *Service) Configure(ctx context.Context, caller *v1.Caller, c *v1.Config
 		if old != nil {
 			return nil, command.Fail("BUDGET_ALREADY_CONFIGURED")
 		}
-		b := &v1.Budget{Ref: command.NewRef(s.user, s.domain, "budget", "lerna.v1.Budget"), TaskId: c.TaskId, Unit: c.Unit, Limit: c.Limit, Status: "OPEN"}
+		b := &v1.Budget{Ref: command.NewRef(s.user, s.domain, "budget", "lerna.v1.Budget"), TaskId: c.TaskId, Unit: c.Unit, Limit: c.Limit, Available: c.Limit, Status: "OPEN"}
 		return b.Ref, s.store.SaveBudget(tx, b)
 	})
 }
@@ -70,8 +72,14 @@ func (s *Service) ReserveInTransaction(ctx context.Context, task, operation *v1.
 		if e != nil {
 			return nil, e
 		}
+		if b != nil && b.BillingBlocked {
+			return nil, command.Fail("BILLING_CONFLICT")
+		}
 		if b == nil || b.Status != "OPEN" || b.Unit != cap.Unit || b.Settled < 0 || b.Reserved < 0 || b.Settled > b.Limit || b.Reserved > b.Limit-b.Settled || amount > b.Limit-b.Settled-b.Reserved {
 			return nil, command.Fail("BUDGET_EXCEEDED")
+		}
+		if b.CeilingViolation {
+			return nil, command.Fail("COST_CEILING_VIOLATED")
 		}
 		chain = append(chain, b)
 	}
@@ -79,6 +87,9 @@ func (s *Service) ReserveInTransaction(ctx context.Context, task, operation *v1.
 	for _, b := range chain {
 		b.Reserved += amount
 		b.Ref.Revision++
+		if e := projectBudget(b); e != nil {
+			return nil, e
+		}
 		if e := s.store.SaveBudget(ctx, b); e != nil {
 			return nil, e
 		}
@@ -120,4 +131,8 @@ func (s *Service) QueryReservations(ctx context.Context, c *v1.Caller, id *v1.Gl
 		return nil, e
 	}
 	return s.store.Reservations(ctx, id)
+}
+
+func (s *Service) trustedCaller(c *v1.Caller) bool {
+	return c.GetIssuerId() == s.trustedIssuer || c.GetIssuerId() == "local-cli"
 }

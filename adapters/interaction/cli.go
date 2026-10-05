@@ -25,6 +25,7 @@ type Durable interface {
 	QueryReceipt(context.Context, *v1.Caller, *v1.CommandIdentity) (*v1.ReceiptQuery, error)
 }
 type CLI struct {
+	Budget            Budget
 	Grants            Grants
 	Confirmations     Confirmations
 	ConfirmationTasks ConfirmationTasks
@@ -51,6 +52,8 @@ func (c CLI) Run(ctx context.Context, args []string, out io.Writer) error {
 	switch args[0] {
 	case "complete", "recheck-completion", "verification", "result", "request-proposal", "receive-proposal":
 		value, err = c.completion(ctx, args)
+	case "budget", "budget-configure", "budget-limit", "budget-version", "bill-import", "budget-release", "billing-source", "billing-entry", "billing-conflict":
+		value, err = c.budgetCommand(ctx, args)
 	case "process-input", "accept-requirements", "task-inputs":
 		value, err = c.runTaskInputCommand(ctx, args)
 	case "session-create", "input", "question", "route-input", "query-input", "query-question":
@@ -128,7 +131,12 @@ func (c CLI) Run(ctx context.Context, args []string, out io.Writer) error {
 			}
 		}
 		if tasks, ok := c.Tasks.(CompletionCommands); ok {
-			return tasks.ProcessCompletions(ctx, c.Caller)
+			if e := tasks.ProcessCompletions(ctx, c.Caller); e != nil {
+				return e
+			}
+		}
+		if c.Budget != nil {
+			return c.Budget.ProcessClosures(ctx)
 		}
 		return nil
 	default:

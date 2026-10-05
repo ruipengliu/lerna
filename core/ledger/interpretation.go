@@ -212,7 +212,7 @@ func validSimulatorObject(body []byte) (bool, bool) {
 			return false, false
 		}
 		switch key {
-		case "protocol", "external_key", "attempt_id", "applied", "terminal", "applied_at_unix_nano":
+		case "protocol", "external_key", "attempt_id", "applied", "terminal", "applied_at_unix_nano", "billing":
 		default:
 			return false, false
 		}

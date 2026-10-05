@@ -44,6 +44,7 @@
 | [ADR 0002 授权区分操作权利与处理目的](../adr/0002-processing-purposes.md) | 2 决定 | 已采纳 |
 | [ADR 0003 替换资格分三类，公共契约与内部接口分开](../adr/0003-replacement-classes-and-assembly.md) | 2 决定 | 已采纳 |
 | [ADR 0004 开发语言与主要技术栈](../adr/0004-language-and-stack.md) | 2 决定 | 已采纳 |
+| [ADR 0005 M1 计费来源与结算](../adr/0005-billing-source-identity.md) | 2 决定 | 已采纳 |
 | [核心契约](core/contracts/README.md) | 3 设计 | 草稿 |
 | [持久工作](core/durable/README.md) | 3 设计 | 草稿 |
 | [执行管理](core/ledger/README.md) | 3 设计 | 草稿 |

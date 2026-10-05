@@ -36,5 +36,9 @@ func (s *Service) ConsumeSendInTransaction(ctx context.Context, a *v1.Admission,
 	if e = s.store.SaveReservation(ctx, r); e != nil {
 		return e
 	}
-	return s.store.(sendStore).SaveSendConsumption(ctx, use)
+	if e = s.store.(sendStore).SaveSendConsumption(ctx, use); e != nil {
+		return e
+	}
+	source := &v1.BillingSource{Ref: command.NewRef(s.user, s.domain, "billing-source", "lerna.v1.BillingSource"), SendRef: send, ReservationRef: a.BudgetBasis.ReservationRef, AdmissionRef: a.Ref, TaskId: a.TaskId, OperationId: a.OperationId, Unit: r.Unit, Status: "PENDING", PriceRuleRef: a.BudgetBasis.RateBasisRef}
+	return s.store.(billingStore).SaveBillingSource(ctx, source)
 }
