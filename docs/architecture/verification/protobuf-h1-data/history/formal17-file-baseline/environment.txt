@@ -1,0 +1,20 @@
+47524c884ee12c5fbbf623d5fcdff07dfc9c6e93
+ M .scratch/m1-recoverable-mainline/issues/22-protobuf-real-object-check.md
+ M docs/architecture/README.md
+ M docs/architecture/core/contracts/README.md
+?? conformance/admission/protobuf_authority_capture_test.go
+?? conformance/admission/protobuf_billing_capture_test.go
+?? conformance/admission/protobuf_capture_test.go
+?? conformance/admission/protobuf_input_capture_test.go
+?? conformance/admission/protobuf_io_capture_test.go
+?? conformance/protobuf/
+?? docs/architecture/verification/protobuf-h1-data/
+?? docs/architecture/verification/protobuf-h1.md
+?? scripts/measure-protobuf.sh
+go version go1.27.1 darwin/arm64
+darwin
+arm64
+1
+google.golang.org/protobuf v1.36.12
+Darwin mac-mini.local 27.0.0 Darwin Kernel Version 27.0.0: Tue Aug 11 21:02:57 PDT 2026; root:xnu-13432.1.9~1/RELEASE_ARM64_T8132 arm64
+842c0ca8c87dc29faed9314d461db3aa81ae6f7ae616e747c14cd12c5311c58a  conformance/protobuf/testdata/mainline.json

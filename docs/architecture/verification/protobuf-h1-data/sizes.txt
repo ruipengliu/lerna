@@ -1,0 +1,4 @@
+baseline_executable_bytes  1571186
+binding_executable_bytes  4210930
+generated_go_source_bytes   821476
+protobuf_source_bytes    54037

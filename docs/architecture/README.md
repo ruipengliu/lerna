@@ -76,4 +76,5 @@
 | [端云部署与故障域](topics/deployment.md) | 3 设计 | 草稿 |
 | [安全与威胁模型](topics/security.md) | 3 设计 | 草稿 |
 | [观测与诊断](topics/observability.md) | 3 设计 | 草稿 |
+| [Protobuf 实对象验证（H1）](verification/protobuf-h1.md) | 5 验证 | 验证中，Go 局部样本 |
 | [SQLite 本地档存储故障验收](verification/local-durability.md) | 5 验证 | 有条件准入，见平台表 |

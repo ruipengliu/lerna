@@ -1,0 +1,53 @@
+{
+  "scope": "Historical 229-object FILE baseline; not current schema qualification",
+  "artifacts": [
+    {
+      "original_path": "conformance/protobuf/testdata/mainline.json",
+      "historical_path": "docs/architecture/verification/protobuf-h1-data/history/formal17-file-baseline/mainline.json",
+      "sha256": "8b9a01b303280ebc5c7c027693ca0a9089f6a1725e6ca9452530b487ed10974c",
+      "bytes": 888963
+    },
+    {
+      "original_path": "docs/architecture/verification/protobuf-h1-data/current-inventory.json",
+      "historical_path": "docs/architecture/verification/protobuf-h1-data/history/formal17-file-baseline/current-inventory.json",
+      "sha256": "0f67a3dfc0833233bedd21197efcfc045ffa9dbfc6759643e15b5bb7d28c6e82",
+      "bytes": 79890
+    },
+    {
+      "original_path": "docs/architecture/verification/protobuf-h1-data/inventory.json",
+      "historical_path": "docs/architecture/verification/protobuf-h1-data/history/formal17-file-baseline/inventory.json",
+      "sha256": "ae828ae89593e894ba0a9cad02230848c288fc8e3d7932c2329cea796be5f690",
+      "bytes": 42857
+    },
+    {
+      "original_path": "docs/architecture/verification/protobuf-h1-data/environment.txt",
+      "historical_path": "docs/architecture/verification/protobuf-h1-data/history/formal17-file-baseline/environment.txt",
+      "sha256": "283f542278c1976007c8c016687a44c3bd12406b36e85e9c277450ef077916bb",
+      "bytes": 958
+    },
+    {
+      "original_path": "docs/architecture/verification/protobuf-h1-data/sizes.txt",
+      "historical_path": "docs/architecture/verification/protobuf-h1-data/history/formal17-file-baseline/sizes.txt",
+      "sha256": "0418ff4d3312361f523c62dbf0025c14e1e7e0350c4c5ff21686e2d7b7b5500d",
+      "bytes": 135
+    },
+    {
+      "original_path": "docs/architecture/verification/protobuf-h1-data/peak-memory.txt",
+      "historical_path": "docs/architecture/verification/protobuf-h1-data/history/formal17-file-baseline/peak-memory.txt",
+      "sha256": "4cdf07f1b45d704cd3afce750425c4c9550194196fceb1d7d135b4c7c84dfcba",
+      "bytes": 777
+    },
+    {
+      "original_path": "docs/architecture/verification/protobuf-h1-data/bench.txt",
+      "historical_path": "docs/architecture/verification/protobuf-h1-data/history/formal17-file-baseline/bench.txt",
+      "sha256": "aaf150c8d33c6d1a721d086e9f5419973102e24d32449f5dcef5d92a0c272096",
+      "bytes": 188520
+    },
+    {
+      "original_path": "docs/architecture/verification/protobuf-h1-data/measured-corpus.json",
+      "historical_path": "docs/architecture/verification/protobuf-h1-data/history/formal17-file-baseline/measured-corpus.json",
+      "sha256": "842c0ca8c87dc29faed9314d461db3aa81ae6f7ae616e747c14cd12c5311c58a",
+      "bytes": 300370
+    }
+  ]
+}

@@ -35,7 +35,7 @@ lint: $(BUF) $(LINT)
 	@if test -n "$$(git ls-tree -r --name-only $(BUF_BASE) -- contracts/proto 2>/dev/null)"; then $(BUF) breaking --against ".git#ref=$(BUF_BASE)"; else echo "No protocol in $(BUF_BASE); breaking baseline starts with first protocol release."; fi
 
 test:
-	go test -race ./...
+	go test -race -timeout 20m ./...
 
 test-fault:
 	@if test -d conformance/fault; then go test -race -timeout 120m -tags fault ./conformance/fault/...; else echo 'No fault suite yet.'; fi

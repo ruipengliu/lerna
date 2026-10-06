@@ -1,0 +1,4966 @@
+{
+  "schema_sha256": "9de27d45cd64139a16d3c1cb10b9f52e942296696447fda1ac89b4d0fe0ac98d",
+  "generated_bindings": 192,
+  "sampled_types": 188,
+  "unsampled_types": [
+    "lerna.v1.AncestorControl",
+    "lerna.v1.MemoryDependency",
+    "lerna.v1.ObservationHandoff",
+    "lerna.v1.SendConsumption"
+  ],
+  "populated_fields": [
+    "lerna.v1.AcceptObservationCommand.header",
+    "lerna.v1.AcceptObservationCommand.observation",
+    "lerna.v1.AcceptOperationCommand.admission",
+    "lerna.v1.AcceptOperationCommand.header",
+    "lerna.v1.AcceptOperationProgressCommand.header",
+    "lerna.v1.AcceptOperationProgressCommand.notice",
+    "lerna.v1.AcceptRequirementsCommand.conditions",
+    "lerna.v1.AcceptRequirementsCommand.header",
+    "lerna.v1.AcceptRequirementsCommand.input_version",
+    "lerna.v1.AcceptRequirementsCommand.source",
+    "lerna.v1.AcceptRequirementsCommand.task_ref",
+    "lerna.v1.AcceptTraceCommand.event",
+    "lerna.v1.AcceptTraceCommand.header",
+    "lerna.v1.AcceptUsageCommand.header",
+    "lerna.v1.AcceptUsageCommand.usage",
+    "lerna.v1.ActionStep.arguments_json",
+    "lerna.v1.ActionStep.capability_ref",
+    "lerna.v1.ActionStep.expected_evidence",
+    "lerna.v1.ActionStep.parameters_ref",
+    "lerna.v1.ActionStep.schema_digest",
+    "lerna.v1.ActionStep.step_id",
+    "lerna.v1.AdjustBudgetLimitCommand.expected_ref",
+    "lerna.v1.AdjustBudgetLimitCommand.header",
+    "lerna.v1.AdjustBudgetLimitCommand.limit",
+    "lerna.v1.AdjustBudgetLimitCommand.reason",
+    "lerna.v1.Admission.budget_basis",
+    "lerna.v1.Admission.capability_ref",
+    "lerna.v1.Admission.capability_snapshot",
+    "lerna.v1.Admission.confirmation_ref",
+    "lerna.v1.Admission.content_refs",
+    "lerna.v1.Admission.control_generation",
+    "lerna.v1.Admission.executor_endpoint_id",
+    "lerna.v1.Admission.grant_refs",
+    "lerna.v1.Admission.grant_use_ref",
+    "lerna.v1.Admission.handoff_identity",
+    "lerna.v1.Admission.input_version",
+    "lerna.v1.Admission.ledger_domain_id",
+    "lerna.v1.Admission.model_descriptor_digest",
+    "lerna.v1.Admission.operation_id",
+    "lerna.v1.Admission.origin",
+    "lerna.v1.Admission.parameters_ref",
+    "lerna.v1.Admission.query_subject",
+    "lerna.v1.Admission.ref",
+    "lerna.v1.Admission.requirements_version",
+    "lerna.v1.Admission.step_id",
+    "lerna.v1.Admission.task_id",
+    "lerna.v1.Admission.work_category",
+    "lerna.v1.AdmitClosureCommand.confirmation_ref",
+    "lerna.v1.AdmitClosureCommand.header",
+    "lerna.v1.AdmitClosureCommand.work_ref",
+    "lerna.v1.AdmitCommand.confirmation_ref",
+    "lerna.v1.AdmitCommand.grant_ref",
+    "lerna.v1.AdmitCommand.header",
+    "lerna.v1.AdmitCommand.proposal_ref",
+    "lerna.v1.AdmitCommand.task_id",
+    "lerna.v1.AdmitModelCallCommand.claim",
+    "lerna.v1.AdmitModelCallCommand.descriptor_digest",
+    "lerna.v1.AdmitModelCallCommand.grant_ref",
+    "lerna.v1.AdmitModelCallCommand.header",
+    "lerna.v1.AdmitModelCallCommand.request_ref",
+    "lerna.v1.AdvanceReasonerTaskRequest.limit",
+    "lerna.v1.AdvanceReasonerTaskRequest.task_id",
+    "lerna.v1.ApiDescriptor.authentication",
+    "lerna.v1.ApiDescriptor.binding",
+    "lerna.v1.ApiDescriptor.digest",
+    "lerna.v1.ApiDescriptor.environment",
+    "lerna.v1.ApiDescriptor.idempotent",
+    "lerna.v1.ApiDescriptor.media_type",
+    "lerna.v1.ApiDescriptor.protocol_version",
+    "lerna.v1.ApiDescriptor.provider",
+    "lerna.v1.ApiDescriptor.queryable",
+    "lerna.v1.ApiDescriptor.serialization",
+    "lerna.v1.ApiDescriptor.version",
+    "lerna.v1.ApiTargetBinding.account",
+    "lerna.v1.ApiTargetBinding.credential_ref",
+    "lerna.v1.ApiTargetBinding.origin",
+    "lerna.v1.ApiTargetBinding.resource",
+    "lerna.v1.ApiTargetBinding.user_id",
+    "lerna.v1.ApiWait.category",
+    "lerna.v1.ApiWait.observation_ref",
+    "lerna.v1.ApiWait.observed_at_unix_ms",
+    "lerna.v1.ApiWait.ready_at_unix_ms",
+    "lerna.v1.ApiWait.send_ref",
+    "lerna.v1.BeginCompletionCommand.header",
+    "lerna.v1.BeginCompletionCommand.proposal_ref",
+    "lerna.v1.BeginCompletionCommand.task_id",
+    "lerna.v1.BeginTaskCloseCommand.cancellation_ref",
+    "lerna.v1.BeginTaskCloseCommand.close_reason",
+    "lerna.v1.BeginTaskCloseCommand.expected_control_generation",
+    "lerna.v1.BeginTaskCloseCommand.header",
+    "lerna.v1.BeginTaskCloseCommand.outcome",
+    "lerna.v1.BeginTaskCloseCommand.task_ref",
+    "lerna.v1.BillingConflict.alias",
+    "lerna.v1.BillingConflict.evidence_ref",
+    "lerna.v1.BillingConflict.reason",
+    "lerna.v1.BillingConflict.ref",
+    "lerna.v1.BillingConflict.source_ref",
+    "lerna.v1.BillingEntry.alias",
+    "lerna.v1.BillingEntry.amount",
+    "lerna.v1.BillingEntry.evidence_ref",
+    "lerna.v1.BillingEntry.identity",
+    "lerna.v1.BillingEntry.kind",
+    "lerna.v1.BillingEntry.measurement_rule",
+    "lerna.v1.BillingEntry.price_version",
+    "lerna.v1.BillingEntry.ref",
+    "lerna.v1.BillingEntry.released",
+    "lerna.v1.BillingEntry.semantic_fingerprint",
+    "lerna.v1.BillingEntry.source_ref",
+    "lerna.v1.BillingEntry.source_version",
+    "lerna.v1.BillingIdentity.account",
+    "lerna.v1.BillingIdentity.component",
+    "lerna.v1.BillingIdentity.namespace",
+    "lerna.v1.BillingIdentity.native_instance",
+    "lerna.v1.BillingSource.admission_ref",
+    "lerna.v1.BillingSource.alias",
+    "lerna.v1.BillingSource.amount",
+    "lerna.v1.BillingSource.conflict_ref",
+    "lerna.v1.BillingSource.entry_ref",
+    "lerna.v1.BillingSource.identity",
+    "lerna.v1.BillingSource.operation_id",
+    "lerna.v1.BillingSource.price_rule_ref",
+    "lerna.v1.BillingSource.ref",
+    "lerna.v1.BillingSource.reservation_ref",
+    "lerna.v1.BillingSource.send_ref",
+    "lerna.v1.BillingSource.source_version",
+    "lerna.v1.BillingSource.status",
+    "lerna.v1.BillingSource.task_id",
+    "lerna.v1.BillingSource.unit",
+    "lerna.v1.BindFileRootCommand.header",
+    "lerna.v1.BindFileRootCommand.native_identity",
+    "lerna.v1.BindFileRootCommand.operation_id",
+    "lerna.v1.BindFileRootCommand.platform",
+    "lerna.v1.BindFileRootCommand.root_id",
+    "lerna.v1.BindFileRootCommand.send_ref",
+    "lerna.v1.BodyDeposit.byte_size",
+    "lerna.v1.BodyDeposit.content_ref",
+    "lerna.v1.BodyDeposit.digest",
+    "lerna.v1.BodyDeposit.identity",
+    "lerna.v1.BodyDeposit.location_ref",
+    "lerna.v1.BodyReceipt.accepted_at_unix_ms",
+    "lerna.v1.BodyReceipt.deposit",
+    "lerna.v1.BodyReceipt.durability_profile",
+    "lerna.v1.BodyReceipt.fingerprint",
+    "lerna.v1.Budget.available",
+    "lerna.v1.Budget.billing_blocked",
+    "lerna.v1.Budget.ceiling_violation",
+    "lerna.v1.Budget.deficit",
+    "lerna.v1.Budget.limit",
+    "lerna.v1.Budget.ref",
+    "lerna.v1.Budget.reserved",
+    "lerna.v1.Budget.settled",
+    "lerna.v1.Budget.status",
+    "lerna.v1.Budget.task_id",
+    "lerna.v1.Budget.unit",
+    "lerna.v1.BudgetBasis.budget_chain_refs",
+    "lerna.v1.BudgetBasis.budget_ref",
+    "lerna.v1.BudgetBasis.ceiling",
+    "lerna.v1.BudgetBasis.rate_basis_ref",
+    "lerna.v1.BudgetBasis.reservation_ref",
+    "lerna.v1.BudgetBasis.unit",
+    "lerna.v1.CallDescriptor.api_descriptor",
+    "lerna.v1.CallDescriptor.body_digest",
+    "lerna.v1.CallDescriptor.capability_ref",
+    "lerna.v1.CallDescriptor.digest",
+    "lerna.v1.CallDescriptor.external_key",
+    "lerna.v1.CallDescriptor.method",
+    "lerna.v1.CallDescriptor.parameters_digest",
+    "lerna.v1.CallDescriptor.parameters_ref",
+    "lerna.v1.CallDescriptor.protocol",
+    "lerna.v1.CallDescriptor.query_subject",
+    "lerna.v1.CallDescriptor.target",
+    "lerna.v1.Caller.issuer_id",
+    "lerna.v1.Caller.user_id",
+    "lerna.v1.Cancellation.admission_refs",
+    "lerna.v1.Cancellation.closure_intent_refs",
+    "lerna.v1.Cancellation.control_generation",
+    "lerna.v1.Cancellation.control_identity",
+    "lerna.v1.Cancellation.ref",
+    "lerna.v1.Cancellation.saved_at_unix_ms",
+    "lerna.v1.Cancellation.task_id",
+    "lerna.v1.CancellationClosureIntent.command",
+    "lerna.v1.CancellationClosureIntent.job_ref",
+    "lerna.v1.CancellationClosureIntent.recipient_receipt",
+    "lerna.v1.CancellationClosureIntent.ref",
+    "lerna.v1.CancellationClosureIntent.task_id",
+    "lerna.v1.CancellationSeal.admission_ref",
+    "lerna.v1.CancellationSeal.cancellation_ref",
+    "lerna.v1.CancellationSeal.executor_endpoint_id",
+    "lerna.v1.CancellationSeal.intent_ref",
+    "lerna.v1.CancellationSeal.no_send_proven",
+    "lerna.v1.CancellationSeal.operation_id",
+    "lerna.v1.CancellationSeal.ref",
+    "lerna.v1.CancellationView.awaiting_operation_admission_refs",
+    "lerna.v1.CancellationView.cancellation",
+    "lerna.v1.CancellationView.closure_intents",
+    "lerna.v1.CancellationView.closure_seals",
+    "lerna.v1.CancellationView.operations",
+    "lerna.v1.CancellationView.pending_closure_refs",
+    "lerna.v1.CancellationView.task",
+    "lerna.v1.Capability.action",
+    "lerna.v1.Capability.adapter_ref",
+    "lerna.v1.Capability.api_descriptor",
+    "lerna.v1.Capability.approved_by",
+    "lerna.v1.Capability.executor_endpoint_id",
+    "lerna.v1.Capability.fee_ceiling",
+    "lerna.v1.Capability.max_sends",
+    "lerna.v1.Capability.nonbillable",
+    "lerna.v1.Capability.parameter_schema_json",
+    "lerna.v1.Capability.processing_purpose",
+    "lerna.v1.Capability.rate_basis_ref",
+    "lerna.v1.Capability.ref",
+    "lerna.v1.Capability.resource",
+    "lerna.v1.Capability.schema_digest",
+    "lerna.v1.Capability.unit",
+    "lerna.v1.Capability.use_right",
+    "lerna.v1.CloseCancellationCommand.admission_ref",
+    "lerna.v1.CloseCancellationCommand.cancellation_ref",
+    "lerna.v1.CloseCancellationCommand.executor_endpoint_id",
+    "lerna.v1.CloseCancellationCommand.header",
+    "lerna.v1.CloseCancellationCommand.intent_ref",
+    "lerna.v1.CloseCancellationCommand.operation_id",
+    "lerna.v1.CloseCompletionCommand.admission_ref",
+    "lerna.v1.CloseCompletionCommand.executor_endpoint_id",
+    "lerna.v1.CloseCompletionCommand.header",
+    "lerna.v1.CloseCompletionCommand.intent_ref",
+    "lerna.v1.CloseCompletionCommand.operation_id",
+    "lerna.v1.CloseCompletionCommand.verification_ref",
+    "lerna.v1.CloseGrantExitCommand.binding",
+    "lerna.v1.CloseGrantExitCommand.credential_ref",
+    "lerna.v1.CloseGrantExitCommand.header",
+    "lerna.v1.CloseGrantExitCommand.revocation_ref",
+    "lerna.v1.CloseTaskEndpointCommand.admission_ref",
+    "lerna.v1.CloseTaskEndpointCommand.executor_endpoint_id",
+    "lerna.v1.CloseTaskEndpointCommand.header",
+    "lerna.v1.CloseTaskEndpointCommand.intent_ref",
+    "lerna.v1.CloseTaskEndpointCommand.operation_id",
+    "lerna.v1.CloseTaskEndpointCommand.task_closing_ref",
+    "lerna.v1.ClosureWorkRequest.admission_identity",
+    "lerna.v1.ClosureWorkRequest.capability_ref",
+    "lerna.v1.ClosureWorkRequest.grant_ref",
+    "lerna.v1.ClosureWorkRequest.owner_ref",
+    "lerna.v1.ClosureWorkRequest.parameters_ref",
+    "lerna.v1.ClosureWorkRequest.purpose",
+    "lerna.v1.ClosureWorkRequest.query_subject",
+    "lerna.v1.ClosureWorkRequest.ref",
+    "lerna.v1.ClosureWorkRequest.source_identity",
+    "lerna.v1.ClosureWorkRequest.source_ref",
+    "lerna.v1.ClosureWorkRequest.task_id",
+    "lerna.v1.CommandHeader.contract_version",
+    "lerna.v1.CommandHeader.fingerprint_version",
+    "lerna.v1.CommandHeader.identity",
+    "lerna.v1.CommandHeader.schema_id",
+    "lerna.v1.CommandIdentity.command_id",
+    "lerna.v1.CommandIdentity.issuer_id",
+    "lerna.v1.CommandIdentity.target_domain_id",
+    "lerna.v1.CommandIdentity.user_id",
+    "lerna.v1.CommandReceipt.commit_position",
+    "lerna.v1.CommandReceipt.decided_at_unix_ms",
+    "lerna.v1.CommandReceipt.decision",
+    "lerna.v1.CommandReceipt.decision_ref",
+    "lerna.v1.CommandReceipt.durability_profile",
+    "lerna.v1.CommandReceipt.error",
+    "lerna.v1.CommandReceipt.fingerprint",
+    "lerna.v1.CommandReceipt.fingerprint_version",
+    "lerna.v1.CommandReceipt.identity",
+    "lerna.v1.CommandReceipt.input_ref",
+    "lerna.v1.CommandReceipt.job_ref",
+    "lerna.v1.CommandReceipt.jobs",
+    "lerna.v1.CommandReceipt.phase",
+    "lerna.v1.CommandReceipt.responsible_domain_id",
+    "lerna.v1.CommandReceipt.result_ref",
+    "lerna.v1.CommandReceipt.session_ref",
+    "lerna.v1.CommandReceipt.task_ref",
+    "lerna.v1.CommitDerivationCommand.body",
+    "lerna.v1.CommitDerivationCommand.derivation_ref",
+    "lerna.v1.CommitDerivationCommand.generation",
+    "lerna.v1.CommitDerivationCommand.header",
+    "lerna.v1.CommitDerivationCommand.host_instance_id",
+    "lerna.v1.CompletionClosureIntent.command",
+    "lerna.v1.CompletionClosureIntent.job_ref",
+    "lerna.v1.CompletionClosureIntent.recipient_receipt",
+    "lerna.v1.CompletionClosureIntent.ref",
+    "lerna.v1.CompletionClosureIntent.task_id",
+    "lerna.v1.CompletionEvidence.condition_id",
+    "lerna.v1.CompletionEvidence.confirmation_ref",
+    "lerna.v1.CompletionEvidence.operation_id",
+    "lerna.v1.CompletionSeal.admission_ref",
+    "lerna.v1.CompletionSeal.executor_endpoint_id",
+    "lerna.v1.CompletionSeal.intent_ref",
+    "lerna.v1.CompletionSeal.operation_id",
+    "lerna.v1.CompletionSeal.operation_ref",
+    "lerna.v1.CompletionSeal.physical_send_was_possible",
+    "lerna.v1.CompletionSeal.ref",
+    "lerna.v1.CompletionSeal.verification_ref",
+    "lerna.v1.ConditionConfirmationMatter.condition_id",
+    "lerna.v1.ConditionConfirmationMatter.control_generation",
+    "lerna.v1.ConditionConfirmationMatter.evidence_refs",
+    "lerna.v1.ConditionConfirmationMatter.input_version",
+    "lerna.v1.ConditionConfirmationMatter.requirements_ref",
+    "lerna.v1.ConditionConfirmationMatter.task_id",
+    "lerna.v1.ConditionFinding.conclusion",
+    "lerna.v1.ConditionFinding.condition",
+    "lerna.v1.ConditionFinding.evidence_refs",
+    "lerna.v1.ConditionFinding.gap",
+    "lerna.v1.ConditionFinding.operation_ref",
+    "lerna.v1.ConditionFinding.source",
+    "lerna.v1.ConditionVerdict.conclusion",
+    "lerna.v1.ConditionVerdict.condition_id",
+    "lerna.v1.ConditionVerdict.confirmation_ref",
+    "lerna.v1.ConditionVerdict.evidence_refs",
+    "lerna.v1.ConditionVerdict.gaps",
+    "lerna.v1.ConditionVerdict.operation_id",
+    "lerna.v1.ConfigureBudgetCommand.header",
+    "lerna.v1.ConfigureBudgetCommand.limit",
+    "lerna.v1.ConfigureBudgetCommand.task_id",
+    "lerna.v1.ConfigureBudgetCommand.unit",
+    "lerna.v1.ConfigureCapabilityCommand.capability",
+    "lerna.v1.ConfigureCapabilityCommand.header",
+    "lerna.v1.ConfigureGrantCommand.grant",
+    "lerna.v1.ConfigureGrantCommand.header",
+    "lerna.v1.ConfigureReasonerDriverCommand.disabled",
+    "lerna.v1.ConfigureReasonerDriverCommand.header",
+    "lerna.v1.ConfigureReasonerDriverCommand.policy",
+    "lerna.v1.ConfigureReasonerDriverCommand.replaces",
+    "lerna.v1.ConfigureReasonerDriverCommand.task_id",
+    "lerna.v1.Confirmation.binding_digest",
+    "lerna.v1.Confirmation.condition_evaluation",
+    "lerna.v1.Confirmation.consumed_admission_ref",
+    "lerna.v1.Confirmation.consumed_grant_issuance_ref",
+    "lerna.v1.Confirmation.consumed_verification_ref",
+    "lerna.v1.Confirmation.description",
+    "lerna.v1.Confirmation.expires_at_unix_ms",
+    "lerna.v1.Confirmation.grant_issuance",
+    "lerna.v1.Confirmation.matter_type",
+    "lerna.v1.Confirmation.operation_admission",
+    "lerna.v1.Confirmation.ref",
+    "lerna.v1.Confirmation.responded_by",
+    "lerna.v1.Confirmation.session_id",
+    "lerna.v1.Confirmation.state",
+    "lerna.v1.Confirmation.withdrawn_by",
+    "lerna.v1.Content.acquired_at_unix_ms",
+    "lerna.v1.Content.attempt_id",
+    "lerna.v1.Content.byte_size",
+    "lerna.v1.Content.cleanup_status",
+    "lerna.v1.Content.content_id",
+    "lerna.v1.Content.content_version",
+    "lerna.v1.Content.derived_from",
+    "lerna.v1.Content.digest",
+    "lerna.v1.Content.digest_algorithm",
+    "lerna.v1.Content.kind",
+    "lerna.v1.Content.location_ref",
+    "lerna.v1.Content.media_type",
+    "lerna.v1.Content.operation_id",
+    "lerna.v1.Content.previous_version_refs",
+    "lerna.v1.Content.processing_purposes",
+    "lerna.v1.Content.producer_ref",
+    "lerna.v1.Content.publish_status",
+    "lerna.v1.Content.raw_body",
+    "lerna.v1.Content.ref",
+    "lerna.v1.Content.source",
+    "lerna.v1.Content.source_descriptor",
+    "lerna.v1.Content.status",
+    "lerna.v1.Content.task_id",
+    "lerna.v1.Content.text",
+    "lerna.v1.Content.use_status",
+    "lerna.v1.ContentDerivation.actual_input_refs",
+    "lerna.v1.ContentDerivation.attempt_id",
+    "lerna.v1.ContentDerivation.body_receipt",
+    "lerna.v1.ContentDerivation.generation",
+    "lerna.v1.ContentDerivation.generator_version",
+    "lerna.v1.ContentDerivation.host_instance_id",
+    "lerna.v1.ContentDerivation.location_ref",
+    "lerna.v1.ContentDerivation.media_type",
+    "lerna.v1.ContentDerivation.operation_id",
+    "lerna.v1.ContentDerivation.output_kind",
+    "lerna.v1.ContentDerivation.output_ref",
+    "lerna.v1.ContentDerivation.ref",
+    "lerna.v1.ContentDerivation.responsibility",
+    "lerna.v1.ContentDerivation.sealed_input_refs",
+    "lerna.v1.ContentDerivation.state",
+    "lerna.v1.ContentDerivation.task_id",
+    "lerna.v1.ContentRegistration.body_receipt",
+    "lerna.v1.ContentRegistration.content",
+    "lerna.v1.ContentRegistration.deposit",
+    "lerna.v1.ContentRegistration.identity",
+    "lerna.v1.ContentRegistration.staging_location_ref",
+    "lerna.v1.ContentRegistration.state",
+    "lerna.v1.ContentSourceDescriptor.acquisition_method",
+    "lerna.v1.ContentSourceDescriptor.kind",
+    "lerna.v1.ContentSourceDescriptor.locator",
+    "lerna.v1.ContentSourceDescriptor.observation_ref",
+    "lerna.v1.ContentSourceDescriptor.provider_version",
+    "lerna.v1.ContentSourceDescriptor.source_time_unix_ms",
+    "lerna.v1.ContextSnapshot.allowed_purposes",
+    "lerna.v1.ContextSnapshot.bound_input_version",
+    "lerna.v1.ContextSnapshot.capability_refs",
+    "lerna.v1.ContextSnapshot.confirmations",
+    "lerna.v1.ContextSnapshot.content_refs",
+    "lerna.v1.ContextSnapshot.control_generation",
+    "lerna.v1.ContextSnapshot.expires_at_unix_ms",
+    "lerna.v1.ContextSnapshot.input_refs",
+    "lerna.v1.ContextSnapshot.input_version",
+    "lerna.v1.ContextSnapshot.max_model_positions",
+    "lerna.v1.ContextSnapshot.max_model_sends",
+    "lerna.v1.ContextSnapshot.planning_generation",
+    "lerna.v1.ContextSnapshot.progress_facts",
+    "lerna.v1.ContextSnapshot.progress_refs",
+    "lerna.v1.ContextSnapshot.progress_watermarks",
+    "lerna.v1.ContextSnapshot.ref",
+    "lerna.v1.ContextSnapshot.request_ref",
+    "lerna.v1.ContextSnapshot.requirements_ref",
+    "lerna.v1.ContextSnapshot.requirements_status",
+    "lerna.v1.ContextSnapshot.requirements_version",
+    "lerna.v1.ContextSnapshot.task_ref",
+    "lerna.v1.ContextSnapshot.unprocessed_inputs",
+    "lerna.v1.ContractError.category",
+    "lerna.v1.ContractError.code",
+    "lerna.v1.ContractError.command_acceptance",
+    "lerna.v1.ContractError.recovery_action",
+    "lerna.v1.ControlReconciliationCommand.action",
+    "lerna.v1.ControlReconciliationCommand.confirmation_ref",
+    "lerna.v1.ControlReconciliationCommand.expected_revision",
+    "lerna.v1.ControlReconciliationCommand.header",
+    "lerna.v1.ControlReconciliationCommand.operation_id",
+    "lerna.v1.CreateSessionCommand.header",
+    "lerna.v1.DeleteContentCommand.content_ref",
+    "lerna.v1.DeleteContentCommand.header",
+    "lerna.v1.DispatchCommand.claim",
+    "lerna.v1.DispatchCommand.header",
+    "lerna.v1.DispatchCommand.operation_id",
+    "lerna.v1.DispatchCommand.start_receipt",
+    "lerna.v1.Effect.covered_attempt_ids",
+    "lerna.v1.Effect.evidence_refs",
+    "lerna.v1.Effect.late_effect",
+    "lerna.v1.Effect.operation_id",
+    "lerna.v1.Effect.outcome",
+    "lerna.v1.Effect.ref",
+    "lerna.v1.EffectInterpretation.late_effect",
+    "lerna.v1.EffectInterpretation.observation_ref",
+    "lerna.v1.EffectInterpretation.outcome",
+    "lerna.v1.EffectInterpretation.reason",
+    "lerna.v1.EffectInterpretation.ref",
+    "lerna.v1.EffectInterpretation.rule",
+    "lerna.v1.Execution.attempt",
+    "lerna.v1.Execution.call_descriptor",
+    "lerna.v1.Execution.previous_sends",
+    "lerna.v1.Execution.send",
+    "lerna.v1.ExecutionAttempt.attempt_no",
+    "lerna.v1.ExecutionAttempt.capabilities",
+    "lerna.v1.ExecutionAttempt.external_key",
+    "lerna.v1.ExecutionAttempt.external_key_scope",
+    "lerna.v1.ExecutionAttempt.first_possible_send_at_unix_ms",
+    "lerna.v1.ExecutionAttempt.operation_id",
+    "lerna.v1.ExecutionAttempt.phase",
+    "lerna.v1.ExecutionAttempt.ref",
+    "lerna.v1.ExecutionCapabilities.account_scope",
+    "lerna.v1.ExecutionCapabilities.concurrency_guarantee",
+    "lerna.v1.ExecutionCapabilities.declaration_version",
+    "lerna.v1.ExecutionCapabilities.effect",
+    "lerna.v1.ExecutionCapabilities.idempotency_mechanism",
+    "lerna.v1.ExecutionCapabilities.idempotency_scope",
+    "lerna.v1.ExecutionCapabilities.idempotent",
+    "lerna.v1.ExecutionCapabilities.parameter_binding",
+    "lerna.v1.ExecutionCapabilities.protocol_version",
+    "lerna.v1.ExecutionCapabilities.queryable",
+    "lerna.v1.ExecutionCapabilities.rejects_expired_keys",
+    "lerna.v1.ExecutionCapabilities.verification_basis",
+    "lerna.v1.ExecutionFollowup.admission_ref",
+    "lerna.v1.ExecutionFollowup.attempt_ref",
+    "lerna.v1.ExecutionFollowup.executor_endpoint_id",
+    "lerna.v1.ExecutionFollowup.job_ref",
+    "lerna.v1.ExecutionFollowup.operation_id",
+    "lerna.v1.ExecutionFollowup.operation_ref",
+    "lerna.v1.ExecutionFollowup.ref",
+    "lerna.v1.ExecutionFollowup.send_refs",
+    "lerna.v1.ExecutionFollowup.task_closing_ref",
+    "lerna.v1.ExecutionFollowup.task_id",
+    "lerna.v1.ExecutionFollowup.waiting_reason",
+    "lerna.v1.ExitCredential.binding",
+    "lerna.v1.ExitCredential.expires_at_unix_ms",
+    "lerna.v1.ExitCredential.issued_at_unix_ms",
+    "lerna.v1.ExitCredential.ref",
+    "lerna.v1.ExitCredential.state",
+    "lerna.v1.ExitCredentialBinding.admission_ref",
+    "lerna.v1.ExitCredentialBinding.attempt_id",
+    "lerna.v1.ExitCredentialBinding.audience",
+    "lerna.v1.ExitCredentialBinding.budget_reservation_ref",
+    "lerna.v1.ExitCredentialBinding.caller_issuer_id",
+    "lerna.v1.ExitCredentialBinding.control_generation",
+    "lerna.v1.ExitCredentialBinding.descriptor_digest",
+    "lerna.v1.ExitCredentialBinding.executor_endpoint_id",
+    "lerna.v1.ExitCredentialBinding.executor_instance",
+    "lerna.v1.ExitCredentialBinding.grant_use_ref",
+    "lerna.v1.ExitCredentialBinding.input_version",
+    "lerna.v1.ExitCredentialBinding.operation_id",
+    "lerna.v1.ExitCredentialBinding.processing_purpose",
+    "lerna.v1.ExitCredentialBinding.requirements_version",
+    "lerna.v1.ExitCredentialBinding.send_seq",
+    "lerna.v1.ExitCredentialBinding.subject_id",
+    "lerna.v1.ExitCredentialBinding.task_id",
+    "lerna.v1.ExitCredentialBinding.use_right",
+    "lerna.v1.ExitCredentialBinding.user_id",
+    "lerna.v1.ExitCredentialUse.consumed_at_unix_ms",
+    "lerna.v1.ExitCredentialUse.consumed_send_identity",
+    "lerna.v1.ExitCredentialUse.credential_ref",
+    "lerna.v1.ExitCredentialUse.ref",
+    "lerna.v1.FileCommit.attempt_id",
+    "lerna.v1.FileCommit.byte_size",
+    "lerna.v1.FileCommit.content_ref",
+    "lerna.v1.FileCommit.digest",
+    "lerna.v1.FileCommit.external_key",
+    "lerna.v1.FileCommit.object_name",
+    "lerna.v1.FileCommit.operation_id",
+    "lerna.v1.FileCommit.previous_version",
+    "lerna.v1.FileCommit.resources_ref",
+    "lerna.v1.FileCommit.root_identity",
+    "lerna.v1.FileCommit.send_ref",
+    "lerna.v1.FileCommit.target",
+    "lerna.v1.FileCommit.version",
+    "lerna.v1.FileEvidence.billing_rule",
+    "lerna.v1.FileEvidence.commit",
+    "lerna.v1.FileEvidence.durability_confirmed",
+    "lerna.v1.FileEvidence.object_identity",
+    "lerna.v1.FileEvidence.platform",
+    "lerna.v1.FileEvidence.pointer_identity",
+    "lerna.v1.FileEvidence.published",
+    "lerna.v1.FileEvidence.read_terminal",
+    "lerna.v1.FileEvidence.readback_verified",
+    "lerna.v1.FileEvidence.resources_ref",
+    "lerna.v1.FileEvidence.rule",
+    "lerna.v1.FileEvidence.stage",
+    "lerna.v1.FileEvidence.terminal",
+    "lerna.v1.FileParameters.data",
+    "lerna.v1.FileParameters.expected_version",
+    "lerna.v1.FileResources.attempt_id",
+    "lerna.v1.FileResources.byte_size",
+    "lerna.v1.FileResources.cleanup_status",
+    "lerna.v1.FileResources.content_ref",
+    "lerna.v1.FileResources.derivation_ref",
+    "lerna.v1.FileResources.digest",
+    "lerna.v1.FileResources.object_identity",
+    "lerna.v1.FileResources.object_name",
+    "lerna.v1.FileResources.operation_id",
+    "lerna.v1.FileResources.pointer_identity",
+    "lerna.v1.FileResources.pointer_name",
+    "lerna.v1.FileResources.ref",
+    "lerna.v1.FileResources.send_ref",
+    "lerna.v1.FileResources.target",
+    "lerna.v1.GlobalName.authority_domain_id",
+    "lerna.v1.GlobalName.local_id",
+    "lerna.v1.GlobalName.object_kind",
+    "lerna.v1.GlobalName.user_id",
+    "lerna.v1.Grant.confirmation_required",
+    "lerna.v1.Grant.issuer",
+    "lerna.v1.Grant.max_admissions",
+    "lerna.v1.Grant.permissions",
+    "lerna.v1.Grant.ref",
+    "lerna.v1.Grant.revocation_completion",
+    "lerna.v1.Grant.revocation_epoch",
+    "lerna.v1.Grant.revocation_ref",
+    "lerna.v1.Grant.semantic_version",
+    "lerna.v1.Grant.status",
+    "lerna.v1.Grant.subject",
+    "lerna.v1.Grant.use_mode",
+    "lerna.v1.Grant.use_pool_id",
+    "lerna.v1.Grant.valid_from_unix_ms",
+    "lerna.v1.Grant.valid_until_unix_ms",
+    "lerna.v1.GrantConfirmationMatter.grant",
+    "lerna.v1.GrantConfirmationMatter.issuance_ref",
+    "lerna.v1.GrantExitClosure.credential_ref",
+    "lerna.v1.GrantExitClosure.operation_id",
+    "lerna.v1.GrantExitClosure.ref",
+    "lerna.v1.GrantExitClosure.revocation_ref",
+    "lerna.v1.GrantExitClosure.send_ref",
+    "lerna.v1.GrantExitClosureRequest.command",
+    "lerna.v1.GrantExitClosureRequest.recipient_receipt",
+    "lerna.v1.GrantIssuance.grant",
+    "lerna.v1.GrantIssuance.grant_ref",
+    "lerna.v1.GrantIssuance.ref",
+    "lerna.v1.GrantIssuance.state",
+    "lerna.v1.GrantRevocation.accepted_by",
+    "lerna.v1.GrantRevocation.closures",
+    "lerna.v1.GrantRevocation.grant_ref",
+    "lerna.v1.GrantRevocation.ref",
+    "lerna.v1.GrantRevocation.status",
+    "lerna.v1.GrantStatus.display_status",
+    "lerna.v1.GrantStatus.grant",
+    "lerna.v1.GrantStatus.observed_at_unix_ms",
+    "lerna.v1.GrantStatus.occupied_admissions",
+    "lerna.v1.GrantUse.admission_ref",
+    "lerna.v1.GrantUse.grant_ref",
+    "lerna.v1.GrantUse.operation_id",
+    "lerna.v1.GrantUse.ref",
+    "lerna.v1.GrantUse.task_id",
+    "lerna.v1.GrantUse.use_pool_id",
+    "lerna.v1.Handoff.admission_ref",
+    "lerna.v1.Handoff.identity",
+    "lerna.v1.Handoff.job_ref",
+    "lerna.v1.Handoff.recipient_receipt",
+    "lerna.v1.Handoff.ref",
+    "lerna.v1.Handoff.state",
+    "lerna.v1.ImportBillCommand.evidence_ref",
+    "lerna.v1.ImportBillCommand.header",
+    "lerna.v1.ImportBillCommand.send_ref",
+    "lerna.v1.InputDelivery.input",
+    "lerna.v1.InputDelivery.original_command",
+    "lerna.v1.InputDelivery.ref",
+    "lerna.v1.InterpretObservationCommand.header",
+    "lerna.v1.InterpretObservationCommand.observation_ref",
+    "lerna.v1.IssueExitCredentialCommand.admission_ref",
+    "lerna.v1.IssueExitCredentialCommand.binding",
+    "lerna.v1.IssueExitCredentialCommand.expires_at_unix_ms",
+    "lerna.v1.IssueExitCredentialCommand.header",
+    "lerna.v1.IssueGrantCommand.confirmation_ref",
+    "lerna.v1.IssueGrantCommand.header",
+    "lerna.v1.Job.attempts",
+    "lerna.v1.Job.claim_epoch",
+    "lerna.v1.Job.contract_version",
+    "lerna.v1.Job.executor_endpoint_id",
+    "lerna.v1.Job.goal",
+    "lerna.v1.Job.job_type",
+    "lerna.v1.Job.lease_until_unix_ms",
+    "lerna.v1.Job.ledger_domain_id",
+    "lerna.v1.Job.module",
+    "lerna.v1.Job.process_instance",
+    "lerna.v1.Job.purpose_key",
+    "lerna.v1.Job.ref",
+    "lerna.v1.Job.responsibility",
+    "lerna.v1.Job.specification_ref",
+    "lerna.v1.Job.state",
+    "lerna.v1.Job.waiting_reason",
+    "lerna.v1.JobCommand.action",
+    "lerna.v1.JobCommand.allowed_types",
+    "lerna.v1.JobCommand.contract_version",
+    "lerna.v1.JobCommand.identity",
+    "lerna.v1.JobCommand.job_ref",
+    "lerna.v1.JobCommand.lease_ms",
+    "lerna.v1.JobCommand.limit",
+    "lerna.v1.JobCommand.module",
+    "lerna.v1.JobCommand.process_instance",
+    "lerna.v1.ManagedFileRoot.executor_endpoint_id",
+    "lerna.v1.ManagedFileRoot.native_identity",
+    "lerna.v1.ManagedFileRoot.platform",
+    "lerna.v1.ManagedFileRoot.ref",
+    "lerna.v1.ManagedFileRoot.root_id",
+    "lerna.v1.ModelCall.admission_ref",
+    "lerna.v1.ModelCall.capability_ref",
+    "lerna.v1.ModelCall.derivation_ref",
+    "lerna.v1.ModelCall.descriptor_digest",
+    "lerna.v1.ModelCall.input_ref",
+    "lerna.v1.ModelCall.input_refs",
+    "lerna.v1.ModelCall.ref",
+    "lerna.v1.ModelCall.request_ref",
+    "lerna.v1.ModelCall.result",
+    "lerna.v1.ModelCall.settings",
+    "lerna.v1.ModelCall.state",
+    "lerna.v1.ModelCallResult.call_ref",
+    "lerna.v1.ModelCallResult.input_ref",
+    "lerna.v1.ModelCallResult.observation_ref",
+    "lerna.v1.ModelCallResult.operation_id",
+    "lerna.v1.ModelCallResult.output_derivation_ref",
+    "lerna.v1.ModelCallResult.output_ref",
+    "lerna.v1.ModelCallResult.status",
+    "lerna.v1.ModelCallResult.usage_ref",
+    "lerna.v1.ModelSettings.encoder_version",
+    "lerna.v1.ModelSettings.max_input_bytes",
+    "lerna.v1.ModelSettings.max_input_tokens",
+    "lerna.v1.ModelSettings.max_output_tokens",
+    "lerna.v1.ModelSettings.model",
+    "lerna.v1.ModelSettings.parameters_json",
+    "lerna.v1.ModelSettings.policy_version",
+    "lerna.v1.ModelSettings.provider",
+    "lerna.v1.ModelSettings.tool_schemas_json",
+    "lerna.v1.ModelSettings.view_policy",
+    "lerna.v1.ObservationReports.observation_ref",
+    "lerna.v1.ObservationReports.trace",
+    "lerna.v1.ObservationReports.trace_receipt",
+    "lerna.v1.ObservationReports.usage",
+    "lerna.v1.ObservationReports.usage_receipt",
+    "lerna.v1.Operation.adapter_ref",
+    "lerna.v1.Operation.admission_ref",
+    "lerna.v1.Operation.api_wait",
+    "lerna.v1.Operation.attempt_refs",
+    "lerna.v1.Operation.capability_snapshot",
+    "lerna.v1.Operation.closure_evidence_refs",
+    "lerna.v1.Operation.closure_work_ref",
+    "lerna.v1.Operation.dispatch",
+    "lerna.v1.Operation.effect",
+    "lerna.v1.Operation.effect_ref",
+    "lerna.v1.Operation.execution",
+    "lerna.v1.Operation.executor_endpoint_id",
+    "lerna.v1.Operation.lifecycle",
+    "lerna.v1.Operation.model_descriptor_digest",
+    "lerna.v1.Operation.parameters_ref",
+    "lerna.v1.Operation.query_subject",
+    "lerna.v1.Operation.ref",
+    "lerna.v1.Operation.start_receipt_obtained",
+    "lerna.v1.OperationConfirmationMatter.capability",
+    "lerna.v1.OperationConfirmationMatter.control_generation",
+    "lerna.v1.OperationConfirmationMatter.grant_ref",
+    "lerna.v1.OperationConfirmationMatter.input_version",
+    "lerna.v1.OperationConfirmationMatter.parameters_ref",
+    "lerna.v1.OperationConfirmationMatter.proposal_ref",
+    "lerna.v1.OperationConfirmationMatter.query_subject",
+    "lerna.v1.OperationConfirmationMatter.requirements_version",
+    "lerna.v1.OperationConfirmationMatter.step_id",
+    "lerna.v1.OperationConfirmationMatter.task_id",
+    "lerna.v1.OperationProgressHandoff.command",
+    "lerna.v1.OperationProgressHandoff.notice",
+    "lerna.v1.OperationProgressHandoff.recipient_receipt",
+    "lerna.v1.OperationProgressNotice.effect_ref",
+    "lerna.v1.OperationProgressNotice.identity",
+    "lerna.v1.OperationProgressNotice.last_observation_ref",
+    "lerna.v1.OperationProgressNotice.operation_ref",
+    "lerna.v1.OperationProgressNotice.reconciliation_ref",
+    "lerna.v1.OperationProgressNotice.ref",
+    "lerna.v1.OperationProgressNotice.state",
+    "lerna.v1.OperationProgressNotice.task_id",
+    "lerna.v1.PendingGoal.command",
+    "lerna.v1.PendingGoal.content_ref",
+    "lerna.v1.PermissionClause.action",
+    "lerna.v1.PermissionClause.executor_endpoint_id",
+    "lerna.v1.PermissionClause.parameter_mode",
+    "lerna.v1.PermissionClause.parameters_ref",
+    "lerna.v1.PermissionClause.processing_purpose",
+    "lerna.v1.PermissionClause.resource",
+    "lerna.v1.PermissionClause.use_right",
+    "lerna.v1.PhysicalIORequest.attempt",
+    "lerna.v1.PhysicalIORequest.body",
+    "lerna.v1.PhysicalIORequest.call_descriptor",
+    "lerna.v1.PhysicalIORequest.executor_endpoint_id",
+    "lerna.v1.PhysicalIORequest.file_parameters",
+    "lerna.v1.PhysicalIORequest.file_resources",
+    "lerna.v1.PhysicalIORequest.operation_id",
+    "lerna.v1.PhysicalIORequest.send",
+    "lerna.v1.PhysicalIORequest.task_id",
+    "lerna.v1.PhysicalIOResult.body",
+    "lerna.v1.PhysicalIOResult.observation",
+    "lerna.v1.PhysicalSend.api_wait",
+    "lerna.v1.PhysicalSend.attempt_id",
+    "lerna.v1.PhysicalSend.claim_epoch",
+    "lerna.v1.PhysicalSend.credential_ref",
+    "lerna.v1.PhysicalSend.lease_until_unix_ms",
+    "lerna.v1.PhysicalSend.observation_ref",
+    "lerna.v1.PhysicalSend.phase",
+    "lerna.v1.PhysicalSend.process_instance",
+    "lerna.v1.PhysicalSend.ref",
+    "lerna.v1.PhysicalSend.send_seq",
+    "lerna.v1.PhysicalSend.start_receipt",
+    "lerna.v1.PlanningState.admission_refs",
+    "lerna.v1.PlanningState.proposal",
+    "lerna.v1.PlanningState.proposal_consumed",
+    "lerna.v1.PlanningState.rejected_verification_operations",
+    "lerna.v1.PlanningState.requirements",
+    "lerna.v1.PlanningState.snapshot",
+    "lerna.v1.PlanningState.task_id",
+    "lerna.v1.PlanningState.verification_ref",
+    "lerna.v1.PlanningState.verification_round",
+    "lerna.v1.PrepareDerivationCommand.generator_version",
+    "lerna.v1.PrepareDerivationCommand.header",
+    "lerna.v1.PrepareDerivationCommand.media_type",
+    "lerna.v1.PrepareDerivationCommand.output_kind",
+    "lerna.v1.PrepareDerivationCommand.task_id",
+    "lerna.v1.PrepareExecutionCommand.claim",
+    "lerna.v1.PrepareExecutionCommand.header",
+    "lerna.v1.PrepareExecutionCommand.operation_id",
+    "lerna.v1.PrepareExecutionCommand.process_instance",
+    "lerna.v1.PrepareModelCallCommand.capability_ref",
+    "lerna.v1.PrepareModelCallCommand.claim",
+    "lerna.v1.PrepareModelCallCommand.header",
+    "lerna.v1.PrepareModelCallCommand.input_refs",
+    "lerna.v1.PrepareModelCallCommand.request_ref",
+    "lerna.v1.PrepareModelCallCommand.settings",
+    "lerna.v1.PrepareResendCommand.claim",
+    "lerna.v1.PrepareResendCommand.header",
+    "lerna.v1.PrepareResendCommand.operation_id",
+    "lerna.v1.PrepareResendCommand.previous_send_ref",
+    "lerna.v1.ProcessInputCommand.conditions",
+    "lerna.v1.ProcessInputCommand.header",
+    "lerna.v1.ProcessInputCommand.input_version",
+    "lerna.v1.ProcessInputCommand.outcome",
+    "lerna.v1.ProcessInputCommand.source",
+    "lerna.v1.ProcessInputCommand.source_input_ref",
+    "lerna.v1.ProcessInputCommand.task_ref",
+    "lerna.v1.Proposal.basis_refs",
+    "lerna.v1.Proposal.body_content_ref",
+    "lerna.v1.Proposal.completion_evidence",
+    "lerna.v1.Proposal.context_snapshot_ref",
+    "lerna.v1.Proposal.control_generation",
+    "lerna.v1.Proposal.gaps",
+    "lerna.v1.Proposal.input_version",
+    "lerna.v1.Proposal.kind",
+    "lerna.v1.Proposal.planning_generation",
+    "lerna.v1.Proposal.prompt_version",
+    "lerna.v1.Proposal.question",
+    "lerna.v1.Proposal.reasoner_ref",
+    "lerna.v1.Proposal.ref",
+    "lerna.v1.Proposal.request_ref",
+    "lerna.v1.Proposal.requirements_change",
+    "lerna.v1.Proposal.requirements_version",
+    "lerna.v1.Proposal.result_draft",
+    "lerna.v1.Proposal.step",
+    "lerna.v1.Proposal.task_id",
+    "lerna.v1.Proposal.verdicts",
+    "lerna.v1.ProposalOutcome.accepted_for_progress",
+    "lerna.v1.ProposalOutcome.claim",
+    "lerna.v1.ProposalOutcome.error_code",
+    "lerna.v1.ProposalOutcome.identity",
+    "lerna.v1.ProposalOutcome.model_call_ref",
+    "lerna.v1.ProposalOutcome.output_ref",
+    "lerna.v1.ProposalOutcome.proposal",
+    "lerna.v1.ProposalOutcome.proposal_ref",
+    "lerna.v1.ProposalOutcome.reason_code",
+    "lerna.v1.ProposalOutcome.ref",
+    "lerna.v1.ProposalOutcome.request_ref",
+    "lerna.v1.ProposalOutcome.usage_ref",
+    "lerna.v1.ProposalRequest.job_ref",
+    "lerna.v1.ProposalRequest.max_call_positions",
+    "lerna.v1.ProposalRequest.max_physical_sends",
+    "lerna.v1.ProposalRequest.model_operation_refs",
+    "lerna.v1.ProposalRequest.outcome_identity",
+    "lerna.v1.ProposalRequest.outcome_receipt",
+    "lerna.v1.ProposalRequest.outcome_refs",
+    "lerna.v1.ProposalRequest.purpose",
+    "lerna.v1.ProposalRequest.ref",
+    "lerna.v1.ProposalRequest.snapshot_ref",
+    "lerna.v1.ProposalRequest.state",
+    "lerna.v1.ProposalRequest.task_id",
+    "lerna.v1.PublishProposalQuestionCommand.header",
+    "lerna.v1.PublishProposalQuestionCommand.proposal_ref",
+    "lerna.v1.PublishProposalQuestionCommand.session_id",
+    "lerna.v1.PublishQuestionCommand.content_ref",
+    "lerna.v1.PublishQuestionCommand.expires_at_unix_ms",
+    "lerna.v1.PublishQuestionCommand.header",
+    "lerna.v1.PublishQuestionCommand.session_id",
+    "lerna.v1.PublishQuestionCommand.task_ref",
+    "lerna.v1.QuerySubject.attempt_id",
+    "lerna.v1.QuerySubject.capability_ref",
+    "lerna.v1.QuerySubject.executor_endpoint_id",
+    "lerna.v1.QuerySubject.external_key",
+    "lerna.v1.QuerySubject.operation_id",
+    "lerna.v1.QuerySubject.target_scope",
+    "lerna.v1.Question.changes_basis",
+    "lerna.v1.Question.content_ref",
+    "lerna.v1.Question.control_generation",
+    "lerna.v1.Question.expires_at_unix_ms",
+    "lerna.v1.Question.input_version",
+    "lerna.v1.Question.published_by",
+    "lerna.v1.Question.ref",
+    "lerna.v1.Question.requirements_version",
+    "lerna.v1.Question.response_input_ref",
+    "lerna.v1.Question.session_id",
+    "lerna.v1.Question.status",
+    "lerna.v1.Question.task_id",
+    "lerna.v1.QuestionProposal.changes_basis",
+    "lerna.v1.QuestionProposal.condition_ids",
+    "lerna.v1.QuestionProposal.involves_confirmation",
+    "lerna.v1.QuestionProposal.options",
+    "lerna.v1.QuestionProposal.question",
+    "lerna.v1.RawObservation.actual_address",
+    "lerna.v1.RawObservation.attempt_id",
+    "lerna.v1.RawObservation.body_ref",
+    "lerna.v1.RawObservation.executor_endpoint_id",
+    "lerna.v1.RawObservation.external_key",
+    "lerna.v1.RawObservation.file_evidence",
+    "lerna.v1.RawObservation.finished_at_unix_ms",
+    "lerna.v1.RawObservation.operation_id",
+    "lerna.v1.RawObservation.protocol",
+    "lerna.v1.RawObservation.query_subject",
+    "lerna.v1.RawObservation.rate_category",
+    "lerna.v1.RawObservation.redacted",
+    "lerna.v1.RawObservation.ref",
+    "lerna.v1.RawObservation.retry_after",
+    "lerna.v1.RawObservation.send_ref",
+    "lerna.v1.RawObservation.send_seq",
+    "lerna.v1.RawObservation.source",
+    "lerna.v1.RawObservation.started_at_unix_ms",
+    "lerna.v1.RawObservation.status_code",
+    "lerna.v1.RawObservation.target",
+    "lerna.v1.RawObservation.task_id",
+    "lerna.v1.RawObservation.transport_error",
+    "lerna.v1.RawObservation.user_id",
+    "lerna.v1.ReadDerivationInputCommand.derivation_ref",
+    "lerna.v1.ReadDerivationInputCommand.generation",
+    "lerna.v1.ReadDerivationInputCommand.header",
+    "lerna.v1.ReadDerivationInputCommand.host_instance_id",
+    "lerna.v1.ReadDerivationInputCommand.input_ref",
+    "lerna.v1.ReasonerActionAuthority.capability_ref",
+    "lerna.v1.ReasonerActionAuthority.confirmation_ref",
+    "lerna.v1.ReasonerActionAuthority.grant_ref",
+    "lerna.v1.ReasonerDescription.contract_version",
+    "lerna.v1.ReasonerDescription.implementation_version",
+    "lerna.v1.ReasonerDescription.max_call_positions",
+    "lerna.v1.ReasonerDescription.max_physical_sends",
+    "lerna.v1.ReasonerDescription.max_plan_length",
+    "lerna.v1.ReasonerDescription.supported_kinds",
+    "lerna.v1.ReasonerDriver.admission_ref",
+    "lerna.v1.ReasonerDriver.configured_by",
+    "lerna.v1.ReasonerDriver.contract_version",
+    "lerna.v1.ReasonerDriver.enabled",
+    "lerna.v1.ReasonerDriver.implementation_version",
+    "lerna.v1.ReasonerDriver.outcome_ref",
+    "lerna.v1.ReasonerDriver.policy",
+    "lerna.v1.ReasonerDriver.question_ref",
+    "lerna.v1.ReasonerDriver.ref",
+    "lerna.v1.ReasonerDriver.request_ref",
+    "lerna.v1.ReasonerDriver.state",
+    "lerna.v1.ReasonerDriver.task_id",
+    "lerna.v1.ReasonerDriver.waiting_reason",
+    "lerna.v1.ReasonerDriverPolicy.actions",
+    "lerna.v1.ReasonerDriverPolicy.model_capability_ref",
+    "lerna.v1.ReasonerDriverPolicy.model_grant_ref",
+    "lerna.v1.ReasonerDriverPolicy.session_id",
+    "lerna.v1.ReasonerDriverPolicy.settings",
+    "lerna.v1.ReceiptQuery.receipt",
+    "lerna.v1.ReceiptQuery.responsible_domain_id",
+    "lerna.v1.ReceiptQuery.revision",
+    "lerna.v1.ReceiptQuery.state",
+    "lerna.v1.ReceiveProposalCommand.header",
+    "lerna.v1.ReceiveProposalCommand.proposal",
+    "lerna.v1.RecheckCompletionCommand.header",
+    "lerna.v1.RecheckCompletionCommand.verification_ref",
+    "lerna.v1.Reconciliation.active_query_ref",
+    "lerna.v1.Reconciliation.check_count",
+    "lerna.v1.Reconciliation.confirmation_ref",
+    "lerna.v1.Reconciliation.grant_ref",
+    "lerna.v1.Reconciliation.job_ref",
+    "lerna.v1.Reconciliation.last_observation_ref",
+    "lerna.v1.Reconciliation.limits",
+    "lerna.v1.Reconciliation.next_reconcile_at_unix_ms",
+    "lerna.v1.Reconciliation.no_progress_count",
+    "lerna.v1.Reconciliation.operation_id",
+    "lerna.v1.Reconciliation.original_attempt_ref",
+    "lerna.v1.Reconciliation.parameters_ref",
+    "lerna.v1.Reconciliation.pause_reason",
+    "lerna.v1.Reconciliation.policy_version",
+    "lerna.v1.Reconciliation.query_capability_ref",
+    "lerna.v1.Reconciliation.query_refs",
+    "lerna.v1.Reconciliation.ref",
+    "lerna.v1.Reconciliation.requested_by",
+    "lerna.v1.Reconciliation.reserved_fee",
+    "lerna.v1.Reconciliation.state",
+    "lerna.v1.Reconciliation.task_id",
+    "lerna.v1.ReconciliationFinding.late_effect",
+    "lerna.v1.ReconciliationFinding.observation_ref",
+    "lerna.v1.ReconciliationFinding.operation_id",
+    "lerna.v1.ReconciliationFinding.outcome",
+    "lerna.v1.ReconciliationFinding.query_ref",
+    "lerna.v1.ReconciliationFinding.reason",
+    "lerna.v1.ReconciliationFinding.ref",
+    "lerna.v1.ReconciliationFinding.rule",
+    "lerna.v1.ReconciliationLimits.deadline_unix_ms",
+    "lerna.v1.ReconciliationLimits.initial_delay_ms",
+    "lerna.v1.ReconciliationLimits.max_checks",
+    "lerna.v1.ReconciliationLimits.max_delay_ms",
+    "lerna.v1.ReconciliationLimits.max_fee",
+    "lerna.v1.ReconciliationQuery.admission_command",
+    "lerna.v1.ReconciliationQuery.admission_receipt",
+    "lerna.v1.ReconciliationQuery.interpretation_ref",
+    "lerna.v1.ReconciliationQuery.observation_ref",
+    "lerna.v1.ReconciliationQuery.query_operation_ref",
+    "lerna.v1.ReconciliationQuery.reason",
+    "lerna.v1.ReconciliationQuery.ref",
+    "lerna.v1.ReconciliationQuery.state",
+    "lerna.v1.ReconciliationQuery.work",
+    "lerna.v1.Ref.name",
+    "lerna.v1.Ref.revision",
+    "lerna.v1.Ref.schema_id",
+    "lerna.v1.RegisterContentCommand.body",
+    "lerna.v1.RegisterContentCommand.header",
+    "lerna.v1.RegisterContentCommand.media_type",
+    "lerna.v1.RegisterContentCommand.previous_version_ref",
+    "lerna.v1.RegisterContentCommand.source_descriptor",
+    "lerna.v1.RegisterContentCommand.task_id",
+    "lerna.v1.RegisterFileResourcesCommand.derivation_ref",
+    "lerna.v1.RegisterFileResourcesCommand.header",
+    "lerna.v1.RegisterFileResourcesCommand.send_ref",
+    "lerna.v1.RegisterObservationCommand.body",
+    "lerna.v1.RegisterObservationCommand.header",
+    "lerna.v1.RegisterObservationCommand.observation",
+    "lerna.v1.ReleaseReservationCommand.closure_ref",
+    "lerna.v1.ReleaseReservationCommand.header",
+    "lerna.v1.ReleaseReservationCommand.reservation_ref",
+    "lerna.v1.RequestAdmissionConfirmationCommand.grant_ref",
+    "lerna.v1.RequestAdmissionConfirmationCommand.header",
+    "lerna.v1.RequestAdmissionConfirmationCommand.proposal_ref",
+    "lerna.v1.RequestAdmissionConfirmationCommand.session_id",
+    "lerna.v1.RequestAdmissionConfirmationCommand.task_id",
+    "lerna.v1.RequestClosureConfirmationCommand.header",
+    "lerna.v1.RequestClosureConfirmationCommand.session_id",
+    "lerna.v1.RequestClosureConfirmationCommand.work_ref",
+    "lerna.v1.RequestConditionConfirmationCommand.condition_id",
+    "lerna.v1.RequestConditionConfirmationCommand.evidence_refs",
+    "lerna.v1.RequestConditionConfirmationCommand.header",
+    "lerna.v1.RequestConditionConfirmationCommand.requirements_ref",
+    "lerna.v1.RequestConditionConfirmationCommand.session_id",
+    "lerna.v1.RequestConditionConfirmationCommand.task_id",
+    "lerna.v1.RequestGrantConfirmationCommand.grant",
+    "lerna.v1.RequestGrantConfirmationCommand.header",
+    "lerna.v1.RequestProposalCommand.header",
+    "lerna.v1.RequestProposalCommand.task_id",
+    "lerna.v1.RequestReconciliationCommand.grant_ref",
+    "lerna.v1.RequestReconciliationCommand.header",
+    "lerna.v1.RequestReconciliationCommand.limits",
+    "lerna.v1.RequestReconciliationCommand.operation_id",
+    "lerna.v1.RequestReconciliationCommand.parameters_ref",
+    "lerna.v1.RequestReconciliationCommand.policy_version",
+    "lerna.v1.RequestReconciliationCommand.query_capability_ref",
+    "lerna.v1.Requirement.condition_id",
+    "lerna.v1.Requirement.description_ref",
+    "lerna.v1.Requirement.necessary",
+    "lerna.v1.Requirement.rule_version",
+    "lerna.v1.Requirement.target_record",
+    "lerna.v1.Requirement.verification_rule",
+    "lerna.v1.Requirements.accepted_by",
+    "lerna.v1.Requirements.bound_input_version",
+    "lerna.v1.Requirements.conditions",
+    "lerna.v1.Requirements.ref",
+    "lerna.v1.Requirements.requirements_version",
+    "lerna.v1.Requirements.source",
+    "lerna.v1.Requirements.source_input_ref",
+    "lerna.v1.Requirements.task_id",
+    "lerna.v1.RequirementsProposal.conditions",
+    "lerna.v1.RequirementsProposal.impact",
+    "lerna.v1.RequirementsProposal.original_version",
+    "lerna.v1.RequirementsProposal.reason",
+    "lerna.v1.Reservation.admission_ref",
+    "lerna.v1.Reservation.budget_refs",
+    "lerna.v1.Reservation.ceiling",
+    "lerna.v1.Reservation.operation_id",
+    "lerna.v1.Reservation.ref",
+    "lerna.v1.Reservation.send_ceiling",
+    "lerna.v1.Reservation.status",
+    "lerna.v1.Reservation.task_id",
+    "lerna.v1.Reservation.unit",
+    "lerna.v1.ReservationRelease.closure_ref",
+    "lerna.v1.ReservationRelease.ref",
+    "lerna.v1.ReservationRelease.released",
+    "lerna.v1.ReservationRelease.reservation_ref",
+    "lerna.v1.RespondConfirmationCommand.binding_digest",
+    "lerna.v1.RespondConfirmationCommand.confirmation_ref",
+    "lerna.v1.RespondConfirmationCommand.decision",
+    "lerna.v1.RespondConfirmationCommand.header",
+    "lerna.v1.Result.close_reason",
+    "lerna.v1.Result.closed_at_unix_ms",
+    "lerna.v1.Result.conditions",
+    "lerna.v1.Result.execution_followup_refs",
+    "lerna.v1.Result.operation_refs",
+    "lerna.v1.Result.outcome",
+    "lerna.v1.Result.ref",
+    "lerna.v1.Result.requirements_ref",
+    "lerna.v1.Result.reservation_refs",
+    "lerna.v1.Result.task_closing_ref",
+    "lerna.v1.Result.task_id",
+    "lerna.v1.Result.unknown_operation_refs",
+    "lerna.v1.Result.usage_snapshot",
+    "lerna.v1.Result.verification_ref",
+    "lerna.v1.RevokeGrantCommand.grant_id",
+    "lerna.v1.RevokeGrantCommand.header",
+    "lerna.v1.RouteInputCommand.header",
+    "lerna.v1.RouteInputCommand.input_ref",
+    "lerna.v1.RunModelCallCommand.grant_ref",
+    "lerna.v1.RunModelCallCommand.preparation",
+    "lerna.v1.SealDerivationCommand.derivation_ref",
+    "lerna.v1.SealDerivationCommand.generation",
+    "lerna.v1.SealDerivationCommand.header",
+    "lerna.v1.SealDerivationCommand.host_instance_id",
+    "lerna.v1.SealDerivationCommand.input_refs",
+    "lerna.v1.Session.inputs",
+    "lerna.v1.Session.last_committed_seq",
+    "lerna.v1.Session.revision",
+    "lerna.v1.Session.session_id",
+    "lerna.v1.Session.status",
+    "lerna.v1.Session.task_refs",
+    "lerna.v1.SessionInput.command_identity",
+    "lerna.v1.SessionInput.content_ref",
+    "lerna.v1.SessionInput.expected_input_version",
+    "lerna.v1.SessionInput.expected_requirements_version",
+    "lerna.v1.SessionInput.input_id",
+    "lerna.v1.SessionInput.input_kind",
+    "lerna.v1.SessionInput.request_ref",
+    "lerna.v1.SessionInput.routing_status",
+    "lerna.v1.SessionInput.session_seq",
+    "lerna.v1.SessionInput.task_id",
+    "lerna.v1.SessionInput.task_input_seq",
+    "lerna.v1.SettlementFollowup.admission_ref",
+    "lerna.v1.SettlementFollowup.billing_source_refs",
+    "lerna.v1.SettlementFollowup.job_ref",
+    "lerna.v1.SettlementFollowup.operation_id",
+    "lerna.v1.SettlementFollowup.ref",
+    "lerna.v1.SettlementFollowup.reservation_refs",
+    "lerna.v1.SettlementFollowup.task_closing_ref",
+    "lerna.v1.SettlementFollowup.task_id",
+    "lerna.v1.SnapshotConfirmation.condition_id",
+    "lerna.v1.SnapshotConfirmation.control_generation",
+    "lerna.v1.SnapshotConfirmation.evidence_refs",
+    "lerna.v1.SnapshotConfirmation.expires_at_unix_ms",
+    "lerna.v1.SnapshotConfirmation.input_version",
+    "lerna.v1.SnapshotConfirmation.matter_type",
+    "lerna.v1.SnapshotConfirmation.proposal_ref",
+    "lerna.v1.SnapshotConfirmation.ref",
+    "lerna.v1.SnapshotConfirmation.requirements_ref",
+    "lerna.v1.SnapshotConfirmation.state",
+    "lerna.v1.SnapshotInput.changes_basis",
+    "lerna.v1.SnapshotInput.content_ref",
+    "lerna.v1.SnapshotInput.input_ref",
+    "lerna.v1.SnapshotInput.input_version",
+    "lerna.v1.SnapshotInput.processing_status",
+    "lerna.v1.SnapshotProgress.admission_ref",
+    "lerna.v1.SnapshotProgress.capability_ref",
+    "lerna.v1.SnapshotProgress.dispatch",
+    "lerna.v1.SnapshotProgress.effect_outcome",
+    "lerna.v1.SnapshotProgress.effect_ref",
+    "lerna.v1.SnapshotProgress.evidence_refs",
+    "lerna.v1.SnapshotProgress.late_effect",
+    "lerna.v1.SnapshotProgress.lifecycle",
+    "lerna.v1.SnapshotProgress.operation_ref",
+    "lerna.v1.SnapshotProgress.parameters_ref",
+    "lerna.v1.StartExecutionCommand.admission_ref",
+    "lerna.v1.StartExecutionCommand.binding",
+    "lerna.v1.StartExecutionCommand.call_descriptor",
+    "lerna.v1.StartExecutionCommand.claim",
+    "lerna.v1.StartExecutionCommand.credential_ref",
+    "lerna.v1.StartExecutionCommand.header",
+    "lerna.v1.StartRecord.binding",
+    "lerna.v1.StartRecord.credential_ref",
+    "lerna.v1.StartRecord.identity",
+    "lerna.v1.StartRecord.ref",
+    "lerna.v1.StartRecord.send_ref",
+    "lerna.v1.StartRecord.started_at_unix_ms",
+    "lerna.v1.StopProposalRequestCommand.header",
+    "lerna.v1.StopProposalRequestCommand.request_ref",
+    "lerna.v1.SubmitGoalCommand.contract_version",
+    "lerna.v1.SubmitGoalCommand.fingerprint_version",
+    "lerna.v1.SubmitGoalCommand.goal",
+    "lerna.v1.SubmitGoalCommand.identity",
+    "lerna.v1.SubmitGoalCommand.schema_id",
+    "lerna.v1.SubmitInputCommand.content_ref",
+    "lerna.v1.SubmitInputCommand.control",
+    "lerna.v1.SubmitInputCommand.expected_control_generation",
+    "lerna.v1.SubmitInputCommand.expected_input_version",
+    "lerna.v1.SubmitInputCommand.expected_requirements_version",
+    "lerna.v1.SubmitInputCommand.explicit_conditions",
+    "lerna.v1.SubmitInputCommand.header",
+    "lerna.v1.SubmitInputCommand.input_kind",
+    "lerna.v1.SubmitInputCommand.request_ref",
+    "lerna.v1.SubmitInputCommand.session_id",
+    "lerna.v1.SubmitInputCommand.task_id",
+    "lerna.v1.SubmitProposalOutcomeCommand.claim",
+    "lerna.v1.SubmitProposalOutcomeCommand.error_code",
+    "lerna.v1.SubmitProposalOutcomeCommand.header",
+    "lerna.v1.SubmitProposalOutcomeCommand.model_call_ref",
+    "lerna.v1.SubmitProposalOutcomeCommand.output_ref",
+    "lerna.v1.SubmitProposalOutcomeCommand.proposal",
+    "lerna.v1.SubmitProposalOutcomeCommand.request_ref",
+    "lerna.v1.SubmitProposalOutcomeCommand.usage_ref",
+    "lerna.v1.TakeoverDerivationCommand.derivation_ref",
+    "lerna.v1.TakeoverDerivationCommand.expected_generation",
+    "lerna.v1.TakeoverDerivationCommand.header",
+    "lerna.v1.TargetRecordAssertion.capability_ref",
+    "lerna.v1.TargetRecordAssertion.parameters_ref",
+    "lerna.v1.Task.bound_input_version",
+    "lerna.v1.Task.control",
+    "lerna.v1.Task.control_generation",
+    "lerna.v1.Task.goal_ref",
+    "lerna.v1.Task.input_version",
+    "lerna.v1.Task.lifecycle",
+    "lerna.v1.Task.owner_domain_id",
+    "lerna.v1.Task.planning_generation",
+    "lerna.v1.Task.progress",
+    "lerna.v1.Task.requirements_status",
+    "lerna.v1.Task.requirements_version",
+    "lerna.v1.Task.result_ref",
+    "lerna.v1.Task.revision",
+    "lerna.v1.Task.task_id",
+    "lerna.v1.Task.waiting_on",
+    "lerna.v1.TaskClosing.admission_refs",
+    "lerna.v1.TaskClosing.cancellation_ref",
+    "lerna.v1.TaskClosing.close_reason",
+    "lerna.v1.TaskClosing.closure_intent_refs",
+    "lerna.v1.TaskClosing.control_generation",
+    "lerna.v1.TaskClosing.input_version",
+    "lerna.v1.TaskClosing.outcome",
+    "lerna.v1.TaskClosing.ref",
+    "lerna.v1.TaskClosing.requested_by",
+    "lerna.v1.TaskClosing.requirements_ref",
+    "lerna.v1.TaskClosing.requirements_version",
+    "lerna.v1.TaskClosing.saved_at_unix_ms",
+    "lerna.v1.TaskClosing.settlement_followup_refs",
+    "lerna.v1.TaskClosing.task_id",
+    "lerna.v1.TaskClosingView.awaiting_operation_admission_refs",
+    "lerna.v1.TaskClosingView.closing",
+    "lerna.v1.TaskClosingView.closure_intents",
+    "lerna.v1.TaskClosingView.closure_seals",
+    "lerna.v1.TaskClosingView.execution_followups",
+    "lerna.v1.TaskClosingView.followup_jobs",
+    "lerna.v1.TaskClosingView.operations",
+    "lerna.v1.TaskClosingView.pending_closure_refs",
+    "lerna.v1.TaskClosingView.result",
+    "lerna.v1.TaskClosingView.settlement_followups",
+    "lerna.v1.TaskClosingView.task",
+    "lerna.v1.TaskClosureIntent.command",
+    "lerna.v1.TaskClosureIntent.job_ref",
+    "lerna.v1.TaskClosureIntent.recipient_receipt",
+    "lerna.v1.TaskClosureIntent.ref",
+    "lerna.v1.TaskClosureIntent.task_id",
+    "lerna.v1.TaskClosureSeal.admission_ref",
+    "lerna.v1.TaskClosureSeal.execution_followup_ref",
+    "lerna.v1.TaskClosureSeal.executor_endpoint_id",
+    "lerna.v1.TaskClosureSeal.intent_ref",
+    "lerna.v1.TaskClosureSeal.no_send_proven",
+    "lerna.v1.TaskClosureSeal.operation_id",
+    "lerna.v1.TaskClosureSeal.operation_ref",
+    "lerna.v1.TaskClosureSeal.physical_send_was_possible",
+    "lerna.v1.TaskClosureSeal.ref",
+    "lerna.v1.TaskClosureSeal.task_closing_ref",
+    "lerna.v1.TaskInputHistory.inputs",
+    "lerna.v1.TaskInputHistory.task_id",
+    "lerna.v1.TaskInputRecord.changes_basis",
+    "lerna.v1.TaskInputRecord.content_ref",
+    "lerna.v1.TaskInputRecord.input_ref",
+    "lerna.v1.TaskInputRecord.input_version",
+    "lerna.v1.TaskInputRecord.processing_decision",
+    "lerna.v1.TaskInputRecord.processing_status",
+    "lerna.v1.TaskInputRecord.task_input_seq",
+    "lerna.v1.TraceCutoff.source_seq",
+    "lerna.v1.TraceCutoff.source_stream_id",
+    "lerna.v1.TraceEvent.attempt_id",
+    "lerna.v1.TraceEvent.body_ref",
+    "lerna.v1.TraceEvent.effect_outcome",
+    "lerna.v1.TraceEvent.event_type",
+    "lerna.v1.TraceEvent.late_effect",
+    "lerna.v1.TraceEvent.mapping_version",
+    "lerna.v1.TraceEvent.observation_ref",
+    "lerna.v1.TraceEvent.operation_id",
+    "lerna.v1.TraceEvent.origin_command",
+    "lerna.v1.TraceEvent.producer",
+    "lerna.v1.TraceEvent.producer_version",
+    "lerna.v1.TraceEvent.reason_code",
+    "lerna.v1.TraceEvent.ref",
+    "lerna.v1.TraceEvent.related_refs",
+    "lerna.v1.TraceEvent.requirements_version",
+    "lerna.v1.TraceEvent.send_ref",
+    "lerna.v1.TraceEvent.source_record_ref",
+    "lerna.v1.TraceEvent.source_schema_version",
+    "lerna.v1.TraceEvent.source_seq",
+    "lerna.v1.TraceEvent.source_stream_id",
+    "lerna.v1.TraceEvent.task_id",
+    "lerna.v1.TraceGap.first",
+    "lerna.v1.TraceGap.last",
+    "lerna.v1.TraceProgress.accepted_contiguous",
+    "lerna.v1.TraceProgress.backlog",
+    "lerna.v1.TraceProgress.cutoff",
+    "lerna.v1.TraceProgress.gaps",
+    "lerna.v1.TraceProgress.indexed_contiguous",
+    "lerna.v1.TraceProgress.pending_receipts",
+    "lerna.v1.TraceProgress.source_high_water",
+    "lerna.v1.TraceProgress.source_known",
+    "lerna.v1.TraceProgress.source_stream_id",
+    "lerna.v1.TraceQuery.cutoff",
+    "lerna.v1.TraceQuery.processing_purpose",
+    "lerna.v1.TraceQuery.task_id",
+    "lerna.v1.TraceSourceRecord.command",
+    "lerna.v1.TraceSourceRecord.receipt",
+    "lerna.v1.TraceView.backlog",
+    "lerna.v1.TraceView.complete",
+    "lerna.v1.TraceView.events",
+    "lerna.v1.TraceView.mapping_version",
+    "lerna.v1.TraceView.pending_receipts",
+    "lerna.v1.TraceView.sources",
+    "lerna.v1.UsageReport.attempt_id",
+    "lerna.v1.UsageReport.billing_source",
+    "lerna.v1.UsageReport.measurement_ref",
+    "lerna.v1.UsageReport.operation_id",
+    "lerna.v1.UsageReport.physical_sends",
+    "lerna.v1.UsageReport.price_rule_ref",
+    "lerna.v1.UsageReport.ref",
+    "lerna.v1.UsageReport.send_ref",
+    "lerna.v1.UsageReport.settlement",
+    "lerna.v1.UsageReport.source_revision",
+    "lerna.v1.UsageReport.task_id",
+    "lerna.v1.UsageReport.unit",
+    "lerna.v1.Verification.admission_refs",
+    "lerna.v1.Verification.candidates",
+    "lerna.v1.Verification.closure_intent_refs",
+    "lerna.v1.Verification.conditions",
+    "lerna.v1.Verification.continuation_request_ref",
+    "lerna.v1.Verification.control_generation",
+    "lerna.v1.Verification.ended_reason",
+    "lerna.v1.Verification.finished_at_unix_ms",
+    "lerna.v1.Verification.gaps",
+    "lerna.v1.Verification.input_version",
+    "lerna.v1.Verification.operation_refs",
+    "lerna.v1.Verification.proposal_ref",
+    "lerna.v1.Verification.ref",
+    "lerna.v1.Verification.requirements_ref",
+    "lerna.v1.Verification.requirements_version",
+    "lerna.v1.Verification.round",
+    "lerna.v1.Verification.started_at_unix_ms",
+    "lerna.v1.Verification.status",
+    "lerna.v1.Verification.task_id",
+    "lerna.v1.WithdrawConfirmationCommand.confirmation_ref",
+    "lerna.v1.WithdrawConfirmationCommand.header"
+  ],
+  "samples": [
+    {
+      "name": "start-command",
+      "type": "lerna.v1.StartExecutionCommand",
+      "binary_bytes": 1551,
+      "json_bytes": 3525
+    },
+    {
+      "name": "admission",
+      "type": "lerna.v1.Admission",
+      "binary_bytes": 1466,
+      "json_bytes": 3549
+    },
+    {
+      "name": "operation-handoff",
+      "type": "lerna.v1.Handoff",
+      "binary_bytes": 735,
+      "json_bytes": 1720
+    },
+    {
+      "name": "planning-before-send",
+      "type": "lerna.v1.PlanningState",
+      "binary_bytes": 1797,
+      "json_bytes": 4596
+    },
+    {
+      "name": "grant",
+      "type": "lerna.v1.Grant",
+      "binary_bytes": 292,
+      "json_bytes": 757
+    },
+    {
+      "name": "grant-use",
+      "type": "lerna.v1.GrantUse",
+      "binary_bytes": 388,
+      "json_bytes": 859
+    },
+    {
+      "name": "exit-credential",
+      "type": "lerna.v1.ExitCredential",
+      "binary_bytes": 726,
+      "json_bytes": 1737
+    },
+    {
+      "name": "prepare-command",
+      "type": "lerna.v1.PrepareExecutionCommand",
+      "binary_bytes": 497,
+      "json_bytes": 1202
+    },
+    {
+      "name": "issue-exit-command",
+      "type": "lerna.v1.IssueExitCredentialCommand",
+      "binary_bytes": 765,
+      "json_bytes": 1879
+    },
+    {
+      "name": "accept-operation-command",
+      "type": "lerna.v1.AcceptOperationCommand",
+      "binary_bytes": 1571,
+      "json_bytes": 3796
+    },
+    {
+      "name": "execution-before-send",
+      "type": "lerna.v1.Execution",
+      "binary_bytes": 866,
+      "json_bytes": 1887
+    },
+    {
+      "name": "reservation",
+      "type": "lerna.v1.Reservation",
+      "binary_bytes": 457,
+      "json_bytes": 1061
+    },
+    {
+      "name": "send-receipt",
+      "type": "lerna.v1.CommandReceipt",
+      "binary_bytes": 347,
+      "json_bytes": 821
+    },
+    {
+      "name": "execution-after-send",
+      "type": "lerna.v1.Execution",
+      "binary_bytes": 1370,
+      "json_bytes": 3139
+    },
+    {
+      "name": "operation-after-send",
+      "type": "lerna.v1.Operation",
+      "binary_bytes": 2569,
+      "json_bytes": 5996
+    },
+    {
+      "name": "observation",
+      "type": "lerna.v1.RawObservation",
+      "binary_bytes": 576,
+      "json_bytes": 1283
+    },
+    {
+      "name": "dispatch-command",
+      "type": "lerna.v1.DispatchCommand",
+      "binary_bytes": 848,
+      "json_bytes": 2022
+    },
+    {
+      "name": "register-observation-command",
+      "type": "lerna.v1.RegisterObservationCommand",
+      "binary_bytes": 818,
+      "json_bytes": 1647
+    },
+    {
+      "name": "accept-observation-command",
+      "type": "lerna.v1.AcceptObservationCommand",
+      "binary_bytes": 695,
+      "json_bytes": 1546
+    },
+    {
+      "name": "interpret-observation-command",
+      "type": "lerna.v1.InterpretObservationCommand",
+      "binary_bytes": 169,
+      "json_bytes": 411
+    },
+    {
+      "name": "effect-interpretation",
+      "type": "lerna.v1.EffectInterpretation",
+      "binary_bytes": 268,
+      "json_bytes": 526
+    },
+    {
+      "name": "observation-reports",
+      "type": "lerna.v1.ObservationReports",
+      "binary_bytes": 2344,
+      "json_bytes": 5400
+    },
+    {
+      "name": "usage",
+      "type": "lerna.v1.UsageReport",
+      "binary_bytes": 633,
+      "json_bytes": 1445
+    },
+    {
+      "name": "trace-event",
+      "type": "lerna.v1.TraceEvent",
+      "binary_bytes": 715,
+      "json_bytes": 1581
+    },
+    {
+      "name": "credential-use",
+      "type": "lerna.v1.ExitCredentialUse",
+      "binary_bytes": 228,
+      "json_bytes": 492
+    },
+    {
+      "name": "billing-source",
+      "type": "lerna.v1.BillingSource",
+      "binary_bytes": 563,
+      "json_bytes": 1259
+    },
+    {
+      "name": "begin-completion-command",
+      "type": "lerna.v1.BeginCompletionCommand",
+      "binary_bytes": 197,
+      "json_bytes": 505
+    },
+    {
+      "name": "result",
+      "type": "lerna.v1.Result",
+      "binary_bytes": 1357,
+      "json_bytes": 3150
+    },
+    {
+      "name": "verification",
+      "type": "lerna.v1.Verification",
+      "binary_bytes": 1376,
+      "json_bytes": 3224
+    },
+    {
+      "name": "completion-intent-0",
+      "type": "lerna.v1.CompletionClosureIntent",
+      "binary_bytes": 1052,
+      "json_bytes": 2381
+    },
+    {
+      "name": "completion-seal-0",
+      "type": "lerna.v1.CompletionSeal",
+      "binary_bytes": 535,
+      "json_bytes": 1198
+    },
+    {
+      "name": "closed-recheck-rejection",
+      "type": "lerna.v1.CommandReceipt",
+      "binary_bytes": 250,
+      "json_bytes": 741
+    },
+    {
+      "name": "recheck-completion-command",
+      "type": "lerna.v1.RecheckCompletionCommand",
+      "binary_bytes": 152,
+      "json_bytes": 395
+    },
+    {
+      "name": "closed-task",
+      "type": "lerna.v1.Task",
+      "binary_bytes": 236,
+      "json_bytes": 810
+    },
+    {
+      "name": "planning-after-completion",
+      "type": "lerna.v1.PlanningState",
+      "binary_bytes": 2596,
+      "json_bytes": 6459
+    },
+    {
+      "name": "user-budget",
+      "type": "lerna.v1.Budget",
+      "binary_bytes": 98,
+      "json_bytes": 262
+    },
+    {
+      "name": "task-budget",
+      "type": "lerna.v1.Budget",
+      "binary_bytes": 150,
+      "json_bytes": 382
+    },
+    {
+      "name": "goal-receipt-query",
+      "type": "lerna.v1.ReceiptQuery",
+      "binary_bytes": 508,
+      "json_bytes": 1380
+    },
+    {
+      "name": "session",
+      "type": "lerna.v1.Session",
+      "binary_bytes": 372,
+      "json_bytes": 995
+    },
+    {
+      "name": "goal-command",
+      "type": "lerna.v1.SubmitGoalCommand",
+      "binary_bytes": 62,
+      "json_bytes": 193
+    },
+    {
+      "name": "large-goal-command",
+      "type": "lerna.v1.SubmitGoalCommand",
+      "binary_bytes": 65599,
+      "json_bytes": 65728
+    },
+    {
+      "name": "request-confirmation-command",
+      "type": "lerna.v1.RequestAdmissionConfirmationCommand",
+      "binary_bytes": 269,
+      "json_bytes": 682
+    },
+    {
+      "name": "confirmation-pending",
+      "type": "lerna.v1.Confirmation",
+      "binary_bytes": 1251,
+      "json_bytes": 2502
+    },
+    {
+      "name": "approve-confirmation-command",
+      "type": "lerna.v1.RespondConfirmationCommand",
+      "binary_bytes": 227,
+      "json_bytes": 501
+    },
+    {
+      "name": "confirmation-approved",
+      "type": "lerna.v1.Confirmation",
+      "binary_bytes": 1283,
+      "json_bytes": 2605
+    },
+    {
+      "name": "confirmed-admit-command",
+      "type": "lerna.v1.AdmitCommand",
+      "binary_bytes": 354,
+      "json_bytes": 879
+    },
+    {
+      "name": "confirmation-consumed",
+      "type": "lerna.v1.Confirmation",
+      "binary_bytes": 1364,
+      "json_bytes": 2803
+    },
+    {
+      "name": "withdraw-confirmation-command",
+      "type": "lerna.v1.WithdrawConfirmationCommand",
+      "binary_bytes": 153,
+      "json_bytes": 396
+    },
+    {
+      "name": "confirmation-withdrawn",
+      "type": "lerna.v1.Confirmation",
+      "binary_bytes": 1325,
+      "json_bytes": 2718
+    },
+    {
+      "name": "withdrawn-admission-rejection",
+      "type": "lerna.v1.CommandReceipt",
+      "binary_bytes": 260,
+      "json_bytes": 751
+    },
+    {
+      "name": "grant-confirmation-command",
+      "type": "lerna.v1.RequestGrantConfirmationCommand",
+      "binary_bytes": 314,
+      "json_bytes": 881
+    },
+    {
+      "name": "grant-confirmation-pending",
+      "type": "lerna.v1.Confirmation",
+      "binary_bytes": 1227,
+      "json_bytes": 2062
+    },
+    {
+      "name": "issue-grant-command",
+      "type": "lerna.v1.IssueGrantCommand",
+      "binary_bytes": 156,
+      "json_bytes": 399
+    },
+    {
+      "name": "grant-confirmation-consumed",
+      "type": "lerna.v1.Confirmation",
+      "binary_bytes": 1355,
+      "json_bytes": 2382
+    },
+    {
+      "name": "grant-issuance",
+      "type": "lerna.v1.GrantIssuance",
+      "binary_bytes": 414,
+      "json_bytes": 1065
+    },
+    {
+      "name": "single-exact-grant",
+      "type": "lerna.v1.Grant",
+      "binary_bytes": 396,
+      "json_bytes": 1016
+    },
+    {
+      "name": "start-record",
+      "type": "lerna.v1.StartRecord",
+      "binary_bytes": 936,
+      "json_bytes": 2192
+    },
+    {
+      "name": "revoke-grant-command",
+      "type": "lerna.v1.RevokeGrantCommand",
+      "binary_bytes": 117,
+      "json_bytes": 318
+    },
+    {
+      "name": "revocation-pending",
+      "type": "lerna.v1.GrantRevocation",
+      "binary_bytes": 1154,
+      "json_bytes": 2657
+    },
+    {
+      "name": "revocation-complete",
+      "type": "lerna.v1.GrantRevocation",
+      "binary_bytes": 1562,
+      "json_bytes": 3557
+    },
+    {
+      "name": "revoked-grant-status",
+      "type": "lerna.v1.GrantStatus",
+      "binary_bytes": 420,
+      "json_bytes": 1119
+    },
+    {
+      "name": "sealed-operation",
+      "type": "lerna.v1.Operation",
+      "binary_bytes": 2006,
+      "json_bytes": 4583
+    },
+    {
+      "name": "grant-exit-closure",
+      "type": "lerna.v1.GrantExitClosure",
+      "binary_bytes": 435,
+      "json_bytes": 933
+    },
+    {
+      "name": "release-reservation-command",
+      "type": "lerna.v1.ReleaseReservationCommand",
+      "binary_bytes": 254,
+      "json_bytes": 603
+    },
+    {
+      "name": "reservation-release",
+      "type": "lerna.v1.ReservationRelease",
+      "binary_bytes": 291,
+      "json_bytes": 624
+    },
+    {
+      "name": "released-budget",
+      "type": "lerna.v1.Budget",
+      "binary_bytes": 96,
+      "json_bytes": 246
+    },
+    {
+      "name": "settled-billing-source",
+      "type": "lerna.v1.BillingSource",
+      "binary_bytes": 785,
+      "json_bytes": 1698
+    },
+    {
+      "name": "billing-entry",
+      "type": "lerna.v1.BillingEntry",
+      "binary_bytes": 529,
+      "json_bytes": 1039
+    },
+    {
+      "name": "conflicted-billing-source",
+      "type": "lerna.v1.BillingSource",
+      "binary_bytes": 658,
+      "json_bytes": 1462
+    },
+    {
+      "name": "billing-conflict",
+      "type": "lerna.v1.BillingConflict",
+      "binary_bytes": 369,
+      "json_bytes": 704
+    },
+    {
+      "name": "billing-blocked-budget",
+      "type": "lerna.v1.Budget",
+      "binary_bytes": 103,
+      "json_bytes": 301
+    },
+    {
+      "name": "adjust-budget-command",
+      "type": "lerna.v1.AdjustBudgetLimitCommand",
+      "binary_bytes": 164,
+      "json_bytes": 426
+    },
+    {
+      "name": "deficit-budget",
+      "type": "lerna.v1.Budget",
+      "binary_bytes": 102,
+      "json_bytes": 298
+    },
+    {
+      "name": "unknown-billing-source",
+      "type": "lerna.v1.BillingSource",
+      "binary_bytes": 563,
+      "json_bytes": 1259
+    },
+    {
+      "name": "import-bill-command",
+      "type": "lerna.v1.ImportBillCommand",
+      "binary_bytes": 240,
+      "json_bytes": 583
+    },
+    {
+      "name": "late-over-ceiling-source",
+      "type": "lerna.v1.BillingSource",
+      "binary_bytes": 810,
+      "json_bytes": 1724
+    },
+    {
+      "name": "unknown-operation-after-bill",
+      "type": "lerna.v1.Operation",
+      "binary_bytes": 2566,
+      "json_bytes": 5993
+    },
+    {
+      "name": "authenticated-caller",
+      "type": "lerna.v1.Caller",
+      "binary_bytes": 9,
+      "json_bytes": 33
+    },
+    {
+      "name": "input-content",
+      "type": "lerna.v1.Content",
+      "binary_bytes": 486,
+      "json_bytes": 1080
+    },
+    {
+      "name": "create-session-command",
+      "type": "lerna.v1.CreateSessionCommand",
+      "binary_bytes": 71,
+      "json_bytes": 202
+    },
+    {
+      "name": "empty-session",
+      "type": "lerna.v1.Session",
+      "binary_bytes": 65,
+      "json_bytes": 162
+    },
+    {
+      "name": "publish-question-command",
+      "type": "lerna.v1.PublishQuestionCommand",
+      "binary_bytes": 284,
+      "json_bytes": 726
+    },
+    {
+      "name": "question",
+      "type": "lerna.v1.Question",
+      "binary_bytes": 325,
+      "json_bytes": 849
+    },
+    {
+      "name": "submit-answer-command",
+      "type": "lerna.v1.SubmitInputCommand",
+      "binary_bytes": 347,
+      "json_bytes": 906
+    },
+    {
+      "name": "input-delivery",
+      "type": "lerna.v1.InputDelivery",
+      "binary_bytes": 763,
+      "json_bytes": 1999
+    },
+    {
+      "name": "already-routed-rejection",
+      "type": "lerna.v1.CommandReceipt",
+      "binary_bytes": 246,
+      "json_bytes": 737
+    },
+    {
+      "name": "route-input-command",
+      "type": "lerna.v1.RouteInputCommand",
+      "binary_bytes": 145,
+      "json_bytes": 381
+    },
+    {
+      "name": "modify-input-command",
+      "type": "lerna.v1.SubmitInputCommand",
+      "binary_bytes": 268,
+      "json_bytes": 720
+    },
+    {
+      "name": "model-unprocessed-input-snapshot",
+      "type": "lerna.v1.ContextSnapshot",
+      "binary_bytes": 973,
+      "json_bytes": 2453
+    },
+    {
+      "name": "process-input-command",
+      "type": "lerna.v1.ProcessInputCommand",
+      "binary_bytes": 167,
+      "json_bytes": 443
+    },
+    {
+      "name": "task-input-history",
+      "type": "lerna.v1.TaskInputHistory",
+      "binary_bytes": 664,
+      "json_bytes": 1742
+    },
+    {
+      "name": "accept-requirements-command",
+      "type": "lerna.v1.AcceptRequirementsCommand",
+      "binary_bytes": 276,
+      "json_bytes": 734
+    },
+    {
+      "name": "request-proposal-command",
+      "type": "lerna.v1.RequestProposalCommand",
+      "binary_bytes": 117,
+      "json_bytes": 317
+    },
+    {
+      "name": "receive-proposal-command",
+      "type": "lerna.v1.ReceiveProposalCommand",
+      "binary_bytes": 554,
+      "json_bytes": 1430
+    },
+    {
+      "name": "configure-budget-rejection",
+      "type": "lerna.v1.CommandReceipt",
+      "binary_bytes": 260,
+      "json_bytes": 751
+    },
+    {
+      "name": "configure-budget-command",
+      "type": "lerna.v1.ConfigureBudgetCommand",
+      "binary_bytes": 133,
+      "json_bytes": 354
+    },
+    {
+      "name": "configure-capability-command",
+      "type": "lerna.v1.ConfigureCapabilityCommand",
+      "binary_bytes": 303,
+      "json_bytes": 782
+    },
+    {
+      "name": "configure-grant-command",
+      "type": "lerna.v1.ConfigureGrantCommand",
+      "binary_bytes": 256,
+      "json_bytes": 682
+    },
+    {
+      "name": "claim-job-command",
+      "type": "lerna.v1.JobCommand",
+      "binary_bytes": 84,
+      "json_bytes": 256
+    },
+    {
+      "name": "physical-io-request",
+      "type": "lerna.v1.PhysicalIORequest",
+      "binary_bytes": 1532,
+      "json_bytes": 3481
+    },
+    {
+      "name": "physical-io-result",
+      "type": "lerna.v1.PhysicalIOResult",
+      "binary_bytes": 711,
+      "json_bytes": 1409
+    },
+    {
+      "name": "content-register-command",
+      "type": "lerna.v1.RegisterContentCommand",
+      "binary_bytes": 228,
+      "json_bytes": 556
+    },
+    {
+      "name": "content-registration-staged",
+      "type": "lerna.v1.ContentRegistration",
+      "binary_bytes": 1037,
+      "json_bytes": 2213
+    },
+    {
+      "name": "content-registration-published",
+      "type": "lerna.v1.ContentRegistration",
+      "binary_bytes": 1449,
+      "json_bytes": 3022
+    },
+    {
+      "name": "content-body-receipt",
+      "type": "lerna.v1.BodyReceipt",
+      "binary_bytes": 402,
+      "json_bytes": 786
+    },
+    {
+      "name": "content-version-one",
+      "type": "lerna.v1.Content",
+      "binary_bytes": 560,
+      "json_bytes": 1230
+    },
+    {
+      "name": "content-update-command",
+      "type": "lerna.v1.RegisterContentCommand",
+      "binary_bytes": 322,
+      "json_bytes": 770
+    },
+    {
+      "name": "content-version-two",
+      "type": "lerna.v1.Content",
+      "binary_bytes": 654,
+      "json_bytes": 1448
+    },
+    {
+      "name": "content-prepare-command",
+      "type": "lerna.v1.PrepareDerivationCommand",
+      "binary_bytes": 179,
+      "json_bytes": 429
+    },
+    {
+      "name": "content-derivation-prepared",
+      "type": "lerna.v1.ContentDerivation",
+      "binary_bytes": 469,
+      "json_bytes": 1021
+    },
+    {
+      "name": "content-derivation-input",
+      "type": "lerna.v1.Content",
+      "binary_bytes": 560,
+      "json_bytes": 1230
+    },
+    {
+      "name": "content-read-input-command",
+      "type": "lerna.v1.ReadDerivationInputCommand",
+      "binary_bytes": 300,
+      "json_bytes": 681
+    },
+    {
+      "name": "content-takeover-command",
+      "type": "lerna.v1.TakeoverDerivationCommand",
+      "binary_bytes": 181,
+      "json_bytes": 446
+    },
+    {
+      "name": "content-derivation-taken-over",
+      "type": "lerna.v1.ContentDerivation",
+      "binary_bytes": 555,
+      "json_bytes": 1221
+    },
+    {
+      "name": "content-seal-command",
+      "type": "lerna.v1.SealDerivationCommand",
+      "binary_bytes": 300,
+      "json_bytes": 684
+    },
+    {
+      "name": "content-derivation-sealed",
+      "type": "lerna.v1.ContentDerivation",
+      "binary_bytes": 637,
+      "json_bytes": 1417
+    },
+    {
+      "name": "content-commit-command",
+      "type": "lerna.v1.CommitDerivationCommand",
+      "binary_bytes": 222,
+      "json_bytes": 508
+    },
+    {
+      "name": "content-derivation-staged",
+      "type": "lerna.v1.ContentDerivation",
+      "binary_bytes": 637,
+      "json_bytes": 1417
+    },
+    {
+      "name": "content-derived-published",
+      "type": "lerna.v1.Content",
+      "binary_bytes": 755,
+      "json_bytes": 1620
+    },
+    {
+      "name": "content-derivation-committed",
+      "type": "lerna.v1.ContentDerivation",
+      "binary_bytes": 1046,
+      "json_bytes": 2222
+    },
+    {
+      "name": "content-delete-unsupported-command",
+      "type": "lerna.v1.DeleteContentCommand",
+      "binary_bytes": 169,
+      "json_bytes": 407
+    },
+    {
+      "name": "model-proposal-request",
+      "type": "lerna.v1.ProposalRequest",
+      "binary_bytes": 320,
+      "json_bytes": 762
+    },
+    {
+      "name": "model-context-snapshot",
+      "type": "lerna.v1.ContextSnapshot",
+      "binary_bytes": 703,
+      "json_bytes": 1798
+    },
+    {
+      "name": "model-call-prepared",
+      "type": "lerna.v1.ModelCall",
+      "binary_bytes": 684,
+      "json_bytes": 1499
+    },
+    {
+      "name": "model-prepare-command",
+      "type": "lerna.v1.PrepareModelCallCommand",
+      "binary_bytes": 702,
+      "json_bytes": 1741
+    },
+    {
+      "name": "model-input-published",
+      "type": "lerna.v1.Content",
+      "binary_bytes": 5600,
+      "json_bytes": 8069
+    },
+    {
+      "name": "model-input-derivation",
+      "type": "lerna.v1.ContentDerivation",
+      "binary_bytes": 1081,
+      "json_bytes": 2259
+    },
+    {
+      "name": "model-admit-command",
+      "type": "lerna.v1.AdmitModelCallCommand",
+      "binary_bytes": 596,
+      "json_bytes": 1399
+    },
+    {
+      "name": "model-admission",
+      "type": "lerna.v1.Admission",
+      "binary_bytes": 1635,
+      "json_bytes": 3852
+    },
+    {
+      "name": "model-call-result",
+      "type": "lerna.v1.ModelCallResult",
+      "binary_bytes": 599,
+      "json_bytes": 1331
+    },
+    {
+      "name": "model-run-command",
+      "type": "lerna.v1.RunModelCallCommand",
+      "binary_bytes": 778,
+      "json_bytes": 1935
+    },
+    {
+      "name": "model-call-completed",
+      "type": "lerna.v1.ModelCall",
+      "binary_bytes": 1369,
+      "json_bytes": 3033
+    },
+    {
+      "name": "model-execution-descriptor",
+      "type": "lerna.v1.Execution",
+      "binary_bytes": 1387,
+      "json_bytes": 3067
+    },
+    {
+      "name": "model-output-published",
+      "type": "lerna.v1.Content",
+      "binary_bytes": 1076,
+      "json_bytes": 2188
+    },
+    {
+      "name": "model-output-derivation",
+      "type": "lerna.v1.ContentDerivation",
+      "binary_bytes": 1434,
+      "json_bytes": 2945
+    },
+    {
+      "name": "model-usage",
+      "type": "lerna.v1.UsageReport",
+      "binary_bytes": 633,
+      "json_bytes": 1445
+    },
+    {
+      "name": "model-outcome-command",
+      "type": "lerna.v1.SubmitProposalOutcomeCommand",
+      "binary_bytes": 1019,
+      "json_bytes": 2524
+    },
+    {
+      "name": "model-outcome-accepted",
+      "type": "lerna.v1.ProposalOutcome",
+      "binary_bytes": 1160,
+      "json_bytes": 2836
+    },
+    {
+      "name": "model-request-reported",
+      "type": "lerna.v1.ProposalRequest",
+      "binary_bytes": 851,
+      "json_bytes": 2086
+    },
+    {
+      "name": "model-settled-budget",
+      "type": "lerna.v1.Budget",
+      "binary_bytes": 98,
+      "json_bytes": 260
+    },
+    {
+      "name": "model-unknown-result",
+      "type": "lerna.v1.ModelCallResult",
+      "binary_bytes": 414,
+      "json_bytes": 924
+    },
+    {
+      "name": "model-stop-command",
+      "type": "lerna.v1.StopProposalRequestCommand",
+      "binary_bytes": 162,
+      "json_bytes": 400
+    },
+    {
+      "name": "model-request-stopped",
+      "type": "lerna.v1.ProposalRequest",
+      "binary_bytes": 408,
+      "json_bytes": 967
+    },
+    {
+      "name": "model-stopped-outcome-command",
+      "type": "lerna.v1.SubmitProposalOutcomeCommand",
+      "binary_bytes": 631,
+      "json_bytes": 1536
+    },
+    {
+      "name": "model-stopped-late-outcome",
+      "type": "lerna.v1.ProposalOutcome",
+      "binary_bytes": 704,
+      "json_bytes": 1661
+    },
+    {
+      "name": "model-unknown-budget",
+      "type": "lerna.v1.Budget",
+      "binary_bytes": 98,
+      "json_bytes": 262
+    },
+    {
+      "name": "model-refused-result",
+      "type": "lerna.v1.ModelCallResult",
+      "binary_bytes": 597,
+      "json_bytes": 1329
+    },
+    {
+      "name": "reconciliation-original-unknown",
+      "type": "lerna.v1.Operation",
+      "binary_bytes": 2518,
+      "json_bytes": 5857
+    },
+    {
+      "name": "reconciliation-request-command",
+      "type": "lerna.v1.RequestReconciliationCommand",
+      "binary_bytes": 391,
+      "json_bytes": 1044
+    },
+    {
+      "name": "reconciliation-waiting-task",
+      "type": "lerna.v1.Task",
+      "binary_bytes": 213,
+      "json_bytes": 696
+    },
+    {
+      "name": "reconciliation-confirmation-required",
+      "type": "lerna.v1.Reconciliation",
+      "binary_bytes": 941,
+      "json_bytes": 2226
+    },
+    {
+      "name": "reconciliation-query-before-approval",
+      "type": "lerna.v1.ReconciliationQuery",
+      "binary_bytes": 1134,
+      "json_bytes": 2443
+    },
+    {
+      "name": "closure-work",
+      "type": "lerna.v1.ClosureWorkRequest",
+      "binary_bytes": 1003,
+      "json_bytes": 2196
+    },
+    {
+      "name": "closure-confirmation-command",
+      "type": "lerna.v1.RequestClosureConfirmationCommand",
+      "binary_bytes": 233,
+      "json_bytes": 540
+    },
+    {
+      "name": "closure-confirmation-pending",
+      "type": "lerna.v1.Confirmation",
+      "binary_bytes": 2613,
+      "json_bytes": 4386
+    },
+    {
+      "name": "reconciliation-control-command",
+      "type": "lerna.v1.ControlReconciliationCommand",
+      "binary_bytes": 240,
+      "json_bytes": 590
+    },
+    {
+      "name": "reconciliation-completed",
+      "type": "lerna.v1.Reconciliation",
+      "binary_bytes": 994,
+      "json_bytes": 2379
+    },
+    {
+      "name": "reconciliation-query-completed",
+      "type": "lerna.v1.ReconciliationQuery",
+      "binary_bytes": 2080,
+      "json_bytes": 4597
+    },
+    {
+      "name": "reconciliation-finding",
+      "type": "lerna.v1.ReconciliationFinding",
+      "binary_bytes": 453,
+      "json_bytes": 890
+    },
+    {
+      "name": "closure-admission",
+      "type": "lerna.v1.Admission",
+      "binary_bytes": 1895,
+      "json_bytes": 4412
+    },
+    {
+      "name": "reconciliation-query-operation",
+      "type": "lerna.v1.Operation",
+      "binary_bytes": 3213,
+      "json_bytes": 7295
+    },
+    {
+      "name": "reconciliation-original-settled",
+      "type": "lerna.v1.Operation",
+      "binary_bytes": 2729,
+      "json_bytes": 6280
+    },
+    {
+      "name": "reconciliation-query-observation",
+      "type": "lerna.v1.RawObservation",
+      "binary_bytes": 862,
+      "json_bytes": 1893
+    },
+    {
+      "name": "reconciliation-query-reports",
+      "type": "lerna.v1.ObservationReports",
+      "binary_bytes": 2344,
+      "json_bytes": 5401
+    },
+    {
+      "name": "closure-confirmation-consumed",
+      "type": "lerna.v1.Confirmation",
+      "binary_bytes": 2734,
+      "json_bytes": 4695
+    },
+    {
+      "name": "closure-admission-command",
+      "type": "lerna.v1.AdmitClosureCommand",
+      "binary_bytes": 296,
+      "json_bytes": 643
+    },
+    {
+      "name": "reconciliation-progress-handoff",
+      "type": "lerna.v1.OperationProgressHandoff",
+      "binary_bytes": 1704,
+      "json_bytes": 3735
+    },
+    {
+      "name": "reconciliation-awake-task",
+      "type": "lerna.v1.Task",
+      "binary_bytes": 160,
+      "json_bytes": 627
+    },
+    {
+      "name": "reconciliation-check-limit",
+      "type": "lerna.v1.Reconciliation",
+      "binary_bytes": 919,
+      "json_bytes": 2227
+    },
+    {
+      "name": "reconciliation-weak-query",
+      "type": "lerna.v1.ReconciliationQuery",
+      "binary_bytes": 1991,
+      "json_bytes": 4396
+    },
+    {
+      "name": "reconciliation-weak-finding",
+      "type": "lerna.v1.ReconciliationFinding",
+      "binary_bytes": 451,
+      "json_bytes": 888
+    },
+    {
+      "name": "reconciliation-weak-original",
+      "type": "lerna.v1.Operation",
+      "binary_bytes": 2613,
+      "json_bytes": 6046
+    },
+    {
+      "name": "resend-original-unknown",
+      "type": "lerna.v1.Operation",
+      "binary_bytes": 2566,
+      "json_bytes": 5993
+    },
+    {
+      "name": "resend-command",
+      "type": "lerna.v1.PrepareResendCommand",
+      "binary_bytes": 597,
+      "json_bytes": 1394
+    },
+    {
+      "name": "resend-prepared-execution",
+      "type": "lerna.v1.Execution",
+      "binary_bytes": 1567,
+      "json_bytes": 3611
+    },
+    {
+      "name": "resend-start-command",
+      "type": "lerna.v1.StartExecutionCommand",
+      "binary_bytes": 1581,
+      "json_bytes": 3555
+    },
+    {
+      "name": "resend-settled-operation",
+      "type": "lerna.v1.Operation",
+      "binary_bytes": 3360,
+      "json_bytes": 7866
+    },
+    {
+      "name": "resend-historical-operation",
+      "type": "lerna.v1.Operation",
+      "binary_bytes": 2566,
+      "json_bytes": 5993
+    },
+    {
+      "name": "resend-original-send",
+      "type": "lerna.v1.PhysicalSend",
+      "binary_bytes": 678,
+      "json_bytes": 1646
+    },
+    {
+      "name": "resend-original-send-projection",
+      "type": "lerna.v1.Execution",
+      "binary_bytes": 1370,
+      "json_bytes": 3139
+    },
+    {
+      "name": "resend-original-attempt",
+      "type": "lerna.v1.ExecutionAttempt",
+      "binary_bytes": 375,
+      "json_bytes": 863
+    },
+    {
+      "name": "resend-historical-effect",
+      "type": "lerna.v1.Effect",
+      "binary_bytes": 323,
+      "json_bytes": 717
+    },
+    {
+      "name": "resend-budget-two-holds",
+      "type": "lerna.v1.Budget",
+      "binary_bytes": 150,
+      "json_bytes": 382
+    },
+    {
+      "name": "resend-first-billing-source",
+      "type": "lerna.v1.BillingSource",
+      "binary_bytes": 563,
+      "json_bytes": 1259
+    },
+    {
+      "name": "resend-second-billing-source",
+      "type": "lerna.v1.BillingSource",
+      "binary_bytes": 563,
+      "json_bytes": 1259
+    },
+    {
+      "name": "resend-trace-operation-view",
+      "type": "lerna.v1.TraceView",
+      "binary_bytes": 28852,
+      "json_bytes": 64354
+    },
+    {
+      "name": "trace-producer-budget",
+      "type": "lerna.v1.TraceSourceRecord",
+      "binary_bytes": 713,
+      "json_bytes": 1675
+    },
+    {
+      "name": "trace-producer-content",
+      "type": "lerna.v1.TraceSourceRecord",
+      "binary_bytes": 1029,
+      "json_bytes": 2372
+    },
+    {
+      "name": "trace-producer-grants",
+      "type": "lerna.v1.TraceSourceRecord",
+      "binary_bytes": 762,
+      "json_bytes": 1794
+    },
+    {
+      "name": "trace-producer-ledger",
+      "type": "lerna.v1.TraceSourceRecord",
+      "binary_bytes": 1034,
+      "json_bytes": 2375
+    },
+    {
+      "name": "trace-producer-sessions",
+      "type": "lerna.v1.TraceSourceRecord",
+      "binary_bytes": 884,
+      "json_bytes": 2098
+    },
+    {
+      "name": "trace-producer-tasks",
+      "type": "lerna.v1.TraceSourceRecord",
+      "binary_bytes": 842,
+      "json_bytes": 2009
+    },
+    {
+      "name": "trace-source-pending",
+      "type": "lerna.v1.TraceSourceRecord",
+      "binary_bytes": 488,
+      "json_bytes": 1171
+    },
+    {
+      "name": "trace-accept-original-command",
+      "type": "lerna.v1.AcceptTraceCommand",
+      "binary_bytes": 485,
+      "json_bytes": 1159
+    },
+    {
+      "name": "trace-view-gap",
+      "type": "lerna.v1.TraceView",
+      "binary_bytes": 564,
+      "json_bytes": 1903
+    },
+    {
+      "name": "trace-view-complete",
+      "type": "lerna.v1.TraceView",
+      "binary_bytes": 2350,
+      "json_bytes": 6088
+    },
+    {
+      "name": "trace-fixed-cutoff-view",
+      "type": "lerna.v1.TraceView",
+      "binary_bytes": 2350,
+      "json_bytes": 6088
+    },
+    {
+      "name": "trace-cutoff-query",
+      "type": "lerna.v1.TraceQuery",
+      "binary_bytes": 148,
+      "json_bytes": 439
+    },
+    {
+      "name": "trace-source-acknowledged",
+      "type": "lerna.v1.TraceSourceRecord",
+      "binary_bytes": 842,
+      "json_bytes": 2008
+    },
+    {
+      "name": "file-start-CREATE",
+      "type": "lerna.v1.StartExecutionCommand",
+      "binary_bytes": 1559,
+      "json_bytes": 3533
+    },
+    {
+      "name": "file-register-resources-command-CREATE",
+      "type": "lerna.v1.RegisterFileResourcesCommand",
+      "binary_bytes": 298,
+      "json_bytes": 643
+    },
+    {
+      "name": "file-io-request-CREATE",
+      "type": "lerna.v1.PhysicalIORequest",
+      "binary_bytes": 2232,
+      "json_bytes": 4773
+    },
+    {
+      "name": "file-bind-root-command-CREATE",
+      "type": "lerna.v1.BindFileRootCommand",
+      "binary_bytes": 495,
+      "json_bytes": 846
+    },
+    {
+      "name": "file-io-result-CREATE",
+      "type": "lerna.v1.PhysicalIOResult",
+      "binary_bytes": 1830,
+      "json_bytes": 3318
+    },
+    {
+      "name": "file-operation-CREATE",
+      "type": "lerna.v1.Operation",
+      "binary_bytes": 2505,
+      "json_bytes": 5840
+    },
+    {
+      "name": "file-observation-CREATE",
+      "type": "lerna.v1.RawObservation",
+      "binary_bytes": 1896,
+      "json_bytes": 3460
+    },
+    {
+      "name": "file-body-CREATE",
+      "type": "lerna.v1.Content",
+      "binary_bytes": 917,
+      "json_bytes": 1964
+    },
+    {
+      "name": "file-billing-CREATE",
+      "type": "lerna.v1.BillingSource",
+      "binary_bytes": 794,
+      "json_bytes": 1706
+    },
+    {
+      "name": "file-resources-CREATE",
+      "type": "lerna.v1.FileResources",
+      "binary_bytes": 831,
+      "json_bytes": 1523
+    },
+    {
+      "name": "file-start-REPLACE",
+      "type": "lerna.v1.StartExecutionCommand",
+      "binary_bytes": 1560,
+      "json_bytes": 3534
+    },
+    {
+      "name": "file-register-resources-command-REPLACE",
+      "type": "lerna.v1.RegisterFileResourcesCommand",
+      "binary_bytes": 298,
+      "json_bytes": 643
+    },
+    {
+      "name": "file-io-request-REPLACE",
+      "type": "lerna.v1.PhysicalIORequest",
+      "binary_bytes": 2299,
+      "json_bytes": 4860
+    },
+    {
+      "name": "file-bind-root-command-REPLACE",
+      "type": "lerna.v1.BindFileRootCommand",
+      "binary_bytes": 495,
+      "json_bytes": 846
+    },
+    {
+      "name": "file-io-result-REPLACE",
+      "type": "lerna.v1.PhysicalIOResult",
+      "binary_bytes": 1896,
+      "json_bytes": 3404
+    },
+    {
+      "name": "file-operation-REPLACE",
+      "type": "lerna.v1.Operation",
+      "binary_bytes": 2508,
+      "json_bytes": 5843
+    },
+    {
+      "name": "file-observation-REPLACE",
+      "type": "lerna.v1.RawObservation",
+      "binary_bytes": 1962,
+      "json_bytes": 3546
+    },
+    {
+      "name": "file-body-REPLACE",
+      "type": "lerna.v1.Content",
+      "binary_bytes": 917,
+      "json_bytes": 1964
+    },
+    {
+      "name": "file-billing-REPLACE",
+      "type": "lerna.v1.BillingSource",
+      "binary_bytes": 794,
+      "json_bytes": 1706
+    },
+    {
+      "name": "file-resources-REPLACE",
+      "type": "lerna.v1.FileResources",
+      "binary_bytes": 831,
+      "json_bytes": 1523
+    },
+    {
+      "name": "file-start-READ",
+      "type": "lerna.v1.StartExecutionCommand",
+      "binary_bytes": 1555,
+      "json_bytes": 3529
+    },
+    {
+      "name": "file-io-request-READ",
+      "type": "lerna.v1.PhysicalIORequest",
+      "binary_bytes": 1506,
+      "json_bytes": 3353
+    },
+    {
+      "name": "file-bind-root-command-READ",
+      "type": "lerna.v1.BindFileRootCommand",
+      "binary_bytes": 495,
+      "json_bytes": 846
+    },
+    {
+      "name": "file-io-result-READ",
+      "type": "lerna.v1.PhysicalIOResult",
+      "binary_bytes": 1709,
+      "json_bytes": 3047
+    },
+    {
+      "name": "file-operation-READ",
+      "type": "lerna.v1.Operation",
+      "binary_bytes": 2487,
+      "json_bytes": 5806
+    },
+    {
+      "name": "file-observation-READ",
+      "type": "lerna.v1.RawObservation",
+      "binary_bytes": 1775,
+      "json_bytes": 3189
+    },
+    {
+      "name": "file-body-READ",
+      "type": "lerna.v1.Content",
+      "binary_bytes": 917,
+      "json_bytes": 1964
+    },
+    {
+      "name": "file-billing-READ",
+      "type": "lerna.v1.BillingSource",
+      "binary_bytes": 794,
+      "json_bytes": 1706
+    },
+    {
+      "name": "file-root",
+      "type": "lerna.v1.ManagedFileRoot",
+      "binary_bytes": 343,
+      "json_bytes": 508
+    },
+    {
+      "name": "file-history-original",
+      "type": "lerna.v1.RawObservation",
+      "binary_bytes": 1896,
+      "json_bytes": 3460
+    },
+    {
+      "name": "cancellation-original-admit-command",
+      "type": "lerna.v1.AdmitCommand",
+      "binary_bytes": 283,
+      "json_bytes": 696
+    },
+    {
+      "name": "cancellation-original-admission",
+      "type": "lerna.v1.Admission",
+      "binary_bytes": 1466,
+      "json_bytes": 3549
+    },
+    {
+      "name": "cancellation-control-command",
+      "type": "lerna.v1.SubmitInputCommand",
+      "binary_bytes": 209,
+      "json_bytes": 538
+    },
+    {
+      "name": "cancellation-control-receipt",
+      "type": "lerna.v1.CommandReceipt",
+      "binary_bytes": 306,
+      "json_bytes": 781
+    },
+    {
+      "name": "cancellation-scope",
+      "type": "lerna.v1.Cancellation",
+      "binary_bytes": 385,
+      "json_bytes": 906
+    },
+    {
+      "name": "cancellation-intent-pending",
+      "type": "lerna.v1.CancellationClosureIntent",
+      "binary_bytes": 693,
+      "json_bytes": 1529
+    },
+    {
+      "name": "cancellation-close-command",
+      "type": "lerna.v1.CloseCancellationCommand",
+      "binary_bytes": 462,
+      "json_bytes": 1017
+    },
+    {
+      "name": "cancellation-view-pending",
+      "type": "lerna.v1.CancellationView",
+      "binary_bytes": 1457,
+      "json_bytes": 3585
+    },
+    {
+      "name": "cancellation-intent-acknowledged",
+      "type": "lerna.v1.CancellationClosureIntent",
+      "binary_bytes": 1068,
+      "json_bytes": 2396
+    },
+    {
+      "name": "cancellation-endpoint-receipt",
+      "type": "lerna.v1.CommandReceipt",
+      "binary_bytes": 372,
+      "json_bytes": 846
+    },
+    {
+      "name": "cancellation-no-send-seal",
+      "type": "lerna.v1.CancellationSeal",
+      "binary_bytes": 455,
+      "json_bytes": 998
+    },
+    {
+      "name": "cancellation-view-awaiting-original",
+      "type": "lerna.v1.CancellationView",
+      "binary_bytes": 2161,
+      "json_bytes": 5207
+    },
+    {
+      "name": "cancellation-original-operation",
+      "type": "lerna.v1.Operation",
+      "binary_bytes": 1051,
+      "json_bytes": 2486
+    },
+    {
+      "name": "cancellation-view-original-arrived",
+      "type": "lerna.v1.CancellationView",
+      "binary_bytes": 3134,
+      "json_bytes": 7500
+    },
+    {
+      "name": "cancellation-original-planning",
+      "type": "lerna.v1.PlanningState",
+      "binary_bytes": 440,
+      "json_bytes": 1127
+    },
+    {
+      "name": "closing-failed-admission",
+      "type": "lerna.v1.Admission",
+      "binary_bytes": 1466,
+      "json_bytes": 3549
+    },
+    {
+      "name": "closing-failed-start-command",
+      "type": "lerna.v1.StartExecutionCommand",
+      "binary_bytes": 1551,
+      "json_bytes": 3525
+    },
+    {
+      "name": "closing-failed-actual-physical-result-held",
+      "type": "lerna.v1.PhysicalIOResult",
+      "binary_bytes": 1100,
+      "json_bytes": 1925
+    },
+    {
+      "name": "closing-failed-operation-before-close",
+      "type": "lerna.v1.Operation",
+      "binary_bytes": 2427,
+      "json_bytes": 5661
+    },
+    {
+      "name": "closing-failed-begin",
+      "type": "lerna.v1.BeginTaskCloseCommand",
+      "binary_bytes": 171,
+      "json_bytes": 465
+    },
+    {
+      "name": "closing-failed-begin-receipt",
+      "type": "lerna.v1.CommandReceipt",
+      "binary_bytes": 299,
+      "json_bytes": 774
+    },
+    {
+      "name": "closing-failed-view-pending",
+      "type": "lerna.v1.TaskClosingView",
+      "binary_bytes": 4956,
+      "json_bytes": 11698
+    },
+    {
+      "name": "closing-failed-endpoint-command",
+      "type": "lerna.v1.CloseTaskEndpointCommand",
+      "binary_bytes": 448,
+      "json_bytes": 1002
+    },
+    {
+      "name": "closing-failed-view-fixed",
+      "type": "lerna.v1.TaskClosingView",
+      "binary_bytes": 8372,
+      "json_bytes": 19494
+    },
+    {
+      "name": "closing-failed-scope",
+      "type": "lerna.v1.TaskClosing",
+      "binary_bytes": 582,
+      "json_bytes": 1403
+    },
+    {
+      "name": "closing-failed-intent-ack",
+      "type": "lerna.v1.TaskClosureIntent",
+      "binary_bytes": 1040,
+      "json_bytes": 2367
+    },
+    {
+      "name": "closing-failed-endpoint-receipt",
+      "type": "lerna.v1.CommandReceipt",
+      "binary_bytes": 366,
+      "json_bytes": 840
+    },
+    {
+      "name": "closing-failed-seal",
+      "type": "lerna.v1.TaskClosureSeal",
+      "binary_bytes": 638,
+      "json_bytes": 1417
+    },
+    {
+      "name": "closing-failed-execution-followup",
+      "type": "lerna.v1.ExecutionFollowup",
+      "binary_bytes": 766,
+      "json_bytes": 1696
+    },
+    {
+      "name": "closing-failed-settlement-followup",
+      "type": "lerna.v1.SettlementFollowup",
+      "binary_bytes": 627,
+      "json_bytes": 1423
+    },
+    {
+      "name": "closing-failed-result-fixed",
+      "type": "lerna.v1.Result",
+      "binary_bytes": 1189,
+      "json_bytes": 2820
+    },
+    {
+      "name": "closing-failed-job-waiting-ledger",
+      "type": "lerna.v1.Job",
+      "binary_bytes": 393,
+      "json_bytes": 804
+    },
+    {
+      "name": "closing-failed-job-waiting-budget",
+      "type": "lerna.v1.Job",
+      "binary_bytes": 340,
+      "json_bytes": 710
+    },
+    {
+      "name": "closing-failed-import-original-bill",
+      "type": "lerna.v1.ImportBillCommand",
+      "binary_bytes": 242,
+      "json_bytes": 585
+    },
+    {
+      "name": "closing-failed-import-original-bill-receipt",
+      "type": "lerna.v1.CommandReceipt",
+      "binary_bytes": 302,
+      "json_bytes": 777
+    },
+    {
+      "name": "closing-failed-view-after-bill",
+      "type": "lerna.v1.TaskClosingView",
+      "binary_bytes": 8337,
+      "json_bytes": 19442
+    },
+    {
+      "name": "closing-failed-view-late",
+      "type": "lerna.v1.TaskClosingView",
+      "binary_bytes": 8454,
+      "json_bytes": 19735
+    },
+    {
+      "name": "closing-failed-result-late",
+      "type": "lerna.v1.Result",
+      "binary_bytes": 1189,
+      "json_bytes": 2820
+    },
+    {
+      "name": "closing-failed-job-completed-ledger",
+      "type": "lerna.v1.Job",
+      "binary_bytes": 370,
+      "json_bytes": 764
+    },
+    {
+      "name": "closing-failed-job-completed-budget",
+      "type": "lerna.v1.Job",
+      "binary_bytes": 305,
+      "json_bytes": 658
+    },
+    {
+      "name": "closing-failed-budget-late",
+      "type": "lerna.v1.Budget",
+      "binary_bytes": 152,
+      "json_bytes": 405
+    },
+    {
+      "name": "closing-failed-source-late",
+      "type": "lerna.v1.BillingSource",
+      "binary_bytes": 810,
+      "json_bytes": 1724
+    },
+    {
+      "name": "closing-failed-observation-late",
+      "type": "lerna.v1.RawObservation",
+      "binary_bytes": 576,
+      "json_bytes": 1283
+    },
+    {
+      "name": "closing-cancelled-admission",
+      "type": "lerna.v1.Admission",
+      "binary_bytes": 1466,
+      "json_bytes": 3549
+    },
+    {
+      "name": "closing-cancelled-start-command",
+      "type": "lerna.v1.StartExecutionCommand",
+      "binary_bytes": 1551,
+      "json_bytes": 3525
+    },
+    {
+      "name": "closing-cancelled-actual-physical-result-held",
+      "type": "lerna.v1.PhysicalIOResult",
+      "binary_bytes": 1100,
+      "json_bytes": 1925
+    },
+    {
+      "name": "closing-cancelled-operation-before-close",
+      "type": "lerna.v1.Operation",
+      "binary_bytes": 2427,
+      "json_bytes": 5661
+    },
+    {
+      "name": "closing-cancelled-original-cancellation",
+      "type": "lerna.v1.Cancellation",
+      "binary_bytes": 376,
+      "json_bytes": 897
+    },
+    {
+      "name": "closing-cancelled-begin",
+      "type": "lerna.v1.BeginTaskCloseCommand",
+      "binary_bytes": 264,
+      "json_bytes": 670
+    },
+    {
+      "name": "closing-cancelled-begin-receipt",
+      "type": "lerna.v1.CommandReceipt",
+      "binary_bytes": 302,
+      "json_bytes": 777
+    },
+    {
+      "name": "closing-cancelled-view-pending",
+      "type": "lerna.v1.TaskClosingView",
+      "binary_bytes": 5157,
+      "json_bytes": 12133
+    },
+    {
+      "name": "closing-cancelled-endpoint-command",
+      "type": "lerna.v1.CloseTaskEndpointCommand",
+      "binary_bytes": 448,
+      "json_bytes": 1002
+    },
+    {
+      "name": "closing-cancelled-view-fixed",
+      "type": "lerna.v1.TaskClosingView",
+      "binary_bytes": 8574,
+      "json_bytes": 19906
+    },
+    {
+      "name": "closing-cancelled-scope",
+      "type": "lerna.v1.TaskClosing",
+      "binary_bytes": 675,
+      "json_bytes": 1608
+    },
+    {
+      "name": "closing-cancelled-intent-ack",
+      "type": "lerna.v1.TaskClosureIntent",
+      "binary_bytes": 1040,
+      "json_bytes": 2367
+    },
+    {
+      "name": "closing-cancelled-endpoint-receipt",
+      "type": "lerna.v1.CommandReceipt",
+      "binary_bytes": 366,
+      "json_bytes": 840
+    },
+    {
+      "name": "closing-cancelled-seal",
+      "type": "lerna.v1.TaskClosureSeal",
+      "binary_bytes": 638,
+      "json_bytes": 1417
+    },
+    {
+      "name": "closing-cancelled-execution-followup",
+      "type": "lerna.v1.ExecutionFollowup",
+      "binary_bytes": 766,
+      "json_bytes": 1696
+    },
+    {
+      "name": "closing-cancelled-settlement-followup",
+      "type": "lerna.v1.SettlementFollowup",
+      "binary_bytes": 627,
+      "json_bytes": 1423
+    },
+    {
+      "name": "closing-cancelled-result-fixed",
+      "type": "lerna.v1.Result",
+      "binary_bytes": 1192,
+      "json_bytes": 2823
+    },
+    {
+      "name": "closing-cancelled-job-waiting-ledger",
+      "type": "lerna.v1.Job",
+      "binary_bytes": 393,
+      "json_bytes": 804
+    },
+    {
+      "name": "closing-cancelled-job-waiting-budget",
+      "type": "lerna.v1.Job",
+      "binary_bytes": 343,
+      "json_bytes": 713
+    },
+    {
+      "name": "closing-cancelled-import-original-bill",
+      "type": "lerna.v1.ImportBillCommand",
+      "binary_bytes": 245,
+      "json_bytes": 588
+    },
+    {
+      "name": "closing-cancelled-import-original-bill-receipt",
+      "type": "lerna.v1.CommandReceipt",
+      "binary_bytes": 305,
+      "json_bytes": 780
+    },
+    {
+      "name": "closing-cancelled-view-after-bill",
+      "type": "lerna.v1.TaskClosingView",
+      "binary_bytes": 8539,
+      "json_bytes": 19854
+    },
+    {
+      "name": "closing-cancelled-view-late",
+      "type": "lerna.v1.TaskClosingView",
+      "binary_bytes": 8656,
+      "json_bytes": 20147
+    },
+    {
+      "name": "closing-cancelled-result-late",
+      "type": "lerna.v1.Result",
+      "binary_bytes": 1192,
+      "json_bytes": 2823
+    },
+    {
+      "name": "closing-cancelled-job-completed-ledger",
+      "type": "lerna.v1.Job",
+      "binary_bytes": 370,
+      "json_bytes": 764
+    },
+    {
+      "name": "closing-cancelled-job-completed-budget",
+      "type": "lerna.v1.Job",
+      "binary_bytes": 308,
+      "json_bytes": 661
+    },
+    {
+      "name": "closing-cancelled-budget-late",
+      "type": "lerna.v1.Budget",
+      "binary_bytes": 152,
+      "json_bytes": 405
+    },
+    {
+      "name": "closing-cancelled-source-late",
+      "type": "lerna.v1.BillingSource",
+      "binary_bytes": 810,
+      "json_bytes": 1724
+    },
+    {
+      "name": "closing-cancelled-observation-late",
+      "type": "lerna.v1.RawObservation",
+      "binary_bytes": 576,
+      "json_bytes": 1283
+    },
+    {
+      "name": "closing-pre-p2-admission",
+      "type": "lerna.v1.Admission",
+      "binary_bytes": 1466,
+      "json_bytes": 3549
+    },
+    {
+      "name": "closing-pre-p2-begin",
+      "type": "lerna.v1.BeginTaskCloseCommand",
+      "binary_bytes": 264,
+      "json_bytes": 670
+    },
+    {
+      "name": "closing-pre-p2-pending",
+      "type": "lerna.v1.TaskClosingView",
+      "binary_bytes": 2641,
+      "json_bytes": 6266
+    },
+    {
+      "name": "closing-pre-p2-awaiting",
+      "type": "lerna.v1.TaskClosingView",
+      "binary_bytes": 3337,
+      "json_bytes": 7893
+    },
+    {
+      "name": "closing-pre-p2-tombstone",
+      "type": "lerna.v1.TaskClosureSeal",
+      "binary_bytes": 445,
+      "json_bytes": 987
+    },
+    {
+      "name": "closing-pre-p2-arrived",
+      "type": "lerna.v1.TaskClosingView",
+      "binary_bytes": 5284,
+      "json_bytes": 12512
+    },
+    {
+      "name": "closing-pre-p2-job-0",
+      "type": "lerna.v1.Job",
+      "binary_bytes": 349,
+      "json_bytes": 719
+    },
+    {
+      "name": "continuation-original-admission",
+      "type": "lerna.v1.Admission",
+      "binary_bytes": 1466,
+      "json_bytes": 3549
+    },
+    {
+      "name": "continuation-planning-before",
+      "type": "lerna.v1.PlanningState",
+      "binary_bytes": 2509,
+      "json_bytes": 6214
+    },
+    {
+      "name": "continuation-begin-command",
+      "type": "lerna.v1.BeginCompletionCommand",
+      "binary_bytes": 210,
+      "json_bytes": 518
+    },
+    {
+      "name": "continuation-begin-receipt",
+      "type": "lerna.v1.CommandReceipt",
+      "binary_bytes": 309,
+      "json_bytes": 784
+    },
+    {
+      "name": "continuation-planning-after",
+      "type": "lerna.v1.PlanningState",
+      "binary_bytes": 2218,
+      "json_bytes": 5466
+    },
+    {
+      "name": "continuation-rejected-verification",
+      "type": "lerna.v1.Verification",
+      "binary_bytes": 1590,
+      "json_bytes": 3591
+    },
+    {
+      "name": "continuation-request",
+      "type": "lerna.v1.ProposalRequest",
+      "binary_bytes": 320,
+      "json_bytes": 762
+    },
+    {
+      "name": "continuation-snapshot",
+      "type": "lerna.v1.ContextSnapshot",
+      "binary_bytes": 1433,
+      "json_bytes": 3487
+    },
+    {
+      "name": "continuation-owner-job",
+      "type": "lerna.v1.Job",
+      "binary_bytes": 312,
+      "json_bytes": 665
+    },
+    {
+      "name": "continuation-original-operation",
+      "type": "lerna.v1.Operation",
+      "binary_bytes": 2672,
+      "json_bytes": 6217
+    },
+    {
+      "name": "continuation-original-billing",
+      "type": "lerna.v1.BillingSource",
+      "binary_bytes": 810,
+      "json_bytes": 1723
+    },
+    {
+      "name": "continuation-budget",
+      "type": "lerna.v1.Budget",
+      "binary_bytes": 150,
+      "json_bytes": 381
+    },
+    {
+      "name": "continuation-replayed-planning",
+      "type": "lerna.v1.PlanningState",
+      "binary_bytes": 2218,
+      "json_bytes": 5466
+    },
+    {
+      "name": "reasoner-action-cap-command",
+      "type": "lerna.v1.ConfigureCapabilityCommand",
+      "binary_bytes": 425,
+      "json_bytes": 968
+    },
+    {
+      "name": "reasoner-action-capability",
+      "type": "lerna.v1.Capability",
+      "binary_bytes": 537,
+      "json_bytes": 1124
+    },
+    {
+      "name": "reasoner-action-run-command",
+      "type": "lerna.v1.RunModelCallCommand",
+      "binary_bytes": 755,
+      "json_bytes": 1903
+    },
+    {
+      "name": "reasoner-action-outcome",
+      "type": "lerna.v1.ProposalOutcome",
+      "binary_bytes": 1634,
+      "json_bytes": 3798
+    },
+    {
+      "name": "reasoner-action-request",
+      "type": "lerna.v1.ProposalRequest",
+      "binary_bytes": 945,
+      "json_bytes": 2180
+    },
+    {
+      "name": "reasoner-action-snapshot",
+      "type": "lerna.v1.ContextSnapshot",
+      "binary_bytes": 786,
+      "json_bytes": 1975
+    },
+    {
+      "name": "reasoner-action-call",
+      "type": "lerna.v1.ModelCall",
+      "binary_bytes": 1369,
+      "json_bytes": 3079
+    },
+    {
+      "name": "reasoner-action-settings",
+      "type": "lerna.v1.ModelSettings",
+      "binary_bytes": 81,
+      "json_bytes": 260
+    },
+    {
+      "name": "reasoner-action-model-input",
+      "type": "lerna.v1.Content",
+      "binary_bytes": 7964,
+      "json_bytes": 11221
+    },
+    {
+      "name": "reasoner-action-model-output",
+      "type": "lerna.v1.Content",
+      "binary_bytes": 1711,
+      "json_bytes": 3033
+    },
+    {
+      "name": "reasoner-action-projection",
+      "type": "lerna.v1.Proposal",
+      "binary_bytes": 817,
+      "json_bytes": 1903
+    },
+    {
+      "name": "reasoner-action-full",
+      "type": "lerna.v1.Proposal",
+      "binary_bytes": 896,
+      "json_bytes": 2044
+    },
+    {
+      "name": "reasoner-action-body",
+      "type": "lerna.v1.Content",
+      "binary_bytes": 2558,
+      "json_bytes": 4076
+    },
+    {
+      "name": "reasoner-action-step",
+      "type": "lerna.v1.ActionStep",
+      "binary_bytes": 285,
+      "json_bytes": 585
+    },
+    {
+      "name": "reasoner-action-derived-parameters",
+      "type": "lerna.v1.Content",
+      "binary_bytes": 829,
+      "json_bytes": 1705
+    },
+    {
+      "name": "reasoner-default-description",
+      "type": "lerna.v1.ReasonerDescription",
+      "binary_bytes": 62,
+      "json_bytes": 191
+    },
+    {
+      "name": "reasoner-question-run-command",
+      "type": "lerna.v1.RunModelCallCommand",
+      "binary_bytes": 755,
+      "json_bytes": 1903
+    },
+    {
+      "name": "reasoner-question-outcome",
+      "type": "lerna.v1.ProposalOutcome",
+      "binary_bytes": 1409,
+      "json_bytes": 3395
+    },
+    {
+      "name": "reasoner-question-request",
+      "type": "lerna.v1.ProposalRequest",
+      "binary_bytes": 945,
+      "json_bytes": 2180
+    },
+    {
+      "name": "reasoner-question-snapshot",
+      "type": "lerna.v1.ContextSnapshot",
+      "binary_bytes": 703,
+      "json_bytes": 1798
+    },
+    {
+      "name": "reasoner-question-call",
+      "type": "lerna.v1.ModelCall",
+      "binary_bytes": 1369,
+      "json_bytes": 3079
+    },
+    {
+      "name": "reasoner-question-settings",
+      "type": "lerna.v1.ModelSettings",
+      "binary_bytes": 81,
+      "json_bytes": 260
+    },
+    {
+      "name": "reasoner-question-model-input",
+      "type": "lerna.v1.Content",
+      "binary_bytes": 6699,
+      "json_bytes": 9537
+    },
+    {
+      "name": "reasoner-question-model-output",
+      "type": "lerna.v1.Content",
+      "binary_bytes": 1459,
+      "json_bytes": 2697
+    },
+    {
+      "name": "reasoner-question-projection",
+      "type": "lerna.v1.Proposal",
+      "binary_bytes": 592,
+      "json_bytes": 1500
+    },
+    {
+      "name": "reasoner-question-full",
+      "type": "lerna.v1.Proposal",
+      "binary_bytes": 650,
+      "json_bytes": 1597
+    },
+    {
+      "name": "reasoner-question-body",
+      "type": "lerna.v1.Content",
+      "binary_bytes": 2026,
+      "json_bytes": 3301
+    },
+    {
+      "name": "reasoner-question-payload",
+      "type": "lerna.v1.QuestionProposal",
+      "binary_bytes": 49,
+      "json_bytes": 143
+    },
+    {
+      "name": "reasoner-question-publish-command",
+      "type": "lerna.v1.PublishProposalQuestionCommand",
+      "binary_bytes": 208,
+      "json_bytes": 519
+    },
+    {
+      "name": "reasoner-question-pending",
+      "type": "lerna.v1.Question",
+      "binary_bytes": 335,
+      "json_bytes": 878
+    },
+    {
+      "name": "reasoner-question-published-body",
+      "type": "lerna.v1.Content",
+      "binary_bytes": 947,
+      "json_bytes": 1860
+    },
+    {
+      "name": "reasoner-question-answer-command",
+      "type": "lerna.v1.SubmitInputCommand",
+      "binary_bytes": 356,
+      "json_bytes": 915
+    },
+    {
+      "name": "reasoner-question-answered",
+      "type": "lerna.v1.Question",
+      "binary_bytes": 416,
+      "json_bytes": 1072
+    },
+    {
+      "name": "reasoner-requirements-run-command",
+      "type": "lerna.v1.RunModelCallCommand",
+      "binary_bytes": 755,
+      "json_bytes": 1903
+    },
+    {
+      "name": "reasoner-requirements-outcome",
+      "type": "lerna.v1.ProposalOutcome",
+      "binary_bytes": 1520,
+      "json_bytes": 3666
+    },
+    {
+      "name": "reasoner-requirements-request",
+      "type": "lerna.v1.ProposalRequest",
+      "binary_bytes": 945,
+      "json_bytes": 2180
+    },
+    {
+      "name": "reasoner-requirements-snapshot",
+      "type": "lerna.v1.ContextSnapshot",
+      "binary_bytes": 703,
+      "json_bytes": 1798
+    },
+    {
+      "name": "reasoner-requirements-call",
+      "type": "lerna.v1.ModelCall",
+      "binary_bytes": 1369,
+      "json_bytes": 3079
+    },
+    {
+      "name": "reasoner-requirements-settings",
+      "type": "lerna.v1.ModelSettings",
+      "binary_bytes": 81,
+      "json_bytes": 260
+    },
+    {
+      "name": "reasoner-requirements-model-input",
+      "type": "lerna.v1.Content",
+      "binary_bytes": 6699,
+      "json_bytes": 9537
+    },
+    {
+      "name": "reasoner-requirements-model-output",
+      "type": "lerna.v1.Content",
+      "binary_bytes": 1767,
+      "json_bytes": 3105
+    },
+    {
+      "name": "reasoner-requirements-projection",
+      "type": "lerna.v1.Proposal",
+      "binary_bytes": 703,
+      "json_bytes": 1771
+    },
+    {
+      "name": "reasoner-requirements-full",
+      "type": "lerna.v1.Proposal",
+      "binary_bytes": 806,
+      "json_bytes": 1905
+    },
+    {
+      "name": "reasoner-requirements-body",
+      "type": "lerna.v1.Content",
+      "binary_bytes": 2419,
+      "json_bytes": 3888
+    },
+    {
+      "name": "reasoner-requirements-payload",
+      "type": "lerna.v1.RequirementsProposal",
+      "binary_bytes": 182,
+      "json_bytes": 419
+    },
+    {
+      "name": "reasoner-requirements-original",
+      "type": "lerna.v1.Requirements",
+      "binary_bytes": 304,
+      "json_bytes": 796
+    },
+    {
+      "name": "reasoner-requirements-publish-command",
+      "type": "lerna.v1.PublishProposalQuestionCommand",
+      "binary_bytes": 213,
+      "json_bytes": 524
+    },
+    {
+      "name": "reasoner-requirements-question",
+      "type": "lerna.v1.Question",
+      "binary_bytes": 340,
+      "json_bytes": 883
+    },
+    {
+      "name": "reasoner-requirements-answer-command",
+      "type": "lerna.v1.SubmitInputCommand",
+      "binary_bytes": 478,
+      "json_bytes": 1239
+    },
+    {
+      "name": "reasoner-requirements-process-command",
+      "type": "lerna.v1.ProcessInputCommand",
+      "binary_bytes": 372,
+      "json_bytes": 953
+    },
+    {
+      "name": "reasoner-requirements-accepted",
+      "type": "lerna.v1.Requirements",
+      "binary_bytes": 399,
+      "json_bytes": 1002
+    },
+    {
+      "name": "reasoner-requirements-history",
+      "type": "lerna.v1.Requirements",
+      "binary_bytes": 304,
+      "json_bytes": 796
+    },
+    {
+      "name": "condition-accept-requirements-command",
+      "type": "lerna.v1.AcceptRequirementsCommand",
+      "binary_bytes": 289,
+      "json_bytes": 747
+    },
+    {
+      "name": "condition-request-command",
+      "type": "lerna.v1.RequestConditionConfirmationCommand",
+      "binary_bytes": 368,
+      "json_bytes": 879
+    },
+    {
+      "name": "condition-pending",
+      "type": "lerna.v1.Confirmation",
+      "binary_bytes": 990,
+      "json_bytes": 1684
+    },
+    {
+      "name": "condition-matter",
+      "type": "lerna.v1.ConditionConfirmationMatter",
+      "binary_bytes": 237,
+      "json_bytes": 586
+    },
+    {
+      "name": "condition-pending-summary",
+      "type": "lerna.v1.SnapshotConfirmation",
+      "binary_bytes": 310,
+      "json_bytes": 743
+    },
+    {
+      "name": "condition-displayed",
+      "type": "lerna.v1.Confirmation",
+      "binary_bytes": 1076,
+      "json_bytes": 1784
+    },
+    {
+      "name": "condition-respond-command",
+      "type": "lerna.v1.RespondConfirmationCommand",
+      "binary_bytes": 243,
+      "json_bytes": 517
+    },
+    {
+      "name": "condition-approved",
+      "type": "lerna.v1.Confirmation",
+      "binary_bytes": 1038,
+      "json_bytes": 1803
+    },
+    {
+      "name": "condition-approved-summary",
+      "type": "lerna.v1.SnapshotConfirmation",
+      "binary_bytes": 311,
+      "json_bytes": 744
+    },
+    {
+      "name": "condition-complete-run-command",
+      "type": "lerna.v1.RunModelCallCommand",
+      "binary_bytes": 755,
+      "json_bytes": 1903
+    },
+    {
+      "name": "condition-complete-outcome",
+      "type": "lerna.v1.ProposalOutcome",
+      "binary_bytes": 1689,
+      "json_bytes": 3999
+    },
+    {
+      "name": "condition-complete-request",
+      "type": "lerna.v1.ProposalRequest",
+      "binary_bytes": 945,
+      "json_bytes": 2180
+    },
+    {
+      "name": "condition-complete-snapshot",
+      "type": "lerna.v1.ContextSnapshot",
+      "binary_bytes": 1018,
+      "json_bytes": 2562
+    },
+    {
+      "name": "condition-complete-call",
+      "type": "lerna.v1.ModelCall",
+      "binary_bytes": 1369,
+      "json_bytes": 3079
+    },
+    {
+      "name": "condition-complete-settings",
+      "type": "lerna.v1.ModelSettings",
+      "binary_bytes": 81,
+      "json_bytes": 260
+    },
+    {
+      "name": "condition-complete-model-input",
+      "type": "lerna.v1.Content",
+      "binary_bytes": 7460,
+      "json_bytes": 10549
+    },
+    {
+      "name": "condition-complete-model-output",
+      "type": "lerna.v1.Content",
+      "binary_bytes": 1774,
+      "json_bytes": 3117
+    },
+    {
+      "name": "condition-complete-projection",
+      "type": "lerna.v1.Proposal",
+      "binary_bytes": 872,
+      "json_bytes": 2104
+    },
+    {
+      "name": "condition-complete-full",
+      "type": "lerna.v1.Proposal",
+      "binary_bytes": 914,
+      "json_bytes": 2161
+    },
+    {
+      "name": "condition-complete-body",
+      "type": "lerna.v1.Content",
+      "binary_bytes": 2590,
+      "json_bytes": 4053
+    },
+    {
+      "name": "condition-verdict",
+      "type": "lerna.v1.ConditionVerdict",
+      "binary_bytes": 107,
+      "json_bytes": 250
+    },
+    {
+      "name": "condition-completion-evidence",
+      "type": "lerna.v1.CompletionEvidence",
+      "binary_bytes": 96,
+      "json_bytes": 224
+    },
+    {
+      "name": "condition-begin-command",
+      "type": "lerna.v1.BeginCompletionCommand",
+      "binary_bytes": 207,
+      "json_bytes": 515
+    },
+    {
+      "name": "condition-result",
+      "type": "lerna.v1.Result",
+      "binary_bytes": 987,
+      "json_bytes": 2342
+    },
+    {
+      "name": "condition-consumed",
+      "type": "lerna.v1.Confirmation",
+      "binary_bytes": 1125,
+      "json_bytes": 2010
+    },
+    {
+      "name": "condition-consuming-verification",
+      "type": "lerna.v1.Verification",
+      "binary_bytes": 615,
+      "json_bytes": 1489
+    },
+    {
+      "name": "condition-verification",
+      "type": "lerna.v1.Verification",
+      "binary_bytes": 1029,
+      "json_bytes": 2479
+    },
+    {
+      "name": "condition-consumed-summary",
+      "type": "lerna.v1.SnapshotConfirmation",
+      "binary_bytes": 311,
+      "json_bytes": 744
+    },
+    {
+      "name": "condition-pending-history",
+      "type": "lerna.v1.Confirmation",
+      "binary_bytes": 990,
+      "json_bytes": 1684
+    },
+    {
+      "name": "condition-approval-history",
+      "type": "lerna.v1.Confirmation",
+      "binary_bytes": 1038,
+      "json_bytes": 1803
+    },
+    {
+      "name": "negative-verdict-original-admission",
+      "type": "lerna.v1.Admission",
+      "binary_bytes": 1466,
+      "json_bytes": 3549
+    },
+    {
+      "name": "negative-verdict-actual-negative-operation",
+      "type": "lerna.v1.Operation",
+      "binary_bytes": 2573,
+      "json_bytes": 6000
+    },
+    {
+      "name": "negative-verdict-model-cap-command",
+      "type": "lerna.v1.ConfigureCapabilityCommand",
+      "binary_bytes": 314,
+      "json_bytes": 793
+    },
+    {
+      "name": "negative-verdict-model-grant-command",
+      "type": "lerna.v1.ConfigureGrantCommand",
+      "binary_bytes": 267,
+      "json_bytes": 693
+    },
+    {
+      "name": "negative-verdict-model-run-command",
+      "type": "lerna.v1.RunModelCallCommand",
+      "binary_bytes": 840,
+      "json_bytes": 2082
+    },
+    {
+      "name": "negative-verdict-model-outcome",
+      "type": "lerna.v1.ProposalOutcome",
+      "binary_bytes": 1663,
+      "json_bytes": 3914
+    },
+    {
+      "name": "negative-verdict-model-request",
+      "type": "lerna.v1.ProposalRequest",
+      "binary_bytes": 945,
+      "json_bytes": 2180
+    },
+    {
+      "name": "negative-verdict-model-snapshot",
+      "type": "lerna.v1.ContextSnapshot",
+      "binary_bytes": 1516,
+      "json_bytes": 3664
+    },
+    {
+      "name": "negative-verdict-model-call",
+      "type": "lerna.v1.ModelCall",
+      "binary_bytes": 1454,
+      "json_bytes": 3258
+    },
+    {
+      "name": "negative-verdict-model-settings",
+      "type": "lerna.v1.ModelSettings",
+      "binary_bytes": 81,
+      "json_bytes": 260
+    },
+    {
+      "name": "negative-verdict-model-model-input",
+      "type": "lerna.v1.Content",
+      "binary_bytes": 13381,
+      "json_bytes": 18513
+    },
+    {
+      "name": "negative-verdict-model-model-output",
+      "type": "lerna.v1.Content",
+      "binary_bytes": 1878,
+      "json_bytes": 3253
+    },
+    {
+      "name": "negative-verdict-model-projection",
+      "type": "lerna.v1.Proposal",
+      "binary_bytes": 846,
+      "json_bytes": 2019
+    },
+    {
+      "name": "negative-verdict-model-full",
+      "type": "lerna.v1.Proposal",
+      "binary_bytes": 995,
+      "json_bytes": 2204
+    },
+    {
+      "name": "negative-verdict-model-body",
+      "type": "lerna.v1.Content",
+      "binary_bytes": 2633,
+      "json_bytes": 4109
+    },
+    {
+      "name": "negative-verdict-payload",
+      "type": "lerna.v1.ConditionVerdict",
+      "binary_bytes": 238,
+      "json_bytes": 465
+    },
+    {
+      "name": "negative-verdict-candidate",
+      "type": "lerna.v1.CompletionEvidence",
+      "binary_bytes": 73,
+      "json_bytes": 163
+    },
+    {
+      "name": "negative-verdict-original-snapshot",
+      "type": "lerna.v1.ContextSnapshot",
+      "binary_bytes": 1516,
+      "json_bytes": 3664
+    },
+    {
+      "name": "negative-verdict-begin-command",
+      "type": "lerna.v1.BeginCompletionCommand",
+      "binary_bytes": 216,
+      "json_bytes": 524
+    },
+    {
+      "name": "negative-verdict-rejected-verification",
+      "type": "lerna.v1.Verification",
+      "binary_bytes": 1863,
+      "json_bytes": 4145
+    },
+    {
+      "name": "negative-verdict-exact-continuation",
+      "type": "lerna.v1.ProposalRequest",
+      "binary_bytes": 320,
+      "json_bytes": 762
+    },
+    {
+      "name": "negative-verdict-exact-continuation-snapshot",
+      "type": "lerna.v1.ContextSnapshot",
+      "binary_bytes": 2325,
+      "json_bytes": 5468
+    },
+    {
+      "name": "negative-verdict-exact-continuation-job",
+      "type": "lerna.v1.Job",
+      "binary_bytes": 312,
+      "json_bytes": 665
+    },
+    {
+      "name": "negative-verdict-unavailable-body-projection",
+      "type": "lerna.v1.Proposal",
+      "binary_bytes": 846,
+      "json_bytes": 2019
+    },
+    {
+      "name": "negative-verdict-budget",
+      "type": "lerna.v1.Budget",
+      "binary_bytes": 150,
+      "json_bytes": 381
+    },
+    {
+      "name": "question-driver-configure-command",
+      "type": "lerna.v1.ConfigureReasonerDriverCommand",
+      "binary_bytes": 409,
+      "json_bytes": 1049
+    },
+    {
+      "name": "question-driver-ready",
+      "type": "lerna.v1.ReasonerDriver",
+      "binary_bytes": 490,
+      "json_bytes": 1240
+    },
+    {
+      "name": "question-driver-saved-policy",
+      "type": "lerna.v1.ReasonerDriverPolicy",
+      "binary_bytes": 271,
+      "json_bytes": 703
+    },
+    {
+      "name": "question-driver-advance-command",
+      "type": "lerna.v1.AdvanceReasonerTaskRequest",
+      "binary_bytes": 54,
+      "json_bytes": 132
+    },
+    {
+      "name": "question-driver-waiting",
+      "type": "lerna.v1.ReasonerDriver",
+      "binary_bytes": 780,
+      "json_bytes": 1870
+    },
+    {
+      "name": "question-driver-original-request",
+      "type": "lerna.v1.ProposalRequest",
+      "binary_bytes": 993,
+      "json_bytes": 2228
+    },
+    {
+      "name": "question-driver-original-snapshot",
+      "type": "lerna.v1.ContextSnapshot",
+      "binary_bytes": 703,
+      "json_bytes": 1798
+    },
+    {
+      "name": "question-driver-original-outcome",
+      "type": "lerna.v1.ProposalOutcome",
+      "binary_bytes": 1398,
+      "json_bytes": 3231
+    },
+    {
+      "name": "question-driver-original-question",
+      "type": "lerna.v1.Question",
+      "binary_bytes": 363,
+      "json_bytes": 906
+    },
+    {
+      "name": "question-driver-question-publication",
+      "type": "lerna.v1.ReceiptQuery",
+      "binary_bytes": 334,
+      "json_bytes": 894
+    },
+    {
+      "name": "question-driver-ready-history",
+      "type": "lerna.v1.ReasonerDriver",
+      "binary_bytes": 490,
+      "json_bytes": 1240
+    },
+    {
+      "name": "question-driver-disable-command",
+      "type": "lerna.v1.ConfigureReasonerDriverCommand",
+      "binary_bytes": 501,
+      "json_bytes": 1261
+    },
+    {
+      "name": "question-driver-disabled",
+      "type": "lerna.v1.ReasonerDriver",
+      "binary_bytes": 755,
+      "json_bytes": 1813
+    },
+    {
+      "name": "question-driver-restart-replay",
+      "type": "lerna.v1.ReasonerDriver",
+      "binary_bytes": 755,
+      "json_bytes": 1813
+    },
+    {
+      "name": "question-driver-waiting-history",
+      "type": "lerna.v1.ReasonerDriver",
+      "binary_bytes": 780,
+      "json_bytes": 1870
+    },
+    {
+      "name": "question-driver-budget",
+      "type": "lerna.v1.Budget",
+      "binary_bytes": 150,
+      "json_bytes": 380
+    },
+    {
+      "name": "approved-action-driver-parameters-command",
+      "type": "lerna.v1.SubmitGoalCommand",
+      "binary_bytes": 93,
+      "json_bytes": 228
+    },
+    {
+      "name": "approved-action-driver-target-cap-command",
+      "type": "lerna.v1.ConfigureCapabilityCommand",
+      "binary_bytes": 424,
+      "json_bytes": 967
+    },
+    {
+      "name": "approved-action-driver-target-cap",
+      "type": "lerna.v1.Capability",
+      "binary_bytes": 536,
+      "json_bytes": 1123
+    },
+    {
+      "name": "approved-action-driver-model-cap-command",
+      "type": "lerna.v1.ConfigureCapabilityCommand",
+      "binary_bytes": 320,
+      "json_bytes": 799
+    },
+    {
+      "name": "approved-action-driver-model-grant-command",
+      "type": "lerna.v1.ConfigureGrantCommand",
+      "binary_bytes": 279,
+      "json_bytes": 705
+    },
+    {
+      "name": "approved-action-driver-configure-command",
+      "type": "lerna.v1.ConfigureReasonerDriverCommand",
+      "binary_bytes": 568,
+      "json_bytes": 1434
+    },
+    {
+      "name": "approved-action-driver-advance-command",
+      "type": "lerna.v1.AdvanceReasonerTaskRequest",
+      "binary_bytes": 54,
+      "json_bytes": 132
+    },
+    {
+      "name": "approved-action-driver-model-position",
+      "type": "lerna.v1.ReasonerDriver",
+      "binary_bytes": 852,
+      "json_bytes": 2060
+    },
+    {
+      "name": "approved-action-driver-original-outcome",
+      "type": "lerna.v1.ProposalOutcome",
+      "binary_bytes": 1723,
+      "json_bytes": 3887
+    },
+    {
+      "name": "approved-action-driver-governed-original-action",
+      "type": "lerna.v1.Proposal",
+      "binary_bytes": 844,
+      "json_bytes": 1953
+    },
+    {
+      "name": "approved-action-driver-request-confirmation-command",
+      "type": "lerna.v1.RequestAdmissionConfirmationCommand",
+      "binary_bytes": 340,
+      "json_bytes": 825
+    },
+    {
+      "name": "approved-action-driver-pending-confirmation",
+      "type": "lerna.v1.Confirmation",
+      "binary_bytes": 1504,
+      "json_bytes": 2908
+    },
+    {
+      "name": "approved-action-driver-pending-summary",
+      "type": "lerna.v1.SnapshotConfirmation",
+      "binary_bytes": 292,
+      "json_bytes": 705
+    },
+    {
+      "name": "approved-action-driver-approval-command",
+      "type": "lerna.v1.RespondConfirmationCommand",
+      "binary_bytes": 234,
+      "json_bytes": 508
+    },
+    {
+      "name": "approved-action-driver-approved-confirmation",
+      "type": "lerna.v1.Confirmation",
+      "binary_bytes": 1543,
+      "json_bytes": 3018
+    },
+    {
+      "name": "approved-action-driver-authority-update-command",
+      "type": "lerna.v1.ConfigureReasonerDriverCommand",
+      "binary_bytes": 751,
+      "json_bytes": 1834
+    },
+    {
+      "name": "approved-action-driver-approved-configuration",
+      "type": "lerna.v1.ReasonerDriver",
+      "binary_bytes": 928,
+      "json_bytes": 2230
+    },
+    {
+      "name": "approved-action-driver-saved-policy",
+      "type": "lerna.v1.ReasonerDriverPolicy",
+      "binary_bytes": 517,
+      "json_bytes": 1287
+    },
+    {
+      "name": "approved-action-driver-saved-action-authority",
+      "type": "lerna.v1.ReasonerActionAuthority",
+      "binary_bytes": 243,
+      "json_bytes": 570
+    },
+    {
+      "name": "approved-action-driver-admitted-before-IO",
+      "type": "lerna.v1.ReasonerDriver",
+      "binary_bytes": 1024,
+      "json_bytes": 2453
+    },
+    {
+      "name": "approved-action-driver-original-admission",
+      "type": "lerna.v1.Admission",
+      "binary_bytes": 1751,
+      "json_bytes": 4027
+    },
+    {
+      "name": "approved-action-driver-consumed-confirmation",
+      "type": "lerna.v1.Confirmation",
+      "binary_bytes": 1624,
+      "json_bytes": 3216
+    },
+    {
+      "name": "approved-action-driver-consumed-summary",
+      "type": "lerna.v1.SnapshotConfirmation",
+      "binary_bytes": 293,
+      "json_bytes": 706
+    },
+    {
+      "name": "approved-action-driver-cancel-command",
+      "type": "lerna.v1.SubmitInputCommand",
+      "binary_bytes": 204,
+      "json_bytes": 533
+    },
+    {
+      "name": "approved-action-driver-original-cancellation",
+      "type": "lerna.v1.Cancellation",
+      "binary_bytes": 568,
+      "json_bytes": 1277
+    },
+    {
+      "name": "approved-action-driver-begin-close-command",
+      "type": "lerna.v1.BeginTaskCloseCommand",
+      "binary_bytes": 273,
+      "json_bytes": 679
+    },
+    {
+      "name": "approved-action-driver-fixed-cancelled-result",
+      "type": "lerna.v1.Result",
+      "binary_bytes": 1168,
+      "json_bytes": 2761
+    },
+    {
+      "name": "approved-action-driver-original-unsent-operation",
+      "type": "lerna.v1.Operation",
+      "binary_bytes": 1340,
+      "json_bytes": 2950
+    },
+    {
+      "name": "approved-action-driver-completed",
+      "type": "lerna.v1.ReasonerDriver",
+      "binary_bytes": 1013,
+      "json_bytes": 2424
+    },
+    {
+      "name": "approved-action-driver-restart-replay",
+      "type": "lerna.v1.ReasonerDriver",
+      "binary_bytes": 1013,
+      "json_bytes": 2424
+    },
+    {
+      "name": "approved-action-driver-admitted-history",
+      "type": "lerna.v1.ReasonerDriver",
+      "binary_bytes": 1024,
+      "json_bytes": 2453
+    },
+    {
+      "name": "approved-action-driver-unchanged-result",
+      "type": "lerna.v1.Result",
+      "binary_bytes": 1168,
+      "json_bytes": 2761
+    },
+    {
+      "name": "approved-action-driver-original-model-call",
+      "type": "lerna.v1.ModelCall",
+      "binary_bytes": 1454,
+      "json_bytes": 3258
+    },
+    {
+      "name": "approved-action-driver-budget",
+      "type": "lerna.v1.Budget",
+      "binary_bytes": 150,
+      "json_bytes": 380
+    },
+    {
+      "name": "api-native-RATE-io-request",
+      "type": "lerna.v1.PhysicalIORequest",
+      "binary_bytes": 2025,
+      "json_bytes": 4393
+    },
+    {
+      "name": "api-native-RATE-io-result",
+      "type": "lerna.v1.PhysicalIOResult",
+      "binary_bytes": 505,
+      "json_bytes": 1151
+    },
+    {
+      "name": "api-native-RATE-start",
+      "type": "lerna.v1.StartExecutionCommand",
+      "binary_bytes": 2024,
+      "json_bytes": 4371
+    },
+    {
+      "name": "api-native-RATE-admission",
+      "type": "lerna.v1.Admission",
+      "binary_bytes": 1813,
+      "json_bytes": 4232
+    },
+    {
+      "name": "api-native-RATE-receipt",
+      "type": "lerna.v1.CommandReceipt",
+      "binary_bytes": 347,
+      "json_bytes": 821
+    },
+    {
+      "name": "api-native-RATE-capability",
+      "type": "lerna.v1.Capability",
+      "binary_bytes": 688,
+      "json_bytes": 1530
+    },
+    {
+      "name": "api-native-RATE-descriptor",
+      "type": "lerna.v1.ApiDescriptor",
+      "binary_bytes": 338,
+      "json_bytes": 660
+    },
+    {
+      "name": "api-native-RATE-binding",
+      "type": "lerna.v1.ApiTargetBinding",
+      "binary_bytes": 165,
+      "json_bytes": 322
+    },
+    {
+      "name": "api-native-RATE-operation",
+      "type": "lerna.v1.Operation",
+      "binary_bytes": 3796,
+      "json_bytes": 8556
+    },
+    {
+      "name": "api-native-RATE-call-descriptor",
+      "type": "lerna.v1.CallDescriptor",
+      "binary_bytes": 781,
+      "json_bytes": 1436
+    },
+    {
+      "name": "api-native-RATE-send",
+      "type": "lerna.v1.PhysicalSend",
+      "binary_bytes": 882,
+      "json_bytes": 2142
+    },
+    {
+      "name": "api-native-RATE-observation",
+      "type": "lerna.v1.RawObservation",
+      "binary_bytes": 587,
+      "json_bytes": 1324
+    },
+    {
+      "name": "api-native-RATE-billing-source",
+      "type": "lerna.v1.BillingSource",
+      "binary_bytes": 563,
+      "json_bytes": 1259
+    },
+    {
+      "name": "api-native-RATE-parameters",
+      "type": "lerna.v1.Content",
+      "binary_bytes": 518,
+      "json_bytes": 1118
+    },
+    {
+      "name": "api-native-RATE-wait",
+      "type": "lerna.v1.ApiWait",
+      "binary_bytes": 201,
+      "json_bytes": 484
+    },
+    {
+      "name": "api-native-RATE-wait-trace-source",
+      "type": "lerna.v1.TraceSourceRecord",
+      "binary_bytes": 1553,
+      "json_bytes": 3425
+    },
+    {
+      "name": "api-native-RATE-wait-trace-event",
+      "type": "lerna.v1.TraceEvent",
+      "binary_bytes": 1085,
+      "json_bytes": 2326
+    },
+    {
+      "name": "api-native-CONCURRENCY-io-request",
+      "type": "lerna.v1.PhysicalIORequest",
+      "binary_bytes": 2025,
+      "json_bytes": 4393
+    },
+    {
+      "name": "api-native-CONCURRENCY-io-result",
+      "type": "lerna.v1.PhysicalIOResult",
+      "binary_bytes": 512,
+      "json_bytes": 1158
+    },
+    {
+      "name": "api-native-CONCURRENCY-start",
+      "type": "lerna.v1.StartExecutionCommand",
+      "binary_bytes": 2024,
+      "json_bytes": 4371
+    },
+    {
+      "name": "api-native-CONCURRENCY-admission",
+      "type": "lerna.v1.Admission",
+      "binary_bytes": 1813,
+      "json_bytes": 4232
+    },
+    {
+      "name": "api-native-CONCURRENCY-receipt",
+      "type": "lerna.v1.CommandReceipt",
+      "binary_bytes": 347,
+      "json_bytes": 821
+    },
+    {
+      "name": "api-native-CONCURRENCY-capability",
+      "type": "lerna.v1.Capability",
+      "binary_bytes": 688,
+      "json_bytes": 1530
+    },
+    {
+      "name": "api-native-CONCURRENCY-descriptor",
+      "type": "lerna.v1.ApiDescriptor",
+      "binary_bytes": 338,
+      "json_bytes": 660
+    },
+    {
+      "name": "api-native-CONCURRENCY-binding",
+      "type": "lerna.v1.ApiTargetBinding",
+      "binary_bytes": 165,
+      "json_bytes": 322
+    },
+    {
+      "name": "api-native-CONCURRENCY-operation",
+      "type": "lerna.v1.Operation",
+      "binary_bytes": 3810,
+      "json_bytes": 8570
+    },
+    {
+      "name": "api-native-CONCURRENCY-call-descriptor",
+      "type": "lerna.v1.CallDescriptor",
+      "binary_bytes": 781,
+      "json_bytes": 1436
+    },
+    {
+      "name": "api-native-CONCURRENCY-send",
+      "type": "lerna.v1.PhysicalSend",
+      "binary_bytes": 889,
+      "json_bytes": 2149
+    },
+    {
+      "name": "api-native-CONCURRENCY-observation",
+      "type": "lerna.v1.RawObservation",
+      "binary_bytes": 594,
+      "json_bytes": 1331
+    },
+    {
+      "name": "api-native-CONCURRENCY-billing-source",
+      "type": "lerna.v1.BillingSource",
+      "binary_bytes": 563,
+      "json_bytes": 1259
+    },
+    {
+      "name": "api-native-CONCURRENCY-parameters",
+      "type": "lerna.v1.Content",
+      "binary_bytes": 518,
+      "json_bytes": 1118
+    },
+    {
+      "name": "api-native-CONCURRENCY-wait",
+      "type": "lerna.v1.ApiWait",
+      "binary_bytes": 208,
+      "json_bytes": 491
+    },
+    {
+      "name": "api-native-CONCURRENCY-wait-trace-source",
+      "type": "lerna.v1.TraceSourceRecord",
+      "binary_bytes": 1560,
+      "json_bytes": 3432
+    },
+    {
+      "name": "api-native-CONCURRENCY-wait-trace-event",
+      "type": "lerna.v1.TraceEvent",
+      "binary_bytes": 1092,
+      "json_bytes": 2333
+    },
+    {
+      "name": "api-native-RESOURCE_CONFLICT-io-request",
+      "type": "lerna.v1.PhysicalIORequest",
+      "binary_bytes": 2025,
+      "json_bytes": 4393
+    },
+    {
+      "name": "api-native-RESOURCE_CONFLICT-io-result",
+      "type": "lerna.v1.PhysicalIOResult",
+      "binary_bytes": 518,
+      "json_bytes": 1164
+    },
+    {
+      "name": "api-native-RESOURCE_CONFLICT-start",
+      "type": "lerna.v1.StartExecutionCommand",
+      "binary_bytes": 2024,
+      "json_bytes": 4371
+    },
+    {
+      "name": "api-native-RESOURCE_CONFLICT-admission",
+      "type": "lerna.v1.Admission",
+      "binary_bytes": 1813,
+      "json_bytes": 4232
+    },
+    {
+      "name": "api-native-RESOURCE_CONFLICT-receipt",
+      "type": "lerna.v1.CommandReceipt",
+      "binary_bytes": 347,
+      "json_bytes": 821
+    },
+    {
+      "name": "api-native-RESOURCE_CONFLICT-capability",
+      "type": "lerna.v1.Capability",
+      "binary_bytes": 688,
+      "json_bytes": 1530
+    },
+    {
+      "name": "api-native-RESOURCE_CONFLICT-descriptor",
+      "type": "lerna.v1.ApiDescriptor",
+      "binary_bytes": 338,
+      "json_bytes": 660
+    },
+    {
+      "name": "api-native-RESOURCE_CONFLICT-binding",
+      "type": "lerna.v1.ApiTargetBinding",
+      "binary_bytes": 165,
+      "json_bytes": 322
+    },
+    {
+      "name": "api-native-RESOURCE_CONFLICT-operation",
+      "type": "lerna.v1.Operation",
+      "binary_bytes": 3822,
+      "json_bytes": 8582
+    },
+    {
+      "name": "api-native-RESOURCE_CONFLICT-call-descriptor",
+      "type": "lerna.v1.CallDescriptor",
+      "binary_bytes": 781,
+      "json_bytes": 1436
+    },
+    {
+      "name": "api-native-RESOURCE_CONFLICT-send",
+      "type": "lerna.v1.PhysicalSend",
+      "binary_bytes": 895,
+      "json_bytes": 2155
+    },
+    {
+      "name": "api-native-RESOURCE_CONFLICT-observation",
+      "type": "lerna.v1.RawObservation",
+      "binary_bytes": 600,
+      "json_bytes": 1337
+    },
+    {
+      "name": "api-native-RESOURCE_CONFLICT-billing-source",
+      "type": "lerna.v1.BillingSource",
+      "binary_bytes": 563,
+      "json_bytes": 1259
+    },
+    {
+      "name": "api-native-RESOURCE_CONFLICT-parameters",
+      "type": "lerna.v1.Content",
+      "binary_bytes": 518,
+      "json_bytes": 1118
+    },
+    {
+      "name": "api-native-RESOURCE_CONFLICT-wait",
+      "type": "lerna.v1.ApiWait",
+      "binary_bytes": 214,
+      "json_bytes": 497
+    },
+    {
+      "name": "api-native-RESOURCE_CONFLICT-wait-trace-source",
+      "type": "lerna.v1.TraceSourceRecord",
+      "binary_bytes": 1566,
+      "json_bytes": 3438
+    },
+    {
+      "name": "api-native-RESOURCE_CONFLICT-wait-trace-event",
+      "type": "lerna.v1.TraceEvent",
+      "binary_bytes": 1098,
+      "json_bytes": 2339
+    },
+    {
+      "name": "api-native-UNKNOWN-io-request",
+      "type": "lerna.v1.PhysicalIORequest",
+      "binary_bytes": 2025,
+      "json_bytes": 4393
+    },
+    {
+      "name": "api-native-UNKNOWN-io-result",
+      "type": "lerna.v1.PhysicalIOResult",
+      "binary_bytes": 508,
+      "json_bytes": 1154
+    },
+    {
+      "name": "api-native-UNKNOWN-start",
+      "type": "lerna.v1.StartExecutionCommand",
+      "binary_bytes": 2024,
+      "json_bytes": 4371
+    },
+    {
+      "name": "api-native-UNKNOWN-admission",
+      "type": "lerna.v1.Admission",
+      "binary_bytes": 1813,
+      "json_bytes": 4232
+    },
+    {
+      "name": "api-native-UNKNOWN-receipt",
+      "type": "lerna.v1.CommandReceipt",
+      "binary_bytes": 347,
+      "json_bytes": 821
+    },
+    {
+      "name": "api-native-UNKNOWN-capability",
+      "type": "lerna.v1.Capability",
+      "binary_bytes": 688,
+      "json_bytes": 1530
+    },
+    {
+      "name": "api-native-UNKNOWN-descriptor",
+      "type": "lerna.v1.ApiDescriptor",
+      "binary_bytes": 338,
+      "json_bytes": 660
+    },
+    {
+      "name": "api-native-UNKNOWN-binding",
+      "type": "lerna.v1.ApiTargetBinding",
+      "binary_bytes": 165,
+      "json_bytes": 322
+    },
+    {
+      "name": "api-native-UNKNOWN-operation",
+      "type": "lerna.v1.Operation",
+      "binary_bytes": 3802,
+      "json_bytes": 8562
+    },
+    {
+      "name": "api-native-UNKNOWN-call-descriptor",
+      "type": "lerna.v1.CallDescriptor",
+      "binary_bytes": 781,
+      "json_bytes": 1436
+    },
+    {
+      "name": "api-native-UNKNOWN-send",
+      "type": "lerna.v1.PhysicalSend",
+      "binary_bytes": 885,
+      "json_bytes": 2145
+    },
+    {
+      "name": "api-native-UNKNOWN-observation",
+      "type": "lerna.v1.RawObservation",
+      "binary_bytes": 590,
+      "json_bytes": 1327
+    },
+    {
+      "name": "api-native-UNKNOWN-billing-source",
+      "type": "lerna.v1.BillingSource",
+      "binary_bytes": 563,
+      "json_bytes": 1259
+    },
+    {
+      "name": "api-native-UNKNOWN-parameters",
+      "type": "lerna.v1.Content",
+      "binary_bytes": 518,
+      "json_bytes": 1118
+    },
+    {
+      "name": "api-native-UNKNOWN-wait",
+      "type": "lerna.v1.ApiWait",
+      "binary_bytes": 204,
+      "json_bytes": 487
+    },
+    {
+      "name": "api-native-UNKNOWN-wait-trace-source",
+      "type": "lerna.v1.TraceSourceRecord",
+      "binary_bytes": 1556,
+      "json_bytes": 3428
+    },
+    {
+      "name": "api-native-UNKNOWN-wait-trace-event",
+      "type": "lerna.v1.TraceEvent",
+      "binary_bytes": 1088,
+      "json_bytes": 2329
+    },
+    {
+      "name": "api-native-REDACTED-io-request",
+      "type": "lerna.v1.PhysicalIORequest",
+      "binary_bytes": 2025,
+      "json_bytes": 4393
+    },
+    {
+      "name": "api-native-REDACTED-io-result",
+      "type": "lerna.v1.PhysicalIOResult",
+      "binary_bytes": 534,
+      "json_bytes": 1198
+    },
+    {
+      "name": "api-native-REDACTED-start",
+      "type": "lerna.v1.StartExecutionCommand",
+      "binary_bytes": 2024,
+      "json_bytes": 4371
+    },
+    {
+      "name": "api-native-REDACTED-admission",
+      "type": "lerna.v1.Admission",
+      "binary_bytes": 1813,
+      "json_bytes": 4232
+    },
+    {
+      "name": "api-native-REDACTED-receipt",
+      "type": "lerna.v1.CommandReceipt",
+      "binary_bytes": 347,
+      "json_bytes": 821
+    },
+    {
+      "name": "api-native-REDACTED-capability",
+      "type": "lerna.v1.Capability",
+      "binary_bytes": 688,
+      "json_bytes": 1530
+    },
+    {
+      "name": "api-native-REDACTED-descriptor",
+      "type": "lerna.v1.ApiDescriptor",
+      "binary_bytes": 338,
+      "json_bytes": 660
+    },
+    {
+      "name": "api-native-REDACTED-binding",
+      "type": "lerna.v1.ApiTargetBinding",
+      "binary_bytes": 165,
+      "json_bytes": 322
+    },
+    {
+      "name": "api-native-REDACTED-operation",
+      "type": "lerna.v1.Operation",
+      "binary_bytes": 3387,
+      "json_bytes": 7564
+    },
+    {
+      "name": "api-native-REDACTED-call-descriptor",
+      "type": "lerna.v1.CallDescriptor",
+      "binary_bytes": 781,
+      "json_bytes": 1436
+    },
+    {
+      "name": "api-native-REDACTED-send",
+      "type": "lerna.v1.PhysicalSend",
+      "binary_bytes": 678,
+      "json_bytes": 1646
+    },
+    {
+      "name": "api-native-REDACTED-observation",
+      "type": "lerna.v1.RawObservation",
+      "binary_bytes": 616,
+      "json_bytes": 1371
+    },
+    {
+      "name": "api-native-REDACTED-billing-source",
+      "type": "lerna.v1.BillingSource",
+      "binary_bytes": 563,
+      "json_bytes": 1259
+    },
+    {
+      "name": "api-native-REDACTED-parameters",
+      "type": "lerna.v1.Content",
+      "binary_bytes": 518,
+      "json_bytes": 1118
+    },
+    {
+      "name": "default-model-api-driver",
+      "type": "lerna.v1.ReasonerDriver",
+      "binary_bytes": 770,
+      "json_bytes": 1888
+    },
+    {
+      "name": "default-model-api-api-descriptor",
+      "type": "lerna.v1.ApiDescriptor",
+      "binary_bytes": 338,
+      "json_bytes": 660
+    },
+    {
+      "name": "default-model-api-api-binding",
+      "type": "lerna.v1.ApiTargetBinding",
+      "binary_bytes": 165,
+      "json_bytes": 322
+    },
+    {
+      "name": "default-model-api-result",
+      "type": "lerna.v1.Result",
+      "binary_bytes": 1705,
+      "json_bytes": 3873
+    },
+    {
+      "name": "default-model-api-planning",
+      "type": "lerna.v1.PlanningState",
+      "binary_bytes": 4446,
+      "json_bytes": 10518
+    },
+    {
+      "name": "default-model-api-request-0-request",
+      "type": "lerna.v1.ProposalRequest",
+      "binary_bytes": 993,
+      "json_bytes": 2228
+    },
+    {
+      "name": "default-model-api-request-0-snapshot",
+      "type": "lerna.v1.ContextSnapshot",
+      "binary_bytes": 1120,
+      "json_bytes": 2685
+    },
+    {
+      "name": "default-model-api-request-0-outcome",
+      "type": "lerna.v1.ProposalOutcome",
+      "binary_bytes": 1693,
+      "json_bytes": 3857
+    },
+    {
+      "name": "default-model-api-request-0-proposal-full",
+      "type": "lerna.v1.Proposal",
+      "binary_bytes": 820,
+      "json_bytes": 1906
+    },
+    {
+      "name": "default-model-api-request-0-proposal-audit",
+      "type": "lerna.v1.Proposal",
+      "binary_bytes": 820,
+      "json_bytes": 1906
+    },
+    {
+      "name": "default-model-api-request-0-proposal-body",
+      "type": "lerna.v1.Content",
+      "binary_bytes": 2373,
+      "json_bytes": 3828
+    },
+    {
+      "name": "default-model-api-request-0-model-call",
+      "type": "lerna.v1.ModelCall",
+      "binary_bytes": 1454,
+      "json_bytes": 3258
+    },
+    {
+      "name": "default-model-api-request-1-request",
+      "type": "lerna.v1.ProposalRequest",
+      "binary_bytes": 993,
+      "json_bytes": 2228
+    },
+    {
+      "name": "default-model-api-request-1-snapshot",
+      "type": "lerna.v1.ContextSnapshot",
+      "binary_bytes": 2738,
+      "json_bytes": 6351
+    },
+    {
+      "name": "default-model-api-request-1-outcome",
+      "type": "lerna.v1.ProposalOutcome",
+      "binary_bytes": 1781,
+      "json_bytes": 4032
+    },
+    {
+      "name": "default-model-api-request-1-proposal-full",
+      "type": "lerna.v1.Proposal",
+      "binary_bytes": 844,
+      "json_bytes": 2017
+    },
+    {
+      "name": "default-model-api-request-1-proposal-audit",
+      "type": "lerna.v1.Proposal",
+      "binary_bytes": 844,
+      "json_bytes": 2017
+    },
+    {
+      "name": "default-model-api-request-1-proposal-body",
+      "type": "lerna.v1.Content",
+      "binary_bytes": 2396,
+      "json_bytes": 3793
+    },
+    {
+      "name": "default-model-api-request-1-model-call",
+      "type": "lerna.v1.ModelCall",
+      "binary_bytes": 1624,
+      "json_bytes": 3616
+    },
+    {
+      "name": "default-model-api-operation-0-admission",
+      "type": "lerna.v1.Admission",
+      "binary_bytes": 1721,
+      "json_bytes": 4031
+    },
+    {
+      "name": "default-model-api-operation-0-operation",
+      "type": "lerna.v1.Operation",
+      "binary_bytes": 2783,
+      "json_bytes": 6264
+    },
+    {
+      "name": "default-model-api-operation-0-send",
+      "type": "lerna.v1.PhysicalSend",
+      "binary_bytes": 708,
+      "json_bytes": 1676
+    },
+    {
+      "name": "default-model-api-operation-0-call-descriptor",
+      "type": "lerna.v1.CallDescriptor",
+      "binary_bytes": 374,
+      "json_bytes": 671
+    },
+    {
+      "name": "default-model-api-operation-0-billing-source",
+      "type": "lerna.v1.BillingSource",
+      "binary_bytes": 810,
+      "json_bytes": 1722
+    },
+    {
+      "name": "default-model-api-operation-0-raw-observation",
+      "type": "lerna.v1.RawObservation",
+      "binary_bytes": 576,
+      "json_bytes": 1283
+    },
+    {
+      "name": "default-model-api-operation-1-admission",
+      "type": "lerna.v1.Admission",
+      "binary_bytes": 2025,
+      "json_bytes": 4530
+    },
+    {
+      "name": "default-model-api-operation-1-operation",
+      "type": "lerna.v1.Operation",
+      "binary_bytes": 3728,
+      "json_bytes": 8109
+    },
+    {
+      "name": "default-model-api-operation-1-send",
+      "type": "lerna.v1.PhysicalSend",
+      "binary_bytes": 708,
+      "json_bytes": 1676
+    },
+    {
+      "name": "default-model-api-operation-1-call-descriptor",
+      "type": "lerna.v1.CallDescriptor",
+      "binary_bytes": 781,
+      "json_bytes": 1436
+    },
+    {
+      "name": "default-model-api-operation-1-billing-source",
+      "type": "lerna.v1.BillingSource",
+      "binary_bytes": 803,
+      "json_bytes": 1715
+    },
+    {
+      "name": "default-model-api-operation-1-raw-observation",
+      "type": "lerna.v1.RawObservation",
+      "binary_bytes": 586,
+      "json_bytes": 1309
+    },
+    {
+      "name": "default-model-api-operation-2-admission",
+      "type": "lerna.v1.Admission",
+      "binary_bytes": 1893,
+      "json_bytes": 4389
+    },
+    {
+      "name": "default-model-api-operation-2-operation",
+      "type": "lerna.v1.Operation",
+      "binary_bytes": 2783,
+      "json_bytes": 6264
+    },
+    {
+      "name": "default-model-api-operation-2-send",
+      "type": "lerna.v1.PhysicalSend",
+      "binary_bytes": 708,
+      "json_bytes": 1676
+    },
+    {
+      "name": "default-model-api-operation-2-call-descriptor",
+      "type": "lerna.v1.CallDescriptor",
+      "binary_bytes": 374,
+      "json_bytes": 671
+    },
+    {
+      "name": "default-model-api-operation-2-billing-source",
+      "type": "lerna.v1.BillingSource",
+      "binary_bytes": 810,
+      "json_bytes": 1722
+    },
+    {
+      "name": "default-model-api-operation-2-raw-observation",
+      "type": "lerna.v1.RawObservation",
+      "binary_bytes": 576,
+      "json_bytes": 1283
+    },
+    {
+      "name": "default-model-api-budget",
+      "type": "lerna.v1.Budget",
+      "binary_bytes": 152,
+      "json_bytes": 383
+    },
+    {
+      "name": "pending-goal-submitted",
+      "type": "lerna.v1.CommandReceipt",
+      "binary_bytes": 272,
+      "json_bytes": 686
+    },
+    {
+      "name": "pending-goal-ready-job",
+      "type": "lerna.v1.Job",
+      "binary_bytes": 422,
+      "json_bytes": 1028
+    },
+    {
+      "name": "pending-goal-payload",
+      "type": "lerna.v1.PendingGoal",
+      "binary_bytes": 148,
+      "json_bytes": 387
+    },
+    {
+      "name": "pending-goal-body",
+      "type": "lerna.v1.Content",
+      "binary_bytes": 542,
+      "json_bytes": 1140
+    },
+    {
+      "name": "pending-goal-claim-command",
+      "type": "lerna.v1.JobCommand",
+      "binary_bytes": 168,
+      "json_bytes": 443
+    },
+    {
+      "name": "pending-goal-claim-receipt",
+      "type": "lerna.v1.CommandReceipt",
+      "binary_bytes": 676,
+      "json_bytes": 1738
+    },
+    {
+      "name": "pending-goal-claimed-job",
+      "type": "lerna.v1.Job",
+      "binary_bytes": 459,
+      "json_bytes": 1144
+    },
+    {
+      "name": "pending-goal-decided",
+      "type": "lerna.v1.ReceiptQuery",
+      "binary_bytes": 524,
+      "json_bytes": 1398
+    },
+    {
+      "name": "pending-goal-completed-job",
+      "type": "lerna.v1.Job",
+      "binary_bytes": 461,
+      "json_bytes": 1146
+    },
+    {
+      "name": "pending-goal-claim-replay",
+      "type": "lerna.v1.CommandReceipt",
+      "binary_bytes": 676,
+      "json_bytes": 1738
+    }
+  ]
+}
