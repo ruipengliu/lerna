@@ -198,6 +198,7 @@ func TestCaptureProtobufMainline(t *testing.T) {
 	captureNativeAPI(t, &samples)
 	captureDefaultModelAPIDriver(t, &samples)
 	capturePendingGoal(t, &samples)
+	captureLocalMetrics(t, &samples)
 	if output := os.Getenv("LERNA_PROTOBUF_CAPTURE"); output != "" {
 		if err := protobuf.Save(output, samples); err != nil {
 			t.Fatal(err)

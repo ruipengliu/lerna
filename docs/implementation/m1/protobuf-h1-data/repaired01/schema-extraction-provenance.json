@@ -1,0 +1,184 @@
+{
+  "status": "PURE_IMMUTABLE_GENERATED_DESCRIPTOR_EXTRACTION_NOT_RUNTIME_QUALIFICATION",
+  "created_utc": "2026-10-06T17:51:48.541497+00:00",
+  "source_snapshot_commit": "f809a47c5acc62939f2cb9e7fdf178819a307b6b",
+  "artifact": {
+    "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-repaired-schema-descriptor-set-01.pb",
+    "sha256": "c3128c71ae31f62a149c129cc043f0a154d8295007e462dbf5d339f3cf01fc18",
+    "bytes": 79490,
+    "mode": "0o644"
+  },
+  "encoding": "FileDescriptorSet field 1, generated raw descriptor bytes sorted by original descriptor file name, length-prefixed deterministic wire encoding; no Go/protoc/test/build invoked.",
+  "sources": [
+    {
+      "generated_path": "contracts/gen/go/lerna/v1/admission.pb.go",
+      "generated_source_sha256": "83f55bf3eaed136af37f9e9685ffe9e2a42c94b9aeb29375bad9188f4a86e864",
+      "descriptor_name": "lerna/v1/admission.proto",
+      "descriptor_bytes": 2975,
+      "descriptor_sha256": "b47450bde0649354dfa06ce86db9a1c01d0fb56c71720cfd7d39ebd692224d1e"
+    },
+    {
+      "generated_path": "contracts/gen/go/lerna/v1/api.pb.go",
+      "generated_source_sha256": "f28ff30709287aa8b992b34a7ce25e199174c7fc6bc0e648d77f6433a9852495",
+      "descriptor_name": "lerna/v1/api.proto",
+      "descriptor_bytes": 932,
+      "descriptor_sha256": "74d91ac749a07201dd8dd6d7fde41e3e28865e4cd5dd8b95f1c0167942b73e40"
+    },
+    {
+      "generated_path": "contracts/gen/go/lerna/v1/authority.pb.go",
+      "generated_source_sha256": "b9525f7fe0c1ee13239a34865b4e4dfd6052b97b224f221b7b68602a3bd7f7a3",
+      "descriptor_name": "lerna/v1/authority.proto",
+      "descriptor_bytes": 2881,
+      "descriptor_sha256": "f5b6c87530ac1479e0429579b1e184fa7aed87424dc6156d6ae43fc2b84f5cf1"
+    },
+    {
+      "generated_path": "contracts/gen/go/lerna/v1/budget.pb.go",
+      "generated_source_sha256": "c89fcbbed2b06f099d7094351e0de72a1a908322af041ddd8e736081ebfb5464",
+      "descriptor_name": "lerna/v1/budget.proto",
+      "descriptor_bytes": 2423,
+      "descriptor_sha256": "01e60923b0eafc4250f331ba4c7b6f46dc07a6cb1c0161e33e46af78b1054c18"
+    },
+    {
+      "generated_path": "contracts/gen/go/lerna/v1/cancellation.pb.go",
+      "generated_source_sha256": "9ad773c3bb804580062765a13e4ba237048f385dc6a560ae967d9e13566cfbb8",
+      "descriptor_name": "lerna/v1/cancellation.proto",
+      "descriptor_bytes": 2388,
+      "descriptor_sha256": "6df79a03c036e9be04f3f597aba7c1fd35314798004a668790a73c2eab855353"
+    },
+    {
+      "generated_path": "contracts/gen/go/lerna/v1/closure.pb.go",
+      "generated_source_sha256": "0b0684449f1c8fdb81afa9191c13249e2ddea0df079018d5cc68321994a4129b",
+      "descriptor_name": "lerna/v1/closure.proto",
+      "descriptor_bytes": 1465,
+      "descriptor_sha256": "aeb777be0de31da54d7aa4a465e25c0773309450f4445fcb54ce812fcd327514"
+    },
+    {
+      "generated_path": "contracts/gen/go/lerna/v1/completion.pb.go",
+      "generated_source_sha256": "42acaed9b98800455570120f1fadd930cd146cd498a1dda154e1e96a39d30b65",
+      "descriptor_name": "lerna/v1/completion.proto",
+      "descriptor_bytes": 3608,
+      "descriptor_sha256": "84389f43cdf7e53bacd178c95c1b4aa8d1a0fdfe7a305fd5a1081b83f25e62cc"
+    },
+    {
+      "generated_path": "contracts/gen/go/lerna/v1/confirmation.pb.go",
+      "generated_source_sha256": "d449f9c3a1928d7e093075bd5299552a359cd5ad543268fdd061df8f9bb7b601",
+      "descriptor_name": "lerna/v1/confirmation.proto",
+      "descriptor_bytes": 3574,
+      "descriptor_sha256": "7bc6eb0e2828c2fa7329e5a3e30c48a1596bca3e9864af1edb51e2b380d49905"
+    },
+    {
+      "generated_path": "contracts/gen/go/lerna/v1/content_governance.pb.go",
+      "generated_source_sha256": "e3cef11857f5a12ca36a8f6c6f3043e10a42d75bffcc32df54b6a264ab72f4e7",
+      "descriptor_name": "lerna/v1/content_governance.proto",
+      "descriptor_bytes": 3649,
+      "descriptor_sha256": "2dd17b8d65a1c3e657bebed69aa0c31134e4d0e39c65bdce8549335e9f8d00bb"
+    },
+    {
+      "generated_path": "contracts/gen/go/lerna/v1/credential.pb.go",
+      "generated_source_sha256": "059ee31ceed688b0cdbd1ac8265f570a50de0b7dc935cca833b7b3d9cb60196c",
+      "descriptor_name": "lerna/v1/credential.proto",
+      "descriptor_bytes": 2396,
+      "descriptor_sha256": "c1c8d625c861770cb2c979ae7724b3186b2734304e01c89443a682ed8c9878ce"
+    },
+    {
+      "generated_path": "contracts/gen/go/lerna/v1/egress.pb.go",
+      "generated_source_sha256": "8f41f02f19d4d0062dd8d6250e29cc7165a80642ccb2386ee63b161805b6ac86",
+      "descriptor_name": "lerna/v1/egress.proto",
+      "descriptor_bytes": 2028,
+      "descriptor_sha256": "f1a00e0ba35f99b290f253721dd4478abe72ddd2246b97e2a2654cc82520ca33"
+    },
+    {
+      "generated_path": "contracts/gen/go/lerna/v1/grant_lifecycle.pb.go",
+      "generated_source_sha256": "3692f1dc62ff9c34bd25a7130da2b905319d18f944554b0f63a84d1879871590",
+      "descriptor_name": "lerna/v1/grant_lifecycle.proto",
+      "descriptor_bytes": 1137,
+      "descriptor_sha256": "f0bbbe997cf2092b53c5e80f63541e6c1ac920826a5d80fbe1ce13d7f63ba29c"
+    },
+    {
+      "generated_path": "contracts/gen/go/lerna/v1/identity.pb.go",
+      "generated_source_sha256": "008e477a6ed76b0ebc6c504bf89e556a670ca20d9c3af3ef9ffb6671e591d15b",
+      "descriptor_name": "lerna/v1/identity.proto",
+      "descriptor_bytes": 256,
+      "descriptor_sha256": "d4c50f9847cba7aa58d4eb2aac0a9f7307b3e6fe0dd42e6a41ed4253981febb5"
+    },
+    {
+      "generated_path": "contracts/gen/go/lerna/v1/ledger.pb.go",
+      "generated_source_sha256": "573df0b416ced7c44eb718055dca4dc364359eb2cb073d9ebf203a5e5e5f1c09",
+      "descriptor_name": "lerna/v1/ledger.proto",
+      "descriptor_bytes": 4785,
+      "descriptor_sha256": "0fac6b1471a33325d32e2050497a3b9ac496a2aeecc95285f373ca0871d7685b"
+    },
+    {
+      "generated_path": "contracts/gen/go/lerna/v1/managed_file.pb.go",
+      "generated_source_sha256": "6030833d2f604ce90d29fd8a08f50cfb0011bee5006e15c0c7a00b46cef817ed",
+      "descriptor_name": "lerna/v1/managed_file.proto",
+      "descriptor_bytes": 2779,
+      "descriptor_sha256": "fcd2ab74c4d899654a271ad54b808e1429840211b1e38e22f933ef775c338351"
+    },
+    {
+      "generated_path": "contracts/gen/go/lerna/v1/metrics.pb.go",
+      "generated_source_sha256": "8548ebaff14b56f3d9d779e19d8d3ff8a1729c1ec19f4c572301b49011b9304c",
+      "descriptor_name": "lerna/v1/metrics.proto",
+      "descriptor_bytes": 4289,
+      "descriptor_sha256": "6bf9bc452923336f89bb81d4bdab3c75317ad008cdedee3c754660c2ea92610f"
+    },
+    {
+      "generated_path": "contracts/gen/go/lerna/v1/model.pb.go",
+      "generated_source_sha256": "860c09f8b4872813612c6e49923a8fe4cb3b879c48716b7f3ab4412c51992e1b",
+      "descriptor_name": "lerna/v1/model.proto",
+      "descriptor_bytes": 4039,
+      "descriptor_sha256": "1d290b186551f97c0aca8229220fea15fba998b09e6be606f10ba340a2db9ebd"
+    },
+    {
+      "generated_path": "contracts/gen/go/lerna/v1/planning.pb.go",
+      "generated_source_sha256": "cfc54920f6df0591a7f0969cf04b8d721290aa1b625e6722a5ac92edd363b454",
+      "descriptor_name": "lerna/v1/planning.proto",
+      "descriptor_bytes": 7689,
+      "descriptor_sha256": "246519e5023086a359f44c04d492a220cd38acf14d9b66a51f8623cec47d1836"
+    },
+    {
+      "generated_path": "contracts/gen/go/lerna/v1/reasoner_driver.pb.go",
+      "generated_source_sha256": "a036e34eeee0bd6dcc4055b1d56025c6dabe28831fdfa10e5abbea238ecb1158",
+      "descriptor_name": "lerna/v1/reasoner_driver.proto",
+      "descriptor_bytes": 1738,
+      "descriptor_sha256": "1db539b8054cfe9e4e986c829a6b5d049bf7b56fdd3e5150ca7e79c1ed46aa9f"
+    },
+    {
+      "generated_path": "contracts/gen/go/lerna/v1/reconciliation.pb.go",
+      "generated_source_sha256": "e7f276836a52fccfbd21c76ad759d648273bd5fc158f3628fab103bcb59ae08c",
+      "descriptor_name": "lerna/v1/reconciliation.proto",
+      "descriptor_bytes": 3922,
+      "descriptor_sha256": "ff7a6c62a72dad1eb3021193980df35158a0571140fb6aa7e896e0fc2de6a0a2"
+    },
+    {
+      "generated_path": "contracts/gen/go/lerna/v1/reporting.pb.go",
+      "generated_source_sha256": "989f1bb129c63f578f25a8b6e34c53b09c7b662636a4464950972395d3c52777",
+      "descriptor_name": "lerna/v1/reporting.proto",
+      "descriptor_bytes": 5251,
+      "descriptor_sha256": "fd70854f63a2e2f3d28d121ff9ff101cd7a4681e47a684f2d1e8d9f6954f0641"
+    },
+    {
+      "generated_path": "contracts/gen/go/lerna/v1/sessions.pb.go",
+      "generated_source_sha256": "fe22d9dd36a41eed0f4ea715305cca0b42f0ef3af2fb6956d6b3b000e8ff0f50",
+      "descriptor_name": "lerna/v1/sessions.proto",
+      "descriptor_bytes": 3022,
+      "descriptor_sha256": "3117ca6f04aa1bbf781f2f5db5c4b222867b8ed59991e322000e3a073d4e2493"
+    },
+    {
+      "generated_path": "contracts/gen/go/lerna/v1/submission.pb.go",
+      "generated_source_sha256": "5e3fbe267a3f046337aebaa7600d94d2b23d814faf4a84d0fb418a3d2a30c2df",
+      "descriptor_name": "lerna/v1/submission.proto",
+      "descriptor_bytes": 8074,
+      "descriptor_sha256": "ecd324459f5c890088d9bb4fbde91311a350f74d275af479e1870b4972670903"
+    },
+    {
+      "generated_path": "contracts/gen/go/lerna/v1/task_closing.pb.go",
+      "generated_source_sha256": "7faa24c9c71203cf69619315d402e130e9b253d44f7b4ee18c43967628ea8ebb",
+      "descriptor_name": "lerna/v1/task_closing.proto",
+      "descriptor_bytes": 4118,
+      "descriptor_sha256": "5a4bcd1fb70f8a99acbca0fc21ad8786aece40ca3a2efccc67efdc5d669a08ad"
+    }
+  ],
+  "descriptor_file_count": 24,
+  "runtime_qualified": false
+}

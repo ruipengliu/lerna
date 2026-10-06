@@ -1,0 +1,97 @@
+{
+  "state": "completed",
+  "recorded_at": "2026-10-06T17:47:33.959423+00:00",
+  "files": {
+    "artifacts_sha_manifest": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-repaired-measurement-01/artifacts-sha256.txt",
+      "sha256": "3c8f90c69c02a78da7d80df7f2c2af9808857117d084e9509c8ed767ce0f02fe",
+      "bytes": 822,
+      "mode": "0o644"
+    },
+    "bench": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-repaired-measurement-01/bench.txt",
+      "sha256": "ae6aedad0d90fbcdb56443f21b6ff109a9c4c0ec9a74b0ae5095400f0d71ed86",
+      "bytes": 1273835,
+      "mode": "0o644"
+    },
+    "binaries_sha_manifest": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-repaired-measurement-01/binaries-sha256.txt",
+      "sha256": "01f91003587a205c092f8c8c9d6fbcf5f04b790b5b6ec280dbcbd9940e5f820f",
+      "bytes": 383,
+      "mode": "0o644"
+    },
+    "capture_inventory": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-repaired-capture-inventory-01.json",
+      "sha256": "42960dfba50286963acd8a5cc17fa2331ffcdd0c6284a71ca77f52be96160658",
+      "bytes": 156421,
+      "mode": "0o600"
+    },
+    "capture_log": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-repaired-bound-unified-capture-01.log",
+      "sha256": "00f14ebc2edc94e7b9e2bf4c1e1b72e91b800999ad9ba25322b5778641a6d47c",
+      "bytes": 2781,
+      "mode": "0o644"
+    },
+    "corpus": {
+      "path": "/Volumes/Data/proj/lerna-m1-ticket23/conformance/protobuf/testdata/mainline.json",
+      "sha256": "8af42a2506e5c178ecb02d87127ce7092b93fa9eefe18c40de74a370d988d6cf",
+      "bytes": 2476384,
+      "mode": "0o644"
+    },
+    "corpus_sha_manifest": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-repaired-measurement-01/corpus-sha256.txt",
+      "sha256": "dab7cf545cdb9487ea2a8fd51ec80c1f9f63efa7b636bc447291d4fee4753efb",
+      "bytes": 110,
+      "mode": "0o644"
+    },
+    "environment": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-repaired-measurement-01/environment.txt",
+      "sha256": "ae246b2ee9314a977256b99e518c5d063eb82de28d46964e51b449818cbe19dc",
+      "bytes": 6482,
+      "mode": "0o644"
+    },
+    "inventory": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-repaired-measurement-01/inventory.json",
+      "sha256": "42960dfba50286963acd8a5cc17fa2331ffcdd0c6284a71ca77f52be96160658",
+      "bytes": 156421,
+      "mode": "0o600"
+    },
+    "inventory_run": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-repaired-measurement-01/inventory-run.txt",
+      "sha256": "4c287eb7f7cef738d750d963a306f4ac8c7b713df1b253cdeeb56083e9ad3d42",
+      "bytes": 109,
+      "mode": "0o644"
+    },
+    "measured_corpus": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-repaired-measurement-01/measured-corpus.json",
+      "sha256": "8af42a2506e5c178ecb02d87127ce7092b93fa9eefe18c40de74a370d988d6cf",
+      "bytes": 2476384,
+      "mode": "0o644"
+    },
+    "measurement_log": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-repaired-bound-measurement-01.log",
+      "sha256": "d9afe6ed9b134ac889d84cd89c2811a21c92914819da0a41851d01e0b8af81b5",
+      "bytes": 88,
+      "mode": "0o644"
+    },
+    "peak_memory": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-repaired-measurement-01/peak-memory.txt",
+      "sha256": "3e6ab187488abec241c34c300989ea24f19e57dc64dc4d185020078ced275078",
+      "bytes": 777,
+      "mode": "0o644"
+    },
+    "sizes": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-repaired-measurement-01/sizes.txt",
+      "sha256": "906653e6984380cd0f42803cd04b6bc3163622978b36d7c63f92bcbcd25bdacf",
+      "bytes": 135,
+      "mode": "0o644"
+    },
+    "source_sha_manifest": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-repaired-measurement-01/source-sha256.txt",
+      "sha256": "1ed028e43d718494ba27f874281272fe775dd1657ac05496114128bc356f50fa",
+      "bytes": 45853,
+      "mode": "0o644"
+    }
+  },
+  "observation": "Actual stable output file hashes, byte counts and modes observed after outer measurement completion."
+}

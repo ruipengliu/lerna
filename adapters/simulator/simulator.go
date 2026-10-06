@@ -16,11 +16,43 @@ func (Adapter) Compile(op *v1.Operation, attempt *v1.ExecutionAttempt) (*v1.Call
 	if cap == nil || cap.AdapterRef == nil || cap.AdapterRef.Name == nil || cap.AdapterRef.Revision != 1 || (cap.Action != "CREATE" && cap.Action != "QUERY" && cap.Action != "MODEL_INFER") || op.ParametersRef == nil || attempt == nil || attempt.ExternalKey == "" {
 		return nil, nil, command.Fail("UNSUPPORTED_CAPABILITY")
 	}
+	declaration, e := fixedDeclaration(op)
+	if e != nil {
+		return nil, nil, e
+	}
+	if declaration.RetentionMs > 0 && attempt.KeyValidUntilUnixMs == nil {
+		return nil, nil, command.Fail("UNSUPPORTED_CAPABILITY")
+	}
+	target, e := url.Parse(cap.Resource)
+	if e != nil || target.Scheme != "http" || target.User != nil || target.Fragment != "" || net.ParseIP(target.Hostname()) == nil || !net.ParseIP(target.Hostname()).IsLoopback() {
+		return nil, nil, command.Fail("TARGET_SCOPE_MISMATCH")
+	}
+	d := &v1.CallDescriptor{Protocol: "HTTP", Method: "POST", Target: cap.Resource, ParametersRef: op.ParametersRef, CapabilityRef: cap.Ref, ExternalKey: attempt.ExternalKey, KeyValidUntilUnixMs: attempt.KeyValidUntilUnixMs}
+	if cap.Action == "QUERY" {
+		d.Method = "GET"
+		d.QuerySubject = op.QuerySubject
+	}
+	if cap.Action == "MODEL_INFER" {
+		d.BodyDigest = op.ModelDescriptorDigest
+	}
+	d.Digest = command.SemanticFingerprint("call-descriptor-v1", d)
+	return d, declaration, nil
+}
+
+// fixedDeclaration 是固定版本的纯声明规则，不创建执行或调用描述。
+func fixedDeclaration(op *v1.Operation) (*v1.ExecutionCapabilities, error) {
+	cap := op.GetCapabilitySnapshot()
+	if cap == nil || cap.AdapterRef.GetName() == nil || cap.AdapterRef.Revision != 1 || (cap.Action != "CREATE" && cap.Action != "QUERY" && cap.Action != "MODEL_INFER") {
+		return nil, command.Fail("UNSUPPORTED_CAPABILITY")
+	}
+	if (cap.Action == "MODEL_INFER") != (cap.AdapterRef.Name.LocalId == "model-reference-v1") {
+		return nil, command.Fail("UNSUPPORTED_CAPABILITY")
+	}
 	declaration := &v1.ExecutionCapabilities{Effect: "ATOMIC_WRITE", ProtocolVersion: "lerna-simulator-v1", DeclarationVersion: "1", VerificationBasis: "reference-target-v1", IdempotencyScope: cap.Resource}
 	switch cap.AdapterRef.Name.LocalId {
 	case "model-reference-v1":
 		if cap.Action != "MODEL_INFER" || op.ModelDescriptorDigest == "" || cap.MaxSends != 1 {
-			return nil, nil, command.Fail("UNSUPPORTED_CAPABILITY")
+			return nil, command.Fail("UNSUPPORTED_CAPABILITY")
 		}
 		declaration = &v1.ExecutionCapabilities{Effect: "MODEL_INFERENCE", ProtocolVersion: "lerna-model-v1", DeclarationVersion: "1", VerificationBasis: "reference-model-v1", IdempotencyScope: cap.Resource}
 	case "simulator-idempotent", "simulator-idempotent-expiring", "simulator-idempotent-evicting":
@@ -32,7 +64,7 @@ func (Adapter) Compile(op *v1.Operation, attempt *v1.ExecutionAttempt) (*v1.Call
 		declaration.Queryable = true
 	case "simulator-opaque":
 	default:
-		return nil, nil, command.Fail("UNSUPPORTED_CAPABILITY")
+		return nil, command.Fail("UNSUPPORTED_CAPABILITY")
 	}
 	if declaration.Idempotent {
 		declaration.IdempotencyMechanism = "NATIVE_KEY"
@@ -40,36 +72,25 @@ func (Adapter) Compile(op *v1.Operation, attempt *v1.ExecutionAttempt) (*v1.Call
 		declaration.ParameterBinding = "EXACT_REQUEST"
 		declaration.AccountScope = cap.AdapterRef.Name.UserId
 		if cap.AdapterRef.Name.LocalId == "simulator-idempotent-expiring" || cap.AdapterRef.Name.LocalId == "simulator-idempotent-evicting" {
-			if cap.IdempotencyRetentionMs <= 0 || attempt.KeyValidUntilUnixMs == nil {
-				return nil, nil, command.Fail("UNSUPPORTED_CAPABILITY")
+			if cap.IdempotencyRetentionMs <= 0 {
+				return nil, command.Fail("UNSUPPORTED_CAPABILITY")
 			}
 			declaration.RetentionMs = cap.IdempotencyRetentionMs
 			declaration.RejectsExpiredKeys = cap.AdapterRef.Name.LocalId == "simulator-idempotent-expiring"
 		} else if cap.IdempotencyRetentionMs != 0 {
-			return nil, nil, command.Fail("UNSUPPORTED_CAPABILITY")
+			return nil, command.Fail("UNSUPPORTED_CAPABILITY")
 		}
 	} else if cap.IdempotencyRetentionMs != 0 {
-		return nil, nil, command.Fail("UNSUPPORTED_CAPABILITY")
+		return nil, command.Fail("UNSUPPORTED_CAPABILITY")
 	}
-	target, e := url.Parse(cap.Resource)
-	if e != nil || target.Scheme != "http" || target.User != nil || target.Fragment != "" || net.ParseIP(target.Hostname()) == nil || !net.ParseIP(target.Hostname()).IsLoopback() {
-		return nil, nil, command.Fail("TARGET_SCOPE_MISMATCH")
-	}
-	d := &v1.CallDescriptor{Protocol: "HTTP", Method: "POST", Target: cap.Resource, ParametersRef: op.ParametersRef, CapabilityRef: cap.Ref, ExternalKey: attempt.ExternalKey, KeyValidUntilUnixMs: attempt.KeyValidUntilUnixMs}
 	if cap.Action == "QUERY" {
 		if cap.AdapterRef.Name.LocalId != "simulator-queryable" || cap.UseRight != "READ" || op.QuerySubject == nil || op.ClosureWorkRef == nil || op.QuerySubject.TargetScope != cap.Resource || op.QuerySubject.ExecutorEndpointId != cap.ExecutorEndpointId {
-			return nil, nil, command.Fail("UNSUPPORTED_CAPABILITY")
+			return nil, command.Fail("UNSUPPORTED_CAPABILITY")
 		}
-		d.Method = "GET"
-		d.QuerySubject = op.QuerySubject
 		declaration.Effect = "READ"
 		declaration.ProtocolVersion = "lerna-simulator-query-v1"
 		declaration.VerificationBasis = "reference-query-v1"
 		declaration.Queryable = false
 	}
-	if cap.Action == "MODEL_INFER" {
-		d.BodyDigest = op.ModelDescriptorDigest
-	}
-	d.Digest = command.SemanticFingerprint("call-descriptor-v1", d)
-	return d, declaration, nil
+	return declaration, nil
 }

@@ -110,6 +110,9 @@ func (d *traceDecisions) Execute(ctx context.Context, caller *v1.Caller, h *v1.C
 		return nil, command.Fail("DEPENDENCY_UNAVAILABLE")
 	}
 	return observed.ExecuteObserved(ctx, caller, h, fingerprint, point, fn, func(tx context.Context, r *v1.CommandReceipt) error {
+		if measurement, ok := ctx.Value(admissionMetricKey{}).(*admissionMetricEntry); ok {
+			measurement.originalDecision = true
+		}
 		if r.Decision != v1.Decision_DECISION_REJECTED {
 			return nil
 		}

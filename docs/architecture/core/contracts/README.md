@@ -139,6 +139,19 @@ Ref = 全局名字 + revision + schema_id + digest（可选）
 
 声明是**待验证的主张**，必须附带验证证据：固定版本的目标系统文档、一致性测试结果，或两者兼有。缺少证据的维度按缺省值处理。缺省值都是最保守的取法：上界未知的计费调用无法准入，没有幂等和查询能力的动作一旦结果未知就只能保持未知。
 
+M1 的公开五维声明由原 `Capability`、准入的 `BudgetBasis` 和原 `ExecutionAttempt.capabilities` 共同保存：费用是否发生、单次上界和来源仍由原能力与预算依据承担，不另复制一份可能失同步的计费声明。`ExecutionCapabilities.query_visibility_delay_ms` 是经过验证的最大可见性延迟，显式零才表示立即可见；`query_record_retention_ms` 是至少保证查询记录可用多久，显式零表示没有保证的保留时段，绝不表示无限保留。两项独立可选，缺席明确表示 UNKNOWN，不能按零解读。当前受支持声明没有经过验证的查询可见性延迟或查询记录保留保证，两项均缺席。`retention_ms` 只表示幂等键期限，不得代替查询记录保留期。
+
+迟到终局维度由原 `protocol_version`、`verification_basis` 与 `declaration_version` 绑定下表固定规则；它声明采信证据的条件，不保证某次调用一定终局。声明由固定编译器产生，启动恢复和重发比较原完整声明及描述；实际解释器按各自的原协议、来源和关联条件查验。不能把这些共同门禁说成每个独立解释函数都再次检查全部版本字段；MODEL 正文解释只检查原协议，完整声明约束由原编译、启动和开始链承担。未支持的原版本不能通过这条生产与恢复链取得强保证。
+
+| 原协议与原验证依据（声明版本均为 1） | 固定终局规则与边界 |
+| --- | --- |
+| `lerna-simulator-v1` / `reference-target-v1` | 实际规则 `reference-target-v1` 要求受信来源、原目标地址、原尝试和外部键相符的严格正文；只有明确 `terminal=true` 才排除迟到。已生效但未终局仍为 APPLIED / MAY_OCCUR |
+| `lerna-reference-api-v1` / `reference-api-v1` | 实际规则 `reference-api-v1` 还绑定原账户、origin 和固定描述；200 本身不构成终局，严格且可归因的 `terminal=true` 才排除迟到 |
+| `lerna-simulator-query-v1` / `reference-query-v1`；`lerna-reference-api-query-v1` / `reference-api-v1` | `reference-query-v1` / `reference-api-query-v1` 的 `read_terminal` 只终结查询自己的读责任。原主体另由 `reference-query-subject-v1` / `reference-api-query-subject-v1` 查验原动作、尝试、外部键和范围，且可用结果必须 `terminal=true`，并有已生效事实或明确 `negative_proof`；读完成与短期未查到不能替代原主体的终局证明 |
+| `lerna-managed-file-v1` / `managed-file-v1` | `managed-file-v1` 的受信原生观察与原动作、尝试、发送、根和对象绑定。发布、耐久确认及读回核验共同证明写效果；READ 的终局读回只证明自己的读责任；CLEANUP 还需真正清理的耐久与读回事实。独立 QUERY 的原主体证明要求已保存发布身份及读回相符，不把文件不存在当作原未生效 |
+| `lerna-model-v1` / `reference-model-v1` | `reference-model-v1` 的可归因终局供应商响应只终结原 MODEL 调用；模型正文里的动作、授权、费用或任务结论不是目标业务效果证明 |
+
+
 ### 2.5 状态模型
 
 所有枚举保留 `UNSPECIFIED = 0` 表示非法缺失。它不得兼作业务上的"未知"。
@@ -542,7 +555,7 @@ AWS 的做法是由调用方提供请求标识表达意图：同一标识、不�
 
 | 编号 | 问题 | 怎样决定 |
 | --- | --- | --- |
-| H1 | Protobuf 是否适合实际的端云平台 | [实对象验证](../../verification/protobuf-h1.md)已在正式 API 联合版本采集 608 个 Go 实对象，覆盖 188/192 种消息，并完成三轮编解码、语义入口、链接增量与外部 RSS 测量；四种未采样类型及可选字段范围如实列出。本轮支持 M1 Go 继续采用 7.5 首选；最终指标契约合入后必须重采重测，端侧绑定仍待独立验证，不宣称端云 H1 最终通过。不满足则回到 7.5 重新选择 |
+| H1 | Protobuf 是否适合实际的端云平台 | [正式22实施报告](../../../implementation/m1/protobuf-h1.md)已在正式 API 联合版本采集 608 个 Go 实对象，覆盖 188/192 种消息，并完成三轮编解码、语义入口、链接增量与外部 RSS 测量；四种未采样类型及可选字段范围如实列出。本轮支持 M1 Go 继续采用 7.5 首选；最终指标契约合入后必须重采重测，端侧绑定仍待独立验证，不宣称端云 H1 最终通过。不满足则回到 7.5 重新选择 |
 | H2 | UUIDv7 的索引收益是否值得暴露创建时间 | 在目标存储上比较 UUIDv4 和 v7，并确认日志与对外标识的隐私要求 |
 | H3 | 端侧资源限制下的消息上限 | 为消息长度、嵌套深度、列表和快照规模定出平台上限，超限明确拒绝 |
 | H4 | 首批模型和工具供应商能否提供计费来源和可靠的费用上界 | 核对计费标识、重试收费、迟到账单和更正规则；不能确认的费用按上界未知处理 |

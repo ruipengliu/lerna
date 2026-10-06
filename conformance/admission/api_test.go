@@ -16,8 +16,11 @@ func referenceAPIDescriptor(target string) *v1.ApiDescriptor {
 }
 
 func configureAPIQueryable(t *testing.T, f *fixture, idempotent bool) (*v1.ApiDescriptor, *v1.Ref, *v1.Ref) {
+	return configureAPIQueryableAt(t, f, idempotent, "")
+}
+func configureAPIQueryableAt(t *testing.T, f *fixture, idempotent bool, target string) (*v1.ApiDescriptor, *v1.Ref, *v1.Ref) {
 	t.Helper()
-	configureAPI(t, f)
+	configureAPIAt(t, f, target)
 	write, e := f.h.Tasks.QueryCapability(f.ctx, f.caller, f.capability)
 	if e != nil {
 		t.Fatal(e)

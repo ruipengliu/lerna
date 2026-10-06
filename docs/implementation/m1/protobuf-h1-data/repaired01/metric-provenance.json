@@ -1,0 +1,148 @@
+{
+  "source_snapshot_commit": "f809a47c5acc62939f2cb9e7fdf178819a307b6b",
+  "corpus_sha256": "8af42a2506e5c178ecb02d87127ce7092b93fa9eefe18c40de74a370d988d6cf",
+  "types": {
+    "lerna.v1.MetricSource": [
+      {
+        "sample_name": "metric-admission-source",
+        "source_path": "conformance/admission/protobuf_metrics_capture_test.go",
+        "source_blob": "5fd0d6d2a2f8af32cfbf79bc1282251bccadb519",
+        "source_sha256": "4ec602dcef140b563eeddb21b5cb69feffec3bda2e71a94ed7db9d4f4989959a",
+        "public_method": "f.h.QueryMetrics",
+        "test_parent": "TestCaptureProtobufMainline",
+        "direct_producer": "captureLocalMetrics",
+        "returned_nested_object_not_constructed": true
+      }
+    ],
+    "lerna.v1.LatencyBucket": [
+      {
+        "sample_name": "metric-latency-bucket",
+        "source_path": "conformance/admission/protobuf_metrics_capture_test.go",
+        "source_blob": "5fd0d6d2a2f8af32cfbf79bc1282251bccadb519",
+        "source_sha256": "4ec602dcef140b563eeddb21b5cb69feffec3bda2e71a94ed7db9d4f4989959a",
+        "public_method": "f.h.QueryMetrics",
+        "test_parent": "TestCaptureProtobufMainline",
+        "direct_producer": "captureLocalMetrics",
+        "returned_nested_object_not_constructed": true
+      }
+    ],
+    "lerna.v1.AdmissionMetrics": [
+      {
+        "sample_name": "metric-admission",
+        "source_path": "conformance/admission/protobuf_metrics_capture_test.go",
+        "source_blob": "5fd0d6d2a2f8af32cfbf79bc1282251bccadb519",
+        "source_sha256": "4ec602dcef140b563eeddb21b5cb69feffec3bda2e71a94ed7db9d4f4989959a",
+        "public_method": "f.h.QueryMetrics",
+        "test_parent": "TestCaptureProtobufMainline",
+        "direct_producer": "captureLocalMetrics",
+        "returned_nested_object_not_constructed": true
+      }
+    ],
+    "lerna.v1.AgeBucket": [
+      {
+        "sample_name": "metric-age-bucket",
+        "source_path": "conformance/admission/protobuf_metrics_capture_test.go",
+        "source_blob": "5fd0d6d2a2f8af32cfbf79bc1282251bccadb519",
+        "source_sha256": "4ec602dcef140b563eeddb21b5cb69feffec3bda2e71a94ed7db9d4f4989959a",
+        "public_method": "f.h.QueryMetrics",
+        "test_parent": "TestCaptureProtobufMainline",
+        "direct_producer": "captureLocalMetrics",
+        "returned_nested_object_not_constructed": true
+      }
+    ],
+    "lerna.v1.UnknownMetrics": [
+      {
+        "sample_name": "metric-unknown",
+        "source_path": "conformance/admission/protobuf_metrics_capture_test.go",
+        "source_blob": "5fd0d6d2a2f8af32cfbf79bc1282251bccadb519",
+        "source_sha256": "4ec602dcef140b563eeddb21b5cb69feffec3bda2e71a94ed7db9d4f4989959a",
+        "public_method": "f.h.QueryMetrics",
+        "test_parent": "TestCaptureProtobufMainline",
+        "direct_producer": "captureLocalMetrics",
+        "returned_nested_object_not_constructed": true
+      }
+    ],
+    "lerna.v1.ReconciliationMetrics": [
+      {
+        "sample_name": "metric-reconciliation-ready",
+        "source_path": "conformance/admission/protobuf_metrics_capture_test.go",
+        "source_blob": "5fd0d6d2a2f8af32cfbf79bc1282251bccadb519",
+        "source_sha256": "4ec602dcef140b563eeddb21b5cb69feffec3bda2e71a94ed7db9d4f4989959a",
+        "public_method": "f.h.QueryMetrics",
+        "test_parent": "TestCaptureProtobufMainline",
+        "direct_producer": "captureLocalMetrics",
+        "returned_nested_object_not_constructed": true
+      }
+    ],
+    "lerna.v1.LedgerMetrics": [
+      {
+        "sample_name": "metric-ledger",
+        "source_path": "conformance/admission/protobuf_metrics_capture_test.go",
+        "source_blob": "5fd0d6d2a2f8af32cfbf79bc1282251bccadb519",
+        "source_sha256": "4ec602dcef140b563eeddb21b5cb69feffec3bda2e71a94ed7db9d4f4989959a",
+        "public_method": "f.h.QueryMetrics",
+        "test_parent": "TestCaptureProtobufMainline",
+        "direct_producer": "captureLocalMetrics",
+        "returned_nested_object_not_constructed": true
+      }
+    ],
+    "lerna.v1.DiagnosticMetrics": [
+      {
+        "sample_name": "metric-diagnostics-disabled",
+        "source_path": "conformance/admission/protobuf_metrics_capture_test.go",
+        "source_blob": "5fd0d6d2a2f8af32cfbf79bc1282251bccadb519",
+        "source_sha256": "4ec602dcef140b563eeddb21b5cb69feffec3bda2e71a94ed7db9d4f4989959a",
+        "public_method": "f.h.QueryMetrics",
+        "test_parent": "TestCaptureProtobufMainline",
+        "direct_producer": "captureLocalMetrics",
+        "returned_nested_object_not_constructed": true
+      }
+    ],
+    "lerna.v1.TraceStreamMetrics": [
+      {
+        "sample_name": "metric-trace-stream",
+        "source_path": "conformance/admission/protobuf_metrics_capture_test.go",
+        "source_blob": "5fd0d6d2a2f8af32cfbf79bc1282251bccadb519",
+        "source_sha256": "4ec602dcef140b563eeddb21b5cb69feffec3bda2e71a94ed7db9d4f4989959a",
+        "public_method": "f.h.QueryMetrics",
+        "test_parent": "TestCaptureProtobufMainline",
+        "direct_producer": "captureLocalMetrics",
+        "returned_nested_object_not_constructed": true
+      }
+    ],
+    "lerna.v1.TraceMetrics": [
+      {
+        "sample_name": "metric-trace",
+        "source_path": "conformance/admission/protobuf_metrics_capture_test.go",
+        "source_blob": "5fd0d6d2a2f8af32cfbf79bc1282251bccadb519",
+        "source_sha256": "4ec602dcef140b563eeddb21b5cb69feffec3bda2e71a94ed7db9d4f4989959a",
+        "public_method": "f.h.QueryMetrics",
+        "test_parent": "TestCaptureProtobufMainline",
+        "direct_producer": "captureLocalMetrics",
+        "returned_nested_object_not_constructed": true
+      }
+    ],
+    "lerna.v1.LocalMetrics": [
+      {
+        "sample_name": "metric-local-unknown",
+        "source_path": "conformance/admission/protobuf_metrics_capture_test.go",
+        "source_blob": "5fd0d6d2a2f8af32cfbf79bc1282251bccadb519",
+        "source_sha256": "4ec602dcef140b563eeddb21b5cb69feffec3bda2e71a94ed7db9d4f4989959a",
+        "public_method": "f.h.QueryMetrics",
+        "test_parent": "TestCaptureProtobufMainline",
+        "direct_producer": "captureLocalMetrics",
+        "returned_nested_object_not_constructed": true
+      }
+    ]
+  },
+  "semantic_review": "Public-source index anchors only; ROOT independently reviewed actual source and bound capture in ticket23-root-public-metric-producer-source-review.json; fresh whole/H1 pending.",
+  "new_guidance_field_provenance": {
+    "source_path": "cmd/assembly/metrics.go",
+    "source_blob": "11342c1695187eb798df522702e7c74f7829666d",
+    "source_sha256": "5abdabb4b97dcb50cffd4b7abfe58fc0a0b6377b882d7802c2b852c6e1b824cb",
+    "public_method": "Harness.QueryMetrics",
+    "field": "lerna.v1.LocalMetrics.investigation_guidance",
+    "predicate": "Actual returned composite receives bounded fixed guidance after original owner reads; no synthetic object added to corpus. All real fixed declarations leave optional query bounds absent UNKNOWN.",
+    "qualification": "SOURCE_AND_CAPTURE_ONLY_FRESH_H1_WHOLE_PENDING"
+  }
+}

@@ -1,0 +1,7 @@
+/Volumes/Data/go/path/bin/lerna-tools/golangci-lint-v2.14.0/golangci-lint run
+0 issues.
+/Volumes/Data/go/path/bin/lerna-tools/golangci-lint-v2.14.0/golangci-lint run --build-tags fault
+0 issues.
+/Volumes/Data/go/path/bin/lerna-tools/buf-v1.73.0/buf format --diff --exit-code
+/Volumes/Data/go/path/bin/lerna-tools/buf-v1.73.0/buf lint
+go run ./scripts/checkrules

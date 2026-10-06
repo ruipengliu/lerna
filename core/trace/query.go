@@ -43,6 +43,9 @@ func (s *Service) Collect(ctx context.Context, caller *v1.Caller) error {
 		return err
 	}
 	for _, source := range all {
+		if err := command.CheckSavedHeaders(source); err != nil {
+			return err
+		}
 		if source.Receipt != nil {
 			continue
 		}

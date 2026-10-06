@@ -54,3 +54,38 @@ func (s *Store) AllReasonerDrivers(ctx context.Context) ([]*v1.ReasonerDriver, e
 	})
 	return result, e
 }
+
+// RecoveryReasonerDrivers 只读枚举当前及每个原历史修订，不筛选禁用或已完成责任。
+func (s *Store) RecoveryReasonerDrivers(ctx context.Context) ([]*v1.ReasonerDriver, error) {
+	var all []*v1.ReasonerDriver
+	e := s.read(ctx, func(q querier) error {
+		for _, source := range []struct{ table, order string }{{"reasoner_drivers", "task_id"}, {"reasoner_driver_versions", "id,revision"}} {
+			rows, e := q.QueryContext(ctx, "SELECT record FROM "+source.table+" WHERE user_id=? AND domain_id=? ORDER BY "+source.order, s.user, s.domain)
+			if e != nil {
+				return e
+			}
+			for rows.Next() {
+				var b []byte
+				if e = rows.Scan(&b); e != nil {
+					rows.Close()
+					return e
+				}
+				d := new(v1.ReasonerDriver)
+				if e = proto.Unmarshal(b, d); e != nil {
+					rows.Close()
+					return e
+				}
+				all = append(all, d)
+			}
+			e = rows.Err()
+			if closeErr := rows.Close(); e == nil {
+				e = closeErr
+			}
+			if e != nil {
+				return e
+			}
+		}
+		return nil
+	})
+	return all, e
+}

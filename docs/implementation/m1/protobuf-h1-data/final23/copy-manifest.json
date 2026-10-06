@@ -1,0 +1,146 @@
+{
+  "status": "ACTUAL_H1_PREWHOLE_INTEGRITY_PASS_FINAL_WHOLE_PENDING",
+  "source_snapshot_commit": "6a2d495b3eacbd7cffebe5a3b7a6102770702cb7",
+  "corpus_sha256": "df1ec71fb0b822a8f3a1caf9fd959151371d811f0f51270907b65204cd77bb4c",
+  "sealed_external_proof": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-h1-sealed-protection.json",
+  "original_capture_inventory_preserved": {
+    "path": "docs/implementation/m1/protobuf-h1-data/current-inventory.json",
+    "sha256": "dabfe9b57f4f233a2eb199989d7fc8b45e939c64b52d3431512dfbb2ee772275"
+  },
+  "copied_actual_files": [
+    {
+      "path": "docs/implementation/m1/protobuf-h1-data/final23/source-sha256.txt",
+      "external_original": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-measurement/source-sha256.txt",
+      "sha256": "89a55057e9c82f4a322bd73b74c193b1051d83f0a07fd3cf399a092a0c6f8451",
+      "bytes": 45399,
+      "mode": "0o644"
+    },
+    {
+      "path": "docs/implementation/m1/protobuf-h1-data/final23/corpus-sha256.txt",
+      "external_original": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-measurement/corpus-sha256.txt",
+      "sha256": "e68a1acbe05eaac843401243317946e6e43b4aedebd91b2f38a3b2c205e4299a",
+      "bytes": 110,
+      "mode": "0o644"
+    },
+    {
+      "path": "docs/implementation/m1/protobuf-h1-data/final23/prewhole-qualification.json",
+      "external_original": null,
+      "sha256": "ad41e01ae02afad1be2b88fef6fe1771e8846b7406c52234ad054005809d13da",
+      "bytes": 1200,
+      "mode": "0o644"
+    },
+    {
+      "path": "docs/implementation/m1/protobuf-h1-data/final23/actual-invocation-spec.json",
+      "external_original": null,
+      "sha256": "0f07ce780319bc1e716c0b0e2e4252d68e2a0df45c17d468148666445976a719",
+      "bytes": 12934,
+      "mode": "0o644"
+    },
+    {
+      "path": "docs/implementation/m1/protobuf-h1-data/final23/metric-provenance.json",
+      "external_original": null,
+      "sha256": "d14c823dac1ba0fc7d098383cb6cc90cb181f19833b95189744c88eb134dab95",
+      "bytes": 6401,
+      "mode": "0o644"
+    },
+    {
+      "path": "docs/implementation/m1/protobuf-h1-data/final23/measured-corpus.json",
+      "external_original": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-measurement/measured-corpus.json",
+      "sha256": "df1ec71fb0b822a8f3a1caf9fd959151371d811f0f51270907b65204cd77bb4c",
+      "bytes": 2470899,
+      "mode": "0o644"
+    },
+    {
+      "path": "docs/implementation/m1/protobuf-h1-data/final23/artifacts-sha256.txt",
+      "external_original": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-measurement/artifacts-sha256.txt",
+      "sha256": "555db4f791b0a811e41abe51f4e0f642760a557dd51444a13b6c869ddbd50cb7",
+      "bytes": 822,
+      "mode": "0o644"
+    },
+    {
+      "path": "docs/implementation/m1/protobuf-h1-data/final23/independent-measurement-audit.json",
+      "external_original": null,
+      "sha256": "88e4e415d480aef14f392d0d6dbb720e8821409788e234a7ca7a59b1c8f67a20",
+      "bytes": 433897,
+      "mode": "0o644"
+    },
+    {
+      "path": "docs/implementation/m1/protobuf-h1-data/final23/binaries-sha256.txt",
+      "external_original": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-measurement/binaries-sha256.txt",
+      "sha256": "b71e63fb230d9456621a78d6f31f7a2f61dcd0adb9dc62b7d32ec839ea129029",
+      "bytes": 383,
+      "mode": "0o644"
+    },
+    {
+      "path": "docs/implementation/m1/protobuf-h1-data/final23/bench.txt",
+      "external_original": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-measurement/bench.txt",
+      "sha256": "50f0550eadf3e31d48b7c2af08b59876510796101bcf7333b56a6faf5274a29c",
+      "bytes": 1273807,
+      "mode": "0o644"
+    },
+    {
+      "path": "docs/implementation/m1/protobuf-h1-data/final23/peak-memory.txt",
+      "external_original": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-measurement/peak-memory.txt",
+      "sha256": "b88dd42398169dfdc758e9b301ff5a2ff2984c6b0b1c9fd249f81cea9934711d",
+      "bytes": 777,
+      "mode": "0o644"
+    },
+    {
+      "path": "docs/implementation/m1/protobuf-h1-data/final23/sizes.txt",
+      "external_original": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-measurement/sizes.txt",
+      "sha256": "214609645b614c80639f74c2d88791399df08c2ff10384d17767bb5885665ffa",
+      "bytes": 135,
+      "mode": "0o644"
+    },
+    {
+      "path": "docs/implementation/m1/protobuf-h1-data/final23/environment.txt",
+      "external_original": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-measurement/environment.txt",
+      "sha256": "05102f5b8e9ce8ef809f9bc7beb0f2aa51a4f1210fa79a781ec601b6f6a995ec",
+      "bytes": 5966,
+      "mode": "0o644"
+    },
+    {
+      "path": "docs/implementation/m1/protobuf-h1-data/final23/inventory.json",
+      "external_original": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-measurement/inventory.json",
+      "sha256": "1c8735baa4902a586d671742a27a45c050b957f9174d0ee5ea72f3475beac20c",
+      "bytes": 156376,
+      "mode": "0o600"
+    },
+    {
+      "path": "docs/implementation/m1/protobuf-h1-data/final23/actual-artifacts.json",
+      "external_original": null,
+      "sha256": "b27ea251866561951113c1da8e19dbc6a146ca896b4b1136452caaceb44e59df",
+      "bytes": 4045,
+      "mode": "0o644"
+    },
+    {
+      "path": "docs/implementation/m1/protobuf-h1-data/final23/actual-execution.json",
+      "external_original": null,
+      "sha256": "0596486a2758119e4e6077eb876283e595861a299e47ab6ec245f3b15d4ba967",
+      "bytes": 3951,
+      "mode": "0o644"
+    },
+    {
+      "path": "docs/implementation/m1/protobuf-h1-data/final23/execution-steps.txt",
+      "external_original": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-measurement/execution-steps.txt",
+      "sha256": "12eb893cab30c02f71157e7b956fbf8b540ff5f292efe932d126bb014f45734d",
+      "bytes": 2293,
+      "mode": "0o644"
+    },
+    {
+      "path": "docs/implementation/m1/protobuf-h1-data/final23/inventory-run.txt",
+      "external_original": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-measurement/inventory-run.txt",
+      "sha256": "4c287eb7f7cef738d750d963a306f4ac8c7b713df1b253cdeeb56083e9ad3d42",
+      "bytes": 109,
+      "mode": "0o644"
+    },
+    {
+      "path": "docs/implementation/m1/protobuf-h1-data/final23/actual-measurement-run.json",
+      "external_original": null,
+      "sha256": "95fa0d87523d812aca582d6a574d4981768c38151837c06cca9c2f3d48801dc7",
+      "bytes": 484642,
+      "mode": "0o644"
+    }
+  ],
+  "note": "Original manifest strings remain original actual paths; additive repository copies do not silently rewrite provenance. Five measured binaries remain external permanent archive. Final whole and M1 acceptance are pending."
+}

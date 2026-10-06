@@ -19,11 +19,14 @@ func (s *Service) WithClosureSource(source ClosureSource) *Service {
 	return s
 }
 
-func (s *Service) AdmitClosure(ctx context.Context, caller *v1.Caller, c *v1.AdmitClosureCommand) (*v1.CommandReceipt, error) {
+func (s *Service) AdmitClosure(ctx context.Context, caller *v1.Caller, c *v1.AdmitClosureCommand) (receipt *v1.CommandReceipt, err error) {
+	ctx, measurement := s.beginAdmissionMetric(ctx)
+	defer func() { s.finishAdmissionMetric(measurement, receipt, err) }()
 	if e := command.ValidateHeader(c.GetHeader(), c); e != nil {
 		return nil, e
 	}
-	return s.decisions.Execute(ctx, caller, c.Header, command.SemanticFingerprint("admit-closure", c.WorkRef, c.ConfirmationRef), "tasks.closure_admit", func(tx context.Context) (*v1.Ref, error) {
+	measurement.validated = true
+	return s.traceDecisions(nil).Execute(ctx, caller, c.Header, command.SemanticFingerprint("admit-closure", c.WorkRef, c.ConfirmationRef), "tasks.closure_admit", func(tx context.Context) (*v1.Ref, error) {
 		if s.closureSource == nil {
 			return nil, command.Fail("DEPENDENCY_UNAVAILABLE")
 		}

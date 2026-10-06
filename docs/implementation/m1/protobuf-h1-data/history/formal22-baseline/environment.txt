@@ -1,0 +1,37 @@
+0d42b1c3d3e3bf8a50cab058b66b3c132e9017c9
+ M .scratch/m1-recoverable-mainline/issues/22-protobuf-real-object-check.md
+ M Makefile
+ M docs/architecture/README.md
+ M docs/architecture/core/contracts/README.md
+?? conformance/admission/protobuf_api_capture_darwin_test.go
+?? conformance/admission/protobuf_api_capture_unsupported_test.go
+?? conformance/admission/protobuf_api_driver_capture_darwin_test.go
+?? conformance/admission/protobuf_authority_capture_test.go
+?? conformance/admission/protobuf_billing_capture_test.go
+?? conformance/admission/protobuf_cancellation_capture_test.go
+?? conformance/admission/protobuf_capture_test.go
+?? conformance/admission/protobuf_closing_capture_test.go
+?? conformance/admission/protobuf_condition_capture_test.go
+?? conformance/admission/protobuf_content_capture_test.go
+?? conformance/admission/protobuf_continuation_capture_test.go
+?? conformance/admission/protobuf_driver_capture_test.go
+?? conformance/admission/protobuf_file_capture_test.go
+?? conformance/admission/protobuf_input_capture_test.go
+?? conformance/admission/protobuf_io_capture_test.go
+?? conformance/admission/protobuf_model_capture_test.go
+?? conformance/admission/protobuf_pending_goal_capture_test.go
+?? conformance/admission/protobuf_reasoner_capture_test.go
+?? conformance/admission/protobuf_reconciliation_capture_test.go
+?? conformance/admission/protobuf_resend_trace_capture_test.go
+?? conformance/admission/protobuf_verdict_capture_test.go
+?? conformance/protobuf/
+?? docs/architecture/verification/protobuf-h1-data/
+?? docs/architecture/verification/protobuf-h1.md
+?? scripts/measure-protobuf.sh
+go version go1.27.1 darwin/arm64
+darwin
+arm64
+1
+google.golang.org/protobuf v1.36.12
+Darwin mac-mini.local 27.0.0 Darwin Kernel Version 27.0.0: Tue Aug 11 21:02:57 PDT 2026; root:xnu-13432.1.9~1/RELEASE_ARM64_T8132 arm64
+ec5f39d50051f019a0dc37efa5341230ace9c4dd3db49176d067218a17e2feb7  conformance/protobuf/testdata/mainline.json

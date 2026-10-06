@@ -110,6 +110,11 @@ message ExecutionCapabilities {
   string parameter_binding = 12;
   bool repeat_read_safe = 13;
   string account_scope = 14;
+  // 已验证的最大可见性延迟；缺席表示 UNKNOWN，显式零才表示立即可见。
+  optional int64 query_visibility_delay_ms = 15;
+  // 已验证的最短保证保留期；缺席表示 UNKNOWN，显式零表示没有保证的保留时段。
+  // 与幂等键 retention_ms 分开，零绝不表示无限保留。
+  optional int64 query_record_retention_ms = 16;
 }
 
 message PrepareResendCommand {

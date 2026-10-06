@@ -90,6 +90,9 @@ func (s *Service) applyJob(ctx context.Context, c *v1.JobCommand, now int64) ([]
 			return nil, err
 		}
 		if old != nil {
+			if err := command.CheckSavedJobContract(old); err != nil {
+				return nil, err
+			}
 			if old.ExecutorEndpointId != j.ExecutorEndpointId || old.LedgerDomainId != j.LedgerDomainId || !proto.Equal(old.SpecificationRef, j.SpecificationRef) {
 				return nil, command.Fail("IDEMPOTENCY_CONFLICT")
 			}
@@ -118,6 +121,18 @@ func (s *Service) applyJob(ctx context.Context, c *v1.JobCommand, now int64) ([]
 			return nil, e
 		}
 		var claimed []*v1.Job
+		// G3：永久拒绝会保存回执，必须在修改首个工作前检查整个候选集合。
+		for _, j := range jobs {
+			if c.JobRef != nil && !proto.Equal(c.JobRef.Name, j.Ref.Name) {
+				continue
+			}
+			if (c.Module != "" && c.Module != j.Module) || !slices.Contains(c.AllowedTypes, j.JobType) {
+				continue
+			}
+			if err := command.CheckSavedJobContract(j); err != nil {
+				return nil, err
+			}
+		}
 		slices.SortStableFunc(jobs, func(a, b *v1.Job) int {
 			if a.Priority > b.Priority {
 				return -1
@@ -164,6 +179,9 @@ func (s *Service) applyJob(ctx context.Context, c *v1.JobCommand, now int64) ([]
 	}
 	if j == nil {
 		return nil, command.Fail("INVALID_INPUT")
+	}
+	if e := command.CheckSavedJobContract(j); e != nil {
+		return nil, e
 	}
 	if (j.JobType == "RECONCILE_OPERATION" || j.JobType == "RECONCILE_UNRESOLVED_OPERATION" || j.JobType == "SETTLE_CLOSED_TASK") && (c.Action == "PROGRESS" || c.Action == "CONTROL") {
 		return nil, command.Fail("UNSUPPORTED_FEATURE")
@@ -227,6 +245,9 @@ func (s *Service) applyJob(ctx context.Context, c *v1.JobCommand, now int64) ([]
 	return []*v1.Job{j}, nil
 }
 func validClaim(j *v1.Job, instance string, epoch, revision uint64, now int64) error {
+	if e := command.CheckSavedJobContract(j); e != nil {
+		return e
+	}
 	if j == nil || j.State != "CLAIMED" || j.ProcessInstance != instance || j.ClaimEpoch != epoch || j.Ref.Revision != revision || j.LeaseUntilUnixMs <= now {
 		return command.Fail("STALE_CLAIM")
 	}

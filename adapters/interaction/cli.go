@@ -24,8 +24,12 @@ type Tasks interface {
 type Durable interface {
 	QueryReceipt(context.Context, *v1.Caller, *v1.CommandIdentity) (*v1.ReceiptQuery, error)
 }
+type Metrics interface {
+	QueryMetrics(context.Context, *v1.Caller) (*v1.LocalMetrics, error)
+}
 type CLI struct {
 	Reasoner          DefaultReasonerRunner
+	Metrics           Metrics
 	Budget            Budget
 	Trace             Trace
 	Grants            Grants
@@ -52,6 +56,11 @@ func (c CLI) Run(ctx context.Context, args []string, out io.Writer) error {
 	var value proto.Message
 	var err error
 	switch args[0] {
+	case "metrics":
+		if len(args) != 1 || c.Metrics == nil {
+			return command.Fail("INVALID_INPUT")
+		}
+		value, err = c.Metrics.QueryMetrics(ctx, c.Caller)
 	case "trace-task", "trace-operation":
 		value, err = c.trace(ctx, args)
 	case "cancellation":

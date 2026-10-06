@@ -1,0 +1,30 @@
+{
+  "status": "ROOT_CURRENT_H1_INTEGRITY_AND_PUBLIC_PRODUCER_SOURCE_PASS_FINAL_WHOLE_PENDING",
+  "source_snapshot_commit": "6a2d495b3eacbd7cffebe5a3b7a6102770702cb7",
+  "source_file_count": 509,
+  "samples": 630,
+  "sampled_types": 199,
+  "generated_bindings": 203,
+  "populated_fields": 1367,
+  "benchmark_leaves": 2625,
+  "benchmark_rows": 7875,
+  "semantic_goal_leaves": 3,
+  "semantic_header_leaves": 102,
+  "linked_increment_bytes": 2691136,
+  "peak_rss_bytes": 44384256,
+  "measurement_binary_sha256": "041ae73825c1d5485ebd062cdc70d2bfd397643c6450da1c4b93c93fddbd2e00",
+  "protojson_capture_minus_measurement_coefficient": -1,
+  "unsampled_types": [
+    "lerna.v1.AncestorControl",
+    "lerna.v1.MemoryDependency",
+    "lerna.v1.ObservationHandoff",
+    "lerna.v1.SendConsumption"
+  ],
+  "at": "2026-10-06T15:23:27.204917+00:00",
+  "independent_audit_sha256": "88e4e415d480aef14f392d0d6dbb720e8821409788e234a7ca7a59b1c8f67a20",
+  "all24_inputs_and5_binaries_still_exact": true,
+  "actual_benchmark_2625_unique_leaf_counts_each3": true,
+  "root_public_producer_source_review": "ticket23-root-public-metric-producer-source-review.json",
+  "final_h1_qualified": false,
+  "full_qualified": false
+}

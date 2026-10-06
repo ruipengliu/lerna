@@ -1,0 +1,20 @@
+=== RUN   TestCaptureProtobufMainline
+    protobuf_capture_test.go:189: closing-failed actual calls=1 effects=1 bills=1 fixed_reserved=30 current_settled=120 current_deficit=40
+    protobuf_capture_test.go:189: closing-cancelled actual calls=1 effects=1 bills=1 fixed_reserved=30 current_settled=120 current_deficit=40
+    protobuf_capture_test.go:189: closing-pre-p2 actual calls=0 effects=0 bills=0 awaiting_original_without_operation=true
+    protobuf_capture_test.go:190: rejected continuation actual calls=1 effects=0 bills=1 pending_PROPOSE=1 current_settled=25 no_Result=true
+    protobuf_capture_test.go:191: actual default ACTION: MODEL calls1/bills1; governed schema/parameters/body; 337 public objects
+    protobuf_capture_test.go:192: actual default QUESTION: MODEL calls1/bills1; original question/answer with no confirmation authority; 354 public objects
+    protobuf_capture_test.go:193: actual default REQUIREMENTS: MODEL calls1/bills1; original v1 retained, actual USER_EXPLICIT v2; 373 public objects
+    protobuf_capture_test.go:194: actual condition COMPLETE: PENDING→APPROVED→CONSUMED by original Verification; MODEL calls1/bills1; 403 public objects
+    protobuf_capture_test.go:195: actual negative COMPLETE: target requests1/effects0/bills1; MODEL calls1/bills1; original UNSAT→REJECTED→exact continuation; unavailable body refused; 428 public objects
+    protobuf_capture_test.go:196: actual question driver READY→WAITING→STOPPED; bounded limit1, original request/outcome/question and immutable history; restart MODEL calls1/bills1/endpoint requests1 with no ACTION authority; 444 public objects
+    protobuf_capture_test.go:197: actual action driver approval PENDING→APPROVED→CONSUMED original admission; limit1 before I/O→CANCEL→fixed CANCELLED→COMPLETED/restart; MODEL1/bill1 target requests0/effects0/bills0 settled7/reserved0; 478 public objects
+    protobuf_capture_test.go:198: actual native API: four distinct 429 waits and one secret-redacted response, POST5/effects0; 82 public objects
+    protobuf_capture_test.go:199: actual MODEL=2 POST=1 GET=0 effects=1 model_bills=2 target_bills=1 bills=3 settled=21 reserved=0 result=SUCCEEDED
+    protobuf_capture_test.go:200: actual submitted goal -> original public claim -> accepted decision; restart preserves original claim and decision, target requests 0
+    protobuf_capture_test.go:201: actual metric public objects=22; POST1 GET1 effects1; originalUNKNOWN1 completed1 unfinished0; source/index/ACK checked; storeUnavailable retains process; restartNO_SAMPLES; diagnosticsDISABLED; durationMISSING
+    protobuf_capture_test.go:207: captured 630 public objects
+--- PASS: TestCaptureProtobufMainline (32.40s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/admission	34.409s

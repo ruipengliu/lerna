@@ -48,6 +48,7 @@
 | [ADR 0006 M1 基础关联交接与本地诊断映射](../adr/0006-trace-source-handoff-local-mapping.md) | 2 决定 | 已采纳 |
 | [ADR 0007 受管理单文件发布与证据交接](../adr/0007-managed-file-publication.md) | 2 决定 | 已采纳 |
 | [ADR 0008 M1 固定 API 身份与平台凭据](../adr/0008-fixed-api-identity-and-platform-credentials.md) | 2 决定 | 已采纳 |
+| [ADR 0011 M1 初始格式与停机恢复](../adr/0011-m1-format-and-stopped-recovery.md) | 决定、停机升级与备份操作 | 已采纳 |
 | [核心契约](core/contracts/README.md) | 3 设计 | 草稿 |
 | [持久工作](core/durable/README.md) | 3 设计 | 草稿 |
 | [执行管理](core/ledger/README.md) | 3 设计 | 草稿 |
@@ -76,5 +77,5 @@
 | [端云部署与故障域](topics/deployment.md) | 3 设计 | 草稿 |
 | [安全与威胁模型](topics/security.md) | 3 设计 | 草稿 |
 | [观测与诊断](topics/observability.md) | 3 设计 | 草稿 |
-| [Protobuf 实对象验证（H1）](verification/protobuf-h1.md) | 5 验证 | 验证中，Go 局部样本 |
-| [SQLite 本地档存储故障验收](verification/local-durability.md) | 5 验证 | 有条件准入，见平台表 |
+| [Protobuf 实对象验证（H1）](verification/protobuf-h1.md) | 5 验证 | 方法与标准；正式22 Go范围结果见实施报告，最终指标联合验收待完成 |
+| [SQLite 本地档存储故障验收](verification/local-durability.md) | 5 验证 | 方法与有限模型；平台与实际结果见部署表及实施报告 |

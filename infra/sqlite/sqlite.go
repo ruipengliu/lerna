@@ -70,6 +70,10 @@ var fileResourcesMigration string
 var cancellationMigration string
 
 type Settings struct {
+	FormatVersion            uint32
+	ContractVersion          uint32
+	FormatDigest             string
+	ImplementationProfile    string
 	Platform                 string
 	SQLiteVersion            string
 	SQLiteSourceID           string
@@ -101,6 +105,11 @@ type querier interface {
 
 // Open 固定一条经过核验的连接，不允许池中新建未配置的写连接。
 func Open(path, user, domain string) (*Store, error) {
+	return OpenContext(context.Background(), path, user, domain)
+}
+
+// OpenContext 让宿主启动与公开存储故障切面使用同一格式初始化事务。
+func OpenContext(ctx context.Context, path, user, domain string) (*Store, error) {
 	if err := ensureBarrier(); err != nil {
 		return nil, err
 	}
@@ -111,20 +120,27 @@ func Open(path, user, domain string) (*Store, error) {
 	if err != nil {
 		return nil, err
 	}
+	qualified, err := qualifyOriginal(ctx, path, user, domain)
+	if err != nil {
+		return nil, err
+	}
+	if err = verifyQualification(ctx, path, qualified); err != nil {
+		return nil, err
+	}
 	dsn := (&url.URL{Scheme: "file", Path: path}).String() + "?_busy_timeout=5000&_txlock=immediate&_foreign_keys=on"
 	db, err := sql.Open("sqlite3", dsn)
 	if err != nil {
 		return nil, err
 	}
 	db.SetMaxOpenConns(1)
-	conn, err := db.Conn(context.Background())
+	conn, err := db.Conn(ctx)
 	if err != nil {
 		db.Close()
 		return nil, err
 	}
 	s := &Store{db: db, conn: conn, user: user, domain: domain}
 	s.settings.Platform = observedPlatform(path)
-	if err := s.configure(context.Background()); err != nil {
+	if err := s.configure(ctx); err != nil {
 		s.Close()
 		return nil, err
 	}
@@ -132,6 +148,16 @@ func Open(path, user, domain string) (*Store, error) {
 	return s, nil
 }
 func (s *Store) configure(ctx context.Context) error {
+	// G3、G11：未知文件先只读拒绝，journal_mode 会写文件，不能提前切换。
+	empty, err := s.checkFormat(ctx, s.conn)
+	if err != nil {
+		return err
+	}
+	if !empty {
+		if err := s.checkSavedContracts(ctx, s.conn); err != nil {
+			return err
+		}
+	}
 	for _, pragma := range []string{"PRAGMA fullfsync=ON", "PRAGMA synchronous=FULL", "PRAGMA journal_mode=WAL"} {
 		if _, err := s.conn.ExecContext(ctx, pragma); err != nil {
 			return err
@@ -180,22 +206,9 @@ func (s *Store) configure(ctx context.Context) error {
 	if !s.settings.PowerLossQualified {
 		return fmt.Errorf("unqualified local durability platform: %+v", s.settings)
 	}
-	if _, err := s.conn.ExecContext(ctx, migration+admissionMigration+sessionInputMigration+grantsMigration+egressMigration+completionMigration+budgetMigration+reconciliationMigration+contentGovernanceMigration+resendMigration+modelMigration+traceMigration+taskClosingMigration+reasonerDriverMigration+fileResourcesMigration+cancellationMigration); err != nil {
-		return err
-	}
-	if _, err := s.conn.ExecContext(ctx, "INSERT OR IGNORE INTO domain_config VALUES(1,?,?,?)", s.user, s.domain, "LOCAL"); err != nil {
-		return err
-	}
-	var user, domain, profile string
-	if err := s.conn.QueryRowContext(ctx, "SELECT user_id,domain_id,durability_profile FROM domain_config WHERE singleton=1").Scan(&user, &domain, &profile); err != nil {
-		return err
-	}
-	if user != s.user || domain != s.domain || profile != "LOCAL" {
-		return command.Fail("PERMISSION_DENIED")
-	}
-	s.settings.DurabilityProfile = profile
-	return nil
+	return s.initializeFormat(ctx)
 }
+
 func (s *Store) Settings() Settings { return s.settings }
 func (s *Store) Close() error {
 	s.mu.Lock()

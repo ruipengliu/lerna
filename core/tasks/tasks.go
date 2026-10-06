@@ -39,6 +39,7 @@ type Service struct {
 	taskCloser             TaskCloser
 	taskCloseFacts         TaskCloseFacts
 	taskCloseBudget        TaskCloseBudget
+	admissionMetrics       admissionMetricState
 	reasonerWork           ModelWork
 	reasonerFactory        ReasonerFactory
 	conditionConfirmations ConditionConfirmations
@@ -73,7 +74,7 @@ type Service struct {
 }
 
 func New(s Store, user, domain string) *Service {
-	return &Service{store: s, user: user, domain: domain}
+	return &Service{store: s, user: user, domain: domain, admissionMetrics: admissionMetricState{instance: command.NewRef(user, domain, "metrics-process", "metrics-process").Name.LocalId}}
 }
 
 // CreateInTransaction 只能由受信裁决事务参与者调用。

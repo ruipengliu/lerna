@@ -4,9 +4,11 @@ package admission_test
 
 import (
 	"bytes"
+	"crypto/x509"
 	"encoding/json"
 	"io"
 	"net/http"
+	"net/http/httptest"
 	"sync"
 	"testing"
 
@@ -26,6 +28,11 @@ func TestCancelledAPIClosingKeepsLateOriginalWorkAndFixedResult(t *testing.T) {
 }
 
 func testAPIClosingKeepsLateOriginalWork(t *testing.T, outcome string) {
+	testAPIClosingOriginalHistory(t, outcome, false, nil)
+}
+
+// testAPIClosingOriginalHistory 用同一原生公开历史，允许停机恢复场景重连原外部环境。
+func testAPIClosingOriginalHistory(t *testing.T, outcome string, https bool, restore func(*fixture, assembly.Options)) {
 	type received struct{ method, operation, attempt, key, send, account, subjectOperation, subjectAttempt, subjectKey string }
 	var mu sync.Mutex
 	var requests []received
@@ -114,13 +121,26 @@ func testAPIClosingKeepsLateOriginalWork(t *testing.T, outcome string) {
 			return
 		}
 		response := apiQueryResponse(r)
+		if r.TLS != nil {
+			response["origin"] = "https://" + r.Host
+		}
 		response["applied"] = effects[got.subjectKey]
 		response["billing"] = bill
 		_ = json.NewEncoder(w).Encode(response)
 	})
 	f := newFixtureWithTarget(t, 200, 200, false, target)
-	d, cap, grant := configureAPIQueryable(t, f, true)
-	keychain := withAPIKeychain(t, f, d, []byte("synthetic-api-closed-secret"))
+	options := assembly.Options{}
+	endpoint := ""
+	if https {
+		server := httptest.NewTLSServer(target)
+		t.Cleanup(server.Close)
+		endpoint = server.URL
+		options.APIRoots = x509.NewCertPool()
+		options.APIRoots.AddCert(server.Certificate())
+	}
+	d, cap, grant := configureAPIQueryableAt(t, f, true, endpoint)
+	keychain := withAPIKeychainOptions(t, f, d, []byte("synthetic-api-closed-secret"), options)
+	options.APIKeychainPath = keychain.Path()
 	scopeRequirement(t, f)
 	a, start := prepareStart(t, f)
 	actor := &v1.Caller{UserId: "u", IssuerId: "egress"}
@@ -262,12 +282,18 @@ func testAPIClosingKeepsLateOriginalWork(t *testing.T, outcome string) {
 	}
 	assertFixed("WAITING", "WAITING")
 	assertTarget(1, 0, 0, 1)
+	restorePending := restore != nil
 	reopen := func() {
 		t.Helper()
+		if restorePending {
+			restorePending = false
+			restore(f, options)
+			return
+		}
 		if e := f.h.Close(); e != nil {
 			t.Fatal(e)
 		}
-		next, e := assembly.OpenWithOptions(f.path, "u", "d", assembly.Options{APIKeychainPath: keychain.Path()})
+		next, e := assembly.OpenWithOptions(f.path, "u", "d", options)
 		if e != nil {
 			t.Fatal(e)
 		}

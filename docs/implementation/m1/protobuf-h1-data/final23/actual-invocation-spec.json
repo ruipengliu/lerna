@@ -1,0 +1,311 @@
+{
+  "interface_status": "ACTUAL_COMPLETE_EVIDENCE_BOUND",
+  "git_object_repository": "/Volumes/Data/proj/lerna-docs",
+  "source_snapshot_commit": "6a2d495b3eacbd7cffebe5a3b7a6102770702cb7",
+  "measurement_script_path": "scripts/measure-protobuf.sh",
+  "binary_archive": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-measurement-binaries",
+  "binaries": {
+    "baseline.go": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-measurement-binaries/baseline.go",
+      "sha256": "5034ac7efd235b57db534c193216266753a536d86268688f2e77ce4e6e32b366",
+      "bytes": 54,
+      "mode": "0o644"
+    },
+    "binding.go": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-measurement-binaries/binding.go",
+      "sha256": "081a5f7298fd63b403606ad83a58b4291636df6ecc304f9bbbb5ba2aa4e96376",
+      "bytes": 178,
+      "mode": "0o644"
+    },
+    "baseline": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-measurement-binaries/baseline",
+      "sha256": "79b05d14153250c3c22d7bc951f6c01d5d25dbe609b6c7944ba2c44730c4ef4b",
+      "bytes": 1571186,
+      "mode": "0o755"
+    },
+    "binding": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-measurement-binaries/binding",
+      "sha256": "baf88b89b2814b482d70af5d40b9d994d99d69430a15754482add30b1b2a7d83",
+      "bytes": 4262322,
+      "mode": "0o755"
+    },
+    "measure.test": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-measurement-binaries/measure.test",
+      "sha256": "041ae73825c1d5485ebd062cdc70d2bfd397643c6450da1c4b93c93fddbd2e00",
+      "bytes": 9531026,
+      "mode": "0o755"
+    }
+  },
+  "inputs": {
+    "capture_run": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-bound-unified-capture.json",
+      "sha256": "0f78bcdeae58377c2309517b4f2d982ac2231084e5b55986e1098931f53bde95",
+      "bytes": 483825,
+      "mode": "0o644"
+    },
+    "measurement_run": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-bound-measurement.json",
+      "sha256": "95fa0d87523d812aca582d6a574d4981768c38151837c06cca9c2f3d48801dc7",
+      "bytes": 484642,
+      "mode": "0o644"
+    },
+    "capture_log": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-bound-unified-capture.log",
+      "sha256": "803779a5975c49ee34f6e7093ba3d216219169ea0608ae01dfcfcad232997f07",
+      "bytes": 2781,
+      "mode": "0o644"
+    },
+    "measurement_log": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-bound-measurement.log",
+      "sha256": "25933edcd6faf0fe97867b93994c990e719c8febb213b53b3237c3739c46847f",
+      "bytes": 82,
+      "mode": "0o644"
+    },
+    "capture_source": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-bound-unified-capture.json",
+      "sha256": "0f78bcdeae58377c2309517b4f2d982ac2231084e5b55986e1098931f53bde95",
+      "bytes": 483825,
+      "mode": "0o644"
+    },
+    "source_before": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-bound-measurement.json",
+      "sha256": "95fa0d87523d812aca582d6a574d4981768c38151837c06cca9c2f3d48801dc7",
+      "bytes": 484642,
+      "mode": "0o644"
+    },
+    "source_after": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-bound-measurement.json",
+      "sha256": "95fa0d87523d812aca582d6a574d4981768c38151837c06cca9c2f3d48801dc7",
+      "bytes": 484642,
+      "mode": "0o644"
+    },
+    "corpus": {
+      "path": "/Volumes/Data/proj/lerna-m1-ticket23/conformance/protobuf/testdata/mainline.json",
+      "sha256": "df1ec71fb0b822a8f3a1caf9fd959151371d811f0f51270907b65204cd77bb4c",
+      "bytes": 2470899,
+      "mode": "0o644"
+    },
+    "capture_inventory": {
+      "path": "/Volumes/Data/proj/lerna-m1-ticket23/docs/implementation/m1/protobuf-h1-data/current-inventory.json",
+      "sha256": "dabfe9b57f4f233a2eb199989d7fc8b45e939c64b52d3431512dfbb2ee772275",
+      "bytes": 156369,
+      "mode": "0o644"
+    },
+    "metric_provenance_index": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-metric-provenance-index.json",
+      "sha256": "d14c823dac1ba0fc7d098383cb6cc90cb181f19833b95189744c88eb134dab95",
+      "bytes": 6401,
+      "mode": "0o644"
+    },
+    "environment": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-measurement/environment.txt",
+      "sha256": "05102f5b8e9ce8ef809f9bc7beb0f2aa51a4f1210fa79a781ec601b6f6a995ec",
+      "bytes": 5966,
+      "mode": "0o644"
+    },
+    "inventory": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-measurement/inventory.json",
+      "sha256": "1c8735baa4902a586d671742a27a45c050b957f9174d0ee5ea72f3475beac20c",
+      "bytes": 156376,
+      "mode": "0o600"
+    },
+    "inventory_run": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-measurement/inventory-run.txt",
+      "sha256": "4c287eb7f7cef738d750d963a306f4ac8c7b713df1b253cdeeb56083e9ad3d42",
+      "bytes": 109,
+      "mode": "0o644"
+    },
+    "sizes": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-measurement/sizes.txt",
+      "sha256": "214609645b614c80639f74c2d88791399df08c2ff10384d17767bb5885665ffa",
+      "bytes": 135,
+      "mode": "0o644"
+    },
+    "bench": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-measurement/bench.txt",
+      "sha256": "50f0550eadf3e31d48b7c2af08b59876510796101bcf7333b56a6faf5274a29c",
+      "bytes": 1273807,
+      "mode": "0o644"
+    },
+    "peak_memory": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-measurement/peak-memory.txt",
+      "sha256": "b88dd42398169dfdc758e9b301ff5a2ff2984c6b0b1c9fd249f81cea9934711d",
+      "bytes": 777,
+      "mode": "0o644"
+    },
+    "binaries_sha_manifest": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-measurement/binaries-sha256.txt",
+      "sha256": "b71e63fb230d9456621a78d6f31f7a2f61dcd0adb9dc62b7d32ec839ea129029",
+      "bytes": 383,
+      "mode": "0o644"
+    },
+    "source_sha_manifest": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-measurement/source-sha256.txt",
+      "sha256": "89a55057e9c82f4a322bd73b74c193b1051d83f0a07fd3cf399a092a0c6f8451",
+      "bytes": 45399,
+      "mode": "0o644"
+    },
+    "corpus_sha_manifest": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-measurement/corpus-sha256.txt",
+      "sha256": "e68a1acbe05eaac843401243317946e6e43b4aedebd91b2f38a3b2c205e4299a",
+      "bytes": 110,
+      "mode": "0o644"
+    },
+    "measured_corpus": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-measurement/measured-corpus.json",
+      "sha256": "df1ec71fb0b822a8f3a1caf9fd959151371d811f0f51270907b65204cd77bb4c",
+      "bytes": 2470899,
+      "mode": "0o644"
+    },
+    "artifacts_sha_manifest": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-measurement/artifacts-sha256.txt",
+      "sha256": "555db4f791b0a811e41abe51f4e0f642760a557dd51444a13b6c869ddbd50cb7",
+      "bytes": 822,
+      "mode": "0o644"
+    },
+    "artifact_record": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-h1-adaptation-actual-artifacts.json",
+      "sha256": "b27ea251866561951113c1da8e19dbc6a146ca896b4b1136452caaceb44e59df",
+      "bytes": 4045,
+      "mode": "0o644"
+    },
+    "execution_record": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-h1-adaptation-actual-execution.json",
+      "sha256": "0596486a2758119e4e6077eb876283e595861a299e47ab6ec245f3b15d4ba967",
+      "bytes": 3951,
+      "mode": "0o644"
+    },
+    "relocation_manifest": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-h1-adaptation-actual-relocation.json",
+      "sha256": "f2f9f7f1c101d69b78ea9f90a2fde2da2c9ee0cc21a292774dcd6ea94c2698ec",
+      "bytes": 10586,
+      "mode": "0o644"
+    }
+  },
+  "run_selectors": {
+    "capture": {
+      "exit": "/exit",
+      "start": "/start",
+      "end": "/end",
+      "duration_seconds": "/duration_seconds",
+      "source_unchanged": "/source_unchanged"
+    },
+    "measurement": {
+      "exit": "/exit",
+      "start": "/start",
+      "end": "/end",
+      "duration_seconds": "/duration_seconds",
+      "source_unchanged": "/source_unchanged"
+    }
+  },
+  "source_record_pointers": {
+    "capture_source": "/source_before",
+    "source_before": "/source_before",
+    "source_after": "/source_after"
+  },
+  "artifact_manifest_role_map": {
+    "environment.txt": "environment",
+    "inventory.json": "inventory",
+    "inventory-run.txt": "inventory_run",
+    "sizes.txt": "sizes",
+    "bench.txt": "bench",
+    "peak-memory.txt": "peak_memory",
+    "binaries-sha256.txt": "binaries_sha_manifest",
+    "source-sha256.txt": "source_sha_manifest",
+    "corpus-sha256.txt": "corpus_sha_manifest",
+    "measured-corpus.json": "measured_corpus"
+  },
+  "preparation_provenance": {
+    "source_anchor_commit": "6a2d495b3eacbd7cffebe5a3b7a6102770702cb7",
+    "source_anchor_tree": "ac1471822ae7d12bba84c92c5a0815e7205a7517",
+    "source_protection_record": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-resumed-current-protection.json",
+      "sha256": "2635f682538fa08fe04e0b771640fb67bcdf667dd11e249fbc899e11df0ae616",
+      "bytes": 233263,
+      "mode": "0o644"
+    },
+    "codec_run_record": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-bound-codec.json",
+      "sha256": "e789c229e655265d8933ad14d2b756064c605c586dac14d01b0e4271b49f5efa",
+      "bytes": 483788,
+      "mode": "0o644"
+    },
+    "codec_log_record": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-bound-codec.log",
+      "sha256": "fb60c7ce2403d0cb911c13500ca85ad5706e337266007bccecf4bbe0ac865cc5",
+      "bytes": 93672,
+      "mode": "0o644"
+    },
+    "parser_only_preparation_record": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-h1-current-immutable-parser-preparation.json",
+      "sha256": "e9df528080fca7f15c684568e182b5c27efca047c8656c27da4a56b5d6785f08",
+      "bytes": 8858,
+      "mode": "0o644"
+    },
+    "earlier_strict_auditor": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-h1-independent-audit-prepared.py",
+      "sha256": "9601b81f2fea831cc1908d1dee10ddda5c3801d67c3dc959e00dc1227ee60fb2",
+      "bytes": 37059,
+      "mode": "0o644"
+    },
+    "new_adapter_plan": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-h1-owner-interface-adapter-plan.md",
+      "sha256": "e3f4ad46b7b2a1b3bda52fecdc1d885da8f33394821009c7eb6867a70282ed38",
+      "bytes": 11848,
+      "mode": "0o644"
+    },
+    "known_captured_corpus_sha256": "df1ec71fb0b822a8f3a1caf9fd959151371d811f0f51270907b65204cd77bb4c",
+    "current_measured_corpus_is_old_608": true,
+    "actual_measurement_has_not_occurred": true,
+    "template_cannot_qualify": true
+  },
+  "adapter_provenance": {
+    "adapter": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-h1-owner-adapter.py",
+      "sha256": "c13d569db83cf96a135146d8f1c726f36bf596c3ed6831f6c2fbbb5ec3c9f44b",
+      "bytes": 10886,
+      "mode": "0o644"
+    },
+    "actual_steps": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-measurement/execution-steps.txt",
+      "sha256": "12eb893cab30c02f71157e7b956fbf8b540ff5f292efe932d126bb014f45734d",
+      "bytes": 2293,
+      "mode": "0o644"
+    },
+    "actual_artifacts": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-h1-adaptation-actual-artifacts.json",
+      "sha256": "b27ea251866561951113c1da8e19dbc6a146ca896b4b1136452caaceb44e59df",
+      "bytes": 4045,
+      "mode": "0o644"
+    },
+    "raw_relocation": {
+      "path": "/Volumes/Data/proj/lerna-m1-ticket23/docs/implementation/m1/relocation-map.json",
+      "sha256": "4baa2440fd5e3345fcfed1acc25502e66536fe0a39f1f9c6e4e3ab49603eb894",
+      "bytes": 11936,
+      "mode": "0o644"
+    },
+    "extra_archive_entries": [
+      {
+        "original_path": "docs/architecture/verification/protobuf-h1.md",
+        "relocated_path": "docs/implementation/m1/history/formal22-protobuf-h1.md",
+        "sha256": "3c5e6f21cedca38d7fbc4895e8ee5655e7f4887a04402d069b4f389c3adf26d8",
+        "bytes": 25952,
+        "original_blob": "4296f0d6d3661525ae9383d77df2be17410b155d"
+      },
+      {
+        "original_path": "docs/architecture/verification/local-durability.md",
+        "relocated_path": "docs/implementation/m1/history/formal22-local-durability.md",
+        "sha256": "98394fbf6983b104d901521b6652afdbda917dc4d7be37bc3ccc87ba0e2ff89b",
+        "bytes": 9879,
+        "original_blob": "bec83fce7f2acf5d92ccabf4576d6c4f2c118b73"
+      },
+      {
+        "original_path": ".scratch/m1-recoverable-mainline/issues/22-protobuf-real-object-check.md",
+        "relocated_path": "docs/implementation/m1/history/formal22-issue22.md",
+        "sha256": "622ccd15000469fbb1c568d13f57e947232109713aeb164562ed9ca9b25f490d",
+        "bytes": 6547,
+        "original_blob": "d6ddff78f45701c2a85205dfe17a937bc1dd2968"
+      }
+    ]
+  }
+}

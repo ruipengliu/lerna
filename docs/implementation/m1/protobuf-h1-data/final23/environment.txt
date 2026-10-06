@@ -1,0 +1,124 @@
+b7a3a50ee5a72047990f49f4a8713d778e1501df
+ M .scratch/m1-recoverable-mainline/issues/22-protobuf-real-object-check.md
+ M .scratch/m1-recoverable-mainline/issues/23-v3-v4-fault-matrix.md
+M  Makefile
+A  adapters/api/compatibility.go
+A  adapters/file/compatibility.go
+M  adapters/interaction/cli.go
+A  adapters/simulator/compatibility.go
+M  adapters/simulator/simulator.go
+M  cmd/assembly/assembly.go
+A  cmd/assembly/backup.go
+A  cmd/assembly/metrics.go
+M  cmd/lerna/main.go
+A  conformance/admission/api_backup_darwin_test.go
+M  conformance/admission/api_closed_darwin_test.go
+A  conformance/admission/api_recovery_bindings_fault_darwin_test.go
+A  conformance/admission/api_recovery_compatibility_darwin_test.go
+M  conformance/admission/api_test.go
+A  conformance/admission/backup_cancellation_test.go
+A  conformance/admission/backup_fault_test.go
+A  conformance/admission/backup_test.go
+A  conformance/admission/cancellation_compatibility_fault_test.go
+A  conformance/admission/compatibility_fault_test.go
+A  conformance/admission/job_nested_compatibility_fault_test.go
+A  conformance/admission/metrics_closing_test.go
+A  conformance/admission/metrics_completion_test.go
+A  conformance/admission/metrics_fault_test.go
+A  conformance/admission/metrics_population_test.go
+A  conformance/admission/metrics_test.go
+ M conformance/admission/protobuf_capture_test.go
+ M conformance/admission/protobuf_driver_capture_test.go
+M  conformance/admission/reasoner_cancellation_driver_test.go
+A  conformance/admission/reasoner_compatibility_fault_test.go
+A  conformance/admission/recovery_bindings_fault_test.go
+A  conformance/admission/recovery_profiles_test.go
+A  conformance/admission/task_closing_compatibility_fault_test.go
+A  conformance/admission/unsupported_routes_test.go
+A  conformance/fault/backup_file_test.go
+A  conformance/fault/compatibility_test.go
+A  conformance/fault/file_compatibility_test.go
+A  conformance/fault/format_test.go
+A  conformance/fault/job_nested_compatibility_test.go
+A  conformance/fault/qualification_test.go
+A  conformance/format_fault_test.go
+A  conformance/format_test.go
+ M conformance/protobuf/testdata/mainline.json
+A  conformance/sessions/closed_task_continuation_test.go
+A  contracts/command/compatibility.go
+A  contracts/gen/go/lerna/v1/metrics.pb.go
+A  contracts/proto/lerna/v1/metrics.proto
+M  core/content/observations.go
+M  core/durable/jobs.go
+A  core/ledger/compatibility.go
+A  core/ledger/metrics.go
+M  core/tasks/admission.go
+M  core/tasks/closure.go
+A  core/tasks/compatibility.go
+A  core/tasks/metrics.go
+M  core/tasks/model_admission.go
+M  core/tasks/model_preparation.go
+M  core/tasks/tasks.go
+M  core/tasks/trace.go
+A  core/trace/metrics.go
+M  core/trace/query.go
+A  docs/adr/0011-m1-format-and-stopped-recovery.md
+MM docs/architecture/README.md
+ M docs/architecture/conventions.md
+ M docs/architecture/core/contracts/README.md
+M  docs/architecture/core/durable/README.md
+M  docs/architecture/core/egress/README.md
+M  docs/architecture/core/ledger/README.md
+M  docs/architecture/core/sessions/README.md
+M  docs/architecture/core/tasks/README.md
+M  docs/architecture/core/trace/README.md
+M  docs/architecture/ports/interaction/README.md
+M  docs/architecture/topics/data-and-storage.md
+MM docs/architecture/topics/deployment.md
+MM docs/architecture/topics/observability.md
+ M docs/architecture/verification/local-durability.md
+ D docs/architecture/verification/protobuf-h1-data/artifacts-sha256.txt
+ D docs/architecture/verification/protobuf-h1-data/bench.txt
+ D docs/architecture/verification/protobuf-h1-data/binaries-sha256.txt
+ D docs/architecture/verification/protobuf-h1-data/corpus-sha256.txt
+ D docs/architecture/verification/protobuf-h1-data/current-inventory.json
+ D docs/architecture/verification/protobuf-h1-data/environment.txt
+ D docs/architecture/verification/protobuf-h1-data/history/formal17-file-baseline/bench.txt
+ D docs/architecture/verification/protobuf-h1-data/history/formal17-file-baseline/current-inventory.json
+ D docs/architecture/verification/protobuf-h1-data/history/formal17-file-baseline/environment.txt
+ D docs/architecture/verification/protobuf-h1-data/history/formal17-file-baseline/inventory.json
+ D docs/architecture/verification/protobuf-h1-data/history/formal17-file-baseline/mainline.json
+ D docs/architecture/verification/protobuf-h1-data/history/formal17-file-baseline/manifest.json
+ D docs/architecture/verification/protobuf-h1-data/history/formal17-file-baseline/measured-corpus.json
+ D docs/architecture/verification/protobuf-h1-data/history/formal17-file-baseline/peak-memory.txt
+ D docs/architecture/verification/protobuf-h1-data/history/formal17-file-baseline/sizes.txt
+ D docs/architecture/verification/protobuf-h1-data/inventory-run.txt
+ D docs/architecture/verification/protobuf-h1-data/inventory.json
+ D docs/architecture/verification/protobuf-h1-data/measured-corpus.json
+ D docs/architecture/verification/protobuf-h1-data/peak-memory.txt
+ D docs/architecture/verification/protobuf-h1-data/sizes.txt
+ D docs/architecture/verification/protobuf-h1-data/source-sha256.txt
+ M docs/architecture/verification/protobuf-h1.md
+M  docs/development.md
+A  infra/backup/backup.go
+M  infra/sqlite/barrier_darwin.go
+M  infra/sqlite/barrier_other.go
+A  infra/sqlite/compatibility.go
+A  infra/sqlite/compatibility_operations.go
+A  infra/sqlite/format.go
+M  infra/sqlite/hooks_fault.go
+A  infra/sqlite/metrics.go
+A  infra/sqlite/qualification.go
+M  infra/sqlite/reasoner_driver.go
+M  infra/sqlite/sqlite.go
+ M scripts/measure-protobuf.sh
+?? conformance/admission/protobuf_metrics_capture_test.go
+?? conformance/protobuf/metrics_test.go
+?? docs/implementation/
+go version go1.27.1 darwin/arm64
+darwin
+arm64
+1
+google.golang.org/protobuf v1.36.12
+Darwin mac-mini.local 27.0.0 Darwin Kernel Version 27.0.0: Tue Aug 11 21:02:57 PDT 2026; root:xnu-13432.1.9~1/RELEASE_ARM64_T8132 arm64
+df1ec71fb0b822a8f3a1caf9fd959151371d811f0f51270907b65204cd77bb4c  conformance/protobuf/testdata/mainline.json

@@ -46,6 +46,13 @@ func TestQueryableLostWriteReceiptRecoversThroughSeparateAdmittedRead(t *testing
 	if err != nil || query.Lifecycle != "SETTLED" || query.Execution.CallDescriptor.Method != "GET" || query.Execution.Attempt.ExternalKey == before.Execution.Attempt.ExternalKey {
 		t.Fatalf("query execution: %v %v", query, err)
 	}
+	assertFixedExecutionDeclaration(t, before.Execution.Attempt.Capabilities, "lerna-simulator-v1", "reference-target-v1")
+	assertFixedExecutionDeclaration(t, query.Execution.Attempt.Capabilities, "lerna-simulator-query-v1", "reference-query-v1")
+	assertOriginalProofRule(t, f, query, "reference-query-v1")
+	subjectProof, err := f.h.Ledger.QueryReconciliationFinding(f.ctx, f.caller, relation.InterpretationRef)
+	if err != nil || subjectProof.Rule != "reference-query-subject-v1" || subjectProof.Outcome != "APPLIED" || subjectProof.LateEffect != "RULED_OUT" {
+		t.Fatalf("query read completion replaced original subject proof: %v %v", subjectProof, err)
+	}
 	original, err := f.h.Ledger.QueryOperation(f.ctx, f.caller, a.OperationId)
 	if err != nil || original.Lifecycle != "SETTLED" || original.Effect.Outcome != "APPLIED" || original.Effect.LateEffect != "RULED_OUT" || !proto.Equal(original.Execution, before.Execution) {
 		t.Fatalf("original: %v %v", original, err)

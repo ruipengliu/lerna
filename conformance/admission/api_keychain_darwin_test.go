@@ -259,6 +259,8 @@ func TestAPIOnlyFixedBoundTerminalEvidenceSettlesOperation(t *testing.T) {
 				t.Fatal(e)
 			}
 			outcome, late, lifecycle := "UNKNOWN", "MAY_OCCUR", "ACTIVE"
+			assertFixedExecutionDeclaration(t, op.Execution.Attempt.Capabilities, "lerna-reference-api-v1", "reference-api-v1")
+			assertOriginalProofRule(t, f, op, "reference-api-v1")
 			switch kind {
 			case "applied":
 				outcome, late, lifecycle = "APPLIED", "RULED_OUT", "SETTLED"
@@ -734,6 +736,20 @@ func TestAPIOriginalAttemptQueryPreservesWeakEvidenceAndRestoresLateEffect(t *te
 	if e != nil || plan.State != "WAITING" || plan.CheckCount != 1 {
 		t.Fatalf("weak query schedule %v %v", plan, e)
 	}
+	relation, e := f.h.Ledger.QueryReconciliationQuery(f.ctx, f.caller, plan.QueryRefs[0])
+	if e != nil {
+		t.Fatal(e)
+	}
+	queryOperation, e := f.h.Ledger.QueryOperation(f.ctx, f.caller, relation.QueryOperationRef.Name)
+	if e != nil {
+		t.Fatal(e)
+	}
+	assertFixedExecutionDeclaration(t, queryOperation.Execution.Attempt.Capabilities, "lerna-reference-api-query-v1", "reference-api-v1")
+	assertOriginalProofRule(t, f, queryOperation, "reference-api-query-v1")
+	subjectFinding, e := f.h.Ledger.QueryReconciliationFinding(f.ctx, f.caller, relation.InterpretationRef)
+	if e != nil || subjectFinding.Rule != "reference-api-query-subject-v1" || subjectFinding.Outcome != "UNKNOWN" || subjectFinding.LateEffect != "MAY_OCCUR" || queryOperation.Effect.Outcome != "APPLIED" || queryOperation.Effect.LateEffect != "RULED_OUT" {
+		t.Fatalf("terminal API read became original subject proof: %v %v", subjectFinding, e)
+	}
 	original, e := f.h.Ledger.QueryOperation(f.ctx, f.caller, a.OperationId)
 	if e != nil || original.Effect.Outcome != "UNKNOWN" || original.Effect.LateEffect != "MAY_OCCUR" || writes.Load() != 1 || queries.Load() != 1 || effects.Load() != 1 {
 		t.Fatalf("weak absence changed original effect%v %v", original, e)
@@ -1161,7 +1177,7 @@ func TestAPICommandLineHostUsesExplicitNativeKeychain(t *testing.T) {
 
 // 规则：G1、G2、G3、G4、G10、G11、完成-4
 func TestAPIQueryFailuresKeepOriginalResponsibilityAndNeverResend(t *testing.T) {
-	for _, scenario := range []string{"drop", "malformed", "duplicate", "tool-error", "wrong-protocol", "wrong-account", "wrong-origin", "wrong-query-operation", "wrong-query-attempt", "wrong-query-key", "wrong-original-operation", "wrong-original-attempt", "wrong-original-key", "wrong-scope", "no-read-terminal", "retention-expired", "temporarily-unavailable", "weak-terminal-absence", "strong-negative"} {
+	for _, scenario := range []string{"drop", "malformed", "duplicate", "tool-error", "wrong-protocol", "wrong-account", "wrong-origin", "wrong-query-operation", "wrong-query-attempt", "wrong-query-key", "wrong-original-operation", "wrong-original-attempt", "wrong-original-key", "wrong-scope", "no-read-terminal", "retention-expired", "temporarily-unavailable", "weak-terminal-absence", "weak-terminal-absence-after-due", "strong-negative"} {
 		t.Run(scenario, func(t *testing.T) {
 			var writes, queries, effects atomic.Int64
 			target := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -1223,11 +1239,15 @@ func TestAPIQueryFailuresKeepOriginalResponsibilityAndNeverResend(t *testing.T) 
 					response["query_status"] = "RETENTION_EXPIRED"
 				case "temporarily-unavailable":
 					response["query_status"] = "TEMPORARILY_UNAVAILABLE"
-				case "weak-terminal-absence":
+				case "weak-terminal-absence", "weak-terminal-absence-after-due":
 					response["applied"] = false
 				case "strong-negative":
 					response["applied"] = false
 					response["negative_proof"] = true
+				}
+				if scenario == "weak-terminal-absence" || scenario == "temporarily-unavailable" {
+					// 未到期恢复不依赖宿主打开数据库必须快于一秒；到期推进由独立场景验证。
+					response["retry_after_ms"] = int64(time.Hour / time.Millisecond)
 				}
 				_ = json.NewEncoder(w).Encode(response)
 			})
@@ -1255,7 +1275,7 @@ func TestAPIQueryFailuresKeepOriginalResponsibilityAndNeverResend(t *testing.T) 
 				if plan.State != "COMPLETED" || original.Effect.Outcome != "NOT_APPLIED" || original.Effect.LateEffect != "RULED_OUT" || effects.Load() != 0 {
 					t.Fatalf("negative proof %v %v", plan, original.Effect)
 				}
-			case "weak-terminal-absence", "temporarily-unavailable":
+			case "weak-terminal-absence", "weak-terminal-absence-after-due", "temporarily-unavailable":
 				if plan.State != "WAITING" || original.Effect.Outcome != "UNKNOWN" || original.Effect.LateEffect != "MAY_OCCUR" || effects.Load() != 1 {
 					t.Fatalf("weak evidence %v %v", plan, original.Effect)
 				}
@@ -1291,11 +1311,41 @@ func TestAPIQueryFailuresKeepOriginalResponsibilityAndNeverResend(t *testing.T) 
 			if e != nil {
 				t.Fatal(e)
 			}
+			restored, e := f.h.Ledger.QueryReconciliation(f.ctx, f.caller, a.OperationId)
+			if e != nil || !proto.Equal(restored, plan) || writes.Load() != 1 || queries.Load() != 1 {
+				t.Fatalf("restart changed original query wait or created a request: %v %v", restored, e)
+			}
+			if scenario == "weak-terminal-absence-after-due" {
+				// 明确等待原持久到期时间；这是宿主主动扫描，不是打开数据库隐式发送。
+				time.Sleep(max(0, time.Until(time.UnixMilli(plan.NextReconcileAtUnixMs))) + 50*time.Millisecond)
+			}
 			if e = f.h.Ledger.ProcessReconciliations(f.ctx, f.caller); e != nil {
 				t.Fatal(e)
 			}
-			if writes.Load() != 1 || queries.Load() != 1 {
-				t.Fatal("query restart created implicit request")
+			processed, e := f.h.Ledger.QueryReconciliation(f.ctx, f.caller, a.OperationId)
+			if e != nil {
+				t.Fatal(e)
+			}
+			if scenario != "weak-terminal-absence-after-due" {
+				if !proto.Equal(processed, plan) || writes.Load() != 1 || queries.Load() != 1 {
+					t.Fatal("not-due or paused query scan created another request")
+				}
+				return
+			}
+			if processed.State != "WAITING" || processed.CheckCount != 2 || len(processed.QueryRefs) != 2 || writes.Load() != 1 || queries.Load() != 2 || effects.Load() != 1 {
+				t.Fatalf("explicit due scan did not create exactly one independent query: %v", processed)
+			}
+			first, e := f.h.Ledger.QueryReconciliationQuery(f.ctx, f.caller, processed.QueryRefs[0])
+			if e != nil {
+				t.Fatal(e)
+			}
+			second, e := f.h.Ledger.QueryReconciliationQuery(f.ctx, f.caller, processed.QueryRefs[1])
+			if e != nil || proto.Equal(first.QueryOperationRef, second.QueryOperationRef) || !proto.Equal(first.Work.QuerySubject, second.Work.QuerySubject) {
+				t.Fatalf("independent query changed the original subject or reused its operation: %v %v", second, e)
+			}
+			after, e := f.h.Ledger.QueryOperation(f.ctx, f.caller, a.OperationId)
+			if e != nil || after.Effect.Outcome != "UNKNOWN" || after.Effect.LateEffect != "MAY_OCCUR" || !proto.Equal(after.Execution, original.Execution) {
+				t.Fatalf("explicit query rewrote original execution or proved weak absence: %v %v", after, e)
 			}
 		})
 	}

@@ -1,0 +1,97 @@
+{
+  "state": "completed",
+  "recorded_at": "2026-10-06T15:18:29.611437+00:00",
+  "files": {
+    "artifacts_sha_manifest": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-measurement/artifacts-sha256.txt",
+      "sha256": "555db4f791b0a811e41abe51f4e0f642760a557dd51444a13b6c869ddbd50cb7",
+      "bytes": 822,
+      "mode": "0o644"
+    },
+    "bench": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-measurement/bench.txt",
+      "sha256": "50f0550eadf3e31d48b7c2af08b59876510796101bcf7333b56a6faf5274a29c",
+      "bytes": 1273807,
+      "mode": "0o644"
+    },
+    "binaries_sha_manifest": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-measurement/binaries-sha256.txt",
+      "sha256": "b71e63fb230d9456621a78d6f31f7a2f61dcd0adb9dc62b7d32ec839ea129029",
+      "bytes": 383,
+      "mode": "0o644"
+    },
+    "capture_inventory": {
+      "path": "/Volumes/Data/proj/lerna-m1-ticket23/docs/implementation/m1/protobuf-h1-data/current-inventory.json",
+      "sha256": "dabfe9b57f4f233a2eb199989d7fc8b45e939c64b52d3431512dfbb2ee772275",
+      "bytes": 156369,
+      "mode": "0o644"
+    },
+    "capture_log": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-bound-unified-capture.log",
+      "sha256": "803779a5975c49ee34f6e7093ba3d216219169ea0608ae01dfcfcad232997f07",
+      "bytes": 2781,
+      "mode": "0o644"
+    },
+    "corpus": {
+      "path": "/Volumes/Data/proj/lerna-m1-ticket23/conformance/protobuf/testdata/mainline.json",
+      "sha256": "df1ec71fb0b822a8f3a1caf9fd959151371d811f0f51270907b65204cd77bb4c",
+      "bytes": 2470899,
+      "mode": "0o644"
+    },
+    "corpus_sha_manifest": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-measurement/corpus-sha256.txt",
+      "sha256": "e68a1acbe05eaac843401243317946e6e43b4aedebd91b2f38a3b2c205e4299a",
+      "bytes": 110,
+      "mode": "0o644"
+    },
+    "environment": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-measurement/environment.txt",
+      "sha256": "05102f5b8e9ce8ef809f9bc7beb0f2aa51a4f1210fa79a781ec601b6f6a995ec",
+      "bytes": 5966,
+      "mode": "0o644"
+    },
+    "inventory": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-measurement/inventory.json",
+      "sha256": "1c8735baa4902a586d671742a27a45c050b957f9174d0ee5ea72f3475beac20c",
+      "bytes": 156376,
+      "mode": "0o600"
+    },
+    "inventory_run": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-measurement/inventory-run.txt",
+      "sha256": "4c287eb7f7cef738d750d963a306f4ac8c7b713df1b253cdeeb56083e9ad3d42",
+      "bytes": 109,
+      "mode": "0o644"
+    },
+    "measured_corpus": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-measurement/measured-corpus.json",
+      "sha256": "df1ec71fb0b822a8f3a1caf9fd959151371d811f0f51270907b65204cd77bb4c",
+      "bytes": 2470899,
+      "mode": "0o644"
+    },
+    "measurement_log": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-bound-measurement.log",
+      "sha256": "25933edcd6faf0fe97867b93994c990e719c8febb213b53b3237c3739c46847f",
+      "bytes": 82,
+      "mode": "0o644"
+    },
+    "peak_memory": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-measurement/peak-memory.txt",
+      "sha256": "b88dd42398169dfdc758e9b301ff5a2ff2984c6b0b1c9fd249f81cea9934711d",
+      "bytes": 777,
+      "mode": "0o644"
+    },
+    "sizes": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-measurement/sizes.txt",
+      "sha256": "214609645b614c80639f74c2d88791399df08c2ff10384d17767bb5885665ffa",
+      "bytes": 135,
+      "mode": "0o644"
+    },
+    "source_sha_manifest": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-final-measurement/source-sha256.txt",
+      "sha256": "89a55057e9c82f4a322bd73b74c193b1051d83f0a07fd3cf399a092a0c6f8451",
+      "bytes": 45399,
+      "mode": "0o644"
+    }
+  },
+  "observation": "Actual stable output file hashes, byte counts and modes observed after outer measurement completion."
+}

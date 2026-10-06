@@ -38,7 +38,7 @@ test:
 	go test -race -timeout 20m ./...
 
 test-fault:
-	@if test -d conformance/fault; then go test -race -timeout 120m -tags fault ./conformance/fault/...; else echo 'No fault suite yet.'; fi
+	go test -race -timeout 120m -tags fault ./conformance/... ./infra/sqlite/...
 
 gen: $(BUF) $(PROTO)
 	$(BUF) generate

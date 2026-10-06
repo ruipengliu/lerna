@@ -399,6 +399,14 @@ func cancellationDriverFixture(t *testing.T) (*fixture, *simulator.ModelProvider
 	if out, e := exec.Command("go", "build", "-o", binary, "../../cmd/lerna").CombinedOutput(); e != nil {
 		t.Fatalf("build: %v %s", e, out)
 	}
+	f, provider, target, policy := cancellationDriverPublicFixture(t)
+	configuration := writeReasonerCLIJSON(t, "cancel-driver.json", &v1.ConfigureReasonerDriverCommand{Header: header("cancel-driver-config"), TaskId: f.task.Name, Policy: policy})
+	return f, provider, target, configuration, binary
+}
+
+// cancellationDriverPublicFixture 只复用真实公开配置，不构建 CLI 或推进模型位置。
+func cancellationDriverPublicFixture(t *testing.T) (*fixture, *simulator.ModelProvider, *simulator.BillingTarget, *v1.ReasonerDriverPolicy) {
+	t.Helper()
 	target := simulator.NewBillingTarget(25)
 	f := newFixtureWithTarget(t, 100, 80, false, target)
 	parameters, e := f.h.Content.Stage(f.ctx, f.caller, &v1.SubmitGoalCommand{Identity: header("cancel-driver-parameters").Identity, ContractVersion: 1, SchemaId: "lerna.v1.SubmitGoal", FingerprintVersion: 1, Goal: `{"destination":"archive"}`})
@@ -472,8 +480,7 @@ func cancellationDriverFixture(t *testing.T) (*fixture, *simulator.ModelProvider
 	}
 	policy := driverPolicy(f)
 	policy.Actions = []*v1.ReasonerActionAuthority{{CapabilityRef: targetCapability, GrantRef: targetGrant}}
-	configuration := writeReasonerCLIJSON(t, "cancel-driver.json", &v1.ConfigureReasonerDriverCommand{Header: header("cancel-driver-config"), TaskId: f.task.Name, Policy: policy})
-	return f, provider, target, configuration, binary
+	return f, provider, target, policy
 }
 
 func cancellationDriverCLI(t *testing.T, f *fixture, binary string, args ...string) []byte {

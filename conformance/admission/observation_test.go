@@ -8,7 +8,10 @@ import (
 	"github.com/ruipengliu/lerna/cmd/assembly"
 	"github.com/ruipengliu/lerna/conformance/simulator"
 
+	"strings"
+
 	v1 "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1"
+	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -120,6 +123,24 @@ func TestProtocolEvidenceDistinguishesTerminalAndLateEffects(t *testing.T) {
 			}
 			if op.Effect.EvidenceConflict != (tc.behavior == "contradictory") {
 				t.Fatalf("conflict flag %v", op.Effect)
+			}
+			if tc.behavior == "applied-not-terminal" {
+				metrics, err := f.h.QueryMetrics(f.ctx, f.caller)
+				if err != nil || metrics.Ledger.Unknown.Total != 0 || metrics.Ledger.KnownEffectLateMayOccur != 1 {
+					t.Fatalf("known late effect was mislabeled UNKNOWN: %v %v", metrics, err)
+				}
+				encoded, err := protojson.Marshal(metrics)
+				if err != nil {
+					t.Fatal(err)
+				}
+				guidance := strings.Join(readMetricGuidance(t, encoded), "\n")
+				if !strings.Contains(guidance, "Known effects may still occur late") || strings.Contains(guidance, "UNKNOWN effects remain") {
+					t.Error("guidance did not distinguish known effects from late-effect risk")
+				}
+				after, err := f.h.Ledger.QueryOperation(f.ctx, f.caller, a.OperationId)
+				if err != nil || !proto.Equal(op, after) {
+					t.Fatalf("known-late guidance changed original operation: %v %v", after, err)
+				}
 			}
 			requests, effects := target.Snapshot()
 			if len(requests) != 1 || len(effects) != tc.effects {

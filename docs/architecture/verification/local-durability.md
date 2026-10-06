@@ -1,95 +1,32 @@
-# 本地档：SQLite 等价存储故障验收
+# SQLite 本地档存储故障验收方法
 
 | 日期 | 修订说明 |
 | --- | --- |
-| 2026-10-05 | 固定 SQLite 构建的 VFS 存储模型、独立确认判据、原生屏障观测与限制。 |
-| 2026-10-05 | 区分持久文件前缀与活事务 SUBJOURNAL I/O，加入 P4 溢出、回滚和写失败验证。 |
+| 2026-10-06 | 按文档规范拆分方法与实际结果；保留原报告字节，明确全部SQL/native联合有限模型与负对照。 |
 
-本验收落实 G3，准入决定见[部署平台表](../topics/deployment.md#11-本地档平台准入表)。验证 SQLite 到 VFS 的持久协议，以及所选 macOS 构建实际调用完整同步的路径。没有做物理断电试验，不证明介质永久丢失可恢复。
+本文规定G3本地档的有限等价存储故障模型与判据，实际平台准入见[部署表](../topics/deployment.md#11-本地档平台准入表)，实际版本、次数和限制见[实施报告](../../implementation/m1/local-durability.md)。原报告已原字节归档；不在方法中固定旧I/O次数。
 
-## 1 复现
+## 1 真实公共生产与独立确认
 
-在准入表中的 macOS/arm64/APFS 组合运行：
+使用公共 `assembly.Open`、生产同一go-sqlite3与严格同步VFS；包装器和驱动SQLite source ID必须相同。已有库与全新不存在路径分别采集，bootstrap从零prefix开始。公共SubmitGoal/CLAIM/ProcessClaim原回执由独立父进程实际收到后建立确认判据，不能从恢复数据库推定哪些记录已确认。等待真实租约到期，不能提前接替；子进程直接退出，不Close或清理checkpoint。恢复原identity、回执、输入/任务/来源、claim fencing与未确认原命令的原子性，同时检查完整性与外键。
+
+## 2 模型与矩阵
+
+记录实际持久MAIN/WAL/主journal成功写入、截断、同步、名称与前缀；屏障仅在生产VFS真正成功后记录。全部已定义prefix和lost/all/reverse/even/torn五种byte政策保留；屏障前未同步字节可丢失/部分保留，屏障后不得任意损坏已稳定字节。模型声明固定sector与powersafe-overwrite，读取/锁/SHM交给真实VFS，恢复重建SHM，不rematerialize未来字节。匿名SUBJOURNAL保持独立真实句柄和错误转发，不当主journal或假持久cut；P4保存点溢出、回滚、写失败单独实际验证。
+
+原生FILE采集所有实际提交屏障与namespace事件，保留全部byte×namespace政策、零prefix和独立native负对照；联合SQL/native paired images按同一原历史恢复。SQLite事务与FILE发布之间不能假造跨域原子性。每轮从当前实际producer重新量测I/O、ACK、events、cuts、images/pairs与完整同步次数，不能借用旧schema总数或重复乘namespace系数。
+
+## 3 持久配置与负对照
+
+写连接验证本地档WAL/FULL/严格F_FULLFSYNC与固定平台构建；同步、ENOTSUP、目录同步和真实出口前屏障失败必须不确认新责任、不产生新business I/O。NORMAL/OFF/omit-sync、syncEIO、directorysync以及各原生omit-barrier负对照均按原suite保留，证明测试能检测实际缺屏障；生产构建不含fault配置或记录包装器。
+
+成功系统调用依赖OS/设备履行屏障与名称假设，不证明设备未谎报。该有限模型没有穷举所有字节子集/排列，不覆盖多库工作负载、无限介质寿命或物理断电；平台声明不得外推。
+
+## 4 复现
 
 ```sh
-go test -tags fault ./conformance/fault -run '^TestStorage' -count=1 -v
-make check
+go test -race -tags fault ./conformance/fault -run '^TestStorage' -count=1 -timeout 120m -v
+GOFLAGS=-v make check
 ```
 
-`TMPDIR` 决定临时数据库所在卷；复验其他挂载点时设置到该卷的已存在目录。测试打印实际平台、SQLite source ID、编译选项 SHA-256、成功的 `F_FULLFSYNC` 次数、I/O 事件数与恢复镜像数。子用例名含 `cut-NNN/policy`，可用 `-run '^TestStoragePowerLoss$/cut-NNN/policy$'` 单独复现。每次重新采集轨迹，不依赖上一轮快照。
-
-2026-10-05 的固定三目标场景：已有库轨迹为 207 个 I/O 事件、980 个故障镜像，首次建库轨迹为 273 个事件、1370 个镜像；各有 9 个独立确认。在最后一个业务确认时分别观测到 22、35 次成功完整同步，随后检查点的同步不计入该数字。次数是场景的实测结果，不是验收写死的上限；新增持久事务后随轨迹增长。
-
-执行路径是公共装配 `assembly.Open`，使用生产 `go-sqlite3 v1.14.52` 的同一份 SQLite，没有调用系统 sqlite CLI 或链接第二份 SQLite。VFS 包装器与驱动报告的 source ID 必须一致。
-
-## 2 独立确认判据
-
-两条场景分别从已同步且无业务记录的数据库，以及完全不存在的数据库文件开始。首次建库场景先注册 VFS，再调用 Open，并枚举从前缀 0 开始的初始化操作。子进程通过公共命令提交 A、B、C：`SubmitGoal` 返回后立即向 stdout 输出 SUBMITTED 回执；公共 CLAIM 返回后输出不可变领取回执；`ProcessClaim` 完成后输出 DECIDED 回执。领取租期为 100ms，恢复必须等到真实租期到期，不得提前接替。
-
-确认记录包含原始 protobuf 回执和已完成 I/O 前缀长度。父进程只用收到的确认建立判据，不能从恢复后的数据库推导“哪些记录必须存在”。子进程结束时直接 `os.Exit`，不关闭 SQLite，不执行清理检查点。镜像只来自前缀事件，不复制活跃的数据库与 WAL。
-
-每个前缀分别检查：
-
-- SUBMITTED 的原命令身份、输入引用、工作引用、摘要、负责域和持久档位不变；启动恢复可以将其推进为 DECIDED。
-- 已确认 DECIDED 与 CLAIM 的完整原回执不变。
-- 会话、任务、正文与正文来源可通过公共查询读取；原身份重试仍是同一决定，只有一个任务和一份会话输入。
-- 未确认命令可以缺失或已提交，但不能只出现任务或会话的部分事实；原身份重试后也只有一个任务。提前写入的内容允许作为未发布内容保留。
-- `integrity_check` 返回 `ok`，`foreign_key_check` 无违规；真实启动恢复完成未完成的目标工作。
-
-本次主线尚无出口调用，因此不声称验证 P5 外部发送。增加出口与文件适配器后，仍须独立验证屏障失败时实际调用次数为零。
-
-## 3 存储模型和有限覆盖
-
-故障构建包装生产 VFS，记录成功 `xWrite` 的文件、偏移、原始字节，`xTruncate` 的长度，以及打开、删除。`xSync` 仅在生产 VFS 返回成功时记录屏障。轨迹在模型之外，写入失败立即终止验收；记录与序号通过互斥锁串行化。
-
-父进程顺序重放每个前缀。各文件有稳定镜像和未同步操作：成功同步将该文件的全部先前操作按顺序发布。故障时采用以下五种固定策略：
-
-| 策略 | 持久下来的未同步操作 |
-| --- | --- |
-| lost | 全部丢失 |
-| all | 全部按原顺序保存，包括截断和名称变化 |
-| reverse | 所有字节写入逆序保存，名称变化和截断丢失 |
-| even | 偶数序号的字节写入保存，其余丢失 |
-| torn | 每个字节写入只保存前 2048 字节；小于等于 2048 字节时只保存前一半 |
-
-相邻前缀覆盖持久数据库、WAL 与主回滚日志的每次成功写入、截断和同步前后，torn 覆盖部分落盘。成功屏障后的数据不得任意损坏。没有穷举所有字节子集与排列，也不宣称模型检查完备性。反序覆盖未同步覆盖写，交替子集打破提交帧与页面共同保存的假设，部分写打断页面或 WAL 帧。五种策略、全部前缀和负对照构成可重复的有限验收。
-
-A 完成后执行 RESTART 检查点，B 复用 WAL 后执行 TRUNCATE 检查点，C 在重置的 WAL 中提交并再次检查点。检查后续写入和检查点不能损坏先前已确认的 A/B。
-
-模型声明 4096 字节扇区和 powersafe-overwrite：故障可破坏未同步写入的目标字节，不得破坏写入范围之外的持久字节；不声明原子写、safe-append 或原子批写。读取、锁、共享内存交给真实 VFS；恢复不复制 SHM，由 SQLite 重建。`xFetch` 返回空，避免 mmap 绕过记录。持久镜像只模型化单库数据库、WAL、主回滚日志，不能用于任意多库工作负载。
-
-固定 SQLite 构建的匿名 `SUBJOURNAL | READWRITE | CREATE | DELETEONCLOSE | EXCLUSIVE` 句柄是保存点回滚使用的临时日志。包装器通过独立方法表转发它的真实读、写、截断、同步及关闭，所有真实错误原样上抛；不记录它的字节，不映射为主回滚日志文件 2，也不让它消耗持久同步故障计数。固定源码的保存点恢复读取子日志，崩溃重启恢复只依赖主日志或 WAL；升级 SQLite 时须重审该分类。匿名 DELETEONCLOSE 的删除由底层 VFS 处理，持久名称事件只记录本库及其 WAL／主日志。其他临时数据库、多库和 SUPER_JOURNAL 仍不在范围内。
-
-`TestStartSavepointSpillPreservesAtomicResponsibilities` 通过公共真实 P4 验证子日志实际溢出、活事务回滚和注入写失败，检查原回执、凭据消费、发送额度与来源队列原子性及目标调用为零。`TestStorageStartSavepointPowerLoss` 从本次 P4 前正常提交并完整检查点、截断 WAL 的基线开始，只对随后 P4 的全部持久文件前缀执行五种策略；子进程在公共开始命令返回后记录独立 ACK，并直接退出以免 Close 改变轨迹。该范围不重新声明覆盖基线的全部历史，也不声称枚举临时日志的每个 OS I/O 边界。
-
-生产包装器在 CREATE 句柄首次同步前，显式打开父目录，核验 `fsync` 和 `F_FULLFSYNC` 均成功；删除要求同步目录时也执行核验。目录屏障稳定同目录此前的所有创建和删除；模型的 N 事件因此发布跨数据库、WAL、回滚日志的名称变化，不能只稳定当前文件名。目录操作失败会拒绝同步；目录 fsync 故障用例证明不能打开关键事实写连接。SQLite 自带的目录同步会忽略部分错误，所以不能仅根据它的 xSync 成功推断名称持久化。
-
-父目录事先存在；未覆盖目录自身丢失、无 powersafe-overwrite 的设备、介质永久丢失、并发多进程写入或所有可能断电行为。数据库目录屏障验收不证明文件适配器的替换、rename 或完整同步协议。
-
-## 4 屏障与负对照
-
-在开启 WAL 前先配置 fullfsync=ON、synchronous=FULL，首次建库也使用完整屏障。生产 macOS VFS 通过 SQLite 公共 `xSetSystemCall` 观测真实 `fcntl(F_FULLFSYNC)`。每次 FULL `xSync` 必须在同一线程内看到完整同步且成功；缺少调用或失败均返回 `SQLITE_IOERR_FSYNC`，不接受默认 Unix VFS 的普通 `fsync` 回退。注册失败或 source ID 不匹配时拒绝打开。公共命令在同步错误后返回错误，不返回接纳回执。
-
-故障测试在数据库打开之后注入同步错误，分别命中内容提交和接纳回执提交；另一个用例在实际 `F_FULLFSYNC` 返回 `ENOTSUP`，由生产包装器拒绝。临时移除生产拒绝检查的变异对照会失败，报告 `sync error leaked receipt`，证明不是测试包装器自行拒绝。
-
-三个负对照分别将同一连接改成 NORMAL、OFF，或跳过同步。收到业务确认后按 lost 恢复，确定观察到原命令 NOT_FOUND。负对照与注入入口只在 `fault` 构建存在，生产依赖检查验证排除它们。
-
-原生完整同步成功只证明系统调用成功，不证明设备没有谎报。准入依赖 OS 与设备履行屏障、目录名称和 powersafe-overwrite 条件；物理电源中断仍未测试。
-
-## 5 固定构建
-
-SQLite 3.53.4 的 source ID：
-
-```text
-2026-07-24 19:02:57 bf7c7f30031888f4e796e429ab3978879485813aaca6f641c7b33e4e09459bcc
-```
-
-编译选项按字典序排列、换行连接（无末尾换行）的 SHA-256：
-
-```text
-a2f6947c17af9ef76e5b18f8ade825805502af9d65a6f1c7a4c547a74ae4c610
-```
-
-驱动的公共 `sqlite3-binding.h` 原样放在 `infra/sqlite/internal/barrier/sqlite3.h`，SHA-256：`4e7d1523cf95991f7e4c08c576e2232e063da6f10067e5c03c9bf9f904b1cf5f`。保留 SQLite 公有领域声明，避免手写结构体 ABI。`fcntl` 转发按固定构建的调用点区分整数和锁结构指针；升级必须重新审查、复验，不得只放宽版本比较。
-
-固定驱动的 [SQLite 源码](https://github.com/mattn/go-sqlite3/blob/v1.14.52/sqlite3-binding.c) 中 `full_fsync` 展示默认回退；包装器使用公共 VFS ABI，没有复制 SQLite 私有测试框架或引入第二个实现。
+单例只用于诊断，不能替代完整门禁。expanded fault目标还包括format/compatibility/metrics/必要WAL、所有nativeFILE/API及infra/sqlite occurrence selector。TMPDIR决定临时数据库所在卷；复验其他卷先设置到该卷真实目录。保留actual环境、构建、每个case/政策、独立确认、raw日志和完整源冻结证据；实施报告记录结果与未覆盖项。

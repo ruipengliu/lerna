@@ -106,6 +106,9 @@ func (s *Service) ProcessObservations(ctx context.Context, caller *v1.Caller) er
 	}
 	actor := &v1.Caller{UserId: s.user, IssuerId: "content-observation"}
 	for _, h := range all {
+		if e := command.CheckSavedHeaders(h); e != nil {
+			return e
+		}
 		q, e := s.ledger.QueryReceipt(ctx, actor, h.Command.Header.Identity)
 		if e != nil {
 			return e

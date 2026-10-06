@@ -88,9 +88,9 @@ docs/                       设计文档、ADR、评审与调研
 | `make fmt` | 格式化全部 Go 代码 |
 | `make lint` | 静态检查，含依赖方向（depguard）和 buf 检查 |
 | `make test` | 单元测试，带 `-race` |
-| `make test-fault` | 故障注入测试（`conformance/fault/`） |
+| `make test-fault` | 全部实际 `fault` 构建测试包（`conformance/` 含根包与 `admission/`，以及 `infra/sqlite/`） |
 | `make gen` | 由 `contracts/proto/` 生成代码 |
-| `make check` | 提交前的全部检查：fmt、lint、test、规则标注检查、生成代码是否最新 |
+| `make check` | 提交前的全部检查：fmt、lint、普通及 `fault` 构建测试、规则标注检查、生成代码是否最新 |
 
 `Makefile` 和 `.golangci.yml` 在 M1 建立代码骨架时一并创建。
 
@@ -104,7 +104,7 @@ docs/                       设计文档、ADR、评审与调研
 | --- | --- | --- |
 | 单元测试 | 与代码同目录的 `_test.go` | `make test` |
 | 一致性测试：同一接口的不同实现必须通过同一套用例 | `conformance/` | `make test` |
-| 故障注入：崩溃、回执丢失、竞争、迟到效果 | `conformance/fault/`，用构建标签 `fault` 隔开 | `make test-fault` |
+| 故障注入：崩溃、回执丢失、竞争、迟到效果 | `conformance/` 各实际公共一致性包，用构建标签 `fault` 隔开；存储矩阵在 `conformance/fault/` | `make test-fault` |
 
 需要在模块目录运行的黑盒一致性测试，使用外部测试包，通过 `cmd/assembly` 提交公共命令、查询持久记录；生产宿主使用同一装配。数据库连接配置测试可以直接核验受信存储的公开设置。
 
@@ -160,7 +160,7 @@ func TestSafeResendSkipsAdmissionGeneration(t *testing.T) { ... }
 | `ledger.followup_completion` | 原动作取得可靠终态后由执行管理完成后续责任 |
 | `budget.followup_completion` | 原逐发送费用结清或可靠未发送后由预算完成后续责任 |
 
-新增事务必须传入固定名称、登记到同一表，并补充对应故障用例。故障套件检查未登记的事务和无调用点的登记项，普通构建只编译空边界，不包含故障计划、登记表或配置 API。`make test-fault` 仅运行 `conformance/fault/` 中带 `fault` 标签的测试。完整套件保留 race 检测和全部存储切点；随着 M1 schema 和来源事件增加，包级超时上限设为 120 分钟，不能用缩减切点规避运行时间。
+新增事务必须传入固定名称、登记到同一表，并补充对应故障用例。故障套件检查未登记的事务和无调用点的登记项，普通构建只编译空边界，不包含故障计划、登记表或配置 API。`make test-fault` 实际执行 `go test -race -timeout 120m -tags fault ./conformance/... ./infra/sqlite/...`，覆盖根包的格式故障和 `admission/` 的保存版本、指标端点、实际必要 WAL 备份用例，也覆盖 `infra/sqlite/` 的真实 occurrence 选择器回归，并保留 `conformance/fault/` 的全部 SQL/native 存储切点与负对照。不能只执行存储子包而遗漏其他公开故障入口，也不能用筛选测试或缩减切点规避运行时间。随着 M1 schema 和来源事件增加，包级超时上限设为 120 分钟。
 
 这些用例验证进程崩溃恢复，不等于通过掉电或存储故障验证。本地档的掉电资格仍由 ADR 0001 的独立验收决定。
 
@@ -319,3 +319,7 @@ M1 参考适配器为 `model-reference-v1`，模型设置使用 `provider: refer
 已审查的 `api-reference-v1` 能力携带 `ApiDescriptor` v1，固定 origin、资源、账户、用户和 `ApiCredentialReference`。参考目标使用 `lerna-reference-api-v1`；参数只接受 `value` 和可选整数 `quantity`，原输入与实际编码正文分别保存摘要。受信出口只执行单次 HTTP 请求；HTTPS 使用宿主系统证书信任，测试可在 `APIRoots` 显式装配合成根。参考 GET 核对独立准入，并携带原查询主体，不重发原业务请求。
 
 429 以原始观察结束时间固定 `ApiWait`，区分 `RATE`、`CONCURRENCY`、`RESOURCE_CONFLICT` 和 `UNKNOWN`。重启与重放读取同一到期时间；通用队列控制不能绕过等待。到期后仍须经过安全重发、P4/P5 的当前控制、授权、预算、正文、版本、绑定、凭据和原键期限门禁。参见 [ADR 0008](adr/0008-fixed-api-identity-and-platform-credentials.md) 与 [API 设计](architecture/adapters/api.md)。
+
+启动在任何负责方自动恢复前纯核验全部原 API 动作，包含未准备、已关闭 UNKNOWN、原发送历史和独立 QUERY。检查原固定协议、完整声明、描述及身份绑定，不重新编译、读取内容、解析平台凭据或发送请求；原键已到期不使合法历史不可读取。平台条目缺失时保留合法历史，新出口以 `CREDENTIAL_UNAVAILABLE` 停在 P5 前。
+
+停机恢复通过 `RestoreBackupWithOptions` 传入原 `APIKeychainPath`、`APIRoots` 和 `FileRoots`。数据库清单不包含或回滚这些外部世界。来源全部关闭后永久保持停止，恢复目录继续使用同一原目标和凭据仓库；迟到效果、原账单和重新恢复的独立查询不能改变已经固定的 Result。

@@ -17,6 +17,9 @@ import (
 // 导入时先注册，故障包装器随后可以在同一 VFS 外侧观测和注入。
 var registration = C.register_strict_barrier()
 
+// 资格副本直接使用真实生产屏障；真正原库仍经默认 VFS 的完整故障记录。
+func qualificationVFSQuery() string { return "&vfs=lerna-strict-fullfsync" }
+
 // Ensure 注册失败时禁止打开关键事实的写连接。
 func ensureBarrier() error {
 	if registration != 0 {

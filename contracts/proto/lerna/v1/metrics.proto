@@ -1,0 +1,118 @@
+syntax = "proto3";
+package lerna.v1;
+
+import "lerna/v1/reporting.proto";
+
+option go_package = "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1;lernav1";
+
+message MetricSource {
+  string owner_domain_id = 1;
+  string definition_version = 2;
+  int64 captured_at_unix_ms = 3;
+  optional uint64 source_revision = 4;
+  string availability = 5;
+  string scope = 6;
+  string error_code = 7;
+}
+message LatencyBucket {
+  optional uint64 upper_bound_ns = 1;
+  uint64 count = 2;
+}
+message AdmissionMetrics {
+  MetricSource source = 1;
+  string process_instance = 2;
+  uint64 entries = 3;
+  uint64 samples = 4;
+  uint64 accepted = 5;
+  uint64 rejected = 6;
+  uint64 replays = 7;
+  uint64 invalid_headers = 8;
+  uint64 decisions_without_endpoint = 9;
+  uint64 calls_without_decision = 10;
+  optional uint64 duration_sum_ns = 11;
+  optional uint64 duration_max_ns = 12;
+  repeated LatencyBucket buckets = 13;
+  optional int64 last_sample_at_unix_ms = 14;
+}
+message AgeBucket {
+  optional uint64 upper_bound_ms = 1;
+  uint64 count = 2;
+}
+message UnknownMetrics {
+  uint64 total = 1;
+  uint64 queryable = 2;
+  uint64 unqueryable = 3;
+  uint64 late_may_occur = 4;
+  uint64 late_ruled_out = 5;
+  uint64 late_unknown = 6;
+  uint64 age_samples = 7;
+  uint64 age_missing = 8;
+  uint64 age_clock_invalid = 9;
+  optional uint64 oldest_age_ms = 10;
+  repeated AgeBucket age_buckets = 11;
+  string age_basis = 12;
+  uint64 queryability_missing = 13;
+}
+message ReconciliationMetrics {
+  uint64 total = 1;
+  uint64 active = 2;
+  uint64 ready = 3;
+  uint64 in_progress = 4;
+  uint64 waiting = 5;
+  uint64 paused = 6;
+  uint64 completed = 7;
+  uint64 other = 8;
+  uint64 unfinished = 9;
+  uint64 unknown_covered = 10;
+  uint64 unknown_uncovered = 11;
+  string duration_availability = 12;
+}
+message LedgerMetrics {
+  MetricSource source = 1;
+  UnknownMetrics unknown = 2;
+  ReconciliationMetrics reconciliation = 3;
+  uint64 uninterpretable_operations = 4;
+  uint64 unknown_business_operations = 5;
+  uint64 unknown_query_operations = 6;
+  uint64 known_effect_late_may_occur = 7;
+}
+message DiagnosticMetrics {
+  MetricSource source = 1;
+  optional uint64 dropped = 2;
+  optional uint64 queue_capacity = 3;
+  optional uint64 queued = 4;
+  optional int64 last_collected_at_unix_ms = 5;
+  optional uint64 staleness_ms = 6;
+}
+message TraceStreamMetrics {
+  MetricSource source = 1;
+  TraceProgress progress = 2;
+  uint64 accepted = 3;
+  uint64 indexed = 4;
+  uint64 acknowledged = 5;
+  uint64 index_backlog = 6;
+  uint64 source_records_missing = 7;
+}
+message TraceMetrics {
+  MetricSource source = 1;
+  repeated TraceStreamMetrics streams = 2;
+  uint64 produced = 3;
+  uint64 accepted = 4;
+  uint64 indexed = 5;
+  uint64 pending_acknowledgements = 6;
+  uint64 receiver_backlog = 7;
+  uint64 index_backlog = 8;
+  bool coverage_complete = 9;
+  DiagnosticMetrics diagnostics = 10;
+  uint64 receiver_acceptance_position = 11;
+}
+message LocalMetrics {
+  string definition_version = 1;
+  int64 captured_at_unix_ms = 2;
+  bool cross_domain_atomic = 3;
+  AdmissionMetrics admission = 4;
+  LedgerMetrics ledger = 5;
+  TraceMetrics trace = 6;
+  repeated MetricSource unavailable_sources = 7;
+  repeated string investigation_guidance = 8;
+}

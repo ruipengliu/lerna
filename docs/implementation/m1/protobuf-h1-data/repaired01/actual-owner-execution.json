@@ -1,0 +1,87 @@
+{
+  "state": "completed",
+  "source_snapshot_commit": "f809a47c5acc62939f2cb9e7fdf178819a307b6b",
+  "corpus_sha256": "8af42a2506e5c178ecb02d87127ce7092b93fa9eefe18c40de74a370d988d6cf",
+  "capture_log_sha256": "00f14ebc2edc94e7b9e2bf4c1e1b72e91b800999ad9ba25322b5778641a6d47c",
+  "measurement_log_sha256": "d9afe6ed9b134ac889d84cd89c2811a21c92914819da0a41851d01e0b8af81b5",
+  "measurement_script_sha256": "573de1069f80c0b6cc0421b3e9bee69f2a09432f5a0881496a2680e978275c69",
+  "platform": "Darwin",
+  "builds_completed_before_timed_process": true,
+  "baseline_build_options": [
+    "-trimpath",
+    "-ldflags=-s -w"
+  ],
+  "binding_build_options": [
+    "-trimpath",
+    "-ldflags=-s -w"
+  ],
+  "inventory": {
+    "exit": 0,
+    "argv": [
+      "/var/folders/q3/nxw95lcx0nb05qqqp0w1nzgc0000gn/T/tmp.S1wLdDxu1I/measure.test",
+      "-test.run",
+      "^TestWriteProtobufMeasurementInventory$",
+      "-test.v"
+    ],
+    "binary_before_sha256": "899bbee1a0b49dee19283c22deda8e7ce7fa7866bda16fa164ff86a3cc0252ce",
+    "binary_after_sha256": "899bbee1a0b49dee19283c22deda8e7ce7fa7866bda16fa164ff86a3cc0252ce",
+    "corpus_sha256": "8af42a2506e5c178ecb02d87127ce7092b93fa9eefe18c40de74a370d988d6cf",
+    "start_utc": "2026-10-06T17:31:02Z",
+    "end_utc": "2026-10-06T17:31:03Z",
+    "source_manifest_sha256": "1ed028e43d718494ba27f874281272fe775dd1657ac05496114128bc356f50fa",
+    "environment_manifest_sha256": "ae246b2ee9314a977256b99e518c5d063eb82de28d46964e51b449818cbe19dc",
+    "stdout_sha256": "4c287eb7f7cef738d750d963a306f4ac8c7b713df1b253cdeeb56083e9ad3d42",
+    "inventory_sha256": "42960dfba50286963acd8a5cc17fa2331ffcdd0c6284a71ca77f52be96160658"
+  },
+  "benchmark": {
+    "exit": 0,
+    "argv": [
+      "/var/folders/q3/nxw95lcx0nb05qqqp0w1nzgc0000gn/T/tmp.S1wLdDxu1I/measure.test",
+      "-test.run",
+      "^$",
+      "-test.bench",
+      ".",
+      "-test.benchtime=100ms",
+      "-test.count=3"
+    ],
+    "binary_before_sha256": "899bbee1a0b49dee19283c22deda8e7ce7fa7866bda16fa164ff86a3cc0252ce",
+    "binary_after_sha256": "899bbee1a0b49dee19283c22deda8e7ce7fa7866bda16fa164ff86a3cc0252ce",
+    "corpus_sha256": "8af42a2506e5c178ecb02d87127ce7092b93fa9eefe18c40de74a370d988d6cf",
+    "start_utc": "2026-10-06T17:31:03Z",
+    "end_utc": "2026-10-06T17:47:03Z",
+    "source_manifest_sha256": "1ed028e43d718494ba27f874281272fe775dd1657ac05496114128bc356f50fa",
+    "environment_manifest_sha256": "ae246b2ee9314a977256b99e518c5d063eb82de28d46964e51b449818cbe19dc",
+    "stdout_sha256": "ae6aedad0d90fbcdb56443f21b6ff109a9c4c0ec9a74b0ae5095400f0d71ed86",
+    "rss_stderr_sha256": "3e6ab187488abec241c34c300989ea24f19e57dc64dc4d185020078ced275078",
+    "count": 3,
+    "benchtime": "100ms",
+    "test_selector": "^$"
+  },
+  "derived_from": {
+    "actual_execution_steps": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-repaired-measurement-01/execution-steps.txt",
+      "sha256": "ddd208fa34ee8c39c82168580dd4a508a2e42ed3e6aabb33258aa3995c3d45b8",
+      "bytes": 2299,
+      "mode": "0o644"
+    },
+    "actual_completed_artifact_record": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-repaired-h1-adaptation-actual-01-artifacts.json",
+      "sha256": "66b2356cea446d278e67a332d2ea3b390a979949c4cfcc8af0b7d97cfa5ed0b5",
+      "bytes": 4103,
+      "mode": "0o644"
+    },
+    "actual_measurement_run": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-repaired-bound-measurement-01.json",
+      "sha256": "5216bd6b3b6a32d5dc07a77c1671c62f9ebd0375e3585018a9dc2f8dc2aa07fc",
+      "bytes": 496910,
+      "mode": "0o644"
+    },
+    "adapter": {
+      "path": "/Volumes/Data/proj/lerna-m1-context/ticket23-repaired-h1-owner-adapter-01.py",
+      "sha256": "3a3df3ba81bc5dd996002a2cc9447924a9fa8811f654d2b4eb5342721a00b0ef",
+      "bytes": 10909,
+      "mode": "0o644"
+    }
+  },
+  "utc_clock_precision_allowance": "Strictly less than one second only for whole-second stage start against fractional outer start; never permits overlap."
+}

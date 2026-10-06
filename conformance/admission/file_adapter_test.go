@@ -95,6 +95,12 @@ func TestManagedFileCreatePublishesBytesAndRetainsGovernedEvidence(t *testing.T)
 	if err != nil || op.Effect.Outcome != "APPLIED" || op.Lifecycle != "SETTLED" {
 		t.Fatalf("effect %v: %v", op, err)
 	}
+	assertFixedExecutionDeclaration(t, op.Execution.Attempt.Capabilities, "lerna-managed-file-v1", "managed-file-v1")
+	assertOriginalProofRule(t, f, op, "managed-file-v1")
+	admission, err := f.h.Tasks.QueryAdmission(f.ctx, f.caller, op.AdmissionRef)
+	if err != nil || !op.CapabilitySnapshot.Nonbillable || op.CapabilitySnapshot.FeeCeiling == nil || *op.CapabilitySnapshot.FeeCeiling != 0 || admission.BudgetBasis.Ceiling != 0 {
+		t.Fatalf("file declaration lost original nonbillable basis: %v %v", admission, err)
+	}
 	source, err := f.h.Budget.QueryBillingSource(f.ctx, f.caller, op.Execution.Send.Ref)
 	if err != nil || source.Status != "SETTLED" {
 		t.Fatalf("file billing %v: %v", source, err)

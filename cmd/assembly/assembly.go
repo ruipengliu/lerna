@@ -4,6 +4,7 @@ package assembly
 import (
 	"context"
 	"crypto/x509"
+	"path/filepath"
 	"time"
 
 	"github.com/ruipengliu/lerna/adapters/api"
@@ -38,6 +39,9 @@ type Harness struct {
 	Durable    *durable.Service
 	Content    *content.Service
 	store      *sqlite.Store
+	user       string
+	domain     string
+	path       string
 }
 
 func Open(path, user, domain string) (*Harness, error) {
@@ -69,10 +73,15 @@ func OpenWithOptions(path, user, domain string, options Options) (*Harness, erro
 	if err != nil {
 		return nil, err
 	}
+	path, err = filepath.Abs(path)
+	if err != nil {
+		s.Close()
+		return nil, err
+	}
 	d := durable.New(s, user, domain)
 	t := tasks.New(s, user, domain).WithDecisions(d).WithCancellationJobs(d)
 	c := content.New(s, user, domain+"/content").WithAssociations(t)
-	h := &Harness{Bodies: s.BodyReceipts(), Sessions: sessions.New(s, d, t, c, user, domain), Tasks: t, Durable: d, Content: c, store: s}
+	h := &Harness{Bodies: s.BodyReceipts(), Sessions: sessions.New(s, d, t, c, user, domain), Tasks: t, Durable: d, Content: c, store: s, user: user, domain: domain, path: path}
 	h.Grants = grants.New(s, d, user, domain, "host").WithAdmissions(t)
 	h.Grants.WithConfirmations(h.Sessions).WithConfirmationContent(c)
 	h.Sessions.WithConfirmations(s, d, t, h.Grants)
@@ -110,6 +119,14 @@ func OpenWithOptions(path, user, domain string, options Options) (*Harness, erro
 	// 固定受信宿主身份仅驱动已保存的责任，不替换原命令身份。
 	ctx, cancel := context.WithTimeout(context.Background(), 65*time.Second)
 	defer cancel()
+	if err := t.CheckStartupCompatibility(ctx); err != nil {
+		s.Close()
+		return nil, err
+	}
+	if err := h.Ledger.CheckStartupCompatibility(ctx); err != nil {
+		s.Close()
+		return nil, err
+	}
 	if err := h.Sessions.RecoverPending(ctx, &v1.Caller{UserId: user, IssuerId: "host-recovery"}); err != nil {
 		s.Close()
 		return nil, err
@@ -193,6 +210,17 @@ func (h *Harness) StorageSettings() sqlite.Settings { return h.store.Settings() 
 
 // executionCompiler 只分派已经固定的能力版本。
 type executionCompiler struct{ api api.Adapter }
+
+// CheckRecoverySupported 依原适配器分派；不调用 Compile 或替换原能力。
+func (executionCompiler) CheckRecoverySupported(op *v1.Operation) error {
+	if op.GetCapabilitySnapshot().GetAdapterRef().GetName().GetLocalId() == "api-reference-v1" {
+		return (api.Adapter{}).CheckRecoverySupported(op)
+	}
+	if op.GetCapabilitySnapshot().GetAdapterRef().GetName().GetLocalId() == "managed-file" {
+		return (fileadapter.Adapter{}).CheckRecoverySupported(op)
+	}
+	return (simulator.Adapter{}).CheckRecoverySupported(op)
+}
 
 func (c executionCompiler) Compile(o *v1.Operation, a *v1.ExecutionAttempt) (*v1.CallDescriptor, *v1.ExecutionCapabilities, error) {
 	return c.CompileContext(context.Background(), o, a)

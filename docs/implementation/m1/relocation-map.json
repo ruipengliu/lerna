@@ -1,0 +1,210 @@
+{
+  "reason": "conventions2.1: methods/criteria in verification; actual results/data in implementation reports",
+  "original_git_ref": "b7a3a50ee5a72047990f49f4a8713d778e1501df",
+  "historical_prefix_resolution": {
+    "docs/architecture/verification/protobuf-h1-data/": "docs/implementation/m1/protobuf-h1-data/"
+  },
+  "original_manifests_not_rewritten": true,
+  "files": [
+    {
+      "original_path": "docs/architecture/verification/protobuf-h1.md",
+      "relocated_path": "docs/implementation/m1/history/formal22-protobuf-h1.md",
+      "sha256": "3c5e6f21cedca38d7fbc4895e8ee5655e7f4887a04402d069b4f389c3adf26d8",
+      "original_git_ref": "b7a3a50ee5a72047990f49f4a8713d778e1501df",
+      "bytes": 25952,
+      "original_blob": "4296f0d6d3661525ae9383d77df2be17410b155d"
+    },
+    {
+      "original_path": "docs/architecture/verification/local-durability.md",
+      "relocated_path": "docs/implementation/m1/history/formal22-local-durability.md",
+      "sha256": "98394fbf6983b104d901521b6652afdbda917dc4d7be37bc3ccc87ba0e2ff89b",
+      "original_git_ref": "b7a3a50ee5a72047990f49f4a8713d778e1501df",
+      "bytes": 9879,
+      "original_blob": "bec83fce7f2acf5d92ccabf4576d6c4f2c118b73"
+    },
+    {
+      "original_path": "docs/architecture/verification/protobuf-h1-data/source-sha256.txt",
+      "relocated_path": "docs/implementation/m1/protobuf-h1-data/history/formal22-baseline/source-sha256.txt",
+      "sha256": "9bbe2d12987e976ee1190a9283d46e09084a7eee6c266be22b02c24408d19d8c",
+      "original_git_ref": "b7a3a50ee5a72047990f49f4a8713d778e1501df",
+      "bytes": 40179,
+      "original_blob": "057f0b9521e050b8b8799b48dc6f0be304d79c01"
+    },
+    {
+      "original_path": "docs/architecture/verification/protobuf-h1-data/corpus-sha256.txt",
+      "relocated_path": "docs/implementation/m1/protobuf-h1-data/history/formal22-baseline/corpus-sha256.txt",
+      "sha256": "2d1955deab3c691da1eef722f854ea227395f8444cc0c6aeab5b06275fa53c6b",
+      "original_git_ref": "b7a3a50ee5a72047990f49f4a8713d778e1501df",
+      "bytes": 110,
+      "original_blob": "bf3aaf2c2b35cf5973050699e709508fe9995ba9"
+    },
+    {
+      "original_path": "docs/architecture/verification/protobuf-h1-data/measured-corpus.json",
+      "relocated_path": "docs/implementation/m1/protobuf-h1-data/history/formal22-baseline/measured-corpus.json",
+      "sha256": "ec5f39d50051f019a0dc37efa5341230ace9c4dd3db49176d067218a17e2feb7",
+      "original_git_ref": "b7a3a50ee5a72047990f49f4a8713d778e1501df",
+      "bytes": 2409185,
+      "original_blob": "2992de8add4be35229fbe5dbada963233dfae8b7"
+    },
+    {
+      "original_path": "docs/architecture/verification/protobuf-h1-data/artifacts-sha256.txt",
+      "relocated_path": "docs/implementation/m1/protobuf-h1-data/history/formal22-baseline/artifacts-sha256.txt",
+      "sha256": "98772ee450669c1b34e160473386a85a90feb77e012a7aec7e3474a462271069",
+      "original_git_ref": "b7a3a50ee5a72047990f49f4a8713d778e1501df",
+      "bytes": 822,
+      "original_blob": "3b76f556a4068be9d5a0c98a8045684f85d78e28"
+    },
+    {
+      "original_path": "docs/architecture/verification/protobuf-h1-data/binaries-sha256.txt",
+      "relocated_path": "docs/implementation/m1/protobuf-h1-data/history/formal22-baseline/binaries-sha256.txt",
+      "sha256": "a978b0b5796901b80a17e5302ad339a88c9960026a025a4a128d4859cc504d71",
+      "original_git_ref": "b7a3a50ee5a72047990f49f4a8713d778e1501df",
+      "bytes": 383,
+      "original_blob": "2d6730bb561b3f8b9a29de52c7bef1305651678b"
+    },
+    {
+      "original_path": "docs/architecture/verification/protobuf-h1-data/bench.txt",
+      "relocated_path": "docs/implementation/m1/protobuf-h1-data/history/formal22-baseline/bench.txt",
+      "sha256": "3d492273d8f5609e3d31907a7fe76ea0659acc57e09ec5888cee538c7f633bc8",
+      "original_git_ref": "b7a3a50ee5a72047990f49f4a8713d778e1501df",
+      "bytes": 1227341,
+      "original_blob": "d89316d12ebab228068220b7698b58218207a68b"
+    },
+    {
+      "original_path": "docs/architecture/verification/protobuf-h1-data/peak-memory.txt",
+      "relocated_path": "docs/implementation/m1/protobuf-h1-data/history/formal22-baseline/peak-memory.txt",
+      "sha256": "7f62cc965c52de2414ac7e8fa86eba091c3a32e758f55d0c20c3d5c26550925a",
+      "original_git_ref": "b7a3a50ee5a72047990f49f4a8713d778e1501df",
+      "bytes": 777,
+      "original_blob": "0afb8fadbd1d9cf363f31ac28cc8a331c555ab26"
+    },
+    {
+      "original_path": "docs/architecture/verification/protobuf-h1-data/sizes.txt",
+      "relocated_path": "docs/implementation/m1/protobuf-h1-data/history/formal22-baseline/sizes.txt",
+      "sha256": "f655a919f28c73c119258460cd28e67a9c4de14305c4f223ace5678531ec24b7",
+      "original_git_ref": "b7a3a50ee5a72047990f49f4a8713d778e1501df",
+      "bytes": 135,
+      "original_blob": "6f8351b9c9765092cfbd9fd56d54a29d8a3af854"
+    },
+    {
+      "original_path": "docs/architecture/verification/protobuf-h1-data/environment.txt",
+      "relocated_path": "docs/implementation/m1/protobuf-h1-data/history/formal22-baseline/environment.txt",
+      "sha256": "4ff2513d007bd08f25d0e69f19a151d83590a31bc5cceefb7cbeea26cd261f9b",
+      "original_git_ref": "b7a3a50ee5a72047990f49f4a8713d778e1501df",
+      "bytes": 1943,
+      "original_blob": "428ef0b60f39294a4431d4435929021ef0047a98"
+    },
+    {
+      "original_path": "docs/architecture/verification/protobuf-h1-data/inventory.json",
+      "relocated_path": "docs/implementation/m1/protobuf-h1-data/history/formal22-baseline/inventory.json",
+      "sha256": "2417e1da5f2c0a0ef221967294a4982ca3ef96136d1505d72dc96fbf3fa616cd",
+      "original_git_ref": "b7a3a50ee5a72047990f49f4a8713d778e1501df",
+      "bytes": 150401,
+      "original_blob": "cf76b2a3a3ac1a0855a5dc35bbf04f07985eb967"
+    },
+    {
+      "original_path": "docs/architecture/verification/protobuf-h1-data/current-inventory.json",
+      "relocated_path": "docs/implementation/m1/protobuf-h1-data/history/formal22-baseline/current-inventory.json",
+      "sha256": "746e55980db415c9909a58151778ba0554944532bbcb980cf1c2569e4d63590b",
+      "original_git_ref": "b7a3a50ee5a72047990f49f4a8713d778e1501df",
+      "bytes": 150408,
+      "original_blob": "969184b2027008226bb2464fd16a9fe101e9d673"
+    },
+    {
+      "original_path": "docs/architecture/verification/protobuf-h1-data/inventory-run.txt",
+      "relocated_path": "docs/implementation/m1/protobuf-h1-data/history/formal22-baseline/inventory-run.txt",
+      "sha256": "c26de83abdc9496cd1301470918ec39ecca1cf389ef0ae1c6504da1800d1c431",
+      "original_git_ref": "b7a3a50ee5a72047990f49f4a8713d778e1501df",
+      "bytes": 5,
+      "original_blob": "7ef22e9a431ad0272713b71fdc8794016c8ef12f"
+    },
+    {
+      "original_path": "docs/architecture/verification/protobuf-h1-data/history/formal17-file-baseline/measured-corpus.json",
+      "relocated_path": "docs/implementation/m1/protobuf-h1-data/history/formal17-file-baseline/measured-corpus.json",
+      "sha256": "842c0ca8c87dc29faed9314d461db3aa81ae6f7ae616e747c14cd12c5311c58a",
+      "original_git_ref": "b7a3a50ee5a72047990f49f4a8713d778e1501df",
+      "bytes": 300370,
+      "original_blob": "4b99dadbfdc6d05a76ee8442d21eb175cd617fa6"
+    },
+    {
+      "original_path": "docs/architecture/verification/protobuf-h1-data/history/formal17-file-baseline/mainline.json",
+      "relocated_path": "docs/implementation/m1/protobuf-h1-data/history/formal17-file-baseline/mainline.json",
+      "sha256": "8b9a01b303280ebc5c7c027693ca0a9089f6a1725e6ca9452530b487ed10974c",
+      "original_git_ref": "b7a3a50ee5a72047990f49f4a8713d778e1501df",
+      "bytes": 888963,
+      "original_blob": "0f51713917d990d0dcbf3c63fd347acd689551fe"
+    },
+    {
+      "original_path": "docs/architecture/verification/protobuf-h1-data/history/formal17-file-baseline/bench.txt",
+      "relocated_path": "docs/implementation/m1/protobuf-h1-data/history/formal17-file-baseline/bench.txt",
+      "sha256": "aaf150c8d33c6d1a721d086e9f5419973102e24d32449f5dcef5d92a0c272096",
+      "original_git_ref": "b7a3a50ee5a72047990f49f4a8713d778e1501df",
+      "bytes": 188520,
+      "original_blob": "2adc1bf0967a8832a1ff2daa13f32f566151df89"
+    },
+    {
+      "original_path": "docs/architecture/verification/protobuf-h1-data/history/formal17-file-baseline/peak-memory.txt",
+      "relocated_path": "docs/implementation/m1/protobuf-h1-data/history/formal17-file-baseline/peak-memory.txt",
+      "sha256": "4cdf07f1b45d704cd3afce750425c4c9550194196fceb1d7d135b4c7c84dfcba",
+      "original_git_ref": "b7a3a50ee5a72047990f49f4a8713d778e1501df",
+      "bytes": 777,
+      "original_blob": "eade1e895a83c744be236479d8b537d5eec6fe0f"
+    },
+    {
+      "original_path": "docs/architecture/verification/protobuf-h1-data/history/formal17-file-baseline/sizes.txt",
+      "relocated_path": "docs/implementation/m1/protobuf-h1-data/history/formal17-file-baseline/sizes.txt",
+      "sha256": "0418ff4d3312361f523c62dbf0025c14e1e7e0350c4c5ff21686e2d7b7b5500d",
+      "original_git_ref": "b7a3a50ee5a72047990f49f4a8713d778e1501df",
+      "bytes": 135,
+      "original_blob": "65982e81929c8422ad4792e56e4aebf788029f09"
+    },
+    {
+      "original_path": "docs/architecture/verification/protobuf-h1-data/history/formal17-file-baseline/manifest.json",
+      "relocated_path": "docs/implementation/m1/protobuf-h1-data/history/formal17-file-baseline/manifest.json",
+      "sha256": "88883df7b8b4f217e45b49f9b6e16886c62412d7b5da11d1aed2ca4d329aae89",
+      "original_git_ref": "b7a3a50ee5a72047990f49f4a8713d778e1501df",
+      "bytes": 2729,
+      "original_blob": "c61f760d1f82b962e83e05c619464e49f6226259"
+    },
+    {
+      "original_path": "docs/architecture/verification/protobuf-h1-data/history/formal17-file-baseline/environment.txt",
+      "relocated_path": "docs/implementation/m1/protobuf-h1-data/history/formal17-file-baseline/environment.txt",
+      "sha256": "283f542278c1976007c8c016687a44c3bd12406b36e85e9c277450ef077916bb",
+      "original_git_ref": "b7a3a50ee5a72047990f49f4a8713d778e1501df",
+      "bytes": 958,
+      "original_blob": "cd52518dceeb1b1403ce73c6d69ca08013d475f1"
+    },
+    {
+      "original_path": "docs/architecture/verification/protobuf-h1-data/history/formal17-file-baseline/inventory.json",
+      "relocated_path": "docs/implementation/m1/protobuf-h1-data/history/formal17-file-baseline/inventory.json",
+      "sha256": "ae828ae89593e894ba0a9cad02230848c288fc8e3d7932c2329cea796be5f690",
+      "original_git_ref": "b7a3a50ee5a72047990f49f4a8713d778e1501df",
+      "bytes": 42857,
+      "original_blob": "317532f985e3138556e2a336fa4c69a74eb664a3"
+    },
+    {
+      "original_path": "docs/architecture/verification/protobuf-h1-data/history/formal17-file-baseline/current-inventory.json",
+      "relocated_path": "docs/implementation/m1/protobuf-h1-data/history/formal17-file-baseline/current-inventory.json",
+      "sha256": "0f67a3dfc0833233bedd21197efcfc045ffa9dbfc6759643e15b5bb7d28c6e82",
+      "original_git_ref": "b7a3a50ee5a72047990f49f4a8713d778e1501df",
+      "bytes": 79890,
+      "original_blob": "405baca1da38795331cd4a85e40fc34d48e4671f"
+    },
+    {
+      "original_path": "conformance/protobuf/testdata/mainline.json",
+      "relocated_path": "docs/implementation/m1/protobuf-h1-data/history/formal22-baseline/mainline.json",
+      "sha256": "ec5f39d50051f019a0dc37efa5341230ace9c4dd3db49176d067218a17e2feb7",
+      "bytes": 2409185,
+      "original_blob": "2992de8add4be35229fbe5dbada963233dfae8b7",
+      "original_git_ref": "b7a3a50ee5a72047990f49f4a8713d778e1501df"
+    },
+    {
+      "original_path": ".scratch/m1-recoverable-mainline/issues/22-protobuf-real-object-check.md",
+      "relocated_path": "docs/implementation/m1/history/formal22-issue22.md",
+      "sha256": "622ccd15000469fbb1c568d13f57e947232109713aeb164562ed9ca9b25f490d",
+      "bytes": 6547,
+      "original_blob": "d6ddff78f45701c2a85205dfe17a937bc1dd2968",
+      "original_git_ref": "b7a3a50ee5a72047990f49f4a8713d778e1501df"
+    }
+  ]
+}

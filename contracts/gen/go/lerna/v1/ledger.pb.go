@@ -877,8 +877,13 @@ type ExecutionCapabilities struct {
 	ParameterBinding     string                 `protobuf:"bytes,12,opt,name=parameter_binding,json=parameterBinding,proto3" json:"parameter_binding,omitempty"`
 	RepeatReadSafe       bool                   `protobuf:"varint,13,opt,name=repeat_read_safe,json=repeatReadSafe,proto3" json:"repeat_read_safe,omitempty"`
 	AccountScope         string                 `protobuf:"bytes,14,opt,name=account_scope,json=accountScope,proto3" json:"account_scope,omitempty"`
-	unknownFields        protoimpl.UnknownFields
-	sizeCache            protoimpl.SizeCache
+	// 已验证的最大可见性延迟；缺席表示 UNKNOWN，显式零才表示立即可见。
+	QueryVisibilityDelayMs *int64 `protobuf:"varint,15,opt,name=query_visibility_delay_ms,json=queryVisibilityDelayMs,proto3,oneof" json:"query_visibility_delay_ms,omitempty"`
+	// 已验证的最短保证保留期；缺席表示 UNKNOWN，显式零表示没有保证的保留时段。
+	// 与幂等键 retention_ms 分开，零绝不表示无限保留。
+	QueryRecordRetentionMs *int64 `protobuf:"varint,16,opt,name=query_record_retention_ms,json=queryRecordRetentionMs,proto3,oneof" json:"query_record_retention_ms,omitempty"`
+	unknownFields          protoimpl.UnknownFields
+	sizeCache              protoimpl.SizeCache
 }
 
 func (x *ExecutionCapabilities) Reset() {
@@ -1007,6 +1012,20 @@ func (x *ExecutionCapabilities) GetAccountScope() string {
 		return x.AccountScope
 	}
 	return ""
+}
+
+func (x *ExecutionCapabilities) GetQueryVisibilityDelayMs() int64 {
+	if x != nil && x.QueryVisibilityDelayMs != nil {
+		return *x.QueryVisibilityDelayMs
+	}
+	return 0
+}
+
+func (x *ExecutionCapabilities) GetQueryRecordRetentionMs() int64 {
+	if x != nil && x.QueryRecordRetentionMs != nil {
+		return *x.QueryRecordRetentionMs
+	}
+	return 0
 }
 
 type PrepareResendCommand struct {
@@ -1171,7 +1190,7 @@ const file_lerna_v1_ledger_proto_rawDesc = "" +
 	"\x06header\x18\x01 \x01(\v2\x17.lerna.v1.CommandHeaderR\x06header\x127\n" +
 	"\foperation_id\x18\x02 \x01(\v2\x14.lerna.v1.GlobalNameR\voperationId\x12)\n" +
 	"\x10process_instance\x18\x03 \x01(\tR\x0fprocessInstance\x12#\n" +
-	"\x05claim\x18\x04 \x01(\v2\r.lerna.v1.JobR\x05claim\"\xe0\x04\n" +
+	"\x05claim\x18\x04 \x01(\v2\r.lerna.v1.JobR\x05claim\"\x9c\x06\n" +
 	"\x15ExecutionCapabilities\x12\x16\n" +
 	"\x06effect\x18\x01 \x01(\tR\x06effect\x12\x1e\n" +
 	"\n" +
@@ -1189,7 +1208,11 @@ const file_lerna_v1_ledger_proto_rawDesc = "" +
 	"\x15concurrency_guarantee\x18\v \x01(\tR\x14concurrencyGuarantee\x12+\n" +
 	"\x11parameter_binding\x18\f \x01(\tR\x10parameterBinding\x12(\n" +
 	"\x10repeat_read_safe\x18\r \x01(\bR\x0erepeatReadSafe\x12#\n" +
-	"\raccount_scope\x18\x0e \x01(\tR\faccountScope\"\xe0\x01\n" +
+	"\raccount_scope\x18\x0e \x01(\tR\faccountScope\x12>\n" +
+	"\x19query_visibility_delay_ms\x18\x0f \x01(\x03H\x00R\x16queryVisibilityDelayMs\x88\x01\x01\x12>\n" +
+	"\x19query_record_retention_ms\x18\x10 \x01(\x03H\x01R\x16queryRecordRetentionMs\x88\x01\x01B\x1c\n" +
+	"\x1a_query_visibility_delay_msB\x1c\n" +
+	"\x1a_query_record_retention_ms\"\xe0\x01\n" +
 	"\x14PrepareResendCommand\x12/\n" +
 	"\x06header\x18\x01 \x01(\v2\x17.lerna.v1.CommandHeaderR\x06header\x127\n" +
 	"\foperation_id\x18\x02 \x01(\v2\x14.lerna.v1.GlobalNameR\voperationId\x129\n" +
@@ -1297,6 +1320,7 @@ func file_lerna_v1_ledger_proto_init() {
 	file_lerna_v1_ledger_proto_msgTypes[0].OneofWrappers = []any{}
 	file_lerna_v1_ledger_proto_msgTypes[3].OneofWrappers = []any{}
 	file_lerna_v1_ledger_proto_msgTypes[4].OneofWrappers = []any{}
+	file_lerna_v1_ledger_proto_msgTypes[8].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

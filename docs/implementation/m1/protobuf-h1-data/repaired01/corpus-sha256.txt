@@ -1,0 +1,1 @@
+8af42a2506e5c178ecb02d87127ce7092b93fa9eefe18c40de74a370d988d6cf  conformance/protobuf/testdata/mainline.json

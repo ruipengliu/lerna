@@ -84,10 +84,13 @@ func (s *Service) ConfigureCapability(ctx context.Context, caller *v1.Caller, c 
 		return cap.Ref, s.store.SaveCapability(tx, cap)
 	})
 }
-func (s *Service) Admit(ctx context.Context, caller *v1.Caller, c *v1.AdmitCommand) (*v1.CommandReceipt, error) {
+func (s *Service) Admit(ctx context.Context, caller *v1.Caller, c *v1.AdmitCommand) (receipt *v1.CommandReceipt, err error) {
+	ctx, measurement := s.beginAdmissionMetric(ctx)
+	defer func() { s.finishAdmissionMetric(measurement, receipt, err) }()
 	if e := command.ValidateHeader(c.GetHeader(), c); e != nil {
 		return nil, e
 	}
+	measurement.validated = true
 	return s.traceDecisions(c.TaskId).Execute(ctx, caller, c.Header, command.SemanticFingerprint("admit", c.TaskId, c.ProposalRef, c.GrantRef, c.ConfirmationRef), "tasks.admit", func(tx context.Context) (*v1.Ref, error) {
 		t, e := s.QueryTask(tx, caller, c.TaskId)
 		if e != nil {

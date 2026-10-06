@@ -12,10 +12,13 @@ import (
 )
 
 // AdmitModelCall 在同一裁决事务内绑定逻辑调用位置、授权、费用预留与派发责任。
-func (s *Service) AdmitModelCall(ctx context.Context, caller *v1.Caller, c *v1.AdmitModelCallCommand) (*v1.CommandReceipt, error) {
+func (s *Service) AdmitModelCall(ctx context.Context, caller *v1.Caller, c *v1.AdmitModelCallCommand) (receipt *v1.CommandReceipt, err error) {
+	ctx, measurement := s.beginAdmissionMetric(ctx)
+	defer func() { s.finishAdmissionMetric(measurement, receipt, err) }()
 	if e := command.ValidateHeader(c.GetHeader(), c); e != nil {
 		return nil, e
 	}
+	measurement.validated = true
 	return s.traceModelDecisions(c.RequestRef).Execute(ctx, caller, c.Header, command.SemanticFingerprint("model-admit", c.RequestRef, c.Position, c.DescriptorDigest, c.GrantRef, c.ConfirmationRef), "tasks.model_admit", func(tx context.Context) (*v1.Ref, error) {
 		if caller.GetIssuerId() != "host" {
 			return nil, command.Fail("PERMISSION_DENIED")
@@ -144,6 +147,9 @@ func (s *Service) AdmitModelCall(ctx context.Context, caller *v1.Caller, c *v1.A
 }
 
 func (s *Service) checkModelInput(ctx context.Context, caller *v1.Caller, c *v1.ModelCall) error {
+	if e := checkSavedModelCall(c); e != nil {
+		return e
+	}
 	if c.InputRef == nil || c.DerivationRef == nil {
 		return command.Fail("PREPARATION_UNRECOVERABLE")
 	}

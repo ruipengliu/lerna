@@ -66,6 +66,9 @@ func (s *Service) currentModelClaim(ctx context.Context, caller *v1.Caller, r *v
 	if e != nil {
 		return e
 	}
+	if e := command.CheckSavedJobContract(current); e != nil {
+		return e
+	}
 	now, e := s.store.(modelStore).ReadAuthorityTime(ctx)
 	if e != nil {
 		return e
@@ -180,6 +183,9 @@ func (s *Service) PrepareModelCall(ctx context.Context, caller *v1.Caller, c *v1
 			return nil, e
 		}
 		if old != nil {
+			if e = checkSavedModelCall(old); e != nil {
+				return nil, e
+			}
 			if !proto.Equal(old.Settings, settings) || !sameRefs(old.InputRefs, c.InputRefs) || !proto.Equal(old.CapabilityRef, c.CapabilityRef) {
 				return nil, command.Fail("MODEL_POSITION_CONFLICT")
 			}

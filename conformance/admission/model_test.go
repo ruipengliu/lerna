@@ -165,6 +165,16 @@ func TestModelRestartReturnsOriginalOutputWithoutNewSendOrCharge(t *testing.T) {
 	if e != nil || result.Status != "COMPLETED" || result.OutputRef == nil || result.UsageRef == nil {
 		t.Fatalf("output: %v %v", result, e)
 	}
+	modelOperation, e := f.h.Ledger.QueryOperation(f.ctx, f.caller, result.OperationId)
+	if e != nil {
+		t.Fatal(e)
+	}
+	assertFixedExecutionDeclaration(t, modelOperation.Execution.Attempt.Capabilities, "lerna-model-v1", "reference-model-v1")
+	assertOriginalProofRule(t, f, modelOperation, "reference-model-v1")
+	modelAdmission, e := f.h.Tasks.QueryAdmission(f.ctx, f.caller, modelOperation.AdmissionRef)
+	if e != nil || modelAdmission.ModelDescriptorDigest == "" || modelOperation.CapabilitySnapshot.Action != "MODEL_INFER" || modelOperation.Execution.Attempt.Capabilities.Effect != "MODEL_INFERENCE" || provider.Calls() != 1 {
+		t.Fatalf("model proof lost its original model call binding: %v %v", modelAdmission, e)
+	}
 	body, e := f.h.Content.Read(f.ctx, f.caller, result.OutputRef)
 	if e != nil || string(command.ContentBytes(body)) != provider.Output || body.SourceDescriptor.Kind != "DERIVED" {
 		t.Fatalf("derived output: %v %v", body, e)

@@ -145,7 +145,8 @@ func captureReasonerApprovedActionDriver(t *testing.T, samples *[]protobuf.Sampl
 		t.Fatal(e)
 	}
 	cap.Ref, cap.ApprovedBy = nil, nil
-	cap.AdapterRef.Name.LocalId = "reference-v1"
+	// 真实发送前取消仍保留可解释的原实现；不声明幂等或查询能力。
+	cap.AdapterRef.Name.LocalId = "simulator-opaque"
 	cap.ParameterSchemaJson = []byte(`{"type":"object","properties":{"destination":{"type":"string"}},"required":["destination"],"additionalProperties":false}`)
 	configureCap := &v1.ConfigureCapabilityCommand{Header: header("capture-driver-target-cap"), Capability: cap}
 	receipt, e := f.h.Tasks.ConfigureCapability(f.ctx, f.caller, configureCap)
@@ -289,10 +290,11 @@ func captureReasonerApprovedActionDriver(t *testing.T, samples *[]protobuf.Sampl
 	if e = f.h.Close(); e != nil {
 		t.Fatal(e)
 	}
-	f.h, e = assembly.Open(f.path, "u", "d")
+	restored, e := assembly.Open(f.path, "u", "d")
 	if e != nil {
 		t.Fatal(e)
 	}
+	f.h = restored
 	restarted, e := f.h.Tasks.AdvanceReasonerTask(f.ctx, f.caller, advance)
 	add("restart-replay", restarted, e)
 	history, e := f.h.Tasks.QueryReasonerDriverVersion(f.ctx, f.caller, d.Ref)

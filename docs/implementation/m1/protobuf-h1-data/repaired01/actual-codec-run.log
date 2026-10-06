@@ -1,0 +1,1282 @@
+=== RUN   TestWriteProtobufMeasurementInventory
+--- PASS: TestWriteProtobufMeasurementInventory (0.42s)
+=== RUN   TestCapturedObjectsRoundTrip
+=== RUN   TestCapturedObjectsRoundTrip/start-command
+=== RUN   TestCapturedObjectsRoundTrip/admission
+=== RUN   TestCapturedObjectsRoundTrip/operation-handoff
+=== RUN   TestCapturedObjectsRoundTrip/planning-before-send
+=== RUN   TestCapturedObjectsRoundTrip/grant
+=== RUN   TestCapturedObjectsRoundTrip/grant-use
+=== RUN   TestCapturedObjectsRoundTrip/exit-credential
+=== RUN   TestCapturedObjectsRoundTrip/prepare-command
+=== RUN   TestCapturedObjectsRoundTrip/issue-exit-command
+=== RUN   TestCapturedObjectsRoundTrip/accept-operation-command
+=== RUN   TestCapturedObjectsRoundTrip/execution-before-send
+=== RUN   TestCapturedObjectsRoundTrip/reservation
+=== RUN   TestCapturedObjectsRoundTrip/send-receipt
+=== RUN   TestCapturedObjectsRoundTrip/execution-after-send
+=== RUN   TestCapturedObjectsRoundTrip/operation-after-send
+=== RUN   TestCapturedObjectsRoundTrip/observation
+=== RUN   TestCapturedObjectsRoundTrip/dispatch-command
+=== RUN   TestCapturedObjectsRoundTrip/register-observation-command
+=== RUN   TestCapturedObjectsRoundTrip/accept-observation-command
+=== RUN   TestCapturedObjectsRoundTrip/interpret-observation-command
+=== RUN   TestCapturedObjectsRoundTrip/effect-interpretation
+=== RUN   TestCapturedObjectsRoundTrip/observation-reports
+=== RUN   TestCapturedObjectsRoundTrip/usage
+=== RUN   TestCapturedObjectsRoundTrip/trace-event
+=== RUN   TestCapturedObjectsRoundTrip/credential-use
+=== RUN   TestCapturedObjectsRoundTrip/billing-source
+=== RUN   TestCapturedObjectsRoundTrip/begin-completion-command
+=== RUN   TestCapturedObjectsRoundTrip/result
+=== RUN   TestCapturedObjectsRoundTrip/verification
+=== RUN   TestCapturedObjectsRoundTrip/completion-intent-0
+=== RUN   TestCapturedObjectsRoundTrip/completion-seal-0
+=== RUN   TestCapturedObjectsRoundTrip/closed-recheck-rejection
+=== RUN   TestCapturedObjectsRoundTrip/recheck-completion-command
+=== RUN   TestCapturedObjectsRoundTrip/closed-task
+=== RUN   TestCapturedObjectsRoundTrip/planning-after-completion
+=== RUN   TestCapturedObjectsRoundTrip/user-budget
+=== RUN   TestCapturedObjectsRoundTrip/task-budget
+=== RUN   TestCapturedObjectsRoundTrip/goal-receipt-query
+=== RUN   TestCapturedObjectsRoundTrip/session
+=== RUN   TestCapturedObjectsRoundTrip/goal-command
+=== RUN   TestCapturedObjectsRoundTrip/large-goal-command
+=== RUN   TestCapturedObjectsRoundTrip/request-confirmation-command
+=== RUN   TestCapturedObjectsRoundTrip/confirmation-pending
+=== RUN   TestCapturedObjectsRoundTrip/approve-confirmation-command
+=== RUN   TestCapturedObjectsRoundTrip/confirmation-approved
+=== RUN   TestCapturedObjectsRoundTrip/confirmed-admit-command
+=== RUN   TestCapturedObjectsRoundTrip/confirmation-consumed
+=== RUN   TestCapturedObjectsRoundTrip/withdraw-confirmation-command
+=== RUN   TestCapturedObjectsRoundTrip/confirmation-withdrawn
+=== RUN   TestCapturedObjectsRoundTrip/withdrawn-admission-rejection
+=== RUN   TestCapturedObjectsRoundTrip/grant-confirmation-command
+=== RUN   TestCapturedObjectsRoundTrip/grant-confirmation-pending
+=== RUN   TestCapturedObjectsRoundTrip/issue-grant-command
+=== RUN   TestCapturedObjectsRoundTrip/grant-confirmation-consumed
+=== RUN   TestCapturedObjectsRoundTrip/grant-issuance
+=== RUN   TestCapturedObjectsRoundTrip/single-exact-grant
+=== RUN   TestCapturedObjectsRoundTrip/start-record
+=== RUN   TestCapturedObjectsRoundTrip/revoke-grant-command
+=== RUN   TestCapturedObjectsRoundTrip/revocation-pending
+=== RUN   TestCapturedObjectsRoundTrip/revocation-complete
+=== RUN   TestCapturedObjectsRoundTrip/revoked-grant-status
+=== RUN   TestCapturedObjectsRoundTrip/sealed-operation
+=== RUN   TestCapturedObjectsRoundTrip/grant-exit-closure
+=== RUN   TestCapturedObjectsRoundTrip/release-reservation-command
+=== RUN   TestCapturedObjectsRoundTrip/reservation-release
+=== RUN   TestCapturedObjectsRoundTrip/released-budget
+=== RUN   TestCapturedObjectsRoundTrip/settled-billing-source
+=== RUN   TestCapturedObjectsRoundTrip/billing-entry
+=== RUN   TestCapturedObjectsRoundTrip/conflicted-billing-source
+=== RUN   TestCapturedObjectsRoundTrip/billing-conflict
+=== RUN   TestCapturedObjectsRoundTrip/billing-blocked-budget
+=== RUN   TestCapturedObjectsRoundTrip/adjust-budget-command
+=== RUN   TestCapturedObjectsRoundTrip/deficit-budget
+=== RUN   TestCapturedObjectsRoundTrip/unknown-billing-source
+=== RUN   TestCapturedObjectsRoundTrip/import-bill-command
+=== RUN   TestCapturedObjectsRoundTrip/late-over-ceiling-source
+=== RUN   TestCapturedObjectsRoundTrip/unknown-operation-after-bill
+=== RUN   TestCapturedObjectsRoundTrip/authenticated-caller
+=== RUN   TestCapturedObjectsRoundTrip/input-content
+=== RUN   TestCapturedObjectsRoundTrip/create-session-command
+=== RUN   TestCapturedObjectsRoundTrip/empty-session
+=== RUN   TestCapturedObjectsRoundTrip/publish-question-command
+=== RUN   TestCapturedObjectsRoundTrip/question
+=== RUN   TestCapturedObjectsRoundTrip/submit-answer-command
+=== RUN   TestCapturedObjectsRoundTrip/input-delivery
+=== RUN   TestCapturedObjectsRoundTrip/already-routed-rejection
+=== RUN   TestCapturedObjectsRoundTrip/route-input-command
+=== RUN   TestCapturedObjectsRoundTrip/modify-input-command
+=== RUN   TestCapturedObjectsRoundTrip/model-unprocessed-input-snapshot
+=== RUN   TestCapturedObjectsRoundTrip/process-input-command
+=== RUN   TestCapturedObjectsRoundTrip/task-input-history
+=== RUN   TestCapturedObjectsRoundTrip/accept-requirements-command
+=== RUN   TestCapturedObjectsRoundTrip/request-proposal-command
+=== RUN   TestCapturedObjectsRoundTrip/receive-proposal-command
+=== RUN   TestCapturedObjectsRoundTrip/configure-budget-rejection
+=== RUN   TestCapturedObjectsRoundTrip/configure-budget-command
+=== RUN   TestCapturedObjectsRoundTrip/configure-capability-command
+=== RUN   TestCapturedObjectsRoundTrip/configure-grant-command
+=== RUN   TestCapturedObjectsRoundTrip/claim-job-command
+=== RUN   TestCapturedObjectsRoundTrip/physical-io-request
+=== RUN   TestCapturedObjectsRoundTrip/physical-io-result
+=== RUN   TestCapturedObjectsRoundTrip/content-register-command
+=== RUN   TestCapturedObjectsRoundTrip/content-registration-staged
+=== RUN   TestCapturedObjectsRoundTrip/content-registration-published
+=== RUN   TestCapturedObjectsRoundTrip/content-body-receipt
+=== RUN   TestCapturedObjectsRoundTrip/content-version-one
+=== RUN   TestCapturedObjectsRoundTrip/content-update-command
+=== RUN   TestCapturedObjectsRoundTrip/content-version-two
+=== RUN   TestCapturedObjectsRoundTrip/content-prepare-command
+=== RUN   TestCapturedObjectsRoundTrip/content-derivation-prepared
+=== RUN   TestCapturedObjectsRoundTrip/content-derivation-input
+=== RUN   TestCapturedObjectsRoundTrip/content-read-input-command
+=== RUN   TestCapturedObjectsRoundTrip/content-takeover-command
+=== RUN   TestCapturedObjectsRoundTrip/content-derivation-taken-over
+=== RUN   TestCapturedObjectsRoundTrip/content-seal-command
+=== RUN   TestCapturedObjectsRoundTrip/content-derivation-sealed
+=== RUN   TestCapturedObjectsRoundTrip/content-commit-command
+=== RUN   TestCapturedObjectsRoundTrip/content-derivation-staged
+=== RUN   TestCapturedObjectsRoundTrip/content-derived-published
+=== RUN   TestCapturedObjectsRoundTrip/content-derivation-committed
+=== RUN   TestCapturedObjectsRoundTrip/content-delete-unsupported-command
+=== RUN   TestCapturedObjectsRoundTrip/model-proposal-request
+=== RUN   TestCapturedObjectsRoundTrip/model-context-snapshot
+=== RUN   TestCapturedObjectsRoundTrip/model-call-prepared
+=== RUN   TestCapturedObjectsRoundTrip/model-prepare-command
+=== RUN   TestCapturedObjectsRoundTrip/model-input-published
+=== RUN   TestCapturedObjectsRoundTrip/model-input-derivation
+=== RUN   TestCapturedObjectsRoundTrip/model-admit-command
+=== RUN   TestCapturedObjectsRoundTrip/model-admission
+=== RUN   TestCapturedObjectsRoundTrip/model-call-result
+=== RUN   TestCapturedObjectsRoundTrip/model-run-command
+=== RUN   TestCapturedObjectsRoundTrip/model-call-completed
+=== RUN   TestCapturedObjectsRoundTrip/model-execution-descriptor
+=== RUN   TestCapturedObjectsRoundTrip/model-output-published
+=== RUN   TestCapturedObjectsRoundTrip/model-output-derivation
+=== RUN   TestCapturedObjectsRoundTrip/model-usage
+=== RUN   TestCapturedObjectsRoundTrip/model-outcome-command
+=== RUN   TestCapturedObjectsRoundTrip/model-outcome-accepted
+=== RUN   TestCapturedObjectsRoundTrip/model-request-reported
+=== RUN   TestCapturedObjectsRoundTrip/model-settled-budget
+=== RUN   TestCapturedObjectsRoundTrip/model-unknown-result
+=== RUN   TestCapturedObjectsRoundTrip/model-stop-command
+=== RUN   TestCapturedObjectsRoundTrip/model-request-stopped
+=== RUN   TestCapturedObjectsRoundTrip/model-stopped-outcome-command
+=== RUN   TestCapturedObjectsRoundTrip/model-stopped-late-outcome
+=== RUN   TestCapturedObjectsRoundTrip/model-unknown-budget
+=== RUN   TestCapturedObjectsRoundTrip/model-refused-result
+=== RUN   TestCapturedObjectsRoundTrip/reconciliation-original-unknown
+=== RUN   TestCapturedObjectsRoundTrip/reconciliation-request-command
+=== RUN   TestCapturedObjectsRoundTrip/reconciliation-waiting-task
+=== RUN   TestCapturedObjectsRoundTrip/reconciliation-confirmation-required
+=== RUN   TestCapturedObjectsRoundTrip/reconciliation-query-before-approval
+=== RUN   TestCapturedObjectsRoundTrip/closure-work
+=== RUN   TestCapturedObjectsRoundTrip/closure-confirmation-command
+=== RUN   TestCapturedObjectsRoundTrip/closure-confirmation-pending
+=== RUN   TestCapturedObjectsRoundTrip/reconciliation-control-command
+=== RUN   TestCapturedObjectsRoundTrip/reconciliation-completed
+=== RUN   TestCapturedObjectsRoundTrip/reconciliation-query-completed
+=== RUN   TestCapturedObjectsRoundTrip/reconciliation-finding
+=== RUN   TestCapturedObjectsRoundTrip/closure-admission
+=== RUN   TestCapturedObjectsRoundTrip/reconciliation-query-operation
+=== RUN   TestCapturedObjectsRoundTrip/reconciliation-original-settled
+=== RUN   TestCapturedObjectsRoundTrip/reconciliation-query-observation
+=== RUN   TestCapturedObjectsRoundTrip/reconciliation-query-reports
+=== RUN   TestCapturedObjectsRoundTrip/closure-confirmation-consumed
+=== RUN   TestCapturedObjectsRoundTrip/closure-admission-command
+=== RUN   TestCapturedObjectsRoundTrip/reconciliation-progress-handoff
+=== RUN   TestCapturedObjectsRoundTrip/reconciliation-awake-task
+=== RUN   TestCapturedObjectsRoundTrip/reconciliation-check-limit
+=== RUN   TestCapturedObjectsRoundTrip/reconciliation-weak-query
+=== RUN   TestCapturedObjectsRoundTrip/reconciliation-weak-finding
+=== RUN   TestCapturedObjectsRoundTrip/reconciliation-weak-original
+=== RUN   TestCapturedObjectsRoundTrip/resend-original-unknown
+=== RUN   TestCapturedObjectsRoundTrip/resend-command
+=== RUN   TestCapturedObjectsRoundTrip/resend-prepared-execution
+=== RUN   TestCapturedObjectsRoundTrip/resend-start-command
+=== RUN   TestCapturedObjectsRoundTrip/resend-settled-operation
+=== RUN   TestCapturedObjectsRoundTrip/resend-historical-operation
+=== RUN   TestCapturedObjectsRoundTrip/resend-original-send
+=== RUN   TestCapturedObjectsRoundTrip/resend-original-send-projection
+=== RUN   TestCapturedObjectsRoundTrip/resend-original-attempt
+=== RUN   TestCapturedObjectsRoundTrip/resend-historical-effect
+=== RUN   TestCapturedObjectsRoundTrip/resend-budget-two-holds
+=== RUN   TestCapturedObjectsRoundTrip/resend-first-billing-source
+=== RUN   TestCapturedObjectsRoundTrip/resend-second-billing-source
+=== RUN   TestCapturedObjectsRoundTrip/resend-trace-operation-view
+=== RUN   TestCapturedObjectsRoundTrip/trace-producer-budget
+=== RUN   TestCapturedObjectsRoundTrip/trace-producer-content
+=== RUN   TestCapturedObjectsRoundTrip/trace-producer-grants
+=== RUN   TestCapturedObjectsRoundTrip/trace-producer-ledger
+=== RUN   TestCapturedObjectsRoundTrip/trace-producer-sessions
+=== RUN   TestCapturedObjectsRoundTrip/trace-producer-tasks
+=== RUN   TestCapturedObjectsRoundTrip/trace-source-pending
+=== RUN   TestCapturedObjectsRoundTrip/trace-accept-original-command
+=== RUN   TestCapturedObjectsRoundTrip/trace-view-gap
+=== RUN   TestCapturedObjectsRoundTrip/trace-view-complete
+=== RUN   TestCapturedObjectsRoundTrip/trace-fixed-cutoff-view
+=== RUN   TestCapturedObjectsRoundTrip/trace-cutoff-query
+=== RUN   TestCapturedObjectsRoundTrip/trace-source-acknowledged
+=== RUN   TestCapturedObjectsRoundTrip/file-start-CREATE
+=== RUN   TestCapturedObjectsRoundTrip/file-register-resources-command-CREATE
+=== RUN   TestCapturedObjectsRoundTrip/file-io-request-CREATE
+=== RUN   TestCapturedObjectsRoundTrip/file-bind-root-command-CREATE
+=== RUN   TestCapturedObjectsRoundTrip/file-io-result-CREATE
+=== RUN   TestCapturedObjectsRoundTrip/file-operation-CREATE
+=== RUN   TestCapturedObjectsRoundTrip/file-observation-CREATE
+=== RUN   TestCapturedObjectsRoundTrip/file-body-CREATE
+=== RUN   TestCapturedObjectsRoundTrip/file-billing-CREATE
+=== RUN   TestCapturedObjectsRoundTrip/file-resources-CREATE
+=== RUN   TestCapturedObjectsRoundTrip/file-start-REPLACE
+=== RUN   TestCapturedObjectsRoundTrip/file-register-resources-command-REPLACE
+=== RUN   TestCapturedObjectsRoundTrip/file-io-request-REPLACE
+=== RUN   TestCapturedObjectsRoundTrip/file-bind-root-command-REPLACE
+=== RUN   TestCapturedObjectsRoundTrip/file-io-result-REPLACE
+=== RUN   TestCapturedObjectsRoundTrip/file-operation-REPLACE
+=== RUN   TestCapturedObjectsRoundTrip/file-observation-REPLACE
+=== RUN   TestCapturedObjectsRoundTrip/file-body-REPLACE
+=== RUN   TestCapturedObjectsRoundTrip/file-billing-REPLACE
+=== RUN   TestCapturedObjectsRoundTrip/file-resources-REPLACE
+=== RUN   TestCapturedObjectsRoundTrip/file-start-READ
+=== RUN   TestCapturedObjectsRoundTrip/file-io-request-READ
+=== RUN   TestCapturedObjectsRoundTrip/file-bind-root-command-READ
+=== RUN   TestCapturedObjectsRoundTrip/file-io-result-READ
+=== RUN   TestCapturedObjectsRoundTrip/file-operation-READ
+=== RUN   TestCapturedObjectsRoundTrip/file-observation-READ
+=== RUN   TestCapturedObjectsRoundTrip/file-body-READ
+=== RUN   TestCapturedObjectsRoundTrip/file-billing-READ
+=== RUN   TestCapturedObjectsRoundTrip/file-root
+=== RUN   TestCapturedObjectsRoundTrip/file-history-original
+=== RUN   TestCapturedObjectsRoundTrip/cancellation-original-admit-command
+=== RUN   TestCapturedObjectsRoundTrip/cancellation-original-admission
+=== RUN   TestCapturedObjectsRoundTrip/cancellation-control-command
+=== RUN   TestCapturedObjectsRoundTrip/cancellation-control-receipt
+=== RUN   TestCapturedObjectsRoundTrip/cancellation-scope
+=== RUN   TestCapturedObjectsRoundTrip/cancellation-intent-pending
+=== RUN   TestCapturedObjectsRoundTrip/cancellation-close-command
+=== RUN   TestCapturedObjectsRoundTrip/cancellation-view-pending
+=== RUN   TestCapturedObjectsRoundTrip/cancellation-intent-acknowledged
+=== RUN   TestCapturedObjectsRoundTrip/cancellation-endpoint-receipt
+=== RUN   TestCapturedObjectsRoundTrip/cancellation-no-send-seal
+=== RUN   TestCapturedObjectsRoundTrip/cancellation-view-awaiting-original
+=== RUN   TestCapturedObjectsRoundTrip/cancellation-original-operation
+=== RUN   TestCapturedObjectsRoundTrip/cancellation-view-original-arrived
+=== RUN   TestCapturedObjectsRoundTrip/cancellation-original-planning
+=== RUN   TestCapturedObjectsRoundTrip/closing-failed-admission
+=== RUN   TestCapturedObjectsRoundTrip/closing-failed-start-command
+=== RUN   TestCapturedObjectsRoundTrip/closing-failed-actual-physical-result-held
+=== RUN   TestCapturedObjectsRoundTrip/closing-failed-operation-before-close
+=== RUN   TestCapturedObjectsRoundTrip/closing-failed-begin
+=== RUN   TestCapturedObjectsRoundTrip/closing-failed-begin-receipt
+=== RUN   TestCapturedObjectsRoundTrip/closing-failed-view-pending
+=== RUN   TestCapturedObjectsRoundTrip/closing-failed-endpoint-command
+=== RUN   TestCapturedObjectsRoundTrip/closing-failed-view-fixed
+=== RUN   TestCapturedObjectsRoundTrip/closing-failed-scope
+=== RUN   TestCapturedObjectsRoundTrip/closing-failed-intent-ack
+=== RUN   TestCapturedObjectsRoundTrip/closing-failed-endpoint-receipt
+=== RUN   TestCapturedObjectsRoundTrip/closing-failed-seal
+=== RUN   TestCapturedObjectsRoundTrip/closing-failed-execution-followup
+=== RUN   TestCapturedObjectsRoundTrip/closing-failed-settlement-followup
+=== RUN   TestCapturedObjectsRoundTrip/closing-failed-result-fixed
+=== RUN   TestCapturedObjectsRoundTrip/closing-failed-job-waiting-ledger
+=== RUN   TestCapturedObjectsRoundTrip/closing-failed-job-waiting-budget
+=== RUN   TestCapturedObjectsRoundTrip/closing-failed-import-original-bill
+=== RUN   TestCapturedObjectsRoundTrip/closing-failed-import-original-bill-receipt
+=== RUN   TestCapturedObjectsRoundTrip/closing-failed-view-after-bill
+=== RUN   TestCapturedObjectsRoundTrip/closing-failed-view-late
+=== RUN   TestCapturedObjectsRoundTrip/closing-failed-result-late
+=== RUN   TestCapturedObjectsRoundTrip/closing-failed-job-completed-ledger
+=== RUN   TestCapturedObjectsRoundTrip/closing-failed-job-completed-budget
+=== RUN   TestCapturedObjectsRoundTrip/closing-failed-budget-late
+=== RUN   TestCapturedObjectsRoundTrip/closing-failed-source-late
+=== RUN   TestCapturedObjectsRoundTrip/closing-failed-observation-late
+=== RUN   TestCapturedObjectsRoundTrip/closing-cancelled-admission
+=== RUN   TestCapturedObjectsRoundTrip/closing-cancelled-start-command
+=== RUN   TestCapturedObjectsRoundTrip/closing-cancelled-actual-physical-result-held
+=== RUN   TestCapturedObjectsRoundTrip/closing-cancelled-operation-before-close
+=== RUN   TestCapturedObjectsRoundTrip/closing-cancelled-original-cancellation
+=== RUN   TestCapturedObjectsRoundTrip/closing-cancelled-begin
+=== RUN   TestCapturedObjectsRoundTrip/closing-cancelled-begin-receipt
+=== RUN   TestCapturedObjectsRoundTrip/closing-cancelled-view-pending
+=== RUN   TestCapturedObjectsRoundTrip/closing-cancelled-endpoint-command
+=== RUN   TestCapturedObjectsRoundTrip/closing-cancelled-view-fixed
+=== RUN   TestCapturedObjectsRoundTrip/closing-cancelled-scope
+=== RUN   TestCapturedObjectsRoundTrip/closing-cancelled-intent-ack
+=== RUN   TestCapturedObjectsRoundTrip/closing-cancelled-endpoint-receipt
+=== RUN   TestCapturedObjectsRoundTrip/closing-cancelled-seal
+=== RUN   TestCapturedObjectsRoundTrip/closing-cancelled-execution-followup
+=== RUN   TestCapturedObjectsRoundTrip/closing-cancelled-settlement-followup
+=== RUN   TestCapturedObjectsRoundTrip/closing-cancelled-result-fixed
+=== RUN   TestCapturedObjectsRoundTrip/closing-cancelled-job-waiting-ledger
+=== RUN   TestCapturedObjectsRoundTrip/closing-cancelled-job-waiting-budget
+=== RUN   TestCapturedObjectsRoundTrip/closing-cancelled-import-original-bill
+=== RUN   TestCapturedObjectsRoundTrip/closing-cancelled-import-original-bill-receipt
+=== RUN   TestCapturedObjectsRoundTrip/closing-cancelled-view-after-bill
+=== RUN   TestCapturedObjectsRoundTrip/closing-cancelled-view-late
+=== RUN   TestCapturedObjectsRoundTrip/closing-cancelled-result-late
+=== RUN   TestCapturedObjectsRoundTrip/closing-cancelled-job-completed-ledger
+=== RUN   TestCapturedObjectsRoundTrip/closing-cancelled-job-completed-budget
+=== RUN   TestCapturedObjectsRoundTrip/closing-cancelled-budget-late
+=== RUN   TestCapturedObjectsRoundTrip/closing-cancelled-source-late
+=== RUN   TestCapturedObjectsRoundTrip/closing-cancelled-observation-late
+=== RUN   TestCapturedObjectsRoundTrip/closing-pre-p2-admission
+=== RUN   TestCapturedObjectsRoundTrip/closing-pre-p2-begin
+=== RUN   TestCapturedObjectsRoundTrip/closing-pre-p2-pending
+=== RUN   TestCapturedObjectsRoundTrip/closing-pre-p2-awaiting
+=== RUN   TestCapturedObjectsRoundTrip/closing-pre-p2-tombstone
+=== RUN   TestCapturedObjectsRoundTrip/closing-pre-p2-arrived
+=== RUN   TestCapturedObjectsRoundTrip/closing-pre-p2-job-0
+=== RUN   TestCapturedObjectsRoundTrip/continuation-original-admission
+=== RUN   TestCapturedObjectsRoundTrip/continuation-planning-before
+=== RUN   TestCapturedObjectsRoundTrip/continuation-begin-command
+=== RUN   TestCapturedObjectsRoundTrip/continuation-begin-receipt
+=== RUN   TestCapturedObjectsRoundTrip/continuation-planning-after
+=== RUN   TestCapturedObjectsRoundTrip/continuation-rejected-verification
+=== RUN   TestCapturedObjectsRoundTrip/continuation-request
+=== RUN   TestCapturedObjectsRoundTrip/continuation-snapshot
+=== RUN   TestCapturedObjectsRoundTrip/continuation-owner-job
+=== RUN   TestCapturedObjectsRoundTrip/continuation-original-operation
+=== RUN   TestCapturedObjectsRoundTrip/continuation-original-billing
+=== RUN   TestCapturedObjectsRoundTrip/continuation-budget
+=== RUN   TestCapturedObjectsRoundTrip/continuation-replayed-planning
+=== RUN   TestCapturedObjectsRoundTrip/reasoner-action-cap-command
+=== RUN   TestCapturedObjectsRoundTrip/reasoner-action-capability
+=== RUN   TestCapturedObjectsRoundTrip/reasoner-action-run-command
+=== RUN   TestCapturedObjectsRoundTrip/reasoner-action-outcome
+=== RUN   TestCapturedObjectsRoundTrip/reasoner-action-request
+=== RUN   TestCapturedObjectsRoundTrip/reasoner-action-snapshot
+=== RUN   TestCapturedObjectsRoundTrip/reasoner-action-call
+=== RUN   TestCapturedObjectsRoundTrip/reasoner-action-settings
+=== RUN   TestCapturedObjectsRoundTrip/reasoner-action-model-input
+=== RUN   TestCapturedObjectsRoundTrip/reasoner-action-model-output
+=== RUN   TestCapturedObjectsRoundTrip/reasoner-action-projection
+=== RUN   TestCapturedObjectsRoundTrip/reasoner-action-full
+=== RUN   TestCapturedObjectsRoundTrip/reasoner-action-body
+=== RUN   TestCapturedObjectsRoundTrip/reasoner-action-step
+=== RUN   TestCapturedObjectsRoundTrip/reasoner-action-derived-parameters
+=== RUN   TestCapturedObjectsRoundTrip/reasoner-default-description
+=== RUN   TestCapturedObjectsRoundTrip/reasoner-question-run-command
+=== RUN   TestCapturedObjectsRoundTrip/reasoner-question-outcome
+=== RUN   TestCapturedObjectsRoundTrip/reasoner-question-request
+=== RUN   TestCapturedObjectsRoundTrip/reasoner-question-snapshot
+=== RUN   TestCapturedObjectsRoundTrip/reasoner-question-call
+=== RUN   TestCapturedObjectsRoundTrip/reasoner-question-settings
+=== RUN   TestCapturedObjectsRoundTrip/reasoner-question-model-input
+=== RUN   TestCapturedObjectsRoundTrip/reasoner-question-model-output
+=== RUN   TestCapturedObjectsRoundTrip/reasoner-question-projection
+=== RUN   TestCapturedObjectsRoundTrip/reasoner-question-full
+=== RUN   TestCapturedObjectsRoundTrip/reasoner-question-body
+=== RUN   TestCapturedObjectsRoundTrip/reasoner-question-payload
+=== RUN   TestCapturedObjectsRoundTrip/reasoner-question-publish-command
+=== RUN   TestCapturedObjectsRoundTrip/reasoner-question-pending
+=== RUN   TestCapturedObjectsRoundTrip/reasoner-question-published-body
+=== RUN   TestCapturedObjectsRoundTrip/reasoner-question-answer-command
+=== RUN   TestCapturedObjectsRoundTrip/reasoner-question-answered
+=== RUN   TestCapturedObjectsRoundTrip/reasoner-requirements-run-command
+=== RUN   TestCapturedObjectsRoundTrip/reasoner-requirements-outcome
+=== RUN   TestCapturedObjectsRoundTrip/reasoner-requirements-request
+=== RUN   TestCapturedObjectsRoundTrip/reasoner-requirements-snapshot
+=== RUN   TestCapturedObjectsRoundTrip/reasoner-requirements-call
+=== RUN   TestCapturedObjectsRoundTrip/reasoner-requirements-settings
+=== RUN   TestCapturedObjectsRoundTrip/reasoner-requirements-model-input
+=== RUN   TestCapturedObjectsRoundTrip/reasoner-requirements-model-output
+=== RUN   TestCapturedObjectsRoundTrip/reasoner-requirements-projection
+=== RUN   TestCapturedObjectsRoundTrip/reasoner-requirements-full
+=== RUN   TestCapturedObjectsRoundTrip/reasoner-requirements-body
+=== RUN   TestCapturedObjectsRoundTrip/reasoner-requirements-payload
+=== RUN   TestCapturedObjectsRoundTrip/reasoner-requirements-original
+=== RUN   TestCapturedObjectsRoundTrip/reasoner-requirements-publish-command
+=== RUN   TestCapturedObjectsRoundTrip/reasoner-requirements-question
+=== RUN   TestCapturedObjectsRoundTrip/reasoner-requirements-answer-command
+=== RUN   TestCapturedObjectsRoundTrip/reasoner-requirements-process-command
+=== RUN   TestCapturedObjectsRoundTrip/reasoner-requirements-accepted
+=== RUN   TestCapturedObjectsRoundTrip/reasoner-requirements-history
+=== RUN   TestCapturedObjectsRoundTrip/condition-accept-requirements-command
+=== RUN   TestCapturedObjectsRoundTrip/condition-request-command
+=== RUN   TestCapturedObjectsRoundTrip/condition-pending
+=== RUN   TestCapturedObjectsRoundTrip/condition-matter
+=== RUN   TestCapturedObjectsRoundTrip/condition-pending-summary
+=== RUN   TestCapturedObjectsRoundTrip/condition-displayed
+=== RUN   TestCapturedObjectsRoundTrip/condition-respond-command
+=== RUN   TestCapturedObjectsRoundTrip/condition-approved
+=== RUN   TestCapturedObjectsRoundTrip/condition-approved-summary
+=== RUN   TestCapturedObjectsRoundTrip/condition-complete-run-command
+=== RUN   TestCapturedObjectsRoundTrip/condition-complete-outcome
+=== RUN   TestCapturedObjectsRoundTrip/condition-complete-request
+=== RUN   TestCapturedObjectsRoundTrip/condition-complete-snapshot
+=== RUN   TestCapturedObjectsRoundTrip/condition-complete-call
+=== RUN   TestCapturedObjectsRoundTrip/condition-complete-settings
+=== RUN   TestCapturedObjectsRoundTrip/condition-complete-model-input
+=== RUN   TestCapturedObjectsRoundTrip/condition-complete-model-output
+=== RUN   TestCapturedObjectsRoundTrip/condition-complete-projection
+=== RUN   TestCapturedObjectsRoundTrip/condition-complete-full
+=== RUN   TestCapturedObjectsRoundTrip/condition-complete-body
+=== RUN   TestCapturedObjectsRoundTrip/condition-verdict
+=== RUN   TestCapturedObjectsRoundTrip/condition-completion-evidence
+=== RUN   TestCapturedObjectsRoundTrip/condition-begin-command
+=== RUN   TestCapturedObjectsRoundTrip/condition-result
+=== RUN   TestCapturedObjectsRoundTrip/condition-consumed
+=== RUN   TestCapturedObjectsRoundTrip/condition-consuming-verification
+=== RUN   TestCapturedObjectsRoundTrip/condition-verification
+=== RUN   TestCapturedObjectsRoundTrip/condition-consumed-summary
+=== RUN   TestCapturedObjectsRoundTrip/condition-pending-history
+=== RUN   TestCapturedObjectsRoundTrip/condition-approval-history
+=== RUN   TestCapturedObjectsRoundTrip/negative-verdict-original-admission
+=== RUN   TestCapturedObjectsRoundTrip/negative-verdict-actual-negative-operation
+=== RUN   TestCapturedObjectsRoundTrip/negative-verdict-model-cap-command
+=== RUN   TestCapturedObjectsRoundTrip/negative-verdict-model-grant-command
+=== RUN   TestCapturedObjectsRoundTrip/negative-verdict-model-run-command
+=== RUN   TestCapturedObjectsRoundTrip/negative-verdict-model-outcome
+=== RUN   TestCapturedObjectsRoundTrip/negative-verdict-model-request
+=== RUN   TestCapturedObjectsRoundTrip/negative-verdict-model-snapshot
+=== RUN   TestCapturedObjectsRoundTrip/negative-verdict-model-call
+=== RUN   TestCapturedObjectsRoundTrip/negative-verdict-model-settings
+=== RUN   TestCapturedObjectsRoundTrip/negative-verdict-model-model-input
+=== RUN   TestCapturedObjectsRoundTrip/negative-verdict-model-model-output
+=== RUN   TestCapturedObjectsRoundTrip/negative-verdict-model-projection
+=== RUN   TestCapturedObjectsRoundTrip/negative-verdict-model-full
+=== RUN   TestCapturedObjectsRoundTrip/negative-verdict-model-body
+=== RUN   TestCapturedObjectsRoundTrip/negative-verdict-payload
+=== RUN   TestCapturedObjectsRoundTrip/negative-verdict-candidate
+=== RUN   TestCapturedObjectsRoundTrip/negative-verdict-original-snapshot
+=== RUN   TestCapturedObjectsRoundTrip/negative-verdict-begin-command
+=== RUN   TestCapturedObjectsRoundTrip/negative-verdict-rejected-verification
+=== RUN   TestCapturedObjectsRoundTrip/negative-verdict-exact-continuation
+=== RUN   TestCapturedObjectsRoundTrip/negative-verdict-exact-continuation-snapshot
+=== RUN   TestCapturedObjectsRoundTrip/negative-verdict-exact-continuation-job
+=== RUN   TestCapturedObjectsRoundTrip/negative-verdict-unavailable-body-projection
+=== RUN   TestCapturedObjectsRoundTrip/negative-verdict-budget
+=== RUN   TestCapturedObjectsRoundTrip/question-driver-configure-command
+=== RUN   TestCapturedObjectsRoundTrip/question-driver-ready
+=== RUN   TestCapturedObjectsRoundTrip/question-driver-saved-policy
+=== RUN   TestCapturedObjectsRoundTrip/question-driver-advance-command
+=== RUN   TestCapturedObjectsRoundTrip/question-driver-waiting
+=== RUN   TestCapturedObjectsRoundTrip/question-driver-original-request
+=== RUN   TestCapturedObjectsRoundTrip/question-driver-original-snapshot
+=== RUN   TestCapturedObjectsRoundTrip/question-driver-original-outcome
+=== RUN   TestCapturedObjectsRoundTrip/question-driver-original-question
+=== RUN   TestCapturedObjectsRoundTrip/question-driver-question-publication
+=== RUN   TestCapturedObjectsRoundTrip/question-driver-ready-history
+=== RUN   TestCapturedObjectsRoundTrip/question-driver-disable-command
+=== RUN   TestCapturedObjectsRoundTrip/question-driver-disabled
+=== RUN   TestCapturedObjectsRoundTrip/question-driver-restart-replay
+=== RUN   TestCapturedObjectsRoundTrip/question-driver-waiting-history
+=== RUN   TestCapturedObjectsRoundTrip/question-driver-budget
+=== RUN   TestCapturedObjectsRoundTrip/approved-action-driver-parameters-command
+=== RUN   TestCapturedObjectsRoundTrip/approved-action-driver-target-cap-command
+=== RUN   TestCapturedObjectsRoundTrip/approved-action-driver-target-cap
+=== RUN   TestCapturedObjectsRoundTrip/approved-action-driver-model-cap-command
+=== RUN   TestCapturedObjectsRoundTrip/approved-action-driver-model-grant-command
+=== RUN   TestCapturedObjectsRoundTrip/approved-action-driver-configure-command
+=== RUN   TestCapturedObjectsRoundTrip/approved-action-driver-advance-command
+=== RUN   TestCapturedObjectsRoundTrip/approved-action-driver-model-position
+=== RUN   TestCapturedObjectsRoundTrip/approved-action-driver-original-outcome
+=== RUN   TestCapturedObjectsRoundTrip/approved-action-driver-governed-original-action
+=== RUN   TestCapturedObjectsRoundTrip/approved-action-driver-request-confirmation-command
+=== RUN   TestCapturedObjectsRoundTrip/approved-action-driver-pending-confirmation
+=== RUN   TestCapturedObjectsRoundTrip/approved-action-driver-pending-summary
+=== RUN   TestCapturedObjectsRoundTrip/approved-action-driver-approval-command
+=== RUN   TestCapturedObjectsRoundTrip/approved-action-driver-approved-confirmation
+=== RUN   TestCapturedObjectsRoundTrip/approved-action-driver-authority-update-command
+=== RUN   TestCapturedObjectsRoundTrip/approved-action-driver-approved-configuration
+=== RUN   TestCapturedObjectsRoundTrip/approved-action-driver-saved-policy
+=== RUN   TestCapturedObjectsRoundTrip/approved-action-driver-saved-action-authority
+=== RUN   TestCapturedObjectsRoundTrip/approved-action-driver-admitted-before-IO
+=== RUN   TestCapturedObjectsRoundTrip/approved-action-driver-original-admission
+=== RUN   TestCapturedObjectsRoundTrip/approved-action-driver-consumed-confirmation
+=== RUN   TestCapturedObjectsRoundTrip/approved-action-driver-consumed-summary
+=== RUN   TestCapturedObjectsRoundTrip/approved-action-driver-cancel-command
+=== RUN   TestCapturedObjectsRoundTrip/approved-action-driver-original-cancellation
+=== RUN   TestCapturedObjectsRoundTrip/approved-action-driver-begin-close-command
+=== RUN   TestCapturedObjectsRoundTrip/approved-action-driver-fixed-cancelled-result
+=== RUN   TestCapturedObjectsRoundTrip/approved-action-driver-original-unsent-operation
+=== RUN   TestCapturedObjectsRoundTrip/approved-action-driver-completed
+=== RUN   TestCapturedObjectsRoundTrip/approved-action-driver-restart-replay
+=== RUN   TestCapturedObjectsRoundTrip/approved-action-driver-admitted-history
+=== RUN   TestCapturedObjectsRoundTrip/approved-action-driver-unchanged-result
+=== RUN   TestCapturedObjectsRoundTrip/approved-action-driver-original-model-call
+=== RUN   TestCapturedObjectsRoundTrip/approved-action-driver-budget
+=== RUN   TestCapturedObjectsRoundTrip/api-native-RATE-io-request
+=== RUN   TestCapturedObjectsRoundTrip/api-native-RATE-io-result
+=== RUN   TestCapturedObjectsRoundTrip/api-native-RATE-start
+=== RUN   TestCapturedObjectsRoundTrip/api-native-RATE-admission
+=== RUN   TestCapturedObjectsRoundTrip/api-native-RATE-receipt
+=== RUN   TestCapturedObjectsRoundTrip/api-native-RATE-capability
+=== RUN   TestCapturedObjectsRoundTrip/api-native-RATE-descriptor
+=== RUN   TestCapturedObjectsRoundTrip/api-native-RATE-binding
+=== RUN   TestCapturedObjectsRoundTrip/api-native-RATE-operation
+=== RUN   TestCapturedObjectsRoundTrip/api-native-RATE-call-descriptor
+=== RUN   TestCapturedObjectsRoundTrip/api-native-RATE-send
+=== RUN   TestCapturedObjectsRoundTrip/api-native-RATE-observation
+=== RUN   TestCapturedObjectsRoundTrip/api-native-RATE-billing-source
+=== RUN   TestCapturedObjectsRoundTrip/api-native-RATE-parameters
+=== RUN   TestCapturedObjectsRoundTrip/api-native-RATE-wait
+=== RUN   TestCapturedObjectsRoundTrip/api-native-RATE-wait-trace-source
+=== RUN   TestCapturedObjectsRoundTrip/api-native-RATE-wait-trace-event
+=== RUN   TestCapturedObjectsRoundTrip/api-native-CONCURRENCY-io-request
+=== RUN   TestCapturedObjectsRoundTrip/api-native-CONCURRENCY-io-result
+=== RUN   TestCapturedObjectsRoundTrip/api-native-CONCURRENCY-start
+=== RUN   TestCapturedObjectsRoundTrip/api-native-CONCURRENCY-admission
+=== RUN   TestCapturedObjectsRoundTrip/api-native-CONCURRENCY-receipt
+=== RUN   TestCapturedObjectsRoundTrip/api-native-CONCURRENCY-capability
+=== RUN   TestCapturedObjectsRoundTrip/api-native-CONCURRENCY-descriptor
+=== RUN   TestCapturedObjectsRoundTrip/api-native-CONCURRENCY-binding
+=== RUN   TestCapturedObjectsRoundTrip/api-native-CONCURRENCY-operation
+=== RUN   TestCapturedObjectsRoundTrip/api-native-CONCURRENCY-call-descriptor
+=== RUN   TestCapturedObjectsRoundTrip/api-native-CONCURRENCY-send
+=== RUN   TestCapturedObjectsRoundTrip/api-native-CONCURRENCY-observation
+=== RUN   TestCapturedObjectsRoundTrip/api-native-CONCURRENCY-billing-source
+=== RUN   TestCapturedObjectsRoundTrip/api-native-CONCURRENCY-parameters
+=== RUN   TestCapturedObjectsRoundTrip/api-native-CONCURRENCY-wait
+=== RUN   TestCapturedObjectsRoundTrip/api-native-CONCURRENCY-wait-trace-source
+=== RUN   TestCapturedObjectsRoundTrip/api-native-CONCURRENCY-wait-trace-event
+=== RUN   TestCapturedObjectsRoundTrip/api-native-RESOURCE_CONFLICT-io-request
+=== RUN   TestCapturedObjectsRoundTrip/api-native-RESOURCE_CONFLICT-io-result
+=== RUN   TestCapturedObjectsRoundTrip/api-native-RESOURCE_CONFLICT-start
+=== RUN   TestCapturedObjectsRoundTrip/api-native-RESOURCE_CONFLICT-admission
+=== RUN   TestCapturedObjectsRoundTrip/api-native-RESOURCE_CONFLICT-receipt
+=== RUN   TestCapturedObjectsRoundTrip/api-native-RESOURCE_CONFLICT-capability
+=== RUN   TestCapturedObjectsRoundTrip/api-native-RESOURCE_CONFLICT-descriptor
+=== RUN   TestCapturedObjectsRoundTrip/api-native-RESOURCE_CONFLICT-binding
+=== RUN   TestCapturedObjectsRoundTrip/api-native-RESOURCE_CONFLICT-operation
+=== RUN   TestCapturedObjectsRoundTrip/api-native-RESOURCE_CONFLICT-call-descriptor
+=== RUN   TestCapturedObjectsRoundTrip/api-native-RESOURCE_CONFLICT-send
+=== RUN   TestCapturedObjectsRoundTrip/api-native-RESOURCE_CONFLICT-observation
+=== RUN   TestCapturedObjectsRoundTrip/api-native-RESOURCE_CONFLICT-billing-source
+=== RUN   TestCapturedObjectsRoundTrip/api-native-RESOURCE_CONFLICT-parameters
+=== RUN   TestCapturedObjectsRoundTrip/api-native-RESOURCE_CONFLICT-wait
+=== RUN   TestCapturedObjectsRoundTrip/api-native-RESOURCE_CONFLICT-wait-trace-source
+=== RUN   TestCapturedObjectsRoundTrip/api-native-RESOURCE_CONFLICT-wait-trace-event
+=== RUN   TestCapturedObjectsRoundTrip/api-native-UNKNOWN-io-request
+=== RUN   TestCapturedObjectsRoundTrip/api-native-UNKNOWN-io-result
+=== RUN   TestCapturedObjectsRoundTrip/api-native-UNKNOWN-start
+=== RUN   TestCapturedObjectsRoundTrip/api-native-UNKNOWN-admission
+=== RUN   TestCapturedObjectsRoundTrip/api-native-UNKNOWN-receipt
+=== RUN   TestCapturedObjectsRoundTrip/api-native-UNKNOWN-capability
+=== RUN   TestCapturedObjectsRoundTrip/api-native-UNKNOWN-descriptor
+=== RUN   TestCapturedObjectsRoundTrip/api-native-UNKNOWN-binding
+=== RUN   TestCapturedObjectsRoundTrip/api-native-UNKNOWN-operation
+=== RUN   TestCapturedObjectsRoundTrip/api-native-UNKNOWN-call-descriptor
+=== RUN   TestCapturedObjectsRoundTrip/api-native-UNKNOWN-send
+=== RUN   TestCapturedObjectsRoundTrip/api-native-UNKNOWN-observation
+=== RUN   TestCapturedObjectsRoundTrip/api-native-UNKNOWN-billing-source
+=== RUN   TestCapturedObjectsRoundTrip/api-native-UNKNOWN-parameters
+=== RUN   TestCapturedObjectsRoundTrip/api-native-UNKNOWN-wait
+=== RUN   TestCapturedObjectsRoundTrip/api-native-UNKNOWN-wait-trace-source
+=== RUN   TestCapturedObjectsRoundTrip/api-native-UNKNOWN-wait-trace-event
+=== RUN   TestCapturedObjectsRoundTrip/api-native-REDACTED-io-request
+=== RUN   TestCapturedObjectsRoundTrip/api-native-REDACTED-io-result
+=== RUN   TestCapturedObjectsRoundTrip/api-native-REDACTED-start
+=== RUN   TestCapturedObjectsRoundTrip/api-native-REDACTED-admission
+=== RUN   TestCapturedObjectsRoundTrip/api-native-REDACTED-receipt
+=== RUN   TestCapturedObjectsRoundTrip/api-native-REDACTED-capability
+=== RUN   TestCapturedObjectsRoundTrip/api-native-REDACTED-descriptor
+=== RUN   TestCapturedObjectsRoundTrip/api-native-REDACTED-binding
+=== RUN   TestCapturedObjectsRoundTrip/api-native-REDACTED-operation
+=== RUN   TestCapturedObjectsRoundTrip/api-native-REDACTED-call-descriptor
+=== RUN   TestCapturedObjectsRoundTrip/api-native-REDACTED-send
+=== RUN   TestCapturedObjectsRoundTrip/api-native-REDACTED-observation
+=== RUN   TestCapturedObjectsRoundTrip/api-native-REDACTED-billing-source
+=== RUN   TestCapturedObjectsRoundTrip/api-native-REDACTED-parameters
+=== RUN   TestCapturedObjectsRoundTrip/default-model-api-driver
+=== RUN   TestCapturedObjectsRoundTrip/default-model-api-api-descriptor
+=== RUN   TestCapturedObjectsRoundTrip/default-model-api-api-binding
+=== RUN   TestCapturedObjectsRoundTrip/default-model-api-result
+=== RUN   TestCapturedObjectsRoundTrip/default-model-api-planning
+=== RUN   TestCapturedObjectsRoundTrip/default-model-api-request-0-request
+=== RUN   TestCapturedObjectsRoundTrip/default-model-api-request-0-snapshot
+=== RUN   TestCapturedObjectsRoundTrip/default-model-api-request-0-outcome
+=== RUN   TestCapturedObjectsRoundTrip/default-model-api-request-0-proposal-full
+=== RUN   TestCapturedObjectsRoundTrip/default-model-api-request-0-proposal-audit
+=== RUN   TestCapturedObjectsRoundTrip/default-model-api-request-0-proposal-body
+=== RUN   TestCapturedObjectsRoundTrip/default-model-api-request-0-model-call
+=== RUN   TestCapturedObjectsRoundTrip/default-model-api-request-1-request
+=== RUN   TestCapturedObjectsRoundTrip/default-model-api-request-1-snapshot
+=== RUN   TestCapturedObjectsRoundTrip/default-model-api-request-1-outcome
+=== RUN   TestCapturedObjectsRoundTrip/default-model-api-request-1-proposal-full
+=== RUN   TestCapturedObjectsRoundTrip/default-model-api-request-1-proposal-audit
+=== RUN   TestCapturedObjectsRoundTrip/default-model-api-request-1-proposal-body
+=== RUN   TestCapturedObjectsRoundTrip/default-model-api-request-1-model-call
+=== RUN   TestCapturedObjectsRoundTrip/default-model-api-operation-0-admission
+=== RUN   TestCapturedObjectsRoundTrip/default-model-api-operation-0-operation
+=== RUN   TestCapturedObjectsRoundTrip/default-model-api-operation-0-send
+=== RUN   TestCapturedObjectsRoundTrip/default-model-api-operation-0-call-descriptor
+=== RUN   TestCapturedObjectsRoundTrip/default-model-api-operation-0-billing-source
+=== RUN   TestCapturedObjectsRoundTrip/default-model-api-operation-0-raw-observation
+=== RUN   TestCapturedObjectsRoundTrip/default-model-api-operation-1-admission
+=== RUN   TestCapturedObjectsRoundTrip/default-model-api-operation-1-operation
+=== RUN   TestCapturedObjectsRoundTrip/default-model-api-operation-1-send
+=== RUN   TestCapturedObjectsRoundTrip/default-model-api-operation-1-call-descriptor
+=== RUN   TestCapturedObjectsRoundTrip/default-model-api-operation-1-billing-source
+=== RUN   TestCapturedObjectsRoundTrip/default-model-api-operation-1-raw-observation
+=== RUN   TestCapturedObjectsRoundTrip/default-model-api-operation-2-admission
+=== RUN   TestCapturedObjectsRoundTrip/default-model-api-operation-2-operation
+=== RUN   TestCapturedObjectsRoundTrip/default-model-api-operation-2-send
+=== RUN   TestCapturedObjectsRoundTrip/default-model-api-operation-2-call-descriptor
+=== RUN   TestCapturedObjectsRoundTrip/default-model-api-operation-2-billing-source
+=== RUN   TestCapturedObjectsRoundTrip/default-model-api-operation-2-raw-observation
+=== RUN   TestCapturedObjectsRoundTrip/default-model-api-budget
+=== RUN   TestCapturedObjectsRoundTrip/pending-goal-submitted
+=== RUN   TestCapturedObjectsRoundTrip/pending-goal-ready-job
+=== RUN   TestCapturedObjectsRoundTrip/pending-goal-payload
+=== RUN   TestCapturedObjectsRoundTrip/pending-goal-body
+=== RUN   TestCapturedObjectsRoundTrip/pending-goal-claim-command
+=== RUN   TestCapturedObjectsRoundTrip/pending-goal-claim-receipt
+=== RUN   TestCapturedObjectsRoundTrip/pending-goal-claimed-job
+=== RUN   TestCapturedObjectsRoundTrip/pending-goal-decided
+=== RUN   TestCapturedObjectsRoundTrip/pending-goal-completed-job
+=== RUN   TestCapturedObjectsRoundTrip/pending-goal-claim-replay
+=== RUN   TestCapturedObjectsRoundTrip/metric-local-empty
+=== RUN   TestCapturedObjectsRoundTrip/metric-local-unknown
+=== RUN   TestCapturedObjectsRoundTrip/metric-admission
+=== RUN   TestCapturedObjectsRoundTrip/metric-admission-source
+=== RUN   TestCapturedObjectsRoundTrip/metric-latency-bucket
+=== RUN   TestCapturedObjectsRoundTrip/metric-ledger
+=== RUN   TestCapturedObjectsRoundTrip/metric-ledger-source
+=== RUN   TestCapturedObjectsRoundTrip/metric-unknown
+=== RUN   TestCapturedObjectsRoundTrip/metric-age-bucket
+=== RUN   TestCapturedObjectsRoundTrip/metric-trace
+=== RUN   TestCapturedObjectsRoundTrip/metric-trace-source
+=== RUN   TestCapturedObjectsRoundTrip/metric-diagnostics-disabled
+=== RUN   TestCapturedObjectsRoundTrip/metric-trace-stream
+=== RUN   TestCapturedObjectsRoundTrip/metric-local-ready
+=== RUN   TestCapturedObjectsRoundTrip/metric-reconciliation-ready
+=== RUN   TestCapturedObjectsRoundTrip/metric-local-paused
+=== RUN   TestCapturedObjectsRoundTrip/metric-local-completed
+=== RUN   TestCapturedObjectsRoundTrip/metric-local-indexed
+=== RUN   TestCapturedObjectsRoundTrip/metric-local-source-unavailable
+=== RUN   TestCapturedObjectsRoundTrip/metric-unavailable-d/ledger
+=== RUN   TestCapturedObjectsRoundTrip/metric-unavailable-d/trace
+=== RUN   TestCapturedObjectsRoundTrip/metric-local-restarted
+--- PASS: TestCapturedObjectsRoundTrip (0.65s)
+    --- PASS: TestCapturedObjectsRoundTrip/start-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/admission (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/operation-handoff (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/planning-before-send (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/grant (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/grant-use (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/exit-credential (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/prepare-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/issue-exit-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/accept-operation-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/execution-before-send (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reservation (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/send-receipt (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/execution-after-send (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/operation-after-send (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/observation (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/dispatch-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/register-observation-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/accept-observation-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/interpret-observation-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/effect-interpretation (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/observation-reports (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/usage (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/trace-event (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/credential-use (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/billing-source (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/begin-completion-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/result (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/verification (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/completion-intent-0 (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/completion-seal-0 (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closed-recheck-rejection (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/recheck-completion-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closed-task (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/planning-after-completion (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/user-budget (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/task-budget (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/goal-receipt-query (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/session (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/goal-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/large-goal-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/request-confirmation-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/confirmation-pending (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/approve-confirmation-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/confirmation-approved (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/confirmed-admit-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/confirmation-consumed (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/withdraw-confirmation-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/confirmation-withdrawn (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/withdrawn-admission-rejection (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/grant-confirmation-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/grant-confirmation-pending (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/issue-grant-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/grant-confirmation-consumed (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/grant-issuance (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/single-exact-grant (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/start-record (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/revoke-grant-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/revocation-pending (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/revocation-complete (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/revoked-grant-status (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/sealed-operation (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/grant-exit-closure (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/release-reservation-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reservation-release (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/released-budget (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/settled-billing-source (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/billing-entry (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/conflicted-billing-source (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/billing-conflict (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/billing-blocked-budget (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/adjust-budget-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/deficit-budget (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/unknown-billing-source (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/import-bill-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/late-over-ceiling-source (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/unknown-operation-after-bill (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/authenticated-caller (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/input-content (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/create-session-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/empty-session (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/publish-question-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/question (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/submit-answer-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/input-delivery (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/already-routed-rejection (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/route-input-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/modify-input-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/model-unprocessed-input-snapshot (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/process-input-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/task-input-history (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/accept-requirements-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/request-proposal-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/receive-proposal-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/configure-budget-rejection (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/configure-budget-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/configure-capability-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/configure-grant-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/claim-job-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/physical-io-request (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/physical-io-result (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/content-register-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/content-registration-staged (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/content-registration-published (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/content-body-receipt (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/content-version-one (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/content-update-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/content-version-two (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/content-prepare-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/content-derivation-prepared (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/content-derivation-input (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/content-read-input-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/content-takeover-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/content-derivation-taken-over (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/content-seal-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/content-derivation-sealed (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/content-commit-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/content-derivation-staged (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/content-derived-published (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/content-derivation-committed (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/content-delete-unsupported-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/model-proposal-request (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/model-context-snapshot (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/model-call-prepared (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/model-prepare-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/model-input-published (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/model-input-derivation (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/model-admit-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/model-admission (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/model-call-result (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/model-run-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/model-call-completed (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/model-execution-descriptor (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/model-output-published (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/model-output-derivation (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/model-usage (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/model-outcome-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/model-outcome-accepted (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/model-request-reported (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/model-settled-budget (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/model-unknown-result (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/model-stop-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/model-request-stopped (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/model-stopped-outcome-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/model-stopped-late-outcome (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/model-unknown-budget (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/model-refused-result (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reconciliation-original-unknown (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reconciliation-request-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reconciliation-waiting-task (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reconciliation-confirmation-required (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reconciliation-query-before-approval (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closure-work (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closure-confirmation-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closure-confirmation-pending (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reconciliation-control-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reconciliation-completed (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reconciliation-query-completed (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reconciliation-finding (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closure-admission (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reconciliation-query-operation (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reconciliation-original-settled (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reconciliation-query-observation (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reconciliation-query-reports (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closure-confirmation-consumed (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closure-admission-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reconciliation-progress-handoff (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reconciliation-awake-task (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reconciliation-check-limit (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reconciliation-weak-query (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reconciliation-weak-finding (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reconciliation-weak-original (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/resend-original-unknown (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/resend-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/resend-prepared-execution (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/resend-start-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/resend-settled-operation (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/resend-historical-operation (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/resend-original-send (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/resend-original-send-projection (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/resend-original-attempt (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/resend-historical-effect (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/resend-budget-two-holds (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/resend-first-billing-source (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/resend-second-billing-source (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/resend-trace-operation-view (0.02s)
+    --- PASS: TestCapturedObjectsRoundTrip/trace-producer-budget (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/trace-producer-content (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/trace-producer-grants (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/trace-producer-ledger (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/trace-producer-sessions (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/trace-producer-tasks (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/trace-source-pending (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/trace-accept-original-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/trace-view-gap (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/trace-view-complete (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/trace-fixed-cutoff-view (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/trace-cutoff-query (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/trace-source-acknowledged (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/file-start-CREATE (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/file-register-resources-command-CREATE (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/file-io-request-CREATE (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/file-bind-root-command-CREATE (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/file-io-result-CREATE (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/file-operation-CREATE (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/file-observation-CREATE (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/file-body-CREATE (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/file-billing-CREATE (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/file-resources-CREATE (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/file-start-REPLACE (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/file-register-resources-command-REPLACE (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/file-io-request-REPLACE (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/file-bind-root-command-REPLACE (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/file-io-result-REPLACE (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/file-operation-REPLACE (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/file-observation-REPLACE (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/file-body-REPLACE (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/file-billing-REPLACE (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/file-resources-REPLACE (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/file-start-READ (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/file-io-request-READ (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/file-bind-root-command-READ (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/file-io-result-READ (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/file-operation-READ (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/file-observation-READ (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/file-body-READ (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/file-billing-READ (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/file-root (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/file-history-original (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/cancellation-original-admit-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/cancellation-original-admission (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/cancellation-control-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/cancellation-control-receipt (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/cancellation-scope (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/cancellation-intent-pending (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/cancellation-close-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/cancellation-view-pending (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/cancellation-intent-acknowledged (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/cancellation-endpoint-receipt (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/cancellation-no-send-seal (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/cancellation-view-awaiting-original (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/cancellation-original-operation (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/cancellation-view-original-arrived (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/cancellation-original-planning (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-failed-admission (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-failed-start-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-failed-actual-physical-result-held (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-failed-operation-before-close (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-failed-begin (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-failed-begin-receipt (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-failed-view-pending (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-failed-endpoint-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-failed-view-fixed (0.01s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-failed-scope (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-failed-intent-ack (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-failed-endpoint-receipt (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-failed-seal (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-failed-execution-followup (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-failed-settlement-followup (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-failed-result-fixed (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-failed-job-waiting-ledger (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-failed-job-waiting-budget (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-failed-import-original-bill (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-failed-import-original-bill-receipt (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-failed-view-after-bill (0.01s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-failed-view-late (0.01s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-failed-result-late (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-failed-job-completed-ledger (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-failed-job-completed-budget (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-failed-budget-late (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-failed-source-late (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-failed-observation-late (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-cancelled-admission (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-cancelled-start-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-cancelled-actual-physical-result-held (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-cancelled-operation-before-close (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-cancelled-original-cancellation (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-cancelled-begin (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-cancelled-begin-receipt (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-cancelled-view-pending (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-cancelled-endpoint-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-cancelled-view-fixed (0.01s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-cancelled-scope (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-cancelled-intent-ack (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-cancelled-endpoint-receipt (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-cancelled-seal (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-cancelled-execution-followup (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-cancelled-settlement-followup (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-cancelled-result-fixed (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-cancelled-job-waiting-ledger (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-cancelled-job-waiting-budget (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-cancelled-import-original-bill (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-cancelled-import-original-bill-receipt (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-cancelled-view-after-bill (0.01s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-cancelled-view-late (0.01s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-cancelled-result-late (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-cancelled-job-completed-ledger (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-cancelled-job-completed-budget (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-cancelled-budget-late (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-cancelled-source-late (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-cancelled-observation-late (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-pre-p2-admission (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-pre-p2-begin (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-pre-p2-pending (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-pre-p2-awaiting (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-pre-p2-tombstone (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-pre-p2-arrived (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/closing-pre-p2-job-0 (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/continuation-original-admission (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/continuation-planning-before (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/continuation-begin-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/continuation-begin-receipt (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/continuation-planning-after (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/continuation-rejected-verification (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/continuation-request (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/continuation-snapshot (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/continuation-owner-job (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/continuation-original-operation (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/continuation-original-billing (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/continuation-budget (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/continuation-replayed-planning (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reasoner-action-cap-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reasoner-action-capability (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reasoner-action-run-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reasoner-action-outcome (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reasoner-action-request (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reasoner-action-snapshot (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reasoner-action-call (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reasoner-action-settings (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reasoner-action-model-input (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reasoner-action-model-output (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reasoner-action-projection (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reasoner-action-full (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reasoner-action-body (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reasoner-action-step (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reasoner-action-derived-parameters (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reasoner-default-description (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reasoner-question-run-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reasoner-question-outcome (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reasoner-question-request (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reasoner-question-snapshot (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reasoner-question-call (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reasoner-question-settings (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reasoner-question-model-input (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reasoner-question-model-output (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reasoner-question-projection (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reasoner-question-full (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reasoner-question-body (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reasoner-question-payload (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reasoner-question-publish-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reasoner-question-pending (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reasoner-question-published-body (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reasoner-question-answer-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reasoner-question-answered (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reasoner-requirements-run-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reasoner-requirements-outcome (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reasoner-requirements-request (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reasoner-requirements-snapshot (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reasoner-requirements-call (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reasoner-requirements-settings (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reasoner-requirements-model-input (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reasoner-requirements-model-output (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reasoner-requirements-projection (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reasoner-requirements-full (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reasoner-requirements-body (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reasoner-requirements-payload (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reasoner-requirements-original (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reasoner-requirements-publish-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reasoner-requirements-question (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reasoner-requirements-answer-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reasoner-requirements-process-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reasoner-requirements-accepted (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/reasoner-requirements-history (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/condition-accept-requirements-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/condition-request-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/condition-pending (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/condition-matter (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/condition-pending-summary (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/condition-displayed (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/condition-respond-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/condition-approved (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/condition-approved-summary (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/condition-complete-run-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/condition-complete-outcome (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/condition-complete-request (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/condition-complete-snapshot (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/condition-complete-call (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/condition-complete-settings (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/condition-complete-model-input (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/condition-complete-model-output (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/condition-complete-projection (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/condition-complete-full (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/condition-complete-body (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/condition-verdict (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/condition-completion-evidence (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/condition-begin-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/condition-result (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/condition-consumed (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/condition-consuming-verification (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/condition-verification (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/condition-consumed-summary (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/condition-pending-history (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/condition-approval-history (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/negative-verdict-original-admission (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/negative-verdict-actual-negative-operation (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/negative-verdict-model-cap-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/negative-verdict-model-grant-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/negative-verdict-model-run-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/negative-verdict-model-outcome (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/negative-verdict-model-request (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/negative-verdict-model-snapshot (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/negative-verdict-model-call (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/negative-verdict-model-settings (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/negative-verdict-model-model-input (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/negative-verdict-model-model-output (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/negative-verdict-model-projection (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/negative-verdict-model-full (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/negative-verdict-model-body (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/negative-verdict-payload (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/negative-verdict-candidate (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/negative-verdict-original-snapshot (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/negative-verdict-begin-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/negative-verdict-rejected-verification (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/negative-verdict-exact-continuation (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/negative-verdict-exact-continuation-snapshot (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/negative-verdict-exact-continuation-job (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/negative-verdict-unavailable-body-projection (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/negative-verdict-budget (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/question-driver-configure-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/question-driver-ready (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/question-driver-saved-policy (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/question-driver-advance-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/question-driver-waiting (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/question-driver-original-request (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/question-driver-original-snapshot (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/question-driver-original-outcome (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/question-driver-original-question (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/question-driver-question-publication (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/question-driver-ready-history (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/question-driver-disable-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/question-driver-disabled (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/question-driver-restart-replay (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/question-driver-waiting-history (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/question-driver-budget (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/approved-action-driver-parameters-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/approved-action-driver-target-cap-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/approved-action-driver-target-cap (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/approved-action-driver-model-cap-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/approved-action-driver-model-grant-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/approved-action-driver-configure-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/approved-action-driver-advance-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/approved-action-driver-model-position (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/approved-action-driver-original-outcome (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/approved-action-driver-governed-original-action (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/approved-action-driver-request-confirmation-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/approved-action-driver-pending-confirmation (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/approved-action-driver-pending-summary (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/approved-action-driver-approval-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/approved-action-driver-approved-confirmation (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/approved-action-driver-authority-update-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/approved-action-driver-approved-configuration (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/approved-action-driver-saved-policy (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/approved-action-driver-saved-action-authority (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/approved-action-driver-admitted-before-IO (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/approved-action-driver-original-admission (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/approved-action-driver-consumed-confirmation (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/approved-action-driver-consumed-summary (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/approved-action-driver-cancel-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/approved-action-driver-original-cancellation (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/approved-action-driver-begin-close-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/approved-action-driver-fixed-cancelled-result (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/approved-action-driver-original-unsent-operation (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/approved-action-driver-completed (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/approved-action-driver-restart-replay (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/approved-action-driver-admitted-history (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/approved-action-driver-unchanged-result (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/approved-action-driver-original-model-call (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/approved-action-driver-budget (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-RATE-io-request (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-RATE-io-result (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-RATE-start (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-RATE-admission (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-RATE-receipt (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-RATE-capability (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-RATE-descriptor (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-RATE-binding (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-RATE-operation (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-RATE-call-descriptor (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-RATE-send (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-RATE-observation (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-RATE-billing-source (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-RATE-parameters (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-RATE-wait (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-RATE-wait-trace-source (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-RATE-wait-trace-event (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-CONCURRENCY-io-request (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-CONCURRENCY-io-result (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-CONCURRENCY-start (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-CONCURRENCY-admission (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-CONCURRENCY-receipt (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-CONCURRENCY-capability (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-CONCURRENCY-descriptor (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-CONCURRENCY-binding (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-CONCURRENCY-operation (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-CONCURRENCY-call-descriptor (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-CONCURRENCY-send (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-CONCURRENCY-observation (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-CONCURRENCY-billing-source (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-CONCURRENCY-parameters (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-CONCURRENCY-wait (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-CONCURRENCY-wait-trace-source (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-CONCURRENCY-wait-trace-event (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-RESOURCE_CONFLICT-io-request (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-RESOURCE_CONFLICT-io-result (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-RESOURCE_CONFLICT-start (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-RESOURCE_CONFLICT-admission (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-RESOURCE_CONFLICT-receipt (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-RESOURCE_CONFLICT-capability (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-RESOURCE_CONFLICT-descriptor (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-RESOURCE_CONFLICT-binding (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-RESOURCE_CONFLICT-operation (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-RESOURCE_CONFLICT-call-descriptor (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-RESOURCE_CONFLICT-send (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-RESOURCE_CONFLICT-observation (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-RESOURCE_CONFLICT-billing-source (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-RESOURCE_CONFLICT-parameters (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-RESOURCE_CONFLICT-wait (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-RESOURCE_CONFLICT-wait-trace-source (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-RESOURCE_CONFLICT-wait-trace-event (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-UNKNOWN-io-request (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-UNKNOWN-io-result (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-UNKNOWN-start (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-UNKNOWN-admission (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-UNKNOWN-receipt (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-UNKNOWN-capability (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-UNKNOWN-descriptor (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-UNKNOWN-binding (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-UNKNOWN-operation (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-UNKNOWN-call-descriptor (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-UNKNOWN-send (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-UNKNOWN-observation (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-UNKNOWN-billing-source (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-UNKNOWN-parameters (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-UNKNOWN-wait (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-UNKNOWN-wait-trace-source (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-UNKNOWN-wait-trace-event (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-REDACTED-io-request (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-REDACTED-io-result (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-REDACTED-start (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-REDACTED-admission (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-REDACTED-receipt (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-REDACTED-capability (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-REDACTED-descriptor (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-REDACTED-binding (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-REDACTED-operation (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-REDACTED-call-descriptor (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-REDACTED-send (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-REDACTED-observation (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-REDACTED-billing-source (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/api-native-REDACTED-parameters (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/default-model-api-driver (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/default-model-api-api-descriptor (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/default-model-api-api-binding (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/default-model-api-result (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/default-model-api-planning (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/default-model-api-request-0-request (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/default-model-api-request-0-snapshot (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/default-model-api-request-0-outcome (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/default-model-api-request-0-proposal-full (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/default-model-api-request-0-proposal-audit (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/default-model-api-request-0-proposal-body (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/default-model-api-request-0-model-call (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/default-model-api-request-1-request (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/default-model-api-request-1-snapshot (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/default-model-api-request-1-outcome (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/default-model-api-request-1-proposal-full (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/default-model-api-request-1-proposal-audit (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/default-model-api-request-1-proposal-body (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/default-model-api-request-1-model-call (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/default-model-api-operation-0-admission (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/default-model-api-operation-0-operation (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/default-model-api-operation-0-send (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/default-model-api-operation-0-call-descriptor (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/default-model-api-operation-0-billing-source (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/default-model-api-operation-0-raw-observation (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/default-model-api-operation-1-admission (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/default-model-api-operation-1-operation (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/default-model-api-operation-1-send (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/default-model-api-operation-1-call-descriptor (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/default-model-api-operation-1-billing-source (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/default-model-api-operation-1-raw-observation (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/default-model-api-operation-2-admission (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/default-model-api-operation-2-operation (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/default-model-api-operation-2-send (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/default-model-api-operation-2-call-descriptor (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/default-model-api-operation-2-billing-source (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/default-model-api-operation-2-raw-observation (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/default-model-api-budget (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/pending-goal-submitted (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/pending-goal-ready-job (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/pending-goal-payload (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/pending-goal-body (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/pending-goal-claim-command (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/pending-goal-claim-receipt (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/pending-goal-claimed-job (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/pending-goal-decided (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/pending-goal-completed-job (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/pending-goal-claim-replay (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/metric-local-empty (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/metric-local-unknown (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/metric-admission (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/metric-admission-source (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/metric-latency-bucket (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/metric-ledger (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/metric-ledger-source (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/metric-unknown (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/metric-age-bucket (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/metric-trace (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/metric-trace-source (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/metric-diagnostics-disabled (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/metric-trace-stream (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/metric-local-ready (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/metric-reconciliation-ready (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/metric-local-paused (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/metric-local-completed (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/metric-local-indexed (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/metric-local-source-unavailable (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/metric-unavailable-d/ledger (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/metric-unavailable-d/trace (0.00s)
+    --- PASS: TestCapturedObjectsRoundTrip/metric-local-restarted (0.00s)
+=== RUN   TestReportDistinguishesGeneratedBindingsFromExercisedObjects
+--- PASS: TestReportDistinguishesGeneratedBindingsFromExercisedObjects (0.40s)
+=== RUN   TestCapturedCurrentAuthorityAndBillingVariants
+--- PASS: TestCapturedCurrentAuthorityAndBillingVariants (0.23s)
+=== RUN   TestCapturedLocalMetricsKeepOwnerScopeAndMissingMeasurements
+--- PASS: TestCapturedLocalMetricsKeepOwnerScopeAndMissingMeasurements (0.41s)
+=== RUN   TestBindingPreservesPresencePrecisionAndUnknownFields
+--- PASS: TestBindingPreservesPresencePrecisionAndUnknownFields (0.00s)
+=== RUN   TestSemanticValidationIsSeparateFromSuccessfulDecode
+=== RUN   TestSemanticValidationIsSeparateFromSuccessfulDecode/empty-goal
+=== RUN   TestSemanticValidationIsSeparateFromSuccessfulDecode/unknown-schema
+=== RUN   TestSemanticValidationIsSeparateFromSuccessfulDecode/must-understand
+--- PASS: TestSemanticValidationIsSeparateFromSuccessfulDecode (0.00s)
+    --- PASS: TestSemanticValidationIsSeparateFromSuccessfulDecode/empty-goal (0.00s)
+    --- PASS: TestSemanticValidationIsSeparateFromSuccessfulDecode/unknown-schema (0.00s)
+    --- PASS: TestSemanticValidationIsSeparateFromSuccessfulDecode/must-understand (0.00s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/protobuf	3.947s
