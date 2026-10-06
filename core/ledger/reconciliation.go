@@ -140,7 +140,13 @@ func (s *Service) RequestReconciliation(ctx context.Context, caller *v1.Caller, 
 	})
 }
 func queryCapability(op *v1.Operation, cap *v1.Capability) bool {
-	return cap != nil && cap.Action == "QUERY" && cap.UseRight == "READ" && cap.ProcessingPurpose == "CURRENT_TASK" && cap.Resource == op.CapabilitySnapshot.Resource && cap.ExecutorEndpointId == op.ExecutorEndpointId && cap.AdapterRef != nil && cap.AdapterRef.Name != nil && (cap.AdapterRef.Name.LocalId == "simulator-queryable" && (op.CapabilitySnapshot.AdapterRef.GetName().GetLocalId() == "simulator-queryable" || op.CapabilitySnapshot.AdapterRef.GetName().GetLocalId() == "simulator-idempotent-queryable") || cap.AdapterRef.Name.LocalId == "managed-file" && op.CapabilitySnapshot.AdapterRef.GetName().GetLocalId() == "managed-file") && cap.AdapterRef.Revision == 1
+	if cap == nil || cap.Action != "QUERY" || cap.UseRight != "READ" || cap.ProcessingPurpose != "CURRENT_TASK" || cap.Resource != op.CapabilitySnapshot.Resource || cap.ExecutorEndpointId != op.ExecutorEndpointId || cap.AdapterRef == nil || cap.AdapterRef.Name == nil || cap.AdapterRef.Revision != 1 {
+		return false
+	}
+	if op.CapabilitySnapshot.ApiDescriptor != nil {
+		return cap.AdapterRef.Name.LocalId == "api-reference-v1" && proto.Equal(cap.AdapterRef, op.AdapterRef) && proto.Equal(cap.ApiDescriptor, op.CapabilitySnapshot.ApiDescriptor) && cap.ApiDescriptor.Queryable && command.ValidateAPIDescriptor(cap.ApiDescriptor, op.Ref.Name.UserId, cap.Resource) == nil
+	}
+	return cap.ApiDescriptor == nil && ((cap.AdapterRef.Name.LocalId == "simulator-queryable" && (op.CapabilitySnapshot.AdapterRef.GetName().GetLocalId() == "simulator-queryable" || op.CapabilitySnapshot.AdapterRef.GetName().GetLocalId() == "simulator-idempotent-queryable")) || (cap.AdapterRef.Name.LocalId == "managed-file" && op.CapabilitySnapshot.AdapterRef.GetName().GetLocalId() == "managed-file"))
 }
 
 // ValidateClosureWork 读取核心保存的精确意图；原任务版本并非查询的新开始依据。

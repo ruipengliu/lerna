@@ -1,0 +1,33 @@
+syntax = "proto3";
+package lerna.v1;
+
+import "lerna/v1/submission.proto";
+
+option go_package = "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1;lernav1";
+message ApiTargetBinding {
+  string user_id = 1;
+  string origin = 2;
+  string account = 3;
+  Ref credential_ref = 4;
+  string resource = 5;
+}
+message ApiDescriptor {
+  string provider = 1;
+  string environment = 2;
+  string version = 3;
+  string protocol_version = 4;
+  string serialization = 5;
+  string media_type = 6;
+  string authentication = 7;
+  ApiTargetBinding binding = 8;
+  string digest = 9;
+  bool idempotent = 10;
+  bool queryable = 11;
+}
+message ApiWait {
+  Ref observation_ref = 1;
+  Ref send_ref = 2;
+  string category = 3;
+  int64 observed_at_unix_ms = 4;
+  int64 ready_at_unix_ms = 5;
+}

@@ -92,19 +92,12 @@ func (s *Service) completeModelSnapshot(ctx context.Context, caller *v1.Caller, 
 				if e != nil {
 					return e
 				}
-				if raw == nil || !proto.Equal(raw.TaskId, t.TaskId) {
-					return command.Fail("INVARIANT_VIOLATION")
+				matches, e := s.snapshotEvidenceMatches(ctx, caller, t, op, raw)
+				if e != nil {
+					return e
 				}
-				if !proto.Equal(raw.OperationId, a.OperationId) {
-					// 核对观察保留独立查询身份；原动作的已接纳证据引用只提供关联。
-					query, err := s.modelLedger.QueryOperation(ctx, caller, raw.OperationId)
-					if err != nil {
-						return err
-					}
-					subject := raw.QuerySubject
-					if query == nil || query.ClosureWorkRef == nil || subject == nil || !proto.Equal(query.QuerySubject, subject) || !proto.Equal(subject.OperationId, a.OperationId) || op.Execution == nil || !proto.Equal(subject.AttemptId, op.Execution.Attempt.Ref.Name) || subject.ExternalKey != op.Execution.Attempt.ExternalKey || subject.TargetScope != op.CapabilitySnapshot.Resource || subject.ExecutorEndpointId != op.ExecutorEndpointId || !proto.Equal(subject.CapabilityRef, op.CapabilitySnapshot.Ref) {
-						return command.Fail("INVARIANT_VIOLATION")
-					}
+				if !matches {
+					return command.Fail("INVARIANT_VIOLATION")
 				}
 				snap.ContentRefs = append(snap.ContentRefs, raw.BodyRef)
 			}
@@ -128,4 +121,33 @@ func (s *Service) completeModelSnapshot(ctx context.Context, caller *v1.Caller, 
 	}
 	snap.ContentRefs = uniqueRefs(snap.ContentRefs)
 	return nil
+}
+
+// snapshotEvidenceMatches 保留独立查询的原身份，通过其封闭准入连接原责任。
+func (s *Service) snapshotEvidenceMatches(ctx context.Context, caller *v1.Caller, task *v1.Task, original *v1.Operation, raw *v1.RawObservation) (bool, error) {
+	if raw == nil || !proto.Equal(raw.TaskId, task.TaskId) {
+		return false, nil
+	}
+	if proto.Equal(raw.OperationId, original.Ref.Name) {
+		return true, nil
+	}
+	if raw.QuerySubject == nil || original.Execution == nil || original.CapabilitySnapshot == nil || raw.Source != "TRUSTED_IO" {
+		return false, nil
+	}
+	query, e := s.modelLedger.QueryOperation(ctx, caller, raw.OperationId)
+	if e != nil {
+		return false, e
+	}
+	if query == nil || query.Execution == nil || query.ClosureWorkRef == nil || query.QuerySubject == nil || query.CapabilitySnapshot == nil || query.CapabilitySnapshot.Action != "QUERY" || !proto.Equal(raw.OperationId, query.Ref.Name) || !proto.Equal(raw.AttemptId, query.Execution.Attempt.GetRef().GetName()) || raw.ExternalKey != query.Execution.Attempt.ExternalKey || !proto.Equal(raw.QuerySubject, query.QuerySubject) {
+		return false, nil
+	}
+	admission, e := s.store.LoadAdmission(ctx, query.AdmissionRef)
+	if e != nil {
+		return false, e
+	}
+	if admission == nil || admission.WorkCategory != "CLOSURE" || !proto.Equal(admission.TaskId, task.TaskId) || !proto.Equal(admission.OperationId, query.Ref.Name) || !proto.Equal(admission.Origin, query.ClosureWorkRef) || !proto.Equal(admission.QuerySubject, query.QuerySubject) || !proto.Equal(admission.CapabilityRef, query.CapabilitySnapshot.Ref) {
+		return false, nil
+	}
+	subject := query.QuerySubject
+	return proto.Equal(subject.OperationId, original.Ref.Name) && proto.Equal(subject.AttemptId, original.Execution.Attempt.GetRef().GetName()) && subject.ExternalKey == original.Execution.Attempt.ExternalKey && subject.TargetScope == original.CapabilitySnapshot.Resource && subject.ExecutorEndpointId == original.ExecutorEndpointId && proto.Equal(subject.CapabilityRef, original.CapabilitySnapshot.Ref), nil
 }

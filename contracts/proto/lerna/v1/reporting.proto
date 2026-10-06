@@ -30,6 +30,9 @@ message RawObservation {
   string provider_request_id = 19;
   QuerySubject query_subject = 20;
   FileEvidence file_evidence = 21;
+  string rate_category = 30;
+  string retry_after = 31;
+  bool redacted = 32;
 }
 message RegisterObservationCommand {
   CommandHeader header = 1;

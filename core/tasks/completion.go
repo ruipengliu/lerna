@@ -415,7 +415,11 @@ func (s *Service) checkCondition(ctx context.Context, c *v1.Caller, r *v1.Requir
 					continue
 				}
 			} else {
-				if proof == nil || (proof.Rule != "reference-target-v1" && proof.Rule != "managed-file-v1") || (proof.Outcome != "APPLIED" && proof.Outcome != "NOT_APPLIED") || raw.Source != "TRUSTED_IO" || !proto.Equal(raw.OperationId, op.Ref.Name) || !proto.Equal(raw.TaskId, r.TaskId) || !proto.Equal(proof.ObservationRef, raw.Ref) {
+				reviewed := proof.GetRule() == "reference-target-v1" || proof.GetRule() == "managed-file-v1"
+				if op.Execution.GetCallDescriptor().GetApiDescriptor() != nil {
+					reviewed = proof.GetRule() == "reference-api-v1" && command.APIObservationMatches(raw, op.Execution.CallDescriptor, op.Execution.Attempt)
+				}
+				if proof == nil || !reviewed || (proof.Outcome != "APPLIED" && proof.Outcome != "NOT_APPLIED") || raw.Source != "TRUSTED_IO" || !proto.Equal(raw.OperationId, op.Ref.Name) || !proto.Equal(raw.TaskId, r.TaskId) || !proto.Equal(proof.ObservationRef, raw.Ref) {
 					continue
 				}
 				if raw.Protocol == "FILE" && outcome == "APPLIED" && !durableFileCondition(raw) {

@@ -14,6 +14,7 @@ import (
 	"testing"
 
 	"github.com/ruipengliu/lerna/cmd/assembly"
+	"github.com/ruipengliu/lerna/contracts/command"
 	v1 "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1"
 	"github.com/ruipengliu/lerna/defaults/scripted"
 	"github.com/ruipengliu/lerna/infra/sqlite"
@@ -178,7 +179,11 @@ func prepareAdmissionAdapter(t *testing.T, h *assembly.Harness, target, adapter 
 	t.Helper()
 	ctx := context.Background()
 	caller := &v1.Caller{UserId: "u", IssuerId: "host"}
-	r, e := h.Sessions.SubmitGoal(ctx, caller, &v1.SubmitGoalCommand{Identity: admissionHeader("goal").Identity, ContractVersion: 1, SchemaId: "lerna.v1.SubmitGoal", FingerprintVersion: 1, Goal: "create record"})
+	goal := "create record"
+	if adapter == "api-reference-v1" {
+		goal = `{"value":"hello"}`
+	}
+	r, e := h.Sessions.SubmitGoal(ctx, caller, &v1.SubmitGoalCommand{Identity: admissionHeader("goal").Identity, ContractVersion: 1, SchemaId: "lerna.v1.SubmitGoal", FingerprintVersion: 1, Goal: goal})
 	if e != nil {
 		t.Fatal(e)
 	}
@@ -197,7 +202,12 @@ func prepareAdmissionAdapter(t *testing.T, h *assembly.Harness, target, adapter 
 	if len(maxSends) > 0 {
 		sends = maxSends[0]
 	}
-	r, e = h.Tasks.ConfigureCapability(ctx, caller, &v1.ConfigureCapabilityCommand{Header: admissionHeader("cap"), Capability: &v1.Capability{Action: "CREATE", Resource: target, UseRight: "INVOKE", ProcessingPurpose: "CURRENT_TASK", ExecutorEndpointId: "local-api", AdapterRef: &v1.Ref{Name: &v1.GlobalName{UserId: "u", AuthorityDomainId: "adapter", ObjectKind: "adapter", LocalId: adapter}, Revision: 1, SchemaId: "lerna.v1.Adapter"}, Unit: "USD_MICRO", FeeCeiling: &ceiling, RateBasisRef: parameters, MaxSends: sends}})
+	configured := &v1.Capability{Action: "CREATE", Resource: target, UseRight: "INVOKE", ProcessingPurpose: "CURRENT_TASK", ExecutorEndpointId: "local-api", AdapterRef: &v1.Ref{Name: &v1.GlobalName{UserId: "u", AuthorityDomainId: "adapter", ObjectKind: "adapter", LocalId: adapter}, Revision: 1, SchemaId: "lerna.v1.Adapter"}, Unit: "USD_MICRO", FeeCeiling: &ceiling, RateBasisRef: parameters, MaxSends: sends}
+	if adapter == "api-reference-v1" {
+		configured.ApiDescriptor = &v1.ApiDescriptor{Provider: "lerna-reference", Environment: "synthetic", Version: "1", ProtocolVersion: "lerna-reference-api-v1", Serialization: "reference-json-v1", MediaType: "application/json", Authentication: "BEARER", Idempotent: true, Binding: &v1.ApiTargetBinding{UserId: "u", Origin: target, Resource: target, Account: "synthetic-account", CredentialRef: &v1.Ref{Name: &v1.GlobalName{UserId: "u", AuthorityDomainId: "platform-credentials", ObjectKind: "api-credential", LocalId: "synthetic-api"}, Revision: 1, SchemaId: "lerna.v1.ApiCredentialReference"}}}
+		configured.ApiDescriptor.Digest = command.APIDescriptorDigest(configured.ApiDescriptor)
+	}
+	r, e = h.Tasks.ConfigureCapability(ctx, caller, &v1.ConfigureCapabilityCommand{Header: admissionHeader("cap"), Capability: configured})
 	requireAccepted(t, r, e)
 	capability := r.ResultRef
 	for _, c := range []*v1.ConfigureBudgetCommand{{Header: admissionHeader("user-budget"), Unit: "USD_MICRO", Limit: 100}, {Header: admissionHeader("task-budget"), TaskId: task.Name, Unit: "USD_MICRO", Limit: 80}} {

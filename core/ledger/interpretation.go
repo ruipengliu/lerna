@@ -61,6 +61,8 @@ func (s *Service) InterpretObservation(ctx context.Context, caller *v1.Caller, c
 		finding := interpretSimulator(raw, body.RawBody, op.Execution.Attempt)
 		if raw.Protocol == "FILE" {
 			finding = interpretFile(raw, op)
+		} else if op.Execution.CallDescriptor.ApiDescriptor != nil {
+			finding = interpretAPI(raw, body.RawBody, op.Execution.CallDescriptor, op.Execution.Attempt)
 		}
 		if op.QuerySubject != nil {
 			finding = interpretQuery(raw, body.RawBody, op)
@@ -74,6 +76,18 @@ func (s *Service) InterpretObservation(ctx context.Context, caller *v1.Caller, c
 			}
 		}
 		finding.Ref = ref
+		var waitSend *v1.PhysicalSend
+		if wait := apiWait(raw, op.Execution.CallDescriptor, op.Execution.Attempt); wait != nil {
+			send := executionSend(op.Execution, raw.SendRef)
+			if send != nil {
+				send.Ref.Revision++
+				send.ApiWait = wait
+				waitSend = send
+				if proto.Equal(send.Ref.Name, op.Execution.Send.Ref.Name) {
+					op.ApiWait = wait
+				}
+			}
+		}
 		if e = s.store.(interpretationStore).SaveInterpretation(tx, finding); e != nil {
 			return nil, e
 		}
@@ -109,6 +123,10 @@ func (s *Service) InterpretObservation(ctx context.Context, caller *v1.Caller, c
 				j.State = "COMPLETED"
 			} else {
 				j.State = "WAITING"
+				if op.ApiWait != nil {
+					j.ReadyAtUnixMs = op.ApiWait.ReadyAtUnixMs
+					j.WaitingReason = "API_429_" + op.ApiWait.Category
+				}
 			}
 			j.ProcessInstance = ""
 			j.LeaseUntilUnixMs = 0
@@ -119,6 +137,11 @@ func (s *Service) InterpretObservation(ctx context.Context, caller *v1.Caller, c
 		if e = s.saveOperation(tx, op); e != nil {
 			return nil, e
 		}
+		if waitSend != nil {
+			if e = s.store.SaveTraceSource(tx, "ledger", &v1.TraceEvent{EventType: "API_WAIT_RECORDED", SourceRecordRef: waitSend.Ref, OriginCommand: c.Header.Identity, TaskId: admission.TaskId, OperationId: op.Ref.Name, AttemptId: raw.AttemptId, SendRef: raw.SendRef, ObservationRef: raw.Ref, ReasonCode: "API_429_" + waitSend.ApiWait.Category, RelatedRefs: []*v1.Ref{op.Ref, op.AdmissionRef, op.Execution.Attempt.Ref, finding.Ref}}); e != nil {
+				return nil, e
+			}
+		}
 		if op.QuerySubject != nil {
 			if e = s.applyReconciliationObservation(tx, caller, op, raw, body.RawBody); e != nil {
 				return nil, e
@@ -128,6 +151,30 @@ func (s *Service) InterpretObservation(ctx context.Context, caller *v1.Caller, c
 		}
 		return ref, nil
 	})
+}
+
+func interpretAPI(raw *v1.RawObservation, body []byte, d *v1.CallDescriptor, attempt *v1.ExecutionAttempt) *v1.EffectInterpretation {
+	r := &v1.EffectInterpretation{ObservationRef: raw.Ref, Rule: "reference-api-v1", Outcome: "UNKNOWN", LateEffect: "MAY_OCCUR", Reason: "INSUFFICIENT_EVIDENCE"}
+	applied, terminal, valid, conflict := command.ReferenceAPIResponse(raw, body, d, attempt)
+	if conflict {
+		r.Reason = "EVIDENCE_CONFLICT"
+	}
+	if !valid {
+		return r
+	}
+	if applied {
+		r.Outcome = "APPLIED"
+	}
+	if terminal {
+		r.LateEffect = "RULED_OUT"
+		r.Reason = "TERMINAL_PROTOCOL_EVIDENCE"
+		if !applied {
+			r.Outcome = "NOT_APPLIED"
+		}
+	} else {
+		r.Reason = "LATE_EFFECT_POSSIBLE"
+	}
+	return r
 }
 func interpretSimulator(raw *v1.RawObservation, body []byte, attempt *v1.ExecutionAttempt) *v1.EffectInterpretation {
 	r := &v1.EffectInterpretation{ObservationRef: raw.Ref, Rule: "reference-target-v1", Outcome: "UNKNOWN", LateEffect: "MAY_OCCUR", Reason: "INSUFFICIENT_EVIDENCE"}

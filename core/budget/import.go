@@ -55,7 +55,11 @@ func (s *Service) ImportBill(ctx context.Context, caller *v1.Caller, c *v1.Impor
 		if body == nil || body.Status != "AVAILABLE" || !s.trustedCaller(&v1.Caller{IssuerId: body.GetSource().GetIssuerId()}) || body.GetSource().GetUserId() != s.user {
 			return nil, command.Fail("UNTRUSTED_BILLING_EVIDENCE")
 		}
-		bill, e := parseBill(command.ContentBytes(body))
+		account, e := billingAccount(x.CallDescriptor, s.user)
+		if e != nil {
+			return nil, e
+		}
+		bill, e := parseBillForAccount(command.ContentBytes(body), account)
 		if e != nil {
 			return nil, e
 		}

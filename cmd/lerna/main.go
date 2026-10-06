@@ -25,8 +25,9 @@ func run() error {
 	domain := flag.String("domain", "local-adjudication", "fixed adjudication domain")
 	roots := fileRootFlags{}
 	flag.Var(&roots, "file-root", "fixed managed file root NAME=/absolute/path (repeatable)")
+	keychain := flag.String("api-keychain", "", "explicit existing macOS file-based Keychain path")
 	flag.Parse()
-	h, err := assembly.OpenWithFiles(*path, *user, *domain, roots)
+	h, err := assembly.OpenWithOptions(*path, *user, *domain, assembly.Options{APIKeychainPath: *keychain, FileRoots: roots})
 	if err != nil {
 		return err
 	}

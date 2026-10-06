@@ -44,6 +44,9 @@ type RawObservation struct {
 	ProviderRequestId  string                 `protobuf:"bytes,19,opt,name=provider_request_id,json=providerRequestId,proto3" json:"provider_request_id,omitempty"`
 	QuerySubject       *QuerySubject          `protobuf:"bytes,20,opt,name=query_subject,json=querySubject,proto3" json:"query_subject,omitempty"`
 	FileEvidence       *FileEvidence          `protobuf:"bytes,21,opt,name=file_evidence,json=fileEvidence,proto3" json:"file_evidence,omitempty"`
+	RateCategory       string                 `protobuf:"bytes,30,opt,name=rate_category,json=rateCategory,proto3" json:"rate_category,omitempty"`
+	RetryAfter         string                 `protobuf:"bytes,31,opt,name=retry_after,json=retryAfter,proto3" json:"retry_after,omitempty"`
+	Redacted           bool                   `protobuf:"varint,32,opt,name=redacted,proto3" json:"redacted,omitempty"`
 	unknownFields      protoimpl.UnknownFields
 	sizeCache          protoimpl.SizeCache
 }
@@ -223,6 +226,27 @@ func (x *RawObservation) GetFileEvidence() *FileEvidence {
 		return x.FileEvidence
 	}
 	return nil
+}
+
+func (x *RawObservation) GetRateCategory() string {
+	if x != nil {
+		return x.RateCategory
+	}
+	return ""
+}
+
+func (x *RawObservation) GetRetryAfter() string {
+	if x != nil {
+		return x.RetryAfter
+	}
+	return ""
+}
+
+func (x *RawObservation) GetRedacted() bool {
+	if x != nil {
+		return x.Redacted
+	}
+	return false
 }
 
 type RegisterObservationCommand struct {
@@ -1477,7 +1501,7 @@ var File_lerna_v1_reporting_proto protoreflect.FileDescriptor
 
 const file_lerna_v1_reporting_proto_rawDesc = "" +
 	"\n" +
-	"\x18lerna/v1/reporting.proto\x12\blerna.v1\x1a\x16lerna/v1/closure.proto\x1a\x17lerna/v1/identity.proto\x1a\x1blerna/v1/managed_file.proto\x1a\x17lerna/v1/planning.proto\x1a\x19lerna/v1/submission.proto\"\xee\x06\n" +
+	"\x18lerna/v1/reporting.proto\x12\blerna.v1\x1a\x16lerna/v1/closure.proto\x1a\x17lerna/v1/identity.proto\x1a\x1blerna/v1/managed_file.proto\x1a\x17lerna/v1/planning.proto\x1a\x19lerna/v1/submission.proto\"\xd0\a\n" +
 	"\x0eRawObservation\x12\x1f\n" +
 	"\x03ref\x18\x01 \x01(\v2\r.lerna.v1.RefR\x03ref\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\tR\x06userId\x12-\n" +
@@ -1502,7 +1526,11 @@ const file_lerna_v1_reporting_proto_rawDesc = "" +
 	"\x0ftransport_error\x18\x12 \x01(\tR\x0etransportError\x12.\n" +
 	"\x13provider_request_id\x18\x13 \x01(\tR\x11providerRequestId\x12;\n" +
 	"\rquery_subject\x18\x14 \x01(\v2\x16.lerna.v1.QuerySubjectR\fquerySubject\x12;\n" +
-	"\rfile_evidence\x18\x15 \x01(\v2\x16.lerna.v1.FileEvidenceR\ffileEvidence\"\x9d\x01\n" +
+	"\rfile_evidence\x18\x15 \x01(\v2\x16.lerna.v1.FileEvidenceR\ffileEvidence\x12#\n" +
+	"\rrate_category\x18\x1e \x01(\tR\frateCategory\x12\x1f\n" +
+	"\vretry_after\x18\x1f \x01(\tR\n" +
+	"retryAfter\x12\x1a\n" +
+	"\bredacted\x18  \x01(\bR\bredacted\"\x9d\x01\n" +
 	"\x1aRegisterObservationCommand\x12/\n" +
 	"\x06header\x18\x01 \x01(\v2\x17.lerna.v1.CommandHeaderR\x06header\x12:\n" +
 	"\vobservation\x18\x02 \x01(\v2\x18.lerna.v1.RawObservationR\vobservation\x12\x12\n" +

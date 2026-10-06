@@ -39,6 +39,7 @@ type Capability struct {
 	ParameterSchemaJson    []byte                 `protobuf:"bytes,14,opt,name=parameter_schema_json,json=parameterSchemaJson,proto3" json:"parameter_schema_json,omitempty"`
 	SchemaDigest           string                 `protobuf:"bytes,15,opt,name=schema_digest,json=schemaDigest,proto3" json:"schema_digest,omitempty"`
 	IdempotencyRetentionMs int64                  `protobuf:"varint,20,opt,name=idempotency_retention_ms,json=idempotencyRetentionMs,proto3" json:"idempotency_retention_ms,omitempty"`
+	ApiDescriptor          *ApiDescriptor         `protobuf:"bytes,21,opt,name=api_descriptor,json=apiDescriptor,proto3" json:"api_descriptor,omitempty"`
 	unknownFields          protoimpl.UnknownFields
 	sizeCache              protoimpl.SizeCache
 }
@@ -183,6 +184,13 @@ func (x *Capability) GetIdempotencyRetentionMs() int64 {
 		return x.IdempotencyRetentionMs
 	}
 	return 0
+}
+
+func (x *Capability) GetApiDescriptor() *ApiDescriptor {
+	if x != nil {
+		return x.ApiDescriptor
+	}
+	return nil
 }
 
 type ConfigureCapabilityCommand struct {
@@ -637,7 +645,7 @@ var File_lerna_v1_admission_proto protoreflect.FileDescriptor
 
 const file_lerna_v1_admission_proto_rawDesc = "" +
 	"\n" +
-	"\x18lerna/v1/admission.proto\x12\blerna.v1\x1a\x18lerna/v1/authority.proto\x1a\x16lerna/v1/closure.proto\x1a\x17lerna/v1/identity.proto\x1a\x17lerna/v1/planning.proto\x1a\x19lerna/v1/submission.proto\"\x9c\x05\n" +
+	"\x18lerna/v1/admission.proto\x12\blerna.v1\x1a\x12lerna/v1/api.proto\x1a\x18lerna/v1/authority.proto\x1a\x16lerna/v1/closure.proto\x1a\x17lerna/v1/identity.proto\x1a\x17lerna/v1/planning.proto\x1a\x19lerna/v1/submission.proto\"\xdc\x05\n" +
 	"\n" +
 	"Capability\x12\x1f\n" +
 	"\x03ref\x18\x01 \x01(\v2\r.lerna.v1.RefR\x03ref\x12\x16\n" +
@@ -659,7 +667,8 @@ const file_lerna_v1_admission_proto_rawDesc = "" +
 	"approvedBy\x122\n" +
 	"\x15parameter_schema_json\x18\x0e \x01(\fR\x13parameterSchemaJson\x12#\n" +
 	"\rschema_digest\x18\x0f \x01(\tR\fschemaDigest\x128\n" +
-	"\x18idempotency_retention_ms\x18\x14 \x01(\x03R\x16idempotencyRetentionMsB\x0e\n" +
+	"\x18idempotency_retention_ms\x18\x14 \x01(\x03R\x16idempotencyRetentionMs\x12>\n" +
+	"\x0eapi_descriptor\x18\x15 \x01(\v2\x17.lerna.v1.ApiDescriptorR\rapiDescriptorB\x0e\n" +
 	"\f_fee_ceiling\"\xae\x01\n" +
 	"\x1aConfigureCapabilityCommand\x12/\n" +
 	"\x06header\x18\x01 \x01(\v2\x17.lerna.v1.CommandHeaderR\x06header\x124\n" +
@@ -729,53 +738,55 @@ var file_lerna_v1_admission_proto_goTypes = []any{
 	(*Handoff)(nil),                    // 4: lerna.v1.Handoff
 	(*Ref)(nil),                        // 5: lerna.v1.Ref
 	(*CommandIdentity)(nil),            // 6: lerna.v1.CommandIdentity
-	(*CommandHeader)(nil),              // 7: lerna.v1.CommandHeader
-	(*GlobalName)(nil),                 // 8: lerna.v1.GlobalName
-	(*AncestorControl)(nil),            // 9: lerna.v1.AncestorControl
-	(*MemoryDependency)(nil),           // 10: lerna.v1.MemoryDependency
-	(*BudgetBasis)(nil),                // 11: lerna.v1.BudgetBasis
-	(*QuerySubject)(nil),               // 12: lerna.v1.QuerySubject
-	(*CommandReceipt)(nil),             // 13: lerna.v1.CommandReceipt
+	(*ApiDescriptor)(nil),              // 7: lerna.v1.ApiDescriptor
+	(*CommandHeader)(nil),              // 8: lerna.v1.CommandHeader
+	(*GlobalName)(nil),                 // 9: lerna.v1.GlobalName
+	(*AncestorControl)(nil),            // 10: lerna.v1.AncestorControl
+	(*MemoryDependency)(nil),           // 11: lerna.v1.MemoryDependency
+	(*BudgetBasis)(nil),                // 12: lerna.v1.BudgetBasis
+	(*QuerySubject)(nil),               // 13: lerna.v1.QuerySubject
+	(*CommandReceipt)(nil),             // 14: lerna.v1.CommandReceipt
 }
 var file_lerna_v1_admission_proto_depIdxs = []int32{
 	5,  // 0: lerna.v1.Capability.ref:type_name -> lerna.v1.Ref
 	5,  // 1: lerna.v1.Capability.adapter_ref:type_name -> lerna.v1.Ref
 	5,  // 2: lerna.v1.Capability.rate_basis_ref:type_name -> lerna.v1.Ref
 	6,  // 3: lerna.v1.Capability.approved_by:type_name -> lerna.v1.CommandIdentity
-	7,  // 4: lerna.v1.ConfigureCapabilityCommand.header:type_name -> lerna.v1.CommandHeader
-	0,  // 5: lerna.v1.ConfigureCapabilityCommand.capability:type_name -> lerna.v1.Capability
-	5,  // 6: lerna.v1.ConfigureCapabilityCommand.replaces:type_name -> lerna.v1.Ref
-	5,  // 7: lerna.v1.Admission.ref:type_name -> lerna.v1.Ref
-	5,  // 8: lerna.v1.Admission.origin:type_name -> lerna.v1.Ref
-	8,  // 9: lerna.v1.Admission.task_id:type_name -> lerna.v1.GlobalName
-	9,  // 10: lerna.v1.Admission.ancestor_controls:type_name -> lerna.v1.AncestorControl
-	10, // 11: lerna.v1.Admission.memory_dependencies:type_name -> lerna.v1.MemoryDependency
-	8,  // 12: lerna.v1.Admission.operation_id:type_name -> lerna.v1.GlobalName
-	5,  // 13: lerna.v1.Admission.grant_refs:type_name -> lerna.v1.Ref
-	11, // 14: lerna.v1.Admission.budget_basis:type_name -> lerna.v1.BudgetBasis
-	5,  // 15: lerna.v1.Admission.confirmation_ref:type_name -> lerna.v1.Ref
-	5,  // 16: lerna.v1.Admission.parameters_ref:type_name -> lerna.v1.Ref
-	5,  // 17: lerna.v1.Admission.capability_ref:type_name -> lerna.v1.Ref
-	5,  // 18: lerna.v1.Admission.grant_use_ref:type_name -> lerna.v1.Ref
-	6,  // 19: lerna.v1.Admission.handoff_identity:type_name -> lerna.v1.CommandIdentity
-	0,  // 20: lerna.v1.Admission.capability_snapshot:type_name -> lerna.v1.Capability
-	5,  // 21: lerna.v1.Admission.content_refs:type_name -> lerna.v1.Ref
-	12, // 22: lerna.v1.Admission.query_subject:type_name -> lerna.v1.QuerySubject
-	7,  // 23: lerna.v1.AdmitCommand.header:type_name -> lerna.v1.CommandHeader
-	8,  // 24: lerna.v1.AdmitCommand.task_id:type_name -> lerna.v1.GlobalName
-	5,  // 25: lerna.v1.AdmitCommand.proposal_ref:type_name -> lerna.v1.Ref
-	5,  // 26: lerna.v1.AdmitCommand.grant_ref:type_name -> lerna.v1.Ref
-	5,  // 27: lerna.v1.AdmitCommand.confirmation_ref:type_name -> lerna.v1.Ref
-	5,  // 28: lerna.v1.Handoff.ref:type_name -> lerna.v1.Ref
-	5,  // 29: lerna.v1.Handoff.admission_ref:type_name -> lerna.v1.Ref
-	6,  // 30: lerna.v1.Handoff.identity:type_name -> lerna.v1.CommandIdentity
-	5,  // 31: lerna.v1.Handoff.job_ref:type_name -> lerna.v1.Ref
-	13, // 32: lerna.v1.Handoff.recipient_receipt:type_name -> lerna.v1.CommandReceipt
-	33, // [33:33] is the sub-list for method output_type
-	33, // [33:33] is the sub-list for method input_type
-	33, // [33:33] is the sub-list for extension type_name
-	33, // [33:33] is the sub-list for extension extendee
-	0,  // [0:33] is the sub-list for field type_name
+	7,  // 4: lerna.v1.Capability.api_descriptor:type_name -> lerna.v1.ApiDescriptor
+	8,  // 5: lerna.v1.ConfigureCapabilityCommand.header:type_name -> lerna.v1.CommandHeader
+	0,  // 6: lerna.v1.ConfigureCapabilityCommand.capability:type_name -> lerna.v1.Capability
+	5,  // 7: lerna.v1.ConfigureCapabilityCommand.replaces:type_name -> lerna.v1.Ref
+	5,  // 8: lerna.v1.Admission.ref:type_name -> lerna.v1.Ref
+	5,  // 9: lerna.v1.Admission.origin:type_name -> lerna.v1.Ref
+	9,  // 10: lerna.v1.Admission.task_id:type_name -> lerna.v1.GlobalName
+	10, // 11: lerna.v1.Admission.ancestor_controls:type_name -> lerna.v1.AncestorControl
+	11, // 12: lerna.v1.Admission.memory_dependencies:type_name -> lerna.v1.MemoryDependency
+	9,  // 13: lerna.v1.Admission.operation_id:type_name -> lerna.v1.GlobalName
+	5,  // 14: lerna.v1.Admission.grant_refs:type_name -> lerna.v1.Ref
+	12, // 15: lerna.v1.Admission.budget_basis:type_name -> lerna.v1.BudgetBasis
+	5,  // 16: lerna.v1.Admission.confirmation_ref:type_name -> lerna.v1.Ref
+	5,  // 17: lerna.v1.Admission.parameters_ref:type_name -> lerna.v1.Ref
+	5,  // 18: lerna.v1.Admission.capability_ref:type_name -> lerna.v1.Ref
+	5,  // 19: lerna.v1.Admission.grant_use_ref:type_name -> lerna.v1.Ref
+	6,  // 20: lerna.v1.Admission.handoff_identity:type_name -> lerna.v1.CommandIdentity
+	0,  // 21: lerna.v1.Admission.capability_snapshot:type_name -> lerna.v1.Capability
+	5,  // 22: lerna.v1.Admission.content_refs:type_name -> lerna.v1.Ref
+	13, // 23: lerna.v1.Admission.query_subject:type_name -> lerna.v1.QuerySubject
+	8,  // 24: lerna.v1.AdmitCommand.header:type_name -> lerna.v1.CommandHeader
+	9,  // 25: lerna.v1.AdmitCommand.task_id:type_name -> lerna.v1.GlobalName
+	5,  // 26: lerna.v1.AdmitCommand.proposal_ref:type_name -> lerna.v1.Ref
+	5,  // 27: lerna.v1.AdmitCommand.grant_ref:type_name -> lerna.v1.Ref
+	5,  // 28: lerna.v1.AdmitCommand.confirmation_ref:type_name -> lerna.v1.Ref
+	5,  // 29: lerna.v1.Handoff.ref:type_name -> lerna.v1.Ref
+	5,  // 30: lerna.v1.Handoff.admission_ref:type_name -> lerna.v1.Ref
+	6,  // 31: lerna.v1.Handoff.identity:type_name -> lerna.v1.CommandIdentity
+	5,  // 32: lerna.v1.Handoff.job_ref:type_name -> lerna.v1.Ref
+	14, // 33: lerna.v1.Handoff.recipient_receipt:type_name -> lerna.v1.CommandReceipt
+	34, // [34:34] is the sub-list for method output_type
+	34, // [34:34] is the sub-list for method input_type
+	34, // [34:34] is the sub-list for extension type_name
+	34, // [34:34] is the sub-list for extension extendee
+	0,  // [0:34] is the sub-list for field type_name
 }
 
 func init() { file_lerna_v1_admission_proto_init() }
@@ -783,6 +794,7 @@ func file_lerna_v1_admission_proto_init() {
 	if File_lerna_v1_admission_proto != nil {
 		return
 	}
+	file_lerna_v1_api_proto_init()
 	file_lerna_v1_authority_proto_init()
 	file_lerna_v1_closure_proto_init()
 	file_lerna_v1_identity_proto_init()

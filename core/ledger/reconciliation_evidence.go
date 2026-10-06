@@ -17,6 +17,8 @@ import (
 )
 
 type queryResponse struct {
+	Account            string `json:"account"`
+	Origin             string `json:"origin"`
 	QueryStatus        string `json:"query_status"`
 	Protocol           string `json:"protocol"`
 	QueryExternalKey   string `json:"query_external_key"`
@@ -41,7 +43,12 @@ func parseQueryResponse(raw *v1.RawObservation, body []byte, op *v1.Operation) (
 		return parseFileQuery(raw, op), false
 	}
 	cap := op.Execution.Attempt.Capabilities
-	if cap.ProtocolVersion != "lerna-simulator-query-v1" || cap.VerificationBasis != "reference-query-v1" || cap.Effect != "READ" || raw.Source != "TRUSTED_IO" || raw.Protocol != "HTTP" || raw.TransportError != "" || raw.StatusCode != 200 || !proto.Equal(raw.QuerySubject, op.QuerySubject) {
+	api := op.Execution.CallDescriptor.GetApiDescriptor() != nil
+	protocol, basis := "lerna-simulator-query-v1", "reference-query-v1"
+	if api {
+		protocol, basis = "lerna-reference-api-query-v1", "reference-api-v1"
+	}
+	if cap.ProtocolVersion != protocol || cap.VerificationBasis != basis || cap.Effect != "READ" || raw.Source != "TRUSTED_IO" || raw.Protocol != "HTTP" || raw.TransportError != "" || raw.Redacted || raw.StatusCode != 200 || !proto.Equal(raw.QuerySubject, op.QuerySubject) {
 		return nil, false
 	}
 	endpoint, e := url.Parse(raw.Target)
@@ -53,10 +60,18 @@ func parseQueryResponse(raw *v1.RawObservation, body []byte, op *v1.Operation) (
 	if expected == "" {
 		expected = "80"
 	}
-	if e != nil || port != expected || !net.ParseIP(address).Equal(net.ParseIP(endpoint.Hostname())) {
+	if api {
+		if !command.APIObservationMatches(raw, op.Execution.CallDescriptor, op.Execution.Attempt) {
+			return nil, false
+		}
+	} else if e != nil || port != expected || !net.ParseIP(address).Equal(net.ParseIP(endpoint.Hostname())) {
 		return nil, false
 	}
 	valid, conflict := validQueryObject(body)
+	if api {
+		values, duplicate := command.StrictJSONObject(body, "billing", "query_status", "protocol", "query_external_key", "query_attempt_id", "query_operation_id", "read_terminal", "subject_external_key", "subject_attempt_id", "subject_operation_id", "subject_scope", "applied", "terminal", "negative_proof", "retry_after_ms", "account", "origin")
+		valid, conflict = values != nil, duplicate
+	}
 	if !valid {
 		return nil, conflict
 	}
@@ -67,6 +82,9 @@ func parseQueryResponse(raw *v1.RawObservation, body []byte, op *v1.Operation) (
 	if response.QueryStatus != "" && response.QueryStatus != "AVAILABLE" && response.QueryStatus != "TEMPORARILY_UNAVAILABLE" && response.QueryStatus != "RETENTION_EXPIRED" {
 		return nil, false
 	}
+	if api && (response.Account != op.Execution.CallDescriptor.ApiDescriptor.Binding.Account || response.Origin != op.Execution.CallDescriptor.ApiDescriptor.Binding.Origin) {
+		return nil, false
+	}
 	subject := op.QuerySubject
 	if response.SubjectExternalKey != subject.ExternalKey || response.SubjectAttemptID != subject.AttemptId.LocalId || response.SubjectOperationID != subject.OperationId.LocalId || response.SubjectScope != subject.TargetScope {
 		return nil, false
@@ -75,6 +93,9 @@ func parseQueryResponse(raw *v1.RawObservation, body []byte, op *v1.Operation) (
 }
 func interpretQuery(raw *v1.RawObservation, body []byte, op *v1.Operation) *v1.EffectInterpretation {
 	finding := &v1.EffectInterpretation{ObservationRef: raw.Ref, Rule: "reference-query-v1", Outcome: "UNKNOWN", LateEffect: "MAY_OCCUR", Reason: "QUERY_RESULT_UNKNOWN"}
+	if op.Execution.CallDescriptor.ApiDescriptor != nil {
+		finding.Rule = "reference-api-query-v1"
+	}
 	response, conflict := parseQueryResponse(raw, body, op)
 	if conflict {
 		finding.Reason = "EVIDENCE_CONFLICT"
@@ -153,6 +174,9 @@ func (s *Service) applyReconciliationObservation(ctx context.Context, caller *v1
 	}
 	response, conflict := parseQueryResponse(raw, body, query)
 	finding := &v1.ReconciliationFinding{Ref: command.NewRef(s.user, s.domain, "reconciliation-finding", "lerna.v1.ReconciliationFinding"), QueryRef: proto.Clone(q.Ref).(*v1.Ref), OperationId: original.Ref.Name, ObservationRef: raw.Ref, Rule: "reference-query-subject-v1", Outcome: "UNKNOWN", LateEffect: "MAY_OCCUR", Reason: "QUERY_RESULT_UNKNOWN"}
+	if query.Execution.CallDescriptor.ApiDescriptor != nil {
+		finding.Rule = "reference-api-query-subject-v1"
+	}
 	if response != nil && *response.ReadTerminal && (response.QueryStatus == "" || response.QueryStatus == "AVAILABLE") {
 		finding.Reason = "SUBJECT_NOT_TERMINAL"
 		if *response.Applied {

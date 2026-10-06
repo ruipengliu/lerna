@@ -3,6 +3,7 @@ package tasks
 import (
 	"context"
 
+	"github.com/ruipengliu/lerna/contracts/command"
 	v1 "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1"
 	"google.golang.org/protobuf/proto"
 )
@@ -11,7 +12,18 @@ import (
 func (s *Service) queryConditionEvidence(ctx context.Context, c *v1.Caller, requirements *v1.Requirements, raw *v1.RawObservation, readProof *v1.EffectInterpretation, original *v1.Operation, admissions map[string]*v1.Admission, ops map[string]*v1.Operation) (string, []*v1.Ref, error) {
 	query := ops[raw.GetOperationId().GetLocalId()]
 	admission := admissions[raw.GetOperationId().GetLocalId()]
-	if query == nil || admission == nil || query.Execution == nil || original.Execution == nil || query.QuerySubject == nil || readProof == nil || readProof.Rule != "reference-query-v1" || readProof.Outcome != "APPLIED" || readProof.LateEffect != "RULED_OUT" || raw.Source != "TRUSTED_IO" || !proto.Equal(raw.TaskId, requirements.TaskId) || !proto.Equal(raw.OperationId, query.Ref.Name) || !proto.Equal(raw.AttemptId, query.Execution.Attempt.Ref.Name) || raw.ExternalKey != query.Execution.Attempt.ExternalKey || !proto.Equal(readProof.ObservationRef, raw.Ref) || !proto.Equal(raw.QuerySubject, query.QuerySubject) || !proto.Equal(admission.QuerySubject, query.QuerySubject) || !proto.Equal(admission.Origin, query.ClosureWorkRef) || admission.WorkCategory != "CLOSURE" {
+	if query == nil || admission == nil || query.Execution == nil || original.Execution == nil || original.CapabilitySnapshot == nil || query.CapabilitySnapshot == nil {
+		return "", nil, nil
+	}
+	readRule, subjectRule := "reference-query-v1", "reference-query-subject-v1"
+	if original.Execution.CallDescriptor.GetApiDescriptor() != nil {
+		readRule, subjectRule = "reference-api-query-v1", "reference-api-query-subject-v1"
+		originalAPI := original.Execution.CallDescriptor.ApiDescriptor
+		if query.Execution.Attempt.GetCapabilities().GetProtocolVersion() != "lerna-reference-api-query-v1" || query.Execution.Attempt.GetCapabilities().GetVerificationBasis() != "reference-api-v1" || query.Execution.Attempt.GetCapabilities().GetEffect() != "READ" || command.ValidateAPIDescriptor(originalAPI, original.Ref.Name.UserId, original.CapabilitySnapshot.Resource) != nil || !proto.Equal(originalAPI, original.CapabilitySnapshot.ApiDescriptor) || !proto.Equal(originalAPI, query.Execution.CallDescriptor.GetApiDescriptor()) || !proto.Equal(originalAPI, query.CapabilitySnapshot.ApiDescriptor) || !proto.Equal(original.CapabilitySnapshot.AdapterRef, query.CapabilitySnapshot.AdapterRef) || !command.APIObservationMatches(raw, query.Execution.CallDescriptor, query.Execution.Attempt) {
+			return "", nil, nil
+		}
+	}
+	if query.QuerySubject == nil || readProof == nil || readProof.Rule != readRule || readProof.Outcome != "APPLIED" || readProof.LateEffect != "RULED_OUT" || raw.Source != "TRUSTED_IO" || !proto.Equal(raw.TaskId, requirements.TaskId) || !proto.Equal(raw.OperationId, query.Ref.Name) || !proto.Equal(raw.AttemptId, query.Execution.Attempt.Ref.Name) || raw.ExternalKey != query.Execution.Attempt.ExternalKey || !proto.Equal(readProof.ObservationRef, raw.Ref) || !proto.Equal(raw.QuerySubject, query.QuerySubject) || !proto.Equal(admission.QuerySubject, query.QuerySubject) || !proto.Equal(admission.Origin, query.ClosureWorkRef) || admission.WorkCategory != "CLOSURE" {
 		return "", nil, nil
 	}
 	subject := query.QuerySubject
@@ -26,7 +38,7 @@ func (s *Service) queryConditionEvidence(ctx context.Context, c *v1.Caller, requ
 		if e != nil {
 			return "", nil, e
 		}
-		if finding == nil || finding.Rule != "reference-query-subject-v1" || !proto.Equal(finding.OperationId, original.Ref.Name) || !proto.Equal(finding.ObservationRef, raw.Ref) || finding.LateEffect != "RULED_OUT" || (finding.Outcome != "APPLIED" && finding.Outcome != "NOT_APPLIED") || finding.Outcome != original.Effect.Outcome {
+		if finding == nil || finding.Rule != subjectRule || !proto.Equal(finding.OperationId, original.Ref.Name) || !proto.Equal(finding.ObservationRef, raw.Ref) || finding.LateEffect != "RULED_OUT" || (finding.Outcome != "APPLIED" && finding.Outcome != "NOT_APPLIED") || finding.Outcome != original.Effect.Outcome {
 			continue
 		}
 		relation, e := s.completionFacts.QueryReconciliationQuery(ctx, c, finding.QueryRef)

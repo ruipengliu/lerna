@@ -2,6 +2,7 @@ syntax = "proto3";
 package lerna.v1;
 
 import "lerna/v1/admission.proto";
+import "lerna/v1/api.proto";
 import "lerna/v1/closure.proto";
 import "lerna/v1/identity.proto";
 import "lerna/v1/planning.proto";
@@ -36,6 +37,7 @@ message Operation {
   Ref closure_work_ref = 15;
   QuerySubject query_subject = 16;
   string model_descriptor_digest = 17;
+  ApiWait api_wait = 18;
 }
 message AcceptOperationCommand {
   CommandHeader header = 1;
@@ -53,6 +55,8 @@ message CallDescriptor {
   QuerySubject query_subject = 8;
   string body_digest = 9;
   optional int64 key_valid_until_unix_ms = 10;
+  ApiDescriptor api_descriptor = 11;
+  string parameters_digest = 12;
 }
 message ExecutionAttempt {
   Ref ref = 1;
@@ -77,6 +81,7 @@ message PhysicalSend {
   Ref observation_ref = 9;
   Ref credential_ref = 10;
   Ref resend_query_observation_ref = 11;
+  ApiWait api_wait = 12;
 }
 message Execution {
   ExecutionAttempt attempt = 1;

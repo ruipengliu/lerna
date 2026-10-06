@@ -23,6 +23,15 @@ type Compiler interface {
 
 func (s *Service) WithCompiler(adapter Compiler) *Service { s.adapter = adapter; return s }
 
+func (s *Service) compile(ctx context.Context, op *v1.Operation, a *v1.ExecutionAttempt) (*v1.CallDescriptor, *v1.ExecutionCapabilities, error) {
+	if contextual, ok := s.adapter.(interface {
+		CompileContext(context.Context, *v1.Operation, *v1.ExecutionAttempt) (*v1.CallDescriptor, *v1.ExecutionCapabilities, error)
+	}); ok {
+		return contextual.CompileContext(ctx, op, a)
+	}
+	return s.adapter.Compile(op, a)
+}
+
 // Prepare 固定原尝试与发送身份；任何重放都不触发外部 I/O。
 func (s *Service) Prepare(ctx context.Context, caller *v1.Caller, c *v1.PrepareExecutionCommand) (*v1.CommandReceipt, error) {
 	if e := command.ValidateHeader(c.GetHeader(), c); e != nil {
@@ -87,7 +96,7 @@ func (s *Service) Prepare(ctx context.Context, caller *v1.Caller, c *v1.PrepareE
 		if s.adapter == nil {
 			return nil, command.Fail("UNSUPPORTED_CAPABILITY")
 		}
-		descriptor, declaration, e := s.adapter.Compile(op, attempt)
+		descriptor, declaration, e := s.compile(tx, op, attempt)
 		if e != nil {
 			return nil, e
 		}

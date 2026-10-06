@@ -94,10 +94,30 @@ func (s *Service) Invoke(ctx context.Context, caller *v1.Caller, c *v1.StartExec
 	if body == nil {
 		return nil, command.Fail("CONTENT_UNUSABLE")
 	}
+	payload := command.ContentBytes(body)
+	if c.CallDescriptor.ApiDescriptor != nil {
+		if command.BytesDigest(payload) != c.CallDescriptor.ParametersDigest {
+			return nil, command.Fail("PREPARATION_UNRECOVERABLE")
+		}
+		payload, e = command.CompileAPIParameters(payload)
+		if e != nil {
+			return nil, e
+		}
+		if c.CallDescriptor.Method == "GET" {
+			payload = nil
+		}
+	}
 	if c.CallDescriptor.BodyDigest != "" {
-		sum := sha256.Sum256(command.ContentBytes(body))
+		sum := sha256.Sum256(payload)
 		if hex.EncodeToString(sum[:]) != c.CallDescriptor.BodyDigest {
 			return nil, command.Fail("PREPARATION_UNRECOVERABLE")
+		}
+	}
+	if preflight, ok := s.io.(interface {
+		Preflight(context.Context, *v1.CallDescriptor) error
+	}); ok {
+		if e = preflight.Preflight(ctx, c.CallDescriptor); e != nil {
+			return nil, e
 		}
 	}
 	receipt, fresh, e := s.ledger.RecordDispatch(ctx, caller, &v1.DispatchCommand{Header: header, OperationId: c.Binding.OperationId, StartReceipt: start, Claim: c.Claim})
@@ -114,7 +134,6 @@ func (s *Service) Invoke(ctx context.Context, caller *v1.Caller, c *v1.StartExec
 	if x == nil {
 		return nil, command.Fail("NOT_FOUND")
 	}
-	payload := command.ContentBytes(body)
 	request := &v1.PhysicalIORequest{TaskId: c.Binding.TaskId, OperationId: c.Binding.OperationId, ExecutorEndpointId: c.Binding.ExecutorEndpointId, Attempt: x.Attempt, Send: x.Send, CallDescriptor: x.CallDescriptor, Body: payload}
 	var result *v1.PhysicalIOResult
 	if request.CallDescriptor.Protocol == "FILE" {

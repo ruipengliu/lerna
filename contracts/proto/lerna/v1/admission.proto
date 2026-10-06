@@ -1,6 +1,7 @@
 syntax = "proto3";
 package lerna.v1;
 
+import "lerna/v1/api.proto";
 import "lerna/v1/authority.proto";
 import "lerna/v1/closure.proto";
 import "lerna/v1/identity.proto";
@@ -25,6 +26,7 @@ message Capability {
   bytes parameter_schema_json = 14;
   string schema_digest = 15;
   int64 idempotency_retention_ms = 20;
+  ApiDescriptor api_descriptor = 21;
 }
 message ConfigureCapabilityCommand {
   CommandHeader header = 1;

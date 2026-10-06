@@ -73,6 +73,9 @@ func (s *Service) PrepareResend(ctx context.Context, caller *v1.Caller, c *v1.Pr
 }
 
 func (s *Service) validateResend(ctx context.Context, caller *v1.Caller, op *v1.Operation, now int64) error {
+	if e := checkAPIWait(op, now); e != nil {
+		return e
+	}
 	if op.Dispatch != "OPEN" {
 		return command.Fail("DISPATCH_SEALED")
 	}
@@ -95,7 +98,7 @@ func (s *Service) validateResend(ctx context.Context, caller *v1.Caller, op *v1.
 	if !proto.Equal(registered, op.CapabilitySnapshot) {
 		return command.Fail("RESEND_BINDING_MISMATCH")
 	}
-	descriptor, current, e := s.adapter.Compile(op, x.Attempt)
+	descriptor, current, e := s.compile(ctx, op, x.Attempt)
 	if e != nil {
 		return e
 	}
@@ -103,7 +106,11 @@ func (s *Service) validateResend(ctx context.Context, caller *v1.Caller, op *v1.
 	if !proto.Equal(descriptor, x.CallDescriptor) || !proto.Equal(original, current) {
 		return command.Fail("RESEND_BINDING_MISMATCH")
 	}
-	if original == nil || !original.Idempotent || original.IdempotencyMechanism != "NATIVE_KEY" || original.ConcurrencyGuarantee != "SAME_KEY_ALL_SENDS" || original.ParameterBinding != "EXACT_REQUEST" || original.AccountScope != s.user || original.VerificationBasis != "reference-target-v1" || original.IdempotencyScope != x.Attempt.ExternalKeyScope || descriptor.ExternalKey != x.Attempt.ExternalKey {
+	reviewed := original.GetVerificationBasis() == "reference-target-v1" && original.GetProtocolVersion() == "lerna-simulator-v1"
+	if descriptor.ApiDescriptor != nil {
+		reviewed = original.GetVerificationBasis() == "reference-api-v1" && original.GetProtocolVersion() == "lerna-reference-api-v1" && descriptor.ApiDescriptor.Idempotent && command.ValidateAPIDescriptor(descriptor.ApiDescriptor, s.user, descriptor.Target) == nil
+	}
+	if original == nil || !original.Idempotent || original.IdempotencyMechanism != "NATIVE_KEY" || original.ConcurrencyGuarantee != "SAME_KEY_ALL_SENDS" || original.ParameterBinding != "EXACT_REQUEST" || original.AccountScope != s.user || !reviewed || original.IdempotencyScope != x.Attempt.ExternalKeyScope || descriptor.ExternalKey != x.Attempt.ExternalKey {
 		return command.Fail("RESEND_UNSAFE")
 	}
 	if original.Queryable {

@@ -296,6 +296,7 @@ M1 参考适配器为 `model-reference-v1`，模型设置使用 `provider: refer
 | 可靠未满足后新请求／新授权／新动作，拒绝轮次不改写；唯一继续责任的三种故障模式 | `TestRejectedContinuationUsesFreshAuthorityAndCompletesWithNewAction`、`TestRejectedContinuationCommitRecoversOneActualRequest` |
 
 只重放关闭提交和 FILE 原历史的命名故障切片可使用：`go test -v -race -tags fault ./conformance/fault -run '^(TestTaskClosingCommitBoundariesPreserveOriginalResponsibilities|TestCancelledClosingCommitBoundariesPreserveOriginalResponsibilities|TestFailedClosingKeepsOriginalFileHistoryQueryAndFixedResult|TestCancelledClosingKeepsOriginalFileHistoryQueryAndFixedResult)$' -count=1 -timeout=20m`。提交前仍执行原样 `GOFLAGS=-v make check`，保留全部普通、故障及存储矩阵、政策与独立负对照；不得以命名切片代替全门禁。真实原 API 目标和默认 driver 的组合使用后续正式集成接口验收，当前 FILE 与模拟目标证据不作这些组合的完成声明。
+
 ### M1 默认推理
 
 受信宿主复用模型调用章节的 `RunModelCallCommand` 绑定，通过 `Tasks.RunReasoner(ctx, caller, run, &reasoner.Reasoner{Settings: run.Preparation.Settings})` 调用 `defaults/reasoner`。入口读取原请求固定的快照、条件和能力版本，把只接受调用位置、模型设置与输入引用的窄接口传给推理；授权、预算和出口仍由宿主持有。`defaults/scripted` 通过相同入口使用预设提议，便于确定性验证。
@@ -309,3 +310,12 @@ M1 参考适配器为 `model-reference-v1`，模型设置使用 `provider: refer
 验证入口：`go test ./conformance/reasoner` 检查四类提议接口与确定性裁剪；`go test ./conformance/admission -run 'Reasoner|Default|Subjective|RequirementsProposal|ProposalMetadata|UnavailableProposal|DirectProposal'` 检查真实模拟供应商、治理正文、准入、确认和恢复；`go test -tags fault ./conformance/fault -run '^TestReasonerBodyAndOutcomeCrashRecovery$'` 对正文派生和回报做进程崩溃及回执丢失测试。完整提交检查仍为 `make check`。
 
 确认展示的治理分离适用于新生成的 M1 记录。曾在 `Description` 保存参数字节的实验数据库不能仅靠重新渲染就视为已治理；历史副本需要受支持的停写迁移，保留原事项、摘要、批准、消费身份及全部 P5、未知效果和费用责任。迁移未受支持时必须明确拒绝旧库，不能通过删除或重建数据库丢弃这些责任。
+
+
+### M1 固定 API 与平台凭据
+
+受信宿主通过 `assembly.OpenWithOptions` 的 `APIKeychainPath` 显式打开 macOS 已有、已解锁的 file-based Keychain；CLI 对应启动参数为 `--api-keychain ABSOLUTE_PATH`。路径是宿主配置，不能由提议或适配器传入；密钥不通过命令行、环境变量或配置正文传入。生产入口不创建或解锁平台仓库。未装配、缺项、锁定或访问失效时，在 P5 前拒绝真实发送，原责任仍保留。
+
+已审查的 `api-reference-v1` 能力携带 `ApiDescriptor` v1，固定 origin、资源、账户、用户和 `ApiCredentialReference`。参考目标使用 `lerna-reference-api-v1`；参数只接受 `value` 和可选整数 `quantity`，原输入与实际编码正文分别保存摘要。受信出口只执行单次 HTTP 请求；HTTPS 使用宿主系统证书信任，测试可在 `APIRoots` 显式装配合成根。参考 GET 核对独立准入，并携带原查询主体，不重发原业务请求。
+
+429 以原始观察结束时间固定 `ApiWait`，区分 `RATE`、`CONCURRENCY`、`RESOURCE_CONFLICT` 和 `UNKNOWN`。重启与重放读取同一到期时间；通用队列控制不能绕过等待。到期后仍须经过安全重发、P4/P5 的当前控制、授权、预算、正文、版本、绑定、凭据和原键期限门禁。参见 [ADR 0008](adr/0008-fixed-api-identity-and-platform-credentials.md) 与 [API 设计](architecture/adapters/api.md)。

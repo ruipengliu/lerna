@@ -3,8 +3,10 @@ package assembly
 
 import (
 	"context"
+	"crypto/x509"
 	"time"
 
+	"github.com/ruipengliu/lerna/adapters/api"
 	fileadapter "github.com/ruipengliu/lerna/adapters/file"
 	"github.com/ruipengliu/lerna/adapters/simulator"
 
@@ -19,6 +21,7 @@ import (
 	"github.com/ruipengliu/lerna/core/tasks"
 	"github.com/ruipengliu/lerna/core/trace"
 	"github.com/ruipengliu/lerna/infra/egressio"
+	"github.com/ruipengliu/lerna/infra/keys"
 	"github.com/ruipengliu/lerna/infra/sqlite"
 )
 
@@ -37,10 +40,31 @@ type Harness struct {
 	store      *sqlite.Store
 }
 
-func Open(path, user, domain string) (*Harness, error) { return OpenWithFiles(path, user, domain, nil) }
+func Open(path, user, domain string) (*Harness, error) {
+	return OpenWithOptions(path, user, domain, Options{})
+}
+
+// Options 固定受信宿主的文件根、平台凭据及证书配置。
+type Options struct {
+	FileRoots       map[string]string
+	APIKeychainPath string
+	APIRoots        *x509.CertPool
+}
 
 // OpenWithFiles 固定宿主配置的受管理根；配置本身不访问外部文件。
 func OpenWithFiles(path, user, domain string, roots map[string]string) (*Harness, error) {
+	return OpenWithOptions(path, user, domain, Options{FileRoots: roots})
+}
+
+func OpenWithOptions(path, user, domain string, options Options) (*Harness, error) {
+	apiIO := egressio.APIHTTP{Roots: options.APIRoots}
+	if options.APIKeychainPath != "" {
+		secure, e := keys.OpenFileBased(options.APIKeychainPath)
+		if e != nil {
+			return nil, e
+		}
+		apiIO.Credentials = secure
+	}
 	s, err := sqlite.Open(path, user, domain)
 	if err != nil {
 		return nil, err
@@ -55,7 +79,7 @@ func OpenWithFiles(path, user, domain string, roots map[string]string) (*Harness
 	t.WithConfirmationRequests(h.Sessions, c).WithModelContent(c).WithReasonerQuestions(h.Sessions).WithConditionConfirmations(h.Sessions)
 	h.Budget = budget.New(s, d, user, domain, "host")
 	h.LedgerWork = durable.New(s.LedgerWork(), user, domain+"/ledger")
-	h.Ledger = ledger.New(s, user, domain+"/ledger", domain).WithWork(h.LedgerWork).WithCompiler(executionCompiler{}).WithStarts(t)
+	h.Ledger = ledger.New(s, user, domain+"/ledger", domain).WithWork(h.LedgerWork).WithCompiler(executionCompiler{api: api.Adapter{Content: c}}).WithStarts(t)
 	c.WithObservations(durable.New(s.ContentWork(), user, domain+"/content"), h.Ledger)
 	h.Ledger.WithObservations(c)
 	h.Budget.WithUsageSource(h.Ledger).WithBillingEvidence(c).WithCompletionAuthority(t).WithCancellationAuthority(t).WithTaskClosingAuthority(t)
@@ -68,7 +92,7 @@ func OpenWithFiles(path, user, domain string, roots map[string]string) (*Harness
 		s.Close()
 		return nil, e
 	}
-	h.Egress = egress.New(t, h.Ledger, c, physicalIO{files: egressio.NewFiles(roots, h.Ledger, c)}, critical)
+	h.Egress = egress.New(t, h.Ledger, c, physicalIO{files: egressio.NewFiles(options.FileRoots, h.Ledger, c), network: egressio.Router{API: apiIO}}, critical)
 	t.WithModelExecution(h.Ledger, h.LedgerWork, h.Grants, h.Egress)
 	t.WithReasonerDriver(h.Durable, defaultReasoner)
 	h.Ledger.WithGrantClosures(h.Grants)
@@ -168,19 +192,31 @@ func (h *Harness) Close() error                     { return h.store.Close() }
 func (h *Harness) StorageSettings() sqlite.Settings { return h.store.Settings() }
 
 // executionCompiler 只分派已经固定的能力版本。
-type executionCompiler struct{}
+type executionCompiler struct{ api api.Adapter }
 
-func (executionCompiler) Compile(op *v1.Operation, attempt *v1.ExecutionAttempt) (*v1.CallDescriptor, *v1.ExecutionCapabilities, error) {
-	if op.GetCapabilitySnapshot().GetAdapterRef().GetName().GetLocalId() == "managed-file" {
-		return (fileadapter.Adapter{}).Compile(op, attempt)
+func (c executionCompiler) Compile(o *v1.Operation, a *v1.ExecutionAttempt) (*v1.CallDescriptor, *v1.ExecutionCapabilities, error) {
+	return c.CompileContext(context.Background(), o, a)
+}
+func (c executionCompiler) CompileContext(ctx context.Context, o *v1.Operation, a *v1.ExecutionAttempt) (*v1.CallDescriptor, *v1.ExecutionCapabilities, error) {
+	if o.GetCapabilitySnapshot().GetAdapterRef().GetName().GetLocalId() == "api-reference-v1" {
+		return c.api.CompileContext(ctx, o, a)
 	}
-	return (simulator.Adapter{}).Compile(op, attempt)
+	if o.GetCapabilitySnapshot().GetAdapterRef().GetName().GetLocalId() == "managed-file" {
+		return (fileadapter.Adapter{}).Compile(o, a)
+	}
+	return (simulator.Adapter{}).Compile(o, a)
 }
 
-type physicalIO struct{ files *egressio.Files }
+type physicalIO struct {
+	files   *egressio.Files
+	network egressio.Router
+}
 
+func (p physicalIO) Preflight(ctx context.Context, d *v1.CallDescriptor) error {
+	return p.network.Preflight(ctx, d)
+}
 func (p physicalIO) Perform(ctx context.Context, r *v1.PhysicalIORequest) (*v1.PhysicalIOResult, error) {
-	return (egressio.HTTP{}).Perform(ctx, r)
+	return p.network.Perform(ctx, r)
 }
 func (p physicalIO) PerformChecked(ctx context.Context, r *v1.PhysicalIORequest, check func(context.Context) error) (*v1.PhysicalIOResult, error) {
 	return p.files.PerformChecked(ctx, r, check)

@@ -99,7 +99,7 @@ func uniqueJSON(raw []byte) bool {
 	_, e := d.Token()
 	return e == io.EOF
 }
-func parseBill(raw []byte) (*referenceBill, error) {
+func parseBillForAccount(raw []byte, account string) (*referenceBill, error) {
 	if !uniqueJSON(raw) {
 		return nil, nil
 	}
@@ -115,7 +115,7 @@ func parseBill(raw []byte) (*referenceBill, error) {
 	if d.Decode(&bill) != nil {
 		return nil, nil
 	}
-	if bill.Rule != "reference-billing-v1" || bill.Namespace != "lerna-reference" || bill.Account != "reference-account" || bill.NativeInstance == "" || bill.Component != "call" || bill.SourceVersion == 0 || bill.Unit != "USD_MICRO" || bill.PriceVersion != "reference-price-v1" || bill.Amount == nil || *bill.Amount < 0 || !bill.Final {
+	if bill.Rule != "reference-billing-v1" || bill.Namespace != "lerna-reference" || bill.Account != account || bill.NativeInstance == "" || bill.Component != "call" || bill.SourceVersion == 0 || bill.Unit != "USD_MICRO" || bill.PriceVersion != "reference-price-v1" || bill.Amount == nil || *bill.Amount < 0 || !bill.Final {
 		return nil, nil
 	}
 	return &bill, nil
@@ -142,7 +142,18 @@ func (s *Service) settleReport(ctx context.Context, caller *v1.Caller, u *v1.Usa
 	if body == nil || body.Status != "AVAILABLE" {
 		return command.Fail("CONTENT_UNUSABLE")
 	}
-	bill, e := parseBill(command.ContentBytes(body))
+	x, e := s.usageSource.(BillingExecution).QuerySendExecution(ctx, caller, source.OperationId, u.SendRef)
+	if e != nil {
+		return e
+	}
+	if x == nil {
+		return command.Fail("INVALID_USAGE_SOURCE")
+	}
+	account, e := billingAccount(x.CallDescriptor, s.user)
+	if e != nil {
+		return e
+	}
+	bill, e := parseBillForAccount(command.ContentBytes(body), account)
 	if raw.Protocol == "FILE" {
 		bill, e = s.fileZeroBill(ctx, caller, raw)
 	}
@@ -156,6 +167,16 @@ func (s *Service) settleReport(ctx context.Context, caller *v1.Caller, u *v1.Usa
 		return s.recordConflict(ctx, source, raw.Ref, "BILLING_BINDING_MISMATCH", "")
 	}
 	return s.applyBill(ctx, source, bill, raw.Ref)
+}
+
+func billingAccount(d *v1.CallDescriptor, user string) (string, error) {
+	if d.GetApiDescriptor() == nil {
+		return "reference-account", nil
+	}
+	if e := command.ValidateAPIDescriptor(d.ApiDescriptor, user, d.Target); e != nil {
+		return "", e
+	}
+	return d.ApiDescriptor.Binding.Account, nil
 }
 func (s *Service) applyBill(ctx context.Context, source *v1.BillingSource, bill *referenceBill, evidence *v1.Ref) error {
 	store := s.store.(billingStore)
