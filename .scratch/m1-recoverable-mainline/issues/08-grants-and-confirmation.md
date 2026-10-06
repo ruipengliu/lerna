@@ -22,3 +22,10 @@
 - 完整确认故障矩阵 21 例、实际撤销交接故障矩阵 18 例通过；各例验证原始决定／回执、历史引用、一次消费和目标实际调用数。
 - `make fmt lint test check-rules check-gen`、完整非存储故障套件及最终 `make check` 均通过。最终代码／测试树为 `b39c61f0affb66057c95d49b3bacd310b8f2519f`；完整 fault 套件耗时 1004.363 秒，日志 `/tmp/lerna-ticket08-final-check-v2.log`。本条验收记录在检查后补充。
 - Bootstrap 存储矩阵为 779 个 I/O 事件、3,900 个崩溃镜像；发送前封闭证明保留供 10 结算原预算预留，授权准入次数不退款。
+
+
+## Answer
+
+单次／持续授权、确认一次消费、参数绑定、撤销交接与不透明出口凭据沿原公开契约工作。新增公共凭据恢复场景实际证明：负责方不可达时不保存拒绝决定、凭据或额外预留，也不执行 I/O；恢复同一负责方后，同一原始命令只签发一次，原回执、凭据和重启后重试稳定。确认和撤销的既有故障事实、引用、额度及目标计数继续保留，不将读取授权扩展为保存或委派。
+
+当前逐项语义见 [ROOT 当前验收认定](/Volumes/Data/proj/lerna-m1-context/ticket23-root-standards-fix-current-specific-semantic-qualified-01.json)，绑定 TESTED `8d951ad2d89d06282560280666ca162c957e9e68`；修复提交 `94f77d187e0b65010c4332302beb93854674fedb` 已经独立合并并经 [ROOT POST](/Volumes/Data/proj/lerna-m1-context/ticket23-root-standards-fix-formal-merge-independent-audit-01.json) 核验。此处记录本地 Markdown 收尾；该收尾提交的独立合并 POST 和工作树清理仍待完成。

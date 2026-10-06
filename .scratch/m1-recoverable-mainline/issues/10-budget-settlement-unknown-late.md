@@ -4,7 +4,7 @@
 
 **Blocked by:** 06（出口与效果：一次 API 调用经出口闸门）
 
-**Status:** done
+**Status:** resolved
 
 - [x] 额度版本可追溯；准入保存预算依据和本次费用上界
 - [x] 用量按稳定来源、出口关联、计量规则和价格版本记录；重复回报只计一次（标注 G10）
@@ -19,3 +19,10 @@
 - 公共装配 harness 的 18 个预算场景覆盖独立供应商计费、回执丢失、重复/迟到账单、跨来源冲突、关闭后的迟到费用、整数边界及上界失效。预算专项故障覆盖 P7 三边界与限额/导入/释放三命令各自的提交前、提交后和回执丢失窗口。
 - 最终 `make check` 全部通过，完整 race 故障集 1313.085s；bootstrap 存储矩阵为 944 I/O 事件、4,725 个崩溃镜像。日志：`/tmp/lerna-m1-ticket10-final-check.log`。
 - 验证代码树：`aad9a94e83b0b3dc5649fc3c024c46716e11b061`，基于 `6701126`；本节与完成状态是验证后的唯一变更。
+
+
+## Answer
+
+原费用来源、账单、预算版本和预留责任保持不变；未知费用、迟到费用与取消／关闭后的责任按原证据结清，重复回报不重复计费。新增真实核对准入恢复场景保留原 UNKNOWN 动作与保存工作：负责方暂不可用时没有 durable 决定或实际 GET，恢复后同一命令只形成一项独立准入，用量／预留各增加一次；原预留和授权用量字节不变，用户与任务仅各增加五单位预留、已结算额不变，重试和目标 POST／效果次数稳定。前文实施记录不重写。
+
+当前逐项语义见 [ROOT 当前验收认定](/Volumes/Data/proj/lerna-m1-context/ticket23-root-standards-fix-current-specific-semantic-qualified-01.json)，绑定 TESTED `8d951ad2d89d06282560280666ca162c957e9e68`；修复提交 `94f77d187e0b65010c4332302beb93854674fedb` 已经独立合并并经 [ROOT POST](/Volumes/Data/proj/lerna-m1-context/ticket23-root-standards-fix-formal-merge-independent-audit-01.json) 核验。此处记录本地 Markdown 收尾；该收尾提交的独立合并 POST 和工作树清理仍待完成。

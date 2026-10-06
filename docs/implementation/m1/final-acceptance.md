@@ -144,3 +144,22 @@
 认定边界保持明确：M06-C12 的过期 CommitDerivation 及 STAGED／COMMITTED takeover 拒绝以精确源代码条件和实际公共 fencing 场景联合认定，不声称直接执行了这些拒绝分支；M10-C07 的有限 right／purpose 白名单以源代码条件和实际 READ／SAVE 场景联合认定，不声称穷举了非法值 Configure。native 协议的 225 个映像是实际循环计数，没有虚构逐映像 RUN／PASS 行；qualification chronology 仅运行 FULL／BOOTSTRAP 两个末尾映像，原文“full matrix NOT RUN”保持有效。同步错误等没有 t.Run 的迭代仍按原源代码和父测试断言认定。当前证据限于实际 Darwin arm64／CGO=1／go1.27.1 的有限 I/O 场景及原测量进程 RSS 范围，不外推物理断电、所有平台、生产容量、远程／离线部署、完整治理或完成时延 SLO。
 
 当前完整认定入口为 `ticket23-root-repaired-final-qualified-guard-index-01.json`，SHA-256 `7690264be56e5bfd36b26636a7a618dc7d4ef9cd426aef742f84a8f5c73c9d15`；条款／故事／模块认定为 `226ebd80b5706a4bef2f8a58caa3342f3a410165fa0df2186bb785a4ba7ad1cb`，辅助因果认定为 `ec2bf929374e3fdf589b1b580e5ddfd6764ffb17955eddf74ab7a69fc70e103b`，最终当前 H1 认定为 `4f080f9e73655b9e3ad6229f9514058daf5d1fe4ce1685e636f0b3ede3d0f8fc`。当前源代码库存使用 02 版 `713f0a74d9dd2cd38d0d49621a27d1e8d05003fdb8a4646cb6b8ac500b9c9ad5`，子进程／父测试合同使用 02 版 `5297fc94f5d9cd242da445d0c5ccb7c9c398711e7d72f20a7e66ee48d14a7e12`，H1 库存使用 `fc5ce5259914e65a3133683bcef24e9b433de6e37c080432ba66e70a6c6555c6`。既有准备及失败记录均保留。后续 feature 提交、独立代码／规格复核、tracker／spec 收尾和工作树清理仍为 PENDING；本记录不授权仓库改动或合并。
+
+
+## Standards 修复后的当前验收与收尾
+
+本次完整检查实际运行于 2026-10-06T21:15:41.353104+00:00 至 2026-10-06T22:36:49.167291+00:00，耗时 4867.777855 秒，退出码为 0；原日志 SHA-256 为 `4f57d9396976882264f47ad3ae4ac59ab6736e61c18ce210440091e1749f094e`。普通阶段 381 个父测试 PASS、1 个辅助导出 SKIP、1,051 个子测试 PASS；fault 阶段 497 个父测试 PASS、39 个精确 SKIP（38 个仅子进程 helper＋1 个辅助导出）、14,337 个子测试 PASS。共 918 个父项、15,388 个子测试 PASS、47 个包结果；包结果含 18 个无测试文件项，未把它们算作测试 PASS。
+
+完整命令为 `env GOFLAGS='-v -count=1' BUF_BASE=fcc5739dc4dba8a81e12121124aa6416a53fd2b5 make check`，普通 race 20 分钟上限与扩展 fault race 120 分钟上限保持原范围，没有选择器或缓存测试结果。实际运行前后全部 874 份文件、514 份源代码／工具清单和 21 个原缺失路径一致。源代码清单用于完整冻结核验，不代表每项都是字面编译输入。
+
+287 条要求、80 个故事、26 节 M1 范围、38 个仅子进程 helper 与 60 个独立父测试已按当前完整运行逐项认定；305 个选定函数跨 122 份不同文件，544 个阶段父测试与 2,832 个逐项引用绑定原具体谓词。原 286 条文字和 25 节正文不变；M25-C22 的“指标应报告”加强为“指标必须报告”，其原 100／90／10、每个原动作／保存计划／查询关联和独立目标 POST／GET／效果谓词不变。本次两阶段实际人口日志均核验，未声称一秒完成或完成时长 SLO。
+
+P2 修复仅改变五个规范错误码的分类／接纳／恢复信息。真实凭据场景先 RED 再 GREEN；核对准入与分类场景在共享修复后首次 GREEN。临时负责方不可达不保存不可变 REJECTED；恢复后同一原始命令只签发一次凭据或形成一次独立核对准入，原回执、费用、预留和独立目标计数稳定。真正永久业务拒绝保持原行为。九份设计修订和强制措辞属于 P3 文档修复，原 Standards 审查者复核三个发现均解决，Spec 复核零发现。
+
+H1 的 schema、类型、实际语料和捕获／指标生产者源代码保持原样。原 `f809a47c5acc62939f2cb9e7fdf178819a307b6b` 快照的测量程序、三轮数值、链接大小、构建成本和进程 RSS 是其实际历史结果。当前修复改变已链接的 Fail 实现，当前二进制／构建／RSS／时延成本为 **NOT_MEASURED**；不将旧数值称为当前构建成本。保留该精确源代码历史 H1 证据，无须重复测量未变的协议／语料对象。
+
+M06-C12、M10-C07 保留源代码＋实际公开场景的联合资格，不声称直接执行全部负值分支。七个无独立场景行的父测试、native 225 实际循环没有发明逐映像行；chronology 只运行两个末尾映像，未执行重型矩阵。四种未采样内部／延期类型、后续路线能力和有限 Darwin arm64／APFS／SQLite 本地档资格继续保留，未外推物理掉电、全部平台、生产容量或远程／离线部署。
+
+当前逐项语义见 [ROOT 当前验收认定](/Volumes/Data/proj/lerna-m1-context/ticket23-root-standards-fix-current-specific-semantic-qualified-01.json)，绑定 TESTED `8d951ad2d89d06282560280666ca162c957e9e68`；修复提交 `94f77d187e0b65010c4332302beb93854674fedb` 已经独立合并并经 [ROOT POST](/Volumes/Data/proj/lerna-m1-context/ticket23-root-standards-fix-formal-merge-independent-audit-01.json) 核验。此处记录本地 Markdown 收尾；该收尾提交的独立合并 POST 和工作树清理仍待完成。
+
+原始运行记录：[本次全量记录](/Volumes/Data/proj/lerna-m1-context/ticket23-standards-fix-whole-01.json)，[原始日志](/Volumes/Data/proj/lerna-m1-context/ticket23-standards-fix-whole-01.log)，[独立阶段认定](/Volumes/Data/proj/lerna-m1-context/ticket23-root-standards-fix-original-whole-phase-audit-01.json)，[TESTED 认定](/Volumes/Data/proj/lerna-m1-context/ticket23-root-standards-fix-current-tested-qualified-01.json)，[精确 H1 历史范围](/Volumes/Data/proj/lerna-m1-context/ticket23-standards-fix-H1-impact-02.json)。各原始哈希和当前认定的完整引用保存在 `acceptance-source-map.json` 的 `standards_repair_completion_evidence`；前文历史记录保持原样。
