@@ -19,6 +19,7 @@ message TargetRecordAssertion {
 message CompletionEvidence {
   string condition_id = 1;
   GlobalName operation_id = 2;
+  Ref confirmation_ref = 3;
 }
 message Requirement {
   string condition_id = 1;
@@ -59,6 +60,8 @@ message ContextSnapshot {
   repeated string allowed_purposes = 18;
   uint32 max_model_positions = 19;
   uint32 max_model_sends = 20;
+  repeated SnapshotConfirmation confirmations = 21;
+  repeated Ref progress_watermarks = 22;
 }
 message AncestorControl {
   Ref task_ref = 1;
@@ -76,6 +79,9 @@ message ActionStep {
   repeated MemoryDependency memory_dependencies = 5;
   repeated Ref content_refs = 6;
   string work_category = 7;
+  bytes arguments_json = 8;
+  string schema_digest = 9;
+  repeated string expected_evidence = 10;
 }
 message Proposal {
   Ref ref = 1;
@@ -90,6 +96,14 @@ message Proposal {
   string kind = 10;
   ActionStep step = 11;
   repeated CompletionEvidence completion_evidence = 12;
+  QuestionProposal question = 13;
+  RequirementsProposal requirements_change = 14;
+  repeated ConditionVerdict verdicts = 15;
+  repeated Ref basis_refs = 16;
+  repeated string gaps = 17;
+  string result_draft = 18;
+  string prompt_version = 19;
+  Ref body_content_ref = 20;
 }
 message PlanningState {
   GlobalName task_id = 1;
@@ -140,4 +154,53 @@ message SnapshotInput {
   uint64 input_version = 3;
   string processing_status = 4;
   bool changes_basis = 5;
+}
+
+message QuestionProposal {
+  string question = 1;
+  repeated string options = 2;
+  repeated string condition_ids = 3;
+  bool changes_basis = 4;
+  bool involves_confirmation = 5;
+}
+
+message RequirementsProposal {
+  uint64 original_version = 1;
+  repeated Requirement conditions = 2;
+  string reason = 3;
+  string impact = 4;
+}
+message ConditionVerdict {
+  string condition_id = 1;
+  string conclusion = 2;
+  repeated Ref evidence_refs = 3;
+  Ref confirmation_ref = 4;
+  repeated string gaps = 5;
+  GlobalName operation_id = 6;
+}
+message PublishProposalQuestionCommand {
+  CommandHeader header = 1;
+  Ref proposal_ref = 2;
+  GlobalName session_id = 3;
+}
+
+message SnapshotConfirmation {
+  Ref ref = 1;
+  string matter_type = 2;
+  string state = 3;
+  string condition_id = 4;
+  Ref requirements_ref = 5;
+  repeated Ref evidence_refs = 6;
+  uint64 input_version = 7;
+  uint64 control_generation = 8;
+  int64 expires_at_unix_ms = 9;
+  Ref proposal_ref = 10;
+}
+message ReasonerDescription {
+  uint32 contract_version = 1;
+  string implementation_version = 2;
+  repeated string supported_kinds = 3;
+  uint32 max_call_positions = 4;
+  uint32 max_physical_sends = 5;
+  uint32 max_plan_length = 6;
 }

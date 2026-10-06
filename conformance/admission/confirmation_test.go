@@ -25,8 +25,12 @@ func TestTrustedOperationConfirmationConsumedWithAdmission(t *testing.T) {
 	accepted(t, r, e)
 	requestRef := r.ResultRef
 	pending, e := f.h.Sessions.QueryConfirmation(f.ctx, f.caller, requestRef)
-	if e != nil || pending == nil || pending.MatterType != "OPERATION_ADMISSION" || pending.State != "PENDING" || pending.BindingDigest == "" || !strings.Contains(pending.Description, "create a record") {
+	if e != nil || pending == nil || pending.MatterType != "OPERATION_ADMISSION" || pending.State != "PENDING" || pending.BindingDigest == "" {
 		t.Fatalf("confirmation: %v %v", pending, e)
+	}
+	displayed, e := f.h.Sessions.ReadConfirmation(f.ctx, f.caller, pending.Ref)
+	if e != nil || !strings.Contains(displayed.Description, "create a record") {
+		t.Fatalf("parameters hidden from user: %v %v", displayed, e)
 	}
 	before, e := f.h.Tasks.QueryTask(f.ctx, f.caller, f.task.Name)
 	if e != nil {
@@ -204,7 +208,7 @@ func TestSingleGrantConfirmationShowsExactParameters(t *testing.T) {
 	g.Permissions[0].ParametersRef = f.parameters
 	r, e := f.h.Grants.RequestGrantConfirmation(f.ctx, f.caller, &v1.RequestGrantConfirmationCommand{Header: header("single-description"), Grant: g})
 	accepted(t, r, e)
-	c, e := f.h.Sessions.QueryConfirmation(f.ctx, f.caller, r.ResultRef)
+	c, e := f.h.Sessions.ReadConfirmation(f.ctx, f.caller, r.ResultRef)
 	if e != nil || !strings.Contains(c.Description, "create a record") {
 		t.Fatalf("parameters hidden from user: %v %v", c, e)
 	}

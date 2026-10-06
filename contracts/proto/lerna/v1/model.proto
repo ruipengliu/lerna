@@ -28,6 +28,9 @@ message ModelSettings {
   bytes parameters_json = 5;
   bytes tool_schemas_json = 6;
   uint32 max_output_tokens = 7;
+  string view_policy = 8;
+  uint32 max_input_bytes = 9;
+  uint32 max_input_tokens = 10;
 }
 message ModelCall {
   Ref ref = 1;

@@ -47,13 +47,6 @@ func (s *Service) RequestClosureConfirmation(ctx context.Context, caller *v1.Cal
 		if e = s.content.CheckUsable(tx, caller, a.ParametersRef); e != nil {
 			return nil, e
 		}
-		body, e := s.confirmationContent.Read(tx, caller, a.ParametersRef)
-		if e != nil {
-			return nil, e
-		}
-		if body == nil {
-			return nil, command.Fail("CONTENT_UNUSABLE")
-		}
 		_, now, e := s.store.Position(tx)
 		if e != nil {
 			return nil, e
@@ -70,11 +63,10 @@ func (s *Service) RequestClosureConfirmation(ctx context.Context, caller *v1.Cal
 			Owner                                                   *v1.Ref
 			QuerySubject                                            *v1.QuerySubject
 			Action, Resource, Endpoint, UseRight, ProcessingPurpose string
-			Parameters                                              command.ParameterDescription
 			ParametersRef, GrantRef                                 *v1.Ref
 			Unit                                                    string
 			FeeCeiling                                              *int64
-		}{"OPERATION_ADMISSION", a.Origin, a.QuerySubject, a.CapabilitySnapshot.Action, a.CapabilitySnapshot.Resource, a.CapabilitySnapshot.ExecutorEndpointId, a.CapabilitySnapshot.UseRight, a.CapabilitySnapshot.ProcessingPurpose, command.DescribeParameters(body), a.ParametersRef, a.GrantRefs[0], a.CapabilitySnapshot.Unit, a.CapabilitySnapshot.FeeCeiling})
+		}{"OPERATION_ADMISSION", a.Origin, a.QuerySubject, a.CapabilitySnapshot.Action, a.CapabilitySnapshot.Resource, a.CapabilitySnapshot.ExecutorEndpointId, a.CapabilitySnapshot.UseRight, a.CapabilitySnapshot.ProcessingPurpose, a.ParametersRef, a.GrantRefs[0], a.CapabilitySnapshot.Unit, a.CapabilitySnapshot.FeeCeiling})
 		if e != nil {
 			return nil, e
 		}

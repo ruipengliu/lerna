@@ -156,7 +156,7 @@ func (s *Service) checkModelInput(ctx context.Context, caller *v1.Caller, c *v1.
 	}
 	body, e := s.modelContent.Read(ctx, caller, c.InputRef)
 	if e != nil || body == nil {
-		return command.Fail("PREPARATION_UNRECOVERABLE")
+		return modelPreparationError(e)
 	}
 	sum := sha256.Sum256(command.ContentBytes(body))
 	if hex.EncodeToString(sum[:]) != c.DescriptorDigest {
@@ -164,7 +164,7 @@ func (s *Service) checkModelInput(ctx context.Context, caller *v1.Caller, c *v1.
 	}
 	for _, ref := range c.InputRefs {
 		if e = s.content.CheckUsable(ctx, caller, ref); e != nil {
-			return command.Fail("PREPARATION_UNRECOVERABLE")
+			return modelPreparationError(e)
 		}
 	}
 	return nil

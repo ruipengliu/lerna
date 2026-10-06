@@ -42,28 +42,18 @@ func (s *Service) RequestGrantConfirmation(ctx context.Context, caller *v1.Calle
 		if e = s.store.SaveGrantIssuance(tx, draft); e != nil {
 			return nil, e
 		}
-		parameters := make([]command.ParameterDescription, len(g.Permissions))
-		for i, p := range g.Permissions {
+		for _, p := range g.Permissions {
 			if p.ParameterMode != "EXACT" {
 				continue
 			}
 			if e = s.confirmationContent.CheckUsable(tx, caller, p.ParametersRef); e != nil {
 				return nil, e
 			}
-			body, readErr := s.confirmationContent.Read(tx, caller, p.ParametersRef)
-			if readErr != nil {
-				return nil, readErr
-			}
-			if body == nil {
-				return nil, command.Fail("CONTENT_UNUSABLE")
-			}
-			parameters[i] = command.DescribeParameters(body)
 		}
 		description, e := json.Marshal(struct {
-			Matter     string
-			Scope      *v1.Grant
-			Parameters []command.ParameterDescription
-		}{"GRANT_ISSUANCE", g, parameters})
+			Matter string
+			Scope  *v1.Grant
+		}{"GRANT_ISSUANCE", g})
 		if e != nil {
 			return nil, e
 		}

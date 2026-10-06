@@ -6,6 +6,7 @@ import (
 
 	"github.com/ruipengliu/lerna/contracts/command"
 	v1 "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1"
+	"github.com/ruipengliu/lerna/contracts/reasoner"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -63,9 +64,32 @@ func (s *Service) SubmitProposalOutcome(ctx context.Context, caller *v1.Caller, 
 			if c.Proposal != nil && call.Result.Status != "COMPLETED" {
 				return nil, command.Fail("INVALID_OUTCOME")
 			}
-		} else if c.Proposal != nil || c.OutputRef != nil || c.UsageRef != nil {
+		} else if c.OutputRef != nil || c.UsageRef != nil {
+			return nil, command.Fail("INVALID_OUTCOME")
+		} else if c.Proposal != nil {
+			call, e := s.store.(modelCallStore).LoadModelCall(tx, r.Ref, 0)
+			if e != nil {
+				return nil, e
+			}
+			if call != nil {
+				return nil, command.Fail("INVALID_OUTCOME")
+			}
+		}
+		if c.Proposal != nil && c.Proposal.BodyContentRef != nil {
+			if !proto.Equal(c.Proposal, proposalProjection(c.Proposal)) {
+				return nil, command.Fail("INVALID_OUTCOME")
+			}
+			full, e := s.readProposalBody(tx, caller, c.Proposal)
+			if e != nil {
+				return nil, e
+			}
+			if e = reasoner.Validate(snap, full); e != nil {
+				return nil, command.Fail("INVALID_OUTCOME")
+			}
+		} else if c.Proposal != nil && (c.Proposal.Kind == "QUESTION" || c.Proposal.Kind == "REQUIREMENTS" || !proto.Equal(c.Proposal, proposalProjection(c.Proposal))) {
 			return nil, command.Fail("INVALID_OUTCOME")
 		}
+
 		outcome := &v1.ProposalOutcome{Ref: command.NewRef(s.user, s.domain, "proposal-outcome", "lerna.v1.ProposalOutcome"), RequestRef: r.Ref, Claim: c.Claim, Proposal: c.Proposal, ErrorCode: c.ErrorCode, ModelCallRef: c.ModelCallRef, OutputRef: c.OutputRef, UsageRef: c.UsageRef, Identity: c.Header.Identity}
 		eligible := s.currentModelClaim(tx, caller, r, c.Claim)
 		if eligible == nil {

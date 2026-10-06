@@ -22,6 +22,8 @@ message Capability {
   uint32 max_sends = 11;
   bool nonbillable = 12;
   CommandIdentity approved_by = 13;
+  bytes parameter_schema_json = 14;
+  string schema_digest = 15;
   int64 idempotency_retention_ms = 20;
 }
 message ConfigureCapabilityCommand {

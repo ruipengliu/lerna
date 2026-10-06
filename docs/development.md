@@ -125,7 +125,7 @@ func TestSafeResendSkipsAdmissionGeneration(t *testing.T) { ... }
 
 `cmd/assembly.Open` 在返回前恢复当前已可处理的待办命令。命令行每次启动共用此流程，因此启动可能推进先前受理的命令；`QueryReceipt` 本身仍为只读。
 
-故障构建通过 `sqlite.WithFault(ctx, point, mode)` 给单次调用链配置一次性故障。`CrashBeforeCommit` 在提交前直接退出子进程，`CrashAfterCommit` 在提交成功、回执返回前直接退出，`LoseReceipt` 提交后返回提交结果未知。两种崩溃均跳过 `defer` 和存储关闭，父进程以同一 SQLite 文件重启。
+故障构建通过 `sqlite.WithFault(ctx, point, mode)` 给单次调用链配置一次性故障。`CrashBeforeCommit` 在提交前直接退出子进程，`CrashAfterCommit` 在提交成功、回执返回前直接退出，`LoseReceipt` 提交后返回提交结果未知。两种崩溃均跳过 `defer` 和存储关闭，父进程以同一 SQLite 文件重启。 同一调用链多次经过同一点时，故障构建可用 `sqlite.WithFaultOnOccurrence(ctx, point, mode, occurrence)` 选择第几次匹配提交阶段；计数只发生在该模式对应的提交前或提交后阶段，`WithFault` 保持第一次命中的语义。`sqlite.FaultTriggered(ctx)` 只用于验证丢失回执已实际触发。
 
 当前持久化点在 `infra/sqlite/hooks_fault.go` 的 `FaultPoints` 登记：
 
@@ -207,7 +207,7 @@ func TestSafeResendSkipsAdmissionGeneration(t *testing.T) { ... }
 
 `grant-request --command ID --json GRANT_JSON [--session ID]` 提交授权范围，返回确认引用。单次授权使用 `useMode: SINGLE`、`maxAdmissions: 1`，每条权限必须用 `parameterMode: EXACT` 绑定参数内容引用；持续授权显式选择 `ANY` 或 `EXACT`，`maxAdmissions: 0` 表示不限准入次数。授权主体是同用户的明确任务标识；可以先授权未来任务，不会因此创建任务。
 
-`confirmation ID` 展示核心生成的事项描述、具体参数、绑定摘要与当前版本。参数描述与出口共用实际发送字节选择：优先使用显式 `RawBody`（包括空字节），否则使用 `Text`；有效 UTF-8 以字符串展示，其他字节以 Base64 展示，并携带媒体类型，不截断。用户阅读后用 `confirm --command ID --confirmation ID --revision N --digest DIGEST --decision APPROVE` 批准，或以 `REJECT` 拒绝。`grant-issue --command ID --confirmation ID --revision N` 消费已批准的签发确认。动作确认由 `admission-confirmation --command ID --json REQUEST_JSON` 请求，JSON 包含任务、提议和授权引用；准入时由任务编排消费。两种确认不能交叉消费；批准后仍须重新核验当前事实。
+`confirmation ID` 通过 `Sessions.ReadCurrentConfirmation` 临时展示核心生成的事项描述、具体参数、绑定摘要与当前版本；正文读取失败时命令明确失败。持久 `Confirmation.Description` 只保存结构字段，`QueryConfirmation` 和 `QueryCurrentConfirmation` 提供不含参数正文的历史审计。参数描述与出口共用实际发送字节选择：优先使用显式 `RawBody`（包括空字节），否则使用 `Text`；有效 UTF-8 以字符串展示，其他字节以 Base64 展示，并携带媒体类型，不截断。用户阅读后用 `confirm --command ID --confirmation ID --revision N --digest DIGEST --decision APPROVE` 批准，或以 `REJECT` 拒绝。`grant-issue --command ID --confirmation ID --revision N` 消费已批准的签发确认。动作确认由 `admission-confirmation --command ID --json REQUEST_JSON` 请求，JSON 包含任务、提议和授权引用；准入时由任务编排消费。两种确认不能交叉消费；批准后仍须重新核验当前事实。
 
 `withdraw-confirmation --command ID --confirmation ID --revision N` 撤回未消费的批准。`grant ID` 查询当前授权及计算出的剩余次数、过期标记和展示状态；这些诊断值不产生使用许可。`revoke-grant --command ID --grant ID` 撤销授权并返回撤销进度引用，`revocation ID` 查询当前收尾状态。`PENDING` 表示尚未取得全部原出口的封闭回执；已过期、已耗尽的授权仍可撤销。准入使用额度不因撤销或后续失败退还。
 
@@ -296,3 +296,16 @@ M1 参考适配器为 `model-reference-v1`，模型设置使用 `provider: refer
 | 可靠未满足后新请求／新授权／新动作，拒绝轮次不改写；唯一继续责任的三种故障模式 | `TestRejectedContinuationUsesFreshAuthorityAndCompletesWithNewAction`、`TestRejectedContinuationCommitRecoversOneActualRequest` |
 
 只重放关闭提交和 FILE 原历史的命名故障切片可使用：`go test -v -race -tags fault ./conformance/fault -run '^(TestTaskClosingCommitBoundariesPreserveOriginalResponsibilities|TestCancelledClosingCommitBoundariesPreserveOriginalResponsibilities|TestFailedClosingKeepsOriginalFileHistoryQueryAndFixedResult|TestCancelledClosingKeepsOriginalFileHistoryQueryAndFixedResult)$' -count=1 -timeout=20m`。提交前仍执行原样 `GOFLAGS=-v make check`，保留全部普通、故障及存储矩阵、政策与独立负对照；不得以命名切片代替全门禁。真实原 API 目标和默认 driver 的组合使用后续正式集成接口验收，当前 FILE 与模拟目标证据不作这些组合的完成声明。
+### M1 默认推理
+
+受信宿主复用模型调用章节的 `RunModelCallCommand` 绑定，通过 `Tasks.RunReasoner(ctx, caller, run, &reasoner.Reasoner{Settings: run.Preparation.Settings})` 调用 `defaults/reasoner`。入口读取原请求固定的快照、条件和能力版本，把只接受调用位置、模型设置与输入引用的窄接口传给推理；授权、预算和出口仍由宿主持有。`defaults/scripted` 通过相同入口使用预设提议，便于确定性验证。
+
+生产 `cmd/assembly.Harness.RunDefaultReasoner` 装配默认实现；`cmd/lerna` 的 `run-reasoner --json run.json` 调用这个入口。`run.json` 是已经由受信宿主固定的 `RunModelCallCommand`：包含原 `RequestRef`、有效 PROPOSE 领取、能力引用、输入引用、固定模型设置和授权引用。配置能力、预算、授权并建立请求／领取仍使用对应公共宿主接口；该命令不提供自动配置或自主循环。参考模型通过已登记能力的 loopback HTTP 目标运行受控合成供应商，不接受命令行临时 URL、密钥、HTTP 头或自动回退配置。
+
+本地受信部署示例：`lerna --db state.db --user u --domain d --issuer host run-reasoner --json run.json`。`--issuer host` 是受控 M1 宿主配置的信任边界，不是远程身份认证；默认 `local-cli` 不会被此入口提升为 host。命令 JSON 的身份也必须匹配调用方。重复执行保留原文件和请求，返回原 `ProposalOutcome`，不新建请求以重新采样。将结果的 `proposalRef` 保存为引用 JSON 后，`lerna --db state.db --user u --domain d read-proposal --json proposal-ref.json` 读取治理后的完整提议；它不执行或批准提议。
+
+`QueryProposal`、`QueryPlanning` 和 `QueryProposalOutcome` 返回结构记录。需要向用户展示问题、条件变更或草稿时使用 `ReadProposal`，它通过内容治理读取 `BodyContentRef`。`PublishProposalQuestion` 把 QUESTION 或 REQUIREMENTS 载荷发布为会话输入请求；回答经会话关联到原任务，条件变更仍要求真实用户的显式条件列表。主观完成条件先通过 `RequestConditionConfirmation` 固定事项，再由会话确认接口记录批准；模型文本不能替代批准。新主观确认的描述只包含结构引用；`ReadConditionConfirmation` 读取事项绑定的历史条件与证据正文，内容不可用时拒绝展示。
+
+验证入口：`go test ./conformance/reasoner` 检查四类提议接口与确定性裁剪；`go test ./conformance/admission -run 'Reasoner|Default|Subjective|RequirementsProposal|ProposalMetadata|UnavailableProposal|DirectProposal'` 检查真实模拟供应商、治理正文、准入、确认和恢复；`go test -tags fault ./conformance/fault -run '^TestReasonerBodyAndOutcomeCrashRecovery$'` 对正文派生和回报做进程崩溃及回执丢失测试。完整提交检查仍为 `make check`。
+
+确认展示的治理分离适用于新生成的 M1 记录。曾在 `Description` 保存参数字节的实验数据库不能仅靠重新渲染就视为已治理；历史副本需要受支持的停写迁移，保留原事项、摘要、批准、消费身份及全部 P5、未知效果和费用责任。迁移未受支持时必须明确拒绝旧库，不能通过删除或重建数据库丢弃这些责任。

@@ -109,10 +109,19 @@ func (s *Service) AcceptRequirements(ctx context.Context, caller *v1.Caller, c *
 	})
 }
 func (s *Service) RequestProposal(ctx context.Context, caller *v1.Caller, c *v1.RequestProposalCommand) (*v1.ContextSnapshot, error) {
+	return s.requestProposal(ctx, caller, c, nil)
+}
+
+func (s *Service) requestProposal(ctx context.Context, caller *v1.Caller, c *v1.RequestProposalCommand, before func(context.Context) error) (*v1.ContextSnapshot, error) {
 	if e := command.ValidateHeader(c.GetHeader(), c); e != nil {
 		return nil, e
 	}
 	r, e := s.decisions.Execute(ctx, caller, c.Header, command.SemanticFingerprint("request", c.TaskId), "tasks.planning", func(tx context.Context) (*v1.Ref, error) {
+		if before != nil {
+			if e := before(tx); e != nil {
+				return nil, e
+			}
+		}
 		t, e := s.QueryTask(tx, caller, c.TaskId)
 		if e != nil {
 			return nil, e
@@ -201,6 +210,14 @@ func (s *Service) ReceiveProposal(ctx context.Context, caller *v1.Caller, c *v1.
 		if q == nil || q.ReasonerRef == nil || q.ReasonerRef.Name == nil || q.ReasonerRef.Name.UserId != s.user || q.ReasonerRef.Name.ObjectKind != "reasoner" || q.ReasonerRef.Revision == 0 || q.ReasonerRef.SchemaId != "lerna.v1.Reasoner" || q.Ref != nil || !validProposalBody(q) {
 			return nil, command.Fail("INVALID_PROPOSAL")
 		}
+		if !proto.Equal(q, proposalProjection(q)) || (q.BodyContentRef == nil && (q.Kind == "QUESTION" || q.Kind == "REQUIREMENTS")) {
+			return nil, command.Fail("INVALID_PROPOSAL")
+		}
+		if q.BodyContentRef != nil {
+			if _, e := s.readProposalBody(tx, caller, q); e != nil {
+				return nil, e
+			}
+		}
 		if e := command.CheckName(caller, q.TaskId, s.user, s.domain, "task"); e != nil {
 			return nil, e
 		}
@@ -264,6 +281,15 @@ func (s *Service) QuerySnapshot(ctx context.Context, c *v1.Caller, r *v1.Ref) (*
 }
 
 func validProposalBody(q *v1.Proposal) bool {
+	if q.Kind == "QUESTION" {
+		return q.Question != nil && (q.Question.Question != "" || q.BodyContentRef != nil) && q.Step == nil && q.RequirementsChange == nil && len(q.CompletionEvidence) == 0 && len(q.Verdicts) == 0
+	}
+	if q.Kind == "REQUIREMENTS" {
+		return q.RequirementsChange != nil && q.RequirementsChange.OriginalVersion == q.RequirementsVersion && len(q.RequirementsChange.Conditions) > 0 && q.Question == nil && q.Step == nil && len(q.CompletionEvidence) == 0 && len(q.Verdicts) == 0
+	}
+	if q.Question != nil || q.RequirementsChange != nil {
+		return false
+	}
 	if q.Kind == "ACTION" {
 		return q.Step != nil && q.Step.StepId != "" && len(q.CompletionEvidence) == 0
 	}
@@ -272,7 +298,7 @@ func validProposalBody(q *v1.Proposal) bool {
 	}
 	seen := map[string]bool{}
 	for _, e := range q.CompletionEvidence {
-		if e == nil || e.ConditionId == "" || e.OperationId == nil || seen[e.ConditionId] {
+		if e == nil || e.ConditionId == "" || (e.OperationId == nil && e.ConfirmationRef == nil) || (e.OperationId != nil && e.ConfirmationRef != nil) || seen[e.ConditionId] {
 			return false
 		}
 		seen[e.ConditionId] = true

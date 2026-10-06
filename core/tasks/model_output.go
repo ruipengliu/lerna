@@ -14,7 +14,7 @@ func (s *Service) collectModelOutput(ctx context.Context, caller *v1.Caller, cal
 	result := &v1.ModelCallResult{CallRef: call.Ref, Status: "UNKNOWN", OperationId: a.OperationId, InputRef: call.InputRef}
 	x := op.Execution
 	if x == nil || x.Send.ObservationRef == nil {
-		return result, nil
+		return s.saveModelResult(ctx, caller, call, result)
 	}
 	raw, e := s.modelLedger.QueryObservation(ctx, caller, x.Send.ObservationRef)
 	if e != nil {
@@ -55,7 +55,7 @@ func (s *Service) collectModelOutput(ctx context.Context, caller *v1.Caller, cal
 			content, e = s.modelContent.Read(ctx, caller, ref)
 		}
 		if e != nil {
-			return nil, command.Fail("PREPARATION_UNRECOVERABLE")
+			return nil, modelPreparationError(e)
 		}
 		if i == 1 {
 			response = command.ContentBytes(content)

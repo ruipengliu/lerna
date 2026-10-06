@@ -162,6 +162,9 @@ type ModelSettings struct {
 	ParametersJson  []byte                 `protobuf:"bytes,5,opt,name=parameters_json,json=parametersJson,proto3" json:"parameters_json,omitempty"`
 	ToolSchemasJson []byte                 `protobuf:"bytes,6,opt,name=tool_schemas_json,json=toolSchemasJson,proto3" json:"tool_schemas_json,omitempty"`
 	MaxOutputTokens uint32                 `protobuf:"varint,7,opt,name=max_output_tokens,json=maxOutputTokens,proto3" json:"max_output_tokens,omitempty"`
+	ViewPolicy      string                 `protobuf:"bytes,8,opt,name=view_policy,json=viewPolicy,proto3" json:"view_policy,omitempty"`
+	MaxInputBytes   uint32                 `protobuf:"varint,9,opt,name=max_input_bytes,json=maxInputBytes,proto3" json:"max_input_bytes,omitempty"`
+	MaxInputTokens  uint32                 `protobuf:"varint,10,opt,name=max_input_tokens,json=maxInputTokens,proto3" json:"max_input_tokens,omitempty"`
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
@@ -241,6 +244,27 @@ func (x *ModelSettings) GetToolSchemasJson() []byte {
 func (x *ModelSettings) GetMaxOutputTokens() uint32 {
 	if x != nil {
 		return x.MaxOutputTokens
+	}
+	return 0
+}
+
+func (x *ModelSettings) GetViewPolicy() string {
+	if x != nil {
+		return x.ViewPolicy
+	}
+	return ""
+}
+
+func (x *ModelSettings) GetMaxInputBytes() uint32 {
+	if x != nil {
+		return x.MaxInputBytes
+	}
+	return 0
+}
+
+func (x *ModelSettings) GetMaxInputTokens() uint32 {
+	if x != nil {
+		return x.MaxInputTokens
 	}
 	return 0
 }
@@ -1023,7 +1047,7 @@ const file_lerna_v1_model_proto_rawDesc = "" +
 	"\foutcome_refs\x18\n" +
 	" \x03(\v2\r.lerna.v1.RefR\voutcomeRefs\x12D\n" +
 	"\x10outcome_identity\x18\v \x01(\v2\x19.lerna.v1.CommandIdentityR\x0foutcomeIdentity\x12A\n" +
-	"\x0foutcome_receipt\x18\f \x01(\v2\x18.lerna.v1.CommandReceiptR\x0eoutcomeReceipt\"\x92\x02\n" +
+	"\x0foutcome_receipt\x18\f \x01(\v2\x18.lerna.v1.CommandReceiptR\x0eoutcomeReceipt\"\x85\x03\n" +
 	"\rModelSettings\x12\x1a\n" +
 	"\bprovider\x18\x01 \x01(\tR\bprovider\x12\x14\n" +
 	"\x05model\x18\x02 \x01(\tR\x05model\x12'\n" +
@@ -1031,7 +1055,12 @@ const file_lerna_v1_model_proto_rawDesc = "" +
 	"\x0epolicy_version\x18\x04 \x01(\tR\rpolicyVersion\x12'\n" +
 	"\x0fparameters_json\x18\x05 \x01(\fR\x0eparametersJson\x12*\n" +
 	"\x11tool_schemas_json\x18\x06 \x01(\fR\x0ftoolSchemasJson\x12*\n" +
-	"\x11max_output_tokens\x18\a \x01(\rR\x0fmaxOutputTokens\"\x9d\x04\n" +
+	"\x11max_output_tokens\x18\a \x01(\rR\x0fmaxOutputTokens\x12\x1f\n" +
+	"\vview_policy\x18\b \x01(\tR\n" +
+	"viewPolicy\x12&\n" +
+	"\x0fmax_input_bytes\x18\t \x01(\rR\rmaxInputBytes\x12(\n" +
+	"\x10max_input_tokens\x18\n" +
+	" \x01(\rR\x0emaxInputTokens\"\x9d\x04\n" +
 	"\tModelCall\x12\x1f\n" +
 	"\x03ref\x18\x01 \x01(\v2\r.lerna.v1.RefR\x03ref\x12.\n" +
 	"\vrequest_ref\x18\x02 \x01(\v2\r.lerna.v1.RefR\n" +

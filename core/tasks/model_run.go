@@ -55,7 +55,7 @@ func (s *Service) QueryModelCall(ctx context.Context, c *v1.Caller, request *v1.
 	}
 	if call.Result.GetOutputRef() != nil {
 		if e = s.modelContent.CheckUsable(ctx, c, call.Result.OutputRef); e != nil {
-			return nil, command.Fail("PREPARATION_UNRECOVERABLE")
+			return nil, modelPreparationError(e)
 		}
 	}
 	return call, nil
@@ -68,7 +68,7 @@ func (s *Service) RunModelCall(ctx context.Context, caller *v1.Caller, c *v1.Run
 		return nil, e
 	}
 	p := c.Preparation
-	admitted, e := s.AdmitModelCall(ctx, caller, &v1.AdmitModelCallCommand{Header: s.modelHeader("model-admit:"+call.Ref.Name.LocalId+":"+command.SemanticFingerprint("authority", c.GrantRef, c.ConfirmationRef), s.domain), RequestRef: p.RequestRef, Position: p.Position, DescriptorDigest: call.DescriptorDigest, GrantRef: c.GrantRef, ConfirmationRef: c.ConfirmationRef, Claim: p.Claim})
+	admitted, e := s.AdmitModelCall(ctx, caller, &v1.AdmitModelCallCommand{Header: s.modelHeader("model-admit:"+call.Ref.Name.LocalId+":"+command.SemanticFingerprint("authority", c.GrantRef, c.ConfirmationRef, p.Header.Identity), s.domain), RequestRef: p.RequestRef, Position: p.Position, DescriptorDigest: call.DescriptorDigest, GrantRef: c.GrantRef, ConfirmationRef: c.ConfirmationRef, Claim: p.Claim})
 	if e = modelReceipt(admitted, e); e != nil {
 		return nil, e
 	}

@@ -64,7 +64,10 @@ func (s *Service) completeModelSnapshot(ctx context.Context, caller *v1.Caller, 
 			return command.Fail("INVARIANT_VIOLATION")
 		}
 		fact := &v1.SnapshotProgress{AdmissionRef: ref, OperationRef: &v1.Ref{Name: a.OperationId, Revision: 1, SchemaId: "lerna.v1.Operation"}, CapabilityRef: a.CapabilityRef, ParametersRef: a.ParametersRef, EffectOutcome: "UNKNOWN", LateEffect: "MAY_OCCUR", ExecutionReportPending: true}
-		snap.ContentRefs = append(snap.ContentRefs, a.ParametersRef)
+		// 原模型提示按原调用可查；下一轮保留结构事实，不递归嵌入旧提示正文。
+		if a.ModelDescriptorDigest == "" {
+			snap.ContentRefs = append(snap.ContentRefs, a.ParametersRef)
+		}
 		if s.modelLedger == nil {
 			return command.Fail("EXECUTION_FACTS_UNAVAILABLE")
 		}
@@ -107,6 +110,21 @@ func (s *Service) completeModelSnapshot(ctx context.Context, caller *v1.Caller, 
 			}
 		}
 		snap.ProgressFacts = append(snap.ProgressFacts, fact)
+	}
+	if s.conditionConfirmations != nil {
+		var e error
+		snap.Confirmations, e = s.conditionConfirmations.QueryTaskConfirmations(ctx, caller, t.TaskId)
+		if e != nil {
+			return e
+		}
+		for _, confirmation := range snap.Confirmations {
+			snap.ContentRefs = append(snap.ContentRefs, confirmation.EvidenceRefs...)
+		}
+	}
+	for _, progress := range snap.ProgressFacts {
+		if progress.OperationRef != nil {
+			snap.ProgressWatermarks = append(snap.ProgressWatermarks, progress.OperationRef)
+		}
 	}
 	snap.ContentRefs = uniqueRefs(snap.ContentRefs)
 	return nil

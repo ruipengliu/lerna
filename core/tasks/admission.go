@@ -1,10 +1,12 @@
 package tasks
 
 import (
+	"bytes"
 	"context"
 
 	"github.com/ruipengliu/lerna/contracts/command"
 	v1 "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1"
+	"github.com/ruipengliu/lerna/contracts/reasoner"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -53,6 +55,19 @@ func (s *Service) ConfigureCapability(ctx context.Context, caller *v1.Caller, c 
 			return nil, command.Fail("INVALID_CAPABILITY")
 		}
 		cap = proto.Clone(cap).(*v1.Capability)
+		if len(cap.ParameterSchemaJson) > 0 {
+			schema, digest, e := reasoner.NormalizeSchema(cap.ParameterSchemaJson)
+			if e != nil {
+				return nil, e
+			}
+			if cap.SchemaDigest != "" && cap.SchemaDigest != digest {
+				return nil, command.Fail("INVALID_PARAMETER_SCHEMA")
+			}
+			cap.ParameterSchemaJson = schema
+			cap.SchemaDigest = digest
+		} else if cap.SchemaDigest != "" {
+			return nil, command.Fail("INVALID_PARAMETER_SCHEMA")
+		}
 		cap.ApprovedBy = c.Header.Identity
 		cap.Ref = command.NewRef(s.user, s.domain, "capability", "lerna.v1.Capability")
 		if c.Replaces != nil {
@@ -94,6 +109,11 @@ func (s *Service) Admit(ctx context.Context, caller *v1.Caller, c *v1.AdmitComma
 		snap := p.Snapshot
 		if q == nil || snap == nil || p.ProposalConsumed || !proto.Equal(c.ProposalRef, q.Ref) || !proto.Equal(q.RequestRef, snap.RequestRef) || !proto.Equal(q.ContextSnapshotRef, snap.Ref) || now >= snap.ExpiresAtUnixMs || q.PlanningGeneration != t.PlanningGeneration || q.PlanningGeneration != snap.PlanningGeneration {
 			return nil, command.Fail("STALE_PROPOSAL")
+		}
+		if q.BodyContentRef != nil {
+			if e = s.content.CheckUsable(tx, caller, q.BodyContentRef); e != nil {
+				return nil, e
+			}
 		}
 		// 准入-2：M1 只有一个具体步骤，不接纳依赖其他输出的参数。
 		if q.RequirementsVersion != t.RequirementsVersion || q.RequirementsVersion != snap.RequirementsVersion {
@@ -161,6 +181,22 @@ func (s *Service) Admit(ctx context.Context, caller *v1.Caller, c *v1.AdmitComma
 		}
 		if cap == nil || !proto.Equal(cap.Ref, step.CapabilityRef) {
 			return nil, command.Fail("CAPABILITY_INVALID")
+		}
+		if len(cap.ParameterSchemaJson) > 0 || step.SchemaDigest != "" || len(step.ArgumentsJson) > 0 {
+			if cap.SchemaDigest == "" || step.SchemaDigest != cap.SchemaDigest {
+				return nil, command.Fail("CAPABILITY_INVALID")
+			}
+			parameters, e := s.confirmationContent.Read(tx, caller, step.ParametersRef)
+			if e != nil {
+				return nil, e
+			}
+			body := command.ContentBytes(parameters)
+			if e = reasoner.ValidateArguments(cap.ParameterSchemaJson, body); e != nil {
+				return nil, e
+			}
+			if len(step.ArgumentsJson) > 0 && !bytes.Equal(step.ArgumentsJson, body) {
+				return nil, command.Fail("INVALID_ARGUMENTS")
+			}
 		}
 		if cap.Action == "MODEL_INFER" {
 			return nil, command.Fail("MODEL_HOST_REQUIRED")

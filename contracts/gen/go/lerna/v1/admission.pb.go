@@ -36,6 +36,8 @@ type Capability struct {
 	MaxSends               uint32                 `protobuf:"varint,11,opt,name=max_sends,json=maxSends,proto3" json:"max_sends,omitempty"`
 	Nonbillable            bool                   `protobuf:"varint,12,opt,name=nonbillable,proto3" json:"nonbillable,omitempty"`
 	ApprovedBy             *CommandIdentity       `protobuf:"bytes,13,opt,name=approved_by,json=approvedBy,proto3" json:"approved_by,omitempty"`
+	ParameterSchemaJson    []byte                 `protobuf:"bytes,14,opt,name=parameter_schema_json,json=parameterSchemaJson,proto3" json:"parameter_schema_json,omitempty"`
+	SchemaDigest           string                 `protobuf:"bytes,15,opt,name=schema_digest,json=schemaDigest,proto3" json:"schema_digest,omitempty"`
 	IdempotencyRetentionMs int64                  `protobuf:"varint,20,opt,name=idempotency_retention_ms,json=idempotencyRetentionMs,proto3" json:"idempotency_retention_ms,omitempty"`
 	unknownFields          protoimpl.UnknownFields
 	sizeCache              protoimpl.SizeCache
@@ -160,6 +162,20 @@ func (x *Capability) GetApprovedBy() *CommandIdentity {
 		return x.ApprovedBy
 	}
 	return nil
+}
+
+func (x *Capability) GetParameterSchemaJson() []byte {
+	if x != nil {
+		return x.ParameterSchemaJson
+	}
+	return nil
+}
+
+func (x *Capability) GetSchemaDigest() string {
+	if x != nil {
+		return x.SchemaDigest
+	}
+	return ""
 }
 
 func (x *Capability) GetIdempotencyRetentionMs() int64 {
@@ -621,7 +637,7 @@ var File_lerna_v1_admission_proto protoreflect.FileDescriptor
 
 const file_lerna_v1_admission_proto_rawDesc = "" +
 	"\n" +
-	"\x18lerna/v1/admission.proto\x12\blerna.v1\x1a\x18lerna/v1/authority.proto\x1a\x16lerna/v1/closure.proto\x1a\x17lerna/v1/identity.proto\x1a\x17lerna/v1/planning.proto\x1a\x19lerna/v1/submission.proto\"\xc3\x04\n" +
+	"\x18lerna/v1/admission.proto\x12\blerna.v1\x1a\x18lerna/v1/authority.proto\x1a\x16lerna/v1/closure.proto\x1a\x17lerna/v1/identity.proto\x1a\x17lerna/v1/planning.proto\x1a\x19lerna/v1/submission.proto\"\x9c\x05\n" +
 	"\n" +
 	"Capability\x12\x1f\n" +
 	"\x03ref\x18\x01 \x01(\v2\r.lerna.v1.RefR\x03ref\x12\x16\n" +
@@ -640,7 +656,9 @@ const file_lerna_v1_admission_proto_rawDesc = "" +
 	"\tmax_sends\x18\v \x01(\rR\bmaxSends\x12 \n" +
 	"\vnonbillable\x18\f \x01(\bR\vnonbillable\x12:\n" +
 	"\vapproved_by\x18\r \x01(\v2\x19.lerna.v1.CommandIdentityR\n" +
-	"approvedBy\x128\n" +
+	"approvedBy\x122\n" +
+	"\x15parameter_schema_json\x18\x0e \x01(\fR\x13parameterSchemaJson\x12#\n" +
+	"\rschema_digest\x18\x0f \x01(\tR\fschemaDigest\x128\n" +
 	"\x18idempotency_retention_ms\x18\x14 \x01(\x03R\x16idempotencyRetentionMsB\x0e\n" +
 	"\f_fee_ceiling\"\xae\x01\n" +
 	"\x1aConfigureCapabilityCommand\x12/\n" +

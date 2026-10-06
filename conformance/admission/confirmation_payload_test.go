@@ -79,7 +79,7 @@ func TestConfirmedRawPayloadMatchesDisplayedAndSentBytes(t *testing.T) {
 			g.Permissions[0].ParametersRef = raw.BodyRef
 			r, e = f.h.Grants.RequestGrantConfirmation(f.ctx, f.caller, &v1.RequestGrantConfirmationCommand{Header: header("raw-grant-request"), Grant: g})
 			accepted(t, r, e)
-			grantMatter, e := f.h.Sessions.QueryConfirmation(f.ctx, f.caller, r.ResultRef)
+			grantMatter, e := f.h.Sessions.ReadConfirmation(f.ctx, f.caller, r.ResultRef)
 			if e != nil {
 				t.Fatal(e)
 			}
@@ -102,7 +102,7 @@ func TestConfirmedRawPayloadMatchesDisplayedAndSentBytes(t *testing.T) {
 			proposal := f.propose(t, nil)
 			r, e = f.h.Tasks.RequestAdmissionConfirmation(f.ctx, f.caller, &v1.RequestAdmissionConfirmationCommand{Header: header("raw-action-request"), TaskId: f.task.Name, ProposalRef: proposal, GrantRef: f.grant})
 			accepted(t, r, e)
-			actionMatter, e := f.h.Sessions.QueryConfirmation(f.ctx, f.caller, r.ResultRef)
+			actionMatter, e := f.h.Sessions.ReadConfirmation(f.ctx, f.caller, r.ResultRef)
 			if e != nil {
 				t.Fatal(e)
 			}
@@ -151,6 +151,12 @@ func TestConfirmedRawPayloadMatchesDisplayedAndSentBytes(t *testing.T) {
 			accepted(t, r, e)
 			if actual := <-received; !bytes.Equal(actual, tc.body) {
 				t.Fatalf("sent %x, displayed original %x", actual, tc.body)
+			}
+			for _, original := range []*v1.Confirmation{grantMatter, actionMatter} {
+				historical, e := f.h.Sessions.ReadConfirmation(f.ctx, f.caller, original.Ref)
+				if e != nil || !proto.Equal(historical, original) {
+					t.Fatalf("consumed original display changed %v %v", historical, e)
+				}
 			}
 			if f.calls.Load() != 2 {
 				t.Fatalf("unexpected actual sends %d", f.calls.Load())

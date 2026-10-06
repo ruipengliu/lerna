@@ -37,12 +37,14 @@ message Confirmation {
   oneof matter {
     OperationConfirmationMatter operation_admission = 8;
     GrantConfirmationMatter grant_issuance = 9;
+    ConditionConfirmationMatter condition_evaluation = 14;
   }
   CommandIdentity responded_by = 10;
   CommandIdentity withdrawn_by = 13;
   oneof consumed_by {
     Ref consumed_admission_ref = 11;
     Ref consumed_grant_issuance_ref = 12;
+    Ref consumed_verification_ref = 15;
   }
 }
 message RequestAdmissionConfirmationCommand {
@@ -76,4 +78,21 @@ message IssueGrantCommand {
 message WithdrawConfirmationCommand {
   CommandHeader header = 1;
   Ref confirmation_ref = 2;
+}
+
+message ConditionConfirmationMatter {
+  GlobalName task_id = 1;
+  Ref requirements_ref = 2;
+  string condition_id = 3;
+  uint64 input_version = 4;
+  uint64 control_generation = 5;
+  repeated Ref evidence_refs = 6;
+}
+message RequestConditionConfirmationCommand {
+  CommandHeader header = 1;
+  GlobalName task_id = 2;
+  Ref requirements_ref = 3;
+  string condition_id = 4;
+  repeated Ref evidence_refs = 5;
+  GlobalName session_id = 6;
 }

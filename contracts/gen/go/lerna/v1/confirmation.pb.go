@@ -210,6 +210,7 @@ type Confirmation struct {
 	//
 	//	*Confirmation_OperationAdmission
 	//	*Confirmation_GrantIssuance
+	//	*Confirmation_ConditionEvaluation
 	Matter      isConfirmation_Matter `protobuf_oneof:"matter"`
 	RespondedBy *CommandIdentity      `protobuf:"bytes,10,opt,name=responded_by,json=respondedBy,proto3" json:"responded_by,omitempty"`
 	WithdrawnBy *CommandIdentity      `protobuf:"bytes,13,opt,name=withdrawn_by,json=withdrawnBy,proto3" json:"withdrawn_by,omitempty"`
@@ -217,6 +218,7 @@ type Confirmation struct {
 	//
 	//	*Confirmation_ConsumedAdmissionRef
 	//	*Confirmation_ConsumedGrantIssuanceRef
+	//	*Confirmation_ConsumedVerificationRef
 	ConsumedBy    isConfirmation_ConsumedBy `protobuf_oneof:"consumed_by"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -326,6 +328,15 @@ func (x *Confirmation) GetGrantIssuance() *GrantConfirmationMatter {
 	return nil
 }
 
+func (x *Confirmation) GetConditionEvaluation() *ConditionConfirmationMatter {
+	if x != nil {
+		if x, ok := x.Matter.(*Confirmation_ConditionEvaluation); ok {
+			return x.ConditionEvaluation
+		}
+	}
+	return nil
+}
+
 func (x *Confirmation) GetRespondedBy() *CommandIdentity {
 	if x != nil {
 		return x.RespondedBy
@@ -365,6 +376,15 @@ func (x *Confirmation) GetConsumedGrantIssuanceRef() *Ref {
 	return nil
 }
 
+func (x *Confirmation) GetConsumedVerificationRef() *Ref {
+	if x != nil {
+		if x, ok := x.ConsumedBy.(*Confirmation_ConsumedVerificationRef); ok {
+			return x.ConsumedVerificationRef
+		}
+	}
+	return nil
+}
+
 type isConfirmation_Matter interface {
 	isConfirmation_Matter()
 }
@@ -377,9 +397,15 @@ type Confirmation_GrantIssuance struct {
 	GrantIssuance *GrantConfirmationMatter `protobuf:"bytes,9,opt,name=grant_issuance,json=grantIssuance,proto3,oneof"`
 }
 
+type Confirmation_ConditionEvaluation struct {
+	ConditionEvaluation *ConditionConfirmationMatter `protobuf:"bytes,14,opt,name=condition_evaluation,json=conditionEvaluation,proto3,oneof"`
+}
+
 func (*Confirmation_OperationAdmission) isConfirmation_Matter() {}
 
 func (*Confirmation_GrantIssuance) isConfirmation_Matter() {}
+
+func (*Confirmation_ConditionEvaluation) isConfirmation_Matter() {}
 
 type isConfirmation_ConsumedBy interface {
 	isConfirmation_ConsumedBy()
@@ -393,9 +419,15 @@ type Confirmation_ConsumedGrantIssuanceRef struct {
 	ConsumedGrantIssuanceRef *Ref `protobuf:"bytes,12,opt,name=consumed_grant_issuance_ref,json=consumedGrantIssuanceRef,proto3,oneof"`
 }
 
+type Confirmation_ConsumedVerificationRef struct {
+	ConsumedVerificationRef *Ref `protobuf:"bytes,15,opt,name=consumed_verification_ref,json=consumedVerificationRef,proto3,oneof"`
+}
+
 func (*Confirmation_ConsumedAdmissionRef) isConfirmation_ConsumedBy() {}
 
 func (*Confirmation_ConsumedGrantIssuanceRef) isConfirmation_ConsumedBy() {}
+
+func (*Confirmation_ConsumedVerificationRef) isConfirmation_ConsumedBy() {}
 
 type RequestAdmissionConfirmationCommand struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -773,6 +805,174 @@ func (x *WithdrawConfirmationCommand) GetConfirmationRef() *Ref {
 	return nil
 }
 
+type ConditionConfirmationMatter struct {
+	state             protoimpl.MessageState `protogen:"open.v1"`
+	TaskId            *GlobalName            `protobuf:"bytes,1,opt,name=task_id,json=taskId,proto3" json:"task_id,omitempty"`
+	RequirementsRef   *Ref                   `protobuf:"bytes,2,opt,name=requirements_ref,json=requirementsRef,proto3" json:"requirements_ref,omitempty"`
+	ConditionId       string                 `protobuf:"bytes,3,opt,name=condition_id,json=conditionId,proto3" json:"condition_id,omitempty"`
+	InputVersion      uint64                 `protobuf:"varint,4,opt,name=input_version,json=inputVersion,proto3" json:"input_version,omitempty"`
+	ControlGeneration uint64                 `protobuf:"varint,5,opt,name=control_generation,json=controlGeneration,proto3" json:"control_generation,omitempty"`
+	EvidenceRefs      []*Ref                 `protobuf:"bytes,6,rep,name=evidence_refs,json=evidenceRefs,proto3" json:"evidence_refs,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
+}
+
+func (x *ConditionConfirmationMatter) Reset() {
+	*x = ConditionConfirmationMatter{}
+	mi := &file_lerna_v1_confirmation_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ConditionConfirmationMatter) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ConditionConfirmationMatter) ProtoMessage() {}
+
+func (x *ConditionConfirmationMatter) ProtoReflect() protoreflect.Message {
+	mi := &file_lerna_v1_confirmation_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ConditionConfirmationMatter.ProtoReflect.Descriptor instead.
+func (*ConditionConfirmationMatter) Descriptor() ([]byte, []int) {
+	return file_lerna_v1_confirmation_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *ConditionConfirmationMatter) GetTaskId() *GlobalName {
+	if x != nil {
+		return x.TaskId
+	}
+	return nil
+}
+
+func (x *ConditionConfirmationMatter) GetRequirementsRef() *Ref {
+	if x != nil {
+		return x.RequirementsRef
+	}
+	return nil
+}
+
+func (x *ConditionConfirmationMatter) GetConditionId() string {
+	if x != nil {
+		return x.ConditionId
+	}
+	return ""
+}
+
+func (x *ConditionConfirmationMatter) GetInputVersion() uint64 {
+	if x != nil {
+		return x.InputVersion
+	}
+	return 0
+}
+
+func (x *ConditionConfirmationMatter) GetControlGeneration() uint64 {
+	if x != nil {
+		return x.ControlGeneration
+	}
+	return 0
+}
+
+func (x *ConditionConfirmationMatter) GetEvidenceRefs() []*Ref {
+	if x != nil {
+		return x.EvidenceRefs
+	}
+	return nil
+}
+
+type RequestConditionConfirmationCommand struct {
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	Header          *CommandHeader         `protobuf:"bytes,1,opt,name=header,proto3" json:"header,omitempty"`
+	TaskId          *GlobalName            `protobuf:"bytes,2,opt,name=task_id,json=taskId,proto3" json:"task_id,omitempty"`
+	RequirementsRef *Ref                   `protobuf:"bytes,3,opt,name=requirements_ref,json=requirementsRef,proto3" json:"requirements_ref,omitempty"`
+	ConditionId     string                 `protobuf:"bytes,4,opt,name=condition_id,json=conditionId,proto3" json:"condition_id,omitempty"`
+	EvidenceRefs    []*Ref                 `protobuf:"bytes,5,rep,name=evidence_refs,json=evidenceRefs,proto3" json:"evidence_refs,omitempty"`
+	SessionId       *GlobalName            `protobuf:"bytes,6,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
+}
+
+func (x *RequestConditionConfirmationCommand) Reset() {
+	*x = RequestConditionConfirmationCommand{}
+	mi := &file_lerna_v1_confirmation_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RequestConditionConfirmationCommand) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RequestConditionConfirmationCommand) ProtoMessage() {}
+
+func (x *RequestConditionConfirmationCommand) ProtoReflect() protoreflect.Message {
+	mi := &file_lerna_v1_confirmation_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RequestConditionConfirmationCommand.ProtoReflect.Descriptor instead.
+func (*RequestConditionConfirmationCommand) Descriptor() ([]byte, []int) {
+	return file_lerna_v1_confirmation_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *RequestConditionConfirmationCommand) GetHeader() *CommandHeader {
+	if x != nil {
+		return x.Header
+	}
+	return nil
+}
+
+func (x *RequestConditionConfirmationCommand) GetTaskId() *GlobalName {
+	if x != nil {
+		return x.TaskId
+	}
+	return nil
+}
+
+func (x *RequestConditionConfirmationCommand) GetRequirementsRef() *Ref {
+	if x != nil {
+		return x.RequirementsRef
+	}
+	return nil
+}
+
+func (x *RequestConditionConfirmationCommand) GetConditionId() string {
+	if x != nil {
+		return x.ConditionId
+	}
+	return ""
+}
+
+func (x *RequestConditionConfirmationCommand) GetEvidenceRefs() []*Ref {
+	if x != nil {
+		return x.EvidenceRefs
+	}
+	return nil
+}
+
+func (x *RequestConditionConfirmationCommand) GetSessionId() *GlobalName {
+	if x != nil {
+		return x.SessionId
+	}
+	return nil
+}
+
 var File_lerna_v1_confirmation_proto protoreflect.FileDescriptor
 
 const file_lerna_v1_confirmation_proto_rawDesc = "" +
@@ -795,7 +995,7 @@ const file_lerna_v1_confirmation_proto_rawDesc = "" +
 	"\rquery_subject\x18\v \x01(\v2\x16.lerna.v1.QuerySubjectR\fquerySubject\"r\n" +
 	"\x17GrantConfirmationMatter\x120\n" +
 	"\fissuance_ref\x18\x01 \x01(\v2\r.lerna.v1.RefR\vissuanceRef\x12%\n" +
-	"\x05grant\x18\x02 \x01(\v2\x0f.lerna.v1.GrantR\x05grant\"\xe3\x05\n" +
+	"\x05grant\x18\x02 \x01(\v2\x0f.lerna.v1.GrantR\x05grant\"\x8c\a\n" +
 	"\fConfirmation\x12\x1f\n" +
 	"\x03ref\x18\x01 \x01(\v2\r.lerna.v1.RefR\x03ref\x123\n" +
 	"\n" +
@@ -807,12 +1007,14 @@ const file_lerna_v1_confirmation_proto_rawDesc = "" +
 	"\x12expires_at_unix_ms\x18\x06 \x01(\x03R\x0fexpiresAtUnixMs\x12\x14\n" +
 	"\x05state\x18\a \x01(\tR\x05state\x12X\n" +
 	"\x13operation_admission\x18\b \x01(\v2%.lerna.v1.OperationConfirmationMatterH\x00R\x12operationAdmission\x12J\n" +
-	"\x0egrant_issuance\x18\t \x01(\v2!.lerna.v1.GrantConfirmationMatterH\x00R\rgrantIssuance\x12<\n" +
+	"\x0egrant_issuance\x18\t \x01(\v2!.lerna.v1.GrantConfirmationMatterH\x00R\rgrantIssuance\x12Z\n" +
+	"\x14condition_evaluation\x18\x0e \x01(\v2%.lerna.v1.ConditionConfirmationMatterH\x00R\x13conditionEvaluation\x12<\n" +
 	"\fresponded_by\x18\n" +
 	" \x01(\v2\x19.lerna.v1.CommandIdentityR\vrespondedBy\x12<\n" +
 	"\fwithdrawn_by\x18\r \x01(\v2\x19.lerna.v1.CommandIdentityR\vwithdrawnBy\x12E\n" +
 	"\x16consumed_admission_ref\x18\v \x01(\v2\r.lerna.v1.RefH\x01R\x14consumedAdmissionRef\x12N\n" +
-	"\x1bconsumed_grant_issuance_ref\x18\f \x01(\v2\r.lerna.v1.RefH\x01R\x18consumedGrantIssuanceRefB\b\n" +
+	"\x1bconsumed_grant_issuance_ref\x18\f \x01(\v2\r.lerna.v1.RefH\x01R\x18consumedGrantIssuanceRef\x12K\n" +
+	"\x19consumed_verification_ref\x18\x0f \x01(\v2\r.lerna.v1.RefH\x01R\x17consumedVerificationRefB\b\n" +
 	"\x06matterB\r\n" +
 	"\vconsumed_by\"\x98\x02\n" +
 	"#RequestAdmissionConfirmationCommand\x12/\n" +
@@ -842,7 +1044,22 @@ const file_lerna_v1_confirmation_proto_rawDesc = "" +
 	"\x10confirmation_ref\x18\x02 \x01(\v2\r.lerna.v1.RefR\x0fconfirmationRef\"\x88\x01\n" +
 	"\x1bWithdrawConfirmationCommand\x12/\n" +
 	"\x06header\x18\x01 \x01(\v2\x17.lerna.v1.CommandHeaderR\x06header\x128\n" +
-	"\x10confirmation_ref\x18\x02 \x01(\v2\r.lerna.v1.RefR\x0fconfirmationRefB?Z=github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1;lernav1b\x06proto3"
+	"\x10confirmation_ref\x18\x02 \x01(\v2\r.lerna.v1.RefR\x0fconfirmationRef\"\xb1\x02\n" +
+	"\x1bConditionConfirmationMatter\x12-\n" +
+	"\atask_id\x18\x01 \x01(\v2\x14.lerna.v1.GlobalNameR\x06taskId\x128\n" +
+	"\x10requirements_ref\x18\x02 \x01(\v2\r.lerna.v1.RefR\x0frequirementsRef\x12!\n" +
+	"\fcondition_id\x18\x03 \x01(\tR\vconditionId\x12#\n" +
+	"\rinput_version\x18\x04 \x01(\x04R\finputVersion\x12-\n" +
+	"\x12control_generation\x18\x05 \x01(\x04R\x11controlGeneration\x122\n" +
+	"\revidence_refs\x18\x06 \x03(\v2\r.lerna.v1.RefR\fevidenceRefs\"\xcb\x02\n" +
+	"#RequestConditionConfirmationCommand\x12/\n" +
+	"\x06header\x18\x01 \x01(\v2\x17.lerna.v1.CommandHeaderR\x06header\x12-\n" +
+	"\atask_id\x18\x02 \x01(\v2\x14.lerna.v1.GlobalNameR\x06taskId\x128\n" +
+	"\x10requirements_ref\x18\x03 \x01(\v2\r.lerna.v1.RefR\x0frequirementsRef\x12!\n" +
+	"\fcondition_id\x18\x04 \x01(\tR\vconditionId\x122\n" +
+	"\revidence_refs\x18\x05 \x03(\v2\r.lerna.v1.RefR\fevidenceRefs\x123\n" +
+	"\n" +
+	"session_id\x18\x06 \x01(\v2\x14.lerna.v1.GlobalNameR\tsessionIdB?Z=github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1;lernav1b\x06proto3"
 
 var (
 	file_lerna_v1_confirmation_proto_rawDescOnce sync.Once
@@ -856,7 +1073,7 @@ func file_lerna_v1_confirmation_proto_rawDescGZIP() []byte {
 	return file_lerna_v1_confirmation_proto_rawDescData
 }
 
-var file_lerna_v1_confirmation_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
+var file_lerna_v1_confirmation_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
 var file_lerna_v1_confirmation_proto_goTypes = []any{
 	(*OperationConfirmationMatter)(nil),         // 0: lerna.v1.OperationConfirmationMatter
 	(*GrantConfirmationMatter)(nil),             // 1: lerna.v1.GrantConfirmationMatter
@@ -867,54 +1084,66 @@ var file_lerna_v1_confirmation_proto_goTypes = []any{
 	(*RequestGrantConfirmationCommand)(nil),     // 6: lerna.v1.RequestGrantConfirmationCommand
 	(*IssueGrantCommand)(nil),                   // 7: lerna.v1.IssueGrantCommand
 	(*WithdrawConfirmationCommand)(nil),         // 8: lerna.v1.WithdrawConfirmationCommand
-	(*GlobalName)(nil),                          // 9: lerna.v1.GlobalName
-	(*Ref)(nil),                                 // 10: lerna.v1.Ref
-	(*Capability)(nil),                          // 11: lerna.v1.Capability
-	(*QuerySubject)(nil),                        // 12: lerna.v1.QuerySubject
-	(*Grant)(nil),                               // 13: lerna.v1.Grant
-	(*CommandIdentity)(nil),                     // 14: lerna.v1.CommandIdentity
-	(*CommandHeader)(nil),                       // 15: lerna.v1.CommandHeader
+	(*ConditionConfirmationMatter)(nil),         // 9: lerna.v1.ConditionConfirmationMatter
+	(*RequestConditionConfirmationCommand)(nil), // 10: lerna.v1.RequestConditionConfirmationCommand
+	(*GlobalName)(nil),                          // 11: lerna.v1.GlobalName
+	(*Ref)(nil),                                 // 12: lerna.v1.Ref
+	(*Capability)(nil),                          // 13: lerna.v1.Capability
+	(*QuerySubject)(nil),                        // 14: lerna.v1.QuerySubject
+	(*Grant)(nil),                               // 15: lerna.v1.Grant
+	(*CommandIdentity)(nil),                     // 16: lerna.v1.CommandIdentity
+	(*CommandHeader)(nil),                       // 17: lerna.v1.CommandHeader
 }
 var file_lerna_v1_confirmation_proto_depIdxs = []int32{
-	9,  // 0: lerna.v1.OperationConfirmationMatter.task_id:type_name -> lerna.v1.GlobalName
-	10, // 1: lerna.v1.OperationConfirmationMatter.proposal_ref:type_name -> lerna.v1.Ref
-	10, // 2: lerna.v1.OperationConfirmationMatter.grant_ref:type_name -> lerna.v1.Ref
-	11, // 3: lerna.v1.OperationConfirmationMatter.capability:type_name -> lerna.v1.Capability
-	10, // 4: lerna.v1.OperationConfirmationMatter.parameters_ref:type_name -> lerna.v1.Ref
-	10, // 5: lerna.v1.OperationConfirmationMatter.content_refs:type_name -> lerna.v1.Ref
-	12, // 6: lerna.v1.OperationConfirmationMatter.query_subject:type_name -> lerna.v1.QuerySubject
-	10, // 7: lerna.v1.GrantConfirmationMatter.issuance_ref:type_name -> lerna.v1.Ref
-	13, // 8: lerna.v1.GrantConfirmationMatter.grant:type_name -> lerna.v1.Grant
-	10, // 9: lerna.v1.Confirmation.ref:type_name -> lerna.v1.Ref
-	9,  // 10: lerna.v1.Confirmation.session_id:type_name -> lerna.v1.GlobalName
+	11, // 0: lerna.v1.OperationConfirmationMatter.task_id:type_name -> lerna.v1.GlobalName
+	12, // 1: lerna.v1.OperationConfirmationMatter.proposal_ref:type_name -> lerna.v1.Ref
+	12, // 2: lerna.v1.OperationConfirmationMatter.grant_ref:type_name -> lerna.v1.Ref
+	13, // 3: lerna.v1.OperationConfirmationMatter.capability:type_name -> lerna.v1.Capability
+	12, // 4: lerna.v1.OperationConfirmationMatter.parameters_ref:type_name -> lerna.v1.Ref
+	12, // 5: lerna.v1.OperationConfirmationMatter.content_refs:type_name -> lerna.v1.Ref
+	14, // 6: lerna.v1.OperationConfirmationMatter.query_subject:type_name -> lerna.v1.QuerySubject
+	12, // 7: lerna.v1.GrantConfirmationMatter.issuance_ref:type_name -> lerna.v1.Ref
+	15, // 8: lerna.v1.GrantConfirmationMatter.grant:type_name -> lerna.v1.Grant
+	12, // 9: lerna.v1.Confirmation.ref:type_name -> lerna.v1.Ref
+	11, // 10: lerna.v1.Confirmation.session_id:type_name -> lerna.v1.GlobalName
 	0,  // 11: lerna.v1.Confirmation.operation_admission:type_name -> lerna.v1.OperationConfirmationMatter
 	1,  // 12: lerna.v1.Confirmation.grant_issuance:type_name -> lerna.v1.GrantConfirmationMatter
-	14, // 13: lerna.v1.Confirmation.responded_by:type_name -> lerna.v1.CommandIdentity
-	14, // 14: lerna.v1.Confirmation.withdrawn_by:type_name -> lerna.v1.CommandIdentity
-	10, // 15: lerna.v1.Confirmation.consumed_admission_ref:type_name -> lerna.v1.Ref
-	10, // 16: lerna.v1.Confirmation.consumed_grant_issuance_ref:type_name -> lerna.v1.Ref
-	15, // 17: lerna.v1.RequestAdmissionConfirmationCommand.header:type_name -> lerna.v1.CommandHeader
-	9,  // 18: lerna.v1.RequestAdmissionConfirmationCommand.task_id:type_name -> lerna.v1.GlobalName
-	10, // 19: lerna.v1.RequestAdmissionConfirmationCommand.proposal_ref:type_name -> lerna.v1.Ref
-	10, // 20: lerna.v1.RequestAdmissionConfirmationCommand.grant_ref:type_name -> lerna.v1.Ref
-	9,  // 21: lerna.v1.RequestAdmissionConfirmationCommand.session_id:type_name -> lerna.v1.GlobalName
-	15, // 22: lerna.v1.RespondConfirmationCommand.header:type_name -> lerna.v1.CommandHeader
-	10, // 23: lerna.v1.RespondConfirmationCommand.confirmation_ref:type_name -> lerna.v1.Ref
-	10, // 24: lerna.v1.GrantIssuance.ref:type_name -> lerna.v1.Ref
-	13, // 25: lerna.v1.GrantIssuance.grant:type_name -> lerna.v1.Grant
-	10, // 26: lerna.v1.GrantIssuance.grant_ref:type_name -> lerna.v1.Ref
-	15, // 27: lerna.v1.RequestGrantConfirmationCommand.header:type_name -> lerna.v1.CommandHeader
-	13, // 28: lerna.v1.RequestGrantConfirmationCommand.grant:type_name -> lerna.v1.Grant
-	9,  // 29: lerna.v1.RequestGrantConfirmationCommand.session_id:type_name -> lerna.v1.GlobalName
-	15, // 30: lerna.v1.IssueGrantCommand.header:type_name -> lerna.v1.CommandHeader
-	10, // 31: lerna.v1.IssueGrantCommand.confirmation_ref:type_name -> lerna.v1.Ref
-	15, // 32: lerna.v1.WithdrawConfirmationCommand.header:type_name -> lerna.v1.CommandHeader
-	10, // 33: lerna.v1.WithdrawConfirmationCommand.confirmation_ref:type_name -> lerna.v1.Ref
-	34, // [34:34] is the sub-list for method output_type
-	34, // [34:34] is the sub-list for method input_type
-	34, // [34:34] is the sub-list for extension type_name
-	34, // [34:34] is the sub-list for extension extendee
-	0,  // [0:34] is the sub-list for field type_name
+	9,  // 13: lerna.v1.Confirmation.condition_evaluation:type_name -> lerna.v1.ConditionConfirmationMatter
+	16, // 14: lerna.v1.Confirmation.responded_by:type_name -> lerna.v1.CommandIdentity
+	16, // 15: lerna.v1.Confirmation.withdrawn_by:type_name -> lerna.v1.CommandIdentity
+	12, // 16: lerna.v1.Confirmation.consumed_admission_ref:type_name -> lerna.v1.Ref
+	12, // 17: lerna.v1.Confirmation.consumed_grant_issuance_ref:type_name -> lerna.v1.Ref
+	12, // 18: lerna.v1.Confirmation.consumed_verification_ref:type_name -> lerna.v1.Ref
+	17, // 19: lerna.v1.RequestAdmissionConfirmationCommand.header:type_name -> lerna.v1.CommandHeader
+	11, // 20: lerna.v1.RequestAdmissionConfirmationCommand.task_id:type_name -> lerna.v1.GlobalName
+	12, // 21: lerna.v1.RequestAdmissionConfirmationCommand.proposal_ref:type_name -> lerna.v1.Ref
+	12, // 22: lerna.v1.RequestAdmissionConfirmationCommand.grant_ref:type_name -> lerna.v1.Ref
+	11, // 23: lerna.v1.RequestAdmissionConfirmationCommand.session_id:type_name -> lerna.v1.GlobalName
+	17, // 24: lerna.v1.RespondConfirmationCommand.header:type_name -> lerna.v1.CommandHeader
+	12, // 25: lerna.v1.RespondConfirmationCommand.confirmation_ref:type_name -> lerna.v1.Ref
+	12, // 26: lerna.v1.GrantIssuance.ref:type_name -> lerna.v1.Ref
+	15, // 27: lerna.v1.GrantIssuance.grant:type_name -> lerna.v1.Grant
+	12, // 28: lerna.v1.GrantIssuance.grant_ref:type_name -> lerna.v1.Ref
+	17, // 29: lerna.v1.RequestGrantConfirmationCommand.header:type_name -> lerna.v1.CommandHeader
+	15, // 30: lerna.v1.RequestGrantConfirmationCommand.grant:type_name -> lerna.v1.Grant
+	11, // 31: lerna.v1.RequestGrantConfirmationCommand.session_id:type_name -> lerna.v1.GlobalName
+	17, // 32: lerna.v1.IssueGrantCommand.header:type_name -> lerna.v1.CommandHeader
+	12, // 33: lerna.v1.IssueGrantCommand.confirmation_ref:type_name -> lerna.v1.Ref
+	17, // 34: lerna.v1.WithdrawConfirmationCommand.header:type_name -> lerna.v1.CommandHeader
+	12, // 35: lerna.v1.WithdrawConfirmationCommand.confirmation_ref:type_name -> lerna.v1.Ref
+	11, // 36: lerna.v1.ConditionConfirmationMatter.task_id:type_name -> lerna.v1.GlobalName
+	12, // 37: lerna.v1.ConditionConfirmationMatter.requirements_ref:type_name -> lerna.v1.Ref
+	12, // 38: lerna.v1.ConditionConfirmationMatter.evidence_refs:type_name -> lerna.v1.Ref
+	17, // 39: lerna.v1.RequestConditionConfirmationCommand.header:type_name -> lerna.v1.CommandHeader
+	11, // 40: lerna.v1.RequestConditionConfirmationCommand.task_id:type_name -> lerna.v1.GlobalName
+	12, // 41: lerna.v1.RequestConditionConfirmationCommand.requirements_ref:type_name -> lerna.v1.Ref
+	12, // 42: lerna.v1.RequestConditionConfirmationCommand.evidence_refs:type_name -> lerna.v1.Ref
+	11, // 43: lerna.v1.RequestConditionConfirmationCommand.session_id:type_name -> lerna.v1.GlobalName
+	44, // [44:44] is the sub-list for method output_type
+	44, // [44:44] is the sub-list for method input_type
+	44, // [44:44] is the sub-list for extension type_name
+	44, // [44:44] is the sub-list for extension extendee
+	0,  // [0:44] is the sub-list for field type_name
 }
 
 func init() { file_lerna_v1_confirmation_proto_init() }
@@ -931,8 +1160,10 @@ func file_lerna_v1_confirmation_proto_init() {
 	file_lerna_v1_confirmation_proto_msgTypes[2].OneofWrappers = []any{
 		(*Confirmation_OperationAdmission)(nil),
 		(*Confirmation_GrantIssuance)(nil),
+		(*Confirmation_ConditionEvaluation)(nil),
 		(*Confirmation_ConsumedAdmissionRef)(nil),
 		(*Confirmation_ConsumedGrantIssuanceRef)(nil),
+		(*Confirmation_ConsumedVerificationRef)(nil),
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -940,7 +1171,7 @@ func file_lerna_v1_confirmation_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_lerna_v1_confirmation_proto_rawDesc), len(file_lerna_v1_confirmation_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   9,
+			NumMessages:   11,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

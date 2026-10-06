@@ -49,7 +49,7 @@ func (s *Service) PublishQuestion(ctx context.Context, caller *v1.Caller, c *v1.
 			return nil, command.Fail("REQUEST_INVALID")
 		}
 		q := &v1.Question{Ref: command.NewRef(s.user, s.domain, "question", "lerna.v1.Question"), SessionId: c.SessionId, TaskId: task.TaskId, ContentRef: c.ContentRef, ChangesBasis: c.ChangesBasis, RequirementsVersion: task.RequirementsVersion, InputVersion: task.InputVersion, ControlGeneration: task.ControlGeneration, ExpiresAtUnixMs: c.ExpiresAtUnixMs, Status: "PENDING", PublishedBy: c.Header.Identity}
-		return q.Ref, s.store.(QuestionStore).SaveQuestion(tx, q)
+		return q.Ref, s.saveQuestion(tx, q)
 	})
 }
 func (s *Service) QueryQuestion(ctx context.Context, caller *v1.Caller, r *v1.Ref) (*v1.Question, error) {
@@ -101,5 +101,5 @@ func (s *Service) answer(ctx context.Context, caller *v1.Caller, c *v1.SubmitInp
 	input.RequestRef = q.Ref
 	q.Status = "ANSWERED"
 	q.ResponseInputRef = &v1.Ref{Name: input.InputId, Revision: 1, SchemaId: "lerna.v1.SessionInput"}
-	return s.store.(QuestionStore).SaveQuestion(ctx, q)
+	return s.saveQuestion(ctx, q)
 }

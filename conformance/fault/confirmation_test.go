@@ -169,6 +169,28 @@ func TestConfirmationLifecycleCommitBoundaries(t *testing.T) {
 				if calls.Load() != 0 {
 					t.Fatal("authority command called target")
 				}
+				if e = h.Trace.Recover(ctx, caller); e != nil {
+					t.Fatal(e)
+				}
+				sources, e := h.Trace.QuerySources(ctx, caller)
+				if e != nil {
+					t.Fatal(e)
+				}
+				for _, source := range sources {
+					event := source.Command.Event
+					if event.SourceRecordRef.GetSchemaId() != "lerna.v1.Confirmation" || event.Producer != "sessions" {
+						continue
+					}
+					original, e := h.Sessions.QueryConfirmation(ctx, caller, event.SourceRecordRef)
+					if e != nil || original == nil || event.EventType != "CONFIRMATION_"+original.State {
+						t.Fatalf("source escaped original confirmation transaction: %v %v", event, e)
+					}
+					confirmationSource(t, h, ctx, caller, original)
+					indexed, e := h.Trace.QueryEvent(ctx, caller, event.Ref)
+					if e != nil || source.Receipt == nil || !proto.Equal(indexed, event) {
+						t.Fatalf("confirmation source recovery lost original: %v %v", indexed, e)
+					}
+				}
 			})
 		}
 	}

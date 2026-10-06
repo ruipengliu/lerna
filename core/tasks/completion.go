@@ -60,6 +60,11 @@ func (s *Service) BeginCompletion(ctx context.Context, caller *v1.Caller, c *v1.
 		if q == nil || snap == nil || q.Kind != "COMPLETE" || p.ProposalConsumed || !proto.Equal(c.ProposalRef, q.Ref) || !proto.Equal(q.RequestRef, snap.RequestRef) || !proto.Equal(q.ContextSnapshotRef, snap.Ref) || now >= snap.ExpiresAtUnixMs || q.PlanningGeneration != t.PlanningGeneration || q.PlanningGeneration != snap.PlanningGeneration {
 			return nil, command.Fail("STALE_PROPOSAL")
 		}
+		if q.BodyContentRef != nil {
+			if e = s.content.CheckUsable(tx, caller, q.BodyContentRef); e != nil {
+				return nil, e
+			}
+		}
 		if q.RequirementsVersion != t.RequirementsVersion || q.RequirementsVersion != snap.RequirementsVersion {
 			return nil, command.Fail("STALE_REQUIREMENT")
 		}
@@ -83,7 +88,16 @@ func (s *Service) BeginCompletion(ctx context.Context, caller *v1.Caller, c *v1.
 		p.VerificationRound++
 		p.VerificationFreeze = p.VerificationRound
 		p.ProposalConsumed = true
-		v := &v1.Verification{Ref: command.NewRef(s.user, s.domain, "verification", "lerna.v1.Verification"), TaskId: t.TaskId, Round: p.VerificationRound, Status: "VERIFYING", RequirementsRef: p.Requirements.Ref, RequirementsVersion: t.RequirementsVersion, InputVersion: t.InputVersion, ControlGeneration: t.ControlGeneration, ProposalRef: q.Ref, AdmissionRefs: p.AdmissionRefs, Candidates: q.CompletionEvidence, StartedAtUnixMs: now}
+		v := &v1.Verification{Ref: command.NewRef(s.user, s.domain, "verification", "lerna.v1.Verification"), TaskId: t.TaskId, Round: p.VerificationRound, Status: "VERIFYING", RequirementsRef: p.Requirements.Ref, RequirementsVersion: t.RequirementsVersion, InputVersion: t.InputVersion, ControlGeneration: t.ControlGeneration, ProposalRef: q.Ref, AdmissionRefs: p.AdmissionRefs, Candidates: proto.Clone(q).(*v1.Proposal).CompletionEvidence, StartedAtUnixMs: now}
+		for _, candidate := range v.Candidates {
+			if candidate.ConfirmationRef != nil {
+				consumed, e := s.conditionConfirmations.ConsumeConditionConfirmationInTransaction(tx, candidate.ConfirmationRef, p.Requirements.Ref, candidate.ConditionId, v.Ref)
+				if e != nil {
+					return nil, e
+				}
+				candidate.ConfirmationRef = consumed
+			}
+		}
 		if e = s.addCompletionClosures(tx, v, v.AdmissionRefs, v.Ref); e != nil {
 			return nil, e
 		}
@@ -237,7 +251,7 @@ func (s *Service) RecheckCompletion(ctx context.Context, caller *v1.Caller, c *v
 			}
 		}
 		for _, condition := range p.Requirements.Conditions {
-			finding, e := s.checkCondition(tx, caller, p.Requirements, condition, v.Candidates, admissions, ops)
+			finding, e := s.checkCondition(tx, caller, p.Requirements, condition, v.Candidates, admissions, ops, v.Ref)
 			if e != nil {
 				return nil, e
 			}
@@ -340,10 +354,13 @@ func (s *Service) RecheckCompletion(ctx context.Context, caller *v1.Caller, c *v
 	})
 }
 
-func (s *Service) checkCondition(ctx context.Context, c *v1.Caller, r *v1.Requirements, condition *v1.Requirement, candidates []*v1.CompletionEvidence, admissions map[string]*v1.Admission, ops map[string]*v1.Operation) (*v1.ConditionFinding, error) {
+func (s *Service) checkCondition(ctx context.Context, c *v1.Caller, r *v1.Requirements, condition *v1.Requirement, candidates []*v1.CompletionEvidence, admissions map[string]*v1.Admission, ops map[string]*v1.Operation, verification *v1.Ref) (*v1.ConditionFinding, error) {
 	f := &v1.ConditionFinding{Condition: condition, Source: r.Source, SourceInputRef: r.SourceInputRef, Conclusion: "UNKNOWN", Gap: "EVIDENCE_MISSING"}
 	if e := s.content.CheckUsable(ctx, c, condition.DescriptionRef); e != nil {
 		return nil, e
+	}
+	if condition.VerificationRule == "USER_EVALUATION" && condition.RuleVersion == 1 {
+		return s.checkSubjectiveCondition(ctx, c, r, condition, candidates, verification)
 	}
 	if condition.VerificationRule != "TARGET_RECORD" || condition.RuleVersion != 1 {
 		f.Gap = "RULE_UNSUPPORTED"
@@ -362,7 +379,7 @@ func (s *Service) checkCondition(ctx context.Context, c *v1.Caller, r *v1.Requir
 		return f, nil
 	}
 	for _, candidate := range candidates {
-		if candidate.ConditionId != condition.ConditionId {
+		if candidate.ConditionId != condition.ConditionId || candidate.OperationId == nil {
 			continue
 		}
 		a := admissions[candidate.OperationId.LocalId]

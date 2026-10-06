@@ -1,0 +1,53 @@
+syntax = "proto3";
+package lerna.v1;
+
+import "lerna/v1/identity.proto";
+import "lerna/v1/model.proto";
+import "lerna/v1/planning.proto";
+import "lerna/v1/submission.proto";
+
+option go_package = "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1;lernav1";
+
+message ReasonerActionAuthority {
+  Ref capability_ref = 1;
+  Ref grant_ref = 2;
+  Ref confirmation_ref = 3;
+}
+
+message ReasonerDriverPolicy {
+  ModelSettings settings = 1;
+  Ref model_capability_ref = 2;
+  Ref model_grant_ref = 3;
+  Ref model_confirmation_ref = 4;
+  repeated ReasonerActionAuthority actions = 5;
+  GlobalName session_id = 6;
+}
+
+message ReasonerDriver {
+  Ref ref = 1;
+  GlobalName task_id = 2;
+  ReasonerDriverPolicy policy = 3;
+  CommandIdentity configured_by = 4;
+  Ref request_ref = 5;
+  Ref outcome_ref = 6;
+  Ref admission_ref = 7;
+  string state = 8;
+  string waiting_reason = 9;
+  bool enabled = 10;
+  uint32 contract_version = 11;
+  string implementation_version = 12;
+  Ref question_ref = 13;
+}
+
+message ConfigureReasonerDriverCommand {
+  CommandHeader header = 1;
+  GlobalName task_id = 2;
+  ReasonerDriverPolicy policy = 3;
+  Ref replaces = 4;
+  bool disabled = 5;
+}
+
+message AdvanceReasonerTaskRequest {
+  GlobalName task_id = 1;
+  uint32 limit = 2;
+}

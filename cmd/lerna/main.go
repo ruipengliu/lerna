@@ -31,7 +31,7 @@ func run() error {
 		return err
 	}
 	defer h.Close()
-	cli := interaction.CLI{Trace: h.Trace, Budget: h.Budget, Grants: h.Grants, Confirmations: h.Sessions, ConfirmationTasks: h.Tasks, Ledger: h.Ledger, Egress: h.Egress, Content: h.Content, Observations: h.Content, Sessions: h.Sessions, Tasks: h.Tasks, Durable: h.Durable, Caller: &v1.Caller{UserId: *user, IssuerId: *issuer}, Domain: *domain}
+	cli := interaction.CLI{Reasoner: h, Trace: h.Trace, Budget: h.Budget, Grants: h.Grants, Confirmations: h.Sessions, ConfirmationTasks: h.Tasks, Ledger: h.Ledger, Egress: h.Egress, Content: h.Content, Observations: h.Content, Sessions: h.Sessions, Tasks: h.Tasks, Durable: h.Durable, Caller: &v1.Caller{UserId: *user, IssuerId: *issuer}, Domain: *domain}
 
 	return cli.Run(context.Background(), flag.Args(), os.Stdout)
 }

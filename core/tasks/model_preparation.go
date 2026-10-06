@@ -6,11 +6,13 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 
 	"github.com/ruipengliu/lerna/contracts/command"
 	v1 "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1"
+	"github.com/ruipengliu/lerna/contracts/reasoner"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 )
@@ -118,6 +120,9 @@ func normalizedModelSettings(m *v1.ModelSettings) (*v1.ModelSettings, error) {
 	m = proto.Clone(m).(*v1.ModelSettings)
 	if m.Provider != "reference" || m.Model == "" || m.EncoderVersion != "reference-model-v1" || m.PolicyVersion != "m1-v1" || m.MaxOutputTokens == 0 || m.MaxOutputTokens > 65536 {
 		return nil, command.Fail("PREPARATION_UNRECOVERABLE")
+	}
+	if m.ViewPolicy != "" && (m.ViewPolicy != reasoner.ViewPolicy || m.MaxInputBytes == 0 || m.MaxInputBytes > 262144 || m.MaxInputTokens == 0 || m.MaxInputTokens > 65536) {
+		return nil, command.Fail("INVALID_MODEL_SETTINGS")
 	}
 	parameters, err := decodeModelJSON(m.ParametersJson)
 	if err != nil {
@@ -237,7 +242,7 @@ func (s *Service) PrepareModelCall(ctx context.Context, caller *v1.Caller, c *v1
 	}
 	if call.State != "PREPARING" {
 		if e = s.modelContent.CheckUsable(ctx, caller, call.InputRef); e != nil {
-			return nil, command.Fail("PREPARATION_UNRECOVERABLE")
+			return nil, modelPreparationError(e)
 		}
 		return call, nil
 	}
@@ -268,7 +273,7 @@ func (s *Service) PrepareModelCall(ctx context.Context, caller *v1.Caller, c *v1
 			body, e = s.modelContent.Read(ctx, caller, input)
 		}
 		if e != nil {
-			return nil, command.Fail("PREPARATION_UNRECOVERABLE")
+			return nil, modelPreparationError(e)
 		}
 		inputs = append(inputs, modelInput{Ref: input, Body: command.ContentBytes(body)})
 	}
@@ -370,6 +375,36 @@ func (s *Service) encodeModelInput(ctx context.Context, caller *v1.Caller, snap 
 		Facts      []json.RawMessage `json:"facts"`
 		Inputs     []modelInput      `json:"inputs"`
 	}{settings, capability, facts, inputs}
+	if settings.ViewPolicy == reasoner.ViewPolicy {
+		fixed, e := json.Marshal(struct {
+			Settings   *v1.ModelSettings `json:"settings"`
+			Capability *v1.Ref           `json:"capability"`
+			Facts      []json.RawMessage `json:"facts"`
+		}{settings, capability, facts})
+		if e != nil {
+			return nil, e
+		}
+		materials := make([]reasoner.ViewMaterial, 0, len(inputs))
+		for _, input := range inputs {
+			required := false
+			for _, ref := range snap.ContentRefs {
+				if proto.Equal(ref, input.Ref) {
+					required = true
+					break
+				}
+			}
+			materials = append(materials, reasoner.ViewMaterial{Ref: input.Ref, Body: input.Body, Required: required})
+		}
+		body, e := reasoner.BuildView(fixed, materials, settings.MaxInputBytes, settings.MaxInputTokens)
+		if e != nil {
+			return nil, e
+		}
+		canonical, e := decodeModelJSON(body)
+		if e != nil {
+			return nil, e
+		}
+		return json.Marshal(canonical)
+	}
 	b, e := json.Marshal(value)
 	if e != nil {
 		return nil, e
@@ -448,4 +483,16 @@ func decodeModelJSON(body []byte) (any, error) {
 		return nil, command.Fail("INVALID_MODEL_SETTINGS")
 	}
 	return v, nil
+}
+
+// modelPreparationError 只有内容永久不可恢复才终止准备；存储回执不确定仍按原命令恢复。
+func modelPreparationError(err error) error {
+	var failure *command.Failure
+	if err != nil && !errors.As(err, &failure) {
+		return err
+	}
+	if failure != nil && (failure.Detail.Category == v1.ErrorCategory_ERROR_CATEGORY_TRANSIENT || failure.Detail.Category == v1.ErrorCategory_ERROR_CATEGORY_INDETERMINATE) {
+		return err
+	}
+	return command.Fail("PREPARATION_UNRECOVERABLE")
 }

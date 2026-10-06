@@ -52,7 +52,7 @@ func OpenWithFiles(path, user, domain string, roots map[string]string) (*Harness
 	h.Grants = grants.New(s, d, user, domain, "host").WithAdmissions(t)
 	h.Grants.WithConfirmations(h.Sessions).WithConfirmationContent(c)
 	h.Sessions.WithConfirmations(s, d, t, h.Grants)
-	t.WithConfirmationRequests(h.Sessions, c).WithModelContent(c)
+	t.WithConfirmationRequests(h.Sessions, c).WithModelContent(c).WithReasonerQuestions(h.Sessions).WithConditionConfirmations(h.Sessions)
 	h.Budget = budget.New(s, d, user, domain, "host")
 	h.LedgerWork = durable.New(s.LedgerWork(), user, domain+"/ledger")
 	h.Ledger = ledger.New(s, user, domain+"/ledger", domain).WithWork(h.LedgerWork).WithCompiler(executionCompiler{}).WithStarts(t)
@@ -70,6 +70,7 @@ func OpenWithFiles(path, user, domain string, roots map[string]string) (*Harness
 	}
 	h.Egress = egress.New(t, h.Ledger, c, physicalIO{files: egressio.NewFiles(roots, h.Ledger, c)}, critical)
 	t.WithModelExecution(h.Ledger, h.LedgerWork, h.Grants, h.Egress)
+	t.WithReasonerDriver(h.Durable, defaultReasoner)
 	h.Ledger.WithGrantClosures(h.Grants)
 	h.Grants.WithRevocationExits(h.Egress)
 	h.Ledger.WithCompletionClosures(t)
@@ -150,6 +151,10 @@ func OpenWithFiles(path, user, domain string, roots map[string]string) (*Harness
 		return nil, err
 	}
 	if err := h.Budget.ProcessSettlementFollowups(ctx, &v1.Caller{UserId: user, IssuerId: "host-recovery"}); err != nil {
+		s.Close()
+		return nil, err
+	}
+	if err := h.Tasks.RecoverReasonerDrivers(ctx, &v1.Caller{UserId: user, IssuerId: "host"}); err != nil {
 		s.Close()
 		return nil, err
 	}

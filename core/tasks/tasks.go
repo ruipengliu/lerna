@@ -33,39 +33,43 @@ type Store interface {
 	LoadTask(context.Context, *v1.GlobalName) (*v1.Task, error)
 }
 type Service struct {
-	cancellationJobs      CancellationJobs
-	cancellationCloser    CancellationCloser
-	taskClosingJobs       TaskClosingJobs
-	taskCloser            TaskCloser
-	taskCloseFacts        TaskCloseFacts
-	taskCloseBudget       TaskCloseBudget
-	modelLedger           ModelLedger
-	modelWork             ModelWork
-	modelCredentials      ModelCredentials
-	modelEgress           ModelEgress
-	modelContent          ModelContent
-	completionJobs        CompletionJobs
-	completionCloser      CompletionCloser
-	completionFacts       CompletionFacts
-	completionBudget      CompletionBudget
-	progressSource        OperationProgressSource
-	closureSource         ClosureSource
-	confirmationPublisher ConfirmationPublisher
-	confirmationContent   ConfirmationContent
-	startGrants           StartGrants
-	startBudget           StartBudget
-	startExecution        StartExecutionFacts
-	decisions             Decisions
-	grants                Grants
-	budget                Budget
-	content               Content
-	confirmations         Confirmations
-	scheduling            Scheduling
-	execution             ExecutionFacts
-	handoffJobs           HandoffJobs
-	recipient             Recipient
-	store                 Store
-	user, domain          string
+	cancellationJobs       CancellationJobs
+	cancellationCloser     CancellationCloser
+	taskClosingJobs        TaskClosingJobs
+	taskCloser             TaskCloser
+	taskCloseFacts         TaskCloseFacts
+	taskCloseBudget        TaskCloseBudget
+	reasonerWork           ModelWork
+	reasonerFactory        ReasonerFactory
+	conditionConfirmations ConditionConfirmations
+	reasonerQuestions      ReasonerQuestions
+	modelLedger            ModelLedger
+	modelWork              ModelWork
+	modelCredentials       ModelCredentials
+	modelEgress            ModelEgress
+	modelContent           ModelContent
+	completionJobs         CompletionJobs
+	completionCloser       CompletionCloser
+	completionFacts        CompletionFacts
+	completionBudget       CompletionBudget
+	progressSource         OperationProgressSource
+	closureSource          ClosureSource
+	confirmationPublisher  ConfirmationPublisher
+	confirmationContent    ConfirmationContent
+	startGrants            StartGrants
+	startBudget            StartBudget
+	startExecution         StartExecutionFacts
+	decisions              Decisions
+	grants                 Grants
+	budget                 Budget
+	content                Content
+	confirmations          Confirmations
+	scheduling             Scheduling
+	execution              ExecutionFacts
+	handoffJobs            HandoffJobs
+	recipient              Recipient
+	store                  Store
+	user, domain           string
 }
 
 func New(s Store, user, domain string) *Service {

@@ -362,7 +362,7 @@ func (s *Service) ProcessTaskClosings(ctx context.Context, c *v1.Caller) error {
 						candidates = append(candidates, &v1.CompletionEvidence{ConditionId: condition.ConditionId, OperationId: a.OperationId})
 					}
 				}
-				finding, e := s.checkCondition(tx, c, p.Requirements, condition, candidates, admissions, ops)
+				finding, e := s.checkCondition(tx, c, p.Requirements, condition, candidates, admissions, ops, nil)
 				if e != nil {
 					return e
 				}

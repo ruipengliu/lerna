@@ -55,13 +55,6 @@ func (s *Service) RequestAdmissionConfirmation(ctx context.Context, caller *v1.C
 		if e = s.content.CheckUsable(tx, caller, step.ParametersRef); e != nil {
 			return nil, e
 		}
-		body, e := s.confirmationContent.Read(tx, caller, step.ParametersRef)
-		if e != nil {
-			return nil, e
-		}
-		if body == nil {
-			return nil, command.Fail("CONTENT_UNUSABLE")
-		}
 		description, e := json.Marshal(struct {
 			Matter            string
 			Action            string
@@ -69,12 +62,11 @@ func (s *Service) RequestAdmissionConfirmation(ctx context.Context, caller *v1.C
 			Endpoint          string
 			UseRight          string
 			ProcessingPurpose string
-			Parameters        command.ParameterDescription
 			ParametersRef     *v1.Ref
 			ContentRefs       []*v1.Ref
 			Unit              string
 			FeeCeiling        *int64
-		}{"OPERATION_ADMISSION", cap.Action, cap.Resource, cap.ExecutorEndpointId, cap.UseRight, cap.ProcessingPurpose, command.DescribeParameters(body), step.ParametersRef, step.ContentRefs, cap.Unit, cap.FeeCeiling})
+		}{"OPERATION_ADMISSION", cap.Action, cap.Resource, cap.ExecutorEndpointId, cap.UseRight, cap.ProcessingPurpose, step.ParametersRef, step.ContentRefs, cap.Unit, cap.FeeCeiling})
 		if e != nil {
 			return nil, e
 		}
@@ -88,6 +80,9 @@ func (s *Service) RequestAdmissionConfirmation(ctx context.Context, caller *v1.C
 
 // CheckConfirmationMatter 在回应时核对当前任务和提议，批准不递增任何任务版本。
 func (s *Service) CheckConfirmationMatter(ctx context.Context, c *v1.Confirmation) error {
+	if c.MatterType == "CONDITION_EVALUATION" {
+		return s.checkConditionConfirmationMatter(ctx, c)
+	}
 	m := c.GetOperationAdmission()
 	if c.MatterType != "OPERATION_ADMISSION" || m == nil {
 		return command.Fail("CONFIRMATION_INVALID")

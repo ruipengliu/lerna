@@ -36,21 +36,38 @@ func registered(point string) bool {
 
 type faultKey struct{}
 type faultPlan struct {
-	point string
-	mode  FaultMode
-	fired atomic.Bool
+	point      string
+	mode       FaultMode
+	fired      atomic.Bool
+	occurrence uint64
+	seen       atomic.Uint64
 }
 
 // WithFault 返回一次性、限于本次调用链的故障计划，不使用全局配置。
 func WithFault(ctx context.Context, point string, mode FaultMode) (context.Context, error) {
+	return WithFaultOnOccurrence(ctx, point, mode, 1)
+}
+
+// WithFaultOnOccurrence 只计算与模式匹配的提交阶段，选择第 occurrence 次命中。
+func WithFaultOnOccurrence(ctx context.Context, point string, mode FaultMode, occurrence uint64) (context.Context, error) {
+	if occurrence == 0 {
+		return nil, fmt.Errorf("fault occurrence must be positive")
+	}
 	if !registered(point) {
 		return nil, fmt.Errorf("unregistered persistence point: %s", point)
 	}
 	if mode != CrashBeforeCommit && mode != CrashAfterCommit && mode != LoseReceipt {
 		return nil, fmt.Errorf("unknown fault mode: %s", mode)
 	}
-	return context.WithValue(ctx, faultKey{}, &faultPlan{point: point, mode: mode}), nil
+	return context.WithValue(ctx, faultKey{}, &faultPlan{point: point, mode: mode, occurrence: occurrence}), nil
 }
+
+// FaultTriggered 报告本调用链的故障是否实际触发。
+func FaultTriggered(ctx context.Context) bool {
+	p, ok := ctx.Value(faultKey{}).(*faultPlan)
+	return ok && p.fired.Load()
+}
+
 func persistenceBoundary(ctx context.Context, point string, committed bool) error {
 	if !registered(point) {
 		return fmt.Errorf("unregistered persistence point: %s", point)
@@ -59,10 +76,14 @@ func persistenceBoundary(ctx context.Context, point string, committed bool) erro
 	if !ok || p.point != point {
 		return nil
 	}
-	if p.mode == LoseReceipt && committed && p.fired.CompareAndSwap(false, true) {
+	matches := p.mode == CrashBeforeCommit && !committed || (p.mode == CrashAfterCommit || p.mode == LoseReceipt) && committed
+	if !matches || p.seen.Add(1) != p.occurrence || !p.fired.CompareAndSwap(false, true) {
+		return nil
+	}
+	if p.mode == LoseReceipt {
 		return storageError(fmt.Errorf("injected lost receipt"), true)
 	}
-	if (p.mode == CrashBeforeCommit && !committed || p.mode == CrashAfterCommit && committed) && p.fired.CompareAndSwap(false, true) {
+	if p.mode == CrashBeforeCommit || p.mode == CrashAfterCommit {
 		os.Exit(CrashExitCode)
 	}
 	return nil

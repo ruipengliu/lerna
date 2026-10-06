@@ -48,7 +48,11 @@ func prepareStartWithLease(t *testing.T, f *fixture, lease int64) (*v1.Admission
 	p := f.propose(t, nil)
 	r, e := f.h.Tasks.Admit(f.ctx, f.caller, &v1.AdmitCommand{Header: header("admit" + f.suffix), TaskId: f.task.Name, ProposalRef: p, GrantRef: f.grant})
 	accepted(t, r, e)
-	a, e := f.h.Tasks.QueryAdmission(f.ctx, f.caller, r.ResultRef)
+	return prepareAdmittedStart(t, f, r.ResultRef, lease)
+}
+func prepareAdmittedStart(t *testing.T, f *fixture, admissionRef *v1.Ref, lease int64) (*v1.Admission, *v1.StartExecutionCommand) {
+	t.Helper()
+	a, e := f.h.Tasks.QueryAdmission(f.ctx, f.caller, admissionRef)
 	if e != nil {
 		t.Fatal(e)
 	}

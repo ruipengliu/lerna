@@ -9,6 +9,7 @@ import (
 )
 
 type ConfirmationStore interface {
+	AllConfirmations(context.Context) ([]*v1.Confirmation, error)
 	SaveConfirmation(context.Context, *v1.Confirmation) error
 	LoadConfirmation(context.Context, *v1.Ref) (*v1.Confirmation, error)
 	LoadCurrentConfirmation(context.Context, *v1.GlobalName) (*v1.Confirmation, error)
@@ -17,6 +18,7 @@ type ConfirmationDecisions interface {
 	Execute(context.Context, *v1.Caller, *v1.CommandHeader, string, string, func(context.Context) (*v1.Ref, error)) (*v1.CommandReceipt, error)
 }
 type ConfirmationFacts interface {
+	ReadConfirmationDescription(context.Context, *v1.Caller, *v1.Confirmation) (string, error)
 	CheckConfirmationMatter(context.Context, *v1.Confirmation) error
 }
 
@@ -35,15 +37,17 @@ func (s *Service) checkConfirmation(ctx context.Context, c *v1.Confirmation) err
 	if now >= c.ExpiresAtUnixMs {
 		return command.Fail("CONFIRMATION_EXPIRED")
 	}
-	if c.MatterType == "OPERATION_ADMISSION" {
+	if c.MatterType == "OPERATION_ADMISSION" || c.MatterType == "CONDITION_EVALUATION" {
 		if e = s.operationFacts.CheckConfirmationMatter(ctx, c); e != nil {
 			return e
 		}
 	} else if c.MatterType != "GRANT_ISSUANCE" {
 		return command.Fail("CONFIRMATION_INVALID")
 	}
-	if e = s.grantFacts.CheckConfirmationMatter(ctx, c); e != nil {
-		return e
+	if c.MatterType != "CONDITION_EVALUATION" {
+		if e = s.grantFacts.CheckConfirmationMatter(ctx, c); e != nil {
+			return e
+		}
 	}
 	if c.SessionId != nil {
 		if command.CheckName(&v1.Caller{UserId: s.user, IssuerId: "host"}, c.SessionId, s.user, s.domain, "session") != nil {
@@ -56,10 +60,17 @@ func (s *Service) checkConfirmation(ctx context.Context, c *v1.Confirmation) err
 		if session == nil || session.Status != "ACTIVE" {
 			return command.Fail("CONFIRMATION_INVALID")
 		}
+		var taskID *v1.GlobalName
 		if m := c.GetOperationAdmission(); m != nil {
+			taskID = m.TaskId
+		}
+		if m := c.GetConditionEvaluation(); m != nil {
+			taskID = m.TaskId
+		}
+		if taskID != nil {
 			found := false
 			for _, r := range session.TaskRefs {
-				if proto.Equal(r.Name, m.TaskId) {
+				if proto.Equal(r.Name, taskID) {
 					found = true
 				}
 			}
@@ -83,7 +94,7 @@ func (s *Service) CreateConfirmationInTransaction(ctx context.Context, c *v1.Con
 	c.Ref = command.NewRef(s.user, s.domain, "confirmation", "lerna.v1.Confirmation")
 	c.State = "PENDING"
 	c.BindingDigest = command.ConfirmationDigest(c)
-	return c, s.confirmationStore.SaveConfirmation(ctx, c)
+	return c, s.saveConfirmation(ctx, c)
 }
 func (s *Service) QueryConfirmation(ctx context.Context, caller *v1.Caller, r *v1.Ref) (*v1.Confirmation, error) {
 	if r == nil {
@@ -146,6 +157,9 @@ func (s *Service) RespondConfirmation(ctx context.Context, caller *v1.Caller, c 
 			if m := v.GetOperationAdmission(); m != nil {
 				task = m.TaskId
 			}
+			if m := v.GetConditionEvaluation(); m != nil {
+				task = m.TaskId
+			}
 			session.Inputs = append(session.Inputs, &v1.SessionInput{InputId: command.NewRef(s.user, s.domain, "input", "lerna.v1.SessionInput").Name, SessionSeq: session.LastCommittedSeq, TaskId: task, InputKind: "CONFIRMATION", ConfirmationRef: proto.Clone(v.Ref).(*v1.Ref), CommandIdentity: c.Header.Identity, RoutingStatus: "RECORDED"})
 			if e = s.store.SaveSession(tx, session); e != nil {
 				return nil, e
@@ -156,7 +170,7 @@ func (s *Service) RespondConfirmation(ctx context.Context, caller *v1.Caller, c 
 				return nil, e
 			}
 		}
-		return v.Ref, s.confirmationStore.SaveConfirmation(tx, v)
+		return v.Ref, s.saveConfirmation(tx, v)
 	})
 }
 
@@ -230,6 +244,8 @@ func (s *Service) consumeConfirmation(ctx context.Context, c *v1.Confirmation, k
 	switch kind {
 	case "OPERATION_ADMISSION":
 		c.ConsumedBy = &v1.Confirmation_ConsumedAdmissionRef{ConsumedAdmissionRef: target}
+	case "CONDITION_EVALUATION":
+		c.ConsumedBy = &v1.Confirmation_ConsumedVerificationRef{ConsumedVerificationRef: target}
 	case "GRANT_ISSUANCE":
 		c.ConsumedBy = &v1.Confirmation_ConsumedGrantIssuanceRef{ConsumedGrantIssuanceRef: target}
 	default:
@@ -237,7 +253,7 @@ func (s *Service) consumeConfirmation(ctx context.Context, c *v1.Confirmation, k
 	}
 	c.State = "CONSUMED"
 	c.Ref.Revision++
-	return s.confirmationStore.SaveConfirmation(ctx, c)
+	return s.saveConfirmation(ctx, c)
 }
 
 // WithdrawConfirmation 撤回未消费的批准，不恢复任何已消费资格。
@@ -276,6 +292,9 @@ func (s *Service) WithdrawConfirmation(ctx context.Context, caller *v1.Caller, c
 			if m := v.GetOperationAdmission(); m != nil {
 				task = m.TaskId
 			}
+			if m := v.GetConditionEvaluation(); m != nil {
+				task = m.TaskId
+			}
 			session.Inputs = append(session.Inputs, &v1.SessionInput{InputId: command.NewRef(s.user, s.domain, "input", "lerna.v1.SessionInput").Name, SessionSeq: session.LastCommittedSeq, TaskId: task, InputKind: "CONFIRMATION", ConfirmationRef: proto.Clone(v.Ref).(*v1.Ref), CommandIdentity: c.Header.Identity, RoutingStatus: "RECORDED"})
 			if e = s.store.SaveSession(tx, session); e != nil {
 				return nil, e
@@ -286,6 +305,6 @@ func (s *Service) WithdrawConfirmation(ctx context.Context, caller *v1.Caller, c
 				return nil, e
 			}
 		}
-		return v.Ref, s.confirmationStore.SaveConfirmation(tx, v)
+		return v.Ref, s.saveConfirmation(tx, v)
 	})
 }

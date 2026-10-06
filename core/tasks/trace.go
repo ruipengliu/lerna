@@ -33,7 +33,7 @@ func (s *Service) saveRequirements(ctx context.Context, v *v1.Requirements) erro
 		return err
 	}
 	source := s.store
-	return source.SaveTraceSource(ctx, "tasks", &v1.TraceEvent{EventType: "REQUIREMENTS_ACCEPTED", SourceRecordRef: v.Ref, TaskId: v.TaskId, RequirementsVersion: v.RequirementsVersion})
+	return source.SaveTraceSource(ctx, "tasks", &v1.TraceEvent{EventType: "REQUIREMENTS_ACCEPTED", SourceRecordRef: v.Ref, TaskId: v.TaskId, RequirementsVersion: v.RequirementsVersion, RelatedRefs: append([]*v1.Ref{v.SourceInputRef}, conditionTraceRefs(v.Conditions)...), OriginCommand: v.AcceptedBy})
 }
 
 func (s *Service) saveProposal(ctx context.Context, v *v1.Proposal) error {
@@ -41,7 +41,7 @@ func (s *Service) saveProposal(ctx context.Context, v *v1.Proposal) error {
 		return err
 	}
 	source := s.store
-	return source.SaveTraceSource(ctx, "tasks", &v1.TraceEvent{EventType: "PROPOSAL_RECEIVED", SourceRecordRef: v.Ref, TaskId: v.TaskId, RequirementsVersion: v.RequirementsVersion, RelatedRefs: []*v1.Ref{v.ContextSnapshotRef, v.RequestRef}})
+	return source.SaveTraceSource(ctx, "tasks", &v1.TraceEvent{EventType: "PROPOSAL_RECEIVED", SourceRecordRef: v.Ref, TaskId: v.TaskId, RequirementsVersion: v.RequirementsVersion, BodyRef: v.BodyContentRef, RelatedRefs: proposalTraceRefs(v)})
 }
 
 func (s *Service) saveSnapshot(ctx context.Context, v *v1.ContextSnapshot) error {
@@ -49,7 +49,13 @@ func (s *Service) saveSnapshot(ctx context.Context, v *v1.ContextSnapshot) error
 		return err
 	}
 	source := s.store
-	return source.SaveTraceSource(ctx, "tasks", &v1.TraceEvent{EventType: "PROPOSAL_REQUESTED", SourceRecordRef: v.Ref, TaskId: v.TaskRef.Name, RequirementsVersion: v.RequirementsVersion, RelatedRefs: []*v1.Ref{v.TaskRef, v.RequestRef, v.RequirementsRef}})
+	refs := append([]*v1.Ref{v.TaskRef, v.RequestRef, v.RequirementsRef}, v.ContentRefs...)
+	refs = append(refs, v.ProgressWatermarks...)
+	for _, confirmation := range v.Confirmations {
+		refs = append(refs, confirmation.Ref, confirmation.RequirementsRef, confirmation.ProposalRef)
+		refs = append(refs, confirmation.EvidenceRefs...)
+	}
+	return source.SaveTraceSource(ctx, "tasks", &v1.TraceEvent{EventType: "PROPOSAL_REQUESTED", SourceRecordRef: v.Ref, TaskId: v.TaskRef.Name, RequirementsVersion: v.RequirementsVersion, RelatedRefs: refs})
 }
 
 func (s *Service) saveAdmission(ctx context.Context, v *v1.Admission) error {
@@ -65,7 +71,12 @@ func (s *Service) saveVerification(ctx context.Context, v *v1.Verification) erro
 		return err
 	}
 	source := s.store
-	return source.SaveTraceSource(ctx, "tasks", &v1.TraceEvent{EventType: "VERIFICATION_CHANGED", SourceRecordRef: v.Ref, TaskId: v.TaskId, RelatedRefs: append([]*v1.Ref{v.RequirementsRef, v.ProposalRef, v.ContinuationRequestRef}, v.AdmissionRefs...)})
+	refs := append([]*v1.Ref{v.RequirementsRef, v.ProposalRef, v.ContinuationRequestRef}, v.AdmissionRefs...)
+	for _, candidate := range v.Candidates {
+		refs = append(refs, candidate.ConfirmationRef)
+	}
+	refs = append(refs, findingTraceRefs(v.Conditions)...)
+	return source.SaveTraceSource(ctx, "tasks", &v1.TraceEvent{EventType: "VERIFICATION_CHANGED", SourceRecordRef: v.Ref, TaskId: v.TaskId, RelatedRefs: refs})
 }
 
 func (s *Service) saveResult(ctx context.Context, v *v1.Result) error {
@@ -73,7 +84,9 @@ func (s *Service) saveResult(ctx context.Context, v *v1.Result) error {
 		return err
 	}
 	source := s.store
-	return source.SaveTraceSource(ctx, "tasks", &v1.TraceEvent{EventType: "RESULT_FIXED", SourceRecordRef: v.Ref, TaskId: v.TaskId, RelatedRefs: append(append([]*v1.Ref{v.VerificationRef, v.RequirementsRef, v.TaskClosingRef}, v.OperationRefs...), v.ExecutionFollowupRefs...)})
+	refs := append([]*v1.Ref{v.VerificationRef, v.RequirementsRef, v.TaskClosingRef}, v.OperationRefs...)
+	refs = append(refs, v.ExecutionFollowupRefs...)
+	return source.SaveTraceSource(ctx, "tasks", &v1.TraceEvent{EventType: "RESULT_FIXED", SourceRecordRef: v.Ref, TaskId: v.TaskId, RelatedRefs: append(refs, findingTraceRefs(v.Conditions)...)})
 }
 
 type observedDecisions interface {
@@ -246,7 +259,10 @@ func (s *Service) saveModelOutcome(ctx context.Context, outcome *v1.ProposalOutc
 		reason = outcome.ErrorCode
 	}
 	refs := []*v1.Ref{outcome.RequestRef, request.SnapshotRef, outcome.ModelCallRef, outcome.OutputRef, outcome.UsageRef, outcome.ProposalRef, outcome.Claim.GetRef()}
-	ev := &v1.TraceEvent{EventType: kind, SourceRecordRef: outcome.Ref, TaskId: request.TaskId, OriginCommand: outcome.Identity, ReasonCode: reason, RelatedRefs: refs}
+	if outcome.Proposal != nil {
+		refs = append(refs, proposalTraceRefs(outcome.Proposal)...)
+	}
+	ev := &v1.TraceEvent{EventType: kind, SourceRecordRef: outcome.Ref, TaskId: request.TaskId, OriginCommand: outcome.Identity, ReasonCode: reason, BodyRef: outcome.GetProposal().GetBodyContentRef(), RelatedRefs: refs}
 	if outcome.ModelCallRef != nil {
 		call, e := s.store.(modelCallStore).LoadModelCallRef(ctx, outcome.ModelCallRef)
 		if e != nil {
@@ -258,4 +274,48 @@ func (s *Service) saveModelOutcome(ctx context.Context, outcome *v1.ProposalOutc
 		ev.OperationId = call.GetResult().GetOperationId()
 	}
 	return s.store.SaveTraceSource(ctx, "tasks", ev)
+}
+
+func conditionTraceRefs(conditions []*v1.Requirement) []*v1.Ref {
+	var refs []*v1.Ref
+	for _, condition := range conditions {
+		refs = append(refs, condition.DescriptionRef)
+		if condition.TargetRecord != nil {
+			refs = append(refs, condition.TargetRecord.CapabilityRef, condition.TargetRecord.ParametersRef)
+		}
+	}
+	return refs
+}
+
+func findingTraceRefs(findings []*v1.ConditionFinding) []*v1.Ref {
+	var refs []*v1.Ref
+	for _, finding := range findings {
+		refs = append(refs, finding.SourceInputRef, finding.OperationRef)
+		if finding.Condition != nil {
+			refs = append(refs, conditionTraceRefs([]*v1.Requirement{finding.Condition})...)
+		}
+		refs = append(refs, finding.EvidenceRefs...)
+	}
+	return refs
+}
+
+// proposalTraceRefs 只投影提议原载荷中的结构引用，不读取规范正文。
+func proposalTraceRefs(p *v1.Proposal) []*v1.Ref {
+	refs := append([]*v1.Ref{p.ContextSnapshotRef, p.RequestRef, p.ReasonerRef, p.BodyContentRef}, p.BasisRefs...)
+	if p.Step != nil {
+		refs = append(refs, p.Step.CapabilityRef, p.Step.ParametersRef)
+		refs = append(refs, p.Step.ContentRefs...)
+		refs = append(refs, p.Step.Dependencies...)
+	}
+	if p.RequirementsChange != nil {
+		refs = append(refs, conditionTraceRefs(p.RequirementsChange.Conditions)...)
+	}
+	for _, verdict := range p.Verdicts {
+		refs = append(refs, verdict.ConfirmationRef)
+		refs = append(refs, verdict.EvidenceRefs...)
+	}
+	for _, evidence := range p.CompletionEvidence {
+		refs = append(refs, evidence.ConfirmationRef)
+	}
+	return refs
 }

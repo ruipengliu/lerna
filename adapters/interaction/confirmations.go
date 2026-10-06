@@ -12,7 +12,7 @@ import (
 )
 
 type Confirmations interface {
-	QueryCurrentConfirmation(context.Context, *v1.Caller, *v1.GlobalName) (*v1.Confirmation, error)
+	ReadCurrentConfirmation(context.Context, *v1.Caller, *v1.GlobalName) (*v1.Confirmation, error)
 	RespondConfirmation(context.Context, *v1.Caller, *v1.RespondConfirmationCommand) (*v1.CommandReceipt, error)
 	WithdrawConfirmation(context.Context, *v1.Caller, *v1.WithdrawConfirmationCommand) (*v1.CommandReceipt, error)
 }
@@ -39,7 +39,7 @@ func (c CLI) confirmationCommand(ctx context.Context, args []string) (proto.Mess
 		}
 		switch args[0] {
 		case "confirmation":
-			return c.Confirmations.QueryCurrentConfirmation(ctx, c.Caller, name("confirmation", args[1]))
+			return c.Confirmations.ReadCurrentConfirmation(ctx, c.Caller, name("confirmation", args[1]))
 		case "grant":
 			return c.Grants.QueryGrantStatus(ctx, c.Caller, name("grant", args[1]))
 		default:

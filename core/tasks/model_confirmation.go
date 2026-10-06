@@ -57,17 +57,12 @@ func (s *Service) requestModelConfirmation(ctx context.Context, caller *v1.Calle
 		if !proto.Equal(a.TaskId, c.TaskId) {
 			return nil, command.Fail("CONFIRMATION_INVALID")
 		}
-		body, e := s.modelContent.Read(tx, caller, a.ParametersRef)
-		if e != nil {
-			return nil, e
-		}
 		description, e := json.Marshal(struct {
 			Matter        string
 			Capability    *v1.Capability
-			Parameters    command.ParameterDescription
 			ParametersRef *v1.Ref
 			ContentRefs   []*v1.Ref
-		}{"MODEL_ADMISSION", a.CapabilitySnapshot, command.DescribeParameters(body), a.ParametersRef, a.ContentRefs})
+		}{"MODEL_ADMISSION", a.CapabilitySnapshot, a.ParametersRef, a.ContentRefs})
 		if e != nil {
 			return nil, e
 		}

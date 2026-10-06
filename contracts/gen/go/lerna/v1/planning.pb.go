@@ -150,11 +150,12 @@ func (x *TargetRecordAssertion) GetParametersRef() *Ref {
 }
 
 type CompletionEvidence struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	ConditionId   string                 `protobuf:"bytes,1,opt,name=condition_id,json=conditionId,proto3" json:"condition_id,omitempty"`
-	OperationId   *GlobalName            `protobuf:"bytes,2,opt,name=operation_id,json=operationId,proto3" json:"operation_id,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	ConditionId     string                 `protobuf:"bytes,1,opt,name=condition_id,json=conditionId,proto3" json:"condition_id,omitempty"`
+	OperationId     *GlobalName            `protobuf:"bytes,2,opt,name=operation_id,json=operationId,proto3" json:"operation_id,omitempty"`
+	ConfirmationRef *Ref                   `protobuf:"bytes,3,opt,name=confirmation_ref,json=confirmationRef,proto3" json:"confirmation_ref,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
 }
 
 func (x *CompletionEvidence) Reset() {
@@ -197,6 +198,13 @@ func (x *CompletionEvidence) GetConditionId() string {
 func (x *CompletionEvidence) GetOperationId() *GlobalName {
 	if x != nil {
 		return x.OperationId
+	}
+	return nil
+}
+
+func (x *CompletionEvidence) GetConfirmationRef() *Ref {
+	if x != nil {
+		return x.ConfirmationRef
 	}
 	return nil
 }
@@ -386,27 +394,29 @@ func (x *Requirements) GetSourceInputRef() *Ref {
 }
 
 type ContextSnapshot struct {
-	state               protoimpl.MessageState `protogen:"open.v1"`
-	Ref                 *Ref                   `protobuf:"bytes,1,opt,name=ref,proto3" json:"ref,omitempty"`
-	TaskRef             *Ref                   `protobuf:"bytes,2,opt,name=task_ref,json=taskRef,proto3" json:"task_ref,omitempty"`
-	RequirementsVersion uint64                 `protobuf:"varint,3,opt,name=requirements_version,json=requirementsVersion,proto3" json:"requirements_version,omitempty"`
-	InputVersion        uint64                 `protobuf:"varint,4,opt,name=input_version,json=inputVersion,proto3" json:"input_version,omitempty"`
-	ControlGeneration   uint64                 `protobuf:"varint,5,opt,name=control_generation,json=controlGeneration,proto3" json:"control_generation,omitempty"`
-	PlanningGeneration  uint64                 `protobuf:"varint,6,opt,name=planning_generation,json=planningGeneration,proto3" json:"planning_generation,omitempty"`
-	RequestRef          *Ref                   `protobuf:"bytes,7,opt,name=request_ref,json=requestRef,proto3" json:"request_ref,omitempty"`
-	ExpiresAtUnixMs     int64                  `protobuf:"varint,8,opt,name=expires_at_unix_ms,json=expiresAtUnixMs,proto3" json:"expires_at_unix_ms,omitempty"`
-	ContentRefs         []*Ref                 `protobuf:"bytes,9,rep,name=content_refs,json=contentRefs,proto3" json:"content_refs,omitempty"`
-	CapabilityRefs      []*Ref                 `protobuf:"bytes,10,rep,name=capability_refs,json=capabilityRefs,proto3" json:"capability_refs,omitempty"`
-	ProgressRefs        []*Ref                 `protobuf:"bytes,11,rep,name=progress_refs,json=progressRefs,proto3" json:"progress_refs,omitempty"`
-	RequirementsRef     *Ref                   `protobuf:"bytes,12,opt,name=requirements_ref,json=requirementsRef,proto3" json:"requirements_ref,omitempty"`
-	InputRefs           []*Ref                 `protobuf:"bytes,13,rep,name=input_refs,json=inputRefs,proto3" json:"input_refs,omitempty"`
-	ProgressFacts       []*SnapshotProgress    `protobuf:"bytes,14,rep,name=progress_facts,json=progressFacts,proto3" json:"progress_facts,omitempty"`
-	UnprocessedInputs   []*SnapshotInput       `protobuf:"bytes,15,rep,name=unprocessed_inputs,json=unprocessedInputs,proto3" json:"unprocessed_inputs,omitempty"`
-	BoundInputVersion   uint64                 `protobuf:"varint,16,opt,name=bound_input_version,json=boundInputVersion,proto3" json:"bound_input_version,omitempty"`
-	RequirementsStatus  RequirementsStatus     `protobuf:"varint,17,opt,name=requirements_status,json=requirementsStatus,proto3,enum=lerna.v1.RequirementsStatus" json:"requirements_status,omitempty"`
-	AllowedPurposes     []string               `protobuf:"bytes,18,rep,name=allowed_purposes,json=allowedPurposes,proto3" json:"allowed_purposes,omitempty"`
-	MaxModelPositions   uint32                 `protobuf:"varint,19,opt,name=max_model_positions,json=maxModelPositions,proto3" json:"max_model_positions,omitempty"`
-	MaxModelSends       uint32                 `protobuf:"varint,20,opt,name=max_model_sends,json=maxModelSends,proto3" json:"max_model_sends,omitempty"`
+	state               protoimpl.MessageState  `protogen:"open.v1"`
+	Ref                 *Ref                    `protobuf:"bytes,1,opt,name=ref,proto3" json:"ref,omitempty"`
+	TaskRef             *Ref                    `protobuf:"bytes,2,opt,name=task_ref,json=taskRef,proto3" json:"task_ref,omitempty"`
+	RequirementsVersion uint64                  `protobuf:"varint,3,opt,name=requirements_version,json=requirementsVersion,proto3" json:"requirements_version,omitempty"`
+	InputVersion        uint64                  `protobuf:"varint,4,opt,name=input_version,json=inputVersion,proto3" json:"input_version,omitempty"`
+	ControlGeneration   uint64                  `protobuf:"varint,5,opt,name=control_generation,json=controlGeneration,proto3" json:"control_generation,omitempty"`
+	PlanningGeneration  uint64                  `protobuf:"varint,6,opt,name=planning_generation,json=planningGeneration,proto3" json:"planning_generation,omitempty"`
+	RequestRef          *Ref                    `protobuf:"bytes,7,opt,name=request_ref,json=requestRef,proto3" json:"request_ref,omitempty"`
+	ExpiresAtUnixMs     int64                   `protobuf:"varint,8,opt,name=expires_at_unix_ms,json=expiresAtUnixMs,proto3" json:"expires_at_unix_ms,omitempty"`
+	ContentRefs         []*Ref                  `protobuf:"bytes,9,rep,name=content_refs,json=contentRefs,proto3" json:"content_refs,omitempty"`
+	CapabilityRefs      []*Ref                  `protobuf:"bytes,10,rep,name=capability_refs,json=capabilityRefs,proto3" json:"capability_refs,omitempty"`
+	ProgressRefs        []*Ref                  `protobuf:"bytes,11,rep,name=progress_refs,json=progressRefs,proto3" json:"progress_refs,omitempty"`
+	RequirementsRef     *Ref                    `protobuf:"bytes,12,opt,name=requirements_ref,json=requirementsRef,proto3" json:"requirements_ref,omitempty"`
+	InputRefs           []*Ref                  `protobuf:"bytes,13,rep,name=input_refs,json=inputRefs,proto3" json:"input_refs,omitempty"`
+	ProgressFacts       []*SnapshotProgress     `protobuf:"bytes,14,rep,name=progress_facts,json=progressFacts,proto3" json:"progress_facts,omitempty"`
+	UnprocessedInputs   []*SnapshotInput        `protobuf:"bytes,15,rep,name=unprocessed_inputs,json=unprocessedInputs,proto3" json:"unprocessed_inputs,omitempty"`
+	BoundInputVersion   uint64                  `protobuf:"varint,16,opt,name=bound_input_version,json=boundInputVersion,proto3" json:"bound_input_version,omitempty"`
+	RequirementsStatus  RequirementsStatus      `protobuf:"varint,17,opt,name=requirements_status,json=requirementsStatus,proto3,enum=lerna.v1.RequirementsStatus" json:"requirements_status,omitempty"`
+	AllowedPurposes     []string                `protobuf:"bytes,18,rep,name=allowed_purposes,json=allowedPurposes,proto3" json:"allowed_purposes,omitempty"`
+	MaxModelPositions   uint32                  `protobuf:"varint,19,opt,name=max_model_positions,json=maxModelPositions,proto3" json:"max_model_positions,omitempty"`
+	MaxModelSends       uint32                  `protobuf:"varint,20,opt,name=max_model_sends,json=maxModelSends,proto3" json:"max_model_sends,omitempty"`
+	Confirmations       []*SnapshotConfirmation `protobuf:"bytes,21,rep,name=confirmations,proto3" json:"confirmations,omitempty"`
+	ProgressWatermarks  []*Ref                  `protobuf:"bytes,22,rep,name=progress_watermarks,json=progressWatermarks,proto3" json:"progress_watermarks,omitempty"`
 	unknownFields       protoimpl.UnknownFields
 	sizeCache           protoimpl.SizeCache
 }
@@ -581,6 +591,20 @@ func (x *ContextSnapshot) GetMaxModelSends() uint32 {
 	return 0
 }
 
+func (x *ContextSnapshot) GetConfirmations() []*SnapshotConfirmation {
+	if x != nil {
+		return x.Confirmations
+	}
+	return nil
+}
+
+func (x *ContextSnapshot) GetProgressWatermarks() []*Ref {
+	if x != nil {
+		return x.ProgressWatermarks
+	}
+	return nil
+}
+
 type AncestorControl struct {
 	state             protoimpl.MessageState `protogen:"open.v1"`
 	TaskRef           *Ref                   `protobuf:"bytes,1,opt,name=task_ref,json=taskRef,proto3" json:"task_ref,omitempty"`
@@ -694,6 +718,9 @@ type ActionStep struct {
 	MemoryDependencies []*MemoryDependency    `protobuf:"bytes,5,rep,name=memory_dependencies,json=memoryDependencies,proto3" json:"memory_dependencies,omitempty"`
 	ContentRefs        []*Ref                 `protobuf:"bytes,6,rep,name=content_refs,json=contentRefs,proto3" json:"content_refs,omitempty"`
 	WorkCategory       string                 `protobuf:"bytes,7,opt,name=work_category,json=workCategory,proto3" json:"work_category,omitempty"`
+	ArgumentsJson      []byte                 `protobuf:"bytes,8,opt,name=arguments_json,json=argumentsJson,proto3" json:"arguments_json,omitempty"`
+	SchemaDigest       string                 `protobuf:"bytes,9,opt,name=schema_digest,json=schemaDigest,proto3" json:"schema_digest,omitempty"`
+	ExpectedEvidence   []string               `protobuf:"bytes,10,rep,name=expected_evidence,json=expectedEvidence,proto3" json:"expected_evidence,omitempty"`
 	unknownFields      protoimpl.UnknownFields
 	sizeCache          protoimpl.SizeCache
 }
@@ -777,6 +804,27 @@ func (x *ActionStep) GetWorkCategory() string {
 	return ""
 }
 
+func (x *ActionStep) GetArgumentsJson() []byte {
+	if x != nil {
+		return x.ArgumentsJson
+	}
+	return nil
+}
+
+func (x *ActionStep) GetSchemaDigest() string {
+	if x != nil {
+		return x.SchemaDigest
+	}
+	return ""
+}
+
+func (x *ActionStep) GetExpectedEvidence() []string {
+	if x != nil {
+		return x.ExpectedEvidence
+	}
+	return nil
+}
+
 type Proposal struct {
 	state               protoimpl.MessageState `protogen:"open.v1"`
 	Ref                 *Ref                   `protobuf:"bytes,1,opt,name=ref,proto3" json:"ref,omitempty"`
@@ -791,6 +839,14 @@ type Proposal struct {
 	Kind                string                 `protobuf:"bytes,10,opt,name=kind,proto3" json:"kind,omitempty"`
 	Step                *ActionStep            `protobuf:"bytes,11,opt,name=step,proto3" json:"step,omitempty"`
 	CompletionEvidence  []*CompletionEvidence  `protobuf:"bytes,12,rep,name=completion_evidence,json=completionEvidence,proto3" json:"completion_evidence,omitempty"`
+	Question            *QuestionProposal      `protobuf:"bytes,13,opt,name=question,proto3" json:"question,omitempty"`
+	RequirementsChange  *RequirementsProposal  `protobuf:"bytes,14,opt,name=requirements_change,json=requirementsChange,proto3" json:"requirements_change,omitempty"`
+	Verdicts            []*ConditionVerdict    `protobuf:"bytes,15,rep,name=verdicts,proto3" json:"verdicts,omitempty"`
+	BasisRefs           []*Ref                 `protobuf:"bytes,16,rep,name=basis_refs,json=basisRefs,proto3" json:"basis_refs,omitempty"`
+	Gaps                []string               `protobuf:"bytes,17,rep,name=gaps,proto3" json:"gaps,omitempty"`
+	ResultDraft         string                 `protobuf:"bytes,18,opt,name=result_draft,json=resultDraft,proto3" json:"result_draft,omitempty"`
+	PromptVersion       string                 `protobuf:"bytes,19,opt,name=prompt_version,json=promptVersion,proto3" json:"prompt_version,omitempty"`
+	BodyContentRef      *Ref                   `protobuf:"bytes,20,opt,name=body_content_ref,json=bodyContentRef,proto3" json:"body_content_ref,omitempty"`
 	unknownFields       protoimpl.UnknownFields
 	sizeCache           protoimpl.SizeCache
 }
@@ -905,6 +961,62 @@ func (x *Proposal) GetStep() *ActionStep {
 func (x *Proposal) GetCompletionEvidence() []*CompletionEvidence {
 	if x != nil {
 		return x.CompletionEvidence
+	}
+	return nil
+}
+
+func (x *Proposal) GetQuestion() *QuestionProposal {
+	if x != nil {
+		return x.Question
+	}
+	return nil
+}
+
+func (x *Proposal) GetRequirementsChange() *RequirementsProposal {
+	if x != nil {
+		return x.RequirementsChange
+	}
+	return nil
+}
+
+func (x *Proposal) GetVerdicts() []*ConditionVerdict {
+	if x != nil {
+		return x.Verdicts
+	}
+	return nil
+}
+
+func (x *Proposal) GetBasisRefs() []*Ref {
+	if x != nil {
+		return x.BasisRefs
+	}
+	return nil
+}
+
+func (x *Proposal) GetGaps() []string {
+	if x != nil {
+		return x.Gaps
+	}
+	return nil
+}
+
+func (x *Proposal) GetResultDraft() string {
+	if x != nil {
+		return x.ResultDraft
+	}
+	return ""
+}
+
+func (x *Proposal) GetPromptVersion() string {
+	if x != nil {
+		return x.PromptVersion
+	}
+	return ""
+}
+
+func (x *Proposal) GetBodyContentRef() *Ref {
+	if x != nil {
+		return x.BodyContentRef
 	}
 	return nil
 }
@@ -1421,6 +1533,494 @@ func (x *SnapshotInput) GetChangesBasis() bool {
 	return false
 }
 
+type QuestionProposal struct {
+	state                protoimpl.MessageState `protogen:"open.v1"`
+	Question             string                 `protobuf:"bytes,1,opt,name=question,proto3" json:"question,omitempty"`
+	Options              []string               `protobuf:"bytes,2,rep,name=options,proto3" json:"options,omitempty"`
+	ConditionIds         []string               `protobuf:"bytes,3,rep,name=condition_ids,json=conditionIds,proto3" json:"condition_ids,omitempty"`
+	ChangesBasis         bool                   `protobuf:"varint,4,opt,name=changes_basis,json=changesBasis,proto3" json:"changes_basis,omitempty"`
+	InvolvesConfirmation bool                   `protobuf:"varint,5,opt,name=involves_confirmation,json=involvesConfirmation,proto3" json:"involves_confirmation,omitempty"`
+	unknownFields        protoimpl.UnknownFields
+	sizeCache            protoimpl.SizeCache
+}
+
+func (x *QuestionProposal) Reset() {
+	*x = QuestionProposal{}
+	mi := &file_lerna_v1_planning_proto_msgTypes[16]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *QuestionProposal) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*QuestionProposal) ProtoMessage() {}
+
+func (x *QuestionProposal) ProtoReflect() protoreflect.Message {
+	mi := &file_lerna_v1_planning_proto_msgTypes[16]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use QuestionProposal.ProtoReflect.Descriptor instead.
+func (*QuestionProposal) Descriptor() ([]byte, []int) {
+	return file_lerna_v1_planning_proto_rawDescGZIP(), []int{16}
+}
+
+func (x *QuestionProposal) GetQuestion() string {
+	if x != nil {
+		return x.Question
+	}
+	return ""
+}
+
+func (x *QuestionProposal) GetOptions() []string {
+	if x != nil {
+		return x.Options
+	}
+	return nil
+}
+
+func (x *QuestionProposal) GetConditionIds() []string {
+	if x != nil {
+		return x.ConditionIds
+	}
+	return nil
+}
+
+func (x *QuestionProposal) GetChangesBasis() bool {
+	if x != nil {
+		return x.ChangesBasis
+	}
+	return false
+}
+
+func (x *QuestionProposal) GetInvolvesConfirmation() bool {
+	if x != nil {
+		return x.InvolvesConfirmation
+	}
+	return false
+}
+
+type RequirementsProposal struct {
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	OriginalVersion uint64                 `protobuf:"varint,1,opt,name=original_version,json=originalVersion,proto3" json:"original_version,omitempty"`
+	Conditions      []*Requirement         `protobuf:"bytes,2,rep,name=conditions,proto3" json:"conditions,omitempty"`
+	Reason          string                 `protobuf:"bytes,3,opt,name=reason,proto3" json:"reason,omitempty"`
+	Impact          string                 `protobuf:"bytes,4,opt,name=impact,proto3" json:"impact,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
+}
+
+func (x *RequirementsProposal) Reset() {
+	*x = RequirementsProposal{}
+	mi := &file_lerna_v1_planning_proto_msgTypes[17]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RequirementsProposal) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RequirementsProposal) ProtoMessage() {}
+
+func (x *RequirementsProposal) ProtoReflect() protoreflect.Message {
+	mi := &file_lerna_v1_planning_proto_msgTypes[17]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RequirementsProposal.ProtoReflect.Descriptor instead.
+func (*RequirementsProposal) Descriptor() ([]byte, []int) {
+	return file_lerna_v1_planning_proto_rawDescGZIP(), []int{17}
+}
+
+func (x *RequirementsProposal) GetOriginalVersion() uint64 {
+	if x != nil {
+		return x.OriginalVersion
+	}
+	return 0
+}
+
+func (x *RequirementsProposal) GetConditions() []*Requirement {
+	if x != nil {
+		return x.Conditions
+	}
+	return nil
+}
+
+func (x *RequirementsProposal) GetReason() string {
+	if x != nil {
+		return x.Reason
+	}
+	return ""
+}
+
+func (x *RequirementsProposal) GetImpact() string {
+	if x != nil {
+		return x.Impact
+	}
+	return ""
+}
+
+type ConditionVerdict struct {
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	ConditionId     string                 `protobuf:"bytes,1,opt,name=condition_id,json=conditionId,proto3" json:"condition_id,omitempty"`
+	Conclusion      string                 `protobuf:"bytes,2,opt,name=conclusion,proto3" json:"conclusion,omitempty"`
+	EvidenceRefs    []*Ref                 `protobuf:"bytes,3,rep,name=evidence_refs,json=evidenceRefs,proto3" json:"evidence_refs,omitempty"`
+	ConfirmationRef *Ref                   `protobuf:"bytes,4,opt,name=confirmation_ref,json=confirmationRef,proto3" json:"confirmation_ref,omitempty"`
+	Gaps            []string               `protobuf:"bytes,5,rep,name=gaps,proto3" json:"gaps,omitempty"`
+	OperationId     *GlobalName            `protobuf:"bytes,6,opt,name=operation_id,json=operationId,proto3" json:"operation_id,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
+}
+
+func (x *ConditionVerdict) Reset() {
+	*x = ConditionVerdict{}
+	mi := &file_lerna_v1_planning_proto_msgTypes[18]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ConditionVerdict) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ConditionVerdict) ProtoMessage() {}
+
+func (x *ConditionVerdict) ProtoReflect() protoreflect.Message {
+	mi := &file_lerna_v1_planning_proto_msgTypes[18]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ConditionVerdict.ProtoReflect.Descriptor instead.
+func (*ConditionVerdict) Descriptor() ([]byte, []int) {
+	return file_lerna_v1_planning_proto_rawDescGZIP(), []int{18}
+}
+
+func (x *ConditionVerdict) GetConditionId() string {
+	if x != nil {
+		return x.ConditionId
+	}
+	return ""
+}
+
+func (x *ConditionVerdict) GetConclusion() string {
+	if x != nil {
+		return x.Conclusion
+	}
+	return ""
+}
+
+func (x *ConditionVerdict) GetEvidenceRefs() []*Ref {
+	if x != nil {
+		return x.EvidenceRefs
+	}
+	return nil
+}
+
+func (x *ConditionVerdict) GetConfirmationRef() *Ref {
+	if x != nil {
+		return x.ConfirmationRef
+	}
+	return nil
+}
+
+func (x *ConditionVerdict) GetGaps() []string {
+	if x != nil {
+		return x.Gaps
+	}
+	return nil
+}
+
+func (x *ConditionVerdict) GetOperationId() *GlobalName {
+	if x != nil {
+		return x.OperationId
+	}
+	return nil
+}
+
+type PublishProposalQuestionCommand struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Header        *CommandHeader         `protobuf:"bytes,1,opt,name=header,proto3" json:"header,omitempty"`
+	ProposalRef   *Ref                   `protobuf:"bytes,2,opt,name=proposal_ref,json=proposalRef,proto3" json:"proposal_ref,omitempty"`
+	SessionId     *GlobalName            `protobuf:"bytes,3,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PublishProposalQuestionCommand) Reset() {
+	*x = PublishProposalQuestionCommand{}
+	mi := &file_lerna_v1_planning_proto_msgTypes[19]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PublishProposalQuestionCommand) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PublishProposalQuestionCommand) ProtoMessage() {}
+
+func (x *PublishProposalQuestionCommand) ProtoReflect() protoreflect.Message {
+	mi := &file_lerna_v1_planning_proto_msgTypes[19]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PublishProposalQuestionCommand.ProtoReflect.Descriptor instead.
+func (*PublishProposalQuestionCommand) Descriptor() ([]byte, []int) {
+	return file_lerna_v1_planning_proto_rawDescGZIP(), []int{19}
+}
+
+func (x *PublishProposalQuestionCommand) GetHeader() *CommandHeader {
+	if x != nil {
+		return x.Header
+	}
+	return nil
+}
+
+func (x *PublishProposalQuestionCommand) GetProposalRef() *Ref {
+	if x != nil {
+		return x.ProposalRef
+	}
+	return nil
+}
+
+func (x *PublishProposalQuestionCommand) GetSessionId() *GlobalName {
+	if x != nil {
+		return x.SessionId
+	}
+	return nil
+}
+
+type SnapshotConfirmation struct {
+	state             protoimpl.MessageState `protogen:"open.v1"`
+	Ref               *Ref                   `protobuf:"bytes,1,opt,name=ref,proto3" json:"ref,omitempty"`
+	MatterType        string                 `protobuf:"bytes,2,opt,name=matter_type,json=matterType,proto3" json:"matter_type,omitempty"`
+	State             string                 `protobuf:"bytes,3,opt,name=state,proto3" json:"state,omitempty"`
+	ConditionId       string                 `protobuf:"bytes,4,opt,name=condition_id,json=conditionId,proto3" json:"condition_id,omitempty"`
+	RequirementsRef   *Ref                   `protobuf:"bytes,5,opt,name=requirements_ref,json=requirementsRef,proto3" json:"requirements_ref,omitempty"`
+	EvidenceRefs      []*Ref                 `protobuf:"bytes,6,rep,name=evidence_refs,json=evidenceRefs,proto3" json:"evidence_refs,omitempty"`
+	InputVersion      uint64                 `protobuf:"varint,7,opt,name=input_version,json=inputVersion,proto3" json:"input_version,omitempty"`
+	ControlGeneration uint64                 `protobuf:"varint,8,opt,name=control_generation,json=controlGeneration,proto3" json:"control_generation,omitempty"`
+	ExpiresAtUnixMs   int64                  `protobuf:"varint,9,opt,name=expires_at_unix_ms,json=expiresAtUnixMs,proto3" json:"expires_at_unix_ms,omitempty"`
+	ProposalRef       *Ref                   `protobuf:"bytes,10,opt,name=proposal_ref,json=proposalRef,proto3" json:"proposal_ref,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
+}
+
+func (x *SnapshotConfirmation) Reset() {
+	*x = SnapshotConfirmation{}
+	mi := &file_lerna_v1_planning_proto_msgTypes[20]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SnapshotConfirmation) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SnapshotConfirmation) ProtoMessage() {}
+
+func (x *SnapshotConfirmation) ProtoReflect() protoreflect.Message {
+	mi := &file_lerna_v1_planning_proto_msgTypes[20]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SnapshotConfirmation.ProtoReflect.Descriptor instead.
+func (*SnapshotConfirmation) Descriptor() ([]byte, []int) {
+	return file_lerna_v1_planning_proto_rawDescGZIP(), []int{20}
+}
+
+func (x *SnapshotConfirmation) GetRef() *Ref {
+	if x != nil {
+		return x.Ref
+	}
+	return nil
+}
+
+func (x *SnapshotConfirmation) GetMatterType() string {
+	if x != nil {
+		return x.MatterType
+	}
+	return ""
+}
+
+func (x *SnapshotConfirmation) GetState() string {
+	if x != nil {
+		return x.State
+	}
+	return ""
+}
+
+func (x *SnapshotConfirmation) GetConditionId() string {
+	if x != nil {
+		return x.ConditionId
+	}
+	return ""
+}
+
+func (x *SnapshotConfirmation) GetRequirementsRef() *Ref {
+	if x != nil {
+		return x.RequirementsRef
+	}
+	return nil
+}
+
+func (x *SnapshotConfirmation) GetEvidenceRefs() []*Ref {
+	if x != nil {
+		return x.EvidenceRefs
+	}
+	return nil
+}
+
+func (x *SnapshotConfirmation) GetInputVersion() uint64 {
+	if x != nil {
+		return x.InputVersion
+	}
+	return 0
+}
+
+func (x *SnapshotConfirmation) GetControlGeneration() uint64 {
+	if x != nil {
+		return x.ControlGeneration
+	}
+	return 0
+}
+
+func (x *SnapshotConfirmation) GetExpiresAtUnixMs() int64 {
+	if x != nil {
+		return x.ExpiresAtUnixMs
+	}
+	return 0
+}
+
+func (x *SnapshotConfirmation) GetProposalRef() *Ref {
+	if x != nil {
+		return x.ProposalRef
+	}
+	return nil
+}
+
+type ReasonerDescription struct {
+	state                 protoimpl.MessageState `protogen:"open.v1"`
+	ContractVersion       uint32                 `protobuf:"varint,1,opt,name=contract_version,json=contractVersion,proto3" json:"contract_version,omitempty"`
+	ImplementationVersion string                 `protobuf:"bytes,2,opt,name=implementation_version,json=implementationVersion,proto3" json:"implementation_version,omitempty"`
+	SupportedKinds        []string               `protobuf:"bytes,3,rep,name=supported_kinds,json=supportedKinds,proto3" json:"supported_kinds,omitempty"`
+	MaxCallPositions      uint32                 `protobuf:"varint,4,opt,name=max_call_positions,json=maxCallPositions,proto3" json:"max_call_positions,omitempty"`
+	MaxPhysicalSends      uint32                 `protobuf:"varint,5,opt,name=max_physical_sends,json=maxPhysicalSends,proto3" json:"max_physical_sends,omitempty"`
+	MaxPlanLength         uint32                 `protobuf:"varint,6,opt,name=max_plan_length,json=maxPlanLength,proto3" json:"max_plan_length,omitempty"`
+	unknownFields         protoimpl.UnknownFields
+	sizeCache             protoimpl.SizeCache
+}
+
+func (x *ReasonerDescription) Reset() {
+	*x = ReasonerDescription{}
+	mi := &file_lerna_v1_planning_proto_msgTypes[21]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ReasonerDescription) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ReasonerDescription) ProtoMessage() {}
+
+func (x *ReasonerDescription) ProtoReflect() protoreflect.Message {
+	mi := &file_lerna_v1_planning_proto_msgTypes[21]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ReasonerDescription.ProtoReflect.Descriptor instead.
+func (*ReasonerDescription) Descriptor() ([]byte, []int) {
+	return file_lerna_v1_planning_proto_rawDescGZIP(), []int{21}
+}
+
+func (x *ReasonerDescription) GetContractVersion() uint32 {
+	if x != nil {
+		return x.ContractVersion
+	}
+	return 0
+}
+
+func (x *ReasonerDescription) GetImplementationVersion() string {
+	if x != nil {
+		return x.ImplementationVersion
+	}
+	return ""
+}
+
+func (x *ReasonerDescription) GetSupportedKinds() []string {
+	if x != nil {
+		return x.SupportedKinds
+	}
+	return nil
+}
+
+func (x *ReasonerDescription) GetMaxCallPositions() uint32 {
+	if x != nil {
+		return x.MaxCallPositions
+	}
+	return 0
+}
+
+func (x *ReasonerDescription) GetMaxPhysicalSends() uint32 {
+	if x != nil {
+		return x.MaxPhysicalSends
+	}
+	return 0
+}
+
+func (x *ReasonerDescription) GetMaxPlanLength() uint32 {
+	if x != nil {
+		return x.MaxPlanLength
+	}
+	return 0
+}
+
 var File_lerna_v1_planning_proto protoreflect.FileDescriptor
 
 const file_lerna_v1_planning_proto_rawDesc = "" +
@@ -1434,10 +2034,11 @@ const file_lerna_v1_planning_proto_rawDesc = "" +
 	"\x0fmust_understand\x18\x05 \x03(\tR\x0emustUnderstand\"\x83\x01\n" +
 	"\x15TargetRecordAssertion\x124\n" +
 	"\x0ecapability_ref\x18\x01 \x01(\v2\r.lerna.v1.RefR\rcapabilityRef\x124\n" +
-	"\x0eparameters_ref\x18\x02 \x01(\v2\r.lerna.v1.RefR\rparametersRef\"p\n" +
+	"\x0eparameters_ref\x18\x02 \x01(\v2\r.lerna.v1.RefR\rparametersRef\"\xaa\x01\n" +
 	"\x12CompletionEvidence\x12!\n" +
 	"\fcondition_id\x18\x01 \x01(\tR\vconditionId\x127\n" +
-	"\foperation_id\x18\x02 \x01(\v2\x14.lerna.v1.GlobalNameR\voperationId\"\x9c\x02\n" +
+	"\foperation_id\x18\x02 \x01(\v2\x14.lerna.v1.GlobalNameR\voperationId\x128\n" +
+	"\x10confirmation_ref\x18\x03 \x01(\v2\r.lerna.v1.RefR\x0fconfirmationRef\"\x9c\x02\n" +
 	"\vRequirement\x12!\n" +
 	"\fcondition_id\x18\x01 \x01(\tR\vconditionId\x126\n" +
 	"\x0fdescription_ref\x18\x02 \x01(\v2\r.lerna.v1.RefR\x0edescriptionRef\x12\x1c\n" +
@@ -1456,7 +2057,7 @@ const file_lerna_v1_planning_proto_rawDesc = "" +
 	"conditions\x12:\n" +
 	"\vaccepted_by\x18\a \x01(\v2\x19.lerna.v1.CommandIdentityR\n" +
 	"acceptedBy\x127\n" +
-	"\x10source_input_ref\x18\b \x01(\v2\r.lerna.v1.RefR\x0esourceInputRef\"\x84\b\n" +
+	"\x10source_input_ref\x18\b \x01(\v2\r.lerna.v1.RefR\x0esourceInputRef\"\x8a\t\n" +
 	"\x0fContextSnapshot\x12\x1f\n" +
 	"\x03ref\x18\x01 \x01(\v2\r.lerna.v1.RefR\x03ref\x12(\n" +
 	"\btask_ref\x18\x02 \x01(\v2\r.lerna.v1.RefR\ataskRef\x121\n" +
@@ -1480,14 +2081,16 @@ const file_lerna_v1_planning_proto_rawDesc = "" +
 	"\x13requirements_status\x18\x11 \x01(\x0e2\x1c.lerna.v1.RequirementsStatusR\x12requirementsStatus\x12)\n" +
 	"\x10allowed_purposes\x18\x12 \x03(\tR\x0fallowedPurposes\x12.\n" +
 	"\x13max_model_positions\x18\x13 \x01(\rR\x11maxModelPositions\x12&\n" +
-	"\x0fmax_model_sends\x18\x14 \x01(\rR\rmaxModelSends\"j\n" +
+	"\x0fmax_model_sends\x18\x14 \x01(\rR\rmaxModelSends\x12D\n" +
+	"\rconfirmations\x18\x15 \x03(\v2\x1e.lerna.v1.SnapshotConfirmationR\rconfirmations\x12>\n" +
+	"\x13progress_watermarks\x18\x16 \x03(\v2\r.lerna.v1.RefR\x12progressWatermarks\"j\n" +
 	"\x0fAncestorControl\x12(\n" +
 	"\btask_ref\x18\x01 \x01(\v2\r.lerna.v1.RefR\ataskRef\x12-\n" +
 	"\x12control_generation\x18\x02 \x01(\x04R\x11controlGeneration\"V\n" +
 	"\x10MemoryDependency\x12,\n" +
 	"\n" +
 	"memory_ref\x18\x01 \x01(\v2\r.lerna.v1.RefR\tmemoryRef\x12\x14\n" +
-	"\x05usage\x18\x02 \x01(\tR\x05usage\"\xe8\x02\n" +
+	"\x05usage\x18\x02 \x01(\tR\x05usage\"\xe1\x03\n" +
 	"\n" +
 	"ActionStep\x12\x17\n" +
 	"\astep_id\x18\x01 \x01(\tR\x06stepId\x124\n" +
@@ -1496,7 +2099,11 @@ const file_lerna_v1_planning_proto_rawDesc = "" +
 	"\fdependencies\x18\x04 \x03(\v2\r.lerna.v1.RefR\fdependencies\x12K\n" +
 	"\x13memory_dependencies\x18\x05 \x03(\v2\x1a.lerna.v1.MemoryDependencyR\x12memoryDependencies\x120\n" +
 	"\fcontent_refs\x18\x06 \x03(\v2\r.lerna.v1.RefR\vcontentRefs\x12#\n" +
-	"\rwork_category\x18\a \x01(\tR\fworkCategory\"\xc2\x04\n" +
+	"\rwork_category\x18\a \x01(\tR\fworkCategory\x12%\n" +
+	"\x0earguments_json\x18\b \x01(\fR\rargumentsJson\x12#\n" +
+	"\rschema_digest\x18\t \x01(\tR\fschemaDigest\x12+\n" +
+	"\x11expected_evidence\x18\n" +
+	" \x03(\tR\x10expectedEvidence\"\xc8\a\n" +
 	"\bProposal\x12\x1f\n" +
 	"\x03ref\x18\x01 \x01(\v2\r.lerna.v1.RefR\x03ref\x12-\n" +
 	"\atask_id\x18\x02 \x01(\v2\x14.lerna.v1.GlobalNameR\x06taskId\x12?\n" +
@@ -1511,7 +2118,16 @@ const file_lerna_v1_planning_proto_rawDesc = "" +
 	"\x04kind\x18\n" +
 	" \x01(\tR\x04kind\x12(\n" +
 	"\x04step\x18\v \x01(\v2\x14.lerna.v1.ActionStepR\x04step\x12M\n" +
-	"\x13completion_evidence\x18\f \x03(\v2\x1c.lerna.v1.CompletionEvidenceR\x12completionEvidence\"\x87\x05\n" +
+	"\x13completion_evidence\x18\f \x03(\v2\x1c.lerna.v1.CompletionEvidenceR\x12completionEvidence\x126\n" +
+	"\bquestion\x18\r \x01(\v2\x1a.lerna.v1.QuestionProposalR\bquestion\x12O\n" +
+	"\x13requirements_change\x18\x0e \x01(\v2\x1e.lerna.v1.RequirementsProposalR\x12requirementsChange\x126\n" +
+	"\bverdicts\x18\x0f \x03(\v2\x1a.lerna.v1.ConditionVerdictR\bverdicts\x12,\n" +
+	"\n" +
+	"basis_refs\x18\x10 \x03(\v2\r.lerna.v1.RefR\tbasisRefs\x12\x12\n" +
+	"\x04gaps\x18\x11 \x03(\tR\x04gaps\x12!\n" +
+	"\fresult_draft\x18\x12 \x01(\tR\vresultDraft\x12%\n" +
+	"\x0eprompt_version\x18\x13 \x01(\tR\rpromptVersion\x127\n" +
+	"\x10body_content_ref\x18\x14 \x01(\v2\r.lerna.v1.RefR\x0ebodyContentRef\"\x87\x05\n" +
 	"\rPlanningState\x12-\n" +
 	"\atask_id\x18\x01 \x01(\v2\x14.lerna.v1.GlobalNameR\x06taskId\x12:\n" +
 	"\frequirements\x18\x02 \x01(\v2\x16.lerna.v1.RequirementsR\frequirements\x125\n" +
@@ -1561,7 +2177,54 @@ const file_lerna_v1_planning_proto_rawDesc = "" +
 	"contentRef\x12#\n" +
 	"\rinput_version\x18\x03 \x01(\x04R\finputVersion\x12+\n" +
 	"\x11processing_status\x18\x04 \x01(\tR\x10processingStatus\x12#\n" +
-	"\rchanges_basis\x18\x05 \x01(\bR\fchangesBasisB?Z=github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1;lernav1b\x06proto3"
+	"\rchanges_basis\x18\x05 \x01(\bR\fchangesBasis\"\xc7\x01\n" +
+	"\x10QuestionProposal\x12\x1a\n" +
+	"\bquestion\x18\x01 \x01(\tR\bquestion\x12\x18\n" +
+	"\aoptions\x18\x02 \x03(\tR\aoptions\x12#\n" +
+	"\rcondition_ids\x18\x03 \x03(\tR\fconditionIds\x12#\n" +
+	"\rchanges_basis\x18\x04 \x01(\bR\fchangesBasis\x123\n" +
+	"\x15involves_confirmation\x18\x05 \x01(\bR\x14involvesConfirmation\"\xa8\x01\n" +
+	"\x14RequirementsProposal\x12)\n" +
+	"\x10original_version\x18\x01 \x01(\x04R\x0foriginalVersion\x125\n" +
+	"\n" +
+	"conditions\x18\x02 \x03(\v2\x15.lerna.v1.RequirementR\n" +
+	"conditions\x12\x16\n" +
+	"\x06reason\x18\x03 \x01(\tR\x06reason\x12\x16\n" +
+	"\x06impact\x18\x04 \x01(\tR\x06impact\"\x90\x02\n" +
+	"\x10ConditionVerdict\x12!\n" +
+	"\fcondition_id\x18\x01 \x01(\tR\vconditionId\x12\x1e\n" +
+	"\n" +
+	"conclusion\x18\x02 \x01(\tR\n" +
+	"conclusion\x122\n" +
+	"\revidence_refs\x18\x03 \x03(\v2\r.lerna.v1.RefR\fevidenceRefs\x128\n" +
+	"\x10confirmation_ref\x18\x04 \x01(\v2\r.lerna.v1.RefR\x0fconfirmationRef\x12\x12\n" +
+	"\x04gaps\x18\x05 \x03(\tR\x04gaps\x127\n" +
+	"\foperation_id\x18\x06 \x01(\v2\x14.lerna.v1.GlobalNameR\voperationId\"\xb8\x01\n" +
+	"\x1ePublishProposalQuestionCommand\x12/\n" +
+	"\x06header\x18\x01 \x01(\v2\x17.lerna.v1.CommandHeaderR\x06header\x120\n" +
+	"\fproposal_ref\x18\x02 \x01(\v2\r.lerna.v1.RefR\vproposalRef\x123\n" +
+	"\n" +
+	"session_id\x18\x03 \x01(\v2\x14.lerna.v1.GlobalNameR\tsessionId\"\xb2\x03\n" +
+	"\x14SnapshotConfirmation\x12\x1f\n" +
+	"\x03ref\x18\x01 \x01(\v2\r.lerna.v1.RefR\x03ref\x12\x1f\n" +
+	"\vmatter_type\x18\x02 \x01(\tR\n" +
+	"matterType\x12\x14\n" +
+	"\x05state\x18\x03 \x01(\tR\x05state\x12!\n" +
+	"\fcondition_id\x18\x04 \x01(\tR\vconditionId\x128\n" +
+	"\x10requirements_ref\x18\x05 \x01(\v2\r.lerna.v1.RefR\x0frequirementsRef\x122\n" +
+	"\revidence_refs\x18\x06 \x03(\v2\r.lerna.v1.RefR\fevidenceRefs\x12#\n" +
+	"\rinput_version\x18\a \x01(\x04R\finputVersion\x12-\n" +
+	"\x12control_generation\x18\b \x01(\x04R\x11controlGeneration\x12+\n" +
+	"\x12expires_at_unix_ms\x18\t \x01(\x03R\x0fexpiresAtUnixMs\x120\n" +
+	"\fproposal_ref\x18\n" +
+	" \x01(\v2\r.lerna.v1.RefR\vproposalRef\"\xa4\x02\n" +
+	"\x13ReasonerDescription\x12)\n" +
+	"\x10contract_version\x18\x01 \x01(\rR\x0fcontractVersion\x125\n" +
+	"\x16implementation_version\x18\x02 \x01(\tR\x15implementationVersion\x12'\n" +
+	"\x0fsupported_kinds\x18\x03 \x03(\tR\x0esupportedKinds\x12,\n" +
+	"\x12max_call_positions\x18\x04 \x01(\rR\x10maxCallPositions\x12,\n" +
+	"\x12max_physical_sends\x18\x05 \x01(\rR\x10maxPhysicalSends\x12&\n" +
+	"\x0fmax_plan_length\x18\x06 \x01(\rR\rmaxPlanLengthB?Z=github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1;lernav1b\x06proto3"
 
 var (
 	file_lerna_v1_planning_proto_rawDescOnce sync.Once
@@ -1575,93 +2238,118 @@ func file_lerna_v1_planning_proto_rawDescGZIP() []byte {
 	return file_lerna_v1_planning_proto_rawDescData
 }
 
-var file_lerna_v1_planning_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
+var file_lerna_v1_planning_proto_msgTypes = make([]protoimpl.MessageInfo, 22)
 var file_lerna_v1_planning_proto_goTypes = []any{
-	(*CommandHeader)(nil),             // 0: lerna.v1.CommandHeader
-	(*TargetRecordAssertion)(nil),     // 1: lerna.v1.TargetRecordAssertion
-	(*CompletionEvidence)(nil),        // 2: lerna.v1.CompletionEvidence
-	(*Requirement)(nil),               // 3: lerna.v1.Requirement
-	(*Requirements)(nil),              // 4: lerna.v1.Requirements
-	(*ContextSnapshot)(nil),           // 5: lerna.v1.ContextSnapshot
-	(*AncestorControl)(nil),           // 6: lerna.v1.AncestorControl
-	(*MemoryDependency)(nil),          // 7: lerna.v1.MemoryDependency
-	(*ActionStep)(nil),                // 8: lerna.v1.ActionStep
-	(*Proposal)(nil),                  // 9: lerna.v1.Proposal
-	(*PlanningState)(nil),             // 10: lerna.v1.PlanningState
-	(*AcceptRequirementsCommand)(nil), // 11: lerna.v1.AcceptRequirementsCommand
-	(*RequestProposalCommand)(nil),    // 12: lerna.v1.RequestProposalCommand
-	(*ReceiveProposalCommand)(nil),    // 13: lerna.v1.ReceiveProposalCommand
-	(*SnapshotProgress)(nil),          // 14: lerna.v1.SnapshotProgress
-	(*SnapshotInput)(nil),             // 15: lerna.v1.SnapshotInput
-	(*CommandIdentity)(nil),           // 16: lerna.v1.CommandIdentity
-	(*Ref)(nil),                       // 17: lerna.v1.Ref
-	(*GlobalName)(nil),                // 18: lerna.v1.GlobalName
-	(RequirementsStatus)(0),           // 19: lerna.v1.RequirementsStatus
+	(*CommandHeader)(nil),                  // 0: lerna.v1.CommandHeader
+	(*TargetRecordAssertion)(nil),          // 1: lerna.v1.TargetRecordAssertion
+	(*CompletionEvidence)(nil),             // 2: lerna.v1.CompletionEvidence
+	(*Requirement)(nil),                    // 3: lerna.v1.Requirement
+	(*Requirements)(nil),                   // 4: lerna.v1.Requirements
+	(*ContextSnapshot)(nil),                // 5: lerna.v1.ContextSnapshot
+	(*AncestorControl)(nil),                // 6: lerna.v1.AncestorControl
+	(*MemoryDependency)(nil),               // 7: lerna.v1.MemoryDependency
+	(*ActionStep)(nil),                     // 8: lerna.v1.ActionStep
+	(*Proposal)(nil),                       // 9: lerna.v1.Proposal
+	(*PlanningState)(nil),                  // 10: lerna.v1.PlanningState
+	(*AcceptRequirementsCommand)(nil),      // 11: lerna.v1.AcceptRequirementsCommand
+	(*RequestProposalCommand)(nil),         // 12: lerna.v1.RequestProposalCommand
+	(*ReceiveProposalCommand)(nil),         // 13: lerna.v1.ReceiveProposalCommand
+	(*SnapshotProgress)(nil),               // 14: lerna.v1.SnapshotProgress
+	(*SnapshotInput)(nil),                  // 15: lerna.v1.SnapshotInput
+	(*QuestionProposal)(nil),               // 16: lerna.v1.QuestionProposal
+	(*RequirementsProposal)(nil),           // 17: lerna.v1.RequirementsProposal
+	(*ConditionVerdict)(nil),               // 18: lerna.v1.ConditionVerdict
+	(*PublishProposalQuestionCommand)(nil), // 19: lerna.v1.PublishProposalQuestionCommand
+	(*SnapshotConfirmation)(nil),           // 20: lerna.v1.SnapshotConfirmation
+	(*ReasonerDescription)(nil),            // 21: lerna.v1.ReasonerDescription
+	(*CommandIdentity)(nil),                // 22: lerna.v1.CommandIdentity
+	(*Ref)(nil),                            // 23: lerna.v1.Ref
+	(*GlobalName)(nil),                     // 24: lerna.v1.GlobalName
+	(RequirementsStatus)(0),                // 25: lerna.v1.RequirementsStatus
 }
 var file_lerna_v1_planning_proto_depIdxs = []int32{
-	16, // 0: lerna.v1.CommandHeader.identity:type_name -> lerna.v1.CommandIdentity
-	17, // 1: lerna.v1.TargetRecordAssertion.capability_ref:type_name -> lerna.v1.Ref
-	17, // 2: lerna.v1.TargetRecordAssertion.parameters_ref:type_name -> lerna.v1.Ref
-	18, // 3: lerna.v1.CompletionEvidence.operation_id:type_name -> lerna.v1.GlobalName
-	17, // 4: lerna.v1.Requirement.description_ref:type_name -> lerna.v1.Ref
-	1,  // 5: lerna.v1.Requirement.target_record:type_name -> lerna.v1.TargetRecordAssertion
-	17, // 6: lerna.v1.Requirements.ref:type_name -> lerna.v1.Ref
-	18, // 7: lerna.v1.Requirements.task_id:type_name -> lerna.v1.GlobalName
-	3,  // 8: lerna.v1.Requirements.conditions:type_name -> lerna.v1.Requirement
-	16, // 9: lerna.v1.Requirements.accepted_by:type_name -> lerna.v1.CommandIdentity
-	17, // 10: lerna.v1.Requirements.source_input_ref:type_name -> lerna.v1.Ref
-	17, // 11: lerna.v1.ContextSnapshot.ref:type_name -> lerna.v1.Ref
-	17, // 12: lerna.v1.ContextSnapshot.task_ref:type_name -> lerna.v1.Ref
-	17, // 13: lerna.v1.ContextSnapshot.request_ref:type_name -> lerna.v1.Ref
-	17, // 14: lerna.v1.ContextSnapshot.content_refs:type_name -> lerna.v1.Ref
-	17, // 15: lerna.v1.ContextSnapshot.capability_refs:type_name -> lerna.v1.Ref
-	17, // 16: lerna.v1.ContextSnapshot.progress_refs:type_name -> lerna.v1.Ref
-	17, // 17: lerna.v1.ContextSnapshot.requirements_ref:type_name -> lerna.v1.Ref
-	17, // 18: lerna.v1.ContextSnapshot.input_refs:type_name -> lerna.v1.Ref
-	14, // 19: lerna.v1.ContextSnapshot.progress_facts:type_name -> lerna.v1.SnapshotProgress
-	15, // 20: lerna.v1.ContextSnapshot.unprocessed_inputs:type_name -> lerna.v1.SnapshotInput
-	19, // 21: lerna.v1.ContextSnapshot.requirements_status:type_name -> lerna.v1.RequirementsStatus
-	17, // 22: lerna.v1.AncestorControl.task_ref:type_name -> lerna.v1.Ref
-	17, // 23: lerna.v1.MemoryDependency.memory_ref:type_name -> lerna.v1.Ref
-	17, // 24: lerna.v1.ActionStep.capability_ref:type_name -> lerna.v1.Ref
-	17, // 25: lerna.v1.ActionStep.parameters_ref:type_name -> lerna.v1.Ref
-	17, // 26: lerna.v1.ActionStep.dependencies:type_name -> lerna.v1.Ref
-	7,  // 27: lerna.v1.ActionStep.memory_dependencies:type_name -> lerna.v1.MemoryDependency
-	17, // 28: lerna.v1.ActionStep.content_refs:type_name -> lerna.v1.Ref
-	17, // 29: lerna.v1.Proposal.ref:type_name -> lerna.v1.Ref
-	18, // 30: lerna.v1.Proposal.task_id:type_name -> lerna.v1.GlobalName
-	17, // 31: lerna.v1.Proposal.context_snapshot_ref:type_name -> lerna.v1.Ref
-	17, // 32: lerna.v1.Proposal.request_ref:type_name -> lerna.v1.Ref
-	17, // 33: lerna.v1.Proposal.reasoner_ref:type_name -> lerna.v1.Ref
-	8,  // 34: lerna.v1.Proposal.step:type_name -> lerna.v1.ActionStep
-	2,  // 35: lerna.v1.Proposal.completion_evidence:type_name -> lerna.v1.CompletionEvidence
-	18, // 36: lerna.v1.PlanningState.task_id:type_name -> lerna.v1.GlobalName
-	4,  // 37: lerna.v1.PlanningState.requirements:type_name -> lerna.v1.Requirements
-	5,  // 38: lerna.v1.PlanningState.snapshot:type_name -> lerna.v1.ContextSnapshot
-	9,  // 39: lerna.v1.PlanningState.proposal:type_name -> lerna.v1.Proposal
-	17, // 40: lerna.v1.PlanningState.admission_refs:type_name -> lerna.v1.Ref
-	17, // 41: lerna.v1.PlanningState.rejected_verification_operations:type_name -> lerna.v1.Ref
-	17, // 42: lerna.v1.PlanningState.verification_ref:type_name -> lerna.v1.Ref
-	0,  // 43: lerna.v1.AcceptRequirementsCommand.header:type_name -> lerna.v1.CommandHeader
-	17, // 44: lerna.v1.AcceptRequirementsCommand.task_ref:type_name -> lerna.v1.Ref
-	3,  // 45: lerna.v1.AcceptRequirementsCommand.conditions:type_name -> lerna.v1.Requirement
-	0,  // 46: lerna.v1.RequestProposalCommand.header:type_name -> lerna.v1.CommandHeader
-	18, // 47: lerna.v1.RequestProposalCommand.task_id:type_name -> lerna.v1.GlobalName
-	0,  // 48: lerna.v1.ReceiveProposalCommand.header:type_name -> lerna.v1.CommandHeader
-	9,  // 49: lerna.v1.ReceiveProposalCommand.proposal:type_name -> lerna.v1.Proposal
-	17, // 50: lerna.v1.SnapshotProgress.admission_ref:type_name -> lerna.v1.Ref
-	17, // 51: lerna.v1.SnapshotProgress.operation_ref:type_name -> lerna.v1.Ref
-	17, // 52: lerna.v1.SnapshotProgress.capability_ref:type_name -> lerna.v1.Ref
-	17, // 53: lerna.v1.SnapshotProgress.parameters_ref:type_name -> lerna.v1.Ref
-	17, // 54: lerna.v1.SnapshotProgress.effect_ref:type_name -> lerna.v1.Ref
-	17, // 55: lerna.v1.SnapshotProgress.evidence_refs:type_name -> lerna.v1.Ref
-	17, // 56: lerna.v1.SnapshotInput.input_ref:type_name -> lerna.v1.Ref
-	17, // 57: lerna.v1.SnapshotInput.content_ref:type_name -> lerna.v1.Ref
-	58, // [58:58] is the sub-list for method output_type
-	58, // [58:58] is the sub-list for method input_type
-	58, // [58:58] is the sub-list for extension type_name
-	58, // [58:58] is the sub-list for extension extendee
-	0,  // [0:58] is the sub-list for field type_name
+	22, // 0: lerna.v1.CommandHeader.identity:type_name -> lerna.v1.CommandIdentity
+	23, // 1: lerna.v1.TargetRecordAssertion.capability_ref:type_name -> lerna.v1.Ref
+	23, // 2: lerna.v1.TargetRecordAssertion.parameters_ref:type_name -> lerna.v1.Ref
+	24, // 3: lerna.v1.CompletionEvidence.operation_id:type_name -> lerna.v1.GlobalName
+	23, // 4: lerna.v1.CompletionEvidence.confirmation_ref:type_name -> lerna.v1.Ref
+	23, // 5: lerna.v1.Requirement.description_ref:type_name -> lerna.v1.Ref
+	1,  // 6: lerna.v1.Requirement.target_record:type_name -> lerna.v1.TargetRecordAssertion
+	23, // 7: lerna.v1.Requirements.ref:type_name -> lerna.v1.Ref
+	24, // 8: lerna.v1.Requirements.task_id:type_name -> lerna.v1.GlobalName
+	3,  // 9: lerna.v1.Requirements.conditions:type_name -> lerna.v1.Requirement
+	22, // 10: lerna.v1.Requirements.accepted_by:type_name -> lerna.v1.CommandIdentity
+	23, // 11: lerna.v1.Requirements.source_input_ref:type_name -> lerna.v1.Ref
+	23, // 12: lerna.v1.ContextSnapshot.ref:type_name -> lerna.v1.Ref
+	23, // 13: lerna.v1.ContextSnapshot.task_ref:type_name -> lerna.v1.Ref
+	23, // 14: lerna.v1.ContextSnapshot.request_ref:type_name -> lerna.v1.Ref
+	23, // 15: lerna.v1.ContextSnapshot.content_refs:type_name -> lerna.v1.Ref
+	23, // 16: lerna.v1.ContextSnapshot.capability_refs:type_name -> lerna.v1.Ref
+	23, // 17: lerna.v1.ContextSnapshot.progress_refs:type_name -> lerna.v1.Ref
+	23, // 18: lerna.v1.ContextSnapshot.requirements_ref:type_name -> lerna.v1.Ref
+	23, // 19: lerna.v1.ContextSnapshot.input_refs:type_name -> lerna.v1.Ref
+	14, // 20: lerna.v1.ContextSnapshot.progress_facts:type_name -> lerna.v1.SnapshotProgress
+	15, // 21: lerna.v1.ContextSnapshot.unprocessed_inputs:type_name -> lerna.v1.SnapshotInput
+	25, // 22: lerna.v1.ContextSnapshot.requirements_status:type_name -> lerna.v1.RequirementsStatus
+	20, // 23: lerna.v1.ContextSnapshot.confirmations:type_name -> lerna.v1.SnapshotConfirmation
+	23, // 24: lerna.v1.ContextSnapshot.progress_watermarks:type_name -> lerna.v1.Ref
+	23, // 25: lerna.v1.AncestorControl.task_ref:type_name -> lerna.v1.Ref
+	23, // 26: lerna.v1.MemoryDependency.memory_ref:type_name -> lerna.v1.Ref
+	23, // 27: lerna.v1.ActionStep.capability_ref:type_name -> lerna.v1.Ref
+	23, // 28: lerna.v1.ActionStep.parameters_ref:type_name -> lerna.v1.Ref
+	23, // 29: lerna.v1.ActionStep.dependencies:type_name -> lerna.v1.Ref
+	7,  // 30: lerna.v1.ActionStep.memory_dependencies:type_name -> lerna.v1.MemoryDependency
+	23, // 31: lerna.v1.ActionStep.content_refs:type_name -> lerna.v1.Ref
+	23, // 32: lerna.v1.Proposal.ref:type_name -> lerna.v1.Ref
+	24, // 33: lerna.v1.Proposal.task_id:type_name -> lerna.v1.GlobalName
+	23, // 34: lerna.v1.Proposal.context_snapshot_ref:type_name -> lerna.v1.Ref
+	23, // 35: lerna.v1.Proposal.request_ref:type_name -> lerna.v1.Ref
+	23, // 36: lerna.v1.Proposal.reasoner_ref:type_name -> lerna.v1.Ref
+	8,  // 37: lerna.v1.Proposal.step:type_name -> lerna.v1.ActionStep
+	2,  // 38: lerna.v1.Proposal.completion_evidence:type_name -> lerna.v1.CompletionEvidence
+	16, // 39: lerna.v1.Proposal.question:type_name -> lerna.v1.QuestionProposal
+	17, // 40: lerna.v1.Proposal.requirements_change:type_name -> lerna.v1.RequirementsProposal
+	18, // 41: lerna.v1.Proposal.verdicts:type_name -> lerna.v1.ConditionVerdict
+	23, // 42: lerna.v1.Proposal.basis_refs:type_name -> lerna.v1.Ref
+	23, // 43: lerna.v1.Proposal.body_content_ref:type_name -> lerna.v1.Ref
+	24, // 44: lerna.v1.PlanningState.task_id:type_name -> lerna.v1.GlobalName
+	4,  // 45: lerna.v1.PlanningState.requirements:type_name -> lerna.v1.Requirements
+	5,  // 46: lerna.v1.PlanningState.snapshot:type_name -> lerna.v1.ContextSnapshot
+	9,  // 47: lerna.v1.PlanningState.proposal:type_name -> lerna.v1.Proposal
+	23, // 48: lerna.v1.PlanningState.admission_refs:type_name -> lerna.v1.Ref
+	23, // 49: lerna.v1.PlanningState.rejected_verification_operations:type_name -> lerna.v1.Ref
+	23, // 50: lerna.v1.PlanningState.verification_ref:type_name -> lerna.v1.Ref
+	0,  // 51: lerna.v1.AcceptRequirementsCommand.header:type_name -> lerna.v1.CommandHeader
+	23, // 52: lerna.v1.AcceptRequirementsCommand.task_ref:type_name -> lerna.v1.Ref
+	3,  // 53: lerna.v1.AcceptRequirementsCommand.conditions:type_name -> lerna.v1.Requirement
+	0,  // 54: lerna.v1.RequestProposalCommand.header:type_name -> lerna.v1.CommandHeader
+	24, // 55: lerna.v1.RequestProposalCommand.task_id:type_name -> lerna.v1.GlobalName
+	0,  // 56: lerna.v1.ReceiveProposalCommand.header:type_name -> lerna.v1.CommandHeader
+	9,  // 57: lerna.v1.ReceiveProposalCommand.proposal:type_name -> lerna.v1.Proposal
+	23, // 58: lerna.v1.SnapshotProgress.admission_ref:type_name -> lerna.v1.Ref
+	23, // 59: lerna.v1.SnapshotProgress.operation_ref:type_name -> lerna.v1.Ref
+	23, // 60: lerna.v1.SnapshotProgress.capability_ref:type_name -> lerna.v1.Ref
+	23, // 61: lerna.v1.SnapshotProgress.parameters_ref:type_name -> lerna.v1.Ref
+	23, // 62: lerna.v1.SnapshotProgress.effect_ref:type_name -> lerna.v1.Ref
+	23, // 63: lerna.v1.SnapshotProgress.evidence_refs:type_name -> lerna.v1.Ref
+	23, // 64: lerna.v1.SnapshotInput.input_ref:type_name -> lerna.v1.Ref
+	23, // 65: lerna.v1.SnapshotInput.content_ref:type_name -> lerna.v1.Ref
+	3,  // 66: lerna.v1.RequirementsProposal.conditions:type_name -> lerna.v1.Requirement
+	23, // 67: lerna.v1.ConditionVerdict.evidence_refs:type_name -> lerna.v1.Ref
+	23, // 68: lerna.v1.ConditionVerdict.confirmation_ref:type_name -> lerna.v1.Ref
+	24, // 69: lerna.v1.ConditionVerdict.operation_id:type_name -> lerna.v1.GlobalName
+	0,  // 70: lerna.v1.PublishProposalQuestionCommand.header:type_name -> lerna.v1.CommandHeader
+	23, // 71: lerna.v1.PublishProposalQuestionCommand.proposal_ref:type_name -> lerna.v1.Ref
+	24, // 72: lerna.v1.PublishProposalQuestionCommand.session_id:type_name -> lerna.v1.GlobalName
+	23, // 73: lerna.v1.SnapshotConfirmation.ref:type_name -> lerna.v1.Ref
+	23, // 74: lerna.v1.SnapshotConfirmation.requirements_ref:type_name -> lerna.v1.Ref
+	23, // 75: lerna.v1.SnapshotConfirmation.evidence_refs:type_name -> lerna.v1.Ref
+	23, // 76: lerna.v1.SnapshotConfirmation.proposal_ref:type_name -> lerna.v1.Ref
+	77, // [77:77] is the sub-list for method output_type
+	77, // [77:77] is the sub-list for method input_type
+	77, // [77:77] is the sub-list for extension type_name
+	77, // [77:77] is the sub-list for extension extendee
+	0,  // [0:77] is the sub-list for field type_name
 }
 
 func init() { file_lerna_v1_planning_proto_init() }
@@ -1677,7 +2365,7 @@ func file_lerna_v1_planning_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_lerna_v1_planning_proto_rawDesc), len(file_lerna_v1_planning_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   16,
+			NumMessages:   22,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
