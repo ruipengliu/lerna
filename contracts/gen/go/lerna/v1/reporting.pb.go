@@ -43,6 +43,7 @@ type RawObservation struct {
 	TransportError     string                 `protobuf:"bytes,18,opt,name=transport_error,json=transportError,proto3" json:"transport_error,omitempty"`
 	ProviderRequestId  string                 `protobuf:"bytes,19,opt,name=provider_request_id,json=providerRequestId,proto3" json:"provider_request_id,omitempty"`
 	QuerySubject       *QuerySubject          `protobuf:"bytes,20,opt,name=query_subject,json=querySubject,proto3" json:"query_subject,omitempty"`
+	FileEvidence       *FileEvidence          `protobuf:"bytes,21,opt,name=file_evidence,json=fileEvidence,proto3" json:"file_evidence,omitempty"`
 	unknownFields      protoimpl.UnknownFields
 	sizeCache          protoimpl.SizeCache
 }
@@ -213,6 +214,13 @@ func (x *RawObservation) GetProviderRequestId() string {
 func (x *RawObservation) GetQuerySubject() *QuerySubject {
 	if x != nil {
 		return x.QuerySubject
+	}
+	return nil
+}
+
+func (x *RawObservation) GetFileEvidence() *FileEvidence {
+	if x != nil {
+		return x.FileEvidence
 	}
 	return nil
 }
@@ -1469,7 +1477,7 @@ var File_lerna_v1_reporting_proto protoreflect.FileDescriptor
 
 const file_lerna_v1_reporting_proto_rawDesc = "" +
 	"\n" +
-	"\x18lerna/v1/reporting.proto\x12\blerna.v1\x1a\x16lerna/v1/closure.proto\x1a\x17lerna/v1/identity.proto\x1a\x17lerna/v1/planning.proto\x1a\x19lerna/v1/submission.proto\"\xb1\x06\n" +
+	"\x18lerna/v1/reporting.proto\x12\blerna.v1\x1a\x16lerna/v1/closure.proto\x1a\x17lerna/v1/identity.proto\x1a\x1blerna/v1/managed_file.proto\x1a\x17lerna/v1/planning.proto\x1a\x19lerna/v1/submission.proto\"\xee\x06\n" +
 	"\x0eRawObservation\x12\x1f\n" +
 	"\x03ref\x18\x01 \x01(\v2\r.lerna.v1.RefR\x03ref\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\tR\x06userId\x12-\n" +
@@ -1493,7 +1501,8 @@ const file_lerna_v1_reporting_proto_rawDesc = "" +
 	"\x06source\x18\x11 \x01(\tR\x06source\x12'\n" +
 	"\x0ftransport_error\x18\x12 \x01(\tR\x0etransportError\x12.\n" +
 	"\x13provider_request_id\x18\x13 \x01(\tR\x11providerRequestId\x12;\n" +
-	"\rquery_subject\x18\x14 \x01(\v2\x16.lerna.v1.QuerySubjectR\fquerySubject\"\x9d\x01\n" +
+	"\rquery_subject\x18\x14 \x01(\v2\x16.lerna.v1.QuerySubjectR\fquerySubject\x12;\n" +
+	"\rfile_evidence\x18\x15 \x01(\v2\x16.lerna.v1.FileEvidenceR\ffileEvidence\"\x9d\x01\n" +
 	"\x1aRegisterObservationCommand\x12/\n" +
 	"\x06header\x18\x01 \x01(\v2\x17.lerna.v1.CommandHeaderR\x06header\x12:\n" +
 	"\vobservation\x18\x02 \x01(\v2\x18.lerna.v1.RawObservationR\vobservation\x12\x12\n" +
@@ -1643,9 +1652,10 @@ var file_lerna_v1_reporting_proto_goTypes = []any{
 	(*Ref)(nil),                         // 17: lerna.v1.Ref
 	(*GlobalName)(nil),                  // 18: lerna.v1.GlobalName
 	(*QuerySubject)(nil),                // 19: lerna.v1.QuerySubject
-	(*CommandHeader)(nil),               // 20: lerna.v1.CommandHeader
-	(*CommandReceipt)(nil),              // 21: lerna.v1.CommandReceipt
-	(*CommandIdentity)(nil),             // 22: lerna.v1.CommandIdentity
+	(*FileEvidence)(nil),                // 20: lerna.v1.FileEvidence
+	(*CommandHeader)(nil),               // 21: lerna.v1.CommandHeader
+	(*CommandReceipt)(nil),              // 22: lerna.v1.CommandReceipt
+	(*CommandIdentity)(nil),             // 23: lerna.v1.CommandIdentity
 }
 var file_lerna_v1_reporting_proto_depIdxs = []int32{
 	17, // 0: lerna.v1.RawObservation.ref:type_name -> lerna.v1.Ref
@@ -1655,57 +1665,58 @@ var file_lerna_v1_reporting_proto_depIdxs = []int32{
 	17, // 4: lerna.v1.RawObservation.send_ref:type_name -> lerna.v1.Ref
 	17, // 5: lerna.v1.RawObservation.body_ref:type_name -> lerna.v1.Ref
 	19, // 6: lerna.v1.RawObservation.query_subject:type_name -> lerna.v1.QuerySubject
-	20, // 7: lerna.v1.RegisterObservationCommand.header:type_name -> lerna.v1.CommandHeader
-	0,  // 8: lerna.v1.RegisterObservationCommand.observation:type_name -> lerna.v1.RawObservation
-	20, // 9: lerna.v1.AcceptObservationCommand.header:type_name -> lerna.v1.CommandHeader
-	0,  // 10: lerna.v1.AcceptObservationCommand.observation:type_name -> lerna.v1.RawObservation
-	0,  // 11: lerna.v1.ObservationHandoff.observation:type_name -> lerna.v1.RawObservation
-	2,  // 12: lerna.v1.ObservationHandoff.command:type_name -> lerna.v1.AcceptObservationCommand
-	21, // 13: lerna.v1.ObservationHandoff.recipient_receipt:type_name -> lerna.v1.CommandReceipt
-	17, // 14: lerna.v1.UsageReport.ref:type_name -> lerna.v1.Ref
-	17, // 15: lerna.v1.UsageReport.billing_source:type_name -> lerna.v1.Ref
-	17, // 16: lerna.v1.UsageReport.measurement_ref:type_name -> lerna.v1.Ref
-	17, // 17: lerna.v1.UsageReport.price_rule_ref:type_name -> lerna.v1.Ref
-	18, // 18: lerna.v1.UsageReport.operation_id:type_name -> lerna.v1.GlobalName
-	18, // 19: lerna.v1.UsageReport.attempt_id:type_name -> lerna.v1.GlobalName
-	17, // 20: lerna.v1.UsageReport.send_ref:type_name -> lerna.v1.Ref
-	18, // 21: lerna.v1.UsageReport.task_id:type_name -> lerna.v1.GlobalName
-	20, // 22: lerna.v1.AcceptUsageCommand.header:type_name -> lerna.v1.CommandHeader
-	4,  // 23: lerna.v1.AcceptUsageCommand.usage:type_name -> lerna.v1.UsageReport
-	17, // 24: lerna.v1.TraceEvent.ref:type_name -> lerna.v1.Ref
-	18, // 25: lerna.v1.TraceEvent.task_id:type_name -> lerna.v1.GlobalName
-	18, // 26: lerna.v1.TraceEvent.operation_id:type_name -> lerna.v1.GlobalName
-	18, // 27: lerna.v1.TraceEvent.attempt_id:type_name -> lerna.v1.GlobalName
-	17, // 28: lerna.v1.TraceEvent.send_ref:type_name -> lerna.v1.Ref
-	17, // 29: lerna.v1.TraceEvent.observation_ref:type_name -> lerna.v1.Ref
-	17, // 30: lerna.v1.TraceEvent.body_ref:type_name -> lerna.v1.Ref
-	17, // 31: lerna.v1.TraceEvent.source_record_ref:type_name -> lerna.v1.Ref
-	17, // 32: lerna.v1.TraceEvent.related_refs:type_name -> lerna.v1.Ref
-	22, // 33: lerna.v1.TraceEvent.origin_command:type_name -> lerna.v1.CommandIdentity
-	13, // 34: lerna.v1.TraceSourceRecord.command:type_name -> lerna.v1.AcceptTraceCommand
-	21, // 35: lerna.v1.TraceSourceRecord.receipt:type_name -> lerna.v1.CommandReceipt
-	18, // 36: lerna.v1.TraceQuery.task_id:type_name -> lerna.v1.GlobalName
-	18, // 37: lerna.v1.TraceQuery.operation_id:type_name -> lerna.v1.GlobalName
-	9,  // 38: lerna.v1.TraceQuery.cutoff:type_name -> lerna.v1.TraceCutoff
-	10, // 39: lerna.v1.TraceProgress.gaps:type_name -> lerna.v1.TraceGap
-	6,  // 40: lerna.v1.TraceView.events:type_name -> lerna.v1.TraceEvent
-	11, // 41: lerna.v1.TraceView.sources:type_name -> lerna.v1.TraceProgress
-	20, // 42: lerna.v1.AcceptTraceCommand.header:type_name -> lerna.v1.CommandHeader
-	6,  // 43: lerna.v1.AcceptTraceCommand.event:type_name -> lerna.v1.TraceEvent
-	17, // 44: lerna.v1.ObservationReports.observation_ref:type_name -> lerna.v1.Ref
-	5,  // 45: lerna.v1.ObservationReports.usage:type_name -> lerna.v1.AcceptUsageCommand
-	13, // 46: lerna.v1.ObservationReports.trace:type_name -> lerna.v1.AcceptTraceCommand
-	21, // 47: lerna.v1.ObservationReports.usage_receipt:type_name -> lerna.v1.CommandReceipt
-	21, // 48: lerna.v1.ObservationReports.trace_receipt:type_name -> lerna.v1.CommandReceipt
-	17, // 49: lerna.v1.EffectInterpretation.ref:type_name -> lerna.v1.Ref
-	17, // 50: lerna.v1.EffectInterpretation.observation_ref:type_name -> lerna.v1.Ref
-	20, // 51: lerna.v1.InterpretObservationCommand.header:type_name -> lerna.v1.CommandHeader
-	17, // 52: lerna.v1.InterpretObservationCommand.observation_ref:type_name -> lerna.v1.Ref
-	53, // [53:53] is the sub-list for method output_type
-	53, // [53:53] is the sub-list for method input_type
-	53, // [53:53] is the sub-list for extension type_name
-	53, // [53:53] is the sub-list for extension extendee
-	0,  // [0:53] is the sub-list for field type_name
+	20, // 7: lerna.v1.RawObservation.file_evidence:type_name -> lerna.v1.FileEvidence
+	21, // 8: lerna.v1.RegisterObservationCommand.header:type_name -> lerna.v1.CommandHeader
+	0,  // 9: lerna.v1.RegisterObservationCommand.observation:type_name -> lerna.v1.RawObservation
+	21, // 10: lerna.v1.AcceptObservationCommand.header:type_name -> lerna.v1.CommandHeader
+	0,  // 11: lerna.v1.AcceptObservationCommand.observation:type_name -> lerna.v1.RawObservation
+	0,  // 12: lerna.v1.ObservationHandoff.observation:type_name -> lerna.v1.RawObservation
+	2,  // 13: lerna.v1.ObservationHandoff.command:type_name -> lerna.v1.AcceptObservationCommand
+	22, // 14: lerna.v1.ObservationHandoff.recipient_receipt:type_name -> lerna.v1.CommandReceipt
+	17, // 15: lerna.v1.UsageReport.ref:type_name -> lerna.v1.Ref
+	17, // 16: lerna.v1.UsageReport.billing_source:type_name -> lerna.v1.Ref
+	17, // 17: lerna.v1.UsageReport.measurement_ref:type_name -> lerna.v1.Ref
+	17, // 18: lerna.v1.UsageReport.price_rule_ref:type_name -> lerna.v1.Ref
+	18, // 19: lerna.v1.UsageReport.operation_id:type_name -> lerna.v1.GlobalName
+	18, // 20: lerna.v1.UsageReport.attempt_id:type_name -> lerna.v1.GlobalName
+	17, // 21: lerna.v1.UsageReport.send_ref:type_name -> lerna.v1.Ref
+	18, // 22: lerna.v1.UsageReport.task_id:type_name -> lerna.v1.GlobalName
+	21, // 23: lerna.v1.AcceptUsageCommand.header:type_name -> lerna.v1.CommandHeader
+	4,  // 24: lerna.v1.AcceptUsageCommand.usage:type_name -> lerna.v1.UsageReport
+	17, // 25: lerna.v1.TraceEvent.ref:type_name -> lerna.v1.Ref
+	18, // 26: lerna.v1.TraceEvent.task_id:type_name -> lerna.v1.GlobalName
+	18, // 27: lerna.v1.TraceEvent.operation_id:type_name -> lerna.v1.GlobalName
+	18, // 28: lerna.v1.TraceEvent.attempt_id:type_name -> lerna.v1.GlobalName
+	17, // 29: lerna.v1.TraceEvent.send_ref:type_name -> lerna.v1.Ref
+	17, // 30: lerna.v1.TraceEvent.observation_ref:type_name -> lerna.v1.Ref
+	17, // 31: lerna.v1.TraceEvent.body_ref:type_name -> lerna.v1.Ref
+	17, // 32: lerna.v1.TraceEvent.source_record_ref:type_name -> lerna.v1.Ref
+	17, // 33: lerna.v1.TraceEvent.related_refs:type_name -> lerna.v1.Ref
+	23, // 34: lerna.v1.TraceEvent.origin_command:type_name -> lerna.v1.CommandIdentity
+	13, // 35: lerna.v1.TraceSourceRecord.command:type_name -> lerna.v1.AcceptTraceCommand
+	22, // 36: lerna.v1.TraceSourceRecord.receipt:type_name -> lerna.v1.CommandReceipt
+	18, // 37: lerna.v1.TraceQuery.task_id:type_name -> lerna.v1.GlobalName
+	18, // 38: lerna.v1.TraceQuery.operation_id:type_name -> lerna.v1.GlobalName
+	9,  // 39: lerna.v1.TraceQuery.cutoff:type_name -> lerna.v1.TraceCutoff
+	10, // 40: lerna.v1.TraceProgress.gaps:type_name -> lerna.v1.TraceGap
+	6,  // 41: lerna.v1.TraceView.events:type_name -> lerna.v1.TraceEvent
+	11, // 42: lerna.v1.TraceView.sources:type_name -> lerna.v1.TraceProgress
+	21, // 43: lerna.v1.AcceptTraceCommand.header:type_name -> lerna.v1.CommandHeader
+	6,  // 44: lerna.v1.AcceptTraceCommand.event:type_name -> lerna.v1.TraceEvent
+	17, // 45: lerna.v1.ObservationReports.observation_ref:type_name -> lerna.v1.Ref
+	5,  // 46: lerna.v1.ObservationReports.usage:type_name -> lerna.v1.AcceptUsageCommand
+	13, // 47: lerna.v1.ObservationReports.trace:type_name -> lerna.v1.AcceptTraceCommand
+	22, // 48: lerna.v1.ObservationReports.usage_receipt:type_name -> lerna.v1.CommandReceipt
+	22, // 49: lerna.v1.ObservationReports.trace_receipt:type_name -> lerna.v1.CommandReceipt
+	17, // 50: lerna.v1.EffectInterpretation.ref:type_name -> lerna.v1.Ref
+	17, // 51: lerna.v1.EffectInterpretation.observation_ref:type_name -> lerna.v1.Ref
+	21, // 52: lerna.v1.InterpretObservationCommand.header:type_name -> lerna.v1.CommandHeader
+	17, // 53: lerna.v1.InterpretObservationCommand.observation_ref:type_name -> lerna.v1.Ref
+	54, // [54:54] is the sub-list for method output_type
+	54, // [54:54] is the sub-list for method input_type
+	54, // [54:54] is the sub-list for extension type_name
+	54, // [54:54] is the sub-list for extension extendee
+	0,  // [0:54] is the sub-list for field type_name
 }
 
 func init() { file_lerna_v1_reporting_proto_init() }
@@ -1715,6 +1726,7 @@ func file_lerna_v1_reporting_proto_init() {
 	}
 	file_lerna_v1_closure_proto_init()
 	file_lerna_v1_identity_proto_init()
+	file_lerna_v1_managed_file_proto_init()
 	file_lerna_v1_planning_proto_init()
 	file_lerna_v1_submission_proto_init()
 	type x struct{}

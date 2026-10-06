@@ -23,8 +23,10 @@ func run() error {
 	user := flag.String("user", "local-user", "configured local user")
 	issuer := flag.String("issuer", "local-cli", "authenticated local installation namespace")
 	domain := flag.String("domain", "local-adjudication", "fixed adjudication domain")
+	roots := fileRootFlags{}
+	flag.Var(&roots, "file-root", "fixed managed file root NAME=/absolute/path (repeatable)")
 	flag.Parse()
-	h, err := assembly.Open(*path, *user, *domain)
+	h, err := assembly.OpenWithFiles(*path, *user, *domain, roots)
 	if err != nil {
 		return err
 	}

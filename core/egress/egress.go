@@ -115,7 +115,26 @@ func (s *Service) Invoke(ctx context.Context, caller *v1.Caller, c *v1.StartExec
 		return nil, command.Fail("NOT_FOUND")
 	}
 	payload := command.ContentBytes(body)
-	result, e := s.io.Perform(ctx, &v1.PhysicalIORequest{TaskId: c.Binding.TaskId, OperationId: c.Binding.OperationId, ExecutorEndpointId: c.Binding.ExecutorEndpointId, Attempt: x.Attempt, Send: x.Send, CallDescriptor: x.CallDescriptor, Body: payload})
+	request := &v1.PhysicalIORequest{TaskId: c.Binding.TaskId, OperationId: c.Binding.OperationId, ExecutorEndpointId: c.Binding.ExecutorEndpointId, Attempt: x.Attempt, Send: x.Send, CallDescriptor: x.CallDescriptor, Body: payload}
+	var result *v1.PhysicalIOResult
+	if request.CallDescriptor.Protocol == "FILE" {
+		if e = s.prepareFile(ctx, request); e != nil {
+			return receipt, e
+		}
+		checked, ok := s.io.(CheckedIO)
+		if !ok {
+			return receipt, command.Fail("UNSUPPORTED_CAPABILITY")
+		}
+		authority, ok := s.starts.(interface {
+			ValidateFileUse(context.Context, *v1.Caller, *v1.StartExecutionCommand) error
+		})
+		if !ok {
+			return receipt, command.Fail("DEPENDENCY_UNAVAILABLE")
+		}
+		result, e = checked.PerformChecked(ctx, request, func(useCtx context.Context) error { return authority.ValidateFileUse(useCtx, caller, c) })
+	} else {
+		result, e = s.io.Perform(ctx, request)
+	}
 	if e != nil {
 		return receipt, e
 	}

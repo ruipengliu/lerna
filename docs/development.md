@@ -244,3 +244,9 @@ M1 参考适配器为 `model-reference-v1`，模型设置使用 `provider: refer
 `QueryModelCall` 查询原位置并检查内容当前是否可用；同位置更改设置、能力或输入引用返回 `MODEL_POSITION_CONFLICT`。原编码器、策略或正文不可恢复时返回 `PREPARATION_UNRECOVERABLE`。P5 后恢复只收集原发送的观察，不再发送。`COMPLETED`、`REFUSED`、`INCOMPLETE` 和 `INVALID_OUTPUT` 均保存原结果，不自动修复、换供应商或重采样；传输结果未明保存 `UNKNOWN`，原费用责任继续存在。模型正文不能提供可信费用，费用仍由普通计费证据解释器处理。
 
 `SubmitProposalOutcome` 保存原报告及命令回执，只有当前请求和有效领取可以推进提议。旧工作者的报告保留为迟到事实。`StopProposalRequest` 终止请求推进，保留已有动作、未知效果和费用；通用持久工作命令不能替代这个业务入口封闭 `PROPOSE`。故障点包括 `tasks.model_prepare`、`tasks.model_seal`、`tasks.model_admit`、`tasks.model_result`、`tasks.proposal_outcome` 和 `tasks.proposal_stop`，并复用内容派生、P4 与 P5 的故障点。
+
+### M1 本地受管理文件配置
+
+先由部署宿主建立并完整同步受管理布局，再使用 `lerna --db state.db --user USER --domain DOMAIN --file-root documents=/absolute/managed-root ...` 固定别名映射；多个根重复指定 `--file-root`。布局、权限、平台和同步要求见 [ADR 0007](adr/0007-managed-file-publication.md)。根选项只供本机受信宿主装配，不是来自模型或执行参数的任意路径。重复别名、相对路径、空路径与非规范路径在打开数据库前拒绝；实际原生身份在统一出口内验证，原别名已经绑定后不能改指另一目录。
+
+执行仍使用宿主已取得的完整 `execute START_JSON` 命令与对应出口身份；CLI 不根据文件路径代造准入、凭据、领取或调用描述。`operation ID`、`observation ID` 和原计费来源查询用于核对原动作与原发送。相同命令的进程重放返回原回执，文件创建、替换和读取都由同一受信出口处理。

@@ -37,6 +37,9 @@ func parseQueryResponse(raw *v1.RawObservation, body []byte, op *v1.Operation) (
 	if raw == nil || op == nil || op.Execution == nil || op.QuerySubject == nil || op.Execution.Attempt.Capabilities == nil {
 		return nil, false
 	}
+	if raw.Protocol == "FILE" {
+		return parseFileQuery(raw, op), false
+	}
 	cap := op.Execution.Attempt.Capabilities
 	if cap.ProtocolVersion != "lerna-simulator-query-v1" || cap.VerificationBasis != "reference-query-v1" || cap.Effect != "READ" || raw.Source != "TRUSTED_IO" || raw.Protocol != "HTTP" || raw.TransportError != "" || raw.StatusCode != 200 || !proto.Equal(raw.QuerySubject, op.QuerySubject) {
 		return nil, false
@@ -218,7 +221,7 @@ func (s *Service) applyReconciliationObservation(ctx context.Context, caller *v1
 	if query.Lifecycle != "SETTLED" {
 		p.State = "PAUSED"
 		p.PauseReason = "QUERY_RESULT_UNKNOWN"
-	} else if original.Lifecycle == "SETTLED" {
+	} else if original.Lifecycle == "SETTLED" && original.Effect.Outcome != "UNKNOWN" {
 		p.State = "COMPLETED"
 		p.ActiveQueryRef = nil
 	} else {
@@ -315,7 +318,7 @@ func (s *Service) applyOriginalReconciliationFact(ctx context.Context, c *v1.Cal
 	if e != nil || p == nil {
 		return e
 	}
-	if op.Lifecycle == "SETTLED" && p.ActiveQueryRef == nil {
+	if op.Lifecycle == "SETTLED" && op.Effect.Outcome != "UNKNOWN" && p.ActiveQueryRef == nil {
 		p.State = "COMPLETED"
 		p.PauseReason = ""
 		if e = s.saveReconciliationJob(ctx, p); e != nil {

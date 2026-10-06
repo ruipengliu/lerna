@@ -49,7 +49,7 @@ func (s *Service) ConfigureCapability(ctx context.Context, caller *v1.Caller, c 
 		if caller.IssuerId != "host" {
 			return nil, command.Fail("PERMISSION_DENIED")
 		}
-		if cap == nil || cap.Ref != nil || cap.ApprovedBy != nil || cap.Action == "" || cap.Resource == "" || cap.ExecutorEndpointId == "" || cap.AdapterRef == nil || cap.AdapterRef.Revision == 0 || cap.AdapterRef.Name == nil || cap.AdapterRef.Name.UserId != s.user || cap.AdapterRef.Name.ObjectKind != "adapter" || cap.AdapterRef.Name.LocalId == "" || cap.AdapterRef.SchemaId != "lerna.v1.Adapter" || (cap.UseRight != "INVOKE" && (cap.Action != "QUERY" || cap.UseRight != "READ")) || cap.ProcessingPurpose != "CURRENT_TASK" {
+		if cap == nil || cap.Ref != nil || cap.ApprovedBy != nil || cap.Action == "" || cap.Resource == "" || cap.ExecutorEndpointId == "" || cap.AdapterRef == nil || cap.AdapterRef.Revision == 0 || cap.AdapterRef.Name == nil || cap.AdapterRef.Name.UserId != s.user || cap.AdapterRef.Name.ObjectKind != "adapter" || cap.AdapterRef.Name.LocalId == "" || cap.AdapterRef.SchemaId != "lerna.v1.Adapter" || (cap.UseRight != "INVOKE" && ((cap.Action != "QUERY" && (cap.Action != "READ" || cap.AdapterRef.GetName().GetLocalId() != "managed-file")) || cap.UseRight != "READ")) || cap.ProcessingPurpose != "CURRENT_TASK" {
 			return nil, command.Fail("INVALID_CAPABILITY")
 		}
 		cap = proto.Clone(cap).(*v1.Capability)

@@ -46,6 +46,8 @@
 | [ADR 0004 开发语言与主要技术栈](../adr/0004-language-and-stack.md) | 2 决定 | 已采纳 |
 | [ADR 0005 M1 计费来源与结算](../adr/0005-billing-source-identity.md) | 2 决定 | 已采纳 |
 | [ADR 0006 M1 基础关联交接与本地诊断映射](../adr/0006-trace-source-handoff-local-mapping.md) | 2 决定 | 已采纳 |
+
+| [ADR 0007 受管理单文件发布与证据交接](../adr/0007-managed-file-publication.md) | 2 决定 | 实施中 |
 | [核心契约](core/contracts/README.md) | 3 设计 | 草稿 |
 | [持久工作](core/durable/README.md) | 3 设计 | 草稿 |
 | [执行管理](core/ledger/README.md) | 3 设计 | 草稿 |

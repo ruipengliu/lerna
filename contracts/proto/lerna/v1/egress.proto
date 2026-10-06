@@ -4,6 +4,7 @@ package lerna.v1;
 import "lerna/v1/credential.proto";
 import "lerna/v1/identity.proto";
 import "lerna/v1/ledger.proto";
+import "lerna/v1/managed_file.proto";
 import "lerna/v1/planning.proto";
 import "lerna/v1/reporting.proto";
 import "lerna/v1/submission.proto";
@@ -46,6 +47,8 @@ message PhysicalIORequest {
   PhysicalSend send = 5;
   CallDescriptor call_descriptor = 6;
   bytes body = 7;
+  FileResources file_resources = 8;
+  FileParameters file_parameters = 9;
 }
 message PhysicalIOResult {
   RawObservation observation = 1;

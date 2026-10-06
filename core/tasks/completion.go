@@ -396,7 +396,10 @@ func (s *Service) checkCondition(ctx context.Context, c *v1.Caller, r *v1.Requir
 					continue
 				}
 			} else {
-				if proof == nil || proof.Rule != "reference-target-v1" || (proof.Outcome != "APPLIED" && proof.Outcome != "NOT_APPLIED") || raw.Source != "TRUSTED_IO" || !proto.Equal(raw.OperationId, op.Ref.Name) || !proto.Equal(raw.TaskId, r.TaskId) || !proto.Equal(proof.ObservationRef, raw.Ref) {
+				if proof == nil || (proof.Rule != "reference-target-v1" && proof.Rule != "managed-file-v1") || (proof.Outcome != "APPLIED" && proof.Outcome != "NOT_APPLIED") || raw.Source != "TRUSTED_IO" || !proto.Equal(raw.OperationId, op.Ref.Name) || !proto.Equal(raw.TaskId, r.TaskId) || !proto.Equal(proof.ObservationRef, raw.Ref) {
+					continue
+				}
+				if raw.Protocol == "FILE" && outcome == "APPLIED" && !durableFileCondition(raw) {
 					continue
 				}
 				evidence = []*v1.Ref{proof.Ref, raw.Ref, raw.BodyRef}
@@ -480,4 +483,10 @@ func allScopedActionsNotApplied(r *v1.Requirements, scope *v1.TargetRecordAssert
 		}
 	}
 	return found
+}
+
+// durableFileCondition 区分已观察到发布与完成条件要求的耐久、读回双证据。
+func durableFileCondition(raw *v1.RawObservation) bool {
+	e := raw.GetFileEvidence()
+	return e != nil && e.Rule == "managed-file-v1" && e.Published && e.DurabilityConfirmed && e.ReadbackVerified && e.Terminal && e.ErrorCode == "" && e.Commit != nil
 }

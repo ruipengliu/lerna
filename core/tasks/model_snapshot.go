@@ -89,8 +89,19 @@ func (s *Service) completeModelSnapshot(ctx context.Context, caller *v1.Caller, 
 				if e != nil {
 					return e
 				}
-				if raw == nil || !proto.Equal(raw.OperationId, a.OperationId) || !proto.Equal(raw.TaskId, t.TaskId) {
+				if raw == nil || !proto.Equal(raw.TaskId, t.TaskId) {
 					return command.Fail("INVARIANT_VIOLATION")
+				}
+				if !proto.Equal(raw.OperationId, a.OperationId) {
+					// 核对观察保留独立查询身份；原动作的已接纳证据引用只提供关联。
+					query, err := s.modelLedger.QueryOperation(ctx, caller, raw.OperationId)
+					if err != nil {
+						return err
+					}
+					subject := raw.QuerySubject
+					if query == nil || query.ClosureWorkRef == nil || subject == nil || !proto.Equal(query.QuerySubject, subject) || !proto.Equal(subject.OperationId, a.OperationId) || op.Execution == nil || !proto.Equal(subject.AttemptId, op.Execution.Attempt.Ref.Name) || subject.ExternalKey != op.Execution.Attempt.ExternalKey || subject.TargetScope != op.CapabilitySnapshot.Resource || subject.ExecutorEndpointId != op.ExecutorEndpointId || !proto.Equal(subject.CapabilityRef, op.CapabilitySnapshot.Ref) {
+						return command.Fail("INVARIANT_VIOLATION")
+					}
 				}
 				snap.ContentRefs = append(snap.ContentRefs, raw.BodyRef)
 			}

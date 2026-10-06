@@ -869,6 +869,40 @@ func TestQueryableIdempotentResendRequiresQueryFirst(t *testing.T) {
 			if len(requests) != want || requests[1].Method != "GET" || len(effects) != 1 {
 				t.Fatalf("requests=%v effects=%v", requests, effects)
 			}
+			plan, e := f.h.Ledger.QueryReconciliation(f.ctx, f.caller, a.OperationId)
+			if e != nil || len(plan.GetQueryRefs()) != 1 {
+				t.Fatalf("query identity: %v %v", plan, e)
+			}
+			relation, e := f.h.Ledger.QueryReconciliationQuery(f.ctx, f.caller, plan.QueryRefs[0])
+			if e != nil {
+				t.Fatal(e)
+			}
+			query, e := f.h.Ledger.QueryOperation(f.ctx, f.caller, relation.QueryOperationRef.Name)
+			if e != nil || query.QuerySubject == nil || !proto.Equal(query.QuerySubject.OperationId, a.OperationId) || proto.Equal(query.Ref.Name, a.OperationId) {
+				t.Fatalf("query relabeled original: %v %v", query, e)
+			}
+			if requests[0].Operation != a.OperationId.LocalId || requests[0].Attempt != before.Attempt.Ref.Name.LocalId || requests[0].Send != "1" || requests[1].Operation != query.Ref.Name.LocalId || requests[1].Attempt != query.Execution.Attempt.Ref.Name.LocalId || requests[1].Send != "1" {
+				t.Fatalf("actual query/original identity: %v", requests)
+			}
+			current, e := f.h.Ledger.QueryExecution(f.ctx, f.caller, a.OperationId)
+			if e != nil {
+				t.Fatal(e)
+			}
+			executions := []*v1.Execution{before, query.Execution}
+			if queryResult != "applied" {
+				if requests[2].Operation != a.OperationId.LocalId || requests[2].Attempt != before.Attempt.Ref.Name.LocalId || requests[2].Send != "2" || requests[2].ExternalKey != requests[0].ExternalKey {
+					t.Fatalf("actual resend identity: %v", requests)
+				}
+				executions = append(executions, current)
+			}
+			seenSources := map[string]bool{}
+			for _, execution := range executions {
+				source, err := f.h.Budget.QueryBillingSource(f.ctx, f.caller, execution.Send.Ref)
+				if err != nil || source == nil || !proto.Equal(source.SendRef.Name, execution.Send.Ref.Name) || !proto.Equal(source.OperationId, execution.Attempt.OperationId) || source.Amount != nil || seenSources[source.Ref.Name.LocalId] {
+					t.Fatalf("query/resend fee source merged or fabricated: %v %v", source, err)
+				}
+				seenSources[source.Ref.Name.LocalId] = true
+			}
 			if queryResult == "drop" {
 				plan, e := f.h.Ledger.QueryReconciliation(f.ctx, f.caller, a.OperationId)
 				if e != nil {

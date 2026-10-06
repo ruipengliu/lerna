@@ -1,0 +1,89 @@
+syntax = "proto3";
+package lerna.v1;
+
+import "lerna/v1/identity.proto";
+import "lerna/v1/planning.proto";
+import "lerna/v1/submission.proto";
+
+option go_package = "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1;lernav1";
+
+// FileParameters 是由 parameters_ref 固定的载荷；字节通过内容治理读取。
+message FileParameters {
+  string expected_version = 1;
+  bytes data = 2;
+  Ref cleanup_resources_ref = 3;
+}
+// FileCommit 是目标的原生当前指针，不是另一份效果账本。
+message FileCommit {
+  string version = 1;
+  string target = 2;
+  GlobalName operation_id = 3;
+  GlobalName attempt_id = 4;
+  Ref send_ref = 5;
+  string external_key = 6;
+  string object_name = 7;
+  string digest = 8;
+  uint64 byte_size = 9;
+  Ref content_ref = 10;
+  Ref resources_ref = 11;
+  string previous_version = 12;
+  string root_identity = 13;
+}
+message FileEvidence {
+  string rule = 1;
+  string stage = 2;
+  FileCommit commit = 3;
+  bool published = 4;
+  bool durability_confirmed = 5;
+  bool readback_verified = 6;
+  bool terminal = 7;
+  string error_code = 8;
+  string platform = 9;
+  string billing_rule = 10;
+  Ref resources_ref = 11;
+  Ref accepted_observation_ref = 12;
+  bool read_terminal = 13;
+  bool negative_proof = 14;
+  string object_identity = 15;
+  string pointer_identity = 16;
+}
+// FileResources 预登记具体副本位置，失败和进程退出后仍能按原发送找到。
+message FileResources {
+  Ref ref = 1;
+  Ref derivation_ref = 2;
+  Ref content_ref = 3;
+  GlobalName operation_id = 4;
+  GlobalName attempt_id = 5;
+  Ref send_ref = 6;
+  string target = 7;
+  string object_name = 8;
+  string pointer_name = 9;
+  string digest = 10;
+  uint64 byte_size = 11;
+  string cleanup_status = 12;
+  Ref cleanup_observation_ref = 13;
+  string object_identity = 14;
+  string pointer_identity = 15;
+}
+message RegisterFileResourcesCommand {
+  CommandHeader header = 1;
+  Ref derivation_ref = 2;
+  Ref send_ref = 3;
+}
+
+// ManagedFileRoot 将部署别名绑定到第一次获准使用的原生根身份。
+message ManagedFileRoot {
+  Ref ref = 1;
+  string root_id = 2;
+  string native_identity = 3;
+  string platform = 4;
+  string executor_endpoint_id = 5;
+}
+message BindFileRootCommand {
+  CommandHeader header = 1;
+  GlobalName operation_id = 2;
+  Ref send_ref = 3;
+  string root_id = 4;
+  string native_identity = 5;
+  string platform = 6;
+}

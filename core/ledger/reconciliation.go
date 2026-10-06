@@ -102,7 +102,7 @@ func (s *Service) RequestReconciliation(ctx context.Context, caller *v1.Caller, 
 			}
 			return existing.Ref, nil
 		}
-		if op.Lifecycle == "SETTLED" {
+		if op.Lifecycle == "SETTLED" && op.Effect.Outcome != "UNKNOWN" {
 			return nil, command.Fail("ALREADY_SETTLED")
 		}
 		_, now, e := s.store.LedgerPosition(tx)
@@ -140,7 +140,7 @@ func (s *Service) RequestReconciliation(ctx context.Context, caller *v1.Caller, 
 	})
 }
 func queryCapability(op *v1.Operation, cap *v1.Capability) bool {
-	return cap != nil && cap.Action == "QUERY" && cap.UseRight == "READ" && cap.ProcessingPurpose == "CURRENT_TASK" && cap.Resource == op.CapabilitySnapshot.Resource && cap.ExecutorEndpointId == op.ExecutorEndpointId && cap.AdapterRef != nil && cap.AdapterRef.Name != nil && cap.AdapterRef.Name.LocalId == "simulator-queryable" && cap.AdapterRef.Revision == 1
+	return cap != nil && cap.Action == "QUERY" && cap.UseRight == "READ" && cap.ProcessingPurpose == "CURRENT_TASK" && cap.Resource == op.CapabilitySnapshot.Resource && cap.ExecutorEndpointId == op.ExecutorEndpointId && cap.AdapterRef != nil && cap.AdapterRef.Name != nil && (cap.AdapterRef.Name.LocalId == "simulator-queryable" && (op.CapabilitySnapshot.AdapterRef.GetName().GetLocalId() == "simulator-queryable" || op.CapabilitySnapshot.AdapterRef.GetName().GetLocalId() == "simulator-idempotent-queryable") || cap.AdapterRef.Name.LocalId == "managed-file" && op.CapabilitySnapshot.AdapterRef.GetName().GetLocalId() == "managed-file") && cap.AdapterRef.Revision == 1
 }
 
 // ValidateClosureWork 读取核心保存的精确意图；原任务版本并非查询的新开始依据。

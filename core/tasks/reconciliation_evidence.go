@@ -36,6 +36,9 @@ func (s *Service) queryConditionEvidence(ctx context.Context, c *v1.Caller, requ
 		if relation == nil || relation.Work == nil || relation.Work.Purpose != "RECONCILE" || relation.AdmissionReceipt.GetDecision() != v1.Decision_DECISION_ACCEPTED || !proto.Equal(relation.AdmissionReceipt.ResultRef, admission.Ref) || !proto.Equal(relation.QueryOperationRef.GetName(), query.Ref.Name) || !proto.Equal(relation.Work.Ref, admission.Origin) || !proto.Equal(relation.Work.QuerySubject, subject) || !proto.Equal(relation.Work.SourceRef.GetName(), relation.Ref.Name) {
 			continue
 		}
+		if raw.Protocol == "FILE" && finding.Outcome == "APPLIED" && !durableFileCondition(raw) {
+			return "", nil, nil
+		}
 		return finding.Outcome, []*v1.Ref{finding.Ref, relation.Ref, readProof.Ref, raw.Ref, raw.BodyRef}, nil
 	}
 	return "", nil, nil

@@ -63,3 +63,23 @@ func (s *Service) ConsumeSendInTransaction(ctx context.Context, a *v1.Admission,
 	source := &v1.BillingSource{Ref: command.NewRef(s.user, s.domain, "billing-source", "lerna.v1.BillingSource"), SendRef: send, ReservationRef: reservation, AdmissionRef: a.Ref, TaskId: a.TaskId, OperationId: a.OperationId, Unit: r.Unit, Status: "PENDING", PriceRuleRef: a.BudgetBasis.RateBasisRef}
 	return s.saveBillingSource(ctx, source)
 }
+
+// CheckConsumedSendInTransaction 验证原发送的费用责任仍存在，不重新占用额度。
+func (s *Service) CheckConsumedSendInTransaction(ctx context.Context, a *v1.Admission, send *v1.Ref) error {
+	r, e := s.store.(sendStore).LoadCurrentReservation(ctx, a.BudgetBasis.ReservationRef)
+	if e != nil {
+		return e
+	}
+	u, e := s.store.(sendStore).LoadSendConsumption(ctx, send)
+	if e != nil {
+		return e
+	}
+	source, e := s.store.(billingStore).LoadBillingSource(ctx, send)
+	if e != nil {
+		return e
+	}
+	if r == nil || r.Status != "RESERVED" || u == nil || source == nil || source.Status != "PENDING" || !proto.Equal(u.OperationId, a.OperationId) || !proto.Equal(source.OperationId, a.OperationId) || !proto.Equal(source.SendRef.Name, send.Name) {
+		return command.Fail("SEND_BUDGET_INVALID")
+	}
+	return nil
+}

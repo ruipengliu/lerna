@@ -342,6 +342,8 @@ type PhysicalIORequest struct {
 	Send               *PhysicalSend          `protobuf:"bytes,5,opt,name=send,proto3" json:"send,omitempty"`
 	CallDescriptor     *CallDescriptor        `protobuf:"bytes,6,opt,name=call_descriptor,json=callDescriptor,proto3" json:"call_descriptor,omitempty"`
 	Body               []byte                 `protobuf:"bytes,7,opt,name=body,proto3" json:"body,omitempty"`
+	FileResources      *FileResources         `protobuf:"bytes,8,opt,name=file_resources,json=fileResources,proto3" json:"file_resources,omitempty"`
+	FileParameters     *FileParameters        `protobuf:"bytes,9,opt,name=file_parameters,json=fileParameters,proto3" json:"file_parameters,omitempty"`
 	unknownFields      protoimpl.UnknownFields
 	sizeCache          protoimpl.SizeCache
 }
@@ -425,6 +427,20 @@ func (x *PhysicalIORequest) GetBody() []byte {
 	return nil
 }
 
+func (x *PhysicalIORequest) GetFileResources() *FileResources {
+	if x != nil {
+		return x.FileResources
+	}
+	return nil
+}
+
+func (x *PhysicalIORequest) GetFileParameters() *FileParameters {
+	if x != nil {
+		return x.FileParameters
+	}
+	return nil
+}
+
 type PhysicalIOResult struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Observation   *RawObservation        `protobuf:"bytes,1,opt,name=observation,proto3" json:"observation,omitempty"`
@@ -481,7 +497,7 @@ var File_lerna_v1_egress_proto protoreflect.FileDescriptor
 
 const file_lerna_v1_egress_proto_rawDesc = "" +
 	"\n" +
-	"\x15lerna/v1/egress.proto\x12\blerna.v1\x1a\x19lerna/v1/credential.proto\x1a\x17lerna/v1/identity.proto\x1a\x15lerna/v1/ledger.proto\x1a\x17lerna/v1/planning.proto\x1a\x18lerna/v1/reporting.proto\x1a\x19lerna/v1/submission.proto\"\xd5\x02\n" +
+	"\x15lerna/v1/egress.proto\x12\blerna.v1\x1a\x19lerna/v1/credential.proto\x1a\x17lerna/v1/identity.proto\x1a\x15lerna/v1/ledger.proto\x1a\x1blerna/v1/managed_file.proto\x1a\x17lerna/v1/planning.proto\x1a\x18lerna/v1/reporting.proto\x1a\x19lerna/v1/submission.proto\"\xd5\x02\n" +
 	"\x15StartExecutionCommand\x12/\n" +
 	"\x06header\x18\x01 \x01(\v2\x17.lerna.v1.CommandHeaderR\x06header\x122\n" +
 	"\radmission_ref\x18\x02 \x01(\v2\r.lerna.v1.RefR\fadmissionRef\x124\n" +
@@ -506,7 +522,7 @@ const file_lerna_v1_egress_proto_rawDesc = "" +
 	"\x06header\x18\x01 \x01(\v2\x17.lerna.v1.CommandHeaderR\x06header\x127\n" +
 	"\foperation_id\x18\x02 \x01(\v2\x14.lerna.v1.GlobalNameR\voperationId\x12=\n" +
 	"\rstart_receipt\x18\x03 \x01(\v2\x18.lerna.v1.CommandReceiptR\fstartReceipt\x12#\n" +
-	"\x05claim\x18\x04 \x01(\v2\r.lerna.v1.JobR\x05claim\"\xe6\x02\n" +
+	"\x05claim\x18\x04 \x01(\v2\r.lerna.v1.JobR\x05claim\"\xe9\x03\n" +
 	"\x11PhysicalIORequest\x12-\n" +
 	"\atask_id\x18\x01 \x01(\v2\x14.lerna.v1.GlobalNameR\x06taskId\x127\n" +
 	"\foperation_id\x18\x02 \x01(\v2\x14.lerna.v1.GlobalNameR\voperationId\x120\n" +
@@ -514,7 +530,9 @@ const file_lerna_v1_egress_proto_rawDesc = "" +
 	"\aattempt\x18\x04 \x01(\v2\x1a.lerna.v1.ExecutionAttemptR\aattempt\x12*\n" +
 	"\x04send\x18\x05 \x01(\v2\x16.lerna.v1.PhysicalSendR\x04send\x12A\n" +
 	"\x0fcall_descriptor\x18\x06 \x01(\v2\x18.lerna.v1.CallDescriptorR\x0ecallDescriptor\x12\x12\n" +
-	"\x04body\x18\a \x01(\fR\x04body\"b\n" +
+	"\x04body\x18\a \x01(\fR\x04body\x12>\n" +
+	"\x0efile_resources\x18\b \x01(\v2\x17.lerna.v1.FileResourcesR\rfileResources\x12A\n" +
+	"\x0ffile_parameters\x18\t \x01(\v2\x18.lerna.v1.FileParametersR\x0efileParameters\"b\n" +
 	"\x10PhysicalIOResult\x12:\n" +
 	"\vobservation\x18\x01 \x01(\v2\x18.lerna.v1.RawObservationR\vobservation\x12\x12\n" +
 	"\x04body\x18\x02 \x01(\fR\x04bodyB?Z=github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1;lernav1b\x06proto3"
@@ -549,7 +567,9 @@ var file_lerna_v1_egress_proto_goTypes = []any{
 	(*CommandReceipt)(nil),        // 13: lerna.v1.CommandReceipt
 	(*ExecutionAttempt)(nil),      // 14: lerna.v1.ExecutionAttempt
 	(*PhysicalSend)(nil),          // 15: lerna.v1.PhysicalSend
-	(*RawObservation)(nil),        // 16: lerna.v1.RawObservation
+	(*FileResources)(nil),         // 16: lerna.v1.FileResources
+	(*FileParameters)(nil),        // 17: lerna.v1.FileParameters
+	(*RawObservation)(nil),        // 18: lerna.v1.RawObservation
 }
 var file_lerna_v1_egress_proto_depIdxs = []int32{
 	6,  // 0: lerna.v1.StartExecutionCommand.header:type_name -> lerna.v1.CommandHeader
@@ -577,12 +597,14 @@ var file_lerna_v1_egress_proto_depIdxs = []int32{
 	14, // 22: lerna.v1.PhysicalIORequest.attempt:type_name -> lerna.v1.ExecutionAttempt
 	15, // 23: lerna.v1.PhysicalIORequest.send:type_name -> lerna.v1.PhysicalSend
 	10, // 24: lerna.v1.PhysicalIORequest.call_descriptor:type_name -> lerna.v1.CallDescriptor
-	16, // 25: lerna.v1.PhysicalIOResult.observation:type_name -> lerna.v1.RawObservation
-	26, // [26:26] is the sub-list for method output_type
-	26, // [26:26] is the sub-list for method input_type
-	26, // [26:26] is the sub-list for extension type_name
-	26, // [26:26] is the sub-list for extension extendee
-	0,  // [0:26] is the sub-list for field type_name
+	16, // 25: lerna.v1.PhysicalIORequest.file_resources:type_name -> lerna.v1.FileResources
+	17, // 26: lerna.v1.PhysicalIORequest.file_parameters:type_name -> lerna.v1.FileParameters
+	18, // 27: lerna.v1.PhysicalIOResult.observation:type_name -> lerna.v1.RawObservation
+	28, // [28:28] is the sub-list for method output_type
+	28, // [28:28] is the sub-list for method input_type
+	28, // [28:28] is the sub-list for extension type_name
+	28, // [28:28] is the sub-list for extension extendee
+	0,  // [0:28] is the sub-list for field type_name
 }
 
 func init() { file_lerna_v1_egress_proto_init() }
@@ -593,6 +615,7 @@ func file_lerna_v1_egress_proto_init() {
 	file_lerna_v1_credential_proto_init()
 	file_lerna_v1_identity_proto_init()
 	file_lerna_v1_ledger_proto_init()
+	file_lerna_v1_managed_file_proto_init()
 	file_lerna_v1_planning_proto_init()
 	file_lerna_v1_reporting_proto_init()
 	file_lerna_v1_submission_proto_init()

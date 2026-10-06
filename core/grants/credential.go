@@ -63,7 +63,7 @@ func (s *Service) QueryCredential(ctx context.Context, caller *v1.Caller, r *v1.
 	return c, e
 }
 func (s *Service) checkExit(ctx context.Context, b *v1.ExitCredentialBinding, a *v1.Admission) (*v1.Grant, error) {
-	if b == nil || a == nil || b.UserId != s.user || b.Audience != "egress" || b.CallerIssuerId != "egress" || b.ExecutorInstance == "" || b.DescriptorDigest == "" || b.SendSeq == 0 || b.AttemptId == nil || b.AttemptId.UserId != s.user || b.AttemptId.AuthorityDomainId != a.LedgerDomainId || b.AttemptId.ObjectKind != "attempt" || b.AttemptId.LocalId == "" || !proto.Equal(b.TaskId, a.TaskId) || !proto.Equal(b.SubjectId, a.TaskId) || !proto.Equal(b.OperationId, a.OperationId) || !proto.Equal(b.AdmissionRef, a.Ref) || !proto.Equal(b.GrantUseRef, a.GrantUseRef) || b.ExecutorEndpointId != a.ExecutorEndpointId || b.RequirementsVersion != a.RequirementsVersion || b.InputVersion != a.InputVersion || b.ControlGeneration != a.ControlGeneration || a.BudgetBasis == nil || !proto.Equal(b.BudgetReservationRef, a.BudgetBasis.ReservationRef) || a.CapabilitySnapshot == nil || b.UseRight != a.CapabilitySnapshot.UseRight || b.ProcessingPurpose != a.CapabilitySnapshot.ProcessingPurpose || (b.UseRight != "INVOKE" && (a.CapabilitySnapshot.Action != "QUERY" || b.UseRight != "READ")) || b.ProcessingPurpose != "CURRENT_TASK" {
+	if b == nil || a == nil || b.UserId != s.user || b.Audience != "egress" || b.CallerIssuerId != "egress" || b.ExecutorInstance == "" || b.DescriptorDigest == "" || b.SendSeq == 0 || b.AttemptId == nil || b.AttemptId.UserId != s.user || b.AttemptId.AuthorityDomainId != a.LedgerDomainId || b.AttemptId.ObjectKind != "attempt" || b.AttemptId.LocalId == "" || !proto.Equal(b.TaskId, a.TaskId) || !proto.Equal(b.SubjectId, a.TaskId) || !proto.Equal(b.OperationId, a.OperationId) || !proto.Equal(b.AdmissionRef, a.Ref) || !proto.Equal(b.GrantUseRef, a.GrantUseRef) || b.ExecutorEndpointId != a.ExecutorEndpointId || b.RequirementsVersion != a.RequirementsVersion || b.InputVersion != a.InputVersion || b.ControlGeneration != a.ControlGeneration || a.BudgetBasis == nil || !proto.Equal(b.BudgetReservationRef, a.BudgetBasis.ReservationRef) || a.CapabilitySnapshot == nil || b.UseRight != a.CapabilitySnapshot.UseRight || b.ProcessingPurpose != a.CapabilitySnapshot.ProcessingPurpose || (b.UseRight != "INVOKE" && ((a.CapabilitySnapshot.Action != "QUERY" && (a.CapabilitySnapshot.Action != "READ" || a.CapabilitySnapshot.AdapterRef.GetName().GetLocalId() != "managed-file")) || b.UseRight != "READ")) || b.ProcessingPurpose != "CURRENT_TASK" {
 		return nil, command.Fail("CREDENTIAL_BINDING_MISMATCH")
 	}
 	u, e := s.store.LoadGrantUse(ctx, a.OperationId)
@@ -134,4 +134,37 @@ func (s *Service) QueryCredentialUse(ctx context.Context, caller *v1.Caller, r *
 		return nil, e
 	}
 	return s.store.LoadExitCredentialUse(ctx, r)
+}
+
+// ValidateConsumedCredentialInTransaction 复查本次有界文件使用，不再次消费单次凭据。
+func (s *Service) ValidateConsumedCredentialInTransaction(ctx context.Context, caller *v1.Caller, r *v1.Ref, b *v1.ExitCredentialBinding, a *v1.Admission) error {
+	if caller.GetUserId() != s.user || caller.GetIssuerId() != "egress" {
+		return command.Fail("PERMISSION_DENIED")
+	}
+	c, e := s.QueryCredential(ctx, caller, r)
+	if e != nil {
+		return e
+	}
+	if c == nil || c.State != "ISSUED" || !proto.Equal(c.Binding, b) {
+		return command.Fail("CREDENTIAL_INVALID")
+	}
+	g, e := s.checkExit(ctx, b, a)
+	if e != nil {
+		return e
+	}
+	_, now, e := s.store.Position(ctx)
+	if e != nil {
+		return e
+	}
+	if now >= c.ExpiresAtUnixMs || c.RevocationEpoch != g.RevocationEpoch {
+		return command.Fail("CREDENTIAL_INVALID")
+	}
+	u, e := s.store.LoadExitCredentialUse(ctx, r)
+	if e != nil {
+		return e
+	}
+	if u == nil || u.ConsumedSendIdentity != fmt.Sprintf("%s/%d", b.AttemptId.LocalId, b.SendSeq) {
+		return command.Fail("CREDENTIAL_INVALID")
+	}
+	return nil
 }

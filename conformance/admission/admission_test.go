@@ -129,6 +129,9 @@ func newFixture(t *testing.T, userLimit, taskLimit int64, confirmation bool) *fi
 	return newFixtureWithTarget(t, userLimit, taskLimit, confirmation, nil)
 }
 func newFixtureWithTarget(t *testing.T, userLimit, taskLimit int64, confirmation bool, target http.Handler) *fixture {
+	return newFixtureWithTargetAndFiles(t, userLimit, taskLimit, confirmation, target, nil)
+}
+func newFixtureWithTargetAndFiles(t *testing.T, userLimit, taskLimit int64, confirmation bool, target http.Handler, roots map[string]string) *fixture {
 	t.Helper()
 	f := &fixture{ctx: context.Background(), caller: &v1.Caller{UserId: "u", IssuerId: "host"}}
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -142,7 +145,7 @@ func newFixtureWithTarget(t *testing.T, userLimit, taskLimit int64, confirmation
 	t.Cleanup(server.Close)
 	var err error
 	f.path = filepath.Join(t.TempDir(), "state.db")
-	f.h, err = assembly.Open(f.path, "u", "d")
+	f.h, err = assembly.OpenWithFiles(f.path, "u", "d", roots)
 	if err != nil {
 		t.Fatal(err)
 	}

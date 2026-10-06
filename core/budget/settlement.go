@@ -143,6 +143,9 @@ func (s *Service) settleReport(ctx context.Context, caller *v1.Caller, u *v1.Usa
 		return command.Fail("CONTENT_UNUSABLE")
 	}
 	bill, e := parseBill(command.ContentBytes(body))
+	if raw.Protocol == "FILE" {
+		bill, e = s.fileZeroBill(ctx, caller, raw)
+	}
 	if e != nil {
 		return e
 	}
@@ -321,4 +324,38 @@ func (s *Service) QueryBillingSourceVersion(ctx context.Context, c *v1.Caller, r
 		return nil, command.Fail("INVALID_REFERENCE")
 	}
 	return v, e
+}
+
+// fileZeroBill 的零费用来自固定本机协议，不从效果或缺少账单推断。
+func (s *Service) fileZeroBill(ctx context.Context, caller *v1.Caller, raw *v1.RawObservation) (*referenceBill, error) {
+	facts, ok := s.usageSource.(interface {
+		QueryOperation(context.Context, *v1.Caller, *v1.GlobalName) (*v1.Operation, error)
+	})
+	if !ok {
+		return nil, command.Fail("DEPENDENCY_UNAVAILABLE")
+	}
+	op, e := facts.QueryOperation(ctx, caller, raw.OperationId)
+	if e != nil {
+		return nil, e
+	}
+	if op == nil || op.Execution == nil || op.CapabilitySnapshot == nil {
+		return nil, command.Fail("INVALID_USAGE_SOURCE")
+	}
+	execution, ok := s.usageSource.(BillingExecution)
+	if !ok {
+		return nil, command.Fail("DEPENDENCY_UNAVAILABLE")
+	}
+	x, e := execution.QuerySendExecution(ctx, caller, raw.OperationId, raw.SendRef)
+	if e != nil {
+		return nil, e
+	}
+	if x == nil {
+		return nil, command.Fail("INVALID_USAGE_SOURCE")
+	}
+	cap := op.CapabilitySnapshot
+	if cap.AdapterRef.GetName().GetLocalId() != "managed-file" || cap.AdapterRef.GetRevision() != 1 || !cap.Nonbillable || cap.FeeCeiling == nil || cap.GetFeeCeiling() != 0 || x.Attempt.Capabilities.GetProtocolVersion() != "lerna-managed-file-v1" || raw.FileEvidence.GetBillingRule() != "managed-file-zero-v1" || !proto.Equal(x.Send.Ref.Name, raw.SendRef.Name) || raw.ExternalKey != x.Attempt.ExternalKey {
+		return nil, nil
+	}
+	zero := int64(0)
+	return &referenceBill{Rule: "managed-file-zero-v1", Namespace: "lerna-managed-file", Account: raw.UserId, NativeInstance: raw.SendRef.Name.LocalId, Component: "local-io", SendID: raw.SendRef.Name.LocalId, ExternalKey: raw.ExternalKey, SourceVersion: 1, Unit: "USD_MICRO", Amount: &zero, Final: true, PriceVersion: "managed-file-price-v1"}, nil
 }

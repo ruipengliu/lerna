@@ -5,6 +5,7 @@ import (
 	"context"
 	"time"
 
+	fileadapter "github.com/ruipengliu/lerna/adapters/file"
 	"github.com/ruipengliu/lerna/adapters/simulator"
 
 	v1 "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1"
@@ -36,7 +37,10 @@ type Harness struct {
 	store      *sqlite.Store
 }
 
-func Open(path, user, domain string) (*Harness, error) {
+func Open(path, user, domain string) (*Harness, error) { return OpenWithFiles(path, user, domain, nil) }
+
+// OpenWithFiles 固定宿主配置的受管理根；配置本身不访问外部文件。
+func OpenWithFiles(path, user, domain string, roots map[string]string) (*Harness, error) {
 	s, err := sqlite.Open(path, user, domain)
 	if err != nil {
 		return nil, err
@@ -51,7 +55,7 @@ func Open(path, user, domain string) (*Harness, error) {
 	t.WithConfirmationRequests(h.Sessions, c).WithModelContent(c)
 	h.Budget = budget.New(s, d, user, domain, "host")
 	h.LedgerWork = durable.New(s.LedgerWork(), user, domain+"/ledger")
-	h.Ledger = ledger.New(s, user, domain+"/ledger", domain).WithWork(h.LedgerWork).WithCompiler(simulator.Adapter{}).WithStarts(t)
+	h.Ledger = ledger.New(s, user, domain+"/ledger", domain).WithWork(h.LedgerWork).WithCompiler(executionCompiler{}).WithStarts(t)
 	c.WithObservations(durable.New(s.ContentWork(), user, domain+"/content"), h.Ledger)
 	h.Ledger.WithObservations(c)
 	h.Budget.WithUsageSource(h.Ledger).WithBillingEvidence(c).WithCompletionAuthority(t)
@@ -64,7 +68,7 @@ func Open(path, user, domain string) (*Harness, error) {
 		s.Close()
 		return nil, e
 	}
-	h.Egress = egress.New(t, h.Ledger, c, egressio.HTTP{}, critical)
+	h.Egress = egress.New(t, h.Ledger, c, physicalIO{files: egressio.NewFiles(roots, h.Ledger, c)}, critical)
 	t.WithModelExecution(h.Ledger, h.LedgerWork, h.Grants, h.Egress)
 	h.Ledger.WithGrantClosures(h.Grants)
 	h.Grants.WithRevocationExits(h.Egress)
@@ -133,3 +137,22 @@ func Open(path, user, domain string) (*Harness, error) {
 }
 func (h *Harness) Close() error                     { return h.store.Close() }
 func (h *Harness) StorageSettings() sqlite.Settings { return h.store.Settings() }
+
+// executionCompiler 只分派已经固定的能力版本。
+type executionCompiler struct{}
+
+func (executionCompiler) Compile(op *v1.Operation, attempt *v1.ExecutionAttempt) (*v1.CallDescriptor, *v1.ExecutionCapabilities, error) {
+	if op.GetCapabilitySnapshot().GetAdapterRef().GetName().GetLocalId() == "managed-file" {
+		return (fileadapter.Adapter{}).Compile(op, attempt)
+	}
+	return (simulator.Adapter{}).Compile(op, attempt)
+}
+
+type physicalIO struct{ files *egressio.Files }
+
+func (p physicalIO) Perform(ctx context.Context, r *v1.PhysicalIORequest) (*v1.PhysicalIOResult, error) {
+	return (egressio.HTTP{}).Perform(ctx, r)
+}
+func (p physicalIO) PerformChecked(ctx context.Context, r *v1.PhysicalIORequest, check func(context.Context) error) (*v1.PhysicalIOResult, error) {
+	return p.files.PerformChecked(ctx, r, check)
+}

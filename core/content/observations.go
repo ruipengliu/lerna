@@ -52,8 +52,19 @@ func (s *Service) RegisterObservation(ctx context.Context, caller *v1.Caller, c 
 		if e = s.checkAssociation(tx, caller, o.TaskId, o.OperationId, o.AttemptId); e != nil {
 			return nil, e
 		}
+		if e = s.recordFileResourceObservation(tx, caller, o, c.Header.Identity); e != nil {
+			return nil, e
+		}
 		o = proto.Clone(o).(*v1.RawObservation)
 		body := &v1.Content{Ref: command.NewRef(s.user, s.domain, "content", "lerna.v1.Content"), Source: c.Header.Identity, MediaType: "application/octet-stream", ProcessingPurposes: []string{"CURRENT_TASK", "EFFECT_EVIDENCE"}, ContentVersion: 1, Kind: "RAW_OBSERVATION", TaskId: o.TaskId, OperationId: o.OperationId, AttemptId: o.AttemptId, SourceDescriptor: &v1.ContentSourceDescriptor{Kind: "TRUSTED_IO", Locator: o.Target, AcquisitionMethod: "EGRESS", ProviderVersion: "egress-v1", SourceTimeUnixMs: o.FinishedAtUnixMs, ObservationRef: o.Ref}}
+		if o.Protocol == "FILE" && o.FileEvidence.GetCommit() != nil {
+			source := o.FileEvidence.Commit.ContentRef
+			if e = s.CheckUsable(tx, caller, source); e != nil {
+				return nil, e
+			}
+			body.DerivedFrom = []*v1.Ref{source}
+			body.ProcessingPurposes = []string{"CURRENT_TASK"}
+		}
 		body.ContentId = body.Ref.Name.LocalId
 		o.BodyRef = body.Ref
 		h := &v1.ObservationHandoff{Observation: o, Command: &v1.AcceptObservationCommand{Header: observationHeader(s.user, "content-observation", o.OperationId.AuthorityDomainId, "observe:"+o.Ref.Name.LocalId), Observation: o}}
@@ -117,6 +128,9 @@ func (s *Service) ProcessObservations(ctx context.Context, caller *v1.Caller) er
 		h.RecipientReceipt = r
 		ack := observationHeader(s.user, "content-observation", s.domain, "ack:"+h.Observation.Ref.Name.LocalId)
 		_, e = s.work.Execute(ctx, actor, ack, command.SemanticFingerprint("observation-ack", h.Observation.Ref, r), "content.observation_ack", func(tx context.Context) (*v1.Ref, error) {
+			if e := s.acceptFileResourceCleanup(tx, actor, h.Observation, ack.Identity); e != nil {
+				return nil, e
+			}
 			return h.Observation.Ref, s.store.(observationStore).SaveObservationHandoff(tx, h)
 		})
 		if e != nil {

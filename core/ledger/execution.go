@@ -68,7 +68,7 @@ func (s *Service) Prepare(ctx context.Context, caller *v1.Caller, c *v1.PrepareE
 			return op.Execution.Attempt.Ref, nil
 		}
 		cap := op.CapabilitySnapshot
-		if cap.Action != "CREATE" && cap.Action != "MODEL_INFER" && (cap.Action != "QUERY" || op.QuerySubject == nil || op.ClosureWorkRef == nil) {
+		if cap.Action != "CREATE" && cap.Action != "MODEL_INFER" && (cap.Action != "QUERY" || op.QuerySubject == nil || op.ClosureWorkRef == nil) && (cap.AdapterRef.GetName().GetLocalId() != "managed-file" || (cap.Action != "REPLACE" && cap.Action != "READ" && cap.Action != "CLEANUP")) {
 			return nil, command.Fail("UNSUPPORTED_FEATURE")
 		}
 		attempt := &v1.ExecutionAttempt{Ref: command.NewRef(s.user, s.domain, "attempt", "lerna.v1.ExecutionAttempt"), OperationId: c.OperationId, AttemptNo: 1, Phase: "REGISTERED", ExternalKeyScope: cap.Resource}
@@ -139,4 +139,30 @@ func (s *Service) ValidateStart(ctx context.Context, c *v1.Caller, b *v1.ExitCre
 // CheckRecoveryAllowed 只从已核验的本地账本读取恢复状态。
 func (s *Service) CheckRecoveryAllowed(ctx context.Context) error {
 	return s.store.(interface{ CheckRecoveryAllowed(context.Context) error }).CheckRecoveryAllowed(ctx)
+}
+
+// ValidateFileUse 只核验已开放的原发送；返回引用不能授权第二次物理调用。
+func (s *Service) ValidateFileUse(ctx context.Context, c *v1.Caller, b *v1.ExitCredentialBinding, d *v1.CallDescriptor, j *v1.Job, now int64) (*v1.Ref, error) {
+	if b == nil || d == nil || d.Protocol != "FILE" || c.GetIssuerId() != "egress" {
+		return nil, command.Fail("CREDENTIAL_BINDING_MISMATCH")
+	}
+	job, e := s.work.CheckExecutionClaimAt(ctx, j, now)
+	if e != nil {
+		return nil, e
+	}
+	op, e := s.QueryOperation(ctx, c, b.OperationId)
+	if e != nil {
+		return nil, e
+	}
+	if op == nil || op.Execution == nil || op.Dispatch != "OPEN" {
+		return nil, command.Fail("DISPATCH_SEALED")
+	}
+	x := op.Execution
+	if !proto.Equal(job.SpecificationRef.Name, b.OperationId) || x.Send.Phase != "DISPATCH_POSSIBLE" || !proto.Equal(x.Attempt.Ref.Name, b.AttemptId) || x.Send.SendSeq != b.SendSeq || !proto.Equal(x.CallDescriptor, d) || x.CallDescriptor.Digest != b.DescriptorDigest || op.ExecutorEndpointId != b.ExecutorEndpointId || !proto.Equal(op.AdmissionRef, b.AdmissionRef) || x.Send.ProcessInstance != b.ExecutorInstance || job.ProcessInstance != b.ExecutorInstance || job.ClaimEpoch != x.Send.ClaimEpoch {
+		return nil, command.Fail("STALE_CLAIM")
+	}
+	if e = s.CheckRecoveryAllowed(ctx); e != nil {
+		return nil, e
+	}
+	return x.Send.Ref, nil
 }

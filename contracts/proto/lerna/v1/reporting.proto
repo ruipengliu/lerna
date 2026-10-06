@@ -3,6 +3,7 @@ package lerna.v1;
 
 import "lerna/v1/closure.proto";
 import "lerna/v1/identity.proto";
+import "lerna/v1/managed_file.proto";
 import "lerna/v1/planning.proto";
 import "lerna/v1/submission.proto";
 
@@ -28,6 +29,7 @@ message RawObservation {
   string transport_error = 18;
   string provider_request_id = 19;
   QuerySubject query_subject = 20;
+  FileEvidence file_evidence = 21;
 }
 message RegisterObservationCommand {
   CommandHeader header = 1;

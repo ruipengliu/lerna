@@ -59,6 +59,9 @@ func (s *Service) InterpretObservation(ctx context.Context, caller *v1.Caller, c
 			return nil, command.Fail("CONTENT_UNUSABLE")
 		}
 		finding := interpretSimulator(raw, body.RawBody, op.Execution.Attempt)
+		if raw.Protocol == "FILE" {
+			finding = interpretFile(raw, op)
+		}
 		if op.QuerySubject != nil {
 			finding = interpretQuery(raw, body.RawBody, op)
 		} else if op.Execution.Attempt.GetCapabilities().GetProtocolVersion() == "lerna-model-v1" {
