@@ -1,0 +1,48 @@
+{
+  "kind": "actual ONE finite build immediate STOP_RELEASE before static freshbinary/sourcepost facts",
+  "head": "d0fcc61264904070ce94e1146f07327a0ef9b2aa",
+  "source_current_clean": true,
+  "original_pre": {
+    "event": "native_start_ack",
+    "operation": "closure-cpu-build",
+    "pid": 4178176,
+    "pgid": 4178176,
+    "starttime": "17534537",
+    "root": "/tmp/lerna-partition-durable-closure-cpu-execution",
+    "argv": [
+      "bash",
+      "-c",
+      "set -e; set -o pipefail; source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; export GOFLAGS=-mod=readonly; export GOPROXY=off; cd /tmp/lerna-worktrees/current-ci-partition; exec /home/agent/.local/toolchains/go1.27.1/bin/go test -c -p=1 -count=1 -race -tags=integration -mod=readonly -timeout=120s -o /tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure-race.test ./conformance/component"
+    ],
+    "deadline_seconds": 120
+  },
+  "native": {
+    "event": "native_completion_ack",
+    "operation": "closure-cpu-build",
+    "pid": 4178176,
+    "pgid": 4178176,
+    "starttime": "17534537",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false,
+    "owned_raw_fsync_close_ack": true
+  },
+  "actual_owner_session": 13533,
+  "actual_owner_tool_exit": 0,
+  "original_owner_Wait_confirmed": true,
+  "current_native_group_absent": true,
+  "raw_firstClose_fsyncACK": true,
+  "raw": "/tmp/lerna-partition-durable-closure-cpu-execution/closure-cpu-build.log",
+  "raw_sha256": "7ad4920661e41ed449380258ac0275cbb21fdb5a205f042d47657fd5ee70ef69",
+  "raw_lines": 1,
+  "owned_original_scope_interval_1based": [
+    1,
+    2
+  ],
+  "owned_ledger_beforeRelease_sha256": "15972f11e70909e08ed1b4902a68b67615cb30ad6bd780e1affe859c1c35f19b",
+  "profile_not_created_case_not_executed": true,
+  "no_test_pprof_DB_probe_warmup_retry": true,
+  "fresh_binary_hash_devino_sourcepost_pending_STATIC_only": true,
+  "STATIC_STOP": true,
+  "LOCAL_RELEASE": true
+}

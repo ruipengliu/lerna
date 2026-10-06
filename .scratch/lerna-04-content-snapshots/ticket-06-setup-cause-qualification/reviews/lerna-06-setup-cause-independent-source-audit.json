@@ -1,0 +1,12 @@
+{
+  "kind": "independent_complete_machine_source_audit_only_not_native",
+  "old_sha256": "c9a098141d23cda9c40d210539384d7cfb17b0d6b4f0222c16d70577308ff7e5",
+  "new_sha256": "a4fe8bc8559dd1f21aa3726efbc61f6c595a3e39107023f230675742d38ee771",
+  "changed_regions_all_independently_exact": 22,
+  "full_original_reconstruction_exact": true,
+  "prefix_bytes": 9707,
+  "suffix_bytes": 62744,
+  "classifier_exact": true,
+  "closed_frame_close_order_cause_loop_ack_fields_exact": true,
+  "manifest_read_in_full_machine": "/tmp/lerna-06-setup-cause-first-green-static/wholebyte-success-equivalence-proof.json"
+}

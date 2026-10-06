@@ -1,0 +1,123 @@
+{
+  "kind": "STATIC same-profile/binary ready for separately granted bounded flat40/cum40; unexecuted",
+  "head": "d0fcc61264904070ce94e1146f07327a0ef9b2aa",
+  "case_release": "/tmp/lerna-partition-durable-closure-cpu-execution/closure-cpu-case-release.json",
+  "case_release_sha256": "66e2e93bf267aa6875ffa413c94499f9315a4f2470d9be01813236c12952aced",
+  "case_post": "/tmp/lerna-partition-durable-closure-cpu-execution/closure-cpu-case-source-postlaunch.json",
+  "case_post_sha256": "41d2629c77133786262b5c154890360283c5e609daad48cee1be981764334e5b",
+  "binary": {
+    "path": "/tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure-race.test",
+    "device": 33,
+    "inode": 485542,
+    "mode": "0o700",
+    "bytes": 30448868,
+    "sha256": "ec4ed121fdda09707f904268bb4e8ff9beb8f5fbcbf226d810130408bdab1306",
+    "mtime_ns": 1791207108760087375,
+    "ctime_ns": 1791207108810562554,
+    "postWait_observation_not_original_writer_preACK": true,
+    "header": "7f454c4602010100",
+    "no_producer_Close_backfill": true
+  },
+  "profile": {
+    "path": "/tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure.cpu.pprof",
+    "device": 33,
+    "inode": 485853,
+    "mode": "0o600",
+    "bytes": 96735,
+    "sha256": "9239f7fb4c5ad82d10c517bd2dba614dae31c5e7174736bf96763a537bd3dc48",
+    "mtime_ns": 1791207477016768250,
+    "ctime_ns": 1791207477016768250,
+    "postWait_observation_not_original_writer_preACK": true,
+    "header": "1f8b080000000000",
+    "no_producer_Close_backfill": true
+  },
+  "producer_UNKNOWN_protected": true,
+  "original_manifest_sha256": "540b1439ac21cc70a86a28dc71939e145c1492c0831f0e9434aefa5c3b4f79da",
+  "two_expected_analysis_operations": [
+    {
+      "operation": "closure-cpu-flat40",
+      "phase": "one same-profile flat report",
+      "target_argv": [
+        "/home/agent/.local/toolchains/go1.27.1/bin/go",
+        "tool",
+        "pprof",
+        "-top",
+        "-nodecount=40",
+        "-nodefraction=0",
+        "-sample_index=cpu",
+        "-unit=s",
+        "-symbolize=local",
+        "/tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure-race.test",
+        "/tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure.cpu.pprof"
+      ],
+      "target_cwd": "/tmp/lerna-partition-durable-closure-cpu-execution",
+      "native_shell_wrapper_full": "set -e; set -o pipefail; source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; export GOFLAGS=-mod=readonly; export GOPROXY=off; export GOSUMDB=off; export PPROF_TMPDIR=/tmp/lerna-partition-durable-closure-cpu-execution/pprof-tmp; export PPROF_BINARY_PATH=/tmp/lerna-partition-durable-closure-cpu-execution/artifacts; cd /tmp/lerna-partition-durable-closure-cpu-execution; exec /home/agent/.local/toolchains/go1.27.1/bin/go tool pprof -top -nodecount=40 -nodefraction=0 -sample_index=cpu -unit=s -symbolize=local /tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure-race.test /tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure.cpu.pprof",
+      "native_argv": [
+        "bash",
+        "-c",
+        "set -e; set -o pipefail; source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; export GOFLAGS=-mod=readonly; export GOPROXY=off; export GOSUMDB=off; export PPROF_TMPDIR=/tmp/lerna-partition-durable-closure-cpu-execution/pprof-tmp; export PPROF_BINARY_PATH=/tmp/lerna-partition-durable-closure-cpu-execution/artifacts; cd /tmp/lerna-partition-durable-closure-cpu-execution; exec /home/agent/.local/toolchains/go1.27.1/bin/go tool pprof -top -nodecount=40 -nodefraction=0 -sample_index=cpu -unit=s -symbolize=local /tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure-race.test /tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure.cpu.pprof"
+      ],
+      "supervisor_argv": [
+        "python3",
+        "/tmp/lerna-partition-durable-closure-cpu-execution/run-native.py",
+        "closure-cpu-flat40",
+        "bash",
+        "-c",
+        "set -e; set -o pipefail; source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; export GOFLAGS=-mod=readonly; export GOPROXY=off; export GOSUMDB=off; export PPROF_TMPDIR=/tmp/lerna-partition-durable-closure-cpu-execution/pprof-tmp; export PPROF_BINARY_PATH=/tmp/lerna-partition-durable-closure-cpu-execution/artifacts; cd /tmp/lerna-partition-durable-closure-cpu-execution; exec /home/agent/.local/toolchains/go1.27.1/bin/go tool pprof -top -nodecount=40 -nodefraction=0 -sample_index=cpu -unit=s -symbolize=local /tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure-race.test /tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure.cpu.pprof"
+      ],
+      "finite_outer_seconds": 120,
+      "original_native_preACK_PID_equals_PGID_start_fullargv_fsync": true,
+      "raw": "/tmp/lerna-partition-durable-closure-cpu-execution/closure-cpu-flat40.log",
+      "prelaunch": "/tmp/lerna-partition-durable-closure-cpu-execution/closure-cpu-flat40-prelaunch.json",
+      "outcome": "/tmp/lerna-partition-durable-closure-cpu-execution/closure-cpu-flat40-outcome.json",
+      "native_operation_not_started": true,
+      "STOP_RELEASE_required_after_this_operation": true,
+      "requires_separate_explicit_grant_or_root_approved_ordered_small_block": true
+    },
+    {
+      "operation": "closure-cpu-cum40",
+      "phase": "one same-profile cumulative report",
+      "target_argv": [
+        "/home/agent/.local/toolchains/go1.27.1/bin/go",
+        "tool",
+        "pprof",
+        "-cum",
+        "-top",
+        "-nodecount=40",
+        "-nodefraction=0",
+        "-sample_index=cpu",
+        "-unit=s",
+        "-symbolize=local",
+        "/tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure-race.test",
+        "/tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure.cpu.pprof"
+      ],
+      "target_cwd": "/tmp/lerna-partition-durable-closure-cpu-execution",
+      "native_shell_wrapper_full": "set -e; set -o pipefail; source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; export GOFLAGS=-mod=readonly; export GOPROXY=off; export GOSUMDB=off; export PPROF_TMPDIR=/tmp/lerna-partition-durable-closure-cpu-execution/pprof-tmp; export PPROF_BINARY_PATH=/tmp/lerna-partition-durable-closure-cpu-execution/artifacts; cd /tmp/lerna-partition-durable-closure-cpu-execution; exec /home/agent/.local/toolchains/go1.27.1/bin/go tool pprof -cum -top -nodecount=40 -nodefraction=0 -sample_index=cpu -unit=s -symbolize=local /tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure-race.test /tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure.cpu.pprof",
+      "native_argv": [
+        "bash",
+        "-c",
+        "set -e; set -o pipefail; source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; export GOFLAGS=-mod=readonly; export GOPROXY=off; export GOSUMDB=off; export PPROF_TMPDIR=/tmp/lerna-partition-durable-closure-cpu-execution/pprof-tmp; export PPROF_BINARY_PATH=/tmp/lerna-partition-durable-closure-cpu-execution/artifacts; cd /tmp/lerna-partition-durable-closure-cpu-execution; exec /home/agent/.local/toolchains/go1.27.1/bin/go tool pprof -cum -top -nodecount=40 -nodefraction=0 -sample_index=cpu -unit=s -symbolize=local /tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure-race.test /tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure.cpu.pprof"
+      ],
+      "supervisor_argv": [
+        "python3",
+        "/tmp/lerna-partition-durable-closure-cpu-execution/run-native.py",
+        "closure-cpu-cum40",
+        "bash",
+        "-c",
+        "set -e; set -o pipefail; source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; export GOFLAGS=-mod=readonly; export GOPROXY=off; export GOSUMDB=off; export PPROF_TMPDIR=/tmp/lerna-partition-durable-closure-cpu-execution/pprof-tmp; export PPROF_BINARY_PATH=/tmp/lerna-partition-durable-closure-cpu-execution/artifacts; cd /tmp/lerna-partition-durable-closure-cpu-execution; exec /home/agent/.local/toolchains/go1.27.1/bin/go tool pprof -cum -top -nodecount=40 -nodefraction=0 -sample_index=cpu -unit=s -symbolize=local /tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure-race.test /tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure.cpu.pprof"
+      ],
+      "finite_outer_seconds": 120,
+      "original_native_preACK_PID_equals_PGID_start_fullargv_fsync": true,
+      "raw": "/tmp/lerna-partition-durable-closure-cpu-execution/closure-cpu-cum40.log",
+      "prelaunch": "/tmp/lerna-partition-durable-closure-cpu-execution/closure-cpu-cum40-prelaunch.json",
+      "outcome": "/tmp/lerna-partition-durable-closure-cpu-execution/closure-cpu-cum40-outcome.json",
+      "native_operation_not_started": true,
+      "STOP_RELEASE_required_after_this_operation": true,
+      "requires_separate_explicit_grant_or_root_approved_ordered_small_block": true
+    }
+  ],
+  "native_analysis_not_started_not_authorized": true,
+  "ledger_current_lines": 17,
+  "ledger_current_sha256": "27de4f311079165d2680511e483fdcf2e8ca91d84b27a87be57b3e2bb932ba8c",
+  "not_new_profile_or_wholeR_qualification": true
+}

@@ -1,0 +1,24 @@
+{
+  "status": "METADATA_ONLY_V2_OF_SAME_ORIGINAL_FMT_NO_FMT_GO_RERUN",
+  "root_full_hunk_adoption": "Parent explicitly reviewed complete5008B diff: layout and one optional struct-field semicolon to newline; exact ndiff pair binds complete source bytes. No global normalization or semantic inference.",
+  "original_checker_exit1_retained": true,
+  "static_metadata_dictionary_SyntaxError_retained": true,
+  "fmt_raw_original_sha256": "f688fbd88e6bf27fe19bff9b28a7c9b7688753b4dbc495aa62a255c25c2111cc",
+  "fmt_actual": {
+    "event": "native_completion_ack",
+    "operation": "setup-cause-mechanics-format",
+    "pid": 3597,
+    "pgid": 3597,
+    "starttime": "17620048",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false,
+    "owned_raw_fsync_close_ack": true
+  },
+  "current_fmt_group_members": [],
+  "formatted27_sha256": "e8887ab7681a5469b17165312b2938251476f15f822a15a27eea711ffb584ccd",
+  "source27_and_snapshots_byte_equal": true,
+  "original349_ledger_prefix_unchanged": true,
+  "protected16_original_devino0700": true,
+  "mechanics_N_R_not_started": true
+}

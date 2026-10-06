@@ -1,0 +1,76 @@
+{
+  "kind": "STATIC original case postsource and exact profile/binary facts after actual release",
+  "head": "d0fcc61264904070ce94e1146f07327a0ef9b2aa",
+  "clean": true,
+  "qualified6": {
+    "scripts/component-integration-race.test.mjs": {
+      "bytes": 14867,
+      "sha256": "980549594cb0754ca01c72626986359184b7344782fa1ceddb9e9b9e7170a6be"
+    },
+    "scripts/test-component-integration-race.sh": {
+      "bytes": 3622,
+      "sha256": "58625eb9021299a7549a3b98ad3bd2b70b24a85acf2ac44662d0118aede91937"
+    },
+    "scripts/testdata/component-content-97.json": {
+      "bytes": 14126,
+      "sha256": "99301ce17abe265578d272a1150093e8e17cc5a73ca71a174752cf6090b3c049"
+    },
+    "scripts/bounded-build.mjs": {
+      "bytes": 4201,
+      "sha256": "9987ff70c2ff6349ca9de5fe225ea6e310379534f633dffef0ef738a168b3a6e"
+    },
+    "scripts/conformance-ownership.mjs": {
+      "bytes": 5453,
+      "sha256": "d17b90608d45335036f7c794b1f4e9d651a010bec60aed44d7fd26b0b030f88d"
+    },
+    "scripts/testdata/component-durable-60.json": {
+      "bytes": 8583,
+      "sha256": "3fc89edc6f2ad8dbd1377441615b3636c201e02bb5af5e225cdcfe480b9eb194"
+    }
+  },
+  "module286_allunchanged": true,
+  "module286_inventory_sha256": "244ff00bc019bbbe41ac0fd1f47d6094b51584e8d18d2caa6af7be5a7ce04562",
+  "Run30_allunchanged": true,
+  "strict90a_Go_tool_sources_allunchanged": true,
+  "old5ledgers_counters_2UNKNOWN_allunchanged": true,
+  "new3ownedFS_devino_mode_unchanged": true,
+  "artifacts": {
+    "same_binary": {
+      "path": "/tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure-race.test",
+      "device": 33,
+      "inode": 485542,
+      "mode": "0o700",
+      "bytes": 30448868,
+      "sha256": "ec4ed121fdda09707f904268bb4e8ff9beb8f5fbcbf226d810130408bdab1306",
+      "mtime_ns": 1791207108760087375,
+      "ctime_ns": 1791207108810562554,
+      "postWait_observation_not_original_writer_preACK": true,
+      "header": "7f454c4602010100",
+      "no_producer_Close_backfill": true
+    },
+    "new_cpu_profile": {
+      "path": "/tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure.cpu.pprof",
+      "device": 33,
+      "inode": 485853,
+      "mode": "0o600",
+      "bytes": 96735,
+      "sha256": "9239f7fb4c5ad82d10c517bd2dba614dae31c5e7174736bf96763a537bd3dc48",
+      "mtime_ns": 1791207477016768250,
+      "ctime_ns": 1791207477016768250,
+      "postWait_observation_not_original_writer_preACK": true,
+      "header": "1f8b080000000000",
+      "no_producer_Close_backfill": true
+    }
+  },
+  "independent_readFD_ACK": "/tmp/lerna-partition-durable-closure-cpu-execution/case-artifacts-static-owned-read-fd-ack.json",
+  "independent_readFD_ACK_sha256": "d89f993b37ecae02deb9b3a64c63eede89f364b682dc53dfbf787f219c7beebd",
+  "original_profile_producer_UNKNOWN_inventory": "/tmp/lerna-partition-durable-closure-cpu-execution/cpu-profile-original-producer-UNKNOWN-inventory.json",
+  "original_profile_producer_UNKNOWN_inventory_sha256": "37522f351dd8f3ff60329495e35e14cb2f661cd59f6b6358c3c884e38f167543",
+  "FULL_raw_interpretation": "/tmp/lerna-partition-durable-closure-cpu-execution/closure-cpu-case-FULL-raw-interpretation.json",
+  "FULL_raw_interpretation_sha256": "78d4e7a4c4767bf8d8f1a22c228c823b95fbde0a4a1ca12d2490acd319b6b023",
+  "profile_CPU_usable_not_claimed_until_separately_authorized_analysis": true,
+  "LOCAL_RELEASE_already_actual": true,
+  "pprof_case_retries_observers_not_executed": true,
+  "ledger_now_lines17_after_pure_static_readFD6records": true,
+  "ledger_sha256": "27de4f311079165d2680511e483fdcf2e8ca91d84b27a87be57b3e2bb932ba8c"
+}

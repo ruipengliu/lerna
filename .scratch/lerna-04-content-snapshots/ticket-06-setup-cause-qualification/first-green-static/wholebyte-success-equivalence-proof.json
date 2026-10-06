@@ -1,0 +1,307 @@
+{
+  "status": "STATIC_WHOLEBYTE_REVERSE_DIFF_PROOF_AND_UNCHANGED_SUCCESS_BUSINESS_REGIONS",
+  "old_c9a_path": "/tmp/lerna-04-ticket06-execution/late-put-source-formatted/conformance/component/content_process_recovery_test.go",
+  "old_bytes": 79561,
+  "old_sha256": "c9a098141d23cda9c40d210539384d7cfb17b0d6b4f0222c16d70577308ff7e5",
+  "candidate_path": "/tmp/lerna-worktrees/content-snapshots-06/conformance/component/content_process_recovery_test.go",
+  "candidate_bytes": 81369,
+  "candidate_sha256": "a4fe8bc8559dd1f21aa3726efbc61f6c595a3e39107023f230675742d38ee771",
+  "reverse_opcodes_reconstruct_entire_original79561Bc9a": true,
+  "changed_regions": [
+    {
+      "tag": "insert",
+      "old_line_interval_zero_based": [
+        234,
+        234
+      ],
+      "new_line_interval_zero_based": [
+        234,
+        250
+      ],
+      "old": "",
+      "new": "type contentProcessStageError struct {\n\tstage string\n\tcause error\n}\n\nfunc (e *contentProcessStageError) Error() string { return e.stage }\nfunc (e *contentProcessStageError) Unwrap() error { return e.cause }\n\n// Stages are source constants; original error text never enters diagnostics.\nfunc contentProcessCause(stage string, err error) error {\n\tif err == nil {\n\t\treturn nil\n\t}\n\treturn &contentProcessStageError{stage: stage, cause: err}\n}\n\n"
+    },
+    {
+      "tag": "replace",
+      "old_line_interval_zero_based": [
+        238,
+        239
+      ],
+      "new_line_interval_zero_based": [
+        254,
+        255
+      ],
+      "old": "\t\treturn 0, 0, \"\", errors.New(\"child process group unavailable\")\n",
+      "new": "\t\treturn 0, 0, \"\", contentProcessCause(\"child process group unavailable\", err)\n"
+    },
+    {
+      "tag": "replace",
+      "old_line_interval_zero_based": [
+        242,
+        243
+      ],
+      "new_line_interval_zero_based": [
+        258,
+        259
+      ],
+      "old": "\t\treturn 0, 0, \"\", errors.New(\"child process identity unavailable\")\n",
+      "new": "\t\treturn 0, 0, \"\", contentProcessCause(\"child process identity unavailable\", err)\n"
+    },
+    {
+      "tag": "insert",
+      "old_line_interval_zero_based": [
+        244,
+        244
+      ],
+      "new_line_interval_zero_based": [
+        260,
+        265
+      ],
+      "old": "",
+      "new": "\treturn contentProcessReadIdentity(file, pid, pgid)\n}\n\n// This consumer owns the same single bounded Read and single first Close.\nfunc contentProcessReadIdentity(reader io.ReadCloser, pid, pgid int) (int, int, string, error) {\n"
+    },
+    {
+      "tag": "replace",
+      "old_line_interval_zero_based": [
+        245,
+        249
+      ],
+      "new_line_interval_zero_based": [
+        266,
+        273
+      ],
+      "old": "\tn, readErr := file.Read(raw[:])\n\tcloseErr := file.Close()\n\tif readErr != nil || closeErr != nil || n == len(raw) {\n\t\treturn 0, 0, \"\", errors.New(\"child identity read/first Close unconfirmed\")\n",
+      "new": "\tn, readErr := reader.Read(raw[:])\n\tcloseErr := reader.Close()\n\tif err := errors.Join(readErr, closeErr); err != nil {\n\t\treturn 0, 0, \"\", contentProcessCause(\"child identity read/first Close unconfirmed\", err)\n\t}\n\tif n == len(raw) {\n\t\treturn 0, 0, \"\", errors.New(\"child identity exceeds bound\")\n"
+    },
+    {
+      "tag": "replace",
+      "old_line_interval_zero_based": [
+        258,
+        260
+      ],
+      "new_line_interval_zero_based": [
+        282,
+        284
+      ],
+      "old": "\tif _, err = strconv.ParseUint(fields[19], 10, 64); err != nil {\n\t\treturn 0, 0, \"\", errors.New(\"child identity start invalid\")\n",
+      "new": "\tif _, err := strconv.ParseUint(fields[19], 10, 64); err != nil {\n\t\treturn 0, 0, \"\", contentProcessCause(\"child identity start invalid\", err)\n"
+    },
+    {
+      "tag": "replace",
+      "old_line_interval_zero_based": [
+        311,
+        313
+      ],
+      "new_line_interval_zero_based": [
+        335,
+        337
+      ],
+      "old": "\t\t\tif pipes.Close() != nil {\n\t\t\t\tt.Error(\"child inherited pipe first Close unknown\")\n",
+      "new": "\t\t\tif closeErr := pipes.Close(); closeErr != nil {\n\t\t\t\tt.Error(\"child inherited pipe first Close unknown:\", contentProcessCauseClasses(closeErr))\n"
+    },
+    {
+      "tag": "replace",
+      "old_line_interval_zero_based": [
+        317,
+        318
+      ],
+      "new_line_interval_zero_based": [
+        341,
+        342
+      ],
+      "old": "\t\tt.Fatal(\"child inherited pipes unavailable\")\n",
+      "new": "\t\tt.Fatal(\"child inherited pipes unavailable:\", contentProcessCauseClasses(err))\n"
+    },
+    {
+      "tag": "replace",
+      "old_line_interval_zero_based": [
+        320,
+        322
+      ],
+      "new_line_interval_zero_based": [
+        344,
+        346
+      ],
+      "old": "\tif pipes.Receive(ctx, &cfg) != nil {\n\t\tt.Fatal(\"child exact-scope descriptor unavailable\")\n",
+      "new": "\tif err = pipes.Receive(ctx, &cfg); err != nil {\n\t\tt.Fatal(\"child exact-scope descriptor unavailable:\", contentProcessCauseClasses(err))\n"
+    },
+    {
+      "tag": "replace",
+      "old_line_interval_zero_based": [
+        327,
+        328
+      ],
+      "new_line_interval_zero_based": [
+        351,
+        355
+      ],
+      "old": "\tif err != nil || !info.IsDir() || info.Mode()&os.ModeSymlink != 0 {\n",
+      "new": "\tif err != nil {\n\t\tt.Fatal(\"parent-created Content root unavailable:\", contentProcessCauseClasses(err))\n\t}\n\tif !info.IsDir() || info.Mode()&os.ModeSymlink != 0 {\n"
+    },
+    {
+      "tag": "replace",
+      "old_line_interval_zero_based": [
+        336,
+        337
+      ],
+      "new_line_interval_zero_based": [
+        363,
+        364
+      ],
+      "old": "\t\tt.Fatal(err)\n",
+      "new": "\t\tt.Fatal(\"child process identity unavailable:\", contentProcessCauseClasses(err))\n"
+    },
+    {
+      "tag": "replace",
+      "old_line_interval_zero_based": [
+        339,
+        341
+      ],
+      "new_line_interval_zero_based": [
+        366,
+        368
+      ],
+      "old": "\tif pipes.Emit(ctx, frame) != nil {\n\t\tt.Fatal(\"child pre-effect identity unavailable\")\n",
+      "new": "\tif err = pipes.Emit(ctx, frame); err != nil {\n\t\tt.Fatal(\"child pre-effect identity unavailable:\", contentProcessCauseClasses(err))\n"
+    },
+    {
+      "tag": "replace",
+      "old_line_interval_zero_based": [
+        343,
+        344
+      ],
+      "new_line_interval_zero_based": [
+        370,
+        374
+      ],
+      "old": "\tif pipes.Receive(ctx, &permit) != nil || permit.Stage != \"open\" || permit.PutResult != \"\" || permit.Scenario != cfg.Scenario || permit.Generation != cfg.Generation {\n",
+      "new": "\tif err = pipes.Receive(ctx, &permit); err != nil {\n\t\tt.Fatal(\"child pre-effect permission unavailable:\", contentProcessCauseClasses(err))\n\t}\n\tif permit.Stage != \"open\" || permit.PutResult != \"\" || permit.Scenario != cfg.Scenario || permit.Generation != cfg.Generation {\n"
+    },
+    {
+      "tag": "replace",
+      "old_line_interval_zero_based": [
+        377,
+        379
+      ],
+      "new_line_interval_zero_based": [
+        407,
+        409
+      ],
+      "old": "\t\tif pipes.Respond(ctx, result) != nil {\n\t\t\tt.Error(\"child actual native Close frame unavailable\")\n",
+      "new": "\t\tif respondErr := pipes.Respond(ctx, result); respondErr != nil {\n\t\t\tt.Error(\"child actual native Close frame unavailable:\", contentProcessCauseClasses(respondErr))\n"
+    },
+    {
+      "tag": "replace",
+      "old_line_interval_zero_based": [
+        381,
+        382
+      ],
+      "new_line_interval_zero_based": [
+        411,
+        412
+      ],
+      "old": "\t\t\tt.Error(\"child first native Close unknown\")\n",
+      "new": "\t\t\tt.Error(\"child first native Close unknown:\", causes)\n"
+    },
+    {
+      "tag": "replace",
+      "old_line_interval_zero_based": [
+        385,
+        386
+      ],
+      "new_line_interval_zero_based": [
+        415,
+        416
+      ],
+      "old": "\t\tt.Fatal(\"child existing Content store unavailable\")\n",
+      "new": "\t\tt.Fatal(\"child existing Content store unavailable:\", contentProcessCauseClasses(err))\n"
+    },
+    {
+      "tag": "replace",
+      "old_line_interval_zero_based": [
+        388,
+        389
+      ],
+      "new_line_interval_zero_based": [
+        418,
+        423
+      ],
+      "old": "\tif err != nil || len(versions) != 3 || versions[0].Version != 1 || versions[1].Version != 2 || versions[2].Version != 3 {\n",
+      "new": "\tif err != nil {\n\t\tfailed = true\n\t\tt.Fatal(\"child frozen Content migrations unavailable:\", contentProcessCauseClasses(err))\n\t}\n\tif len(versions) != 3 || versions[0].Version != 1 || versions[1].Version != 2 || versions[2].Version != 3 {\n"
+    },
+    {
+      "tag": "replace",
+      "old_line_interval_zero_based": [
+        393,
+        394
+      ],
+      "new_line_interval_zero_based": [
+        427,
+        432
+      ],
+      "old": "\tif err != nil || objects == nil || objects.Binding() != cfg.Scope.Binding {\n",
+      "new": "\tif err != nil {\n\t\tfailed = true\n\t\tt.Fatal(\"child original Content holder unavailable:\", contentProcessCauseClasses(err))\n\t}\n\tif objects == nil || objects.Binding() != cfg.Scope.Binding {\n"
+    },
+    {
+      "tag": "replace",
+      "old_line_interval_zero_based": [
+        402,
+        403
+      ],
+      "new_line_interval_zero_based": [
+        440,
+        441
+      ],
+      "old": "\t\tt.Fatal(\"child Content service unavailable\")\n",
+      "new": "\t\tt.Fatal(\"child Content service unavailable:\", contentProcessCauseClasses(err))\n"
+    },
+    {
+      "tag": "replace",
+      "old_line_interval_zero_based": [
+        407,
+        408
+      ],
+      "new_line_interval_zero_based": [
+        445,
+        446
+      ],
+      "old": "\t\tt.Fatal(\"child configured frame unavailable\")\n",
+      "new": "\t\tt.Fatal(\"child configured frame unavailable:\", contentProcessCauseClasses(err))\n"
+    },
+    {
+      "tag": "replace",
+      "old_line_interval_zero_based": [
+        409,
+        410
+      ],
+      "new_line_interval_zero_based": [
+        447,
+        452
+      ],
+      "old": "\tif err = pipes.Receive(ctx, &permit); err != nil || permit.Stage != \"run\" || permit.PutResult != \"\" || permit.Scenario != cfg.Scenario || permit.Generation != cfg.Generation {\n",
+      "new": "\tif err = pipes.Receive(ctx, &permit); err != nil {\n\t\tfailed = true\n\t\tt.Fatal(\"child original Job permission unavailable:\", contentProcessCauseClasses(err))\n\t}\n\tif permit.Stage != \"run\" || permit.PutResult != \"\" || permit.Scenario != cfg.Scenario || permit.Generation != cfg.Generation {\n"
+    },
+    {
+      "tag": "replace",
+      "old_line_interval_zero_based": [
+        416,
+        417
+      ],
+      "new_line_interval_zero_based": [
+        458,
+        459
+      ],
+      "old": "\t\tt.Error(\"child original Content Step failed\")\n",
+      "new": "\t\tt.Error(\"child original Content Step failed:\", contentProcessCauseClasses(err))\n"
+    }
+  ],
+  "unchanged_business_store_objects_protocol_prefix_bytes": 9707,
+  "unchanged_business_store_objects_protocol_prefix_sha256": "3ab6c94bf41048c2ece73ed79d37f1cd512ceace24ffd963264f23fb66dead6d",
+  "all_parent_starthelper_and_business_tests_suffix_bytes": 62744,
+  "all_parent_starthelper_and_business_tests_suffix_sha256": "56aebc64b6426c05e9785f8c70e4915116334f0758682d20fa25c27f18775fc1",
+  "original_classifier_wholebytes_unchanged": "b53d51eeb7ab06d3858279b89ef60d4cb4561bc166754d5dd6f02b1a46c87c79",
+  "closedframe_independent_step_object_store_causes_ACK_and_result_wholebytes_unchanged": "0ee07b809a8613a8e3805ca4d2bfa3405c665ddf66417b3e0a1aeff7e6a381fc",
+  "single4096_read_then_firstClose_then_join_before_capacity_then_same_parser_order_static": true,
+  "newtest_first_tracer_wholebytes_unchanged": "9410c9925c375fbc17321e52410e495a6cf541f8a0cf45921d945a3d968b5c47",
+  "successful_OS_Getpid_Getpgid_Open_and_child_preopen_ACK_run_Step_Close_order": "STATIC_SOURCE_EQUIVALENCE_REVIEW_REQUIRED_NOT_YET_NATIVE_NEW_SOURCE"
+}

@@ -1,0 +1,14 @@
+{
+  "event": "native_start_ack",
+  "operation": "closure-cpu-flat40",
+  "pid": 4193916,
+  "pgid": 4193916,
+  "starttime": "17603789",
+  "root": "/tmp/lerna-partition-durable-closure-cpu-execution",
+  "argv": [
+    "bash",
+    "-c",
+    "set -e; set -o pipefail; source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; export GOFLAGS=-mod=readonly; export GOPROXY=off; export GOSUMDB=off; export PPROF_TMPDIR=/tmp/lerna-partition-durable-closure-cpu-execution/pprof-tmp; export PPROF_BINARY_PATH=/tmp/lerna-partition-durable-closure-cpu-execution/artifacts; cd /tmp/lerna-partition-durable-closure-cpu-execution; exec /home/agent/.local/toolchains/go1.27.1/bin/go tool pprof -top -nodecount=40 -nodefraction=0 -sample_index=cpu -unit=s -symbolize=local /tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure-race.test /tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure.cpu.pprof"
+  ],
+  "deadline_seconds": 120
+}

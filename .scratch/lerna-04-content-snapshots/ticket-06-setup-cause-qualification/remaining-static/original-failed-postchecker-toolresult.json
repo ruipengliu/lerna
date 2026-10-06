@@ -1,0 +1,9 @@
+{
+  "chunk_id": "ad09e4",
+  "wall_time_seconds": 0.000032761,
+  "exit_code": 1,
+  "original_token_count": 22,
+  "output": "Traceback (most recent call last):\n  File \"<stdin>\", line 8, in <module>\nAssertionError\n",
+  "native_N_not_started": true,
+  "native_R_not_started": true
+}

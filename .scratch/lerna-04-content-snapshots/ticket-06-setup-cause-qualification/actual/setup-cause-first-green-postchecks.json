@@ -1,0 +1,130 @@
+{
+  "status": "ACTUAL_FIRST_MECHANICAL_GREEN_ONLY_PASS_STOP_RELEASED",
+  "formatted27_manifest": "/tmp/lerna-04-ticket06-execution/setup-cause-first-green-formatted27-manifest.json",
+  "formatted27_manifest_sha256": "2a4871fa62b2048b5fc425df2444ee9e3cdc23660f5b6e8f01df849ed6f62c6a",
+  "current27_snapshot_byteequal": true,
+  "protected16_exact_lstat_0700_unchanged": true,
+  "protected_native_firstClose": "UNKNOWN permanently retained; not supplemented",
+  "root": {
+    "path": "/tmp/lerna-04-ticket06-execution",
+    "device": 33,
+    "inode": 407243,
+    "mode": "0700"
+  },
+  "runner_sha256": "90a808a0e3cf3a3a62441818dd0f87392a763b5ebdeef9ec2d5f2b5abc3e8d6d",
+  "ledger_current_lines": 349,
+  "original345_prefix_bytes": 54822,
+  "original345_prefix_sha256": "4f2b90b4871d0f4dbbeca51c0999d377256b765f8abf616cd736ce1af12a5902",
+  "ledger_interval_path": "/tmp/lerna-04-ticket06-execution/setup-cause-first-green-ledger-346-through-349.log",
+  "ledger_interval_bytes": 1334,
+  "ledger_interval_sha256": "8c1141cdefce3a8962a3f084b591f157f48b7ad84e0a4091887ca9be140099aa",
+  "ledger_interval_records": [
+    {
+      "argv": [
+        "gofmt",
+        "-w",
+        "conformance/component/content_process_recovery_test.go",
+        "conformance/component/content_process_setup_test.go"
+      ],
+      "deadline_seconds": 120,
+      "event": "native_start_ack",
+      "operation": "setup-cause-first-green-format",
+      "pgid": 4166430,
+      "pid": 4166430,
+      "root": "/tmp/lerna-04-ticket06-execution",
+      "starttime": "17482807"
+    },
+    {
+      "event": "native_completion_ack",
+      "exit": 0,
+      "group_absent": true,
+      "operation": "setup-cause-first-green-format",
+      "owned_raw_fsync_close_ack": true,
+      "pgid": 4166430,
+      "pid": 4166430,
+      "starttime": "17482807",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "bash",
+        "-c",
+        ". /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local GOFLAGS=-mod=readonly; exec \"$@\"",
+        "owned-locked",
+        "go",
+        "test",
+        "-tags=integration",
+        "-v",
+        "-count=1",
+        "-p=1",
+        "-mod=readonly",
+        "-timeout=120s",
+        "./conformance/component",
+        "-run",
+        "^TestContentProcessSetupRetainsReadAndFirstCloseCauses$"
+      ],
+      "deadline_seconds": 120,
+      "event": "native_start_ack",
+      "operation": "setup-cause-first-mechanical-green",
+      "pgid": 4175607,
+      "pid": 4175607,
+      "root": "/tmp/lerna-04-ticket06-execution",
+      "starttime": "17523767"
+    },
+    {
+      "event": "native_completion_ack",
+      "exit": 0,
+      "group_absent": true,
+      "operation": "setup-cause-first-mechanical-green",
+      "owned_raw_fsync_close_ack": true,
+      "pgid": 4175607,
+      "pid": 4175607,
+      "starttime": "17523767",
+      "timed_out": false
+    }
+  ],
+  "no_new_pg_object_child_scope": true,
+  "business_or_native_fd_failure_qualification": false,
+  "artifacts": [
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/setup-cause-first-green-format.log",
+      "bytes": 215,
+      "sha256": "1386be9770d0c879fe9b4cb82ff3f7b7a65272e071fd5c4964a641622fe338ce"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/setup-cause-first-green-format-prelaunch.json",
+      "bytes": 380,
+      "sha256": "a8e116bc989740340459cff48508d2f2dd05f21bee8f6c1f62b11108de28effc"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/setup-cause-first-green-format-outcome.json",
+      "bytes": 248,
+      "sha256": "d9caa08366c68f311f276bc0a5a2aae4ec998a5649cf814c49c732ccd77e9cb3"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/setup-cause-first-mechanical-green.log",
+      "bytes": 422,
+      "sha256": "f72e2cd7bccf44c311d3d8691520ee92df111ac93fb75ce993f877ab8521d59b"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/setup-cause-first-mechanical-green-prelaunch.json",
+      "bytes": 614,
+      "sha256": "a3ea049ab7d6c3d223526995917f34be61719b050f5bef8dd783ab5bfd4a117b"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/setup-cause-first-mechanical-green-outcome.json",
+      "bytes": 252,
+      "sha256": "da444dcb6327e5460ba6c794e6dd8fba790ac1e9e4c49cf25aa7d2c1fa596f34"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/setup-cause-first-green-release.json",
+      "bytes": 862,
+      "sha256": "82198497a6b980b642b020a0e63dd7473013fec4a30f1314dd904390f5702ec6"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/setup-cause-first-green-format-only.diff",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

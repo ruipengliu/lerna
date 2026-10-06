@@ -1,0 +1,11 @@
+{
+  "event": "native_completion_ack",
+  "operation": "setup-cause-mechanics-normal",
+  "pid": 13682,
+  "pgid": 13682,
+  "starttime": "17665744",
+  "exit": 1,
+  "group_absent": true,
+  "timed_out": false,
+  "owned_raw_fsync_close_ack": true
+}

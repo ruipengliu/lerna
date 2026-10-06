@@ -1,0 +1,42 @@
+{
+  "kind": "independent original static read FD ACK after build; not original Go output FD backfill",
+  "preopen": {
+    "event": "static_binary_owned_read_fd_preopen_intent",
+    "path": "/tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure-race.test",
+    "expected_device": 33,
+    "expected_inode": 485542,
+    "expected_sha256": "ec4ed121fdda09707f904268bb4e8ff9beb8f5fbcbf226d810130408bdab1306",
+    "pid": 4183194,
+    "pgid": 4183191,
+    "starttime": "17556252",
+    "readonly": true,
+    "not_Go_output_FD_or_native_test_execution": true
+  },
+  "opened_before_read": {
+    "event": "static_binary_owned_read_fd_open_ack",
+    "path": "/tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure-race.test",
+    "fd": 3,
+    "device": 33,
+    "inode": 485542,
+    "bytes_expected": 30448868,
+    "pid": 4183194,
+    "pgid": 4183191,
+    "starttime": "17556252",
+    "original_static_reader_only": true
+  },
+  "original_readFD_firstClose": {
+    "event": "static_binary_owned_read_fd_firstClose_ack",
+    "fd": 3,
+    "path": "/tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure-race.test",
+    "device": 33,
+    "inode": 485542,
+    "pid": 4183194,
+    "pgid": 4183191,
+    "starttime": "17556252",
+    "bytes": 30448868,
+    "sha256": "ec4ed121fdda09707f904268bb4e8ff9beb8f5fbcbf226d810130408bdab1306",
+    "actual_first_os_close_returned": true,
+    "does_not_certify_Go_compiler_output_FD_Close": true
+  },
+  "full_binary_read_frozen_same_devino_size_mtime_ctime": true
+}

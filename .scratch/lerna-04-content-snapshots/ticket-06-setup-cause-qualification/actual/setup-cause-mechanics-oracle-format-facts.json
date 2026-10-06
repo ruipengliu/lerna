@@ -1,0 +1,22 @@
+{
+  "status": "ACTUAL_FMT_PASS_ZERO_BYTE_DELTA",
+  "format": {
+    "event": "native_completion_ack",
+    "operation": "setup-cause-mechanics-oracle-format",
+    "pid": 821276,
+    "pgid": 821276,
+    "starttime": "21407391",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false,
+    "owned_raw_fsync_close_ack": true
+  },
+  "raw": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-oracle-format.log",
+  "raw_bytes": 218,
+  "raw_sha256": "d820f658de657e8ece431bcea1a69ca3a46efe3dcd7851c1306a67542b33331c",
+  "source27_current_and_snapshots_match": true,
+  "current_pid_absent": true,
+  "formed27_manifest": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-oracle-formatted27-manifest.json",
+  "formed27_sha256": "bf9a17606e589d7c2edf5c15b9ac04e9aeda45c944ebabb4b475789bc50e984f",
+  "no_new_pg_object_child": true
+}

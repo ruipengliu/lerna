@@ -1,0 +1,101 @@
+{
+  "kind": "FULL17 raw original case outcome and cost interpretation; no pprof analysis yet",
+  "raw": "/tmp/lerna-partition-durable-closure-cpu-execution/closure-cpu-case.log",
+  "raw_sha256": "f748eba20cd4ca2f898fee757a84c6fc96651487cf89c13ea8a9794288ec2f5e",
+  "FULL_raw_read": true,
+  "named_case_PASS_seconds": 55.32,
+  "full_Get64_reject65_completed_by_original_test_oracle": true,
+  "final_stage_i65_put": true,
+  "cumulative_install_wall": "1.534445079s",
+  "cumulative_put_wall": "31.799166069s",
+  "cumulative_step_wall": "20.974119052s",
+  "ports12": [
+    {
+      "phase": "put",
+      "port": "Now",
+      "calls": 4746,
+      "logical_actions": 0,
+      "client_wall": "2.594343902s"
+    },
+    {
+      "phase": "put",
+      "port": "CheckPolicy",
+      "calls": 2210,
+      "logical_actions": 6498,
+      "client_wall": "2.307627027s"
+    },
+    {
+      "phase": "put",
+      "port": "LockVersion",
+      "calls": 2275,
+      "logical_actions": 0,
+      "client_wall": "4.299318883s"
+    },
+    {
+      "phase": "put",
+      "port": "ScheduleRetention",
+      "calls": 65,
+      "logical_actions": 0,
+      "client_wall": "17.58956202s"
+    },
+    {
+      "phase": "step",
+      "port": "Now",
+      "calls": 8710,
+      "logical_actions": 0,
+      "client_wall": "5.07178387s"
+    },
+    {
+      "phase": "step",
+      "port": "CheckPolicy",
+      "calls": 4290,
+      "logical_actions": 12610,
+      "client_wall": "4.615014515s"
+    },
+    {
+      "phase": "step",
+      "port": "LockVersion",
+      "calls": 4225,
+      "logical_actions": 0,
+      "client_wall": "8.087158205s"
+    },
+    {
+      "phase": "step",
+      "port": "ScheduleRetention",
+      "calls": 0,
+      "logical_actions": 0,
+      "client_wall": "0s"
+    },
+    {
+      "phase": "get",
+      "port": "Now",
+      "calls": 264,
+      "logical_actions": 0,
+      "client_wall": "167.62967ms"
+    },
+    {
+      "phase": "get",
+      "port": "CheckPolicy",
+      "calls": 132,
+      "logical_actions": 260,
+      "client_wall": "150.794116ms"
+    },
+    {
+      "phase": "get",
+      "port": "LockVersion",
+      "calls": 130,
+      "logical_actions": 0,
+      "client_wall": "263.691983ms"
+    },
+    {
+      "phase": "get",
+      "port": "ScheduleRetention",
+      "calls": 0,
+      "logical_actions": 0,
+      "client_wall": "0s"
+    }
+  ],
+  "profile_sampling_overhead_UNKNOWN": true,
+  "port_wall_not_server_execution_or_CPU_attribution": true,
+  "new_diagnostic_conditions_do_not_accept_old_wholeR_or_missing7tails": true
+}

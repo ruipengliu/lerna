@@ -1,0 +1,74 @@
+{
+  "status": "STATIC_ONLY_NOT_FMT_OR_GO_GRANTED",
+  "operations": [
+    {
+      "operation": "setup-cause-first-green-format",
+      "native_argv": [
+        "gofmt",
+        "-w",
+        "conformance/component/content_process_recovery_test.go",
+        "conformance/component/content_process_setup_test.go"
+      ],
+      "full_invocation_argv": [
+        "python3",
+        "/tmp/lerna-04-ticket06-execution/run-native.py",
+        "setup-cause-first-green-format",
+        "gofmt",
+        "-w",
+        "conformance/component/content_process_recovery_test.go",
+        "conformance/component/content_process_setup_test.go"
+      ],
+      "working_directory": "/tmp/lerna-worktrees/content-snapshots-06",
+      "raw": "/tmp/lerna-04-ticket06-execution/setup-cause-first-green-format.log",
+      "prelaunch": "/tmp/lerna-04-ticket06-execution/setup-cause-first-green-format-prelaunch.json",
+      "outcome": "/tmp/lerna-04-ticket06-execution/setup-cause-first-green-format-outcome.json"
+    },
+    {
+      "operation": "setup-cause-first-mechanical-green",
+      "native_argv": [
+        "go",
+        "test",
+        "-tags=integration",
+        "-v",
+        "-count=1",
+        "-p=1",
+        "-mod=readonly",
+        "-timeout=120s",
+        "./conformance/component",
+        "-run",
+        "^TestContentProcessSetupRetainsReadAndFirstCloseCauses$"
+      ],
+      "full_invocation_argv": [
+        "python3",
+        "/tmp/lerna-04-ticket06-execution/run-native.py",
+        "setup-cause-first-mechanical-green",
+        "bash",
+        "-c",
+        ". /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local GOFLAGS=-mod=readonly; exec \"$@\"",
+        "owned-locked",
+        "go",
+        "test",
+        "-tags=integration",
+        "-v",
+        "-count=1",
+        "-p=1",
+        "-mod=readonly",
+        "-timeout=120s",
+        "./conformance/component",
+        "-run",
+        "^TestContentProcessSetupRetainsReadAndFirstCloseCauses$"
+      ],
+      "working_directory": "/tmp/lerna-worktrees/content-snapshots-06",
+      "raw": "/tmp/lerna-04-ticket06-execution/setup-cause-first-mechanical-green.log",
+      "prelaunch": "/tmp/lerna-04-ticket06-execution/setup-cause-first-mechanical-green-prelaunch.json",
+      "outcome": "/tmp/lerna-04-ticket06-execution/setup-cause-first-mechanical-green-outcome.json"
+    }
+  ],
+  "candidate27_manifest": "/tmp/lerna-06-setup-cause-first-green-static/candidate-unformatted27-manifest.json",
+  "candidate27_manifest_sha256": "e30b4a026dc63d015b87cc243702eba8fabbb1c7363fa7a60fe16d0110d8723c",
+  "same_first_mechanical_tracer_only_no_newtests_business_green": true,
+  "go_outer_each_seconds": 120,
+  "first_failure_STOP_RELEASE_no_repair_retry_extra_tests": true,
+  "successful_firsttracer_then_rootSTATICadopts_next_necessary_mechanics_only": true,
+  "release_path": "/tmp/lerna-04-ticket06-execution/setup-cause-first-green-release.json"
+}

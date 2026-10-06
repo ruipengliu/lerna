@@ -1,0 +1,264 @@
+{
+  "byte_exact_originals": [
+    {
+      "original": "/tmp/lerna-partition-durable-closure-cpu-execution/binary-static-owned-read-fd-ack.json",
+      "archived": "binary-static-owned-read-fd-ack.json",
+      "bytes": 1527,
+      "sha256": "19b7acb0ffb8a34b58524425c7cba51c77359d6a8751f7e3d1af18d7e9e18d37"
+    },
+    {
+      "original": "/tmp/lerna-partition-durable-closure-cpu-execution/binary-static-owned-read-fd-intent.json",
+      "archived": "binary-static-owned-read-fd-intent.json",
+      "bytes": 431,
+      "sha256": "e5b1eb47e1f56e9969fc41a32968ad6a5dfb2da0c14569d2cfb8026d91662dfc"
+    },
+    {
+      "original": "/tmp/lerna-partition-durable-closure-cpu-execution/case-artifacts-static-owned-read-fd-ack.json",
+      "archived": "case-artifacts-static-owned-read-fd-ack.json",
+      "bytes": 2699,
+      "sha256": "d89f993b37ecae02deb9b3a64c63eede89f364b682dc53dfbf787f219c7beebd"
+    },
+    {
+      "original": "/tmp/lerna-partition-durable-closure-cpu-execution/closure-cpu-analysis-source-prelaunch.json",
+      "archived": "closure-cpu-analysis-source-prelaunch.json",
+      "bytes": 3355,
+      "sha256": "ea0cb8bb322c8976498d8270472f5d336e7f2107a121a505c192d932b5eb301d"
+    },
+    {
+      "original": "/tmp/lerna-partition-durable-closure-cpu-execution/closure-cpu-analysis-static-ready.json",
+      "archived": "closure-cpu-analysis-static-ready.json",
+      "bytes": 9099,
+      "sha256": "e49f0ef4be560135146e3a0524ea34f45c57a3738e33959cfeec0b93d59145a2"
+    },
+    {
+      "original": "/tmp/lerna-partition-durable-closure-cpu-execution/closure-cpu-build-outcome.json",
+      "archived": "closure-cpu-build-outcome.json",
+      "bytes": 235,
+      "sha256": "056ec3f56d8b351df44c71dc1b63f00247e521ec7235f1b11cf6ab8ac8d15444"
+    },
+    {
+      "original": "/tmp/lerna-partition-durable-closure-cpu-execution/closure-cpu-build-prelaunch.json",
+      "archived": "closure-cpu-build-prelaunch.json",
+      "bytes": 685,
+      "sha256": "c0c090082db325fa969a14300059b942d38a02659fcef6d0ddb4f65bbaa3438f"
+    },
+    {
+      "original": "/tmp/lerna-partition-durable-closure-cpu-execution/closure-cpu-build-release.json",
+      "archived": "closure-cpu-build-release.json",
+      "bytes": 1936,
+      "sha256": "78fe57bc7ed0362fd8694e3a8d12317e1ec433c4c7d383f02f395665b468ea36"
+    },
+    {
+      "original": "/tmp/lerna-partition-durable-closure-cpu-execution/closure-cpu-build-source-postlaunch-v2.json",
+      "archived": "closure-cpu-build-source-postlaunch-v2.json",
+      "bytes": 2247,
+      "sha256": "1d9867ee97a8d5c240b813282a2abdfd24e2ea66c548fabfe52af31a9557ee66"
+    },
+    {
+      "original": "/tmp/lerna-partition-durable-closure-cpu-execution/closure-cpu-build-source-postlaunch.json",
+      "archived": "closure-cpu-build-source-postlaunch.json",
+      "bytes": 1795,
+      "sha256": "f3cc294dcf5e9cee1318ed7d6d675cc01eb115180d6c89902591b55ec4d0aa6a"
+    },
+    {
+      "original": "/tmp/lerna-partition-durable-closure-cpu-execution/closure-cpu-build-source-prelaunch.json",
+      "archived": "closure-cpu-build-source-prelaunch.json",
+      "bytes": 2949,
+      "sha256": "b056648db9a30d1750d1f5ca3122456c1896c01e85ec2f997ecdb3f1ca8b3f89"
+    },
+    {
+      "original": "/tmp/lerna-partition-durable-closure-cpu-execution/closure-cpu-build.log",
+      "archived": "closure-cpu-build.log",
+      "bytes": 202,
+      "sha256": "7ad4920661e41ed449380258ac0275cbb21fdb5a205f042d47657fd5ee70ef69"
+    },
+    {
+      "original": "/tmp/lerna-partition-durable-closure-cpu-execution/closure-cpu-case-FULL-raw-interpretation.json",
+      "archived": "closure-cpu-case-FULL-raw-interpretation.json",
+      "bytes": 2517,
+      "sha256": "78d4e7a4c4767bf8d8f1a22c228c823b95fbde0a4a1ca12d2490acd319b6b023"
+    },
+    {
+      "original": "/tmp/lerna-partition-durable-closure-cpu-execution/closure-cpu-case-outcome.json",
+      "archived": "closure-cpu-case-outcome.json",
+      "bytes": 234,
+      "sha256": "55e21c0924763d9954a12296c1374fbb79e07791a7597cf74ccc82bc3f5f764e"
+    },
+    {
+      "original": "/tmp/lerna-partition-durable-closure-cpu-execution/closure-cpu-case-prelaunch.json",
+      "archived": "closure-cpu-case-prelaunch.json",
+      "bytes": 833,
+      "sha256": "d51a7d481b226fd3c08ea6bc7d1bb582036880941c39fff6124e38611969bb59"
+    },
+    {
+      "original": "/tmp/lerna-partition-durable-closure-cpu-execution/closure-cpu-case-release.json",
+      "archived": "closure-cpu-case-release.json",
+      "bytes": 2937,
+      "sha256": "66e2e93bf267aa6875ffa413c94499f9315a4f2470d9be01813236c12952aced"
+    },
+    {
+      "original": "/tmp/lerna-partition-durable-closure-cpu-execution/closure-cpu-case-source-postlaunch.json",
+      "archived": "closure-cpu-case-source-postlaunch.json",
+      "bytes": 3582,
+      "sha256": "41d2629c77133786262b5c154890360283c5e609daad48cee1be981764334e5b"
+    },
+    {
+      "original": "/tmp/lerna-partition-durable-closure-cpu-execution/closure-cpu-case-source-prelaunch.json",
+      "archived": "closure-cpu-case-source-prelaunch.json",
+      "bytes": 3872,
+      "sha256": "c25c6a3b81b7f3c3f9ebfa2510a46afe35f0b10a51b3f218c55360a4e9de1481"
+    },
+    {
+      "original": "/tmp/lerna-partition-durable-closure-cpu-execution/closure-cpu-case-static-ready-v2.json",
+      "archived": "closure-cpu-case-static-ready-v2.json",
+      "bytes": 3412,
+      "sha256": "69125e8863ffb2f236bc1e62254058eb8aa6f09591bd7ca1b1f04060162a2e86"
+    },
+    {
+      "original": "/tmp/lerna-partition-durable-closure-cpu-execution/closure-cpu-case-static-ready.json",
+      "archived": "closure-cpu-case-static-ready.json",
+      "bytes": 3159,
+      "sha256": "447ca308e45b2687f546112027dcccecbbf5d3b7a2d10bb9853b2c30368426c1"
+    },
+    {
+      "original": "/tmp/lerna-partition-durable-closure-cpu-execution/closure-cpu-case.log",
+      "archived": "closure-cpu-case.log",
+      "bytes": 1827,
+      "sha256": "f748eba20cd4ca2f898fee757a84c6fc96651487cf89c13ea8a9794288ec2f5e"
+    },
+    {
+      "original": "/tmp/lerna-partition-durable-closure-cpu-execution/closure-cpu-cum40-outcome.json",
+      "archived": "closure-cpu-cum40-outcome.json",
+      "bytes": 233,
+      "sha256": "78dae3762fdea04f0896eaf8588031e869d44fbb97432f8913b664f8c067c786"
+    },
+    {
+      "original": "/tmp/lerna-partition-durable-closure-cpu-execution/closure-cpu-cum40-prelaunch.json",
+      "archived": "closure-cpu-cum40-prelaunch.json",
+      "bytes": 953,
+      "sha256": "2b6adc32e6e78c40f69bad7552773211a5e469c560a92697987ef79b52d70b17"
+    },
+    {
+      "original": "/tmp/lerna-partition-durable-closure-cpu-execution/closure-cpu-cum40-release.json",
+      "archived": "closure-cpu-cum40-release.json",
+      "bytes": 1652,
+      "sha256": "8c943a59e5e203a263c2e1b3923d623730b116822cbf9c8dc6938a808ac097dd"
+    },
+    {
+      "original": "/tmp/lerna-partition-durable-closure-cpu-execution/closure-cpu-cum40-source-postlaunch-and-FULL-raw.json",
+      "archived": "closure-cpu-cum40-source-postlaunch-and-FULL-raw.json",
+      "bytes": 3752,
+      "sha256": "0d79f2bff60849c6b2c9d6dfc2da1af60a898c48eee8d8b1b5891ef96f21f256"
+    },
+    {
+      "original": "/tmp/lerna-partition-durable-closure-cpu-execution/closure-cpu-cum40-source-prelaunch.json",
+      "archived": "closure-cpu-cum40-source-prelaunch.json",
+      "bytes": 2098,
+      "sha256": "5e9e4db69847281225c24509c27bd0a2fc9e23913df0da8cceb7232e74b86bdc"
+    },
+    {
+      "original": "/tmp/lerna-partition-durable-closure-cpu-execution/closure-cpu-cum40-static-ready-after-warning.json",
+      "archived": "closure-cpu-cum40-static-ready-after-warning.json",
+      "bytes": 7232,
+      "sha256": "6a888709421bf8bca6c54e948c3738f8a81cf70554fbfdb75afc5b48b12633c7"
+    },
+    {
+      "original": "/tmp/lerna-partition-durable-closure-cpu-execution/closure-cpu-cum40.log",
+      "archived": "closure-cpu-cum40.log",
+      "bytes": 4986,
+      "sha256": "f593074fd065ea9a3f8e583f19d051707721df63b72f9b119f3901f867f2187e"
+    },
+    {
+      "original": "/tmp/lerna-partition-durable-closure-cpu-execution/closure-cpu-flat40-outcome.json",
+      "archived": "closure-cpu-flat40-outcome.json",
+      "bytes": 236,
+      "sha256": "e16b69c7a54717fac6fc736f5ed1d0d518a05a266029aa3500bc5330ab311c64"
+    },
+    {
+      "original": "/tmp/lerna-partition-durable-closure-cpu-execution/closure-cpu-flat40-prelaunch.json",
+      "archived": "closure-cpu-flat40-prelaunch.json",
+      "bytes": 951,
+      "sha256": "32fdb6c4465f78db627449ea641d0b29378360fc41be4dd64daa43e8fc5f2eb8"
+    },
+    {
+      "original": "/tmp/lerna-partition-durable-closure-cpu-execution/closure-cpu-flat40-static-buildid-comparison.json",
+      "archived": "closure-cpu-flat40-static-buildid-comparison.json",
+      "bytes": 16889,
+      "sha256": "eca03b952a10069efe585f1163ee493fb457f7421ef95254b5d9572dd40fb22e"
+    },
+    {
+      "original": "/tmp/lerna-partition-durable-closure-cpu-execution/closure-cpu-flat40-static-buildid-comparison.md",
+      "archived": "closure-cpu-flat40-static-buildid-comparison.md",
+      "bytes": 2655,
+      "sha256": "0988751c46d33315d02613df58c9945a07cc5c1bf0db682ae2902290622693ec"
+    },
+    {
+      "original": "/tmp/lerna-partition-durable-closure-cpu-execution/closure-cpu-flat40-warning-release.json",
+      "archived": "closure-cpu-flat40-warning-release.json",
+      "bytes": 3792,
+      "sha256": "22169f93df0749dbc730dced8448b210218cbf6145488f05275065d0851824c2"
+    },
+    {
+      "original": "/tmp/lerna-partition-durable-closure-cpu-execution/closure-cpu-flat40.log",
+      "archived": "closure-cpu-flat40.log",
+      "bytes": 3432,
+      "sha256": "9a6553747c5f0c7707dd34b33eddd4e8e15b030e2fed375aee73373a9f460043"
+    },
+    {
+      "original": "/tmp/lerna-partition-durable-closure-cpu-execution/cpu-profile-original-producer-UNKNOWN-inventory.json",
+      "archived": "cpu-profile-original-producer-UNKNOWN-inventory.json",
+      "bytes": 2752,
+      "sha256": "37522f351dd8f3ff60329495e35e14cb2f661cd59f6b6358c3c884e38f167543"
+    },
+    {
+      "original": "/tmp/lerna-partition-durable-closure-cpu-execution/fresh-closure-binary-qualified.json",
+      "archived": "fresh-closure-binary-qualified.json",
+      "bytes": 1494,
+      "sha256": "32902df34cb3a32ff42f38cc86ebd7dde7d645c14473d6d0c2ae1d21783c2193"
+    },
+    {
+      "original": "/tmp/lerna-partition-durable-closure-cpu-execution/manifest.json",
+      "archived": "manifest.json",
+      "bytes": 25199,
+      "sha256": "540b1439ac21cc70a86a28dc71939e145c1492c0831f0e9434aefa5c3b4f79da"
+    },
+    {
+      "original": "/tmp/lerna-partition-durable-closure-cpu-execution/module-go-source-inventory.json",
+      "archived": "module-go-source-inventory.json",
+      "bytes": 46439,
+      "sha256": "244ff00bc019bbbe41ac0fd1f47d6094b51584e8d18d2caa6af7be5a7ce04562"
+    },
+    {
+      "original": "/tmp/lerna-partition-durable-closure-cpu-execution/owned-scopes.log",
+      "archived": "owned-scopes.log",
+      "bytes": 9088,
+      "sha256": "01af0b702983c8fa1c67b6dea7b59f1ef234d3090250ad759a35cd3131fc883a"
+    },
+    {
+      "original": "/tmp/lerna-partition-durable-closure-cpu-execution/plan.md",
+      "archived": "plan.md",
+      "bytes": 4261,
+      "sha256": "e00d5f14f52cb80ea1269cb4bd6a999c17e208250aff1d1cd81a56d6d71dad53"
+    },
+    {
+      "original": "/tmp/lerna-partition-durable-closure-cpu-execution/root-ack.json",
+      "archived": "root-ack.json",
+      "bytes": 380,
+      "sha256": "2ac101cb1d9043f97d7b224455ea5743cd87a777a090cc53eaf1d862d3a4babd"
+    },
+    {
+      "original": "/tmp/lerna-partition-durable-closure-cpu-execution/root-buildid-warning-resolution.json",
+      "archived": "root-buildid-warning-resolution.json",
+      "bytes": 561,
+      "sha256": "666ea79e66397d710a55ff6922eddf34bd4d0706e6dc2ddc31bc69cc486e70d7"
+    },
+    {
+      "original": "/tmp/lerna-partition-durable-closure-cpu-execution/static-source-ownership-snapshot.json",
+      "archived": "static-source-ownership-snapshot.json",
+      "bytes": 12401,
+      "sha256": "3d7261323b6e83fdeec8165600a57928738194051b80f3610efeb022c666e3c3"
+    }
+  ],
+  "binary_profile_retained_by_identity_references_only": true,
+  "original_writer_Close_UNKNOWN": true
+}

@@ -1,0 +1,14 @@
+{
+  "event": "native_start_ack",
+  "operation": "closure-cpu-build",
+  "pid": 4178176,
+  "pgid": 4178176,
+  "starttime": "17534537",
+  "root": "/tmp/lerna-partition-durable-closure-cpu-execution",
+  "argv": [
+    "bash",
+    "-c",
+    "set -e; set -o pipefail; source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; export GOFLAGS=-mod=readonly; export GOPROXY=off; cd /tmp/lerna-worktrees/current-ci-partition; exec /home/agent/.local/toolchains/go1.27.1/bin/go test -c -p=1 -count=1 -race -tags=integration -mod=readonly -timeout=120s -o /tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure-race.test ./conformance/component"
+  ],
+  "deadline_seconds": 120
+}

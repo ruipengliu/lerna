@@ -1,0 +1,60 @@
+{
+  "kind": "actual ONE original closure default CPU profile case immediate STOP_RELEASE before static binary/profile/sourcepost facts",
+  "head": "d0fcc61264904070ce94e1146f07327a0ef9b2aa",
+  "source_current_clean": true,
+  "original_pre": {
+    "event": "native_start_ack",
+    "operation": "closure-cpu-case",
+    "pid": 4185393,
+    "pgid": 4185393,
+    "starttime": "17565984",
+    "root": "/tmp/lerna-partition-durable-closure-cpu-execution",
+    "argv": [
+      "bash",
+      "-c",
+      "set -e; set -o pipefail; source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; export GOFLAGS=-mod=readonly; cd /tmp/lerna-worktrees/current-ci-partition/conformance/component; exec /tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure-race.test -test.v -test.count=1 -test.timeout=120s '-test.run=^TestContentFullClosureIncludesIntermediateVersionsAndExact64Bound$' -test.cpuprofile=/tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure.cpu.pprof -test.outputdir=/tmp/lerna-partition-durable-closure-cpu-execution/artifacts"
+    ],
+    "deadline_seconds": 120
+  },
+  "native": {
+    "event": "native_completion_ack",
+    "operation": "closure-cpu-case",
+    "pid": 4185393,
+    "pgid": 4185393,
+    "starttime": "17565984",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false,
+    "owned_raw_fsync_close_ack": true
+  },
+  "actual_owner_session": 30044,
+  "actual_owner_tool_exit": 0,
+  "original_owner_Wait_confirmed": true,
+  "current_native_group_absent": true,
+  "raw_firstClose_fsyncACK": true,
+  "raw": "/tmp/lerna-partition-durable-closure-cpu-execution/closure-cpu-case.log",
+  "raw_sha256": "f748eba20cd4ca2f898fee757a84c6fc96651487cf89c13ea8a9794288ec2f5e",
+  "raw_lines": 17,
+  "FULL_raw_human_read": false,
+  "business_case_actual_PASS": true,
+  "original_full0through65_Get64_reject65_source_unchanged": true,
+  "original60_Lease60_Work5_pub60_attempt3_pkgouter120_preserved": true,
+  "profile_created": true,
+  "profile_current_hash_devino_and_samebinary_postfacts_pending_STATIC": true,
+  "profile_original_writer_firstClose_no_independent_ACK_UNKNOWN_keep": true,
+  "profile_unknown_cause": "original Go testing.go2773 deliberately does not retain CPU profile FD for Close; StopCPUProfile flush is not Close ACK",
+  "profile_FD_number_not_observed_do_not_fabricate": true,
+  "Go_build_output_FD_Close_unknown_distinct_from_profile_writer_and_static_readFD_ACK": true,
+  "root_and_artifacts_profile_keep_no_cleanup_adoption_Closebackfill": true,
+  "profile_parse_CPU_usability_not_yet_analyzed": true,
+  "not_a_wholeR_PASS_or_retry": true,
+  "prior_wholeR_FAIL_and7missing_tails_unchanged": true,
+  "owned_original_scope_interval_1based": [
+    7,
+    10
+  ],
+  "owned_ledger_beforeRelease_sha256": "f234675b7216c61203ebd41510f64c34bcb59d6779741bec51900ce957a1bc36",
+  "no_pprof_DB_observer_otherprofiles_warmup_retry": true,
+  "STATIC_STOP": true,
+  "LOCAL_RELEASE": true
+}

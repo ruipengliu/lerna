@@ -1,0 +1,83 @@
+{
+  "kind": "actual flat40 native0 but explicit binary buildID warning unresolved: STOP_RELEASE before cum40",
+  "head": "d0fcc61264904070ce94e1146f07327a0ef9b2aa",
+  "source_current_clean": true,
+  "original_pre": {
+    "event": "native_start_ack",
+    "operation": "closure-cpu-flat40",
+    "pid": 4193916,
+    "pgid": 4193916,
+    "starttime": "17603789",
+    "root": "/tmp/lerna-partition-durable-closure-cpu-execution",
+    "argv": [
+      "bash",
+      "-c",
+      "set -e; set -o pipefail; source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; export GOFLAGS=-mod=readonly; export GOPROXY=off; export GOSUMDB=off; export PPROF_TMPDIR=/tmp/lerna-partition-durable-closure-cpu-execution/pprof-tmp; export PPROF_BINARY_PATH=/tmp/lerna-partition-durable-closure-cpu-execution/artifacts; cd /tmp/lerna-partition-durable-closure-cpu-execution; exec /home/agent/.local/toolchains/go1.27.1/bin/go tool pprof -top -nodecount=40 -nodefraction=0 -sample_index=cpu -unit=s -symbolize=local /tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure-race.test /tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure.cpu.pprof"
+    ],
+    "deadline_seconds": 120
+  },
+  "native": {
+    "event": "native_completion_ack",
+    "operation": "closure-cpu-flat40",
+    "pid": 4193916,
+    "pgid": 4193916,
+    "starttime": "17603789",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false,
+    "owned_raw_fsync_close_ack": true
+  },
+  "actual_owner_tool_exit": 0,
+  "actual_owner_exec_chunk": "b991fa",
+  "original_owner_Wait_confirmed": true,
+  "current_flat_group_absent": true,
+  "raw_firstClose_fsyncACK": true,
+  "raw": "/tmp/lerna-partition-durable-closure-cpu-execution/closure-cpu-flat40.log",
+  "raw_sha256": "9a6553747c5f0c7707dd34b33eddd4e8e15b030e2fed375aee73373a9f460043",
+  "raw_lines": 50,
+  "FULL_raw_read": true,
+  "first_warning": "Ignoring local file /tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure-race.test: build-id mismatch (79e0da0f05534522bbca82f3304c7f13428a2d33 != )",
+  "qualification_status": "UNRESOLVED: pprof ignored explicit local binary due build-ID comparison warning",
+  "native_status_not_falsified_actual0": true,
+  "binary_profile_same_actual_identity_hash_mtime_ctime": true,
+  "binary": {
+    "path": "/tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure-race.test",
+    "device": 33,
+    "inode": 485542,
+    "mode": "0o700",
+    "bytes": 30448868,
+    "sha256": "ec4ed121fdda09707f904268bb4e8ff9beb8f5fbcbf226d810130408bdab1306",
+    "mtime_ns": 1791207108760087375,
+    "ctime_ns": 1791207108810562554,
+    "postWait_observation_not_original_writer_preACK": true,
+    "header": "7f454c4602010100",
+    "no_producer_Close_backfill": true
+  },
+  "profile": {
+    "path": "/tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure.cpu.pprof",
+    "device": 33,
+    "inode": 485853,
+    "mode": "0o600",
+    "bytes": 96735,
+    "sha256": "9239f7fb4c5ad82d10c517bd2dba614dae31c5e7174736bf96763a537bd3dc48",
+    "mtime_ns": 1791207477016768250,
+    "ctime_ns": 1791207477016768250,
+    "postWait_observation_not_original_writer_preACK": true,
+    "header": "1f8b080000000000",
+    "no_producer_Close_backfill": true
+  },
+  "profile_original_firstClose_UNKNOWN_keep": true,
+  "reported_cpu_samples_seconds": 36.71,
+  "reported_duration_seconds": 55.32,
+  "reported_top_nodes40_total_nodes893": true,
+  "CPU_symbol_attribution_not_adopted_pending_binary_mapping_proof": true,
+  "cum40_not_executed": true,
+  "no_retry_fix_thirdview_profile_retest_DB_or_env_probe": true,
+  "original_scope_interval_1based": [
+    18,
+    19
+  ],
+  "ledger_beforeRelease_sha256": "d780ddad8dc56dd08a79821df4e8e84f19ad5dbd8c036a0c2e281bc34ecb26e6",
+  "STATIC_STOP": true,
+  "LOCAL_RELEASE": true
+}

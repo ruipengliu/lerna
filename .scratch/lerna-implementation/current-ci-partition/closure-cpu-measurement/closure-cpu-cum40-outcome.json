@@ -1,0 +1,11 @@
+{
+  "event": "native_completion_ack",
+  "operation": "closure-cpu-cum40",
+  "pid": 820768,
+  "pgid": 820768,
+  "starttime": "21405382",
+  "exit": 0,
+  "group_absent": true,
+  "timed_out": false,
+  "owned_raw_fsync_close_ack": true
+}

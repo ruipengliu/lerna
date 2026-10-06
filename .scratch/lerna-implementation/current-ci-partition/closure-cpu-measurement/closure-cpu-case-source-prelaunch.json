@@ -1,0 +1,86 @@
+{
+  "kind": "actual source and exact binary prechecks for ONE authorized original closure CPU case",
+  "head": "d0fcc61264904070ce94e1146f07327a0ef9b2aa",
+  "clean": true,
+  "qualified6": {
+    "scripts/component-integration-race.test.mjs": {
+      "bytes": 14867,
+      "sha256": "980549594cb0754ca01c72626986359184b7344782fa1ceddb9e9b9e7170a6be"
+    },
+    "scripts/test-component-integration-race.sh": {
+      "bytes": 3622,
+      "sha256": "58625eb9021299a7549a3b98ad3bd2b70b24a85acf2ac44662d0118aede91937"
+    },
+    "scripts/testdata/component-content-97.json": {
+      "bytes": 14126,
+      "sha256": "99301ce17abe265578d272a1150093e8e17cc5a73ca71a174752cf6090b3c049"
+    },
+    "scripts/bounded-build.mjs": {
+      "bytes": 4201,
+      "sha256": "9987ff70c2ff6349ca9de5fe225ea6e310379534f633dffef0ef738a168b3a6e"
+    },
+    "scripts/conformance-ownership.mjs": {
+      "bytes": 5453,
+      "sha256": "d17b90608d45335036f7c794b1f4e9d651a010bec60aed44d7fd26b0b030f88d"
+    },
+    "scripts/testdata/component-durable-60.json": {
+      "bytes": 8583,
+      "sha256": "3fc89edc6f2ad8dbd1377441615b3636c201e02bb5af5e225cdcfe480b9eb194"
+    }
+  },
+  "module286_all_pass": true,
+  "Run30_all_pass": true,
+  "strict90a_Go_tool_metadata_all_pass": true,
+  "old5ledgers_counters_2UNKNOWN_all_stable": true,
+  "new3FS_exact_devino_mode": [
+    {
+      "path": "/tmp/lerna-partition-durable-closure-cpu-execution",
+      "device": 33,
+      "inode": 483116,
+      "mode": "0700",
+      "intent": "exclusive allocation ACK only; future writer FD Close not certified"
+    },
+    {
+      "path": "/tmp/lerna-partition-durable-closure-cpu-execution/artifacts",
+      "device": 33,
+      "inode": 483117,
+      "mode": "0700",
+      "intent": "exclusive allocation ACK only; future writer FD Close not certified"
+    },
+    {
+      "path": "/tmp/lerna-partition-durable-closure-cpu-execution/pprof-tmp",
+      "device": 33,
+      "inode": 483118,
+      "mode": "0700",
+      "intent": "exclusive allocation ACK only; future writer FD Close not certified"
+    }
+  ],
+  "binary": {
+    "path": "/tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure-race.test",
+    "device": 33,
+    "inode": 485542,
+    "mode": "0700",
+    "bytes": 30448868,
+    "sha256": "ec4ed121fdda09707f904268bb4e8ff9beb8f5fbcbf226d810130408bdab1306"
+  },
+  "new_ledger_before_lines": 6,
+  "new_ledger_before_sha256": "3b17a53e914033cd1549a6052bfd1329350ec8de3a8e480fccccf56802fe8c74",
+  "profile_output_pre_effect_intent": {
+    "path": "/tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure.cpu.pprof",
+    "absent_before_effect": true,
+    "native_writer_in_testing_M_before": "default100Hz CPU",
+    "original_writer_firstClose_not_independently_ACKed": "testing.go2773 intentionally does not Close FD; preserve actual FD/root UNKNOWN once created",
+    "future_inode_not_fabricated": true
+  },
+  "manifest_sha256": "540b1439ac21cc70a86a28dc71939e145c1492c0831f0e9434aefa5c3b4f79da",
+  "exact_supervisor_argv": [
+    "python3",
+    "/tmp/lerna-partition-durable-closure-cpu-execution/run-native.py",
+    "closure-cpu-case",
+    "bash",
+    "-c",
+    "set -e; set -o pipefail; source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; export GOFLAGS=-mod=readonly; cd /tmp/lerna-worktrees/current-ci-partition/conformance/component; exec /tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure-race.test -test.v -test.count=1 -test.timeout=120s '-test.run=^TestContentFullClosureIncludesIntermediateVersionsAndExact64Bound$' -test.cpuprofile=/tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure.cpu.pprof -test.outputdir=/tmp/lerna-partition-durable-closure-cpu-execution/artifacts"
+  ],
+  "case_only_authorized_no_pprof_no_DBobserver_or_extra_profiles": true,
+  "original60_full0through65_Lease60_Work5_Publish60_attempt3_pkgouter120": true
+}

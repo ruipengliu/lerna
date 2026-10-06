@@ -1,0 +1,570 @@
+{
+  "exact_originals": [
+    {
+      "original": "/tmp/lerna-06-setup-cause-first-test-static/candidate-unformatted27-manifest.json",
+      "archived": "first-test-static/candidate-unformatted27-manifest.json",
+      "bytes": 7609,
+      "sha256": "201bf6baf64cb5d67f3c46a3f87d2bc4d2ec46e050604275dc555bf987f7706c"
+    },
+    {
+      "original": "/tmp/lerna-06-setup-cause-first-test-static/commands.json",
+      "archived": "first-test-static/commands.json",
+      "bytes": 3251,
+      "sha256": "7003393c5ac3eb1dce6a70caf2cce7738d9233b544b3177f966941b18c8043e4"
+    },
+    {
+      "original": "/tmp/lerna-06-setup-cause-first-test-static/first-test-only.diff",
+      "archived": "first-test-static/first-test-only.diff",
+      "bytes": 2181,
+      "sha256": "8c9237cd57b63e7e04dbde7d0feacd48b4587112599c603684f9a95ef759b97a"
+    },
+    {
+      "original": "/tmp/lerna-06-setup-cause-first-test-static/new-test-unformatted/conformance/component/content_process_setup_test.go",
+      "archived": "first-test-static/new-test-unformatted/conformance/component/content_process_setup_test.go.source",
+      "bytes": 1754,
+      "sha256": "410d95c5745a290e4f9214254cda1410a5907662d202ae9c14a6296a42045f2e"
+    },
+    {
+      "original": "/tmp/lerna-06-setup-cause-first-test-static/source-ready.json",
+      "archived": "first-test-static/source-ready.json",
+      "bytes": 1059,
+      "sha256": "92bfe28672d8b8006ba3469fd890a962b440330366622a4a957c4b325168c3cd"
+    },
+    {
+      "original": "/tmp/lerna-06-setup-cause-first-green-static/candidate-unformatted27-manifest.json",
+      "archived": "first-green-static/candidate-unformatted27-manifest.json",
+      "bytes": 10571,
+      "sha256": "e30b4a026dc63d015b87cc243702eba8fabbb1c7363fa7a60fe16d0110d8723c"
+    },
+    {
+      "original": "/tmp/lerna-06-setup-cause-first-green-static/commands.json",
+      "archived": "first-green-static/commands.json",
+      "bytes": 2903,
+      "sha256": "786602d0f63d725e6fff1fcd03a2d0df557570adbe0008644891b151de41bc1d"
+    },
+    {
+      "original": "/tmp/lerna-06-setup-cause-first-green-static/implementation-only.diff",
+      "archived": "first-green-static/implementation-only.diff",
+      "bytes": 8272,
+      "sha256": "d4cda5569406b07c8039ab5080f3c3d7b965e52e6a9d8ec37604fdb2b79406f4"
+    },
+    {
+      "original": "/tmp/lerna-06-setup-cause-first-green-static/source-ready.json",
+      "archived": "first-green-static/source-ready.json",
+      "bytes": 1130,
+      "sha256": "d3ae1372ab3d178cd52505c36060e49f0ac23c37644db2504a8de33b90b36208"
+    },
+    {
+      "original": "/tmp/lerna-06-setup-cause-first-green-static/source-unformatted/conformance/component/content_process_recovery_test.go",
+      "archived": "first-green-static/source-unformatted/conformance/component/content_process_recovery_test.go.source",
+      "bytes": 81369,
+      "sha256": "a4fe8bc8559dd1f21aa3726efbc61f6c595a3e39107023f230675742d38ee771"
+    },
+    {
+      "original": "/tmp/lerna-06-setup-cause-first-green-static/source-unformatted/conformance/component/content_process_setup_test.go",
+      "archived": "first-green-static/source-unformatted/conformance/component/content_process_setup_test.go.source",
+      "bytes": 1758,
+      "sha256": "9410c9925c375fbc17321e52410e495a6cf541f8a0cf45921d945a3d968b5c47"
+    },
+    {
+      "original": "/tmp/lerna-06-setup-cause-first-green-static/wholebyte-success-equivalence-proof.json",
+      "archived": "first-green-static/wholebyte-success-equivalence-proof.json",
+      "bytes": 12105,
+      "sha256": "b5dd610e8dd5f0dedde2d5ddddf2572cff78dccbeaffd84e5eb7f567388fc01f"
+    },
+    {
+      "original": "/tmp/lerna-06-setup-cause-remaining-mechanics-static/actual-format-source-pair.ndiff",
+      "archived": "remaining-static/actual-format-source-pair.ndiff",
+      "bytes": 13566,
+      "sha256": "5c48e29ee1168c3551a5c37f5ccdc9bba8d3f93dd51601a872be4c9bd80ba8d4"
+    },
+    {
+      "original": "/tmp/lerna-06-setup-cause-remaining-mechanics-static/already-actual-format-bound-pair.json",
+      "archived": "remaining-static/already-actual-format-bound-pair.json",
+      "bytes": 1481,
+      "sha256": "90389fa10b75a0335fdb8dadd47233994bb6f2c7d12fe11de1ce02c3085ed74b"
+    },
+    {
+      "original": "/tmp/lerna-06-setup-cause-remaining-mechanics-static/candidate-unformatted27-manifest.json",
+      "archived": "remaining-static/candidate-unformatted27-manifest.json",
+      "bytes": 10831,
+      "sha256": "4ce89145b5a42efa90eed4bbc01fb85eeccb79788adcaf50c3b3a4b1e44ee954"
+    },
+    {
+      "original": "/tmp/lerna-06-setup-cause-remaining-mechanics-static/commands.json",
+      "archived": "remaining-static/commands.json",
+      "bytes": 8263,
+      "sha256": "d71dbc84f91dae0ee97b47db7c51c7387b89fff718a8405342f940bac1d6b298"
+    },
+    {
+      "original": "/tmp/lerna-06-setup-cause-remaining-mechanics-static/current-pins.json",
+      "archived": "remaining-static/current-pins.json",
+      "bytes": 10350,
+      "sha256": "b559c40531cac422bcdf9aa6f0728b0be202edb6c7549e4fcb5a9c7223832dfb"
+    },
+    {
+      "original": "/tmp/lerna-06-setup-cause-remaining-mechanics-static/first-tracer-unchanged-proof.json",
+      "archived": "remaining-static/first-tracer-unchanged-proof.json",
+      "bytes": 1009,
+      "sha256": "8dda346f22baf587a3336983b43f0639b9f7141209542116140ffdaf567718c4"
+    },
+    {
+      "original": "/tmp/lerna-06-setup-cause-remaining-mechanics-static/mechanics-test-only.diff",
+      "archived": "remaining-static/mechanics-test-only.diff",
+      "bytes": 9507,
+      "sha256": "15464b6f0f18f3376fee6fbe5ef29885dd25c123cd0d70fc1c57b73070bdf44b"
+    },
+    {
+      "original": "/tmp/lerna-06-setup-cause-remaining-mechanics-static/metadata-only-postchecker-v2.py",
+      "archived": "remaining-static/metadata-only-postchecker-v2.py",
+      "bytes": 4084,
+      "sha256": "bc94dbef79c526de96cc81b606445a7393babe7a35e50ca54f3e0454085ad6da"
+    },
+    {
+      "original": "/tmp/lerna-06-setup-cause-remaining-mechanics-static/original-failed-postchecker-stdin.py",
+      "archived": "remaining-static/original-failed-postchecker-stdin.py",
+      "bytes": 2601,
+      "sha256": "3fc9bf54ae91d05e96ecbf7208261371d002b6f6016ce547d44d9e41dbf595c2"
+    },
+    {
+      "original": "/tmp/lerna-06-setup-cause-remaining-mechanics-static/original-failed-postchecker-toolresult.json",
+      "archived": "remaining-static/original-failed-postchecker-toolresult.json",
+      "bytes": 284,
+      "sha256": "03879aac1978eb626f0d7273889ff7f6c69d375a20815c4f30411341a9b186e3"
+    },
+    {
+      "original": "/tmp/lerna-06-setup-cause-remaining-mechanics-static/owned-audit-targets-at349.json",
+      "archived": "remaining-static/owned-audit-targets-at349.json",
+      "bytes": 54743,
+      "sha256": "3492da70b616243d18cd0db0ec72a08457b6894eede5198b7f56862b840c2e91"
+    },
+    {
+      "original": "/tmp/lerna-06-setup-cause-remaining-mechanics-static/plan.md",
+      "archived": "remaining-static/plan.md",
+      "bytes": 9418,
+      "sha256": "73e8f8857ff02877d3e5a3a918ce79cd4e3b4b05fff6715ff6ec749c453292a8"
+    },
+    {
+      "original": "/tmp/lerna-06-setup-cause-remaining-mechanics-static/source-commands.json",
+      "archived": "remaining-static/source-commands.json",
+      "bytes": 9268,
+      "sha256": "922f480098b3d0b98f5ed1ef2172a182709e1065ac17ca450b742d81c0d1bcf2"
+    },
+    {
+      "original": "/tmp/lerna-06-setup-cause-remaining-mechanics-static/source-unformatted/conformance/component/content_process_setup_test.go",
+      "archived": "remaining-static/source-unformatted/conformance/component/content_process_setup_test.go.source",
+      "bytes": 10630,
+      "sha256": "ba30a1db83018eb781ae05140eb787349e2c0aa63bad7affeb7515068d797ac4"
+    },
+    {
+      "original": "/tmp/lerna-06-setup-cause-remaining-mechanics-static/static-metadata-SyntaxError-history.json",
+      "archived": "remaining-static/static-metadata-SyntaxError-history.json",
+      "bytes": 389,
+      "sha256": "45bcfb91630120ec0dbb521a2de9476b6aecec9ef66a20ccf356da85bea35ea0"
+    },
+    {
+      "original": "/tmp/lerna-06-setup-cause-mechanics-oracle-correction-static/candidate-unformatted27-manifest.json",
+      "archived": "oracle-static/candidate-unformatted27-manifest.json",
+      "bytes": 10786,
+      "sha256": "3827fec50baff2a176f4412eaa1cefc4cfee47986fd4e23130e9d61bcc268134"
+    },
+    {
+      "original": "/tmp/lerna-06-setup-cause-mechanics-oracle-correction-static/commands.json",
+      "archived": "oracle-static/commands.json",
+      "bytes": 4294,
+      "sha256": "ac167a991cfac1f556d026ca5efe5fc044ffc39c0c66c53e55acc98dc77fee9d"
+    },
+    {
+      "original": "/tmp/lerna-06-setup-cause-mechanics-oracle-correction-static/oracle-only.diff",
+      "archived": "oracle-static/oracle-only.diff",
+      "bytes": 537,
+      "sha256": "a6d6fa8c35e0cea326e5815d86ac5ab89df4c6d0e2ed159995d9d0eff854db7b"
+    },
+    {
+      "original": "/tmp/lerna-06-setup-cause-mechanics-oracle-correction-static/resume-independent-static-recheck.json",
+      "archived": "oracle-static/resume-independent-static-recheck.json",
+      "bytes": 1106,
+      "sha256": "4e8c988eabdb2ffd7b5be6c7f24f4d9d3d032a637caf273b02ba67a140ffc8ae"
+    },
+    {
+      "original": "/tmp/lerna-06-setup-cause-mechanics-oracle-correction-static/source-ready.json",
+      "archived": "oracle-static/source-ready.json",
+      "bytes": 631,
+      "sha256": "646f5b2b0821f843288d1e255149242cc7ee2d67d9cbb79d569d97a13584b457"
+    },
+    {
+      "original": "/tmp/lerna-06-setup-cause-mechanics-oracle-correction-static/source-unformatted/conformance/component/content_process_setup_test.go",
+      "archived": "oracle-static/source-unformatted/conformance/component/content_process_setup_test.go.source",
+      "bytes": 10830,
+      "sha256": "fa1890ddd9b790b02cf3870c820435617716e7ee7954a17af522fef92d5f4320"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-first-green-format-facts.json",
+      "archived": "actual/setup-cause-first-green-format-facts.json",
+      "bytes": 1388,
+      "sha256": "66728dc7cf46b367d6b50668be80b35117a19a99e4b9a05e1dc74518827b522c"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-first-green-format-only.diff",
+      "archived": "actual/setup-cause-first-green-format-only.diff",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-first-green-format-outcome.json",
+      "archived": "actual/setup-cause-first-green-format-outcome.json",
+      "bytes": 248,
+      "sha256": "d9caa08366c68f311f276bc0a5a2aae4ec998a5649cf814c49c732ccd77e9cb3"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-first-green-format-prelaunch.json",
+      "archived": "actual/setup-cause-first-green-format-prelaunch.json",
+      "bytes": 380,
+      "sha256": "a8e116bc989740340459cff48508d2f2dd05f21bee8f6c1f62b11108de28effc"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-first-green-format.log",
+      "archived": "actual/setup-cause-first-green-format.log",
+      "bytes": 215,
+      "sha256": "1386be9770d0c879fe9b4cb82ff3f7b7a65272e071fd5c4964a641622fe338ce"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-first-green-formatted27-manifest.json",
+      "archived": "actual/setup-cause-first-green-formatted27-manifest.json",
+      "bytes": 11124,
+      "sha256": "2a4871fa62b2048b5fc425df2444ee9e3cdc23660f5b6e8f01df849ed6f62c6a"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-first-green-ledger-346-through-349.log",
+      "archived": "actual/setup-cause-first-green-ledger-346-through-349.log",
+      "bytes": 1334,
+      "sha256": "8c1141cdefce3a8962a3f084b591f157f48b7ad84e0a4091887ca9be140099aa"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-first-green-postchecks.json",
+      "archived": "actual/setup-cause-first-green-postchecks.json",
+      "bytes": 4645,
+      "sha256": "8e04630af854967542f097ff93383eef88d434e0c6dd207fc48c922768dab3ec"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-first-green-release.json",
+      "archived": "actual/setup-cause-first-green-release.json",
+      "bytes": 862,
+      "sha256": "82198497a6b980b642b020a0e63dd7473013fec4a30f1314dd904390f5702ec6"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-first-mechanical-green-outcome.json",
+      "archived": "actual/setup-cause-first-mechanical-green-outcome.json",
+      "bytes": 252,
+      "sha256": "da444dcb6327e5460ba6c794e6dd8fba790ac1e9e4c49cf25aa7d2c1fa596f34"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-first-mechanical-green-prelaunch.json",
+      "archived": "actual/setup-cause-first-mechanical-green-prelaunch.json",
+      "bytes": 614,
+      "sha256": "a3ea049ab7d6c3d223526995917f34be61719b050f5bef8dd783ab5bfd4a117b"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-first-mechanical-green.log",
+      "archived": "actual/setup-cause-first-mechanical-green.log",
+      "bytes": 422,
+      "sha256": "f72e2cd7bccf44c311d3d8691520ee92df111ac93fb75ce993f877ab8521d59b"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-first-test-compile-red-outcome.json",
+      "archived": "actual/setup-cause-first-test-compile-red-outcome.json",
+      "bytes": 252,
+      "sha256": "1960e7361a2e448def6bbb9659379fb61f4c619e2f6941591f29c47515312776"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-first-test-compile-red-prelaunch.json",
+      "archived": "actual/setup-cause-first-test-compile-red-prelaunch.json",
+      "bytes": 614,
+      "sha256": "d8cf6ae4e022f62b0fb57d91b58ac0aea2b5f8a6c08cff1d917a60c244784705"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-first-test-compile-red.log",
+      "archived": "actual/setup-cause-first-test-compile-red.log",
+      "bytes": 505,
+      "sha256": "e1fa5b2b1325122953510d2210fdaf9173c319efcd921aae5aa792811d1ee4a8"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-first-test-format-facts.json",
+      "archived": "actual/setup-cause-first-test-format-facts.json",
+      "bytes": 1261,
+      "sha256": "bd433745f94cea1f267923b6264fa11a08b6a402d930559aa1ad71845c8499c5"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-first-test-format-only.diff",
+      "archived": "actual/setup-cause-first-test-format-only.diff",
+      "bytes": 409,
+      "sha256": "bea4574f323a8b91898ba98e3ee865b344cb408dee8440565ccf06304bb11a7d"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-first-test-format-outcome.json",
+      "archived": "actual/setup-cause-first-test-format-outcome.json",
+      "bytes": 247,
+      "sha256": "1e48e8e20bef7af3d687c75444eb517f31cb79daebfa1cbe0e55d9b764881209"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-first-test-format-prelaunch.json",
+      "archived": "actual/setup-cause-first-test-format-prelaunch.json",
+      "bytes": 317,
+      "sha256": "f3a7b9e0462d37ff0a9436b64dae0959ae8a9c11a3c13dcee2927653c4601f8e"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-first-test-format.log",
+      "archived": "actual/setup-cause-first-test-format.log",
+      "bytes": 214,
+      "sha256": "18da834b2f7d936efbe6b409a5626b40fde15f3c0f9795a684471d1d27b3186e"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-first-test-formatted27-manifest.json",
+      "archived": "actual/setup-cause-first-test-formatted27-manifest.json",
+      "bytes": 8144,
+      "sha256": "a5ee31bf82fedad5a41a7f19d1006d36979e8a47913eb2b937b3cc8678c4784a"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-first-test-ledger-342-through-345.log",
+      "archived": "actual/setup-cause-first-test-ledger-342-through-345.log",
+      "bytes": 1274,
+      "sha256": "27c323e8284854edc0ab266c6b5920bb78f2b93aedbb1514ad499e3bd68c7b2e"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-first-test-red-postchecks.json",
+      "archived": "actual/setup-cause-first-test-red-postchecks.json",
+      "bytes": 9888,
+      "sha256": "7ebc7d21a7fe87e0e4999730e1dd8e041e295216fc6a62f74cb7fa6601c64fa8"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-first-test-red-release.json",
+      "archived": "actual/setup-cause-first-test-red-release.json",
+      "bytes": 1660,
+      "sha256": "5e263fe4fa5341e87466c35709156b6ea8e490479c3a86ba783f5ac2184ebd95"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-before-native.json",
+      "archived": "actual/setup-cause-mechanics-before-native.json",
+      "bytes": 371,
+      "sha256": "be6d89974e14a007081ac979f324c319c0a7e34c65b49bf22119e4d98ae81405"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-first-postcheck-release.json",
+      "archived": "actual/setup-cause-mechanics-first-postcheck-release.json",
+      "bytes": 905,
+      "sha256": "66252ec007c8392b8d3dd95e52fc42642473f1348628fc7a069da992dcaa16dd"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-format-only.diff",
+      "archived": "actual/setup-cause-mechanics-format-only.diff",
+      "bytes": 5008,
+      "sha256": "debc204ae2d7324128e5e6ac9aa24a4a86ea3cc21c7d07355d1206008a3239f7"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-format-outcome.json",
+      "archived": "actual/setup-cause-mechanics-format-outcome.json",
+      "bytes": 240,
+      "sha256": "b22045d297cfa20cf1f6634b9ce97a73bdb0e716079c2e9a0794b966abf05f03"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-format-prelaunch.json",
+      "archived": "actual/setup-cause-mechanics-format-prelaunch.json",
+      "bytes": 310,
+      "sha256": "98c79fab58c30dc3287a06d8454005a0a779e5ee5e6f1de4b04073eec12cd5f1"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-format-v2-postchecks.json",
+      "archived": "actual/setup-cause-mechanics-format-v2-postchecks.json",
+      "bytes": 1078,
+      "sha256": "5c461b74fa997761eb325f5eb2ec01dd271a4ae0d55ffe9fcb620e02399c60f0"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-format.log",
+      "archived": "actual/setup-cause-mechanics-format.log",
+      "bytes": 207,
+      "sha256": "f688fbd88e6bf27fe19bff9b28a7c9b7688753b4dbc495aa62a255c25c2111cc"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-formatted27-manifest.json",
+      "archived": "actual/setup-cause-mechanics-formatted27-manifest.json",
+      "bytes": 10700,
+      "sha256": "e8887ab7681a5469b17165312b2938251476f15f822a15a27eea711ffb584ccd"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-ledger-350-through-353.log",
+      "archived": "actual/setup-cause-mechanics-ledger-350-through-353.log",
+      "bytes": 1209,
+      "sha256": "6485f786e83c1d47aff2d9562559f62ab0388d4e5dec36b8feb5ec3ba7064807"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-normal-failure-postchecks.json",
+      "archived": "actual/setup-cause-mechanics-normal-failure-postchecks.json",
+      "bytes": 3951,
+      "sha256": "80f4e0d12365f9244152b10845e78baf3df2b8ada34b38e80f8ad820120bc150"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-normal-failure-release.json",
+      "archived": "actual/setup-cause-mechanics-normal-failure-release.json",
+      "bytes": 788,
+      "sha256": "58a73235f29f9f66f787094337443ff2d8c5ed445ece8772c914a4967cc954eb"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-normal-outcome.json",
+      "archived": "actual/setup-cause-mechanics-normal-outcome.json",
+      "bytes": 242,
+      "sha256": "0b8a37dbc6136c687faa8c9a35c812662ccea79f130ff8161d794ebcc1470f0e"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-normal-prelaunch.json",
+      "archived": "actual/setup-cause-mechanics-normal-prelaunch.json",
+      "bytes": 573,
+      "sha256": "ba48f0d4d262ae5842a9dac4fec943871ffbed6f46087f499d3631785a250ba4"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-normal.log",
+      "archived": "actual/setup-cause-mechanics-normal.log",
+      "bytes": 3360,
+      "sha256": "e985589fbd607906247f9bb8bbbbf5b4abeb7bf14bbcc085082bcf363666f4f9"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-oracle-format-facts.json",
+      "archived": "actual/setup-cause-mechanics-oracle-format-facts.json",
+      "bytes": 838,
+      "sha256": "3a5fc6c7b817b5ad425a95ca0949336df41cc81a2c2d8bf0d44e38f22dc3e750"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-oracle-format-outcome.json",
+      "archived": "actual/setup-cause-mechanics-oracle-format-outcome.json",
+      "bytes": 251,
+      "sha256": "ca167252cafd7fd8a484453dd5d20d775dd8b5c7ea5ba3485b2baeb95239f83d"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-oracle-format-prelaunch.json",
+      "archived": "actual/setup-cause-mechanics-oracle-format-prelaunch.json",
+      "bytes": 321,
+      "sha256": "916c31b96fb057e492aab37736f3967d393fa54ecfe5fcba869d5a9c871b56a4"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-oracle-format.log",
+      "archived": "actual/setup-cause-mechanics-oracle-format.log",
+      "bytes": 218,
+      "sha256": "d820f658de657e8ece431bcea1a69ca3a46efe3dcd7851c1306a67542b33331c"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-oracle-formatted27-manifest.json",
+      "archived": "actual/setup-cause-mechanics-oracle-formatted27-manifest.json",
+      "bytes": 11107,
+      "sha256": "bf9a17606e589d7c2edf5c15b9ac04e9aeda45c944ebabb4b475789bc50e984f"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-oracle-ledger-354-through-359.log",
+      "archived": "actual/setup-cause-mechanics-oracle-ledger-354-through-359.log",
+      "bytes": 1985,
+      "sha256": "53627b1af38eab4dc1cddedc9e5291ccfe1c6bcfd8a4e880a83b8f3b513264d2"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-oracle-normal-outcome.json",
+      "archived": "actual/setup-cause-mechanics-oracle-normal-outcome.json",
+      "bytes": 251,
+      "sha256": "9ee0068a6b746dfb5f6b7becf04f91e025793e00b8098b79aacf83d0180cea53"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-oracle-normal-postchecks.json",
+      "archived": "actual/setup-cause-mechanics-oracle-normal-postchecks.json",
+      "bytes": 741,
+      "sha256": "c849e3d3ac6b5fc167412585109dceef87669db86c3b40cba5a073434b476bde"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-oracle-normal-prelaunch.json",
+      "archived": "actual/setup-cause-mechanics-oracle-normal-prelaunch.json",
+      "bytes": 582,
+      "sha256": "fdf22337f5de47bc1c584a491cf398e8fc680ce7a904fde45afd21d807575f42"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-oracle-normal.log",
+      "archived": "actual/setup-cause-mechanics-oracle-normal.log",
+      "bytes": 3255,
+      "sha256": "fef97ed1e0a7570f2811409d42ba30c8d80a7157313f446f2fbe5d697f422d1c"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-oracle-postchecks.json",
+      "archived": "actual/setup-cause-mechanics-oracle-postchecks.json",
+      "bytes": 3551,
+      "sha256": "b905bd18cd2116ed5a0d2a5e0396a8d7ce44c7665d08c23500c181232f25e532"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-oracle-race-outcome.json",
+      "archived": "actual/setup-cause-mechanics-oracle-race-outcome.json",
+      "bytes": 249,
+      "sha256": "6661774d55d47f3adeb1851666c050aaf7aa36ad3f8e437a613187742c2742e9"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-oracle-race-prelaunch.json",
+      "archived": "actual/setup-cause-mechanics-oracle-race-prelaunch.json",
+      "bytes": 593,
+      "sha256": "7622521e6fc51e3156a4143971821cb43ec64ff9ddfee4f35146fd3a2b8be41c"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-oracle-race.log",
+      "archived": "actual/setup-cause-mechanics-oracle-race.log",
+      "bytes": 3253,
+      "sha256": "dbb9f2881a73a4c4973b1f95c66bcd938727110d96674389e72aeee7bca225ce"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-oracle-release.json",
+      "archived": "actual/setup-cause-mechanics-oracle-release.json",
+      "bytes": 1254,
+      "sha256": "3418581e3bfa305739881d25dcb77dd476b4b2b7af684d365c6176d074dc2e6a"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-first-test-source-formatted/conformance/component/content_process_setup_test.go",
+      "archived": "actual/setup-cause-first-test-source-formatted/conformance/component/content_process_setup_test.go.source",
+      "bytes": 1758,
+      "sha256": "9410c9925c375fbc17321e52410e495a6cf541f8a0cf45921d945a3d968b5c47"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-first-green-source-formatted/conformance/component/content_process_recovery_test.go",
+      "archived": "actual/setup-cause-first-green-source-formatted/conformance/component/content_process_recovery_test.go.source",
+      "bytes": 81369,
+      "sha256": "a4fe8bc8559dd1f21aa3726efbc61f6c595a3e39107023f230675742d38ee771"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-first-green-source-formatted/conformance/component/content_process_setup_test.go",
+      "archived": "actual/setup-cause-first-green-source-formatted/conformance/component/content_process_setup_test.go.source",
+      "bytes": 1758,
+      "sha256": "9410c9925c375fbc17321e52410e495a6cf541f8a0cf45921d945a3d968b5c47"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-source-formatted/conformance/component/content_process_setup_test.go",
+      "archived": "actual/setup-cause-mechanics-source-formatted/conformance/component/content_process_setup_test.go.source",
+      "bytes": 10759,
+      "sha256": "03d8be401624e397244a8a45251bc08533af18bf67b7a98ecd5b0671ac5a3def"
+    },
+    {
+      "original": "/tmp/lerna-06-setup-cause-next-decision.md",
+      "archived": "reviews/lerna-06-setup-cause-next-decision.md",
+      "bytes": 5978,
+      "sha256": "2e0a50228b09af75ce4351eeb85bcbd4c793382a34220492b9e4ec3aef119dbb"
+    },
+    {
+      "original": "/tmp/lerna-06-setup-cause-architecture-review.md",
+      "archived": "reviews/lerna-06-setup-cause-architecture-review.md",
+      "bytes": 2700,
+      "sha256": "6db9539fe59867a5722dd45790b8104bdcb99187688fd29d4339d71f9068a91e"
+    },
+    {
+      "original": "/tmp/lerna-06-setup-cause-independent-source-audit.json",
+      "archived": "reviews/lerna-06-setup-cause-independent-source-audit.json",
+      "bytes": 602,
+      "sha256": "7d0d12100793b64dbfc00f849a6c622943201d773cf9d8b6a1b9cd7514e5c28e"
+    },
+    {
+      "original": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-oracle-postchecks.json",
+      "archived": "actual/setup-cause-mechanics-oracle-postchecks.json",
+      "bytes": 3551,
+      "sha256": "b905bd18cd2116ed5a0d2a5e0396a8d7ce44c7665d08c23500c181232f25e532"
+    }
+  ],
+  "source_suffix_only_changed": true,
+  "historical_failures_preserved": true
+}

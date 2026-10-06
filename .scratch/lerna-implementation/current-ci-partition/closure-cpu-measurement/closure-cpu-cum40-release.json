@@ -1,0 +1,36 @@
+{
+  "kind": "actual original cum40 immediate STOP_RELEASE; no retry third view",
+  "operation": "closure-cpu-cum40",
+  "original_prelaunch": {
+    "event": "native_start_ack",
+    "operation": "closure-cpu-cum40",
+    "pid": 820768,
+    "pgid": 820768,
+    "starttime": "21405382",
+    "root": "/tmp/lerna-partition-durable-closure-cpu-execution",
+    "argv": [
+      "bash",
+      "-c",
+      "set -e; set -o pipefail; source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; export GOFLAGS=-mod=readonly; export GOPROXY=off; export GOSUMDB=off; export PPROF_TMPDIR=/tmp/lerna-partition-durable-closure-cpu-execution/pprof-tmp; export PPROF_BINARY_PATH=/tmp/lerna-partition-durable-closure-cpu-execution/artifacts; cd /tmp/lerna-partition-durable-closure-cpu-execution; exec /home/agent/.local/toolchains/go1.27.1/bin/go tool pprof -cum -top -nodecount=40 -nodefraction=0 -sample_index=cpu -unit=s -symbolize=local /tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure-race.test /tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure.cpu.pprof"
+    ],
+    "deadline_seconds": 120
+  },
+  "native": {
+    "event": "native_completion_ack",
+    "operation": "closure-cpu-cum40",
+    "pid": 820768,
+    "pgid": 820768,
+    "starttime": "21405382",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false,
+    "owned_raw_fsync_close_ack": true
+  },
+  "actual_owner_subprocess_Wait_exit": 0,
+  "actual_owner_Wait_confirmed": true,
+  "raw_firstClose_fsyncACK": true,
+  "LOCAL_RELEASE": true,
+  "STATIC_STOP": true,
+  "producer_Close_UNKNOWN_keep": true,
+  "post_source_and_raw_interpretation_pending_STATIC": true
+}

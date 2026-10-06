@@ -1,0 +1,91 @@
+{
+  "status": "ACTUAL_MECHANICAL_N_FIRST_FAILURE_STOP_RELEASED_NO_R",
+  "normal_actual": {
+    "event": "native_completion_ack",
+    "operation": "setup-cause-mechanics-normal",
+    "pid": 13682,
+    "pgid": 13682,
+    "starttime": "17665744",
+    "exit": 1,
+    "group_absent": true,
+    "timed_out": false,
+    "owned_raw_fsync_close_ack": true
+  },
+  "raw_lines": 43,
+  "raw_sha256": "e985589fbd607906247f9bb8bbbbf5b4abeb7bf14bbcc085082bcf363666f4f9",
+  "top_pass": 4,
+  "sub_pass": 13,
+  "top_fail": 1,
+  "sub_fail": 1,
+  "source27_formatted_manifest_sha256": "e8887ab7681a5469b17165312b2938251476f15f822a15a27eea711ffb584ccd",
+  "current27_snapshot_wholebyte_equal": true,
+  "main_consumer_a4_and_other25_unchanged": true,
+  "protected16_exact_original_devino0700": true,
+  "no_new_pg_object_child_scope": true,
+  "original349prefix_unchanged": true,
+  "ledger_current_lines": 353,
+  "interval_path": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-ledger-350-through-353.log",
+  "interval_sha256": "6485f786e83c1d47aff2d9562559f62ab0388d4e5dec36b8feb5ec3ba7064807",
+  "root_runner_identity_unmodified": true,
+  "R_not_run": true,
+  "mechanical_oracle_failure_not_business_RED": true,
+  "static_cause_pointer": "process/pipes.go stageError.Error returns stage; cause wraps original error; ReadFrame decoder error invokes cause. original.Error() in secret_unknown_field test refers already-safe process wrapper, not raw decoder error. errors.Unwrap(original) remains actual original decoder error. No producer/product changes needed or authorized.",
+  "no_source_fix_retry_native": true,
+  "artifacts": [
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-format.log",
+      "bytes": 207,
+      "sha256": "f688fbd88e6bf27fe19bff9b28a7c9b7688753b4dbc495aa62a255c25c2111cc"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-format-prelaunch.json",
+      "bytes": 310,
+      "sha256": "98c79fab58c30dc3287a06d8454005a0a779e5ee5e6f1de4b04073eec12cd5f1"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-format-outcome.json",
+      "bytes": 240,
+      "sha256": "b22045d297cfa20cf1f6634b9ce97a73bdb0e716079c2e9a0794b966abf05f03"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-normal.log",
+      "bytes": 3360,
+      "sha256": "e985589fbd607906247f9bb8bbbbf5b4abeb7bf14bbcc085082bcf363666f4f9"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-normal-prelaunch.json",
+      "bytes": 573,
+      "sha256": "ba48f0d4d262ae5842a9dac4fec943871ffbed6f46087f499d3631785a250ba4"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-normal-outcome.json",
+      "bytes": 242,
+      "sha256": "0b8a37dbc6136c687faa8c9a35c812662ccea79f130ff8161d794ebcc1470f0e"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-first-postcheck-release.json",
+      "bytes": 905,
+      "sha256": "66252ec007c8392b8d3dd95e52fc42642473f1348628fc7a069da992dcaa16dd"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-normal-failure-release.json",
+      "bytes": 788,
+      "sha256": "58a73235f29f9f66f787094337443ff2d8c5ed445ece8772c914a4967cc954eb"
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-format-v2-postchecks.json",
+      "bytes": 1078,
+      "sha256": "5c461b74fa997761eb325f5eb2ec01dd271a4ae0d55ffe9fcb620e02399c60f0"
+    },
+    {
+      "path": "/tmp/lerna-06-setup-cause-remaining-mechanics-static/metadata-only-postchecker-v2.py",
+      "bytes": 4084,
+      "sha256": "bc94dbef79c526de96cc81b606445a7393babe7a35e50ca54f3e0454085ad6da"
+    },
+    {
+      "path": "/tmp/lerna-06-setup-cause-remaining-mechanics-static/static-metadata-SyntaxError-history.json",
+      "bytes": 389,
+      "sha256": "45bcfb91630120ec0dbb521a2de9476b6aecec9ef66a20ccf356da85bea35ea0"
+    }
+  ]
+}

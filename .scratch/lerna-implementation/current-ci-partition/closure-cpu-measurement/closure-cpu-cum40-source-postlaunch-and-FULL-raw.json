@@ -1,0 +1,94 @@
+{
+  "kind": "actual once original cum40 FULL50 raw and current source postpins, LOCAL already released",
+  "fixed_head": "d0fcc61264904070ce94e1146f07327a0ef9b2aa",
+  "native": {
+    "event": "native_completion_ack",
+    "operation": "closure-cpu-cum40",
+    "pid": 820768,
+    "pgid": 820768,
+    "starttime": "21405382",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false,
+    "owned_raw_fsync_close_ack": true
+  },
+  "actual_owner_tool_exit": 0,
+  "actual_owner_tool_chunk": "07353c",
+  "actual_original_Wait_confirmed": true,
+  "current_PID_absent_and_group_absent": true,
+  "original_fullargv_deadline120_exact": true,
+  "source6_module286_Run30_allpass": true,
+  "strict90a_go_installed_metadata_allpass": true,
+  "same_binary_profile_hash_devino_mode_mtime_ctime": [
+    {
+      "path": "/tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure-race.test",
+      "device": 33,
+      "inode": 485542,
+      "mode": "0o700",
+      "bytes": 30448868,
+      "sha256": "ec4ed121fdda09707f904268bb4e8ff9beb8f5fbcbf226d810130408bdab1306",
+      "mtime_ns": 1791207108760087375,
+      "ctime_ns": 1791207108810562554,
+      "postWait_observation_not_original_writer_preACK": true,
+      "header": "7f454c4602010100",
+      "no_producer_Close_backfill": true
+    },
+    {
+      "path": "/tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure.cpu.pprof",
+      "device": 33,
+      "inode": 485853,
+      "mode": "0o600",
+      "bytes": 96735,
+      "sha256": "9239f7fb4c5ad82d10c517bd2dba614dae31c5e7174736bf96763a537bd3dc48",
+      "mtime_ns": 1791207477016768250,
+      "ctime_ns": 1791207477016768250,
+      "postWait_observation_not_original_writer_preACK": true,
+      "header": "1f8b080000000000",
+      "no_producer_Close_backfill": true
+    }
+  ],
+  "old5ledger_counters_2UNKNOWN_3rootFS_stable": true,
+  "profile_and_binary_producer_Close_UNKNOWN_keep": true,
+  "raw": "/tmp/lerna-partition-durable-closure-cpu-execution/closure-cpu-cum40.log",
+  "raw_bytes": 4986,
+  "raw_sha256": "f593074fd065ea9a3f8e583f19d051707721df63b72f9b119f3901f867f2187e",
+  "FULL_raw_read": true,
+  "raw_lines": 50,
+  "expected_same_buildid_emptytool_warning": "Ignoring local file /tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure-race.test: build-id mismatch (79e0da0f05534522bbca82f3304c7f13428a2d33 != )",
+  "warning_root_resolution_sha256": "666ea79e66397d710a55ff6922eddf34bd4d0706e6dc2ddc31bc69cc486e70d7",
+  "release_sha256": "8c943a59e5e203a263c2e1b3923d623730b116822cbf9c8dc6938a808ac097dd",
+  "sample_CPU_seconds": 36.71,
+  "case_duration_seconds": 55.32,
+  "reported_nodes": 893,
+  "cum_report_top_nodes": 40,
+  "visible_flat_seconds": 11.5,
+  "cumulative_overlap_not_additive": true,
+  "wholeR_firstFAIL_and_7_unrun_unchanged": true,
+  "pure_compute_observed": {
+    "VersionIdentity": {
+      "flat_cpu_seconds": 0.02,
+      "cum_cpu_seconds": 3.16,
+      "source": "domain/content/identity.go:14; v.Encode validation, JSON positional array, SHA256/hex; no Store/SQL in this function"
+    },
+    "ContentRef_Encode": {
+      "flat_cpu_seconds": 0.01,
+      "cum_cpu_seconds": 2.91,
+      "overlap_with_VersionIdentity_not_summable": true
+    }
+  },
+  "mixed_frames_not_purecompute": {
+    "Core.Within": 13.96,
+    "registeredClosure.func1": 9.03,
+    "registeredClosure": 8.25,
+    "Put": 7.91,
+    "Step": 5.61,
+    "publicationPolicy": 5.5,
+    "ScheduleRetention": 4.22,
+    "LockVersion": 3.7
+  },
+  "no_wall_minus_CPU_PGwait_claim_or_global_bottleneck_claim": true,
+  "actual_ledger_lines": 23,
+  "actual_ledger_sha256": "01af0b702983c8fa1c67b6dea7b59f1ef234d3090250ad759a35cd3131fc883a",
+  "STATIC_STOP_LOCAL_RELEASE": true,
+  "no_retry_thirdview_new_profile_test_DB_or_env_probe": true
+}

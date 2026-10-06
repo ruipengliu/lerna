@@ -1,0 +1,11 @@
+{
+  "event": "native_completion_ack",
+  "operation": "setup-cause-mechanics-oracle-format",
+  "pid": 821276,
+  "pgid": 821276,
+  "starttime": "21407391",
+  "exit": 0,
+  "group_absent": true,
+  "timed_out": false,
+  "owned_raw_fsync_close_ack": true
+}

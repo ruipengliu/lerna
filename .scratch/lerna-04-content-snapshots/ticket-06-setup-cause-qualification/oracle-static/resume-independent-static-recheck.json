@@ -1,0 +1,19 @@
+{
+  "status": "INDEPENDENT_STATIC_READONLY_RECHECK_PASS_NO_NATIVE",
+  "source27_and_all_snapshots": true,
+  "other26_a4_consumer_unchanged": true,
+  "one_oracle_hunk_inverse_entire_old_10759_bytes": true,
+  "three_full_wrapper_argv_native_arrays_equal_original_except_exclusive_operation_names": true,
+  "nine_new_outputs_absent": true,
+  "strict_original_sha256": "90a808a0e3cf3a3a62441818dd0f87392a763b5ebdeef9ec2d5f2b5abc3e8d6d",
+  "original_43line_failure_and_all_10_artifacts_immutable": true,
+  "ledger_lines": 353,
+  "ledger_sha256": "8a851982416a9831b5c4ea25dc7f59dfdc1e2332827e3a647586be937f35c051",
+  "old349prefix_unchanged": true,
+  "protected16_exact_lstat_devino0700": true,
+  "candidate_manifest_sha256": "3827fec50baff2a176f4412eaa1cefc4cfee47986fd4e23130e9d61bcc268134",
+  "commands_sha256": "ac167a991cfac1f556d026ca5efe5fc044ffc39c0c66c53e55acc98dc77fee9d",
+  "oracle_diff_sha256": "a6d6fa8c35e0cea326e5815d86ac5ab89df4c6d0e2ed159995d9d0eff854db7b",
+  "source_sha256": "fa1890ddd9b790b02cf3870c820435617716e7ee7954a17af522fef92d5f4320",
+  "no_FMT_Go_native_DB_or_business_grant": true
+}

@@ -1,0 +1,294 @@
+//go:build integration && linux
+
+package component_test
+
+import (
+	"bytes"
+	"context"
+	"encoding/binary"
+	"encoding/json"
+	"errors"
+	"fmt"
+	"io"
+	"os"
+	"strconv"
+	"strings"
+	"syscall"
+	"testing"
+	"time"
+
+	process "github.com/ruipengliu/lerna/conformance/internal/testkit/process"
+)
+
+// This injected reader tests mechanical diagnostic/first-close ownership only.
+// It is not evidence of an actual native FD Close or publication failure.
+type contentSetupReadCloser struct {
+	readErr, closeErr error
+	reads, closes     int
+}
+
+func (r *contentSetupReadCloser) Read(p []byte) (int, error) {
+	r.reads++
+	return copy(p, "FAKE_BODY_SECRET"), r.readErr
+}
+
+func (r *contentSetupReadCloser) Close() error {
+	r.closes++
+	return r.closeErr
+}
+
+func TestContentProcessSetupRetainsReadAndFirstCloseCauses(t *testing.T) {
+	readCause := &os.PathError{Op: "read", Path: "FAKE_DSN_SECRET_PATH", Err: syscall.EIO}
+	closeCause := fmt.Errorf("FAKE_BODY_SECRET: %w", os.ErrClosed)
+	reader := &contentSetupReadCloser{readErr: readCause, closeErr: closeCause}
+	pid, pgid, start, err := contentProcessReadIdentity(reader, 41, 40)
+	if err == nil || pid != 0 || pgid != 0 || start != "" || reader.reads != 1 || reader.closes != 1 {
+		t.Fatal("mechanical identity failure or first-close responsibility changed")
+	}
+	var pathCause *os.PathError
+	if !errors.Is(err, readCause) || !errors.Is(err, closeCause) || !errors.As(err, &pathCause) || pathCause != readCause {
+		t.Fatal("original read and first-close causes were not both retained")
+	}
+	classes := contentProcessCauseClasses(err)
+	seenIO, seenClosed := false, false
+	for _, class := range classes {
+		seenIO = seenIO || class == "native_io"
+		seenClosed = seenClosed || class == "native_fd_closed"
+	}
+	if !seenIO || !seenClosed || len(classes) > 12 || strings.Contains(err.Error()+fmt.Sprint(classes), "FAKE_") {
+		t.Fatal("unsafe or incomplete bounded mechanical cause diagnostic")
+	}
+}
+
+// This literal is independent of the parser and includes nested name brackets.
+const contentSetupIdentityLiteral = "41 (worker (inner) name) S 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 777 20"
+
+type contentSetupIdentityReader struct {
+	contentSetupReadCloser
+	data string
+}
+
+func (r *contentSetupIdentityReader) Read(p []byte) (int, error) {
+	r.reads++
+	return copy(p, r.data), r.readErr
+}
+
+func contentSetupSafeDiagnostic(t *testing.T, err error) []string {
+	t.Helper()
+	classes := contentProcessCauseClasses(err)
+	if len(classes) > 12 || strings.Contains(err.Error()+fmt.Sprint(classes), "FAKE_") {
+		t.Fatal("unsafe or unbounded setup diagnostic")
+	}
+	seen := map[string]bool{}
+	for _, class := range classes {
+		if seen[class] || strings.HasPrefix(class, "type:") && len(strings.TrimPrefix(class, "type:")) > 128 {
+			t.Fatal("duplicate or unbounded setup diagnostic type")
+		}
+		seen[class] = true
+	}
+	return classes
+}
+
+func TestContentProcessSetupIdentityShapeAndFirstClose(t *testing.T) {
+	readCause := &os.PathError{Op: "read", Path: "FAKE_DSN_SECRET_PATH", Err: syscall.EIO}
+	closeCause := fmt.Errorf("FAKE_BODY_SECRET: %w", os.ErrClosed)
+	cases := []struct {
+		name, data, stage string
+		readErr, closeErr error
+		numErr            error
+	}{
+		{name: "success_nested_name", data: contentSetupIdentityLiteral},
+		{name: "read_only", data: contentSetupIdentityLiteral, readErr: readCause, stage: "child identity read/first Close unconfirmed"},
+		{name: "first_close_only", data: contentSetupIdentityLiteral, closeErr: closeCause, stage: "child identity read/first Close unconfirmed"},
+		{name: "4096_without_cause", data: strings.Repeat("x", 4096), stage: "child identity exceeds bound"},
+		{name: "4096_with_both_causes", data: strings.Repeat("x", 4096), readErr: readCause, closeErr: closeCause, stage: "child identity read/first Close unconfirmed"},
+		{name: "missing_bracket", data: "FAKE_BODY_SECRET", stage: "child identity shape"},
+		{name: "short_fields", data: "41 (FAKE_DSN_SECRET_NAME) S 1", stage: "child identity start missing"},
+		{name: "typed_parse_syntax", data: strings.Replace(contentSetupIdentityLiteral, "777", "FAKE_DSN_SECRET_START", 1), stage: "child identity start invalid", numErr: strconv.ErrSyntax},
+		{name: "typed_parse_range", data: strings.Replace(contentSetupIdentityLiteral, "777", "18446744073709551616", 1), stage: "child identity start invalid", numErr: strconv.ErrRange},
+	}
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			reader := &contentSetupIdentityReader{contentSetupReadCloser: contentSetupReadCloser{readErr: c.readErr, closeErr: c.closeErr}, data: c.data}
+			pid, pgid, start, err := contentProcessReadIdentity(reader, 41, 40)
+			if reader.reads != 1 || reader.closes != 1 {
+				t.Fatal("single Read and first Close responsibility changed")
+			}
+			if c.stage == "" {
+				if err != nil || pid != 41 || pgid != 40 || start != "777" {
+					t.Fatal("original successful identity literal was not preserved")
+				}
+				return
+			}
+			if err == nil || pid != 0 || pgid != 0 || start != "" || err.Error() != c.stage {
+				t.Fatal("original bounded identity refusal changed")
+			}
+			classes := contentSetupSafeDiagnostic(t, err)
+			for _, cause := range []error{c.readErr, c.closeErr} {
+				if cause != nil && !errors.Is(err, cause) {
+					t.Fatal("original read or first Close cause was lost")
+				}
+			}
+			var pathCause *os.PathError
+			if c.readErr != nil && (!errors.As(err, &pathCause) || pathCause != readCause) {
+				t.Fatal("original typed read cause was lost")
+			}
+			seenIO, seenClosed := false, false
+			for _, class := range classes {
+				seenIO = seenIO || class == "native_io"
+				seenClosed = seenClosed || class == "native_fd_closed"
+			}
+			if seenIO != (c.readErr != nil) || seenClosed != (c.closeErr != nil) {
+				t.Fatal("mechanical cause classification changed")
+			}
+			if c.numErr != nil {
+				var number *strconv.NumError
+				want := "FAKE_DSN_SECRET_START"
+				if c.numErr == strconv.ErrRange {
+					want = "18446744073709551616"
+				}
+				if !errors.As(err, &number) || number.Func != "ParseUint" || number.Num != want || !errors.Is(err, c.numErr) {
+					t.Fatal("original typed numeric parse cause was lost")
+				}
+				var stage *contentProcessStageError
+				if !errors.As(err, &stage) || fmt.Sprintf("%T", err) == fmt.Sprintf("%T", number) {
+					t.Fatal("safe outer wrapper and original typed cause were confused")
+				}
+			}
+		})
+	}
+}
+
+func TestContentProcessSetupNilAndJoinedCancellationClasses(t *testing.T) {
+	if contentProcessCause("fixed setup stage", nil) != nil || contentProcessCauseClasses(nil) != nil {
+		t.Fatal("nil cause manufactured a setup error")
+	}
+	original := errors.Join(context.Canceled, context.DeadlineExceeded, os.ErrClosed, syscall.EIO)
+	err := contentProcessCause("fixed setup stage", original)
+	classes := contentSetupSafeDiagnostic(t, err)
+	for _, c := range []struct {
+		cause error
+		class string
+	}{
+		{context.Canceled, "context_canceled"}, {context.DeadlineExceeded, "context_deadline"},
+		{os.ErrClosed, "native_fd_closed"}, {syscall.EIO, "native_io"},
+	} {
+		seen := false
+		for _, class := range classes {
+			seen = seen || class == c.class
+		}
+		if !errors.Is(err, c.cause) || !seen {
+			t.Fatal("joined recognizable cause was lost")
+		}
+	}
+}
+
+func TestContentProcessSetupRealBoundedJSONDiagnostics(t *testing.T) {
+	for _, c := range []struct{ name, payload, typed string }{
+		{"syntax", `{"value":"FAKE_BODY_SECRET","FAKE_DSN_SECRET_FIELD":@}`, "syntax"},
+		{"type", `{"value":"FAKE_BODY_SECRET"}`, "type"},
+		{"secret_unknown_field", `{"FAKE_DSN_SECRET_FIELD":"FAKE_BODY_SECRET"}`, "unknown"},
+	} {
+		t.Run(c.name, func(t *testing.T) {
+			frame := make([]byte, 4+len(c.payload))
+			binary.BigEndian.PutUint32(frame[:4], uint32(len(c.payload)))
+			copy(frame[4:], c.payload)
+			reader := io.NopCloser(bytes.NewReader(frame))
+			defer reader.Close()
+			ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+			defer cancel()
+			var value struct {
+				Value int `json:"value"`
+			}
+			original := process.ReadFrame(ctx, reader, &value)
+			if original == nil {
+				t.Fatal("real bounded JSON decoder accepted invalid input")
+			}
+			err := contentProcessCause("fixed setup frame stage", original)
+			if !errors.Is(err, original) {
+				t.Fatal("original bounded frame cause was lost")
+			}
+			contentSetupSafeDiagnostic(t, err)
+			switch c.typed {
+			case "syntax":
+				var syntax *json.SyntaxError
+				if !errors.As(err, &syntax) {
+					t.Fatal("original JSON syntax type was lost")
+				}
+			case "type":
+				var typed *json.UnmarshalTypeError
+				if !errors.As(err, &typed) {
+					t.Fatal("original JSON value type was lost")
+				}
+			case "unknown":
+				if !strings.Contains(original.Error(), "FAKE_DSN_SECRET_FIELD") {
+					t.Fatal("secret-field mechanical input did not exercise original decoder cause")
+				}
+			}
+		})
+	}
+}
+
+// Close completion is observed separately from ReadFrame's return. The actual
+// physicalIO cancellation callback must join before the consumer returns.
+type contentSetupCancellationReader struct {
+	*io.PipeReader
+	done          chan struct{}
+	firstCloseErr error
+}
+
+func (r *contentSetupCancellationReader) Close() error {
+	r.firstCloseErr = r.PipeReader.Close()
+	close(r.done)
+	return r.firstCloseErr
+}
+
+func TestContentProcessSetupRealReadFrameCancellationJoinsClose(t *testing.T) {
+	for _, deadline := range []bool{false, true} {
+		name := "canceled"
+		if deadline {
+			name = "deadline"
+		}
+		t.Run(name, func(t *testing.T) {
+			read, write := io.Pipe()
+			defer read.Close()
+			defer write.Close()
+			reader := &contentSetupCancellationReader{PipeReader: read, done: make(chan struct{})}
+			var ctx context.Context
+			var cancel context.CancelFunc
+			if deadline {
+				ctx, cancel = context.WithDeadline(context.Background(), time.Unix(1, 0))
+			} else {
+				ctx, cancel = context.WithTimeout(context.Background(), time.Second)
+				cancel()
+			}
+			defer cancel()
+			var value any
+			original := process.ReadFrame(ctx, reader, &value)
+			want, class := context.Canceled, "context_canceled"
+			if deadline {
+				want, class = context.DeadlineExceeded, "context_deadline"
+			}
+			if !errors.Is(original, want) {
+				t.Fatal("real physical frame cancellation cause was lost")
+			}
+			select {
+			case <-reader.done:
+				if reader.firstCloseErr != nil {
+					t.Fatal("real in-memory cancellation first Close was unconfirmed")
+				}
+			default:
+				t.Fatal("frame returned before cancellation Close callback completed")
+			}
+			err := contentProcessCause("fixed setup cancellation stage", original)
+			classes := contentSetupSafeDiagnostic(t, err)
+			seen := false
+			for _, got := range classes {
+				seen = seen || got == class
+			}
+			if !errors.Is(err, want) || !seen {
+				t.Fatal("real bounded cancellation diagnostic lost its cause")
+			}
+		})
+	}
+}

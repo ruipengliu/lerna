@@ -1,0 +1,74 @@
+{
+  "kind": "independent actual static reader FD ACKs; source producer FDs remain separate",
+  "readers": [
+    {
+      "intent": {
+        "event": "static_case_artifact_owned_read_fd_preopen_intent",
+        "kind": "same_binary",
+        "path": "/tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure-race.test",
+        "device": 33,
+        "inode": 485542,
+        "pid": 4191529,
+        "pgid": 4191526,
+        "starttime": "17593438",
+        "not_producer_output_FD": true
+      },
+      "opened_before_read": {
+        "event": "static_case_artifact_owned_read_fd_open_ack",
+        "kind": "same_binary",
+        "path": "/tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure-race.test",
+        "fd": 3,
+        "device": 33,
+        "inode": 485542,
+        "pid": 4191529,
+        "pgid": 4191526,
+        "starttime": "17593438"
+      },
+      "original_static_readFD_firstClose": {
+        "event": "static_case_artifact_readFD_firstClose_ACK",
+        "path": "/tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure-race.test",
+        "kind": "same_binary",
+        "fd": 3,
+        "actual_first_os_close_returned": true,
+        "bytes": 30448868,
+        "sha256": "ec4ed121fdda09707f904268bb4e8ff9beb8f5fbcbf226d810130408bdab1306",
+        "not_Go_producer_outputFD_Close_backfill": true
+      }
+    },
+    {
+      "intent": {
+        "event": "static_case_artifact_owned_read_fd_preopen_intent",
+        "kind": "new_cpu_profile",
+        "path": "/tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure.cpu.pprof",
+        "device": 33,
+        "inode": 485853,
+        "pid": 4191529,
+        "pgid": 4191526,
+        "starttime": "17593438",
+        "not_producer_output_FD": true
+      },
+      "opened_before_read": {
+        "event": "static_case_artifact_owned_read_fd_open_ack",
+        "kind": "new_cpu_profile",
+        "path": "/tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure.cpu.pprof",
+        "fd": 3,
+        "device": 33,
+        "inode": 485853,
+        "pid": 4191529,
+        "pgid": 4191526,
+        "starttime": "17593438"
+      },
+      "original_static_readFD_firstClose": {
+        "event": "static_case_artifact_readFD_firstClose_ACK",
+        "path": "/tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure.cpu.pprof",
+        "kind": "new_cpu_profile",
+        "fd": 3,
+        "actual_first_os_close_returned": true,
+        "bytes": 96735,
+        "sha256": "9239f7fb4c5ad82d10c517bd2dba614dae31c5e7174736bf96763a537bd3dc48",
+        "not_Go_producer_outputFD_Close_backfill": true
+      }
+    }
+  ],
+  "not_native_analysis_or_CPU_sample_parse": true
+}

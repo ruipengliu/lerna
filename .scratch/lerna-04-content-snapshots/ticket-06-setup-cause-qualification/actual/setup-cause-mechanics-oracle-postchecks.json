@@ -1,0 +1,89 @@
+{
+  "status": "ACTUAL_CORRECTED_MECHANICS_FMT_N_R_ALL_PASS_RELEASED_NO_MORE_NATIVE",
+  "operations": [
+    {
+      "operation": "setup-cause-mechanics-oracle-format",
+      "actual": {
+        "event": "native_completion_ack",
+        "operation": "setup-cause-mechanics-oracle-format",
+        "pid": 821276,
+        "pgid": 821276,
+        "starttime": "21407391",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false,
+        "owned_raw_fsync_close_ack": true
+      },
+      "raw": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-oracle-format.log",
+      "raw_bytes": 218,
+      "raw_lines": 1,
+      "raw_sha256": "d820f658de657e8ece431bcea1a69ca3a46efe3dcd7851c1306a67542b33331c",
+      "full_native_argv_equal_manifest": true,
+      "current_pid_absent": true
+    },
+    {
+      "operation": "setup-cause-mechanics-oracle-normal",
+      "actual": {
+        "event": "native_completion_ack",
+        "operation": "setup-cause-mechanics-oracle-normal",
+        "pid": 821758,
+        "pgid": 821758,
+        "starttime": "21409487",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false,
+        "owned_raw_fsync_close_ack": true
+      },
+      "raw": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-oracle-normal.log",
+      "raw_bytes": 3255,
+      "raw_lines": 41,
+      "raw_sha256": "fef97ed1e0a7570f2811409d42ba30c8d80a7157313f446f2fbe5d697f422d1c",
+      "full_native_argv_equal_manifest": true,
+      "current_pid_absent": true,
+      "top_pass": 5,
+      "sub_pass": 14,
+      "pkg_seconds": "0.012"
+    },
+    {
+      "operation": "setup-cause-mechanics-oracle-race",
+      "actual": {
+        "event": "native_completion_ack",
+        "operation": "setup-cause-mechanics-oracle-race",
+        "pid": 822695,
+        "pgid": 822695,
+        "starttime": "21413027",
+        "exit": 0,
+        "group_absent": true,
+        "timed_out": false,
+        "owned_raw_fsync_close_ack": true
+      },
+      "raw": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-oracle-race.log",
+      "raw_bytes": 3253,
+      "raw_lines": 41,
+      "raw_sha256": "dbb9f2881a73a4c4973b1f95c66bcd938727110d96674389e72aeee7bca225ce",
+      "full_native_argv_equal_manifest": true,
+      "current_pid_absent": true,
+      "top_pass": 5,
+      "sub_pass": 14,
+      "pkg_seconds": "1.122"
+    }
+  ],
+  "source27_current_and_all_snapshots_wholebyte_equal": true,
+  "source27_manifest": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-oracle-formatted27-manifest.json",
+  "source27_manifest_sha256": "bf9a17606e589d7c2edf5c15b9ac04e9aeda45c944ebabb4b475789bc50e984f",
+  "consumer_a4_and_other26_unchanged": true,
+  "format_byte_delta": 0,
+  "ledger_lines": 359,
+  "ledger_sha256": "a7cb5b1fcd19d8fb28689931730ac79b9e31e1c70feaaef12c3ecd7e0025b3cb",
+  "original353prefix_unchanged": true,
+  "new_ledger_interval": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-oracle-ledger-354-through-359.log",
+  "new_ledger_interval_sha256": "53627b1af38eab4dc1cddedc9e5291ccfe1c6bcfd8a4e880a83b8f3b513264d2",
+  "new_records_are_only3native_start_completion_pairs": true,
+  "new_resource_scopes": 0,
+  "protected16_exact_devino0700": true,
+  "old_mechanics_N1_raw43_and_checker1_preserved": true,
+  "release": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-oracle-release.json",
+  "release_sha256": "3418581e3bfa305739881d25dcb77dd476b4b2b7af684d365c6176d074dc2e6a",
+  "normalpub_Make_audit_business_not_run": true,
+  "scope": "mechanical-only qualification; ticket06 remains open"
+}

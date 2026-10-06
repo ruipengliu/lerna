@@ -1,0 +1,43 @@
+{
+  "status": "GRANTED_THREE_OPERATIONS_COMPLETED_ACTUAL0_STOP_LOCAL_RELEASED",
+  "actual_outcomes": [
+    {
+      "event": "native_completion_ack",
+      "operation": "setup-cause-mechanics-oracle-format",
+      "pid": 821276,
+      "pgid": 821276,
+      "starttime": "21407391",
+      "exit": 0,
+      "group_absent": true,
+      "timed_out": false,
+      "owned_raw_fsync_close_ack": true
+    },
+    {
+      "event": "native_completion_ack",
+      "operation": "setup-cause-mechanics-oracle-normal",
+      "pid": 821758,
+      "pgid": 821758,
+      "starttime": "21409487",
+      "exit": 0,
+      "group_absent": true,
+      "timed_out": false,
+      "owned_raw_fsync_close_ack": true
+    },
+    {
+      "event": "native_completion_ack",
+      "operation": "setup-cause-mechanics-oracle-race",
+      "pid": 822695,
+      "pgid": 822695,
+      "starttime": "21413027",
+      "exit": 0,
+      "group_absent": true,
+      "timed_out": false,
+      "owned_raw_fsync_close_ack": true
+    }
+  ],
+  "current_group_members": [],
+  "original_wait_each_confirmed": "frozen run-native proc.wait and actual outer tool exit0",
+  "own_raw_each_fsync_firstClose_ack": true,
+  "normalpub_business_Make_audit_not_started": true,
+  "further_native_not_granted": true
+}

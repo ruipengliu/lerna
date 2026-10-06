@@ -1,0 +1,17 @@
+=== RUN   TestContentFullClosureIncludesIntermediateVersionsAndExact64Bound
+    content_closure_test.go:120: closure timing i=65 stage=put current=371.467599ms install=1.534445079s put=31.799166069s step=20.974119052s
+    content_closure_test.go:124: closure port put/Now calls=4746 logical_actions=0 elapsed=2.594343902s
+    content_closure_test.go:124: closure port put/CheckPolicy calls=2210 logical_actions=6498 elapsed=2.307627027s
+    content_closure_test.go:124: closure port put/LockVersion calls=2275 logical_actions=0 elapsed=4.299318883s
+    content_closure_test.go:124: closure port put/ScheduleRetention calls=65 logical_actions=0 elapsed=17.58956202s
+    content_closure_test.go:124: closure port step/Now calls=8710 logical_actions=0 elapsed=5.07178387s
+    content_closure_test.go:124: closure port step/CheckPolicy calls=4290 logical_actions=12610 elapsed=4.615014515s
+    content_closure_test.go:124: closure port step/LockVersion calls=4225 logical_actions=0 elapsed=8.087158205s
+    content_closure_test.go:124: closure port step/ScheduleRetention calls=0 logical_actions=0 elapsed=0s
+    content_closure_test.go:124: closure port get/Now calls=264 logical_actions=0 elapsed=167.62967ms
+    content_closure_test.go:124: closure port get/CheckPolicy calls=132 logical_actions=260 elapsed=150.794116ms
+    content_closure_test.go:124: closure port get/LockVersion calls=130 logical_actions=0 elapsed=263.691983ms
+    content_closure_test.go:124: closure port get/ScheduleRetention calls=0 logical_actions=0 elapsed=0s
+--- PASS: TestContentFullClosureIncludesIntermediateVersionsAndExact64Bound (55.32s)
+PASS
+NATIVE_COMPLETION_ACK {"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "closure-cpu-case", "pgid": 4185393, "pid": 4185393, "starttime": "17565984", "timed_out": false}

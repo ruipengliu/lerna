@@ -1,0 +1,11 @@
+{
+  "event": "native_completion_ack",
+  "operation": "setup-cause-first-test-format",
+  "pid": 4142879,
+  "pgid": 4142879,
+  "starttime": "17375843",
+  "exit": 0,
+  "group_absent": true,
+  "timed_out": false,
+  "owned_raw_fsync_close_ack": true
+}

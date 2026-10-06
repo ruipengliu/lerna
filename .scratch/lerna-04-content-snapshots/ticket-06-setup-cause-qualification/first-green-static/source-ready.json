@@ -1,0 +1,15 @@
+{
+  "status": "STATIC_MINIMAL_SAFECAUSE_FIRST_GREEN_READY_ONLY",
+  "candidate27_manifest": "/tmp/lerna-06-setup-cause-first-green-static/candidate-unformatted27-manifest.json",
+  "candidate27_manifest_sha256": "e30b4a026dc63d015b87cc243702eba8fabbb1c7363fa7a60fe16d0110d8723c",
+  "diff": "/tmp/lerna-06-setup-cause-first-green-static/implementation-only.diff",
+  "diff_sha256": "d4cda5569406b07c8039ab5080f3c3d7b965e52e6a9d8ec37604fdb2b79406f4",
+  "wholebyteproof": "/tmp/lerna-06-setup-cause-first-green-static/wholebyte-success-equivalence-proof.json",
+  "wholebyteproof_sha256": "b5dd610e8dd5f0dedde2d5ddddf2572cff78dccbeaffd84e5eb7f567388fc01f",
+  "commands": "/tmp/lerna-06-setup-cause-first-green-static/commands.json",
+  "commands_sha256": "786602d0f63d725e6fff1fcd03a2d0df557570adbe0008644891b151de41bc1d",
+  "main_source_bytes": 81369,
+  "main_source_sha256": "a4fe8bc8559dd1f21aa3726efbc61f6c595a3e39107023f230675742d38ee771",
+  "same_first_mechanical_test_sha256": "9410c9925c375fbc17321e52410e495a6cf541f8a0cf45921d945a3d968b5c47",
+  "original_c9a15qualification_and_compileRED_preserved_not_newGREEN_claimed": true
+}

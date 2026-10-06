@@ -1,0 +1,11 @@
+{
+  "root": "/tmp/lerna-partition-durable-closure-cpu-execution",
+  "device": 33,
+  "inode": 483116,
+  "mode": "0700",
+  "purpose": "STATIC one original d0 closure60 default CPU profile plan; native not granted or started",
+  "new_ledger_next_line": 1,
+  "not_old_ledger_continuation": true,
+  "no_counter_or_native_ID_allocated": true,
+  "historical_UNKNOWN_not_adopted": true
+}

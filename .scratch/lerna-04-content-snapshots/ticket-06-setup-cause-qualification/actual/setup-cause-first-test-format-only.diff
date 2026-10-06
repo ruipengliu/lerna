@@ -1,0 +1,11 @@
+--- unformatted/conformance/component/content_process_setup_test.go
++++ actual-onefmt/conformance/component/content_process_setup_test.go
+@@ -15,7 +15,7 @@
+ // It is not evidence of an actual native FD Close or publication failure.
+ type contentSetupReadCloser struct {
+ 	readErr, closeErr error
+-	reads, closes int
++	reads, closes     int
+ }
+ 
+ func (r *contentSetupReadCloser) Read(p []byte) (int, error) {

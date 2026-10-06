@@ -1,0 +1,33 @@
+{
+  "status": "STOP_RELEASED_ACTUAL_FIRST_EXPECTED_MECHANICAL_COMPILE_RED",
+  "native_actual": {
+    "event": "native_completion_ack",
+    "operation": "setup-cause-first-test-compile-red",
+    "pid": 4144035,
+    "pgid": 4144035,
+    "starttime": "17381116",
+    "exit": 1,
+    "group_absent": true,
+    "timed_out": false,
+    "owned_raw_fsync_close_ack": true
+  },
+  "independent_current_group_absent": true,
+  "expected_only_undefined_private_helper": true,
+  "classification": "MECHANICAL_COMPILE_RED_NOT_BUSINESS_RED",
+  "raw_path": "/tmp/lerna-04-ticket06-execution/setup-cause-first-test-compile-red.log",
+  "raw_bytes": 505,
+  "raw_sha256": "e1fa5b2b1325122953510d2210fdaf9173c319efcd921aae5aa792811d1ee4a8",
+  "prelaunch": "/tmp/lerna-04-ticket06-execution/setup-cause-first-test-compile-red-prelaunch.json",
+  "prelaunch_sha256": "d8cf6ae4e022f62b0fb57d91b58ac0aea2b5f8a6c08cff1d917a60c244784705",
+  "outcome": "/tmp/lerna-04-ticket06-execution/setup-cause-first-test-compile-red-outcome.json",
+  "outcome_sha256": "1960e7361a2e448def6bbb9659379fb61f4c619e2f6941591f29c47515312776",
+  "formatted27_manifest": "/tmp/lerna-04-ticket06-execution/setup-cause-first-test-formatted27-manifest.json",
+  "formatted27_manifest_sha256": "a5ee31bf82fedad5a41a7f19d1006d36979e8a47913eb2b937b3cc8678c4784a",
+  "current27_after_RED_equals_fmt_manifest": true,
+  "original26_c9a_unchanged": true,
+  "new_mechanical_test_did_not_execute_because_build_failed": true,
+  "no_helper_GREEN_expansion_retry_other_native_source_audit_commit_push": true,
+  "old16_unknown_permanent_protection_unchanged": true,
+  "owned_ledger_lines": 345,
+  "whole_ticket_claimed": true
+}

@@ -1,0 +1,9 @@
+{
+  "chunk_id": "24cd64",
+  "exit_code": 1,
+  "phase": "static metadata script compilation before execution",
+  "diagnostic": "SyntaxError: ':' expected after dictionary key; bare firstfailure_STOP_RELEASE_no_repair_retry string in dict at stdin line29",
+  "script_statements_executed": false,
+  "native_or_source_changes": false,
+  "root_informed_and_historical_failure_retained": true
+}

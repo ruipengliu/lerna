@@ -1,0 +1,72 @@
+{
+  "kind": "actual source prechecks for ONE authorized finite build only",
+  "head": "d0fcc61264904070ce94e1146f07327a0ef9b2aa",
+  "clean": true,
+  "qualified6": {
+    "scripts/component-integration-race.test.mjs": {
+      "bytes": 14867,
+      "sha256": "980549594cb0754ca01c72626986359184b7344782fa1ceddb9e9b9e7170a6be"
+    },
+    "scripts/test-component-integration-race.sh": {
+      "bytes": 3622,
+      "sha256": "58625eb9021299a7549a3b98ad3bd2b70b24a85acf2ac44662d0118aede91937"
+    },
+    "scripts/testdata/component-content-97.json": {
+      "bytes": 14126,
+      "sha256": "99301ce17abe265578d272a1150093e8e17cc5a73ca71a174752cf6090b3c049"
+    },
+    "scripts/bounded-build.mjs": {
+      "bytes": 4201,
+      "sha256": "9987ff70c2ff6349ca9de5fe225ea6e310379534f633dffef0ef738a168b3a6e"
+    },
+    "scripts/conformance-ownership.mjs": {
+      "bytes": 5453,
+      "sha256": "d17b90608d45335036f7c794b1f4e9d651a010bec60aed44d7fd26b0b030f88d"
+    },
+    "scripts/testdata/component-durable-60.json": {
+      "bytes": 8583,
+      "sha256": "3fc89edc6f2ad8dbd1377441615b3636c201e02bb5af5e225cdcfe480b9eb194"
+    }
+  },
+  "module286_all_pass": true,
+  "module286_inventory_sha256": "244ff00bc019bbbe41ac0fd1f47d6094b51584e8d18d2caa6af7be5a7ce04562",
+  "Run30_all_pass": true,
+  "strict90a_original_byteexact": true,
+  "tool_metadata_sources_all_pass": true,
+  "old5ledgers_counters_2UNKNOWN_stable": true,
+  "new3FS_exact_devino_mode": [
+    {
+      "path": "/tmp/lerna-partition-durable-closure-cpu-execution",
+      "device": 33,
+      "inode": 483116,
+      "mode": "0700",
+      "intent": "exclusive allocation ACK only; future writer FD Close not certified"
+    },
+    {
+      "path": "/tmp/lerna-partition-durable-closure-cpu-execution/artifacts",
+      "device": 33,
+      "inode": 483117,
+      "mode": "0700",
+      "intent": "exclusive allocation ACK only; future writer FD Close not certified"
+    },
+    {
+      "path": "/tmp/lerna-partition-durable-closure-cpu-execution/pprof-tmp",
+      "device": 33,
+      "inode": 483118,
+      "mode": "0700",
+      "intent": "exclusive allocation ACK only; future writer FD Close not certified"
+    }
+  ],
+  "new_ledger_lines": 0,
+  "binary_profile_absent": true,
+  "manifest_sha256": "540b1439ac21cc70a86a28dc71939e145c1492c0831f0e9434aefa5c3b4f79da",
+  "exact_supervisor_argv": [
+    "python3",
+    "/tmp/lerna-partition-durable-closure-cpu-execution/run-native.py",
+    "closure-cpu-build",
+    "bash",
+    "-c",
+    "set -e; set -o pipefail; source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; export GOFLAGS=-mod=readonly; export GOPROXY=off; cd /tmp/lerna-worktrees/current-ci-partition; exec /home/agent/.local/toolchains/go1.27.1/bin/go test -c -p=1 -count=1 -race -tags=integration -mod=readonly -timeout=120s -o /tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure-race.test ./conformance/component"
+  ],
+  "only_build_authorized_no_test_or_pprof": true
+}

@@ -1,0 +1,28 @@
+{
+  "status": "ACTUAL_ONCE_FMT_ONLY2FILES_PASS_BEFORE_ORIGINAL_FIRST_TRACER_GREEN",
+  "native_actual": {
+    "event": "native_completion_ack",
+    "operation": "setup-cause-first-green-format",
+    "pid": 4166430,
+    "pgid": 4166430,
+    "starttime": "17482807",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false,
+    "owned_raw_fsync_close_ack": true
+  },
+  "independent_current_group_absent": true,
+  "raw_path": "/tmp/lerna-04-ticket06-execution/setup-cause-first-green-format.log",
+  "raw_sha256": "1386be9770d0c879fe9b4cb82ff3f7b7a65272e071fd5c4964a641622fe338ce",
+  "prelaunch_sha256": "a8e116bc989740340459cff48508d2f2dd05f21bee8f6c1f62b11108de28effc",
+  "outcome_sha256": "d9caa08366c68f311f276bc0a5a2aae4ec998a5649cf814c49c732ccd77e9cb3",
+  "format_diff": "/tmp/lerna-04-ticket06-execution/setup-cause-first-green-format-only.diff",
+  "format_diff_bytes": 0,
+  "format_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "formatted27_manifest": "/tmp/lerna-04-ticket06-execution/setup-cause-first-green-formatted27-manifest.json",
+  "formatted27_manifest_sha256": "2a4871fa62b2048b5fc425df2444ee9e3cdc23660f5b6e8f01df849ed6f62c6a",
+  "original345ledger_prefix_unchanged_and_current347": true,
+  "old16_protected_lstat0700_unchanged": true,
+  "old25_products_fixture_process_SQL_unchanged": true,
+  "first_test_not_expanded": true
+}

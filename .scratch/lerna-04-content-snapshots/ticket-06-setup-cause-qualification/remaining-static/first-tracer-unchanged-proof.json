@@ -1,0 +1,14 @@
+{
+  "status": "STATIC_FIRST_TRACER_ORIGINAL_BODY_EXACT_AND_ONLY_APPEND_PLUS_IMPORTS",
+  "before_firsttest_sha256": "9410c9925c375fbc17321e52410e495a6cf541f8a0cf45921d945a3d968b5c47",
+  "after_firsttest_bytes": 10630,
+  "after_firsttest_sha256": "ba30a1db83018eb781ae05140eb787349e2c0aa63bad7affeb7515068d797ac4",
+  "old_firsttracer_and_fakereader_wholebody_match": true,
+  "other26_allcurrent_snapshot_byteequal": true,
+  "existing_qualified_consumer_unchanged": true,
+  "no_business_product_ports_frames_gates_budgets_edited": true,
+  "no_fmt_or_go_or_observation_executed": true,
+  "cancellationClose": "original process.physicalIO joins AfterFunc callback before return; own callback emits done only after PipeReader.Close; consumer requires done and nil firstCloseErr; raw reader/writer deferred closes provide finite failure cleanup",
+  "cancel_deadline": "timeout1 immediatelycanceled OR immediatelyexpireddeadline, not sleep or replenished deadline",
+  "first_green_historical_actual_retained": true
+}

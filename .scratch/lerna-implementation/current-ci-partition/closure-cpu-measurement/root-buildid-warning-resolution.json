@@ -1,0 +1,14 @@
+{
+  "kind": "independent root metadata-only CPU buildID comparison",
+  "main_mapping": "/tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure-race.test",
+  "profile_build_id": "79e0da0f05534522bbca82f3304c7f13428a2d33",
+  "elf_gnu_build_ids": [
+    "79e0da0f05534522bbca82f3304c7f13428a2d33"
+  ],
+  "binary_profile_exact": true,
+  "installed_source_and_every_excerpt_exact": true,
+  "samples_locations_functions_not_analyzed": true,
+  "original_warning_preserved": true,
+  "cum40_not_executed": true,
+  "producer_Close_unknown_preserved": true
+}

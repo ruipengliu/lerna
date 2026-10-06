@@ -1,0 +1,23 @@
+{
+  "status": "STATIC_NDIFF_WHOLE_BEFORE_AFTER_BYTE_RECONSTRUCTION_NOT_SEMANTIC_OR_TOKEN_PROOF",
+  "original_checker_line8_failure_retained": true,
+  "full_fmt_diff": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-format-only.diff",
+  "full_fmt_diff_sha256": "debc204ae2d7324128e5e6ac9aa24a4a86ea3cc21c7d07355d1206008a3239f7",
+  "ndiff_pair": "/tmp/lerna-06-setup-cause-remaining-mechanics-static/actual-format-source-pair.ndiff",
+  "ndiff_sha256": "5c48e29ee1168c3551a5c37f5ccdc9bba8d3f93dd51601a872be4c9bd80ba8d4",
+  "ndiff_restore_before_after_complete_byte_equal": true,
+  "root_review_required_for_layout_and_optional_semicolon_hunks": true,
+  "unformatted_before_bytes": 10630,
+  "unformatted_before_sha256": "ba30a1db83018eb781ae05140eb787349e2c0aa63bad7affeb7515068d797ac4",
+  "formatted_after_bytes": 10759,
+  "formatted_after_sha256": "03d8be401624e397244a8a45251bc08533af18bf67b7a98ecd5b0671ac5a3def",
+  "firsttracer_fakereader_wholebody_unchanged": true,
+  "other26_fullbyteunchanged": true,
+  "source27_manifest": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-formatted27-manifest.json",
+  "source27_manifest_sha256": "e8887ab7681a5469b17165312b2938251476f15f822a15a27eea711ffb584ccd",
+  "ledger_lines": 351,
+  "ledger_349prefix_unchanged": true,
+  "protected16_exact_devino0700_unchanged": true,
+  "N_R_not_executed": true,
+  "first_failed_release_immutable": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-first-postcheck-release.json"
+}

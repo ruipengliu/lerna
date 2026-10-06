@@ -1,0 +1,2123 @@
+{
+  "status": "STATIC_LEDGER_DERIVED_TARGETS_ONLY_NO_PG_FS_PROC_OBSERVATION",
+  "ledger_path": "/tmp/lerna-04-ticket06-execution/owned-scopes.log",
+  "first_line": 1,
+  "last_line": 349,
+  "ledger_interval_sha256": "4becabcfeb683d6d822b0d777e160f495601ebe967146478512b43e19e860d5f",
+  "schemas": [
+    {
+      "schema": "lerna_test_00daeb37fcf91bc92833136c",
+      "registration_lines": [
+        307
+      ]
+    },
+    {
+      "schema": "lerna_test_06f2b27855c7b44b2379a1fc",
+      "registration_lines": [
+        212
+      ]
+    },
+    {
+      "schema": "lerna_test_1273bda8e088482708824c37",
+      "registration_lines": [
+        155
+      ]
+    },
+    {
+      "schema": "lerna_test_12eb271ad47ca46653aa8aa2",
+      "registration_lines": [
+        176
+      ]
+    },
+    {
+      "schema": "lerna_test_16e9679776e1a666b76b47d6",
+      "registration_lines": [
+        61
+      ]
+    },
+    {
+      "schema": "lerna_test_1792b35ad5b4e329b3a3dcd5",
+      "registration_lines": [
+        101
+      ]
+    },
+    {
+      "schema": "lerna_test_19c2e383adb12e48ac55afed",
+      "registration_lines": [
+        114
+      ]
+    },
+    {
+      "schema": "lerna_test_1dcf6de0b36fbdbd32e7c8c2",
+      "registration_lines": [
+        22
+      ]
+    },
+    {
+      "schema": "lerna_test_25207971e9b129a1f996ddb7",
+      "registration_lines": [
+        141
+      ]
+    },
+    {
+      "schema": "lerna_test_2f663e1a930e022081e8fe18",
+      "registration_lines": [
+        169
+      ]
+    },
+    {
+      "schema": "lerna_test_3b7e58c98b0dd14033326d22",
+      "registration_lines": [
+        195
+      ]
+    },
+    {
+      "schema": "lerna_test_3e0545deee979130abe21272",
+      "registration_lines": [
+        292
+      ]
+    },
+    {
+      "schema": "lerna_test_3e82942edc73296f43be9510",
+      "registration_lines": [
+        249
+      ]
+    },
+    {
+      "schema": "lerna_test_486408314c4b3c8836ac4e12",
+      "registration_lines": [
+        227
+      ]
+    },
+    {
+      "schema": "lerna_test_4a31b0f4d331c87076d908e0",
+      "registration_lines": [
+        302
+      ]
+    },
+    {
+      "schema": "lerna_test_539a6823a2ff044955104afa",
+      "registration_lines": [
+        183
+      ]
+    },
+    {
+      "schema": "lerna_test_5aa1dba26c48dcc1e55eb965",
+      "registration_lines": [
+        129
+      ]
+    },
+    {
+      "schema": "lerna_test_6a50e824aede768770812f18",
+      "registration_lines": [
+        234
+      ]
+    },
+    {
+      "schema": "lerna_test_6b159a9d3ca960f281f41c24",
+      "registration_lines": [
+        278
+      ]
+    },
+    {
+      "schema": "lerna_test_7c490a67114ee236acd6e3b1",
+      "registration_lines": [
+        73
+      ]
+    },
+    {
+      "schema": "lerna_test_88645d7035aeab5751b9d5f3",
+      "registration_lines": [
+        217
+      ]
+    },
+    {
+      "schema": "lerna_test_8fb88309cd5f8f190c3ffd9c",
+      "registration_lines": [
+        317
+      ]
+    },
+    {
+      "schema": "lerna_test_911a1f5960c093373aafe2d8",
+      "registration_lines": [
+        202
+      ]
+    },
+    {
+      "schema": "lerna_test_a70753b4b891ed676c5cb740",
+      "registration_lines": [
+        285
+      ]
+    },
+    {
+      "schema": "lerna_test_a77911089367a14459f3d9e8",
+      "registration_lines": [
+        12
+      ]
+    },
+    {
+      "schema": "lerna_test_c04e03df8f37657da9a84ce5",
+      "registration_lines": [
+        124
+      ]
+    },
+    {
+      "schema": "lerna_test_c2f794d660d6f7e336c377b4",
+      "registration_lines": [
+        80
+      ]
+    },
+    {
+      "schema": "lerna_test_c69d3fc47d45247c30181d80",
+      "registration_lines": [
+        188
+      ]
+    },
+    {
+      "schema": "lerna_test_c79770996c493281433e9ff1",
+      "registration_lines": [
+        27
+      ]
+    },
+    {
+      "schema": "lerna_test_c8f3b71696b69ca6600a47ce",
+      "registration_lines": [
+        273
+      ]
+    },
+    {
+      "schema": "lerna_test_d354c00a1ea6b477f9969cc6",
+      "registration_lines": [
+        148
+      ]
+    },
+    {
+      "schema": "lerna_test_d6224519786623a085863cf9",
+      "registration_lines": [
+        56
+      ]
+    },
+    {
+      "schema": "lerna_test_d7b56ca6645aa88f1b4ae195",
+      "registration_lines": [
+        324
+      ]
+    },
+    {
+      "schema": "lerna_test_db6d5f454d14611b68899c92",
+      "registration_lines": [
+        266
+      ]
+    },
+    {
+      "schema": "lerna_test_db85903513e438a1ff7e4304",
+      "registration_lines": [
+        244
+      ]
+    },
+    {
+      "schema": "lerna_test_df4eacaafb93c79fd6c2ac2f",
+      "registration_lines": [
+        259
+      ]
+    },
+    {
+      "schema": "lerna_test_e36c382019eccbfe4cfb3f82",
+      "registration_lines": [
+        39
+      ]
+    },
+    {
+      "schema": "lerna_test_e7119ccdb081fbe3f1bbf03c",
+      "registration_lines": [
+        46
+      ]
+    },
+    {
+      "schema": "lerna_test_ea7d4e9ae094dd9db46c59aa",
+      "registration_lines": [
+        107
+      ]
+    },
+    {
+      "schema": "lerna_test_f22e9acc40978267b5ca8c25",
+      "registration_lines": [
+        87
+      ]
+    },
+    {
+      "schema": "lerna_test_f276bbc71a5d8f9c88030d15",
+      "registration_lines": [
+        5
+      ]
+    },
+    {
+      "schema": "lerna_test_f51a61b96bd2a51e5e36cbcd",
+      "registration_lines": [
+        331
+      ]
+    },
+    {
+      "schema": "lerna_test_f991ad1c96ea361e8f2a3490",
+      "registration_lines": [
+        92
+      ]
+    },
+    {
+      "schema": "lerna_test_fa59596031078047a18d9900",
+      "registration_lines": [
+        336
+      ]
+    },
+    {
+      "schema": "lerna_test_fb0bbdc091acc35999dfb596",
+      "registration_lines": [
+        160
+      ]
+    }
+  ],
+  "paths": [
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-109171970",
+      "device": 33,
+      "inode": 410338,
+      "registration_lines": [
+        6
+      ],
+      "sticky_unknown": false,
+      "firstClose_proof": "original per-generation content_child_close ledger records; no inference from present/absent",
+      "cleanup_allowed": false
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-4136084765",
+      "device": 33,
+      "inode": 410968,
+      "registration_lines": [
+        13
+      ],
+      "sticky_unknown": true,
+      "firstClose_proof": "original per-generation content_child_close ledger records; no inference from present/absent",
+      "cleanup_allowed": false
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-3106865984",
+      "device": 33,
+      "inode": 412795,
+      "registration_lines": [
+        23
+      ],
+      "sticky_unknown": false,
+      "firstClose_proof": "original per-generation content_child_close ledger records; no inference from present/absent",
+      "cleanup_allowed": false
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-403060689",
+      "device": 33,
+      "inode": 412800,
+      "registration_lines": [
+        28
+      ],
+      "sticky_unknown": true,
+      "firstClose_proof": "original per-generation content_child_close ledger records; no inference from present/absent",
+      "cleanup_allowed": false
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-560706378",
+      "device": 33,
+      "inode": 417559,
+      "registration_lines": [
+        40
+      ],
+      "sticky_unknown": false,
+      "firstClose_proof": "original per-generation content_child_close ledger records; no inference from present/absent",
+      "cleanup_allowed": false
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-4013822289",
+      "device": 33,
+      "inode": 418085,
+      "registration_lines": [
+        47
+      ],
+      "sticky_unknown": true,
+      "firstClose_proof": "original per-generation content_child_close ledger records; no inference from present/absent",
+      "cleanup_allowed": false
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-3206856829",
+      "device": 33,
+      "inode": 418489,
+      "registration_lines": [
+        57
+      ],
+      "sticky_unknown": false,
+      "firstClose_proof": "original per-generation content_child_close ledger records; no inference from present/absent",
+      "cleanup_allowed": false
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-283551839",
+      "device": 33,
+      "inode": 418493,
+      "registration_lines": [
+        62
+      ],
+      "sticky_unknown": true,
+      "firstClose_proof": "original per-generation content_child_close ledger records; no inference from present/absent",
+      "cleanup_allowed": false
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-1387287227",
+      "device": 33,
+      "inode": 422333,
+      "registration_lines": [
+        74
+      ],
+      "sticky_unknown": false,
+      "firstClose_proof": "original per-generation content_child_close ledger records; no inference from present/absent",
+      "cleanup_allowed": false
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-2029374551",
+      "device": 33,
+      "inode": 423714,
+      "registration_lines": [
+        81
+      ],
+      "sticky_unknown": true,
+      "firstClose_proof": "original per-generation content_child_close ledger records; no inference from present/absent",
+      "cleanup_allowed": false
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-4185093059",
+      "device": 33,
+      "inode": 424081,
+      "registration_lines": [
+        88
+      ],
+      "sticky_unknown": false,
+      "firstClose_proof": "original per-generation content_child_close ledger records; no inference from present/absent",
+      "cleanup_allowed": false
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-3499575554",
+      "device": 33,
+      "inode": 424086,
+      "registration_lines": [
+        93
+      ],
+      "sticky_unknown": true,
+      "firstClose_proof": "original per-generation content_child_close ledger records; no inference from present/absent",
+      "cleanup_allowed": false
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-919670284",
+      "device": 33,
+      "inode": 448873,
+      "registration_lines": [
+        102
+      ],
+      "sticky_unknown": false,
+      "firstClose_proof": "original per-generation content_child_close ledger records; no inference from present/absent",
+      "cleanup_allowed": false
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-2101095036",
+      "device": 33,
+      "inode": 450170,
+      "registration_lines": [
+        108
+      ],
+      "sticky_unknown": false,
+      "firstClose_proof": "original per-generation content_child_close ledger records; no inference from present/absent",
+      "cleanup_allowed": false
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-3364467673",
+      "device": 33,
+      "inode": 451764,
+      "registration_lines": [
+        115
+      ],
+      "sticky_unknown": true,
+      "firstClose_proof": "original per-generation content_child_close ledger records; no inference from present/absent",
+      "cleanup_allowed": false
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-3418960653",
+      "device": 33,
+      "inode": 452722,
+      "registration_lines": [
+        125
+      ],
+      "sticky_unknown": false,
+      "firstClose_proof": "original per-generation content_child_close ledger records; no inference from present/absent",
+      "cleanup_allowed": false
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-3028872266",
+      "device": 33,
+      "inode": 452726,
+      "registration_lines": [
+        130
+      ],
+      "sticky_unknown": true,
+      "firstClose_proof": "original per-generation content_child_close ledger records; no inference from present/absent",
+      "cleanup_allowed": false
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-293615515",
+      "device": 33,
+      "inode": 461377,
+      "registration_lines": [
+        142
+      ],
+      "sticky_unknown": false,
+      "firstClose_proof": "original per-generation content_child_close ledger records; no inference from present/absent",
+      "cleanup_allowed": false
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-2899419728",
+      "device": 33,
+      "inode": 461974,
+      "registration_lines": [
+        149
+      ],
+      "sticky_unknown": false,
+      "firstClose_proof": "original per-generation content_child_close ledger records; no inference from present/absent",
+      "cleanup_allowed": false
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-2938228115",
+      "device": 33,
+      "inode": 462455,
+      "registration_lines": [
+        156
+      ],
+      "sticky_unknown": false,
+      "firstClose_proof": "original per-generation content_child_close ledger records; no inference from present/absent",
+      "cleanup_allowed": false
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-354021635",
+      "device": 33,
+      "inode": 462460,
+      "registration_lines": [
+        161
+      ],
+      "sticky_unknown": false,
+      "firstClose_proof": "original per-generation content_child_close ledger records; no inference from present/absent",
+      "cleanup_allowed": false
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-2741457356",
+      "device": 33,
+      "inode": 465150,
+      "registration_lines": [
+        170
+      ],
+      "sticky_unknown": false,
+      "firstClose_proof": "original per-generation content_child_close ledger records; no inference from present/absent",
+      "cleanup_allowed": false
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-1278343551",
+      "device": 33,
+      "inode": 465770,
+      "registration_lines": [
+        177
+      ],
+      "sticky_unknown": false,
+      "firstClose_proof": "original per-generation content_child_close ledger records; no inference from present/absent",
+      "cleanup_allowed": false
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-1843719278",
+      "device": 33,
+      "inode": 466222,
+      "registration_lines": [
+        184
+      ],
+      "sticky_unknown": false,
+      "firstClose_proof": "original per-generation content_child_close ledger records; no inference from present/absent",
+      "cleanup_allowed": false
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-1231648912",
+      "device": 33,
+      "inode": 466227,
+      "registration_lines": [
+        189
+      ],
+      "sticky_unknown": false,
+      "firstClose_proof": "original per-generation content_child_close ledger records; no inference from present/absent",
+      "cleanup_allowed": false
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-998867185",
+      "device": 33,
+      "inode": 474884,
+      "registration_lines": [
+        196
+      ],
+      "sticky_unknown": false,
+      "firstClose_proof": "original per-generation content_child_close ledger records; no inference from present/absent",
+      "cleanup_allowed": false
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-2511088488",
+      "device": 33,
+      "inode": 478014,
+      "registration_lines": [
+        203
+      ],
+      "sticky_unknown": true,
+      "firstClose_proof": "original per-generation content_child_close ledger records; no inference from present/absent",
+      "cleanup_allowed": false
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-2114095998",
+      "device": 33,
+      "inode": 478330,
+      "registration_lines": [
+        213
+      ],
+      "sticky_unknown": false,
+      "firstClose_proof": "original per-generation content_child_close ledger records; no inference from present/absent",
+      "cleanup_allowed": false
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-753981788",
+      "device": 33,
+      "inode": 478335,
+      "registration_lines": [
+        218
+      ],
+      "sticky_unknown": true,
+      "firstClose_proof": "original per-generation content_child_close ledger records; no inference from present/absent",
+      "cleanup_allowed": false
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-371804015",
+      "device": 33,
+      "inode": 478685,
+      "registration_lines": [
+        228
+      ],
+      "sticky_unknown": false,
+      "firstClose_proof": "original per-generation content_child_close ledger records; no inference from present/absent",
+      "cleanup_allowed": false
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-1399548342",
+      "device": 33,
+      "inode": 479008,
+      "registration_lines": [
+        235
+      ],
+      "sticky_unknown": true,
+      "firstClose_proof": "original per-generation content_child_close ledger records; no inference from present/absent",
+      "cleanup_allowed": false
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-2534261937",
+      "device": 33,
+      "inode": 479330,
+      "registration_lines": [
+        245
+      ],
+      "sticky_unknown": false,
+      "firstClose_proof": "original per-generation content_child_close ledger records; no inference from present/absent",
+      "cleanup_allowed": false
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-1484034955",
+      "device": 33,
+      "inode": 479335,
+      "registration_lines": [
+        250
+      ],
+      "sticky_unknown": true,
+      "firstClose_proof": "original per-generation content_child_close ledger records; no inference from present/absent",
+      "cleanup_allowed": false
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-1248274164",
+      "device": 33,
+      "inode": 479671,
+      "registration_lines": [
+        260
+      ],
+      "sticky_unknown": false,
+      "firstClose_proof": "original per-generation content_child_close ledger records; no inference from present/absent",
+      "cleanup_allowed": false
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-3836418164",
+      "device": 33,
+      "inode": 479983,
+      "registration_lines": [
+        267
+      ],
+      "sticky_unknown": true,
+      "firstClose_proof": "original per-generation content_child_close ledger records; no inference from present/absent",
+      "cleanup_allowed": false
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-2493967970",
+      "device": 33,
+      "inode": 480292,
+      "registration_lines": [
+        274
+      ],
+      "sticky_unknown": false,
+      "firstClose_proof": "original per-generation content_child_close ledger records; no inference from present/absent",
+      "cleanup_allowed": false
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-667109751",
+      "device": 33,
+      "inode": 480297,
+      "registration_lines": [
+        279
+      ],
+      "sticky_unknown": true,
+      "firstClose_proof": "original per-generation content_child_close ledger records; no inference from present/absent",
+      "cleanup_allowed": false
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-10721605",
+      "device": 33,
+      "inode": 480609,
+      "registration_lines": [
+        286
+      ],
+      "sticky_unknown": false,
+      "firstClose_proof": "original per-generation content_child_close ledger records; no inference from present/absent",
+      "cleanup_allowed": false
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-3288104960",
+      "device": 33,
+      "inode": 480912,
+      "registration_lines": [
+        293
+      ],
+      "sticky_unknown": true,
+      "firstClose_proof": "original per-generation content_child_close ledger records; no inference from present/absent",
+      "cleanup_allowed": false
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-3108476912",
+      "device": 33,
+      "inode": 481221,
+      "registration_lines": [
+        303
+      ],
+      "sticky_unknown": false,
+      "firstClose_proof": "original per-generation content_child_close ledger records; no inference from present/absent",
+      "cleanup_allowed": false
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-1117642246",
+      "device": 33,
+      "inode": 481226,
+      "registration_lines": [
+        308
+      ],
+      "sticky_unknown": true,
+      "firstClose_proof": "original per-generation content_child_close ledger records; no inference from present/absent",
+      "cleanup_allowed": false
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-1629820",
+      "device": 33,
+      "inode": 481548,
+      "registration_lines": [
+        318
+      ],
+      "sticky_unknown": false,
+      "firstClose_proof": "original per-generation content_child_close ledger records; no inference from present/absent",
+      "cleanup_allowed": false
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-3181406271",
+      "device": 33,
+      "inode": 481855,
+      "registration_lines": [
+        325
+      ],
+      "sticky_unknown": false,
+      "firstClose_proof": "original per-generation content_child_close ledger records; no inference from present/absent",
+      "cleanup_allowed": false
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-3949415822",
+      "device": 33,
+      "inode": 482161,
+      "registration_lines": [
+        332
+      ],
+      "sticky_unknown": false,
+      "firstClose_proof": "original per-generation content_child_close ledger records; no inference from present/absent",
+      "cleanup_allowed": false
+    },
+    {
+      "path": "/tmp/lerna-04-ticket06-execution/lerna-content-objects-1344980382",
+      "device": 33,
+      "inode": 482165,
+      "registration_lines": [
+        337
+      ],
+      "sticky_unknown": false,
+      "firstClose_proof": "original per-generation content_child_close ledger records; no inference from present/absent",
+      "cleanup_allowed": false
+    }
+  ],
+  "groups": [
+    {
+      "pgid": 3629434,
+      "original_records": [
+        {
+          "line": 2,
+          "starttime": "15223562",
+          "operation": "first-format",
+          "pid": 3629434
+        }
+      ]
+    },
+    {
+      "pgid": 3630391,
+      "original_records": [
+        {
+          "line": 4,
+          "starttime": "15227863",
+          "operation": "durable-normal-control",
+          "pid": 3630391
+        },
+        {
+          "line": 8,
+          "schema": "lerna_test_f276bbc71a5d8f9c88030d15",
+          "pid": 3630925,
+          "starttime": "15228824",
+          "generation": 1
+        }
+      ]
+    },
+    {
+      "pgid": 3639190,
+      "original_records": [
+        {
+          "line": 11,
+          "starttime": "15265079",
+          "operation": "durable-sigkill-fault",
+          "pid": 3639190
+        },
+        {
+          "line": 15,
+          "schema": "lerna_test_a77911089367a14459f3d9e8",
+          "pid": 3639297,
+          "starttime": "15265188",
+          "generation": 1
+        },
+        {
+          "line": 18,
+          "schema": "lerna_test_a77911089367a14459f3d9e8",
+          "pid": 3639405,
+          "starttime": "15265695",
+          "generation": 2
+        }
+      ]
+    },
+    {
+      "pgid": 3659350,
+      "original_records": [
+        {
+          "line": 21,
+          "starttime": "15349458",
+          "operation": "durable-paired-race",
+          "pid": 3659350
+        },
+        {
+          "line": 25,
+          "schema": "lerna_test_1dcf6de0b36fbdbd32e7c8c2",
+          "pid": 3659999,
+          "starttime": "15350888",
+          "generation": 1
+        },
+        {
+          "line": 30,
+          "schema": "lerna_test_c79770996c493281433e9ff1",
+          "pid": 3660033,
+          "starttime": "15351038",
+          "generation": 1
+        },
+        {
+          "line": 33,
+          "schema": "lerna_test_c79770996c493281433e9ff1",
+          "pid": 3660165,
+          "starttime": "15351555",
+          "generation": 2
+        }
+      ]
+    },
+    {
+      "pgid": 3697349,
+      "original_records": [
+        {
+          "line": 36,
+          "starttime": "15517882",
+          "operation": "precommit-format",
+          "pid": 3697349
+        }
+      ]
+    },
+    {
+      "pgid": 3698205,
+      "original_records": [
+        {
+          "line": 38,
+          "starttime": "15521567",
+          "operation": "precommit-normal-control",
+          "pid": 3698205
+        },
+        {
+          "line": 42,
+          "schema": "lerna_test_e36c382019eccbfe4cfb3f82",
+          "pid": 3698391,
+          "starttime": "15522007",
+          "generation": 1
+        }
+      ]
+    },
+    {
+      "pgid": 3703416,
+      "original_records": [
+        {
+          "line": 45,
+          "starttime": "15543891",
+          "operation": "precommit-sigkill-fault",
+          "pid": 3703416
+        },
+        {
+          "line": 49,
+          "schema": "lerna_test_e7119ccdb081fbe3f1bbf03c",
+          "pid": 3703496,
+          "starttime": "15544025",
+          "generation": 1
+        },
+        {
+          "line": 52,
+          "schema": "lerna_test_e7119ccdb081fbe3f1bbf03c",
+          "pid": 3703641,
+          "starttime": "15544535",
+          "generation": 2
+        }
+      ]
+    },
+    {
+      "pgid": 3706145,
+      "original_records": [
+        {
+          "line": 55,
+          "starttime": "15555468",
+          "operation": "precommit-paired-race",
+          "pid": 3706145
+        },
+        {
+          "line": 59,
+          "schema": "lerna_test_d6224519786623a085863cf9",
+          "pid": 3706361,
+          "starttime": "15556166",
+          "generation": 1
+        },
+        {
+          "line": 64,
+          "schema": "lerna_test_16e9679776e1a666b76b47d6",
+          "pid": 3706397,
+          "starttime": "15556320",
+          "generation": 1
+        },
+        {
+          "line": 67,
+          "schema": "lerna_test_16e9679776e1a666b76b47d6",
+          "pid": 3706524,
+          "starttime": "15556838",
+          "generation": 2
+        }
+      ]
+    },
+    {
+      "pgid": 3760029,
+      "original_records": [
+        {
+          "line": 70,
+          "starttime": "15790976",
+          "operation": "postcommit-format",
+          "pid": 3760029
+        }
+      ]
+    },
+    {
+      "pgid": 3760631,
+      "original_records": [
+        {
+          "line": 72,
+          "starttime": "15793710",
+          "operation": "postcommit-normal-control",
+          "pid": 3760631
+        },
+        {
+          "line": 76,
+          "schema": "lerna_test_7c490a67114ee236acd6e3b1",
+          "pid": 3760796,
+          "starttime": "15794178",
+          "generation": 1
+        }
+      ]
+    },
+    {
+      "pgid": 3769041,
+      "original_records": [
+        {
+          "line": 79,
+          "starttime": "15830448",
+          "operation": "postcommit-sigkill-fault",
+          "pid": 3769041
+        },
+        {
+          "line": 83,
+          "schema": "lerna_test_c2f794d660d6f7e336c377b4",
+          "pid": 3769114,
+          "starttime": "15830553",
+          "generation": 1
+        }
+      ]
+    },
+    {
+      "pgid": 3770896,
+      "original_records": [
+        {
+          "line": 86,
+          "starttime": "15838349",
+          "operation": "postcommit-paired-race",
+          "pid": 3770896
+        },
+        {
+          "line": 90,
+          "schema": "lerna_test_f22e9acc40978267b5ca8c25",
+          "pid": 3771171,
+          "starttime": "15839185",
+          "generation": 1
+        },
+        {
+          "line": 95,
+          "schema": "lerna_test_f991ad1c96ea361e8f2a3490",
+          "pid": 3771209,
+          "starttime": "15839357",
+          "generation": 1
+        }
+      ]
+    },
+    {
+      "pgid": 3846993,
+      "original_records": [
+        {
+          "line": 98,
+          "starttime": "16118850",
+          "operation": "policy-orphan-format",
+          "pid": 3846993
+        }
+      ]
+    },
+    {
+      "pgid": 3847706,
+      "original_records": [
+        {
+          "line": 100,
+          "starttime": "16122119",
+          "operation": "policy-orphan-normal-control",
+          "pid": 3847706
+        }
+      ]
+    },
+    {
+      "pgid": 3867394,
+      "original_records": [
+        {
+          "line": 104,
+          "starttime": "16209893",
+          "operation": "policy-orphan-reader-format",
+          "pid": 3867394
+        }
+      ]
+    },
+    {
+      "pgid": 3868040,
+      "original_records": [
+        {
+          "line": 106,
+          "starttime": "16212656",
+          "operation": "policy-orphan-reader-normal-control",
+          "pid": 3868040
+        },
+        {
+          "line": 110,
+          "schema": "lerna_test_ea7d4e9ae094dd9db46c59aa",
+          "pid": 3868205,
+          "starttime": "16213166",
+          "generation": 1
+        }
+      ]
+    },
+    {
+      "pgid": 3886840,
+      "original_records": [
+        {
+          "line": 113,
+          "starttime": "16296846",
+          "operation": "policy-orphan-reader-sigkill-fault",
+          "pid": 3886840
+        },
+        {
+          "line": 117,
+          "schema": "lerna_test_19c2e383adb12e48ac55afed",
+          "pid": 3886940,
+          "starttime": "16296998",
+          "generation": 1
+        },
+        {
+          "line": 120,
+          "schema": "lerna_test_19c2e383adb12e48ac55afed",
+          "pid": 3887044,
+          "starttime": "16297505",
+          "generation": 2
+        }
+      ]
+    },
+    {
+      "pgid": 3905075,
+      "original_records": [
+        {
+          "line": 123,
+          "starttime": "16367800",
+          "operation": "policy-orphan-reader-paired-race",
+          "pid": 3905075
+        },
+        {
+          "line": 127,
+          "schema": "lerna_test_c04e03df8f37657da9a84ce5",
+          "pid": 3905350,
+          "starttime": "16368600",
+          "generation": 1
+        },
+        {
+          "line": 132,
+          "schema": "lerna_test_5aa1dba26c48dcc1e55eb965",
+          "pid": 3905421,
+          "starttime": "16368768",
+          "generation": 1
+        },
+        {
+          "line": 135,
+          "schema": "lerna_test_5aa1dba26c48dcc1e55eb965",
+          "pid": 3905539,
+          "starttime": "16369288",
+          "generation": 2
+        }
+      ]
+    },
+    {
+      "pgid": 3967979,
+      "original_records": [
+        {
+          "line": 138,
+          "starttime": "16636553",
+          "operation": "late-finish-format",
+          "pid": 3967979
+        }
+      ]
+    },
+    {
+      "pgid": 3969133,
+      "original_records": [
+        {
+          "line": 140,
+          "starttime": "16641553",
+          "operation": "late-finish-normal-control",
+          "pid": 3969133
+        },
+        {
+          "line": 144,
+          "schema": "lerna_test_25207971e9b129a1f996ddb7",
+          "pid": 3969321,
+          "starttime": "16642077",
+          "generation": 1
+        }
+      ]
+    },
+    {
+      "pgid": 3976602,
+      "original_records": [
+        {
+          "line": 147,
+          "starttime": "16674526",
+          "operation": "late-finish-original-fence-fault",
+          "pid": 3976602
+        },
+        {
+          "line": 151,
+          "schema": "lerna_test_d354c00a1ea6b477f9969cc6",
+          "pid": 3976703,
+          "starttime": "16674646",
+          "generation": 1
+        }
+      ]
+    },
+    {
+      "pgid": 3981027,
+      "original_records": [
+        {
+          "line": 154,
+          "starttime": "16693732",
+          "operation": "late-finish-paired-race",
+          "pid": 3981027
+        },
+        {
+          "line": 158,
+          "schema": "lerna_test_1273bda8e088482708824c37",
+          "pid": 3981280,
+          "starttime": "16694438",
+          "generation": 1
+        },
+        {
+          "line": 163,
+          "schema": "lerna_test_fb0bbdc091acc35999dfb596",
+          "pid": 3981313,
+          "starttime": "16694593",
+          "generation": 1
+        }
+      ]
+    },
+    {
+      "pgid": 4027597,
+      "original_records": [
+        {
+          "line": 166,
+          "starttime": "16895564",
+          "operation": "late-put-format",
+          "pid": 4027597
+        }
+      ]
+    },
+    {
+      "pgid": 4028563,
+      "original_records": [
+        {
+          "line": 168,
+          "starttime": "16899866",
+          "operation": "late-put-normal-control",
+          "pid": 4028563
+        },
+        {
+          "line": 172,
+          "schema": "lerna_test_2f663e1a930e022081e8fe18",
+          "pid": 4028773,
+          "starttime": "16900483",
+          "generation": 1
+        }
+      ]
+    },
+    {
+      "pgid": 4036592,
+      "original_records": [
+        {
+          "line": 175,
+          "starttime": "16934843",
+          "operation": "late-put-original-fence-fault",
+          "pid": 4036592
+        },
+        {
+          "line": 179,
+          "schema": "lerna_test_12eb271ad47ca46653aa8aa2",
+          "pid": 4036674,
+          "starttime": "16934960",
+          "generation": 1
+        }
+      ]
+    },
+    {
+      "pgid": 4040390,
+      "original_records": [
+        {
+          "line": 182,
+          "starttime": "16951580",
+          "operation": "late-put-paired-race",
+          "pid": 4040390
+        },
+        {
+          "line": 186,
+          "schema": "lerna_test_539a6823a2ff044955104afa",
+          "pid": 4040674,
+          "starttime": "16952508",
+          "generation": 1
+        },
+        {
+          "line": 191,
+          "schema": "lerna_test_c69d3fc47d45247c30181d80",
+          "pid": 4040710,
+          "starttime": "16952671",
+          "generation": 1
+        }
+      ]
+    },
+    {
+      "pgid": 4078161,
+      "original_records": [
+        {
+          "line": 194,
+          "starttime": "17103157",
+          "operation": "current-producer-durable-normal-control",
+          "pid": 4078161
+        },
+        {
+          "line": 198,
+          "schema": "lerna_test_3b7e58c98b0dd14033326d22",
+          "pid": 4078262,
+          "starttime": "17103311",
+          "generation": 1
+        }
+      ]
+    },
+    {
+      "pgid": 4104414,
+      "original_records": [
+        {
+          "line": 201,
+          "starttime": "17217338",
+          "operation": "current-producer-durable-original-fault",
+          "pid": 4104414
+        },
+        {
+          "line": 205,
+          "schema": "lerna_test_911a1f5960c093373aafe2d8",
+          "pid": 4104516,
+          "starttime": "17217497",
+          "generation": 1
+        },
+        {
+          "line": 208,
+          "schema": "lerna_test_911a1f5960c093373aafe2d8",
+          "pid": 4104631,
+          "starttime": "17218003",
+          "generation": 2
+        }
+      ]
+    },
+    {
+      "pgid": 4105287,
+      "original_records": [
+        {
+          "line": 211,
+          "starttime": "17220837",
+          "operation": "current-producer-durable-paired-race",
+          "pid": 4105287
+        },
+        {
+          "line": 215,
+          "schema": "lerna_test_06f2b27855c7b44b2379a1fc",
+          "pid": 4105387,
+          "starttime": "17221043",
+          "generation": 1
+        },
+        {
+          "line": 220,
+          "schema": "lerna_test_88645d7035aeab5751b9d5f3",
+          "pid": 4105446,
+          "starttime": "17221204",
+          "generation": 1
+        },
+        {
+          "line": 223,
+          "schema": "lerna_test_88645d7035aeab5751b9d5f3",
+          "pid": 4105552,
+          "starttime": "17221726",
+          "generation": 2
+        }
+      ]
+    },
+    {
+      "pgid": 4107055,
+      "original_records": [
+        {
+          "line": 226,
+          "starttime": "17228335",
+          "operation": "current-producer-precommit-normal-control",
+          "pid": 4107055
+        },
+        {
+          "line": 230,
+          "schema": "lerna_test_486408314c4b3c8836ac4e12",
+          "pid": 4107152,
+          "starttime": "17228456",
+          "generation": 1
+        }
+      ]
+    },
+    {
+      "pgid": 4108168,
+      "original_records": [
+        {
+          "line": 233,
+          "starttime": "17232845",
+          "operation": "current-producer-precommit-original-fault",
+          "pid": 4108168
+        },
+        {
+          "line": 237,
+          "schema": "lerna_test_6a50e824aede768770812f18",
+          "pid": 4108224,
+          "starttime": "17232949",
+          "generation": 1
+        },
+        {
+          "line": 240,
+          "schema": "lerna_test_6a50e824aede768770812f18",
+          "pid": 4108370,
+          "starttime": "17233468",
+          "generation": 2
+        }
+      ]
+    },
+    {
+      "pgid": 4109067,
+      "original_records": [
+        {
+          "line": 243,
+          "starttime": "17236675",
+          "operation": "current-producer-precommit-paired-race",
+          "pid": 4109067
+        },
+        {
+          "line": 247,
+          "schema": "lerna_test_db85903513e438a1ff7e4304",
+          "pid": 4109192,
+          "starttime": "17236888",
+          "generation": 1
+        },
+        {
+          "line": 252,
+          "schema": "lerna_test_3e82942edc73296f43be9510",
+          "pid": 4109251,
+          "starttime": "17237045",
+          "generation": 1
+        },
+        {
+          "line": 255,
+          "schema": "lerna_test_3e82942edc73296f43be9510",
+          "pid": 4109382,
+          "starttime": "17237562",
+          "generation": 2
+        }
+      ]
+    },
+    {
+      "pgid": 4110506,
+      "original_records": [
+        {
+          "line": 258,
+          "starttime": "17242688",
+          "operation": "current-producer-postcommit-normal-control",
+          "pid": 4110506
+        },
+        {
+          "line": 262,
+          "schema": "lerna_test_df4eacaafb93c79fd6c2ac2f",
+          "pid": 4110588,
+          "starttime": "17242805",
+          "generation": 1
+        }
+      ]
+    },
+    {
+      "pgid": 4111407,
+      "original_records": [
+        {
+          "line": 265,
+          "starttime": "17246010",
+          "operation": "current-producer-postcommit-original-fault",
+          "pid": 4111407
+        },
+        {
+          "line": 269,
+          "schema": "lerna_test_db6d5f454d14611b68899c92",
+          "pid": 4111480,
+          "starttime": "17246130",
+          "generation": 1
+        }
+      ]
+    },
+    {
+      "pgid": 4112111,
+      "original_records": [
+        {
+          "line": 272,
+          "starttime": "17248976",
+          "operation": "current-producer-postcommit-paired-race",
+          "pid": 4112111
+        },
+        {
+          "line": 276,
+          "schema": "lerna_test_c8f3b71696b69ca6600a47ce",
+          "pid": 4112214,
+          "starttime": "17249116",
+          "generation": 1
+        },
+        {
+          "line": 281,
+          "schema": "lerna_test_6b159a9d3ca960f281f41c24",
+          "pid": 4112273,
+          "starttime": "17249275",
+          "generation": 1
+        }
+      ]
+    },
+    {
+      "pgid": 4113572,
+      "original_records": [
+        {
+          "line": 284,
+          "starttime": "17252618",
+          "operation": "current-producer-policy-orphan-normal-control",
+          "pid": 4113572
+        },
+        {
+          "line": 288,
+          "schema": "lerna_test_a70753b4b891ed676c5cb740",
+          "pid": 4113650,
+          "starttime": "17252712",
+          "generation": 1
+        }
+      ]
+    },
+    {
+      "pgid": 4114188,
+      "original_records": [
+        {
+          "line": 291,
+          "starttime": "17254943",
+          "operation": "current-producer-policy-orphan-original-fault",
+          "pid": 4114188
+        },
+        {
+          "line": 295,
+          "schema": "lerna_test_3e0545deee979130abe21272",
+          "pid": 4114242,
+          "starttime": "17255057",
+          "generation": 1
+        },
+        {
+          "line": 298,
+          "schema": "lerna_test_3e0545deee979130abe21272",
+          "pid": 4114370,
+          "starttime": "17255569",
+          "generation": 2
+        }
+      ]
+    },
+    {
+      "pgid": 4114888,
+      "original_records": [
+        {
+          "line": 301,
+          "starttime": "17257823",
+          "operation": "current-producer-policy-orphan-paired-race",
+          "pid": 4114888
+        },
+        {
+          "line": 305,
+          "schema": "lerna_test_4a31b0f4d331c87076d908e0",
+          "pid": 4114987,
+          "starttime": "17257968",
+          "generation": 1
+        },
+        {
+          "line": 310,
+          "schema": "lerna_test_00daeb37fcf91bc92833136c",
+          "pid": 4115019,
+          "starttime": "17258158",
+          "generation": 1
+        },
+        {
+          "line": 313,
+          "schema": "lerna_test_00daeb37fcf91bc92833136c",
+          "pid": 4115148,
+          "starttime": "17258680",
+          "generation": 2
+        }
+      ]
+    },
+    {
+      "pgid": 4115932,
+      "original_records": [
+        {
+          "line": 316,
+          "starttime": "17262342",
+          "operation": "current-producer-late-finish-normal-control",
+          "pid": 4115932
+        },
+        {
+          "line": 320,
+          "schema": "lerna_test_8fb88309cd5f8f190c3ffd9c",
+          "pid": 4116033,
+          "starttime": "17262445",
+          "generation": 1
+        }
+      ]
+    },
+    {
+      "pgid": 4116610,
+      "original_records": [
+        {
+          "line": 323,
+          "starttime": "17265097",
+          "operation": "current-producer-late-finish-original-fault",
+          "pid": 4116610
+        },
+        {
+          "line": 327,
+          "schema": "lerna_test_d7b56ca6645aa88f1b4ae195",
+          "pid": 4116712,
+          "starttime": "17265198",
+          "generation": 1
+        }
+      ]
+    },
+    {
+      "pgid": 4117261,
+      "original_records": [
+        {
+          "line": 330,
+          "starttime": "17267749",
+          "operation": "current-producer-late-finish-paired-race",
+          "pid": 4117261
+        },
+        {
+          "line": 334,
+          "schema": "lerna_test_f51a61b96bd2a51e5e36cbcd",
+          "pid": 4117342,
+          "starttime": "17267885",
+          "generation": 1
+        },
+        {
+          "line": 339,
+          "schema": "lerna_test_fa59596031078047a18d9900",
+          "pid": 4117400,
+          "starttime": "17268047",
+          "generation": 1
+        }
+      ]
+    },
+    {
+      "pgid": 4142879,
+      "original_records": [
+        {
+          "line": 342,
+          "starttime": "17375843",
+          "operation": "setup-cause-first-test-format",
+          "pid": 4142879
+        }
+      ]
+    },
+    {
+      "pgid": 4144035,
+      "original_records": [
+        {
+          "line": 344,
+          "starttime": "17381116",
+          "operation": "setup-cause-first-test-compile-red",
+          "pid": 4144035
+        }
+      ]
+    },
+    {
+      "pgid": 4166430,
+      "original_records": [
+        {
+          "line": 346,
+          "starttime": "17482807",
+          "operation": "setup-cause-first-green-format",
+          "pid": 4166430
+        }
+      ]
+    },
+    {
+      "pgid": 4175607,
+      "original_records": [
+        {
+          "line": 348,
+          "starttime": "17523767",
+          "operation": "setup-cause-first-mechanical-green",
+          "pid": 4175607
+        }
+      ]
+    }
+  ],
+  "children": [
+    {
+      "line": 8,
+      "schema": "lerna_test_f276bbc71a5d8f9c88030d15",
+      "generation": "1",
+      "pid": "3630925",
+      "pgid": "3630391",
+      "start": "15228824"
+    },
+    {
+      "line": 15,
+      "schema": "lerna_test_a77911089367a14459f3d9e8",
+      "generation": "1",
+      "pid": "3639297",
+      "pgid": "3639190",
+      "start": "15265188"
+    },
+    {
+      "line": 18,
+      "schema": "lerna_test_a77911089367a14459f3d9e8",
+      "generation": "2",
+      "pid": "3639405",
+      "pgid": "3639190",
+      "start": "15265695"
+    },
+    {
+      "line": 25,
+      "schema": "lerna_test_1dcf6de0b36fbdbd32e7c8c2",
+      "generation": "1",
+      "pid": "3659999",
+      "pgid": "3659350",
+      "start": "15350888"
+    },
+    {
+      "line": 30,
+      "schema": "lerna_test_c79770996c493281433e9ff1",
+      "generation": "1",
+      "pid": "3660033",
+      "pgid": "3659350",
+      "start": "15351038"
+    },
+    {
+      "line": 33,
+      "schema": "lerna_test_c79770996c493281433e9ff1",
+      "generation": "2",
+      "pid": "3660165",
+      "pgid": "3659350",
+      "start": "15351555"
+    },
+    {
+      "line": 42,
+      "schema": "lerna_test_e36c382019eccbfe4cfb3f82",
+      "generation": "1",
+      "pid": "3698391",
+      "pgid": "3698205",
+      "start": "15522007"
+    },
+    {
+      "line": 49,
+      "schema": "lerna_test_e7119ccdb081fbe3f1bbf03c",
+      "generation": "1",
+      "pid": "3703496",
+      "pgid": "3703416",
+      "start": "15544025"
+    },
+    {
+      "line": 52,
+      "schema": "lerna_test_e7119ccdb081fbe3f1bbf03c",
+      "generation": "2",
+      "pid": "3703641",
+      "pgid": "3703416",
+      "start": "15544535"
+    },
+    {
+      "line": 59,
+      "schema": "lerna_test_d6224519786623a085863cf9",
+      "generation": "1",
+      "pid": "3706361",
+      "pgid": "3706145",
+      "start": "15556166"
+    },
+    {
+      "line": 64,
+      "schema": "lerna_test_16e9679776e1a666b76b47d6",
+      "generation": "1",
+      "pid": "3706397",
+      "pgid": "3706145",
+      "start": "15556320"
+    },
+    {
+      "line": 67,
+      "schema": "lerna_test_16e9679776e1a666b76b47d6",
+      "generation": "2",
+      "pid": "3706524",
+      "pgid": "3706145",
+      "start": "15556838"
+    },
+    {
+      "line": 76,
+      "schema": "lerna_test_7c490a67114ee236acd6e3b1",
+      "generation": "1",
+      "pid": "3760796",
+      "pgid": "3760631",
+      "start": "15794178"
+    },
+    {
+      "line": 83,
+      "schema": "lerna_test_c2f794d660d6f7e336c377b4",
+      "generation": "1",
+      "pid": "3769114",
+      "pgid": "3769041",
+      "start": "15830553"
+    },
+    {
+      "line": 90,
+      "schema": "lerna_test_f22e9acc40978267b5ca8c25",
+      "generation": "1",
+      "pid": "3771171",
+      "pgid": "3770896",
+      "start": "15839185"
+    },
+    {
+      "line": 95,
+      "schema": "lerna_test_f991ad1c96ea361e8f2a3490",
+      "generation": "1",
+      "pid": "3771209",
+      "pgid": "3770896",
+      "start": "15839357"
+    },
+    {
+      "line": 110,
+      "schema": "lerna_test_ea7d4e9ae094dd9db46c59aa",
+      "generation": "1",
+      "pid": "3868205",
+      "pgid": "3868040",
+      "start": "16213166"
+    },
+    {
+      "line": 117,
+      "schema": "lerna_test_19c2e383adb12e48ac55afed",
+      "generation": "1",
+      "pid": "3886940",
+      "pgid": "3886840",
+      "start": "16296998"
+    },
+    {
+      "line": 120,
+      "schema": "lerna_test_19c2e383adb12e48ac55afed",
+      "generation": "2",
+      "pid": "3887044",
+      "pgid": "3886840",
+      "start": "16297505"
+    },
+    {
+      "line": 127,
+      "schema": "lerna_test_c04e03df8f37657da9a84ce5",
+      "generation": "1",
+      "pid": "3905350",
+      "pgid": "3905075",
+      "start": "16368600"
+    },
+    {
+      "line": 132,
+      "schema": "lerna_test_5aa1dba26c48dcc1e55eb965",
+      "generation": "1",
+      "pid": "3905421",
+      "pgid": "3905075",
+      "start": "16368768"
+    },
+    {
+      "line": 135,
+      "schema": "lerna_test_5aa1dba26c48dcc1e55eb965",
+      "generation": "2",
+      "pid": "3905539",
+      "pgid": "3905075",
+      "start": "16369288"
+    },
+    {
+      "line": 144,
+      "schema": "lerna_test_25207971e9b129a1f996ddb7",
+      "generation": "1",
+      "pid": "3969321",
+      "pgid": "3969133",
+      "start": "16642077"
+    },
+    {
+      "line": 151,
+      "schema": "lerna_test_d354c00a1ea6b477f9969cc6",
+      "generation": "1",
+      "pid": "3976703",
+      "pgid": "3976602",
+      "start": "16674646"
+    },
+    {
+      "line": 158,
+      "schema": "lerna_test_1273bda8e088482708824c37",
+      "generation": "1",
+      "pid": "3981280",
+      "pgid": "3981027",
+      "start": "16694438"
+    },
+    {
+      "line": 163,
+      "schema": "lerna_test_fb0bbdc091acc35999dfb596",
+      "generation": "1",
+      "pid": "3981313",
+      "pgid": "3981027",
+      "start": "16694593"
+    },
+    {
+      "line": 172,
+      "schema": "lerna_test_2f663e1a930e022081e8fe18",
+      "generation": "1",
+      "pid": "4028773",
+      "pgid": "4028563",
+      "start": "16900483"
+    },
+    {
+      "line": 179,
+      "schema": "lerna_test_12eb271ad47ca46653aa8aa2",
+      "generation": "1",
+      "pid": "4036674",
+      "pgid": "4036592",
+      "start": "16934960"
+    },
+    {
+      "line": 186,
+      "schema": "lerna_test_539a6823a2ff044955104afa",
+      "generation": "1",
+      "pid": "4040674",
+      "pgid": "4040390",
+      "start": "16952508"
+    },
+    {
+      "line": 191,
+      "schema": "lerna_test_c69d3fc47d45247c30181d80",
+      "generation": "1",
+      "pid": "4040710",
+      "pgid": "4040390",
+      "start": "16952671"
+    },
+    {
+      "line": 198,
+      "schema": "lerna_test_3b7e58c98b0dd14033326d22",
+      "generation": "1",
+      "pid": "4078262",
+      "pgid": "4078161",
+      "start": "17103311"
+    },
+    {
+      "line": 205,
+      "schema": "lerna_test_911a1f5960c093373aafe2d8",
+      "generation": "1",
+      "pid": "4104516",
+      "pgid": "4104414",
+      "start": "17217497"
+    },
+    {
+      "line": 208,
+      "schema": "lerna_test_911a1f5960c093373aafe2d8",
+      "generation": "2",
+      "pid": "4104631",
+      "pgid": "4104414",
+      "start": "17218003"
+    },
+    {
+      "line": 215,
+      "schema": "lerna_test_06f2b27855c7b44b2379a1fc",
+      "generation": "1",
+      "pid": "4105387",
+      "pgid": "4105287",
+      "start": "17221043"
+    },
+    {
+      "line": 220,
+      "schema": "lerna_test_88645d7035aeab5751b9d5f3",
+      "generation": "1",
+      "pid": "4105446",
+      "pgid": "4105287",
+      "start": "17221204"
+    },
+    {
+      "line": 223,
+      "schema": "lerna_test_88645d7035aeab5751b9d5f3",
+      "generation": "2",
+      "pid": "4105552",
+      "pgid": "4105287",
+      "start": "17221726"
+    },
+    {
+      "line": 230,
+      "schema": "lerna_test_486408314c4b3c8836ac4e12",
+      "generation": "1",
+      "pid": "4107152",
+      "pgid": "4107055",
+      "start": "17228456"
+    },
+    {
+      "line": 237,
+      "schema": "lerna_test_6a50e824aede768770812f18",
+      "generation": "1",
+      "pid": "4108224",
+      "pgid": "4108168",
+      "start": "17232949"
+    },
+    {
+      "line": 240,
+      "schema": "lerna_test_6a50e824aede768770812f18",
+      "generation": "2",
+      "pid": "4108370",
+      "pgid": "4108168",
+      "start": "17233468"
+    },
+    {
+      "line": 247,
+      "schema": "lerna_test_db85903513e438a1ff7e4304",
+      "generation": "1",
+      "pid": "4109192",
+      "pgid": "4109067",
+      "start": "17236888"
+    },
+    {
+      "line": 252,
+      "schema": "lerna_test_3e82942edc73296f43be9510",
+      "generation": "1",
+      "pid": "4109251",
+      "pgid": "4109067",
+      "start": "17237045"
+    },
+    {
+      "line": 255,
+      "schema": "lerna_test_3e82942edc73296f43be9510",
+      "generation": "2",
+      "pid": "4109382",
+      "pgid": "4109067",
+      "start": "17237562"
+    },
+    {
+      "line": 262,
+      "schema": "lerna_test_df4eacaafb93c79fd6c2ac2f",
+      "generation": "1",
+      "pid": "4110588",
+      "pgid": "4110506",
+      "start": "17242805"
+    },
+    {
+      "line": 269,
+      "schema": "lerna_test_db6d5f454d14611b68899c92",
+      "generation": "1",
+      "pid": "4111480",
+      "pgid": "4111407",
+      "start": "17246130"
+    },
+    {
+      "line": 276,
+      "schema": "lerna_test_c8f3b71696b69ca6600a47ce",
+      "generation": "1",
+      "pid": "4112214",
+      "pgid": "4112111",
+      "start": "17249116"
+    },
+    {
+      "line": 281,
+      "schema": "lerna_test_6b159a9d3ca960f281f41c24",
+      "generation": "1",
+      "pid": "4112273",
+      "pgid": "4112111",
+      "start": "17249275"
+    },
+    {
+      "line": 288,
+      "schema": "lerna_test_a70753b4b891ed676c5cb740",
+      "generation": "1",
+      "pid": "4113650",
+      "pgid": "4113572",
+      "start": "17252712"
+    },
+    {
+      "line": 295,
+      "schema": "lerna_test_3e0545deee979130abe21272",
+      "generation": "1",
+      "pid": "4114242",
+      "pgid": "4114188",
+      "start": "17255057"
+    },
+    {
+      "line": 298,
+      "schema": "lerna_test_3e0545deee979130abe21272",
+      "generation": "2",
+      "pid": "4114370",
+      "pgid": "4114188",
+      "start": "17255569"
+    },
+    {
+      "line": 305,
+      "schema": "lerna_test_4a31b0f4d331c87076d908e0",
+      "generation": "1",
+      "pid": "4114987",
+      "pgid": "4114888",
+      "start": "17257968"
+    },
+    {
+      "line": 310,
+      "schema": "lerna_test_00daeb37fcf91bc92833136c",
+      "generation": "1",
+      "pid": "4115019",
+      "pgid": "4114888",
+      "start": "17258158"
+    },
+    {
+      "line": 313,
+      "schema": "lerna_test_00daeb37fcf91bc92833136c",
+      "generation": "2",
+      "pid": "4115148",
+      "pgid": "4114888",
+      "start": "17258680"
+    },
+    {
+      "line": 320,
+      "schema": "lerna_test_8fb88309cd5f8f190c3ffd9c",
+      "generation": "1",
+      "pid": "4116033",
+      "pgid": "4115932",
+      "start": "17262445"
+    },
+    {
+      "line": 327,
+      "schema": "lerna_test_d7b56ca6645aa88f1b4ae195",
+      "generation": "1",
+      "pid": "4116712",
+      "pgid": "4116610",
+      "start": "17265198"
+    },
+    {
+      "line": 334,
+      "schema": "lerna_test_f51a61b96bd2a51e5e36cbcd",
+      "generation": "1",
+      "pid": "4117342",
+      "pgid": "4117261",
+      "start": "17267885"
+    },
+    {
+      "line": 339,
+      "schema": "lerna_test_fa59596031078047a18d9900",
+      "generation": "1",
+      "pid": "4117400",
+      "pgid": "4117261",
+      "start": "17268047"
+    }
+  ],
+  "backend_pids": [],
+  "backend_ownership_limit": "No original PostgreSQL backend PID is registered in this06 ledger; empty input is not evidence that all historical backends disappeared. Do not query or claim ownership of unregistered/shared backends. Audit connection alone registers its own actual protocol PID before queries.",
+  "protected16_inventory": "/tmp/lerna-04-ticket06-execution/current-producer-regression-protected-current16.json",
+  "protected16_inventory_sha256": "97af17159a6173830cb94c4f9d0a882dcc1bca47bbd60e29bead5422f5da2f18",
+  "source27_manifest": "/tmp/lerna-04-ticket06-execution/setup-cause-first-green-formatted27-manifest.json",
+  "source27_manifest_sha256": "2a4871fa62b2048b5fc425df2444ee9e3cdc23660f5b6e8f01df849ed6f62c6a",
+  "readonly": true,
+  "no_cleanup": true
+}

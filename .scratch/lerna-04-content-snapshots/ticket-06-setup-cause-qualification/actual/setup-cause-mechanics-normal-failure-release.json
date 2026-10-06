@@ -1,0 +1,22 @@
+{
+  "status": "STOP_RELEASED_FIRST_MECHANICS_NORMAL_ACTUAL_FAILURE_R_CANCELED",
+  "operation": "setup-cause-mechanics-normal",
+  "actual_outcome": {
+    "event": "native_completion_ack",
+    "operation": "setup-cause-mechanics-normal",
+    "pid": 13682,
+    "pgid": 13682,
+    "starttime": "17665744",
+    "exit": 1,
+    "group_absent": true,
+    "timed_out": false,
+    "owned_raw_fsync_close_ack": true
+  },
+  "current_group_members": [],
+  "raw": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-normal.log",
+  "raw_bytes": 3360,
+  "raw_sha256": "e985589fbd607906247f9bb8bbbbf5b4abeb7bf14bbcc085082bcf363666f4f9",
+  "actual_wait": "frozen runner completion after proc.wait; outer tool exit1",
+  "mechanics_R_started": false,
+  "no_source_fix_or_retry_or_further_native": true
+}

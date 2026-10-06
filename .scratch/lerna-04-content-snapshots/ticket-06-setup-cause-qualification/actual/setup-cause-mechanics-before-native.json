@@ -1,0 +1,10 @@
+{
+  "status": "STATIC_PRE_NATIVE_PINS_CHECKED",
+  "ledger_lines": 349,
+  "ledger_bytes": 56156,
+  "ledger_sha256": "4becabcfeb683d6d822b0d777e160f495601ebe967146478512b43e19e860d5f",
+  "candidate27_sha256": "4ce89145b5a42efa90eed4bbc01fb85eeccb79788adcaf50c3b3a4b1e44ee954",
+  "root_33_407243_0700": true,
+  "protected16_same_devino0700": true,
+  "source27_same": true
+}

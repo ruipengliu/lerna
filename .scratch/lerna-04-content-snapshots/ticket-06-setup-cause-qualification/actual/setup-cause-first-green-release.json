@@ -1,0 +1,22 @@
+{
+  "status": "STOP_RELEASED",
+  "operation": "setup-cause-first-mechanical-green",
+  "actual_outcome": {
+    "event": "native_completion_ack",
+    "operation": "setup-cause-first-mechanical-green",
+    "pid": 4175607,
+    "pgid": 4175607,
+    "starttime": "17523767",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false,
+    "owned_raw_fsync_close_ack": true
+  },
+  "current_group_members": [],
+  "raw_path": "/tmp/lerna-04-ticket06-execution/setup-cause-first-mechanical-green.log",
+  "raw_bytes": 422,
+  "raw_sha256": "f72e2cd7bccf44c311d3d8691520ee92df111ac93fb75ce993f877ab8521d59b",
+  "actual_wait_evidence": "frozen runner outcome emitted only after proc.wait returns; outer tool exit0",
+  "scope": "mechanical fakeReadCloser cause tracer only; no publication business qualification or actual native FD failure",
+  "no_further_native": true
+}

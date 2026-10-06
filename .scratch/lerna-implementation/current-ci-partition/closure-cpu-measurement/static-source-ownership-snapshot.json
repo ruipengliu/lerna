@@ -1,0 +1,255 @@
+{
+  "kind": "STATIC original source, tool default profiler and historical ownership; no native effects",
+  "fixed_head": "d0fcc61264904070ce94e1146f07327a0ef9b2aa",
+  "tree": "7b13b76444649f7127030e9686039cd13c63d181",
+  "clean": true,
+  "qualified6": {
+    "scripts/component-integration-race.test.mjs": {
+      "bytes": 14867,
+      "sha256": "980549594cb0754ca01c72626986359184b7344782fa1ceddb9e9b9e7170a6be"
+    },
+    "scripts/test-component-integration-race.sh": {
+      "bytes": 3622,
+      "sha256": "58625eb9021299a7549a3b98ad3bd2b70b24a85acf2ac44662d0118aede91937"
+    },
+    "scripts/testdata/component-content-97.json": {
+      "bytes": 14126,
+      "sha256": "99301ce17abe265578d272a1150093e8e17cc5a73ca71a174752cf6090b3c049"
+    },
+    "scripts/bounded-build.mjs": {
+      "bytes": 4201,
+      "sha256": "9987ff70c2ff6349ca9de5fe225ea6e310379534f633dffef0ef738a168b3a6e"
+    },
+    "scripts/conformance-ownership.mjs": {
+      "bytes": 5453,
+      "sha256": "d17b90608d45335036f7c794b1f4e9d651a010bec60aed44d7fd26b0b030f88d"
+    },
+    "scripts/testdata/component-durable-60.json": {
+      "bytes": 8583,
+      "sha256": "3fc89edc6f2ad8dbd1377441615b3636c201e02bb5af5e225cdcfe480b9eb194"
+    }
+  },
+  "module286_inventory_sha256": "244ff00bc019bbbe41ac0fd1f47d6094b51584e8d18d2caa6af7be5a7ce04562",
+  "module286_all_currentpass": true,
+  "acceptedRun30_pins": {
+    "host/durablework/pool_run_test.go": "6e6eacbc17679dc1d8cf99cb03afbaf2d39978d9c179f6467548f5fea36ad4f7",
+    "internal/durableworkdemo/pool_worker.go": "65e16f218a9fda70240a8e01b42ee7b85404c586214fb4089ddcd129ec223a60",
+    "host/durablework/pool.go": "f3d2ac781246e837e683b86cdbfbcb7824471740c1638989d86696a13c239375",
+    "internal/durableworkdemo/maintenance.go": "3d0d13089ac8cf76372a28155f0896757ec8990d034dacefa94956d87ad97800",
+    "runtime/admission.go": "9f6136f51196814bdaacd2065b038371d1a1827e9d4c0e0d496cf80c161bad21",
+    "runtime/schedule.go": "d1d72e6cd41bafeb792cca905cf107ef7be5571b54656b32027bce58045a836f",
+    "host/durablework/pool_run_live_fault_test.go": "e3a8aa6f8cc5b2f74c56310db3d602cfb9760dc57f96465ec7b5eb56e21ef868",
+    "conformance/recovery/pool_test.go": "64d27653cad585e809c2c96eab28c7285c46918909a12e320c1bb0d81af8a740",
+    "conformance/recovery/pool_wake_test.go": "2c3eae4de7adc78c50cca03a1b7cd951577e016847bfdc376ddb54273350a3f1",
+    "conformance/recovery/owned_fixture_test.go": "571401f59a2568f89a5d5bf8a3ee2c26fde69c6c1dbec6f796067790f043daea",
+    "conformance/recovery/owned_pg_fault_test.go": "487ab1a7a4a0365a1d386eaaa0cb96200329dbeda3082b14c4ebf33276285a05",
+    "conformance/recovery/owned_cleanup_failure_test.go": "cc174d06876ed558abe205cda4fcb646c7b9398258a6ee77713670d38fe52551",
+    "conformance/recovery/pg_lock_scope_test.go": "345bcd5d8a1bf296d87e4b2aeae5b750063f99b034f21db23e81f2604afbd382",
+    "conformance/recovery/admission_test.go": "99186d71bc37541e3c94e6941b5f506bf655b42d04fe6ac5c8f2d7b4994c6cd1",
+    "conformance/recovery/sqlite_test.go": "7210687fb15c5e6aba88a6abdc24a6942ba55a583512f01667133e00eb9536d8",
+    "conformance/recovery/wait_test.go": "3b0223eb04234635a0ea3815ddd1e9e63b935aa63f8130539485fc7c3b8490d3",
+    "adapters/postgres/internal/pgstore/core.go": "6a7a494bcb33bb03e0b3844b33829f2bd4a3954326a3f05d4737e5ba75c19499",
+    "adapters/postgres/internal/pgstore/pool.go": "ca3e395b06d2cda0d995f325b27663782e5c06359d3dde7495ff1574531099f1",
+    "conformance/recovery/pool_run_blocked_sql_test.go": "fcfe38b40601798e8928847d123e3923d758fa674141079682d2f233599a06f2",
+    "adapters/postgres/pool.go": "4b88ee97ec80a7b7f51c0c45a1199192106ff0d84b0421fa926404cd705a5609",
+    "adapters/postgres/store.go": "1be157b5ab0938e04915eebdbcaa4d957f904db88c14d594a2efd155e420c3f0",
+    "internal/durableworkdemo/pool.go": "9fe6056767bb2deba551ad88c5a85e16e8b2fa72b5945f22f02fd805d3d37ab6",
+    "Makefile": "6e62d20c87ffd15ba43f50d4293b66c1efb4c20cbacee83b857c1478db2fe382",
+    "go.mod": "ae25405c4fd98f5962178ff4241c52022a5bff182903337beead57204d39a04a",
+    "go.sum": "67de0a2b012283127841c03932d678a06b9b278ae8b277db6f8cc9f7f3d99b37",
+    "package.json": "603c9810ed5ae0745d2f0b605111d5d1538c48cdeb18355857937b4a8cdfbf7d",
+    "pnpm-lock.yaml": "305afb254694f82c8ce88e6341304005ea316c80ed6fa6c79373edcf00833eb0",
+    "pnpm-workspace.yaml": "de47e459577b8e63456484d1fa0ceb80bc4b2dc6eac824eeb1421a0539bc3b9c",
+    "scripts/check-go-format.mjs": "1b11ab6bace00effb86829fa6c6feab1b0ab681ab26a174f0d04e495d4d96727",
+    "scripts/generate.mjs": "36f3adad9dad2169750530dc7d0cacd3a930a88acd705f6d6e9da0ae3c086c5d"
+  },
+  "old5roots_ledgers_counters": [
+    {
+      "path": "/tmp/lerna-current-ci-partition-execution",
+      "device": 33,
+      "inode": 415239,
+      "mode": "0o700",
+      "ledger_lines": 1436,
+      "ledger_bytes": 166092,
+      "ledger_sha256": "5f81464f298a3257b040dec29ba250717b08dcdfcfc2f773452f8c095f1bd99d",
+      "counter_next": 15,
+      "counter_sha256": "65aade1cee42cbab5ce894a8e810d15d50c8d25eb346cda85f66c62f1bbee7b0",
+      "no_scope_adoption_or_cleanup_or_Close_backfill": true
+    },
+    {
+      "path": "/tmp/lerna-current-ci-partition-after-run-execution",
+      "device": 33,
+      "inode": 453685,
+      "mode": "0o700",
+      "ledger_lines": 982,
+      "ledger_bytes": 130502,
+      "ledger_sha256": "874a198ff51e6d3a68c2a2dcf74d1e324a7defb6d357aebea5e882a743dca178",
+      "counter_next": 24,
+      "counter_sha256": "cc6564169687edec5dbe5b39324240e6b6ea9fb6973faf958874e3ba59d69cf4",
+      "no_scope_adoption_or_cleanup_or_Close_backfill": true
+    },
+    {
+      "path": "/tmp/lerna-ci-partition-durable-mechanical",
+      "device": 33,
+      "inode": 459929,
+      "mode": "0o700",
+      "ledger_lines": 159,
+      "ledger_bytes": 16245,
+      "ledger_sha256": "4f3fb50817b94b628c7162735394c0e10816e0f1131ead414db1b507ab29c1bc",
+      "counter_next": null,
+      "counter_sha256": null,
+      "no_scope_adoption_or_cleanup_or_Close_backfill": true
+    },
+    {
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution",
+      "device": 33,
+      "inode": 465377,
+      "mode": "0o700",
+      "ledger_lines": 1082,
+      "ledger_bytes": 143441,
+      "ledger_sha256": "63ee2eff0905490b8240dc4a507e32a85438eacb16935e85cd859aa9b73ec772",
+      "counter_next": 36,
+      "counter_sha256": "e455edd6ba7c49777a65e1a786cb6c2ba0044179991a1f93592640374d446d13",
+      "no_scope_adoption_or_cleanup_or_Close_backfill": true
+    },
+    {
+      "path": "/tmp/lerna-ci-partition-durable-race-execution",
+      "device": 33,
+      "inode": 474553,
+      "mode": "0700",
+      "ledger_lines": 295,
+      "ledger_bytes": 26524,
+      "ledger_sha256": "385f8e8cf922200af27afa5e3911620023492ba5aa147a17073de8046d2015ae",
+      "counter_next": 41,
+      "counter_sha256": "7960bdff1c310d73093dbdf340bf441f12aeee93bdb238217419ff9df6f70ac1",
+      "no_scope_adoption_or_cleanup_or_Close_backfill": true
+    }
+  ],
+  "protected_original_UNKNOWNs": [
+    {
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-local-lifetime-4236457110",
+      "device": 33,
+      "inode": 431541,
+      "exists": true,
+      "observation": "current read-only FS identity after original native Wait; not original pre-effect inode ACK",
+      "original_Close_UNKNOWN": "original historical SIGKILL Close UNKNOWN",
+      "no_cleanup_adoption_or_Close_backfill": true
+    },
+    {
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-local-lifetime-3810108689",
+      "device": 33,
+      "inode": 473830,
+      "exists": true,
+      "observation": "current read-only FS identity after original native Wait; not original pre-effect inode ACK",
+      "original_Close_UNKNOWN": "normal original ledger1074 SIGKILL before actual Store.Close",
+      "no_cleanup_adoption_or_Close_backfill": true
+    }
+  ],
+  "new_owned_FS_ack": [
+    {
+      "path": "/tmp/lerna-partition-durable-closure-cpu-execution",
+      "device": 33,
+      "inode": 483116,
+      "mode": "0700",
+      "intent": "exclusive allocation ACK only; future writer FD Close not certified"
+    },
+    {
+      "path": "/tmp/lerna-partition-durable-closure-cpu-execution/artifacts",
+      "device": 33,
+      "inode": 483117,
+      "mode": "0700",
+      "intent": "exclusive allocation ACK only; future writer FD Close not certified"
+    },
+    {
+      "path": "/tmp/lerna-partition-durable-closure-cpu-execution/pprof-tmp",
+      "device": 33,
+      "inode": 483118,
+      "mode": "0700",
+      "intent": "exclusive allocation ACK only; future writer FD Close not certified"
+    }
+  ],
+  "strict90a_controller": {
+    "bytes": 5324,
+    "sha256": "90a808a0e3cf3a3a62441818dd0f87392a763b5ebdeef9ec2d5f2b5abc3e8d6d"
+  },
+  "real_go": {
+    "path": "/home/agent/.local/toolchains/go1.27.1/bin/go",
+    "bytes": 17142188,
+    "sha256": "30969f97169d7f43fe6a085873d75613adc21e30818a8c61d95bd27275df4624"
+  },
+  "installed_tool_metadata_sources": {
+    "/home/agent/.local/toolchains/go1.27.1/VERSION": {
+      "bytes": 35,
+      "sha256": "25eb74b09036e1ad894fb63b86cb0f0ee53342df8d2e2e860da4ff5079607758"
+    },
+    "/home/agent/.local/toolchains/go1.27.1/src/testing/testing.go": {
+      "bytes": 94214,
+      "sha256": "8d2437cfdcfb82fd8807e5063783de1d50f70e589e80cad10e17d8ef23f724d9"
+    },
+    "/home/agent/.local/toolchains/go1.27.1/src/runtime/pprof/pprof.go": {
+      "bytes": 35082,
+      "sha256": "31477a5cb8a678930eb219f3f533346f6aef262c37e2799f90438166ade5104a"
+    },
+    "/home/agent/.local/toolchains/go1.27.1/src/cmd/go/internal/tool/tool.go": {
+      "bytes": 12910,
+      "sha256": "f56daeda08b9d783d74e4598114bc8e04aa22cafae1596205dbb1dc17026bb50"
+    },
+    "/home/agent/.local/toolchains/go1.27.1/src/cmd/go/internal/base/tool.go": {
+      "bytes": 1449,
+      "sha256": "3cef4ace24caad6dfbddd58732f4a4898465dc6a84b9830ef3a4a56e4cd7be50"
+    },
+    "/home/agent/.local/toolchains/go1.27.1/src/cmd/go/internal/test/test.go": {
+      "bytes": 81728,
+      "sha256": "ce0bfdd1686ff4d58fd013848066a27b509d76ada665712fbb2746d101537172"
+    },
+    "/home/agent/.local/toolchains/go1.27.1/src/cmd/vendor/github.com/google/pprof/internal/driver/cli.go": {
+      "bytes": 12700,
+      "sha256": "852fe43a10fcbf78e317201da3eabcf2d7eb8b508d5a95f3c0cec2ebffaaea5b"
+    },
+    "/home/agent/.local/toolchains/go1.27.1/src/cmd/vendor/github.com/google/pprof/internal/driver/commands.go": {
+      "bytes": 18897,
+      "sha256": "e54ad690ad0123f3a00ee9e0c8623e9c52fa6ed11203f67f10ee266501bacbe4"
+    },
+    "/home/agent/.local/toolchains/go1.27.1/src/cmd/vendor/github.com/google/pprof/internal/driver/fetch.go": {
+      "bytes": 19475,
+      "sha256": "f1bc4c1972cfb2f86e362478044697941358204b8abfb2cc307a574fa58f1999"
+    }
+  },
+  "prior_decisions_actual_normal_race_provenance_refs": {
+    "/tmp/lerna-partition-durable-closure-after-comparison-next-decision.md": {
+      "bytes": 5642,
+      "sha256": "b319aa17a464e880f41946b58a2576d01cb52316b53a0dccf3c6e587536d3ae0"
+    },
+    "/tmp/lerna-partition-durable-closure-execution-comparison-certificate.md": {
+      "bytes": 17281,
+      "sha256": "2eab95cafac90d9424b1bc88d1745b85e74b01047897abbcbcd42e7216d5aa5b"
+    },
+    "/tmp/lerna-partition-durable-closure-execution-comparison-blobs.json": {
+      "bytes": 115116,
+      "sha256": "84112a452f81e300274623b9d2c72926e4577a3621d892969a26b9009ced8bfa"
+    },
+    "/tmp/lerna-ci-partition-durable-race-execution/sharedrace-release.json": {
+      "bytes": 12076,
+      "sha256": "6b9f578e09be3684514ed9484c9c3dd89614f70a9df12f7961287eb12eb47a00"
+    },
+    "/tmp/lerna-ci-partition-durable-race-execution/sharedrace-selector-proof.json": {
+      "bytes": 2088,
+      "sha256": "96bd3b67f83ee62cc6f8314d59c08fed1d142cd65376ddaac69be765e9e801f4"
+    },
+    "/tmp/lerna-ci-partition-durable-race-execution/sharedrace-owned-scope-sidecar-v2.json": {
+      "bytes": 67653,
+      "sha256": "9439e9f962732fde0698fcd6a397e45292270b9fe0c2faa1e586ec1422867a2d"
+    },
+    "/tmp/lerna-ci-partition-durable-race-execution/protected-unknown-inventory.json": {
+      "bytes": 3120,
+      "sha256": "10f48ff2a80d1b298c5bfdae486ee26704b0484af640621b534f08b49b4622ca"
+    },
+    "/tmp/lerna-ci-partition-durable-normal-execution/sharednormal-release.json": {
+      "bytes": 30064,
+      "sha256": "dffca4396a0e0aa2925608f07e81fa049c14ed686bd1c8e8154aee5834b70a8d"
+    }
+  },
+  "binary_profile_absent": true,
+  "counter_not_used_not_allocated": true,
+  "new_ledger_lines": 0
+}

@@ -1,0 +1,43 @@
+=== RUN   TestContentProcessSetupRetainsReadAndFirstCloseCauses
+--- PASS: TestContentProcessSetupRetainsReadAndFirstCloseCauses (0.00s)
+=== RUN   TestContentProcessSetupIdentityShapeAndFirstClose
+=== RUN   TestContentProcessSetupIdentityShapeAndFirstClose/success_nested_name
+=== RUN   TestContentProcessSetupIdentityShapeAndFirstClose/read_only
+=== RUN   TestContentProcessSetupIdentityShapeAndFirstClose/first_close_only
+=== RUN   TestContentProcessSetupIdentityShapeAndFirstClose/4096_without_cause
+=== RUN   TestContentProcessSetupIdentityShapeAndFirstClose/4096_with_both_causes
+=== RUN   TestContentProcessSetupIdentityShapeAndFirstClose/missing_bracket
+=== RUN   TestContentProcessSetupIdentityShapeAndFirstClose/short_fields
+=== RUN   TestContentProcessSetupIdentityShapeAndFirstClose/typed_parse_syntax
+=== RUN   TestContentProcessSetupIdentityShapeAndFirstClose/typed_parse_range
+--- PASS: TestContentProcessSetupIdentityShapeAndFirstClose (0.00s)
+    --- PASS: TestContentProcessSetupIdentityShapeAndFirstClose/success_nested_name (0.00s)
+    --- PASS: TestContentProcessSetupIdentityShapeAndFirstClose/read_only (0.00s)
+    --- PASS: TestContentProcessSetupIdentityShapeAndFirstClose/first_close_only (0.00s)
+    --- PASS: TestContentProcessSetupIdentityShapeAndFirstClose/4096_without_cause (0.00s)
+    --- PASS: TestContentProcessSetupIdentityShapeAndFirstClose/4096_with_both_causes (0.00s)
+    --- PASS: TestContentProcessSetupIdentityShapeAndFirstClose/missing_bracket (0.00s)
+    --- PASS: TestContentProcessSetupIdentityShapeAndFirstClose/short_fields (0.00s)
+    --- PASS: TestContentProcessSetupIdentityShapeAndFirstClose/typed_parse_syntax (0.00s)
+    --- PASS: TestContentProcessSetupIdentityShapeAndFirstClose/typed_parse_range (0.00s)
+=== RUN   TestContentProcessSetupNilAndJoinedCancellationClasses
+--- PASS: TestContentProcessSetupNilAndJoinedCancellationClasses (0.00s)
+=== RUN   TestContentProcessSetupRealBoundedJSONDiagnostics
+=== RUN   TestContentProcessSetupRealBoundedJSONDiagnostics/syntax
+=== RUN   TestContentProcessSetupRealBoundedJSONDiagnostics/type
+=== RUN   TestContentProcessSetupRealBoundedJSONDiagnostics/secret_unknown_field
+    content_process_setup_test.go:225: secret-field mechanical input did not exercise original decoder cause
+--- FAIL: TestContentProcessSetupRealBoundedJSONDiagnostics (0.00s)
+    --- PASS: TestContentProcessSetupRealBoundedJSONDiagnostics/syntax (0.00s)
+    --- PASS: TestContentProcessSetupRealBoundedJSONDiagnostics/type (0.00s)
+    --- FAIL: TestContentProcessSetupRealBoundedJSONDiagnostics/secret_unknown_field (0.00s)
+=== RUN   TestContentProcessSetupRealReadFrameCancellationJoinsClose
+=== RUN   TestContentProcessSetupRealReadFrameCancellationJoinsClose/canceled
+=== RUN   TestContentProcessSetupRealReadFrameCancellationJoinsClose/deadline
+--- PASS: TestContentProcessSetupRealReadFrameCancellationJoinsClose (0.00s)
+    --- PASS: TestContentProcessSetupRealReadFrameCancellationJoinsClose/canceled (0.00s)
+    --- PASS: TestContentProcessSetupRealReadFrameCancellationJoinsClose/deadline (0.00s)
+FAIL
+FAIL	github.com/ruipengliu/lerna/conformance/component	0.012s
+FAIL
+NATIVE_COMPLETION_ACK {"event": "native_completion_ack", "exit": 1, "group_absent": true, "operation": "setup-cause-mechanics-normal", "pgid": 13682, "pid": 13682, "starttime": "17665744", "timed_out": false}

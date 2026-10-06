@@ -1,0 +1,25 @@
+{
+  "status": "ACTUAL_ORACLE_N_PASS_CONDITIONAL_ONCE_R_GATE_SATISFIED",
+  "normal": {
+    "event": "native_completion_ack",
+    "operation": "setup-cause-mechanics-oracle-normal",
+    "pid": 821758,
+    "pgid": 821758,
+    "starttime": "21409487",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false,
+    "owned_raw_fsync_close_ack": true
+  },
+  "raw_bytes": 3255,
+  "raw_lines": 41,
+  "raw_sha256": "fef97ed1e0a7570f2811409d42ba30c8d80a7157313f446f2fbe5d697f422d1c",
+  "top_pass": 5,
+  "sub_pass": 14,
+  "pkg_seconds": "0.012",
+  "source27_current_and_snapshots_wholebyte_equal": true,
+  "protected16_exact_devino0700": true,
+  "current_pid_absent": true,
+  "full_native_argv_verified": true,
+  "no_new_pg_object_child": true
+}

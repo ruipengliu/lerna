@@ -1,0 +1,13 @@
+{
+  "status": "STATIC_SOURCE_READY_TEST_ORACLE_ONLY_NOT_BUSINESS_RED_OR_PRODUCT_FIX",
+  "old_failed_source10759_sha256": "03d8be401624e397244a8a45251bc08533af18bf67b7a98ecd5b0671ac5a3def",
+  "new_source_bytes": 10830,
+  "new_source_sha256": "fa1890ddd9b790b02cf3870c820435617716e7ee7954a17af522fef92d5f4320",
+  "single_exact_oracle_hunk_inverse_entire_oldsource_byteequal": true,
+  "other26_unchanged": true,
+  "consumer_a4_unchanged": true,
+  "ledger353_unchanged": true,
+  "old43raw_sha256": "e985589fbd607906247f9bb8bbbbf5b4abeb7bf14bbcc085082bcf363666f4f9",
+  "oldchecker_failure_immutable": true,
+  "no_fmt_Go_native": true
+}

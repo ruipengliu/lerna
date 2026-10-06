@@ -1,0 +1,52 @@
+//go:build integration && linux
+
+package component_test
+
+import (
+	"errors"
+	"fmt"
+	"os"
+	"strings"
+	"syscall"
+	"testing"
+)
+
+// This injected reader tests mechanical diagnostic/first-close ownership only.
+// It is not evidence of an actual native FD Close or publication failure.
+type contentSetupReadCloser struct {
+	readErr, closeErr error
+	reads, closes int
+}
+
+func (r *contentSetupReadCloser) Read(p []byte) (int, error) {
+	r.reads++
+	return copy(p, "FAKE_BODY_SECRET"), r.readErr
+}
+
+func (r *contentSetupReadCloser) Close() error {
+	r.closes++
+	return r.closeErr
+}
+
+func TestContentProcessSetupRetainsReadAndFirstCloseCauses(t *testing.T) {
+	readCause := &os.PathError{Op: "read", Path: "FAKE_DSN_SECRET_PATH", Err: syscall.EIO}
+	closeCause := fmt.Errorf("FAKE_BODY_SECRET: %w", os.ErrClosed)
+	reader := &contentSetupReadCloser{readErr: readCause, closeErr: closeCause}
+	pid, pgid, start, err := contentProcessReadIdentity(reader, 41, 40)
+	if err == nil || pid != 0 || pgid != 0 || start != "" || reader.reads != 1 || reader.closes != 1 {
+		t.Fatal("mechanical identity failure or first-close responsibility changed")
+	}
+	var pathCause *os.PathError
+	if !errors.Is(err, readCause) || !errors.Is(err, closeCause) || !errors.As(err, &pathCause) || pathCause != readCause {
+		t.Fatal("original read and first-close causes were not both retained")
+	}
+	classes := contentProcessCauseClasses(err)
+	seenIO, seenClosed := false, false
+	for _, class := range classes {
+		seenIO = seenIO || class == "native_io"
+		seenClosed = seenClosed || class == "native_fd_closed"
+	}
+	if !seenIO || !seenClosed || len(classes) > 12 || strings.Contains(err.Error()+fmt.Sprint(classes), "FAKE_") {
+		t.Fatal("unsafe or incomplete bounded mechanical cause diagnostic")
+	}
+}

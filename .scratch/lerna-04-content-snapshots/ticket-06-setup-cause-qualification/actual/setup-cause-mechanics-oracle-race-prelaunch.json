@@ -1,0 +1,27 @@
+{
+  "event": "native_start_ack",
+  "operation": "setup-cause-mechanics-oracle-race",
+  "pid": 822695,
+  "pgid": 822695,
+  "starttime": "21413027",
+  "root": "/tmp/lerna-04-ticket06-execution",
+  "argv": [
+    "bash",
+    "-c",
+    ". /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local GOFLAGS=-mod=readonly; exec \"$@\"",
+    "owned-locked",
+    "go",
+    "test",
+    "-race",
+    "-tags=integration",
+    "-v",
+    "-count=1",
+    "-p=1",
+    "-mod=readonly",
+    "-timeout=120s",
+    "./conformance/component",
+    "-run",
+    "^TestContentProcessSetup"
+  ],
+  "deadline_seconds": 120
+}

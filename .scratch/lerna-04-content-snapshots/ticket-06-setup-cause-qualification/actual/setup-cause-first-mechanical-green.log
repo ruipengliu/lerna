@@ -1,0 +1,5 @@
+=== RUN   TestContentProcessSetupRetainsReadAndFirstCloseCauses
+--- PASS: TestContentProcessSetupRetainsReadAndFirstCloseCauses (0.00s)
+PASS
+ok  	github.com/ruipengliu/lerna/conformance/component	0.012s
+NATIVE_COMPLETION_ACK {"event": "native_completion_ack", "exit": 0, "group_absent": true, "operation": "setup-cause-first-mechanical-green", "pgid": 4175607, "pid": 4175607, "starttime": "17523767", "timed_out": false}

@@ -1,0 +1,131 @@
+--- before/conformance/component/content_process_setup_test.go
++++ after/conformance/component/content_process_setup_test.go
+@@ -95,7 +95,7 @@
+ 	cases := []struct {
+ 		name, data, stage string
+ 		readErr, closeErr error
+-		numErr error
++		numErr            error
+ 	}{
+ 		{name: "success_nested_name", data: contentSetupIdentityLiteral},
+ 		{name: "read_only", data: contentSetupIdentityLiteral, readErr: readCause, stage: "child identity read/first Close unconfirmed"},
+@@ -166,13 +166,20 @@
+ 	original := errors.Join(context.Canceled, context.DeadlineExceeded, os.ErrClosed, syscall.EIO)
+ 	err := contentProcessCause("fixed setup stage", original)
+ 	classes := contentSetupSafeDiagnostic(t, err)
+-	for _, c := range []struct{ cause error; class string }{
++	for _, c := range []struct {
++		cause error
++		class string
++	}{
+ 		{context.Canceled, "context_canceled"}, {context.DeadlineExceeded, "context_deadline"},
+ 		{os.ErrClosed, "native_fd_closed"}, {syscall.EIO, "native_io"},
+ 	} {
+ 		seen := false
+-		for _, class := range classes { seen = seen || class == c.class }
+-		if !errors.Is(err, c.cause) || !seen { t.Fatal("joined recognizable cause was lost") }
++		for _, class := range classes {
++			seen = seen || class == c.class
++		}
++		if !errors.Is(err, c.cause) || !seen {
++			t.Fatal("joined recognizable cause was lost")
++		}
+ 	}
+ }
+ 
+@@ -190,21 +197,33 @@
+ 			defer reader.Close()
+ 			ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+ 			defer cancel()
+-			var value struct { Value int `json:"value"` }
++			var value struct {
++				Value int `json:"value"`
++			}
+ 			original := process.ReadFrame(ctx, reader, &value)
+-			if original == nil { t.Fatal("real bounded JSON decoder accepted invalid input") }
++			if original == nil {
++				t.Fatal("real bounded JSON decoder accepted invalid input")
++			}
+ 			err := contentProcessCause("fixed setup frame stage", original)
+-			if !errors.Is(err, original) { t.Fatal("original bounded frame cause was lost") }
++			if !errors.Is(err, original) {
++				t.Fatal("original bounded frame cause was lost")
++			}
+ 			contentSetupSafeDiagnostic(t, err)
+ 			switch c.typed {
+ 			case "syntax":
+ 				var syntax *json.SyntaxError
+-				if !errors.As(err, &syntax) { t.Fatal("original JSON syntax type was lost") }
++				if !errors.As(err, &syntax) {
++					t.Fatal("original JSON syntax type was lost")
++				}
+ 			case "type":
+ 				var typed *json.UnmarshalTypeError
+-				if !errors.As(err, &typed) { t.Fatal("original JSON value type was lost") }
++				if !errors.As(err, &typed) {
++					t.Fatal("original JSON value type was lost")
++				}
+ 			case "unknown":
+-				if !strings.Contains(original.Error(), "FAKE_DSN_SECRET_FIELD") { t.Fatal("secret-field mechanical input did not exercise original decoder cause") }
++				if !strings.Contains(original.Error(), "FAKE_DSN_SECRET_FIELD") {
++					t.Fatal("secret-field mechanical input did not exercise original decoder cause")
++				}
+ 			}
+ 		})
+ 	}
+@@ -214,7 +233,7 @@
+ // physicalIO cancellation callback must join before the consumer returns.
+ type contentSetupCancellationReader struct {
+ 	*io.PipeReader
+-	done chan struct{}
++	done          chan struct{}
+ 	firstCloseErr error
+ }
+ 
+@@ -227,7 +246,9 @@
+ func TestContentProcessSetupRealReadFrameCancellationJoinsClose(t *testing.T) {
+ 	for _, deadline := range []bool{false, true} {
+ 		name := "canceled"
+-		if deadline { name = "deadline" }
++		if deadline {
++			name = "deadline"
++		}
+ 		t.Run(name, func(t *testing.T) {
+ 			read, write := io.Pipe()
+ 			defer read.Close()
+@@ -245,18 +266,29 @@
+ 			var value any
+ 			original := process.ReadFrame(ctx, reader, &value)
+ 			want, class := context.Canceled, "context_canceled"
+-			if deadline { want, class = context.DeadlineExceeded, "context_deadline" }
+-			if !errors.Is(original, want) { t.Fatal("real physical frame cancellation cause was lost") }
++			if deadline {
++				want, class = context.DeadlineExceeded, "context_deadline"
++			}
++			if !errors.Is(original, want) {
++				t.Fatal("real physical frame cancellation cause was lost")
++			}
+ 			select {
+ 			case <-reader.done:
+-				if reader.firstCloseErr != nil { t.Fatal("real in-memory cancellation first Close was unconfirmed") }
+-			default: t.Fatal("frame returned before cancellation Close callback completed")
++				if reader.firstCloseErr != nil {
++					t.Fatal("real in-memory cancellation first Close was unconfirmed")
++				}
++			default:
++				t.Fatal("frame returned before cancellation Close callback completed")
+ 			}
+ 			err := contentProcessCause("fixed setup cancellation stage", original)
+ 			classes := contentSetupSafeDiagnostic(t, err)
+ 			seen := false
+-			for _, got := range classes { seen = seen || got == class }
+-			if !errors.Is(err, want) || !seen { t.Fatal("real bounded cancellation diagnostic lost its cause") }
++			for _, got := range classes {
++				seen = seen || got == class
++			}
++			if !errors.Is(err, want) || !seen {
++				t.Fatal("real bounded cancellation diagnostic lost its cause")
++			}
+ 		})
+ 	}
+ }

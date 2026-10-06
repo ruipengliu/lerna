@@ -1,0 +1,125 @@
+{
+  "kind": "STATIC original cum40 readiness after flat warning release; no LOCAL or execution",
+  "fixed_head": "d0fcc61264904070ce94e1146f07327a0ef9b2aa",
+  "all_source_pins_checked": {
+    "qualified": 6,
+    "module": 286,
+    "acceptedRun": 30
+  },
+  "strict_original90a_tool_metadata_allpass": true,
+  "same_binary_profile": [
+    {
+      "path": "/tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure-race.test",
+      "device": 33,
+      "inode": 485542,
+      "mode": "0o700",
+      "bytes": 30448868,
+      "sha256": "ec4ed121fdda09707f904268bb4e8ff9beb8f5fbcbf226d810130408bdab1306",
+      "mtime_ns": 1791207108760087375,
+      "ctime_ns": 1791207108810562554,
+      "postWait_observation_not_original_writer_preACK": true,
+      "header": "7f454c4602010100",
+      "no_producer_Close_backfill": true
+    },
+    {
+      "path": "/tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure.cpu.pprof",
+      "device": 33,
+      "inode": 485853,
+      "mode": "0o600",
+      "bytes": 96735,
+      "sha256": "9239f7fb4c5ad82d10c517bd2dba614dae31c5e7174736bf96763a537bd3dc48",
+      "mtime_ns": 1791207477016768250,
+      "ctime_ns": 1791207477016768250,
+      "postWait_observation_not_original_writer_preACK": true,
+      "header": "1f8b080000000000",
+      "no_producer_Close_backfill": true
+    }
+  ],
+  "old5ledger_counters_exact": [
+    {
+      "path": "/tmp/lerna-current-ci-partition-execution",
+      "ledger_lines": 1436,
+      "ledger_sha256": "5f81464f298a3257b040dec29ba250717b08dcdfcfc2f773452f8c095f1bd99d",
+      "counter_sha256": "65aade1cee42cbab5ce894a8e810d15d50c8d25eb346cda85f66c62f1bbee7b0"
+    },
+    {
+      "path": "/tmp/lerna-current-ci-partition-after-run-execution",
+      "ledger_lines": 982,
+      "ledger_sha256": "874a198ff51e6d3a68c2a2dcf74d1e324a7defb6d357aebea5e882a743dca178",
+      "counter_sha256": "cc6564169687edec5dbe5b39324240e6b6ea9fb6973faf958874e3ba59d69cf4"
+    },
+    {
+      "path": "/tmp/lerna-ci-partition-durable-mechanical",
+      "ledger_lines": 159,
+      "ledger_sha256": "4f3fb50817b94b628c7162735394c0e10816e0f1131ead414db1b507ab29c1bc",
+      "counter_sha256": null
+    },
+    {
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution",
+      "ledger_lines": 1082,
+      "ledger_sha256": "63ee2eff0905490b8240dc4a507e32a85438eacb16935e85cd859aa9b73ec772",
+      "counter_sha256": "e455edd6ba7c49777a65e1a786cb6c2ba0044179991a1f93592640374d446d13"
+    },
+    {
+      "path": "/tmp/lerna-ci-partition-durable-race-execution",
+      "ledger_lines": 295,
+      "ledger_sha256": "385f8e8cf922200af27afa5e3911620023492ba5aa147a17073de8046d2015ae",
+      "counter_sha256": "7960bdff1c310d73093dbdf340bf441f12aeee93bdb238217419ff9df6f70ac1"
+    }
+  ],
+  "protected_2UNKNOWN_devino_mode_unchanged": true,
+  "producer_Close_UNKNOWN_keep_no_backfill": true,
+  "original_manifest_sha256": "540b1439ac21cc70a86a28dc71939e145c1492c0831f0e9434aefa5c3b4f79da",
+  "flat_warning_release_sha256": "22169f93df0749dbc730dced8448b210218cbf6145488f05275065d0851824c2",
+  "buildid_static_comparison_sha256": "eca03b952a10069efe585f1163ee493fb457f7421ef95254b5d9572dd40fb22e",
+  "root_resolution_sha256": "666ea79e66397d710a55ff6922eddf34bd4d0706e6dc2ddc31bc69cc486e70d7",
+  "original_operation": {
+    "operation": "closure-cpu-cum40",
+    "phase": "one same-profile cumulative report",
+    "target_argv": [
+      "/home/agent/.local/toolchains/go1.27.1/bin/go",
+      "tool",
+      "pprof",
+      "-cum",
+      "-top",
+      "-nodecount=40",
+      "-nodefraction=0",
+      "-sample_index=cpu",
+      "-unit=s",
+      "-symbolize=local",
+      "/tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure-race.test",
+      "/tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure.cpu.pprof"
+    ],
+    "target_cwd": "/tmp/lerna-partition-durable-closure-cpu-execution",
+    "native_shell_wrapper_full": "set -e; set -o pipefail; source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; export GOFLAGS=-mod=readonly; export GOPROXY=off; export GOSUMDB=off; export PPROF_TMPDIR=/tmp/lerna-partition-durable-closure-cpu-execution/pprof-tmp; export PPROF_BINARY_PATH=/tmp/lerna-partition-durable-closure-cpu-execution/artifacts; cd /tmp/lerna-partition-durable-closure-cpu-execution; exec /home/agent/.local/toolchains/go1.27.1/bin/go tool pprof -cum -top -nodecount=40 -nodefraction=0 -sample_index=cpu -unit=s -symbolize=local /tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure-race.test /tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure.cpu.pprof",
+    "native_argv": [
+      "bash",
+      "-c",
+      "set -e; set -o pipefail; source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; export GOFLAGS=-mod=readonly; export GOPROXY=off; export GOSUMDB=off; export PPROF_TMPDIR=/tmp/lerna-partition-durable-closure-cpu-execution/pprof-tmp; export PPROF_BINARY_PATH=/tmp/lerna-partition-durable-closure-cpu-execution/artifacts; cd /tmp/lerna-partition-durable-closure-cpu-execution; exec /home/agent/.local/toolchains/go1.27.1/bin/go tool pprof -cum -top -nodecount=40 -nodefraction=0 -sample_index=cpu -unit=s -symbolize=local /tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure-race.test /tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure.cpu.pprof"
+    ],
+    "supervisor_argv": [
+      "python3",
+      "/tmp/lerna-partition-durable-closure-cpu-execution/run-native.py",
+      "closure-cpu-cum40",
+      "bash",
+      "-c",
+      "set -e; set -o pipefail; source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; export GOFLAGS=-mod=readonly; export GOPROXY=off; export GOSUMDB=off; export PPROF_TMPDIR=/tmp/lerna-partition-durable-closure-cpu-execution/pprof-tmp; export PPROF_BINARY_PATH=/tmp/lerna-partition-durable-closure-cpu-execution/artifacts; cd /tmp/lerna-partition-durable-closure-cpu-execution; exec /home/agent/.local/toolchains/go1.27.1/bin/go tool pprof -cum -top -nodecount=40 -nodefraction=0 -sample_index=cpu -unit=s -symbolize=local /tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure-race.test /tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure.cpu.pprof"
+    ],
+    "finite_outer_seconds": 120,
+    "original_native_preACK_PID_equals_PGID_start_fullargv_fsync": true,
+    "raw": "/tmp/lerna-partition-durable-closure-cpu-execution/closure-cpu-cum40.log",
+    "prelaunch": "/tmp/lerna-partition-durable-closure-cpu-execution/closure-cpu-cum40-prelaunch.json",
+    "outcome": "/tmp/lerna-partition-durable-closure-cpu-execution/closure-cpu-cum40-outcome.json",
+    "native_operation_not_started": true,
+    "STOP_RELEASE_required_after_this_operation": true,
+    "requires_separate_explicit_grant_or_root_approved_ordered_small_block": true
+  },
+  "current_ledger": {
+    "lines": 20,
+    "sha256": "7fef004207af6ad0d33f6087eaa583861791cc90d6e12a2b4bcc5d8014ded0f1"
+  },
+  "cum40_4exclusive_outputs_absent": true,
+  "native_not_started_no_LOCAL": true,
+  "no_retry_thirdview_new_profile_or_test_DB_env_probe": true,
+  "first_readonly_checker_failed_mixed_nonJSON_ledger_rows_no_effect_or_native": "preserved tool result: JSONDecodeError; subsequent checker treats complete ledger as bytes"
+}

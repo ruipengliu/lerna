@@ -1,0 +1,14 @@
+{
+  "event": "native_start_ack",
+  "operation": "setup-cause-mechanics-format",
+  "pid": 3597,
+  "pgid": 3597,
+  "starttime": "17620048",
+  "root": "/tmp/lerna-04-ticket06-execution",
+  "argv": [
+    "gofmt",
+    "-w",
+    "conformance/component/content_process_setup_test.go"
+  ],
+  "deadline_seconds": 120
+}

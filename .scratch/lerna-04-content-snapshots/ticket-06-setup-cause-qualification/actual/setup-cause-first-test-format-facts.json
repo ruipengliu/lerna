@@ -1,0 +1,26 @@
+{
+  "status": "ACTUAL_ONCE_FORMAT_NEW_MECHANICAL_FILE_ONLY_PASS",
+  "native_actual": {
+    "event": "native_completion_ack",
+    "operation": "setup-cause-first-test-format",
+    "pid": 4142879,
+    "pgid": 4142879,
+    "starttime": "17375843",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false,
+    "owned_raw_fsync_close_ack": true
+  },
+  "independent_current_group_absent": true,
+  "original26_unmodified": true,
+  "format_diff": "/tmp/lerna-04-ticket06-execution/setup-cause-first-test-format-only.diff",
+  "format_diff_sha256": "bea4574f323a8b91898ba98e3ee865b344cb408dee8440565ccf06304bb11a7d",
+  "formatted27_manifest": "/tmp/lerna-04-ticket06-execution/setup-cause-first-test-formatted27-manifest.json",
+  "formatted27_manifest_sha256": "a5ee31bf82fedad5a41a7f19d1006d36979e8a47913eb2b937b3cc8678c4784a",
+  "raw_sha256": "18da834b2f7d936efbe6b409a5626b40fde15f3c0f9795a684471d1d27b3186e",
+  "prelaunch_sha256": "f3a7b9e0462d37ff0a9436b64dae0959ae8a9c11a3c13dcee2927653c4601f8e",
+  "outcome_sha256": "1e48e8e20bef7af3d687c75444eb517f31cb79daebfa1cbe0e55d9b764881209",
+  "original_helper_absent_no_GREEN_implementation": true,
+  "newtest_bytes": 1758,
+  "newtest_sha256": "9410c9925c375fbc17321e52410e495a6cf541f8a0cf45921d945a3d968b5c47"
+}

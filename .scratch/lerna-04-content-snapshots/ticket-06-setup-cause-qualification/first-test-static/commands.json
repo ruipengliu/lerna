@@ -1,0 +1,88 @@
+{
+  "status": "STATIC_ONLY_NOT_NATIVE_GRANTED",
+  "operations": [
+    {
+      "operation": "setup-cause-first-test-format",
+      "native_argv": [
+        "gofmt",
+        "-w",
+        "conformance/component/content_process_setup_test.go"
+      ],
+      "full_invocation_argv": [
+        "python3",
+        "/tmp/lerna-04-ticket06-execution/run-native.py",
+        "setup-cause-first-test-format",
+        "gofmt",
+        "-w",
+        "conformance/component/content_process_setup_test.go"
+      ],
+      "working_directory": "/tmp/lerna-worktrees/content-snapshots-06",
+      "raw": "/tmp/lerna-04-ticket06-execution/setup-cause-first-test-format.log",
+      "prelaunch": "/tmp/lerna-04-ticket06-execution/setup-cause-first-test-format-prelaunch.json",
+      "outcome": "/tmp/lerna-04-ticket06-execution/setup-cause-first-test-format-outcome.json"
+    },
+    {
+      "operation": "setup-cause-first-test-compile-red",
+      "native_argv": [
+        "go",
+        "test",
+        "-tags=integration",
+        "-v",
+        "-count=1",
+        "-p=1",
+        "-mod=readonly",
+        "-timeout=120s",
+        "./conformance/component",
+        "-run",
+        "^TestContentProcessSetupRetainsReadAndFirstCloseCauses$"
+      ],
+      "full_invocation_argv": [
+        "python3",
+        "/tmp/lerna-04-ticket06-execution/run-native.py",
+        "setup-cause-first-test-compile-red",
+        "bash",
+        "-c",
+        ". /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local GOFLAGS=-mod=readonly; exec \"$@\"",
+        "owned-locked",
+        "go",
+        "test",
+        "-tags=integration",
+        "-v",
+        "-count=1",
+        "-p=1",
+        "-mod=readonly",
+        "-timeout=120s",
+        "./conformance/component",
+        "-run",
+        "^TestContentProcessSetupRetainsReadAndFirstCloseCauses$"
+      ],
+      "working_directory": "/tmp/lerna-worktrees/content-snapshots-06",
+      "raw": "/tmp/lerna-04-ticket06-execution/setup-cause-first-test-compile-red.log",
+      "prelaunch": "/tmp/lerna-04-ticket06-execution/setup-cause-first-test-compile-red-prelaunch.json",
+      "outcome": "/tmp/lerna-04-ticket06-execution/setup-cause-first-test-compile-red-outcome.json"
+    }
+  ],
+  "candidate27_manifest": "/tmp/lerna-06-setup-cause-first-test-static/candidate-unformatted27-manifest.json",
+  "candidate27_manifest_sha256": "201bf6baf64cb5d67f3c46a3f87d2bc4d2ec46e050604275dc555bf987f7706c",
+  "firstfmt_then_ONLY_original_first_compile_RED": true,
+  "expected_actual_RED": "undefined: contentProcessReadIdentity (private helper truly absent), build failed/exit1; mechanical compile_RED not businessRED",
+  "other_unused_import_or_syntax_errors_NOT_expected": true,
+  "expected_compile_RED_STOP_RELEASE_no_GREEN_or_next_tests": true,
+  "original26_c9a_unchanged_before_after_firstfmt": true,
+  "finite_original_strict90a_root33_407243": true,
+  "go_outer_seconds_each": 120,
+  "business_budgets_not_exercised_by_compile_RED_and_unchanged": {
+    "caller": 30,
+    "child": 20,
+    "Claim": 5,
+    "Work": 4,
+    "Publish": 20,
+    "management": 20,
+    "Tx": 3,
+    "statement": 2,
+    "lock": 1,
+    "Go": 120,
+    "outer": 120
+  },
+  "release_path": "/tmp/lerna-04-ticket06-execution/setup-cause-first-test-red-release.json"
+}

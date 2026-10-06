@@ -1,0 +1,12 @@
+{
+  "event": "static_binary_owned_read_fd_preopen_intent",
+  "path": "/tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure-race.test",
+  "expected_device": 33,
+  "expected_inode": 485542,
+  "expected_sha256": "ec4ed121fdda09707f904268bb4e8ff9beb8f5fbcbf226d810130408bdab1306",
+  "pid": 4183194,
+  "pgid": 4183191,
+  "starttime": "17556252",
+  "readonly": true,
+  "not_Go_output_FD_or_native_test_execution": true
+}

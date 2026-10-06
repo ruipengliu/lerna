@@ -1,0 +1,11 @@
+{
+  "event": "native_completion_ack",
+  "operation": "closure-cpu-build",
+  "pid": 4178176,
+  "pgid": 4178176,
+  "starttime": "17534537",
+  "exit": 0,
+  "group_absent": true,
+  "timed_out": false,
+  "owned_raw_fsync_close_ack": true
+}

@@ -1,0 +1,190 @@
+--- qualified-c9a/conformance/component/content_process_recovery_test.go
++++ setup-cause-candidate/conformance/component/content_process_recovery_test.go
+@@ -232,21 +232,45 @@
+ 	return nil
+ }
+ 
++type contentProcessStageError struct {
++	stage string
++	cause error
++}
++
++func (e *contentProcessStageError) Error() string { return e.stage }
++func (e *contentProcessStageError) Unwrap() error { return e.cause }
++
++// Stages are source constants; original error text never enters diagnostics.
++func contentProcessCause(stage string, err error) error {
++	if err == nil {
++		return nil
++	}
++	return &contentProcessStageError{stage: stage, cause: err}
++}
++
+ func contentProcessIdentity() (int, int, string, error) {
+ 	pid := os.Getpid()
+ 	pgid, err := syscall.Getpgid(pid)
+ 	if err != nil {
+-		return 0, 0, "", errors.New("child process group unavailable")
++		return 0, 0, "", contentProcessCause("child process group unavailable", err)
+ 	}
+ 	file, err := os.Open("/proc/self/stat")
+ 	if err != nil {
+-		return 0, 0, "", errors.New("child process identity unavailable")
+-	}
++		return 0, 0, "", contentProcessCause("child process identity unavailable", err)
++	}
++	return contentProcessReadIdentity(file, pid, pgid)
++}
++
++// This consumer owns the same single bounded Read and single first Close.
++func contentProcessReadIdentity(reader io.ReadCloser, pid, pgid int) (int, int, string, error) {
+ 	var raw [4096]byte
+-	n, readErr := file.Read(raw[:])
+-	closeErr := file.Close()
+-	if readErr != nil || closeErr != nil || n == len(raw) {
+-		return 0, 0, "", errors.New("child identity read/first Close unconfirmed")
++	n, readErr := reader.Read(raw[:])
++	closeErr := reader.Close()
++	if err := errors.Join(readErr, closeErr); err != nil {
++		return 0, 0, "", contentProcessCause("child identity read/first Close unconfirmed", err)
++	}
++	if n == len(raw) {
++		return 0, 0, "", errors.New("child identity exceeds bound")
+ 	}
+ 	tail := strings.LastIndex(string(raw[:n]), ")")
+ 	if tail < 0 {
+@@ -256,8 +280,8 @@
+ 	if len(fields) < 20 {
+ 		return 0, 0, "", errors.New("child identity start missing")
+ 	}
+-	if _, err = strconv.ParseUint(fields[19], 10, 64); err != nil {
+-		return 0, 0, "", errors.New("child identity start invalid")
++	if _, err := strconv.ParseUint(fields[19], 10, 64); err != nil {
++		return 0, 0, "", contentProcessCause("child identity start invalid", err)
+ 	}
+ 	return pid, pgid, fields[19], nil
+ }
+@@ -309,23 +333,26 @@
+ 	pipes, err := process.OpenInherited()
+ 	if pipes != nil {
+ 		defer func() {
+-			if pipes.Close() != nil {
+-				t.Error("child inherited pipe first Close unknown")
++			if closeErr := pipes.Close(); closeErr != nil {
++				t.Error("child inherited pipe first Close unknown:", contentProcessCauseClasses(closeErr))
+ 			}
+ 		}()
+ 	}
+ 	if err != nil {
+-		t.Fatal("child inherited pipes unavailable")
++		t.Fatal("child inherited pipes unavailable:", contentProcessCauseClasses(err))
+ 	}
+ 	var cfg contentProcessConfig
+-	if pipes.Receive(ctx, &cfg) != nil {
+-		t.Fatal("child exact-scope descriptor unavailable")
++	if err = pipes.Receive(ctx, &cfg); err != nil {
++		t.Fatal("child exact-scope descriptor unavailable:", contentProcessCauseClasses(err))
+ 	}
+ 	if cfg.Scenario != "original-content-publication" || cfg.Generation < 1 || cfg.Generation > 16 || cfg.Scope.Owner != contentOwner || cfg.Ref != alphaRef || (cfg.Gate != "" && cfg.Gate != "durable_before_publication" && cfg.Gate != "published_before_commit" && cfg.Gate != "published_commit_before_reply" && cfg.Gate != "claimed_before_actual_put") || !filepath.IsAbs(cfg.Scope.Directory) || cfg.Scope.Binding == "" || !strings.HasPrefix(cfg.Scope.Schema, "lerna_test_") {
+ 		t.Fatal("invalid Content child descriptor")
+ 	}
+ 	info, err := os.Lstat(cfg.Scope.Directory)
+-	if err != nil || !info.IsDir() || info.Mode()&os.ModeSymlink != 0 {
++	if err != nil {
++		t.Fatal("parent-created Content root unavailable:", contentProcessCauseClasses(err))
++	}
++	if !info.IsDir() || info.Mode()&os.ModeSymlink != 0 {
+ 		t.Fatal("parent-created Content root unavailable")
+ 	}
+ 	identity, ok := info.Sys().(*syscall.Stat_t)
+@@ -334,14 +361,17 @@
+ 	}
+ 	pid, pgid, start, err := contentProcessIdentity()
+ 	if err != nil {
+-		t.Fatal(err)
++		t.Fatal("child process identity unavailable:", contentProcessCauseClasses(err))
+ 	}
+ 	frame := contentProcessFrame{Scenario: cfg.Scenario, Generation: cfg.Generation, Stage: "preopen", PID: pid, PGID: pgid, Start: start}
+-	if pipes.Emit(ctx, frame) != nil {
+-		t.Fatal("child pre-effect identity unavailable")
++	if err = pipes.Emit(ctx, frame); err != nil {
++		t.Fatal("child pre-effect identity unavailable:", contentProcessCauseClasses(err))
+ 	}
+ 	var permit contentProcessFrame
+-	if pipes.Receive(ctx, &permit) != nil || permit.Stage != "open" || permit.PutResult != "" || permit.Scenario != cfg.Scenario || permit.Generation != cfg.Generation {
++	if err = pipes.Receive(ctx, &permit); err != nil {
++		t.Fatal("child pre-effect permission unavailable:", contentProcessCauseClasses(err))
++	}
++	if permit.Stage != "open" || permit.PutResult != "" || permit.Scenario != cfg.Scenario || permit.Generation != cfg.Generation {
+ 		t.Fatal("child pre-effect permission unavailable")
+ 	}
+ 	dsn := os.Getenv("LERNA_TEST_POSTGRES_DSN")
+@@ -375,23 +405,31 @@
+ 			}
+ 		}
+ 		result := contentProcessFrame{Scenario: cfg.Scenario, Generation: cfg.Generation, Stage: "closed", Worked: worked, Failed: failed, StoreCloseACK: storeClosed, ObjectCloseACK: objectClosed, CauseClass: causes}
+-		if pipes.Respond(ctx, result) != nil {
+-			t.Error("child actual native Close frame unavailable")
++		if respondErr := pipes.Respond(ctx, result); respondErr != nil {
++			t.Error("child actual native Close frame unavailable:", contentProcessCauseClasses(respondErr))
+ 		}
+ 		if !storeClosed || !objectClosed {
+-			t.Error("child first native Close unknown")
++			t.Error("child first native Close unknown:", causes)
+ 		}
+ 	}()
+ 	if err != nil {
+-		t.Fatal("child existing Content store unavailable")
++		t.Fatal("child existing Content store unavailable:", contentProcessCauseClasses(err))
+ 	}
+ 	versions, err := store.MigrationVersions(ctx)
+-	if err != nil || len(versions) != 3 || versions[0].Version != 1 || versions[1].Version != 2 || versions[2].Version != 3 {
++	if err != nil {
++		failed = true
++		t.Fatal("child frozen Content migrations unavailable:", contentProcessCauseClasses(err))
++	}
++	if len(versions) != 3 || versions[0].Version != 1 || versions[1].Version != 2 || versions[2].Version != 3 {
+ 		failed = true
+ 		t.Fatal("child frozen Content migrations unavailable")
+ 	}
+ 	objects, err = local.Open(cfg.Scope.Directory)
+-	if err != nil || objects == nil || objects.Binding() != cfg.Scope.Binding {
++	if err != nil {
++		failed = true
++		t.Fatal("child original Content holder unavailable:", contentProcessCauseClasses(err))
++	}
++	if objects == nil || objects.Binding() != cfg.Scope.Binding {
+ 		failed = true
+ 		t.Fatal("child original Content holder unavailable")
+ 	}
+@@ -400,21 +438,25 @@
+ 	service, err := publicationProcessService(observedStore, observedObjects, "publication-child-"+strconv.Itoa(cfg.Generation))
+ 	if err != nil {
+ 		failed = true
+-		t.Fatal("child Content service unavailable")
++		t.Fatal("child Content service unavailable:", contentProcessCauseClasses(err))
+ 	}
+ 	frame.Stage = "configured"
+ 	if err = pipes.Emit(ctx, frame); err != nil {
+ 		failed = true
+-		t.Fatal("child configured frame unavailable")
+-	}
+-	if err = pipes.Receive(ctx, &permit); err != nil || permit.Stage != "run" || permit.PutResult != "" || permit.Scenario != cfg.Scenario || permit.Generation != cfg.Generation {
++		t.Fatal("child configured frame unavailable:", contentProcessCauseClasses(err))
++	}
++	if err = pipes.Receive(ctx, &permit); err != nil {
++		failed = true
++		t.Fatal("child original Job permission unavailable:", contentProcessCauseClasses(err))
++	}
++	if permit.Stage != "run" || permit.PutResult != "" || permit.Scenario != cfg.Scenario || permit.Generation != cfg.Generation {
+ 		failed = true
+ 		t.Fatal("child original Job permission unavailable")
+ 	}
+ 	worked, err = service.Step(ctx)
+ 	failed = err != nil
+ 	if err != nil {
+-		t.Error("child original Content Step failed")
++		t.Error("child original Content Step failed:", contentProcessCauseClasses(err))
+ 	}
+ }
+ 

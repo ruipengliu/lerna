@@ -1,0 +1,224 @@
+{
+  "kind": "STATIC only original profile mappings / main ELF notes / installed Go pprof matching implementation",
+  "fixed_head": "d0fcc61264904070ce94e1146f07327a0ef9b2aa",
+  "original_release": {
+    "path": "/tmp/lerna-partition-durable-closure-cpu-execution/closure-cpu-flat40-warning-release.json",
+    "device": 33,
+    "inode": 486449,
+    "bytes": 3792,
+    "sha256": "22169f93df0749dbc730dced8448b210218cbf6145488f05275065d0851824c2",
+    "mtime_ns": 1791207903551525627,
+    "ctime_ns": 1791207903551525627,
+    "read_own_firstClose_ack": true,
+    "producer_Close_not_inferred": true
+  },
+  "native_flat_exit": 0,
+  "LOCAL_RELEASE": true,
+  "cum40_not_executed": true,
+  "profile": {
+    "path": "/tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure.cpu.pprof",
+    "device": 33,
+    "inode": 485853,
+    "bytes": 96735,
+    "sha256": "9239f7fb4c5ad82d10c517bd2dba614dae31c5e7174736bf96763a537bd3dc48",
+    "mtime_ns": 1791207477016768250,
+    "ctime_ns": 1791207477016768250,
+    "read_own_firstClose_ack": true,
+    "producer_Close_not_inferred": true
+  },
+  "binary": {
+    "path": "/tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure-race.test",
+    "device": 33,
+    "inode": 485542,
+    "bytes": 30448868,
+    "sha256": "ec4ed121fdda09707f904268bb4e8ff9beb8f5fbcbf226d810130408bdab1306",
+    "mtime_ns": 1791207108760087375,
+    "ctime_ns": 1791207108810562554,
+    "read_own_firstClose_ack": true,
+    "producer_Close_not_inferred": true
+  },
+  "parser_scope": "Only top-level profile mapping field3 and string table field6 parsed. Sample/location/function messages skipped; no stacks, sample aggregation, or third pprof view.",
+  "decompressed_bytes": 259651,
+  "skipped_top_level_field_counts": {
+    "9": 1,
+    "1": 2,
+    "10": 1,
+    "11": 1,
+    "12": 1,
+    "4": 2918,
+    "5": 1107,
+    "2": 2154
+  },
+  "profile_mappings": [
+    {
+      "id": 1,
+      "memory_start": "0x400000",
+      "memory_limit": "0x104c000",
+      "file_offset": "0x0",
+      "filename": "/tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure-race.test",
+      "build_id": "79e0da0f05534522bbca82f3304c7f13428a2d33",
+      "has_functions": false,
+      "has_filenames": false,
+      "has_line_numbers": false,
+      "has_inline_frames": false
+    },
+    {
+      "id": 2,
+      "memory_start": "0x7f43ad7bb000",
+      "memory_limit": "0x7f43ad91e000",
+      "file_offset": "0x28000",
+      "filename": "/usr/lib/x86_64-linux-gnu/libc.so.6",
+      "build_id": "c495b62edadd6c356265942ec1282d98058a7b41",
+      "has_functions": false,
+      "has_filenames": false,
+      "has_line_numbers": false,
+      "has_inline_frames": false
+    },
+    {
+      "id": 3,
+      "memory_start": "0x7f43ad9b2000",
+      "memory_limit": "0x7f43ad9b4000",
+      "file_offset": "0x0",
+      "filename": "[vdso]",
+      "build_id": "",
+      "has_functions": false,
+      "has_filenames": false,
+      "has_line_numbers": false,
+      "has_inline_frames": false
+    },
+    {
+      "id": 4,
+      "memory_start": "0x7f43ad9b5000",
+      "memory_limit": "0x7f43ad9dd000",
+      "file_offset": "0x1000",
+      "filename": "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2",
+      "build_id": "c591a5df63f461bfdafb01908ca16845b375fa37",
+      "has_functions": false,
+      "has_filenames": false,
+      "has_line_numbers": false,
+      "has_inline_frames": false
+    }
+  ],
+  "main_ELF_notes": [
+    {
+      "section": ".note.go.buildid",
+      "owner": "Go",
+      "type": 4,
+      "descriptor_bytes": 83,
+      "descriptor_hex": "2d474e6479674c3569516a64396d476655724f592f314835422d4d51537033764e4b376f48734677432f766147684a45554f5f316b703164696333465a682f5f7871614479396b705f3168704d716558586650",
+      "descriptor_ascii": "-GNdygL5iQjd9mGfUrOY/1H5B-MQSp3vNK7oHsFwC/vaGhJEUO_1kp1dic3FZh/_xqaDy9kp_1hpMqeXXfP"
+    },
+    {
+      "section": ".note.gnu.build-id",
+      "owner": "GNU",
+      "type": 3,
+      "descriptor_bytes": 20,
+      "descriptor_hex": "79e0da0f05534522bbca82f3304c7f13428a2d33",
+      "descriptor_ascii": null
+    }
+  ],
+  "main_GNU_buildID_exact_profile_match": true,
+  "warning_buildID_belongs_to_main_not_libc": true,
+  "installed_source_evidence": [
+    {
+      "identity": {
+        "path": "/home/agent/.local/toolchains/go1.27.1/src/cmd/pprof/pprof.go",
+        "device": 27,
+        "inode": 266962,
+        "bytes": 9803,
+        "sha256": "c67bf06e0ae8bac244a88cfa111a7f2cc70b9dc90909cc859b30104ecadbfc61",
+        "mtime_ns": 1787934006000000000,
+        "ctime_ns": 1791036066302557771,
+        "read_own_firstClose_ack": true,
+        "producer_Close_not_inferred": true
+      },
+      "excerpts": [
+        {
+          "first_line": 35,
+          "last_line": 47,
+          "sha256": "966fb7a27c4a23982e574684934aa398fd00e258e01657d6f15331159eca5909",
+          "text": "func main() {\n\tcounter.Open()\n\tcounter.Inc(\"pprof/invocations\")\n\toptions := &driver.Options{\n\t\tFetch: new(fetcher),\n\t\tObj:   new(objTool),\n\t\tUI:    newUI(),\n\t}\n\terr := driver.PProf(options)\n\tcounter.CountFlags(\"pprof/flag:\", *flag.CommandLine) // pprof will use the flag package as its default\n\tif err != nil {\n\t\tfmt.Fprintf(os.Stderr, \"%v\\n\", err)\n\t\tos.Exit(2)\n"
+        },
+        {
+          "first_line": 165,
+          "last_line": 184,
+          "sha256": "5e3b749ca84c6fc5bab0d0145f44103f9d23dad909865055bf6304a614f187ce",
+          "text": "\tmu          sync.Mutex\n\tdisasmCache map[string]*disasm.Disasm\n}\n\nfunc (*objTool) Open(name string, start, limit, offset uint64, relocationSymbol string) (driver.ObjFile, error) {\n\tof, err := objfile.Open(name)\n\tif err != nil {\n\t\treturn nil, err\n\t}\n\tf := &file{\n\t\tname: name,\n\t\tfile: of,\n\t}\n\tif start != 0 {\n\t\tif load, err := of.LoadAddress(); err == nil {\n\t\t\tf.offset = start - load\n\t\t}\n\t}\n\treturn f, nil\n}\n"
+        },
+        {
+          "first_line": 256,
+          "last_line": 259,
+          "sha256": "034db9981becb2f605373fbc86f09e784387bdcbf1d0355ed4ca85466ac35c4f",
+          "text": "func (f *file) BuildID() string {\n\t// No support for build ID.\n\treturn \"\"\n}\n"
+        }
+      ]
+    },
+    {
+      "identity": {
+        "path": "/home/agent/.local/toolchains/go1.27.1/src/cmd/vendor/github.com/google/pprof/internal/driver/fetch.go",
+        "device": 27,
+        "inode": 267022,
+        "bytes": 19475,
+        "sha256": "f1bc4c1972cfb2f86e362478044697941358204b8abfb2cc307a574fa58f1999",
+        "mtime_ns": 1787934006000000000,
+        "ctime_ns": 1791036066310557334,
+        "read_own_firstClose_ack": true,
+        "producer_Close_not_inferred": true
+      },
+      "excerpts": [
+        {
+          "first_line": 402,
+          "last_line": 455,
+          "sha256": "cdb2020475a39c382308529b90d6fe02bd2f915b0e048db68df02d59ce88d986",
+          "text": "// locateBinaries searches for binary files listed in the profile and, if found,\n// updates the profile accordingly.\nfunc locateBinaries(p *profile.Profile, s *source, obj plugin.ObjTool, ui plugin.UI) {\n\t// Construct search path to examine\n\tsearchPath := os.Getenv(\"PPROF_BINARY_PATH\")\n\tif searchPath == \"\" {\n\t\t// Use $HOME/pprof/binaries as default directory for local symbolization binaries\n\t\tsearchPath = filepath.Join(os.Getenv(homeEnv()), \"pprof\", \"binaries\")\n\t}\nmapping:\n\tfor _, m := range p.Mapping {\n\t\tvar noVolumeFile string\n\t\tvar baseName string\n\t\tvar dirName string\n\t\tif m.File != \"\" {\n\t\t\tnoVolumeFile = strings.TrimPrefix(m.File, filepath.VolumeName(m.File))\n\t\t\tbaseName = filepath.Base(m.File)\n\t\t\tdirName = filepath.Dir(noVolumeFile)\n\t\t}\n\n\t\tfor _, path := range filepath.SplitList(searchPath) {\n\t\t\tvar fileNames []string\n\t\t\tif m.BuildID != \"\" {\n\t\t\t\tfileNames = []string{filepath.Join(path, m.BuildID, baseName)}\n\t\t\t\tif matches, err := filepath.Glob(filepath.Join(path, m.BuildID, \"*\")); err == nil {\n\t\t\t\t\tfileNames = append(fileNames, matches...)\n\t\t\t\t}\n\t\t\t\tfileNames = append(fileNames, filepath.Join(path, noVolumeFile, m.BuildID)) // perf path format\n\t\t\t\t// Llvm buildid protocol: the first two characters of the build id\n\t\t\t\t// are used as directory, and the remaining part is in the filename.\n\t\t\t\t// e.g. `/ab/cdef0123456.debug`\n\t\t\t\tif len(m.BuildID) >= 2 {\n\t\t\t\t\tfileNames = append(fileNames, filepath.Join(path, m.BuildID[:2], m.BuildID[2:]+\".debug\"))\n\t\t\t\t}\n\t\t\t}\n\t\t\tif m.File != \"\" {\n\t\t\t\t// Try both the basename and the full path, to support the same directory\n\t\t\t\t// structure as the perf symfs option.\n\t\t\t\tfileNames = append(fileNames, filepath.Join(path, baseName))\n\t\t\t\tfileNames = append(fileNames, filepath.Join(path, noVolumeFile))\n\t\t\t\t// Other locations: use the same search paths as GDB, according to\n\t\t\t\t// https://sourceware.org/gdb/onlinedocs/gdb/Separate-Debug-Files.html\n\t\t\t\tfileNames = append(fileNames, filepath.Join(path, noVolumeFile+\".debug\"))\n\t\t\t\tfileNames = append(fileNames, filepath.Join(path, dirName, \".debug\", baseName+\".debug\"))\n\t\t\t\tfileNames = append(fileNames, filepath.Join(path, \"usr\", \"lib\", \"debug\", dirName, baseName+\".debug\"))\n\t\t\t}\n\t\t\tfor _, name := range fileNames {\n\t\t\t\tif f, err := obj.Open(name, m.Start, m.Limit, m.Offset, m.KernelRelocationSymbol); err == nil {\n\t\t\t\t\tdefer f.Close()\n\t\t\t\t\tfileBuildID := f.BuildID()\n\t\t\t\t\tif m.BuildID != \"\" && m.BuildID != fileBuildID {\n\t\t\t\t\t\tui.PrintErr(\"Ignoring local file \" + name + \": build-id mismatch (\" + m.BuildID + \" != \" + fileBuildID + \")\")\n\t\t\t\t\t} else {\n\t\t\t\t\t\t// Explicitly do not update KernelRelocationSymbol --\n"
+        },
+        {
+          "first_line": 463,
+          "last_line": 490,
+          "sha256": "1dac66a7d008212b72313ca716d07a1836ac642eb6083b54efe13bdf0e9f9015",
+          "text": "\t}\n\tif len(p.Mapping) == 0 {\n\t\t// If there are no mappings, add a fake mapping to attempt symbolization.\n\t\t// This is useful for some profiles generated by the golang runtime, which\n\t\t// do not include any mappings. Symbolization with a fake mapping will only\n\t\t// be successful against a non-PIE binary.\n\t\tm := &profile.Mapping{ID: 1}\n\t\tp.Mapping = []*profile.Mapping{m}\n\t\tfor _, l := range p.Location {\n\t\t\tl.Mapping = m\n\t\t}\n\t}\n\t// If configured, apply executable filename override and (maybe, see below)\n\t// build ID override from source. Assume the executable is the first mapping.\n\tif execName, buildID := s.ExecName, s.BuildID; execName != \"\" || buildID != \"\" {\n\t\tm := p.Mapping[0]\n\t\tif execName != \"\" {\n\t\t\t// Explicitly do not update KernelRelocationSymbol --\n\t\t\t// the source override is most likely missing it.\n\t\t\tm.File = execName\n\t\t}\n\t\t// Only apply the build ID override if the build ID in the main mapping is\n\t\t// missing. Overwriting the build ID in case it's present is very likely a\n\t\t// wrong thing to do so we refuse to do that.\n\t\tif buildID != \"\" && m.BuildID == \"\" {\n\t\t\tm.BuildID = buildID\n\t\t}\n\t}\n"
+        }
+      ]
+    },
+    {
+      "identity": {
+        "path": "/home/agent/.local/toolchains/go1.27.1/src/cmd/vendor/github.com/google/pprof/internal/symbolizer/symbolizer.go",
+        "device": 27,
+        "inode": 267063,
+        "bytes": 10549,
+        "sha256": "43a2d729f3f847065fa44d75cc158d5eb2a8927c4444957a2fa656a90f08ef97",
+        "mtime_ns": 1787934006000000000,
+        "ctime_ns": 1791036066318556898,
+        "read_own_firstClose_ack": true,
+        "producer_Close_not_inferred": true
+      },
+      "excerpts": [
+        {
+          "first_line": 48,
+          "last_line": 90,
+          "sha256": "1b7e83c3574efa70aba58c563d8bd4c8454e8e76a79bed409e526f379e526475",
+          "text": "// local binaries; if the source is a URL it attempts to get any\n// missed entries using symbolz.\nfunc (s *Symbolizer) Symbolize(mode string, sources plugin.MappingSources, p *profile.Profile) error {\n\tremote, local, fast, force, demanglerMode := true, true, false, false, \"\"\n\tfor _, o := range strings.Split(strings.ToLower(mode), \":\") {\n\t\tswitch o {\n\t\tcase \"\":\n\t\t\tcontinue\n\t\tcase \"none\", \"no\":\n\t\t\treturn nil\n\t\tcase \"local\":\n\t\t\tremote, local = false, true\n\t\tcase \"fastlocal\":\n\t\t\tremote, local, fast = false, true, true\n\t\tcase \"remote\":\n\t\t\tremote, local = true, false\n\t\tcase \"force\":\n\t\t\tforce = true\n\t\tdefault:\n\t\t\tswitch d := strings.TrimPrefix(o, \"demangle=\"); d {\n\t\t\tcase \"full\", \"none\", \"templates\":\n\t\t\t\tdemanglerMode = d\n\t\t\t\tforce = true\n\t\t\t\tcontinue\n\t\t\tcase \"default\":\n\t\t\t\tcontinue\n\t\t\t}\n\t\t\ts.UI.PrintErr(\"ignoring unrecognized symbolization option: \" + mode)\n\t\t\ts.UI.PrintErr(\"expecting -symbolize=[local|fastlocal|remote|none][:force][:demangle=[none|full|templates|default]\")\n\t\t}\n\t}\n\n\tvar err error\n\tif local {\n\t\t// Symbolize locally using binutils.\n\t\tif err = localSymbolize(p, fast, force, s.Obj, s.UI); err != nil {\n\t\t\ts.UI.PrintErr(\"local symbolization: \" + err.Error())\n\t\t}\n\t}\n\tif remote {\n\t\tpost := func(source, post string) ([]byte, error) {\n\t\t\treturn postURL(source, post, s.Transport)\n\t\t}\n"
+        },
+        {
+          "first_line": 139,
+          "last_line": 201,
+          "sha256": "13242c27b7bfa7811e8272aae8097e51b24932a4c00f6398a28b42b1f5203cf3",
+          "text": "\t\t\treturn fp\n\t\t}\n\t\tfunctions[*f] = f\n\t\tf.ID = uint64(len(prof.Function)) + 1\n\t\tprof.Function = append(prof.Function, f)\n\t\treturn f\n\t}\n\n\tmissingBinaries := false\n\tmappingLocs := map[*profile.Mapping][]*profile.Location{}\n\tfor _, l := range prof.Location {\n\t\tmappingLocs[l.Mapping] = append(mappingLocs[l.Mapping], l)\n\t}\n\tfor midx, m := range prof.Mapping {\n\t\tlocs := mappingLocs[m]\n\t\tif len(locs) == 0 {\n\t\t\t// The mapping is dangling and has no locations pointing to it.\n\t\t\tcontinue\n\t\t}\n\t\t// Do not attempt to re-symbolize a mapping that has already been symbolized.\n\t\tif !force && (m.HasFunctions || m.HasFilenames || m.HasLineNumbers) {\n\t\t\tcontinue\n\t\t}\n\t\tif m.File == \"\" {\n\t\t\tif midx == 0 {\n\t\t\t\tui.PrintErr(\"Main binary filename not available.\")\n\t\t\t\tcontinue\n\t\t\t}\n\t\t\tmissingBinaries = true\n\t\t\tcontinue\n\t\t}\n\t\tif m.Unsymbolizable() {\n\t\t\t// Skip well-known system mappings\n\t\t\tcontinue\n\t\t}\n\t\tif m.BuildID == \"\" {\n\t\t\tif u, err := url.Parse(m.File); err == nil && u.IsAbs() && strings.Contains(strings.ToLower(u.Scheme), \"http\") {\n\t\t\t\t// Skip mappings pointing to a source URL\n\t\t\t\tcontinue\n\t\t\t}\n\t\t}\n\n\t\tname := filepath.Base(m.File)\n\t\tif m.BuildID != \"\" {\n\t\t\tname += fmt.Sprintf(\" (build ID %s)\", m.BuildID)\n\t\t}\n\t\tf, err := obj.Open(m.File, m.Start, m.Limit, m.Offset, m.KernelRelocationSymbol)\n\t\tif err != nil {\n\t\t\tui.PrintErr(\"Local symbolization failed for \", name, \": \", err)\n\t\t\tmissingBinaries = true\n\t\t\tcontinue\n\t\t}\n\t\tif fid := f.BuildID(); m.BuildID != \"\" && fid != \"\" && fid != m.BuildID {\n\t\t\tui.PrintErr(\"Local symbolization failed for \", name, \": build ID mismatch\")\n\t\t\tf.Close()\n\t\t\tcontinue\n\t\t}\n\t\tsymbolizeOneMapping(m, locs, f, addFunction)\n\t\tf.Close()\n\t}\n\n\tif missingBinaries {\n\t\tui.PrintErr(\"Some binary filenames not available. Symbolization may be incomplete.\\n\" +\n"
+        }
+      ]
+    }
+  ],
+  "conclusions": [
+    "Warning left-hand BuildID79e0 belongs to mapping1 exact main ELF GNU build-id; libc and loader mapping BuildIDs are different.",
+    "Go cmd/pprof options installs new(objTool); file.BuildID unconditionally returns empty string because build ID querying is unsupported.",
+    "locateBinaries emits the warning for the search-path candidate because nonempty mapping.BuildID differs from empty file.BuildID. It does not clear the existing mapping filename.",
+    "After binary discovery, explicit source ExecName overrides mapping0 filename while retaining existing BuildID.",
+    "Local symbolizer rejects BuildID mismatch only if object BuildID is nonempty. With current objTool empty BuildID, main object is opened for local symbols; warning does not establish an artifact mismatch or ignored explicit executable.",
+    "Source branch plus exact original mapping/ELF notes explains warning. This is not a claim that every sampled frame is symbolized, nor a new CPU attribution view or whole-race qualification."
+  ],
+  "unknowns": [
+    "No per-frame complete-symbolization claim: no samples/locations/functions inspected in this static task.",
+    "Original profile-writer and Go binary-output firstClose acknowledgments remain UNKNOWN; own readonly Close is independent."
+  ],
+  "no_new_Go_tool_native_DB_env_probe_or_product_edit": true
+}

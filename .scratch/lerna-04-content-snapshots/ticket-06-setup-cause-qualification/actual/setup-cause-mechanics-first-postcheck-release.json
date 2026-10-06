@@ -1,0 +1,21 @@
+{
+  "status": "STOP_RELEASED_AFTER_STATIC_FORMAT_POSTCHECK_ASSERTION",
+  "actual_fmt": {
+    "event": "native_completion_ack",
+    "operation": "setup-cause-mechanics-format",
+    "pid": 3597,
+    "pgid": 3597,
+    "starttime": "17620048",
+    "exit": 0,
+    "group_absent": true,
+    "timed_out": false,
+    "owned_raw_fsync_close_ack": true
+  },
+  "current_group_members": [],
+  "first_failure": "Python post-format checker line8 asserted whitespace-stripped entire source byte equality; assertion exited1 before mechanics N or R. Original fmt actual0. Cause is mechanical checker, not test/business RED. No repair/retry/native after failure.",
+  "mechanics_N_executed": false,
+  "mechanics_R_executed": false,
+  "raw": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-format.log",
+  "raw_sha256": "f688fbd88e6bf27fe19bff9b28a7c9b7688753b4dbc495aa62a255c25c2111cc",
+  "no_further_native": true
+}

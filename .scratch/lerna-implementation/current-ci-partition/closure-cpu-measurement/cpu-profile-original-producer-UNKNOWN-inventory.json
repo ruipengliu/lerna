@@ -1,0 +1,66 @@
+{
+  "kind": "actual original CPU profile producer firstClose UNKNOWN preservation after case",
+  "root_device_inode": [
+    33,
+    483116
+  ],
+  "profile": {
+    "path": "/tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure.cpu.pprof",
+    "device": 33,
+    "inode": 485853,
+    "mode": "0o600",
+    "bytes": 96735,
+    "sha256": "9239f7fb4c5ad82d10c517bd2dba614dae31c5e7174736bf96763a537bd3dc48",
+    "mtime_ns": 1791207477016768250,
+    "ctime_ns": 1791207477016768250,
+    "postWait_observation_not_original_writer_preACK": true,
+    "header": "1f8b080000000000",
+    "no_producer_Close_backfill": true
+  },
+  "original_writer_PID_PGID_start": [
+    4185393,
+    4185393,
+    "17565984"
+  ],
+  "profile_producer_FD_number_not_observed": true,
+  "firstClose_independent_ACK_absent_UNKNOWN_sticky": true,
+  "cause": "Go1.27 testing.go2773 intentionally does not retain profile FD for Close; StopCPUProfile flush has no file Close ACK",
+  "M_Run_exit0_and_raw_no_profile_error_are_not_Close_or_fsync_ACK": true,
+  "read_FD_ACK_only": "/tmp/lerna-partition-durable-closure-cpu-execution/case-artifacts-static-owned-read-fd-ack.json",
+  "read_FD_ACK_sha256": "d89f993b37ecae02deb9b3a64c63eede89f364b682dc53dfbf787f219c7beebd",
+  "same_binary": {
+    "path": "/tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure-race.test",
+    "device": 33,
+    "inode": 485542,
+    "mode": "0o700",
+    "bytes": 30448868,
+    "sha256": "ec4ed121fdda09707f904268bb4e8ff9beb8f5fbcbf226d810130408bdab1306",
+    "mtime_ns": 1791207108760087375,
+    "ctime_ns": 1791207108810562554,
+    "postWait_observation_not_original_writer_preACK": true,
+    "header": "7f454c4602010100",
+    "no_producer_Close_backfill": true
+  },
+  "binary_Go_outputFD_Close_no_independent_ACK_distinct": true,
+  "root_binary_profile_keep_no_cleanup_adoption_backfill": true,
+  "historical_two_UNKNOWNs": [
+    {
+      "path": "/tmp/lerna-current-ci-partition-execution/lerna-local-lifetime-4236457110",
+      "device": 33,
+      "inode": 431541,
+      "exists": true,
+      "observation": "current read-only FS identity after original native Wait; not original pre-effect inode ACK",
+      "original_Close_UNKNOWN": "original historical SIGKILL Close UNKNOWN",
+      "no_cleanup_adoption_or_Close_backfill": true
+    },
+    {
+      "path": "/tmp/lerna-ci-partition-durable-normal-execution/lerna-local-lifetime-3810108689",
+      "device": 33,
+      "inode": 473830,
+      "exists": true,
+      "observation": "current read-only FS identity after original native Wait; not original pre-effect inode ACK",
+      "original_Close_UNKNOWN": "normal original ledger1074 SIGKILL before actual Store.Close",
+      "no_cleanup_adoption_or_Close_backfill": true
+    }
+  ]
+}

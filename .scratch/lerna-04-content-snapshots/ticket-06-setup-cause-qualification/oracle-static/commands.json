@@ -1,0 +1,118 @@
+{
+  "status": "STATIC_ROOT_FULL_ADOPTION_THEN_NEW_SOLELOCAL_REQUIRED",
+  "operations": [
+    {
+      "operation": "setup-cause-mechanics-oracle-format",
+      "native_argv": [
+        "gofmt",
+        "-w",
+        "conformance/component/content_process_setup_test.go"
+      ],
+      "full_invocation_argv": [
+        "python3",
+        "/tmp/lerna-04-ticket06-execution/run-native.py",
+        "setup-cause-mechanics-oracle-format",
+        "gofmt",
+        "-w",
+        "conformance/component/content_process_setup_test.go"
+      ],
+      "working_directory": "/tmp/lerna-worktrees/content-snapshots-06",
+      "raw": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-oracle-format.log",
+      "prelaunch": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-oracle-format-prelaunch.json",
+      "outcome": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-oracle-format-outcome.json",
+      "outer_seconds": 120
+    },
+    {
+      "operation": "setup-cause-mechanics-oracle-normal",
+      "native_argv": [
+        "go",
+        "test",
+        "-tags=integration",
+        "-v",
+        "-count=1",
+        "-p=1",
+        "-mod=readonly",
+        "-timeout=120s",
+        "./conformance/component",
+        "-run",
+        "^TestContentProcessSetup"
+      ],
+      "full_invocation_argv": [
+        "python3",
+        "/tmp/lerna-04-ticket06-execution/run-native.py",
+        "setup-cause-mechanics-oracle-normal",
+        "bash",
+        "-c",
+        ". /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local GOFLAGS=-mod=readonly; exec \"$@\"",
+        "owned-locked",
+        "go",
+        "test",
+        "-tags=integration",
+        "-v",
+        "-count=1",
+        "-p=1",
+        "-mod=readonly",
+        "-timeout=120s",
+        "./conformance/component",
+        "-run",
+        "^TestContentProcessSetup"
+      ],
+      "working_directory": "/tmp/lerna-worktrees/content-snapshots-06",
+      "raw": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-oracle-normal.log",
+      "prelaunch": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-oracle-normal-prelaunch.json",
+      "outcome": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-oracle-normal-outcome.json",
+      "outer_seconds": 120
+    },
+    {
+      "operation": "setup-cause-mechanics-oracle-race",
+      "native_argv": [
+        "go",
+        "test",
+        "-race",
+        "-tags=integration",
+        "-v",
+        "-count=1",
+        "-p=1",
+        "-mod=readonly",
+        "-timeout=120s",
+        "./conformance/component",
+        "-run",
+        "^TestContentProcessSetup"
+      ],
+      "full_invocation_argv": [
+        "python3",
+        "/tmp/lerna-04-ticket06-execution/run-native.py",
+        "setup-cause-mechanics-oracle-race",
+        "bash",
+        "-c",
+        ". /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local GOFLAGS=-mod=readonly; exec \"$@\"",
+        "owned-locked",
+        "go",
+        "test",
+        "-race",
+        "-tags=integration",
+        "-v",
+        "-count=1",
+        "-p=1",
+        "-mod=readonly",
+        "-timeout=120s",
+        "./conformance/component",
+        "-run",
+        "^TestContentProcessSetup"
+      ],
+      "working_directory": "/tmp/lerna-worktrees/content-snapshots-06",
+      "raw": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-oracle-race.log",
+      "prelaunch": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-oracle-race-prelaunch.json",
+      "outcome": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-oracle-race-outcome.json",
+      "outer_seconds": 120
+    }
+  ],
+  "candidate27_manifest": "/tmp/lerna-06-setup-cause-mechanics-oracle-correction-static/candidate-unformatted27-manifest.json",
+  "candidate27_sha256": "3827fec50baff2a176f4412eaa1cefc4cfee47986fd4e23130e9d61bcc268134",
+  "original_sourcecommands922_nativeargv_identical": true,
+  "normal_must_actual5top14sub_PASS_Wait_groupgone_rawClose_source27_before_conditionalrace": true,
+  "firstfailure_STOP_RELEASE_no_fix_retry": true,
+  "old_actual_normal_exit1_raw43_immutable": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-normal.log",
+  "old_release_immutable": "/tmp/lerna-04-ticket06-execution/setup-cause-mechanics-normal-failure-release.json",
+  "business_or_other_native_not_granted": true
+}

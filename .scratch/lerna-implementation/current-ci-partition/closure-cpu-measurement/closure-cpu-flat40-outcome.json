@@ -1,0 +1,11 @@
+{
+  "event": "native_completion_ack",
+  "operation": "closure-cpu-flat40",
+  "pid": 4193916,
+  "pgid": 4193916,
+  "starttime": "17603789",
+  "exit": 0,
+  "group_absent": true,
+  "timed_out": false,
+  "owned_raw_fsync_close_ack": true
+}

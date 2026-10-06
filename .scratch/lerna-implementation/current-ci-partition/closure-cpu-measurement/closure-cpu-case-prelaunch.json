@@ -1,0 +1,14 @@
+{
+  "event": "native_start_ack",
+  "operation": "closure-cpu-case",
+  "pid": 4185393,
+  "pgid": 4185393,
+  "starttime": "17565984",
+  "root": "/tmp/lerna-partition-durable-closure-cpu-execution",
+  "argv": [
+    "bash",
+    "-c",
+    "set -e; set -o pipefail; source /workspace/.lerna-env/env.sh; export GOTOOLCHAIN=local; export GOFLAGS=-mod=readonly; cd /tmp/lerna-worktrees/current-ci-partition/conformance/component; exec /tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure-race.test -test.v -test.count=1 -test.timeout=120s '-test.run=^TestContentFullClosureIncludesIntermediateVersionsAndExact64Bound$' -test.cpuprofile=/tmp/lerna-partition-durable-closure-cpu-execution/artifacts/closure.cpu.pprof -test.outputdir=/tmp/lerna-partition-durable-closure-cpu-execution/artifacts"
+  ],
+  "deadline_seconds": 120
+}

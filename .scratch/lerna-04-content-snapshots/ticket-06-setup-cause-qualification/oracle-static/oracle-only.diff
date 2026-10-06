@@ -1,0 +1,12 @@
+--- before/conformance/component/content_process_setup_test.go
++++ after/conformance/component/content_process_setup_test.go
+@@ -221,7 +221,8 @@
+ 					t.Fatal("original JSON value type was lost")
+ 				}
+ 			case "unknown":
+-				if !strings.Contains(original.Error(), "FAKE_DSN_SECRET_FIELD") {
++				decodedCause := errors.Unwrap(original)
++				if decodedCause == nil || !strings.Contains(decodedCause.Error(), "FAKE_DSN_SECRET_FIELD") {
+ 					t.Fatal("secret-field mechanical input did not exercise original decoder cause")
+ 				}
+ 			}
