@@ -16,8 +16,23 @@ import (
 type Failure struct{ Detail *v1.ContractError }
 
 func (e *Failure) Error() string { return e.Detail.Code }
+
+// Fail 按固定错误码分类；没有原回执依据时，暂时失败或提交结果未知不得声明已拒绝。
 func Fail(code string) error {
-	return &Failure{Detail: &v1.ContractError{Code: code, Category: v1.ErrorCategory_ERROR_CATEGORY_PERMANENT, CommandAcceptance: v1.CommandAcceptance_COMMAND_ACCEPTANCE_NOT_SUBMITTED, RecoveryAction: "CORRECT_REQUEST"}}
+	category := v1.ErrorCategory_ERROR_CATEGORY_PERMANENT
+	acceptance := v1.CommandAcceptance_COMMAND_ACCEPTANCE_NOT_SUBMITTED
+	recovery := "CORRECT_REQUEST"
+	switch code {
+	case "AUTHORITY_UNREACHABLE", "DEPENDENCY_UNAVAILABLE", "RATE_LIMITED":
+		category = v1.ErrorCategory_ERROR_CATEGORY_TRANSIENT
+	case "DEADLINE_EXCEEDED", "TRANSPORT_LOST":
+		category = v1.ErrorCategory_ERROR_CATEGORY_INDETERMINATE
+	}
+	if category != v1.ErrorCategory_ERROR_CATEGORY_PERMANENT {
+		acceptance = v1.CommandAcceptance_COMMAND_ACCEPTANCE_UNKNOWN
+		recovery = "QUERY_OR_RETRY_ORIGINAL"
+	}
+	return &Failure{Detail: &v1.ContractError{Code: code, Category: category, CommandAcceptance: acceptance, RecoveryAction: recovery}}
 }
 func CheckCaller(c *v1.Caller, user string) error {
 	if c == nil || c.UserId != user || c.IssuerId == "" {
