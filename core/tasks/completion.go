@@ -272,7 +272,9 @@ func (s *Service) RecheckCompletion(ctx context.Context, caller *v1.Caller, c *v
 				p.RejectedVerificationOperations = append(p.RejectedVerificationOperations, &v1.Ref{Name: a.OperationId, Revision: 1, SchemaId: "lerna.v1.Operation"})
 			}
 			t.Revision++
-			setCompletionWaiting(t, append([]string{"COMPLETION:REPLAN_REQUIRED"}, v.Gaps...))
+			if e = s.requestRejectedContinuation(tx, caller, t, p, v); e != nil {
+				return nil, e
+			}
 			if e = s.saveVerification(tx, v); e != nil {
 				return nil, e
 			}
@@ -439,6 +441,11 @@ func (s *Service) ProcessCompletions(ctx context.Context, c *v1.Caller) error {
 		}
 		addedClosures := false
 		for _, v := range rounds {
+			if v.Status == "REJECTED" && v.ContinuationRequestRef == nil {
+				if e = s.continueRejectedCompletion(ctx, c, v); e != nil {
+					return e
+				}
+			}
 			if v.Status != "VERIFYING" {
 				continue
 			}

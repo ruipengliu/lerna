@@ -65,7 +65,7 @@ func (s *Service) saveVerification(ctx context.Context, v *v1.Verification) erro
 		return err
 	}
 	source := s.store
-	return source.SaveTraceSource(ctx, "tasks", &v1.TraceEvent{EventType: "VERIFICATION_CHANGED", SourceRecordRef: v.Ref, TaskId: v.TaskId, RelatedRefs: append([]*v1.Ref{v.RequirementsRef, v.ProposalRef}, v.AdmissionRefs...)})
+	return source.SaveTraceSource(ctx, "tasks", &v1.TraceEvent{EventType: "VERIFICATION_CHANGED", SourceRecordRef: v.Ref, TaskId: v.TaskId, RelatedRefs: append([]*v1.Ref{v.RequirementsRef, v.ProposalRef, v.ContinuationRequestRef}, v.AdmissionRefs...)})
 }
 
 func (s *Service) saveResult(ctx context.Context, v *v1.Result) error {
@@ -73,7 +73,7 @@ func (s *Service) saveResult(ctx context.Context, v *v1.Result) error {
 		return err
 	}
 	source := s.store
-	return source.SaveTraceSource(ctx, "tasks", &v1.TraceEvent{EventType: "RESULT_FIXED", SourceRecordRef: v.Ref, TaskId: v.TaskId, RelatedRefs: append([]*v1.Ref{v.VerificationRef, v.RequirementsRef}, v.OperationRefs...)})
+	return source.SaveTraceSource(ctx, "tasks", &v1.TraceEvent{EventType: "RESULT_FIXED", SourceRecordRef: v.Ref, TaskId: v.TaskId, RelatedRefs: append(append([]*v1.Ref{v.VerificationRef, v.RequirementsRef, v.TaskClosingRef}, v.OperationRefs...), v.ExecutionFollowupRefs...)})
 }
 
 type observedDecisions interface {

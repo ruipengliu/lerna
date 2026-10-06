@@ -58,7 +58,7 @@ func OpenWithFiles(path, user, domain string, roots map[string]string) (*Harness
 	h.Ledger = ledger.New(s, user, domain+"/ledger", domain).WithWork(h.LedgerWork).WithCompiler(executionCompiler{}).WithStarts(t)
 	c.WithObservations(durable.New(s.ContentWork(), user, domain+"/content"), h.Ledger)
 	h.Ledger.WithObservations(c)
-	h.Budget.WithUsageSource(h.Ledger).WithBillingEvidence(c).WithCompletionAuthority(t).WithCancellationAuthority(t)
+	h.Budget.WithUsageSource(h.Ledger).WithBillingEvidence(c).WithCompletionAuthority(t).WithCancellationAuthority(t).WithTaskClosingAuthority(t)
 	h.Trace = trace.New(s, durable.New(s.TraceWork(), user, domain+"/trace"), h.Ledger, user, domain+"/trace")
 	h.Ledger.WithReports(h.Budget, d, h.Trace)
 	t.WithStart(h.Grants, h.Budget, h.Ledger)
@@ -76,6 +76,8 @@ func OpenWithFiles(path, user, domain string, roots map[string]string) (*Harness
 	t.WithCompletionClosures(d, h.Egress)
 	h.Ledger.WithCancellationClosures(t)
 	t.WithCancellationClosures(d, h.Egress)
+	h.Ledger.WithTaskClosures(t)
+	t.WithTaskClosures(d, h.Egress).WithTaskClosingFacts(h.Ledger, h.Budget)
 	h.Ledger.WithReconciliation(t, h.Grants, h.Egress)
 	t.WithClosureSource(h.Ledger).WithOperationProgress(h.Ledger)
 	h.Ledger.WithOperationProgress(t)
@@ -131,7 +133,23 @@ func OpenWithFiles(path, user, domain string, roots map[string]string) (*Harness
 		s.Close()
 		return nil, err
 	}
+	if err := h.Tasks.RecoverTaskClosures(ctx, &v1.Caller{UserId: user, IssuerId: "host-recovery"}); err != nil {
+		s.Close()
+		return nil, err
+	}
+	if err := h.Tasks.ProcessTaskClosings(ctx, &v1.Caller{UserId: user, IssuerId: "host-recovery"}); err != nil {
+		s.Close()
+		return nil, err
+	}
 	if err := h.Budget.ProcessClosures(ctx); err != nil {
+		s.Close()
+		return nil, err
+	}
+	if err := h.Ledger.ProcessExecutionFollowups(ctx, &v1.Caller{UserId: user, IssuerId: "host-recovery"}); err != nil {
+		s.Close()
+		return nil, err
+	}
+	if err := h.Budget.ProcessSettlementFollowups(ctx, &v1.Caller{UserId: user, IssuerId: "host-recovery"}); err != nil {
 		s.Close()
 		return nil, err
 	}

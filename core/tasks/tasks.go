@@ -35,6 +35,10 @@ type Store interface {
 type Service struct {
 	cancellationJobs      CancellationJobs
 	cancellationCloser    CancellationCloser
+	taskClosingJobs       TaskClosingJobs
+	taskCloser            TaskCloser
+	taskCloseFacts        TaskCloseFacts
+	taskCloseBudget       TaskCloseBudget
 	modelLedger           ModelLedger
 	modelWork             ModelWork
 	modelCredentials      ModelCredentials

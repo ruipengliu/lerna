@@ -1,0 +1,99 @@
+syntax = "proto3";
+package lerna.v1;
+
+import "lerna/v1/completion.proto";
+import "lerna/v1/identity.proto";
+import "lerna/v1/ledger.proto";
+import "lerna/v1/planning.proto";
+import "lerna/v1/submission.proto";
+
+option go_package = "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1;lernav1";
+
+message BeginTaskCloseCommand {
+  CommandHeader header = 1;
+  Ref task_ref = 2;
+  uint64 expected_control_generation = 3;
+  string outcome = 4;
+  string close_reason = 5;
+  Ref cancellation_ref = 6;
+}
+message TaskClosing {
+  Ref ref = 1;
+  GlobalName task_id = 2;
+  CommandIdentity requested_by = 3;
+  string outcome = 4;
+  string close_reason = 5;
+  Ref requirements_ref = 6;
+  uint64 requirements_version = 7;
+  uint64 input_version = 8;
+  uint64 control_generation = 9;
+  repeated Ref admission_refs = 10;
+  repeated Ref closure_intent_refs = 11;
+  repeated Ref settlement_followup_refs = 12;
+  Ref cancellation_ref = 13;
+  int64 saved_at_unix_ms = 14;
+}
+message CloseTaskEndpointCommand {
+  CommandHeader header = 1;
+  Ref intent_ref = 2;
+  Ref task_closing_ref = 3;
+  Ref admission_ref = 4;
+  GlobalName operation_id = 5;
+  string executor_endpoint_id = 6;
+}
+message TaskClosureIntent {
+  Ref ref = 1;
+  GlobalName task_id = 2;
+  CloseTaskEndpointCommand command = 3;
+  Ref job_ref = 4;
+  CommandReceipt recipient_receipt = 5;
+}
+message TaskClosureSeal {
+  Ref ref = 1;
+  Ref intent_ref = 2;
+  Ref task_closing_ref = 3;
+  Ref admission_ref = 4;
+  GlobalName operation_id = 5;
+  string executor_endpoint_id = 6;
+  bool no_send_proven = 7;
+  Ref operation_ref = 8;
+  bool physical_send_was_possible = 9;
+  repeated Ref closed_send_refs = 10;
+  Ref execution_followup_ref = 11;
+}
+message ExecutionFollowup {
+  Ref ref = 1;
+  GlobalName task_id = 2;
+  GlobalName operation_id = 3;
+  Ref admission_ref = 4;
+  Ref task_closing_ref = 5;
+  Ref operation_ref = 6;
+  Ref attempt_ref = 7;
+  repeated Ref send_refs = 8;
+  string executor_endpoint_id = 9;
+  Ref job_ref = 10;
+  string waiting_reason = 11;
+}
+message SettlementFollowup {
+  Ref ref = 1;
+  GlobalName task_id = 2;
+  GlobalName operation_id = 3;
+  Ref admission_ref = 4;
+  Ref task_closing_ref = 5;
+  repeated Ref reservation_refs = 6;
+  repeated Ref billing_source_refs = 7;
+  Ref job_ref = 8;
+}
+message TaskClosingView {
+  TaskClosing closing = 1;
+  Task task = 2;
+  Result result = 3;
+  repeated Ref pending_closure_refs = 4;
+  repeated Operation operations = 5;
+  repeated ExecutionFollowup execution_followups = 6;
+  repeated SettlementFollowup settlement_followups = 7;
+  repeated Job followup_jobs = 8;
+  repeated TaskClosureIntent closure_intents = 9;
+  repeated TaskClosureSeal closure_seals = 10;
+  repeated Ref awaiting_operation_admission_refs = 11;
+}

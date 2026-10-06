@@ -237,3 +237,77 @@ func prepareCompletionFault(t *testing.T, h *assembly.Harness, target string) (*
 	requireAccepted(t, r, e)
 	return a, &v1.BeginCompletionCommand{Header: admissionHeader("completion-begin"), TaskId: a.TaskId, ProposalRef: r.ResultRef}
 }
+
+// 规则：G2、G3、G11、完成-4、完成-7
+func TestRejectedContinuationCommitRecoversOneActualRequest(t *testing.T) {
+	for _, mode := range []sqlite.FaultMode{sqlite.CrashBeforeCommit, sqlite.CrashAfterCommit, sqlite.LoseReceipt} {
+		t.Run(string(mode), func(t *testing.T) {
+			target := simulator.New("idempotent")
+			target.SetBehavior("reject")
+			server := httptest.NewServer(target)
+			defer server.Close()
+			path := filepath.Join(t.TempDir(), "continuation.db")
+			h, e := assembly.Open(path, "u", "d")
+			if e != nil {
+				t.Fatal(e)
+			}
+			a, begin := prepareCompletionFault(t, h, server.URL)
+			writeBudgetMessage(t, path+".completion", begin)
+			if e = h.Close(); e != nil {
+				t.Fatal(e)
+			}
+			child := exec.Command(os.Args[0], "-test.run=^TestCompletionCommitChild$")
+			child.Env = append(os.Environ(), "LERNA_COMPLETION_DB="+path, "LERNA_COMPLETION_POINT=tasks.completion", "LERNA_COMPLETION_MODE="+string(mode))
+			out, e := child.CombinedOutput()
+			requireBudgetFault(t, mode, out, e)
+			h, e = assembly.Open(path, "u", "d")
+			if e != nil {
+				t.Fatal(e)
+			}
+			defer h.Close()
+			ctx := context.Background()
+			caller := &v1.Caller{UserId: "u", IssuerId: "host"}
+			state, e := h.Tasks.QueryPlanning(ctx, caller, a.TaskId)
+			if e != nil {
+				t.Fatal(e)
+			}
+			v, e := h.Tasks.QueryVerification(ctx, caller, state.VerificationRef)
+			if e != nil || v.Status != "REJECTED" || v.ContinuationRequestRef == nil || !proto.Equal(v.ContinuationRequestRef, state.Snapshot.RequestRef) || state.VerificationFreeze != 0 || len(v.AdmissionRefs) != 1 || len(v.Gaps) == 0 {
+				t.Fatalf("partial rejection or continuation %v %v", v, e)
+			}
+			req, e := h.Tasks.QueryProposalRequest(ctx, caller, v.ContinuationRequestRef)
+			if e != nil || req.State != "PENDING" || !proto.Equal(req.SnapshotRef, state.Snapshot.Ref) {
+				t.Fatalf("actual continuation missing %v %v", req, e)
+			}
+			job, e := h.Durable.QueryJob(ctx, caller, req.JobRef.Name)
+			if e != nil || job.State != "READY" || job.JobType != "PROPOSE" || !proto.Equal(job.SpecificationRef, req.Ref) {
+				t.Fatalf("durable request responsibility lost %v %v", job, e)
+			}
+			for range 2 {
+				if e = h.Tasks.ProcessCompletions(ctx, caller); e != nil {
+					t.Fatal(e)
+				}
+			}
+			if e = h.Close(); e != nil {
+				t.Fatal(e)
+			}
+			h, e = assembly.Open(path, "u", "d")
+			if e != nil {
+				t.Fatal(e)
+			}
+			defer h.Close()
+			again, e := h.Tasks.QueryPlanning(ctx, caller, a.TaskId)
+			if e != nil || !proto.Equal(again.Snapshot, state.Snapshot) || !proto.Equal(again.VerificationRef, state.VerificationRef) {
+				t.Fatal("restart generated another continuation")
+			}
+			result, e := h.Tasks.QueryResult(ctx, caller, a.TaskId)
+			if e != nil || result != nil {
+				t.Fatal("rejection closed task")
+			}
+			requests, effects := target.Snapshot()
+			if len(requests) != 1 || len(effects) != 0 {
+				t.Fatal("continuation blindly resent old action")
+			}
+		})
+	}
+}

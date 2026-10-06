@@ -114,27 +114,28 @@ func (x *ConditionFinding) GetOperationRef() *Ref {
 }
 
 type Verification struct {
-	state               protoimpl.MessageState `protogen:"open.v1"`
-	Ref                 *Ref                   `protobuf:"bytes,1,opt,name=ref,proto3" json:"ref,omitempty"`
-	TaskId              *GlobalName            `protobuf:"bytes,2,opt,name=task_id,json=taskId,proto3" json:"task_id,omitempty"`
-	Round               uint64                 `protobuf:"varint,3,opt,name=round,proto3" json:"round,omitempty"`
-	Status              string                 `protobuf:"bytes,4,opt,name=status,proto3" json:"status,omitempty"`
-	RequirementsRef     *Ref                   `protobuf:"bytes,5,opt,name=requirements_ref,json=requirementsRef,proto3" json:"requirements_ref,omitempty"`
-	RequirementsVersion uint64                 `protobuf:"varint,6,opt,name=requirements_version,json=requirementsVersion,proto3" json:"requirements_version,omitempty"`
-	InputVersion        uint64                 `protobuf:"varint,7,opt,name=input_version,json=inputVersion,proto3" json:"input_version,omitempty"`
-	ControlGeneration   uint64                 `protobuf:"varint,8,opt,name=control_generation,json=controlGeneration,proto3" json:"control_generation,omitempty"`
-	ProposalRef         *Ref                   `protobuf:"bytes,9,opt,name=proposal_ref,json=proposalRef,proto3" json:"proposal_ref,omitempty"`
-	AdmissionRefs       []*Ref                 `protobuf:"bytes,10,rep,name=admission_refs,json=admissionRefs,proto3" json:"admission_refs,omitempty"`
-	OperationRefs       []*Ref                 `protobuf:"bytes,11,rep,name=operation_refs,json=operationRefs,proto3" json:"operation_refs,omitempty"`
-	Candidates          []*CompletionEvidence  `protobuf:"bytes,12,rep,name=candidates,proto3" json:"candidates,omitempty"`
-	Conditions          []*ConditionFinding    `protobuf:"bytes,13,rep,name=conditions,proto3" json:"conditions,omitempty"`
-	Gaps                []string               `protobuf:"bytes,14,rep,name=gaps,proto3" json:"gaps,omitempty"`
-	EndedReason         string                 `protobuf:"bytes,15,opt,name=ended_reason,json=endedReason,proto3" json:"ended_reason,omitempty"`
-	StartedAtUnixMs     int64                  `protobuf:"varint,16,opt,name=started_at_unix_ms,json=startedAtUnixMs,proto3" json:"started_at_unix_ms,omitempty"`
-	FinishedAtUnixMs    int64                  `protobuf:"varint,17,opt,name=finished_at_unix_ms,json=finishedAtUnixMs,proto3" json:"finished_at_unix_ms,omitempty"`
-	ClosureIntentRefs   []*Ref                 `protobuf:"bytes,18,rep,name=closure_intent_refs,json=closureIntentRefs,proto3" json:"closure_intent_refs,omitempty"`
-	unknownFields       protoimpl.UnknownFields
-	sizeCache           protoimpl.SizeCache
+	state                  protoimpl.MessageState `protogen:"open.v1"`
+	Ref                    *Ref                   `protobuf:"bytes,1,opt,name=ref,proto3" json:"ref,omitempty"`
+	TaskId                 *GlobalName            `protobuf:"bytes,2,opt,name=task_id,json=taskId,proto3" json:"task_id,omitempty"`
+	Round                  uint64                 `protobuf:"varint,3,opt,name=round,proto3" json:"round,omitempty"`
+	Status                 string                 `protobuf:"bytes,4,opt,name=status,proto3" json:"status,omitempty"`
+	RequirementsRef        *Ref                   `protobuf:"bytes,5,opt,name=requirements_ref,json=requirementsRef,proto3" json:"requirements_ref,omitempty"`
+	RequirementsVersion    uint64                 `protobuf:"varint,6,opt,name=requirements_version,json=requirementsVersion,proto3" json:"requirements_version,omitempty"`
+	InputVersion           uint64                 `protobuf:"varint,7,opt,name=input_version,json=inputVersion,proto3" json:"input_version,omitempty"`
+	ControlGeneration      uint64                 `protobuf:"varint,8,opt,name=control_generation,json=controlGeneration,proto3" json:"control_generation,omitempty"`
+	ProposalRef            *Ref                   `protobuf:"bytes,9,opt,name=proposal_ref,json=proposalRef,proto3" json:"proposal_ref,omitempty"`
+	AdmissionRefs          []*Ref                 `protobuf:"bytes,10,rep,name=admission_refs,json=admissionRefs,proto3" json:"admission_refs,omitempty"`
+	OperationRefs          []*Ref                 `protobuf:"bytes,11,rep,name=operation_refs,json=operationRefs,proto3" json:"operation_refs,omitempty"`
+	Candidates             []*CompletionEvidence  `protobuf:"bytes,12,rep,name=candidates,proto3" json:"candidates,omitempty"`
+	Conditions             []*ConditionFinding    `protobuf:"bytes,13,rep,name=conditions,proto3" json:"conditions,omitempty"`
+	Gaps                   []string               `protobuf:"bytes,14,rep,name=gaps,proto3" json:"gaps,omitempty"`
+	EndedReason            string                 `protobuf:"bytes,15,opt,name=ended_reason,json=endedReason,proto3" json:"ended_reason,omitempty"`
+	StartedAtUnixMs        int64                  `protobuf:"varint,16,opt,name=started_at_unix_ms,json=startedAtUnixMs,proto3" json:"started_at_unix_ms,omitempty"`
+	FinishedAtUnixMs       int64                  `protobuf:"varint,17,opt,name=finished_at_unix_ms,json=finishedAtUnixMs,proto3" json:"finished_at_unix_ms,omitempty"`
+	ClosureIntentRefs      []*Ref                 `protobuf:"bytes,18,rep,name=closure_intent_refs,json=closureIntentRefs,proto3" json:"closure_intent_refs,omitempty"`
+	ContinuationRequestRef *Ref                   `protobuf:"bytes,19,opt,name=continuation_request_ref,json=continuationRequestRef,proto3" json:"continuation_request_ref,omitempty"`
+	unknownFields          protoimpl.UnknownFields
+	sizeCache              protoimpl.SizeCache
 }
 
 func (x *Verification) Reset() {
@@ -293,22 +294,31 @@ func (x *Verification) GetClosureIntentRefs() []*Ref {
 	return nil
 }
 
+func (x *Verification) GetContinuationRequestRef() *Ref {
+	if x != nil {
+		return x.ContinuationRequestRef
+	}
+	return nil
+}
+
 type Result struct {
-	state                protoimpl.MessageState `protogen:"open.v1"`
-	Ref                  *Ref                   `protobuf:"bytes,1,opt,name=ref,proto3" json:"ref,omitempty"`
-	TaskId               *GlobalName            `protobuf:"bytes,2,opt,name=task_id,json=taskId,proto3" json:"task_id,omitempty"`
-	Outcome              string                 `protobuf:"bytes,3,opt,name=outcome,proto3" json:"outcome,omitempty"`
-	CloseReason          string                 `protobuf:"bytes,4,opt,name=close_reason,json=closeReason,proto3" json:"close_reason,omitempty"`
-	VerificationRef      *Ref                   `protobuf:"bytes,5,opt,name=verification_ref,json=verificationRef,proto3" json:"verification_ref,omitempty"`
-	RequirementsRef      *Ref                   `protobuf:"bytes,6,opt,name=requirements_ref,json=requirementsRef,proto3" json:"requirements_ref,omitempty"`
-	Conditions           []*ConditionFinding    `protobuf:"bytes,7,rep,name=conditions,proto3" json:"conditions,omitempty"`
-	OperationRefs        []*Ref                 `protobuf:"bytes,8,rep,name=operation_refs,json=operationRefs,proto3" json:"operation_refs,omitempty"`
-	UnknownOperationRefs []*Ref                 `protobuf:"bytes,9,rep,name=unknown_operation_refs,json=unknownOperationRefs,proto3" json:"unknown_operation_refs,omitempty"`
-	UsageSnapshot        *Budget                `protobuf:"bytes,10,opt,name=usage_snapshot,json=usageSnapshot,proto3" json:"usage_snapshot,omitempty"`
-	ClosedAtUnixMs       int64                  `protobuf:"varint,11,opt,name=closed_at_unix_ms,json=closedAtUnixMs,proto3" json:"closed_at_unix_ms,omitempty"`
-	ReservationRefs      []*Ref                 `protobuf:"bytes,12,rep,name=reservation_refs,json=reservationRefs,proto3" json:"reservation_refs,omitempty"`
-	unknownFields        protoimpl.UnknownFields
-	sizeCache            protoimpl.SizeCache
+	state                 protoimpl.MessageState `protogen:"open.v1"`
+	Ref                   *Ref                   `protobuf:"bytes,1,opt,name=ref,proto3" json:"ref,omitempty"`
+	TaskId                *GlobalName            `protobuf:"bytes,2,opt,name=task_id,json=taskId,proto3" json:"task_id,omitempty"`
+	Outcome               string                 `protobuf:"bytes,3,opt,name=outcome,proto3" json:"outcome,omitempty"`
+	CloseReason           string                 `protobuf:"bytes,4,opt,name=close_reason,json=closeReason,proto3" json:"close_reason,omitempty"`
+	VerificationRef       *Ref                   `protobuf:"bytes,5,opt,name=verification_ref,json=verificationRef,proto3" json:"verification_ref,omitempty"`
+	RequirementsRef       *Ref                   `protobuf:"bytes,6,opt,name=requirements_ref,json=requirementsRef,proto3" json:"requirements_ref,omitempty"`
+	Conditions            []*ConditionFinding    `protobuf:"bytes,7,rep,name=conditions,proto3" json:"conditions,omitempty"`
+	OperationRefs         []*Ref                 `protobuf:"bytes,8,rep,name=operation_refs,json=operationRefs,proto3" json:"operation_refs,omitempty"`
+	UnknownOperationRefs  []*Ref                 `protobuf:"bytes,9,rep,name=unknown_operation_refs,json=unknownOperationRefs,proto3" json:"unknown_operation_refs,omitempty"`
+	UsageSnapshot         *Budget                `protobuf:"bytes,10,opt,name=usage_snapshot,json=usageSnapshot,proto3" json:"usage_snapshot,omitempty"`
+	ClosedAtUnixMs        int64                  `protobuf:"varint,11,opt,name=closed_at_unix_ms,json=closedAtUnixMs,proto3" json:"closed_at_unix_ms,omitempty"`
+	ReservationRefs       []*Ref                 `protobuf:"bytes,12,rep,name=reservation_refs,json=reservationRefs,proto3" json:"reservation_refs,omitempty"`
+	TaskClosingRef        *Ref                   `protobuf:"bytes,13,opt,name=task_closing_ref,json=taskClosingRef,proto3" json:"task_closing_ref,omitempty"`
+	ExecutionFollowupRefs []*Ref                 `protobuf:"bytes,14,rep,name=execution_followup_refs,json=executionFollowupRefs,proto3" json:"execution_followup_refs,omitempty"`
+	unknownFields         protoimpl.UnknownFields
+	sizeCache             protoimpl.SizeCache
 }
 
 func (x *Result) Reset() {
@@ -421,6 +431,20 @@ func (x *Result) GetClosedAtUnixMs() int64 {
 func (x *Result) GetReservationRefs() []*Ref {
 	if x != nil {
 		return x.ReservationRefs
+	}
+	return nil
+}
+
+func (x *Result) GetTaskClosingRef() *Ref {
+	if x != nil {
+		return x.TaskClosingRef
+	}
+	return nil
+}
+
+func (x *Result) GetExecutionFollowupRefs() []*Ref {
+	if x != nil {
+		return x.ExecutionFollowupRefs
 	}
 	return nil
 }
@@ -827,7 +851,7 @@ const file_lerna_v1_completion_proto_rawDesc = "" +
 	"conclusion\x12\x10\n" +
 	"\x03gap\x18\x05 \x01(\tR\x03gap\x122\n" +
 	"\revidence_refs\x18\x06 \x03(\v2\r.lerna.v1.RefR\fevidenceRefs\x122\n" +
-	"\roperation_ref\x18\a \x01(\v2\r.lerna.v1.RefR\foperationRef\"\xb7\x06\n" +
+	"\roperation_ref\x18\a \x01(\v2\r.lerna.v1.RefR\foperationRef\"\x80\a\n" +
 	"\fVerification\x12\x1f\n" +
 	"\x03ref\x18\x01 \x01(\v2\r.lerna.v1.RefR\x03ref\x12-\n" +
 	"\atask_id\x18\x02 \x01(\v2\x14.lerna.v1.GlobalNameR\x06taskId\x12\x14\n" +
@@ -851,7 +875,8 @@ const file_lerna_v1_completion_proto_rawDesc = "" +
 	"\fended_reason\x18\x0f \x01(\tR\vendedReason\x12+\n" +
 	"\x12started_at_unix_ms\x18\x10 \x01(\x03R\x0fstartedAtUnixMs\x12-\n" +
 	"\x13finished_at_unix_ms\x18\x11 \x01(\x03R\x10finishedAtUnixMs\x12=\n" +
-	"\x13closure_intent_refs\x18\x12 \x03(\v2\r.lerna.v1.RefR\x11closureIntentRefs\"\xde\x04\n" +
+	"\x13closure_intent_refs\x18\x12 \x03(\v2\r.lerna.v1.RefR\x11closureIntentRefs\x12G\n" +
+	"\x18continuation_request_ref\x18\x13 \x01(\v2\r.lerna.v1.RefR\x16continuationRequestRef\"\xde\x05\n" +
 	"\x06Result\x12\x1f\n" +
 	"\x03ref\x18\x01 \x01(\v2\r.lerna.v1.RefR\x03ref\x12-\n" +
 	"\atask_id\x18\x02 \x01(\v2\x14.lerna.v1.GlobalNameR\x06taskId\x12\x18\n" +
@@ -867,7 +892,9 @@ const file_lerna_v1_completion_proto_rawDesc = "" +
 	"\x0eusage_snapshot\x18\n" +
 	" \x01(\v2\x10.lerna.v1.BudgetR\rusageSnapshot\x12)\n" +
 	"\x11closed_at_unix_ms\x18\v \x01(\x03R\x0eclosedAtUnixMs\x128\n" +
-	"\x10reservation_refs\x18\f \x03(\v2\r.lerna.v1.RefR\x0freservationRefs\"\xaa\x01\n" +
+	"\x10reservation_refs\x18\f \x03(\v2\r.lerna.v1.RefR\x0freservationRefs\x127\n" +
+	"\x10task_closing_ref\x18\r \x01(\v2\r.lerna.v1.RefR\x0etaskClosingRef\x12E\n" +
+	"\x17execution_followup_refs\x18\x0e \x03(\v2\r.lerna.v1.RefR\x15executionFollowupRefs\"\xaa\x01\n" +
 	"\x16BeginCompletionCommand\x12/\n" +
 	"\x06header\x18\x01 \x01(\v2\x17.lerna.v1.CommandHeaderR\x06header\x12-\n" +
 	"\atask_id\x18\x02 \x01(\v2\x14.lerna.v1.GlobalNameR\x06taskId\x120\n" +
@@ -947,42 +974,45 @@ var file_lerna_v1_completion_proto_depIdxs = []int32{
 	11, // 10: lerna.v1.Verification.candidates:type_name -> lerna.v1.CompletionEvidence
 	0,  // 11: lerna.v1.Verification.conditions:type_name -> lerna.v1.ConditionFinding
 	9,  // 12: lerna.v1.Verification.closure_intent_refs:type_name -> lerna.v1.Ref
-	9,  // 13: lerna.v1.Result.ref:type_name -> lerna.v1.Ref
-	10, // 14: lerna.v1.Result.task_id:type_name -> lerna.v1.GlobalName
-	9,  // 15: lerna.v1.Result.verification_ref:type_name -> lerna.v1.Ref
-	9,  // 16: lerna.v1.Result.requirements_ref:type_name -> lerna.v1.Ref
-	0,  // 17: lerna.v1.Result.conditions:type_name -> lerna.v1.ConditionFinding
-	9,  // 18: lerna.v1.Result.operation_refs:type_name -> lerna.v1.Ref
-	9,  // 19: lerna.v1.Result.unknown_operation_refs:type_name -> lerna.v1.Ref
-	12, // 20: lerna.v1.Result.usage_snapshot:type_name -> lerna.v1.Budget
-	9,  // 21: lerna.v1.Result.reservation_refs:type_name -> lerna.v1.Ref
-	13, // 22: lerna.v1.BeginCompletionCommand.header:type_name -> lerna.v1.CommandHeader
-	10, // 23: lerna.v1.BeginCompletionCommand.task_id:type_name -> lerna.v1.GlobalName
-	9,  // 24: lerna.v1.BeginCompletionCommand.proposal_ref:type_name -> lerna.v1.Ref
-	13, // 25: lerna.v1.RecheckCompletionCommand.header:type_name -> lerna.v1.CommandHeader
-	9,  // 26: lerna.v1.RecheckCompletionCommand.verification_ref:type_name -> lerna.v1.Ref
-	13, // 27: lerna.v1.CloseCompletionCommand.header:type_name -> lerna.v1.CommandHeader
-	9,  // 28: lerna.v1.CloseCompletionCommand.intent_ref:type_name -> lerna.v1.Ref
-	9,  // 29: lerna.v1.CloseCompletionCommand.verification_ref:type_name -> lerna.v1.Ref
-	9,  // 30: lerna.v1.CloseCompletionCommand.admission_ref:type_name -> lerna.v1.Ref
-	10, // 31: lerna.v1.CloseCompletionCommand.operation_id:type_name -> lerna.v1.GlobalName
-	9,  // 32: lerna.v1.CompletionClosureIntent.ref:type_name -> lerna.v1.Ref
-	10, // 33: lerna.v1.CompletionClosureIntent.task_id:type_name -> lerna.v1.GlobalName
-	5,  // 34: lerna.v1.CompletionClosureIntent.command:type_name -> lerna.v1.CloseCompletionCommand
-	9,  // 35: lerna.v1.CompletionClosureIntent.job_ref:type_name -> lerna.v1.Ref
-	14, // 36: lerna.v1.CompletionClosureIntent.recipient_receipt:type_name -> lerna.v1.CommandReceipt
-	9,  // 37: lerna.v1.CompletionSeal.ref:type_name -> lerna.v1.Ref
-	9,  // 38: lerna.v1.CompletionSeal.intent_ref:type_name -> lerna.v1.Ref
-	9,  // 39: lerna.v1.CompletionSeal.verification_ref:type_name -> lerna.v1.Ref
-	9,  // 40: lerna.v1.CompletionSeal.admission_ref:type_name -> lerna.v1.Ref
-	10, // 41: lerna.v1.CompletionSeal.operation_id:type_name -> lerna.v1.GlobalName
-	9,  // 42: lerna.v1.CompletionSeal.operation_ref:type_name -> lerna.v1.Ref
-	9,  // 43: lerna.v1.CompletionSeal.closed_send_refs:type_name -> lerna.v1.Ref
-	44, // [44:44] is the sub-list for method output_type
-	44, // [44:44] is the sub-list for method input_type
-	44, // [44:44] is the sub-list for extension type_name
-	44, // [44:44] is the sub-list for extension extendee
-	0,  // [0:44] is the sub-list for field type_name
+	9,  // 13: lerna.v1.Verification.continuation_request_ref:type_name -> lerna.v1.Ref
+	9,  // 14: lerna.v1.Result.ref:type_name -> lerna.v1.Ref
+	10, // 15: lerna.v1.Result.task_id:type_name -> lerna.v1.GlobalName
+	9,  // 16: lerna.v1.Result.verification_ref:type_name -> lerna.v1.Ref
+	9,  // 17: lerna.v1.Result.requirements_ref:type_name -> lerna.v1.Ref
+	0,  // 18: lerna.v1.Result.conditions:type_name -> lerna.v1.ConditionFinding
+	9,  // 19: lerna.v1.Result.operation_refs:type_name -> lerna.v1.Ref
+	9,  // 20: lerna.v1.Result.unknown_operation_refs:type_name -> lerna.v1.Ref
+	12, // 21: lerna.v1.Result.usage_snapshot:type_name -> lerna.v1.Budget
+	9,  // 22: lerna.v1.Result.reservation_refs:type_name -> lerna.v1.Ref
+	9,  // 23: lerna.v1.Result.task_closing_ref:type_name -> lerna.v1.Ref
+	9,  // 24: lerna.v1.Result.execution_followup_refs:type_name -> lerna.v1.Ref
+	13, // 25: lerna.v1.BeginCompletionCommand.header:type_name -> lerna.v1.CommandHeader
+	10, // 26: lerna.v1.BeginCompletionCommand.task_id:type_name -> lerna.v1.GlobalName
+	9,  // 27: lerna.v1.BeginCompletionCommand.proposal_ref:type_name -> lerna.v1.Ref
+	13, // 28: lerna.v1.RecheckCompletionCommand.header:type_name -> lerna.v1.CommandHeader
+	9,  // 29: lerna.v1.RecheckCompletionCommand.verification_ref:type_name -> lerna.v1.Ref
+	13, // 30: lerna.v1.CloseCompletionCommand.header:type_name -> lerna.v1.CommandHeader
+	9,  // 31: lerna.v1.CloseCompletionCommand.intent_ref:type_name -> lerna.v1.Ref
+	9,  // 32: lerna.v1.CloseCompletionCommand.verification_ref:type_name -> lerna.v1.Ref
+	9,  // 33: lerna.v1.CloseCompletionCommand.admission_ref:type_name -> lerna.v1.Ref
+	10, // 34: lerna.v1.CloseCompletionCommand.operation_id:type_name -> lerna.v1.GlobalName
+	9,  // 35: lerna.v1.CompletionClosureIntent.ref:type_name -> lerna.v1.Ref
+	10, // 36: lerna.v1.CompletionClosureIntent.task_id:type_name -> lerna.v1.GlobalName
+	5,  // 37: lerna.v1.CompletionClosureIntent.command:type_name -> lerna.v1.CloseCompletionCommand
+	9,  // 38: lerna.v1.CompletionClosureIntent.job_ref:type_name -> lerna.v1.Ref
+	14, // 39: lerna.v1.CompletionClosureIntent.recipient_receipt:type_name -> lerna.v1.CommandReceipt
+	9,  // 40: lerna.v1.CompletionSeal.ref:type_name -> lerna.v1.Ref
+	9,  // 41: lerna.v1.CompletionSeal.intent_ref:type_name -> lerna.v1.Ref
+	9,  // 42: lerna.v1.CompletionSeal.verification_ref:type_name -> lerna.v1.Ref
+	9,  // 43: lerna.v1.CompletionSeal.admission_ref:type_name -> lerna.v1.Ref
+	10, // 44: lerna.v1.CompletionSeal.operation_id:type_name -> lerna.v1.GlobalName
+	9,  // 45: lerna.v1.CompletionSeal.operation_ref:type_name -> lerna.v1.Ref
+	9,  // 46: lerna.v1.CompletionSeal.closed_send_refs:type_name -> lerna.v1.Ref
+	47, // [47:47] is the sub-list for method output_type
+	47, // [47:47] is the sub-list for method input_type
+	47, // [47:47] is the sub-list for extension type_name
+	47, // [47:47] is the sub-list for extension extendee
+	0,  // [0:47] is the sub-list for field type_name
 }
 
 func init() { file_lerna_v1_completion_proto_init() }

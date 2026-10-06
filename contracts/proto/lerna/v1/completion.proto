@@ -35,6 +35,7 @@ message Verification {
   int64 started_at_unix_ms = 16;
   int64 finished_at_unix_ms = 17;
   repeated Ref closure_intent_refs = 18;
+  Ref continuation_request_ref = 19;
 }
 message Result {
   Ref ref = 1;
@@ -49,6 +50,8 @@ message Result {
   Budget usage_snapshot = 10;
   int64 closed_at_unix_ms = 11;
   repeated Ref reservation_refs = 12;
+  Ref task_closing_ref = 13;
+  repeated Ref execution_followup_refs = 14;
 }
 message BeginCompletionCommand {
   CommandHeader header = 1;

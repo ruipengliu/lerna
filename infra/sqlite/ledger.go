@@ -47,6 +47,9 @@ func (s *Store) LoadOperation(ctx context.Context, id *v1.GlobalName) (*v1.Opera
 	return o, e
 }
 func (s *Store) SaveLedgerJob(ctx context.Context, j *v1.Job) error {
+	if j.JobType == "RECONCILE_UNRESOLVED_OPERATION" {
+		return s.saveRecord(ctx, "ledger", "INSERT INTO execution_followup_jobs VALUES(?,?,?,?,?) ON CONFLICT(user_id,domain_id,id) DO UPDATE SET record=excluded.record", j, j.Ref.Name.UserId, j.Ref.Name.AuthorityDomainId, j.Ref.Name.LocalId, j.SpecificationRef.Name.LocalId)
+	}
 	if j.JobType == "RECONCILE_OPERATION" {
 		return s.saveRecord(ctx, "ledger", "INSERT INTO reconciliation_jobs VALUES(?,?,?,?,?) ON CONFLICT(user_id,domain_id,id) DO UPDATE SET record=excluded.record", j, j.Ref.Name.UserId, j.Ref.Name.AuthorityDomainId, j.Ref.Name.LocalId, j.SpecificationRef.Name.LocalId)
 	}
@@ -55,7 +58,7 @@ func (s *Store) SaveLedgerJob(ctx context.Context, j *v1.Job) error {
 func (s *Store) LedgerJobs(ctx context.Context, id *v1.GlobalName) ([]*v1.Job, error) {
 	var jobs []*v1.Job
 	e := s.read(ctx, func(q querier) error {
-		rows, e := q.QueryContext(ctx, "SELECT record FROM ledger_jobs WHERE user_id=? AND domain_id=? AND operation_id=? UNION ALL SELECT record FROM reconciliation_jobs WHERE user_id=? AND domain_id=? AND operation_id=?", id.UserId, id.AuthorityDomainId, id.LocalId, id.UserId, id.AuthorityDomainId, id.LocalId)
+		rows, e := q.QueryContext(ctx, "SELECT record FROM ledger_jobs WHERE user_id=? AND domain_id=? AND operation_id=? UNION ALL SELECT record FROM reconciliation_jobs WHERE user_id=? AND domain_id=? AND operation_id=? UNION ALL SELECT record FROM execution_followup_jobs WHERE user_id=? AND domain_id=? AND operation_id=?", id.UserId, id.AuthorityDomainId, id.LocalId, id.UserId, id.AuthorityDomainId, id.LocalId, id.UserId, id.AuthorityDomainId, id.LocalId)
 		if e != nil {
 			return e
 		}

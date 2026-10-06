@@ -52,7 +52,11 @@ func prepareStartWithLease(t *testing.T, f *fixture, lease int64) (*v1.Admission
 	if e != nil {
 		t.Fatal(e)
 	}
-	if e = f.h.Tasks.ProcessHandoffs(f.ctx, f.caller); e != nil {
+	return a, prepareExistingAdmissionStart(t, f, a, lease)
+}
+func prepareExistingAdmissionStart(t *testing.T, f *fixture, a *v1.Admission, lease int64) *v1.StartExecutionCommand {
+	t.Helper()
+	if e := f.h.Tasks.ProcessHandoffs(f.ctx, f.caller); e != nil {
 		t.Fatal(e)
 	}
 	claim, e := f.h.LedgerWork.ExecuteJob(f.ctx, f.caller, &v1.JobCommand{Identity: ledgerHeader("claim" + f.suffix).Identity, ContractVersion: 1, Action: "CLAIM", AllowedTypes: []string{"EXECUTE_OPERATION"}, Limit: 100, LeaseMs: lease, ProcessInstance: "worker"})
@@ -67,7 +71,7 @@ func prepareStartWithLease(t *testing.T, f *fixture, lease int64) (*v1.Admission
 	if executionClaim == nil {
 		t.Fatal("operation claim missing")
 	}
-	r, e = f.h.Ledger.Prepare(f.ctx, f.caller, &v1.PrepareExecutionCommand{Header: ledgerHeader("prepare" + f.suffix), OperationId: a.OperationId, ProcessInstance: "worker", Claim: executionClaim})
+	r, e := f.h.Ledger.Prepare(f.ctx, f.caller, &v1.PrepareExecutionCommand{Header: ledgerHeader("prepare" + f.suffix), OperationId: a.OperationId, ProcessInstance: "worker", Claim: executionClaim})
 	accepted(t, r, e)
 	x, e := f.h.Ledger.QueryExecution(f.ctx, f.caller, a.OperationId)
 	if e != nil {
@@ -82,7 +86,7 @@ func prepareStartWithLease(t *testing.T, f *fixture, lease int64) (*v1.Admission
 	accepted(t, r, e)
 	h := header("start:" + x.Send.Ref.Name.LocalId)
 	h.Identity.IssuerId = "egress"
-	return a, &v1.StartExecutionCommand{Header: h, AdmissionRef: a.Ref, CredentialRef: r.ResultRef, Binding: b, Claim: executionClaim, CallDescriptor: x.CallDescriptor}
+	return &v1.StartExecutionCommand{Header: h, AdmissionRef: a.Ref, CredentialRef: r.ResultRef, Binding: b, Claim: executionClaim, CallDescriptor: x.CallDescriptor}
 }
 
 // 规则：G4、开始-2

@@ -26,6 +26,9 @@ func (s *Service) AcceptInputInTransaction(ctx context.Context, caller *v1.Calle
 	if t.Lifecycle != v1.TaskLifecycle_TASK_LIFECYCLE_OPEN {
 		return command.Fail("TASK_CLOSED")
 	}
+	if e = s.checkTaskNotClosing(ctx, t); e != nil {
+		return e
+	}
 	if t.RequirementsVersion != c.ExpectedRequirementsVersion || t.InputVersion != c.ExpectedInputVersion {
 		return command.Fail("STALE_INPUT")
 	}
@@ -93,6 +96,9 @@ func (s *Service) ControlInTransaction(ctx context.Context, caller *v1.Caller, c
 	}
 	if t.Lifecycle != v1.TaskLifecycle_TASK_LIFECYCLE_OPEN || t.ControlGeneration != c.ExpectedControlGeneration {
 		return command.Fail("STALE_CONTROL")
+	}
+	if e = s.checkTaskNotClosing(ctx, t); e != nil {
+		return e
 	}
 	switch c.Control {
 	case "PAUSE":

@@ -119,7 +119,7 @@ func (s *Service) ProcessClosures(ctx context.Context) error {
 			continue
 		}
 		for _, ref := range op.ClosureEvidenceRefs {
-			if kind := ref.GetName().GetObjectKind(); kind != "grant-exit-closure" && kind != "completion-seal" && kind != "cancellation-seal" {
+			if kind := ref.GetName().GetObjectKind(); kind != "grant-exit-closure" && kind != "completion-seal" && kind != "task-closure-seal" && kind != "cancellation-seal" {
 				continue
 			}
 			if _, e = s.validateNoSend(ctx, caller, r, ref); e != nil {
@@ -157,6 +157,7 @@ type CompletionAuthority interface {
 type completionProofs interface {
 	QueryCompletionSeal(context.Context, *v1.Caller, *v1.Ref) (*v1.CompletionSeal, error)
 }
+
 type CancellationAuthority interface {
 	QueryCancellation(context.Context, *v1.Caller, *v1.GlobalName) (*v1.Cancellation, error)
 	QueryCancellationIntent(context.Context, *v1.Caller, *v1.Ref) (*v1.CancellationClosureIntent, error)
@@ -284,6 +285,74 @@ func (s *Service) validateNoSend(ctx context.Context, caller *v1.Caller, r *v1.R
 			return nil, command.Fail("NO_SEND_UNPROVEN")
 		}
 		return nil, nil
+	case "task-closure-seal":
+		seal, e := s.usageSource.(taskClosingProofs).QueryTaskClosureSeal(ctx, caller, ref)
+		if e != nil {
+			return nil, e
+		}
+		if seal == nil || !proto.Equal(seal.OperationId, r.OperationId) || !proto.Equal(seal.AdmissionRef, r.AdmissionRef) {
+			return nil, command.Fail("NO_SEND_UNPROVEN")
+		}
+		intent, e := s.taskClosingAuthority.QueryTaskClosureIntent(ctx, caller, seal.IntentRef)
+		if e != nil {
+			return nil, e
+		}
+		if intent == nil || !proto.Equal(intent.TaskId, r.TaskId) {
+			return nil, command.Fail("INVALID_CLOSURE_PROOF")
+		}
+		c := intent.Command
+		if c == nil || !proto.Equal(c.IntentRef, seal.IntentRef) || !proto.Equal(c.TaskClosingRef, seal.TaskClosingRef) || !proto.Equal(c.AdmissionRef, seal.AdmissionRef) || !proto.Equal(c.OperationId, seal.OperationId) || c.ExecutorEndpointId != seal.ExecutorEndpointId {
+			return nil, command.Fail("INVALID_CLOSURE_PROOF")
+		}
+		verification, e := s.taskClosingAuthority.QueryTaskClosing(ctx, caller, seal.TaskClosingRef)
+		if e != nil {
+			return nil, e
+		}
+		listed := false
+		if verification != nil && proto.Equal(verification.TaskId, r.TaskId) {
+			for _, p := range verification.ClosureIntentRefs {
+				if proto.Equal(p, seal.IntentRef) {
+					listed = true
+				}
+			}
+		}
+		a, e := s.taskClosingAuthority.QueryAdmission(ctx, caller, seal.AdmissionRef)
+		if e != nil {
+			return nil, e
+		}
+		if !listed || a == nil || !proto.Equal(a.TaskId, r.TaskId) || !proto.Equal(a.OperationId, r.OperationId) || a.ExecutorEndpointId != seal.ExecutorEndpointId {
+			return nil, command.Fail("INVALID_CLOSURE_PROOF")
+		}
+		if op != nil && op.Execution != nil {
+			closed := seal.ClosedSendRefs
+			if len(closed) == 0 && seal.NoSendProven && !seal.PhysicalSendWasPossible {
+				closed = []*v1.Ref{op.Execution.Send.Ref}
+			}
+			for _, ref := range closed {
+				x, e := s.usageSource.(BillingExecution).QuerySendExecution(ctx, caller, r.OperationId, ref)
+				if e != nil {
+					return nil, e
+				}
+				if x == nil || x.Send.Phase != "CLOSED" {
+					continue
+				}
+				source, e := s.store.(billingStore).LoadBillingSource(ctx, ref)
+				if e != nil {
+					return nil, e
+				}
+				if source != nil && proto.Equal(source.ReservationRef.Name, r.Ref.Name) {
+					return ref, nil
+				}
+				if source == nil && r.ConsumedSends == 0 && proto.Equal(a.BudgetBasis.ReservationRef.Name, r.Ref.Name) {
+					return ref, nil
+				}
+			}
+			return nil, command.Fail("NO_SEND_UNPROVEN")
+		}
+		if !seal.NoSendProven || seal.PhysicalSendWasPossible || !proto.Equal(a.BudgetBasis.ReservationRef.Name, r.Ref.Name) {
+			return nil, command.Fail("NO_SEND_UNPROVEN")
+		}
+		return nil, nil
 	case "cancellation-seal":
 		proofs, ok := s.usageSource.(cancellationProofs)
 		if !ok || s.cancellationAuthority == nil {
@@ -359,4 +428,19 @@ func (s *Service) validateNoSend(ctx context.Context, caller *v1.Caller, r *v1.R
 	default:
 		return nil, command.Fail("UNSUPPORTED_CLOSURE_PROOF")
 	}
+}
+
+// TaskClosingAuthority 核验独立的非成功关闭依据，不借用成功核验权限。
+type TaskClosingAuthority interface {
+	QueryTaskClosureIntent(context.Context, *v1.Caller, *v1.Ref) (*v1.TaskClosureIntent, error)
+	QueryTaskClosing(context.Context, *v1.Caller, *v1.Ref) (*v1.TaskClosing, error)
+	QueryAdmission(context.Context, *v1.Caller, *v1.Ref) (*v1.Admission, error)
+}
+type taskClosingProofs interface {
+	QueryTaskClosureSeal(context.Context, *v1.Caller, *v1.Ref) (*v1.TaskClosureSeal, error)
+}
+
+func (s *Service) WithTaskClosingAuthority(a TaskClosingAuthority) *Service {
+	s.taskClosingAuthority = a
+	return s
 }

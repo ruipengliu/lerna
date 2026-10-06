@@ -1,7 +1,6 @@
 package admission_test
 
 import (
-	"slices"
 	"testing"
 
 	"github.com/ruipengliu/lerna/cmd/assembly"
@@ -229,7 +228,7 @@ func TestDefinitivelyUnappliedRequiredActionRejectsOnlyItsRound(t *testing.T) {
 		t.Fatalf("rejection %v %v %v", planning, v, e)
 	}
 	task, e := f.h.Tasks.QueryTask(f.ctx, f.caller, f.task.Name)
-	if e != nil || task.Lifecycle != v1.TaskLifecycle_TASK_LIFECYCLE_OPEN || task.Control != v1.TaskControl_TASK_CONTROL_ACTIVE || !slices.Contains(task.WaitingOn, "COMPLETION:REPLAN_REQUIRED") {
+	if e != nil || task.Lifecycle != v1.TaskLifecycle_TASK_LIFECYCLE_OPEN || task.Control != v1.TaskControl_TASK_CONTROL_ACTIVE || v.ContinuationRequestRef == nil || !proto.Equal(v.ContinuationRequestRef, planning.Snapshot.RequestRef) {
 		t.Fatalf("missing continuation %v %v", task, e)
 	}
 	requests, effects := target.Snapshot()

@@ -37,6 +37,9 @@ func (s *Service) AcceptRequirements(ctx context.Context, caller *v1.Caller, c *
 		if t == nil {
 			return nil, command.Fail("NOT_FOUND")
 		}
+		if e = s.checkTaskNotClosing(tx, t); e != nil {
+			return nil, e
+		}
 		if t.Revision != c.TaskRef.Revision || c.InputVersion > t.InputVersion || c.InputVersion == 0 || t.Lifecycle != v1.TaskLifecycle_TASK_LIFECYCLE_OPEN {
 			return nil, command.Fail("STALE_INPUT")
 		}
@@ -121,50 +124,10 @@ func (s *Service) RequestProposal(ctx context.Context, caller *v1.Caller, c *v1.
 		if e != nil {
 			return nil, e
 		}
-		_, now, e := s.store.Position(tx)
-		if e != nil {
+		if e = s.requestProposalInTransaction(tx, caller, t, p, c.Header.Identity); e != nil {
 			return nil, e
 		}
-		if e = s.supersedeProposalRequest(tx, p.Snapshot); e != nil {
-			return nil, e
-		}
-		t.PlanningGeneration++
-		t.Revision++
-		p.Snapshot = &v1.ContextSnapshot{Ref: command.NewRef(s.user, s.domain, "snapshot", "lerna.v1.ContextSnapshot"), TaskRef: &v1.Ref{Name: t.TaskId, Revision: t.Revision, SchemaId: "lerna.v1.Task"}, RequirementsVersion: t.RequirementsVersion, InputVersion: t.InputVersion, ControlGeneration: t.ControlGeneration, PlanningGeneration: t.PlanningGeneration, RequestRef: command.NewRef(s.user, s.domain, "proposal-request", "lerna.v1.ProposalRequest"), ExpiresAtUnixMs: now + 300000, ContentRefs: []*v1.Ref{t.GoalRef}}
-		inputs, e := s.store.(InputStore).LoadTaskInputs(tx, t.TaskId)
-		if e != nil {
-			return nil, e
-		}
-		for _, input := range inputs.Inputs {
-			if input.InputVersion > t.InputVersion {
-				return nil, command.Fail("INVARIANT_VIOLATION")
-			}
-			p.Snapshot.InputRefs = append(p.Snapshot.InputRefs, input.InputRef)
-			if input.InputVersion > 1 {
-				p.Snapshot.ContentRefs = append(p.Snapshot.ContentRefs, input.ContentRef)
-			}
-		}
-		caps, e := s.store.CapabilityRefs(tx)
-		if e != nil {
-			return nil, e
-		}
-		p.Snapshot.CapabilityRefs = caps
-		p.Snapshot.ProgressRefs = p.AdmissionRefs
-		if p.Requirements != nil {
-			p.Snapshot.RequirementsRef = p.Requirements.Ref
-		}
-		p.Proposal = nil
-		p.ProposalConsumed = false
 		if e = s.saveTask(tx, t); e != nil {
-			return nil, e
-		}
-		if e = s.completeModelSnapshot(tx, caller, p.Snapshot, t, inputs); e != nil {
-			return nil, e
-		}
-		if e = s.saveProposalRequest(tx, p.Snapshot, t, c.Header.Identity); e != nil {
-			return nil, e
-		}
-		if e = s.saveSnapshot(tx, p.Snapshot); e != nil {
 			return nil, e
 		}
 		return p.Snapshot.Ref, s.store.SavePlanning(tx, p)
@@ -177,6 +140,58 @@ func (s *Service) RequestProposal(ctx context.Context, caller *v1.Caller, c *v1.
 	}
 	return s.store.LoadSnapshot(ctx, r.ResultRef)
 }
+
+// requestProposalInTransaction 由原业务裁决保存同一快照、请求和工作，不另开事务。
+func (s *Service) requestProposalInTransaction(ctx context.Context, caller *v1.Caller, t *v1.Task, p *v1.PlanningState, id *v1.CommandIdentity) error {
+	if e := s.checkTaskNotClosing(ctx, t); e != nil {
+		return e
+	}
+	_, now, e := s.store.Position(ctx)
+	if e != nil {
+		return e
+	}
+	if e = s.supersedeProposalRequest(ctx, p.Snapshot); e != nil {
+		return e
+	}
+	t.PlanningGeneration++
+	t.Revision++
+	p.Snapshot = &v1.ContextSnapshot{Ref: command.NewRef(s.user, s.domain, "snapshot", "lerna.v1.ContextSnapshot"), TaskRef: &v1.Ref{Name: t.TaskId, Revision: t.Revision, SchemaId: "lerna.v1.Task"}, RequirementsVersion: t.RequirementsVersion, InputVersion: t.InputVersion, ControlGeneration: t.ControlGeneration, PlanningGeneration: t.PlanningGeneration, RequestRef: command.NewRef(s.user, s.domain, "proposal-request", "lerna.v1.ProposalRequest"), ExpiresAtUnixMs: now + 300000, ContentRefs: []*v1.Ref{t.GoalRef}}
+	inputs, e := s.store.(InputStore).LoadTaskInputs(ctx, t.TaskId)
+	if e != nil {
+		return e
+	}
+	for _, input := range inputs.Inputs {
+		if input.InputVersion > t.InputVersion {
+			return command.Fail("INVARIANT_VIOLATION")
+		}
+		p.Snapshot.InputRefs = append(p.Snapshot.InputRefs, input.InputRef)
+		if input.InputVersion > 1 {
+			p.Snapshot.ContentRefs = append(p.Snapshot.ContentRefs, input.ContentRef)
+		}
+	}
+	caps, e := s.store.CapabilityRefs(ctx)
+	if e != nil {
+		return e
+	}
+	p.Snapshot.CapabilityRefs = caps
+	p.Snapshot.ProgressRefs = p.AdmissionRefs
+	if p.Requirements != nil {
+		p.Snapshot.RequirementsRef = p.Requirements.Ref
+	}
+	p.Proposal = nil
+	p.ProposalConsumed = false
+	if e = s.completeModelSnapshot(ctx, caller, p.Snapshot, t, inputs); e != nil {
+		return e
+	}
+	if e = s.saveProposalRequest(ctx, p.Snapshot, t, id); e != nil {
+		return e
+	}
+	if e = s.saveSnapshot(ctx, p.Snapshot); e != nil {
+		return e
+	}
+	return nil
+}
+
 func (s *Service) ReceiveProposal(ctx context.Context, caller *v1.Caller, c *v1.ReceiveProposalCommand) (*v1.CommandReceipt, error) {
 	if e := command.ValidateHeader(c.GetHeader(), c); e != nil {
 		return nil, e

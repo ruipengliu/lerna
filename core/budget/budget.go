@@ -27,6 +27,7 @@ type Service struct {
 	evidence                    BillingEvidence
 	completionAuthority         CompletionAuthority
 	cancellationAuthority       CancellationAuthority
+	taskClosingAuthority        TaskClosingAuthority
 	decisions                   Decisions
 	user, domain, trustedIssuer string
 }

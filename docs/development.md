@@ -152,7 +152,13 @@ func TestSafeResendSkipsAdmissionGeneration(t *testing.T) { ... }
 | `tasks.verification` | 本轮冻结、完整准入清单、准确封闭 outbox、工作与原决定 |
 | `ledger.completion_seal` | 执行域准确封闭、迟到意图墓碑、已有动作状态与原回执 |
 | `tasks.completion_receipt` | 源域封闭回执与领取围栏下的工作完成 |
-| `tasks.completion` | 核验裁决、冻结释放、成功 Result 与任务终态 |
+| `tasks.completion` | 核验裁决、冻结释放、成功 Result 与任务终态；拒绝轮次的唯一继续请求及工作 |
+| `tasks.closing` | 非成功关闭依据、全部历史准入封闭意图、预算逐发送后续责任及持久工作 |
+| `ledger.task_closure_seal` | 原出口准确封闭、迟到准入墓碑、原动作及全部历史发送后续责任 |
+| `tasks.task_closure_receipt` | 非成功封闭源回执与领取围栏下的工作完成 |
+| `tasks.close_final` | 独立非成功 Result 与任务终态 |
+| `ledger.followup_completion` | 原动作取得可靠终态后由执行管理完成后续责任 |
+| `budget.followup_completion` | 原逐发送费用结清或可靠未发送后由预算完成后续责任 |
 
 新增事务必须传入固定名称、登记到同一表，并补充对应故障用例。故障套件检查未登记的事务和无调用点的登记项，普通构建只编译空边界，不包含故障计划、登记表或配置 API。`make test-fault` 仅运行 `conformance/fault/` 中带 `fault` 标签的测试。完整套件保留 race 检测和全部存储切点；随着 M1 schema 和来源事件增加，包级超时上限设为 120 分钟，不能用缩减切点规避运行时间。
 
@@ -256,3 +262,37 @@ M1 参考适配器为 `model-reference-v1`，模型设置使用 `provider: refer
 先由部署宿主建立并完整同步受管理布局，再使用 `lerna --db state.db --user USER --domain DOMAIN --file-root documents=/absolute/managed-root ...` 固定别名映射；多个根重复指定 `--file-root`。布局、权限、平台和同步要求见 [ADR 0007](adr/0007-managed-file-publication.md)。根选项只供本机受信宿主装配，不是来自模型或执行参数的任意路径。重复别名、相对路径、空路径与非规范路径在打开数据库前拒绝；实际原生身份在统一出口内验证，原别名已经绑定后不能改指另一目录。
 
 执行仍使用宿主已取得的完整 `execute START_JSON` 命令与对应出口身份；CLI 不根据文件路径代造准入、凭据、领取或调用描述。`operation ID`、`observation ID` 和原计费来源查询用于核对原动作与原发送。相同命令的进程重放返回原回执，文件创建、替换和读取都由同一受信出口处理。
+
+## 完成拒绝与非成功关闭
+
+必要条件被原动作的可靠证据否定时，当前核验保存 `REJECTED`、缺口和完整旧动作范围并释放本轮冻结。原 P4 已获准但仍未收尾、UNKNOWN 或可能迟到的动作继续阻断补建，包括全部历史发送。取得原出口的可靠封闭及收尾依据后，同一轮只登记一个新的上下文快照、`ProposalRequest` 和 `PROPOSE` 工作。证据缺失保持 `VERIFYING` 及冻结；旧轮次的回报不能释放新轮次冻结。新补建动作仍需重新取得当前准入授权、费用预留、确认和开始凭证。
+
+`close-task --json FILE` 转发 `BeginTaskCloseCommand`，精确绑定当前任务修订及控制代次。受信宿主或本地交互可以用明确的停止原因请求 `FAILED`；模型提议没有关闭权。`task-closing TASK_ID` 查询原关闭依据、当前端点封闭进展和后续责任；它分别展示固定 Result 与原负责方的当前动作及待办。非成功依据不伪造成功核验。取消结果仍须使用正式取消协议的独立依据及原端点证明。
+
+关闭意图与预算逐发送责任保存后，原出口封闭每个历史准入并保存独立原回执。仅在准确回执和负责方持久责任均可核验后固定 Result。UNKNOWN、迟到可能性和费用占用保留；原动作取得可靠终态、原费用结清后，由 ledger 和 budget 推进并完成其持久待办。原迟到回报或账单继续按原尝试及发送身份接纳，固定 Result 的字节及引用不变。generic 工作控制不能丢弃封闭或后续责任，也不能产生新的目标发送。详见 [ADR0010](adr/0010-nonsuccess-task-closing.md)。
+
+真实文件的原历史查询仍由已保存的核对计划执行：失败关闭不重建计划，不把独立查询观察改标成原写观察，也不恢复已经被后继替换的文件。当前原执行与结算待办分别展示，弱读取后的 `UNKNOWN` 不因原写零费用已经结清而完成执行责任；后来可靠证据只改变原负责方事实及待办，固定 Result 保持原字节。
+
+
+### M1 非成功关闭及当前取消依据
+
+`close-task --json FILE` 转发 `BeginTaskCloseCommand`。可信宿主或本地交互须指定当前准确 TaskRef 和 expectedControlGeneration。FAILED 使用明确无法完成、期限或用户停止原因；CANCELLED 还引用同任务原 Cancellation，当前控制保持 CANCELLING。合法 ANSWER/MODIFY 之后，旧未决定命令因 TaskRef 过期而拒绝；可信调用方可用新命令身份明确关闭当前依据，不把旧取消 ACK 当成新输入的关闭裁决。两种范围的原准确 ACK、端点封闭和实际原准入交接到齐后才固定结果。
+
+`task-closing TASK_ID` 返回固定 Result 和原负责方当前事实。closureIntents、closureSeals 和 awaitingOperationAdmissionRefs 分别展示准确源责任、真实封闭证明及尚待原交接的准入；墓碑没有动作引用时不会伪造 UNKNOWN 动作。原事实缺失或读取失败明确不可用。原效果、逐发送费用及核对仍由其负责方推进，固定 Result 的字节和引用不改变。
+
+对应公共验收入口如下；表中入口应在完整 `make check` 日志中实际出现，单例日志不能替代完整门禁。
+
+| 真实行为 | 测试入口 |
+| --- | --- |
+| 原取消 ACK 和当前关闭 ACK 必须分别到齐；CLI 和重启无额外发送 | `TestCLICancelledClosingRequiresBothOriginalCancellationAndClosingAcknowledgements` |
+| 原 ANSWER/MODIFY/要求替换使旧 Begin 失效；新可信当前 Begin 有合法关闭路径 | `TestCancelledClosingRejectsOldBeginButAllowsFreshTrustedBasisAfterInput` |
+| 关闭依据保存后拒绝输入、要求和控制变化 | `TestCancelledClosingRejectsForgedBasisAndFencesLaterInput` |
+| 原准入 tombstone 等待实际交接；公开查询及最终裁决遇到原读取失败均不可用 | `TestCancelledClosingViewQualifiesTombstoneAndWaitsForOriginalAdmission`、`TestCancelledClosingCannotFinalizeWhenOriginalCancellationSealReadFails` |
+| 原 MODEL、业务 TARGET 和独立 CLOSURE 进入完整当前范围，保留原取消范围及费用 | `TestCancelledClosingCoversTargetModelAndOriginalClosureAdmissions` |
+| 两种非成功结果保留真实 UNKNOWN、全部历史发送、物理进行中责任和迟到原账单及效果 | `Test{Failed,Cancelled}ClosingRetainsUnknownAndAcceptsOriginalLateEffectAndBill`、`Test{Failed,Cancelled}ClosingKeepsAllHistoricalSendAndSettlementResponsibilities`、`Test{Failed,Cancelled}ClosingWaitsForActualInFlightTargetUse` |
+| 失败、取消两种关闭各自的依据／封闭／源 ACK／固定 Result 和 P5 后工作完成三种故障模式 | `TestTaskClosingCommitBoundariesPreserveOriginalResponsibilities`、`TestCancelledClosingCommitBoundariesPreserveOriginalResponsibilities` |
+| 真实受管理文件发布后读回失败，两种关闭保留原历史查询、零费用来源、资源及固定结果 | `Test{Failed,Cancelled}ClosingKeepsOriginalFileHistoryQueryAndFixedResult` |
+| 成功结果后的原迟到账单保留费用和固定结果 | `TestClosedTaskAcceptsLateBillWithoutChangingFixedResult` |
+| 可靠未满足后新请求／新授权／新动作，拒绝轮次不改写；唯一继续责任的三种故障模式 | `TestRejectedContinuationUsesFreshAuthorityAndCompletesWithNewAction`、`TestRejectedContinuationCommitRecoversOneActualRequest` |
+
+只重放关闭提交和 FILE 原历史的命名故障切片可使用：`go test -v -race -tags fault ./conformance/fault -run '^(TestTaskClosingCommitBoundariesPreserveOriginalResponsibilities|TestCancelledClosingCommitBoundariesPreserveOriginalResponsibilities|TestFailedClosingKeepsOriginalFileHistoryQueryAndFixedResult|TestCancelledClosingKeepsOriginalFileHistoryQueryAndFixedResult)$' -count=1 -timeout=20m`。提交前仍执行原样 `GOFLAGS=-v make check`，保留全部普通、故障及存储矩阵、政策与独立负对照；不得以命名切片代替全门禁。真实原 API 目标和默认 driver 的组合使用后续正式集成接口验收，当前 FILE 与模拟目标证据不作这些组合的完成声明。

@@ -22,6 +22,7 @@ type Store interface {
 }
 type Service struct {
 	cancellationClosures       CancellationClosureSource
+	taskClosures               TaskClosureSource
 	completionClosures         CompletionClosureSource
 	progressReceiver           OperationProgressReceiver
 	reconciliationTasks        ReconciliationTasks
@@ -120,6 +121,18 @@ func (s *Service) Accept(ctx context.Context, caller *v1.Caller, c *v1.AcceptOpe
 			applyCompletionNoSend(op)
 			job.State = "COMPLETED"
 		}
+		taskSeal, e := s.store.(taskClosureSealStore).TaskClosureSealForOperation(tx, a.OperationId)
+		if e != nil {
+			return e
+		}
+		if taskSeal != nil {
+			if !proto.Equal(taskSeal.AdmissionRef, a.Ref) {
+				return reject("INVALID_CLOSURE")
+			}
+			op.ClosureEvidenceRefs = append(op.ClosureEvidenceRefs, taskSeal.Ref)
+			applyCompletionNoSend(op)
+			job.State = "COMPLETED"
+		}
 		if e = s.saveOperation(tx, op); e != nil {
 			return e
 		}
@@ -188,6 +201,48 @@ func (s *Service) BlocksAdmission(ctx context.Context, c *v1.Caller, all, reject
 		}
 		if op.StartReceiptObtained && op.Lifecycle != "SETTLED" {
 			return true, nil
+		}
+		if op.Lifecycle != "SETTLED" && op.Execution != nil {
+			// P4 先在裁决域成立；尚未送到 P5 的开始回执同样阻止补建。
+			if s.starts == nil {
+				return false, command.Fail("DEPENDENCY_UNAVAILABLE")
+			}
+			actor := &v1.Caller{UserId: s.user, IssuerId: "egress"}
+			a, e := s.starts.QueryAdmission(ctx, actor, op.AdmissionRef)
+			if e != nil {
+				return false, e
+			}
+			if a == nil || !proto.Equal(a.OperationId, op.Ref.Name) || a.ExecutorEndpointId != op.ExecutorEndpointId {
+				return false, command.Fail("INVARIANT_VIOLATION")
+			}
+			for _, send := range append([]*v1.PhysicalSend{op.Execution.Send}, op.Execution.PreviousSends...) {
+				id := &v1.CommandIdentity{UserId: s.user, IssuerId: actor.IssuerId, TargetDomainId: s.sourceDomain, CommandId: "start:" + send.Ref.Name.LocalId}
+				q, e := s.starts.QueryStartReceipt(ctx, actor, id)
+				if e != nil {
+					return false, e
+				}
+				if q == nil || q.ResponsibleDomainId != s.sourceDomain {
+					return false, command.Fail("DEPENDENCY_UNAVAILABLE")
+				}
+				if q.State == v1.ReceiptQueryState_RECEIPT_QUERY_STATE_NOT_FOUND {
+					continue
+				}
+				if q.State != v1.ReceiptQueryState_RECEIPT_QUERY_STATE_DECIDED || q.Receipt == nil || q.Receipt.Phase != v1.ReceiptPhase_RECEIPT_PHASE_DECIDED || q.Receipt.FingerprintVersion != 1 || !proto.Equal(q.Receipt.Identity, id) || q.Receipt.ResponsibleDomainId != s.sourceDomain {
+					return false, command.Fail("DEPENDENCY_UNAVAILABLE")
+				}
+				if q.Receipt.Decision == v1.Decision_DECISION_ACCEPTED {
+					start, e := s.starts.QueryStart(ctx, actor, q.Receipt.ResultRef)
+					if e != nil {
+						return false, e
+					}
+					binding := start.GetBinding()
+					expected := &v1.ExitCredentialBinding{UserId: s.user, TaskId: a.TaskId, SubjectId: a.TaskId, OperationId: a.OperationId, AttemptId: op.Execution.Attempt.Ref.Name, SendSeq: send.SendSeq, AdmissionRef: a.Ref, GrantUseRef: a.GrantUseRef, CallerIssuerId: "egress", Audience: "egress", ExecutorEndpointId: a.ExecutorEndpointId, ExecutorInstance: send.ProcessInstance, DescriptorDigest: op.Execution.CallDescriptor.Digest, UseRight: a.CapabilitySnapshot.UseRight, ProcessingPurpose: a.CapabilitySnapshot.ProcessingPurpose, RequirementsVersion: a.RequirementsVersion, InputVersion: a.InputVersion, ControlGeneration: a.ControlGeneration, BudgetReservationRef: a.BudgetBasis.ReservationRef}
+					if start == nil || !proto.Equal(start.Ref, q.Receipt.ResultRef) || start.CredentialRef == nil || !proto.Equal(binding, expected) || !proto.Equal(send.AttemptId, op.Execution.Attempt.Ref.Name) || !proto.Equal(start.GetIdentity(), id) || !proto.Equal(start.GetSendRef().GetName(), send.Ref.Name) || !proto.Equal(binding.GetOperationId(), op.Ref.Name) || !proto.Equal(binding.GetAdmissionRef(), op.AdmissionRef) || !proto.Equal(binding.GetAttemptId(), op.Execution.Attempt.Ref.Name) || binding.GetSendSeq() != send.SendSeq || binding.GetExecutorEndpointId() != op.ExecutorEndpointId || binding.GetDescriptorDigest() != op.Execution.CallDescriptor.Digest || binding.GetUserId() != s.user {
+						return false, command.Fail("INVARIANT_VIOLATION")
+					}
+					return true, nil
+				}
+			}
 		}
 	}
 	return false, nil

@@ -30,6 +30,9 @@ func (s *Service) ProcessInput(ctx context.Context, caller *v1.Caller, c *v1.Pro
 		if t.Lifecycle != v1.TaskLifecycle_TASK_LIFECYCLE_OPEN || t.Revision != c.TaskRef.Revision {
 			return nil, command.Fail("STALE_INPUT")
 		}
+		if e = s.checkTaskNotClosing(tx, t); e != nil {
+			return nil, e
+		}
 		if c.InputVersion != t.BoundInputVersion+1 {
 			return nil, command.Fail("INPUT_ORDER")
 		}
