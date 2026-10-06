@@ -121,6 +121,11 @@ func (s *Service) ControlInTransaction(ctx context.Context, caller *v1.Caller, c
 	}
 	t.ControlGeneration++
 	t.Revision++
+	if c.Control == "CANCEL" {
+		if e = s.saveCancellation(ctx, t, p, c); e != nil {
+			return e
+		}
+	}
 	if e = s.invalidatePlanning(ctx, t, p); e != nil {
 		return e
 	}

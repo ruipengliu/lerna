@@ -52,6 +52,34 @@ func (s *Service) saveCompletionSeal(ctx context.Context, v *v1.CompletionSeal, 
 	return s.store.SaveTraceSource(ctx, "ledger", &v1.TraceEvent{EventType: "COMPLETION_SEALED", SourceRecordRef: v.Ref, TaskId: task, OperationId: v.OperationId, OriginCommand: origin, RelatedRefs: append([]*v1.Ref{v.IntentRef, v.VerificationRef, v.AdmissionRef, v.OperationRef}, v.ClosedSendRefs...)})
 }
 
+func (s *Service) saveCancellationSeal(ctx context.Context, v *v1.CancellationSeal, task *v1.GlobalName, origin *v1.CommandIdentity, op *v1.Operation) error {
+	if err := s.store.(cancellationSealStore).SaveCancellationSeal(ctx, v); err != nil {
+		return err
+	}
+	event := &v1.TraceEvent{EventType: "CANCELLATION_SEALED", SourceRecordRef: v.Ref, TaskId: task, OperationId: v.OperationId, OriginCommand: origin, RelatedRefs: []*v1.Ref{v.IntentRef, v.CancellationRef, v.AdmissionRef, v.OperationRef}}
+	event.RelatedRefs = append(event.RelatedRefs, v.ClosedSendRefs...)
+	if op != nil {
+		if op.Effect != nil {
+			event.EffectOutcome = op.Effect.Outcome
+			event.LateEffect = op.Effect.LateEffect
+		}
+		if op.Execution != nil {
+			if op.Execution.Attempt != nil {
+				event.AttemptId = op.Execution.Attempt.Ref.Name
+				event.RelatedRefs = append(event.RelatedRefs, op.Execution.Attempt.Ref)
+			}
+			if op.Execution.Send != nil {
+				event.SendRef = op.Execution.Send.Ref
+				event.ObservationRef = op.Execution.Send.ObservationRef
+			}
+			for _, send := range op.Execution.PreviousSends {
+				event.RelatedRefs = append(event.RelatedRefs, send.Ref, send.ObservationRef)
+			}
+		}
+	}
+	return s.store.SaveTraceSource(ctx, "ledger", event)
+}
+
 func (s *Service) recordReconciliationTrace(ctx context.Context, p *v1.Reconciliation) error {
 	refs := []*v1.Ref{p.OriginalAttemptRef, p.QueryCapabilityRef, p.ParametersRef, p.GrantRef, p.ConfirmationRef, p.ActiveQueryRef, p.JobRef}
 	refs = append(refs, p.QueryRefs...)

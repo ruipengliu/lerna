@@ -26,6 +26,7 @@ type Service struct {
 	usageSource                 UsageSource
 	evidence                    BillingEvidence
 	completionAuthority         CompletionAuthority
+	cancellationAuthority       CancellationAuthority
 	decisions                   Decisions
 	user, domain, trustedIssuer string
 }

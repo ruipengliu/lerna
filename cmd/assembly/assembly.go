@@ -46,7 +46,7 @@ func OpenWithFiles(path, user, domain string, roots map[string]string) (*Harness
 		return nil, err
 	}
 	d := durable.New(s, user, domain)
-	t := tasks.New(s, user, domain).WithDecisions(d)
+	t := tasks.New(s, user, domain).WithDecisions(d).WithCancellationJobs(d)
 	c := content.New(s, user, domain+"/content").WithAssociations(t)
 	h := &Harness{Bodies: s.BodyReceipts(), Sessions: sessions.New(s, d, t, c, user, domain), Tasks: t, Durable: d, Content: c, store: s}
 	h.Grants = grants.New(s, d, user, domain, "host").WithAdmissions(t)
@@ -58,7 +58,7 @@ func OpenWithFiles(path, user, domain string, roots map[string]string) (*Harness
 	h.Ledger = ledger.New(s, user, domain+"/ledger", domain).WithWork(h.LedgerWork).WithCompiler(executionCompiler{}).WithStarts(t)
 	c.WithObservations(durable.New(s.ContentWork(), user, domain+"/content"), h.Ledger)
 	h.Ledger.WithObservations(c)
-	h.Budget.WithUsageSource(h.Ledger).WithBillingEvidence(c).WithCompletionAuthority(t)
+	h.Budget.WithUsageSource(h.Ledger).WithBillingEvidence(c).WithCompletionAuthority(t).WithCancellationAuthority(t)
 	h.Trace = trace.New(s, durable.New(s.TraceWork(), user, domain+"/trace"), h.Ledger, user, domain+"/trace")
 	h.Ledger.WithReports(h.Budget, d, h.Trace)
 	t.WithStart(h.Grants, h.Budget, h.Ledger)
@@ -74,6 +74,8 @@ func OpenWithFiles(path, user, domain string, roots map[string]string) (*Harness
 	h.Grants.WithRevocationExits(h.Egress)
 	h.Ledger.WithCompletionClosures(t)
 	t.WithCompletionClosures(d, h.Egress)
+	h.Ledger.WithCancellationClosures(t)
+	t.WithCancellationClosures(d, h.Egress)
 	h.Ledger.WithReconciliation(t, h.Grants, h.Egress)
 	t.WithClosureSource(h.Ledger).WithOperationProgress(h.Ledger)
 	h.Ledger.WithOperationProgress(t)
@@ -106,6 +108,10 @@ func OpenWithFiles(path, user, domain string, roots map[string]string) (*Harness
 		return nil, err
 	}
 	if err := h.Grants.ProcessRevocations(ctx); err != nil {
+		s.Close()
+		return nil, err
+	}
+	if err := h.Tasks.RecoverCancellations(ctx, &v1.Caller{UserId: user, IssuerId: "host-recovery"}); err != nil {
 		s.Close()
 		return nil, err
 	}

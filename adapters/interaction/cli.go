@@ -43,7 +43,7 @@ type CLI struct {
 
 func (c CLI) Run(ctx context.Context, args []string, out io.Writer) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: submit --command ID --goal TEXT [--session ID] | receipt ID | task ID | session ID | recover | execute START_JSON | prepare-resend RESEND_JSON | operation ID | observation ID | session-create --command ID | input --command ID --session ID --kind KIND [--text TEXT] | question --json FILE | process-input --json FILE | accept-requirements --json FILE | task-inputs ID | complete --json FILE | result TASK_ID | verification --json REF_FILE | recheck-completion --json FILE | request-proposal --json FILE | receive-proposal --json FILE | request-reconciliation --json FILE | control-reconciliation --json FILE | reconciliation OPERATION_ID | reconciliation-query --json REF_FILE | reconciliation-finding --json REF_FILE | closure-confirmation --json FILE")
+		return fmt.Errorf("usage: submit --command ID --goal TEXT [--session ID] | receipt ID | task ID | cancellation TASK_ID | session ID | recover | execute START_JSON | prepare-resend RESEND_JSON | operation ID | observation ID | session-create --command ID | input --command ID --session ID --kind KIND [--text TEXT] | question --json FILE | process-input --json FILE | accept-requirements --json FILE | task-inputs ID | complete --json FILE | result TASK_ID | verification --json REF_FILE | recheck-completion --json FILE | request-proposal --json FILE | receive-proposal --json FILE | request-reconciliation --json FILE | control-reconciliation --json FILE | reconciliation OPERATION_ID | reconciliation-query --json REF_FILE | reconciliation-finding --json REF_FILE | closure-confirmation --json FILE")
 	}
 	identity := func(id string) *v1.CommandIdentity {
 		return &v1.CommandIdentity{UserId: c.Caller.UserId, IssuerId: c.Caller.IssuerId, TargetDomainId: c.Domain, CommandId: id}
@@ -53,6 +53,8 @@ func (c CLI) Run(ctx context.Context, args []string, out io.Writer) error {
 	switch args[0] {
 	case "trace-task", "trace-operation":
 		value, err = c.trace(ctx, args)
+	case "cancellation":
+		value, err = c.cancellation(ctx, args)
 	case "complete", "recheck-completion", "verification", "result", "request-proposal", "receive-proposal":
 		value, err = c.completion(ctx, args)
 	case "budget", "budget-configure", "budget-limit", "budget-version", "bill-import", "budget-release", "billing-source", "billing-entry", "billing-conflict":
@@ -137,6 +139,11 @@ func (c CLI) Run(ctx context.Context, args []string, out io.Writer) error {
 		}
 		if tasks, ok := c.Tasks.(CompletionCommands); ok {
 			if e := tasks.ProcessCompletions(ctx, c.Caller); e != nil {
+				return e
+			}
+		}
+		if tasks, ok := c.Tasks.(CancellationCommands); ok {
+			if e := tasks.ProcessCancellations(ctx, c.Caller); e != nil {
 				return e
 			}
 		}

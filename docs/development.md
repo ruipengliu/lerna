@@ -226,6 +226,12 @@ func TestSafeResendSkipsAdmissionGeneration(t *testing.T) { ... }
 
 正文后端在独立 `body` 事务持久保存接纳回执。`assembly.Harness.Bodies.QueryReceipt` 是持有方的只读回执查询，可与内容源域的交接状态独立比较，不返回未发布正文。新增故障点为 `content.register`、`body.accept`、`content.publish`、`content.derivation`、`content.derivation_input`、`content.derivation_takeover`、`content.derivation_seal`、`content.derivation_commit`。原有 `content.stage` 和 `content.observation` 现在保存登记意图；正文持有责任和发布另有独立提交，原始观察发布完成后才交给执行管理。
 
+### M1 取消控制与端点封闭
+
+`input --command ID --session SESSION --task TASK --kind CONTROL --control CANCEL --control-generation N` 保存取消控制并返回原命令回执。`cancellation TASK_ID` 返回 `CancellationView`：原取消命令和清单、任务当前控制、未取得端点回执的 `pendingClosureRefs`、当前动作及 `unresolvedEffectOperationRefs`、原动作的核对责任。封闭回执齐备不代表效果已知；P5 后的未知和费用仍归原发送。`budget TASK_ID` 与 `billing-source SEND_REF_JSON` 继续展示原任务费用和每个历史发送的计费来源。
+
+启动恢复和 `recover` 继续原取消交接，先查询原端点的命令回执。取消与 P4、P5 的三种窗口、晚到原准入、旧领取、历史发送、迟到原始观察和账单在公共装配边界验证；端点内部未发送证明及精确预算释放见 [ADR 0009](adr/0009-cancellation-closure.md)。
+
 ### M1 可查询目标的结果核对
 
 `request-reconciliation --json FILE` 接收 `RequestReconciliationCommand`，指定原动作、查询能力、参数、同一份 READ 与 SAVE 授权和核对策略。`reconciliation OPERATION_ID` 查询当前责任；`reconciliation-query --json REF_FILE` 与 `reconciliation-finding --json REF_FILE` 读取不可变查询及结论。`control-reconciliation --json FILE` 按当前修订号暂停或恢复，可显式更新上限与授权。启动和 `recover` 恢复到期工作；未来的等待时间保留在待办中，下次推进时再次检查。普通工作控制不能替代核对控制。

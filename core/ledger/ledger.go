@@ -21,6 +21,7 @@ type Store interface {
 	LedgerJobs(context.Context, *v1.GlobalName) ([]*v1.Job, error)
 }
 type Service struct {
+	cancellationClosures       CancellationClosureSource
 	completionClosures         CompletionClosureSource
 	progressReceiver           OperationProgressReceiver
 	reconciliationTasks        ReconciliationTasks
@@ -104,6 +105,18 @@ func (s *Service) Accept(ctx context.Context, caller *v1.Caller, c *v1.AcceptOpe
 				return reject("INVALID_CLOSURE")
 			}
 			op.ClosureEvidenceRefs = append(op.ClosureEvidenceRefs, seal.Ref)
+			applyCompletionNoSend(op)
+			job.State = "COMPLETED"
+		}
+		cancellationSeal, e := s.store.(cancellationSealStore).CancellationSealForOperation(tx, a.OperationId)
+		if e != nil {
+			return e
+		}
+		if cancellationSeal != nil {
+			if !proto.Equal(cancellationSeal.AdmissionRef, a.Ref) || cancellationSeal.ExecutorEndpointId != a.ExecutorEndpointId {
+				return reject("INVALID_CLOSURE")
+			}
+			op.ClosureEvidenceRefs = append(op.ClosureEvidenceRefs, cancellationSeal.Ref)
 			applyCompletionNoSend(op)
 			job.State = "COMPLETED"
 		}

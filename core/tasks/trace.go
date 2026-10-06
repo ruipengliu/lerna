@@ -162,6 +162,19 @@ func (s *Service) saveCompletionIntent(ctx context.Context, v *v1.CompletionClos
 	return s.store.SaveTraceSource(ctx, "tasks", &v1.TraceEvent{EventType: "COMPLETION_HANDOFF_CHANGED", SourceRecordRef: v.Ref, TaskId: v.TaskId, OperationId: v.Command.OperationId, OriginCommand: v.Command.Header.Identity, RelatedRefs: refs})
 }
 
+func (s *Service) saveCancellationIntent(ctx context.Context, v *v1.CancellationClosureIntent) error {
+	if err := s.store.(cancellationStore).SaveCancellationIntent(ctx, v); err != nil {
+		return err
+	}
+	kind := "CANCELLATION_CLOSURE_REQUESTED"
+	refs := []*v1.Ref{v.Command.CancellationRef, v.Command.AdmissionRef, v.JobRef}
+	if v.RecipientReceipt != nil {
+		kind = "CANCELLATION_CLOSURE_ACKNOWLEDGED"
+		refs = append(refs, v.RecipientReceipt.DecisionRef, v.RecipientReceipt.ResultRef)
+	}
+	return s.store.SaveTraceSource(ctx, "tasks", &v1.TraceEvent{EventType: kind, SourceRecordRef: v.Ref, TaskId: v.TaskId, OperationId: v.Command.OperationId, OriginCommand: v.Command.Header.Identity, RelatedRefs: refs})
+}
+
 func (s *Service) saveTaskOperationProgress(ctx context.Context, n *v1.OperationProgressNotice) error {
 	if err := s.store.(progressStore).SaveTaskOperationProgress(ctx, n); err != nil {
 		return err

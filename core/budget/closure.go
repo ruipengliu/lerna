@@ -119,7 +119,7 @@ func (s *Service) ProcessClosures(ctx context.Context) error {
 			continue
 		}
 		for _, ref := range op.ClosureEvidenceRefs {
-			if kind := ref.GetName().GetObjectKind(); kind != "grant-exit-closure" && kind != "completion-seal" {
+			if kind := ref.GetName().GetObjectKind(); kind != "grant-exit-closure" && kind != "completion-seal" && kind != "cancellation-seal" {
 				continue
 			}
 			if _, e = s.validateNoSend(ctx, caller, r, ref); e != nil {
@@ -156,6 +156,19 @@ type CompletionAuthority interface {
 }
 type completionProofs interface {
 	QueryCompletionSeal(context.Context, *v1.Caller, *v1.Ref) (*v1.CompletionSeal, error)
+}
+type CancellationAuthority interface {
+	QueryCancellation(context.Context, *v1.Caller, *v1.GlobalName) (*v1.Cancellation, error)
+	QueryCancellationIntent(context.Context, *v1.Caller, *v1.Ref) (*v1.CancellationClosureIntent, error)
+	QueryAdmission(context.Context, *v1.Caller, *v1.Ref) (*v1.Admission, error)
+}
+type cancellationProofs interface {
+	QueryCancellationSeal(context.Context, *v1.Caller, *v1.Ref) (*v1.CancellationSeal, error)
+}
+
+func (s *Service) WithCancellationAuthority(a CancellationAuthority) *Service {
+	s.cancellationAuthority = a
+	return s
 }
 
 func (s *Service) WithCompletionAuthority(a CompletionAuthority) *Service {
@@ -235,6 +248,78 @@ func (s *Service) validateNoSend(ctx context.Context, caller *v1.Caller, r *v1.R
 			}
 		}
 		a, e := s.completionAuthority.QueryAdmission(ctx, caller, seal.AdmissionRef)
+		if e != nil {
+			return nil, e
+		}
+		if !listed || a == nil || !proto.Equal(a.TaskId, r.TaskId) || !proto.Equal(a.OperationId, r.OperationId) || a.ExecutorEndpointId != seal.ExecutorEndpointId {
+			return nil, command.Fail("INVALID_CLOSURE_PROOF")
+		}
+		if op != nil && op.Execution != nil {
+			closed := seal.ClosedSendRefs
+			if len(closed) == 0 && seal.NoSendProven && !seal.PhysicalSendWasPossible {
+				closed = []*v1.Ref{op.Execution.Send.Ref}
+			}
+			for _, ref := range closed {
+				x, e := s.usageSource.(BillingExecution).QuerySendExecution(ctx, caller, r.OperationId, ref)
+				if e != nil {
+					return nil, e
+				}
+				if x == nil || x.Send.Phase != "CLOSED" {
+					continue
+				}
+				source, e := s.store.(billingStore).LoadBillingSource(ctx, ref)
+				if e != nil {
+					return nil, e
+				}
+				if source != nil && proto.Equal(source.ReservationRef.Name, r.Ref.Name) {
+					return ref, nil
+				}
+				if source == nil && r.ConsumedSends == 0 && proto.Equal(a.BudgetBasis.ReservationRef.Name, r.Ref.Name) {
+					return ref, nil
+				}
+			}
+			return nil, command.Fail("NO_SEND_UNPROVEN")
+		}
+		if !seal.NoSendProven || seal.PhysicalSendWasPossible || !proto.Equal(a.BudgetBasis.ReservationRef.Name, r.Ref.Name) {
+			return nil, command.Fail("NO_SEND_UNPROVEN")
+		}
+		return nil, nil
+	case "cancellation-seal":
+		proofs, ok := s.usageSource.(cancellationProofs)
+		if !ok || s.cancellationAuthority == nil {
+			return nil, command.Fail("DEPENDENCY_UNAVAILABLE")
+		}
+		seal, e := proofs.QueryCancellationSeal(ctx, caller, ref)
+		if e != nil {
+			return nil, e
+		}
+		if seal == nil || !proto.Equal(seal.OperationId, r.OperationId) || !proto.Equal(seal.AdmissionRef, r.AdmissionRef) {
+			return nil, command.Fail("NO_SEND_UNPROVEN")
+		}
+		intent, e := s.cancellationAuthority.QueryCancellationIntent(ctx, caller, seal.IntentRef)
+		if e != nil {
+			return nil, e
+		}
+		if intent == nil || !proto.Equal(intent.TaskId, r.TaskId) {
+			return nil, command.Fail("INVALID_CLOSURE_PROOF")
+		}
+		c := intent.Command
+		if c == nil || !proto.Equal(c.IntentRef, seal.IntentRef) || !proto.Equal(c.CancellationRef, seal.CancellationRef) || !proto.Equal(c.AdmissionRef, seal.AdmissionRef) || !proto.Equal(c.OperationId, seal.OperationId) || c.ExecutorEndpointId != seal.ExecutorEndpointId {
+			return nil, command.Fail("INVALID_CLOSURE_PROOF")
+		}
+		scope, e := s.cancellationAuthority.QueryCancellation(ctx, caller, r.TaskId)
+		if e != nil {
+			return nil, e
+		}
+		listed := false
+		if scope != nil && proto.Equal(scope.Ref, seal.CancellationRef) {
+			for _, p := range scope.ClosureIntentRefs {
+				if proto.Equal(p, seal.IntentRef) {
+					listed = true
+				}
+			}
+		}
+		a, e := s.cancellationAuthority.QueryAdmission(ctx, caller, seal.AdmissionRef)
 		if e != nil {
 			return nil, e
 		}

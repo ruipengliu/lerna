@@ -1,0 +1,59 @@
+syntax = "proto3";
+package lerna.v1;
+
+import "lerna/v1/identity.proto";
+import "lerna/v1/ledger.proto";
+import "lerna/v1/planning.proto";
+import "lerna/v1/reconciliation.proto";
+import "lerna/v1/submission.proto";
+
+option go_package = "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1;lernav1";
+
+message Cancellation {
+  Ref ref = 1;
+  GlobalName task_id = 2;
+  CommandIdentity control_identity = 3;
+  uint64 control_generation = 4;
+  repeated Ref admission_refs = 5;
+  repeated Ref closure_intent_refs = 6;
+  int64 saved_at_unix_ms = 7;
+}
+message CloseCancellationCommand {
+  CommandHeader header = 1;
+  Ref intent_ref = 2;
+  Ref cancellation_ref = 3;
+  Ref admission_ref = 4;
+  GlobalName operation_id = 5;
+  string executor_endpoint_id = 6;
+}
+message CancellationClosureIntent {
+  Ref ref = 1;
+  GlobalName task_id = 2;
+  CloseCancellationCommand command = 3;
+  Ref job_ref = 4;
+  CommandReceipt recipient_receipt = 5;
+}
+message CancellationSeal {
+  Ref ref = 1;
+  Ref intent_ref = 2;
+  Ref cancellation_ref = 3;
+  Ref admission_ref = 4;
+  GlobalName operation_id = 5;
+  string executor_endpoint_id = 6;
+  bool no_send_proven = 7;
+  Ref operation_ref = 8;
+  bool physical_send_was_possible = 9;
+  repeated Ref closed_send_refs = 10;
+}
+message CancellationView {
+  Cancellation cancellation = 1;
+  Task task = 2;
+  repeated Ref pending_closure_refs = 3;
+  repeated Operation operations = 4;
+  repeated Reconciliation reconciliations = 5;
+  repeated Ref unresolved_effect_operation_refs = 6;
+  repeated CancellationClosureIntent closure_intents = 7;
+  repeated CancellationSeal closure_seals = 8;
+  // 原准入尚待交接产生动作记录；不能由此生成动作效果或版本。
+  repeated Ref awaiting_operation_admission_refs = 9;
+}
