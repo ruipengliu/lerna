@@ -11,6 +11,7 @@ import (
 )
 
 type Store interface {
+	TraceSource
 	ReadContent(context.Context, *v1.Ref) (*v1.Content, error)
 }
 type Service struct {

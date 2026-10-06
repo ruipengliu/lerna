@@ -42,6 +42,7 @@ func TestModelRequestPersistsAuthorityAndOriginalSnapshot(t *testing.T) {
 	if f.calls.Load() != 0 {
 		t.Fatal("request sent model before admission")
 	}
+	assertModelSourceEvent(t, f, "PROPOSAL_REQUEST_SUPERSEDED", original.Ref, "")
 }
 
 // 规则：G3、G4、G8、G9、准入-10
@@ -326,6 +327,8 @@ func TestModelOutcomeFencesOldWorkerButKeepsItsLateReport(t *testing.T) {
 	if provider.Calls() != 1 {
 		t.Fatal("reporting called model again")
 	}
+	assertModelSourceEvent(t, f, "PROPOSAL_OUTCOME_RETAINED", old.ResultRef, "STALE_CLAIM")
+	assertModelSourceEvent(t, f, "PROPOSAL_OUTCOME_ACCEPTED", acceptedResult.ResultRef, "")
 }
 
 // 规则：G1、G3、G10、G11、R7

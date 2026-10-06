@@ -75,6 +75,6 @@ func (s *Service) AdjustLimit(ctx context.Context, caller *v1.Caller, c *v1.Adju
 		if e = projectBudget(b); e != nil {
 			return nil, e
 		}
-		return b.Ref, s.store.SaveBudget(tx, b)
+		return b.Ref, s.saveBudget(tx, b)
 	})
 }

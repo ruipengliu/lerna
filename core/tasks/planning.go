@@ -96,10 +96,10 @@ func (s *Service) AcceptRequirements(ctx context.Context, caller *v1.Caller, c *
 		}
 		ref := command.NewRef(s.user, s.domain, "requirements", "lerna.v1.Requirements")
 		p.Requirements = &v1.Requirements{Ref: ref, TaskId: t.TaskId, RequirementsVersion: t.RequirementsVersion, BoundInputVersion: boundVersion, Source: c.Source, Conditions: c.Conditions, AcceptedBy: c.Header.Identity}
-		if e = s.store.SaveTask(tx, t); e != nil {
+		if e = s.saveTask(tx, t); e != nil {
 			return nil, e
 		}
-		if e = s.store.SaveRequirements(tx, p.Requirements); e != nil {
+		if e = s.saveRequirements(tx, p.Requirements); e != nil {
 			return nil, e
 		}
 		return ref, s.store.SavePlanning(tx, p)
@@ -155,7 +155,7 @@ func (s *Service) RequestProposal(ctx context.Context, caller *v1.Caller, c *v1.
 		}
 		p.Proposal = nil
 		p.ProposalConsumed = false
-		if e = s.store.SaveTask(tx, t); e != nil {
+		if e = s.saveTask(tx, t); e != nil {
 			return nil, e
 		}
 		if e = s.completeModelSnapshot(tx, caller, p.Snapshot, t, inputs); e != nil {
@@ -164,7 +164,7 @@ func (s *Service) RequestProposal(ctx context.Context, caller *v1.Caller, c *v1.
 		if e = s.saveProposalRequest(tx, p.Snapshot, t, c.Header.Identity); e != nil {
 			return nil, e
 		}
-		if e = s.store.SaveSnapshot(tx, p.Snapshot); e != nil {
+		if e = s.saveSnapshot(tx, p.Snapshot); e != nil {
 			return nil, e
 		}
 		return p.Snapshot.Ref, s.store.SavePlanning(tx, p)
@@ -201,7 +201,7 @@ func (s *Service) ReceiveProposal(ctx context.Context, caller *v1.Caller, c *v1.
 		}
 		p.Proposal = proto.Clone(q).(*v1.Proposal)
 		p.Proposal.Ref = command.NewRef(s.user, s.domain, "proposal", "lerna.v1.Proposal")
-		if e = s.store.SaveProposal(tx, p.Proposal); e != nil {
+		if e = s.saveProposal(tx, p.Proposal); e != nil {
 			return nil, e
 		}
 		return p.Proposal.Ref, s.store.SavePlanning(tx, p)

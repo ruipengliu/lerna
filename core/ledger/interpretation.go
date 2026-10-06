@@ -74,6 +74,13 @@ func (s *Service) InterpretObservation(ctx context.Context, caller *v1.Caller, c
 		if e = s.store.(interpretationStore).SaveInterpretation(tx, finding); e != nil {
 			return nil, e
 		}
+		admission, e := s.starts.QueryAdmission(tx, caller, op.AdmissionRef)
+		if e != nil {
+			return nil, e
+		}
+		if e = s.store.SaveTraceSource(tx, "ledger", &v1.TraceEvent{EventType: "EFFECT_INTERPRETED", SourceRecordRef: finding.Ref, TaskId: admission.TaskId, OperationId: op.Ref.Name, AttemptId: raw.AttemptId, SendRef: raw.SendRef, ObservationRef: raw.Ref, RelatedRefs: []*v1.Ref{op.EffectRef, op.AdmissionRef}, EffectOutcome: finding.Outcome, LateEffect: finding.LateEffect, ReasonCode: finding.Reason}); e != nil {
+			return nil, e
+		}
 		op.Ref.Revision++
 		op.Effect.Ref.Revision++
 		if e = s.projectPhysicalEvidence(tx, op, finding); e != nil {
@@ -106,7 +113,7 @@ func (s *Service) InterpretObservation(ctx context.Context, caller *v1.Caller, c
 				return nil, e
 			}
 		}
-		if e = s.store.SaveOperation(tx, op); e != nil {
+		if e = s.saveOperation(tx, op); e != nil {
 			return nil, e
 		}
 		if op.QuerySubject != nil {

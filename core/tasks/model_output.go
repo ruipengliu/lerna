@@ -83,7 +83,7 @@ func (s *Service) saveModelResult(ctx context.Context, caller *v1.Caller, call *
 	if result.ObservationRef != nil {
 		observationID = result.ObservationRef.Name.LocalId
 	}
-	r, e := s.decisions.Execute(ctx, caller, s.modelHeader("model-result:"+call.Ref.Name.LocalId+":"+observationID, s.domain), command.SemanticFingerprint("model-result", result), "tasks.model_result", func(tx context.Context) (*v1.Ref, error) {
+	r, e := s.traceModelDecisions(call.RequestRef).Execute(ctx, caller, s.modelHeader("model-result:"+call.Ref.Name.LocalId+":"+observationID, s.domain), command.SemanticFingerprint("model-result", result), "tasks.model_result", func(tx context.Context) (*v1.Ref, error) {
 		current, e := s.store.(modelCallStore).LoadModelCall(tx, call.RequestRef, call.Position)
 		if e != nil {
 			return nil, e
@@ -95,7 +95,7 @@ func (s *Service) saveModelResult(ctx context.Context, caller *v1.Caller, call *
 			return nil, command.Fail("MODEL_RESULT_CONFLICT")
 		}
 		current.Result = result
-		return current.Ref, s.store.(modelCallStore).SaveModelCall(tx, current)
+		return current.Ref, s.saveModelCall(tx, current)
 	})
 	if e = modelReceipt(r, e); e != nil {
 		return nil, e

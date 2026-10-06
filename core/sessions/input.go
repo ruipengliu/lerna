@@ -72,7 +72,7 @@ func (s *Service) SubmitInput(ctx context.Context, caller *v1.Caller, c *v1.Subm
 		if e = s.store.SaveSession(tx, session); e != nil {
 			return nil, e
 		}
-		return ref, s.store.(DeliveryStore).SaveInputDelivery(tx, &v1.InputDelivery{Ref: ref, OriginalCommand: c, Input: input})
+		return ref, s.saveInputDelivery(tx, &v1.InputDelivery{Ref: ref, OriginalCommand: c, Input: input})
 	})
 }
 

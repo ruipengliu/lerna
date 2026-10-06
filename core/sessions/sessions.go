@@ -12,6 +12,7 @@ import (
 )
 
 type Store interface {
+	TraceSource
 	SaveSession(context.Context, *v1.Session) error
 	LoadSession(context.Context, *v1.GlobalName) (*v1.Session, error)
 	Position(context.Context) (uint64, int64, error)
@@ -145,7 +146,7 @@ func (s *Service) accept(ctx context.Context, pending *v1.PendingGoal) (*v1.Ref,
 	original := proto.Clone(c).(*v1.SubmitGoalCommand)
 	original.Credential = ""
 	original.TraceId = ""
-	if err = s.store.(DeliveryStore).SaveInputDelivery(ctx, &v1.InputDelivery{Ref: ref, OriginalGoalCommand: original, Input: input}); err != nil {
+	if err = s.saveInputDelivery(ctx, &v1.InputDelivery{Ref: ref, OriginalGoalCommand: original, Input: input}); err != nil {
 		return nil, nil, err
 	}
 	return &v1.Ref{Name: session.SessionId, Revision: session.Revision, SchemaId: "lerna.v1.Session"}, task, nil

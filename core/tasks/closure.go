@@ -80,7 +80,7 @@ func (s *Service) AdmitClosure(ctx context.Context, caller *v1.Caller, c *v1.Adm
 				return nil, e
 			}
 		}
-		if e = s.store.SaveAdmission(tx, a); e != nil {
+		if e = s.saveAdmission(tx, a); e != nil {
 			return nil, e
 		}
 		job, e := s.scheduling.EnqueueHandoffInTransaction(tx, a)
@@ -88,7 +88,7 @@ func (s *Service) AdmitClosure(ctx context.Context, caller *v1.Caller, c *v1.Adm
 			return nil, e
 		}
 		h := &v1.Handoff{Ref: command.NewRef(s.user, s.domain, "handoff", "lerna.v1.Handoff"), AdmissionRef: ref, Identity: a.HandoffIdentity, JobRef: job, State: "PENDING"}
-		if e = s.store.SaveHandoff(tx, h); e != nil {
+		if e = s.saveHandoff(tx, h); e != nil {
 			return nil, e
 		}
 		p.AdmissionRefs = append(p.AdmissionRefs, ref)

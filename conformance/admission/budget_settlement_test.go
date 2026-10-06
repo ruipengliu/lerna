@@ -151,6 +151,33 @@ func TestNoSendClosureReleasesUnusedHoldWithoutUsageOrAuthorityRefund(t *testing
 	if e != nil || source.Status != "UNUSED_CLOSED" || source.EntryRef != nil {
 		t.Fatalf("fabricated usage %v %v", source, e)
 	}
+	if e = f.h.Trace.Recover(f.ctx, f.caller); e != nil {
+		t.Fatal(e)
+	}
+	view, e := f.h.Trace.Query(f.ctx, f.caller, &v1.TraceQuery{TaskId: a.TaskId})
+	if e != nil {
+		t.Fatal(e)
+	}
+	kinds := map[string]bool{}
+	for _, event := range view.Events {
+		kinds[event.EventType] = true
+		if event.EventType == "RESERVATION_RELEASED" {
+			found := false
+			for _, ref := range event.RelatedRefs {
+				if proto.Equal(ref, proof) {
+					found = true
+				}
+			}
+			if !found {
+				t.Fatal("release lost original closure evidence")
+			}
+		}
+	}
+	for _, kind := range []string{"CREDENTIAL_ISSUED", "CREDENTIAL_CONSUMED", "GRANT_REVOKED", "RESERVATION_RELEASED"} {
+		if !kinds[kind] {
+			t.Errorf("missing %s", kind)
+		}
+	}
 }
 
 // 规则：G10、准入-8
@@ -507,6 +534,29 @@ func TestClosedTaskAcceptsLateBillWithoutChangingFixedResult(t *testing.T) {
 	b, e = f.h.Budget.QueryBudget(f.ctx, f.caller, nil)
 	if e != nil || b.Settled != 120 || b.Reserved != 0 || b.Deficit != 20 || len(target.Bills()) != 1 {
 		t.Fatalf("late closed cost %v %v", b, e)
+	}
+	if e = f.h.Trace.Recover(f.ctx, f.caller); e != nil {
+		t.Fatal(e)
+	}
+	view, e := f.h.Trace.Query(f.ctx, f.caller, &v1.TraceQuery{TaskId: f.task.Name})
+	if e != nil {
+		t.Fatal(e)
+	}
+	settled, unknown := false, false
+	for _, event := range view.Events {
+		if event.EventType == "BILLING_UNKNOWN" {
+			unknown = true
+		}
+		if event.EventType == "BILLING_SETTLED" {
+			for _, linked := range event.RelatedRefs {
+				if proto.Equal(linked, r.ResultRef) {
+					settled = true
+				}
+			}
+		}
+	}
+	if !unknown || !settled {
+		t.Fatal("trace lost unknown-to-late-settled billing responsibility")
 	}
 }
 

@@ -96,6 +96,6 @@ func (s *Service) RouteInput(ctx context.Context, caller *v1.Caller, c *v1.Route
 		if e = s.store.SaveSession(tx, session); e != nil {
 			return nil, e
 		}
-		return d.Ref, s.store.(DeliveryStore).SaveInputDelivery(tx, d)
+		return d.Ref, s.saveInputDelivery(tx, d)
 	})
 }

@@ -43,7 +43,10 @@ func (s *Service) IssueCredential(ctx context.Context, caller *v1.Caller, c *v1.
 			return nil, command.Fail("CREDENTIAL_INVALID")
 		}
 		cred := &v1.ExitCredential{Ref: command.NewRef(s.user, s.domain, "credential", "lerna.v1.ExitCredential"), Binding: proto.Clone(c.Binding).(*v1.ExitCredentialBinding), IssuedAtUnixMs: now, ExpiresAtUnixMs: c.ExpiresAtUnixMs, RevocationEpoch: g.RevocationEpoch, State: "ISSUED"}
-		return cred.Ref, s.store.SaveExitCredential(tx, cred)
+		if e = s.store.SaveExitCredential(tx, cred); e != nil {
+			return nil, e
+		}
+		return cred.Ref, s.store.SaveTraceSource(tx, "grants", &v1.TraceEvent{EventType: "CREDENTIAL_ISSUED", SourceRecordRef: cred.Ref, TaskId: a.TaskId, OperationId: a.OperationId, AttemptId: c.Binding.AttemptId, RelatedRefs: []*v1.Ref{a.Ref, a.GrantUseRef}})
 	})
 }
 func (s *Service) QueryCredential(ctx context.Context, caller *v1.Caller, r *v1.Ref) (*v1.ExitCredential, error) {
@@ -117,7 +120,11 @@ func (s *Service) ConsumeCredentialInTransaction(ctx context.Context, caller *v1
 	if u != nil {
 		return command.Fail("CREDENTIAL_CONSUMED")
 	}
-	return s.store.SaveExitCredentialUse(ctx, &v1.ExitCredentialUse{Ref: command.NewRef(s.user, s.domain, "credential-use", "lerna.v1.ExitCredentialUse"), CredentialRef: c.Ref, ConsumedSendIdentity: fmt.Sprintf("%s/%d", b.AttemptId.LocalId, b.SendSeq), ConsumedAtUnixMs: now})
+	use := &v1.ExitCredentialUse{Ref: command.NewRef(s.user, s.domain, "credential-use", "lerna.v1.ExitCredentialUse"), CredentialRef: c.Ref, ConsumedSendIdentity: fmt.Sprintf("%s/%d", b.AttemptId.LocalId, b.SendSeq), ConsumedAtUnixMs: now}
+	if e = s.store.SaveExitCredentialUse(ctx, use); e != nil {
+		return e
+	}
+	return s.store.SaveTraceSource(ctx, "grants", &v1.TraceEvent{EventType: "CREDENTIAL_CONSUMED", SourceRecordRef: use.Ref, TaskId: a.TaskId, OperationId: a.OperationId, AttemptId: b.AttemptId, RelatedRefs: []*v1.Ref{c.Ref, a.Ref, a.GrantUseRef}})
 }
 
 // QueryCredentialUse 返回单独的不可变消费事实，不改写签发引用。

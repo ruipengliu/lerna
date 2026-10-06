@@ -3,6 +3,7 @@ package trace
 
 import (
 	"context"
+	"strings"
 
 	"github.com/ruipengliu/lerna/contracts/command"
 	v1 "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1"
@@ -34,11 +35,24 @@ func (s *Service) Accept(ctx context.Context, caller *v1.Caller, c *v1.AcceptTra
 	if e := command.ValidateHeader(c.GetHeader(), c); e != nil {
 		return nil, e
 	}
-	if caller.GetIssuerId() != "ledger-report" {
+	if caller.GetIssuerId() != "ledger-report" && !strings.HasPrefix(caller.GetIssuerId(), "trace-source/") {
 		return nil, command.Fail("PERMISSION_DENIED")
 	}
 	return s.work.Execute(ctx, caller, c.Header, command.SemanticFingerprint("accept-trace", c.Event), "trace.accept", func(tx context.Context) (*v1.Ref, error) {
 		ev := c.Event
+		if ev.GetProducer() != "" {
+			if ev == nil || ev.Ref == nil || ev.Ref.Name == nil || ev.Ref.Name.UserId != s.user || ev.Ref.Name.AuthorityDomainId != s.domain || ev.SourceRecordRef == nil || ev.SourceSeq == 0 {
+				return nil, command.Fail("INVALID_TRACE_EVENT")
+			}
+			source, err := s.store.(Sources).LoadTraceSource(tx, c.Header.Identity)
+			if err != nil {
+				return nil, err
+			}
+			if source == nil || !proto.Equal(source.Command, c) {
+				return nil, command.Fail("INVALID_TRACE_SOURCE")
+			}
+			return ev.Ref, s.store.SaveTraceEvent(tx, ev)
+		}
 		if ev == nil || ev.Ref == nil || ev.Ref.Name == nil || ev.Ref.Name.UserId != s.user || ev.Ref.Name.AuthorityDomainId != s.domain || ev.EventType != "PHYSICAL_OBSERVATION" || ev.ObservationRef == nil || ev.BodyRef == nil {
 			return nil, command.Fail("INVALID_TRACE_EVENT")
 		}

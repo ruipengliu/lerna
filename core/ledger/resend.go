@@ -19,7 +19,7 @@ func (s *Service) PrepareResend(ctx context.Context, caller *v1.Caller, c *v1.Pr
 	if caller.IssuerId != "host" && caller.IssuerId != "local-cli" {
 		return nil, command.Fail("PERMISSION_DENIED")
 	}
-	return s.work.Execute(ctx, caller, c.Header, command.SemanticFingerprint("prepare-resend", c.OperationId, c.PreviousSendRef, c.Claim), "ledger.resend", func(tx context.Context) (*v1.Ref, error) {
+	return s.executeResendDecision(ctx, caller, c, func(tx context.Context) (*v1.Ref, error) {
 		job, e := s.work.CheckExecutionClaimInTransaction(tx, c.Claim)
 		if e != nil {
 			return nil, e
@@ -65,7 +65,10 @@ func (s *Service) PrepareResend(ctx context.Context, caller *v1.Caller, c *v1.Pr
 		x.PreviousSends = append(x.PreviousSends, proto.Clone(x.Send).(*v1.PhysicalSend))
 		x.Send = &v1.PhysicalSend{Ref: command.NewRef(s.user, s.domain, "send", "lerna.v1.PhysicalSend"), AttemptId: x.Attempt.Ref.Name, SendSeq: x.Send.SendSeq + 1, Phase: "REGISTERED", ProcessInstance: job.ProcessInstance, ClaimEpoch: job.ClaimEpoch, LeaseUntilUnixMs: job.LeaseUntilUnixMs, ResendQueryObservationRef: queryObservation}
 		op.Ref.Revision++
-		return x.Send.Ref, s.store.SaveOperation(tx, op)
+		if e = s.saveOperation(tx, op); e != nil {
+			return nil, e
+		}
+		return x.Send.Ref, s.recordResendTrace(tx, op, c)
 	})
 }
 

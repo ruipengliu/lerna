@@ -109,7 +109,7 @@ func (s *Service) StartExecution(ctx context.Context, caller *v1.Caller, c *v1.S
 			return nil, e
 		}
 		record := &v1.StartRecord{Ref: command.NewRef(s.user, s.domain, "start", "lerna.v1.StartRecord"), Binding: c.Binding, CredentialRef: c.CredentialRef, SendRef: send, Identity: c.Header.Identity, StartedAtUnixMs: now}
-		return record.Ref, s.store.(startStore).SaveStart(tx, record)
+		return record.Ref, s.saveStart(tx, record)
 	})
 }
 func (s *Service) QueryStart(ctx context.Context, c *v1.Caller, r *v1.Ref) (*v1.StartRecord, error) {

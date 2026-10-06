@@ -104,7 +104,7 @@ func (s *Service) CloseForGrantRevocation(ctx context.Context, caller *v1.Caller
 				return nil, e
 			}
 		}
-		if e = s.store.SaveOperation(tx, op); e != nil {
+		if e = s.saveOperation(tx, op); e != nil {
 			return nil, e
 		}
 		return closure.Ref, s.store.(grantClosureStore).SaveGrantExitClosure(tx, closure)

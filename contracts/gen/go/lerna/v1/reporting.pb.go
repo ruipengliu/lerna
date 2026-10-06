@@ -574,17 +574,30 @@ func (x *AcceptUsageCommand) GetUsage() *UsageReport {
 }
 
 type TraceEvent struct {
-	state          protoimpl.MessageState `protogen:"open.v1"`
-	Ref            *Ref                   `protobuf:"bytes,1,opt,name=ref,proto3" json:"ref,omitempty"`
-	EventType      string                 `protobuf:"bytes,2,opt,name=event_type,json=eventType,proto3" json:"event_type,omitempty"`
-	TaskId         *GlobalName            `protobuf:"bytes,3,opt,name=task_id,json=taskId,proto3" json:"task_id,omitempty"`
-	OperationId    *GlobalName            `protobuf:"bytes,4,opt,name=operation_id,json=operationId,proto3" json:"operation_id,omitempty"`
-	AttemptId      *GlobalName            `protobuf:"bytes,5,opt,name=attempt_id,json=attemptId,proto3" json:"attempt_id,omitempty"`
-	SendRef        *Ref                   `protobuf:"bytes,6,opt,name=send_ref,json=sendRef,proto3" json:"send_ref,omitempty"`
-	ObservationRef *Ref                   `protobuf:"bytes,7,opt,name=observation_ref,json=observationRef,proto3" json:"observation_ref,omitempty"`
-	BodyRef        *Ref                   `protobuf:"bytes,8,opt,name=body_ref,json=bodyRef,proto3" json:"body_ref,omitempty"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
+	state               protoimpl.MessageState `protogen:"open.v1"`
+	Ref                 *Ref                   `protobuf:"bytes,1,opt,name=ref,proto3" json:"ref,omitempty"`
+	EventType           string                 `protobuf:"bytes,2,opt,name=event_type,json=eventType,proto3" json:"event_type,omitempty"`
+	TaskId              *GlobalName            `protobuf:"bytes,3,opt,name=task_id,json=taskId,proto3" json:"task_id,omitempty"`
+	OperationId         *GlobalName            `protobuf:"bytes,4,opt,name=operation_id,json=operationId,proto3" json:"operation_id,omitempty"`
+	AttemptId           *GlobalName            `protobuf:"bytes,5,opt,name=attempt_id,json=attemptId,proto3" json:"attempt_id,omitempty"`
+	SendRef             *Ref                   `protobuf:"bytes,6,opt,name=send_ref,json=sendRef,proto3" json:"send_ref,omitempty"`
+	ObservationRef      *Ref                   `protobuf:"bytes,7,opt,name=observation_ref,json=observationRef,proto3" json:"observation_ref,omitempty"`
+	BodyRef             *Ref                   `protobuf:"bytes,8,opt,name=body_ref,json=bodyRef,proto3" json:"body_ref,omitempty"`
+	Producer            string                 `protobuf:"bytes,9,opt,name=producer,proto3" json:"producer,omitempty"`
+	SourceStreamId      string                 `protobuf:"bytes,10,opt,name=source_stream_id,json=sourceStreamId,proto3" json:"source_stream_id,omitempty"`
+	SourceSeq           uint64                 `protobuf:"varint,11,opt,name=source_seq,json=sourceSeq,proto3" json:"source_seq,omitempty"`
+	SourceRecordRef     *Ref                   `protobuf:"bytes,12,opt,name=source_record_ref,json=sourceRecordRef,proto3" json:"source_record_ref,omitempty"`
+	RequirementsVersion uint64                 `protobuf:"varint,13,opt,name=requirements_version,json=requirementsVersion,proto3" json:"requirements_version,omitempty"`
+	RelatedRefs         []*Ref                 `protobuf:"bytes,14,rep,name=related_refs,json=relatedRefs,proto3" json:"related_refs,omitempty"`
+	ReasonCode          string                 `protobuf:"bytes,15,opt,name=reason_code,json=reasonCode,proto3" json:"reason_code,omitempty"`
+	MappingVersion      string                 `protobuf:"bytes,16,opt,name=mapping_version,json=mappingVersion,proto3" json:"mapping_version,omitempty"`
+	OriginCommand       *CommandIdentity       `protobuf:"bytes,17,opt,name=origin_command,json=originCommand,proto3" json:"origin_command,omitempty"`
+	EffectOutcome       string                 `protobuf:"bytes,18,opt,name=effect_outcome,json=effectOutcome,proto3" json:"effect_outcome,omitempty"`
+	LateEffect          string                 `protobuf:"bytes,19,opt,name=late_effect,json=lateEffect,proto3" json:"late_effect,omitempty"`
+	SourceSchemaVersion uint32                 `protobuf:"varint,20,opt,name=source_schema_version,json=sourceSchemaVersion,proto3" json:"source_schema_version,omitempty"`
+	ProducerVersion     string                 `protobuf:"bytes,21,opt,name=producer_version,json=producerVersion,proto3" json:"producer_version,omitempty"`
+	unknownFields       protoimpl.UnknownFields
+	sizeCache           protoimpl.SizeCache
 }
 
 func (x *TraceEvent) Reset() {
@@ -673,6 +686,521 @@ func (x *TraceEvent) GetBodyRef() *Ref {
 	return nil
 }
 
+func (x *TraceEvent) GetProducer() string {
+	if x != nil {
+		return x.Producer
+	}
+	return ""
+}
+
+func (x *TraceEvent) GetSourceStreamId() string {
+	if x != nil {
+		return x.SourceStreamId
+	}
+	return ""
+}
+
+func (x *TraceEvent) GetSourceSeq() uint64 {
+	if x != nil {
+		return x.SourceSeq
+	}
+	return 0
+}
+
+func (x *TraceEvent) GetSourceRecordRef() *Ref {
+	if x != nil {
+		return x.SourceRecordRef
+	}
+	return nil
+}
+
+func (x *TraceEvent) GetRequirementsVersion() uint64 {
+	if x != nil {
+		return x.RequirementsVersion
+	}
+	return 0
+}
+
+func (x *TraceEvent) GetRelatedRefs() []*Ref {
+	if x != nil {
+		return x.RelatedRefs
+	}
+	return nil
+}
+
+func (x *TraceEvent) GetReasonCode() string {
+	if x != nil {
+		return x.ReasonCode
+	}
+	return ""
+}
+
+func (x *TraceEvent) GetMappingVersion() string {
+	if x != nil {
+		return x.MappingVersion
+	}
+	return ""
+}
+
+func (x *TraceEvent) GetOriginCommand() *CommandIdentity {
+	if x != nil {
+		return x.OriginCommand
+	}
+	return nil
+}
+
+func (x *TraceEvent) GetEffectOutcome() string {
+	if x != nil {
+		return x.EffectOutcome
+	}
+	return ""
+}
+
+func (x *TraceEvent) GetLateEffect() string {
+	if x != nil {
+		return x.LateEffect
+	}
+	return ""
+}
+
+func (x *TraceEvent) GetSourceSchemaVersion() uint32 {
+	if x != nil {
+		return x.SourceSchemaVersion
+	}
+	return 0
+}
+
+func (x *TraceEvent) GetProducerVersion() string {
+	if x != nil {
+		return x.ProducerVersion
+	}
+	return ""
+}
+
+type TraceSourceRecord struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Command       *AcceptTraceCommand    `protobuf:"bytes,1,opt,name=command,proto3" json:"command,omitempty"`
+	Receipt       *CommandReceipt        `protobuf:"bytes,2,opt,name=receipt,proto3" json:"receipt,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *TraceSourceRecord) Reset() {
+	*x = TraceSourceRecord{}
+	mi := &file_lerna_v1_reporting_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TraceSourceRecord) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TraceSourceRecord) ProtoMessage() {}
+
+func (x *TraceSourceRecord) ProtoReflect() protoreflect.Message {
+	mi := &file_lerna_v1_reporting_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TraceSourceRecord.ProtoReflect.Descriptor instead.
+func (*TraceSourceRecord) Descriptor() ([]byte, []int) {
+	return file_lerna_v1_reporting_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *TraceSourceRecord) GetCommand() *AcceptTraceCommand {
+	if x != nil {
+		return x.Command
+	}
+	return nil
+}
+
+func (x *TraceSourceRecord) GetReceipt() *CommandReceipt {
+	if x != nil {
+		return x.Receipt
+	}
+	return nil
+}
+
+type TraceQuery struct {
+	state             protoimpl.MessageState `protogen:"open.v1"`
+	TaskId            *GlobalName            `protobuf:"bytes,1,opt,name=task_id,json=taskId,proto3" json:"task_id,omitempty"`
+	OperationId       *GlobalName            `protobuf:"bytes,2,opt,name=operation_id,json=operationId,proto3" json:"operation_id,omitempty"`
+	ProcessingPurpose string                 `protobuf:"bytes,3,opt,name=processing_purpose,json=processingPurpose,proto3" json:"processing_purpose,omitempty"`
+	Cutoff            []*TraceCutoff         `protobuf:"bytes,4,rep,name=cutoff,proto3" json:"cutoff,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
+}
+
+func (x *TraceQuery) Reset() {
+	*x = TraceQuery{}
+	mi := &file_lerna_v1_reporting_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TraceQuery) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TraceQuery) ProtoMessage() {}
+
+func (x *TraceQuery) ProtoReflect() protoreflect.Message {
+	mi := &file_lerna_v1_reporting_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TraceQuery.ProtoReflect.Descriptor instead.
+func (*TraceQuery) Descriptor() ([]byte, []int) {
+	return file_lerna_v1_reporting_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *TraceQuery) GetTaskId() *GlobalName {
+	if x != nil {
+		return x.TaskId
+	}
+	return nil
+}
+
+func (x *TraceQuery) GetOperationId() *GlobalName {
+	if x != nil {
+		return x.OperationId
+	}
+	return nil
+}
+
+func (x *TraceQuery) GetProcessingPurpose() string {
+	if x != nil {
+		return x.ProcessingPurpose
+	}
+	return ""
+}
+
+func (x *TraceQuery) GetCutoff() []*TraceCutoff {
+	if x != nil {
+		return x.Cutoff
+	}
+	return nil
+}
+
+type TraceCutoff struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	SourceStreamId string                 `protobuf:"bytes,1,opt,name=source_stream_id,json=sourceStreamId,proto3" json:"source_stream_id,omitempty"`
+	SourceSeq      uint64                 `protobuf:"varint,2,opt,name=source_seq,json=sourceSeq,proto3" json:"source_seq,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *TraceCutoff) Reset() {
+	*x = TraceCutoff{}
+	mi := &file_lerna_v1_reporting_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TraceCutoff) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TraceCutoff) ProtoMessage() {}
+
+func (x *TraceCutoff) ProtoReflect() protoreflect.Message {
+	mi := &file_lerna_v1_reporting_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TraceCutoff.ProtoReflect.Descriptor instead.
+func (*TraceCutoff) Descriptor() ([]byte, []int) {
+	return file_lerna_v1_reporting_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *TraceCutoff) GetSourceStreamId() string {
+	if x != nil {
+		return x.SourceStreamId
+	}
+	return ""
+}
+
+func (x *TraceCutoff) GetSourceSeq() uint64 {
+	if x != nil {
+		return x.SourceSeq
+	}
+	return 0
+}
+
+type TraceGap struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	First         uint64                 `protobuf:"varint,1,opt,name=first,proto3" json:"first,omitempty"`
+	Last          uint64                 `protobuf:"varint,2,opt,name=last,proto3" json:"last,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *TraceGap) Reset() {
+	*x = TraceGap{}
+	mi := &file_lerna_v1_reporting_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TraceGap) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TraceGap) ProtoMessage() {}
+
+func (x *TraceGap) ProtoReflect() protoreflect.Message {
+	mi := &file_lerna_v1_reporting_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TraceGap.ProtoReflect.Descriptor instead.
+func (*TraceGap) Descriptor() ([]byte, []int) {
+	return file_lerna_v1_reporting_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *TraceGap) GetFirst() uint64 {
+	if x != nil {
+		return x.First
+	}
+	return 0
+}
+
+func (x *TraceGap) GetLast() uint64 {
+	if x != nil {
+		return x.Last
+	}
+	return 0
+}
+
+type TraceProgress struct {
+	state              protoimpl.MessageState `protogen:"open.v1"`
+	SourceStreamId     string                 `protobuf:"bytes,1,opt,name=source_stream_id,json=sourceStreamId,proto3" json:"source_stream_id,omitempty"`
+	SourceKnown        bool                   `protobuf:"varint,2,opt,name=source_known,json=sourceKnown,proto3" json:"source_known,omitempty"`
+	SourceHighWater    uint64                 `protobuf:"varint,3,opt,name=source_high_water,json=sourceHighWater,proto3" json:"source_high_water,omitempty"`
+	Cutoff             uint64                 `protobuf:"varint,4,opt,name=cutoff,proto3" json:"cutoff,omitempty"`
+	AcceptedContiguous uint64                 `protobuf:"varint,5,opt,name=accepted_contiguous,json=acceptedContiguous,proto3" json:"accepted_contiguous,omitempty"`
+	IndexedContiguous  uint64                 `protobuf:"varint,6,opt,name=indexed_contiguous,json=indexedContiguous,proto3" json:"indexed_contiguous,omitempty"`
+	Backlog            uint64                 `protobuf:"varint,7,opt,name=backlog,proto3" json:"backlog,omitempty"`
+	Gaps               []*TraceGap            `protobuf:"bytes,8,rep,name=gaps,proto3" json:"gaps,omitempty"`
+	PendingReceipts    uint64                 `protobuf:"varint,9,opt,name=pending_receipts,json=pendingReceipts,proto3" json:"pending_receipts,omitempty"`
+	unknownFields      protoimpl.UnknownFields
+	sizeCache          protoimpl.SizeCache
+}
+
+func (x *TraceProgress) Reset() {
+	*x = TraceProgress{}
+	mi := &file_lerna_v1_reporting_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TraceProgress) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TraceProgress) ProtoMessage() {}
+
+func (x *TraceProgress) ProtoReflect() protoreflect.Message {
+	mi := &file_lerna_v1_reporting_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TraceProgress.ProtoReflect.Descriptor instead.
+func (*TraceProgress) Descriptor() ([]byte, []int) {
+	return file_lerna_v1_reporting_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *TraceProgress) GetSourceStreamId() string {
+	if x != nil {
+		return x.SourceStreamId
+	}
+	return ""
+}
+
+func (x *TraceProgress) GetSourceKnown() bool {
+	if x != nil {
+		return x.SourceKnown
+	}
+	return false
+}
+
+func (x *TraceProgress) GetSourceHighWater() uint64 {
+	if x != nil {
+		return x.SourceHighWater
+	}
+	return 0
+}
+
+func (x *TraceProgress) GetCutoff() uint64 {
+	if x != nil {
+		return x.Cutoff
+	}
+	return 0
+}
+
+func (x *TraceProgress) GetAcceptedContiguous() uint64 {
+	if x != nil {
+		return x.AcceptedContiguous
+	}
+	return 0
+}
+
+func (x *TraceProgress) GetIndexedContiguous() uint64 {
+	if x != nil {
+		return x.IndexedContiguous
+	}
+	return 0
+}
+
+func (x *TraceProgress) GetBacklog() uint64 {
+	if x != nil {
+		return x.Backlog
+	}
+	return 0
+}
+
+func (x *TraceProgress) GetGaps() []*TraceGap {
+	if x != nil {
+		return x.Gaps
+	}
+	return nil
+}
+
+func (x *TraceProgress) GetPendingReceipts() uint64 {
+	if x != nil {
+		return x.PendingReceipts
+	}
+	return 0
+}
+
+type TraceView struct {
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	Events          []*TraceEvent          `protobuf:"bytes,1,rep,name=events,proto3" json:"events,omitempty"`
+	Sources         []*TraceProgress       `protobuf:"bytes,2,rep,name=sources,proto3" json:"sources,omitempty"`
+	Complete        bool                   `protobuf:"varint,3,opt,name=complete,proto3" json:"complete,omitempty"`
+	Backlog         uint64                 `protobuf:"varint,4,opt,name=backlog,proto3" json:"backlog,omitempty"`
+	MappingVersion  string                 `protobuf:"bytes,5,opt,name=mapping_version,json=mappingVersion,proto3" json:"mapping_version,omitempty"`
+	IndexBacklog    uint64                 `protobuf:"varint,6,opt,name=index_backlog,json=indexBacklog,proto3" json:"index_backlog,omitempty"`
+	PendingReceipts uint64                 `protobuf:"varint,7,opt,name=pending_receipts,json=pendingReceipts,proto3" json:"pending_receipts,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
+}
+
+func (x *TraceView) Reset() {
+	*x = TraceView{}
+	mi := &file_lerna_v1_reporting_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TraceView) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TraceView) ProtoMessage() {}
+
+func (x *TraceView) ProtoReflect() protoreflect.Message {
+	mi := &file_lerna_v1_reporting_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TraceView.ProtoReflect.Descriptor instead.
+func (*TraceView) Descriptor() ([]byte, []int) {
+	return file_lerna_v1_reporting_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *TraceView) GetEvents() []*TraceEvent {
+	if x != nil {
+		return x.Events
+	}
+	return nil
+}
+
+func (x *TraceView) GetSources() []*TraceProgress {
+	if x != nil {
+		return x.Sources
+	}
+	return nil
+}
+
+func (x *TraceView) GetComplete() bool {
+	if x != nil {
+		return x.Complete
+	}
+	return false
+}
+
+func (x *TraceView) GetBacklog() uint64 {
+	if x != nil {
+		return x.Backlog
+	}
+	return 0
+}
+
+func (x *TraceView) GetMappingVersion() string {
+	if x != nil {
+		return x.MappingVersion
+	}
+	return ""
+}
+
+func (x *TraceView) GetIndexBacklog() uint64 {
+	if x != nil {
+		return x.IndexBacklog
+	}
+	return 0
+}
+
+func (x *TraceView) GetPendingReceipts() uint64 {
+	if x != nil {
+		return x.PendingReceipts
+	}
+	return 0
+}
+
 type AcceptTraceCommand struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Header        *CommandHeader         `protobuf:"bytes,1,opt,name=header,proto3" json:"header,omitempty"`
@@ -683,7 +1211,7 @@ type AcceptTraceCommand struct {
 
 func (x *AcceptTraceCommand) Reset() {
 	*x = AcceptTraceCommand{}
-	mi := &file_lerna_v1_reporting_proto_msgTypes[7]
+	mi := &file_lerna_v1_reporting_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -695,7 +1223,7 @@ func (x *AcceptTraceCommand) String() string {
 func (*AcceptTraceCommand) ProtoMessage() {}
 
 func (x *AcceptTraceCommand) ProtoReflect() protoreflect.Message {
-	mi := &file_lerna_v1_reporting_proto_msgTypes[7]
+	mi := &file_lerna_v1_reporting_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -708,7 +1236,7 @@ func (x *AcceptTraceCommand) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AcceptTraceCommand.ProtoReflect.Descriptor instead.
 func (*AcceptTraceCommand) Descriptor() ([]byte, []int) {
-	return file_lerna_v1_reporting_proto_rawDescGZIP(), []int{7}
+	return file_lerna_v1_reporting_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *AcceptTraceCommand) GetHeader() *CommandHeader {
@@ -738,7 +1266,7 @@ type ObservationReports struct {
 
 func (x *ObservationReports) Reset() {
 	*x = ObservationReports{}
-	mi := &file_lerna_v1_reporting_proto_msgTypes[8]
+	mi := &file_lerna_v1_reporting_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -750,7 +1278,7 @@ func (x *ObservationReports) String() string {
 func (*ObservationReports) ProtoMessage() {}
 
 func (x *ObservationReports) ProtoReflect() protoreflect.Message {
-	mi := &file_lerna_v1_reporting_proto_msgTypes[8]
+	mi := &file_lerna_v1_reporting_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -763,7 +1291,7 @@ func (x *ObservationReports) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ObservationReports.ProtoReflect.Descriptor instead.
 func (*ObservationReports) Descriptor() ([]byte, []int) {
-	return file_lerna_v1_reporting_proto_rawDescGZIP(), []int{8}
+	return file_lerna_v1_reporting_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *ObservationReports) GetObservationRef() *Ref {
@@ -815,7 +1343,7 @@ type EffectInterpretation struct {
 
 func (x *EffectInterpretation) Reset() {
 	*x = EffectInterpretation{}
-	mi := &file_lerna_v1_reporting_proto_msgTypes[9]
+	mi := &file_lerna_v1_reporting_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -827,7 +1355,7 @@ func (x *EffectInterpretation) String() string {
 func (*EffectInterpretation) ProtoMessage() {}
 
 func (x *EffectInterpretation) ProtoReflect() protoreflect.Message {
-	mi := &file_lerna_v1_reporting_proto_msgTypes[9]
+	mi := &file_lerna_v1_reporting_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -840,7 +1368,7 @@ func (x *EffectInterpretation) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EffectInterpretation.ProtoReflect.Descriptor instead.
 func (*EffectInterpretation) Descriptor() ([]byte, []int) {
-	return file_lerna_v1_reporting_proto_rawDescGZIP(), []int{9}
+	return file_lerna_v1_reporting_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *EffectInterpretation) GetRef() *Ref {
@@ -895,7 +1423,7 @@ type InterpretObservationCommand struct {
 
 func (x *InterpretObservationCommand) Reset() {
 	*x = InterpretObservationCommand{}
-	mi := &file_lerna_v1_reporting_proto_msgTypes[10]
+	mi := &file_lerna_v1_reporting_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -907,7 +1435,7 @@ func (x *InterpretObservationCommand) String() string {
 func (*InterpretObservationCommand) ProtoMessage() {}
 
 func (x *InterpretObservationCommand) ProtoReflect() protoreflect.Message {
-	mi := &file_lerna_v1_reporting_proto_msgTypes[10]
+	mi := &file_lerna_v1_reporting_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -920,7 +1448,7 @@ func (x *InterpretObservationCommand) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use InterpretObservationCommand.ProtoReflect.Descriptor instead.
 func (*InterpretObservationCommand) Descriptor() ([]byte, []int) {
-	return file_lerna_v1_reporting_proto_rawDescGZIP(), []int{10}
+	return file_lerna_v1_reporting_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *InterpretObservationCommand) GetHeader() *CommandHeader {
@@ -996,7 +1524,7 @@ const file_lerna_v1_reporting_proto_rawDesc = "" +
 	"\x0ephysical_sends\x18\f \x01(\x04R\rphysicalSends\"r\n" +
 	"\x12AcceptUsageCommand\x12/\n" +
 	"\x06header\x18\x01 \x01(\v2\x17.lerna.v1.CommandHeaderR\x06header\x12+\n" +
-	"\x05usage\x18\x02 \x01(\v2\x15.lerna.v1.UsageReportR\x05usage\"\xf5\x02\n" +
+	"\x05usage\x18\x02 \x01(\v2\x15.lerna.v1.UsageReportR\x05usage\"\xad\a\n" +
 	"\n" +
 	"TraceEvent\x12\x1f\n" +
 	"\x03ref\x18\x01 \x01(\v2\r.lerna.v1.RefR\x03ref\x12\x1d\n" +
@@ -1008,7 +1536,58 @@ const file_lerna_v1_reporting_proto_rawDesc = "" +
 	"attempt_id\x18\x05 \x01(\v2\x14.lerna.v1.GlobalNameR\tattemptId\x12(\n" +
 	"\bsend_ref\x18\x06 \x01(\v2\r.lerna.v1.RefR\asendRef\x126\n" +
 	"\x0fobservation_ref\x18\a \x01(\v2\r.lerna.v1.RefR\x0eobservationRef\x12(\n" +
-	"\bbody_ref\x18\b \x01(\v2\r.lerna.v1.RefR\abodyRef\"q\n" +
+	"\bbody_ref\x18\b \x01(\v2\r.lerna.v1.RefR\abodyRef\x12\x1a\n" +
+	"\bproducer\x18\t \x01(\tR\bproducer\x12(\n" +
+	"\x10source_stream_id\x18\n" +
+	" \x01(\tR\x0esourceStreamId\x12\x1d\n" +
+	"\n" +
+	"source_seq\x18\v \x01(\x04R\tsourceSeq\x129\n" +
+	"\x11source_record_ref\x18\f \x01(\v2\r.lerna.v1.RefR\x0fsourceRecordRef\x121\n" +
+	"\x14requirements_version\x18\r \x01(\x04R\x13requirementsVersion\x120\n" +
+	"\frelated_refs\x18\x0e \x03(\v2\r.lerna.v1.RefR\vrelatedRefs\x12\x1f\n" +
+	"\vreason_code\x18\x0f \x01(\tR\n" +
+	"reasonCode\x12'\n" +
+	"\x0fmapping_version\x18\x10 \x01(\tR\x0emappingVersion\x12@\n" +
+	"\x0eorigin_command\x18\x11 \x01(\v2\x19.lerna.v1.CommandIdentityR\roriginCommand\x12%\n" +
+	"\x0eeffect_outcome\x18\x12 \x01(\tR\reffectOutcome\x12\x1f\n" +
+	"\vlate_effect\x18\x13 \x01(\tR\n" +
+	"lateEffect\x122\n" +
+	"\x15source_schema_version\x18\x14 \x01(\rR\x13sourceSchemaVersion\x12)\n" +
+	"\x10producer_version\x18\x15 \x01(\tR\x0fproducerVersion\"\x7f\n" +
+	"\x11TraceSourceRecord\x126\n" +
+	"\acommand\x18\x01 \x01(\v2\x1c.lerna.v1.AcceptTraceCommandR\acommand\x122\n" +
+	"\areceipt\x18\x02 \x01(\v2\x18.lerna.v1.CommandReceiptR\areceipt\"\xd2\x01\n" +
+	"\n" +
+	"TraceQuery\x12-\n" +
+	"\atask_id\x18\x01 \x01(\v2\x14.lerna.v1.GlobalNameR\x06taskId\x127\n" +
+	"\foperation_id\x18\x02 \x01(\v2\x14.lerna.v1.GlobalNameR\voperationId\x12-\n" +
+	"\x12processing_purpose\x18\x03 \x01(\tR\x11processingPurpose\x12-\n" +
+	"\x06cutoff\x18\x04 \x03(\v2\x15.lerna.v1.TraceCutoffR\x06cutoff\"V\n" +
+	"\vTraceCutoff\x12(\n" +
+	"\x10source_stream_id\x18\x01 \x01(\tR\x0esourceStreamId\x12\x1d\n" +
+	"\n" +
+	"source_seq\x18\x02 \x01(\x04R\tsourceSeq\"4\n" +
+	"\bTraceGap\x12\x14\n" +
+	"\x05first\x18\x01 \x01(\x04R\x05first\x12\x12\n" +
+	"\x04last\x18\x02 \x01(\x04R\x04last\"\xed\x02\n" +
+	"\rTraceProgress\x12(\n" +
+	"\x10source_stream_id\x18\x01 \x01(\tR\x0esourceStreamId\x12!\n" +
+	"\fsource_known\x18\x02 \x01(\bR\vsourceKnown\x12*\n" +
+	"\x11source_high_water\x18\x03 \x01(\x04R\x0fsourceHighWater\x12\x16\n" +
+	"\x06cutoff\x18\x04 \x01(\x04R\x06cutoff\x12/\n" +
+	"\x13accepted_contiguous\x18\x05 \x01(\x04R\x12acceptedContiguous\x12-\n" +
+	"\x12indexed_contiguous\x18\x06 \x01(\x04R\x11indexedContiguous\x12\x18\n" +
+	"\abacklog\x18\a \x01(\x04R\abacklog\x12&\n" +
+	"\x04gaps\x18\b \x03(\v2\x12.lerna.v1.TraceGapR\x04gaps\x12)\n" +
+	"\x10pending_receipts\x18\t \x01(\x04R\x0fpendingReceipts\"\x9b\x02\n" +
+	"\tTraceView\x12,\n" +
+	"\x06events\x18\x01 \x03(\v2\x14.lerna.v1.TraceEventR\x06events\x121\n" +
+	"\asources\x18\x02 \x03(\v2\x17.lerna.v1.TraceProgressR\asources\x12\x1a\n" +
+	"\bcomplete\x18\x03 \x01(\bR\bcomplete\x12\x18\n" +
+	"\abacklog\x18\x04 \x01(\x04R\abacklog\x12'\n" +
+	"\x0fmapping_version\x18\x05 \x01(\tR\x0emappingVersion\x12#\n" +
+	"\rindex_backlog\x18\x06 \x01(\x04R\findexBacklog\x12)\n" +
+	"\x10pending_receipts\x18\a \x01(\x04R\x0fpendingReceipts\"q\n" +
 	"\x12AcceptTraceCommand\x12/\n" +
 	"\x06header\x18\x01 \x01(\v2\x17.lerna.v1.CommandHeaderR\x06header\x12*\n" +
 	"\x05event\x18\x02 \x01(\v2\x14.lerna.v1.TraceEventR\x05event\"\xb2\x02\n" +
@@ -1042,7 +1621,7 @@ func file_lerna_v1_reporting_proto_rawDescGZIP() []byte {
 	return file_lerna_v1_reporting_proto_rawDescData
 }
 
-var file_lerna_v1_reporting_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
+var file_lerna_v1_reporting_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
 var file_lerna_v1_reporting_proto_goTypes = []any{
 	(*RawObservation)(nil),              // 0: lerna.v1.RawObservation
 	(*RegisterObservationCommand)(nil),  // 1: lerna.v1.RegisterObservationCommand
@@ -1051,64 +1630,82 @@ var file_lerna_v1_reporting_proto_goTypes = []any{
 	(*UsageReport)(nil),                 // 4: lerna.v1.UsageReport
 	(*AcceptUsageCommand)(nil),          // 5: lerna.v1.AcceptUsageCommand
 	(*TraceEvent)(nil),                  // 6: lerna.v1.TraceEvent
-	(*AcceptTraceCommand)(nil),          // 7: lerna.v1.AcceptTraceCommand
-	(*ObservationReports)(nil),          // 8: lerna.v1.ObservationReports
-	(*EffectInterpretation)(nil),        // 9: lerna.v1.EffectInterpretation
-	(*InterpretObservationCommand)(nil), // 10: lerna.v1.InterpretObservationCommand
-	(*Ref)(nil),                         // 11: lerna.v1.Ref
-	(*GlobalName)(nil),                  // 12: lerna.v1.GlobalName
-	(*QuerySubject)(nil),                // 13: lerna.v1.QuerySubject
-	(*CommandHeader)(nil),               // 14: lerna.v1.CommandHeader
-	(*CommandReceipt)(nil),              // 15: lerna.v1.CommandReceipt
+	(*TraceSourceRecord)(nil),           // 7: lerna.v1.TraceSourceRecord
+	(*TraceQuery)(nil),                  // 8: lerna.v1.TraceQuery
+	(*TraceCutoff)(nil),                 // 9: lerna.v1.TraceCutoff
+	(*TraceGap)(nil),                    // 10: lerna.v1.TraceGap
+	(*TraceProgress)(nil),               // 11: lerna.v1.TraceProgress
+	(*TraceView)(nil),                   // 12: lerna.v1.TraceView
+	(*AcceptTraceCommand)(nil),          // 13: lerna.v1.AcceptTraceCommand
+	(*ObservationReports)(nil),          // 14: lerna.v1.ObservationReports
+	(*EffectInterpretation)(nil),        // 15: lerna.v1.EffectInterpretation
+	(*InterpretObservationCommand)(nil), // 16: lerna.v1.InterpretObservationCommand
+	(*Ref)(nil),                         // 17: lerna.v1.Ref
+	(*GlobalName)(nil),                  // 18: lerna.v1.GlobalName
+	(*QuerySubject)(nil),                // 19: lerna.v1.QuerySubject
+	(*CommandHeader)(nil),               // 20: lerna.v1.CommandHeader
+	(*CommandReceipt)(nil),              // 21: lerna.v1.CommandReceipt
+	(*CommandIdentity)(nil),             // 22: lerna.v1.CommandIdentity
 }
 var file_lerna_v1_reporting_proto_depIdxs = []int32{
-	11, // 0: lerna.v1.RawObservation.ref:type_name -> lerna.v1.Ref
-	12, // 1: lerna.v1.RawObservation.task_id:type_name -> lerna.v1.GlobalName
-	12, // 2: lerna.v1.RawObservation.operation_id:type_name -> lerna.v1.GlobalName
-	12, // 3: lerna.v1.RawObservation.attempt_id:type_name -> lerna.v1.GlobalName
-	11, // 4: lerna.v1.RawObservation.send_ref:type_name -> lerna.v1.Ref
-	11, // 5: lerna.v1.RawObservation.body_ref:type_name -> lerna.v1.Ref
-	13, // 6: lerna.v1.RawObservation.query_subject:type_name -> lerna.v1.QuerySubject
-	14, // 7: lerna.v1.RegisterObservationCommand.header:type_name -> lerna.v1.CommandHeader
+	17, // 0: lerna.v1.RawObservation.ref:type_name -> lerna.v1.Ref
+	18, // 1: lerna.v1.RawObservation.task_id:type_name -> lerna.v1.GlobalName
+	18, // 2: lerna.v1.RawObservation.operation_id:type_name -> lerna.v1.GlobalName
+	18, // 3: lerna.v1.RawObservation.attempt_id:type_name -> lerna.v1.GlobalName
+	17, // 4: lerna.v1.RawObservation.send_ref:type_name -> lerna.v1.Ref
+	17, // 5: lerna.v1.RawObservation.body_ref:type_name -> lerna.v1.Ref
+	19, // 6: lerna.v1.RawObservation.query_subject:type_name -> lerna.v1.QuerySubject
+	20, // 7: lerna.v1.RegisterObservationCommand.header:type_name -> lerna.v1.CommandHeader
 	0,  // 8: lerna.v1.RegisterObservationCommand.observation:type_name -> lerna.v1.RawObservation
-	14, // 9: lerna.v1.AcceptObservationCommand.header:type_name -> lerna.v1.CommandHeader
+	20, // 9: lerna.v1.AcceptObservationCommand.header:type_name -> lerna.v1.CommandHeader
 	0,  // 10: lerna.v1.AcceptObservationCommand.observation:type_name -> lerna.v1.RawObservation
 	0,  // 11: lerna.v1.ObservationHandoff.observation:type_name -> lerna.v1.RawObservation
 	2,  // 12: lerna.v1.ObservationHandoff.command:type_name -> lerna.v1.AcceptObservationCommand
-	15, // 13: lerna.v1.ObservationHandoff.recipient_receipt:type_name -> lerna.v1.CommandReceipt
-	11, // 14: lerna.v1.UsageReport.ref:type_name -> lerna.v1.Ref
-	11, // 15: lerna.v1.UsageReport.billing_source:type_name -> lerna.v1.Ref
-	11, // 16: lerna.v1.UsageReport.measurement_ref:type_name -> lerna.v1.Ref
-	11, // 17: lerna.v1.UsageReport.price_rule_ref:type_name -> lerna.v1.Ref
-	12, // 18: lerna.v1.UsageReport.operation_id:type_name -> lerna.v1.GlobalName
-	12, // 19: lerna.v1.UsageReport.attempt_id:type_name -> lerna.v1.GlobalName
-	11, // 20: lerna.v1.UsageReport.send_ref:type_name -> lerna.v1.Ref
-	12, // 21: lerna.v1.UsageReport.task_id:type_name -> lerna.v1.GlobalName
-	14, // 22: lerna.v1.AcceptUsageCommand.header:type_name -> lerna.v1.CommandHeader
+	21, // 13: lerna.v1.ObservationHandoff.recipient_receipt:type_name -> lerna.v1.CommandReceipt
+	17, // 14: lerna.v1.UsageReport.ref:type_name -> lerna.v1.Ref
+	17, // 15: lerna.v1.UsageReport.billing_source:type_name -> lerna.v1.Ref
+	17, // 16: lerna.v1.UsageReport.measurement_ref:type_name -> lerna.v1.Ref
+	17, // 17: lerna.v1.UsageReport.price_rule_ref:type_name -> lerna.v1.Ref
+	18, // 18: lerna.v1.UsageReport.operation_id:type_name -> lerna.v1.GlobalName
+	18, // 19: lerna.v1.UsageReport.attempt_id:type_name -> lerna.v1.GlobalName
+	17, // 20: lerna.v1.UsageReport.send_ref:type_name -> lerna.v1.Ref
+	18, // 21: lerna.v1.UsageReport.task_id:type_name -> lerna.v1.GlobalName
+	20, // 22: lerna.v1.AcceptUsageCommand.header:type_name -> lerna.v1.CommandHeader
 	4,  // 23: lerna.v1.AcceptUsageCommand.usage:type_name -> lerna.v1.UsageReport
-	11, // 24: lerna.v1.TraceEvent.ref:type_name -> lerna.v1.Ref
-	12, // 25: lerna.v1.TraceEvent.task_id:type_name -> lerna.v1.GlobalName
-	12, // 26: lerna.v1.TraceEvent.operation_id:type_name -> lerna.v1.GlobalName
-	12, // 27: lerna.v1.TraceEvent.attempt_id:type_name -> lerna.v1.GlobalName
-	11, // 28: lerna.v1.TraceEvent.send_ref:type_name -> lerna.v1.Ref
-	11, // 29: lerna.v1.TraceEvent.observation_ref:type_name -> lerna.v1.Ref
-	11, // 30: lerna.v1.TraceEvent.body_ref:type_name -> lerna.v1.Ref
-	14, // 31: lerna.v1.AcceptTraceCommand.header:type_name -> lerna.v1.CommandHeader
-	6,  // 32: lerna.v1.AcceptTraceCommand.event:type_name -> lerna.v1.TraceEvent
-	11, // 33: lerna.v1.ObservationReports.observation_ref:type_name -> lerna.v1.Ref
-	5,  // 34: lerna.v1.ObservationReports.usage:type_name -> lerna.v1.AcceptUsageCommand
-	7,  // 35: lerna.v1.ObservationReports.trace:type_name -> lerna.v1.AcceptTraceCommand
-	15, // 36: lerna.v1.ObservationReports.usage_receipt:type_name -> lerna.v1.CommandReceipt
-	15, // 37: lerna.v1.ObservationReports.trace_receipt:type_name -> lerna.v1.CommandReceipt
-	11, // 38: lerna.v1.EffectInterpretation.ref:type_name -> lerna.v1.Ref
-	11, // 39: lerna.v1.EffectInterpretation.observation_ref:type_name -> lerna.v1.Ref
-	14, // 40: lerna.v1.InterpretObservationCommand.header:type_name -> lerna.v1.CommandHeader
-	11, // 41: lerna.v1.InterpretObservationCommand.observation_ref:type_name -> lerna.v1.Ref
-	42, // [42:42] is the sub-list for method output_type
-	42, // [42:42] is the sub-list for method input_type
-	42, // [42:42] is the sub-list for extension type_name
-	42, // [42:42] is the sub-list for extension extendee
-	0,  // [0:42] is the sub-list for field type_name
+	17, // 24: lerna.v1.TraceEvent.ref:type_name -> lerna.v1.Ref
+	18, // 25: lerna.v1.TraceEvent.task_id:type_name -> lerna.v1.GlobalName
+	18, // 26: lerna.v1.TraceEvent.operation_id:type_name -> lerna.v1.GlobalName
+	18, // 27: lerna.v1.TraceEvent.attempt_id:type_name -> lerna.v1.GlobalName
+	17, // 28: lerna.v1.TraceEvent.send_ref:type_name -> lerna.v1.Ref
+	17, // 29: lerna.v1.TraceEvent.observation_ref:type_name -> lerna.v1.Ref
+	17, // 30: lerna.v1.TraceEvent.body_ref:type_name -> lerna.v1.Ref
+	17, // 31: lerna.v1.TraceEvent.source_record_ref:type_name -> lerna.v1.Ref
+	17, // 32: lerna.v1.TraceEvent.related_refs:type_name -> lerna.v1.Ref
+	22, // 33: lerna.v1.TraceEvent.origin_command:type_name -> lerna.v1.CommandIdentity
+	13, // 34: lerna.v1.TraceSourceRecord.command:type_name -> lerna.v1.AcceptTraceCommand
+	21, // 35: lerna.v1.TraceSourceRecord.receipt:type_name -> lerna.v1.CommandReceipt
+	18, // 36: lerna.v1.TraceQuery.task_id:type_name -> lerna.v1.GlobalName
+	18, // 37: lerna.v1.TraceQuery.operation_id:type_name -> lerna.v1.GlobalName
+	9,  // 38: lerna.v1.TraceQuery.cutoff:type_name -> lerna.v1.TraceCutoff
+	10, // 39: lerna.v1.TraceProgress.gaps:type_name -> lerna.v1.TraceGap
+	6,  // 40: lerna.v1.TraceView.events:type_name -> lerna.v1.TraceEvent
+	11, // 41: lerna.v1.TraceView.sources:type_name -> lerna.v1.TraceProgress
+	20, // 42: lerna.v1.AcceptTraceCommand.header:type_name -> lerna.v1.CommandHeader
+	6,  // 43: lerna.v1.AcceptTraceCommand.event:type_name -> lerna.v1.TraceEvent
+	17, // 44: lerna.v1.ObservationReports.observation_ref:type_name -> lerna.v1.Ref
+	5,  // 45: lerna.v1.ObservationReports.usage:type_name -> lerna.v1.AcceptUsageCommand
+	13, // 46: lerna.v1.ObservationReports.trace:type_name -> lerna.v1.AcceptTraceCommand
+	21, // 47: lerna.v1.ObservationReports.usage_receipt:type_name -> lerna.v1.CommandReceipt
+	21, // 48: lerna.v1.ObservationReports.trace_receipt:type_name -> lerna.v1.CommandReceipt
+	17, // 49: lerna.v1.EffectInterpretation.ref:type_name -> lerna.v1.Ref
+	17, // 50: lerna.v1.EffectInterpretation.observation_ref:type_name -> lerna.v1.Ref
+	20, // 51: lerna.v1.InterpretObservationCommand.header:type_name -> lerna.v1.CommandHeader
+	17, // 52: lerna.v1.InterpretObservationCommand.observation_ref:type_name -> lerna.v1.Ref
+	53, // [53:53] is the sub-list for method output_type
+	53, // [53:53] is the sub-list for method input_type
+	53, // [53:53] is the sub-list for extension type_name
+	53, // [53:53] is the sub-list for extension extendee
+	0,  // [0:53] is the sub-list for field type_name
 }
 
 func init() { file_lerna_v1_reporting_proto_init() }
@@ -1126,7 +1723,7 @@ func file_lerna_v1_reporting_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_lerna_v1_reporting_proto_rawDesc), len(file_lerna_v1_reporting_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   11,
+			NumMessages:   17,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

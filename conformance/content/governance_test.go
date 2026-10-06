@@ -184,6 +184,41 @@ func TestHostDerivationCapturesEveryInputBeforePublishing(t *testing.T) {
 	if e != nil || d.State != "COMMITTED" {
 		t.Fatalf("published responsibility %v %v", d, e)
 	}
+	if e = h.Trace.Recover(ctx, actor); e != nil {
+		t.Fatal(e)
+	}
+	view, e := h.Trace.Query(ctx, actor, &v1.TraceQuery{TaskId: d.TaskId})
+	if e != nil || !view.Complete {
+		t.Fatalf("trace %v %v", view, e)
+	}
+	kinds := map[string]bool{}
+	for _, event := range view.Events {
+		if event.Producer != "content" {
+			continue
+		}
+		kinds[event.EventType] = true
+		if event.EventType == "CONTENT_PUBLISHED" {
+			if !proto.Equal(event.SourceRecordRef, output.Ref) || !proto.Equal(event.BodyRef, output.Ref) {
+				t.Fatal("publication lost output identity")
+			}
+			for _, want := range append([]*v1.Ref{d.Ref, output.LocationRef}, refs...) {
+				found := false
+				for _, got := range event.RelatedRefs {
+					if proto.Equal(got, want) {
+						found = true
+					}
+				}
+				if !found {
+					t.Fatalf("publication lost source link %v", want)
+				}
+			}
+		}
+	}
+	for _, kind := range []string{"DERIVATION_PREPARED", "DERIVATION_COMPUTING", "DERIVATION_SEALED", "DERIVATION_STAGED", "DERIVATION_COMMITTED", "CONTENT_STAGED", "CONTENT_PUBLISHED"} {
+		if !kinds[kind] {
+			t.Errorf("missing %s", kind)
+		}
+	}
 }
 
 // 规则：G3、G6、G11

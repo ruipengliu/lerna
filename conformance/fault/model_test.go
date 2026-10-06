@@ -133,6 +133,7 @@ func TestModelCallCrashMatrix(t *testing.T) {
 					t.Fatal(e)
 				}
 				defer h.Close()
+				defer assertModelRecoveredTrace(t, h, run)
 				switch tc.phase {
 				case "outcome":
 					b, e := os.ReadFile(path + ".outcome")
@@ -276,5 +277,61 @@ func TestModelCallCrashChild(t *testing.T) {
 	}
 	if e == nil {
 		t.Fatal("fault did not fire")
+	}
+}
+
+func assertModelRecoveredTrace(t *testing.T, h *assembly.Harness, run *v1.RunModelCallCommand) {
+	t.Helper()
+	if t.Failed() {
+		return
+	}
+	ctx := context.Background()
+	caller := &v1.Caller{UserId: "u", IssuerId: "host"}
+	request, err := h.Tasks.QueryProposalRequest(ctx, caller, run.Preparation.RequestRef)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err = h.Trace.Recover(ctx, caller); err != nil {
+		t.Fatal(err)
+	}
+	sources, err := h.Trace.QuerySources(ctx, caller)
+	if err != nil {
+		t.Fatal(err)
+	}
+	found := false
+	for _, source := range sources {
+		ev := source.Command.Event
+		if ev.EventType == "PROPOSAL_REQUEST_"+request.State && proto.Equal(ev.SourceRecordRef, request.Ref) {
+			found = true
+		}
+		if ev.SourceRecordRef.GetSchemaId() != "lerna.v1.ModelCall" && ev.SourceRecordRef.GetSchemaId() != "lerna.v1.ProposalRequest" && ev.SourceRecordRef.GetSchemaId() != "lerna.v1.ProposalOutcome" {
+			continue
+		}
+		if source.Receipt == nil {
+			t.Fatal("model source lost recipient receipt")
+		}
+		indexed, e := h.Trace.QueryEvent(ctx, caller, ev.Ref)
+		if e != nil || !proto.Equal(indexed, ev) {
+			t.Fatalf("model source changed across recovery %v %v", ev, e)
+		}
+	}
+	if !found {
+		t.Fatalf("missing original recovered model request %s", request.State)
+	}
+	call, err := h.Tasks.QueryModelCall(ctx, caller, request.Ref, 0)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if call != nil && call.Result != nil {
+		found = false
+		for _, source := range sources {
+			ev := source.Command.Event
+			if ev.EventType == "MODEL_RESULT_"+call.Result.Status && proto.Equal(ev.SourceRecordRef, call.Ref) && proto.Equal(ev.OperationId, call.Result.OperationId) {
+				found = true
+			}
+		}
+		if !found {
+			t.Fatal("model result lost original source")
+		}
 	}
 }

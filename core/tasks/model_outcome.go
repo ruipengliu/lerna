@@ -19,7 +19,7 @@ func (s *Service) SubmitProposalOutcome(ctx context.Context, caller *v1.Caller, 
 	if e := command.ValidateHeader(c.GetHeader(), c); e != nil {
 		return nil, e
 	}
-	return s.decisions.Execute(ctx, caller, c.Header, command.SemanticFingerprint("proposal-outcome", c.RequestRef, c.Claim, c.Proposal, c.ErrorCode, c.ModelCallRef, c.OutputRef, c.UsageRef), "tasks.proposal_outcome", func(tx context.Context) (*v1.Ref, error) {
+	return s.traceModelDecisions(c.RequestRef).Execute(ctx, caller, c.Header, command.SemanticFingerprint("proposal-outcome", c.RequestRef, c.Claim, c.Proposal, c.ErrorCode, c.ModelCallRef, c.OutputRef, c.UsageRef), "tasks.proposal_outcome", func(tx context.Context) (*v1.Ref, error) {
 		if caller.GetIssuerId() != "host" {
 			return nil, command.Fail("PERMISSION_DENIED")
 		}
@@ -92,7 +92,7 @@ func (s *Service) SubmitProposalOutcome(ctx context.Context, caller *v1.Caller, 
 				p.Proposal = proto.Clone(c.Proposal).(*v1.Proposal)
 				p.Proposal.Ref = command.NewRef(s.user, s.domain, "proposal", "lerna.v1.Proposal")
 				outcome.ProposalRef = p.Proposal.Ref
-				if e = s.store.SaveProposal(tx, p.Proposal); e != nil {
+				if e = s.saveProposal(tx, p.Proposal); e != nil {
 					return nil, e
 				}
 				if e = s.store.SavePlanning(tx, p); e != nil {
@@ -115,10 +115,10 @@ func (s *Service) SubmitProposalOutcome(ctx context.Context, caller *v1.Caller, 
 		}
 		r.OutcomeRefs = append(r.OutcomeRefs, outcome.Ref)
 		r.OutcomeReceipt = nil
-		if e = s.store.(modelStore).SaveProposalRequest(tx, r); e != nil {
+		if e = s.saveModelRequest(tx, r); e != nil {
 			return nil, e
 		}
-		return outcome.Ref, s.store.(outcomeStore).SaveProposalOutcome(tx, outcome)
+		return outcome.Ref, s.saveModelOutcome(tx, outcome)
 	})
 }
 func (s *Service) QueryProposalOutcome(ctx context.Context, c *v1.Caller, r *v1.Ref) (*v1.ProposalOutcome, error) {
@@ -157,5 +157,5 @@ func (s *Service) finishScriptedRequest(ctx context.Context, r *v1.Ref) error {
 	if e = s.store.(modelStore).SaveJob(ctx, job); e != nil {
 		return e
 	}
-	return s.store.(modelStore).SaveProposalRequest(ctx, request)
+	return s.saveModelRequest(ctx, request)
 }

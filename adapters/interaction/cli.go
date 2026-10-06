@@ -26,6 +26,7 @@ type Durable interface {
 }
 type CLI struct {
 	Budget            Budget
+	Trace             Trace
 	Grants            Grants
 	Confirmations     Confirmations
 	ConfirmationTasks ConfirmationTasks
@@ -50,6 +51,8 @@ func (c CLI) Run(ctx context.Context, args []string, out io.Writer) error {
 	var value proto.Message
 	var err error
 	switch args[0] {
+	case "trace-task", "trace-operation":
+		value, err = c.trace(ctx, args)
 	case "complete", "recheck-completion", "verification", "result", "request-proposal", "receive-proposal":
 		value, err = c.completion(ctx, args)
 	case "budget", "budget-configure", "budget-limit", "budget-version", "bill-import", "budget-release", "billing-source", "billing-entry", "billing-conflict":
@@ -146,7 +149,12 @@ func (c CLI) Run(ctx context.Context, args []string, out io.Writer) error {
 			}
 		}
 		if c.Budget != nil {
-			return c.Budget.ProcessClosures(ctx)
+			if e := c.Budget.ProcessClosures(ctx); e != nil {
+				return e
+			}
+		}
+		if c.Trace != nil {
+			return c.Trace.Recover(ctx, c.Caller)
 		}
 		return nil
 	default:

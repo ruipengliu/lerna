@@ -161,6 +161,7 @@ func TestResendCrashBoundariesPreserveIdentityAndIndependentFees(t *testing.T) {
 				if lost && (op.Effect.Outcome != "UNKNOWN" || op.Effect.LateEffect != "MAY_OCCUR") {
 					t.Fatalf("lost evidence promoted %v", op)
 				}
+				assertRecoveredResendSource(t, h, c)
 			})
 		}
 	}
@@ -260,5 +261,49 @@ func TestResendActualSyncFailurePreventsSecondIO(t *testing.T) {
 				t.Fatalf("original unknown erased %v %v", op, e)
 			}
 		})
+	}
+}
+
+func assertRecoveredResendSource(t *testing.T, h *assembly.Harness, c *v1.PrepareResendCommand) {
+	t.Helper()
+	ctx := context.Background()
+	caller := &v1.Caller{UserId: "u", IssuerId: "host"}
+	receipt, err := h.LedgerWork.QueryReceipt(ctx, caller, c.Header.Identity)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err = h.Trace.Recover(ctx, caller); err != nil {
+		t.Fatal(err)
+	}
+	sources, err := h.Trace.QuerySources(ctx, caller)
+	if err != nil {
+		t.Fatal(err)
+	}
+	count := 0
+	for _, source := range sources {
+		ev := source.Command.Event
+		if ev.EventType != "RESEND_PREPARED" || !proto.Equal(ev.OriginCommand, c.Header.Identity) {
+			continue
+		}
+		count++
+		if source.Receipt == nil || !proto.Equal(ev.SourceRecordRef, receipt.Receipt.ResultRef) {
+			t.Fatal("resend source lost original receipt/new send")
+		}
+		found := false
+		for _, ref := range ev.RelatedRefs {
+			if proto.Equal(ref, c.PreviousSendRef) {
+				found = true
+			}
+		}
+		if !found {
+			t.Fatal("resend lost previous send reference")
+		}
+		indexed, err := h.Trace.QueryEvent(ctx, caller, ev.Ref)
+		if err != nil || !proto.Equal(indexed, ev) {
+			t.Fatal("resend source changed across independent handoff", err)
+		}
+	}
+	if count != 1 {
+		t.Fatalf("resend source count %d", count)
 	}
 }

@@ -278,7 +278,7 @@ func (s *Service) ProcessReconciliationClaim(ctx context.Context, caller *v1.Cal
 		if cap.FeeCeiling != nil {
 			p.ReservedFee += *cap.FeeCeiling
 		}
-		if e = s.store.(reconciliationStore).SaveReconciliationQuery(tx, q); e != nil {
+		if e = s.saveReconciliationQuery(tx, q); e != nil {
 			return nil, e
 		}
 		return q.Ref, s.saveReconciliation(tx, p)
@@ -410,7 +410,7 @@ func (s *Service) saveQueryAndPlan(ctx context.Context, p *v1.Reconciliation, q 
 	if p.ActiveQueryRef != nil && proto.Equal(p.ActiveQueryRef.Name, q.Ref.Name) {
 		p.ActiveQueryRef = q.Ref
 	}
-	if e := s.store.(reconciliationStore).SaveReconciliationQuery(ctx, q); e != nil {
+	if e := s.saveReconciliationQuery(ctx, q); e != nil {
 		return e
 	}
 	return s.saveReconciliation(ctx, p)

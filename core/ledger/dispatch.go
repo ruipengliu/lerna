@@ -94,7 +94,7 @@ func (s *Service) RecordDispatch(ctx context.Context, caller *v1.Caller, c *v1.D
 		op.Effect.Outcome = "UNKNOWN"
 		op.Effect.LateEffect = "MAY_OCCUR"
 		op.EffectRef = op.Effect.Ref
-		if e = s.store.SaveOperation(tx, op); e != nil {
+		if e = s.saveOperation(tx, op); e != nil {
 			return nil, e
 		}
 		fresh = true

@@ -39,7 +39,7 @@ func (s *Service) PrepareDerivation(ctx context.Context, caller *v1.Caller, c *v
 			}
 		}
 		d := &v1.ContentDerivation{Ref: command.NewRef(s.user, s.domain, "derivation", "lerna.v1.ContentDerivation"), Responsibility: c.Header.Identity, TaskId: c.TaskId, OperationId: c.OperationId, AttemptId: c.AttemptId, GeneratorVersion: c.GeneratorVersion, OutputKind: c.OutputKind, MediaType: c.MediaType, HostInstanceId: command.NewRef(s.user, s.domain, "producer", "producer").Name.LocalId, Generation: 1, OutputRef: command.NewRef(s.user, s.domain, "content", "lerna.v1.Content"), LocationRef: command.NewRef(s.user, s.domain+"/body", "body", "lerna.v1.BodyReceipt"), State: "PREPARED", PreviousVersionRef: c.PreviousVersionRef}
-		return d.Ref, s.store.(derivationStore).SaveContentDerivation(tx, d)
+		return d.Ref, s.saveDerivation(tx, d)
 	})
 }
 func (s *Service) QueryDerivation(ctx context.Context, caller *v1.Caller, ref *v1.Ref) (*v1.ContentDerivation, error) {
@@ -100,7 +100,7 @@ func (s *Service) ReadDerivationInput(ctx context.Context, caller *v1.Caller, c 
 			d.ActualInputRefs = append(d.ActualInputRefs, c.InputRef)
 		}
 		d.State = "COMPUTING"
-		return c.InputRef, s.store.(derivationStore).SaveContentDerivation(tx, d)
+		return c.InputRef, s.saveDerivation(tx, d)
 	})
 	if e != nil {
 		return nil, e
@@ -149,7 +149,7 @@ func (s *Service) SealDerivation(ctx context.Context, caller *v1.Caller, c *v1.S
 			}
 		}
 		d.State = "SEALED"
-		return d.Ref, s.store.(derivationStore).SaveContentDerivation(tx, d)
+		return d.Ref, s.saveDerivation(tx, d)
 	})
 }
 func (s *Service) CommitDerivation(ctx context.Context, caller *v1.Caller, c *v1.CommitDerivationCommand) (*v1.CommandReceipt, error) {
@@ -192,7 +192,7 @@ func (s *Service) CommitDerivation(ctx context.Context, caller *v1.Caller, c *v1
 			return nil, e
 		}
 		d.State = "STAGED"
-		return v.Ref, s.store.(derivationStore).SaveContentDerivation(tx, d)
+		return v.Ref, s.saveDerivation(tx, d)
 	})
 }
 
@@ -220,6 +220,6 @@ func (s *Service) TakeoverDerivation(ctx context.Context, caller *v1.Caller, c *
 		}
 		d.Generation++
 		d.HostInstanceId = command.NewRef(s.user, s.domain, "producer", "producer").Name.LocalId
-		return d.Ref, s.store.(derivationStore).SaveContentDerivation(tx, d)
+		return d.Ref, s.saveDerivation(tx, d)
 	})
 }

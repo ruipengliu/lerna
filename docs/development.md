@@ -154,7 +154,7 @@ func TestSafeResendSkipsAdmissionGeneration(t *testing.T) { ... }
 | `tasks.completion_receipt` | 源域封闭回执与领取围栏下的工作完成 |
 | `tasks.completion` | 核验裁决、冻结释放、成功 Result 与任务终态 |
 
-新增事务必须传入固定名称、登记到同一表，并补充对应故障用例。故障套件检查未登记的事务和无调用点的登记项，普通构建只编译空边界，不包含故障计划、登记表或配置 API。`make test-fault` 仅运行 `conformance/fault/` 中带 `fault` 标签的测试。完整套件保留 race 检测和全部存储切点；随着 M1 schema 增加，包级超时上限设为 60 分钟，不能用缩减切点规避运行时间。
+新增事务必须传入固定名称、登记到同一表，并补充对应故障用例。故障套件检查未登记的事务和无调用点的登记项，普通构建只编译空边界，不包含故障计划、登记表或配置 API。`make test-fault` 仅运行 `conformance/fault/` 中带 `fault` 标签的测试。完整套件保留 race 检测和全部存储切点；随着 M1 schema 和来源事件增加，包级超时上限设为 120 分钟，不能用缩减切点规避运行时间。
 
 这些用例验证进程崩溃恢复，不等于通过掉电或存储故障验证。本地档的掉电资格仍由 ADR 0001 的独立验收决定。
 

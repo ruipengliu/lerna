@@ -90,6 +90,7 @@ func TestSafeResendKeepsAttemptAndReservesEachPhysicalSend(t *testing.T) {
 			t.Fatalf("source %v %v", source, err)
 		}
 	}
+	assertResendTrace(t, f, request, decision)
 }
 
 func resendStart(t *testing.T, f *fixture, a *v1.Admission, first *v1.StartExecutionCommand, x *v1.Execution, claim *v1.Job) *v1.StartExecutionCommand {
@@ -159,6 +160,7 @@ func TestResendPreparationDoesNotRejectOriginalWorkersLateRaw(t *testing.T) {
 	if len(requests) != 1 || len(effects) != 1 {
 		t.Fatalf("unexpected sends/effects %v %v", requests, effects)
 	}
+	assertLateSendTrace(t, f, op, before.Send.Ref)
 }
 
 func configureResendLimit(t *testing.T, f *fixture, limit uint32) {
@@ -835,6 +837,7 @@ func TestQueryableIdempotentResendRequiresQueryFirst(t *testing.T) {
 			if e != nil || r.GetError().GetCode() != "RESEND_QUERY_FIRST" {
 				t.Fatalf("query-first bypass: %v %v", r, e)
 			}
+			assertModelSourceEvent(t, f, "DECISION_REJECTED", r.DecisionRef, "RESEND_QUERY_FIRST")
 			target.SetQueryBehavior(queryResult)
 			r, e = f.h.Ledger.RequestReconciliation(f.ctx, f.caller, reconciliationCommand(f, a, queryCap, queryGrant))
 			accepted(t, r, e)
@@ -853,6 +856,7 @@ func TestQueryableIdempotentResendRequiresQueryFirst(t *testing.T) {
 				if e != nil {
 					t.Fatal(e)
 				}
+				assertResendTrace(t, f, c, r)
 				target.SetBehavior("")
 				r, e = f.h.Egress.Invoke(f.ctx, actor, resendStart(t, f, a, first, x, claim.Jobs[0]))
 				accepted(t, r, e)

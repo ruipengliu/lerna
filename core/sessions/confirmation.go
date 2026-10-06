@@ -152,7 +152,7 @@ func (s *Service) RespondConfirmation(ctx context.Context, caller *v1.Caller, c 
 			}
 			input := session.Inputs[len(session.Inputs)-1]
 			inputRef := &v1.Ref{Name: input.InputId, Revision: 1, SchemaId: "lerna.v1.SessionInput"}
-			if e = s.store.(DeliveryStore).SaveInputDelivery(tx, &v1.InputDelivery{Ref: inputRef, Input: input}); e != nil {
+			if e = s.saveInputDelivery(tx, &v1.InputDelivery{Ref: inputRef, Input: input}); e != nil {
 				return nil, e
 			}
 		}
@@ -282,7 +282,7 @@ func (s *Service) WithdrawConfirmation(ctx context.Context, caller *v1.Caller, c
 			}
 			input := session.Inputs[len(session.Inputs)-1]
 			inputRef := &v1.Ref{Name: input.InputId, Revision: 1, SchemaId: "lerna.v1.SessionInput"}
-			if e = s.store.(DeliveryStore).SaveInputDelivery(tx, &v1.InputDelivery{Ref: inputRef, Input: input}); e != nil {
+			if e = s.saveInputDelivery(tx, &v1.InputDelivery{Ref: inputRef, Input: input}); e != nil {
 				return nil, e
 			}
 		}

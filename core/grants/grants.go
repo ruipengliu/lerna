@@ -10,6 +10,7 @@ import (
 )
 
 type Store interface {
+	TraceSource
 	ReadAuthorityTime(context.Context) (int64, error)
 	PendingGrantRevocations(context.Context) ([]*v1.GrantRevocation, error)
 	LoadGrantVersion(context.Context, *v1.Ref) (*v1.Grant, error)
@@ -90,7 +91,7 @@ func (s *Service) Configure(ctx context.Context, caller *v1.Caller, c *v1.Config
 		g.Issuer = c.Header.Identity
 		g.Status = "ACTIVE"
 		g.SemanticVersion = 1
-		return g.Ref, s.store.SaveGrant(tx, g)
+		return g.Ref, s.saveGrant(tx, g)
 	})
 }
 
@@ -122,7 +123,7 @@ func (s *Service) OccupyInTransaction(ctx context.Context, grant *v1.Ref, task, 
 		return nil, false, command.Fail("GRANT_EXHAUSTED")
 	}
 	use := &v1.GrantUse{Ref: command.NewRef(s.user, s.domain, "grant-use", "lerna.v1.GrantUse"), GrantRef: g.Ref, UsePoolId: g.UsePoolId, OperationId: operation, AdmissionRef: admission, TaskId: task}
-	return use, g.ConfirmationRequired, s.store.SaveGrantUse(ctx, use)
+	return use, g.ConfirmationRequired, s.saveGrantUse(ctx, use)
 }
 func (s *Service) QueryGrant(ctx context.Context, c *v1.Caller, r *v1.Ref) (*v1.Grant, error) {
 	if r == nil {

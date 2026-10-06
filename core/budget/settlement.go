@@ -204,7 +204,7 @@ func (s *Service) applyBill(ctx context.Context, source *v1.BillingSource, bill 
 		if e = projectBudget(b); e != nil {
 			return e
 		}
-		if e = s.store.SaveBudget(ctx, b); e != nil {
+		if e = s.saveBudget(ctx, b); e != nil {
 			return e
 		}
 	}
@@ -228,12 +228,12 @@ func (s *Service) applyBill(ctx context.Context, source *v1.BillingSource, bill 
 	source.SourceVersion = bill.SourceVersion
 	source.EntryRef = entry.Ref
 	source.Alias = alias
-	if e = store.SaveBillingSource(ctx, source); e != nil {
+	if e = s.saveBillingSource(ctx, source); e != nil {
 		return e
 	}
 	r.Ref.Revision++
 	r.Status = "SETTLED"
-	return s.store.SaveReservation(ctx, r)
+	return s.saveReservation(ctx, r)
 }
 func (s *Service) QueryBillingSource(ctx context.Context, c *v1.Caller, send *v1.Ref) (*v1.BillingSource, error) {
 	if send == nil || send.Name == nil {
@@ -275,7 +275,7 @@ func (s *Service) recordConflict(ctx context.Context, source *v1.BillingSource, 
 	source.Ref.Revision++
 	source.Status = "CONFLICT"
 	source.ConflictRef = c.Ref
-	if e := s.store.(billingStore).SaveBillingSource(ctx, source); e != nil {
+	if e := s.saveBillingSource(ctx, source); e != nil {
 		return e
 	}
 	for _, id := range []*v1.GlobalName{nil, source.TaskId} {
@@ -288,7 +288,7 @@ func (s *Service) recordConflict(ctx context.Context, source *v1.BillingSource, 
 		}
 		b.Ref.Revision++
 		b.BillingBlocked = true
-		if e = s.store.SaveBudget(ctx, b); e != nil {
+		if e = s.saveBudget(ctx, b); e != nil {
 			return e
 		}
 	}

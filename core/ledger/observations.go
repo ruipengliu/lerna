@@ -67,7 +67,7 @@ func (s *Service) AcceptObservation(ctx context.Context, caller *v1.Caller, c *v
 		if e = s.createReports(tx, o, op); e != nil {
 			return nil, e
 		}
-		return o.Ref, s.store.SaveOperation(tx, op)
+		return o.Ref, s.saveOperation(tx, op)
 	})
 }
 func (s *Service) QueryObservation(ctx context.Context, caller *v1.Caller, r *v1.Ref) (*v1.RawObservation, error) {

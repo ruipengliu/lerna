@@ -172,7 +172,7 @@ func (s *Service) applyReconciliationObservation(ctx context.Context, caller *v1
 	if conflict {
 		finding.Reason = "EVIDENCE_CONFLICT"
 	}
-	if e = s.store.(reconciliationStore).SaveReconciliationFinding(ctx, finding); e != nil {
+	if e = s.saveReconciliationFinding(ctx, finding, p.TaskId, q.QueryOperationRef); e != nil {
 		return e
 	}
 	q.Ref.Revision++
@@ -212,7 +212,7 @@ func (s *Service) applyReconciliationObservation(ctx context.Context, caller *v1
 		original.ClosureEvidenceRefs = append(original.ClosureEvidenceRefs, finding.Ref)
 	}
 	original.EffectRef = original.Effect.Ref
-	if e = s.store.SaveOperation(ctx, original); e != nil {
+	if e = s.saveOperation(ctx, original); e != nil {
 		return e
 	}
 	if query.Lifecycle != "SETTLED" {

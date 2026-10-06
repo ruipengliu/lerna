@@ -51,7 +51,7 @@ func (s *Service) AcceptUsage(ctx context.Context, caller *v1.Caller, c *v1.Acce
 		if e = s.settleReport(tx, caller, u); e != nil {
 			return nil, e
 		}
-		return u.Ref, s.store.(usageStore).SaveUsage(tx, u)
+		return u.Ref, s.saveUsage(tx, u)
 	})
 }
 func (s *Service) QueryUsage(ctx context.Context, caller *v1.Caller, r *v1.Ref) (*v1.UsageReport, error) {

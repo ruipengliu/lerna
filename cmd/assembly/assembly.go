@@ -125,6 +125,10 @@ func Open(path, user, domain string) (*Harness, error) {
 		s.Close()
 		return nil, err
 	}
+	if err := h.Trace.Recover(ctx, &v1.Caller{UserId: user, IssuerId: "host-recovery"}); err != nil {
+		s.Close()
+		return nil, err
+	}
 	return h, nil
 }
 func (h *Harness) Close() error                     { return h.store.Close() }

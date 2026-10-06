@@ -80,7 +80,7 @@ func (s *Service) prepareRegistration(ctx context.Context, v *v1.Content, body [
 		v.LocationRef = command.NewRef(s.user, s.domain+"/body", "body", "lerna.v1.BodyReceipt")
 	}
 	d := &v1.BodyDeposit{Identity: &v1.CommandIdentity{UserId: s.user, IssuerId: "content-holder", TargetDomainId: s.domain + "/body", CommandId: v.Ref.Name.LocalId}, ContentRef: v.Ref, LocationRef: v.LocationRef, Digest: v.Digest, ByteSize: v.ByteSize}
-	return store.SaveContentRegistration(ctx, &v1.ContentRegistration{Content: v, Identity: id, StagedBody: body, Deposit: d, State: "STAGED", StagingLocationRef: &v1.Ref{Name: &v1.GlobalName{UserId: s.user, AuthorityDomainId: s.domain, ObjectKind: "content-staging", LocalId: v.Ref.Name.LocalId}, Revision: 1, SchemaId: "lerna.v1.ContentRegistration"}})
+	return s.saveRegistration(ctx, &v1.ContentRegistration{Content: v, Identity: id, StagedBody: body, Deposit: d, State: "STAGED", StagingLocationRef: &v1.Ref{Name: &v1.GlobalName{UserId: s.user, AuthorityDomainId: s.domain, ObjectKind: "content-staging", LocalId: v.Ref.Name.LocalId}, Revision: 1, SchemaId: "lerna.v1.ContentRegistration"}})
 }
 func (s *Service) QueryRegistration(ctx context.Context, caller *v1.Caller, ref *v1.Ref) (*v1.ContentRegistration, error) {
 	if ref == nil {
@@ -152,7 +152,7 @@ func (s *Service) ProcessRegistrations(ctx context.Context, caller *v1.Caller) e
 				}
 				d.State = "COMMITTED"
 				d.BodyReceipt = receipt
-				if e = s.store.(derivationStore).SaveContentDerivation(tx, d); e != nil {
+				if e = s.saveDerivation(tx, d); e != nil {
 					return nil, e
 				}
 			}
@@ -162,7 +162,7 @@ func (s *Service) ProcessRegistrations(ctx context.Context, caller *v1.Caller) e
 			current.BodyReceipt = receipt
 			current.StagedBody = nil
 			current.State = "PUBLISHED"
-			return current.Content.Ref, store.SaveContentRegistration(tx, current)
+			return current.Content.Ref, s.saveRegistration(tx, current)
 		})
 		if e != nil {
 			return e

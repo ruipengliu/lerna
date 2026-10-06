@@ -184,6 +184,31 @@ func TestReconciliationCrashBoundariesPreserveQueryIdentity(t *testing.T) {
 				if len(requests) != want || len(effects) != 1 {
 					t.Fatalf("resends: %v %v", requests, effects)
 				}
+				if e = h.Trace.Recover(context.Background(), caller); e != nil {
+					t.Fatal(e)
+				}
+				view, e := h.Trace.Query(context.Background(), caller, &v1.TraceQuery{OperationId: c.OperationId})
+				if e != nil || !view.Complete {
+					t.Fatalf("reconciliation trace incomplete %v %v", view, e)
+				}
+				planFound := false
+				for _, event := range view.Events {
+					if event.EventType == "RECONCILIATION_"+p.State && proto.Equal(event.SourceRecordRef, p.Ref) {
+						planFound = true
+					}
+				}
+				if !planFound {
+					t.Fatal("source transaction lost original reconciliation state")
+				}
+				for _, event := range view.Events {
+					if event.Producer != "ledger" {
+						continue
+					}
+					stored, e := h.Trace.QueryEvent(context.Background(), caller, event.Ref)
+					if e != nil || !proto.Equal(stored, event) {
+						t.Fatalf("recovered association changed %v %v", stored, e)
+					}
+				}
 			})
 		}
 	}

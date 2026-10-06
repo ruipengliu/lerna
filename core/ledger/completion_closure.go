@@ -91,11 +91,11 @@ func (s *Service) CloseForCompletion(ctx context.Context, caller *v1.Caller, c *
 					return nil, e
 				}
 			}
-			if e = s.store.SaveOperation(tx, op); e != nil {
+			if e = s.saveOperation(tx, op); e != nil {
 				return nil, e
 			}
 		}
-		return seal.Ref, s.store.(completionSealStore).SaveCompletionSeal(tx, seal)
+		return seal.Ref, s.saveCompletionSeal(tx, seal, a.TaskId, c.Header.Identity)
 	})
 }
 func applyCompletionNoSend(op *v1.Operation) {

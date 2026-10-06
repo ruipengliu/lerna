@@ -16,7 +16,7 @@ func (s *Service) AdmitModelCall(ctx context.Context, caller *v1.Caller, c *v1.A
 	if e := command.ValidateHeader(c.GetHeader(), c); e != nil {
 		return nil, e
 	}
-	return s.decisions.Execute(ctx, caller, c.Header, command.SemanticFingerprint("model-admit", c.RequestRef, c.Position, c.DescriptorDigest, c.GrantRef, c.ConfirmationRef), "tasks.model_admit", func(tx context.Context) (*v1.Ref, error) {
+	return s.traceModelDecisions(c.RequestRef).Execute(ctx, caller, c.Header, command.SemanticFingerprint("model-admit", c.RequestRef, c.Position, c.DescriptorDigest, c.GrantRef, c.ConfirmationRef), "tasks.model_admit", func(tx context.Context) (*v1.Ref, error) {
 		if caller.GetIssuerId() != "host" {
 			return nil, command.Fail("PERMISSION_DENIED")
 		}
@@ -119,23 +119,23 @@ func (s *Service) AdmitModelCall(ctx context.Context, caller *v1.Caller, c *v1.A
 		if e = s.content.CheckUsable(tx, caller, cap.RateBasisRef); e != nil {
 			return nil, e
 		}
-		if e = s.store.SaveAdmission(tx, a); e != nil {
+		if e = s.saveAdmission(tx, a); e != nil {
 			return nil, e
 		}
 		job, e := s.scheduling.EnqueueHandoffInTransaction(tx, a)
 		if e != nil {
 			return nil, e
 		}
-		if e = s.store.SaveHandoff(tx, &v1.Handoff{Ref: command.NewRef(s.user, s.domain, "handoff", "lerna.v1.Handoff"), AdmissionRef: ref, Identity: a.HandoffIdentity, JobRef: job, State: "PENDING"}); e != nil {
+		if e = s.saveHandoff(tx, &v1.Handoff{Ref: command.NewRef(s.user, s.domain, "handoff", "lerna.v1.Handoff"), AdmissionRef: ref, Identity: a.HandoffIdentity, JobRef: job, State: "PENDING"}); e != nil {
 			return nil, e
 		}
 		call.AdmissionRef = ref
 		call.State = "ADMITTED"
-		if e = s.store.(modelCallStore).SaveModelCall(tx, call); e != nil {
+		if e = s.saveModelCall(tx, call); e != nil {
 			return nil, e
 		}
 		r.ModelOperationRefs = append(r.ModelOperationRefs, op)
-		if e = s.store.(modelStore).SaveProposalRequest(tx, r); e != nil {
+		if e = s.saveModelRequest(tx, r); e != nil {
 			return nil, e
 		}
 		p.AdmissionRefs = append(p.AdmissionRefs, ref)

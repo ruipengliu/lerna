@@ -10,6 +10,7 @@ import (
 )
 
 type Store interface {
+	TraceSource
 	LedgerTransaction(context.Context, func(context.Context) error) error
 	LedgerPosition(context.Context) (uint64, int64, error)
 	LoadReceipt(context.Context, *v1.CommandIdentity) (*v1.CommandReceipt, error)
@@ -106,7 +107,7 @@ func (s *Service) Accept(ctx context.Context, caller *v1.Caller, c *v1.AcceptOpe
 			applyCompletionNoSend(op)
 			job.State = "COMPLETED"
 		}
-		if e = s.store.SaveOperation(tx, op); e != nil {
+		if e = s.saveOperation(tx, op); e != nil {
 			return e
 		}
 		if e = s.store.SaveLedgerJob(tx, job); e != nil {

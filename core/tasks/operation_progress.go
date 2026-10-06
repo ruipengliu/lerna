@@ -86,12 +86,12 @@ func (s *Service) AcceptOperationProgress(ctx context.Context, caller *v1.Caller
 			}
 			if !proto.Equal(before, task) {
 				task.Revision++
-				if e = s.store.SaveTask(tx, task); e != nil {
+				if e = s.saveTask(tx, task); e != nil {
 					return nil, e
 				}
 			}
 		}
-		return n.Ref, s.store.(progressStore).SaveTaskOperationProgress(tx, n)
+		return n.Ref, s.saveTaskOperationProgress(tx, n)
 	})
 }
 func (s *Service) QueryOperationProgress(ctx context.Context, c *v1.Caller, r *v1.Ref) (*v1.OperationProgressNotice, error) {

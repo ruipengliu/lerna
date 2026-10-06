@@ -70,6 +70,57 @@ message TraceEvent {
   Ref send_ref = 6;
   Ref observation_ref = 7;
   Ref body_ref = 8;
+  string producer = 9;
+  string source_stream_id = 10;
+  uint64 source_seq = 11;
+  Ref source_record_ref = 12;
+  uint64 requirements_version = 13;
+  repeated Ref related_refs = 14;
+  string reason_code = 15;
+  string mapping_version = 16;
+  CommandIdentity origin_command = 17;
+  string effect_outcome = 18;
+  string late_effect = 19;
+  uint32 source_schema_version = 20;
+  string producer_version = 21;
+}
+message TraceSourceRecord {
+  AcceptTraceCommand command = 1;
+  CommandReceipt receipt = 2;
+}
+message TraceQuery {
+  GlobalName task_id = 1;
+  GlobalName operation_id = 2;
+  string processing_purpose = 3;
+  repeated TraceCutoff cutoff = 4;
+}
+message TraceCutoff {
+  string source_stream_id = 1;
+  uint64 source_seq = 2;
+}
+message TraceGap {
+  uint64 first = 1;
+  uint64 last = 2;
+}
+message TraceProgress {
+  string source_stream_id = 1;
+  bool source_known = 2;
+  uint64 source_high_water = 3;
+  uint64 cutoff = 4;
+  uint64 accepted_contiguous = 5;
+  uint64 indexed_contiguous = 6;
+  uint64 backlog = 7;
+  repeated TraceGap gaps = 8;
+  uint64 pending_receipts = 9;
+}
+message TraceView {
+  repeated TraceEvent events = 1;
+  repeated TraceProgress sources = 2;
+  bool complete = 3;
+  uint64 backlog = 4;
+  string mapping_version = 5;
+  uint64 index_backlog = 6;
+  uint64 pending_receipts = 7;
 }
 message AcceptTraceCommand {
   CommandHeader header = 1;

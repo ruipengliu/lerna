@@ -148,6 +148,31 @@ func TestContentRegistrationCrashMatrix(t *testing.T) {
 				if !proto.Equal(repeat, r) {
 					t.Fatal("duplicate source")
 				}
+				if e = h.Trace.Recover(ctx, actor); e != nil {
+					t.Fatal(e)
+				}
+				sources, e := h.Trace.QuerySources(ctx, actor)
+				if e != nil {
+					t.Fatal(e)
+				}
+				counts := map[string]int{}
+				for _, source := range sources {
+					event := source.Command.Event
+					if event.Producer != "content" || !proto.Equal(event.SourceRecordRef, r.ResultRef) {
+						continue
+					}
+					counts[event.EventType]++
+					if source.Receipt == nil {
+						t.Fatal("content trace source unacknowledged")
+					}
+					saved, e := h.Trace.QueryEvent(ctx, actor, event.Ref)
+					if e != nil || !proto.Equal(saved, event) {
+						t.Fatalf("content trace handoff changed %v %v", saved, e)
+					}
+				}
+				if counts["CONTENT_STAGED"] != 1 || counts["CONTENT_PUBLISHED"] != 1 {
+					t.Fatalf("lost or duplicated content source %v", counts)
+				}
 			})
 		}
 	}

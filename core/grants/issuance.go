@@ -139,7 +139,7 @@ func (s *Service) IssueGrant(ctx context.Context, caller *v1.Caller, c *v1.Issue
 		if e = s.confirmations.ConsumeGrantConfirmationInTransaction(tx, c.ConfirmationRef, matter, draft.Ref); e != nil {
 			return nil, e
 		}
-		if e = s.store.SaveGrant(tx, g); e != nil {
+		if e = s.saveGrant(tx, g); e != nil {
 			return nil, e
 		}
 		return g.Ref, s.store.SaveGrantIssuance(tx, draft)

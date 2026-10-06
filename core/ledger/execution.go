@@ -63,7 +63,7 @@ func (s *Service) Prepare(ctx context.Context, caller *v1.Caller, c *v1.PrepareE
 				op.Execution.Send.ClaimEpoch = job.ClaimEpoch
 				op.Execution.Send.LeaseUntilUnixMs = job.LeaseUntilUnixMs
 				op.Ref.Revision++
-				return op.Execution.Attempt.Ref, s.store.SaveOperation(tx, op)
+				return op.Execution.Attempt.Ref, s.saveOperation(tx, op)
 			}
 			return op.Execution.Attempt.Ref, nil
 		}
@@ -97,7 +97,7 @@ func (s *Service) Prepare(ctx context.Context, caller *v1.Caller, c *v1.PrepareE
 		op.AttemptRefs = []*v1.Ref{attempt.Ref}
 		op.Ref.Revision++
 		op.Lifecycle = "ACTIVE"
-		return attempt.Ref, s.store.SaveOperation(tx, op)
+		return attempt.Ref, s.saveOperation(tx, op)
 	})
 }
 func (s *Service) QueryExecution(ctx context.Context, c *v1.Caller, id *v1.GlobalName) (*v1.Execution, error) {

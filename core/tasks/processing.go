@@ -114,7 +114,7 @@ func (s *Service) ProcessInput(ctx context.Context, caller *v1.Caller, c *v1.Pro
 			} else {
 				setInputWaiting(t, "INPUT_PROCESSING")
 			}
-			if e = s.store.SaveRequirements(tx, p.Requirements); e != nil {
+			if e = s.saveRequirements(tx, p.Requirements); e != nil {
 				return nil, e
 			}
 		default:
@@ -125,7 +125,7 @@ func (s *Service) ProcessInput(ctx context.Context, caller *v1.Caller, c *v1.Pro
 		if e = s.invalidatePlanning(tx, t, p); e != nil {
 			return nil, e
 		}
-		if e = s.store.SaveTask(tx, t); e != nil {
+		if e = s.saveTask(tx, t); e != nil {
 			return nil, e
 		}
 		if e = s.store.SavePlanning(tx, p); e != nil {
@@ -191,11 +191,11 @@ func (s *Service) AcceptExplicitInTransaction(ctx context.Context, caller *v1.Ca
 	t.Progress = v1.TaskProgress_TASK_PROGRESS_RUNNING
 	t.WaitingOn = nil
 	t.Revision++
-	if e = s.store.SaveRequirements(ctx, p.Requirements); e != nil {
+	if e = s.saveRequirements(ctx, p.Requirements); e != nil {
 		return e
 	}
 	if e = s.store.SavePlanning(ctx, p); e != nil {
 		return e
 	}
-	return s.store.SaveTask(ctx, t)
+	return s.saveTask(ctx, t)
 }

@@ -10,6 +10,12 @@ import (
 
 // Execute 保存原决定；业务保存点使最后一道门禁拒绝也不会留下部分写入。
 func (s *Service) Execute(ctx context.Context, caller *v1.Caller, h *v1.CommandHeader, fingerprint, point string, fn func(context.Context) (*v1.Ref, error)) (*v1.CommandReceipt, error) {
+	return s.ExecuteObserved(ctx, caller, h, fingerprint, point, fn, nil)
+}
+
+// ExecuteObserved 在业务保存点结束、原决定固定后，调用负责方的结构记录参与者。
+// 参与者与命令回执同事务；失败不允许确认决定，不得在这里交付运行记录域。
+func (s *Service) ExecuteObserved(ctx context.Context, caller *v1.Caller, h *v1.CommandHeader, fingerprint, point string, fn func(context.Context) (*v1.Ref, error), observe func(context.Context, *v1.CommandReceipt) error) (*v1.CommandReceipt, error) {
 	if h == nil {
 		return nil, command.Fail("INVALID_INPUT")
 	}
@@ -46,7 +52,13 @@ func (s *Service) Execute(ctx context.Context, caller *v1.Caller, h *v1.CommandH
 			r.Error = failure.Detail
 			r.Error.CommandAcceptance = v1.CommandAcceptance_COMMAND_ACCEPTANCE_DECIDED
 		}
-		return s.store.SaveReceipt(tx, r)
+		if e = s.store.SaveReceipt(tx, r); e != nil {
+			return e
+		}
+		if observe != nil {
+			return observe(tx, r)
+		}
+		return nil
 	})
 	if err != nil {
 		return nil, err

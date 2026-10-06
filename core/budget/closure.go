@@ -68,7 +68,7 @@ func (s *Service) ReleaseUnused(ctx context.Context, caller *v1.Caller, c *v1.Re
 			if e = projectBudget(b); e != nil {
 				return nil, e
 			}
-			if e = s.store.SaveBudget(tx, b); e != nil {
+			if e = s.saveBudget(tx, b); e != nil {
 				return nil, e
 			}
 		}
@@ -80,18 +80,21 @@ func (s *Service) ReleaseUnused(ctx context.Context, caller *v1.Caller, c *v1.Re
 			if source != nil {
 				source.Ref.Revision++
 				source.Status = "UNUSED_CLOSED"
-				if e = s.store.(billingStore).SaveBillingSource(tx, source); e != nil {
+				if e = s.saveBillingSource(tx, source); e != nil {
 					return nil, e
 				}
 			}
 		}
 		r.Ref.Revision++
 		r.Status = "UNUSED_CLOSED"
-		if e = s.store.SaveReservation(tx, r); e != nil {
+		if e = s.saveReservation(tx, r); e != nil {
 			return nil, e
 		}
 		release := &v1.ReservationRelease{Ref: command.NewRef(s.user, s.domain, "reservation-release", "lerna.v1.ReservationRelease"), ReservationRef: c.ReservationRef, ClosureRef: c.ClosureRef, Released: r.Ceiling}
-		return release.Ref, s.store.(releaseStore).SaveReservationRelease(tx, release)
+		if e = s.store.(releaseStore).SaveReservationRelease(tx, release); e != nil {
+			return nil, e
+		}
+		return release.Ref, s.store.SaveTraceSource(tx, "budget", &v1.TraceEvent{EventType: "RESERVATION_RELEASED", SourceRecordRef: release.Ref, TaskId: r.TaskId, OperationId: r.OperationId, RelatedRefs: []*v1.Ref{release.ReservationRef, release.ClosureRef}})
 	})
 }
 

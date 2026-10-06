@@ -49,7 +49,7 @@ func (s *Service) AcceptInputInTransaction(ctx context.Context, caller *v1.Calle
 			p.Requirements = proto.Clone(p.Requirements).(*v1.Requirements)
 			p.Requirements.Ref = command.NewRef(s.user, s.domain, "requirements", "lerna.v1.Requirements")
 			p.Requirements.BoundInputVersion = t.BoundInputVersion
-			if e = s.store.SaveRequirements(ctx, p.Requirements); e != nil {
+			if e = s.saveRequirements(ctx, p.Requirements); e != nil {
 				return e
 			}
 		}
@@ -67,7 +67,7 @@ func (s *Service) AcceptInputInTransaction(ctx context.Context, caller *v1.Calle
 		status = "PROCESSED"
 	}
 	history.Inputs = append(history.Inputs, &v1.TaskInputRecord{InputRef: &v1.Ref{Name: input.InputId, Revision: 1, SchemaId: "lerna.v1.SessionInput"}, ContentRef: c.ContentRef, InputVersion: t.InputVersion, TaskInputSeq: input.TaskInputSeq, ChangesBasis: changesBasis, ExplicitConditions: c.ExplicitConditions, ProcessingStatus: status})
-	if e = s.store.SaveTask(ctx, t); e != nil {
+	if e = s.saveTask(ctx, t); e != nil {
 		return e
 	}
 	if e = s.store.SavePlanning(ctx, p); e != nil {
@@ -124,7 +124,7 @@ func (s *Service) ControlInTransaction(ctx context.Context, caller *v1.Caller, c
 	if e = s.invalidatePlanning(ctx, t, p); e != nil {
 		return e
 	}
-	if e = s.store.SaveTask(ctx, t); e != nil {
+	if e = s.saveTask(ctx, t); e != nil {
 		return e
 	}
 	return s.store.SavePlanning(ctx, p)

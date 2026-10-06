@@ -19,6 +19,7 @@ type TraceReceiver interface {
 	ReceiptReader
 }
 type reportStore interface {
+	CreateTraceSource(context.Context, string, *v1.TraceEvent, *v1.CommandHeader) (*v1.AcceptTraceCommand, error)
 	SaveReports(context.Context, *v1.ObservationReports) error
 	LoadReports(context.Context, *v1.Ref) (*v1.ObservationReports, error)
 	AllReports(context.Context) ([]*v1.ObservationReports, error)
@@ -39,8 +40,12 @@ func (s *Service) createReports(ctx context.Context, o *v1.RawObservation, op *v
 		return e
 	}
 	usage := &v1.UsageReport{Ref: command.NewRef(s.user, s.sourceDomain, "usage", "lerna.v1.UsageReport"), BillingSource: o.SendRef, SourceRevision: 1, MeasurementRef: o.Ref, PriceRuleRef: admission.CapabilitySnapshot.RateBasisRef, OperationId: o.OperationId, AttemptId: o.AttemptId, SendRef: o.SendRef, TaskId: o.TaskId, Settlement: "PENDING", Unit: "USD_MICRO", PhysicalSends: 1}
-	event := &v1.TraceEvent{Ref: command.NewRef(s.user, s.sourceDomain+"/trace", "trace-event", "lerna.v1.TraceEvent"), EventType: "PHYSICAL_OBSERVATION", TaskId: o.TaskId, OperationId: o.OperationId, AttemptId: o.AttemptId, SendRef: o.SendRef, ObservationRef: o.Ref, BodyRef: o.BodyRef}
-	return s.store.(reportStore).SaveReports(ctx, &v1.ObservationReports{ObservationRef: o.Ref, Usage: &v1.AcceptUsageCommand{Header: reportHeader(s.user, "ledger-report", s.sourceDomain, "usage:"+o.Ref.Name.LocalId), Usage: usage}, Trace: &v1.AcceptTraceCommand{Header: reportHeader(s.user, "ledger-report", s.sourceDomain+"/trace", "trace:"+o.Ref.Name.LocalId), Event: event}})
+	event := &v1.TraceEvent{Ref: command.NewRef(s.user, s.sourceDomain+"/trace", "trace-event", "lerna.v1.TraceEvent"), EventType: "PHYSICAL_OBSERVATION", SourceRecordRef: o.Ref, TaskId: o.TaskId, OperationId: o.OperationId, AttemptId: o.AttemptId, SendRef: o.SendRef, ObservationRef: o.Ref, BodyRef: o.BodyRef}
+	traceCommand, e := s.store.(reportStore).CreateTraceSource(ctx, "ledger", event, reportHeader(s.user, "ledger-report", s.sourceDomain+"/trace", "trace:"+o.Ref.Name.LocalId))
+	if e != nil {
+		return e
+	}
+	return s.store.(reportStore).SaveReports(ctx, &v1.ObservationReports{ObservationRef: o.Ref, Usage: &v1.AcceptUsageCommand{Header: reportHeader(s.user, "ledger-report", s.sourceDomain, "usage:"+o.Ref.Name.LocalId), Usage: usage}, Trace: traceCommand})
 }
 func (s *Service) QueryReports(ctx context.Context, caller *v1.Caller, r *v1.Ref) (*v1.ObservationReports, error) {
 	if e := s.checkHistory(caller, r, "observation", "lerna.v1.RawObservation"); e != nil {

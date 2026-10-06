@@ -81,6 +81,7 @@ func TestQueryableLostWriteReceiptRecoversThroughSeparateAdmittedRead(t *testing
 	if len(requests) != 2 || requests[0].Method != "POST" || requests[1].Method != "GET" || len(effects) != 1 {
 		t.Fatalf("target receives=%v effects=%v", requests, effects)
 	}
+	assertReconciliationTrace(t, f, plan, "APPLIED", true)
 }
 
 func configureReconciliation(t *testing.T, f *fixture) (*v1.Ref, *v1.Ref) {
@@ -149,28 +150,50 @@ func TestWeakQueryPreservesDelayedWriteAndDurableSchedule(t *testing.T) {
 		t.Fatal(e)
 	}
 	restored, e := f.h.Ledger.QueryReconciliation(f.ctx, f.caller, a.OperationId)
-	if e != nil || restored.NextReconcileAtUnixMs != plan.NextReconcileAtUnixMs || restored.CheckCount != 1 {
-		t.Fatalf("schedule resampled: %v %v", restored, e)
-	}
-	if e = f.h.Ledger.ProcessReconciliations(f.ctx, f.caller); e != nil {
-		t.Fatal(e)
+	if e != nil || restored.CheckCount < 1 || restored.CheckCount > 2 {
+		t.Fatalf("restart checks: %v %v", restored, e)
 	}
 	requests, effects = target.Snapshot()
-	if len(requests) != 2 || len(effects) != 0 {
-		t.Fatalf("early resend: %v %v", requests, effects)
+	if len(requests) != 1+int(restored.CheckCount) || len(effects) != 0 {
+		t.Fatalf("unexpected restart I/O: %v %v", requests, effects)
 	}
+	// 真实存储恢复可能跨过截止时间；只用已持久的 due 和独立目标收到时间判定是否提前。
+	if restored.CheckCount == 1 {
+		if restored.NextReconcileAtUnixMs != plan.NextReconcileAtUnixMs {
+			t.Fatalf("schedule resampled without a query: %v", restored)
+		}
+	} else if requests[2].Method != "GET" || requests[2].ReceivedAtUnixNano < time.UnixMilli(plan.NextReconcileAtUnixMs).UnixNano() {
+		t.Fatalf("query preceded durable deadline: %v due=%d", requests, plan.NextReconcileAtUnixMs)
+	}
+	beforeLateChecks := restored.CheckCount
 	target.ReleasePending()
-	time.Sleep(time.Until(time.UnixMilli(plan.NextReconcileAtUnixMs)) + 20*time.Millisecond)
+	time.Sleep(time.Until(time.UnixMilli(restored.NextReconcileAtUnixMs)) + 20*time.Millisecond)
 	if e = f.h.Ledger.ProcessReconciliations(f.ctx, f.caller); e != nil {
 		t.Fatal(e)
 	}
 	plan, e = f.h.Ledger.QueryReconciliation(f.ctx, f.caller, a.OperationId)
-	if e != nil || plan.State != "COMPLETED" || plan.CheckCount != 2 {
+	if e != nil || plan.State != "COMPLETED" || plan.CheckCount != beforeLateChecks+1 {
 		t.Fatalf("late proof: %v %v", plan, e)
 	}
 	requests, effects = target.Snapshot()
-	if len(requests) != 3 || requests[1].Method != "GET" || requests[2].Method != "GET" || len(effects) != 1 {
+	if len(requests) != 1+int(plan.CheckCount) || requests[0].Method != "POST" || len(effects) != 1 {
 		t.Fatalf("unsafe duplicate write: %v %v", requests, effects)
+	}
+	for _, request := range requests[1:] {
+		if request.Method != "GET" {
+			t.Fatal("unsafe duplicate write")
+		}
+	}
+	view := assertReconciliationTrace(t, f, plan, "APPLIED", true)
+	unknown, applied := false, false
+	for _, event := range view.Events {
+		if event.EventType == "RECONCILIATION_FINDING" {
+			unknown = unknown || event.EffectOutcome == "UNKNOWN" && event.LateEffect == "MAY_OCCUR"
+			applied = applied || event.EffectOutcome == "APPLIED" && event.LateEffect == "RULED_OUT"
+		}
+	}
+	if !unknown || !applied {
+		t.Fatal("late proof rewrote original unknown finding")
 	}
 }
 func reconciliationCommand(f *fixture, a *v1.Admission, cap, grant *v1.Ref) *v1.RequestReconciliationCommand {
@@ -665,6 +688,7 @@ func TestLateOriginalResponseCompletesPausedReconciliationWithoutAQuery(t *testi
 	if len(requests) != 1 || len(effects) != 1 {
 		t.Fatalf("unnecessary query: %v %v", requests, effects)
 	}
+	assertReconciliationTrace(t, f, p, "APPLIED", false)
 }
 
 // 规则：G1、G3、G11、V4

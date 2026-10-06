@@ -23,7 +23,7 @@ func (s *Service) saveProposalRequest(ctx context.Context, snap *v1.ContextSnaps
 	}
 	r := &v1.ProposalRequest{Ref: snap.RequestRef, TaskId: t.TaskId, SnapshotRef: snap.Ref, JobRef: command.NewRef(s.user, s.domain, "job", "lerna.v1.Job"), Purpose: purpose, MaxCallPositions: 1, MaxPhysicalSends: 1, State: "PENDING"}
 	store := s.store.(modelStore)
-	if e := store.SaveProposalRequest(ctx, r); e != nil {
+	if e := s.saveModelRequest(ctx, r); e != nil {
 		return e
 	}
 	return store.SaveJob(ctx, &v1.Job{Ref: r.JobRef, Module: "tasks", JobType: "PROPOSE", ContractVersion: 1, Responsibility: id, State: "READY", PurposeKey: "propose:" + r.Ref.Name.LocalId, SpecificationRef: r.Ref})
@@ -78,7 +78,7 @@ func (s *Service) supersedeProposalRequest(ctx context.Context, snap *v1.Context
 	if e = s.store.(modelStore).SaveJob(ctx, job); e != nil {
 		return e
 	}
-	return s.store.(modelStore).SaveProposalRequest(ctx, r)
+	return s.saveModelRequest(ctx, r)
 }
 
 // StopProposalRequest 只封闭提议推进，原模型动作和费用仍由原记录负责。
@@ -86,7 +86,7 @@ func (s *Service) StopProposalRequest(ctx context.Context, caller *v1.Caller, c 
 	if e := command.ValidateHeader(c.GetHeader(), c); e != nil {
 		return nil, e
 	}
-	return s.decisions.Execute(ctx, caller, c.Header, command.SemanticFingerprint("stop-proposal-request", c.RequestRef), "tasks.proposal_stop", func(tx context.Context) (*v1.Ref, error) {
+	return s.traceModelDecisions(c.RequestRef).Execute(ctx, caller, c.Header, command.SemanticFingerprint("stop-proposal-request", c.RequestRef), "tasks.proposal_stop", func(tx context.Context) (*v1.Ref, error) {
 		if caller.GetIssuerId() != "host" && caller.GetIssuerId() != "local-cli" {
 			return nil, command.Fail("PERMISSION_DENIED")
 		}
@@ -114,6 +114,6 @@ func (s *Service) StopProposalRequest(ctx context.Context, caller *v1.Caller, c 
 		if e = s.store.(modelStore).SaveJob(tx, job); e != nil {
 			return nil, e
 		}
-		return r.Ref, s.store.(modelStore).SaveProposalRequest(tx, r)
+		return r.Ref, s.saveModelRequest(tx, r)
 	})
 }

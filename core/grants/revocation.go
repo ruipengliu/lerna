@@ -88,10 +88,10 @@ func (s *Service) Revoke(ctx context.Context, caller *v1.Caller, c *v1.RevokeGra
 			g.RevocationCompletion = "COMPLETE"
 		}
 		g.RevocationRef = rev.Ref
-		if e = s.store.SaveGrant(tx, g); e != nil {
+		if e = s.saveGrant(tx, g); e != nil {
 			return nil, e
 		}
-		return rev.Ref, s.store.SaveGrantRevocation(tx, rev)
+		return rev.Ref, s.saveGrantRevocation(tx, rev)
 	})
 }
 
@@ -199,11 +199,11 @@ func (s *Service) recordClosure(ctx context.Context, name *v1.GlobalName, c *v1.
 			g.Ref.Revision++
 			g.RevocationCompletion = "COMPLETE"
 			g.RevocationRef = rev.Ref
-			if e = s.store.SaveGrant(tx, g); e != nil {
+			if e = s.saveGrant(tx, g); e != nil {
 				return nil, e
 			}
 		}
-		return rev.Ref, s.store.SaveGrantRevocation(tx, rev)
+		return rev.Ref, s.saveGrantRevocation(tx, rev)
 	})
 	if e != nil {
 		return e

@@ -28,6 +28,9 @@ func (s *Service) saveReconciliation(ctx context.Context, p *v1.Reconciliation) 
 	if e := s.store.(reconciliationStore).SaveReconciliation(ctx, p); e != nil {
 		return e
 	}
+	if e := s.recordReconciliationTrace(ctx, p); e != nil {
+		return e
+	}
 	op, e := s.store.LoadOperation(ctx, p.OperationId)
 	if e != nil {
 		return e
@@ -37,7 +40,7 @@ func (s *Service) saveReconciliation(ctx context.Context, p *v1.Reconciliation) 
 	}
 	n := &v1.OperationProgressNotice{Ref: command.NewRef(s.user, s.domain, "operation-progress", "lerna.v1.OperationProgressNotice"), TaskId: p.TaskId, OperationRef: op.Ref, ReconciliationRef: p.Ref, EffectRef: op.EffectRef, State: p.State, PauseReason: p.PauseReason, LastObservationRef: p.LastObservationRef, Identity: &v1.CommandIdentity{UserId: s.user, IssuerId: "ledger-progress", TargetDomainId: s.sourceDomain, CommandId: fmt.Sprintf("progress:%s:%d", p.Ref.Name.LocalId, p.Ref.Revision)}}
 	h := &v1.OperationProgressHandoff{Notice: n, Command: &v1.AcceptOperationProgressCommand{Header: reconcileHeader(s.user, "ledger-progress", s.sourceDomain, n.Identity.CommandId), Notice: n}}
-	return s.store.(progressStore).SaveOperationProgressHandoff(ctx, h)
+	return s.saveOperationProgressHandoff(ctx, h)
 }
 func (s *Service) QueryOperationProgress(ctx context.Context, c *v1.Caller, id *v1.GlobalName) ([]*v1.OperationProgressHandoff, error) {
 	if e := command.CheckName(c, id, s.user, s.domain, "operation"); e != nil {
@@ -110,7 +113,7 @@ func (s *Service) ProcessOperationProgress(ctx context.Context, c *v1.Caller) er
 				return nil, command.Fail("INVARIANT_VIOLATION")
 			}
 			fresh.RecipientReceipt = r
-			return fresh.Notice.Ref, s.store.(progressStore).SaveOperationProgressHandoff(tx, fresh)
+			return fresh.Notice.Ref, s.saveOperationProgressHandoff(tx, fresh)
 		})
 		if e != nil {
 			return e

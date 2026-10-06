@@ -69,6 +69,25 @@ func TestCompletionFreezesVerifiedResultAfterOneActualCall(t *testing.T) {
 	if e != nil || !proto.Equal(result, again) {
 		t.Fatalf("mutable result %v %v", again, e)
 	}
+	if e = f.h.Trace.Recover(f.ctx, f.caller); e != nil {
+		t.Fatal(e)
+	}
+	traceView, e := f.h.Trace.Query(f.ctx, f.caller, &v1.TraceQuery{TaskId: f.task.Name})
+	if e != nil {
+		t.Fatal(e)
+	}
+	resultLinked, verificationLinked := false, false
+	for _, event := range traceView.Events {
+		if event.EventType == "RESULT_FIXED" && proto.Equal(event.SourceRecordRef, result.Ref) {
+			resultLinked = true
+		}
+		if event.EventType == "VERIFICATION_CHANGED" && proto.Equal(event.SourceRecordRef, round.Ref) {
+			verificationLinked = true
+		}
+	}
+	if !resultLinked || !verificationLinked {
+		t.Fatalf("missing completion authority links: %v", traceView)
+	}
 	requests, effects := target.Snapshot()
 	if len(requests) != 1 || len(effects) != 1 {
 		t.Fatalf("target requests=%d effects=%d", len(requests), len(effects))
@@ -112,6 +131,21 @@ func TestCompletionSealsLateAdmissionBeforeItCanStart(t *testing.T) {
 	seal, e := f.h.Ledger.QueryCompletionSeal(f.ctx, f.caller, op.ClosureEvidenceRefs[0])
 	if e != nil || seal == nil || !seal.NoSendProven || !proto.Equal(seal.AdmissionRef, a.Ref) {
 		t.Fatalf("seal %v %v", seal, e)
+	}
+	if e = f.h.Trace.Recover(f.ctx, f.caller); e != nil {
+		t.Fatal(e)
+	}
+	view, e := f.h.Trace.Query(f.ctx, f.caller, &v1.TraceQuery{OperationId: a.OperationId})
+	if e != nil {
+		t.Fatal(e)
+	}
+	sealLinked, handoffLinked := false, false
+	for _, event := range view.Events {
+		sealLinked = sealLinked || event.EventType == "COMPLETION_SEALED" && proto.Equal(event.SourceRecordRef, seal.Ref)
+		handoffLinked = handoffLinked || event.EventType == "COMPLETION_HANDOFF_CHANGED"
+	}
+	if !sealLinked || !handoffLinked {
+		t.Fatal("trace lost pre-acceptance seal and original handoff")
 	}
 	if f.calls.Load() != 0 {
 		t.Fatal("late intent sent")

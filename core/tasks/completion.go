@@ -89,13 +89,13 @@ func (s *Service) BeginCompletion(ctx context.Context, caller *v1.Caller, c *v1.
 		}
 		p.VerificationRef = v.Ref
 		setCompletionWaiting(t, []string{"COMPLETION:VERIFYING"})
-		if e = s.store.(completionStore).SaveVerification(tx, v); e != nil {
+		if e = s.saveVerification(tx, v); e != nil {
 			return nil, e
 		}
 		if e = s.store.SavePlanning(tx, p); e != nil {
 			return nil, e
 		}
-		return v.Ref, s.store.SaveTask(tx, t)
+		return v.Ref, s.saveTask(tx, t)
 	})
 }
 func (s *Service) QueryVerification(ctx context.Context, c *v1.Caller, r *v1.Ref) (*v1.Verification, error) {
@@ -273,13 +273,13 @@ func (s *Service) RecheckCompletion(ctx context.Context, caller *v1.Caller, c *v
 			}
 			t.Revision++
 			setCompletionWaiting(t, append([]string{"COMPLETION:REPLAN_REQUIRED"}, v.Gaps...))
-			if e = s.store.(completionStore).SaveVerification(tx, v); e != nil {
+			if e = s.saveVerification(tx, v); e != nil {
 				return nil, e
 			}
 			if e = s.store.SavePlanning(tx, p); e != nil {
 				return nil, e
 			}
-			return v.Ref, s.store.SaveTask(tx, t)
+			return v.Ref, s.saveTask(tx, t)
 		}
 		if len(v.Gaps) > 0 {
 			setCompletionWaiting(t, v.Gaps)
@@ -289,13 +289,13 @@ func (s *Service) RecheckCompletion(ctx context.Context, caller *v1.Caller, c *v
 			v.Ref.Revision++
 			p.VerificationRef = v.Ref
 			t.Revision++
-			if e = s.store.(completionStore).SaveVerification(tx, v); e != nil {
+			if e = s.saveVerification(tx, v); e != nil {
 				return nil, e
 			}
 			if e = s.store.SavePlanning(tx, p); e != nil {
 				return nil, e
 			}
-			return v.Ref, s.store.SaveTask(tx, t)
+			return v.Ref, s.saveTask(tx, t)
 		}
 		_, now, e := s.store.Position(tx)
 		if e != nil {
@@ -325,16 +325,16 @@ func (s *Service) RecheckCompletion(ctx context.Context, caller *v1.Caller, c *v
 		t.ResultRef = result.Ref
 		t.Revision++
 		setCompletionWaiting(t, nil)
-		if e = s.store.(completionStore).SaveVerification(tx, v); e != nil {
+		if e = s.saveVerification(tx, v); e != nil {
 			return nil, e
 		}
-		if e = s.store.(completionStore).SaveResult(tx, result); e != nil {
+		if e = s.saveResult(tx, result); e != nil {
 			return nil, e
 		}
 		if e = s.store.SavePlanning(tx, p); e != nil {
 			return nil, e
 		}
-		return result.Ref, s.store.SaveTask(tx, t)
+		return result.Ref, s.saveTask(tx, t)
 	})
 }
 

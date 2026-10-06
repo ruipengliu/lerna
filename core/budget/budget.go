@@ -11,6 +11,7 @@ import (
 )
 
 type Store interface {
+	TraceSource
 	Reservations(context.Context, *v1.GlobalName) ([]*v1.Reservation, error)
 	SaveBudget(context.Context, *v1.Budget) error
 	LoadBudget(context.Context, *v1.GlobalName) (*v1.Budget, error)
@@ -56,7 +57,7 @@ func (s *Service) Configure(ctx context.Context, caller *v1.Caller, c *v1.Config
 			return nil, command.Fail("BUDGET_ALREADY_CONFIGURED")
 		}
 		b := &v1.Budget{Ref: command.NewRef(s.user, s.domain, "budget", "lerna.v1.Budget"), TaskId: c.TaskId, Unit: c.Unit, Limit: c.Limit, Available: c.Limit, Status: "OPEN"}
-		return b.Ref, s.store.SaveBudget(tx, b)
+		return b.Ref, s.saveBudget(tx, b)
 	})
 }
 
@@ -90,13 +91,13 @@ func (s *Service) ReserveInTransaction(ctx context.Context, task, operation *v1.
 		if e := projectBudget(b); e != nil {
 			return nil, e
 		}
-		if e := s.store.SaveBudget(ctx, b); e != nil {
+		if e := s.saveBudget(ctx, b); e != nil {
 			return nil, e
 		}
 		refs = append(refs, b.Ref)
 	}
 	r := &v1.Reservation{Ref: command.NewRef(s.user, s.domain, "reservation", "lerna.v1.Reservation"), AdmissionRef: admission, OperationId: operation, BudgetRefs: refs, Unit: cap.Unit, Ceiling: amount, SendCeiling: 1, Status: "RESERVED", TaskId: task}
-	if e := s.store.SaveReservation(ctx, r); e != nil {
+	if e := s.saveReservation(ctx, r); e != nil {
 		return nil, e
 	}
 	return &v1.BudgetBasis{BudgetRef: refs[1], BudgetChainRefs: refs, Unit: cap.Unit, Ceiling: amount, RateBasisRef: cap.RateBasisRef, ReservationRef: r.Ref}, nil

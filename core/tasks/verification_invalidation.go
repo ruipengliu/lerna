@@ -38,7 +38,7 @@ func (s *Service) supersedeVerification(ctx context.Context, t *v1.Task, p *v1.P
 	v.EndedReason = "TASK_BASIS_CHANGED"
 	v.FinishedAtUnixMs = now
 	v.Ref.Revision++
-	if e = s.store.(completionStore).SaveVerification(ctx, v); e != nil {
+	if e = s.saveVerification(ctx, v); e != nil {
 		return e
 	}
 	p.VerificationRef = v.Ref

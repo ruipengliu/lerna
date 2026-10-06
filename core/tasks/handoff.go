@@ -91,7 +91,7 @@ func (s *Service) ProcessHandoffClaim(ctx context.Context, j *v1.Job) error {
 		h.RecipientReceipt = receipt
 		h.State = "ACKNOWLEDGED"
 		h.Ref.Revision++
-		return s.store.SaveHandoff(tx, h)
+		return s.saveHandoff(tx, h)
 	})
 }
 func (s *Service) ProcessHandoffs(ctx context.Context, c *v1.Caller) error {

@@ -162,7 +162,7 @@ func (s *Service) PrepareModelCall(ctx context.Context, caller *v1.Caller, c *v1
 	if e != nil {
 		return nil, e
 	}
-	receipt, e := s.decisions.Execute(ctx, caller, c.Header, command.SemanticFingerprint("model-prepare", c.RequestRef, c.Position, settings, c.InputRefs, c.CapabilityRef), "tasks.model_prepare", func(tx context.Context) (*v1.Ref, error) {
+	receipt, e := s.traceModelDecisions(c.RequestRef).Execute(ctx, caller, c.Header, command.SemanticFingerprint("model-prepare", c.RequestRef, c.Position, settings, c.InputRefs, c.CapabilityRef), "tasks.model_prepare", func(tx context.Context) (*v1.Ref, error) {
 		r, e := s.QueryProposalRequest(tx, caller, c.RequestRef)
 		if e != nil {
 			return nil, e
@@ -226,7 +226,7 @@ func (s *Service) PrepareModelCall(ctx context.Context, caller *v1.Caller, c *v1
 			}
 		}
 		call := &v1.ModelCall{Ref: command.NewRef(s.user, s.domain, "model-call", "lerna.v1.ModelCall"), RequestRef: r.Ref, Position: c.Position, Settings: settings, InputRefs: c.InputRefs, CapabilityRef: c.CapabilityRef, State: "PREPARING"}
-		return call.Ref, s.store.(modelCallStore).SaveModelCall(tx, call)
+		return call.Ref, s.saveModelCall(tx, call)
 	})
 	if e = modelReceipt(receipt, e); e != nil {
 		return nil, e
@@ -288,7 +288,7 @@ func (s *Service) PrepareModelCall(ctx context.Context, caller *v1.Caller, c *v1
 		return nil, e
 	}
 	h := sha256.Sum256(body)
-	completed, e := s.decisions.Execute(ctx, caller, s.modelHeader(fmt.Sprintf("%s:fixed:%s:%d", prefix, c.Claim.GetProcessInstance(), c.Claim.GetClaimEpoch()), s.domain), command.SemanticFingerprint("model-fixed", call.Ref, d.Ref, committed.ResultRef, hex.EncodeToString(h[:])), "tasks.model_seal", func(tx context.Context) (*v1.Ref, error) {
+	completed, e := s.traceModelDecisions(c.RequestRef).Execute(ctx, caller, s.modelHeader(fmt.Sprintf("%s:fixed:%s:%d", prefix, c.Claim.GetProcessInstance(), c.Claim.GetClaimEpoch()), s.domain), command.SemanticFingerprint("model-fixed", call.Ref, d.Ref, committed.ResultRef, hex.EncodeToString(h[:])), "tasks.model_seal", func(tx context.Context) (*v1.Ref, error) {
 		current, e := s.store.(modelCallStore).LoadModelCall(tx, c.RequestRef, c.Position)
 		if e != nil {
 			return nil, e
@@ -303,7 +303,7 @@ func (s *Service) PrepareModelCall(ctx context.Context, caller *v1.Caller, c *v1
 		current.InputRef = committed.ResultRef
 		current.DescriptorDigest = hex.EncodeToString(h[:])
 		current.State = "SEALED"
-		return current.Ref, s.store.(modelCallStore).SaveModelCall(tx, current)
+		return current.Ref, s.saveModelCall(tx, current)
 	})
 	if e = modelReceipt(completed, e); e != nil {
 		return nil, e

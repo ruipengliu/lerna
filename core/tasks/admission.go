@@ -73,7 +73,7 @@ func (s *Service) Admit(ctx context.Context, caller *v1.Caller, c *v1.AdmitComma
 	if e := command.ValidateHeader(c.GetHeader(), c); e != nil {
 		return nil, e
 	}
-	return s.decisions.Execute(ctx, caller, c.Header, command.SemanticFingerprint("admit", c.TaskId, c.ProposalRef, c.GrantRef, c.ConfirmationRef), "tasks.admit", func(tx context.Context) (*v1.Ref, error) {
+	return s.traceDecisions(c.TaskId).Execute(ctx, caller, c.Header, command.SemanticFingerprint("admit", c.TaskId, c.ProposalRef, c.GrantRef, c.ConfirmationRef), "tasks.admit", func(tx context.Context) (*v1.Ref, error) {
 		t, e := s.QueryTask(tx, caller, c.TaskId)
 		if e != nil {
 			return nil, e
@@ -198,7 +198,7 @@ func (s *Service) Admit(ctx context.Context, caller *v1.Caller, c *v1.AdmitComma
 				return nil, e
 			}
 		}
-		if e = s.store.SaveAdmission(tx, a); e != nil {
+		if e = s.saveAdmission(tx, a); e != nil {
 			return nil, e
 		}
 		job, e := s.scheduling.EnqueueHandoffInTransaction(tx, a)
@@ -206,7 +206,7 @@ func (s *Service) Admit(ctx context.Context, caller *v1.Caller, c *v1.AdmitComma
 			return nil, e
 		}
 		outbox := &v1.Handoff{Ref: command.NewRef(s.user, s.domain, "handoff", "lerna.v1.Handoff"), AdmissionRef: ref, Identity: a.HandoffIdentity, JobRef: job, State: "PENDING"}
-		if e = s.store.SaveHandoff(tx, outbox); e != nil {
+		if e = s.saveHandoff(tx, outbox); e != nil {
 			return nil, e
 		}
 		p.ProposalConsumed = true

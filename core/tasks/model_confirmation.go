@@ -49,7 +49,7 @@ func (s *Service) modelConfirmationAdmission(ctx context.Context, caller *v1.Cal
 }
 
 func (s *Service) requestModelConfirmation(ctx context.Context, caller *v1.Caller, c *v1.RequestAdmissionConfirmationCommand) (*v1.CommandReceipt, error) {
-	return s.decisions.Execute(ctx, caller, c.Header, command.SemanticFingerprint("request-model-confirmation", c.TaskId, c.ProposalRef, c.GrantRef, c.SessionId), "tasks.confirmation", func(tx context.Context) (*v1.Ref, error) {
+	return s.traceDecisions(c.TaskId).Execute(ctx, caller, c.Header, command.SemanticFingerprint("request-model-confirmation", c.TaskId, c.ProposalRef, c.GrantRef, c.SessionId), "tasks.confirmation", func(tx context.Context) (*v1.Ref, error) {
 		a, snap, e := s.modelConfirmationAdmission(tx, caller, c.ProposalRef, c.GrantRef)
 		if e != nil {
 			return nil, e

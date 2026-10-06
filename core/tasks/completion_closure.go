@@ -60,7 +60,7 @@ func (s *Service) addCompletionClosures(ctx context.Context, v *v1.Verification,
 		if e != nil {
 			return e
 		}
-		if e = s.store.(completionIntentStore).SaveCompletionIntent(ctx, intent); e != nil {
+		if e = s.saveCompletionIntent(ctx, intent); e != nil {
 			return e
 		}
 		v.ClosureIntentRefs = append(v.ClosureIntentRefs, intent.Ref)
@@ -162,7 +162,7 @@ func (s *Service) ProcessCompletionClosureClaim(ctx context.Context, j *v1.Job) 
 			return e
 		}
 		currentIntent.RecipientReceipt = r
-		return s.store.(completionIntentStore).SaveCompletionIntent(tx, currentIntent)
+		return s.saveCompletionIntent(tx, currentIntent)
 	})
 }
 
