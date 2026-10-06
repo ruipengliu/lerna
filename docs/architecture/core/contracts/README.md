@@ -7,7 +7,7 @@
 | 2026-10-04 | 按[架构评审处理记录](../../../review/archive/round-1/README.md)修订：定义唯一的 `CommandIdentity`，回执分为受理回执和决定回执，查询结果分五种（RV1、RV2）；授权控制状态只保留 `ACTIVE`/`REVOKED`，次数与期限改为计算值（RV3）；Grant 拆分 `use_rights[]` 与 `processing_purposes[]`（RV9）；新增端侧账本连续性记录（RV7）、条件集接纳和完成核验轮次的状态（RV6、RV11）；Result 列出条件来源。 |
 | 2026-10-04 | 按[第二轮评审处理记录](../../../review/archive/round-2/disposition.md)修订：核验轮次增加 `SUPERSEDED`（R2-01）；任务修改被接纳时同时递增控制代次（R2-02）；确认区分签发授权与动作准入，消费目标为互斥联合（R2-04）；契约分为公共契约与内部接口（R2-08、[ADR 0003](../../../adr/0003-replacement-classes-and-assembly.md)）；`must_understand` 由受控定义确定，扩展分三条路径（R2-10）。 |
 | 2026-10-04 | 按[第三轮评审处理记录](../../../review/archive/round-3/disposition.md)修订：条件集接纳绑定已处理的输入版本（R3-01）；冻结只存在于 `VERIFYING`（R3-02）；准入记录保存祖先控制依据和记忆依赖（R3-03、R3-05）；模型调用按"提议请求 + 调用位置"标识（R3-04）；内容区分原始观察与派生解释（R3-06）。主流程第 3 步改为先固定模型输入再准入，补上第二轮 R2-05 漏改的一处。 |
-| 2026-10-04 | 按[第四轮评审处理记录](../../../review/disposition.md)修订：开始核验递增控制代次，被拒绝后已开始的清单动作须收尾才能补建（R4-01）；父任务等直接子任务全部关闭后才开始核验（R4-02）；从未开放出口的动作以原账本的内部封闭证明收尾（R4-05）。 |
+| 2026-10-04 | 按[第四轮评审处理记录](../../../review/archive/round-4/disposition.md)修订：开始核验递增控制代次，被拒绝后已开始的清单动作须收尾才能补建（R4-01）；父任务等直接子任务全部关闭后才开始核验（R4-02）；从未开放出口的动作以原账本的内部封闭证明收尾（R4-05）。 |
 | 2026-10-05 | 顶层整理：2.5 只保留状态和转换，增加任务、动作、核验轮次三张状态图；2.6 由"两个门禁"改为"四道门禁"，把散在任务编排、出口闸门、授权等文档中的准入、开始、重试、完成条件集中到一处，并列出递增控制代次的全部事件和收尾的两条路径。第 4 节主线表的局部持久化点改称"持久点 n"，"P4""P5"只指出口闸门的编号。规则内容不变。 一致性修正：门禁条件加稳定编号（准入-1 等），供模块文档引用；记忆依赖区分当前依据与历史视图；开始门禁区分首次开始与安全重发；完成门禁关闭时比较本轮核验记录的依据；准备类准入也豁免条件集已接纳；准入失败时确定的拒绝仍作为决定保存；不改变依据的回答同步推进已处理输入版本；授权确认不带条件集版本；三个错误码的分类改为"不可恢复"。 |
 | 2026-10-05 | 字段与状态统一：内容增加发布维度（`publish_status`，暂存、已发布、隔离），`media_type` 写明指核验后的类型；会话输入的 `sequence` 改为 `session_seq`；新增"模块文档的字段表与本表的关系"。 |
 | 2026-10-05 | 四道门禁改用与整体方案共用的 SVG，突出条件性重试与发送前复查；检查条件不变。 |
@@ -15,6 +15,7 @@
 | 2026-10-05 | 图中的跨域交接改用具体行为说明，规则编号及解释放在图注或正文；交接机制不变。 |
 | 2026-10-05 | 模块名称统一为“执行管理”，同步模块简称与图示；存储和连续性语境中的“账本”指其持久执行记录。职责与契约不变。 |
 | 2026-10-05 | 模块名称由执行网关改回出口闸门，避免与网关与 SDK 撞名；恢复被改写的历史修订行；图中分类标签改为中文；职责与契约不变。 |
+| 2026-10-06 | 按[第五轮评审处理记录](../../../review/disposition.md)修订：收尾增加"无外部效果封闭"路径，重试门禁补安全重复读取一支（X-01、CT-04）；定义阻断性未知（X-02）；任务关闭递增控制代次，开始-2 检查生命周期（N-04）；准入-1 按来源分支（N-05）；收尾类工作在暂停、取消、关闭后仍可准入（N-02）；对象表补条件集、提议请求、核验轮次、授权使用记录、封闭证明、工作类别和完整许可子句，凭据改为 P3 后签发、P4 消费（X-09、X-11、N-03）；核验轮次增加 `INCONCLUSIVE`（TK-01）；开始-5 合并出口关联与金额覆盖（X-12）；补错误码（X-10）；第 4 节第 5、7 步改为引用权威位置（X-03、CT-08）；修正 2.5 的收尾说明（CT-03、CT-09）。 |
 
 - 状态：草稿
 - 负责满足：A4；为 A1–A3、C1–C9、G1–G12 提供共同定义
@@ -86,7 +87,7 @@ Ref = 全局名字 + revision + schema_id + digest（可选）
 | 对象修订 | 对象记录改变时 | 并发控制和精确引用 |
 | 条件集版本 | 任意一项必要条件被增加、删除或修改时 | 整体作废基于旧条件的提议 |
 | 任务输入版本 | 用户对当前任务的修改或有效回答被接纳时 | 作废没有看到新输入的提议。不改变任务依据的回答，同时把条件集的 `bound_input_version` 推进到新版本，不进入处理门禁（见[任务编排 2.2](../tasks/README.md#22-条件证据与提议)） |
-| 控制代次 | 暂停、恢复、取消、条件变更、开始完成核验，以及会改变任务依据的输入被接纳时 | 出口 P4 比较动作准入时的控制代次与当前值，挡住依据已变的旧动作开始；返回 `STALE_INPUT` 或 `STALE_GENERATION` |
+| 控制代次 | 暂停、恢复、取消、条件变更、开始完成核验、任务关闭，以及会改变任务依据的输入被接纳时 | 出口 P4 比较动作准入时的控制代次与当前值，挡住依据已变的旧动作开始；返回 `STALE_INPUT` 或 `STALE_GENERATION`（附代次种类和预期、实际值，见 3.2）。恢复命令以当前控制代次作为预期版本，没有单独的"暂停代次" |
 | 规划代次 | 任务编排发起新一轮提议请求时 | 拒绝迟到的旧一轮提议 |
 | 撤销代次 | 授权或其来源发生撤销时 | 让旧凭据失效 |
 | 实现版本 | 推理、适配器或扩展替换时 | 能力声明、诊断和回滚 |
@@ -99,16 +100,21 @@ Ref = 全局名字 + revision + schema_id + digest（可选）
 
 | 对象 | 关键字段 | 唯一写入方与约束 |
 | --- | --- | --- |
-| 任务（Task） | `goal_ref`、`owner_domain_id`、`requirements_version`、`input_version`、`lifecycle`、`control`、`progress`、`waiting_on[]`、`planning_generation`、`parent_task_ref?`、`result_ref?` | 任务编排。负责方从创建到关闭不变；父子关系不转移子任务的责任 |
+| 任务（Task） | `goal_ref`、`owner_domain_id`、`requirements_version`、`input_version`、`control_generation`、`lifecycle`、`control`、`progress`、`waiting_on[]`、`planning_generation`、`current_round_ref?`、`parent_task_ref?`、`result_ref?` | 任务编排。负责方从创建到关闭不变；父子关系不转移子任务的责任 |
 | 条件（Requirement） | `task_id`、`description_ref`、`necessary`、`verification_rule_ref`、`expected_value_ref?` | 任务编排。修改即新版本，不原地改写；核验规则固定版本 |
+| 条件集 | `task_id`、`requirements_version`、`requirement_refs[]`、`acceptance`（`DRAFT` 或 `ACCEPTED`）、`acceptance_basis_ref?`、`bound_input_version`、`processed_input_versions[]` | 任务编排。不可变快照；接纳状态和已处理的输入版本单独演进（见 2.5、任务编排 2.2） |
 | 上下文快照 | `task_ref`、`requirements_version`、`input_version`、`planning_generation`、`progress_refs[]`、`content_refs[]`、`capability_refs[]`、`retrieval_credential_ref?` | 任务编排。快照不携带行动权限 |
 | 提议（Proposal） | `task_id`、`context_snapshot_ref`、`planning_generation`、`reasoner_ref`、`kind`、`body` | 推理产生，任务编排接收后不可变。`kind` 为行动、修改条件、向用户提问、完成判断之一 |
-| 准入记录（动作意图） | `origin`、`task_id`、`requirements_version`、`input_version`、`control_generation`、`ancestor_controls[]`（各级祖先任务引用及准入时的控制代次）、`memory_dependencies[]`（记忆标识、修订、使用方式）、`model_call_position?`（模型调用时为提议请求和调用位置）、`operation_id`、`ledger_domain_id`、`executor_endpoint_id`、`grant_refs[]`、`budget_basis`、`confirmation_ref?`、`parameters_ref`、`capability_ref` | 任务编排。`origin` 是提议中的一步，或核心安排的工作（例如模型调用、核对查询）。记录准入依据，不保存效果 |
+| 提议请求 | `request_id`、`task_id`、`snapshot_ref`、`planning_generation`、`allowed_work_classes[]`、`model_call_positions[]`（位置、封存描述的摘要、模型动作引用）、`status` | 任务编排。位置的分配与模型动作的准入在同一裁决事务；见[推理接口 2.2](../../ports/reasoner/README.md#22-提议请求) |
+| 完成核验轮次 | `task_id`、`round_no`、`status`、`frozen_versions`（条件集版本、输入版本、递增后的控制代次）、`operation_set_digest`、`gaps[]` | 任务编排。冻结属于持有它的轮次；只有该轮次能释放 |
+| 准入记录（动作意图） | `origin`、`work_class`（`GOAL`、`PREPARATION`、`CLOSURE`）、`task_id`、`requirements_version`、`input_version`、`control_generation`、`ancestor_controls[]`（各级祖先任务引用及准入时的控制代次）、`memory_dependencies[]`（记忆标识、修订、使用方式）、`model_call_position?`（模型调用时为提议请求和调用位置）、`operation_id`、`ledger_domain_id`、`executor_endpoint_id`、`grant_refs[]`、`grant_use_ref`、`budget_basis`、`confirmation_ref?`、`parameters_ref`、`content_refs[]`、`capability_ref` | 任务编排。`origin` 是提议中的一步、提议请求中的模型调用位置，或核心为原责任安排的收尾工作（例如核对查询）；`work_class` 由核心按 `origin` 固定，推理不能自报。记录准入依据，不保存效果 |
 | 动作（Operation） | `admission_ref`、`executor_endpoint_id`、`adapter_ref`、`parameters_ref`、`capability_snapshot`、`lifecycle`、`dispatch`、`attempt_refs[]`、`effect_ref`、`closure_evidence_refs[]` | 执行管理。执行端点固定；取消不会把它变成另一个动作 |
 | 执行尝试（Attempt） | `operation_id`、`attempt_id`、`external_key`、`external_key_scope`、`key_valid_until?`、`phase`、`send_count`、`claim_epoch`、`observation_refs[]` | 执行管理。结果未知时按原标识和原外部键重发，只增加发送计数 |
 | 效果（Effect） | `operation_id`、`covered_attempt_ids[]`、`outcome`、`late_effect`、`evidence_refs[]`、`next_reconcile_at?` | 执行管理。必须注明证据覆盖了哪些尝试；没有证据不得默认为未生效 |
-| 授权（Grant） | `subject_ref`、`resource_scope`、`actions[]`、`use_rights[]`、`processing_purposes[]`、`purpose_vocabulary_version`、`valid_from`、`valid_until?`、`use_mode`、`use_pool_id`、`parent_grant_ref?`、`revocation_epoch`、`status`、`revocation_completion?` | 授权。操作权利分为读取、保存、同步、行动；处理目的是独立维度（见 [ADR 0002](../../../adr/0002-processing-purposes.md)），缺省不等于全部。委派后的有效权限是全部来源的交集 |
-| 凭据 | `credential_id`、`grant_refs[]`、`task_id?`、`operation_ref?`、`use_ref?`、`audience`、`use_right`、`processing_purpose`、`scope`、`issued_at`、`expires_at`、`revocation_epoch`、`proof` | 授权签发。出口凭据绑定具体动作、使用记录和出口；检索凭据绑定任务、操作权利、处理目的和期限。签名有效不等于当前有效 |
+| 封闭证明 | `operation_id`、`ledger_domain_id`、`basis`（`NEVER_DISPATCHED`、`NO_EXTERNAL_EFFECT`）、`covered_attempts[]`、`seal_revision`、`evidence_refs[]` | 执行管理，由原执行管理负责方产生，按 R7 交付。只覆盖准确的动作；用于收尾和释放预算预留（见 2.6"收尾的路径"） |
+| 授权（Grant） | `subject_ref`、`clauses[]`（每个许可子句含资源、动作、操作权利、处理目的、参数范围、运行范围和内容限制）、`semantic_version`、`purpose_vocabulary_version`、`max_admissions?`、`valid_from`、`valid_until?`、`use_mode`、`use_pool_id`、`parent_grant_ref?`、`revocation_epoch`、`status`、`revocation_completion?` | 授权。操作权利分为读取、保存、同步、行动；处理目的是独立维度（见 [ADR 0002](../../../adr/0002-processing-purposes.md)），缺省不等于全部。委派后的有效权限是全部来源的交集。许可以完整子句表达，不得展平成各维度的并集再组合（见[授权 2.1](../grants/README.md#21-授权记录)）；需要按维度展示时只能生成只读摘要 |
+| 授权使用记录 | `use_id`、`use_key`、`grant_chain_ref`、`operation_id` 或 `retrieval_id`、`request_digest`、`admission_ref`、`state` | 授权。与准入在同一事务建立；一次性授权的次数在此占用 |
+| 凭据 | `credential_id`、`kind`（出口发送、只读检索）、`grant_refs[]`、`task_id?`、`operation_ref?`、`attempt_ref?`、`send_seq?`、`use_ref?`、`audience`、`executor_endpoint_id?`、`instance_generation?`、`request_digest?`、`use_right`、`processing_purpose`、`scope`、`issued_at`、`expires_at`、`revocation_epoch`、`state`、`proof` | 授权签发。准入只建立授权使用记录；**出口发送凭据**在执行管理固定尝试和发送身份（P3）之后签发，绑定动作、尝试、发送序号、使用记录、执行端点和请求摘要，在 P4 消费一次。安全重发沿用原使用记录，签发新的发送凭据。检索凭据绑定任务、操作权利、处理目的和期限。签名有效不等于当前有效 |
 | 预算（Budget） | `scope_ref`、`limits[]`、`use_control`、`reserved`、`settled`、`unresolved_usage_refs[]` | 预算。额度、预留和实耗分开记录；关闭后不再接受新消耗，但仍接受已发生的费用 |
 | 预算依据 | `budget_ref`、`unit`、`ceiling`、`rate_basis_ref?`、`reservation_ref` | 准入时保存。`ceiling` 是本次调用的费用上界；上界未知的调用不准入 |
 | 用量回报 | `report_id`、`operation_id`、`attempt_id`、`billing_source`、`source_revision`、`measurement`、`amounts[]`、`evidence_refs[]` | 预算接收。区分累计值、增量、更正和退款；按计费来源去重，不得只按动作去重 |
@@ -129,7 +135,7 @@ Ref = 全局名字 + revision + schema_id + digest（可选）
 
 | 维度 | 声明内容 | 缺省值 |
 | --- | --- | --- |
-| 外部效果 | 无外部效果、改变外部世界、无法确定 | 改变外部世界 |
+| 外部效果 | 无外部效果、改变外部世界、无法确定。"无外部效果"指不改变目标系统的业务状态，费用和数据外发仍然发生；必须附证据才能用于收尾和重发 | 改变外部世界 |
 | 幂等 | 是否支持；幂等键的作用范围；参数是否必须一致；键的有效期 | 不支持 |
 | 结果查询 | 是否支持；如何关联到尝试；查询结果的可见性延迟；记录保留多久 | 不支持 |
 | 迟到终局 | 什么证据能证明原请求不会再生效（例如目标系统明确返回"该请求已终止"） | 无法证明 |
@@ -151,10 +157,10 @@ Ref = 全局名字 + revision + schema_id + digest（可选）
 | 结果 | `SUCCEEDED`、`FAILED`、`CANCELLED` | 只有通过完成门禁才能为 `SUCCEEDED`；后两者可以遗留未知项 |
 | 条件 | 追加新版本，任务切换当前条件集版本 | 任意增删改都使旧版本的提议失效；已准入动作的责任不受影响 |
 | 条件集接纳 | `DRAFT → ACCEPTED`；修改产生新版本，重新从 `DRAFT` 开始。接纳依据记录 `bound_input_version` | `bound_input_version` 只能按输入版本顺序逐个推进，依据是新条件集被接纳，或依据可信输入、受信模板确认无需改条件；模型自报"已处理"不算。核验规则换成更弱的规则，与删除必要条件需要同样的可信依据 |
-| 完成核验轮次 | `VERIFYING → PASSED / REJECTED / SUPERSEDED`；带单调递增的轮次号 | 进入 `VERIFYING` 时冻结新的目标准入并递增控制代次；三个出口都在同一事务中释放本轮冻结，冻结只存在于 `VERIFYING`。`REJECTED` 表示目标未达成，记录逐项缺口；`SUPERSEDED` 表示输入、条件或控制变更使本轮失去裁决资格，不代表条件不满足。旧轮次不得释放新轮次的冻结 |
+| 完成核验轮次 | `VERIFYING → PASSED / REJECTED / INCONCLUSIVE / SUPERSEDED`；带单调递增的轮次号 | 进入 `VERIFYING` 时冻结新的目标准入并递增控制代次；四个出口都在同一事务中释放本轮冻结，冻结只存在于 `VERIFYING`。`REJECTED` 表示目标未达成，记录逐项缺口；`INCONCLUSIVE` 表示在期限、观察上限或核对暂停之后仍无法判定，记录缺口，不代表目标未达成；`SUPERSEDED` 表示输入、条件或控制变更使本轮失去裁决资格，不代表条件不满足。旧轮次不得释放新轮次的冻结 |
 | 命令 | 同步：`不存在 → ACCEPTED / REJECTED`；异步：`不存在 → SUBMITTED → ACCEPTED / REJECTED` | `SUBMITTED` 只表示已承担给出决定的责任，不是业务决定。决定只写一次 |
 | 提议 | 内容不可变；接收、准入、拒绝、过期由独立决定表达 | 推理不得自行把提议标成"已授权"或"已完成" |
-| 动作生命周期 | `ACCEPTED → ACTIVE → SETTLED` | 收尾依据见 2.6 的"收尾的两条路径" |
+| 动作生命周期 | `ACCEPTED → ACTIVE → SETTLED` | 收尾依据见 2.6 的"收尾的路径" |
 | 动作派发 | `OPEN → SEALED` | 封闭后不再创建或发送任何尝试；不得重新打开 |
 | 执行尝试 | `REGISTERED → DISPATCH_POSSIBLE → OBSERVED`；从未发送的可直接封闭 | 调用外部之前必须先持久写入 `DISPATCH_POSSIBLE`；崩溃后按"可能已发出"处理 |
 | 效果 | 没有任何尝试进入 `DISPATCH_POSSIBLE` 时为 `NOT_APPLIED`；第一次写入 `DISPATCH_POSSIBLE` 时转为 `UNKNOWN`；之后由证据转为 `APPLIED` 或 `NOT_APPLIED` | 由覆盖全部相关尝试的证据决定。暂时查不到不是最终否定 |
@@ -177,7 +183,7 @@ stateDiagram-v2
     state OPEN {
         [*] --> ACTIVE
         ACTIVE --> PAUSED: 暂停
-        PAUSED --> ACTIVE: 恢复（匹配暂停代次）
+        PAUSED --> ACTIVE: 恢复（预期控制代次相符）
         ACTIVE --> CANCELLING: 取消
         PAUSED --> CANCELLING: 取消
     }
@@ -186,7 +192,7 @@ stateDiagram-v2
     CLOSED --> [*]
 ```
 
-**一个动作的四个维度。**派发控制决定还能不能发；尝试阶段记录发到了哪一步；效果和迟到可能性分别记录"发生了什么"和"还会不会发生"。只有效果确定、或迟到可能性为 `RULED_OUT` 且派发已封闭时，动作才能收尾。
+**一个动作的四个维度。**派发控制决定还能不能发；尝试阶段记录发到了哪一步；效果和迟到可能性分别记录"发生了什么"和"还会不会发生"。动作何时可以收尾，只以 2.6"收尾的路径"为准。
 
 ```mermaid
 stateDiagram-v2
@@ -204,7 +210,7 @@ stateDiagram-v2
     }
 ```
 
-**完成核验轮次。**冻结只存在于 `VERIFYING`；三个出口都释放冻结，后续是否允许补建由 2.6 的准入门禁决定。
+**完成核验轮次。**冻结只存在于 `VERIFYING`；四个出口都释放冻结，后续是否允许补建由 2.6 的准入门禁决定。
 
 ```mermaid
 stateDiagram-v2
@@ -213,10 +219,12 @@ stateDiagram-v2
     VERIFYING --> PASSED: 全部门禁通过<br/>同事务以 SUCCEEDED 关闭
     VERIFYING --> REJECTED: 目标未达成<br/>记录缺口、释放冻结
     VERIFYING --> SUPERSEDED: 输入、条件或控制变更<br/>释放冻结
+    VERIFYING --> INCONCLUSIVE: 期限到达或核对暂停<br/>记录缺口、释放冻结
     VERIFYING --> VERIFYING: 缺证据：收尾用途观察后重验
     PASSED --> [*]
     REJECTED --> [*]
     SUPERSEDED --> [*]
+    INCONCLUSIVE --> [*]
 ```
 
 ### 2.6 四道门禁
@@ -235,6 +243,7 @@ stateDiagram-v2
 | 条件变更 | 旧条件下准入的动作不再有依据 |
 | 会改变任务依据的输入被接纳（任务修改；会改变依据的答案） | 模型还没解释修改时，核心已知依据变了 |
 | 开始完成核验 | 清单中尚未开始的动作必须停住，否则核验期间清单还在变 |
+| 任务关闭（成功或非成功） | 关闭后不再有目标推进；不能依赖封闭请求何时送达执行管理 |
 
 确认回应和"仅记录"的消息不递增控制代次，否则批准会让被批准的事项失效。
 
@@ -244,11 +253,11 @@ stateDiagram-v2
 
 | 编号 | 条件 | 负责模块 | 依据 |
 | --- | --- | --- | --- |
-| 准入-1 | 原命令尚无决定；提议属于当前请求、未过期、未被消费，规划代次是当前的 | 持久工作、任务编排 | G3、G6 |
+| 准入-1 | 原命令尚无决定，并按 `origin` 检查来源：**提议中的一步**——提议属于当前请求、未过期、未被消费，规划代次是当前的；**模型调用位置**——提议请求有效、规划代次是当前的、该位置尚未绑定其他描述、调用描述已由受信宿主封存；**原责任的收尾工作**——原动作或原任务存在，核心的调度决定引用它。各分支都保留命令去重和版本检查 | 持久工作、任务编排 | G3、G6 |
 | 准入-2 | 条件集版本、输入版本、控制代次都是当前的；计划依赖已满足 | 任务编排 | G4 |
 | 准入-3 | 条件集为 `ACCEPTED`，且 `bound_input_version` 等于当前输入版本（会改变依据的输入都已处理） | 任务编排 | G2 |
-| 准入-4 | 本任务和各级祖先任务允许推进：`OPEN`、`ACTIVE`、没有核验冻结 | 任务编排 | C7 |
-| 准入-5 | 没有阻断性的未知效果；最近一轮被拒绝的核验清单中，开始核验前已取得开始回执、尚未 `SETTLED` 的动作同样阻断 | 任务编排读取执行管理的事实 | G1 |
+| 准入-4 | 本任务和各级祖先任务允许推进：`OPEN`、`ACTIVE`、没有核验冻结（收尾类按下表放宽） | 任务编排 | C7 |
+| 准入-5 | 没有**阻断性的未知效果**。阻断范围是同一根任务下的整棵任务树，包括已关闭子任务尚未收尾的后果；其他根任务不受影响。阻断对象是能力声明不是"无外部效果"、效果为 `UNKNOWN` 的动作，以及最近一轮被拒绝或无法判定的核验清单中，开始核验前已取得开始回执、尚未 `SETTLED` 的动作。有证据的"无外部效果"动作的未知不阻断 | 任务编排读取执行管理的事实 | G1 |
 | 准入-6 | 记忆依赖仍然有效：作为**当前依据**的，修订仍是当前修订；作为**历史视图**的，固定修订仍可按当前许可读取、未被删除 | 内容模块的记忆记录 | G8、G9 |
 | 准入-7 | 授权链有效，覆盖动作、操作权利和处理目的，还有剩余次数；原子建立使用记录 | 授权 | G7、G8 |
 | 准入-8 | 预算预留成功；费用上界未知的调用不准入 | 预算 | G10 |
@@ -259,8 +268,8 @@ stateDiagram-v2
 
 | 类别 | 例子 | 跳过的条件 | 仍然检查 |
 | --- | --- | --- | --- |
-| 准备 | 解释新输入、整理条件所需的模型调用；必要的只读读取；向用户澄清 | 准入-3（条件集已接纳、已处理到当前输入版本） | 其余各项；工作类别由核心按持久来源指定，推理不能自报 |
-| 收尾 | 核对、主动观察、向外部发取消、费用确认 | 准入-3、准入-4 中的核验冻结和祖先推进、准入-5 | 当前授权、预算、出口凭据；不得启动新的目标推进，也不得执行补偿 |
+| 准备 | 解释新输入、整理条件所需的模型调用；必要的只读读取；向用户澄清 | 准入-3（条件集已接纳、已处理到当前输入版本）；能力有证据为"无外部效果"时，另跳过准入-5 | 其余各项；工作类别由核心按持久来源指定，推理不能自报 |
+| 收尾 | 核对、主动观察、向外部发取消、费用确认 | 准入-3、准入-4（本任务处于 `PAUSED`、`CANCELLING` 或已 `CLOSED` 时仍可准入，祖先同样放宽）、准入-5 | 必须绑定一个尚未收尾的原责任；当前授权、预算、出口凭据；不得启动新的目标推进，也不得执行补偿。关闭后的收尾不改变已固定的 Result |
 
 "准备"和"收尾"是**工作类别**，说明这次准入为什么可以跳过部分条件；它与授权中的"处理目的"是两回事。
 
@@ -271,10 +280,10 @@ stateDiagram-v2
 | 编号 | 条件 | 负责模块 |
 | --- | --- | --- |
 | 开始-1 | 凭据、调用者、执行端点、调用描述与准入一致 | 出口闸门 |
-| 开始-2 | **首次开始**：本任务及各级祖先任务的控制代次与准入时相同。**安全重发**：不比较准入时的控制代次（围栏只挡尚未开始的动作），改为检查本任务及各级祖先当前的控制状态允许；取消之后不得再重发写请求（见[执行管理 4.4](../ledger/README.md#44-取消与执行的竞争)） | 任务编排 |
-| 开始-3 | 有与该动作精确匹配的授权使用记录，授权链未撤销、未过期；**不再要求剩余次数** | 授权 |
+| 开始-2 | **首次开始**：本任务及各级祖先任务的控制代次与准入时相同；目标类和准备类动作还要求本任务及祖先仍为 `OPEN`，收尾类按准入时的放宽规则复核原责任仍未收尾。**安全重发**：不比较准入时的控制代次（围栏只挡尚未开始的动作），改为检查本任务及各级祖先当前的控制状态允许；取消之后不得再重发写请求（见[执行管理 4.4](../ledger/README.md#44-取消与执行的竞争)） | 任务编排 |
+| 开始-3 | 有与该动作精确匹配的授权使用记录，授权链未撤销、未过期；消费本次发送的出口凭据；**不再要求剩余次数** | 授权 |
 | 开始-4 | 记忆依赖仍然有效（口径同准入-6）；内容的操作权利与处理目的上限仍允许 | 内容治理 |
-| 开始-5 | 占用一次实际发送额度（安全重发也占），与开始回执同事务绑定 | 预算 |
+| 开始-5 | 占用一次实际发送额度（安全重发也占），登记本次发送的出口关联，并确认预留金额覆盖本次发送的费用上界（不足时先按确定的上界追加预留，追加不了就不开始）；与开始回执同事务绑定 | 预算 |
 | 开始-6 | 端侧执行管理处于"允许恢复"的启动状态 | 执行管理 |
 
 通过后返回持久的开始回执。开始回执只表示"允许开始"，不证明请求已经发出。之后执行管理在 P5 检查派发未封闭，并在调用外部之前写下 `DISPATCH_POSSIBLE`。
@@ -288,6 +297,7 @@ stateDiagram-v2
   且 满足以下之一：
     目标系统证明原尝试未生效，并且原请求不会再迟到生效
     目标系统仍对原键、原作用范围、原参数保证幂等（在有效期内）
+    能力有证据为"无外部效果"，且重复读取安全
 ```
 
 "能查询"不等于"查不到就能重试"。查询结果要能证明最终未生效，必须同时覆盖查询的可见性延迟、已进入目标系统的请求，以及仍在途中的请求。
@@ -308,16 +318,17 @@ stateDiagram-v2
 | 完成-6 | 全部已准入动作都已 `SETTLED`，清单完整，包括尚未收到接纳回执的意图 | 关闭时 |
 | 完成-7 | 关闭事务中读到的条件集版本、输入版本和控制代次，仍等于本轮核验记录的值 | 关闭时 |
 
-G2 允许的唯一例外：执行管理独立证明某个动作不会再迟到生效（`RULED_OUT`），并且必要条件另有证据满足时，该动作的历史效果可以仍是未知。Result 必须披露这个遗留的未知。
+收尾不要求效果已知：动作已 `SETTLED`、必要条件另有证据满足时，它的历史效果可以仍是未知，Result 必须披露这个遗留的未知。迟到可能性仍为 `MAY_OCCUR` 的动作阻止成功。
 
-#### 收尾的两条路径
+#### 收尾的路径
 
-动作 `SETTLED` 要求派发已封闭、迟到可能性为 `RULED_OUT`、没有未处理的证据冲突。证明"不会再迟到生效"只有两条受信路径（见[执行管理 2.3](../ledger/README.md#23-收尾依据)）：
+动作 `SETTLED` 要求派发已封闭、迟到可能性为 `RULED_OUT`、没有未处理的证据冲突。证明"不会再迟到生效"只有三条受信路径（见[执行管理 2.3](../ledger/README.md#23-收尾依据)）：
 
 | 路径 | 适用 | 证据 |
 | --- | --- | --- |
 | 内部封闭证明 | 没有任何发送进入 `DISPATCH_POSSIBLE` | 原执行管理负责方的完整尝试和发送记录、封闭范围和修订、与出口开放竞争的结果 |
 | 外部终局核验 | 至少一次发送可能已发生 | 可信出口固定的原始观察，由受信解释规则判定 |
+| 无外部效果封闭 | 至少一次发送可能已发生，能力有证据为"无外部效果" | 原执行管理负责方的封闭证明：派发已永久封闭，能力证据覆盖全部相关尝试；预算已接纳这些发送的费用责任（预留保持到结清），内容治理已登记数据的接收方。迟到只影响费用和外发记录，效果可以保持 `UNKNOWN`；迟到的响应不得让作废的提议重新生效 |
 
 插件不能选择内部路径，也不能用"从未发送"的声明代替证明。
 
@@ -355,7 +366,13 @@ G2 允许的唯一例外：执行管理独立证明某个动作不会再迟到�
 | `INVALID_INPUT`、`UNSUPPORTED_CONTRACT`、`UNSUPPORTED_FEATURE` | 不可恢复 | 修正输入或升级；不执行 |
 | `PERMISSION_DENIED`、`GRANT_REVOKED`、`CONTENT_UNUSABLE` | 不可恢复 | 取得新的合法依据后提交新命令，不扩大旧权限 |
 | `BUDGET_EXCEEDED`、`CONFIRMATION_INVALID` | 不可恢复 | 等用户或事实变化；不自动批准 |
-| `STALE_REQUIREMENT`、`STALE_INPUT`、`STALE_GENERATION`、`REVISION_CONFLICT` | 不可恢复 | 读取当前状态，重新形成意图；不得换个标识重用旧提议 |
+| `STALE_REQUIREMENT`、`STALE_INPUT`、`STALE_GENERATION`、`REVISION_CONFLICT` | 不可恢复 | 读取当前状态，重新形成意图；不得换个标识重用旧提议。`STALE_GENERATION` 附代次种类（控制、规划）和预期、实际值 |
+| `INPUT_UNPROCESSED` | 不可恢复 | 准入-3：等待会改变依据的输入被处理（准备类工作仍可准入） |
+| `TASK_NOT_ADVANCING` | 不可恢复 | 准入-4、开始-2：本任务或祖先已暂停、取消、关闭或处于核验冻结；附原因字段 |
+| `BLOCKED_BY_UNKNOWN` | 暂时性 | 准入-5：等待阻断动作收尾；附阻断动作的引用。收尾类工作仍可准入 |
+| `MEMORY_REVISION_CHANGED` | 不可恢复 | 准入-6、开始-4：重新取当前视图后重新形成意图 |
+| `DISPATCH_SEALED` | 不可恢复 | 派发已封闭；原动作只能核对，不得再发送 |
+| `LEDGER_QUARANTINED` | 暂时性 | 开始-6：端侧执行管理处于待验证或恢复隔离；等待连续性核对 |
 | `IDEMPOTENCY_CONFLICT` | 不可恢复 | 调用方有错误；保留原决定 |
 | `AUTHORITY_UNREACHABLE` | 暂时性 | 无法证明当前授权或当前事实；等待，不用缓存绕过 |
 | `DEPENDENCY_UNAVAILABLE`、`RATE_LIMITED` | 暂时性 | 尚无决定时按原命令恢复；已接纳的恢复已保存的工作 |
@@ -404,9 +421,9 @@ G2 允许的唯一例外：执行管理独立证明某个动作不会再迟到�
 | 2 | 创建任务和条件，固定上下文快照 | **持久点 2 裁决域**：保存任务、条件和快照 |
 | 3 | 推理每需要一次模型调用，受信宿主固定完整的调用描述，核心对它准入 | **持久点 3 裁决域**：以"核心安排的工作"为来源，按"提议请求 + 调用位置"保存准入记录、费用上界、预留和待办。同位置同描述返回原记录，同位置不同描述报冲突 |
 | 4 | 推理返回提议 | **持久点 4 裁决域**：保存提议及其依据；旧规划代次的提议拒绝 |
-| 5 | 准入 | **持久点 5 裁决域**：原子检查当前条件集版本及其已处理到当前输入版本、没有阻断性未知效果、依赖的记忆修订仍是当前修订、授权、预算和确认，保存动作意图（含祖先控制依据）、回执和待办 |
+| 5 | 准入 | **持久点 5 裁决域**：在一个事务中执行 2.6 的准入门禁，保存动作意图（含祖先控制依据）、回执和待办 |
 | 6 | 交接给执行管理（R7） | **持久点 6a** 本方已有意图；**持久点 6b** 执行管理持久接纳；**持久点 6c** 本方保存接纳回执。回执丢失时查询原交接 |
-| 7 | 发出 | **持久点 7 执行管理**：保存尝试并标记 `DISPATCH_POSSIBLE`；出口闸门在 P4 核验当前凭据、本任务及各级祖先的控制代次、记忆依赖、派发控制和费用依据后调用 |
+| 7 | 发出 | 顺序以[出口闸门 4.1](../egress/README.md#41-正常调用)为准：执行管理固定尝试和发送身份（P3）；裁决域执行开始门禁并保存开始回执（P4）；**持久点 7 执行管理**验证开始回执和派发未封闭，写下 `DISPATCH_POSSIBLE`（P5）；之后才发生 I/O |
 | 8 | 接收效果、证据和用量 | **持久点 8a 内容治理**登记证据来源；**持久点 8b 执行管理**保存观察并裁决效果；**持久点 8c 预算**按计费来源记账 |
 | 9 | 核对未知效果 | 核对查询本身也是一次准入过的动作；没有安全依据就等待 |
 | 10 | 完成门禁 | 固定已准入动作集合，取得执行管理的收尾证明；**持久点 10 裁决域**重新核验后原子保存 Result 和终态 |
@@ -529,7 +546,7 @@ AWS 的做法是由调用方提供请求标识表达意图：同一标识、不�
 
 ### 7.8 需要记录 ADR 的决定
 
-全局标识方案、Schema 的权威来源和版本兼容规则一旦采用就很难撤回，正式采纳前必须各写一篇 ADR。
+全局标识方案、Schema 的权威来源和版本兼容规则一旦采用就很难撤回。Schema 的权威来源已由 [ADR 0004](../../../adr/0004-language-and-stack.md) 决定（Protobuf，仍待 H1 验证）；其余两项见[文档规范 8](../../conventions.md#8-adr-待办)的待办表。
 
 ## 8 待定事项
 

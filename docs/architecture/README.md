@@ -16,6 +16,7 @@
 | 2026-10-05 | 模块名称统一为“执行管理”，同步模块简称与图示；存储和连续性语境中的“账本”指其持久执行记录。职责与契约不变。 |
 | 2026-10-05 | 模块名称由执行网关改回出口闸门，避免与网关与 SDK 撞名；职责与契约不变。 |
 | 2026-10-05 | 文档索引增加 [ADR 0004](../adr/0004-language-and-stack.md) 和[开发规范](../development.md)。 |
+| 2026-10-06 | 索引登记[一致性测试](verification/conformance.md)和[故障注入清单](verification/fault-injection.md)；评审者的阅读顺序加入评审记录（第五轮 RM-02）。 |
 
 本目录存放 Lerna 的现行架构设计：一个面向个人用户、以可靠性契约为核心的 Agent Harness。目前只有设计，尚未实现；各文档的状态以第 2 节索引为准。
 
@@ -24,7 +25,7 @@
 | 你是 | 建议顺序 |
 | --- | --- |
 | 新加入的开发者 | [整体方案](overview.md) → [项目目标](project-goals.md) → [分层与模块](layers.md) → 要开发的模块文档 |
-| 评审者 | [项目目标](project-goals.md) → [分层与模块](layers.md) → [整体方案](overview.md) 第 5 节 → 关心的模块 |
+| 评审者 | [项目目标](project-goals.md) → [分层与模块](layers.md) → [整体方案](overview.md) 第 5 节 → 关心的模块；历次评审意见与处理记录见 [`docs/review/`](../review/README.md)（评审意见本身不是现行规则） |
 | 文档作者 | [文档规范](conventions.md)，再读要修改文档的上游 |
 
 上下游关系：项目目标是全部文档的依据，分层与模块是各模块文档的直接上游；整体方案只做解释，不新增要求。术语以[项目目标第 3 节](project-goals.md#3-核心术语)为准。
@@ -68,6 +69,8 @@
 | [扩展管理](platform/extensions/README.md) | 3 设计 | 草稿 |
 | [评测与进化](platform/eval/README.md) | 3 设计 | 草稿 |
 | [流程：模型调用](flows/model-call.md) | 3 设计 | 草稿 |
+| [一致性测试](verification/conformance.md) | 5 验证 | 草稿 |
+| [故障注入清单](verification/fault-injection.md) | 5 验证 | 草稿 |
 | [数据与存储](topics/data-and-storage.md) | 3 设计 | 草稿 |
 | [端云部署与故障域](topics/deployment.md) | 3 设计 | 草稿 |
 | [安全与威胁模型](topics/security.md) | 3 设计 | 草稿 |

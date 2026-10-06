@@ -3,6 +3,7 @@
 | 日期 | 修订说明 |
 | --- | --- |
 | 2026-10-04 | 初版，来自[架构评审处理记录](../review/archive/round-1/README.md) RV9。 |
+| 2026-10-06 | 按[第五轮评审处理记录](../review/disposition.md)修订后果：区分 M1 保留字段、M2 完整检查、M5 验收（A2-01）。决定不变。 |
 
 - 状态：已采纳
 - 影响：[项目目标 G8 与术语](../architecture/project-goals.md#3-核心术语)、[核心契约](../architecture/core/contracts/README.md)、[授权](../architecture/core/grants/README.md)、[内容治理](../architecture/core/content/README.md)、[运行记录](../architecture/core/trace/README.md)
@@ -22,7 +23,7 @@
 ## 后果
 
 - 授权的可判定集合 D(g) 多一个维度；委派包含判断、内容用途上限和凭据请求绑定都要带上处理目的。
-- M2 写入契约，M5 在真实运行记录的评测数据流上验收。
+- M1 在契约中保留 `use_rights[]`、`processing_purposes[]` 两个字段，未知值一律拒绝，处理目的只用"当前任务"；M2 实现完整的检查；M5 在真实运行记录的评测数据流上验收。
 
 ## 考虑过的备选
 

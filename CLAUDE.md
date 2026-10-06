@@ -14,7 +14,7 @@ contracts/proto/      .proto 源文件（唯一来源）；contracts/gen/go/ 为
 core/<模块>/           核心模块；私有代码放 core/<模块>/internal/
 defaults/             默认推理、默认记忆策略
 adapters/             api/ file/ gui/ agent/ interaction/
-infra/                受信实现：postgres/ sqlite/ clock/ keys/ egressio/；迁移放各自 migrations/
+infra/                受信实现：postgres/ sqlite/ clock/ keys/ egressio/ hosting/ rules/；迁移放各自 migrations/
 platform/             gateway/ extensions/ eval/
 cmd/                  装配入口：lernad/（云端服务）、lerna/（命令行）；只装配，不写业务规则
 conformance/          一致性测试；故障注入放 conformance/fault/（构建标签 fault）
@@ -25,7 +25,7 @@ sdk/typescript/       TypeScript SDK（M3 起）
 
 ## 开发规则
 
-- **依赖方向（R6）**：`core/` 只依赖 `contracts/`、标准库和本模块声明的内部接口；数据库驱动、网络框架、模型供应商 SDK 只出现在 `infra/`、`adapters/`、`cmd/`。新增第三方依赖要在 PR 中说明理由。
+- **依赖方向（R6）**：`core/` 只依赖 `contracts/`、标准库、`core/durable` 的事务上下文和本模块声明的端口（见开发规范 3.1）；数据库驱动、网络框架、模型供应商 SDK 只出现在 `infra/`、`adapters/`、`cmd/`。新增第三方依赖要在 PR 中说明理由。
 - **测试先行**：先写会失败的测试，再实现。测试函数上方标注它验证的规则，格式固定：`// 规则：G1、开始-2`（编号来自项目目标的 G/R/V 编号和核心契约 2.6 的门禁条件）。涉及外部效果的测试检查持久记录和模拟目标实际收到的调用次数。
 - **命名与注释**：标识符用英文，公共对象的字段名、状态名、错误码沿用核心契约；注释用中文，术语以 `docs/architecture/project-goals.md` 第 3 节为准。
 - **提交**：Conventional Commits 前缀（`feat:` `fix:` `docs:` `test:` `refactor:` `build:` `chore:`），正文英文；按功能开分支，经 PR 合并到 `main`。只在被要求时提交或推送。

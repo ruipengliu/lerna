@@ -3,6 +3,7 @@
 | 日期 | 修订说明 |
 | --- | --- |
 | 2026-10-05 | 初版：技术栈、目录骨架、依赖规则、工具链与命令、测试、代码风格、协议与生成代码、Git 工作流、设计文档与代码的关系。 |
+| 2026-10-06 | 按[第五轮评审处理记录](review/disposition.md)修订：新增 3.1 核心模块的包结构（调用方声明端口、`core/durable` 声明事务上下文、核心模块之间只允许导入 `core/durable`）（X-06）；骨架增加受信组件的位置 `infra/hosting/`、`infra/rules/`、`infra/egressio/<供应商>/`（X-08）；测试分为契约场景层与进程内装配层，增加故障点标注（X-20、DV-05）；Go 目录命名建议（DV-04）。 |
 
 - 状态：已采纳
 - 读者：写代码和评审代码的开发者与 Agent
@@ -40,7 +41,10 @@ core/                       核心模块，一个模块一个目录
   <模块>/internal/          模块私有代码，其他模块不可导入
 defaults/                   默认实现：reasoner/、memory/
 adapters/                   执行与交互适配器：api/、file/、gui/、agent/、interaction/
-infra/                      受信实现：postgres/、sqlite/、clock/、keys/、egressio/
+infra/                      受信实现：postgres/、sqlite/、clock/、keys/、egressio/、hosting/、rules/
+  egressio/<供应商>/         出口基本操作与供应商编码（模型、API 的请求编码）
+  hosting/                  受信宿主：捕获推理的实际读取、封存模型调用描述
+  rules/                    受信解释规则（执行证据的终局）与核验规则（条件是否满足）
   <实现>/migrations/        数据库迁移脚本
 platform/                   平台服务：gateway/、extensions/、eval/
 cmd/                        装配入口，一个可执行程序一个目录
@@ -53,7 +57,9 @@ apps/web/                   浏览器界面（以后）
 docs/                       设计文档、ADR、评审与调研
 ```
 
-模块目录与设计文档目录一一对应，例如 `core/ledger/` 的设计在 `docs/architecture/core/ledger/README.md`。目录名用英文小写，多个单词用短横线。
+模块目录与设计文档目录一一对应，例如 `core/ledger/` 的设计在 `docs/architecture/core/ledger/README.md`。目录名用英文小写；Go 代码目录建议用一个简短的英文单词，因为 Go 包名不能含短横线（目录和导入路径本身可以）。
+
+`infra/hosting/`、`infra/rules/` 和 `infra/egressio/` 下的供应商编码属于受信实现（[分层与模块第 2 节](architecture/layers.md#2-划分原则)）：随受审查的版本发布，不随 `defaults/`、`adapters/` 中的第三方实现一起替换。普通适配器只能提交请求描述、引用原始观察和提交解释建议，通过公共契约使用这些组件。
 
 ## 3 依赖规则
 
@@ -62,11 +68,31 @@ docs/                       设计文档、ADR、评审与调研
 | 目录 | 可以依赖 | 不得依赖 |
 | --- | --- | --- |
 | `contracts/` | 标准库、Protobuf 运行时 | 其他任何本仓库目录 |
-| `core/<模块>/` | `contracts/`、标准库、本模块声明的内部接口 | `infra/`、`adapters/`、`defaults/`、`platform/`、`cmd/`；数据库驱动；网络框架；其他模块的 `internal/` |
-| `infra/` | `core/` 声明的内部接口、`contracts/`、数据库驱动等 | `adapters/`、`defaults/`、`platform/` |
+| `core/<模块>/` | `contracts/`、标准库、`core/durable` 的导出包（事务上下文、命令回执、待办）、本模块声明的端口 | `infra/`、`adapters/`、`defaults/`、`platform/`、`cmd/`；数据库驱动；网络框架；除 `core/durable` 以外的其他核心模块；任何模块的 `internal/` |
+| `core/durable/` | `contracts/`、标准库 | 其他任何核心模块 |
+| `infra/` | `core/<模块>` 的导出包（为了实现其中声明的端口）、`contracts/`、数据库驱动等 | `adapters/`、`defaults/`、`platform/`；任何模块的 `internal/` |
 | `defaults/`、`adapters/` | `contracts/` | `core/` 的内部实现 |
-| `platform/` | `contracts/`、`core/` 的公开接口 | 任何模块的私有记录或 `internal/` |
+| `platform/` | `contracts/`、`core/<模块>` 导出包中的命令与查询 API | 端口的实现、任何模块的私有记录或 `internal/` |
 | `cmd/` | 全部；只做装配，不写业务规则 | — |
+
+### 3.1 核心模块的包结构
+
+[ADR 0003](adr/0003-replacement-classes-and-assembly.md) 的"内部接口"指不进入 SDK、由受信实现实现的接口，与 Go 的 `internal/` 目录不是一回事。代码中这样落实：
+
+| 位置 | 放什么 |
+| --- | --- |
+| `core/<模块>/`（导出包） | 模块的命令与查询 API；本模块声明、要求别人实现的**端口**（导出的接口类型），包括存储端口和对其他核心模块的依赖端口 |
+| `core/<模块>/internal/` | 实现细节，只有本模块可以导入 |
+| `core/durable/` | 裁决域唯一的事务上下文类型（只携带事务身份、用户、持久档位和提交钩子，不提供通用的表访问）、命令回执和待办工作的接口 |
+
+规则：
+
+- **调用方声明端口，装配入口注入实现。**例如准入时任务编排需要授权的"核验并占用"、预算的预留、会话的确认消费、内容的使用检查，就在 `core/tasks` 中声明这几个端口，由 `core/grants` 等模块的导出类型实现，在 `cmd/` 中连接；`core/tasks` 不导入 `core/grants`；
+- 端口方法以 `core/durable` 的事务上下文为参数，各模块用它加入同一个裁决域事务，不各自开事务；
+- 核心模块之间唯一允许的导入是 `core/durable`，因此不会成环；
+- `infra/` 实现各模块声明的端口；`platform/` 只调用导出包中的命令与查询 API。
+
+这些规则写进 `.golangci.yml` 的 depguard 配置；违反时 `make lint` 失败，导入他模块 `internal/` 时编译失败。
 
 第三方依赖越少越好：
 
@@ -102,6 +128,7 @@ docs/                       设计文档、ADR、评审与调研
 | --- | --- | --- |
 | 单元测试 | 与代码同目录的 `_test.go` | `make test` |
 | 一致性测试：同一接口的不同实现必须通过同一套用例 | `conformance/` | `make test` |
+| 契约场景：只通过公共契约命令驱动，断言持久记录和模拟目标实际收到的调用 | `conformance/` 中与语言无关的场景定义（输入、故障点、期望的责任记录和目标观察），由 Go harness 执行 | `make test-fault` |
 | 故障注入：崩溃、回执丢失、竞争、迟到效果 | `conformance/fault/`，用构建标签 `fault` 隔开 | `make test-fault` |
 
 **标注规则编号。**测试函数上方用一行注释写明它验证的规则，格式固定：
@@ -112,6 +139,10 @@ func TestSafeResendSkipsAdmissionGeneration(t *testing.T) { ... }
 ```
 
 可以标注的编号：不变量 G1–G12、依赖规则 R1–R7、门禁条件（如"准入-6""开始-2""完成-5"，见[核心契约 2.6](architecture/core/contracts/README.md#26-四道门禁)）、专项验收 V1、V3、V4。
+
+故障注入测试另起一行标注**故障点**，格式为 `// 故障点：出口/P5 提交后`，故障点的名字取自[故障注入清单](architecture/verification/fault-injection.md)。故障点是位置，不是规则，两行分开写。
+
+**两层测试。**契约场景层只通过公共契约命令驱动，场景定义（输入、故障点、期望的责任记录和目标观察）与实现语言无关，将来手机端若有第二份核心实现，必须通过同一批场景；进程内装配层用于检查 Go 实现的内部细节。M1 的 harness 先实现前一层，再补后一层。
 
 涉及出口、授权、预算或持久记录的包（`core/egress`、`core/grants`、`core/budget`、`core/durable`、`core/ledger`、`infra/postgres`、`infra/sqlite`），每个包至少要有一个带规则标注的测试，`make check` 会检查。这是[项目目标第 12 节](architecture/project-goals.md#12-如何使用本文)的要求。
 

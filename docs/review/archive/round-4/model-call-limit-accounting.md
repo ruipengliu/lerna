@@ -16,11 +16,11 @@ R3-04 的“提议请求 + 调用位置”能够区分恢复原结果与新的�
 
 | 位置 | 已写规则 |
 | --- | --- |
-| [推理接口 2.1](../architecture/ports/reasoner/README.md#21-上下文快照) | `limits` 包含“实际模型调用次数上限”。 |
-| [推理接口 2.2](../architecture/ports/reasoner/README.md#22-提议请求) | `model_operation_refs[]` 按调用位置索引，位置分配、次数占用和动作关联在同一事务完成，数量不超过 `limits`。 |
-| [推理接口 3](../architecture/ports/reasoner/README.md#3-接口) | 已有位置重复请求不占新次数；实际模型调用按可能单独收费的供应商请求计数，重试也分别计数。 |
-| [第三轮处理记录 R3-04](archive/round-3/disposition.md#r3-04-模型调用按提议请求--调用位置恢复) | 明确“次数上限按位置计数”，同时要求物理安全重发和新采样分别记录。 |
-| [预算 4.1、4.2](../architecture/core/budget/README.md#41-准入执行与结算) | 出口核验调用次数约束；安全重发如另行计费，需要新的计费关联和预算容量。 |
+| [推理接口 2.1](../../../architecture/ports/reasoner/README.md#21-上下文快照) | `limits` 包含“实际模型调用次数上限”。 |
+| [推理接口 2.2](../../../architecture/ports/reasoner/README.md#22-提议请求) | `model_operation_refs[]` 按调用位置索引，位置分配、次数占用和动作关联在同一事务完成，数量不超过 `limits`。 |
+| [推理接口 3](../../../architecture/ports/reasoner/README.md#3-接口) | 已有位置重复请求不占新次数；实际模型调用按可能单独收费的供应商请求计数，重试也分别计数。 |
+| [第三轮处理记录 R3-04](../round-3/disposition.md#r3-04-模型调用按提议请求--调用位置恢复) | 明确“次数上限按位置计数”，同时要求物理安全重发和新采样分别记录。 |
+| [预算 4.1、4.2](../../../architecture/core/budget/README.md#41-准入执行与结算) | 出口核验调用次数约束；安全重发如另行计费，需要新的计费关联和预算容量。 |
 
 分别记录次数和费用是必要条件，但文档还须说明各次发送具体扣哪个上限、在哪个事务扣减。
 
@@ -54,10 +54,10 @@ M1 可以把两个上限都设为 1。需要物理重发时，核心必须事先
 
 | 文件与章节 | 具体修改 |
 | --- | --- |
-| [推理接口 2.1、2.2、3、10](../architecture/ports/reasoner/README.md) | 拆开 `limits` 的两种含义，保留已有位置结果的恢复例外。 |
-| [任务编排 3.2、4.1](../architecture/core/tasks/README.md#32-命令与查询) | 模型准入只占逻辑位置；物理发送必须另有关联额度。 |
-| [预算 2.1、4.1、4.2](../architecture/core/budget/README.md) | 写明次数维度的预留、消费和未使用释放规则。 |
-| [出口闸门 4.1、动作账本 4.2](../architecture/core/egress/README.md#41-正常调用) | 新发送取得次数依据；查询原发送不重新消费。账本重发门禁同时检查此依据。 |
+| [推理接口 2.1、2.2、3、10](../../../architecture/ports/reasoner/README.md) | 拆开 `limits` 的两种含义，保留已有位置结果的恢复例外。 |
+| [任务编排 3.2、4.1](../../../architecture/core/tasks/README.md#32-命令与查询) | 模型准入只占逻辑位置；物理发送必须另有关联额度。 |
+| [预算 2.1、4.1、4.2](../../../architecture/core/budget/README.md) | 写明次数维度的预留、消费和未使用释放规则。 |
+| [出口闸门 4.1、动作账本 4.2](../../../architecture/core/egress/README.md#41-正常调用) | 新发送取得次数依据；查询原发送不重新消费。账本重发门禁同时检查此依据。 |
 
 ## 5 验收场景
 

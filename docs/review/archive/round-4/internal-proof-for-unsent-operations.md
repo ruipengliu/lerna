@@ -16,11 +16,11 @@
 
 | 位置 | 已写规则 |
 | --- | --- |
-| [动作账本 2.1](../architecture/core/ledger/README.md#21-关键字段) | 效果证据字段要求：强结论 `NOT_APPLIED`、`RULED_OUT` 只能基于可信出口固定的原始观察，并由受信解释规则判定。 |
-| [动作账本 2.3](../architecture/core/ledger/README.md#23-收尾依据) | 原始观察在实际 I/O 处登记；没有受信解释规则的能力按最保守处理。 |
-| [动作账本 2.2、4.4](../architecture/core/ledger/README.md#44-取消与执行的竞争) | 封闭先于出口开放，且没有其他开放过的出口时，效果为 `NOT_APPLIED`，迟到可能性为 `RULED_OUT`。封闭还可以先于意图接纳。 |
-| [核心契约 2.5](../architecture/core/contracts/README.md#25-状态模型) | 从未发送的动作可以直接 `SETTLED`。 |
-| [预算 2.4](../architecture/core/budget/README.md#24-状态转换) | 账本证明出口没有发生且以后不会发生，才可释放未使用的预留。 |
+| [动作账本 2.1](../../../architecture/core/ledger/README.md#21-关键字段) | 效果证据字段要求：强结论 `NOT_APPLIED`、`RULED_OUT` 只能基于可信出口固定的原始观察，并由受信解释规则判定。 |
+| [动作账本 2.3](../../../architecture/core/ledger/README.md#23-收尾依据) | 原始观察在实际 I/O 处登记；没有受信解释规则的能力按最保守处理。 |
+| [动作账本 2.2、4.4](../../../architecture/core/ledger/README.md#44-取消与执行的竞争) | 封闭先于出口开放，且没有其他开放过的出口时，效果为 `NOT_APPLIED`，迟到可能性为 `RULED_OUT`。封闭还可以先于意图接纳。 |
+| [核心契约 2.5](../../../architecture/core/contracts/README.md#25-状态模型) | 从未发送的动作可以直接 `SETTLED`。 |
+| [预算 2.4](../../../architecture/core/budget/README.md#24-状态转换) | 账本证明出口没有发生且以后不会发生，才可释放未使用的预留。 |
 
 下游的证据约束与既有内部封闭分支没有明确划界。R3-06 要防范的是插件伪造目标系统事实；它没有理由禁止账本证明自己从未开放出口。
 
@@ -54,10 +54,10 @@ P4 已返回开始回执但 P5 尚未成立的情况，必须由执行端点持�
 
 | 文件与章节 | 具体修改 |
 | --- | --- |
-| [动作账本 2.1、2.3、3、4.4、10](../architecture/core/ledger/README.md) | 限定外部证据强规则的适用范围；定义内部封闭证明的字段、负责方和拒绝条件。 |
-| [核心契约 2.5](../architecture/core/contracts/README.md#25-状态模型) | 为从未发送直接收尾引用内部证明，避免与外部终局依据混用。 |
-| [出口闸门 4.1](../architecture/core/egress/README.md#41-正常调用) | 写清 P4、P5 与内部封闭证明的竞争顺序。 |
-| [预算 3、执行接口 2.3](../architecture/core/budget/README.md#3-接口) | 预算接纳原账本证明释放未使用预留；执行接口继续只允许插件提交外部观察引用和解释。 |
+| [动作账本 2.1、2.3、3、4.4、10](../../../architecture/core/ledger/README.md) | 限定外部证据强规则的适用范围；定义内部封闭证明的字段、负责方和拒绝条件。 |
+| [核心契约 2.5](../../../architecture/core/contracts/README.md#25-状态模型) | 为从未发送直接收尾引用内部证明，避免与外部终局依据混用。 |
+| [出口闸门 4.1](../../../architecture/core/egress/README.md#41-正常调用) | 写清 P4、P5 与内部封闭证明的竞争顺序。 |
+| [预算 3、执行接口 2.3](../../../architecture/core/budget/README.md#3-接口) | 预算接纳原账本证明释放未使用预留；执行接口继续只允许插件提交外部观察引用和解释。 |
 
 ## 5 验收场景
 
