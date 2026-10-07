@@ -2,6 +2,7 @@
 
 | 日期 | 修订说明 |
 | --- | --- |
+| 2026-10-07 | Mermaid 图按 diagram-design 默认样式重绘为 SVG，正文嵌入图片；HTML 源图同名保存，长时序与分支拆图。节点、关系与设计规则不变。 |
 | 2026-10-05 | 初版：把分散在任务编排、推理接口、出口闸门、动作账本、预算和内容治理中的模型调用规则串成一条流程，只链接、不新增规则。 |
 | 2026-10-05 | 模型调用长时序拆成准备准入、开始发送、回报继续三段，保留调用位置、同事务预留和 P4/P5 顺序。规则不变。 |
 | 2026-10-05 | 模块名称统一为“执行网关”，职责与契约不变。 |
@@ -30,55 +31,15 @@
 
 **准备与准入。**裁决域节点合并表示任务编排及其同事务检查；预算单独保留，突出预留发生在发送前。
 
-```mermaid
-sequenceDiagram
-    participant T as 裁决域<br/>任务编排协调
-    participant R as 推理
-    participant H as 受信宿主
-    participant B as 预算
-    T->>R: 提议请求与快照<br/>准备所需的读取
-    R->>H: 调用位置 n：请求模型调用
-    H->>H: 捕获实际读取，保留必要事实<br/>封存完整调用描述
-    H->>T: 准入位置 n 的确定调用
-    Note over T,B: 同一裁决事务<br/>条件、授权、内容与记忆依据检查
-    T->>B: 按费用上界预留
-    T->>T: 持久保存准入<br/>位置绑定与派发意图
-```
+![模型调用的准备与准入](../assets/model-call-admission.svg)
 
 **开始与发送。**P4 占用发送额度，P5 先记下“可能已发出”，再发生实际 I/O。适配器构造请求等内部调用省略，顺序以[出口闸门 4.1](../core/egress/README.md#41-正常调用)为准。
 
-```mermaid
-sequenceDiagram
-    participant T as 裁决域
-    participant L as 执行管理
-    participant G as 出口闸门
-    participant M as 模型供应商
-    T->>L: 交付已准入的模型调用
-    L->>L: P2 接纳；P3 固定尝试与发送身份
-    G->>T: P4 请求开始：核验当前依据
-    T->>T: 占用本次发送额度
-    T-->>G: 持久的开始回执
-    L->>L: P5 写下可能已发出与 I/O 意图
-    G->>M: 发送封存的请求
-    M-->>G: 响应、用量与输出
-```
+![模型调用的开始与发送](../assets/model-call-dispatch.svg)
 
 **回报与继续推理。**下面把输出登记为派生内容的内部步骤合并为注释；提议回报仍不执行其中的行动。
 
-```mermaid
-sequenceDiagram
-    participant G as 出口闸门
-    participant L as 执行管理
-    participant B as 预算
-    participant R as 推理
-    participant T as 任务编排
-    G->>L: P6 固定原始观察<br/>提交执行回报
-    Note over G,L: 输出交内容治理登记为派生内容<br/>轨迹交运行记录
-    G->>B: P7 按计费来源结算用量
-    L->>L: P8 根据原始观察<br/>判定效果
-    L-->>R: 位置 n 的结果引用
-    R->>T: 提议回报<br/>等待核心裁决
-```
+![模型调用的观察、结算与提议](../assets/model-call-observation.svg)
 
 | 步骤 | 做什么 | 权威位置 |
 | --- | --- | --- |

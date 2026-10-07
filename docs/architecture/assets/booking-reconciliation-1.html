@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>下单、付款超时与核对 · 1/2</title>
+<style>* {box-sizing:border-box} body {margin:0;padding:24px;background:#f5f5f5;color:#2d3142;font-family:'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif} .frame {width:100%;max-width:1664px;min-width:0;margin:auto} .diagram-container {width:100%;overflow-x:auto} svg {width:100%;height:auto;min-width:1616px;display:block} @media print {.diagram-container {overflow-x:visible} svg {min-width:0}}</style></head>
+<!-- diagram-design: sequence; size=fit; detail=faithful; audience=engineer; variant=minimal-light.
+Fidelity: 原消息顺序、持久化点、条件与说明保留；分支或长时序按阶段拆图，参与者按本图涉及范围显示。
+Typography: default families with local Chinese/offline fallbacks; fonts are not bundled.
+2026-10-07: 从 Mermaid 按语义重绘；HTML 为可编辑源，SVG 由 export_svg.py 导出。
+Original semantic source (inert, retained for audit):
+sequenceDiagram
+    participant T as 任务编排&lt;br/&gt;（裁决域）
+    participant L as 执行管理
+    participant E as 出口闸门
+    participant X as 订票服务
+    T-&gt;&gt;L: 交付已准入的下单动作
+    Note over L,E: 执行管理固定尝试与发送身份（P3），交给出口闸门
+    E-&gt;&gt;T: P4 请求开始
+    T—&gt;&gt;E: 持久的开始回执
+    L-&gt;&gt;L: P5 持久：尝试 1&lt;br/&gt;进入可能已发出
+    E-&gt;&gt;X: POST 订单 A1
+    X—xE: 超时，无响应
+    E-&gt;&gt;L: 记录超时；效果保持未知
+    Note over L: 本例接口不幂等，只查询，不重发付款
+    L-&gt;&gt;E: 按订单 A1 核对&lt;br/&gt;另有核对许可
+    E-&gt;&gt;X: 受控查询订单 A1
+    X—&gt;&gt;E: 订单 A1 已支付
+    E-&gt;&gt;L: 固定原始观察&lt;br/&gt;交给执行管理判定
+    Note over L: 持久：效果 = 已生效&lt;br/&gt;收尾另按终局证据判断
+
+--><body><main class="frame"><div class="diagram-container"><svg width="1616" height="1056" viewBox="0 0 1616 1056" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="booking-reconciliation-1-title booking-reconciliation-1-desc">
+<title id="booking-reconciliation-1-title">下单、付款超时与核对 · 1/2</title>
+<desc id="booking-reconciliation-1-desc">下单、付款超时与核对，保留原消息、条件与持久化顺序。</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto-start-reverse"><polygon points="0 0,8 3,0 6" fill="#4f5d75"/></marker><marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto-start-reverse"><polygon points="0 0,8 3,0 6" fill="#eb6c36"/></marker><marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto-start-reverse"><polygon points="0 0,8 3,0 6" fill="#2e5aa8"/></marker></defs><rect x="0" y="0" width="1616" height="1056" rx="0" fill="#f5f5f5" /><text x="40" y="56" font-family="&#x27;Instrument Serif&#x27;, &#x27;Noto Serif SC&#x27;, &#x27;Songti SC&#x27;, serif" font-size="28" font-weight="400" fill="#2d3142" text-anchor="start" >下单、付款超时与核对 · 1/2</text><text x="40" y="88" font-family="&#x27;Geist&#x27;, &#x27;Noto Sans SC&#x27;, &#x27;PingFang SC&#x27;, &#x27;Microsoft YaHei&#x27;, sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="start" >按原消息顺序接续；本图显示本阶段涉及的参与者</text>
+<line x1="208" y1="176" x2="208" y2="972" stroke="#bfc0c0" stroke-dasharray="5,4" data-lifeline="true"/>
+<line x1="544" y1="176" x2="544" y2="972" stroke="#bfc0c0" stroke-dasharray="5,4" data-lifeline="true"/>
+<line x1="880" y1="176" x2="880" y2="972" stroke="#bfc0c0" stroke-dasharray="5,4" data-lifeline="true"/>
+<line x1="1216" y1="176" x2="1216" y2="972" stroke="#bfc0c0" stroke-dasharray="5,4" data-lifeline="true"/>
+<path data-connector="e1" d="M 208,236 L 544,236" fill="none" stroke="#4f5d75" stroke-width="1.5" marker-end="url(#arrow)"/>
+<path data-connector="e2" d="M 880,408 L 208,408" fill="none" stroke="#4f5d75" stroke-width="1.5" marker-end="url(#arrow)"/>
+<path data-connector="e3" d="M 208,484 L 880,484" fill="none" stroke="#4f5d75" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#arrow)"/>
+<path data-connector="e4" d="M 544,580 L 584,580 Q 592,580 592,588 L 592,604 Q 592,612 584,612 L 544,612" fill="none" stroke="#4f5d75" stroke-width="1.5" marker-end="url(#arrow)"/>
+<path data-connector="e5" d="M 880,680 L 1216,680" fill="none" stroke="#2e5aa8" stroke-width="1.5" marker-end="url(#arrow-link)"/>
+<path data-connector="e6" d="M 1216,756 L 880,756" fill="none" stroke="#4f5d75" stroke-width="1.5" stroke-dasharray="5,4"/>
+<path data-connector="e7" d="M 880,832 L 544,832" fill="none" stroke="#4f5d75" stroke-width="1.5" marker-end="url(#arrow)"/>
+<g data-edge-label="true"><rect x="308" y="208" width="136" height="20" rx="2" fill="#f5f5f5" /><text x="376.0" y="222" font-family="&#x27;Geist&#x27;, &#x27;Noto Sans SC&#x27;, &#x27;PingFang SC&#x27;, &#x27;Microsoft YaHei&#x27;, sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="middle" >交付已准入的下单动作</text></g>
+<g data-note="true"><rect x="568" y="284" width="280" height="64" rx="4" fill="#ececec" stroke="#bfc0c0" /><text x="580" y="308" font-family="&#x27;Geist&#x27;, &#x27;Noto Sans SC&#x27;, &#x27;PingFang SC&#x27;, &#x27;Microsoft YaHei&#x27;, sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="start" >执行管理固定尝试与发送身份（P3），交给出口</text>
+<text x="580" y="328" font-family="&#x27;Geist&#x27;, &#x27;Noto Sans SC&#x27;, &#x27;PingFang SC&#x27;, &#x27;Microsoft YaHei&#x27;, sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="start" >闸门</text></g>
+<g data-edge-label="true"><rect x="332" y="380" width="88" height="20" rx="2" fill="#f5f5f5" /><text x="376.0" y="394" font-family="&#x27;Geist&#x27;, &#x27;Noto Sans SC&#x27;, &#x27;PingFang SC&#x27;, &#x27;Microsoft YaHei&#x27;, sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="middle" >P4 请求开始</text></g>
+<g data-edge-label="true"><rect x="328" y="456" width="100" height="20" rx="2" fill="#f5f5f5" /><text x="378.0" y="470" font-family="&#x27;Geist&#x27;, &#x27;Noto Sans SC&#x27;, &#x27;PingFang SC&#x27;, &#x27;Microsoft YaHei&#x27;, sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="middle" >持久的开始回执</text></g>
+<g data-edge-label="true"><rect x="600" y="568" width="116" height="40" rx="2" fill="#f5f5f5" /><text x="658.0" y="582" font-family="&#x27;Geist&#x27;, &#x27;Noto Sans SC&#x27;, &#x27;PingFang SC&#x27;, &#x27;Microsoft YaHei&#x27;, sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="middle" >P5 持久：尝试 1</text>
+<text x="658.0" y="602" font-family="&#x27;Geist&#x27;, &#x27;Noto Sans SC&#x27;, &#x27;PingFang SC&#x27;, &#x27;Microsoft YaHei&#x27;, sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="middle" >进入可能已发出</text></g>
+<g data-edge-label="true"><rect x="1000" y="652" width="100" height="20" rx="2" fill="#f5f5f5" /><text x="1050.0" y="666" font-family="&#x27;Geist&#x27;, &#x27;Noto Sans SC&#x27;, &#x27;PingFang SC&#x27;, &#x27;Microsoft YaHei&#x27;, sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="middle" >POST 订单 A1</text></g>
+<g data-edge-label="true"><rect x="1004" y="728" width="88" height="20" rx="2" fill="#f5f5f5" /><text x="1048.0" y="742" font-family="&#x27;Geist&#x27;, &#x27;Noto Sans SC&#x27;, &#x27;PingFang SC&#x27;, &#x27;Microsoft YaHei&#x27;, sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="middle" >超时，无响应</text></g>
+<g data-edge-label="true"><rect x="640" y="804" width="148" height="20" rx="2" fill="#f5f5f5" /><text x="714.0" y="818" font-family="&#x27;Geist&#x27;, &#x27;Noto Sans SC&#x27;, &#x27;PingFang SC&#x27;, &#x27;Microsoft YaHei&#x27;, sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="middle" >记录超时；效果保持未知</text></g>
+<g data-note="true"><rect x="568" y="880" width="228" height="44" rx="4" fill="#ececec" stroke="#bfc0c0" /><text x="580" y="904" font-family="&#x27;Geist&#x27;, &#x27;Noto Sans SC&#x27;, &#x27;PingFang SC&#x27;, &#x27;Microsoft YaHei&#x27;, sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="start" >本例接口不幂等，只查询，不重发付款</text></g>
+<g data-node="T"><rect x="96" y="112" width="224" height="64" rx="6" fill="#ffffff" stroke="#2d3142" /><text x="208" y="140" font-family="&#x27;Geist&#x27;, &#x27;Noto Sans SC&#x27;, &#x27;PingFang SC&#x27;, &#x27;Microsoft YaHei&#x27;, sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="middle" >任务编排</text>
+<text x="208" y="160" font-family="&#x27;Geist&#x27;, &#x27;Noto Sans SC&#x27;, &#x27;PingFang SC&#x27;, &#x27;Microsoft YaHei&#x27;, sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="middle" >（裁决域）</text></g>
+<g data-node="L"><rect x="432" y="112" width="224" height="64" rx="6" fill="#ffffff" stroke="#2d3142" /><text x="544" y="140" font-family="&#x27;Geist&#x27;, &#x27;Noto Sans SC&#x27;, &#x27;PingFang SC&#x27;, &#x27;Microsoft YaHei&#x27;, sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="middle" >执行管理</text></g>
+<g data-node="E"><rect x="768" y="112" width="224" height="64" rx="6" fill="#ffffff" stroke="#2d3142" /><text x="880" y="140" font-family="&#x27;Geist&#x27;, &#x27;Noto Sans SC&#x27;, &#x27;PingFang SC&#x27;, &#x27;Microsoft YaHei&#x27;, sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="middle" >出口闸门</text></g>
+<g data-node="X"><rect x="1104" y="112" width="224" height="64" rx="6" fill="#ffffff" stroke="#2d3142" /><text x="1216" y="140" font-family="&#x27;Geist&#x27;, &#x27;Noto Sans SC&#x27;, &#x27;PingFang SC&#x27;, &#x27;Microsoft YaHei&#x27;, sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="middle" >订票服务</text></g>
+<line x1="876" y1="752" x2="884" y2="760" stroke="#4f5d75" /><line x1="876" y1="760" x2="884" y2="752" stroke="#4f5d75" />
+<line x1="40" y1="996" x2="1576" y2="996" stroke="#bfc0c0" /><text x="40" y="1024" font-family="&#x27;Geist&#x27;, &#x27;Noto Sans SC&#x27;, &#x27;PingFang SC&#x27;, &#x27;Microsoft YaHei&#x27;, sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="start" >竖向虚线：生命线    实线箭头：请求或提交    横向虚线：返回</text></svg></div></main></body></html>

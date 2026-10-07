@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>模型调用的准备与准入</title>
+<style>* {box-sizing:border-box} body {margin:0;padding:24px;background:#f5f5f5;color:#2d3142;font-family:'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif} .frame {width:100%;max-width:1664px;min-width:0;margin:auto} .diagram-container {width:100%;overflow-x:auto} svg {width:100%;height:auto;min-width:1616px;display:block} @media print {.diagram-container {overflow-x:visible} svg {min-width:0}}</style></head>
+<!-- diagram-design: sequence; size=fit; detail=faithful; audience=engineer; variant=minimal-light.
+Fidelity: 原消息顺序、持久化点、条件与说明保留；分支或长时序按阶段拆图，参与者按本图涉及范围显示。
+Typography: default families with local Chinese/offline fallbacks; fonts are not bundled.
+2026-10-07: 从 Mermaid 按语义重绘；HTML 为可编辑源，SVG 由 export_svg.py 导出。
+Original semantic source (inert, retained for audit):
+sequenceDiagram
+    participant T as 裁决域&lt;br/&gt;任务编排协调
+    participant R as 推理
+    participant H as 受信宿主
+    participant B as 预算
+    T-&gt;&gt;R: 提议请求与快照&lt;br/&gt;准备所需的读取
+    R-&gt;&gt;H: 调用位置 n：请求模型调用
+    H-&gt;&gt;H: 捕获实际读取，保留必要事实&lt;br/&gt;封存完整调用描述
+    H-&gt;&gt;T: 准入位置 n 的确定调用
+    Note over T,B: 同一裁决事务&lt;br/&gt;条件、授权、内容与记忆依据检查
+    T-&gt;&gt;B: 按费用上界预留
+    T-&gt;&gt;T: 持久保存准入&lt;br/&gt;位置绑定与派发意图
+
+--><body><main class="frame"><div class="diagram-container"><svg width="1616" height="968" viewBox="0 0 1616 968" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="model-call-admission-title model-call-admission-desc">
+<title id="model-call-admission-title">模型调用的准备与准入</title>
+<desc id="model-call-admission-desc">模型调用的准备与准入，保留原消息、条件与持久化顺序。</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto-start-reverse"><polygon points="0 0,8 3,0 6" fill="#4f5d75"/></marker><marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto-start-reverse"><polygon points="0 0,8 3,0 6" fill="#eb6c36"/></marker><marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto-start-reverse"><polygon points="0 0,8 3,0 6" fill="#2e5aa8"/></marker></defs><rect x="0" y="0" width="1616" height="968" rx="0" fill="#f5f5f5" /><text x="40" y="56" font-family="&#x27;Instrument Serif&#x27;, &#x27;Noto Serif SC&#x27;, &#x27;Songti SC&#x27;, serif" font-size="28" font-weight="400" fill="#2d3142" text-anchor="start" >模型调用的准备与准入</text><text x="40" y="88" font-family="&#x27;Geist&#x27;, &#x27;Noto Sans SC&#x27;, &#x27;PingFang SC&#x27;, &#x27;Microsoft YaHei&#x27;, sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="start" >按原消息顺序接续；本图显示本阶段涉及的参与者</text>
+<line x1="208" y1="176" x2="208" y2="884" stroke="#bfc0c0" stroke-dasharray="5,4" data-lifeline="true"/>
+<line x1="544" y1="176" x2="544" y2="884" stroke="#bfc0c0" stroke-dasharray="5,4" data-lifeline="true"/>
+<line x1="880" y1="176" x2="880" y2="884" stroke="#bfc0c0" stroke-dasharray="5,4" data-lifeline="true"/>
+<line x1="1216" y1="176" x2="1216" y2="884" stroke="#bfc0c0" stroke-dasharray="5,4" data-lifeline="true"/>
+<path data-connector="e1" d="M 208,256 L 544,256" fill="none" stroke="#4f5d75" stroke-width="1.5" marker-end="url(#arrow)"/>
+<path data-connector="e2" d="M 544,332 L 880,332" fill="none" stroke="#4f5d75" stroke-width="1.5" marker-end="url(#arrow)"/>
+<path data-connector="e3" d="M 880,428 L 920,428 Q 928,428 928,436 L 928,452 Q 928,460 920,460 L 880,460" fill="none" stroke="#4f5d75" stroke-width="1.5" marker-end="url(#arrow)"/>
+<path data-connector="e4" d="M 880,528 L 208,528" fill="none" stroke="#4f5d75" stroke-width="1.5" marker-end="url(#arrow)"/>
+<path data-connector="e5" d="M 208,700 L 1216,700" fill="none" stroke="#4f5d75" stroke-width="1.5" marker-end="url(#arrow)"/>
+<path data-connector="e6" d="M 208,796 L 248,796 Q 256,796 256,804 L 256,820 Q 256,828 248,828 L 208,828" fill="none" stroke="#4f5d75" stroke-width="1.5" marker-end="url(#arrow)"/>
+<g data-edge-label="true"><rect x="328" y="208" width="100" height="40" rx="2" fill="#f5f5f5" /><text x="378.0" y="222" font-family="&#x27;Geist&#x27;, &#x27;Noto Sans SC&#x27;, &#x27;PingFang SC&#x27;, &#x27;Microsoft YaHei&#x27;, sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="middle" >提议请求与快照</text>
+<text x="378.0" y="242" font-family="&#x27;Geist&#x27;, &#x27;Noto Sans SC&#x27;, &#x27;PingFang SC&#x27;, &#x27;Microsoft YaHei&#x27;, sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="middle" >准备所需的读取</text></g>
+<g data-edge-label="true"><rect x="632" y="304" width="164" height="20" rx="2" fill="#f5f5f5" /><text x="714.0" y="318" font-family="&#x27;Geist&#x27;, &#x27;Noto Sans SC&#x27;, &#x27;PingFang SC&#x27;, &#x27;Microsoft YaHei&#x27;, sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="middle" >调用位置 n：请求模型调用</text></g>
+<g data-edge-label="true"><rect x="936" y="416" width="172" height="40" rx="2" fill="#f5f5f5" /><text x="1022.0" y="430" font-family="&#x27;Geist&#x27;, &#x27;Noto Sans SC&#x27;, &#x27;PingFang SC&#x27;, &#x27;Microsoft YaHei&#x27;, sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="middle" >捕获实际读取，保留必要事实</text>
+<text x="1022.0" y="450" font-family="&#x27;Geist&#x27;, &#x27;Noto Sans SC&#x27;, &#x27;PingFang SC&#x27;, &#x27;Microsoft YaHei&#x27;, sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="middle" >封存完整调用描述</text></g>
+<g data-edge-label="true"><rect x="304" y="500" width="148" height="20" rx="2" fill="#f5f5f5" /><text x="378.0" y="514" font-family="&#x27;Geist&#x27;, &#x27;Noto Sans SC&#x27;, &#x27;PingFang SC&#x27;, &#x27;Microsoft YaHei&#x27;, sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="middle" >准入位置 n 的确定调用</text></g>
+<g data-note="true"><rect x="232" y="576" width="204" height="64" rx="4" fill="#ececec" stroke="#bfc0c0" /><text x="244" y="600" font-family="&#x27;Geist&#x27;, &#x27;Noto Sans SC&#x27;, &#x27;PingFang SC&#x27;, &#x27;Microsoft YaHei&#x27;, sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="start" >同一裁决事务</text>
+<text x="244" y="620" font-family="&#x27;Geist&#x27;, &#x27;Noto Sans SC&#x27;, &#x27;PingFang SC&#x27;, &#x27;Microsoft YaHei&#x27;, sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="start" >条件、授权、内容与记忆依据检查</text></g>
+<g data-edge-label="true"><rect x="328" y="672" width="100" height="20" rx="2" fill="#f5f5f5" /><text x="378.0" y="686" font-family="&#x27;Geist&#x27;, &#x27;Noto Sans SC&#x27;, &#x27;PingFang SC&#x27;, &#x27;Microsoft YaHei&#x27;, sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="middle" >按费用上界预留</text></g>
+<g data-edge-label="true"><rect x="264" y="784" width="124" height="40" rx="2" fill="#f5f5f5" /><text x="326.0" y="798" font-family="&#x27;Geist&#x27;, &#x27;Noto Sans SC&#x27;, &#x27;PingFang SC&#x27;, &#x27;Microsoft YaHei&#x27;, sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="middle" >持久保存准入</text>
+<text x="326.0" y="818" font-family="&#x27;Geist&#x27;, &#x27;Noto Sans SC&#x27;, &#x27;PingFang SC&#x27;, &#x27;Microsoft YaHei&#x27;, sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="middle" >位置绑定与派发意图</text></g>
+<g data-node="T"><rect x="96" y="112" width="224" height="64" rx="6" fill="#ffffff" stroke="#2d3142" /><text x="208" y="140" font-family="&#x27;Geist&#x27;, &#x27;Noto Sans SC&#x27;, &#x27;PingFang SC&#x27;, &#x27;Microsoft YaHei&#x27;, sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="middle" >裁决域</text>
+<text x="208" y="160" font-family="&#x27;Geist&#x27;, &#x27;Noto Sans SC&#x27;, &#x27;PingFang SC&#x27;, &#x27;Microsoft YaHei&#x27;, sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="middle" >任务编排协调</text></g>
+<g data-node="R"><rect x="432" y="112" width="224" height="64" rx="6" fill="#ffffff" stroke="#2d3142" /><text x="544" y="140" font-family="&#x27;Geist&#x27;, &#x27;Noto Sans SC&#x27;, &#x27;PingFang SC&#x27;, &#x27;Microsoft YaHei&#x27;, sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="middle" >推理</text></g>
+<g data-node="H"><rect x="768" y="112" width="224" height="64" rx="6" fill="#ffffff" stroke="#2d3142" /><text x="880" y="140" font-family="&#x27;Geist&#x27;, &#x27;Noto Sans SC&#x27;, &#x27;PingFang SC&#x27;, &#x27;Microsoft YaHei&#x27;, sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="middle" >受信宿主</text></g>
+<g data-node="B"><rect x="1104" y="112" width="224" height="64" rx="6" fill="#ffffff" stroke="#2d3142" /><text x="1216" y="140" font-family="&#x27;Geist&#x27;, &#x27;Noto Sans SC&#x27;, &#x27;PingFang SC&#x27;, &#x27;Microsoft YaHei&#x27;, sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="middle" >预算</text></g>
+<line x1="40" y1="908" x2="1576" y2="908" stroke="#bfc0c0" /><text x="40" y="936" font-family="&#x27;Geist&#x27;, &#x27;Noto Sans SC&#x27;, &#x27;PingFang SC&#x27;, &#x27;Microsoft YaHei&#x27;, sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="start" >竖向虚线：生命线    实线箭头：请求或提交</text></svg></div></main></body></html>

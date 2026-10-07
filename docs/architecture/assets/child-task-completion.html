@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>父子任务的完成衔接</title>
+<style>* {box-sizing:border-box} body {margin:0;padding:24px;background:#f5f5f5;color:#2d3142;font-family:'Geist', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif} .frame {width:100%;max-width:1328px;min-width:0;margin:auto} .diagram-container {width:100%;overflow-x:auto} svg {width:100%;height:auto;min-width:1280px;display:block} @media print {.diagram-container {overflow-x:visible} svg {min-width:0}}</style></head>
+<!-- diagram-design: sequence; size=fit; detail=faithful; audience=engineer; variant=minimal-light.
+Fidelity: 原消息顺序、持久化点、条件与说明保留；分支或长时序按阶段拆图，参与者按本图涉及范围显示。
+Typography: default families with local Chinese/offline fallbacks; fonts are not bundled.
+2026-10-07: 从 Mermaid 按语义重绘；HTML 为可编辑源，SVG 由 export_svg.py 导出。
+Original semantic source (inert, retained for audit):
+sequenceDiagram
+    participant P as 父任务
+    participant C as 子任务
+    participant L as 执行管理
+    P-&gt;&gt;P: 提议完成，但有子任务未关闭
+    Note over P: 等待子任务&lt;br/&gt;不持有冻结
+    C-&gt;&gt;L: 目标动作照常准入、执行
+    L—&gt;&gt;C: 全部动作 SETTLED
+    C-&gt;&gt;C: 核验通过或非成功关闭
+    C—&gt;&gt;P: Result + 递归收尾依据
+    P-&gt;&gt;P: 开始核验：冻结、递增控制代次&lt;br/&gt;检查子任务关系和依据修订
+    P-&gt;&gt;P: 完成门禁通过才 SUCCEEDED
+
+--><body><main class="frame"><div class="diagram-container"><svg width="1280" height="1052" viewBox="0 0 1280 1052" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="child-task-completion-title child-task-completion-desc">
+<title id="child-task-completion-title">父子任务的完成衔接</title>
+<desc id="child-task-completion-desc">父子任务的完成衔接，保留原消息、条件与持久化顺序。</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto-start-reverse"><polygon points="0 0,8 3,0 6" fill="#4f5d75"/></marker><marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto-start-reverse"><polygon points="0 0,8 3,0 6" fill="#eb6c36"/></marker><marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto-start-reverse"><polygon points="0 0,8 3,0 6" fill="#2e5aa8"/></marker></defs><rect x="0" y="0" width="1280" height="1052" rx="0" fill="#f5f5f5" /><text x="40" y="56" font-family="&#x27;Instrument Serif&#x27;, &#x27;Noto Serif SC&#x27;, &#x27;Songti SC&#x27;, serif" font-size="28" font-weight="400" fill="#2d3142" text-anchor="start" >父子任务的完成衔接</text><text x="40" y="88" font-family="&#x27;Geist&#x27;, &#x27;Noto Sans SC&#x27;, &#x27;PingFang SC&#x27;, &#x27;Microsoft YaHei&#x27;, sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="start" >按原消息顺序接续；本图显示本阶段涉及的参与者</text>
+<line x1="208" y1="176" x2="208" y2="968" stroke="#bfc0c0" stroke-dasharray="5,4" data-lifeline="true"/>
+<line x1="544" y1="176" x2="544" y2="968" stroke="#bfc0c0" stroke-dasharray="5,4" data-lifeline="true"/>
+<line x1="880" y1="176" x2="880" y2="968" stroke="#bfc0c0" stroke-dasharray="5,4" data-lifeline="true"/>
+<path data-connector="e1" d="M 208,236 L 248,236 Q 256,236 256,244 L 256,260 Q 256,268 248,268 L 208,268" fill="none" stroke="#4f5d75" stroke-width="1.5" marker-end="url(#arrow)"/>
+<path data-connector="e2" d="M 544,432 L 880,432" fill="none" stroke="#4f5d75" stroke-width="1.5" marker-end="url(#arrow)"/>
+<path data-connector="e3" d="M 880,508 L 544,508" fill="none" stroke="#4f5d75" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#arrow)"/>
+<path data-connector="e4" d="M 544,584 L 584,584 Q 592,584 592,592 L 592,608 Q 592,616 584,616 L 544,616" fill="none" stroke="#4f5d75" stroke-width="1.5" marker-end="url(#arrow)"/>
+<path data-connector="e5" d="M 544,684 L 208,684" fill="none" stroke="#4f5d75" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#arrow)"/>
+<path data-connector="e6" d="M 208,780 L 248,780 Q 256,780 256,788 L 256,804 Q 256,812 248,812 L 208,812" fill="none" stroke="#4f5d75" stroke-width="1.5" marker-end="url(#arrow)"/>
+<path data-connector="e7" d="M 208,880 L 248,880 Q 256,880 256,888 L 256,904 Q 256,912 248,912 L 208,912" fill="none" stroke="#4f5d75" stroke-width="1.5" marker-end="url(#arrow)"/>
+<g data-edge-label="true"><rect x="264" y="224" width="172" height="20" rx="2" fill="#f5f5f5" /><text x="350.0" y="238" font-family="&#x27;Geist&#x27;, &#x27;Noto Sans SC&#x27;, &#x27;PingFang SC&#x27;, &#x27;Microsoft YaHei&#x27;, sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="middle" >提议完成，但有子任务未关闭</text></g>
+<g data-note="true"><rect x="232" y="308" width="84" height="64" rx="4" fill="#ececec" stroke="#bfc0c0" /><text x="244" y="332" font-family="&#x27;Geist&#x27;, &#x27;Noto Sans SC&#x27;, &#x27;PingFang SC&#x27;, &#x27;Microsoft YaHei&#x27;, sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="start" >等待子任务</text>
+<text x="244" y="352" font-family="&#x27;Geist&#x27;, &#x27;Noto Sans SC&#x27;, &#x27;PingFang SC&#x27;, &#x27;Microsoft YaHei&#x27;, sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="start" >不持有冻结</text></g>
+<g data-edge-label="true"><rect x="640" y="404" width="148" height="20" rx="2" fill="#f5f5f5" /><text x="714.0" y="418" font-family="&#x27;Geist&#x27;, &#x27;Noto Sans SC&#x27;, &#x27;PingFang SC&#x27;, &#x27;Microsoft YaHei&#x27;, sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="middle" >目标动作照常准入、执行</text></g>
+<g data-edge-label="true"><rect x="652" y="480" width="124" height="20" rx="2" fill="#f5f5f5" /><text x="714.0" y="494" font-family="&#x27;Geist&#x27;, &#x27;Noto Sans SC&#x27;, &#x27;PingFang SC&#x27;, &#x27;Microsoft YaHei&#x27;, sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="middle" >全部动作 SETTLED</text></g>
+<g data-edge-label="true"><rect x="600" y="572" width="136" height="20" rx="2" fill="#f5f5f5" /><text x="668.0" y="586" font-family="&#x27;Geist&#x27;, &#x27;Noto Sans SC&#x27;, &#x27;PingFang SC&#x27;, &#x27;Microsoft YaHei&#x27;, sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="middle" >核验通过或非成功关闭</text></g>
+<g data-edge-label="true"><rect x="300" y="656" width="156" height="20" rx="2" fill="#f5f5f5" /><text x="378.0" y="670" font-family="&#x27;Geist&#x27;, &#x27;Noto Sans SC&#x27;, &#x27;PingFang SC&#x27;, &#x27;Microsoft YaHei&#x27;, sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="middle" >Result + 递归收尾依据</text></g>
+<g data-edge-label="true"><rect x="264" y="768" width="184" height="40" rx="2" fill="#f5f5f5" /><text x="356.0" y="782" font-family="&#x27;Geist&#x27;, &#x27;Noto Sans SC&#x27;, &#x27;PingFang SC&#x27;, &#x27;Microsoft YaHei&#x27;, sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="middle" >开始核验：冻结、递增控制代次</text>
+<text x="356.0" y="802" font-family="&#x27;Geist&#x27;, &#x27;Noto Sans SC&#x27;, &#x27;PingFang SC&#x27;, &#x27;Microsoft YaHei&#x27;, sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="middle" >检查子任务关系和依据修订</text></g>
+<g data-edge-label="true"><rect x="264" y="868" width="176" height="20" rx="2" fill="#f5f5f5" /><text x="352.0" y="882" font-family="&#x27;Geist&#x27;, &#x27;Noto Sans SC&#x27;, &#x27;PingFang SC&#x27;, &#x27;Microsoft YaHei&#x27;, sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="middle" >完成门禁通过才 SUCCEEDED</text></g>
+<g data-node="P"><rect x="96" y="112" width="224" height="64" rx="6" fill="#ffffff" stroke="#2d3142" /><text x="208" y="140" font-family="&#x27;Geist&#x27;, &#x27;Noto Sans SC&#x27;, &#x27;PingFang SC&#x27;, &#x27;Microsoft YaHei&#x27;, sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="middle" >父任务</text></g>
+<g data-node="C"><rect x="432" y="112" width="224" height="64" rx="6" fill="#ffffff" stroke="#2d3142" /><text x="544" y="140" font-family="&#x27;Geist&#x27;, &#x27;Noto Sans SC&#x27;, &#x27;PingFang SC&#x27;, &#x27;Microsoft YaHei&#x27;, sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="middle" >子任务</text></g>
+<g data-node="L"><rect x="768" y="112" width="224" height="64" rx="6" fill="#ffffff" stroke="#2d3142" /><text x="880" y="140" font-family="&#x27;Geist&#x27;, &#x27;Noto Sans SC&#x27;, &#x27;PingFang SC&#x27;, &#x27;Microsoft YaHei&#x27;, sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="middle" >执行管理</text></g>
+<line x1="40" y1="992" x2="1240" y2="992" stroke="#bfc0c0" /><text x="40" y="1020" font-family="&#x27;Geist&#x27;, &#x27;Noto Sans SC&#x27;, &#x27;PingFang SC&#x27;, &#x27;Microsoft YaHei&#x27;, sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="start" >竖向虚线：生命线    实线箭头：请求或提交    横向虚线：返回</text></svg></div></main></body></html>

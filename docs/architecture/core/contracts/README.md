@@ -2,6 +2,7 @@
 
 | 日期 | 修订说明 |
 | --- | --- |
+| 2026-10-07 | Mermaid 图按 diagram-design 默认样式重绘为 SVG，正文嵌入图片；HTML 源图同名保存，长时序与分支拆图。节点、关系与设计规则不变。 |
 | 2026-10-05 | 条件集增加 `source_input_ref`，使较早的待处理输入可以精确引用同任务的后续显式澄清，同时保持绑定版本逐条推进。 |
 | 2026-10-04 | 初版：对象与归属、标识与精确引用、多维状态、命令信封与错误模型、能力声明、版本演进规则。 |
 | 2026-10-04 | 按 `CLAUDE.md` 写作要求和[文档规范](../../conventions.md)修订用语：约束统一为"必须／不得""建议／不建议"，不再使用"应"；"执行端"统一为"执行端点"，发布回滚统一为"回滚"，授权统一用"撤销"。设计内容不变。 |
@@ -192,55 +193,15 @@ M1 的公开五维声明由原 `Capability`、准入的 `BudgetBasis` 和原 `Ex
 
 **任务的三个维度。**生命周期、控制和推进各自独立变化，界面状态由它们组合得到。下图只画生命周期和控制；推进（`RUNNING`、`WAITING`）在 `OPEN` 期间随依赖变化来回切换。
 
-```mermaid
-stateDiagram-v2
-    direction LR
-    state OPEN {
-        [*] --> ACTIVE
-        ACTIVE --> PAUSED: 暂停
-        PAUSED --> ACTIVE: 恢复（预期控制代次相符）
-        ACTIVE --> CANCELLING: 取消
-        PAUSED --> CANCELLING: 取消
-    }
-    [*] --> OPEN: 创建（输入、任务、条件集已持久）
-    OPEN --> CLOSED: 成功（过完成门禁）或非成功关闭
-    CLOSED --> [*]
-```
+![任务的生命周期与控制状态](../../assets/task-control-state.svg)
 
 **一个动作的四个维度。**派发控制决定还能不能发；尝试阶段记录发到了哪一步；效果和迟到可能性分别记录"发生了什么"和"还会不会发生"。动作何时可以收尾，只以 2.6"收尾的路径"为准。
 
-```mermaid
-stateDiagram-v2
-    direction LR
-    state "尝试阶段" as A {
-        [*] --> REGISTERED
-        REGISTERED --> DISPATCH_POSSIBLE: 出口前先持久写入
-        DISPATCH_POSSIBLE --> OBSERVED: 收到回报或核对结果
-    }
-    state "效果" as E {
-        [*] --> NOT_APPLIED
-        NOT_APPLIED --> UNKNOWN: 第一次进入 DISPATCH_POSSIBLE
-        UNKNOWN --> APPLIED: 证据
-        UNKNOWN --> NOT_APPLIED: 证实未生效且不会迟到
-    }
-```
+![尝试阶段与效果是独立维度](../../assets/execution-effect-state.svg)
 
 **完成核验轮次。**冻结只存在于 `VERIFYING`；四个出口都释放冻结，后续是否允许补建由 2.6 的准入门禁决定。
 
-```mermaid
-stateDiagram-v2
-    direction LR
-    [*] --> VERIFYING: 完成提议<br/>冻结目标准入、递增控制代次
-    VERIFYING --> PASSED: 全部门禁通过<br/>同事务以 SUCCEEDED 关闭
-    VERIFYING --> REJECTED: 目标未达成<br/>记录缺口、释放冻结
-    VERIFYING --> SUPERSEDED: 输入、条件或控制变更<br/>释放冻结
-    VERIFYING --> INCONCLUSIVE: 期限到达或核对暂停<br/>记录缺口、释放冻结
-    VERIFYING --> VERIFYING: 缺证据：收尾用途观察后重验
-    PASSED --> [*]
-    REJECTED --> [*]
-    SUPERSEDED --> [*]
-    INCONCLUSIVE --> [*]
-```
+![完成核验轮次的状态](../../assets/completion-verification-state.svg)
 
 ### 2.6 四道门禁
 
