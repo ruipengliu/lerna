@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/ruipengliu/lerna/adapters/interaction"
+	"github.com/ruipengliu/lerna/infra/hosting"
 
 	v1 "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1"
 	"google.golang.org/protobuf/proto"
@@ -24,6 +25,7 @@ func TestAcceptedRevocationClosesRealStartedExitBeforePhysicalSend(t *testing.T)
 		t.Fatalf("missing responsibility: %v %v", pending, e)
 	}
 	cli := interaction.CLI{Grants: f.h.Grants, Sessions: f.h.Sessions, Ledger: f.h.Ledger, Observations: f.h.Content, Caller: f.caller, Domain: "d"}
+	cli.Progress = newManualProgress(t, hosting.ManualDependencies{Sessions: f.h.Sessions, Observations: f.h.Content, Reports: f.h.Ledger, Revocations: f.h.Grants, Reconciliations: f.h.Ledger, ExecutionFollowups: f.h.Ledger})
 	if e = cli.Run(f.ctx, []string{"recover"}, new(bytes.Buffer)); e != nil {
 		t.Fatal(e)
 	}

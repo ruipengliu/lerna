@@ -11,7 +11,6 @@ import (
 type CancellationCommands interface {
 	QueryCancellation(context.Context, *v1.Caller, *v1.GlobalName) (*v1.Cancellation, error)
 	QueryCancellationIntent(context.Context, *v1.Caller, *v1.Ref) (*v1.CancellationClosureIntent, error)
-	ProcessCancellations(context.Context, *v1.Caller) error
 }
 type CancellationSeals interface {
 	QueryCancellationSeal(context.Context, *v1.Caller, *v1.Ref) (*v1.CancellationSeal, error)

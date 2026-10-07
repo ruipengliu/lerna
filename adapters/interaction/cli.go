@@ -27,7 +27,11 @@ type Durable interface {
 type Metrics interface {
 	QueryMetrics(context.Context, *v1.Caller) (*v1.LocalMetrics, error)
 }
+type ManualProgress interface {
+	ManualProgress(context.Context, *v1.Caller) error
+}
 type CLI struct {
+	Progress          ManualProgress
 	Reasoner          DefaultReasonerRunner
 	Metrics           Metrics
 	Budget            Budget
@@ -130,69 +134,10 @@ func (c CLI) Run(ctx context.Context, args []string, out io.Writer) error {
 		if len(args) != 1 {
 			return command.Fail("INVALID_INPUT")
 		}
-		if e := c.Sessions.ProcessPending(ctx, c.Caller); e != nil {
-			return e
+		if c.Progress == nil {
+			return command.Fail("DEPENDENCY_UNAVAILABLE")
 		}
-		if c.Observations != nil {
-			if e := c.Observations.ProcessObservations(ctx, c.Caller); e != nil {
-				return e
-			}
-		}
-		if c.Ledger != nil {
-			if e := c.Ledger.ProcessReports(ctx, c.Caller); e != nil {
-				return e
-			}
-			if e := c.Ledger.ProcessInterpretations(ctx, c.Caller); e != nil {
-				return e
-			}
-		}
-		if c.Grants != nil {
-			if e := c.Grants.ProcessRevocations(ctx); e != nil {
-				return e
-			}
-		}
-		if tasks, ok := c.Tasks.(CompletionCommands); ok {
-			if e := tasks.ProcessCompletions(ctx, c.Caller); e != nil {
-				return e
-			}
-		}
-		if tasks, ok := c.Tasks.(CancellationCommands); ok {
-			if e := tasks.ProcessCancellations(ctx, c.Caller); e != nil {
-				return e
-			}
-		}
-		if ledger, ok := c.Ledger.(ReconciliationLedger); ok {
-			if e := ledger.RecoverReconciliations(ctx, c.Caller); e != nil {
-				return e
-			}
-			if e := ledger.ProcessOperationProgress(ctx, c.Caller); e != nil {
-				return e
-			}
-		}
-		if tasks, ok := c.Tasks.(TaskClosingCommands); ok {
-			if e := tasks.ProcessTaskClosings(ctx, c.Caller); e != nil {
-				return e
-			}
-		}
-		if c.Budget != nil {
-			if e := c.Budget.ProcessClosures(ctx); e != nil {
-				return e
-			}
-		}
-		if ledger, ok := c.Ledger.(ClosingFollowupLedger); ok {
-			if e := ledger.ProcessExecutionFollowups(ctx, c.Caller); e != nil {
-				return e
-			}
-		}
-		if budget, ok := c.Budget.(ClosingFollowupBudget); ok {
-			if e := budget.ProcessSettlementFollowups(ctx, c.Caller); e != nil {
-				return e
-			}
-		}
-		if c.Trace != nil {
-			return c.Trace.Recover(ctx, c.Caller)
-		}
-		return nil
+		return c.Progress.ManualProgress(ctx, c.Caller)
 	default:
 		return command.Fail("UNSUPPORTED_FEATURE")
 	}

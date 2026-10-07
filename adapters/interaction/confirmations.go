@@ -20,7 +20,6 @@ type ConfirmationTasks interface {
 	RequestAdmissionConfirmation(context.Context, *v1.Caller, *v1.RequestAdmissionConfirmationCommand) (*v1.CommandReceipt, error)
 }
 type Grants interface {
-	ProcessRevocations(context.Context) error
 	RequestGrantConfirmation(context.Context, *v1.Caller, *v1.RequestGrantConfirmationCommand) (*v1.CommandReceipt, error)
 	IssueGrant(context.Context, *v1.Caller, *v1.IssueGrantCommand) (*v1.CommandReceipt, error)
 	QueryGrantStatus(context.Context, *v1.Caller, *v1.GlobalName) (*v1.GrantStatus, error)

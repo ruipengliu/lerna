@@ -14,6 +14,7 @@ import (
 
 	"github.com/ruipengliu/lerna/adapters/interaction"
 	"github.com/ruipengliu/lerna/cmd/assembly"
+	"github.com/ruipengliu/lerna/infra/hosting"
 	"google.golang.org/protobuf/encoding/protojson"
 
 	"github.com/ruipengliu/lerna/contracts/command"
@@ -659,6 +660,7 @@ func TestOpaqueTimeoutRemainsUnknownInCLIAfterRestartAndResendRefusal(t *testing
 		t.Fatal(e)
 	}
 	cli := interaction.CLI{Sessions: f.h.Sessions, Tasks: f.h.Tasks, Durable: f.h.Durable, Ledger: f.h.Ledger, Egress: f.h.Egress, Content: f.h.Content, Observations: f.h.Content, Caller: f.caller, Domain: "d"}
+	cli.Progress = newManualProgress(t, hosting.ManualDependencies{Sessions: f.h.Sessions, Observations: f.h.Content, Reports: f.h.Ledger, Completions: f.h.Tasks, Cancellations: f.h.Tasks, Reconciliations: f.h.Ledger, TaskClosings: f.h.Tasks, ExecutionFollowups: f.h.Ledger})
 	var out bytes.Buffer
 	if e = cli.Run(f.ctx, []string{"prepare-resend", path}, &out); e != nil {
 		t.Fatal(e)

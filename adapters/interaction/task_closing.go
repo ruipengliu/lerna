@@ -14,7 +14,6 @@ import (
 
 type TaskClosingCommands interface {
 	BeginTaskClose(context.Context, *v1.Caller, *v1.BeginTaskCloseCommand) (*v1.CommandReceipt, error)
-	ProcessTaskClosings(context.Context, *v1.Caller) error
 	QueryTaskClosingView(context.Context, *v1.Caller, *v1.GlobalName) (*v1.TaskClosingView, error)
 }
 
@@ -47,12 +46,4 @@ func (c CLI) taskClosing(ctx context.Context, args []string) (proto.Message, err
 		return nil, e
 	}
 	return tasks.BeginTaskClose(ctx, c.Caller, cmd)
-}
-
-// ClosingFollowupLedger 只驱动原负责方保存的收尾责任。
-type ClosingFollowupLedger interface {
-	ProcessExecutionFollowups(context.Context, *v1.Caller) error
-}
-type ClosingFollowupBudget interface {
-	ProcessSettlementFollowups(context.Context, *v1.Caller) error
 }
