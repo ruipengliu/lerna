@@ -4,7 +4,7 @@
 
 **Blocked by:** 08（生产装配完成后才允许资格检查与恢复）、16（CLI 手动推进使用统一宿主入口）.
 
-**Status:** ready-for-agent
+**Status:** claimed
 
 - [ ] 复用 16 的 Module，加明确 Startup 模式；只有 08 的完成装配结果才允许进入资格检查和恢复。
 - [ ] 先检查 tasks 与 ledger 的全部原兼容性，再按规格的完整启动顺序执行，保留两次 Operation progress 及后续流程。
@@ -13,3 +13,7 @@
 - [ ] 只恢复已保存且启用 driver；UNKNOWN、取消、非法输出及原核验拒绝保持等待或原唯一继续请求。
 - [ ] 资格拒绝不领取另一 READY 工作，不增加独立目标/供应商/账单次数；完整与部分恢复、丢回执及停机副本场景通过。
 - [ ] 装配不再维护业务恢复列表，相关设计更新且公开启动验收通过。
+
+## Comments
+
+- 2026-10-07: Claimed on `codex/interfaces-17` after 08 and 16 were resolved in integration.
