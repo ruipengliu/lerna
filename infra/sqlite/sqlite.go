@@ -224,6 +224,9 @@ func (s *Store) transact(ctx context.Context, domain, point string, fn func(cont
 	}
 	s.mu.Lock()
 	defer s.mu.Unlock()
+	if err := ctx.Err(); err != nil {
+		return storageError(err, false)
+	}
 	tx, err := s.conn.BeginTx(ctx, nil)
 	if err != nil {
 		return storageError(err, false)
