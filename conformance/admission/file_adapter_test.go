@@ -9,7 +9,35 @@ import (
 	"time"
 
 	v1 "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1"
+	"github.com/ruipengliu/lerna/core/ledger"
+	"github.com/ruipengliu/lerna/infra/rules"
+	"google.golang.org/protobuf/proto"
 )
+
+// 规则：G1、G3、G11、R6
+func TestManagedFileHistoryNeedsConfiguredTrustedRulesBeforeRecovery(t *testing.T) {
+	f := newFixture(t, 100, 80, false)
+	configureFile(t, f, "CREATE", "managed://documents/report")
+	a, _ := prepareStart(t, f)
+	before, e := f.h.Ledger.QueryOperation(f.ctx, f.caller, a.OperationId)
+	if e != nil {
+		t.Fatal(e)
+	}
+	for _, missing := range []ledger.EvidenceRules{nil, (*rules.File)(nil)} {
+		f.h.Ledger.WithEvidenceRules(missing)
+		if e = f.h.Ledger.CheckStartupCompatibility(f.ctx); e == nil || e.Error() != "missing required dependency: ledger.rules" {
+			t.Fatalf("missing original FILE rules: %v", e)
+		}
+		after, e := f.h.Ledger.QueryOperation(f.ctx, f.caller, a.OperationId)
+		if e != nil || !proto.Equal(before, after) || f.calls.Load() != 0 {
+			t.Fatal("rule configuration failure advanced original file responsibility")
+		}
+	}
+	f.h.Ledger.WithEvidenceRules(rules.Fixed{})
+	if e = f.h.Ledger.CheckStartupCompatibility(f.ctx); e != nil {
+		t.Fatalf("supported original file rules: %v", e)
+	}
+}
 
 func configureFile(t *testing.T, f *fixture, action, resource string) {
 	t.Helper()
