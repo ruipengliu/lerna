@@ -46,51 +46,13 @@ func (s *Service) CloseForTaskClose(ctx context.Context, caller *v1.Caller, c *v
 			return nil, command.Fail("INVALID_CLOSURE")
 		}
 		seal := &v1.TaskClosureSeal{Ref: command.NewRef(s.user, s.domain, "task-closure-seal", "lerna.v1.TaskClosureSeal"), IntentRef: c.IntentRef, TaskClosingRef: c.TaskClosingRef, AdmissionRef: a.Ref, OperationId: a.OperationId, ExecutorEndpointId: a.ExecutorEndpointId, NoSendProven: true}
+		facts, e := s.closeOperationSends(tx, op, seal.Ref)
+		if e != nil {
+			return nil, e
+		}
+		seal.OperationRef, seal.ClosedSendRefs = facts.operationRef, facts.closedSendRefs
+		seal.NoSendProven, seal.PhysicalSendWasPossible = facts.noSendProven, facts.physicalSendWasPossible
 		if op != nil {
-			if op.Execution != nil {
-				seal.PhysicalSendWasPossible = executionMayHaveSent(op.Execution)
-				seal.NoSendProven = !seal.PhysicalSendWasPossible
-				for _, send := range append([]*v1.PhysicalSend{op.Execution.Send}, op.Execution.PreviousSends...) {
-					if send.Phase == "REGISTERED" {
-						send.Ref.Revision++
-						send.Phase = "CLOSED"
-					}
-					if send.Phase == "CLOSED" {
-						seal.ClosedSendRefs = append(seal.ClosedSendRefs, proto.Clone(send.Ref).(*v1.Ref))
-					}
-				}
-			}
-			// 有尝试引用却无完整执行记录时，不具备内部未发送证明。
-			if op.Execution == nil && len(op.AttemptRefs) > 0 {
-				seal.NoSendProven = false
-				seal.PhysicalSendWasPossible = true
-			}
-			op.Ref.Revision++
-			seal.OperationRef = proto.Clone(op.Ref).(*v1.Ref)
-			op.Dispatch = "SEALED"
-			op.ClosureEvidenceRefs = append(op.ClosureEvidenceRefs, seal.Ref)
-			if seal.NoSendProven {
-				applyCompletionNoSend(op)
-			}
-			jobs, e := s.store.LedgerJobs(tx, op.Ref.Name)
-			if e != nil {
-				return nil, e
-			}
-			for _, j := range jobs {
-				if j.JobType != "EXECUTE_OPERATION" {
-					continue
-				}
-				j.Ref.Revision++
-				j.ProcessInstance = ""
-				j.LeaseUntilUnixMs = 0
-				j.State = "WAITING"
-				if op.Lifecycle == "SETTLED" {
-					j.State = "COMPLETED"
-				}
-				if e = s.store.SaveLedgerJob(tx, j); e != nil {
-					return nil, e
-				}
-			}
 			if op.Lifecycle != "SETTLED" || op.Effect == nil || op.Effect.Outcome == "UNKNOWN" || op.Effect.LateEffect != "RULED_OUT" || op.Effect.EvidenceConflict {
 				followup, err := s.retainExecutionFollowup(tx, a, op, c.TaskClosingRef, c.Header.Identity)
 				if err != nil {
