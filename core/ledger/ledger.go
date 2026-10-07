@@ -37,6 +37,7 @@ type Store interface {
 	LedgerJobs(context.Context, *v1.GlobalName) ([]*v1.Job, error)
 }
 type Service struct {
+	rules                      EvidenceRules
 	cancellationClosures       CancellationClosureSource
 	taskClosures               TaskClosureSource
 	completionClosures         CompletionClosureSource

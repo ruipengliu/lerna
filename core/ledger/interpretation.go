@@ -58,26 +58,14 @@ func (s *Service) InterpretObservation(ctx context.Context, caller *v1.Caller, c
 		if body == nil || body.Status != "AVAILABLE" {
 			return nil, command.Fail("CONTENT_UNUSABLE")
 		}
-		finding := interpretSimulator(raw, body.RawBody, op.Execution.Attempt)
-		if raw.Protocol == "FILE" {
-			finding = interpretFile(raw, op)
-		} else if op.Execution.CallDescriptor.ApiDescriptor != nil {
-			finding = interpretAPI(raw, body.RawBody, op.Execution.CallDescriptor, op.Execution.Attempt)
+		facts, e := s.interpretEvidence(op, raw, body.RawBody)
+		if e != nil {
+			return nil, e
 		}
-		if op.QuerySubject != nil {
-			finding = interpretQuery(raw, body.RawBody, op)
-		} else if op.Execution.Attempt.GetCapabilities().GetProtocolVersion() == "lerna-model-v1" {
-			_, _, terminal := command.ReferenceModelOutput(raw, body.RawBody, op.Execution.Attempt)
-			finding = &v1.EffectInterpretation{ObservationRef: raw.Ref, Rule: "reference-model-v1", Outcome: "UNKNOWN", LateEffect: "MAY_OCCUR", Reason: "INSUFFICIENT_EVIDENCE"}
-			if terminal {
-				finding.Outcome = "APPLIED"
-				finding.LateEffect = "RULED_OUT"
-				finding.Reason = "TERMINAL_PROTOCOL_EVIDENCE"
-			}
-		}
+		finding := facts.Interpretation
 		finding.Ref = ref
 		var waitSend *v1.PhysicalSend
-		if wait := apiWait(raw, op.Execution.CallDescriptor, op.Execution.Attempt); wait != nil {
+		if wait := facts.Wait; wait != nil {
 			send := executionSend(op.Execution, raw.SendRef)
 			if send != nil {
 				send.Ref.Revision++
@@ -143,7 +131,7 @@ func (s *Service) InterpretObservation(ctx context.Context, caller *v1.Caller, c
 			}
 		}
 		if op.QuerySubject != nil {
-			if e = s.applyReconciliationObservation(tx, caller, op, raw, body.RawBody); e != nil {
+			if e = s.applyReconciliationObservation(tx, caller, op, raw, facts.Query); e != nil {
 				return nil, e
 			}
 		} else if e = s.applyOriginalReconciliationFact(tx, caller, op); e != nil {
@@ -153,29 +141,6 @@ func (s *Service) InterpretObservation(ctx context.Context, caller *v1.Caller, c
 	})
 }
 
-func interpretAPI(raw *v1.RawObservation, body []byte, d *v1.CallDescriptor, attempt *v1.ExecutionAttempt) *v1.EffectInterpretation {
-	r := &v1.EffectInterpretation{ObservationRef: raw.Ref, Rule: "reference-api-v1", Outcome: "UNKNOWN", LateEffect: "MAY_OCCUR", Reason: "INSUFFICIENT_EVIDENCE"}
-	applied, terminal, valid, conflict := command.ReferenceAPIResponse(raw, body, d, attempt)
-	if conflict {
-		r.Reason = "EVIDENCE_CONFLICT"
-	}
-	if !valid {
-		return r
-	}
-	if applied {
-		r.Outcome = "APPLIED"
-	}
-	if terminal {
-		r.LateEffect = "RULED_OUT"
-		r.Reason = "TERMINAL_PROTOCOL_EVIDENCE"
-		if !applied {
-			r.Outcome = "NOT_APPLIED"
-		}
-	} else {
-		r.Reason = "LATE_EFFECT_POSSIBLE"
-	}
-	return r
-}
 func interpretSimulator(raw *v1.RawObservation, body []byte, attempt *v1.ExecutionAttempt) *v1.EffectInterpretation {
 	r := &v1.EffectInterpretation{ObservationRef: raw.Ref, Rule: "reference-target-v1", Outcome: "UNKNOWN", LateEffect: "MAY_OCCUR", Reason: "INSUFFICIENT_EVIDENCE"}
 	cap := attempt.GetCapabilities()

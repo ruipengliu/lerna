@@ -23,6 +23,7 @@ import (
 	"github.com/ruipengliu/lerna/core/trace"
 	"github.com/ruipengliu/lerna/infra/egressio"
 	"github.com/ruipengliu/lerna/infra/keys"
+	"github.com/ruipengliu/lerna/infra/rules"
 	"github.com/ruipengliu/lerna/infra/sqlite"
 )
 
@@ -99,7 +100,7 @@ func OpenWithOptions(path, user, domain string, options Options) (*Harness, erro
 		s.Close()
 		return nil, err
 	}
-	h.Ledger.WithWork(h.LedgerWork).WithCompiler(executionCompiler{api: api.Adapter{Content: c}}).WithStarts(t)
+	h.Ledger.WithWork(h.LedgerWork).WithCompiler(executionCompiler{api: api.Adapter{Content: c}}).WithStarts(t).WithEvidenceRules(rules.API{})
 	c.WithObservations(h.Ledger)
 	h.Ledger.WithObservations(c)
 	h.Budget.WithUsageSource(h.Ledger).WithBillingEvidence(c).WithCompletionAuthority(t).WithCancellationAuthority(t).WithTaskClosingAuthority(t)

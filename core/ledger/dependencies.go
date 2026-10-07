@@ -8,6 +8,7 @@ func (s *Service) ValidateDependencies() error {
 		durable.Dependency{Name: "store", Value: s.store},
 		durable.Dependency{Name: "work", Value: s.work},
 		durable.Dependency{Name: "compiler", Value: s.adapter},
+		durable.Dependency{Name: "rules", Value: s.rules},
 		durable.Dependency{Name: "starts", Value: s.starts},
 		durable.Dependency{Name: "observations", Value: s.observations},
 		durable.Dependency{Name: "usage", Value: s.usage},

@@ -4,6 +4,7 @@ import (
 	"context"
 
 	v1 "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1"
+	"github.com/ruipengliu/lerna/core/durable"
 )
 
 type recoveryOperations interface {
@@ -22,6 +23,14 @@ func (s *Service) CheckStartupCompatibility(ctx context.Context) error {
 		return e
 	}
 	for _, op := range all {
+		if op.GetCapabilitySnapshot().GetAdapterRef().GetName().GetLocalId() == "api-reference-v1" {
+			if e = durable.RequireDependencies("ledger", durable.Dependency{Name: "rules", Value: s.rules}); e != nil {
+				return e
+			}
+			if e = s.rules.CheckSupported(op); e != nil {
+				return e
+			}
+		}
 		if e = s.adapter.CheckRecoverySupported(op); e != nil {
 			return e
 		}

@@ -24,6 +24,7 @@ func TestLedgerConstructionRejectsMissingStoreAndCompletionRequiresEveryLink(t *
 	}{
 		{"work", func() { service.WithWork(struct{ ExecutionWork }{}) }},
 		{"compiler", func() { service.WithCompiler(struct{ Compiler }{}) }},
+		{"rules", func() { service.WithEvidenceRules(struct{ EvidenceRules }{}) }},
 		{"starts", func() { service.WithStarts(struct{ StartFacts }{}) }},
 		{"observations", func() { service.WithObservations(struct{ ObservationContent }{}) }},
 		{"usage", func() { service.WithReports(struct{ UsageReceiver }{}, nil, nil) }},
@@ -57,5 +58,11 @@ func TestLedgerConstructionRejectsMissingStoreAndCompletionRequiresEveryLink(t *
 	service.WithWork(missingWork)
 	if err := service.ValidateDependencies(); err == nil || !strings.Contains(err.Error(), "ledger.work") {
 		t.Fatalf("typed nil connection accepted: %v", err)
+	}
+	service.WithWork(struct{ ExecutionWork }{})
+	var missingRules *struct{ EvidenceRules }
+	service.WithEvidenceRules(missingRules)
+	if err := service.ValidateDependencies(); err == nil || !strings.Contains(err.Error(), "ledger.rules") {
+		t.Fatalf("typed nil evidence rules accepted: %v", err)
 	}
 }
