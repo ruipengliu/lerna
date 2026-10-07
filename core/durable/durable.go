@@ -27,8 +27,15 @@ type Service struct {
 	user, domain string
 }
 
-func New(store Store, user, domain string) *Service {
-	return &Service{store: store, user: user, domain: domain}
+func New(store Store, user, domain string) (*Service, error) {
+	if err := RequireDependencies("durable", Dependency{Name: "store", Value: store}); err != nil {
+		return nil, err
+	}
+	return &Service{store: store, user: user, domain: domain}, nil
+}
+
+func (s *Service) ValidateDependencies() error {
+	return RequireDependencies("durable", Dependency{Name: "store", Value: s.store})
 }
 func (s *Service) Submit(ctx context.Context, caller *v1.Caller, c *v1.SubmitGoalCommand, content *v1.Ref) (*v1.CommandReceipt, error) {
 	if err := command.CheckIdentity(caller, c.Identity, s.user, s.domain); err != nil {

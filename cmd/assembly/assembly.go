@@ -79,9 +79,22 @@ func OpenWithOptions(path, user, domain string, options Options) (*Harness, erro
 		s.Close()
 		return nil, err
 	}
-	d := durable.New(s, user, domain)
-	t := tasks.New(s, user, domain).WithDecisions(d).WithCancellationJobs(d)
-	contentWork := durable.New(s.ContentWork(), user, domain+"/content")
+	d, err := durable.New(s, user, domain)
+	if err != nil {
+		s.Close()
+		return nil, err
+	}
+	t, err := tasks.New(s, user, domain)
+	if err != nil {
+		s.Close()
+		return nil, err
+	}
+	t.WithDecisions(d).WithCancellationJobs(d)
+	contentWork, err := durable.New(s.ContentWork(), user, domain+"/content")
+	if err != nil {
+		s.Close()
+		return nil, err
+	}
 	c, err := content.New(s, contentWork, user, domain+"/content")
 	if err != nil {
 		s.Close()
@@ -108,7 +121,11 @@ func OpenWithOptions(path, user, domain string, options Options) (*Harness, erro
 		s.Close()
 		return nil, err
 	}
-	h.LedgerWork = durable.New(s.LedgerWork(), user, domain+"/ledger")
+	h.LedgerWork, err = durable.New(s.LedgerWork(), user, domain+"/ledger")
+	if err != nil {
+		s.Close()
+		return nil, err
+	}
 	h.Ledger, err = ledger.New(s, user, domain+"/ledger", domain)
 	if err != nil {
 		s.Close()
@@ -118,7 +135,12 @@ func OpenWithOptions(path, user, domain string, options Options) (*Harness, erro
 	c.WithObservations(h.Ledger)
 	h.Ledger.WithObservations(c)
 	h.Budget.WithUsageSource(h.Ledger).WithBillingEvidence(c).WithCompletionAuthority(t).WithCancellationAuthority(t).WithTaskClosingAuthority(t)
-	h.Trace, err = trace.New(s, durable.New(s.TraceWork(), user, domain+"/trace"), h.Ledger, user, domain+"/trace")
+	traceWork, err := durable.New(s.TraceWork(), user, domain+"/trace")
+	if err != nil {
+		s.Close()
+		return nil, err
+	}
+	h.Trace, err = trace.New(s, traceWork, h.Ledger, user, domain+"/trace")
 	if err != nil {
 		s.Close()
 		return nil, err
@@ -171,6 +193,10 @@ func OpenWithOptions(path, user, domain string, options Options) (*Harness, erro
 		return nil, err
 	}
 	if err := h.Budget.ValidateDependencies(); err != nil {
+		s.Close()
+		return nil, err
+	}
+	if err := t.ValidateDependencies(); err != nil {
 		s.Close()
 		return nil, err
 	}
@@ -330,4 +356,19 @@ var (
 	_ budget.CompletionAuthority   = (*tasks.Service)(nil)
 	_ budget.CancellationAuthority = (*tasks.Service)(nil)
 	_ budget.TaskClosingAuthority  = (*tasks.Service)(nil)
+)
+
+// Tasks 的工作责任只依赖声明端口，保持固定 Job 类型与负责方完成方法。
+var (
+	_ tasks.Store            = (*sqlite.Store)(nil)
+	_ tasks.Decisions        = (*durable.Service)(nil)
+	_ tasks.Scheduling       = (*durable.Service)(nil)
+	_ tasks.HandoffJobs      = (*durable.Service)(nil)
+	_ tasks.ModelWork        = (*durable.Service)(nil)
+	_ tasks.CompletionJobs   = (*durable.Service)(nil)
+	_ tasks.CancellationJobs = (*durable.Service)(nil)
+	_ tasks.TaskClosingJobs  = (*durable.Service)(nil)
+	_ durable.Store          = (*sqlite.Store)(nil)
+	_ durable.Store          = (*sqlite.ContentWork)(nil)
+	_ durable.Store          = (*sqlite.TraceWork)(nil)
 )

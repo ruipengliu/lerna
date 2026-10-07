@@ -34,10 +34,7 @@ func (s *Service) ValidateFileUse(ctx context.Context, caller *v1.Caller, c *v1.
 		if e != nil {
 			return e
 		}
-		ledger, ok := s.startExecution.(currentFileExecution)
-		if !ok {
-			return command.Fail("DEPENDENCY_UNAVAILABLE")
-		}
+		ledger := s.startExecution
 		send, e := ledger.ValidateFileUse(tx, caller, c.Binding, c.CallDescriptor, c.Claim, now)
 		if e != nil {
 			return e
@@ -57,10 +54,7 @@ func (s *Service) ValidateFileUse(ctx context.Context, caller *v1.Caller, c *v1.
 				return e
 			}
 		}
-		grants, ok := s.startGrants.(currentFileGrants)
-		if !ok {
-			return command.Fail("DEPENDENCY_UNAVAILABLE")
-		}
+		grants := s.startGrants
 		if e = grants.ValidateConsumedCredentialInTransaction(tx, caller, c.CredentialRef, c.Binding, a); e != nil {
 			return e
 		}
@@ -69,10 +63,7 @@ func (s *Service) ValidateFileUse(ctx context.Context, caller *v1.Caller, c *v1.
 				return e
 			}
 		}
-		budget, ok := s.startBudget.(currentFileBudget)
-		if !ok {
-			return command.Fail("DEPENDENCY_UNAVAILABLE")
-		}
+		budget := s.startBudget
 		return budget.CheckConsumedSendInTransaction(tx, a, send)
 	})
 }

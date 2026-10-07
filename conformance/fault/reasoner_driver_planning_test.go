@@ -134,8 +134,14 @@ func runDriverPlanningBoundary(t *testing.T, window string, mode sqlite.FaultMod
 	}
 	ctx := context.Background()
 	caller := &v1.Caller{UserId: "u", IssuerId: "host"}
-	owner := tasks.New(store, "u", "d")
-	decisions := durable.New(store, "u", "d")
+	owner, err := tasks.New(store, "u", "d")
+	if err != nil {
+		t.Fatal(err)
+	}
+	decisions, err := durable.New(store, "u", "d")
+	if err != nil {
+		t.Fatal(err)
+	}
 	receipt, err := decisions.QueryReceipt(ctx, caller, configuration.Header.Identity)
 	if err != nil {
 		t.Fatal(err)

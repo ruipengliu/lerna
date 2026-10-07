@@ -14,7 +14,7 @@ func (s *Service) modelConfirmationAdmission(ctx context.Context, caller *v1.Cal
 	if ref == nil || command.CheckName(caller, ref.Name, s.user, s.domain, "model-call") != nil {
 		return nil, nil, command.Fail("INVALID_REFERENCE")
 	}
-	call, e := s.store.(modelCallStore).LoadModelCallRef(ctx, ref)
+	call, e := s.store.LoadModelCallRef(ctx, ref)
 	if e != nil {
 		return nil, nil, e
 	}

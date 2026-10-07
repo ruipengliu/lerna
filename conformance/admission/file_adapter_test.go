@@ -91,6 +91,7 @@ func TestManagedFileCreatePublishesBytesAndRetainsGovernedEvidence(t *testing.T)
 		}
 	}
 	f := newFixtureWithTargetAndFiles(t, 100, 80, false, nil, map[string]string{"documents": root})
+	f.h.Tasks.WithStart(declaredTaskStartGrants{f.h.Grants}, declaredTaskStartBudget{f.h.Budget}, declaredTaskStartExecution{f.h.Ledger})
 	f.h.Egress = newDeclaredEgress(t, f, egressio.NewFiles(map[string]string{"documents": root}, f.h.Ledger, f.h.Content))
 	fileParameters(t, f, "", []byte("create a record"))
 	configureFile(t, f, "CREATE", "managed://documents/report")

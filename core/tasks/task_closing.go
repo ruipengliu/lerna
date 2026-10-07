@@ -24,7 +24,7 @@ type TaskCloseFacts interface {
 }
 
 func (s *Service) checkTaskNotClosing(ctx context.Context, t *v1.Task) error {
-	closing, e := s.store.(taskClosingStore).TaskClosingForTask(ctx, t.TaskId)
+	closing, e := s.store.TaskClosingForTask(ctx, t.TaskId)
 	if e != nil {
 		return e
 	}
@@ -71,7 +71,7 @@ func (s *Service) BeginTaskClose(ctx context.Context, caller *v1.Caller, c *v1.B
 		if c.Outcome != "FAILED" && c.Outcome != "CANCELLED" || !slices.Contains([]string{"UNABLE_TO_COMPLETE", "DEADLINE_REACHED", "USER_STOPPED"}, c.CloseReason) || c.Outcome == "FAILED" && (c.CancellationRef != nil || t.Control == v1.TaskControl_TASK_CONTROL_CANCELLING) || c.Outcome == "CANCELLED" && t.Control != v1.TaskControl_TASK_CONTROL_CANCELLING {
 			return nil, command.Fail("INVALID_CLOSE_BASIS")
 		}
-		old, e := s.store.(taskClosingStore).TaskClosingForTask(tx, t.TaskId)
+		old, e := s.store.TaskClosingForTask(tx, t.TaskId)
 		if e != nil {
 			return nil, e
 		}
@@ -135,7 +135,7 @@ func (s *Service) QueryTaskClosing(ctx context.Context, c *v1.Caller, r *v1.Ref)
 	if e := command.CheckName(c, r.Name, s.user, s.domain, "task-closing"); e != nil {
 		return nil, e
 	}
-	v, e := s.store.(taskClosingStore).LoadTaskClosing(ctx, r)
+	v, e := s.store.LoadTaskClosing(ctx, r)
 	if e == nil && v != nil && !proto.Equal(v.Ref, r) {
 		return nil, command.Fail("INVALID_REFERENCE")
 	}
@@ -147,7 +147,7 @@ func (s *Service) QueryTaskClosingView(ctx context.Context, c *v1.Caller, id *v1
 	if e := command.CheckName(c, id, s.user, s.domain, "task"); e != nil {
 		return nil, e
 	}
-	closing, e := s.store.(taskClosingStore).TaskClosingForTask(ctx, id)
+	closing, e := s.store.TaskClosingForTask(ctx, id)
 	if e != nil {
 		return nil, e
 	}
@@ -243,7 +243,7 @@ func (s *Service) ProcessTaskClosings(ctx context.Context, c *v1.Caller) error {
 	if e := s.ProcessTaskClosures(ctx, c); e != nil {
 		return e
 	}
-	closings, e := s.store.(taskClosingStore).AllTaskClosings(ctx)
+	closings, e := s.store.AllTaskClosings(ctx)
 	if e != nil {
 		return e
 	}

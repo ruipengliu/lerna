@@ -55,7 +55,11 @@ func TestDeclaredTraceAdapterCollectsOriginalSourcesAndIndependentIndex(t *testi
 		t.Fatal(err)
 	}
 	t.Cleanup(func() { _ = store.Close() })
-	service, err := trace.New(declaredTraceStore{store}, durable.New(store.TraceWork(), "alice", "local/trace"), h.Ledger, "alice", "local/trace")
+	work, err := durable.New(store.TraceWork(), "alice", "local/trace")
+	if err != nil {
+		t.Fatal(err)
+	}
+	service, err := trace.New(declaredTraceStore{store}, work, h.Ledger, "alice", "local/trace")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -133,7 +137,10 @@ func TestTraceConstructorRejectsMissingStoreWorkAndSource(t *testing.T) {
 		t.Fatal(err)
 	}
 	t.Cleanup(func() { _ = store.Close() })
-	work := durable.New(store.TraceWork(), "alice", "local/trace")
+	work, err := durable.New(store.TraceWork(), "alice", "local/trace")
+	if err != nil {
+		t.Fatal(err)
+	}
 	var nilStore *sqlite.Store
 	var nilWork *durable.Service
 	var nilSource *ledger.Service

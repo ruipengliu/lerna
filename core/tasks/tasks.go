@@ -6,9 +6,25 @@ import (
 
 	"github.com/ruipengliu/lerna/contracts/command"
 	v1 "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1"
+	"github.com/ruipengliu/lerna/core/durable"
 )
 
 type Store interface {
+	InputStore
+	modelStore
+	modelCallStore
+	outcomeStore
+	reasonerDriverStore
+	startStore
+	completionStore
+	completionIntentStore
+	cancellationStore
+	taskClosingStore
+	taskClosureIntentStore
+	progressStore
+	recoveryModelCalls
+	recoveryReasonerDrivers
+	LoadCapabilityVersion(context.Context, *v1.Ref) (*v1.Capability, error)
 	TraceSource
 	SaveRequirements(context.Context, *v1.Requirements) error
 	LoadRequirements(context.Context, *v1.Ref) (*v1.Requirements, error)
@@ -73,8 +89,11 @@ type Service struct {
 	user, domain           string
 }
 
-func New(s Store, user, domain string) *Service {
-	return &Service{store: s, user: user, domain: domain, admissionMetrics: admissionMetricState{instance: command.NewRef(user, domain, "metrics-process", "metrics-process").Name.LocalId}}
+func New(s Store, user, domain string) (*Service, error) {
+	if err := durable.RequireDependencies("tasks", durable.Dependency{Name: "store", Value: s}); err != nil {
+		return nil, err
+	}
+	return &Service{store: s, user: user, domain: domain, admissionMetrics: admissionMetricState{instance: command.NewRef(user, domain, "metrics-process", "metrics-process").Name.LocalId}}, nil
 }
 
 // CreateInTransaction 只能由受信裁决事务参与者调用。

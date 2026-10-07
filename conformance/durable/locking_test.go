@@ -24,7 +24,15 @@ func TestSQLiteLeaseTimeAfterLock(t *testing.T) {
 		t.Fatal(e)
 	}
 	defer b.Close()
-	leaseTimeAfterLock(t, durable.New(a, "alice", "local"), durable.New(b, "alice", "local"), a.Transaction)
+	first, err := durable.New(a, "alice", "local")
+	if err != nil {
+		t.Fatal(err)
+	}
+	second, err := durable.New(b, "alice", "local")
+	if err != nil {
+		t.Fatal(err)
+	}
+	leaseTimeAfterLock(t, first, second, a.Transaction)
 }
 
 // leaseTimeAfterLock 同一事务后端提供两个连接与占锁事务；不读取内部表。

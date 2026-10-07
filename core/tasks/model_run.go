@@ -44,7 +44,7 @@ func (s *Service) QueryModelCall(ctx context.Context, c *v1.Caller, request *v1.
 	if r == nil {
 		return nil, command.Fail("NOT_FOUND")
 	}
-	call, e := s.store.(modelCallStore).LoadModelCall(ctx, request, position)
+	call, e := s.store.LoadModelCall(ctx, request, position)
 	if e != nil || call == nil {
 		return call, e
 	}

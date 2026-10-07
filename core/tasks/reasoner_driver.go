@@ -70,7 +70,7 @@ func (s *Service) ConfigureReasonerDriver(ctx context.Context, caller *v1.Caller
 			}
 			seen[key] = true
 		}
-		store := s.store.(reasonerDriverStore)
+		store := s.store
 		d, e := store.LoadReasonerDriver(tx, c.TaskId)
 		if e != nil {
 			return nil, e
@@ -109,7 +109,7 @@ func (s *Service) QueryReasonerDriver(ctx context.Context, c *v1.Caller, id *v1.
 	if e := command.CheckName(c, id, s.user, s.domain, "task"); e != nil {
 		return nil, e
 	}
-	return s.store.(reasonerDriverStore).LoadReasonerDriver(ctx, id)
+	return s.store.LoadReasonerDriver(ctx, id)
 }
 func (s *Service) QueryReasonerDriverVersion(ctx context.Context, c *v1.Caller, r *v1.Ref) (*v1.ReasonerDriver, error) {
 	if r == nil {
@@ -118,7 +118,7 @@ func (s *Service) QueryReasonerDriverVersion(ctx context.Context, c *v1.Caller, 
 	if e := command.CheckName(c, r.Name, s.user, s.domain, "reasoner-driver"); e != nil {
 		return nil, e
 	}
-	d, e := s.store.(reasonerDriverStore).LoadReasonerDriverVersion(ctx, r)
+	d, e := s.store.LoadReasonerDriverVersion(ctx, r)
 	if e == nil && d != nil && !proto.Equal(d.Ref, r) {
 		return nil, command.Fail("STALE_REFERENCE")
 	}
@@ -126,7 +126,7 @@ func (s *Service) QueryReasonerDriverVersion(ctx context.Context, c *v1.Caller, 
 }
 
 func (s *Service) saveReasonerDriver(ctx context.Context, d *v1.ReasonerDriver) error {
-	if e := s.store.(reasonerDriverStore).SaveReasonerDriver(ctx, d); e != nil {
+	if e := s.store.SaveReasonerDriver(ctx, d); e != nil {
 		return e
 	}
 	refs := []*v1.Ref{d.RequestRef, d.OutcomeRef, d.AdmissionRef, d.QuestionRef, d.Policy.ModelCapabilityRef, d.Policy.ModelGrantRef, d.Policy.ModelConfirmationRef}
@@ -139,7 +139,7 @@ func (s *Service) saveReasonerDriver(ctx context.Context, d *v1.ReasonerDriver) 
 func (s *Service) updateReasonerDriver(ctx context.Context, expected *v1.ReasonerDriver, change func(*v1.ReasonerDriver)) (*v1.ReasonerDriver, error) {
 	var result *v1.ReasonerDriver
 	e := s.store.Transaction(ctx, "tasks.planning", func(tx context.Context) error {
-		current, e := s.store.(reasonerDriverStore).LoadReasonerDriver(tx, expected.TaskId)
+		current, e := s.store.LoadReasonerDriver(tx, expected.TaskId)
 		if e != nil {
 			return e
 		}
@@ -218,7 +218,7 @@ func (s *Service) RecoverReasonerDrivers(ctx context.Context, caller *v1.Caller)
 	if command.CheckCaller(caller, s.user) != nil || caller.GetIssuerId() != "host" {
 		return command.Fail("PERMISSION_DENIED")
 	}
-	drivers, e := s.store.(reasonerDriverStore).AllReasonerDrivers(ctx)
+	drivers, e := s.store.AllReasonerDrivers(ctx)
 	if e != nil {
 		return e
 	}

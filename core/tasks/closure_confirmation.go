@@ -84,9 +84,7 @@ func (s *Service) ValidateClosureConfirmation(ctx context.Context, c *v1.Caller,
 	if e != nil {
 		return e
 	}
-	return s.confirmations.(interface {
-		CheckAdmissionConfirmation(context.Context, *v1.Ref, *v1.Admission, bool) error
-	}).CheckAdmissionConfirmation(ctx, cmd.ConfirmationRef, a, required)
+	return s.confirmations.CheckAdmissionConfirmation(ctx, cmd.ConfirmationRef, a, required)
 }
 func (s *Service) checkClosureConfirmationMatter(ctx context.Context, c *v1.Confirmation) error {
 	m := c.GetOperationAdmission()

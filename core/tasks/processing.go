@@ -36,7 +36,7 @@ func (s *Service) ProcessInput(ctx context.Context, caller *v1.Caller, c *v1.Pro
 		if c.InputVersion != t.BoundInputVersion+1 {
 			return nil, command.Fail("INPUT_ORDER")
 		}
-		h, e := s.store.(InputStore).LoadTaskInputs(tx, t.TaskId)
+		h, e := s.store.LoadTaskInputs(tx, t.TaskId)
 		if e != nil {
 			return nil, e
 		}
@@ -134,7 +134,7 @@ func (s *Service) ProcessInput(ctx context.Context, caller *v1.Caller, c *v1.Pro
 		if e = s.store.SavePlanning(tx, p); e != nil {
 			return nil, e
 		}
-		if e = s.store.(InputStore).SaveTaskInputs(tx, h); e != nil {
+		if e = s.store.SaveTaskInputs(tx, h); e != nil {
 			return nil, e
 		}
 		return &v1.Ref{Name: t.TaskId, Revision: t.Revision, SchemaId: "lerna.v1.Task"}, nil

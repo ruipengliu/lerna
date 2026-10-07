@@ -8,8 +8,14 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-type Decisions interface {
+type commandExecutor interface {
 	Execute(context.Context, *v1.Caller, *v1.CommandHeader, string, string, func(context.Context) (*v1.Ref, error)) (*v1.CommandReceipt, error)
+}
+
+type Decisions interface {
+	commandExecutor
+	observedDecisions
+	QueryReceipt(context.Context, *v1.Caller, *v1.CommandIdentity) (*v1.ReceiptQuery, error)
 }
 
 func (s *Service) WithDecisions(d Decisions) *Service { s.decisions = d; return s }
@@ -58,7 +64,7 @@ func (s *Service) AcceptRequirements(ctx context.Context, caller *v1.Caller, c *
 		}
 		boundVersion := c.InputVersion
 		if c.InputVersion > t.BoundInputVersion {
-			history, e := s.store.(InputStore).LoadTaskInputs(tx, t.TaskId)
+			history, e := s.store.LoadTaskInputs(tx, t.TaskId)
 			if e != nil {
 				return nil, e
 			}
@@ -78,7 +84,7 @@ func (s *Service) AcceptRequirements(ctx context.Context, caller *v1.Caller, c *
 			if !found {
 				return nil, command.Fail("INPUT_ORDER")
 			}
-			if e = s.store.(InputStore).SaveTaskInputs(tx, history); e != nil {
+			if e = s.store.SaveTaskInputs(tx, history); e != nil {
 				return nil, e
 			}
 		}
@@ -165,7 +171,7 @@ func (s *Service) requestProposalInTransaction(ctx context.Context, caller *v1.C
 	t.PlanningGeneration++
 	t.Revision++
 	p.Snapshot = &v1.ContextSnapshot{Ref: command.NewRef(s.user, s.domain, "snapshot", "lerna.v1.ContextSnapshot"), TaskRef: &v1.Ref{Name: t.TaskId, Revision: t.Revision, SchemaId: "lerna.v1.Task"}, RequirementsVersion: t.RequirementsVersion, InputVersion: t.InputVersion, ControlGeneration: t.ControlGeneration, PlanningGeneration: t.PlanningGeneration, RequestRef: command.NewRef(s.user, s.domain, "proposal-request", "lerna.v1.ProposalRequest"), ExpiresAtUnixMs: now + 300000, ContentRefs: []*v1.Ref{t.GoalRef}}
-	inputs, e := s.store.(InputStore).LoadTaskInputs(ctx, t.TaskId)
+	inputs, e := s.store.LoadTaskInputs(ctx, t.TaskId)
 	if e != nil {
 		return e
 	}
