@@ -15,6 +15,7 @@ func TestQueryableLostWriteReceiptRecoversThroughSeparateAdmittedRead(t *testing
 	target := simulator.New("queryable")
 	target.SetBehavior("drop-after-apply")
 	f := newFixtureWithTarget(t, 200, 200, false, target)
+	f.h.Ledger.WithWork(declaredExecutionWork{ExecutionWork: f.h.LedgerWork})
 	queryCap, queryGrant := configureReconciliation(t, f)
 	a, start := prepareStart(t, f)
 	r, err := f.h.Egress.Invoke(f.ctx, &v1.Caller{UserId: "u", IssuerId: "egress"}, start)

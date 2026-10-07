@@ -41,17 +41,17 @@ func (s *Service) createReports(ctx context.Context, o *v1.RawObservation, op *v
 	}
 	usage := &v1.UsageReport{Ref: command.NewRef(s.user, s.sourceDomain, "usage", "lerna.v1.UsageReport"), BillingSource: o.SendRef, SourceRevision: 1, MeasurementRef: o.Ref, PriceRuleRef: admission.CapabilitySnapshot.RateBasisRef, OperationId: o.OperationId, AttemptId: o.AttemptId, SendRef: o.SendRef, TaskId: o.TaskId, Settlement: "PENDING", Unit: "USD_MICRO", PhysicalSends: 1}
 	event := &v1.TraceEvent{Ref: command.NewRef(s.user, s.sourceDomain+"/trace", "trace-event", "lerna.v1.TraceEvent"), EventType: "PHYSICAL_OBSERVATION", SourceRecordRef: o.Ref, TaskId: o.TaskId, OperationId: o.OperationId, AttemptId: o.AttemptId, SendRef: o.SendRef, ObservationRef: o.Ref, BodyRef: o.BodyRef}
-	traceCommand, e := s.store.(reportStore).CreateTraceSource(ctx, "ledger", event, reportHeader(s.user, "ledger-report", s.sourceDomain+"/trace", "trace:"+o.Ref.Name.LocalId))
+	traceCommand, e := s.store.CreateTraceSource(ctx, "ledger", event, reportHeader(s.user, "ledger-report", s.sourceDomain+"/trace", "trace:"+o.Ref.Name.LocalId))
 	if e != nil {
 		return e
 	}
-	return s.store.(reportStore).SaveReports(ctx, &v1.ObservationReports{ObservationRef: o.Ref, Usage: &v1.AcceptUsageCommand{Header: reportHeader(s.user, "ledger-report", s.sourceDomain, "usage:"+o.Ref.Name.LocalId), Usage: usage}, Trace: traceCommand})
+	return s.store.SaveReports(ctx, &v1.ObservationReports{ObservationRef: o.Ref, Usage: &v1.AcceptUsageCommand{Header: reportHeader(s.user, "ledger-report", s.sourceDomain, "usage:"+o.Ref.Name.LocalId), Usage: usage}, Trace: traceCommand})
 }
 func (s *Service) QueryReports(ctx context.Context, caller *v1.Caller, r *v1.Ref) (*v1.ObservationReports, error) {
 	if e := s.checkHistory(caller, r, "observation", "lerna.v1.RawObservation"); e != nil {
 		return nil, e
 	}
-	v, e := s.store.(reportStore).LoadReports(ctx, r)
+	v, e := s.store.LoadReports(ctx, r)
 	if v != nil && !proto.Equal(v.ObservationRef, r) {
 		return nil, command.Fail("INVALID_REFERENCE")
 	}
@@ -63,7 +63,7 @@ func (s *Service) ProcessReports(ctx context.Context, caller *v1.Caller) error {
 	if caller.GetUserId() != s.user {
 		return command.Fail("PERMISSION_DENIED")
 	}
-	all, e := s.store.(reportStore).AllReports(ctx)
+	all, e := s.store.AllReports(ctx)
 	if e != nil {
 		return e
 	}
@@ -104,7 +104,7 @@ func (s *Service) ProcessReports(ctx context.Context, caller *v1.Caller) error {
 			}
 			h := reportHeader(s.user, "ledger-report", s.domain, "ack:"+kind+":"+reports.ObservationRef.Name.LocalId)
 			saveAck := func(tx context.Context) (*v1.Ref, error) {
-				current, e := s.store.(reportStore).LoadReports(tx, reports.ObservationRef)
+				current, e := s.store.LoadReports(tx, reports.ObservationRef)
 				if e != nil {
 					return nil, e
 				}
@@ -120,7 +120,7 @@ func (s *Service) ProcessReports(ctx context.Context, caller *v1.Caller) error {
 				} else {
 					current.TraceReceipt = r
 				}
-				return reports.ObservationRef, s.store.(reportStore).SaveReports(tx, current)
+				return reports.ObservationRef, s.store.SaveReports(tx, current)
 			}
 			fingerprint := command.SemanticFingerprint("report-ack", kind, reports.ObservationRef, r)
 			if kind == "usage" {

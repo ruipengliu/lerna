@@ -1100,7 +1100,10 @@ func TestNativeFilePredecessorLedgerFailureDoesNotPublishSuccessor(t *testing.T)
 			if e != nil {
 				t.Fatal(e)
 			}
-			service := egress.New(n.h.Tasks, n.h.Ledger, n.h.Content, egressio.NewFiles(map[string]string{"documents": n.root}, broken, n.h.Content), lock)
+			service, e := egress.New(n.h.Tasks, n.h.Ledger, n.h.Content, egressio.NewFiles(map[string]string{"documents": n.root}, broken, n.h.Content), lock)
+			if e != nil {
+				t.Fatal(e)
+			}
 			recorder := egressio.NewNativeFileRecorder(nil, nil)
 			ctx := egressio.WithNativeFileFault(n.ctx, &egressio.NativeFileFault{Recorder: recorder})
 			r, e = service.Invoke(ctx, &v1.Caller{UserId: "u", IssuerId: "egress"}, bs)

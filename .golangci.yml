@@ -47,7 +47,7 @@ linters:
         core-ledger:
           files: ["**/core/ledger/*.go", "**/core/ledger/**/*.go"]
           list-mode: strict
-          allow: ["$gostd", "google.golang.org/protobuf", "github.com/ruipengliu/lerna/contracts", "github.com/ruipengliu/lerna/core/ledger$", "github.com/ruipengliu/lerna/core/ledger/", "github.com/ruipengliu/lerna/core/durable$", "github.com/ruipengliu/lerna/core/durable/"]
+          allow: ["$gostd", "google.golang.org/protobuf", "github.com/ruipengliu/lerna/contracts", "github.com/ruipengliu/lerna/core/ledger$", "github.com/ruipengliu/lerna/core/ledger/", "github.com/ruipengliu/lerna/core/durable$"]
         core-content:
           files: ["**/core/content/*.go", "**/core/content/**/*.go"]
           list-mode: strict
@@ -55,11 +55,11 @@ linters:
         core-trace:
           files: ["**/core/trace/*.go", "**/core/trace/**/*.go"]
           list-mode: strict
-          allow: ["$gostd", "google.golang.org/protobuf", "github.com/ruipengliu/lerna/contracts", "github.com/ruipengliu/lerna/core/trace$", "github.com/ruipengliu/lerna/core/trace/"]
+          allow: ["$gostd", "google.golang.org/protobuf", "github.com/ruipengliu/lerna/contracts", "github.com/ruipengliu/lerna/core/durable$", "github.com/ruipengliu/lerna/core/trace$", "github.com/ruipengliu/lerna/core/trace/"]
         core-egress:
           files: ["**/core/egress/*.go", "**/core/egress/**/*.go"]
           list-mode: strict
-          allow: ["$gostd", "google.golang.org/protobuf", "github.com/ruipengliu/lerna/contracts", "github.com/ruipengliu/lerna/core/egress$", "github.com/ruipengliu/lerna/core/egress/"]
+          allow: ["$gostd", "google.golang.org/protobuf", "github.com/ruipengliu/lerna/contracts", "github.com/ruipengliu/lerna/core/egress$", "github.com/ruipengliu/lerna/core/egress/", "github.com/ruipengliu/lerna/core/durable$"]
         infra:
           files: ["**/infra/**/*.go"]
           deny:

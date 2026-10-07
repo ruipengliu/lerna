@@ -102,7 +102,7 @@ func (s *Service) QueryCancellationSeal(ctx context.Context, c *v1.Caller, r *v1
 	if e := s.checkHistory(c, r, "cancellation-seal", "lerna.v1.CancellationSeal"); e != nil {
 		return nil, e
 	}
-	v, e := s.store.(cancellationSealStore).LoadCancellationSeal(ctx, r)
+	v, e := s.store.LoadCancellationSeal(ctx, r)
 	if e == nil && v != nil && !proto.Equal(v.Ref, r) {
 		return nil, command.Fail("INVALID_REFERENCE")
 	}

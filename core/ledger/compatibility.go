@@ -3,7 +3,6 @@ package ledger
 import (
 	"context"
 
-	"github.com/ruipengliu/lerna/contracts/command"
 	v1 "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1"
 	"github.com/ruipengliu/lerna/core/durable"
 )
@@ -19,13 +18,9 @@ type RecoveryCompiler interface {
 
 // CheckStartupCompatibility 在任一域自动恢复前核验原动作，未知和已关闭任务同样保留。
 func (s *Service) CheckStartupCompatibility(ctx context.Context) error {
-	all, e := s.store.(recoveryOperations).RecoveryOperations(ctx)
+	all, e := s.store.RecoveryOperations(ctx)
 	if e != nil {
 		return e
-	}
-	compiler, ok := s.adapter.(RecoveryCompiler)
-	if !ok && len(all) > 0 {
-		return command.Fail("PREPARATION_UNRECOVERABLE")
 	}
 	for _, op := range all {
 		switch op.GetCapabilitySnapshot().GetAdapterRef().GetName().GetLocalId() {
@@ -37,7 +32,7 @@ func (s *Service) CheckStartupCompatibility(ctx context.Context) error {
 				return e
 			}
 		}
-		if e = compiler.CheckRecoverySupported(op); e != nil {
+		if e = s.adapter.CheckRecoverySupported(op); e != nil {
 			return e
 		}
 	}
