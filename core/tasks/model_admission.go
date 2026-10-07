@@ -30,7 +30,7 @@ func (s *Service) AdmitModelCall(ctx context.Context, caller *v1.Caller, c *v1.A
 		if r == nil {
 			return nil, command.Fail("NOT_FOUND")
 		}
-		call, e := s.store.(modelCallStore).LoadModelCall(tx, r.Ref, c.Position)
+		call, e := s.store.LoadModelCall(tx, r.Ref, c.Position)
 		if e != nil {
 			return nil, e
 		}
@@ -187,7 +187,7 @@ func (s *Service) checkModelAdmission(ctx context.Context, caller *v1.Caller, a 
 	if a.Origin == nil || command.CheckName(caller, a.Origin.Name, s.user, s.domain, "model-call") != nil {
 		return false, command.Fail("MODEL_HOST_REQUIRED")
 	}
-	call, e := s.store.(modelCallStore).LoadModelCallRef(ctx, a.Origin)
+	call, e := s.store.LoadModelCallRef(ctx, a.Origin)
 	if e != nil {
 		return false, e
 	}

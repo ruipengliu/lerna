@@ -35,7 +35,7 @@ func (s *Service) WithTaskClosures(j TaskClosingJobs, c TaskCloser) *Service {
 func (s *Service) addTaskClosures(ctx context.Context, v *v1.TaskClosing, refs []*v1.Ref, scopeRef *v1.Ref) error {
 	seen := map[string]bool{}
 	for _, ref := range v.ClosureIntentRefs {
-		intent, e := s.store.(taskClosureIntentStore).LoadTaskClosureIntent(ctx, ref)
+		intent, e := s.store.LoadTaskClosureIntent(ctx, ref)
 		if e != nil {
 			return e
 		}
@@ -75,7 +75,7 @@ func (s *Service) QueryTaskClosureIntent(ctx context.Context, c *v1.Caller, r *v
 	if e := command.CheckName(c, r.Name, s.user, s.domain, "task-closure-intent"); e != nil {
 		return nil, e
 	}
-	v, e := s.store.(taskClosureIntentStore).LoadTaskClosureIntent(ctx, r)
+	v, e := s.store.LoadTaskClosureIntent(ctx, r)
 	if e == nil && v != nil && !proto.Equal(v.Ref, r) {
 		return nil, command.Fail("INVALID_REFERENCE")
 	}

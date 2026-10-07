@@ -62,14 +62,14 @@ func (s *Service) currentModelClaim(ctx context.Context, caller *v1.Caller, r *v
 	if j == nil || j.Ref == nil || j.Ref.Name == nil || !proto.Equal(j.Ref.Name, r.JobRef.Name) {
 		return command.Fail("STALE_CLAIM")
 	}
-	current, e := s.store.(modelStore).LoadJob(ctx, r.JobRef.Name)
+	current, e := s.store.LoadJob(ctx, r.JobRef.Name)
 	if e != nil {
 		return e
 	}
 	if e := command.CheckSavedJobContract(current); e != nil {
 		return e
 	}
-	now, e := s.store.(modelStore).ReadAuthorityTime(ctx)
+	now, e := s.store.ReadAuthorityTime(ctx)
 	if e != nil {
 		return e
 	}
@@ -91,7 +91,7 @@ func (s *Service) currentModelRequest(ctx context.Context, caller *v1.Caller, r 
 	if e != nil {
 		return e
 	}
-	now, e := s.store.(modelStore).ReadAuthorityTime(ctx)
+	now, e := s.store.ReadAuthorityTime(ctx)
 	if e != nil {
 		return e
 	}
@@ -178,7 +178,7 @@ func (s *Service) PrepareModelCall(ctx context.Context, caller *v1.Caller, c *v1
 		if r == nil {
 			return nil, command.Fail("NOT_FOUND")
 		}
-		old, e := s.store.(modelCallStore).LoadModelCall(tx, r.Ref, c.Position)
+		old, e := s.store.LoadModelCall(tx, r.Ref, c.Position)
 		if e != nil {
 			return nil, e
 		}
@@ -242,7 +242,7 @@ func (s *Service) PrepareModelCall(ctx context.Context, caller *v1.Caller, c *v1
 	if e = modelReceipt(receipt, e); e != nil {
 		return nil, e
 	}
-	call, e := s.store.(modelCallStore).LoadModelCall(ctx, c.RequestRef, c.Position)
+	call, e := s.store.LoadModelCall(ctx, c.RequestRef, c.Position)
 	if e != nil {
 		return nil, e
 	}
@@ -300,7 +300,7 @@ func (s *Service) PrepareModelCall(ctx context.Context, caller *v1.Caller, c *v1
 	}
 	h := sha256.Sum256(body)
 	completed, e := s.traceModelDecisions(c.RequestRef).Execute(ctx, caller, s.modelHeader(fmt.Sprintf("%s:fixed:%s:%d", prefix, c.Claim.GetProcessInstance(), c.Claim.GetClaimEpoch()), s.domain), command.SemanticFingerprint("model-fixed", call.Ref, d.Ref, committed.ResultRef, hex.EncodeToString(h[:])), "tasks.model_seal", func(tx context.Context) (*v1.Ref, error) {
-		current, e := s.store.(modelCallStore).LoadModelCall(tx, c.RequestRef, c.Position)
+		current, e := s.store.LoadModelCall(tx, c.RequestRef, c.Position)
 		if e != nil {
 			return nil, e
 		}
@@ -319,7 +319,7 @@ func (s *Service) PrepareModelCall(ctx context.Context, caller *v1.Caller, c *v1
 	if e = modelReceipt(completed, e); e != nil {
 		return nil, e
 	}
-	return s.store.(modelCallStore).LoadModelCall(ctx, c.RequestRef, c.Position)
+	return s.store.LoadModelCall(ctx, c.RequestRef, c.Position)
 }
 
 type modelInput struct {

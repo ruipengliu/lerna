@@ -19,6 +19,7 @@ import (
 // 规则：G3、G4、G10、R3、V4
 func TestAdmissionMetricsCountActualOriginalDecisionsAndReplaySeparately(t *testing.T) {
 	f := newFixture(t, 100, 80, false)
+	f.h.Tasks.WithDecisions(declaredTasksDecisions{f.h.Durable})
 	empty, e := f.h.Tasks.QueryAdmissionMetrics(f.ctx, f.caller)
 	if e != nil || empty.Source.Availability != "NO_SAMPLES" || empty.DurationSumNs != nil || empty.Samples != 0 {
 		t.Fatalf("empty sample scope: %v %v", empty, e)

@@ -84,7 +84,7 @@ func (s *Service) saveModelResult(ctx context.Context, caller *v1.Caller, call *
 		observationID = result.ObservationRef.Name.LocalId
 	}
 	r, e := s.traceModelDecisions(call.RequestRef).Execute(ctx, caller, s.modelHeader("model-result:"+call.Ref.Name.LocalId+":"+observationID, s.domain), command.SemanticFingerprint("model-result", result), "tasks.model_result", func(tx context.Context) (*v1.Ref, error) {
-		current, e := s.store.(modelCallStore).LoadModelCall(tx, call.RequestRef, call.Position)
+		current, e := s.store.LoadModelCall(tx, call.RequestRef, call.Position)
 		if e != nil {
 			return nil, e
 		}
@@ -100,7 +100,7 @@ func (s *Service) saveModelResult(ctx context.Context, caller *v1.Caller, call *
 	if e = modelReceipt(r, e); e != nil {
 		return nil, e
 	}
-	current, e := s.store.(modelCallStore).LoadModelCall(ctx, call.RequestRef, call.Position)
+	current, e := s.store.LoadModelCall(ctx, call.RequestRef, call.Position)
 	if e != nil {
 		return nil, e
 	}
