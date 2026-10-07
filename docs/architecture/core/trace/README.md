@@ -11,6 +11,7 @@
 | 2026-10-05 | 图中的跨域交接改用具体行为说明，规则编号及解释放在图注或正文；交接机制不变。 |
 | 2026-10-05 | 模块名称统一为“执行管理”，同步模块简称与图示；存储和连续性语境中的“账本”指其持久执行记录。职责与契约不变。 |
 | 2026-10-05 | 模块名称由执行网关改回出口闸门，避免与网关与 SDK 撞名；恢复被改写的历史修订行；职责与契约不变。 |
+| 2026-10-06 | 按[第五轮评审处理记录](../../../review/disposition.md)修订：容量背压由发起新责任的模块登记等待，不改变业务状态；批量接纳待 M1 实测（TR-01、TR-02）。 |
 | 2026-10-07 | 补记 M1 本地关联和诊断可用性口径：来源、接纳、索引与源方回执分别计数，完整性与诊断状态不参与业务完成判断。 |
 
 - 状态：草稿
@@ -170,7 +171,7 @@ flowchart LR
 
 获准保存的敏感派生副本必须先拿到内容治理的许可、完成派生登记，然后才对查询或导出可见。正文不会先落进一个"暂存原文"的诊断队列。
 
-业务在持久点 1 之后就可以继续推进，因为责任和待交接记录已经持久化，不必同步等待运行记录或外部诊断后端。积压接近安全容量时，阻止会新增记录责任的推进，但优先保留取消、撤回、效果回报和核对所需的容量。
+业务在持久点 1 之后就可以继续推进，因为责任和待交接记录已经持久化，不必同步等待运行记录或外部诊断后端。积压接近安全容量时，阻止会新增记录责任的推进，但优先保留取消、撤回、效果回报和核对所需的容量。这是可用性降级，不是裁决：由发起新责任的模块（例如任务编排）登记一项"容量等待"，运行记录本身不改变任何业务状态。基础关联的接纳可以批量进行，批量的边界和写放大在 M1 实测后确定（见第 8 节），不得为了性能合并事务域。
 
 **为什么不直接调用 OpenTelemetry SDK。**OpenTelemetry 的 SDK 规范明确要求应用不要用 Span 中的数据实现应用逻辑；批处理队列满时会丢弃 Span，`ForceFlush` 超时时可能跳过或中止导出（[OTel SDK 规范 v1.61.0](https://github.com/open-telemetry/opentelemetry-specification/blob/v1.61.0/specification/trace/sdk.md)）。OTLP 的确认只覆盖一对客户端和服务端，不提供多跳的端到端保证（[OTLP v1.11.0](https://github.com/open-telemetry/opentelemetry-proto/blob/v1.11.0/docs/specification.md)）。Collector 的"持久队列"也有前提：v0.136.0 默认重试期限五分钟，重试耗尽就结束处理；contrib 的 File Storage 默认不 fsync（[重试配置](https://github.com/open-telemetry/opentelemetry-collector/blob/a2b837e7af3f3ca67c8c7dd725f3b8867e85d27a/config/configretry/backoff.go)、[File Storage 默认配置](https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/f5f5c4a3347d96edc48e8cc2f9347212c904a8db/extension/storage/filestorage/factory.go)）。尾采样器把待决轨迹放在内存里，要求同一轨迹的 Span 到达同一个 Collector（[tail sampling processor](https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/f5f5c4a3347d96edc48e8cc2f9347212c904a8db/processor/tailsamplingprocessor/README.md)）。数天的任务、端侧离线补传和未知效果，都不能依赖这些机制保持完整。所以基础关联走 Lerna 自己的持久接纳协议，OpenTelemetry 只承担可以丢失的诊断投影。
 
