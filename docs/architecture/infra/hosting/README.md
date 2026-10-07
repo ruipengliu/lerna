@@ -3,6 +3,7 @@
 | 日期 | 修订说明 |
 | --- | --- |
 | 2026-10-07 | 固定手动进展入口，保留原 CLI 阶段、调用权限和负责方决定。 |
+| 2026-10-07 | 启动接入同一宿主，完整启动配置先于资格检查；保留独立阶段、身份及原等待期限。 |
 
 - 状态：草稿
 - 负责满足：C4、C5、G3、G4、G11、R6、R7
@@ -13,7 +14,7 @@
 
 `infra/hosting` 协调既有负责方推进原责任。宿主只注入窄命令接口，阶段清单固定在实现内；不接收任意处理函数，不拥有任务、回执、效果或费用事实。各核心模块继续按原身份、权威依据和事务写入自己的事实。
 
-交互适配器只解析 `recover` 并委托 `ManualProgress`。生产装配把同一用户的现有负责方接入该入口。实际出口、源意图／接收方决定／源回执及兼容性资格仍由原模块处理。
+交互适配器只解析 `recover` 并委托 `ManualProgress`。生产装配把同一用户的现有负责方接入宿主，完成所有核心与工作域的配置校验后委托 `Startup`。实际出口、源意图／接收方决定／源回执及兼容性资格仍由原模块处理；装配不维护业务恢复阶段清单。
 
 ## 2 对象与状态
 
@@ -21,9 +22,13 @@
 
 报告与解释共用一个可选端口；核对与随后动作进展共用另一个可选端口，保留原能力成组出现的范围。完成、取消、非成功关闭及执行／结算后续责任分别注入，不能因为某一能力缺席而猜测其他能力。
 
+`StartupDependencies` 单独声明全部启动必需端口，包括任务与执行管理的历史资格、会话有界恢复、原交接、内容登记和观察、报告与解释、撤销、取消与完成恢复、动作进展与核对、任务封闭交付、非成功关闭、预算封闭、执行与结算后续责任、启用 driver 和运行记录。启动用户由受信装配固定，不接受手动 caller 作为生产身份配置。任何启动必需端口缺失或 typed nil 均为配置错误，未配置启动模式的合法 Manual-only 实例不能用于生产启动。
+
 ## 3 接口
 
 `NewManual(ManualDependencies)` 返回完成配置校验的宿主；`ValidateDependencies()` 供生产装配汇总校验。`ManualProgress(context.Context, Caller)` 返回原负责方的首个错误或全部支持阶段的返回结果，不包装错误、不改变回执。
+
+`New(ManualDependencies, StartupDependencies)` 返回两个模式均完成配置校验的宿主。`ValidateStartupDependencies()` 明确检查启动能力，生产完成门禁必须调用它；`Startup(context.Context)` 在调用任何资格检查前再次检查启动配置，随后只执行固定启动阶段。仅手动实例的 `ValidateDependencies` 仍合法，调用 Startup 则返回明确缺项错误。
 
 入口原样传递调用方和 context；不添加启动的 65 秒期限，不把普通调用方替换成 `host-recovery` 或 `host`。没有输入输出协议或权限扩展。
 
@@ -45,7 +50,23 @@
 
 任一步错误立即返回，后续阶段不执行。每一步的持久化点、固定生产者和业务命令身份由原负责方定义；协调器不合并事务。
 
-打开生产 CLI 的数据库会先执行现有启动恢复，然后才进入手动进展。两种阶段的责任、身份和调用增量必须分别记录。启动仍留在原装配流程：资格检查先于业务恢复，启动期限、自然租约到期等待和独立启用 driver 的 `host` 身份不属于手动入口。手动入口不增加内容登记、原交接扫描、启用 driver 或第二遍动作进展。
+打开生产 CLI 的数据库会先执行启动恢复，然后才进入手动进展。两种阶段的责任、身份和调用增量必须分别记录。手动入口不增加内容登记、原交接扫描、启用 driver 或第二遍动作进展。
+
+启动在物理格式与身份资格通过、存储打开、全部核心构造及真实循环连接完成之后执行。Open 仍在原位置建立 65 秒 context，完成门禁先检查整个模块图和启动模式，再将该 context 交给宿主。Startup 不延长期限，不新建进程领取标识，不持事务锁等待；各 owner 保留自己的自然 due time、领取代次、租约等待和原错误。
+
+Startup 保留以下独立固定顺序，不调用 ManualProgress 来拼接阶段：
+
+1. 任务 `CheckStartupCompatibility`，执行管理 `CheckStartupCompatibility`；全部原历史可理解后才允许恢复。
+2. 会话 `RecoverPending`，任务 `RecoverHandoffs`。
+3. 内容 `ProcessRegistrations`、`ProcessObservations`。
+4. 执行管理 `ProcessReports`、`ProcessInterpretations`；授权 `ProcessRevocations`。
+5. 任务 `RecoverCancellations`、`RecoverCompletions`；完成恢复仍核验原验证轮次及唯一继续请求。
+6. 执行管理 `ProcessOperationProgress`、`RecoverReconciliations`、再次 `ProcessOperationProgress`。
+7. 任务 `RecoverTaskClosures`、`ProcessTaskClosings`；预算 `ProcessClosures`。
+8. 执行管理 `ProcessExecutionFollowups`；预算 `ProcessSettlementFollowups`。
+9. 任务 `RecoverReasonerDrivers`；运行记录 `Recover`。
+
+普通启动生产者固定为 `host-recovery`，只有原启用 driver 恢复使用 `host`。宿主不自动建立 driver 或签发授权，不替换保存的原命令、请求、模型位置、准入与发送身份。原 owner 决定 disabled/completed、UNKNOWN、取消、非法输出、核验拒绝等待及唯一继续请求；协调器不从这些事实推导新的责任。
 
 ## 5 故障与恢复
 
@@ -67,15 +88,17 @@
 
 ## 8 待定事项
 
-启动恢复迁入同一宿主模块另行实施，迁移时保留已有资格、顺序、期限和身份。本次不改变启动协议。
+无。本次只迁移已有启动协议，未增加恢复策略或业务状态。
 
 ## 9 M1 范围
 
-本次提供本地 CLI 固定手动进展和生产装配；不新增远程恢复、持续自动循环、处理注册或存储格式。
+本次提供本地 CLI 固定手动进展、固定生产启动及生产装配；不新增远程恢复、持续自动循环、处理注册或存储格式。
 
 ## 10 测试要点
 
 通过生产 CLI 与各负责方公共查询验收原回执、观察、报告、解释、撤销、完成、取消、核对与后续责任。分别记录 Open 和 ManualProgress 的结果、身份及独立目标增量。保留未来 due time、当前租约、暂时错误后的原责任和重放；必要配置检查只验证缺失及 typed nil，不复制核心一致性套件。
+
+启动通过公开 Open、原 owner 查询和独立目标/供应商计数验收。历史资格拒绝必须保持其他 READY 工作未领取；完整与部分恢复、停机副本、原启用 driver 位置、UNKNOWN 与固定 Result 保持。必要装配配置测试复用既有真实模块和 SQLite/Work 计数包装器，验证 Manual-only 实例及启动端口缺项在任何业务资格、恢复和 IO 前拒绝，不增加公开测试 hook。
 
 ## 参考资料
 

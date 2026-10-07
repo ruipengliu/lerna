@@ -190,7 +190,7 @@ func newAssemblyFixture(t *testing.T) (*Harness, *assemblyProbe) {
 		t.Fatal(err)
 	}
 	h.connect()
-	if err := h.connectManualProgress(); err != nil {
+	if err := h.connectRecovery(); err != nil {
 		t.Fatal(err)
 	}
 	return h, p
@@ -409,4 +409,28 @@ func TestAssemblyRequiresManualHostConfigurationBeforeOwners(t *testing.T) {
 	h, p := newAssemblyFixture(t)
 	h.Recovery = &hosting.Service{}
 	assertAssemblyRefusesBeforeOwners(t, h, p, "hosting.sessions")
+}
+
+// 规则：G1、G3、G4、G11、R6、V4
+func TestAssemblyRequiresStartupModeBeforeOwners(t *testing.T) {
+	h, p := newAssemblyFixture(t)
+	manualOnly, err := hosting.NewManual(hosting.ManualDependencies{Sessions: h.Sessions})
+	if err != nil {
+		t.Fatal(err)
+	}
+	h.Recovery = manualOnly
+	if err := manualOnly.ValidateDependencies(); err != nil {
+		t.Fatalf("valid manual-only host rejected: %v", err)
+	}
+	if err := manualOnly.Startup(context.Background()); err == nil || err.Error() != "missing required dependency: hosting.startup" {
+		t.Fatalf("manual-only Startup: %v", err)
+	}
+	clear(p.qualification)
+	clear(p.recovery)
+	if err := h.start(context.Background()); err == nil || err.Error() != "missing required dependency: hosting.startup" {
+		t.Errorf("manual-only host used as startup: %v", err)
+	}
+	if len(p.qualification) != 0 || len(p.recovery) != 0 || p.io != 0 {
+		t.Fatalf("incomplete startup reached owners: qualification=%v recovery=%v io=%d", p.qualification, p.recovery, p.io)
+	}
 }

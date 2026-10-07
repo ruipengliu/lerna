@@ -31,5 +31,5 @@ func (h *Harness) complete() error {
 			return err
 		}
 	}
-	return nil
+	return h.Recovery.ValidateStartupDependencies()
 }
