@@ -23,6 +23,7 @@ import (
 	"github.com/ruipengliu/lerna/core/trace"
 	"github.com/ruipengliu/lerna/infra/egressio"
 	"github.com/ruipengliu/lerna/infra/keys"
+	"github.com/ruipengliu/lerna/infra/rules"
 	"github.com/ruipengliu/lerna/infra/sqlite"
 )
 
@@ -88,7 +89,7 @@ func OpenWithOptions(path, user, domain string, options Options) (*Harness, erro
 	t.WithConfirmationRequests(h.Sessions, c).WithModelContent(c).WithReasonerQuestions(h.Sessions).WithConditionConfirmations(h.Sessions)
 	h.Budget = budget.New(s, d, user, domain, "host")
 	h.LedgerWork = durable.New(s.LedgerWork(), user, domain+"/ledger")
-	h.Ledger = ledger.New(s, user, domain+"/ledger", domain).WithWork(h.LedgerWork).WithCompiler(executionCompiler{api: api.Adapter{Content: c}}).WithStarts(t)
+	h.Ledger = ledger.New(s, user, domain+"/ledger", domain).WithWork(h.LedgerWork).WithCompiler(executionCompiler{api: api.Adapter{Content: c}}).WithStarts(t).WithEvidenceRules(rules.API{})
 	c.WithObservations(durable.New(s.ContentWork(), user, domain+"/content"), h.Ledger)
 	h.Ledger.WithObservations(c)
 	h.Budget.WithUsageSource(h.Ledger).WithBillingEvidence(c).WithCompletionAuthority(t).WithCancellationAuthority(t).WithTaskClosingAuthority(t)

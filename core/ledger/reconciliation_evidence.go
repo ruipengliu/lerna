@@ -17,8 +17,6 @@ import (
 )
 
 type queryResponse struct {
-	Account            string `json:"account"`
-	Origin             string `json:"origin"`
 	QueryStatus        string `json:"query_status"`
 	Protocol           string `json:"protocol"`
 	QueryExternalKey   string `json:"query_external_key"`
@@ -43,11 +41,7 @@ func parseQueryResponse(raw *v1.RawObservation, body []byte, op *v1.Operation) (
 		return parseFileQuery(raw, op), false
 	}
 	cap := op.Execution.Attempt.Capabilities
-	api := op.Execution.CallDescriptor.GetApiDescriptor() != nil
 	protocol, basis := "lerna-simulator-query-v1", "reference-query-v1"
-	if api {
-		protocol, basis = "lerna-reference-api-query-v1", "reference-api-v1"
-	}
 	if cap.ProtocolVersion != protocol || cap.VerificationBasis != basis || cap.Effect != "READ" || raw.Source != "TRUSTED_IO" || raw.Protocol != "HTTP" || raw.TransportError != "" || raw.Redacted || raw.StatusCode != 200 || !proto.Equal(raw.QuerySubject, op.QuerySubject) {
 		return nil, false
 	}
@@ -60,18 +54,10 @@ func parseQueryResponse(raw *v1.RawObservation, body []byte, op *v1.Operation) (
 	if expected == "" {
 		expected = "80"
 	}
-	if api {
-		if !command.APIObservationMatches(raw, op.Execution.CallDescriptor, op.Execution.Attempt) {
-			return nil, false
-		}
-	} else if e != nil || port != expected || !net.ParseIP(address).Equal(net.ParseIP(endpoint.Hostname())) {
+	if e != nil || port != expected || !net.ParseIP(address).Equal(net.ParseIP(endpoint.Hostname())) {
 		return nil, false
 	}
 	valid, conflict := validQueryObject(body)
-	if api {
-		values, duplicate := command.StrictJSONObject(body, "billing", "query_status", "protocol", "query_external_key", "query_attempt_id", "query_operation_id", "read_terminal", "subject_external_key", "subject_attempt_id", "subject_operation_id", "subject_scope", "applied", "terminal", "negative_proof", "retry_after_ms", "account", "origin")
-		valid, conflict = values != nil, duplicate
-	}
 	if !valid {
 		return nil, conflict
 	}
@@ -82,9 +68,6 @@ func parseQueryResponse(raw *v1.RawObservation, body []byte, op *v1.Operation) (
 	if response.QueryStatus != "" && response.QueryStatus != "AVAILABLE" && response.QueryStatus != "TEMPORARILY_UNAVAILABLE" && response.QueryStatus != "RETENTION_EXPIRED" {
 		return nil, false
 	}
-	if api && (response.Account != op.Execution.CallDescriptor.ApiDescriptor.Binding.Account || response.Origin != op.Execution.CallDescriptor.ApiDescriptor.Binding.Origin) {
-		return nil, false
-	}
 	subject := op.QuerySubject
 	if response.SubjectExternalKey != subject.ExternalKey || response.SubjectAttemptID != subject.AttemptId.LocalId || response.SubjectOperationID != subject.OperationId.LocalId || response.SubjectScope != subject.TargetScope {
 		return nil, false
@@ -93,9 +76,6 @@ func parseQueryResponse(raw *v1.RawObservation, body []byte, op *v1.Operation) (
 }
 func interpretQuery(raw *v1.RawObservation, body []byte, op *v1.Operation) *v1.EffectInterpretation {
 	finding := &v1.EffectInterpretation{ObservationRef: raw.Ref, Rule: "reference-query-v1", Outcome: "UNKNOWN", LateEffect: "MAY_OCCUR", Reason: "QUERY_RESULT_UNKNOWN"}
-	if op.Execution.CallDescriptor.ApiDescriptor != nil {
-		finding.Rule = "reference-api-query-v1"
-	}
 	response, conflict := parseQueryResponse(raw, body, op)
 	if conflict {
 		finding.Reason = "EVIDENCE_CONFLICT"
@@ -148,8 +128,40 @@ func validQueryObject(body []byte) (bool, bool) {
 	return d.Decode(&extra) == io.EOF, false
 }
 
+// queryEvidence 保留未迁移 FILE 和模拟查询的固定原解释。
+func queryEvidence(raw *v1.RawObservation, body []byte, query *v1.Operation) *QueryEvidence {
+	response, conflict := parseQueryResponse(raw, body, query)
+	facts := &QueryEvidence{Rule: "reference-query-subject-v1", Outcome: "UNKNOWN", LateEffect: "MAY_OCCUR", Reason: "QUERY_RESULT_UNKNOWN", Conflict: conflict}
+	if response != nil {
+		facts.RetryAfterMs = &response.RetryAfterMs
+	}
+	if response != nil && *response.ReadTerminal && (response.QueryStatus == "" || response.QueryStatus == "AVAILABLE") {
+		facts.Reason = "SUBJECT_NOT_TERMINAL"
+		if *response.Applied {
+			facts.Outcome = "APPLIED"
+		}
+		if *response.Terminal && (*response.Applied || response.NegativeProof) {
+			facts.LateEffect = "RULED_OUT"
+			facts.Reason = "TERMINAL_SUBJECT_PROOF"
+			if !*response.Applied {
+				facts.Outcome = "NOT_APPLIED"
+			}
+		}
+	}
+	if response != nil && *response.ReadTerminal && response.QueryStatus == "RETENTION_EXPIRED" {
+		facts.Reason = "QUERY_RETENTION_EXPIRED"
+	}
+	if response != nil && *response.ReadTerminal && response.QueryStatus == "TEMPORARILY_UNAVAILABLE" {
+		facts.Reason = "QUERY_TEMPORARILY_UNAVAILABLE"
+	}
+	if conflict {
+		facts.Reason = "EVIDENCE_CONFLICT"
+	}
+	return facts
+}
+
 // applyReconciliationObservation 只追加原责任的证据，不改变其尝试、发送、端点或任务。
-func (s *Service) applyReconciliationObservation(ctx context.Context, caller *v1.Caller, query *v1.Operation, raw *v1.RawObservation, body []byte) error {
+func (s *Service) applyReconciliationObservation(ctx context.Context, caller *v1.Caller, query *v1.Operation, raw *v1.RawObservation, facts *QueryEvidence) error {
 	q, e := s.store.(reconciliationStore).LoadClosureQuery(ctx, query.ClosureWorkRef)
 	if e != nil {
 		return e
@@ -172,33 +184,11 @@ func (s *Service) applyReconciliationObservation(ctx context.Context, caller *v1
 	if original == nil || original.Execution == nil || !proto.Equal(subject.AttemptId, original.Execution.Attempt.Ref.Name) || subject.ExternalKey != original.Execution.Attempt.ExternalKey || subject.TargetScope != original.CapabilitySnapshot.Resource || subject.ExecutorEndpointId != original.ExecutorEndpointId || !proto.Equal(subject.CapabilityRef, original.CapabilitySnapshot.Ref) {
 		return command.Fail("INVALID_QUERY_RELATION")
 	}
-	response, conflict := parseQueryResponse(raw, body, query)
-	finding := &v1.ReconciliationFinding{Ref: command.NewRef(s.user, s.domain, "reconciliation-finding", "lerna.v1.ReconciliationFinding"), QueryRef: proto.Clone(q.Ref).(*v1.Ref), OperationId: original.Ref.Name, ObservationRef: raw.Ref, Rule: "reference-query-subject-v1", Outcome: "UNKNOWN", LateEffect: "MAY_OCCUR", Reason: "QUERY_RESULT_UNKNOWN"}
-	if query.Execution.CallDescriptor.ApiDescriptor != nil {
-		finding.Rule = "reference-api-query-subject-v1"
+	if facts == nil {
+		return command.Fail("INVARIANT_VIOLATION")
 	}
-	if response != nil && *response.ReadTerminal && (response.QueryStatus == "" || response.QueryStatus == "AVAILABLE") {
-		finding.Reason = "SUBJECT_NOT_TERMINAL"
-		if *response.Applied {
-			finding.Outcome = "APPLIED"
-		}
-		if *response.Terminal && (*response.Applied || response.NegativeProof) {
-			finding.LateEffect = "RULED_OUT"
-			finding.Reason = "TERMINAL_SUBJECT_PROOF"
-			if !*response.Applied {
-				finding.Outcome = "NOT_APPLIED"
-			}
-		}
-	}
-	if response != nil && *response.ReadTerminal && response.QueryStatus == "RETENTION_EXPIRED" {
-		finding.Reason = "QUERY_RETENTION_EXPIRED"
-	}
-	if response != nil && *response.ReadTerminal && response.QueryStatus == "TEMPORARILY_UNAVAILABLE" {
-		finding.Reason = "QUERY_TEMPORARILY_UNAVAILABLE"
-	}
-	if conflict {
-		finding.Reason = "EVIDENCE_CONFLICT"
-	}
+	conflict := facts.Conflict
+	finding := &v1.ReconciliationFinding{Ref: command.NewRef(s.user, s.domain, "reconciliation-finding", "lerna.v1.ReconciliationFinding"), QueryRef: proto.Clone(q.Ref).(*v1.Ref), OperationId: original.Ref.Name, ObservationRef: raw.Ref, Rule: facts.Rule, Outcome: facts.Outcome, LateEffect: facts.LateEffect, Reason: facts.Reason}
 	if e = s.saveReconciliationFinding(ctx, finding, p.TaskId, q.QueryOperationRef); e != nil {
 		return e
 	}
@@ -207,8 +197,8 @@ func (s *Service) applyReconciliationObservation(ctx context.Context, caller *v1
 	q.InterpretationRef = finding.Ref
 	q.State = "OBSERVED"
 	q.Reason = finding.Reason
-	if response != nil {
-		q.RetryAfterMs = response.RetryAfterMs
+	if facts.RetryAfterMs != nil {
+		q.RetryAfterMs = *facts.RetryAfterMs
 	}
 	p.LastObservationRef = raw.Ref
 	previousOutcome, previousLate := original.Effect.Outcome, original.Effect.LateEffect

@@ -47,7 +47,7 @@ linters:
         core-ledger:
           files: ["**/core/ledger/*.go", "**/core/ledger/**/*.go"]
           list-mode: strict
-          allow: ["$gostd", "google.golang.org/protobuf", "github.com/ruipengliu/lerna/contracts", "github.com/ruipengliu/lerna/core/ledger$", "github.com/ruipengliu/lerna/core/ledger/"]
+          allow: ["$gostd", "google.golang.org/protobuf", "github.com/ruipengliu/lerna/contracts", "github.com/ruipengliu/lerna/core/ledger$", "github.com/ruipengliu/lerna/core/ledger/", "github.com/ruipengliu/lerna/core/durable$", "github.com/ruipengliu/lerna/core/durable/"]
         core-content:
           files: ["**/core/content/*.go", "**/core/content/**/*.go"]
           list-mode: strict
