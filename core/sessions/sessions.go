@@ -29,12 +29,10 @@ type Durable interface {
 	Decide(context.Context, *v1.Job, func(context.Context, *v1.PendingGoal) (*v1.Ref, *v1.Ref, error)) error
 }
 type Tasks interface {
-	RecordGoalInTransaction(context.Context, *v1.Caller, *v1.Ref, *v1.SessionInput, []*v1.Requirement) error
+	CreateFromGoalInTransaction(context.Context, *v1.Caller, *v1.Ref, *v1.SessionInput, []*v1.Requirement) (*v1.Ref, error)
 	ControlInTransaction(context.Context, *v1.Caller, *v1.SubmitInputCommand) error
-	AcceptExplicitInTransaction(context.Context, *v1.Caller, *v1.Ref, []*v1.Requirement, *v1.CommandIdentity, *v1.Ref) error
 	QueryTask(context.Context, *v1.Caller, *v1.GlobalName) (*v1.Task, error)
 	AcceptInputInTransaction(context.Context, *v1.Caller, *v1.SubmitInputCommand, *v1.SessionInput, bool) error
-	CreateInTransaction(context.Context, *v1.Ref) (*v1.Ref, error)
 }
 type Content interface {
 	CheckUsable(context.Context, *v1.Caller, *v1.Ref) error
@@ -136,17 +134,15 @@ func (s *Service) accept(ctx context.Context, pending *v1.PendingGoal) (*v1.Ref,
 		}
 		session = &v1.Session{SessionId: command.NewRef(s.user, s.domain, "session", "lerna.v1.Session").Name, Status: "ACTIVE"}
 	}
-	task, err := s.tasks.CreateInTransaction(ctx, pending.ContentRef)
+	input := &v1.SessionInput{InputId: command.NewRef(s.user, s.domain, "input", "lerna.v1.SessionInput").Name, SessionSeq: session.LastCommittedSeq + 1, InputKind: "GOAL", ContentRef: pending.ContentRef, CommandIdentity: c.Identity, RoutingStatus: "DELIVERED"}
+	task, err := s.tasks.CreateFromGoalInTransaction(ctx, &v1.Caller{UserId: s.user, IssuerId: c.Identity.IssuerId}, pending.ContentRef, input, nil)
 	if err != nil {
 		return nil, nil, err
 	}
 	session.LastCommittedSeq++
 	session.Revision++
 	session.TaskRefs = append(session.TaskRefs, task)
-	input := &v1.SessionInput{InputId: command.NewRef(s.user, s.domain, "input", "lerna.v1.SessionInput").Name, SessionSeq: session.LastCommittedSeq, TaskId: task.Name, InputKind: "GOAL", ContentRef: pending.ContentRef, CommandIdentity: c.Identity, RoutingStatus: "DELIVERED"}
-	if err = s.tasks.RecordGoalInTransaction(ctx, &v1.Caller{UserId: s.user, IssuerId: c.Identity.IssuerId}, task, input, nil); err != nil {
-		return nil, nil, err
-	}
+	input.TaskId = task.Name
 	session.Inputs = append(session.Inputs, input)
 	if err := s.store.SaveSession(ctx, session); err != nil {
 		return nil, nil, err

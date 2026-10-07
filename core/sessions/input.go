@@ -83,16 +83,8 @@ func (s *Service) deliver(tx context.Context, caller *v1.Caller, c *v1.SubmitInp
 		if c.TaskId != nil || c.RequestRef != nil {
 			return command.Fail("INVALID_INPUT")
 		}
-		task, e := s.tasks.CreateInTransaction(tx, c.ContentRef)
+		task, e := s.tasks.CreateFromGoalInTransaction(tx, caller, c.ContentRef, input, c.ExplicitConditions)
 		if e != nil {
-			return e
-		}
-		if len(c.ExplicitConditions) > 0 {
-			if e = s.tasks.AcceptExplicitInTransaction(tx, caller, task, c.ExplicitConditions, c.Header.Identity, &v1.Ref{Name: input.InputId, Revision: 1, SchemaId: "lerna.v1.SessionInput"}); e != nil {
-				return e
-			}
-		}
-		if e = s.tasks.RecordGoalInTransaction(tx, caller, task, input, c.ExplicitConditions); e != nil {
 			return e
 		}
 		input.TaskId = task.Name

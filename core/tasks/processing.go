@@ -172,8 +172,8 @@ func (s *Service) validateConditions(ctx context.Context, caller *v1.Caller, con
 	return nil
 }
 
-// AcceptExplicitInTransaction 只接纳会话保存的用户条件，不接受模型整理来源。
-func (s *Service) AcceptExplicitInTransaction(ctx context.Context, caller *v1.Caller, ref *v1.Ref, conditions []*v1.Requirement, source *v1.CommandIdentity, inputRef *v1.Ref) error {
+// acceptExplicitInTransaction 只接纳会话保存的用户条件，不接受模型整理来源。
+func (s *Service) acceptExplicitInTransaction(ctx context.Context, caller *v1.Caller, ref *v1.Ref, conditions []*v1.Requirement, source *v1.CommandIdentity, inputRef *v1.Ref) error {
 	if e := s.validateConditions(ctx, caller, conditions); e != nil {
 		return e
 	}
