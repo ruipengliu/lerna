@@ -12,7 +12,7 @@ type TraceSource interface {
 }
 
 func (s *Service) saveRegistration(ctx context.Context, r *v1.ContentRegistration) error {
-	if err := s.store.(governanceStore).SaveContentRegistration(ctx, r); err != nil {
+	if err := s.store.SaveContentRegistration(ctx, r); err != nil {
 		return err
 	}
 	v := r.Content
@@ -23,7 +23,7 @@ func (s *Service) saveRegistration(ctx context.Context, r *v1.ContentRegistratio
 }
 
 func (s *Service) saveDerivation(ctx context.Context, v *v1.ContentDerivation) error {
-	if err := s.store.(derivationStore).SaveContentDerivation(ctx, v); err != nil {
+	if err := s.store.SaveContentDerivation(ctx, v); err != nil {
 		return err
 	}
 	refs := []*v1.Ref{v.OutputRef, v.LocationRef, v.PreviousVersionRef}
