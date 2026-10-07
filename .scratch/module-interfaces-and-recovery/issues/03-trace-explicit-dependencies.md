@@ -4,7 +4,7 @@
 
 **Blocked by:** None (can start immediately).
 
-**Status:** ready-for-agent
+**Status:** claimed
 
 - [ ] 来源读取、源方确认、事件、索引及指标能力显式声明并注入，取消隐藏必需断言。
 - [ ] SQLite 与运行记录域 Work 通过消费方编译验证；缺失必需配置在使用前明确拒绝。
@@ -12,3 +12,7 @@
 - [ ] 按 ADR 0006 保留源事务、运行记录接纳、源方确认三次提交和独立索引；崩溃与回执丢失恢复原身份。
 - [ ] Trace 不改变任务、效果、费用或 Result；不回填历史，不扩大字段白名单，不加入性能改造。
 - [ ] 相关设计更新且现有运行记录普通与故障场景通过。
+
+## Comments
+
+2026-10-07: Claimed for implementation on codex/interfaces-03.
