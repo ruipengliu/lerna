@@ -141,8 +141,8 @@ func (s *Service) ControlInTransaction(ctx context.Context, caller *v1.Caller, c
 	return s.store.SavePlanning(ctx, p)
 }
 
-// RecordGoalInTransaction 初始目标也属于任务输入序，不能留作隐式上下文。
-func (s *Service) RecordGoalInTransaction(ctx context.Context, caller *v1.Caller, task *v1.Ref, input *v1.SessionInput, conditions []*v1.Requirement) error {
+// recordGoalInTransaction 初始目标也属于任务输入序，不能留作隐式上下文。
+func (s *Service) recordGoalInTransaction(ctx context.Context, caller *v1.Caller, task *v1.Ref, input *v1.SessionInput, conditions []*v1.Requirement) error {
 	t, e := s.QueryTask(ctx, caller, task.Name)
 	if e != nil {
 		return e
