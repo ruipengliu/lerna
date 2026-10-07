@@ -25,11 +25,6 @@ type CancellationJobs interface {
 	ExecuteJob(context.Context, *v1.Caller, *v1.JobCommand) (*v1.CommandReceipt, error)
 }
 
-func (s *Service) WithCancellationJobs(j CancellationJobs) *Service {
-	s.cancellationJobs = j
-	return s
-}
-
 func (s *Service) saveCancellation(ctx context.Context, t *v1.Task, p *v1.PlanningState, c *v1.SubmitInputCommand) error {
 	if s.cancellationJobs == nil {
 		return command.Fail("DEPENDENCY_UNAVAILABLE")

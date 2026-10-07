@@ -23,26 +23,27 @@ import (
 	"github.com/ruipengliu/lerna/core/trace"
 	"github.com/ruipengliu/lerna/infra/egressio"
 	"github.com/ruipengliu/lerna/infra/keys"
-	"github.com/ruipengliu/lerna/infra/rules"
 	"github.com/ruipengliu/lerna/infra/sqlite"
 )
 
 type Harness struct {
-	Bodies     *sqlite.BodyReceipts
-	Egress     *egress.Service
-	Trace      *trace.Service
-	Ledger     *ledger.Service
-	LedgerWork *durable.Service
-	Grants     *grants.Service
-	Budget     *budget.Service
-	Sessions   *sessions.Service
-	Tasks      *tasks.Service
-	Durable    *durable.Service
-	Content    *content.Service
-	store      *sqlite.Store
-	user       string
-	domain     string
-	path       string
+	Bodies      *sqlite.BodyReceipts
+	Egress      *egress.Service
+	Trace       *trace.Service
+	Ledger      *ledger.Service
+	LedgerWork  *durable.Service
+	Grants      *grants.Service
+	Budget      *budget.Service
+	Sessions    *sessions.Service
+	Tasks       *tasks.Service
+	Durable     *durable.Service
+	Content     *content.Service
+	contentWork *durable.Service
+	traceWork   *durable.Service
+	store       *sqlite.Store
+	user        string
+	domain      string
+	path        string
 }
 
 func Open(path, user, domain string) (*Harness, error) {
@@ -89,7 +90,6 @@ func OpenWithOptions(path, user, domain string, options Options) (*Harness, erro
 		s.Close()
 		return nil, err
 	}
-	t.WithDecisions(d).WithCancellationJobs(d)
 	contentWork, err := durable.New(s.ContentWork(), user, domain+"/content")
 	if err != nil {
 		s.Close()
@@ -100,22 +100,17 @@ func OpenWithOptions(path, user, domain string, options Options) (*Harness, erro
 		s.Close()
 		return nil, err
 	}
-	c.WithAssociations(t)
 	sessionService, err := sessions.New(s, d, t, c, user, domain)
 	if err != nil {
 		s.Close()
 		return nil, err
 	}
-	h := &Harness{Bodies: s.BodyReceipts(), Sessions: sessionService, Tasks: t, Durable: d, Content: c, store: s, user: user, domain: domain, path: path}
+	h := &Harness{Bodies: s.BodyReceipts(), Sessions: sessionService, Tasks: t, Durable: d, Content: c, contentWork: contentWork, store: s, user: user, domain: domain, path: path}
 	h.Grants, err = grants.New(s, d, user, domain, "host")
 	if err != nil {
 		s.Close()
 		return nil, err
 	}
-	h.Grants.WithAdmissions(t)
-	h.Grants.WithConfirmations(h.Sessions).WithConfirmationContent(c)
-	h.Sessions.WithConfirmations(t, h.Grants)
-	t.WithConfirmationRequests(h.Sessions, c).WithModelContent(c).WithReasonerQuestions(h.Sessions).WithConditionConfirmations(h.Sessions)
 	h.Budget, err = budget.New(s, d, user, domain, "host")
 	if err != nil {
 		s.Close()
@@ -131,23 +126,17 @@ func OpenWithOptions(path, user, domain string, options Options) (*Harness, erro
 		s.Close()
 		return nil, err
 	}
-	h.Ledger.WithWork(h.LedgerWork).WithCompiler(executionCompiler{api: api.Adapter{Content: c}}).WithStarts(t).WithEvidenceRules(rules.Fixed{})
-	c.WithObservations(h.Ledger)
-	h.Ledger.WithObservations(c)
-	h.Budget.WithUsageSource(h.Ledger).WithBillingEvidence(c).WithCompletionAuthority(t).WithCancellationAuthority(t).WithTaskClosingAuthority(t)
 	traceWork, err := durable.New(s.TraceWork(), user, domain+"/trace")
 	if err != nil {
 		s.Close()
 		return nil, err
 	}
+	h.traceWork = traceWork
 	h.Trace, err = trace.New(s, traceWork, h.Ledger, user, domain+"/trace")
 	if err != nil {
 		s.Close()
 		return nil, err
 	}
-	h.Ledger.WithReports(h.Budget, d, h.Trace)
-	t.WithStart(h.Grants, h.Budget, h.Ledger)
-	t.WithCompletion(h.Ledger, h.Budget)
 	critical, e := egressio.NewFileLock(path)
 	if e != nil {
 		s.Close()
@@ -158,132 +147,10 @@ func OpenWithOptions(path, user, domain string, options Options) (*Harness, erro
 		s.Close()
 		return nil, err
 	}
-	t.WithModelExecution(h.Ledger, h.LedgerWork, h.Grants, h.Egress)
-	t.WithReasonerDriver(h.Durable, defaultReasoner)
-	h.Ledger.WithGrantClosures(h.Grants)
-	h.Grants.WithRevocationExits(h.Egress)
-	h.Ledger.WithCompletionClosures(t)
-	t.WithCompletionClosures(d, h.Egress)
-	h.Ledger.WithCancellationClosures(t)
-	t.WithCancellationClosures(d, h.Egress)
-	h.Ledger.WithTaskClosures(t)
-	t.WithTaskClosures(d, h.Egress).WithTaskClosingFacts(h.Ledger, h.Budget)
-	h.Ledger.WithReconciliation(t, h.Grants, h.Egress)
-	t.WithClosureSource(h.Ledger).WithOperationProgress(h.Ledger)
-	h.Ledger.WithOperationProgress(t)
-	t.WithAdmission(h.Grants, h.Budget, c, h.Sessions, d, h.Ledger).WithHandoffs(d, h.Ledger)
-	if err := h.Egress.ValidateDependencies(); err != nil {
-		s.Close()
-		return nil, err
-	}
-	if err := h.Ledger.ValidateDependencies(); err != nil {
-		s.Close()
-		return nil, err
-	}
-	if err := c.ValidateDependencies(); err != nil {
-		s.Close()
-		return nil, err
-	}
-	if err := h.Sessions.ValidateDependencies(); err != nil {
-		s.Close()
-		return nil, err
-	}
-	if err := h.Grants.ValidateDependencies(); err != nil {
-		s.Close()
-		return nil, err
-	}
-	if err := h.Budget.ValidateDependencies(); err != nil {
-		s.Close()
-		return nil, err
-	}
-	if err := t.ValidateDependencies(); err != nil {
-		s.Close()
-		return nil, err
-	}
-	// 固定受信宿主身份仅驱动已保存的责任，不替换原命令身份。
+	h.connect()
 	ctx, cancel := context.WithTimeout(context.Background(), 65*time.Second)
 	defer cancel()
-	if err := t.CheckStartupCompatibility(ctx); err != nil {
-		s.Close()
-		return nil, err
-	}
-	if err := h.Ledger.CheckStartupCompatibility(ctx); err != nil {
-		s.Close()
-		return nil, err
-	}
-	if err := h.Sessions.RecoverPending(ctx, &v1.Caller{UserId: user, IssuerId: "host-recovery"}); err != nil {
-		s.Close()
-		return nil, err
-	}
-	if err := h.Tasks.RecoverHandoffs(ctx, &v1.Caller{UserId: user, IssuerId: "host-recovery"}); err != nil {
-		s.Close()
-		return nil, err
-	}
-	if err := c.ProcessRegistrations(ctx, &v1.Caller{UserId: user, IssuerId: "host-recovery"}); err != nil {
-		s.Close()
-		return nil, err
-	}
-	if err := c.ProcessObservations(ctx, &v1.Caller{UserId: user, IssuerId: "host-recovery"}); err != nil {
-		s.Close()
-		return nil, err
-	}
-	if err := h.Ledger.ProcessReports(ctx, &v1.Caller{UserId: user, IssuerId: "host-recovery"}); err != nil {
-		s.Close()
-		return nil, err
-	}
-	if err := h.Ledger.ProcessInterpretations(ctx, &v1.Caller{UserId: user, IssuerId: "host-recovery"}); err != nil {
-		s.Close()
-		return nil, err
-	}
-	if err := h.Grants.ProcessRevocations(ctx); err != nil {
-		s.Close()
-		return nil, err
-	}
-	if err := h.Tasks.RecoverCancellations(ctx, &v1.Caller{UserId: user, IssuerId: "host-recovery"}); err != nil {
-		s.Close()
-		return nil, err
-	}
-	if err := h.Tasks.RecoverCompletions(ctx, &v1.Caller{UserId: user, IssuerId: "host-recovery"}); err != nil {
-		s.Close()
-		return nil, err
-	}
-	if err := h.Ledger.ProcessOperationProgress(ctx, &v1.Caller{UserId: user, IssuerId: "host-recovery"}); err != nil {
-		s.Close()
-		return nil, err
-	}
-	if err := h.Ledger.RecoverReconciliations(ctx, &v1.Caller{UserId: user, IssuerId: "host-recovery"}); err != nil {
-		s.Close()
-		return nil, err
-	}
-	if err := h.Ledger.ProcessOperationProgress(ctx, &v1.Caller{UserId: user, IssuerId: "host-recovery"}); err != nil {
-		s.Close()
-		return nil, err
-	}
-	if err := h.Tasks.RecoverTaskClosures(ctx, &v1.Caller{UserId: user, IssuerId: "host-recovery"}); err != nil {
-		s.Close()
-		return nil, err
-	}
-	if err := h.Tasks.ProcessTaskClosings(ctx, &v1.Caller{UserId: user, IssuerId: "host-recovery"}); err != nil {
-		s.Close()
-		return nil, err
-	}
-	if err := h.Budget.ProcessClosures(ctx); err != nil {
-		s.Close()
-		return nil, err
-	}
-	if err := h.Ledger.ProcessExecutionFollowups(ctx, &v1.Caller{UserId: user, IssuerId: "host-recovery"}); err != nil {
-		s.Close()
-		return nil, err
-	}
-	if err := h.Budget.ProcessSettlementFollowups(ctx, &v1.Caller{UserId: user, IssuerId: "host-recovery"}); err != nil {
-		s.Close()
-		return nil, err
-	}
-	if err := h.Tasks.RecoverReasonerDrivers(ctx, &v1.Caller{UserId: user, IssuerId: "host"}); err != nil {
-		s.Close()
-		return nil, err
-	}
-	if err := h.Trace.Recover(ctx, &v1.Caller{UserId: user, IssuerId: "host-recovery"}); err != nil {
+	if err := h.start(ctx); err != nil {
 		s.Close()
 		return nil, err
 	}
