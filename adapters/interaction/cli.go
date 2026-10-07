@@ -40,7 +40,6 @@ type CLI struct {
 	Confirmations     Confirmations
 	ConfirmationTasks ConfirmationTasks
 	Content           Content
-	Observations      ObservationContent
 	Ledger            ExecutionLedger
 	Egress            Egress
 	Sessions          Sessions

@@ -14,10 +14,14 @@ type ExecutionLedger interface {
 	QueryOperation(context.Context, *v1.Caller, *v1.GlobalName) (*v1.Operation, error)
 	QueryObservation(context.Context, *v1.Caller, *v1.Ref) (*v1.RawObservation, error)
 }
+
+// ResendCommands 是可选能力；缺席时安全重发准备返回 UNSUPPORTED_FEATURE。
+type ResendCommands interface {
+	PrepareResend(context.Context, *v1.Caller, *v1.PrepareResendCommand) (*v1.CommandReceipt, error)
+}
+
 type Egress interface {
 	Invoke(context.Context, *v1.Caller, *v1.StartExecutionCommand) (*v1.CommandReceipt, error)
-}
-type ObservationContent interface {
 }
 
 func (c CLI) execution(ctx context.Context, args []string) (proto.Message, error) {
@@ -26,9 +30,7 @@ func (c CLI) execution(ctx context.Context, args []string) (proto.Message, error
 	}
 	switch args[0] {
 	case "prepare-resend":
-		owner, ok := c.Ledger.(interface {
-			PrepareResend(context.Context, *v1.Caller, *v1.PrepareResendCommand) (*v1.CommandReceipt, error)
-		})
+		owner, ok := c.Ledger.(ResendCommands)
 		if !ok {
 			return nil, command.Fail("UNSUPPORTED_FEATURE")
 		}
