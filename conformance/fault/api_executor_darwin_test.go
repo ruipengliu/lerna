@@ -40,7 +40,7 @@ func nativeAPIExecutionFixture(t *testing.T) executor.Fixture {
 	t.Cleanup(target.Close)
 	h, _, admission, start := prepareAPIStartFault(t, filepath.Join(t.TempDir(), "state.db"), target.URL)
 	t.Cleanup(func() { _ = h.Close() })
-	return executor.Fixture{Harness: h, Context: context.Background(), Admission: admission, Start: start, ExpectedCalls: 1, LoseDispatchReceipt: loseExecutionDispatchReceipt, Actual: func() (int, int) {
+	return executor.Fixture{Driver: newExecutionDriver(h), Context: context.Background(), Admission: admission, Start: start, ExpectedCalls: 1, LoseDispatchReceipt: loseExecutionDispatchReceipt, Actual: func() (int, int) {
 		mu.Lock()
 		defer mu.Unlock()
 		return calls, len(records)

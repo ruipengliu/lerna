@@ -5,14 +5,21 @@ import (
 	"context"
 	"testing"
 
-	"github.com/ruipengliu/lerna/cmd/assembly"
 	v1 "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1"
 	"google.golang.org/protobuf/proto"
 )
 
-// Fixture 的目标计数独立于核心效果解释；故障只由装配注入。
+// Driver 只要求执行适配器的公共命令和责任查询。
+type Driver interface {
+	Invoke(context.Context, *v1.Caller, *v1.StartExecutionCommand) (*v1.CommandReceipt, error)
+	QueryOperation(context.Context, *v1.Caller, *v1.GlobalName) (*v1.Operation, error)
+	QueryObservation(context.Context, *v1.Caller, *v1.Ref) (*v1.RawObservation, error)
+	QueryBillingSource(context.Context, *v1.Caller, *v1.Ref) (*v1.BillingSource, error)
+}
+
+// Fixture 负责装配和故障注入，目标计数独立于核心效果解释。
 type Fixture struct {
-	Harness             *assembly.Harness
+	Driver              Driver
 	Context             context.Context
 	Admission           *v1.Admission
 	Start               *v1.StartExecutionCommand
@@ -37,7 +44,7 @@ func Run(t *testing.T, factory FixtureFactory) {
 	for _, scenario := range []string{"one-per-permit", "descriptor-bound", "unknown-dispatch"} {
 		t.Run(scenario, func(t *testing.T) {
 			f := factory(t)
-			if f.Harness == nil || f.Context == nil || f.Admission == nil || f.Start == nil || f.Actual == nil || f.LoseDispatchReceipt == nil {
+			if f.Driver == nil || f.Context == nil || f.Admission == nil || f.Start == nil || f.Actual == nil || f.LoseDispatchReceipt == nil {
 				t.Fatal("incomplete executor conformance fixture")
 			}
 			// 同一入口、同一契约断言；oracle 来自独立 API 目标或实际原生文件原语完成事件。
@@ -49,7 +56,7 @@ func Run(t *testing.T, factory FixtureFactory) {
 			switch scenario {
 			case "descriptor-bound":
 				send.CallDescriptor.Target += "-outside"
-				r, e := f.Harness.Egress.Invoke(f.Context, actor, send)
+				r, e := f.Driver.Invoke(f.Context, actor, send)
 				if e == nil && r.GetDecision() == v1.Decision_DECISION_ACCEPTED {
 					t.Fatalf("mutated fixed scope accepted: %v", r)
 				}
@@ -62,7 +69,7 @@ func Run(t *testing.T, factory FixtureFactory) {
 				if e != nil {
 					t.Fatal(e)
 				}
-				r, e := f.Harness.Egress.Invoke(ctx, actor, send)
+				r, e := f.Driver.Invoke(ctx, actor, send)
 				if e == nil || r != nil {
 					t.Fatalf("P5 receipt-loss did not fire: %v %v", r, e)
 				}
@@ -70,13 +77,13 @@ func Run(t *testing.T, factory FixtureFactory) {
 					t.Fatal("unknown P5 performed I/O")
 				}
 			}
-			r, e := f.Harness.Egress.Invoke(f.Context, actor, send)
+			r, e := f.Driver.Invoke(f.Context, actor, send)
 			accepted(t, r, e)
 			firstCalls, firstEffects := f.Actual()
 			if scenario == "one-per-permit" && f.ExpectedCalls > 0 && firstCalls != f.ExpectedCalls {
 				t.Fatalf("first invocation calls=%d want=%d", firstCalls, f.ExpectedCalls)
 			}
-			again, e := f.Harness.Egress.Invoke(f.Context, actor, send)
+			again, e := f.Driver.Invoke(f.Context, actor, send)
 			accepted(t, again, e)
 			if !proto.Equal(r, again) {
 				t.Fatal("original dispatch receipt changed")
@@ -85,7 +92,7 @@ func Run(t *testing.T, factory FixtureFactory) {
 			if calls != firstCalls || effects != firstEffects {
 				t.Fatalf("permit replay changed actual target: before=%d/%d after=%d/%d", firstCalls, firstEffects, calls, effects)
 			}
-			op, e := f.Harness.Ledger.QueryOperation(f.Context, actor, f.Admission.OperationId)
+			op, e := f.Driver.QueryOperation(f.Context, actor, f.Admission.OperationId)
 			if e != nil {
 				t.Fatal(e)
 			}
@@ -101,11 +108,11 @@ func Run(t *testing.T, factory FixtureFactory) {
 			if calls == 0 || effects != 1 || op.Effect.Outcome != "APPLIED" || op.Effect.LateEffect != "RULED_OUT" || op.Lifecycle != "SETTLED" {
 				t.Fatalf("execution/actual target mismatch: %d %d %v", calls, effects, op)
 			}
-			raw, e := f.Harness.Ledger.QueryObservation(f.Context, actor, op.Execution.Send.ObservationRef)
+			raw, e := f.Driver.QueryObservation(f.Context, actor, op.Execution.Send.ObservationRef)
 			if e != nil || raw.Source != "TRUSTED_IO" || !proto.Equal(raw.SendRef.Name, op.Execution.Send.Ref.Name) || !proto.Equal(raw.OperationId, op.Ref.Name) {
 				t.Fatalf("observation attribution: %v %v", raw, e)
 			}
-			source, e := f.Harness.Budget.QueryBillingSource(f.Context, actor, op.Execution.Send.Ref)
+			source, e := f.Driver.QueryBillingSource(f.Context, actor, op.Execution.Send.Ref)
 			if e != nil || source == nil || !proto.Equal(source.SendRef.Name, op.Execution.Send.Ref.Name) || !proto.Equal(source.OperationId, op.Ref.Name) {
 				t.Fatalf("original billing responsibility: %v %v", source, e)
 			}
