@@ -222,7 +222,11 @@ func (s *closureSourceFault) SaveTraceSource(ctx context.Context, producer strin
 
 func closureOwnerWithStore(t *testing.T, f *fixture, store tasks.Store, work *durable.Service) *tasks.Service {
 	t.Helper()
-	owner := tasks.New(store, "u", "d").WithDecisions(work).WithCancellationJobs(work)
+	owner, err := tasks.New(store, "u", "d")
+	if err != nil {
+		t.Fatal(err)
+	}
+	owner.WithDecisions(work).WithCancellationJobs(work)
 	owner.WithConfirmationRequests(f.h.Sessions, f.h.Content).WithModelContent(f.h.Content).WithReasonerQuestions(f.h.Sessions).WithConditionConfirmations(f.h.Sessions)
 	owner.WithStart(f.h.Grants, f.h.Budget, f.h.Ledger).WithCompletion(f.h.Ledger, f.h.Budget)
 	owner.WithModelExecution(f.h.Ledger, f.h.LedgerWork, f.h.Grants, f.h.Egress)
@@ -231,6 +235,9 @@ func closureOwnerWithStore(t *testing.T, f *fixture, store tasks.Store, work *du
 	owner.WithTaskClosures(work, f.h.Egress).WithTaskClosingFacts(f.h.Ledger, f.h.Budget)
 	owner.WithClosureSource(f.h.Ledger).WithOperationProgress(f.h.Ledger)
 	owner.WithAdmission(f.h.Grants, f.h.Budget, f.h.Content, f.h.Sessions, work, f.h.Ledger).WithHandoffs(work, f.h.Ledger)
+	if err = owner.ValidateDependencies(); err != nil {
+		t.Fatal(err)
+	}
 	return owner
 }
 
@@ -260,7 +267,11 @@ func TestClosureSourceFailureRollsBackReceiptEventAndOriginalJob(t *testing.T) {
 			}
 			fault := &closureSourceFault{Store: store, fail: true, kind: eventType}
 			// 源 Owner 与原 Work 共用这个真实存储实例，保持原事务上下文。
-			owner := closureOwnerWithStore(t, f, fault, durable.New(store, "u", "d"))
+			work, err := durable.New(store, "u", "d")
+			if err != nil {
+				t.Fatal(err)
+			}
+			owner := closureOwnerWithStore(t, f, fault, work)
 			if err = c.process(f.ctx, owner, c.claim); !errors.Is(err, errClosureSourceUnavailable) {
 				t.Fatalf("source failure not propagated: %v", err)
 			}

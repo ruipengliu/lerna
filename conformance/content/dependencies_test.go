@@ -41,7 +41,11 @@ func TestDeclaredContentAdapterPublishesOriginalBodyAndReceipt(t *testing.T) {
 		t.Fatal(err)
 	}
 	t.Cleanup(func() { _ = store.Close() })
-	service, err := content.New(declaredContentStore{store}, durable.New(store.ContentWork(), "alice", "local/content"), "alice", "local/content")
+	work, err := durable.New(store.ContentWork(), "alice", "local/content")
+	if err != nil {
+		t.Fatal(err)
+	}
+	service, err := content.New(declaredContentStore{store}, work, "alice", "local/content")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -81,7 +85,11 @@ func TestContentCompletionRequiresEveryAssociationAndObservationLink(t *testing.
 		t.Fatal(err)
 	}
 	t.Cleanup(func() { _ = store.Close() })
-	service, err := content.New(store, durable.New(store.ContentWork(), "alice", "local/content"), "alice", "local/content")
+	work, err := durable.New(store.ContentWork(), "alice", "local/content")
+	if err != nil {
+		t.Fatal(err)
+	}
+	service, err := content.New(store, work, "alice", "local/content")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -122,7 +130,10 @@ func TestContentConstructorRejectsMissingBaseDependencies(t *testing.T) {
 		t.Fatal(err)
 	}
 	t.Cleanup(func() { _ = store.Close() })
-	work := durable.New(store.ContentWork(), "alice", "local/content")
+	work, err := durable.New(store.ContentWork(), "alice", "local/content")
+	if err != nil {
+		t.Fatal(err)
+	}
 	var nilStore *sqlite.Store
 	var nilWork *durable.Service
 	for _, test := range []struct {

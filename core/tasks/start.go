@@ -9,12 +9,15 @@ import (
 )
 
 type StartGrants interface {
+	currentFileGrants
 	ConsumeCredentialInTransaction(context.Context, *v1.Caller, *v1.Ref, *v1.ExitCredentialBinding, *v1.Admission) error
 }
 type StartBudget interface {
+	currentFileBudget
 	ConsumeSendInTransaction(context.Context, *v1.Admission, *v1.Ref, *v1.CommandIdentity) error
 }
 type StartExecutionFacts interface {
+	currentFileExecution
 	CheckRecoveryAllowed(context.Context) error
 	ValidateStart(context.Context, *v1.Caller, *v1.ExitCredentialBinding, *v1.CallDescriptor, *v1.Job, int64) (*v1.Ref, error)
 }
@@ -119,7 +122,7 @@ func (s *Service) QueryStart(ctx context.Context, c *v1.Caller, r *v1.Ref) (*v1.
 	if e := command.CheckName(c, r.Name, s.user, s.domain, "start"); e != nil {
 		return nil, e
 	}
-	v, e := s.store.(startStore).LoadStart(ctx, r)
+	v, e := s.store.LoadStart(ctx, r)
 	if e == nil && v != nil && !proto.Equal(v.Ref, r) {
 		return nil, command.Fail("STALE_REFERENCE")
 	}
@@ -128,7 +131,5 @@ func (s *Service) QueryStart(ctx context.Context, c *v1.Caller, r *v1.Ref) (*v1.
 
 // QueryStartReceipt 用原身份查询开始决定，不触发重试。
 func (s *Service) QueryStartReceipt(ctx context.Context, c *v1.Caller, id *v1.CommandIdentity) (*v1.ReceiptQuery, error) {
-	return s.decisions.(interface {
-		QueryReceipt(context.Context, *v1.Caller, *v1.CommandIdentity) (*v1.ReceiptQuery, error)
-	}).QueryReceipt(ctx, c, id)
+	return s.decisions.QueryReceipt(ctx, c, id)
 }

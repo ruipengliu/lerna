@@ -31,7 +31,7 @@ linters:
         core-tasks:
           files: ["**/core/tasks/*.go", "**/core/tasks/**/*.go"]
           list-mode: strict
-          allow: ["$gostd", "google.golang.org/protobuf", "github.com/ruipengliu/lerna/contracts", "github.com/ruipengliu/lerna/core/tasks$", "github.com/ruipengliu/lerna/core/tasks/"]
+          allow: ["$gostd", "google.golang.org/protobuf", "github.com/ruipengliu/lerna/contracts", "github.com/ruipengliu/lerna/core/durable$", "github.com/ruipengliu/lerna/core/tasks$", "github.com/ruipengliu/lerna/core/tasks/"]
         core-sessions:
           files: ["**/core/sessions/*.go", "**/core/sessions/**/*.go"]
           list-mode: strict

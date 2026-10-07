@@ -20,6 +20,7 @@ type Content interface {
 	CheckUsable(context.Context, *v1.Caller, *v1.Ref) error
 }
 type Confirmations interface {
+	CheckAdmissionConfirmation(context.Context, *v1.Ref, *v1.Admission, bool) error
 	ConsumeAdmissionConfirmation(context.Context, *v1.Ref, *v1.Admission, bool) error
 }
 type Scheduling interface {
@@ -276,9 +277,7 @@ func (s *Service) QueryCapability(ctx context.Context, c *v1.Caller, r *v1.Ref) 
 	if e := command.CheckName(c, r.Name, s.user, s.domain, "capability"); e != nil {
 		return nil, e
 	}
-	cap, e := s.store.(interface {
-		LoadCapabilityVersion(context.Context, *v1.Ref) (*v1.Capability, error)
-	}).LoadCapabilityVersion(ctx, r)
+	cap, e := s.store.LoadCapabilityVersion(ctx, r)
 	if e == nil && cap != nil && !proto.Equal(cap.Ref, r) {
 		return nil, command.Fail("STALE_REFERENCE")
 	}

@@ -119,7 +119,7 @@ func (s *Service) QueryVerification(ctx context.Context, c *v1.Caller, r *v1.Ref
 	if e := command.CheckName(c, r.Name, s.user, s.domain, "verification"); e != nil {
 		return nil, e
 	}
-	v, e := s.store.(completionStore).LoadVerification(ctx, r)
+	v, e := s.store.LoadVerification(ctx, r)
 	if e == nil && v != nil && !proto.Equal(v.Ref, r) {
 		return nil, command.Fail("INVALID_REFERENCE")
 	}
@@ -129,7 +129,7 @@ func (s *Service) QueryResult(ctx context.Context, c *v1.Caller, id *v1.GlobalNa
 	if e := command.CheckName(c, id, s.user, s.domain, "task"); e != nil {
 		return nil, e
 	}
-	r, e := s.store.(completionStore).LoadResult(ctx, id)
+	r, e := s.store.LoadResult(ctx, id)
 	if e != nil || r == nil {
 		return r, e
 	}
@@ -198,7 +198,7 @@ func (s *Service) RecheckCompletion(ctx context.Context, caller *v1.Caller, c *v
 			return nil, e
 		}
 		for _, ref := range v.ClosureIntentRefs {
-			intent, e := s.store.(completionIntentStore).LoadCompletionIntent(tx, ref)
+			intent, e := s.store.LoadCompletionIntent(tx, ref)
 			if e != nil {
 				return nil, e
 			}
@@ -456,7 +456,7 @@ func (s *Service) ProcessCompletions(ctx context.Context, c *v1.Caller) error {
 		if e := s.ProcessCompletionClosures(ctx, c); e != nil {
 			return e
 		}
-		rounds, e := s.store.(completionStore).AllVerifications(ctx)
+		rounds, e := s.store.AllVerifications(ctx)
 		if e != nil {
 			return e
 		}

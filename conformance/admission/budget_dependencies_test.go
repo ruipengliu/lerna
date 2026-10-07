@@ -39,7 +39,10 @@ func TestDeclaredBudgetStoreAdjustsLimitAndPreservesHistoryAndReceipt(t *testing
 		t.Fatal(err)
 	}
 	t.Cleanup(func() { _ = store.Close() })
-	decisions := durable.New(store, "u", "d")
+	decisions, err := durable.New(store, "u", "d")
+	if err != nil {
+		t.Fatal(err)
+	}
 	owner, err := budget.New(declaredBudgetStore{store}, declaredBudgetDecisions{decisions}, "u", "d", "host")
 	if err != nil {
 		t.Fatal(err)

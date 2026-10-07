@@ -83,7 +83,7 @@ func (s *Service) readProposalBody(ctx context.Context, caller *v1.Caller, p *v1
 	if content == nil || content.Kind != "MODEL_OUTPUT" || content.GetSourceDescriptor().GetKind() != "DERIVED" || content.GetSourceDescriptor().GetProviderVersion() != "m1-reasoner-proposal-v1" || !proto.Equal(content.TaskId, p.TaskId) || len(content.DerivedFrom) == 0 || content.GetSource().GetCommandId() != "reasoner-proposal:"+p.GetRequestRef().GetName().GetLocalId()+":commit" {
 		return nil, command.Fail("INVALID_PROPOSAL")
 	}
-	call, e := s.store.(modelCallStore).LoadModelCall(ctx, p.RequestRef, 0)
+	call, e := s.store.LoadModelCall(ctx, p.RequestRef, 0)
 	if e != nil {
 		return nil, e
 	}

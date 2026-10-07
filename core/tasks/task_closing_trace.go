@@ -7,7 +7,7 @@ import (
 )
 
 func (s *Service) saveTaskClosing(ctx context.Context, closing *v1.TaskClosing) error {
-	if e := s.store.(taskClosingStore).SaveTaskClosing(ctx, closing); e != nil {
+	if e := s.store.SaveTaskClosing(ctx, closing); e != nil {
 		return e
 	}
 	refs := append([]*v1.Ref{closing.RequirementsRef, closing.CancellationRef}, closing.AdmissionRefs...)
@@ -17,7 +17,7 @@ func (s *Service) saveTaskClosing(ctx context.Context, closing *v1.TaskClosing) 
 }
 
 func (s *Service) saveTaskClosureIntent(ctx context.Context, intent *v1.TaskClosureIntent) error {
-	if e := s.store.(taskClosureIntentStore).SaveTaskClosureIntent(ctx, intent); e != nil {
+	if e := s.store.SaveTaskClosureIntent(ctx, intent); e != nil {
 		return e
 	}
 	c := intent.Command

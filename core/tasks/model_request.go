@@ -22,7 +22,7 @@ func (s *Service) saveProposalRequest(ctx context.Context, snap *v1.ContextSnaps
 		purpose = "INTERPRET_INPUT"
 	}
 	r := &v1.ProposalRequest{Ref: snap.RequestRef, TaskId: t.TaskId, SnapshotRef: snap.Ref, JobRef: command.NewRef(s.user, s.domain, "job", "lerna.v1.Job"), Purpose: purpose, MaxCallPositions: 1, MaxPhysicalSends: 1, State: "PENDING"}
-	store := s.store.(modelStore)
+	store := s.store
 	if e := s.saveModelRequest(ctx, r); e != nil {
 		return e
 	}
@@ -37,14 +37,12 @@ func (s *Service) QueryProposalRequest(ctx context.Context, c *v1.Caller, r *v1.
 	if e := command.CheckName(c, r.Name, s.user, s.domain, "proposal-request"); e != nil {
 		return nil, e
 	}
-	p, e := s.store.(modelStore).LoadProposalRequest(ctx, r)
+	p, e := s.store.LoadProposalRequest(ctx, r)
 	if e == nil && p != nil && !proto.Equal(p.Ref, r) {
 		return nil, command.Fail("STALE_REFERENCE")
 	}
 	if e == nil && p != nil && p.OutcomeIdentity != nil {
-		q, err := s.decisions.(interface {
-			QueryReceipt(context.Context, *v1.Caller, *v1.CommandIdentity) (*v1.ReceiptQuery, error)
-		}).QueryReceipt(ctx, &v1.Caller{UserId: s.user, IssuerId: p.OutcomeIdentity.IssuerId}, p.OutcomeIdentity)
+		q, err := s.decisions.QueryReceipt(ctx, &v1.Caller{UserId: s.user, IssuerId: p.OutcomeIdentity.IssuerId}, p.OutcomeIdentity)
 		if err != nil {
 			return nil, err
 		}
@@ -57,7 +55,7 @@ func (s *Service) supersedeProposalRequest(ctx context.Context, snap *v1.Context
 	if snap == nil {
 		return nil
 	}
-	r, e := s.store.(modelStore).LoadProposalRequest(ctx, snap.RequestRef)
+	r, e := s.store.LoadProposalRequest(ctx, snap.RequestRef)
 	if e != nil || r == nil {
 		return e
 	}
@@ -66,7 +64,7 @@ func (s *Service) supersedeProposalRequest(ctx context.Context, snap *v1.Context
 	}
 	r.State = "SUPERSEDED"
 	r.OutcomeReceipt = nil
-	job, e := s.store.(modelStore).LoadJob(ctx, r.JobRef.Name)
+	job, e := s.store.LoadJob(ctx, r.JobRef.Name)
 	if e != nil {
 		return e
 	}
@@ -75,7 +73,7 @@ func (s *Service) supersedeProposalRequest(ctx context.Context, snap *v1.Context
 	}
 	job.State = "CLOSED"
 	job.Ref.Revision++
-	if e = s.store.(modelStore).SaveJob(ctx, job); e != nil {
+	if e = s.store.SaveJob(ctx, job); e != nil {
 		return e
 	}
 	return s.saveModelRequest(ctx, r)
@@ -100,7 +98,7 @@ func (s *Service) StopProposalRequest(ctx context.Context, caller *v1.Caller, c 
 		if r.State == "STOPPED" || r.State == "REPORTED" || r.State == "SUPERSEDED" {
 			return r.Ref, nil
 		}
-		job, e := s.store.(modelStore).LoadJob(tx, r.JobRef.Name)
+		job, e := s.store.LoadJob(tx, r.JobRef.Name)
 		if e != nil {
 			return nil, e
 		}
@@ -111,7 +109,7 @@ func (s *Service) StopProposalRequest(ctx context.Context, caller *v1.Caller, c 
 		job.Ref.Revision++
 		r.State = "STOPPED"
 		r.OutcomeReceipt = nil
-		if e = s.store.(modelStore).SaveJob(tx, job); e != nil {
+		if e = s.store.SaveJob(tx, job); e != nil {
 			return nil, e
 		}
 		return r.Ref, s.saveModelRequest(tx, r)
