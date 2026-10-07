@@ -2,7 +2,6 @@ package tasks
 
 import (
 	"context"
-	"time"
 
 	"github.com/ruipengliu/lerna/contracts/command"
 	v1 "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1"
@@ -118,112 +117,15 @@ func (s *Service) ValidateCompletionClosure(ctx context.Context, c *v1.Caller, r
 	return a, nil
 }
 func (s *Service) ProcessCompletionClosureClaim(ctx context.Context, j *v1.Job) error {
-	current, e := s.completionJobs.ReadCompletionClosureClaim(ctx, j)
-	if e != nil {
-		return e
-	}
-	actor := &v1.Caller{UserId: s.user, IssuerId: "tasks-completion"}
-	intent, e := s.QueryCompletionIntent(ctx, actor, current.SpecificationRef)
-	if e != nil {
-		return e
-	}
-	if intent == nil || !proto.Equal(intent.Command.Header.Identity, current.Responsibility) {
-		return command.Fail("INVARIANT_VIOLATION")
-	}
-	c := intent.Command
-	q, e := s.completionCloser.QueryReceipt(ctx, actor, c.Header.Identity)
-	if e != nil {
-		return e
-	}
-	var r *v1.CommandReceipt
-	switch q.State {
-	case v1.ReceiptQueryState_RECEIPT_QUERY_STATE_DECIDED:
-		r = q.Receipt
-	case v1.ReceiptQueryState_RECEIPT_QUERY_STATE_NOT_FOUND:
-		r, e = s.completionCloser.CloseForCompletion(ctx, actor, c)
-		if e != nil {
-			return e
-		}
-	default:
-		return command.Fail("DEPENDENCY_UNAVAILABLE")
-	}
-	if r == nil || r.Decision != v1.Decision_DECISION_ACCEPTED || r.Phase != v1.ReceiptPhase_RECEIPT_PHASE_DECIDED || !proto.Equal(r.Identity, c.Header.Identity) || r.ResponsibleDomainId != c.OperationId.AuthorityDomainId || r.Fingerprint != command.SemanticFingerprint("completion-seal", c) || r.ResultRef.GetSchemaId() != "lerna.v1.CompletionSeal" {
-		return command.Fail("HANDOFF_RECEIPT_INVALID")
-	}
-	return s.store.Transaction(ctx, "tasks.completion_receipt", func(tx context.Context) error {
-		currentIntent, e := s.QueryCompletionIntent(tx, actor, intent.Ref)
-		if e != nil {
-			return e
-		}
-		if currentIntent.RecipientReceipt != nil && !proto.Equal(currentIntent.RecipientReceipt, r) {
-			return command.Fail("INVARIANT_VIOLATION")
-		}
-		if e = s.completionJobs.CompleteCompletionClosureInTransaction(tx, current); e != nil {
-			return e
-		}
-		currentIntent.RecipientReceipt = r
-		return s.saveCompletionIntent(tx, currentIntent)
-	})
+	return s.processClosureClaim(ctx, j, completionClosureDelivery)
 }
 
 // ProcessCompletionClosures 只交付封闭，不替代原意图接纳或省略源域回执。
 func (s *Service) ProcessCompletionClosures(ctx context.Context, c *v1.Caller) error {
-	if c.GetUserId() != s.user {
-		return command.Fail("PERMISSION_DENIED")
-	}
-	pending, e := s.pendingCompletionClosures(ctx, c)
-	if e != nil || !pending {
-		return e
-	}
-	process := command.NewRef(s.user, s.domain, "process", "process").Name.LocalId
-	for {
-		id := &v1.CommandIdentity{UserId: s.user, IssuerId: c.IssuerId, TargetDomainId: s.domain, CommandId: command.NewRef(s.user, s.domain, "command", "command").Name.LocalId}
-		r, e := s.completionJobs.ExecuteJob(ctx, c, &v1.JobCommand{Identity: id, ContractVersion: 1, Action: "CLAIM", Module: "tasks", AllowedTypes: []string{"DELIVER_COMPLETION_CLOSURE"}, Limit: 1, LeaseMs: 30000, ProcessInstance: process})
-		if e != nil {
-			return e
-		}
-		if r.Error != nil {
-			return &command.Failure{Detail: r.Error}
-		}
-		if len(r.Jobs) == 0 {
-			return nil
-		}
-		if e = s.ProcessCompletionClosureClaim(ctx, r.Jobs[0]); e != nil {
-			return e
-		}
-	}
-}
-
-func (s *Service) pendingCompletionClosures(ctx context.Context, c *v1.Caller) (bool, error) {
-	jobs, e := s.completionJobs.Pending(ctx, c)
-	if e != nil {
-		return false, e
-	}
-	for _, j := range jobs {
-		if j.Module == "tasks" && j.JobType == "DELIVER_COMPLETION_CLOSURE" {
-			return true, nil
-		}
-	}
-	return false, nil
+	return s.processClosureDeliveries(ctx, c, completionClosureDelivery)
 }
 
 // RecoverCompletions 在宿主的有界恢复期限内等待旧领取自然失效，不提前接管。
 func (s *Service) RecoverCompletions(ctx context.Context, c *v1.Caller) error {
-	for {
-		if e := s.ProcessCompletions(ctx, c); e != nil {
-			return e
-		}
-		pending, e := s.pendingCompletionClosures(ctx, c)
-		if e != nil {
-			return e
-		}
-		if !pending {
-			return nil
-		}
-		select {
-		case <-ctx.Done():
-			return ctx.Err()
-		case <-time.After(25 * time.Millisecond):
-		}
-	}
+	return s.recoverClosureDeliveries(ctx, c, completionClosureDelivery)
 }
