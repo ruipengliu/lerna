@@ -47,7 +47,7 @@ func (s *Service) RegisterFileResources(ctx context.Context, caller *v1.Caller, 
 		if body == nil || body.Status != "AVAILABLE" {
 			return nil, command.Fail("CONTENT_UNUSABLE")
 		}
-		existing, e := s.store.(fileResourceStore).FileResourcesForSend(tx, c.SendRef)
+		existing, e := s.store.FileResourcesForSend(tx, c.SendRef)
 		if e != nil {
 			return nil, e
 		}
@@ -69,7 +69,7 @@ func (s *Service) QueryFileResources(ctx context.Context, caller *v1.Caller, r *
 	if e := command.CheckName(caller, r.Name, s.user, s.domain, "file-resources"); e != nil {
 		return nil, e
 	}
-	v, e := s.store.(fileResourceStore).LoadFileResources(ctx, r)
+	v, e := s.store.LoadFileResources(ctx, r)
 	if v != nil && !proto.Equal(v.Ref, r) {
 		return nil, command.Fail("INVALID_REFERENCE")
 	}
@@ -85,7 +85,7 @@ func (s *Service) QueryFileResourcesForSend(ctx context.Context, caller *v1.Call
 	if r.GetName().GetUserId() != s.user || r.GetName().GetObjectKind() != "send" {
 		return nil, command.Fail("INVALID_REFERENCE")
 	}
-	v, e := s.store.(fileResourceStore).FileResourcesForSend(ctx, r)
+	v, e := s.store.FileResourcesForSend(ctx, r)
 	if v != nil && !proto.Equal(v.SendRef.Name, r.Name) {
 		return nil, command.Fail("INVALID_REFERENCE")
 	}
@@ -164,7 +164,7 @@ func (s *Service) BindFileRoot(ctx context.Context, caller *v1.Caller, c *v1.Bin
 		if e != nil || target.Scheme != "managed" || target.Host != c.RootId {
 			return nil, command.Fail("INVALID_FILE_ROOT")
 		}
-		store := s.store.(fileResourceStore)
+		store := s.store
 		old, e := store.LoadManagedFileRoot(tx, s.user, c.RootId)
 		if e != nil {
 			return nil, e
@@ -205,7 +205,7 @@ func (s *Service) QueryManagedFileRoot(ctx context.Context, caller *v1.Caller, r
 	if rootID == "" {
 		return nil, command.Fail("INVALID_REFERENCE")
 	}
-	return s.store.(fileResourceStore).LoadManagedFileRoot(ctx, s.user, rootID)
+	return s.store.LoadManagedFileRoot(ctx, s.user, rootID)
 }
 
 // saveFileResources 与资源责任同事务保存引用，不将原生名字或字节复制给追踪。
@@ -224,7 +224,7 @@ func (s *Service) saveFileResources(ctx context.Context, caller *v1.Caller, r *v
 	if admission == nil {
 		return command.Fail("INVARIANT_VIOLATION")
 	}
-	if e = s.store.(fileResourceStore).SaveFileResources(ctx, r); e != nil {
+	if e = s.store.SaveFileResources(ctx, r); e != nil {
 		return e
 	}
 	return s.store.SaveTraceSource(ctx, "content", &v1.TraceEvent{EventType: kind, SourceRecordRef: r.Ref, TaskId: admission.TaskId, OperationId: r.OperationId, AttemptId: r.AttemptId, SendRef: r.SendRef, BodyRef: r.ContentRef, OriginCommand: origin, RelatedRefs: []*v1.Ref{r.DerivationRef, r.CleanupObservationRef, observation}})

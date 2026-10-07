@@ -8,10 +8,16 @@ import (
 
 	"github.com/ruipengliu/lerna/contracts/command"
 	v1 "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1"
+	"github.com/ruipengliu/lerna/core/durable"
 )
 
+// Store 声明内容登记、正文、派生、观察与文件资源的全部持久能力。
 type Store interface {
 	TraceSource
+	governanceStore
+	derivationStore
+	observationStore
+	fileResourceStore
 	ReadContent(context.Context, *v1.Ref) (*v1.Content, error)
 }
 type Service struct {
@@ -22,9 +28,23 @@ type Service struct {
 	user, domain string
 }
 
-func New(s Store, user, domain string) *Service {
-	return &Service{store: s, user: user, domain: domain}
+func New(s Store, work ObservationWork, user, domain string) (*Service, error) {
+	if err := durable.RequireDependencies("content", durable.Dependency{Name: "store", Value: s}, durable.Dependency{Name: "work", Value: work}); err != nil {
+		return nil, err
+	}
+	return &Service{store: s, work: work, user: user, domain: domain}, nil
 }
+
+// ValidateDependencies 检查基础依赖与两阶段连接，宿主必须在恢复前完成。
+func (s *Service) ValidateDependencies() error {
+	return durable.RequireDependencies("content",
+		durable.Dependency{Name: "store", Value: s.store},
+		durable.Dependency{Name: "work", Value: s.work},
+		durable.Dependency{Name: "associations", Value: s.facts},
+		durable.Dependency{Name: "ledger", Value: s.ledger},
+	)
+}
+
 func (s *Service) Stage(ctx context.Context, caller *v1.Caller, c *v1.SubmitGoalCommand) (*v1.Ref, error) {
 	if err := command.ValidateGoal(c); err != nil {
 		return nil, err

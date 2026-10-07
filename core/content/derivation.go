@@ -49,7 +49,7 @@ func (s *Service) QueryDerivation(ctx context.Context, caller *v1.Caller, ref *v
 	if e := command.CheckName(caller, ref.Name, s.user, s.domain, "derivation"); e != nil {
 		return nil, e
 	}
-	d, e := s.store.(derivationStore).LoadContentDerivation(ctx, ref)
+	d, e := s.store.LoadContentDerivation(ctx, ref)
 	if d != nil && !proto.Equal(d.Ref, ref) {
 		return nil, command.Fail("INVALID_REFERENCE")
 	}
@@ -182,7 +182,7 @@ func (s *Service) CommitDerivation(ctx context.Context, caller *v1.Caller, c *v1
 				return nil, command.Fail("INVALID_REFERENCE")
 			}
 			v.ContentId = old.ContentId
-			v.ContentVersion, e = s.store.(governanceStore).NextContentVersion(tx, old.ContentId)
+			v.ContentVersion, e = s.store.NextContentVersion(tx, old.ContentId)
 			if e != nil {
 				return nil, e
 			}
