@@ -13,6 +13,7 @@ import (
 	"github.com/ruipengliu/lerna/cmd/assembly"
 	"github.com/ruipengliu/lerna/conformance/simulator"
 	v1 "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1"
+	"github.com/ruipengliu/lerna/infra/egressio"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 )
@@ -115,6 +116,7 @@ func TestCancellationEndpointAcknowledgementClosesOldWorkerBeforeP5(t *testing.T
 	for _, afterP4 := range []bool{false, true} {
 		t.Run(fmt.Sprint(afterP4), func(t *testing.T) {
 			f := newFixture(t, 100, 80, false)
+			f.h.Tasks.WithCancellationClosures(f.h.Durable, newDeclaredEgress(t, f, egressio.HTTP{}))
 			a, start := prepareStart(t, f)
 			actor := &v1.Caller{UserId: "u", IssuerId: "egress"}
 			if afterP4 {

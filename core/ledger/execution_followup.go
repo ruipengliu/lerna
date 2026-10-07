@@ -39,7 +39,7 @@ func (s *Service) QueryExecutionFollowup(ctx context.Context, c *v1.Caller, r *v
 	if e := s.checkHistory(c, r, "execution-followup", "lerna.v1.ExecutionFollowup"); e != nil {
 		return nil, e
 	}
-	f, e := s.store.(executionFollowupStore).LoadExecutionFollowup(ctx, r)
+	f, e := s.store.LoadExecutionFollowup(ctx, r)
 	if e == nil && f != nil && !proto.Equal(f.Ref, r) {
 		return nil, command.Fail("INVALID_REFERENCE")
 	}
@@ -57,7 +57,7 @@ func (s *Service) executionFollowupJob(ctx context.Context, c *v1.Caller, f *v1.
 	if e != nil {
 		return nil, e
 	}
-	seal, e := s.store.(taskClosureSealStore).TaskClosureSealForOperation(ctx, f.OperationId)
+	seal, e := s.store.TaskClosureSealForOperation(ctx, f.OperationId)
 	if e != nil {
 		return nil, e
 	}
@@ -104,7 +104,7 @@ func (s *Service) ProcessExecutionFollowups(ctx context.Context, c *v1.Caller) e
 	if e := command.CheckCaller(c, s.user); e != nil {
 		return e
 	}
-	all, e := s.store.(executionFollowupStore).AllExecutionFollowups(ctx)
+	all, e := s.store.AllExecutionFollowups(ctx)
 	if e != nil {
 		return e
 	}

@@ -150,7 +150,7 @@ func validQueryObject(body []byte) (bool, bool) {
 
 // applyReconciliationObservation 只追加原责任的证据，不改变其尝试、发送、端点或任务。
 func (s *Service) applyReconciliationObservation(ctx context.Context, caller *v1.Caller, query *v1.Operation, raw *v1.RawObservation, body []byte) error {
-	q, e := s.store.(reconciliationStore).LoadClosureQuery(ctx, query.ClosureWorkRef)
+	q, e := s.store.LoadClosureQuery(ctx, query.ClosureWorkRef)
 	if e != nil {
 		return e
 	}

@@ -10,6 +10,8 @@ import (
 )
 
 type ExecutionWork interface {
+	reconciliationJobs
+	observedWork
 	Execute(context.Context, *v1.Caller, *v1.CommandHeader, string, string, func(context.Context) (*v1.Ref, error)) (*v1.CommandReceipt, error)
 	CheckExecutionClaimInTransaction(context.Context, *v1.Job) (*v1.Job, error)
 	CheckExecutionClaimAt(context.Context, *v1.Job, int64) (*v1.Job, error)
@@ -18,15 +20,19 @@ type ExecutionWork interface {
 func (s *Service) WithWork(work ExecutionWork) *Service { s.work = work; return s }
 
 type Compiler interface {
+	RecoveryCompiler
 	Compile(*v1.Operation, *v1.ExecutionAttempt) (*v1.CallDescriptor, *v1.ExecutionCapabilities, error)
 }
 
 func (s *Service) WithCompiler(adapter Compiler) *Service { s.adapter = adapter; return s }
 
+// ContextCompiler 是可选的上下文编译能力；缺席时使用原 Compile。
+type ContextCompiler interface {
+	CompileContext(context.Context, *v1.Operation, *v1.ExecutionAttempt) (*v1.CallDescriptor, *v1.ExecutionCapabilities, error)
+}
+
 func (s *Service) compile(ctx context.Context, op *v1.Operation, a *v1.ExecutionAttempt) (*v1.CallDescriptor, *v1.ExecutionCapabilities, error) {
-	if contextual, ok := s.adapter.(interface {
-		CompileContext(context.Context, *v1.Operation, *v1.ExecutionAttempt) (*v1.CallDescriptor, *v1.ExecutionCapabilities, error)
-	}); ok {
+	if contextual, ok := s.adapter.(ContextCompiler); ok {
 		return contextual.CompileContext(ctx, op, a)
 	}
 	return s.adapter.Compile(op, a)
@@ -147,7 +153,7 @@ func (s *Service) ValidateStart(ctx context.Context, c *v1.Caller, b *v1.ExitCre
 
 // CheckRecoveryAllowed 只从已核验的本地账本读取恢复状态。
 func (s *Service) CheckRecoveryAllowed(ctx context.Context) error {
-	return s.store.(interface{ CheckRecoveryAllowed(context.Context) error }).CheckRecoveryAllowed(ctx)
+	return s.store.CheckRecoveryAllowed(ctx)
 }
 
 // ValidateFileUse 只核验已开放的原发送；返回引用不能授权第二次物理调用。

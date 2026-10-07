@@ -19,7 +19,8 @@ type fileContent interface {
 	QueryFileResources(context.Context, *v1.Caller, *v1.Ref) (*v1.FileResources, error)
 }
 
-// CheckedIO 允许受信原生执行在有界使用内的最终发布点复查当前资格。
+// CheckedIO 是可选的受管理文件出口能力，在最终发布点复查当前资格。
+// 缺席时 FILE 返回 UNSUPPORTED_CAPABILITY，不调用普通 Perform。
 type CheckedIO interface {
 	PerformChecked(context.Context, *v1.PhysicalIORequest, func(context.Context) error) (*v1.PhysicalIOResult, error)
 }
@@ -34,10 +35,7 @@ func (s *Service) prepareFile(ctx context.Context, r *v1.PhysicalIORequest) erro
 	}
 	r.FileParameters = p
 	if r.CallDescriptor.Method == "CLEANUP" {
-		content, ok := s.content.(fileContent)
-		if !ok {
-			return command.Fail("DEPENDENCY_UNAVAILABLE")
-		}
+		content := s.content
 		actor := &v1.Caller{UserId: r.OperationId.UserId, IssuerId: "egress-io"}
 		resources, e := content.QueryFileResources(ctx, actor, p.CleanupResourcesRef)
 		if e != nil {
@@ -57,10 +55,7 @@ func (s *Service) prepareFile(ctx context.Context, r *v1.PhysicalIORequest) erro
 	if (r.CallDescriptor.Method == "CREATE" && p.ExpectedVersion != "") || (r.CallDescriptor.Method == "REPLACE" && p.ExpectedVersion == "") || p.CleanupResourcesRef != nil {
 		return command.Fail("INVALID_FILE_PARAMETERS")
 	}
-	content, ok := s.content.(fileContent)
-	if !ok {
-		return command.Fail("DEPENDENCY_UNAVAILABLE")
-	}
+	content := s.content
 	host := &v1.Caller{UserId: r.OperationId.UserId, IssuerId: "host"}
 	header := func(issuer, step string) *v1.CommandHeader {
 		return &v1.CommandHeader{Identity: &v1.CommandIdentity{UserId: host.UserId, IssuerId: issuer, TargetDomainId: r.CallDescriptor.ParametersRef.Name.AuthorityDomainId, CommandId: "file:" + step + ":" + r.Send.Ref.Name.LocalId}, ContractVersion: 1, FingerprintVersion: 1, SchemaId: "lerna.v1.AdmissionCommands"}

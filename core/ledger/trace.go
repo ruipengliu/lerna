@@ -46,14 +46,14 @@ func (s *Service) saveOperation(ctx context.Context, v *v1.Operation) error {
 }
 
 func (s *Service) saveCompletionSeal(ctx context.Context, v *v1.CompletionSeal, task *v1.GlobalName, origin *v1.CommandIdentity) error {
-	if err := s.store.(completionSealStore).SaveCompletionSeal(ctx, v); err != nil {
+	if err := s.store.SaveCompletionSeal(ctx, v); err != nil {
 		return err
 	}
 	return s.store.SaveTraceSource(ctx, "ledger", &v1.TraceEvent{EventType: "COMPLETION_SEALED", SourceRecordRef: v.Ref, TaskId: task, OperationId: v.OperationId, OriginCommand: origin, RelatedRefs: append([]*v1.Ref{v.IntentRef, v.VerificationRef, v.AdmissionRef, v.OperationRef}, v.ClosedSendRefs...)})
 }
 
 func (s *Service) saveCancellationSeal(ctx context.Context, v *v1.CancellationSeal, task *v1.GlobalName, origin *v1.CommandIdentity, op *v1.Operation) error {
-	if err := s.store.(cancellationSealStore).SaveCancellationSeal(ctx, v); err != nil {
+	if err := s.store.SaveCancellationSeal(ctx, v); err != nil {
 		return err
 	}
 	event := &v1.TraceEvent{EventType: "CANCELLATION_SEALED", SourceRecordRef: v.Ref, TaskId: task, OperationId: v.OperationId, OriginCommand: origin, RelatedRefs: []*v1.Ref{v.IntentRef, v.CancellationRef, v.AdmissionRef, v.OperationRef}}
@@ -87,7 +87,7 @@ func (s *Service) recordReconciliationTrace(ctx context.Context, p *v1.Reconcili
 }
 
 func (s *Service) saveReconciliationQuery(ctx context.Context, q *v1.ReconciliationQuery) error {
-	if err := s.store.(reconciliationStore).SaveReconciliationQuery(ctx, q); err != nil {
+	if err := s.store.SaveReconciliationQuery(ctx, q); err != nil {
 		return err
 	}
 	refs := []*v1.Ref{q.Work.Ref, q.Work.OwnerRef, q.Work.SourceRef, q.Work.CapabilityRef, q.Work.ParametersRef, q.Work.GrantRef, q.QueryOperationRef, q.InterpretationRef}
@@ -98,14 +98,14 @@ func (s *Service) saveReconciliationQuery(ctx context.Context, q *v1.Reconciliat
 }
 
 func (s *Service) saveReconciliationFinding(ctx context.Context, v *v1.ReconciliationFinding, task *v1.GlobalName, query *v1.Ref) error {
-	if err := s.store.(reconciliationStore).SaveReconciliationFinding(ctx, v); err != nil {
+	if err := s.store.SaveReconciliationFinding(ctx, v); err != nil {
 		return err
 	}
 	return s.store.SaveTraceSource(ctx, "ledger", &v1.TraceEvent{EventType: "RECONCILIATION_FINDING", SourceRecordRef: v.Ref, TaskId: task, OperationId: v.OperationId, ObservationRef: v.ObservationRef, EffectOutcome: v.Outcome, LateEffect: v.LateEffect, ReasonCode: v.Reason, RelatedRefs: []*v1.Ref{v.QueryRef, query}})
 }
 
 func (s *Service) saveOperationProgressHandoff(ctx context.Context, h *v1.OperationProgressHandoff) error {
-	if err := s.store.(progressStore).SaveOperationProgressHandoff(ctx, h); err != nil {
+	if err := s.store.SaveOperationProgressHandoff(ctx, h); err != nil {
 		return err
 	}
 	n := h.Notice
@@ -132,11 +132,7 @@ type observedWork interface {
 }
 
 func (s *Service) executeResendDecision(ctx context.Context, caller *v1.Caller, c *v1.PrepareResendCommand, fn func(context.Context) (*v1.Ref, error)) (*v1.CommandReceipt, error) {
-	work, ok := s.work.(observedWork)
-	if !ok {
-		return nil, command.Fail("DEPENDENCY_UNAVAILABLE")
-	}
-	return work.ExecuteObserved(ctx, caller, c.Header, command.SemanticFingerprint("prepare-resend", c.OperationId, c.PreviousSendRef, c.Claim), "ledger.resend", fn, func(tx context.Context, r *v1.CommandReceipt) error {
+	return s.work.ExecuteObserved(ctx, caller, c.Header, command.SemanticFingerprint("prepare-resend", c.OperationId, c.PreviousSendRef, c.Claim), "ledger.resend", fn, func(tx context.Context, r *v1.CommandReceipt) error {
 		if r.Decision != v1.Decision_DECISION_REJECTED {
 			return nil
 		}

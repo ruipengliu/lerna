@@ -40,7 +40,7 @@ func (s *Service) InterpretObservation(ctx context.Context, caller *v1.Caller, c
 			return nil, command.Fail("NOT_FOUND")
 		}
 		ref := interpretationRef(raw.Ref)
-		old, e := s.store.(interpretationStore).LoadInterpretation(tx, ref)
+		old, e := s.store.LoadInterpretation(tx, ref)
 		if e != nil {
 			return nil, e
 		}
@@ -88,7 +88,7 @@ func (s *Service) InterpretObservation(ctx context.Context, caller *v1.Caller, c
 				}
 			}
 		}
-		if e = s.store.(interpretationStore).SaveInterpretation(tx, finding); e != nil {
+		if e = s.store.SaveInterpretation(tx, finding); e != nil {
 			return nil, e
 		}
 		admission, e := s.starts.QueryAdmission(tx, caller, op.AdmissionRef)
@@ -230,7 +230,7 @@ func (s *Service) QueryInterpretation(ctx context.Context, caller *v1.Caller, r 
 	if e := s.checkHistory(caller, r, "interpretation", "lerna.v1.EffectInterpretation"); e != nil {
 		return nil, e
 	}
-	v, e := s.store.(interpretationStore).LoadInterpretation(ctx, r)
+	v, e := s.store.LoadInterpretation(ctx, r)
 	if v != nil && !proto.Equal(v.Ref, r) {
 		return nil, command.Fail("INVALID_REFERENCE")
 	}
@@ -240,7 +240,7 @@ func (s *Service) ProcessInterpretations(ctx context.Context, caller *v1.Caller)
 	if caller.GetUserId() != s.user {
 		return command.Fail("PERMISSION_DENIED")
 	}
-	all, e := s.store.(reportStore).AllReports(ctx)
+	all, e := s.store.AllReports(ctx)
 	if e != nil {
 		return e
 	}

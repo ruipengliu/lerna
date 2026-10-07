@@ -11,10 +11,13 @@ import (
 )
 
 type Starts interface {
+	ValidateFileUse(context.Context, *v1.Caller, *v1.StartExecutionCommand) error
 	QueryStart(context.Context, *v1.Caller, *v1.Ref) (*v1.StartRecord, error)
 	StartExecution(context.Context, *v1.Caller, *v1.StartExecutionCommand) (*v1.CommandReceipt, error)
 }
 type Ledger interface {
+	cancellationLedger
+	taskClosingLedger
 	QuerySendExecution(context.Context, *v1.Caller, *v1.GlobalName, *v1.Ref) (*v1.Execution, error)
 	CloseForCompletion(context.Context, *v1.Caller, *v1.CloseCompletionCommand) (*v1.CommandReceipt, error)
 	CloseForGrantRevocation(context.Context, *v1.Caller, *v1.CloseGrantExitCommand) (*v1.CommandReceipt, error)
@@ -25,10 +28,17 @@ type Ledger interface {
 	QueryReceipt(context.Context, *v1.Caller, *v1.CommandIdentity) (*v1.ReceiptQuery, error)
 }
 type Content interface {
+	fileContent
 	Read(context.Context, *v1.Caller, *v1.Ref) (*v1.Content, error)
 	RegisterObservation(context.Context, *v1.Caller, *v1.RegisterObservationCommand) (*v1.CommandReceipt, error)
 	ProcessObservations(context.Context, *v1.Caller) error
 }
+
+// PreflightIO 是可选预检；缺席时继续原 P4/P5 门禁与实际出口。
+type PreflightIO interface {
+	Preflight(context.Context, *v1.CallDescriptor) error
+}
+
 type IO interface {
 	Perform(context.Context, *v1.PhysicalIORequest) (*v1.PhysicalIOResult, error)
 }
@@ -43,8 +53,12 @@ type Service struct {
 	io       IO
 }
 
-func New(starts Starts, ledger Ledger, content Content, io IO, critical CriticalSection) *Service {
-	return &Service{starts: starts, ledger: ledger, content: content, io: io, critical: critical}
+func New(starts Starts, ledger Ledger, content Content, io IO, critical CriticalSection) (*Service, error) {
+	service := &Service{starts: starts, ledger: ledger, content: content, io: io, critical: critical}
+	if err := service.ValidateDependencies(); err != nil {
+		return nil, err
+	}
+	return service, nil
 }
 func (s *Service) QueryReceipt(ctx context.Context, c *v1.Caller, id *v1.CommandIdentity) (*v1.ReceiptQuery, error) {
 	return s.ledger.QueryReceipt(ctx, c, id)
@@ -113,9 +127,7 @@ func (s *Service) Invoke(ctx context.Context, caller *v1.Caller, c *v1.StartExec
 			return nil, command.Fail("PREPARATION_UNRECOVERABLE")
 		}
 	}
-	if preflight, ok := s.io.(interface {
-		Preflight(context.Context, *v1.CallDescriptor) error
-	}); ok {
+	if preflight, ok := s.io.(PreflightIO); ok {
 		if e = preflight.Preflight(ctx, c.CallDescriptor); e != nil {
 			return nil, e
 		}
@@ -144,13 +156,7 @@ func (s *Service) Invoke(ctx context.Context, caller *v1.Caller, c *v1.StartExec
 		if !ok {
 			return receipt, command.Fail("UNSUPPORTED_CAPABILITY")
 		}
-		authority, ok := s.starts.(interface {
-			ValidateFileUse(context.Context, *v1.Caller, *v1.StartExecutionCommand) error
-		})
-		if !ok {
-			return receipt, command.Fail("DEPENDENCY_UNAVAILABLE")
-		}
-		result, e = checked.PerformChecked(ctx, request, func(useCtx context.Context) error { return authority.ValidateFileUse(useCtx, caller, c) })
+		result, e = checked.PerformChecked(ctx, request, func(useCtx context.Context) error { return s.starts.ValidateFileUse(useCtx, caller, c) })
 	} else {
 		result, e = s.io.Perform(ctx, request)
 	}

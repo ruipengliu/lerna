@@ -53,7 +53,7 @@ func (s *Service) QueryReconciliation(ctx context.Context, c *v1.Caller, id *v1.
 	if e := command.CheckName(c, id, s.user, s.domain, "operation"); e != nil {
 		return nil, e
 	}
-	return s.store.(reconciliationStore).LoadReconciliation(ctx, id)
+	return s.store.LoadReconciliation(ctx, id)
 }
 func (s *Service) QueryReconciliationQuery(ctx context.Context, c *v1.Caller, r *v1.Ref) (*v1.ReconciliationQuery, error) {
 	if r == nil || r.SchemaId != "lerna.v1.ReconciliationQuery" || r.Revision == 0 {
@@ -62,7 +62,7 @@ func (s *Service) QueryReconciliationQuery(ctx context.Context, c *v1.Caller, r 
 	if e := command.CheckName(c, r.Name, s.user, s.domain, "reconciliation-query"); e != nil {
 		return nil, e
 	}
-	q, e := s.store.(reconciliationStore).LoadReconciliationQuery(ctx, r)
+	q, e := s.store.LoadReconciliationQuery(ctx, r)
 	if q != nil && !proto.Equal(q.Ref, r) {
 		return nil, command.Fail("INVALID_REFERENCE")
 	}
@@ -75,7 +75,7 @@ func (s *Service) QueryReconciliationFinding(ctx context.Context, c *v1.Caller, 
 	if e := command.CheckName(c, r.Name, s.user, s.domain, "reconciliation-finding"); e != nil {
 		return nil, e
 	}
-	return s.store.(reconciliationStore).LoadReconciliationFinding(ctx, r)
+	return s.store.LoadReconciliationFinding(ctx, r)
 }
 func (s *Service) RequestReconciliation(ctx context.Context, caller *v1.Caller, c *v1.RequestReconciliationCommand) (*v1.CommandReceipt, error) {
 	if e := command.ValidateHeader(c.GetHeader(), c); e != nil {
@@ -157,7 +157,7 @@ func (s *Service) QueryClosureWork(ctx context.Context, caller *v1.Caller, r *v1
 	if e := command.CheckName(caller, r.Name, s.user, s.domain, "closure-work"); e != nil {
 		return nil, e
 	}
-	q, e := s.store.(reconciliationStore).LoadClosureQuery(ctx, r)
+	q, e := s.store.LoadClosureQuery(ctx, r)
 	if e != nil {
 		return nil, e
 	}
@@ -201,7 +201,7 @@ func (s *Service) ProcessReconciliations(ctx context.Context, caller *v1.Caller)
 	if e := command.CheckCaller(caller, s.user); e != nil {
 		return e
 	}
-	jobs := s.work.(reconciliationJobs)
+	jobs := s.work
 	pending, e := jobs.Pending(ctx, caller)
 	if e != nil {
 		return e
@@ -239,7 +239,7 @@ func (s *Service) ProcessReconciliationClaim(ctx context.Context, caller *v1.Cal
 	}
 	h := reconcileHeader(s.user, caller.IssuerId, s.domain, fmt.Sprintf("reconcile-query:%s:%d:%d", claim.Ref.Name.LocalId, claim.ClaimEpoch, claim.Ref.Revision))
 	r, e := s.work.Execute(ctx, caller, h, command.SemanticFingerprint("prepare-reconciliation-query", claim), "ledger.reconcile_prepare", func(tx context.Context) (*v1.Ref, error) {
-		current, e := s.work.(reconciliationJobs).CheckReconciliationClaimInTransaction(tx, claim)
+		current, e := s.work.CheckReconciliationClaimInTransaction(tx, claim)
 		if e != nil {
 			return nil, e
 		}
@@ -303,7 +303,7 @@ func (s *Service) ProcessReconciliationClaim(ctx context.Context, caller *v1.Cal
 		return e
 	}
 	// 不复用初次准备回执里的旧视图；交接可能已经完成。
-	q, e = s.store.(reconciliationStore).LoadClosureQuery(ctx, q.Work.Ref)
+	q, e = s.store.LoadClosureQuery(ctx, q.Work.Ref)
 	if e != nil {
 		return e
 	}
@@ -340,10 +340,10 @@ func (s *Service) ProcessReconciliationClaim(ctx context.Context, caller *v1.Cal
 		}
 		ack := reconcileHeader(s.user, caller.IssuerId, s.domain, "query-admission-ack:"+q.Ref.Name.LocalId)
 		saved, e := s.work.Execute(ctx, caller, ack, command.SemanticFingerprint("reconciliation-admission-ack", q.Work.Ref, ar), "ledger.reconcile_admission_ack", func(tx context.Context) (*v1.Ref, error) {
-			if _, e := s.work.(reconciliationJobs).CheckReconciliationClaimInTransaction(tx, claim); e != nil {
+			if _, e := s.work.CheckReconciliationClaimInTransaction(tx, claim); e != nil {
 				return nil, e
 			}
-			fresh, e := s.store.(reconciliationStore).LoadClosureQuery(tx, q.Work.Ref)
+			fresh, e := s.store.LoadClosureQuery(tx, q.Work.Ref)
 			if e != nil {
 				return nil, e
 			}
@@ -464,7 +464,7 @@ func (s *Service) executeReconciliationQuery(ctx context.Context, caller *v1.Cal
 	}
 	process := command.NewRef(s.user, s.domain, "process", "process").Name.LocalId
 	id := reconcileHeader(s.user, "host", s.domain, "query-execute-claim:"+process)
-	r, e := s.work.(reconciliationJobs).ExecuteJob(ctx, caller, &v1.JobCommand{Identity: id.Identity, ContractVersion: 1, Action: "CLAIM", Module: "ledger", AllowedTypes: []string{"EXECUTE_OPERATION"}, JobRef: pending.Ref, Limit: 1, LeaseMs: 30000, ProcessInstance: process})
+	r, e := s.work.ExecuteJob(ctx, caller, &v1.JobCommand{Identity: id.Identity, ContractVersion: 1, Action: "CLAIM", Module: "ledger", AllowedTypes: []string{"EXECUTE_OPERATION"}, JobRef: pending.Ref, Limit: 1, LeaseMs: 30000, ProcessInstance: process})
 	if e != nil {
 		return e
 	}
@@ -547,7 +547,7 @@ func (s *Service) RecoverReconciliations(ctx context.Context, c *v1.Caller) erro
 		if e := s.ProcessReconciliations(ctx, c); e != nil {
 			return e
 		}
-		pending, e := s.work.(reconciliationJobs).Pending(ctx, c)
+		pending, e := s.work.Pending(ctx, c)
 		if e != nil {
 			return e
 		}
@@ -572,7 +572,7 @@ func (s *Service) RecoverReconciliations(ctx context.Context, c *v1.Caller) erro
 func (s *Service) pauseReconciliationClaim(ctx context.Context, c *v1.Caller, claim *v1.Job, q *v1.ReconciliationQuery, reason string) error {
 	h := reconcileHeader(s.user, c.IssuerId, s.domain, fmt.Sprintf("query-pause:%s:%d", q.Ref.Name.LocalId, claim.ClaimEpoch))
 	r, e := s.work.Execute(ctx, c, h, command.SemanticFingerprint("pause-reconciliation-query", claim, q.Work.Ref, reason), "ledger.reconcile_pause", func(tx context.Context) (*v1.Ref, error) {
-		if _, e := s.work.(reconciliationJobs).CheckReconciliationClaimInTransaction(tx, claim); e != nil {
+		if _, e := s.work.CheckReconciliationClaimInTransaction(tx, claim); e != nil {
 			return nil, e
 		}
 		p, e := s.QueryReconciliation(tx, c, q.Work.QuerySubject.OperationId)
@@ -629,10 +629,10 @@ func (s *Service) prepareClosureAdmission(ctx context.Context, c *v1.Caller, cla
 	}
 	h := reconcileHeader(s.user, c.IssuerId, s.domain, fmt.Sprintf("query-confirmation:%s:%d", q.Ref.Name.LocalId, claim.ClaimEpoch))
 	r, e := s.work.Execute(ctx, c, h, command.SemanticFingerprint("prepare-closure-admission", claim, q.Work.Ref, cmd), "ledger.reconcile_confirmation", func(tx context.Context) (*v1.Ref, error) {
-		if _, e := s.work.(reconciliationJobs).CheckReconciliationClaimInTransaction(tx, claim); e != nil {
+		if _, e := s.work.CheckReconciliationClaimInTransaction(tx, claim); e != nil {
 			return nil, e
 		}
-		fresh, e := s.store.(reconciliationStore).LoadClosureQuery(tx, q.Work.Ref)
+		fresh, e := s.store.LoadClosureQuery(tx, q.Work.Ref)
 		if e != nil {
 			return nil, e
 		}

@@ -33,7 +33,10 @@ func TestUnknownAndPreviouslyStartedUnsettledOperationsBlockReplacement(t *testi
 		{"accepted-no-dispatch", &v1.Operation{Lifecycle: "ACCEPTED", Effect: &v1.Effect{Outcome: "NOT_APPLIED"}}, false, false},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			s := New(&factsStore{operation: tc.operation}, "u", "d/ledger", "d")
+			s, e := New(&factsStore{operation: tc.operation}, "u", "d/ledger", "d")
+			if e != nil {
+				t.Fatal(e)
+			}
 			var previous []*v1.Ref
 			if tc.previous {
 				previous = []*v1.Ref{ref}

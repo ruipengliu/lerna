@@ -109,7 +109,7 @@ func (s *Service) QueryTaskClosureSeal(ctx context.Context, c *v1.Caller, r *v1.
 	if e := s.checkHistory(c, r, "task-closure-seal", "lerna.v1.TaskClosureSeal"); e != nil {
 		return nil, e
 	}
-	v, e := s.store.(taskClosureSealStore).LoadTaskClosureSeal(ctx, r)
+	v, e := s.store.LoadTaskClosureSeal(ctx, r)
 	if e == nil && v != nil && !proto.Equal(v.Ref, r) {
 		return nil, command.Fail("INVALID_REFERENCE")
 	}
