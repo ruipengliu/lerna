@@ -25,7 +25,7 @@ func (s *Service) WithOperationProgress(r OperationProgressReceiver) *Service {
 	return s
 }
 func (s *Service) saveReconciliation(ctx context.Context, p *v1.Reconciliation) error {
-	if e := s.store.(reconciliationStore).SaveReconciliation(ctx, p); e != nil {
+	if e := s.store.SaveReconciliation(ctx, p); e != nil {
 		return e
 	}
 	if e := s.recordReconciliationTrace(ctx, p); e != nil {
@@ -46,7 +46,7 @@ func (s *Service) QueryOperationProgress(ctx context.Context, c *v1.Caller, id *
 	if e := command.CheckName(c, id, s.user, s.domain, "operation"); e != nil {
 		return nil, e
 	}
-	return s.store.(progressStore).OperationProgressHandoffs(ctx, id)
+	return s.store.OperationProgressHandoffs(ctx, id)
 }
 func (s *Service) QueryOperationProgressNotice(ctx context.Context, c *v1.Caller, r *v1.Ref) (*v1.OperationProgressNotice, error) {
 	if r == nil || r.Revision != 1 || r.SchemaId != "lerna.v1.OperationProgressNotice" {
@@ -55,7 +55,7 @@ func (s *Service) QueryOperationProgressNotice(ctx context.Context, c *v1.Caller
 	if e := command.CheckName(c, r.Name, s.user, s.domain, "operation-progress"); e != nil {
 		return nil, e
 	}
-	h, e := s.store.(progressStore).LoadOperationProgressHandoff(ctx, r)
+	h, e := s.store.LoadOperationProgressHandoff(ctx, r)
 	if e != nil || h == nil {
 		return nil, e
 	}
@@ -71,7 +71,7 @@ func (s *Service) ProcessOperationProgress(ctx context.Context, c *v1.Caller) er
 	if s.progressReceiver == nil {
 		return command.Fail("DEPENDENCY_UNAVAILABLE")
 	}
-	all, e := s.store.(progressStore).OperationProgressHandoffs(ctx, nil)
+	all, e := s.store.OperationProgressHandoffs(ctx, nil)
 	if e != nil {
 		return e
 	}
@@ -105,7 +105,7 @@ func (s *Service) ProcessOperationProgress(ctx context.Context, c *v1.Caller) er
 		}
 		ack := reconcileHeader(s.user, actor.IssuerId, s.domain, "progress-ack:"+h.Notice.Ref.Name.LocalId)
 		saved, e := s.work.Execute(ctx, actor, ack, command.SemanticFingerprint("operation-progress-ack", h.Notice.Ref, r), "ledger.progress_ack", func(tx context.Context) (*v1.Ref, error) {
-			fresh, e := s.store.(progressStore).LoadOperationProgressHandoff(tx, h.Notice.Ref)
+			fresh, e := s.store.LoadOperationProgressHandoff(tx, h.Notice.Ref)
 			if e != nil {
 				return nil, e
 			}

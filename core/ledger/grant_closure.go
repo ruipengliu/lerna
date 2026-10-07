@@ -107,14 +107,14 @@ func (s *Service) CloseForGrantRevocation(ctx context.Context, caller *v1.Caller
 		if e = s.saveOperation(tx, op); e != nil {
 			return nil, e
 		}
-		return closure.Ref, s.store.(grantClosureStore).SaveGrantExitClosure(tx, closure)
+		return closure.Ref, s.store.SaveGrantExitClosure(tx, closure)
 	})
 }
 func (s *Service) QueryGrantExitClosure(ctx context.Context, caller *v1.Caller, r *v1.Ref) (*v1.GrantExitClosure, error) {
 	if e := s.checkHistory(caller, r, "grant-exit-closure", "lerna.v1.GrantExitClosure"); e != nil {
 		return nil, e
 	}
-	v, e := s.store.(grantClosureStore).LoadGrantExitClosure(ctx, r)
+	v, e := s.store.LoadGrantExitClosure(ctx, r)
 	if v != nil && !proto.Equal(v.Ref, r) {
 		return nil, command.Fail("INVALID_REFERENCE")
 	}

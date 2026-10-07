@@ -29,6 +29,7 @@ func TestSafeResendKeepsAttemptAndReservesEachPhysicalSend(t *testing.T) {
 	target := simulator.New("idempotent")
 	target.SetBehavior("drop-after-apply")
 	f := newFixtureWithTarget(t, 100, 80, false, target)
+	f.h.Ledger.WithWork(declaredExecutionWork{ExecutionWork: f.h.LedgerWork})
 	cap, err := f.h.Tasks.QueryCapability(f.ctx, f.caller, f.capability)
 	if err != nil {
 		t.Fatal(err)

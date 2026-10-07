@@ -80,7 +80,10 @@ func captureNativeAPIBoundary(t *testing.T, samples *[]protobuf.Sample, category
 	if e != nil {
 		t.Fatal(e)
 	}
-	gateway := egress.New(f.h.Tasks, f.h.Ledger, f.h.Content, native, lock)
+	gateway, err := egress.New(f.h.Tasks, f.h.Ledger, f.h.Content, native, lock)
+	if err != nil {
+		t.Fatal(err)
+	}
 	a, start := prepareStart(t, f)
 	actor := &v1.Caller{UserId: "u", IssuerId: "egress"}
 	receipt, e := gateway.Invoke(f.ctx, actor, start)

@@ -22,7 +22,7 @@ func (s *Service) projectPhysicalEvidence(ctx context.Context, op *v1.Operation,
 			allTerminal = false
 			continue
 		}
-		fact, e := s.store.(interpretationStore).LoadInterpretation(ctx, interpretationRef(send.ObservationRef))
+		fact, e := s.store.LoadInterpretation(ctx, interpretationRef(send.ObservationRef))
 		if e != nil {
 			return e
 		}

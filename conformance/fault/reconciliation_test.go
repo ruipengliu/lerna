@@ -16,6 +16,7 @@ import (
 	"github.com/ruipengliu/lerna/conformance/simulator"
 	v1 "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1"
 	"github.com/ruipengliu/lerna/core/durable"
+	"github.com/ruipengliu/lerna/core/ledger"
 	"github.com/ruipengliu/lerna/infra/sqlite"
 	"google.golang.org/protobuf/proto"
 )
@@ -303,6 +304,8 @@ func TestReconciliationCrashChild(t *testing.T) {
 
 // shortQueryLeases 请求较短但真实经过单调领取检查的租约，减少崩溃接替测试的空等。
 type shortQueryLeases struct{ *durable.Service }
+
+var _ ledger.ExecutionWork = (*shortQueryLeases)(nil)
 
 func (w *shortQueryLeases) ExecuteJob(ctx context.Context, c *v1.Caller, j *v1.JobCommand) (*v1.CommandReceipt, error) {
 	if j.Action == "CLAIM" {

@@ -6,10 +6,26 @@ import (
 
 	"github.com/ruipengliu/lerna/contracts/command"
 	v1 "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1"
+	"github.com/ruipengliu/lerna/core/durable"
 	"google.golang.org/protobuf/proto"
 )
 
+// Store 声明执行管理全部命令、查询与恢复需要的持久能力。
 type Store interface {
+	progressStore
+	cancellationSealStore
+	completionSealStore
+	historyStore
+	interpretationStore
+	executionFollowupStore
+	taskClosureSealStore
+	reportStore
+	observationStore
+	grantClosureStore
+	recoveryOperations
+	metricFacts
+	reconciliationStore
+	CheckRecoveryAllowed(context.Context) error
 	TraceSource
 	LedgerTransaction(context.Context, func(context.Context) error) error
 	LedgerPosition(context.Context) (uint64, int64, error)
@@ -41,8 +57,11 @@ type Service struct {
 	grantClosures              GrantClosures
 }
 
-func New(s Store, user, domain, sourceDomain string) *Service {
-	return &Service{store: s, user: user, domain: domain, sourceDomain: sourceDomain}
+func New(s Store, user, domain, sourceDomain string) (*Service, error) {
+	if err := durable.RequireDependencies("ledger", durable.Dependency{Name: "store", Value: s}); err != nil {
+		return nil, err
+	}
+	return &Service{store: s, user: user, domain: domain, sourceDomain: sourceDomain}, nil
 }
 func (s *Service) Accept(ctx context.Context, caller *v1.Caller, c *v1.AcceptOperationCommand) (*v1.CommandReceipt, error) {
 	if e := command.ValidateHeader(c.GetHeader(), c); e != nil {
@@ -98,7 +117,7 @@ func (s *Service) Accept(ctx context.Context, caller *v1.Caller, c *v1.AcceptOpe
 			op.QuerySubject = a.QuerySubject
 		}
 		job := &v1.Job{Ref: command.NewRef(s.user, s.domain, "job", "lerna.v1.Job"), Module: "ledger", JobType: "EXECUTE_OPERATION", ContractVersion: 1, Responsibility: c.Header.Identity, State: "READY", PurposeKey: "execute:" + a.OperationId.LocalId, SpecificationRef: op.Ref, ExecutorEndpointId: a.ExecutorEndpointId, LedgerDomainId: s.domain}
-		seal, e := s.store.(completionSealStore).CompletionSealForOperation(tx, a.OperationId)
+		seal, e := s.store.CompletionSealForOperation(tx, a.OperationId)
 		if e != nil {
 			return e
 		}
@@ -110,7 +129,7 @@ func (s *Service) Accept(ctx context.Context, caller *v1.Caller, c *v1.AcceptOpe
 			applyCompletionNoSend(op)
 			job.State = "COMPLETED"
 		}
-		cancellationSeal, e := s.store.(cancellationSealStore).CancellationSealForOperation(tx, a.OperationId)
+		cancellationSeal, e := s.store.CancellationSealForOperation(tx, a.OperationId)
 		if e != nil {
 			return e
 		}
@@ -122,7 +141,7 @@ func (s *Service) Accept(ctx context.Context, caller *v1.Caller, c *v1.AcceptOpe
 			applyCompletionNoSend(op)
 			job.State = "COMPLETED"
 		}
-		taskSeal, e := s.store.(taskClosureSealStore).TaskClosureSealForOperation(tx, a.OperationId)
+		taskSeal, e := s.store.TaskClosureSealForOperation(tx, a.OperationId)
 		if e != nil {
 			return e
 		}

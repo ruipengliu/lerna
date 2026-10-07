@@ -95,7 +95,12 @@ func OpenWithOptions(path, user, domain string, options Options) (*Harness, erro
 	t.WithConfirmationRequests(h.Sessions, c).WithModelContent(c).WithReasonerQuestions(h.Sessions).WithConditionConfirmations(h.Sessions)
 	h.Budget = budget.New(s, d, user, domain, "host")
 	h.LedgerWork = durable.New(s.LedgerWork(), user, domain+"/ledger")
-	h.Ledger = ledger.New(s, user, domain+"/ledger", domain).WithWork(h.LedgerWork).WithCompiler(executionCompiler{api: api.Adapter{Content: c}}).WithStarts(t).WithEvidenceRules(rules.API{})
+	h.Ledger, err = ledger.New(s, user, domain+"/ledger", domain)
+	if err != nil {
+		s.Close()
+		return nil, err
+	}
+	h.Ledger.WithWork(h.LedgerWork).WithCompiler(executionCompiler{api: api.Adapter{Content: c}}).WithStarts(t).WithEvidenceRules(rules.API{})
 	c.WithObservations(h.Ledger)
 	h.Ledger.WithObservations(c)
 	h.Budget.WithUsageSource(h.Ledger).WithBillingEvidence(c).WithCompletionAuthority(t).WithCancellationAuthority(t).WithTaskClosingAuthority(t)
@@ -112,7 +117,11 @@ func OpenWithOptions(path, user, domain string, options Options) (*Harness, erro
 		s.Close()
 		return nil, e
 	}
-	h.Egress = egress.New(t, h.Ledger, c, physicalIO{files: egressio.NewFiles(options.FileRoots, h.Ledger, c), network: egressio.Router{API: apiIO}}, critical)
+	h.Egress, err = egress.New(t, h.Ledger, c, physicalIO{files: egressio.NewFiles(options.FileRoots, h.Ledger, c), network: egressio.Router{API: apiIO}}, critical)
+	if err != nil {
+		s.Close()
+		return nil, err
+	}
 	t.WithModelExecution(h.Ledger, h.LedgerWork, h.Grants, h.Egress)
 	t.WithReasonerDriver(h.Durable, defaultReasoner)
 	h.Ledger.WithGrantClosures(h.Grants)
@@ -127,6 +136,14 @@ func OpenWithOptions(path, user, domain string, options Options) (*Harness, erro
 	t.WithClosureSource(h.Ledger).WithOperationProgress(h.Ledger)
 	h.Ledger.WithOperationProgress(t)
 	t.WithAdmission(h.Grants, h.Budget, c, h.Sessions, d, h.Ledger).WithHandoffs(d, h.Ledger)
+	if err := h.Egress.ValidateDependencies(); err != nil {
+		s.Close()
+		return nil, err
+	}
+	if err := h.Ledger.ValidateDependencies(); err != nil {
+		s.Close()
+		return nil, err
+	}
 	if err := c.ValidateDependencies(); err != nil {
 		s.Close()
 		return nil, err
@@ -264,3 +281,16 @@ func (p physicalIO) Perform(ctx context.Context, r *v1.PhysicalIORequest) (*v1.P
 func (p physicalIO) PerformChecked(ctx context.Context, r *v1.PhysicalIORequest, check func(context.Context) error) (*v1.PhysicalIOResult, error) {
 	return p.files.PerformChecked(ctx, r, check)
 }
+
+// 固定生产装配按消费模块的完整接口编译验证。
+var _ ledger.Store = (*sqlite.Store)(nil)
+var _ ledger.ExecutionWork = (*durable.Service)(nil)
+var _ ledger.Compiler = executionCompiler{}
+
+var _ egress.Starts = (*tasks.Service)(nil)
+var _ egress.Ledger = (*ledger.Service)(nil)
+var _ egress.Content = (*content.Service)(nil)
+var _ egress.IO = physicalIO{}
+var _ egress.PreflightIO = physicalIO{}
+var _ egress.CheckedIO = physicalIO{}
+var _ durable.Store = (*sqlite.LedgerWork)(nil)

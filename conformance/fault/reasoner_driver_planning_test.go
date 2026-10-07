@@ -184,7 +184,11 @@ func runDriverPlanningBoundary(t *testing.T, window string, mode sqlite.FaultMod
 		if err != nil {
 			t.Fatal(err)
 		}
-		originalAction, err = ledger.New(store, "u", "d/ledger", "d").QueryOperation(ctx, caller, admitted.OperationId)
+		executionOwner, err := ledger.New(store, "u", "d/ledger", "d")
+		if err != nil {
+			t.Fatal(err)
+		}
+		originalAction, err = executionOwner.QueryOperation(ctx, caller, admitted.OperationId)
 		if err != nil || originalAction == nil || originalAction.Lifecycle != "SETTLED" || originalAction.Dispatch != "SEALED" || originalAction.Effect.Outcome != "APPLIED" {
 			t.Fatalf("fault preceded actual target completion: %v %v", originalAction, err)
 		}

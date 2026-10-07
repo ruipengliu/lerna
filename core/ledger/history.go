@@ -26,7 +26,7 @@ func (s *Service) QueryAttempt(ctx context.Context, c *v1.Caller, r *v1.Ref) (*v
 	if e := s.checkHistory(c, r, "attempt", "lerna.v1.ExecutionAttempt"); e != nil {
 		return nil, e
 	}
-	v, e := s.store.(historyStore).LoadAttemptVersion(ctx, r)
+	v, e := s.store.LoadAttemptVersion(ctx, r)
 	if v != nil && !proto.Equal(v.Ref, r) {
 		return nil, command.Fail("INVALID_REFERENCE")
 	}
@@ -36,7 +36,7 @@ func (s *Service) QuerySend(ctx context.Context, c *v1.Caller, r *v1.Ref) (*v1.P
 	if e := s.checkHistory(c, r, "send", "lerna.v1.PhysicalSend"); e != nil {
 		return nil, e
 	}
-	v, e := s.store.(historyStore).LoadSendVersion(ctx, r)
+	v, e := s.store.LoadSendVersion(ctx, r)
 	if v != nil && !proto.Equal(v.Ref, r) {
 		return nil, command.Fail("INVALID_REFERENCE")
 	}
@@ -46,7 +46,7 @@ func (s *Service) QueryEffect(ctx context.Context, c *v1.Caller, r *v1.Ref) (*v1
 	if e := s.checkHistory(c, r, "effect", "lerna.v1.Effect"); e != nil {
 		return nil, e
 	}
-	v, e := s.store.(historyStore).LoadEffectVersion(ctx, r)
+	v, e := s.store.LoadEffectVersion(ctx, r)
 	if v != nil && !proto.Equal(v.Ref, r) {
 		return nil, command.Fail("INVALID_REFERENCE")
 	}
@@ -56,7 +56,7 @@ func (s *Service) QueryOperationVersion(ctx context.Context, c *v1.Caller, r *v1
 	if e := s.checkHistory(c, r, "operation", "lerna.v1.Operation"); e != nil {
 		return nil, e
 	}
-	v, e := s.store.(historyStore).LoadOperationVersion(ctx, r)
+	v, e := s.store.LoadOperationVersion(ctx, r)
 	if v != nil && !proto.Equal(v.Ref, r) {
 		return nil, command.Fail("INVALID_REFERENCE")
 	}
