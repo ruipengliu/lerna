@@ -14,17 +14,12 @@ type ConfirmationStore interface {
 	LoadConfirmation(context.Context, *v1.Ref) (*v1.Confirmation, error)
 	LoadCurrentConfirmation(context.Context, *v1.GlobalName) (*v1.Confirmation, error)
 }
-type ConfirmationDecisions interface {
-	Execute(context.Context, *v1.Caller, *v1.CommandHeader, string, string, func(context.Context) (*v1.Ref, error)) (*v1.CommandReceipt, error)
-}
 type ConfirmationFacts interface {
 	ReadConfirmationDescription(context.Context, *v1.Caller, *v1.Confirmation) (string, error)
 	CheckConfirmationMatter(context.Context, *v1.Confirmation) error
 }
 
-func (s *Service) WithConfirmations(store ConfirmationStore, d ConfirmationDecisions, t, g ConfirmationFacts) *Service {
-	s.confirmationStore = store
-	s.confirmationDecisions = d
+func (s *Service) WithConfirmations(t, g ConfirmationFacts) *Service {
 	s.operationFacts = t
 	s.grantFacts = g
 	return s
@@ -103,7 +98,7 @@ func (s *Service) QueryConfirmation(ctx context.Context, caller *v1.Caller, r *v
 	if e := command.CheckName(caller, r.Name, s.user, s.domain, "confirmation"); e != nil {
 		return nil, e
 	}
-	c, e := s.confirmationStore.LoadConfirmation(ctx, r)
+	c, e := s.store.LoadConfirmation(ctx, r)
 	if e == nil && c != nil && !proto.Equal(c.Ref, r) {
 		return nil, command.Fail("STALE_REFERENCE")
 	}
@@ -113,13 +108,13 @@ func (s *Service) QueryCurrentConfirmation(ctx context.Context, caller *v1.Calle
 	if e := command.CheckName(caller, n, s.user, s.domain, "confirmation"); e != nil {
 		return nil, e
 	}
-	return s.confirmationStore.LoadCurrentConfirmation(ctx, n)
+	return s.store.LoadCurrentConfirmation(ctx, n)
 }
 func (s *Service) RespondConfirmation(ctx context.Context, caller *v1.Caller, c *v1.RespondConfirmationCommand) (*v1.CommandReceipt, error) {
 	if e := command.ValidateHeader(c.GetHeader(), c); e != nil {
 		return nil, e
 	}
-	return s.confirmationDecisions.Execute(ctx, caller, c.Header, command.SemanticFingerprint("respond-confirmation", c.ConfirmationRef, c.BindingDigest, c.Decision), "sessions.confirmation", func(tx context.Context) (*v1.Ref, error) {
+	return s.durable.Execute(ctx, caller, c.Header, command.SemanticFingerprint("respond-confirmation", c.ConfirmationRef, c.BindingDigest, c.Decision), "sessions.confirmation", func(tx context.Context) (*v1.Ref, error) {
 		if caller.IssuerId != "host" && caller.IssuerId != "local-cli" {
 			return nil, command.Fail("PERMISSION_DENIED")
 		}
@@ -178,7 +173,7 @@ func (s *Service) RespondConfirmation(ctx context.Context, caller *v1.Caller, c 
 func (s *Service) CheckAdmissionConfirmation(ctx context.Context, r *v1.Ref, a *v1.Admission, required bool) error {
 	actor := &v1.Caller{UserId: s.user, IssuerId: "host"}
 	h := &v1.CommandHeader{Identity: &v1.CommandIdentity{UserId: s.user, IssuerId: actor.IssuerId, TargetDomainId: s.domain, CommandId: "check-closure-confirmation:" + command.NewRef(s.user, s.domain, "command", "command").Name.LocalId}, ContractVersion: 1, FingerprintVersion: 1, SchemaId: "lerna.v1.AdmissionCommands"}
-	receipt, e := s.confirmationDecisions.Execute(ctx, actor, h, command.SemanticFingerprint("check-admission-confirmation", r, command.OperationMatter(a), required), "sessions.confirmation", func(tx context.Context) (*v1.Ref, error) {
+	receipt, e := s.durable.Execute(ctx, actor, h, command.SemanticFingerprint("check-admission-confirmation", r, command.OperationMatter(a), required), "sessions.confirmation", func(tx context.Context) (*v1.Ref, error) {
 		_, e := s.admissionConfirmation(tx, r, a, required)
 		if e != nil {
 			return nil, e
@@ -261,7 +256,7 @@ func (s *Service) WithdrawConfirmation(ctx context.Context, caller *v1.Caller, c
 	if e := command.ValidateHeader(c.GetHeader(), c); e != nil {
 		return nil, e
 	}
-	return s.confirmationDecisions.Execute(ctx, caller, c.Header, command.SemanticFingerprint("withdraw-confirmation", c.ConfirmationRef), "sessions.confirmation", func(tx context.Context) (*v1.Ref, error) {
+	return s.durable.Execute(ctx, caller, c.Header, command.SemanticFingerprint("withdraw-confirmation", c.ConfirmationRef), "sessions.confirmation", func(tx context.Context) (*v1.Ref, error) {
 		if caller.IssuerId != "host" && caller.IssuerId != "local-cli" {
 			return nil, command.Fail("PERMISSION_DENIED")
 		}
