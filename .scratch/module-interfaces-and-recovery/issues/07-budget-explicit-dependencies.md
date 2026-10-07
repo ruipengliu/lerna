@@ -4,7 +4,7 @@
 
 **Blocked by:** None (can start immediately).
 
-**Status:** ready-for-agent
+**Status:** claimed
 
 - [ ] Budget 全部 Store、Decisions、usage、billing、send、release、version 与 settlement-followup 能力显式声明，不在调用中发现必需能力。
 - [ ] 生产 SQLite 与测试 Adapter 通过消费方编译验证；必需配置与循环链接缺项明确拒绝。
@@ -12,3 +12,7 @@
 - [ ] 未发送预留只按准确不可变封闭证明释放；P5 来源仍按独立费用终结证据结算并释放未用预留。
 - [ ] 取消、任务关闭或效果结论不清除费用；超上界、缺口和限额失效行为保持。
 - [ ] 按 ADR 0005 更新对应设计，原结算与释放普通及故障场景通过。
+
+## Comments
+
+2026-10-07: Claimed for implementation on codex/interfaces-07.
