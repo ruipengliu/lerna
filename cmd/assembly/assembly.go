@@ -80,7 +80,13 @@ func OpenWithOptions(path, user, domain string, options Options) (*Harness, erro
 	}
 	d := durable.New(s, user, domain)
 	t := tasks.New(s, user, domain).WithDecisions(d).WithCancellationJobs(d)
-	c := content.New(s, user, domain+"/content").WithAssociations(t)
+	contentWork := durable.New(s.ContentWork(), user, domain+"/content")
+	c, err := content.New(s, contentWork, user, domain+"/content")
+	if err != nil {
+		s.Close()
+		return nil, err
+	}
+	c.WithAssociations(t)
 	h := &Harness{Bodies: s.BodyReceipts(), Sessions: sessions.New(s, d, t, c, user, domain), Tasks: t, Durable: d, Content: c, store: s, user: user, domain: domain, path: path}
 	h.Grants = grants.New(s, d, user, domain, "host").WithAdmissions(t)
 	h.Grants.WithConfirmations(h.Sessions).WithConfirmationContent(c)
@@ -94,7 +100,7 @@ func OpenWithOptions(path, user, domain string, options Options) (*Harness, erro
 		return nil, err
 	}
 	h.Ledger.WithWork(h.LedgerWork).WithCompiler(executionCompiler{api: api.Adapter{Content: c}}).WithStarts(t)
-	c.WithObservations(durable.New(s.ContentWork(), user, domain+"/content"), h.Ledger)
+	c.WithObservations(h.Ledger)
 	h.Ledger.WithObservations(c)
 	h.Budget.WithUsageSource(h.Ledger).WithBillingEvidence(c).WithCompletionAuthority(t).WithCancellationAuthority(t).WithTaskClosingAuthority(t)
 	h.Trace = trace.New(s, durable.New(s.TraceWork(), user, domain+"/trace"), h.Ledger, user, domain+"/trace")
@@ -130,6 +136,10 @@ func OpenWithOptions(path, user, domain string, options Options) (*Harness, erro
 		return nil, err
 	}
 	if err := h.Ledger.ValidateDependencies(); err != nil {
+		s.Close()
+		return nil, err
+	}
+	if err := c.ValidateDependencies(); err != nil {
 		s.Close()
 		return nil, err
 	}

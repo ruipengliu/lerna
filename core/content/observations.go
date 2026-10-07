@@ -25,8 +25,7 @@ type observationStore interface {
 	PendingObservations(context.Context) ([]*v1.ObservationHandoff, error)
 }
 
-func (s *Service) WithObservations(w ObservationWork, l ObservationLedger) *Service {
-	s.work = w
+func (s *Service) WithObservations(l ObservationLedger) *Service {
 	s.ledger = l
 	return s
 }
@@ -68,7 +67,7 @@ func (s *Service) RegisterObservation(ctx context.Context, caller *v1.Caller, c 
 		body.ContentId = body.Ref.Name.LocalId
 		o.BodyRef = body.Ref
 		h := &v1.ObservationHandoff{Observation: o, Command: &v1.AcceptObservationCommand{Header: observationHeader(s.user, "content-observation", o.OperationId.AuthorityDomainId, "observe:"+o.Ref.Name.LocalId), Observation: o}}
-		store := s.store.(observationStore)
+		store := s.store
 		if e = s.prepareRegistration(tx, body, c.Body, c.Header.Identity); e != nil {
 			return nil, e
 		}
@@ -82,7 +81,7 @@ func (s *Service) QueryObservation(ctx context.Context, caller *v1.Caller, r *v1
 	if r == nil || r.Name == nil || r.Name.UserId != s.user || caller.GetUserId() != s.user || r.Name.ObjectKind != "observation" || r.Revision != 1 || r.SchemaId != "lerna.v1.RawObservation" {
 		return nil, command.Fail("INVALID_REFERENCE")
 	}
-	h, e := s.store.(observationStore).LoadObservationHandoff(ctx, r)
+	h, e := s.store.LoadObservationHandoff(ctx, r)
 	if e != nil || h == nil {
 		return nil, e
 	}
@@ -100,7 +99,7 @@ func (s *Service) ProcessObservations(ctx context.Context, caller *v1.Caller) er
 	if e := s.ProcessRegistrations(ctx, caller); e != nil {
 		return e
 	}
-	all, e := s.store.(observationStore).PendingObservations(ctx)
+	all, e := s.store.PendingObservations(ctx)
 	if e != nil {
 		return e
 	}
@@ -134,7 +133,7 @@ func (s *Service) ProcessObservations(ctx context.Context, caller *v1.Caller) er
 			if e := s.acceptFileResourceCleanup(tx, actor, h.Observation, ack.Identity); e != nil {
 				return nil, e
 			}
-			return h.Observation.Ref, s.store.(observationStore).SaveObservationHandoff(tx, h)
+			return h.Observation.Ref, s.store.SaveObservationHandoff(tx, h)
 		})
 		if e != nil {
 			return e
