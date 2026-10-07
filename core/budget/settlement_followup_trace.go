@@ -7,7 +7,7 @@ import (
 )
 
 func (s *Service) saveSettlementFollowup(ctx context.Context, f *v1.SettlementFollowup) error {
-	if e := s.store.(settlementFollowupStore).SaveSettlementFollowup(ctx, f); e != nil {
+	if e := s.store.SaveSettlementFollowup(ctx, f); e != nil {
 		return e
 	}
 	refs := append([]*v1.Ref{f.TaskClosingRef, f.AdmissionRef, f.JobRef}, f.ReservationRefs...)
@@ -16,7 +16,7 @@ func (s *Service) saveSettlementFollowup(ctx context.Context, f *v1.SettlementFo
 }
 
 func (s *Service) saveSettlementFollowupJob(ctx context.Context, f *v1.SettlementFollowup, job *v1.Job) error {
-	if e := s.store.(settlementFollowupStore).SaveJob(ctx, job); e != nil {
+	if e := s.store.SaveJob(ctx, job); e != nil {
 		return e
 	}
 	refs := append([]*v1.Ref{f.Ref, f.TaskClosingRef, f.AdmissionRef, job.SpecificationRef}, f.ReservationRefs...)

@@ -10,7 +10,6 @@ import (
 
 type BillingExecution interface {
 	QuerySendExecution(context.Context, *v1.Caller, *v1.GlobalName, *v1.Ref) (*v1.Execution, error)
-	QueryExecution(context.Context, *v1.Caller, *v1.GlobalName) (*v1.Execution, error)
 	QuerySend(context.Context, *v1.Caller, *v1.Ref) (*v1.PhysicalSend, error)
 }
 
@@ -33,7 +32,7 @@ func (s *Service) ImportBill(ctx context.Context, caller *v1.Caller, c *v1.Impor
 		if source == nil {
 			return nil, command.Fail("NOT_FOUND")
 		}
-		execution := s.usageSource.(BillingExecution)
+		execution := s.usageSource
 		send, e := execution.QuerySend(tx, caller, c.SendRef)
 		if e != nil {
 			return nil, e
@@ -72,7 +71,7 @@ func (s *Service) ImportBill(ctx context.Context, caller *v1.Caller, c *v1.Impor
 		if e = s.applyBill(tx, source, bill, c.EvidenceRef); e != nil {
 			return nil, e
 		}
-		current, e := s.store.(billingStore).LoadBillingSource(tx, c.SendRef)
+		current, e := s.store.LoadBillingSource(tx, c.SendRef)
 		if e != nil {
 			return nil, e
 		}
