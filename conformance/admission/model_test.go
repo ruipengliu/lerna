@@ -12,6 +12,8 @@ import (
 	"github.com/ruipengliu/lerna/contracts/command"
 
 	v1 "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1"
+	"github.com/ruipengliu/lerna/core/ledger"
+	"github.com/ruipengliu/lerna/infra/rules"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -631,5 +633,34 @@ func TestModelTakeoverBeforeSendContinuesOriginalAdmission(t *testing.T) {
 	original, e := f.h.Tasks.QueryModelCall(f.ctx, f.caller, call.RequestRef, call.Position)
 	if e != nil || !proto.Equal(original.AdmissionRef, admitted.ResultRef) {
 		t.Fatalf("replaced admission: %v %v", original, e)
+	}
+}
+
+// 规则：G1、G3、G11、R6
+func TestCompletedModelHistoryNeedsConfiguredTrustedRulesBeforeRecovery(t *testing.T) {
+	provider := simulator.NewModelProvider()
+	f := modelFixtureTarget(t, provider)
+	run := modelRunCommand(t, f, 30000)
+	result, e := f.h.Tasks.RunModelCall(f.ctx, f.caller, run)
+	if e != nil || result.GetStatus() != "COMPLETED" {
+		t.Fatalf("original model result: %v %v", result, e)
+	}
+	before, e := f.h.Ledger.QueryOperation(f.ctx, f.caller, result.OperationId)
+	if e != nil {
+		t.Fatal(e)
+	}
+	for _, missing := range []ledger.EvidenceRules{nil, (*rules.Fixed)(nil)} {
+		f.h.Ledger.WithEvidenceRules(missing)
+		if e = f.h.Ledger.CheckStartupCompatibility(f.ctx); e == nil || e.Error() != "missing required dependency: ledger.rules" {
+			t.Fatalf("missing original model rules: %v", e)
+		}
+		after, e := f.h.Ledger.QueryOperation(f.ctx, f.caller, result.OperationId)
+		if e != nil || !proto.Equal(before, after) || provider.Calls() != 1 || len(provider.Bills()) != 1 {
+			t.Fatal("rule configuration failure advanced original model responsibility")
+		}
+	}
+	f.h.Ledger.WithEvidenceRules(rules.Fixed{})
+	if e = f.h.Ledger.CheckStartupCompatibility(f.ctx); e != nil {
+		t.Fatalf("supported original model rules: %v", e)
 	}
 }

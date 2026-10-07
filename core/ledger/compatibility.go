@@ -23,14 +23,11 @@ func (s *Service) CheckStartupCompatibility(ctx context.Context) error {
 		return e
 	}
 	for _, op := range all {
-		switch op.GetCapabilitySnapshot().GetAdapterRef().GetName().GetLocalId() {
-		case "api-reference-v1", "managed-file":
-			if e = durable.RequireDependencies("ledger", durable.Dependency{Name: "rules", Value: s.rules}); e != nil {
-				return e
-			}
-			if e = s.rules.CheckSupported(op); e != nil {
-				return e
-			}
+		if e = durable.RequireDependencies("ledger", durable.Dependency{Name: "rules", Value: s.rules}); e != nil {
+			return e
+		}
+		if e = s.rules.CheckSupported(op); e != nil {
+			return e
 		}
 		if e = s.adapter.CheckRecoverySupported(op); e != nil {
 			return e

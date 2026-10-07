@@ -46,7 +46,7 @@ func (API) Interpret(op *v1.Operation, raw *v1.RawObservation, body []byte) (*le
 		if response != nil && *response.ReadTerminal {
 			facts.Interpretation.Outcome, facts.Interpretation.LateEffect, facts.Interpretation.Reason = "APPLIED", "RULED_OUT", "TERMINAL_READ_RECEIPT"
 		}
-		facts.Query = queryEvidence(response, conflict)
+		facts.Query = queryEvidence(response, conflict, "reference-api-query-subject-v1")
 	}
 	return facts, nil
 }
