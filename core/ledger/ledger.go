@@ -126,7 +126,7 @@ func (s *Service) Accept(ctx context.Context, caller *v1.Caller, c *v1.AcceptOpe
 				return reject("INVALID_CLOSURE")
 			}
 			op.ClosureEvidenceRefs = append(op.ClosureEvidenceRefs, seal.Ref)
-			applyCompletionNoSend(op)
+			applyNoSendClosure(op)
 			job.State = "COMPLETED"
 		}
 		cancellationSeal, e := s.store.CancellationSealForOperation(tx, a.OperationId)
@@ -138,7 +138,7 @@ func (s *Service) Accept(ctx context.Context, caller *v1.Caller, c *v1.AcceptOpe
 				return reject("INVALID_CLOSURE")
 			}
 			op.ClosureEvidenceRefs = append(op.ClosureEvidenceRefs, cancellationSeal.Ref)
-			applyCompletionNoSend(op)
+			applyNoSendClosure(op)
 			job.State = "COMPLETED"
 		}
 		taskSeal, e := s.store.TaskClosureSealForOperation(tx, a.OperationId)
@@ -150,7 +150,7 @@ func (s *Service) Accept(ctx context.Context, caller *v1.Caller, c *v1.AcceptOpe
 				return reject("INVALID_CLOSURE")
 			}
 			op.ClosureEvidenceRefs = append(op.ClosureEvidenceRefs, taskSeal.Ref)
-			applyCompletionNoSend(op)
+			applyNoSendClosure(op)
 			job.State = "COMPLETED"
 		}
 		if e = s.saveOperation(tx, op); e != nil {
