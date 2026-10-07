@@ -6,8 +6,35 @@ import (
 
 	"github.com/ruipengliu/lerna/contracts/command"
 	v1 "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1"
+	"github.com/ruipengliu/lerna/core/ledger"
+	"github.com/ruipengliu/lerna/infra/rules"
 	"google.golang.org/protobuf/proto"
 )
+
+// 规则：G1、G3、G11、R6
+func TestAPIHistoryNeedsConfiguredTrustedRulesBeforeRecovery(t *testing.T) {
+	f := newFixture(t, 100, 80, false)
+	configureAPI(t, f)
+	a, _ := prepareStart(t, f)
+	before, e := f.h.Ledger.QueryOperation(f.ctx, f.caller, a.OperationId)
+	if e != nil {
+		t.Fatal(e)
+	}
+	for _, missing := range []ledger.EvidenceRules{nil, (*rules.API)(nil)} {
+		f.h.Ledger.WithEvidenceRules(missing)
+		if e = f.h.Ledger.CheckStartupCompatibility(f.ctx); e == nil || e.Error() != "missing required dependency: ledger.rules" {
+			t.Fatalf("missing original rules: %v", e)
+		}
+		after, e := f.h.Ledger.QueryOperation(f.ctx, f.caller, a.OperationId)
+		if e != nil || !proto.Equal(before, after) || f.calls.Load() != 0 {
+			t.Fatal("rule configuration failure advanced original responsibility")
+		}
+	}
+	f.h.Ledger.WithEvidenceRules(rules.API{})
+	if e = f.h.Ledger.CheckStartupCompatibility(f.ctx); e != nil {
+		t.Fatalf("supported original rules: %v", e)
+	}
+}
 
 func referenceAPIDescriptor(target string) *v1.ApiDescriptor {
 	d := &v1.ApiDescriptor{Provider: "lerna-reference", Environment: "synthetic", Version: "1", ProtocolVersion: "lerna-reference-api-v1", Serialization: "reference-json-v1", MediaType: "application/json", Authentication: "BEARER", Idempotent: true, Binding: &v1.ApiTargetBinding{UserId: "u", Origin: target, Resource: target, Account: "synthetic-account", CredentialRef: &v1.Ref{Name: &v1.GlobalName{UserId: "u", AuthorityDomainId: "platform-credentials", ObjectKind: "api-credential", LocalId: "synthetic-api"}, Revision: 1, SchemaId: "lerna.v1.ApiCredentialReference"}}}

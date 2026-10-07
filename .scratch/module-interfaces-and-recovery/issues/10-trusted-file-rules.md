@@ -4,7 +4,7 @@
 
 **Blocked by:** 09（API 执行与查询使用受信规则 Adapter）.
 
-**Status:** ready-for-agent
+**Status:** claimed
 
 - [ ] FILE 原动作及 QUERY 规则迁移到受信 Adapter，并删除对应旧规则调用路径。
 - [ ] 核心继续持有发布历史关联、效果投影与资源责任，固定规则身份和文件版本引用保持。
@@ -12,3 +12,7 @@
 - [ ] 屏障失败、读回失败及前驱证据负例保持各阶段原有 UNKNOWN、NOT_APPLIED 与迟到结论；失败不得声明持久成功，内容匹配或根绑定不替代发布证明。
 - [ ] 只读查询不重放旧发布、不覆盖后继文件、不改变固定 Result；零费用仍使用原费用证据。
 - [ ] 纯资格检查、历史兼容与独立文件事件计数不变，设计及相关普通与故障场景通过。
+
+## Comments
+
+2026-10-07: Claimed after ticket 09 resolved, on codex/interfaces-10.
