@@ -264,7 +264,7 @@ func closureOwnerWithStore(t *testing.T, f *fixture, store tasks.Store, work *du
 	if err != nil {
 		t.Fatal(err)
 	}
-	owner.WithDecisions(work).WithCancellationJobs(work)
+	owner.WithDecisions(work)
 	owner.WithConfirmationRequests(f.h.Sessions, f.h.Content).WithModelContent(f.h.Content).WithReasonerQuestions(f.h.Sessions).WithConditionConfirmations(f.h.Sessions)
 	owner.WithStart(f.h.Grants, f.h.Budget, f.h.Ledger).WithCompletion(f.h.Ledger, f.h.Budget)
 	owner.WithModelExecution(f.h.Ledger, f.h.LedgerWork, f.h.Grants, f.h.Egress)
