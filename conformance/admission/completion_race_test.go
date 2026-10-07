@@ -124,6 +124,88 @@ type receiptError struct{ code string }
 
 func (e *receiptError) Error() string { return e.code }
 
+// 规则：G1、G2、G4、G10、G11、R7、完成-6
+func TestCompletionOfNewestSendKeepsHistoricalEffectAndLateFee(t *testing.T) {
+	target := simulator.NewBillingTarget(25)
+	f := newFixtureWithTarget(t, 100, 80, false, target)
+	scopeRequirement(t, f)
+	configureResendLimit(t, f, 2)
+	a, first := prepareStart(t, f)
+	late := performWithoutObservation(t, f, a, first)
+	original, e := f.h.Ledger.QueryExecution(f.ctx, f.caller, a.OperationId)
+	if e != nil {
+		t.Fatal(e)
+	}
+	r, e := f.h.Ledger.PrepareResend(f.ctx, f.caller, &v1.PrepareResendCommand{Header: ledgerHeader("completion-newest-resend"), OperationId: a.OperationId, PreviousSendRef: original.Send.Ref, Claim: first.Claim})
+	accepted(t, r, e)
+	current, e := f.h.Ledger.QueryExecution(f.ctx, f.caller, a.OperationId)
+	if e != nil {
+		t.Fatal(e)
+	}
+	second := resendStart(t, f, a, first, current, first.Claim)
+	actor := &v1.Caller{UserId: "u", IssuerId: "egress"}
+	start, e := f.h.Tasks.StartExecution(f.ctx, actor, second)
+	accepted(t, start, e)
+	p := completeProposal(t, f, []*v1.CompletionEvidence{{ConditionId: "created", OperationId: a.OperationId}})
+	r, e = f.h.Tasks.BeginCompletion(f.ctx, f.caller, &v1.BeginCompletionCommand{Header: header("completion-newest-begin"), TaskId: f.task.Name, ProposalRef: p})
+	accepted(t, r, e)
+	if e = f.h.Tasks.ProcessCompletionClosures(f.ctx, f.caller); e != nil {
+		t.Fatal(e)
+	}
+	if e = f.h.Budget.ProcessClosures(f.ctx); e != nil {
+		t.Fatal(e)
+	}
+	op, e := f.h.Ledger.QueryOperation(f.ctx, f.caller, a.OperationId)
+	if e != nil || op.Dispatch != "SEALED" || op.Effect.Outcome != "UNKNOWN" || op.Effect.LateEffect != "MAY_OCCUR" || op.Execution.Send.Phase != "CLOSED" || op.Execution.Send.Ref.Revision != current.Send.Ref.Revision+1 || !proto.Equal(op.Execution.PreviousSends[0], original.Send) {
+		t.Fatalf("newest completion erased original possible send: %v %v", op, e)
+	}
+	seal, e := f.h.Ledger.QueryCompletionSeal(f.ctx, f.caller, op.ClosureEvidenceRefs[0])
+	if e != nil || seal.NoSendProven || !seal.PhysicalSendWasPossible || !proto.Equal(seal.OperationRef, op.Ref) || len(seal.ClosedSendRefs) != 1 || !proto.Equal(seal.ClosedSendRefs[0], op.Execution.Send.Ref) {
+		t.Fatalf("completion proof lost complete send history: %v %v", seal, e)
+	}
+	budget, e := f.h.Budget.QueryBudget(f.ctx, f.caller, a.TaskId)
+	if e != nil || budget.Reserved != 30 || budget.Settled != 0 {
+		t.Fatalf("completion released original possible fee: %v %v", budget, e)
+	}
+	source, e := f.h.Budget.QueryBillingSource(f.ctx, f.caller, original.Send.Ref)
+	if e != nil || source.Status != "PENDING" || source.Amount != nil {
+		t.Fatalf("completion lost original billing source: %v %v", source, e)
+	}
+	startReplay, e := f.h.Tasks.QueryStartReceipt(f.ctx, actor, second.Header.Identity)
+	if e != nil || !proto.Equal(startReplay.Receipt, start) {
+		t.Fatal("completion changed original P4 receipt", e)
+	}
+	reservations, e := f.h.Budget.QueryReservations(f.ctx, f.caller, a.TaskId)
+	if e != nil || len(reservations) != 2 || reservations[0].ConsumedSends != 1 || reservations[1].ConsumedSends != 1 {
+		t.Fatalf("completion refunded consumed uses: %v %v", reservations, e)
+	}
+	r, e = f.h.Egress.Invoke(f.ctx, actor, second)
+	if e == nil && r.Decision == v1.Decision_DECISION_ACCEPTED {
+		t.Fatal("sealed registered send dispatched")
+	}
+	result, e := f.h.Tasks.QueryResult(f.ctx, f.caller, a.TaskId)
+	if e != nil || result != nil {
+		t.Fatal("unknown completion fabricated final Result", e)
+	}
+	savePhysicalObservation(t, f, late)
+	op, e = f.h.Ledger.QueryOperation(f.ctx, f.caller, a.OperationId)
+	if e != nil || op.Dispatch != "SEALED" || op.Effect.Outcome != "APPLIED" || op.Execution.Send.Phase != "CLOSED" || op.Execution.PreviousSends[0].Phase != "OBSERVED" {
+		t.Fatalf("completion lost late original proof: %v %v", op, e)
+	}
+	budget, e = f.h.Budget.QueryBudget(f.ctx, f.caller, a.TaskId)
+	if e != nil || budget.Reserved != 0 || budget.Settled != 25 {
+		t.Fatalf("completion lost late original fee: %v %v", budget, e)
+	}
+	source, e = f.h.Budget.QueryBillingSource(f.ctx, f.caller, original.Send.Ref)
+	if e != nil || source.Status != "SETTLED" || source.Amount == nil || *source.Amount != 25 {
+		t.Fatalf("completion lost original settlement: %v %v", source, e)
+	}
+	requests, effects := target.Target.Snapshot()
+	if len(requests) != 1 || len(effects) != 1 || len(target.Bills()) != 1 {
+		t.Fatal("completion repeated original request/effect/bill")
+	}
+}
+
 // 规则：G2、G10、G11、R7、完成-7
 func TestLateSupersededClosureChangesLiveFactsButNeverFixedResult(t *testing.T) {
 	target := simulator.New("idempotent")
