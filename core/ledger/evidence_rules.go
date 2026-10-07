@@ -29,18 +29,16 @@ type QueryEvidence struct {
 func (s *Service) WithEvidenceRules(rules EvidenceRules) *Service { s.rules = rules; return s }
 
 func (s *Service) interpretEvidence(op *v1.Operation, raw *v1.RawObservation, body []byte) (*EvidenceFacts, error) {
-	if op.Execution.CallDescriptor.ApiDescriptor != nil {
+	protocol := op.Execution.Attempt.GetCapabilities().GetProtocolVersion()
+	if op.Execution.CallDescriptor.ApiDescriptor != nil || protocol == "lerna-managed-file-v1" {
 		if e := durable.RequireDependencies("ledger", durable.Dependency{Name: "rules", Value: s.rules}); e != nil {
 			return nil, e
 		}
 		return s.rules.Interpret(op, raw, body)
 	}
 	// 未迁移协议只保留原固定实现，不为其他协议或版本提供回退。
-	protocol := op.Execution.Attempt.GetCapabilities().GetProtocolVersion()
 	var finding *v1.EffectInterpretation
 	switch protocol {
-	case "lerna-managed-file-v1":
-		finding = interpretFile(raw, op)
 	case "lerna-simulator-v1":
 		finding = interpretSimulator(raw, body, op.Execution.Attempt)
 	case "lerna-simulator-query-v1":

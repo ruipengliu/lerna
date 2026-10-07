@@ -37,9 +37,6 @@ func parseQueryResponse(raw *v1.RawObservation, body []byte, op *v1.Operation) (
 	if raw == nil || op == nil || op.Execution == nil || op.QuerySubject == nil || op.Execution.Attempt.Capabilities == nil {
 		return nil, false
 	}
-	if raw.Protocol == "FILE" {
-		return parseFileQuery(raw, op), false
-	}
 	cap := op.Execution.Attempt.Capabilities
 	protocol, basis := "lerna-simulator-query-v1", "reference-query-v1"
 	if cap.ProtocolVersion != protocol || cap.VerificationBasis != basis || cap.Effect != "READ" || raw.Source != "TRUSTED_IO" || raw.Protocol != "HTTP" || raw.TransportError != "" || raw.Redacted || raw.StatusCode != 200 || !proto.Equal(raw.QuerySubject, op.QuerySubject) {
@@ -128,7 +125,7 @@ func validQueryObject(body []byte) (bool, bool) {
 	return d.Decode(&extra) == io.EOF, false
 }
 
-// queryEvidence 保留未迁移 FILE 和模拟查询的固定原解释。
+// queryEvidence 保留未迁移模拟查询的固定原解释。
 func queryEvidence(raw *v1.RawObservation, body []byte, query *v1.Operation) *QueryEvidence {
 	response, conflict := parseQueryResponse(raw, body, query)
 	facts := &QueryEvidence{Rule: "reference-query-subject-v1", Outcome: "UNKNOWN", LateEffect: "MAY_OCCUR", Reason: "QUERY_RESULT_UNKNOWN", Conflict: conflict}
