@@ -31,13 +31,13 @@ func (s *Service) Index(ctx context.Context, caller *v1.Caller) error {
 	if err := command.CheckCaller(caller, s.user); err != nil {
 		return err
 	}
-	return s.store.(Sources).IndexTraceEvents(ctx)
+	return s.store.IndexTraceEvents(ctx)
 }
 func (s *Service) Collect(ctx context.Context, caller *v1.Caller) error {
 	if err := command.CheckCaller(caller, s.user); err != nil {
 		return err
 	}
-	sources := s.store.(Sources)
+	sources := s.store
 	all, err := sources.TraceSources(ctx)
 	if err != nil {
 		return err
@@ -93,7 +93,7 @@ func (s *Service) Query(ctx context.Context, caller *v1.Caller, q *v1.TraceQuery
 			return nil, err
 		}
 	}
-	sources := s.store.(Sources)
+	sources := s.store
 	heads, err := sources.TraceSourceHeads(ctx)
 	if err != nil {
 		return nil, err
@@ -213,5 +213,5 @@ func (s *Service) QuerySources(ctx context.Context, caller *v1.Caller) ([]*v1.Tr
 	if err := command.CheckCaller(caller, s.user); err != nil {
 		return nil, err
 	}
-	return s.store.(Sources).TraceSources(ctx)
+	return s.store.TraceSources(ctx)
 }

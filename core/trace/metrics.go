@@ -28,7 +28,7 @@ func (s *Service) QueryMetrics(ctx context.Context, caller *v1.Caller) (*v1.Trac
 	if e := command.CheckCaller(caller, s.user); e != nil {
 		return nil, e
 	}
-	facts, e := s.store.(metricFacts).TraceMetricFacts(ctx)
+	facts, e := s.store.TraceMetricFacts(ctx)
 	if e != nil {
 		return nil, e
 	}
