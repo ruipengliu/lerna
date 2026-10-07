@@ -29,7 +29,6 @@ type closureDelivery struct {
 	domain       string
 	fingerprint  string
 	resultSchema string
-	point        string
 	recipient    closureReceiptSource
 	completion   *v1.CompletionClosureIntent
 	cancellation *v1.CancellationClosureIntent
@@ -61,9 +60,19 @@ func (s *Service) processClosureClaim(ctx context.Context, j *v1.Job, kind closu
 	if r == nil || r.Decision != v1.Decision_DECISION_ACCEPTED || r.Phase != v1.ReceiptPhase_RECEIPT_PHASE_DECIDED || !proto.Equal(r.Identity, delivery.identity) || r.ResponsibleDomainId != delivery.domain || r.Fingerprint != delivery.fingerprint || r.ResultRef.GetSchemaId() != delivery.resultSchema {
 		return command.Fail("HANDOFF_RECEIPT_INVALID")
 	}
-	return s.store.Transaction(ctx, delivery.point, func(tx context.Context) error {
+	acknowledge := func(tx context.Context) error {
 		return s.acknowledgeClosureReceipt(tx, delivery, r)
-	})
+	}
+	switch delivery.kind {
+	case completionClosureDelivery:
+		return s.store.Transaction(ctx, "tasks.completion_receipt", acknowledge)
+	case cancellationClosureDelivery:
+		return s.store.Transaction(ctx, "tasks.cancellation_receipt", acknowledge)
+	case taskClosureDelivery:
+		return s.store.Transaction(ctx, "tasks.task_closure_receipt", acknowledge)
+	default:
+		return command.Fail("INVALID_JOB")
+	}
 }
 
 func (s *Service) readClosureDelivery(ctx context.Context, j *v1.Job, kind closureDeliveryKind) (*closureDelivery, error) {
@@ -87,7 +96,7 @@ func (s *Service) readClosureDelivery(ctx context.Context, j *v1.Job, kind closu
 		c := intent.Command
 		delivery.identity, delivery.domain = c.Header.Identity, c.OperationId.AuthorityDomainId
 		delivery.fingerprint = command.SemanticFingerprint("completion-seal", c)
-		delivery.resultSchema, delivery.point = "lerna.v1.CompletionSeal", "tasks.completion_receipt"
+		delivery.resultSchema = "lerna.v1.CompletionSeal"
 		delivery.recipient = s.completionCloser
 	case cancellationClosureDelivery:
 		current, e := s.cancellationJobs.ReadCancellationClosureClaim(ctx, j)
@@ -107,7 +116,7 @@ func (s *Service) readClosureDelivery(ctx context.Context, j *v1.Job, kind closu
 		c := intent.Command
 		delivery.identity, delivery.domain = c.Header.Identity, c.OperationId.AuthorityDomainId
 		delivery.fingerprint = command.SemanticFingerprint("cancellation-seal", c)
-		delivery.resultSchema, delivery.point = "lerna.v1.CancellationSeal", "tasks.cancellation_receipt"
+		delivery.resultSchema = "lerna.v1.CancellationSeal"
 		delivery.recipient = s.cancellationCloser
 	case taskClosureDelivery:
 		current, e := s.taskClosingJobs.ReadTaskClosureClaim(ctx, j)
@@ -127,7 +136,7 @@ func (s *Service) readClosureDelivery(ctx context.Context, j *v1.Job, kind closu
 		c := intent.Command
 		delivery.identity, delivery.domain = c.Header.Identity, c.OperationId.AuthorityDomainId
 		delivery.fingerprint = command.SemanticFingerprint("task-closure-seal", c)
-		delivery.resultSchema, delivery.point = "lerna.v1.TaskClosureSeal", "tasks.task_closure_receipt"
+		delivery.resultSchema = "lerna.v1.TaskClosureSeal"
 		delivery.recipient = s.taskCloser
 	default:
 		return nil, command.Fail("INVALID_JOB")
