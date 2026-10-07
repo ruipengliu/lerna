@@ -34,7 +34,7 @@ func (s *Service) WithCompletionClosures(j CompletionJobs, c CompletionCloser) *
 func (s *Service) addCompletionClosures(ctx context.Context, v *v1.Verification, refs []*v1.Ref, scopeRef *v1.Ref) error {
 	seen := map[string]bool{}
 	for _, ref := range v.ClosureIntentRefs {
-		intent, e := s.store.(completionIntentStore).LoadCompletionIntent(ctx, ref)
+		intent, e := s.store.LoadCompletionIntent(ctx, ref)
 		if e != nil {
 			return e
 		}
@@ -74,7 +74,7 @@ func (s *Service) QueryCompletionIntent(ctx context.Context, c *v1.Caller, r *v1
 	if e := command.CheckName(c, r.Name, s.user, s.domain, "completion-intent"); e != nil {
 		return nil, e
 	}
-	v, e := s.store.(completionIntentStore).LoadCompletionIntent(ctx, r)
+	v, e := s.store.LoadCompletionIntent(ctx, r)
 	if e == nil && v != nil && !proto.Equal(v.Ref, r) {
 		return nil, command.Fail("INVALID_REFERENCE")
 	}

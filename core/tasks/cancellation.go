@@ -58,7 +58,7 @@ func (s *Service) saveCancellation(ctx context.Context, t *v1.Task, p *v1.Planni
 		}
 		scope.ClosureIntentRefs = append(scope.ClosureIntentRefs, intent.Ref)
 	}
-	if e = s.store.(cancellationStore).SaveCancellation(ctx, scope); e != nil {
+	if e = s.store.SaveCancellation(ctx, scope); e != nil {
 		return e
 	}
 	refs := append([]*v1.Ref{}, scope.AdmissionRefs...)
@@ -70,7 +70,7 @@ func (s *Service) QueryCancellation(ctx context.Context, caller *v1.Caller, task
 	if e := command.CheckName(caller, task, s.user, s.domain, "task"); e != nil {
 		return nil, e
 	}
-	return s.store.(cancellationStore).LoadCancellation(ctx, task)
+	return s.store.LoadCancellation(ctx, task)
 }
 func (s *Service) QueryCancellationIntent(ctx context.Context, caller *v1.Caller, r *v1.Ref) (*v1.CancellationClosureIntent, error) {
 	if r == nil || r.Revision != 1 || r.SchemaId != "lerna.v1.CancellationClosureIntent" {
@@ -79,7 +79,7 @@ func (s *Service) QueryCancellationIntent(ctx context.Context, caller *v1.Caller
 	if e := command.CheckName(caller, r.Name, s.user, s.domain, "cancellation-intent"); e != nil {
 		return nil, e
 	}
-	v, e := s.store.(cancellationStore).LoadCancellationIntent(ctx, r)
+	v, e := s.store.LoadCancellationIntent(ctx, r)
 	if e == nil && v != nil && !proto.Equal(v.Ref, r) {
 		return nil, command.Fail("INVALID_REFERENCE")
 	}
@@ -196,7 +196,7 @@ func (s *Service) ProcessCancellations(ctx context.Context, c *v1.Caller) error 
 	if c.GetUserId() != s.user {
 		return command.Fail("PERMISSION_DENIED")
 	}
-	all, e := s.store.(cancellationStore).AllCancellations(ctx)
+	all, e := s.store.AllCancellations(ctx)
 	if e != nil {
 		return e
 	}

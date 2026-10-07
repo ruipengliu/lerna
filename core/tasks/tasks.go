@@ -6,9 +6,25 @@ import (
 
 	"github.com/ruipengliu/lerna/contracts/command"
 	v1 "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1"
+	"github.com/ruipengliu/lerna/core/durable"
 )
 
 type Store interface {
+	InputStore
+	modelStore
+	modelCallStore
+	outcomeStore
+	reasonerDriverStore
+	startStore
+	completionStore
+	completionIntentStore
+	cancellationStore
+	taskClosingStore
+	taskClosureIntentStore
+	progressStore
+	recoveryModelCalls
+	recoveryReasonerDrivers
+	LoadCapabilityVersion(context.Context, *v1.Ref) (*v1.Capability, error)
 	TraceSource
 	SaveRequirements(context.Context, *v1.Requirements) error
 	LoadRequirements(context.Context, *v1.Ref) (*v1.Requirements, error)
@@ -73,12 +89,14 @@ type Service struct {
 	user, domain           string
 }
 
-func New(s Store, user, domain string) *Service {
-	return &Service{store: s, user: user, domain: domain, admissionMetrics: admissionMetricState{instance: command.NewRef(user, domain, "metrics-process", "metrics-process").Name.LocalId}}
+func New(s Store, user, domain string) (*Service, error) {
+	if err := durable.RequireDependencies("tasks", durable.Dependency{Name: "store", Value: s}); err != nil {
+		return nil, err
+	}
+	return &Service{store: s, user: user, domain: domain, admissionMetrics: admissionMetricState{instance: command.NewRef(user, domain, "metrics-process", "metrics-process").Name.LocalId}}, nil
 }
 
-// CreateInTransaction 只能由受信裁决事务参与者调用。
-func (s *Service) CreateInTransaction(ctx context.Context, goal *v1.Ref) (*v1.Ref, error) {
+func (s *Service) createInTransaction(ctx context.Context, goal *v1.Ref) (*v1.Ref, error) {
 	ref := command.NewRef(s.user, s.domain, "task", "lerna.v1.Task")
 	task := &v1.Task{TaskId: ref.Name, Revision: 1, GoalRef: goal, OwnerDomainId: s.domain, RequirementsVersion: 1, InputVersion: 1, Lifecycle: v1.TaskLifecycle_TASK_LIFECYCLE_OPEN, Control: v1.TaskControl_TASK_CONTROL_ACTIVE, Progress: v1.TaskProgress_TASK_PROGRESS_WAITING, WaitingOn: []string{"REQUIREMENTS"}, RequirementsStatus: v1.RequirementsStatus_REQUIREMENTS_STATUS_DRAFT, ControlGeneration: 1, PlanningGeneration: 1}
 	if err := s.saveTask(ctx, task); err != nil {

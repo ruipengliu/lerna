@@ -23,7 +23,7 @@ func (s *Service) supersedeVerification(ctx context.Context, t *v1.Task, p *v1.P
 	if p.VerificationRef == nil {
 		return command.Fail("INVARIANT_VIOLATION")
 	}
-	v, e := s.store.(completionStore).LoadVerification(ctx, p.VerificationRef)
+	v, e := s.store.LoadVerification(ctx, p.VerificationRef)
 	if e != nil {
 		return e
 	}

@@ -36,7 +36,7 @@ func (s *Service) ProcessInput(ctx context.Context, caller *v1.Caller, c *v1.Pro
 		if c.InputVersion != t.BoundInputVersion+1 {
 			return nil, command.Fail("INPUT_ORDER")
 		}
-		h, e := s.store.(InputStore).LoadTaskInputs(tx, t.TaskId)
+		h, e := s.store.LoadTaskInputs(tx, t.TaskId)
 		if e != nil {
 			return nil, e
 		}
@@ -134,7 +134,7 @@ func (s *Service) ProcessInput(ctx context.Context, caller *v1.Caller, c *v1.Pro
 		if e = s.store.SavePlanning(tx, p); e != nil {
 			return nil, e
 		}
-		if e = s.store.(InputStore).SaveTaskInputs(tx, h); e != nil {
+		if e = s.store.SaveTaskInputs(tx, h); e != nil {
 			return nil, e
 		}
 		return &v1.Ref{Name: t.TaskId, Revision: t.Revision, SchemaId: "lerna.v1.Task"}, nil
@@ -172,8 +172,8 @@ func (s *Service) validateConditions(ctx context.Context, caller *v1.Caller, con
 	return nil
 }
 
-// AcceptExplicitInTransaction 只接纳会话保存的用户条件，不接受模型整理来源。
-func (s *Service) AcceptExplicitInTransaction(ctx context.Context, caller *v1.Caller, ref *v1.Ref, conditions []*v1.Requirement, source *v1.CommandIdentity, inputRef *v1.Ref) error {
+// acceptExplicitInTransaction 只接纳会话保存的用户条件，不接受模型整理来源。
+func (s *Service) acceptExplicitInTransaction(ctx context.Context, caller *v1.Caller, ref *v1.Ref, conditions []*v1.Requirement, source *v1.CommandIdentity, inputRef *v1.Ref) error {
 	if e := s.validateConditions(ctx, caller, conditions); e != nil {
 		return e
 	}

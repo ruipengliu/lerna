@@ -36,7 +36,7 @@ func (s *Service) AcceptInputInTransaction(ctx context.Context, caller *v1.Calle
 	if e != nil {
 		return e
 	}
-	history, e := s.store.(InputStore).LoadTaskInputs(ctx, t.TaskId)
+	history, e := s.store.LoadTaskInputs(ctx, t.TaskId)
 	if e != nil {
 		return e
 	}
@@ -76,13 +76,13 @@ func (s *Service) AcceptInputInTransaction(ctx context.Context, caller *v1.Calle
 	if e = s.store.SavePlanning(ctx, p); e != nil {
 		return e
 	}
-	return s.store.(InputStore).SaveTaskInputs(ctx, history)
+	return s.store.SaveTaskInputs(ctx, history)
 }
 func (s *Service) QueryInputs(ctx context.Context, caller *v1.Caller, id *v1.GlobalName) (*v1.TaskInputHistory, error) {
 	if e := command.CheckName(caller, id, s.user, s.domain, "task"); e != nil {
 		return nil, e
 	}
-	return s.store.(InputStore).LoadTaskInputs(ctx, id)
+	return s.store.LoadTaskInputs(ctx, id)
 }
 
 // ControlInTransaction 只封闭未来开始资格；取消不删除原动作或交接责任。
@@ -141,8 +141,8 @@ func (s *Service) ControlInTransaction(ctx context.Context, caller *v1.Caller, c
 	return s.store.SavePlanning(ctx, p)
 }
 
-// RecordGoalInTransaction 初始目标也属于任务输入序，不能留作隐式上下文。
-func (s *Service) RecordGoalInTransaction(ctx context.Context, caller *v1.Caller, task *v1.Ref, input *v1.SessionInput, conditions []*v1.Requirement) error {
+// recordGoalInTransaction 初始目标也属于任务输入序，不能留作隐式上下文。
+func (s *Service) recordGoalInTransaction(ctx context.Context, caller *v1.Caller, task *v1.Ref, input *v1.SessionInput, conditions []*v1.Requirement) error {
 	t, e := s.QueryTask(ctx, caller, task.Name)
 	if e != nil {
 		return e
@@ -156,7 +156,7 @@ func (s *Service) RecordGoalInTransaction(ctx context.Context, caller *v1.Caller
 		r.ProcessingStatus = "PROCESSED"
 		r.ProcessingDecision = input.CommandIdentity
 	}
-	return s.store.(InputStore).SaveTaskInputs(ctx, &v1.TaskInputHistory{TaskId: t.TaskId, Inputs: []*v1.TaskInputRecord{r}})
+	return s.store.SaveTaskInputs(ctx, &v1.TaskInputHistory{TaskId: t.TaskId, Inputs: []*v1.TaskInputRecord{r}})
 }
 
 // setInputWaiting 只替换输入处理负责的缺口，保留核对、授权和取消收尾的责任。

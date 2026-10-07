@@ -52,9 +52,20 @@ func TestDeclaredSessionAdapterRetainsInputOrderAndOriginalQuestionAnswer(t *tes
 		t.Fatal(err)
 	}
 	t.Cleanup(func() { _ = store.Close() })
-	d := durable.New(store, "alice", "local")
-	h.Tasks = tasks.New(store, "alice", "local").WithDecisions(d).WithCancellationJobs(d)
-	h.Content, err = content.New(store, durable.New(store.ContentWork(), "alice", "local/content"), "alice", "local/content")
+	d, err := durable.New(store, "alice", "local")
+	if err != nil {
+		t.Fatal(err)
+	}
+	h.Tasks, err = tasks.New(store, "alice", "local")
+	if err != nil {
+		t.Fatal(err)
+	}
+	h.Tasks.WithDecisions(d).WithCancellationJobs(d)
+	work, err := durable.New(store.ContentWork(), "alice", "local/content")
+	if err != nil {
+		t.Fatal(err)
+	}
+	h.Content, err = content.New(store, work, "alice", "local/content")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -113,7 +124,10 @@ func TestDeclaredSessionAdapterConsumesOriginalGrantConfirmationOnce(t *testing.
 		t.Fatal(err)
 	}
 	t.Cleanup(func() { _ = store.Close() })
-	d := durable.New(store, "alice", "local")
+	d, err := durable.New(store, "alice", "local")
+	if err != nil {
+		t.Fatal(err)
+	}
 	h.Grants, err = grants.New(declaredGrantStore{store}, declaredGrantDecisions{d}, "alice", "local", "host")
 	if err != nil {
 		t.Fatal(err)
@@ -272,7 +286,10 @@ func TestSessionConstructorRejectsMissingBaseDependencies(t *testing.T) {
 		t.Fatal(err)
 	}
 	t.Cleanup(func() { _ = store.Close() })
-	d := durable.New(store, "alice", "local")
+	d, err := durable.New(store, "alice", "local")
+	if err != nil {
+		t.Fatal(err)
+	}
 	var nilStore *sqlite.Store
 	var nilDurable *durable.Service
 	var nilTasks *tasks.Service

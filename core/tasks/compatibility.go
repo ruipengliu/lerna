@@ -19,7 +19,7 @@ type recoveryReasonerDrivers interface {
 
 // CheckStartupCompatibility 只核验原模型和推理历史解释资格，不重新编码或推进负责方。
 func (s *Service) CheckStartupCompatibility(ctx context.Context) error {
-	all, e := s.store.(recoveryModelCalls).RecoveryModelCalls(ctx)
+	all, e := s.store.RecoveryModelCalls(ctx)
 	if e != nil {
 		return e
 	}
@@ -28,7 +28,7 @@ func (s *Service) CheckStartupCompatibility(ctx context.Context) error {
 			return e
 		}
 	}
-	drivers, e := s.store.(recoveryReasonerDrivers).RecoveryReasonerDrivers(ctx)
+	drivers, e := s.store.RecoveryReasonerDrivers(ctx)
 	if e != nil {
 		return e
 	}

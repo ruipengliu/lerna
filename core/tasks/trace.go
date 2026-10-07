@@ -67,7 +67,7 @@ func (s *Service) saveAdmission(ctx context.Context, v *v1.Admission) error {
 }
 
 func (s *Service) saveVerification(ctx context.Context, v *v1.Verification) error {
-	if err := s.store.(completionStore).SaveVerification(ctx, v); err != nil {
+	if err := s.store.SaveVerification(ctx, v); err != nil {
 		return err
 	}
 	source := s.store
@@ -80,7 +80,7 @@ func (s *Service) saveVerification(ctx context.Context, v *v1.Verification) erro
 }
 
 func (s *Service) saveResult(ctx context.Context, v *v1.Result) error {
-	if err := s.store.(completionStore).SaveResult(ctx, v); err != nil {
+	if err := s.store.SaveResult(ctx, v); err != nil {
 		return err
 	}
 	source := s.store
@@ -98,17 +98,14 @@ type traceDecisions struct {
 	request *v1.Ref
 }
 
-func (s *Service) traceDecisions(task *v1.GlobalName) Decisions {
+func (s *Service) traceDecisions(task *v1.GlobalName) commandExecutor {
 	return &traceDecisions{service: s, task: task}
 }
-func (s *Service) traceModelDecisions(request *v1.Ref) Decisions {
+func (s *Service) traceModelDecisions(request *v1.Ref) commandExecutor {
 	return &traceDecisions{service: s, request: request}
 }
 func (d *traceDecisions) Execute(ctx context.Context, caller *v1.Caller, h *v1.CommandHeader, fingerprint, point string, fn func(context.Context) (*v1.Ref, error)) (*v1.CommandReceipt, error) {
-	observed, ok := d.service.decisions.(observedDecisions)
-	if !ok {
-		return nil, command.Fail("DEPENDENCY_UNAVAILABLE")
-	}
+	observed := d.service.decisions
 	return observed.ExecuteObserved(ctx, caller, h, fingerprint, point, fn, func(tx context.Context, r *v1.CommandReceipt) error {
 		if measurement, ok := ctx.Value(admissionMetricKey{}).(*admissionMetricEntry); ok {
 			measurement.originalDecision = true
@@ -121,7 +118,7 @@ func (d *traceDecisions) Execute(ctx context.Context, caller *v1.Caller, h *v1.C
 
 		taskID := d.task
 		if d.request != nil && command.CheckName(caller, d.request.Name, d.service.user, d.service.domain, "proposal-request") == nil {
-			request, err := d.service.store.(modelStore).LoadProposalRequest(tx, d.request)
+			request, err := d.service.store.LoadProposalRequest(tx, d.request)
 			if err != nil {
 				return err
 			}
@@ -160,7 +157,7 @@ func (s *Service) saveHandoff(ctx context.Context, v *v1.Handoff) error {
 	return source.SaveTraceSource(ctx, "tasks", &v1.TraceEvent{EventType: "HANDOFF_CHANGED", SourceRecordRef: v.Ref, TaskId: a.TaskId, OperationId: a.OperationId, OriginCommand: v.Identity, RelatedRefs: refs})
 }
 func (s *Service) saveStart(ctx context.Context, v *v1.StartRecord) error {
-	if err := s.store.(startStore).SaveStart(ctx, v); err != nil {
+	if err := s.store.SaveStart(ctx, v); err != nil {
 		return err
 	}
 	source := s.store
@@ -168,7 +165,7 @@ func (s *Service) saveStart(ctx context.Context, v *v1.StartRecord) error {
 }
 
 func (s *Service) saveCompletionIntent(ctx context.Context, v *v1.CompletionClosureIntent) error {
-	if err := s.store.(completionIntentStore).SaveCompletionIntent(ctx, v); err != nil {
+	if err := s.store.SaveCompletionIntent(ctx, v); err != nil {
 		return err
 	}
 	refs := []*v1.Ref{v.Command.VerificationRef, v.Command.AdmissionRef, v.JobRef}
@@ -179,7 +176,7 @@ func (s *Service) saveCompletionIntent(ctx context.Context, v *v1.CompletionClos
 }
 
 func (s *Service) saveCancellationIntent(ctx context.Context, v *v1.CancellationClosureIntent) error {
-	if err := s.store.(cancellationStore).SaveCancellationIntent(ctx, v); err != nil {
+	if err := s.store.SaveCancellationIntent(ctx, v); err != nil {
 		return err
 	}
 	kind := "CANCELLATION_CLOSURE_REQUESTED"
@@ -192,7 +189,7 @@ func (s *Service) saveCancellationIntent(ctx context.Context, v *v1.Cancellation
 }
 
 func (s *Service) saveTaskOperationProgress(ctx context.Context, n *v1.OperationProgressNotice) error {
-	if err := s.store.(progressStore).SaveTaskOperationProgress(ctx, n); err != nil {
+	if err := s.store.SaveTaskOperationProgress(ctx, n); err != nil {
 		return err
 	}
 	return s.store.SaveTraceSource(ctx, "tasks", &v1.TraceEvent{EventType: "PROGRESS_ACCEPTED", SourceRecordRef: n.Ref, TaskId: n.TaskId, OperationId: n.OperationRef.Name, OriginCommand: n.Identity, ObservationRef: n.LastObservationRef, ReasonCode: n.PauseReason, RelatedRefs: []*v1.Ref{n.OperationRef, n.ReconciliationRef, n.EffectRef}})
@@ -200,7 +197,7 @@ func (s *Service) saveTaskOperationProgress(ctx context.Context, n *v1.Operation
 
 // saveModelRequest 将模型请求状态与原责任引用写入同一源事务。
 func (s *Service) saveModelRequest(ctx context.Context, r *v1.ProposalRequest) error {
-	if err := s.store.(modelStore).SaveProposalRequest(ctx, r); err != nil {
+	if err := s.store.SaveProposalRequest(ctx, r); err != nil {
 		return err
 	}
 	refs := append([]*v1.Ref{r.SnapshotRef, r.JobRef}, r.ModelOperationRefs...)
@@ -209,10 +206,10 @@ func (s *Service) saveModelRequest(ctx context.Context, r *v1.ProposalRequest) e
 }
 
 func (s *Service) saveModelCall(ctx context.Context, call *v1.ModelCall) error {
-	if err := s.store.(modelCallStore).SaveModelCall(ctx, call); err != nil {
+	if err := s.store.SaveModelCall(ctx, call); err != nil {
 		return err
 	}
-	request, err := s.store.(modelStore).LoadProposalRequest(ctx, call.RequestRef)
+	request, err := s.store.LoadProposalRequest(ctx, call.RequestRef)
 	if err != nil {
 		return err
 	}
@@ -243,10 +240,10 @@ func (s *Service) saveModelCall(ctx context.Context, call *v1.ModelCall) error {
 }
 
 func (s *Service) saveModelOutcome(ctx context.Context, outcome *v1.ProposalOutcome) error {
-	if err := s.store.(outcomeStore).SaveProposalOutcome(ctx, outcome); err != nil {
+	if err := s.store.SaveProposalOutcome(ctx, outcome); err != nil {
 		return err
 	}
-	request, err := s.store.(modelStore).LoadProposalRequest(ctx, outcome.RequestRef)
+	request, err := s.store.LoadProposalRequest(ctx, outcome.RequestRef)
 	if err != nil {
 		return err
 	}
@@ -267,7 +264,7 @@ func (s *Service) saveModelOutcome(ctx context.Context, outcome *v1.ProposalOutc
 	}
 	ev := &v1.TraceEvent{EventType: kind, SourceRecordRef: outcome.Ref, TaskId: request.TaskId, OriginCommand: outcome.Identity, ReasonCode: reason, BodyRef: outcome.GetProposal().GetBodyContentRef(), RelatedRefs: refs}
 	if outcome.ModelCallRef != nil {
-		call, e := s.store.(modelCallStore).LoadModelCallRef(ctx, outcome.ModelCallRef)
+		call, e := s.store.LoadModelCallRef(ctx, outcome.ModelCallRef)
 		if e != nil {
 			return e
 		}

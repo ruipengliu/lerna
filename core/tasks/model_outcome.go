@@ -54,7 +54,7 @@ func (s *Service) SubmitProposalOutcome(ctx context.Context, caller *v1.Caller, 
 			if command.CheckName(caller, c.ModelCallRef.Name, s.user, s.domain, "model-call") != nil {
 				return nil, command.Fail("INVALID_OUTCOME")
 			}
-			call, e := s.store.(modelCallStore).LoadModelCallRef(tx, c.ModelCallRef)
+			call, e := s.store.LoadModelCallRef(tx, c.ModelCallRef)
 			if e != nil {
 				return nil, e
 			}
@@ -67,7 +67,7 @@ func (s *Service) SubmitProposalOutcome(ctx context.Context, caller *v1.Caller, 
 		} else if c.OutputRef != nil || c.UsageRef != nil {
 			return nil, command.Fail("INVALID_OUTCOME")
 		} else if c.Proposal != nil {
-			call, e := s.store.(modelCallStore).LoadModelCall(tx, r.Ref, 0)
+			call, e := s.store.LoadModelCall(tx, r.Ref, 0)
 			if e != nil {
 				return nil, e
 			}
@@ -127,13 +127,13 @@ func (s *Service) SubmitProposalOutcome(ctx context.Context, caller *v1.Caller, 
 			r.State = "REPORTED"
 			r.OutcomeIdentity = c.Header.Identity
 			r.OutcomeReceipt = nil
-			job, e := s.store.(modelStore).LoadJob(tx, r.JobRef.Name)
+			job, e := s.store.LoadJob(tx, r.JobRef.Name)
 			if e != nil {
 				return nil, e
 			}
 			job.State = "COMPLETED"
 			job.Ref.Revision++
-			if e = s.store.(modelStore).SaveJob(tx, job); e != nil {
+			if e = s.store.SaveJob(tx, job); e != nil {
 				return nil, e
 			}
 		}
@@ -152,7 +152,7 @@ func (s *Service) QueryProposalOutcome(ctx context.Context, c *v1.Caller, r *v1.
 	if e := command.CheckName(c, r.Name, s.user, s.domain, "proposal-outcome"); e != nil {
 		return nil, e
 	}
-	o, e := s.store.(outcomeStore).LoadProposalOutcome(ctx, r)
+	o, e := s.store.LoadProposalOutcome(ctx, r)
 	if e == nil && o != nil && !proto.Equal(o.Ref, r) {
 		return nil, command.Fail("STALE_REFERENCE")
 	}
@@ -160,15 +160,15 @@ func (s *Service) QueryProposalOutcome(ctx context.Context, c *v1.Caller, r *v1.
 }
 
 func (s *Service) finishScriptedRequest(ctx context.Context, r *v1.Ref) error {
-	request, e := s.store.(modelStore).LoadProposalRequest(ctx, r)
+	request, e := s.store.LoadProposalRequest(ctx, r)
 	if e != nil || request == nil {
 		return e
 	}
-	call, e := s.store.(modelCallStore).LoadModelCall(ctx, r, 0)
+	call, e := s.store.LoadModelCall(ctx, r, 0)
 	if e != nil {
 		return e
 	}
-	job, e := s.store.(modelStore).LoadJob(ctx, request.JobRef.Name)
+	job, e := s.store.LoadJob(ctx, request.JobRef.Name)
 	if e != nil {
 		return e
 	}
@@ -178,7 +178,7 @@ func (s *Service) finishScriptedRequest(ctx context.Context, r *v1.Ref) error {
 	request.State = "REPORTED"
 	job.State = "COMPLETED"
 	job.Ref.Revision++
-	if e = s.store.(modelStore).SaveJob(ctx, job); e != nil {
+	if e = s.store.SaveJob(ctx, job); e != nil {
 		return e
 	}
 	return s.saveModelRequest(ctx, request)

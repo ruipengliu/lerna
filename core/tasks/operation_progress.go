@@ -101,7 +101,7 @@ func (s *Service) QueryOperationProgress(ctx context.Context, c *v1.Caller, r *v
 	if e := command.CheckName(c, r.Name, s.user, s.domain+"/ledger", "operation-progress"); e != nil {
 		return nil, e
 	}
-	n, e := s.store.(progressStore).LoadTaskOperationProgress(ctx, r)
+	n, e := s.store.LoadTaskOperationProgress(ctx, r)
 	if n != nil && !proto.Equal(n.Ref, r) {
 		return nil, command.Fail("INVALID_REFERENCE")
 	}
