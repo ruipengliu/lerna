@@ -1,13 +1,7 @@
 package ledger
 
 import (
-	"bytes"
 	"context"
-	"encoding/json"
-	"io"
-	"net"
-	"net/url"
-	"unicode/utf8"
 
 	"github.com/ruipengliu/lerna/contracts/command"
 	v1 "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1"
@@ -141,56 +135,6 @@ func (s *Service) InterpretObservation(ctx context.Context, caller *v1.Caller, c
 	})
 }
 
-func interpretSimulator(raw *v1.RawObservation, body []byte, attempt *v1.ExecutionAttempt) *v1.EffectInterpretation {
-	r := &v1.EffectInterpretation{ObservationRef: raw.Ref, Rule: "reference-target-v1", Outcome: "UNKNOWN", LateEffect: "MAY_OCCUR", Reason: "INSUFFICIENT_EVIDENCE"}
-	cap := attempt.GetCapabilities()
-	if cap == nil || cap.ProtocolVersion != "lerna-simulator-v1" || cap.VerificationBasis != "reference-target-v1" || raw.Source != "TRUSTED_IO" || raw.Protocol != "HTTP" || raw.TransportError != "" || raw.StatusCode != 200 {
-		return r
-	}
-	endpoint, e := url.Parse(raw.Target)
-	if e != nil {
-		return r
-	}
-	address, port, e := net.SplitHostPort(raw.ActualAddress)
-	expectedPort := endpoint.Port()
-	if expectedPort == "" {
-		expectedPort = "80"
-	}
-	if e != nil || port != expectedPort || !net.ParseIP(address).Equal(net.ParseIP(endpoint.Hostname())) {
-		return r
-	}
-	valid, conflict := validSimulatorObject(body)
-	if !valid {
-		if conflict {
-			r.Reason = "EVIDENCE_CONFLICT"
-		}
-		return r
-	}
-	var response struct {
-		Protocol    string `json:"protocol"`
-		ExternalKey string `json:"external_key"`
-		AttemptID   string `json:"attempt_id"`
-		Applied     *bool  `json:"applied"`
-		Terminal    *bool  `json:"terminal"`
-	}
-	if json.Unmarshal(body, &response) != nil || response.Protocol != cap.ProtocolVersion || response.ExternalKey != attempt.ExternalKey || response.ExternalKey != raw.ExternalKey || response.AttemptID != attempt.Ref.Name.LocalId || response.Applied == nil || response.Terminal == nil {
-		return r
-	}
-	if !*response.Terminal {
-		if *response.Applied {
-			r.Outcome = "APPLIED"
-		}
-		r.Reason = "LATE_EFFECT_POSSIBLE"
-		return r
-	}
-	r.Outcome = "NOT_APPLIED"
-	if *response.Applied {
-		r.Outcome = "APPLIED"
-	}
-	r.LateEffect = "RULED_OUT"
-	r.Reason = "TERMINAL_PROTOCOL_EVIDENCE"
-	return r
-}
 func (s *Service) QueryInterpretation(ctx context.Context, caller *v1.Caller, r *v1.Ref) (*v1.EffectInterpretation, error) {
 	if e := s.checkHistory(caller, r, "interpretation", "lerna.v1.EffectInterpretation"); e != nil {
 		return nil, e
@@ -221,46 +165,4 @@ func (s *Service) ProcessInterpretations(ctx context.Context, caller *v1.Caller)
 		}
 	}
 	return nil
-}
-
-// validSimulatorObject 拒绝重复字段，避免 JSON 的后值覆盖前值隐藏相反证据。
-func validSimulatorObject(body []byte) (bool, bool) {
-	if !utf8.Valid(body) {
-		return false, false
-	}
-	d := json.NewDecoder(bytes.NewReader(body))
-	opening, e := d.Token()
-	if e != nil || opening != json.Delim('{') {
-		return false, false
-	}
-	seen := map[string]bool{}
-	for d.More() {
-		token, e := d.Token()
-		if e != nil {
-			return false, false
-		}
-		key, ok := token.(string)
-		if !ok {
-			return false, false
-		}
-		switch key {
-		case "protocol", "external_key", "attempt_id", "applied", "terminal", "applied_at_unix_nano", "billing":
-		default:
-			return false, false
-		}
-		if seen[key] {
-			return false, true
-		}
-		seen[key] = true
-		var value json.RawMessage
-		if e = d.Decode(&value); e != nil {
-			return false, false
-		}
-	}
-	closing, e := d.Token()
-	if e != nil || closing != json.Delim('}') {
-		return false, false
-	}
-	var extra any
-	return d.Decode(&extra) == io.EOF, false
 }
