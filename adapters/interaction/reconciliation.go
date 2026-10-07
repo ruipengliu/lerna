@@ -20,6 +20,11 @@ type ReconciliationLedger interface {
 	QueryReconciliationFinding(context.Context, *v1.Caller, *v1.Ref) (*v1.ReconciliationFinding, error)
 }
 
+// ClosureConfirmationCommands 是可选能力；缺席时封闭确认返回 UNSUPPORTED_FEATURE。
+type ClosureConfirmationCommands interface {
+	RequestClosureConfirmation(context.Context, *v1.Caller, *v1.RequestClosureConfirmationCommand) (*v1.CommandReceipt, error)
+}
+
 func (c CLI) reconciliationCommand(ctx context.Context, args []string) (proto.Message, error) {
 	ledger, ok := c.Ledger.(ReconciliationLedger)
 	if !ok {
@@ -46,9 +51,7 @@ func (c CLI) reconciliationCommand(ctx context.Context, args []string) (proto.Me
 	}
 	switch args[0] {
 	case "closure-confirmation":
-		tasks, ok := c.Tasks.(interface {
-			RequestClosureConfirmation(context.Context, *v1.Caller, *v1.RequestClosureConfirmationCommand) (*v1.CommandReceipt, error)
-		})
+		tasks, ok := c.Tasks.(ClosureConfirmationCommands)
 		if !ok {
 			return nil, command.Fail("UNSUPPORTED_FEATURE")
 		}

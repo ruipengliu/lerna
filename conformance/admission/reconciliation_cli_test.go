@@ -23,7 +23,7 @@ func TestCLIReconciliationRequestPauseResumeAndRecover(t *testing.T) {
 	a, start := prepareStart(t, f)
 	r, e := f.h.Egress.Invoke(f.ctx, &v1.Caller{UserId: "u", IssuerId: "egress"}, start)
 	accepted(t, r, e)
-	cli := interaction.CLI{Ledger: f.h.Ledger, Sessions: f.h.Sessions, Observations: f.h.Content, Grants: f.h.Grants, Caller: &v1.Caller{UserId: "u", IssuerId: "local-cli"}, Domain: "d"}
+	cli := interaction.CLI{Ledger: f.h.Ledger, Sessions: f.h.Sessions, Grants: f.h.Grants, Caller: &v1.Caller{UserId: "u", IssuerId: "local-cli"}, Domain: "d"}
 	cli.Progress = newManualProgress(t, hosting.ManualDependencies{Sessions: f.h.Sessions, Observations: f.h.Content, Reports: f.h.Ledger, Revocations: f.h.Grants, Reconciliations: f.h.Ledger, ExecutionFollowups: f.h.Ledger})
 	write := func(name string, m proto.Message) string {
 		t.Helper()

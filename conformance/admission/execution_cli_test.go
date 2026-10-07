@@ -18,7 +18,7 @@ func TestCLIExecutesThroughGateAndDisplaysPersistedEffect(t *testing.T) {
 	target := simulator.New("idempotent")
 	f := newFixtureWithTarget(t, 100, 80, false, target)
 	a, c := prepareStart(t, f)
-	cli := interaction.CLI{Sessions: f.h.Sessions, Tasks: f.h.Tasks, Durable: f.h.Durable, Ledger: f.h.Ledger, Egress: f.h.Egress, Content: f.h.Content, Observations: f.h.Content, Caller: &v1.Caller{UserId: "u", IssuerId: "egress"}, Domain: "d"}
+	cli := interaction.CLI{Sessions: f.h.Sessions, Tasks: f.h.Tasks, Durable: f.h.Durable, Ledger: f.h.Ledger, Egress: f.h.Egress, Content: f.h.Content, Caller: &v1.Caller{UserId: "u", IssuerId: "egress"}, Domain: "d"}
 	path := filepath.Join(t.TempDir(), "start.json")
 	body, e := protojson.Marshal(c)
 	if e != nil {
