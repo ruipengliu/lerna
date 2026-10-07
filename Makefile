@@ -7,8 +7,11 @@ PROTO := $(TOOLS_DIR)/protoc-gen-go-v1.36.12/protoc-gen-go
 export PATH := $(dir $(PROTO)):$(PATH)
 # 可覆盖为发布标签或其他兼容性基线；初始 main 无协议时跳过。
 BUF_BASE ?= main
+# 日常检查可限定受影响包；完整 test/check 始终使用原范围。
+CHECK_PACKAGES ?= ./...
 
-.PHONY: tools fmt lint test test-fault gen check check-fmt check-rules check-gen
+.PHONY: tools fmt lint lint-go lint-proto test test-code test-fault gen
+.PHONY: check check-docs check-code check-fmt check-rules check-gen
 
 tools: $(BUF) $(LINT) $(IMPORTS) $(PROTO)
 $(BUF):
@@ -26,9 +29,13 @@ fmt: $(IMPORTS)
 check-fmt: $(IMPORTS)
 	@files=$$(git ls-files -z --cached --others --exclude-standard -- '*.go' ':!:contracts/gen/**' | xargs -0 $(IMPORTS) -l) || exit $$?; test -z "$$files" || { echo "Run make fmt:"; echo "$$files"; exit 1; }
 
-lint: $(BUF) $(LINT)
+lint: lint-go lint-proto
+
+lint-go: $(LINT)
 	$(LINT) run
 	$(LINT) run --build-tags fault
+
+lint-proto: $(BUF)
 	$(BUF) format --diff --exit-code
 	$(BUF) lint
 	@git rev-parse --verify "$(BUF_BASE)^{commit}" >/dev/null
@@ -36,6 +43,9 @@ lint: $(BUF) $(LINT)
 
 test:
 	go test -race -timeout 20m ./...
+
+test-code:
+	go test -race -timeout 20m $(CHECK_PACKAGES)
 
 test-fault:
 	go test -race -timeout 120m -tags fault ./conformance/... ./infra/sqlite/...
@@ -48,5 +58,11 @@ check-rules:
 
 check-gen: $(BUF) $(PROTO)
 	@sh scripts/check-generated.sh "$(BUF)"
+
+check-docs:
+	git diff --check -- '*.md'
+	git diff --cached --check -- '*.md'
+
+check-code: check-fmt lint-go check-rules test-code
 
 check: check-fmt lint test test-fault check-rules check-gen

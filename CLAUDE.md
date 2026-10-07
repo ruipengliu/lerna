@@ -29,7 +29,7 @@ sdk/typescript/       TypeScript SDK（M3 起）
 - **测试先行**：先写会失败的测试，再实现。测试函数上方标注它验证的规则，格式固定：`// 规则：G1、开始-2`（编号来自项目目标的 G/R/V 编号和核心契约 2.6 的门禁条件）。涉及外部效果的测试检查持久记录和模拟目标实际收到的调用次数。
 - **命名与注释**：标识符用英文，公共对象的字段名、状态名、错误码沿用核心契约；注释用中文，术语以 `docs/architecture/project-goals.md` 第 3 节为准。
 - **提交**：Conventional Commits 前缀（`feat:` `fix:` `docs:` `test:` `refactor:` `build:` `chore:`），正文英文；按功能开分支，经 PR 合并到 `main`。只在被要求时提交或推送。
-- 提交前运行 `make check`。
+- **检查与收尾**：检查范围、结果复用、评审顺序、合并及工作树清理，按 `docs/development.md` 第 4.1 节执行。
 
 工具链、测试分层、协议生成和全部规则见 `docs/development.md`。编写或修改设计文档时，遵守 `docs/architecture/conventions.md`。
 

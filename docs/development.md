@@ -5,6 +5,7 @@
 | 2026-10-05 | 初版：技术栈、目录骨架、依赖规则、工具链与命令、测试、代码风格、协议与生成代码、Git 工作流、设计文档与代码的关系。 |
 | 2026-10-06 | 按[第五轮评审处理记录](review/disposition.md)修订：新增 3.1 核心模块的包结构（调用方声明端口、`core/durable` 声明事务上下文、核心模块之间只允许导入 `core/durable`）（X-06）；骨架增加受信组件的位置 `infra/hosting/`、`infra/rules/`、`infra/egressio/<供应商>/`（X-08）；测试分为契约场景层与进程内装配层，增加故障点标注（X-20、DV-05）；Go 目录命名建议（DV-04）。 |
 | 2026-10-07 | 合并第五轮评审与 M1 实施记录：保留调用方声明端口的包结构、外部装配测试白名单，以及实际 fault 包范围和恢复验收入口。 |
+| 2026-10-07 | 按变更范围选择检查，增加文档与日常代码检查入口；明确结果复用、先评审后完整验收，以及合并和工作树清理的完成条件。 |
 
 - 状态：已采纳
 - 读者：写代码和评审代码的开发者与 Agent
@@ -113,13 +114,39 @@ docs/                       设计文档、ADR、评审与调研
 | 命令 | 作用 |
 | --- | --- |
 | `make fmt` | 格式化全部 Go 代码 |
-| `make lint` | 静态检查，含依赖方向（depguard）和 buf 检查 |
-| `make test` | 单元测试，带 `-race` |
+| `make lint` | 普通与 `fault` 构建的 Go 静态检查（含 depguard），以及 buf 检查 |
+| `make lint-go` | 普通与 `fault` 构建的 Go 静态检查，不运行故障矩阵 |
+| `make lint-proto` | Protobuf 格式、lint 和破坏性变更检查 |
+| `make test` | 全部普通构建测试，带 `-race` |
+| `make test-code CHECK_PACKAGES='./core/ledger/... ./conformance/admission'` | 日常检查指定包的普通构建测试，带 `-race`；未指定包时运行 `./...` |
 | `make test-fault` | 全部实际 `fault` 构建测试包（`conformance/` 含根包与 `admission/`，以及 `infra/sqlite/`） |
 | `make gen` | 由 `contracts/proto/` 生成代码 |
-| `make check` | 提交前的全部检查：fmt、lint、普通及 `fault` 构建测试、规则标注检查、生成代码是否最新 |
+| `make check-docs` | 检查已跟踪 Markdown 的未暂存及已暂存差异中的空白错误和冲突标记 |
+| `make check-code` | 日常代码检查：Go 格式、Go 静态检查、规则标注、普通构建测试；可用 `CHECK_PACKAGES` 限定测试包 |
+| `make check` | 完整集成检查：fmt、lint、全部普通及 `fault` 构建测试、规则标注、生成代码是否最新；测试范围不受 `CHECK_PACKAGES` 影响 |
 
 `Makefile` 和 `.golangci.yml` 在 M1 建立代码骨架时一并创建。
+
+### 4.1 检查范围与完成条件
+
+提交或合并前，先按实际差异选择检查。混合变更合并各类检查；已经通过且仍适用的结果按下文复用。
+
+| 变更范围 | 执行的检查 |
+| --- | --- |
+| 仅文档、注释说明或票据状态，无可执行代码、配置或生成输入变化 | `make check-docs`；核对修改涉及的链接、锚点和语义一致性。Go 文件中的注释变化另做 `make check-fmt` |
+| Go 代码或测试 | `make check-code CHECK_PACKAGES='<受影响包及其调用方／公共契约测试包>'`；无法可靠界定影响时保留默认 `./...` |
+| Protobuf 或其生成配置、工具版本 | 在代码检查之外运行 `make lint-proto check-gen`；源文件变化先执行 `make gen`，并验证相关编解码与兼容性行为 |
+| 持久事务、迁移、同步、授权、预算、出口或恢复行为 | 在代码检查之外执行相关故障切片，覆盖改变的持久化点和公共行为；影响跨模块或无法可靠界定时执行完整 `make test-fault` |
+| 检查脚本、Makefile 或检查配置 | 实际执行改变的检查入口；检查命令选择变化时核对完整入口仍保留原范围，选择受影响测试验证。仅编排变化无需重跑业务故障矩阵 |
+| 里程碑最终集成验收或发布验收 | 在评审与修复完成后，对最终候选版本运行 `make check`；专项验收的覆盖和判据仍按上游设计执行 |
+
+`make check-docs` 只检查上述 Git 差异，不自动检查链接、语义、已提交的分支差异或未跟踪文件；这些内容在差异评审中核对。设计规则改变时还要评估现有实现是否需要跟进，文档检查通过不代表新规则已由实现满足。
+
+**检查分工与顺序。**实现者完成受影响测试和必要故障切片；合并者检查冲突处理及合并新增的影响；评审者检查需求与规范。评审修复后，由集成者运行最终完整检查。一次运行满足多个票据的验收时，各票据引用同一记录。提交次数、合并次数和票据数量不决定全量检查次数。
+
+**结果复用与重跑。**通过的记录需注明命令、结果、受测版本及必要的环境信息。受测代码、相关配置、依赖、工具和平台未变化时，复用对应结果；后续只有文档、验收说明或票据状态变化时，补做文档检查。失败、相关输入变化或评审发现新问题时，重跑受影响检查；影响不清楚时扩大范围。故障切片用于开发验证，完整验收记录如实标明是否运行全矩阵。性能测量等待相关契约和语料稳定，后续只对影响测量结论的变化重新测量。
+
+**完成与收尾。**所选检查通过、评审问题已处理、记录的覆盖与限制准确时结束验证；最终验收再满足上游退出标准。保留运行记录和覆盖说明即可，额外复核应对应尚未解决的具体问题。合并使用正常 Git 操作，核对提交关系与工作区状态；工作树清理确认分支保留、改动已合入，干净目录直接移除，需要保留的未提交内容先保存。协调记录保留当前状态、下一步和证据链接，历史过程另行归档。
 
 ## 5 测试
 
@@ -149,7 +176,7 @@ func TestSafeResendSkipsAdmissionGeneration(t *testing.T) { ... }
 
 **两层测试。**契约场景层只通过公共契约命令驱动，场景定义（输入、故障点、期望的责任记录和目标观察）与实现语言无关，将来手机端若有第二份核心实现，必须通过同一批场景；进程内装配层用于检查 Go 实现的内部细节。M1 的 harness 先实现前一层，再补后一层。
 
-涉及出口、授权、预算或持久记录的包（`core/egress`、`core/grants`、`core/budget`、`core/durable`、`core/ledger`、`infra/postgres`、`infra/sqlite`），每个包至少要有一个带规则标注的测试，`make check` 会检查。这是[项目目标第 12 节](architecture/project-goals.md#12-如何使用本文)的要求。
+涉及出口、授权、预算或持久记录的包（`core/egress`、`core/grants`、`core/budget`、`core/durable`、`core/ledger`、`infra/postgres`、`infra/sqlite`），每个包至少要有一个带规则标注的测试，`make check-code` 和 `make check` 的 `check-rules` 会检查。这是[项目目标第 12 节](architecture/project-goals.md#12-如何使用本文)的要求。
 
 **测试的判据。**涉及外部效果的测试，检查持久记录和模拟目标实际收到的调用次数，不只看函数返回值。验收只认运行证据。
 
@@ -192,7 +219,7 @@ func TestSafeResendSkipsAdmissionGeneration(t *testing.T) { ... }
 | `ledger.followup_completion` | 原动作取得可靠终态后由执行管理完成后续责任 |
 | `budget.followup_completion` | 原逐发送费用结清或可靠未发送后由预算完成后续责任 |
 
-新增事务必须传入固定名称、登记到同一表，并补充对应故障用例。故障套件检查未登记的事务和无调用点的登记项，普通构建只编译空边界，不包含故障计划、登记表或配置 API。`make test-fault` 实际执行 `go test -race -timeout 120m -tags fault ./conformance/... ./infra/sqlite/...`，覆盖根包的格式故障和 `admission/` 的保存版本、指标端点、实际必要 WAL 备份用例，也覆盖 `infra/sqlite/` 的真实 occurrence 选择器回归，并保留 `conformance/fault/` 的全部 SQL/native 存储切点与负对照。不能只执行存储子包而遗漏其他公开故障入口，也不能用筛选测试或缩减切点规避运行时间。随着 M1 schema 和来源事件增加，包级超时上限设为 120 分钟。
+新增事务必须传入固定名称、登记到同一表，并补充对应故障用例。故障套件检查未登记的事务和无调用点的登记项，普通构建只编译空边界，不包含故障计划、登记表或配置 API。`make test-fault` 实际执行 `go test -race -timeout 120m -tags fault ./conformance/... ./infra/sqlite/...`，覆盖根包的格式故障和 `admission/` 的保存版本、指标端点、实际必要 WAL 备份用例，也覆盖 `infra/sqlite/` 的真实 occurrence 选择器回归，并保留 `conformance/fault/` 的全部 SQL/native 存储切点与负对照。完整验收使用这一范围，保留全部切点和负对照；开发阶段的切片与最终验收时机按第 4.1 节选择。随着 M1 schema 和来源事件增加，包级超时上限设为 120 分钟。
 
 这些用例验证进程崩溃恢复，不等于通过掉电或存储故障验证。本地档的掉电资格仍由 ADR 0001 的独立验收决定。
 
@@ -211,7 +238,7 @@ func TestSafeResendSkipsAdmissionGeneration(t *testing.T) { ... }
 ## 7 协议与生成代码
 
 - `.proto` 源文件只放在 `contracts/proto/`；生成的代码放 `contracts/gen/go/`，不手改；
-- 修改协议后运行 `make gen`，并把生成结果一起提交；`make check` 会检查生成代码是否最新；
+- 修改协议后运行 `make gen`，并把生成结果一起提交；`make check-gen`（也包含在完整 `make check` 中）检查生成代码是否最新；
 - 字段编号和枚举编号永不复用；破坏性变更由 buf 检查拦截，必须按[核心契约 7.6](architecture/core/contracts/README.md)的版本规则处理。
 
 ## 8 Git 工作流
@@ -312,7 +339,7 @@ M1 参考适配器为 `model-reference-v1`，模型设置使用 `provider: refer
 
 `task-closing TASK_ID` 返回固定 Result 和原负责方当前事实。closureIntents、closureSeals 和 awaitingOperationAdmissionRefs 分别展示准确源责任、真实封闭证明及尚待原交接的准入；墓碑没有动作引用时不会伪造 UNKNOWN 动作。原事实缺失或读取失败明确不可用。原效果、逐发送费用及核对仍由其负责方推进，固定 Result 的字节和引用不改变。
 
-对应公共验收入口如下；表中入口应在完整 `make check` 日志中实际出现，单例日志不能替代完整门禁。
+对应公共验收入口如下；M1 最终验收时，表中入口应在完整 `make check` 日志中实际出现。开发检查范围按第 4.1 节选择。
 
 | 真实行为 | 测试入口 |
 | --- | --- |
@@ -327,7 +354,7 @@ M1 参考适配器为 `model-reference-v1`，模型设置使用 `provider: refer
 | 成功结果后的原迟到账单保留费用和固定结果 | `TestClosedTaskAcceptsLateBillWithoutChangingFixedResult` |
 | 可靠未满足后新请求／新授权／新动作，拒绝轮次不改写；唯一继续责任的三种故障模式 | `TestRejectedContinuationUsesFreshAuthorityAndCompletesWithNewAction`、`TestRejectedContinuationCommitRecoversOneActualRequest` |
 
-只重放关闭提交和 FILE 原历史的命名故障切片可使用：`go test -v -race -tags fault ./conformance/fault -run '^(TestTaskClosingCommitBoundariesPreserveOriginalResponsibilities|TestCancelledClosingCommitBoundariesPreserveOriginalResponsibilities|TestFailedClosingKeepsOriginalFileHistoryQueryAndFixedResult|TestCancelledClosingKeepsOriginalFileHistoryQueryAndFixedResult)$' -count=1 -timeout=20m`。提交前仍执行原样 `GOFLAGS=-v make check`，保留全部普通、故障及存储矩阵、政策与独立负对照；不得以命名切片代替全门禁。真实原 API 目标和默认 driver 的组合使用后续正式集成接口验收，当前 FILE 与模拟目标证据不作这些组合的完成声明。
+只重放关闭提交和 FILE 原历史的命名故障切片可使用：`go test -v -race -tags fault ./conformance/fault -run '^(TestTaskClosingCommitBoundariesPreserveOriginalResponsibilities|TestCancelledClosingCommitBoundariesPreserveOriginalResponsibilities|TestFailedClosingKeepsOriginalFileHistoryQueryAndFixedResult|TestCancelledClosingKeepsOriginalFileHistoryQueryAndFixedResult)$' -count=1 -timeout=20m`。该命令是开发阶段的切片入口；完整验收和结果复用按第 4.1 节执行。真实原 API 目标和默认 driver 的组合使用后续正式集成接口验收，当前 FILE 与模拟目标证据不作这些组合的完成声明。
 
 ### M1 默认推理
 
@@ -339,7 +366,7 @@ M1 参考适配器为 `model-reference-v1`，模型设置使用 `provider: refer
 
 `QueryProposal`、`QueryPlanning` 和 `QueryProposalOutcome` 返回结构记录。需要向用户展示问题、条件变更或草稿时使用 `ReadProposal`，它通过内容治理读取 `BodyContentRef`。`PublishProposalQuestion` 把 QUESTION 或 REQUIREMENTS 载荷发布为会话输入请求；回答经会话关联到原任务，条件变更仍要求真实用户的显式条件列表。主观完成条件先通过 `RequestConditionConfirmation` 固定事项，再由会话确认接口记录批准；模型文本不能替代批准。新主观确认的描述只包含结构引用；`ReadConditionConfirmation` 读取事项绑定的历史条件与证据正文，内容不可用时拒绝展示。
 
-验证入口：`go test ./conformance/reasoner` 检查四类提议接口与确定性裁剪；`go test ./conformance/admission -run 'Reasoner|Default|Subjective|RequirementsProposal|ProposalMetadata|UnavailableProposal|DirectProposal'` 检查真实模拟供应商、治理正文、准入、确认和恢复；`go test -tags fault ./conformance/fault -run '^TestReasonerBodyAndOutcomeCrashRecovery$'` 对正文派生和回报做进程崩溃及回执丢失测试。完整提交检查仍为 `make check`。
+验证入口：`go test ./conformance/reasoner` 检查四类提议接口与确定性裁剪；`go test ./conformance/admission -run 'Reasoner|Default|Subjective|RequirementsProposal|ProposalMetadata|UnavailableProposal|DirectProposal'` 检查真实模拟供应商、治理正文、准入、确认和恢复；`go test -tags fault ./conformance/fault -run '^TestReasonerBodyAndOutcomeCrashRecovery$'` 对正文派生和回报做进程崩溃及回执丢失测试。检查范围与完整验收时机按第 4.1 节选择。
 
 确认展示的治理分离适用于新生成的 M1 记录。曾在 `Description` 保存参数字节的实验数据库不能仅靠重新渲染就视为已治理；历史副本需要受支持的停写迁移，保留原事项、摘要、批准、消费身份及全部 P5、未知效果和费用责任。迁移未受支持时必须明确拒绝旧库，不能通过删除或重建数据库丢弃这些责任。
 
