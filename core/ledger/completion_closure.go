@@ -119,7 +119,7 @@ func (s *Service) QueryCompletionSeal(ctx context.Context, c *v1.Caller, r *v1.R
 	if e := s.checkHistory(c, r, "completion-seal", "lerna.v1.CompletionSeal"); e != nil {
 		return nil, e
 	}
-	v, e := s.store.(completionSealStore).LoadCompletionSeal(ctx, r)
+	v, e := s.store.LoadCompletionSeal(ctx, r)
 	if e == nil && v != nil && !proto.Equal(v.Ref, r) {
 		return nil, command.Fail("INVALID_REFERENCE")
 	}

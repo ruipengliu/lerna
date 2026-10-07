@@ -50,7 +50,7 @@ func (s *Service) AcceptObservation(ctx context.Context, caller *v1.Caller, c *v
 		if send == nil || !proto.Equal(send.ObservationRef, o.Ref) || !proto.Equal(send.Ref, o.SendRef) || send.Phase != "DISPATCH_POSSIBLE" || !proto.Equal(send.AttemptId, o.AttemptId) || c.Header.Identity.CommandId != "observe:"+o.Ref.Name.LocalId {
 			return nil, command.Fail("INVALID_OBSERVATION")
 		}
-		if e = s.store.(observationStore).SaveLedgerObservation(tx, o); e != nil {
+		if e = s.store.SaveLedgerObservation(tx, o); e != nil {
 			return nil, e
 		}
 		x := op.Execution
@@ -77,7 +77,7 @@ func (s *Service) QueryObservation(ctx context.Context, caller *v1.Caller, r *v1
 	if e := command.CheckName(caller, r.Name, s.user, s.domain, "observation"); e != nil {
 		return nil, e
 	}
-	v, e := s.store.(observationStore).LoadLedgerObservation(ctx, r)
+	v, e := s.store.LoadLedgerObservation(ctx, r)
 	if v != nil && !proto.Equal(v.Ref, r) {
 		return nil, command.Fail("INVALID_REFERENCE")
 	}

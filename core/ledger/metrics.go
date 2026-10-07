@@ -26,7 +26,7 @@ func (s *Service) QueryMetrics(ctx context.Context, caller *v1.Caller) (*v1.Ledg
 	if e := command.CheckCaller(caller, s.user); e != nil {
 		return nil, e
 	}
-	facts, e := s.store.(metricFacts).LedgerMetricFacts(ctx)
+	facts, e := s.store.LedgerMetricFacts(ctx)
 	if e != nil {
 		return nil, e
 	}

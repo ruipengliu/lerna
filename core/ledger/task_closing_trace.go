@@ -7,7 +7,7 @@ import (
 )
 
 func (s *Service) saveTaskClosureSeal(ctx context.Context, seal *v1.TaskClosureSeal, task *v1.GlobalName, origin *v1.CommandIdentity) error {
-	if e := s.store.(taskClosureSealStore).SaveTaskClosureSeal(ctx, seal); e != nil {
+	if e := s.store.SaveTaskClosureSeal(ctx, seal); e != nil {
 		return e
 	}
 	refs := append([]*v1.Ref{seal.IntentRef, seal.TaskClosingRef, seal.AdmissionRef, seal.OperationRef, seal.ExecutionFollowupRef}, seal.ClosedSendRefs...)
@@ -15,7 +15,7 @@ func (s *Service) saveTaskClosureSeal(ctx context.Context, seal *v1.TaskClosureS
 }
 
 func (s *Service) saveExecutionFollowup(ctx context.Context, f *v1.ExecutionFollowup) error {
-	if e := s.store.(executionFollowupStore).SaveExecutionFollowup(ctx, f); e != nil {
+	if e := s.store.SaveExecutionFollowup(ctx, f); e != nil {
 		return e
 	}
 	refs := append([]*v1.Ref{f.TaskClosingRef, f.AdmissionRef, f.OperationRef, f.AttemptRef, f.JobRef}, f.SendRefs...)

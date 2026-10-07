@@ -9,6 +9,7 @@ import (
 	"time"
 
 	v1 "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1"
+	"github.com/ruipengliu/lerna/infra/egressio"
 )
 
 func configureFile(t *testing.T, f *fixture, action, resource string) {
@@ -62,6 +63,7 @@ func TestManagedFileCreatePublishesBytesAndRetainsGovernedEvidence(t *testing.T)
 		}
 	}
 	f := newFixtureWithTargetAndFiles(t, 100, 80, false, nil, map[string]string{"documents": root})
+	f.h.Egress = newDeclaredEgress(t, f, egressio.NewFiles(map[string]string{"documents": root}, f.h.Ledger, f.h.Content))
 	fileParameters(t, f, "", []byte("create a record"))
 	configureFile(t, f, "CREATE", "managed://documents/report")
 	task, err := f.h.Tasks.QueryTask(f.ctx, f.caller, f.task.Name)

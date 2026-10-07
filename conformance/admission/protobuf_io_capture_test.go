@@ -37,7 +37,10 @@ func capturePhysicalIO(t *testing.T, samples *[]protobuf.Sample) {
 		t.Fatal(err)
 	}
 	// 与 assembly.Open 相同的真实模块、锁和 performer；仅增加边界观察。
-	gateway := egress.New(f.h.Tasks, f.h.Ledger, f.h.Content, recordingIO{next: egressio.HTTP{}, t: t, samples: samples}, critical)
+	gateway, err := egress.New(f.h.Tasks, f.h.Ledger, f.h.Content, recordingIO{next: egressio.HTTP{}, t: t, samples: samples}, critical)
+	if err != nil {
+		t.Fatal(err)
+	}
 	receipt, err := gateway.Invoke(f.ctx, &v1.Caller{UserId: "u", IssuerId: "egress"}, start)
 	accepted(t, receipt, err)
 	operation, err := f.h.Ledger.QueryOperation(f.ctx, f.caller, a.OperationId)

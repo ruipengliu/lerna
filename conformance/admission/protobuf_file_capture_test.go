@@ -76,7 +76,10 @@ func captureManagedFiles(t *testing.T, samples *[]protobuf.Sample) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	gateway := egress.New(f.h.Tasks, f.h.Ledger, observer, io, lock)
+	gateway, err := egress.New(f.h.Tasks, f.h.Ledger, observer, io, lock)
+	if err != nil {
+		t.Fatal(err)
+	}
 	var original *v1.RawObservation
 	var previous string
 	for index, action := range []string{"CREATE", "REPLACE", "READ"} {
