@@ -142,6 +142,132 @@ func TestSessionInputAndProcessingCommitBoundaries(t *testing.T) {
 	}
 }
 
+// 规则：G2、G3、G4、G11、R7
+func TestInitialGoalCreationCommitBoundaries(t *testing.T) {
+	for _, explicit := range []bool{false, true} {
+		for _, mode := range []sqlite.FaultMode{sqlite.CrashBeforeCommit, sqlite.CrashAfterCommit, sqlite.LoseReceipt} {
+			kind := "draft"
+			if explicit {
+				kind = "explicit"
+			}
+			t.Run(kind+"/"+string(mode), func(t *testing.T) {
+				ctx := context.Background()
+				caller := &v1.Caller{UserId: "u", IssuerId: "host"}
+				path := filepath.Join(t.TempDir(), "creation.db")
+				h, err := assembly.Open(path, "u", "d")
+				if err != nil {
+					t.Fatal(err)
+				}
+				r, err := h.Sessions.CreateSession(ctx, caller, &v1.CreateSessionCommand{Header: admissionHeader("creation-session")})
+				requireAccepted(t, r, err)
+				id := r.ResultRef.Name
+				contentRef, err := h.Content.Stage(ctx, caller, &v1.SubmitGoalCommand{Identity: admissionHeader("creation-body").Identity, ContractVersion: 1, SchemaId: "lerna.v1.SubmitGoal", FingerprintVersion: 1, Goal: "original initial goal"})
+				if err != nil {
+					t.Fatal(err)
+				}
+				c := &v1.SubmitInputCommand{Header: admissionHeader("initial-creation"), SessionId: id, InputKind: "GOAL", ContentRef: contentRef}
+				if explicit {
+					c.ExplicitConditions = []*v1.Requirement{{ConditionId: "original-condition", DescriptionRef: contentRef, Necessary: true, VerificationRule: "TARGET_RECORD", RuleVersion: 1}}
+				}
+				body, err := protojson.Marshal(c)
+				if err != nil {
+					t.Fatal(err)
+				}
+				commandFile := path + ".json"
+				if err = os.WriteFile(commandFile, body, 0600); err != nil {
+					t.Fatal(err)
+				}
+				h.Close()
+				if mode == sqlite.LoseReceipt {
+					h, err = assembly.Open(path, "u", "d")
+					if err != nil {
+						t.Fatal(err)
+					}
+					fault, err := sqlite.WithFault(ctx, "sessions.input", mode)
+					if err != nil {
+						t.Fatal(err)
+					}
+					r, err = h.Sessions.SubmitInput(fault, caller, c)
+					if err == nil || r != nil {
+						t.Fatalf("lost creation receipt: %v %v", r, err)
+					}
+					h.Close()
+				} else {
+					child := exec.Command(os.Args[0], "-test.run=^TestSessionInputCrashChild$")
+					child.Env = append(os.Environ(), "LERNA_INPUT_DB="+path, "LERNA_INPUT_POINT=sessions.input", "LERNA_INPUT_MODE="+string(mode), "LERNA_INPUT_COMMAND="+commandFile)
+					out, err := child.CombinedOutput()
+					var exit *exec.ExitError
+					if !errors.As(err, &exit) || exit.ExitCode() != sqlite.CrashExitCode {
+						t.Fatalf("creation fault not reached: %v %s", err, out)
+					}
+				}
+				h, err = assembly.Open(path, "u", "d")
+				if err != nil {
+					t.Fatal(err)
+				}
+				defer h.Close()
+				q, err := h.Durable.QueryReceipt(ctx, caller, c.Header.Identity)
+				if err != nil {
+					t.Fatal(err)
+				}
+				before, err := h.Sessions.QuerySession(ctx, caller, id)
+				if err != nil {
+					t.Fatal(err)
+				}
+				if mode == sqlite.CrashBeforeCommit {
+					if q.State != v1.ReceiptQueryState_RECEIPT_QUERY_STATE_NOT_FOUND || before.LastCommittedSeq != 0 || len(before.TaskRefs) != 0 || len(before.Inputs) != 0 {
+						t.Fatalf("partial creation: %v %v", q, before)
+					}
+					sources, err := h.Trace.QuerySources(ctx, caller)
+					if err != nil {
+						t.Fatal(err)
+					}
+					for _, source := range sources {
+						if source.Command.Event.TaskId != nil {
+							t.Fatalf("partial task source: %v", source)
+						}
+					}
+				} else if q.State != v1.ReceiptQueryState_RECEIPT_QUERY_STATE_DECIDED {
+					t.Fatalf("committed creation lost: %v", q)
+				}
+				r, err = h.Sessions.SubmitInput(ctx, caller, c)
+				requireAccepted(t, r, err)
+				if mode != sqlite.CrashBeforeCommit && !proto.Equal(r, q.Receipt) {
+					t.Fatal("original creation receipt changed")
+				}
+				first := r
+				r, err = h.Sessions.SubmitInput(ctx, caller, c)
+				if err != nil || !proto.Equal(first, r) {
+					t.Fatalf("creation replay: %v %v", r, err)
+				}
+				saved, err := h.Sessions.QuerySession(ctx, caller, id)
+				if err != nil || len(saved.TaskRefs) != 1 || len(saved.Inputs) != 1 || saved.LastCommittedSeq != 1 {
+					t.Fatalf("one original creation: %v %v", saved, err)
+				}
+				task, err := h.Tasks.QueryTask(ctx, caller, saved.TaskRefs[0].Name)
+				if err != nil || task.InputVersion != 1 || !proto.Equal(task.GoalRef, contentRef) {
+					t.Fatalf("original created task: %v %v", task, err)
+				}
+				history, err := h.Tasks.QueryInputs(ctx, caller, task.TaskId)
+				if err != nil || len(history.Inputs) != 1 || history.Inputs[0].TaskInputSeq != 1 || !proto.Equal(history.Inputs[0].InputRef, first.ResultRef) {
+					t.Fatalf("original initial history: %v %v", history, err)
+				}
+				planning, err := h.Tasks.QueryPlanning(ctx, caller, task.TaskId)
+				if err != nil {
+					t.Fatal(err)
+				}
+				if explicit {
+					if task.BoundInputVersion != 1 || history.Inputs[0].ProcessingStatus != "PROCESSED" || planning.Requirements.GetSource() != "USER_EXPLICIT" || !proto.Equal(planning.Requirements.AcceptedBy, c.Header.Identity) || !proto.Equal(planning.Requirements.SourceInputRef, first.ResultRef) {
+						t.Fatalf("explicit creation lost: %v %v %v", task, history, planning)
+					}
+				} else if task.BoundInputVersion != 0 || task.RequirementsStatus != v1.RequirementsStatus_REQUIREMENTS_STATUS_DRAFT || history.Inputs[0].ProcessingStatus != "ACCEPTED" || planning.Requirements != nil {
+					t.Fatalf("draft creation changed: %v %v %v", task, history, planning)
+				}
+			})
+		}
+	}
+}
+
 // 规则：G3
 func TestSessionInputCrashChild(t *testing.T) {
 	path := os.Getenv("LERNA_INPUT_DB")
