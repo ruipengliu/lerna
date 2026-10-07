@@ -43,7 +43,7 @@ func (s *Service) RetainSettlementInTransaction(ctx context.Context, c *v1.Calle
 	if len(f.ReservationRefs) == 0 {
 		return nil, command.Fail("INVARIANT_VIOLATION")
 	}
-	store := s.store.(settlementFollowupStore)
+	store := s.store
 	sources, e := store.BillingSourcesForOperation(ctx, a.OperationId)
 	if e != nil {
 		return nil, e
@@ -68,7 +68,7 @@ func (s *Service) QuerySettlementFollowup(ctx context.Context, c *v1.Caller, r *
 	if e := command.CheckName(c, r.Name, s.user, s.domain, "settlement-followup"); e != nil {
 		return nil, e
 	}
-	f, e := s.store.(settlementFollowupStore).LoadSettlementFollowup(ctx, r)
+	f, e := s.store.LoadSettlementFollowup(ctx, r)
 	if e == nil && f != nil && !proto.Equal(f.Ref, r) {
 		return nil, command.Fail("INVALID_REFERENCE")
 	}
@@ -99,7 +99,7 @@ func (s *Service) settlementFollowupScope(ctx context.Context, c *v1.Caller, f *
 	if !listed || a == nil || !proto.Equal(a.TaskId, f.TaskId) || !proto.Equal(closing.TaskId, f.TaskId) || !proto.Equal(a.OperationId, f.OperationId) {
 		return nil, false, command.Fail("FOLLOWUP_RESPONSIBILITY_MISSING")
 	}
-	job, e := s.store.(settlementFollowupStore).LoadJob(ctx, f.JobRef.Name)
+	job, e := s.store.LoadJob(ctx, f.JobRef.Name)
 	if e != nil {
 		return nil, false, e
 	}
@@ -139,7 +139,7 @@ func (s *Service) settlementFollowupScope(ctx context.Context, c *v1.Caller, f *
 		}
 		seen[ref.Name.LocalId] = true
 	}
-	sources, e := s.store.(settlementFollowupStore).BillingSourcesForOperation(ctx, f.OperationId)
+	sources, e := s.store.BillingSourcesForOperation(ctx, f.OperationId)
 	if e != nil {
 		return nil, false, e
 	}
@@ -183,7 +183,7 @@ func (s *Service) ProcessSettlementFollowups(ctx context.Context, c *v1.Caller) 
 	if e := command.CheckCaller(c, s.user); e != nil {
 		return e
 	}
-	store := s.store.(settlementFollowupStore)
+	store := s.store
 	all, e := store.AllSettlementFollowups(ctx)
 	if e != nil {
 		return e

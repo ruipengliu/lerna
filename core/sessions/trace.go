@@ -11,7 +11,7 @@ type TraceSource interface {
 }
 
 func (s *Service) saveInputDelivery(ctx context.Context, v *v1.InputDelivery) error {
-	if err := s.store.(DeliveryStore).SaveInputDelivery(ctx, v); err != nil {
+	if err := s.store.SaveInputDelivery(ctx, v); err != nil {
 		return err
 	}
 	source := s.store
@@ -19,7 +19,7 @@ func (s *Service) saveInputDelivery(ctx context.Context, v *v1.InputDelivery) er
 }
 
 func (s *Service) saveQuestion(ctx context.Context, q *v1.Question) error {
-	if err := s.store.(QuestionStore).SaveQuestion(ctx, q); err != nil {
+	if err := s.store.SaveQuestion(ctx, q); err != nil {
 		return err
 	}
 	return s.store.SaveTraceSource(ctx, "sessions", &v1.TraceEvent{EventType: "QUESTION_" + q.Status, SourceRecordRef: q.Ref, TaskId: q.TaskId, OriginCommand: q.PublishedBy, RequirementsVersion: q.RequirementsVersion, BodyRef: q.ContentRef, RelatedRefs: []*v1.Ref{q.ContentRef, q.ResponseInputRef}})
@@ -27,7 +27,7 @@ func (s *Service) saveQuestion(ctx context.Context, q *v1.Question) error {
 
 // saveConfirmation 只读取已固定的类型化事项，不渲染正文或查询当前可消费性。
 func (s *Service) saveConfirmation(ctx context.Context, c *v1.Confirmation) error {
-	if err := s.confirmationStore.SaveConfirmation(ctx, c); err != nil {
+	if err := s.store.SaveConfirmation(ctx, c); err != nil {
 		return err
 	}
 	event := &v1.TraceEvent{EventType: "CONFIRMATION_" + c.State, SourceRecordRef: c.Ref}

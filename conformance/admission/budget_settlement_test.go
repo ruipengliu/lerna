@@ -43,6 +43,7 @@ func TestKnownUsageSettlesOnceAndRetainsOriginalReport(t *testing.T) {
 	f := newFixtureWithTarget(t, 100, 80, false, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		_ = json.NewEncoder(w).Encode(map[string]any{"billing": map[string]any{"rule": "reference-billing-v1", "namespace": "lerna-reference", "account": "reference-account", "native_instance": "charge:" + r.Header.Get("Lerna-Send-Id"), "component": "call", "send_id": r.Header.Get("Lerna-Send-Id"), "external_key": r.Header.Get("Idempotency-Key"), "source_version": 1, "unit": "USD_MICRO", "amount": 25, "final": true, "price_version": "reference-price-v1"}})
 	}))
+	f.h.Budget.WithUsageSource(declaredBudgetUsageSource{f.h.Ledger})
 	a, c := prepareStart(t, f)
 	r, e := f.h.Egress.Invoke(f.ctx, &v1.Caller{UserId: "u", IssuerId: "egress"}, c)
 	accepted(t, r, e)

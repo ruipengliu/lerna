@@ -6,6 +6,7 @@ import (
 
 	"github.com/ruipengliu/lerna/contracts/command"
 	v1 "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1"
+	"github.com/ruipengliu/lerna/core/durable"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -46,8 +47,16 @@ type Service struct {
 	user, domain, trustedIssuer string
 }
 
-func New(s Store, d Decisions, user, domain, trustedIssuer string) *Service {
-	return &Service{store: s, decisions: d, user: user, domain: domain, trustedIssuer: trustedIssuer}
+func New(s Store, d Decisions, user, domain, trustedIssuer string) (*Service, error) {
+	if err := durable.RequireDependencies("grants", durable.Dependency{Name: "store", Value: s}, durable.Dependency{Name: "decisions", Value: d}); err != nil {
+		return nil, err
+	}
+	return &Service{store: s, decisions: d, user: user, domain: domain, trustedIssuer: trustedIssuer}, nil
+}
+
+// ValidateDependencies 在兼容检查和业务恢复前验证循环装配的事实及出口连接。
+func (s *Service) ValidateDependencies() error {
+	return durable.RequireDependencies("grants", durable.Dependency{Name: "store", Value: s.store}, durable.Dependency{Name: "decisions", Value: s.decisions}, durable.Dependency{Name: "admissions", Value: s.admissions}, durable.Dependency{Name: "confirmations", Value: s.confirmations}, durable.Dependency{Name: "confirmationContent", Value: s.confirmationContent}, durable.Dependency{Name: "revocationExits", Value: s.revocationExits})
 }
 func (s *Service) Configure(ctx context.Context, caller *v1.Caller, c *v1.ConfigureGrantCommand) (*v1.CommandReceipt, error) {
 	if e := command.ValidateHeader(c.GetHeader(), c); e != nil {

@@ -8,9 +8,16 @@ import (
 
 	"github.com/ruipengliu/lerna/contracts/command"
 	v1 "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1"
+	"github.com/ruipengliu/lerna/core/durable"
 )
 
 type Store interface {
+	usageStore
+	sendStore
+	billingStore
+	releaseStore
+	versionStore
+	settlementFollowupStore
 	TraceSource
 	Reservations(context.Context, *v1.GlobalName) ([]*v1.Reservation, error)
 	SaveBudget(context.Context, *v1.Budget) error
@@ -32,8 +39,14 @@ type Service struct {
 	user, domain, trustedIssuer string
 }
 
-func New(s Store, d Decisions, user, domain, trustedIssuer string) *Service {
-	return &Service{store: s, decisions: d, user: user, domain: domain, trustedIssuer: trustedIssuer}
+func New(s Store, d Decisions, user, domain, trustedIssuer string) (*Service, error) {
+	if err := durable.RequireDependencies("budget",
+		durable.Dependency{Name: "store", Value: s},
+		durable.Dependency{Name: "decisions", Value: d},
+	); err != nil {
+		return nil, err
+	}
+	return &Service{store: s, decisions: d, user: user, domain: domain, trustedIssuer: trustedIssuer}, nil
 }
 func (s *Service) Configure(ctx context.Context, caller *v1.Caller, c *v1.ConfigureBudgetCommand) (*v1.CommandReceipt, error) {
 	if e := command.ValidateHeader(c.GetHeader(), c); e != nil {

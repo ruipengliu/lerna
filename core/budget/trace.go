@@ -25,7 +25,7 @@ func (s *Service) saveReservation(ctx context.Context, v *v1.Reservation) error 
 	return source.SaveTraceSource(ctx, "budget", &v1.TraceEvent{EventType: "RESERVATION_CHANGED", SourceRecordRef: v.Ref, TaskId: v.TaskId, OperationId: v.OperationId, RelatedRefs: append([]*v1.Ref{v.AdmissionRef}, v.BudgetRefs...)})
 }
 func (s *Service) saveBillingSource(ctx context.Context, v *v1.BillingSource) error {
-	if err := s.store.(billingStore).SaveBillingSource(ctx, v); err != nil {
+	if err := s.store.SaveBillingSource(ctx, v); err != nil {
 		return err
 	}
 	source := s.store
@@ -41,7 +41,7 @@ func (s *Service) saveBillingSource(ctx context.Context, v *v1.BillingSource) er
 	return source.SaveTraceSource(ctx, "budget", &v1.TraceEvent{EventType: kind, SourceRecordRef: v.Ref, TaskId: v.TaskId, OperationId: v.OperationId, SendRef: v.SendRef, RelatedRefs: []*v1.Ref{v.ReservationRef, v.AdmissionRef, v.EntryRef, v.PriceRuleRef, v.ConflictRef}})
 }
 func (s *Service) saveUsage(ctx context.Context, v *v1.UsageReport) error {
-	if err := s.store.(usageStore).SaveUsage(ctx, v); err != nil {
+	if err := s.store.SaveUsage(ctx, v); err != nil {
 		return err
 	}
 	source := s.store

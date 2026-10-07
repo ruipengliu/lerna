@@ -20,7 +20,7 @@ func (s *Service) dependencies(ctx context.Context, c *v1.SubmitInputCommand) (b
 		if id == nil || id.UserId != s.user || id.TargetDomainId != s.domain || id.IssuerId == "" || id.CommandId == "" || proto.Equal(id, c.Header.Identity) {
 			return false, command.Fail("INVALID_DEPENDENCY")
 		}
-		r, e := s.store.(DeliveryStore).LoadReceipt(ctx, id)
+		r, e := s.store.LoadReceipt(ctx, id)
 		if e != nil {
 			return false, e
 		}
@@ -41,7 +41,7 @@ func (s *Service) QueryInput(ctx context.Context, caller *v1.Caller, r *v1.Ref) 
 	if e := command.CheckName(caller, r.Name, s.user, s.domain, "input"); e != nil {
 		return nil, e
 	}
-	d, e := s.store.(DeliveryStore).LoadInputDelivery(ctx, r)
+	d, e := s.store.LoadInputDelivery(ctx, r)
 	if e == nil && d != nil && !proto.Equal(d.Ref, r) {
 		return nil, command.Fail("STALE_REFERENCE")
 	}

@@ -59,7 +59,7 @@ func (s *Service) QueryQuestion(ctx context.Context, caller *v1.Caller, r *v1.Re
 	if e := command.CheckName(caller, r.Name, s.user, s.domain, "question"); e != nil {
 		return nil, e
 	}
-	q, e := s.store.(QuestionStore).LoadQuestion(ctx, r)
+	q, e := s.store.LoadQuestion(ctx, r)
 	if e == nil && q != nil && !proto.Equal(q.Ref, r) {
 		return nil, command.Fail("STALE_REFERENCE")
 	}
