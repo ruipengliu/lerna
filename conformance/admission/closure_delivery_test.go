@@ -23,6 +23,7 @@ type originalClosure struct {
 	actor        *v1.Caller
 	completion   *v1.CompletionClosureIntent
 	cancellation *v1.CancellationClosureIntent
+	taskClosing  *v1.TaskClosureIntent
 }
 
 func prepareOriginalClosure(t *testing.T, kind string) *originalClosure {
@@ -31,7 +32,8 @@ func prepareOriginalClosure(t *testing.T, kind string) *originalClosure {
 	a, _ := prepareStart(t, f)
 	c := &originalClosure{f: f, kind: kind}
 	jobType := "DELIVER_CANCELLATION_CLOSURE"
-	if kind == "completion" {
+	switch kind {
+	case "completion":
 		p := completeProposal(t, f, []*v1.CompletionEvidence{{ConditionId: "created", OperationId: a.OperationId}})
 		r, err := f.h.Tasks.BeginCompletion(f.ctx, f.caller, &v1.BeginCompletionCommand{Header: header("delivery-begin"), TaskId: f.task.Name, ProposalRef: p})
 		accepted(t, r, err)
@@ -45,7 +47,24 @@ func prepareOriginalClosure(t *testing.T, kind string) *originalClosure {
 		}
 		c.actor = &v1.Caller{UserId: "u", IssuerId: "tasks-completion"}
 		jobType = "DELIVER_COMPLETION_CLOSURE"
-	} else {
+	case "task-closing":
+		task, err := f.h.Tasks.QueryTask(f.ctx, f.caller, f.task.Name)
+		if err != nil {
+			t.Fatal(err)
+		}
+		r, err := f.h.Tasks.BeginTaskClose(f.ctx, f.caller, &v1.BeginTaskCloseCommand{Header: header("delivery-begin-closing"), TaskRef: &v1.Ref{Name: task.TaskId, Revision: task.Revision, SchemaId: "lerna.v1.Task"}, ExpectedControlGeneration: task.ControlGeneration, Outcome: "FAILED", CloseReason: "USER_STOPPED"})
+		accepted(t, r, err)
+		closing, err := f.h.Tasks.QueryTaskClosing(f.ctx, f.caller, r.ResultRef)
+		if err != nil || len(closing.GetClosureIntentRefs()) != 1 {
+			t.Fatalf("original task closing: %v %v", closing, err)
+		}
+		c.taskClosing, err = f.h.Tasks.QueryTaskClosureIntent(f.ctx, f.caller, closing.ClosureIntentRefs[0])
+		if err != nil {
+			t.Fatal(err)
+		}
+		c.actor = &v1.Caller{UserId: "u", IssuerId: "tasks-closing"}
+		jobType = "DELIVER_TASK_CLOSURE"
+	default:
 		cancelTask(t, f, "delivery-cancel")
 		scope, err := f.h.Tasks.QueryCancellation(f.ctx, f.caller, f.task.Name)
 		if err != nil || len(scope.GetClosureIntentRefs()) != 1 {
@@ -70,12 +89,18 @@ func (c *originalClosure) process(ctx context.Context, owner *tasks.Service, cla
 	if c.kind == "completion" {
 		return owner.ProcessCompletionClosureClaim(ctx, claim)
 	}
+	if c.kind == "task-closing" {
+		return owner.ProcessTaskClosureClaim(ctx, claim)
+	}
 	return owner.ProcessCancellationClosureClaim(ctx, claim)
 }
 
 func (c *originalClosure) identity() *v1.CommandIdentity {
 	if c.kind == "completion" {
 		return c.completion.Command.Header.Identity
+	}
+	if c.kind == "task-closing" {
+		return c.taskClosing.Command.Header.Identity
 	}
 	return c.cancellation.Command.Header.Identity
 }
@@ -84,9 +109,12 @@ func (c *originalClosure) recipientReceipt(t *testing.T) *v1.CommandReceipt {
 	t.Helper()
 	var r *v1.CommandReceipt
 	var err error
-	if c.kind == "completion" {
+	switch c.kind {
+	case "completion":
 		r, err = c.f.h.Egress.CloseForCompletion(c.f.ctx, c.actor, c.completion.Command)
-	} else {
+	case "task-closing":
+		r, err = c.f.h.Egress.CloseForTaskClose(c.f.ctx, c.actor, c.taskClosing.Command)
+	default:
 		r, err = c.f.h.Egress.CloseForCancellation(c.f.ctx, c.actor, c.cancellation.Command)
 	}
 	accepted(t, r, err)
@@ -97,6 +125,13 @@ func (c *originalClosure) savedReceipt(t *testing.T) *v1.CommandReceipt {
 	t.Helper()
 	if c.kind == "completion" {
 		intent, err := c.f.h.Tasks.QueryCompletionIntent(c.f.ctx, c.f.caller, c.completion.Ref)
+		if err != nil {
+			t.Fatal(err)
+		}
+		return intent.RecipientReceipt
+	}
+	if c.kind == "task-closing" {
+		intent, err := c.f.h.Tasks.QueryTaskClosureIntent(c.f.ctx, c.f.caller, c.taskClosing.Ref)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -151,14 +186,17 @@ func (f *closureReceiptFault) QueryReceipt(ctx context.Context, c *v1.Caller, id
 
 // 规则：G3、G4、G11、R7
 func TestClosureDeliveryWaitsForOriginalReceiptAndRejectsChangedProof(t *testing.T) {
-	for _, kind := range []string{"completion", "cancellation"} {
+	for _, kind := range []string{"completion", "cancellation", "task-closing"} {
 		t.Run(kind, func(t *testing.T) {
 			c := prepareOriginalClosure(t, kind)
 			f := c.f
 			fault := &closureReceiptFault{Service: f.h.Egress, unavailable: true}
-			if kind == "completion" {
+			switch kind {
+			case "completion":
 				f.h.Tasks.WithCompletionClosures(f.h.Durable, fault)
-			} else {
+			case "task-closing":
+				f.h.Tasks.WithTaskClosures(f.h.Durable, fault)
+			default:
 				f.h.Tasks.WithCancellationClosures(f.h.Durable, fault)
 			}
 			for _, field := range []string{"process", "epoch", "revision"} {
@@ -243,7 +281,7 @@ func closureOwnerWithStore(t *testing.T, f *fixture, store tasks.Store, work *du
 
 // 规则：G3、G4、G11、R7
 func TestClosureSourceFailureRollsBackReceiptEventAndOriginalJob(t *testing.T) {
-	for _, kind := range []string{"completion", "cancellation"} {
+	for _, kind := range []string{"completion", "cancellation", "task-closing"} {
 		t.Run(kind, func(t *testing.T) {
 			c := prepareOriginalClosure(t, kind)
 			f := c.f
@@ -262,8 +300,11 @@ func TestClosureSourceFailureRollsBackReceiptEventAndOriginalJob(t *testing.T) {
 			}
 			t.Cleanup(func() { store.Close() })
 			eventType := "COMPLETION_HANDOFF_CHANGED"
-			if kind == "cancellation" {
+			switch kind {
+			case "cancellation":
 				eventType = "CANCELLATION_CLOSURE_ACKNOWLEDGED"
+			case "task-closing":
+				eventType = "TASK_CLOSURE_ACKNOWLEDGED"
 			}
 			fault := &closureSourceFault{Store: store, fail: true, kind: eventType}
 			// 源 Owner 与原 Work 共用这个真实存储实例，保持原事务上下文。
@@ -328,16 +369,19 @@ func TestClosureSourceFailureRollsBackReceiptEventAndOriginalJob(t *testing.T) {
 
 // 规则：G3、G11、R7
 func TestClosureRecoveryCancellationPreservesUnexpiredClaim(t *testing.T) {
-	for _, kind := range []string{"completion", "cancellation"} {
+	for _, kind := range []string{"completion", "cancellation", "task-closing"} {
 		t.Run(kind, func(t *testing.T) {
 			c := prepareOriginalClosure(t, kind)
 			f := c.f
 			ctx, cancel := context.WithTimeout(f.ctx, 40*time.Millisecond)
 			defer cancel()
 			var err error
-			if kind == "completion" {
+			switch kind {
+			case "completion":
 				err = f.h.Tasks.RecoverCompletions(ctx, f.caller)
-			} else {
+			case "task-closing":
+				err = f.h.Tasks.RecoverTaskClosures(ctx, f.caller)
+			default:
 				err = f.h.Tasks.RecoverCancellations(ctx, f.caller)
 			}
 			// 期限可在等待或原存储读取期间到期；后者保留存储的暂时不可用错误。
@@ -358,3 +402,4 @@ func TestClosureRecoveryCancellationPreservesUnexpiredClaim(t *testing.T) {
 var _ tasks.Store = (*closureSourceFault)(nil)
 var _ tasks.CompletionCloser = (*closureReceiptFault)(nil)
 var _ tasks.CancellationCloser = (*closureReceiptFault)(nil)
+var _ tasks.TaskCloser = (*closureReceiptFault)(nil)

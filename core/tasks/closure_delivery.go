@@ -13,6 +13,7 @@ type closureDeliveryKind uint8
 const (
 	completionClosureDelivery closureDeliveryKind = iota
 	cancellationClosureDelivery
+	taskClosureDelivery
 )
 
 type closureReceiptSource interface {
@@ -32,6 +33,7 @@ type closureDelivery struct {
 	recipient    closureReceiptSource
 	completion   *v1.CompletionClosureIntent
 	cancellation *v1.CancellationClosureIntent
+	taskClosing  *v1.TaskClosureIntent
 }
 
 // processClosureClaim 保留意图、接收方接纳与源确认三个提交域；只补交原身份。
@@ -107,6 +109,26 @@ func (s *Service) readClosureDelivery(ctx context.Context, j *v1.Job, kind closu
 		delivery.fingerprint = command.SemanticFingerprint("cancellation-seal", c)
 		delivery.resultSchema, delivery.point = "lerna.v1.CancellationSeal", "tasks.cancellation_receipt"
 		delivery.recipient = s.cancellationCloser
+	case taskClosureDelivery:
+		current, e := s.taskClosingJobs.ReadTaskClosureClaim(ctx, j)
+		if e != nil {
+			return nil, e
+		}
+		delivery.claim = current
+		delivery.actor = &v1.Caller{UserId: s.user, IssuerId: "tasks-closing"}
+		intent, e := s.QueryTaskClosureIntent(ctx, delivery.actor, current.SpecificationRef)
+		if e != nil {
+			return nil, e
+		}
+		if intent == nil || !proto.Equal(intent.Command.Header.Identity, current.Responsibility) {
+			return nil, command.Fail("INVARIANT_VIOLATION")
+		}
+		delivery.taskClosing = intent
+		c := intent.Command
+		delivery.identity, delivery.domain = c.Header.Identity, c.OperationId.AuthorityDomainId
+		delivery.fingerprint = command.SemanticFingerprint("task-closure-seal", c)
+		delivery.resultSchema, delivery.point = "lerna.v1.TaskClosureSeal", "tasks.task_closure_receipt"
+		delivery.recipient = s.taskCloser
 	default:
 		return nil, command.Fail("INVALID_JOB")
 	}
@@ -119,6 +141,8 @@ func (s *Service) deliverClosure(ctx context.Context, delivery *closureDelivery)
 		return s.completionCloser.CloseForCompletion(ctx, delivery.actor, delivery.completion.Command)
 	case cancellationClosureDelivery:
 		return s.cancellationCloser.CloseForCancellation(ctx, delivery.actor, delivery.cancellation.Command)
+	case taskClosureDelivery:
+		return s.taskCloser.CloseForTaskClose(ctx, delivery.actor, delivery.taskClosing.Command)
 	default:
 		return nil, command.Fail("INVALID_JOB")
 	}
@@ -128,6 +152,7 @@ func (s *Service) acknowledgeClosureReceipt(ctx context.Context, delivery *closu
 	var original *v1.CommandReceipt
 	var completion *v1.CompletionClosureIntent
 	var cancellation *v1.CancellationClosureIntent
+	var taskClosing *v1.TaskClosureIntent
 	var e error
 	switch delivery.kind {
 	case completionClosureDelivery:
@@ -145,6 +170,12 @@ func (s *Service) acknowledgeClosureReceipt(ctx context.Context, delivery *closu
 			return command.Fail("INVARIANT_VIOLATION")
 		}
 		original = cancellation.RecipientReceipt
+	case taskClosureDelivery:
+		taskClosing, e = s.QueryTaskClosureIntent(ctx, delivery.actor, delivery.taskClosing.Ref)
+		if e != nil {
+			return e
+		}
+		original = taskClosing.RecipientReceipt
 	default:
 		return command.Fail("INVALID_JOB")
 	}
@@ -168,6 +199,12 @@ func (s *Service) acknowledgeClosureReceipt(ctx context.Context, delivery *closu
 			return e
 		}
 		return s.updateCancellationWaiting(ctx, delivery.actor, cancellation.TaskId)
+	case taskClosureDelivery:
+		if e = s.taskClosingJobs.CompleteTaskClosureInTransaction(ctx, delivery.claim); e != nil {
+			return e
+		}
+		taskClosing.RecipientReceipt = r
+		return s.saveTaskClosureIntent(ctx, taskClosing)
 	default:
 		return command.Fail("INVALID_JOB")
 	}

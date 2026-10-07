@@ -19,6 +19,8 @@ func (s *Service) closureJobs(kind closureDeliveryKind) (closureWork, string, er
 		return s.completionJobs, "DELIVER_COMPLETION_CLOSURE", nil
 	case cancellationClosureDelivery:
 		return s.cancellationJobs, "DELIVER_CANCELLATION_CLOSURE", nil
+	case taskClosureDelivery:
+		return s.taskClosingJobs, "DELIVER_TASK_CLOSURE", nil
 	default:
 		return nil, "", command.Fail("INVALID_JOB")
 	}
@@ -81,6 +83,8 @@ func (s *Service) recoverClosureDeliveries(ctx context.Context, c *v1.Caller, ki
 			e = s.ProcessCompletions(ctx, c)
 		case cancellationClosureDelivery:
 			e = s.ProcessCancellations(ctx, c)
+		case taskClosureDelivery:
+			e = s.ProcessTaskClosures(ctx, c)
 		default:
 			return command.Fail("INVALID_JOB")
 		}
