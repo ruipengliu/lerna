@@ -7,10 +7,14 @@ import (
 
 	"github.com/ruipengliu/lerna/contracts/command"
 	v1 "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1"
+	"github.com/ruipengliu/lerna/core/durable"
 	"google.golang.org/protobuf/proto"
 )
 
+// Store 声明事件、原来源交接、索引与指标的全部持久能力。
 type Store interface {
+	Sources
+	metricFacts
 	SaveTraceEvent(context.Context, *v1.TraceEvent) error
 	LoadTraceEvent(context.Context, *v1.Ref) (*v1.TraceEvent, error)
 }
@@ -28,8 +32,21 @@ type Service struct {
 	user, domain string
 }
 
-func New(s Store, w Work, source Source, user, domain string) *Service {
-	return &Service{s, w, source, user, domain}
+func New(s Store, w Work, source Source, user, domain string) (*Service, error) {
+	service := &Service{store: s, work: w, source: source, user: user, domain: domain}
+	if err := service.ValidateDependencies(); err != nil {
+		return nil, err
+	}
+	return service, nil
+}
+
+// ValidateDependencies 在恢复和命令调用前核对完整依赖，不推进任何责任。
+func (s *Service) ValidateDependencies() error {
+	return durable.RequireDependencies("trace",
+		durable.Dependency{Name: "store", Value: s.store},
+		durable.Dependency{Name: "work", Value: s.work},
+		durable.Dependency{Name: "source", Value: s.source},
+	)
 }
 func (s *Service) Accept(ctx context.Context, caller *v1.Caller, c *v1.AcceptTraceCommand) (*v1.CommandReceipt, error) {
 	if e := command.ValidateHeader(c.GetHeader(), c); e != nil {
@@ -44,7 +61,7 @@ func (s *Service) Accept(ctx context.Context, caller *v1.Caller, c *v1.AcceptTra
 			if ev == nil || ev.Ref == nil || ev.Ref.Name == nil || ev.Ref.Name.UserId != s.user || ev.Ref.Name.AuthorityDomainId != s.domain || ev.SourceRecordRef == nil || ev.SourceSeq == 0 {
 				return nil, command.Fail("INVALID_TRACE_EVENT")
 			}
-			source, err := s.store.(Sources).LoadTraceSource(tx, c.Header.Identity)
+			source, err := s.store.LoadTraceSource(tx, c.Header.Identity)
 			if err != nil {
 				return nil, err
 			}

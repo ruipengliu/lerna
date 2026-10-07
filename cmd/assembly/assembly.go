@@ -98,7 +98,11 @@ func OpenWithOptions(path, user, domain string, options Options) (*Harness, erro
 	c.WithObservations(h.Ledger)
 	h.Ledger.WithObservations(c)
 	h.Budget.WithUsageSource(h.Ledger).WithBillingEvidence(c).WithCompletionAuthority(t).WithCancellationAuthority(t).WithTaskClosingAuthority(t)
-	h.Trace = trace.New(s, durable.New(s.TraceWork(), user, domain+"/trace"), h.Ledger, user, domain+"/trace")
+	h.Trace, err = trace.New(s, durable.New(s.TraceWork(), user, domain+"/trace"), h.Ledger, user, domain+"/trace")
+	if err != nil {
+		s.Close()
+		return nil, err
+	}
 	h.Ledger.WithReports(h.Budget, d, h.Trace)
 	t.WithStart(h.Grants, h.Budget, h.Ledger)
 	t.WithCompletion(h.Ledger, h.Budget)
