@@ -150,7 +150,7 @@ func OpenWithOptions(path, user, domain string, options Options) (*Harness, erro
 		return nil, err
 	}
 	h.connect()
-	if err := h.connectManualProgress(); err != nil {
+	if err := h.connectRecovery(); err != nil {
 		s.Close()
 		return nil, err
 	}

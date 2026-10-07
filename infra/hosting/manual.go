@@ -64,7 +64,8 @@ type ManualDependencies struct {
 }
 
 type Service struct {
-	manual ManualDependencies
+	manual  ManualDependencies
+	startup *StartupDependencies
 }
 
 func NewManual(dependencies ManualDependencies) (*Service, error) {
@@ -96,7 +97,13 @@ func (s *Service) ValidateDependencies() error {
 			required = append(required, dependency)
 		}
 	}
-	return durable.RequireDependencies("hosting", required...)
+	if err := durable.RequireDependencies("hosting", required...); err != nil {
+		return err
+	}
+	if s.startup != nil {
+		return s.ValidateStartupDependencies()
+	}
+	return nil
 }
 
 // ManualProgress 原样传递 context/caller，只执行原 CLI 支持的固定阶段。
