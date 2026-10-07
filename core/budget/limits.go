@@ -10,6 +10,7 @@ import (
 )
 
 type versionStore interface {
+	LoadBillingSourceVersion(context.Context, *v1.Ref) (*v1.BillingSource, error)
 	LoadBudgetVersion(context.Context, *v1.Ref) (*v1.Budget, error)
 }
 
@@ -34,7 +35,7 @@ func (s *Service) QueryBudgetVersion(ctx context.Context, c *v1.Caller, r *v1.Re
 	if e := command.CheckName(c, r.Name, s.user, s.domain, "budget"); e != nil {
 		return nil, e
 	}
-	b, e := s.store.(versionStore).LoadBudgetVersion(ctx, r)
+	b, e := s.store.LoadBudgetVersion(ctx, r)
 	if e != nil || b == nil {
 		return b, e
 	}

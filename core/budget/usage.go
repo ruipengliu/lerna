@@ -9,6 +9,11 @@ import (
 )
 
 type UsageSource interface {
+	BillingExecution
+	ClosureEvidence
+	completionProofs
+	cancellationProofs
+	taskClosingProofs
 	QueryReports(context.Context, *v1.Caller, *v1.Ref) (*v1.ObservationReports, error)
 }
 type usageStore interface {
@@ -38,7 +43,7 @@ func (s *Service) AcceptUsage(ctx context.Context, caller *v1.Caller, c *v1.Acce
 		if source == nil || !proto.Equal(source.Usage.GetUsage(), c.Usage) {
 			return nil, command.Fail("INVALID_USAGE_SOURCE")
 		}
-		old, e := s.store.(usageStore).LoadUsage(tx, u.Ref)
+		old, e := s.store.LoadUsage(tx, u.Ref)
 		if e != nil {
 			return nil, e
 		}
@@ -61,7 +66,7 @@ func (s *Service) QueryUsage(ctx context.Context, caller *v1.Caller, r *v1.Ref) 
 	if e := command.CheckName(caller, r.Name, s.user, s.domain, "usage"); e != nil {
 		return nil, e
 	}
-	v, e := s.store.(usageStore).LoadUsage(ctx, r)
+	v, e := s.store.LoadUsage(ctx, r)
 	if v != nil && !proto.Equal(v.Ref, r) {
 		return nil, command.Fail("INVALID_REFERENCE")
 	}

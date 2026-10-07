@@ -37,14 +37,14 @@ func (s *Service) ConsumeSendInTransaction(ctx context.Context, a *v1.Admission,
 		}
 		reservation = basis.ReservationRef
 	}
-	r, e := s.store.(sendStore).LoadCurrentReservation(ctx, reservation)
+	r, e := s.store.LoadCurrentReservation(ctx, reservation)
 	if e != nil {
 		return e
 	}
 	if r == nil || r.Status != "RESERVED" || !proto.Equal(r.AdmissionRef, a.Ref) || !proto.Equal(r.OperationId, a.OperationId) || !proto.Equal(r.TaskId, a.TaskId) || r.Unit != a.BudgetBasis.Unit || r.Ceiling != a.BudgetBasis.Ceiling || r.ConsumedSends >= r.SendCeiling {
 		return command.Fail("SEND_BUDGET_EXCEEDED")
 	}
-	old, e := s.store.(sendStore).LoadSendConsumption(ctx, send)
+	old, e := s.store.LoadSendConsumption(ctx, send)
 	if e != nil {
 		return e
 	}
@@ -57,7 +57,7 @@ func (s *Service) ConsumeSendInTransaction(ctx context.Context, a *v1.Admission,
 	if e = s.saveReservation(ctx, r); e != nil {
 		return e
 	}
-	if e = s.store.(sendStore).SaveSendConsumption(ctx, use); e != nil {
+	if e = s.store.SaveSendConsumption(ctx, use); e != nil {
 		return e
 	}
 	source := &v1.BillingSource{Ref: command.NewRef(s.user, s.domain, "billing-source", "lerna.v1.BillingSource"), SendRef: send, ReservationRef: reservation, AdmissionRef: a.Ref, TaskId: a.TaskId, OperationId: a.OperationId, Unit: r.Unit, Status: "PENDING", PriceRuleRef: a.BudgetBasis.RateBasisRef}
@@ -66,15 +66,15 @@ func (s *Service) ConsumeSendInTransaction(ctx context.Context, a *v1.Admission,
 
 // CheckConsumedSendInTransaction 验证原发送的费用责任仍存在，不重新占用额度。
 func (s *Service) CheckConsumedSendInTransaction(ctx context.Context, a *v1.Admission, send *v1.Ref) error {
-	r, e := s.store.(sendStore).LoadCurrentReservation(ctx, a.BudgetBasis.ReservationRef)
+	r, e := s.store.LoadCurrentReservation(ctx, a.BudgetBasis.ReservationRef)
 	if e != nil {
 		return e
 	}
-	u, e := s.store.(sendStore).LoadSendConsumption(ctx, send)
+	u, e := s.store.LoadSendConsumption(ctx, send)
 	if e != nil {
 		return e
 	}
-	source, e := s.store.(billingStore).LoadBillingSource(ctx, send)
+	source, e := s.store.LoadBillingSource(ctx, send)
 	if e != nil {
 		return e
 	}
