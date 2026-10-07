@@ -9,10 +9,14 @@ import (
 
 	"github.com/ruipengliu/lerna/contracts/command"
 	v1 "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1"
+	"github.com/ruipengliu/lerna/core/durable"
 )
 
 type Store interface {
 	TraceSource
+	DeliveryStore
+	QuestionStore
+	ConfirmationStore
 	SaveSession(context.Context, *v1.Session) error
 	LoadSession(context.Context, *v1.GlobalName) (*v1.Session, error)
 	Position(context.Context) (uint64, int64, error)
@@ -37,20 +41,26 @@ type Content interface {
 	Stage(context.Context, *v1.Caller, *v1.SubmitGoalCommand) (*v1.Ref, error)
 }
 type Service struct {
-	confirmationStore     ConfirmationStore
-	confirmationDecisions ConfirmationDecisions
-	operationFacts        ConfirmationFacts
-	grantFacts            ConfirmationFacts
-	store                 Store
-	durable               Durable
-	tasks                 Tasks
-	content               Content
-	user, domain          string
-	processInstance       string
+	operationFacts  ConfirmationFacts
+	grantFacts      ConfirmationFacts
+	store           Store
+	durable         Durable
+	tasks           Tasks
+	content         Content
+	user, domain    string
+	processInstance string
 }
 
-func New(s Store, d Durable, t Tasks, c Content, user, domain string) *Service {
-	return &Service{store: s, durable: d, tasks: t, content: c, user: user, domain: domain, processInstance: command.NewRef(user, domain, "worker", "worker").Name.LocalId}
+func New(s Store, d Durable, t Tasks, c Content, user, domain string) (*Service, error) {
+	if err := durable.RequireDependencies("sessions", durable.Dependency{Name: "store", Value: s}, durable.Dependency{Name: "durable", Value: d}, durable.Dependency{Name: "tasks", Value: t}, durable.Dependency{Name: "content", Value: c}); err != nil {
+		return nil, err
+	}
+	return &Service{store: s, durable: d, tasks: t, content: c, user: user, domain: domain, processInstance: command.NewRef(user, domain, "worker", "worker").Name.LocalId}, nil
+}
+
+// ValidateDependencies 在兼容检查和业务恢复前验证两阶段确认连接。
+func (s *Service) ValidateDependencies() error {
+	return durable.RequireDependencies("sessions", durable.Dependency{Name: "store", Value: s.store}, durable.Dependency{Name: "durable", Value: s.durable}, durable.Dependency{Name: "tasks", Value: s.tasks}, durable.Dependency{Name: "content", Value: s.content}, durable.Dependency{Name: "operationFacts", Value: s.operationFacts}, durable.Dependency{Name: "grantFacts", Value: s.grantFacts})
 }
 func (s *Service) SubmitGoal(ctx context.Context, caller *v1.Caller, c *v1.SubmitGoalCommand) (*v1.CommandReceipt, error) {
 	if err := command.ValidateGoal(c); err != nil {

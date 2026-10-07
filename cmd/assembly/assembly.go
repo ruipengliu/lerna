@@ -88,10 +88,20 @@ func OpenWithOptions(path, user, domain string, options Options) (*Harness, erro
 		return nil, err
 	}
 	c.WithAssociations(t)
-	h := &Harness{Bodies: s.BodyReceipts(), Sessions: sessions.New(s, d, t, c, user, domain), Tasks: t, Durable: d, Content: c, store: s, user: user, domain: domain, path: path}
-	h.Grants = grants.New(s, d, user, domain, "host").WithAdmissions(t)
+	sessionService, err := sessions.New(s, d, t, c, user, domain)
+	if err != nil {
+		s.Close()
+		return nil, err
+	}
+	h := &Harness{Bodies: s.BodyReceipts(), Sessions: sessionService, Tasks: t, Durable: d, Content: c, store: s, user: user, domain: domain, path: path}
+	h.Grants, err = grants.New(s, d, user, domain, "host")
+	if err != nil {
+		s.Close()
+		return nil, err
+	}
+	h.Grants.WithAdmissions(t)
 	h.Grants.WithConfirmations(h.Sessions).WithConfirmationContent(c)
-	h.Sessions.WithConfirmations(s, d, t, h.Grants)
+	h.Sessions.WithConfirmations(t, h.Grants)
 	t.WithConfirmationRequests(h.Sessions, c).WithModelContent(c).WithReasonerQuestions(h.Sessions).WithConditionConfirmations(h.Sessions)
 	h.Budget = budget.New(s, d, user, domain, "host")
 	h.LedgerWork = durable.New(s.LedgerWork(), user, domain+"/ledger")
@@ -145,6 +155,14 @@ func OpenWithOptions(path, user, domain string, options Options) (*Harness, erro
 		return nil, err
 	}
 	if err := c.ValidateDependencies(); err != nil {
+		s.Close()
+		return nil, err
+	}
+	if err := h.Sessions.ValidateDependencies(); err != nil {
+		s.Close()
+		return nil, err
+	}
+	if err := h.Grants.ValidateDependencies(); err != nil {
 		s.Close()
 		return nil, err
 	}

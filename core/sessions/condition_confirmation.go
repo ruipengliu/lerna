@@ -34,7 +34,7 @@ func (s *Service) QueryTaskConfirmations(ctx context.Context, caller *v1.Caller,
 	if e := command.CheckName(caller, task, s.user, s.domain, "task"); e != nil {
 		return nil, e
 	}
-	records, e := s.confirmationStore.AllConfirmations(ctx)
+	records, e := s.store.AllConfirmations(ctx)
 	if e != nil {
 		return nil, e
 	}

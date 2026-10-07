@@ -65,6 +65,37 @@ func TestSingleGrantConsumesOnlyAtAdmissionAndCannotBeReused(t *testing.T) {
 	}
 }
 
+// 规则：G7、G8、准入-7
+func TestReadOnlyGrantCannotAuthorizeInvocation(t *testing.T) {
+	f := newFixture(t, 100, 80, false)
+	g, err := f.h.Grants.QueryGrant(f.ctx, f.caller, f.grant)
+	if err != nil {
+		t.Fatal(err)
+	}
+	g.Ref = nil
+	g.Issuer = nil
+	g.Status = ""
+	g.Permissions[0].UseRight = "READ"
+	r, err := f.h.Grants.Configure(f.ctx, f.caller, &v1.ConfigureGrantCommand{Header: header("read-only-grant"), Grant: g})
+	accepted(t, r, err)
+	f.grant = r.ResultRef
+	r, err = f.h.Tasks.Admit(f.ctx, f.caller, &v1.AdmitCommand{Header: header("read-only-invoke"), TaskId: f.task.Name, ProposalRef: f.propose(t, nil), GrantRef: f.grant})
+	if err != nil || r.GetDecision() != v1.Decision_DECISION_REJECTED || r.GetError().GetCode() != "GRANT_SCOPE_MISMATCH" {
+		t.Fatalf("read-only invocation: %v %v", r, err)
+	}
+	uses, err := f.h.Grants.QueryUses(f.ctx, f.caller, f.task.Name)
+	if err != nil || len(uses) != 0 {
+		t.Fatalf("read-only grant consumed: %v %v", uses, err)
+	}
+	budget, err := f.h.Budget.QueryBudget(f.ctx, f.caller, nil)
+	if err != nil || budget.Reserved != 0 {
+		t.Fatalf("read-only invocation reserved budget: %v %v", budget, err)
+	}
+	if f.calls.Load() != 0 {
+		t.Fatal("read-only invocation called target")
+	}
+}
+
 // 规则：G4、G7、G12
 func TestGrantScopeRejectsForeignParameterReference(t *testing.T) {
 	f := newFixture(t, 100, 80, false)
