@@ -22,11 +22,13 @@ import (
 	"github.com/ruipengliu/lerna/core/tasks"
 	"github.com/ruipengliu/lerna/core/trace"
 	"github.com/ruipengliu/lerna/infra/egressio"
+	"github.com/ruipengliu/lerna/infra/hosting"
 	"github.com/ruipengliu/lerna/infra/keys"
 	"github.com/ruipengliu/lerna/infra/sqlite"
 )
 
 type Harness struct {
+	Recovery    *hosting.Service
 	Bodies      *sqlite.BodyReceipts
 	Egress      *egress.Service
 	Trace       *trace.Service
@@ -148,6 +150,10 @@ func OpenWithOptions(path, user, domain string, options Options) (*Harness, erro
 		return nil, err
 	}
 	h.connect()
+	if err := h.connectManualProgress(); err != nil {
+		s.Close()
+		return nil, err
+	}
 	ctx, cancel := context.WithTimeout(context.Background(), 65*time.Second)
 	defer cancel()
 	if err := h.start(ctx); err != nil {

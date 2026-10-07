@@ -19,7 +19,6 @@ type Budget interface {
 	QueryBillingSource(context.Context, *v1.Caller, *v1.Ref) (*v1.BillingSource, error)
 	QueryBillingEntry(context.Context, *v1.Caller, *v1.Ref) (*v1.BillingEntry, error)
 	QueryBillingConflict(context.Context, *v1.Caller, *v1.Ref) (*v1.BillingConflict, error)
-	ProcessClosures(context.Context) error
 }
 
 func (c CLI) budgetCommand(ctx context.Context, args []string) (proto.Message, error) {

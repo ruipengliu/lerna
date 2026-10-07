@@ -9,7 +9,6 @@ import (
 
 type Trace interface {
 	Query(context.Context, *v1.Caller, *v1.TraceQuery) (*v1.TraceView, error)
-	Recover(context.Context, *v1.Caller) error
 }
 
 func (c CLI) trace(ctx context.Context, args []string) (*v1.TraceView, error) {

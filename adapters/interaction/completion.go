@@ -17,7 +17,6 @@ type CompletionCommands interface {
 	RecheckCompletion(context.Context, *v1.Caller, *v1.RecheckCompletionCommand) (*v1.CommandReceipt, error)
 	QueryVerification(context.Context, *v1.Caller, *v1.Ref) (*v1.Verification, error)
 	QueryResult(context.Context, *v1.Caller, *v1.GlobalName) (*v1.Result, error)
-	ProcessCompletions(context.Context, *v1.Caller) error
 	RequestProposal(context.Context, *v1.Caller, *v1.RequestProposalCommand) (*v1.ContextSnapshot, error)
 	ReceiveProposal(context.Context, *v1.Caller, *v1.ReceiveProposalCommand) (*v1.CommandReceipt, error)
 }

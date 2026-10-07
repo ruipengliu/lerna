@@ -10,6 +10,7 @@ import (
 	"github.com/ruipengliu/lerna/adapters/interaction"
 	"github.com/ruipengliu/lerna/conformance/simulator"
 	v1 "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1"
+	"github.com/ruipengliu/lerna/infra/hosting"
 	"google.golang.org/protobuf/encoding/protojson"
 )
 
@@ -32,6 +33,7 @@ func TestCLICompletesAndDisplaysFrozenResult(t *testing.T) {
 		t.Fatal(e)
 	}
 	cli := interaction.CLI{Sessions: f.h.Sessions, Tasks: f.h.Tasks, Durable: f.h.Durable, Caller: f.caller, Domain: "d"}
+	cli.Progress = newManualProgress(t, hosting.ManualDependencies{Sessions: f.h.Sessions, Completions: f.h.Tasks, Cancellations: f.h.Tasks, TaskClosings: f.h.Tasks})
 	var out bytes.Buffer
 	if e = cli.Run(f.ctx, []string{"complete", "--json", path}, &out); e != nil {
 		t.Fatal(e)

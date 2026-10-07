@@ -9,6 +9,7 @@ import (
 	"github.com/ruipengliu/lerna/adapters/interaction"
 	"github.com/ruipengliu/lerna/conformance/simulator"
 	v1 "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1"
+	"github.com/ruipengliu/lerna/infra/hosting"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 )
@@ -23,6 +24,7 @@ func TestCLIReconciliationRequestPauseResumeAndRecover(t *testing.T) {
 	r, e := f.h.Egress.Invoke(f.ctx, &v1.Caller{UserId: "u", IssuerId: "egress"}, start)
 	accepted(t, r, e)
 	cli := interaction.CLI{Ledger: f.h.Ledger, Sessions: f.h.Sessions, Observations: f.h.Content, Grants: f.h.Grants, Caller: &v1.Caller{UserId: "u", IssuerId: "local-cli"}, Domain: "d"}
+	cli.Progress = newManualProgress(t, hosting.ManualDependencies{Sessions: f.h.Sessions, Observations: f.h.Content, Reports: f.h.Ledger, Revocations: f.h.Grants, Reconciliations: f.h.Ledger, ExecutionFollowups: f.h.Ledger})
 	write := func(name string, m proto.Message) string {
 		t.Helper()
 		b, e := protojson.Marshal(m)

@@ -66,6 +66,7 @@
 | [记忆策略：默认实现](ports/memory/default.md) | 3 设计 | 草稿 |
 | [执行适配器：接口](ports/executor/README.md) | 3 设计 | 草稿 |
 | [交互适配器：接口](ports/interaction/README.md) | 3 设计 | 草稿 |
+| [受信宿主恢复](infra/hosting/README.md) | 3 设计 | 草稿 |
 | [API 适配器](adapters/api.md) | 3 设计 | 草稿 |
 | [文件适配器](adapters/file.md) | 3 设计 | 草稿 |
 | [GUI 适配器](adapters/gui.md) | 3 设计 | 草稿 |

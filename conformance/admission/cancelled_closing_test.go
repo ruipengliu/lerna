@@ -12,6 +12,7 @@ import (
 	"github.com/ruipengliu/lerna/cmd/assembly"
 	"github.com/ruipengliu/lerna/conformance/simulator"
 	v1 "github.com/ruipengliu/lerna/contracts/gen/go/lerna/v1"
+	"github.com/ruipengliu/lerna/infra/hosting"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 )
@@ -39,6 +40,7 @@ func TestCLICancelledClosingRequiresBothOriginalCancellationAndClosingAcknowledg
 		t.Fatal(e)
 	}
 	cli := interaction.CLI{Tasks: f.h.Tasks, Sessions: f.h.Sessions, Durable: f.h.Durable, Ledger: f.h.Ledger, Budget: f.h.Budget, Caller: f.caller, Domain: "d"}
+	cli.Progress = newManualProgress(t, hosting.ManualDependencies{Sessions: f.h.Sessions, Reports: f.h.Ledger, Completions: f.h.Tasks, Cancellations: f.h.Tasks, Reconciliations: f.h.Ledger, TaskClosings: f.h.Tasks, BudgetClosures: f.h.Budget, ExecutionFollowups: f.h.Ledger, SettlementFollowups: f.h.Budget})
 	var out bytes.Buffer
 	if e = cli.Run(f.ctx, []string{"close-task", "--json", path}, &out); e != nil {
 		t.Fatal(e)

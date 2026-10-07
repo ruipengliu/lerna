@@ -18,8 +18,6 @@ type ReconciliationLedger interface {
 	QueryReconciliation(context.Context, *v1.Caller, *v1.GlobalName) (*v1.Reconciliation, error)
 	QueryReconciliationQuery(context.Context, *v1.Caller, *v1.Ref) (*v1.ReconciliationQuery, error)
 	QueryReconciliationFinding(context.Context, *v1.Caller, *v1.Ref) (*v1.ReconciliationFinding, error)
-	RecoverReconciliations(context.Context, *v1.Caller) error
-	ProcessOperationProgress(context.Context, *v1.Caller) error
 }
 
 func (c CLI) reconciliationCommand(ctx context.Context, args []string) (proto.Message, error) {

@@ -13,14 +13,11 @@ import (
 type ExecutionLedger interface {
 	QueryOperation(context.Context, *v1.Caller, *v1.GlobalName) (*v1.Operation, error)
 	QueryObservation(context.Context, *v1.Caller, *v1.Ref) (*v1.RawObservation, error)
-	ProcessReports(context.Context, *v1.Caller) error
-	ProcessInterpretations(context.Context, *v1.Caller) error
 }
 type Egress interface {
 	Invoke(context.Context, *v1.Caller, *v1.StartExecutionCommand) (*v1.CommandReceipt, error)
 }
 type ObservationContent interface {
-	ProcessObservations(context.Context, *v1.Caller) error
 }
 
 func (c CLI) execution(ctx context.Context, args []string) (proto.Message, error) {

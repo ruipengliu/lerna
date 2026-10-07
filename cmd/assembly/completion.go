@@ -19,12 +19,13 @@ func (h *Harness) complete() error {
 		durable.Dependency{Name: "ledger", Value: h.Ledger},
 		durable.Dependency{Name: "trace", Value: h.Trace},
 		durable.Dependency{Name: "egress", Value: h.Egress},
+		durable.Dependency{Name: "recovery", Value: h.Recovery},
 	); err != nil {
 		return err
 	}
 	for _, owner := range []interface{ ValidateDependencies() error }{
 		h.Durable, h.contentWork, h.LedgerWork, h.traceWork,
-		h.Tasks, h.Content, h.Sessions, h.Grants, h.Budget, h.Ledger, h.Trace, h.Egress,
+		h.Tasks, h.Content, h.Sessions, h.Grants, h.Budget, h.Ledger, h.Trace, h.Egress, h.Recovery,
 	} {
 		if err := owner.ValidateDependencies(); err != nil {
 			return err

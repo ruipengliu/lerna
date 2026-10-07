@@ -17,6 +17,7 @@ import (
 	"github.com/ruipengliu/lerna/core/tasks"
 	"github.com/ruipengliu/lerna/core/trace"
 	"github.com/ruipengliu/lerna/infra/egressio"
+	"github.com/ruipengliu/lerna/infra/hosting"
 	"github.com/ruipengliu/lerna/infra/rules"
 	"github.com/ruipengliu/lerna/infra/sqlite"
 	"google.golang.org/protobuf/proto"
@@ -189,6 +190,9 @@ func newAssemblyFixture(t *testing.T) (*Harness, *assemblyProbe) {
 		t.Fatal(err)
 	}
 	h.connect()
+	if err := h.connectManualProgress(); err != nil {
+		t.Fatal(err)
+	}
 	return h, p
 }
 
@@ -268,6 +272,7 @@ func TestAssemblyRequiresEveryModuleAndDomainWorkBeforeOwners(t *testing.T) {
 		{"ledger", func(h *Harness) { h.Ledger = nil }},
 		{"trace", func(h *Harness) { h.Trace = nil }},
 		{"egress", func(h *Harness) { h.Egress = nil }},
+		{"recovery", func(h *Harness) { h.Recovery = nil }},
 	} {
 		t.Run(test.name, func(t *testing.T) {
 			h, p := newAssemblyFixture(t)
@@ -397,4 +402,11 @@ func TestAssemblyRequiresRealCycleLinksBeforeHistoricalQualificationAndRecovery(
 			})
 		}
 	}
+}
+
+// 规则：G1、G3、G4、G11、R6、V4
+func TestAssemblyRequiresManualHostConfigurationBeforeOwners(t *testing.T) {
+	h, p := newAssemblyFixture(t)
+	h.Recovery = &hosting.Service{}
+	assertAssemblyRefusesBeforeOwners(t, h, p, "hosting.sessions")
 }
