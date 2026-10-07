@@ -50,7 +50,7 @@ func (s *Service) Register(ctx context.Context, caller *v1.Caller, c *v1.Registe
 				return nil, command.Fail("INVALID_REFERENCE")
 			}
 			v.ContentId = old.ContentId
-			v.ContentVersion, e = s.store.(governanceStore).NextContentVersion(tx, old.ContentId)
+			v.ContentVersion, e = s.store.NextContentVersion(tx, old.ContentId)
 			if e != nil {
 				return nil, e
 			}
@@ -63,7 +63,7 @@ func (s *Service) prepareRegistration(ctx context.Context, v *v1.Content, body [
 	if e := checkMedia(v.MediaType, body); e != nil {
 		return e
 	}
-	store := s.store.(governanceStore)
+	store := s.store
 	now, e := store.ContentTime(ctx)
 	if e != nil {
 		return e
@@ -89,7 +89,7 @@ func (s *Service) QueryRegistration(ctx context.Context, caller *v1.Caller, ref 
 	if e := command.CheckName(caller, ref.Name, s.user, s.domain, "content"); e != nil {
 		return nil, e
 	}
-	r, e := s.store.(governanceStore).LoadContentRegistration(ctx, ref)
+	r, e := s.store.LoadContentRegistration(ctx, ref)
 	if r != nil {
 		if !proto.Equal(r.Content.Ref, ref) {
 			return nil, command.Fail("INVALID_REFERENCE")
@@ -104,7 +104,7 @@ func (s *Service) ProcessRegistrations(ctx context.Context, caller *v1.Caller) e
 	if e := command.CheckCaller(caller, s.user); e != nil {
 		return e
 	}
-	store := s.store.(governanceStore)
+	store := s.store
 	all, e := store.PendingContentRegistrations(ctx)
 	if e != nil {
 		return e
@@ -174,7 +174,7 @@ func (s *Service) ProcessRegistrations(ctx context.Context, caller *v1.Caller) e
 	return nil
 }
 func (s *Service) readRegistered(ctx context.Context, r *v1.Ref) (*v1.Content, error) {
-	store := s.store.(governanceStore)
+	store := s.store
 	v, e := store.LoadContentRegistration(ctx, r)
 	if e != nil || v == nil {
 		return nil, e

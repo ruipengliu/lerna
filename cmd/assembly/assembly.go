@@ -81,7 +81,13 @@ func OpenWithOptions(path, user, domain string, options Options) (*Harness, erro
 	}
 	d := durable.New(s, user, domain)
 	t := tasks.New(s, user, domain).WithDecisions(d).WithCancellationJobs(d)
-	c := content.New(s, user, domain+"/content").WithAssociations(t)
+	contentWork := durable.New(s.ContentWork(), user, domain+"/content")
+	c, err := content.New(s, contentWork, user, domain+"/content")
+	if err != nil {
+		s.Close()
+		return nil, err
+	}
+	c.WithAssociations(t)
 	h := &Harness{Bodies: s.BodyReceipts(), Sessions: sessions.New(s, d, t, c, user, domain), Tasks: t, Durable: d, Content: c, store: s, user: user, domain: domain, path: path}
 	h.Grants = grants.New(s, d, user, domain, "host").WithAdmissions(t)
 	h.Grants.WithConfirmations(h.Sessions).WithConfirmationContent(c)
@@ -90,7 +96,7 @@ func OpenWithOptions(path, user, domain string, options Options) (*Harness, erro
 	h.Budget = budget.New(s, d, user, domain, "host")
 	h.LedgerWork = durable.New(s.LedgerWork(), user, domain+"/ledger")
 	h.Ledger = ledger.New(s, user, domain+"/ledger", domain).WithWork(h.LedgerWork).WithCompiler(executionCompiler{api: api.Adapter{Content: c}}).WithStarts(t).WithEvidenceRules(rules.API{})
-	c.WithObservations(durable.New(s.ContentWork(), user, domain+"/content"), h.Ledger)
+	c.WithObservations(h.Ledger)
 	h.Ledger.WithObservations(c)
 	h.Budget.WithUsageSource(h.Ledger).WithBillingEvidence(c).WithCompletionAuthority(t).WithCancellationAuthority(t).WithTaskClosingAuthority(t)
 	h.Trace = trace.New(s, durable.New(s.TraceWork(), user, domain+"/trace"), h.Ledger, user, domain+"/trace")
@@ -117,6 +123,10 @@ func OpenWithOptions(path, user, domain string, options Options) (*Harness, erro
 	t.WithClosureSource(h.Ledger).WithOperationProgress(h.Ledger)
 	h.Ledger.WithOperationProgress(t)
 	t.WithAdmission(h.Grants, h.Budget, c, h.Sessions, d, h.Ledger).WithHandoffs(d, h.Ledger)
+	if err := c.ValidateDependencies(); err != nil {
+		s.Close()
+		return nil, err
+	}
 	// 固定受信宿主身份仅驱动已保存的责任，不替换原命令身份。
 	ctx, cancel := context.WithTimeout(context.Background(), 65*time.Second)
 	defer cancel()
