@@ -12,33 +12,35 @@ type Fixed struct{}
 var _ ledger.EvidenceRules = Fixed{}
 
 func (Fixed) CheckSupported(op *v1.Operation) error {
-	switch op.GetCapabilitySnapshot().GetAdapterRef().GetName().GetLocalId() {
-	case "api-reference-v1":
-		return (API{}).CheckSupported(op)
-	case "managed-file":
-		return (File{}).CheckSupported(op)
-	case "simulator-idempotent", "simulator-idempotent-expiring", "simulator-idempotent-evicting", "simulator-idempotent-queryable", "simulator-queryable", "simulator-opaque":
-		return (Simulator{}).CheckSupported(op)
-	case "model-reference-v1":
-		return (Model{}).CheckSupported(op)
-	default:
-		return command.Fail("PREPARATION_UNRECOVERABLE")
+	rules, e := fixedRules(op)
+	if e != nil {
+		return e
 	}
+	return rules.CheckSupported(op)
 }
 
-func (rules Fixed) Interpret(op *v1.Operation, raw *v1.RawObservation, body []byte) (*ledger.EvidenceFacts, error) {
-	if e := rules.CheckSupported(op); e != nil {
+func (Fixed) Interpret(op *v1.Operation, raw *v1.RawObservation, body []byte) (*ledger.EvidenceFacts, error) {
+	rules, e := fixedRules(op)
+	if e != nil {
 		return nil, e
 	}
+	if e = rules.CheckSupported(op); e != nil {
+		return nil, e
+	}
+	return rules.Interpret(op, raw, body)
+}
+
+// fixedRules 共用固定受信清单；历史资格与解释不得选择不同规则。
+func fixedRules(op *v1.Operation) (ledger.EvidenceRules, error) {
 	switch op.GetCapabilitySnapshot().GetAdapterRef().GetName().GetLocalId() {
 	case "api-reference-v1":
-		return (API{}).Interpret(op, raw, body)
+		return API{}, nil
 	case "managed-file":
-		return (File{}).Interpret(op, raw, body)
+		return File{}, nil
 	case "simulator-idempotent", "simulator-idempotent-expiring", "simulator-idempotent-evicting", "simulator-idempotent-queryable", "simulator-queryable", "simulator-opaque":
-		return (Simulator{}).Interpret(op, raw, body)
+		return Simulator{}, nil
 	case "model-reference-v1":
-		return (Model{}).Interpret(op, raw, body)
+		return Model{}, nil
 	default:
 		return nil, command.Fail("PREPARATION_UNRECOVERABLE")
 	}
