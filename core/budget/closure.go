@@ -14,6 +14,7 @@ type ClosureEvidence interface {
 	QueryGrantExitClosure(context.Context, *v1.Caller, *v1.Ref) (*v1.GrantExitClosure, error)
 }
 type releaseStore interface {
+	AllReservations(context.Context) ([]*v1.Reservation, error)
 	SaveReservationRelease(context.Context, *v1.ReservationRelease) error
 	LoadReservationRelease(context.Context, *v1.Ref) (*v1.ReservationRelease, error)
 }
@@ -34,7 +35,7 @@ func (s *Service) ReleaseUnused(ctx context.Context, caller *v1.Caller, c *v1.Re
 		if original == nil {
 			return nil, command.Fail("NOT_FOUND")
 		}
-		old, e := s.store.(releaseStore).LoadReservationRelease(tx, c.ReservationRef)
+		old, e := s.store.LoadReservationRelease(tx, c.ReservationRef)
 		if e != nil {
 			return nil, e
 		}
@@ -44,7 +45,7 @@ func (s *Service) ReleaseUnused(ctx context.Context, caller *v1.Caller, c *v1.Re
 			}
 			return old.Ref, nil
 		}
-		r, e := s.store.(sendStore).LoadCurrentReservation(tx, c.ReservationRef)
+		r, e := s.store.LoadCurrentReservation(tx, c.ReservationRef)
 		if e != nil {
 			return nil, e
 		}
@@ -73,7 +74,7 @@ func (s *Service) ReleaseUnused(ctx context.Context, caller *v1.Caller, c *v1.Re
 			}
 		}
 		if send != nil {
-			source, e := s.store.(billingStore).LoadBillingSource(tx, send)
+			source, e := s.store.LoadBillingSource(tx, send)
 			if e != nil {
 				return nil, e
 			}
@@ -91,7 +92,7 @@ func (s *Service) ReleaseUnused(ctx context.Context, caller *v1.Caller, c *v1.Re
 			return nil, e
 		}
 		release := &v1.ReservationRelease{Ref: command.NewRef(s.user, s.domain, "reservation-release", "lerna.v1.ReservationRelease"), ReservationRef: c.ReservationRef, ClosureRef: c.ClosureRef, Released: r.Ceiling}
-		if e = s.store.(releaseStore).SaveReservationRelease(tx, release); e != nil {
+		if e = s.store.SaveReservationRelease(tx, release); e != nil {
 			return nil, e
 		}
 		return release.Ref, s.store.SaveTraceSource(tx, "budget", &v1.TraceEvent{EventType: "RESERVATION_RELEASED", SourceRecordRef: release.Ref, TaskId: r.TaskId, OperationId: r.OperationId, RelatedRefs: []*v1.Ref{release.ReservationRef, release.ClosureRef}})
@@ -100,9 +101,7 @@ func (s *Service) ReleaseUnused(ctx context.Context, caller *v1.Caller, c *v1.Re
 
 // ProcessClosures 恢复已有封闭证明；缺少证明的预留继续占用。
 func (s *Service) ProcessClosures(ctx context.Context) error {
-	all, e := s.store.(interface {
-		AllReservations(context.Context) ([]*v1.Reservation, error)
-	}).AllReservations(ctx)
+	all, e := s.store.AllReservations(ctx)
 	if e != nil {
 		return e
 	}
@@ -111,7 +110,7 @@ func (s *Service) ProcessClosures(ctx context.Context) error {
 		if r.Status != "RESERVED" {
 			continue
 		}
-		op, e := s.usageSource.(ClosureEvidence).QueryOperation(ctx, caller, r.OperationId)
+		op, e := s.usageSource.QueryOperation(ctx, caller, r.OperationId)
 		if e != nil {
 			return e
 		}
@@ -146,7 +145,7 @@ func (s *Service) QueryReservationRelease(ctx context.Context, c *v1.Caller, res
 	if _, e := s.QueryReservation(ctx, c, reservation); e != nil {
 		return nil, e
 	}
-	return s.store.(releaseStore).LoadReservationRelease(ctx, reservation)
+	return s.store.LoadReservationRelease(ctx, reservation)
 }
 
 type CompletionAuthority interface {
@@ -177,7 +176,7 @@ func (s *Service) WithCompletionAuthority(a CompletionAuthority) *Service {
 	return s
 }
 func (s *Service) validateNoSend(ctx context.Context, caller *v1.Caller, r *v1.Reservation, ref *v1.Ref) (*v1.Ref, error) {
-	proofs := s.usageSource.(ClosureEvidence)
+	proofs := s.usageSource
 	op, e := proofs.QueryOperation(ctx, caller, r.OperationId)
 	if e != nil {
 		return nil, e
@@ -205,11 +204,11 @@ func (s *Service) validateNoSend(ctx context.Context, caller *v1.Caller, r *v1.R
 		if proof == nil || proof.PhysicalSendWasPossible || !proto.Equal(proof.OperationId, r.OperationId) || op == nil || op.Execution == nil {
 			return nil, command.Fail("NO_SEND_UNPROVEN")
 		}
-		x, e := s.usageSource.(BillingExecution).QuerySendExecution(ctx, caller, r.OperationId, proof.SendRef)
+		x, e := s.usageSource.QuerySendExecution(ctx, caller, r.OperationId, proof.SendRef)
 		if e != nil {
 			return nil, e
 		}
-		source, e := s.store.(billingStore).LoadBillingSource(ctx, proof.SendRef)
+		source, e := s.store.LoadBillingSource(ctx, proof.SendRef)
 		if e != nil {
 			return nil, e
 		}
@@ -218,7 +217,7 @@ func (s *Service) validateNoSend(ctx context.Context, caller *v1.Caller, r *v1.R
 		}
 		return proof.SendRef, nil
 	case "completion-seal":
-		seal, e := s.usageSource.(completionProofs).QueryCompletionSeal(ctx, caller, ref)
+		seal, e := s.usageSource.QueryCompletionSeal(ctx, caller, ref)
 		if e != nil {
 			return nil, e
 		}
@@ -261,14 +260,14 @@ func (s *Service) validateNoSend(ctx context.Context, caller *v1.Caller, r *v1.R
 				closed = []*v1.Ref{op.Execution.Send.Ref}
 			}
 			for _, ref := range closed {
-				x, e := s.usageSource.(BillingExecution).QuerySendExecution(ctx, caller, r.OperationId, ref)
+				x, e := s.usageSource.QuerySendExecution(ctx, caller, r.OperationId, ref)
 				if e != nil {
 					return nil, e
 				}
 				if x == nil || x.Send.Phase != "CLOSED" {
 					continue
 				}
-				source, e := s.store.(billingStore).LoadBillingSource(ctx, ref)
+				source, e := s.store.LoadBillingSource(ctx, ref)
 				if e != nil {
 					return nil, e
 				}
@@ -286,7 +285,7 @@ func (s *Service) validateNoSend(ctx context.Context, caller *v1.Caller, r *v1.R
 		}
 		return nil, nil
 	case "task-closure-seal":
-		seal, e := s.usageSource.(taskClosingProofs).QueryTaskClosureSeal(ctx, caller, ref)
+		seal, e := s.usageSource.QueryTaskClosureSeal(ctx, caller, ref)
 		if e != nil {
 			return nil, e
 		}
@@ -329,14 +328,14 @@ func (s *Service) validateNoSend(ctx context.Context, caller *v1.Caller, r *v1.R
 				closed = []*v1.Ref{op.Execution.Send.Ref}
 			}
 			for _, ref := range closed {
-				x, e := s.usageSource.(BillingExecution).QuerySendExecution(ctx, caller, r.OperationId, ref)
+				x, e := s.usageSource.QuerySendExecution(ctx, caller, r.OperationId, ref)
 				if e != nil {
 					return nil, e
 				}
 				if x == nil || x.Send.Phase != "CLOSED" {
 					continue
 				}
-				source, e := s.store.(billingStore).LoadBillingSource(ctx, ref)
+				source, e := s.store.LoadBillingSource(ctx, ref)
 				if e != nil {
 					return nil, e
 				}
@@ -354,8 +353,8 @@ func (s *Service) validateNoSend(ctx context.Context, caller *v1.Caller, r *v1.R
 		}
 		return nil, nil
 	case "cancellation-seal":
-		proofs, ok := s.usageSource.(cancellationProofs)
-		if !ok || s.cancellationAuthority == nil {
+		proofs := s.usageSource
+		if s.cancellationAuthority == nil {
 			return nil, command.Fail("DEPENDENCY_UNAVAILABLE")
 		}
 		seal, e := proofs.QueryCancellationSeal(ctx, caller, ref)
@@ -401,14 +400,14 @@ func (s *Service) validateNoSend(ctx context.Context, caller *v1.Caller, r *v1.R
 				closed = []*v1.Ref{op.Execution.Send.Ref}
 			}
 			for _, ref := range closed {
-				x, e := s.usageSource.(BillingExecution).QuerySendExecution(ctx, caller, r.OperationId, ref)
+				x, e := s.usageSource.QuerySendExecution(ctx, caller, r.OperationId, ref)
 				if e != nil {
 					return nil, e
 				}
 				if x == nil || x.Send.Phase != "CLOSED" {
 					continue
 				}
-				source, e := s.store.(billingStore).LoadBillingSource(ctx, ref)
+				source, e := s.store.LoadBillingSource(ctx, ref)
 				if e != nil {
 					return nil, e
 				}

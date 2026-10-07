@@ -103,7 +103,11 @@ func OpenWithOptions(path, user, domain string, options Options) (*Harness, erro
 	h.Grants.WithConfirmations(h.Sessions).WithConfirmationContent(c)
 	h.Sessions.WithConfirmations(t, h.Grants)
 	t.WithConfirmationRequests(h.Sessions, c).WithModelContent(c).WithReasonerQuestions(h.Sessions).WithConditionConfirmations(h.Sessions)
-	h.Budget = budget.New(s, d, user, domain, "host")
+	h.Budget, err = budget.New(s, d, user, domain, "host")
+	if err != nil {
+		s.Close()
+		return nil, err
+	}
 	h.LedgerWork = durable.New(s.LedgerWork(), user, domain+"/ledger")
 	h.Ledger, err = ledger.New(s, user, domain+"/ledger", domain)
 	if err != nil {
@@ -163,6 +167,10 @@ func OpenWithOptions(path, user, domain string, options Options) (*Harness, erro
 		return nil, err
 	}
 	if err := h.Grants.ValidateDependencies(); err != nil {
+		s.Close()
+		return nil, err
+	}
+	if err := h.Budget.ValidateDependencies(); err != nil {
 		s.Close()
 		return nil, err
 	}
@@ -312,3 +320,14 @@ var _ egress.IO = physicalIO{}
 var _ egress.PreflightIO = physicalIO{}
 var _ egress.CheckedIO = physicalIO{}
 var _ durable.Store = (*sqlite.LedgerWork)(nil)
+
+// 预算的生产依赖必须满足预算声明的完整消费方接口。
+var (
+	_ budget.Store                 = (*sqlite.Store)(nil)
+	_ budget.Decisions             = (*durable.Service)(nil)
+	_ budget.UsageSource           = (*ledger.Service)(nil)
+	_ budget.BillingEvidence       = (*content.Service)(nil)
+	_ budget.CompletionAuthority   = (*tasks.Service)(nil)
+	_ budget.CancellationAuthority = (*tasks.Service)(nil)
+	_ budget.TaskClosingAuthority  = (*tasks.Service)(nil)
+)

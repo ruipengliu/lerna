@@ -43,7 +43,7 @@ linters:
         core-budget:
           files: ["**/core/budget/*.go", "**/core/budget/**/*.go"]
           list-mode: strict
-          allow: ["$gostd", "google.golang.org/protobuf", "github.com/ruipengliu/lerna/contracts", "github.com/ruipengliu/lerna/core/budget$", "github.com/ruipengliu/lerna/core/budget/"]
+          allow: ["$gostd", "google.golang.org/protobuf", "github.com/ruipengliu/lerna/contracts", "github.com/ruipengliu/lerna/core/budget$", "github.com/ruipengliu/lerna/core/budget/", "github.com/ruipengliu/lerna/core/durable$"]
         core-ledger:
           files: ["**/core/ledger/*.go", "**/core/ledger/**/*.go"]
           list-mode: strict

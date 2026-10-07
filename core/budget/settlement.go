@@ -121,7 +121,7 @@ func parseBillForAccount(raw []byte, account string) (*referenceBill, error) {
 	return &bill, nil
 }
 func (s *Service) settleReport(ctx context.Context, caller *v1.Caller, u *v1.UsageReport) error {
-	source, e := s.store.(billingStore).LoadBillingSource(ctx, u.SendRef)
+	source, e := s.store.LoadBillingSource(ctx, u.SendRef)
 	if e != nil {
 		return e
 	}
@@ -142,7 +142,7 @@ func (s *Service) settleReport(ctx context.Context, caller *v1.Caller, u *v1.Usa
 	if body == nil || body.Status != "AVAILABLE" {
 		return command.Fail("CONTENT_UNUSABLE")
 	}
-	x, e := s.usageSource.(BillingExecution).QuerySendExecution(ctx, caller, source.OperationId, u.SendRef)
+	x, e := s.usageSource.QuerySendExecution(ctx, caller, source.OperationId, u.SendRef)
 	if e != nil {
 		return e
 	}
@@ -179,7 +179,7 @@ func billingAccount(d *v1.CallDescriptor, user string) (string, error) {
 	return d.ApiDescriptor.Binding.Account, nil
 }
 func (s *Service) applyBill(ctx context.Context, source *v1.BillingSource, bill *referenceBill, evidence *v1.Ref) error {
-	store := s.store.(billingStore)
+	store := s.store
 	alias := command.SemanticFingerprint("billing-alias", bill.Namespace, bill.Account, bill.NativeInstance, bill.Component)
 	fingerprint := command.SemanticFingerprint("billing-fact", alias, bill.SourceVersion, bill.Unit, *bill.Amount, bill.Rule, bill.PriceVersion, bill.Final)
 	owner, e := store.LoadBillingAlias(ctx, alias)
@@ -205,7 +205,7 @@ func (s *Service) applyBill(ctx context.Context, source *v1.BillingSource, bill 
 	if source.Status != "PENDING" {
 		return command.Fail("BILLING_SOURCE_CLOSED")
 	}
-	r, e := s.store.(sendStore).LoadCurrentReservation(ctx, source.ReservationRef)
+	r, e := s.store.LoadCurrentReservation(ctx, source.ReservationRef)
 	if e != nil {
 		return e
 	}
@@ -266,14 +266,14 @@ func (s *Service) QueryBillingSource(ctx context.Context, c *v1.Caller, send *v1
 	if e := command.CheckName(c, send.Name, s.user, s.domain+"/ledger", "send"); e != nil {
 		return nil, e
 	}
-	v, e := s.usageSource.(BillingExecution).QuerySend(ctx, c, send)
+	v, e := s.usageSource.QuerySend(ctx, c, send)
 	if e != nil {
 		return nil, e
 	}
 	if v == nil {
 		return nil, command.Fail("NOT_FOUND")
 	}
-	return s.store.(billingStore).LoadBillingSource(ctx, send)
+	return s.store.LoadBillingSource(ctx, send)
 }
 func (s *Service) QueryBillingEntry(ctx context.Context, c *v1.Caller, r *v1.Ref) (*v1.BillingEntry, error) {
 	if r == nil || r.Revision != 1 || r.SchemaId != "lerna.v1.BillingEntry" {
@@ -282,7 +282,7 @@ func (s *Service) QueryBillingEntry(ctx context.Context, c *v1.Caller, r *v1.Ref
 	if e := command.CheckName(c, r.Name, s.user, s.domain, "billing-entry"); e != nil {
 		return nil, e
 	}
-	entry, e := s.store.(billingStore).LoadBillingEntry(ctx, r)
+	entry, e := s.store.LoadBillingEntry(ctx, r)
 	if entry != nil && !proto.Equal(entry.Ref, r) {
 		return nil, command.Fail("INVALID_REFERENCE")
 	}
@@ -292,7 +292,7 @@ func (s *Service) QueryBillingEntry(ctx context.Context, c *v1.Caller, r *v1.Ref
 // recordConflict 接纳冲突证据但不接纳冲突金额；余额与原预留保持不变。
 func (s *Service) recordConflict(ctx context.Context, source *v1.BillingSource, evidence *v1.Ref, reason, alias string) error {
 	c := &v1.BillingConflict{Ref: command.NewRef(s.user, s.domain, "billing-conflict", "lerna.v1.BillingConflict"), SourceRef: source.Ref, EvidenceRef: evidence, Reason: reason, Alias: alias}
-	if e := s.store.(billingStore).SaveBillingConflict(ctx, c); e != nil {
+	if e := s.store.SaveBillingConflict(ctx, c); e != nil {
 		return e
 	}
 	source.Ref = proto.Clone(source.Ref).(*v1.Ref)
@@ -325,7 +325,7 @@ func (s *Service) QueryBillingConflict(ctx context.Context, c *v1.Caller, r *v1.
 	if e := command.CheckName(c, r.Name, s.user, s.domain, "billing-conflict"); e != nil {
 		return nil, e
 	}
-	v, e := s.store.(billingStore).LoadBillingConflict(ctx, r)
+	v, e := s.store.LoadBillingConflict(ctx, r)
 	if v != nil && !proto.Equal(v.Ref, r) {
 		return nil, command.Fail("INVALID_REFERENCE")
 	}
@@ -338,9 +338,7 @@ func (s *Service) QueryBillingSourceVersion(ctx context.Context, c *v1.Caller, r
 	if e := command.CheckName(c, r.Name, s.user, s.domain, "billing-source"); e != nil {
 		return nil, e
 	}
-	v, e := s.store.(interface {
-		LoadBillingSourceVersion(context.Context, *v1.Ref) (*v1.BillingSource, error)
-	}).LoadBillingSourceVersion(ctx, r)
+	v, e := s.store.LoadBillingSourceVersion(ctx, r)
 	if v != nil && !proto.Equal(v.Ref, r) {
 		return nil, command.Fail("INVALID_REFERENCE")
 	}
@@ -349,12 +347,7 @@ func (s *Service) QueryBillingSourceVersion(ctx context.Context, c *v1.Caller, r
 
 // fileZeroBill 的零费用来自固定本机协议，不从效果或缺少账单推断。
 func (s *Service) fileZeroBill(ctx context.Context, caller *v1.Caller, raw *v1.RawObservation) (*referenceBill, error) {
-	facts, ok := s.usageSource.(interface {
-		QueryOperation(context.Context, *v1.Caller, *v1.GlobalName) (*v1.Operation, error)
-	})
-	if !ok {
-		return nil, command.Fail("DEPENDENCY_UNAVAILABLE")
-	}
+	facts := s.usageSource
 	op, e := facts.QueryOperation(ctx, caller, raw.OperationId)
 	if e != nil {
 		return nil, e
@@ -362,10 +355,7 @@ func (s *Service) fileZeroBill(ctx context.Context, caller *v1.Caller, raw *v1.R
 	if op == nil || op.Execution == nil || op.CapabilitySnapshot == nil {
 		return nil, command.Fail("INVALID_USAGE_SOURCE")
 	}
-	execution, ok := s.usageSource.(BillingExecution)
-	if !ok {
-		return nil, command.Fail("DEPENDENCY_UNAVAILABLE")
-	}
+	execution := s.usageSource
 	x, e := execution.QuerySendExecution(ctx, caller, raw.OperationId, raw.SendRef)
 	if e != nil {
 		return nil, e
