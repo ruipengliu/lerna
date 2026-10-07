@@ -340,7 +340,8 @@ func TestClosureRecoveryCancellationPreservesUnexpiredClaim(t *testing.T) {
 			} else {
 				err = f.h.Tasks.RecoverCancellations(ctx, f.caller)
 			}
-			if !errors.Is(err, context.DeadlineExceeded) {
+			// 期限可在等待或原存储读取期间到期；后者保留存储的暂时不可用错误。
+			if !errors.Is(ctx.Err(), context.DeadlineExceeded) || err == nil || (!errors.Is(err, context.DeadlineExceeded) && err.Error() != "DEPENDENCY_UNAVAILABLE") {
 				t.Fatalf("bounded recovery: %v", err)
 			}
 			job, err := f.h.Durable.QueryJob(f.ctx, f.caller, c.claim.Ref.Name)
