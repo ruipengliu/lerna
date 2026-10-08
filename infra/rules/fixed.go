@@ -32,14 +32,15 @@ func (Fixed) Interpret(op *v1.Operation, raw *v1.RawObservation, body []byte) (*
 
 // fixedRules 共用固定受信清单；历史资格与解释不得选择不同规则。
 func fixedRules(op *v1.Operation) (ledger.EvidenceRules, error) {
-	switch op.GetCapabilitySnapshot().GetAdapterRef().GetName().GetLocalId() {
-	case "api-reference-v1":
+	adapter := op.GetCapabilitySnapshot().GetAdapterRef().GetName().GetLocalId()
+	switch {
+	case adapter == "api-reference-v1":
 		return API{}, nil
-	case "managed-file":
+	case adapter == "managed-file":
 		return File{}, nil
-	case "simulator-idempotent", "simulator-idempotent-expiring", "simulator-idempotent-evicting", "simulator-idempotent-queryable", "simulator-queryable", "simulator-opaque":
+	case simulatorAdapters[adapter]:
 		return Simulator{}, nil
-	case "model-reference-v1":
+	case adapter == "model-reference-v1":
 		return Model{}, nil
 	default:
 		return nil, command.Fail("PREPARATION_UNRECOVERABLE")
