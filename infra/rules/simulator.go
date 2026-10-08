@@ -13,6 +13,9 @@ import (
 // Simulator 解释原固定模拟写入与独立查询，不持有目标或历史存储能力。
 type Simulator struct{}
 
+// simulatorAdapters 是原固定模拟目标版本；规则选择与资格核验共用这一份。
+var simulatorAdapters = map[string]bool{"simulator-idempotent": true, "simulator-idempotent-expiring": true, "simulator-idempotent-evicting": true, "simulator-idempotent-queryable": true, "simulator-queryable": true, "simulator-opaque": true}
+
 var _ ledger.EvidenceRules = Simulator{}
 
 // CheckSupported 纯核验原规则资格；完整声明与原描述绑定由编译器独立核验。
@@ -21,9 +24,7 @@ func (Simulator) CheckSupported(op *v1.Operation) error {
 	if cap.GetAdapterRef().GetRevision() != 1 {
 		return command.Fail("PREPARATION_UNRECOVERABLE")
 	}
-	switch cap.GetAdapterRef().GetName().GetLocalId() {
-	case "simulator-idempotent", "simulator-idempotent-expiring", "simulator-idempotent-evicting", "simulator-idempotent-queryable", "simulator-queryable", "simulator-opaque":
-	default:
+	if !simulatorAdapters[cap.GetAdapterRef().GetName().GetLocalId()] {
 		return command.Fail("PREPARATION_UNRECOVERABLE")
 	}
 	protocol, basis, effect := "lerna-simulator-v1", "reference-target-v1", "ATOMIC_WRITE"
