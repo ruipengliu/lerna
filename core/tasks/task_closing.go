@@ -226,7 +226,7 @@ func (s *Service) QueryTaskClosingView(ctx context.Context, c *v1.Caller, id *v1
 			return nil, command.Fail("FOLLOWUP_RESPONSIBILITY_MISSING")
 		}
 		v.SettlementFollowups = append(v.SettlementFollowups, f)
-		job, e := s.taskClosingJobs.QueryJob(ctx, c, f.JobRef.Name)
+		job, e := s.closureJobs.QueryJob(ctx, c, f.JobRef.Name)
 		if e != nil {
 			return nil, e
 		}
@@ -240,7 +240,7 @@ func (s *Service) ProcessTaskClosings(ctx context.Context, c *v1.Caller) error {
 	if e := command.CheckCaller(c, s.user); e != nil {
 		return e
 	}
-	if e := s.ProcessTaskClosures(ctx, c); e != nil {
+	if e := s.processClosureDeliveries(ctx, c, taskClosure{}); e != nil {
 		return e
 	}
 	closings, e := s.store.AllTaskClosings(ctx)

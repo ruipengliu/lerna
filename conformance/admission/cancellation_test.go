@@ -116,7 +116,7 @@ func TestCancellationEndpointAcknowledgementClosesOldWorkerBeforeP5(t *testing.T
 	for _, afterP4 := range []bool{false, true} {
 		t.Run(fmt.Sprint(afterP4), func(t *testing.T) {
 			f := newFixture(t, 100, 80, false)
-			f.h.Tasks.WithCancellationClosures(f.h.Durable, newDeclaredEgress(t, f, egressio.HTTP{}))
+			f.h.Tasks.WithClosures(f.h.Durable, newDeclaredEgress(t, f, egressio.HTTP{}))
 			a, start := prepareStart(t, f)
 			actor := &v1.Caller{UserId: "u", IssuerId: "egress"}
 			if afterP4 {
@@ -487,7 +487,7 @@ func TestCancellationClosureCannotBeAbandonedOrCompletedByStaleWorker(t *testing
 		t.Fatalf("stale control changed cancellation %v %v", r, e)
 	}
 	time.Sleep(time.Until(time.UnixMilli(old.LeaseUntilUnixMs)) + 20*time.Millisecond)
-	if e = f.h.Tasks.ProcessCancellationClosureClaim(f.ctx, old); e == nil {
+	if e = f.h.Tasks.ProcessClosureClaim(f.ctx, old); e == nil {
 		t.Fatal("stale worker completed closure")
 	}
 	if e = f.h.Tasks.ProcessCancellations(f.ctx, f.caller); e != nil {

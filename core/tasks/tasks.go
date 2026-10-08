@@ -49,10 +49,8 @@ type Store interface {
 	LoadTask(context.Context, *v1.GlobalName) (*v1.Task, error)
 }
 type Service struct {
-	cancellationJobs       CancellationJobs
-	cancellationCloser     CancellationCloser
-	taskClosingJobs        TaskClosingJobs
-	taskCloser             TaskCloser
+	closureJobs            ClosureJobs
+	closureRecipient       ClosureRecipient
 	taskCloseFacts         TaskCloseFacts
 	taskCloseBudget        TaskCloseBudget
 	admissionMetrics       admissionMetricState
@@ -65,8 +63,6 @@ type Service struct {
 	modelCredentials       ModelCredentials
 	modelEgress            ModelEgress
 	modelContent           ModelContent
-	completionJobs         CompletionJobs
-	completionCloser       CompletionCloser
 	completionFacts        CompletionFacts
 	completionBudget       CompletionBudget
 	progressSource         OperationProgressSource

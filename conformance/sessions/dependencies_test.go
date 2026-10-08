@@ -60,7 +60,7 @@ func TestDeclaredSessionAdapterRetainsInputOrderAndOriginalQuestionAnswer(t *tes
 	if err != nil {
 		t.Fatal(err)
 	}
-	h.Tasks.WithDecisions(d).WithCancellationClosures(d, h.Egress)
+	h.Tasks.WithDecisions(d).WithClosures(d, h.Egress)
 	work, err := durable.New(store.ContentWork(), "alice", "local/content")
 	if err != nil {
 		t.Fatal(err)

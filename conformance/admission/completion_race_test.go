@@ -243,7 +243,7 @@ func TestLateSupersededClosureChangesLiveFactsButNeverFixedResult(t *testing.T) 
 	if oldJob == nil || newJob == nil {
 		t.Fatal("both durable closure responsibilities required")
 	}
-	if e = f.h.Tasks.ProcessCompletionClosureClaim(f.ctx, newJob); e != nil {
+	if e = f.h.Tasks.ProcessClosureClaim(f.ctx, newJob); e != nil {
 		t.Fatal(e)
 	}
 	r, e = f.h.Tasks.RecheckCompletion(f.ctx, f.caller, &v1.RecheckCompletionCommand{Header: header("new-round-finish"), VerificationRef: newRef})
@@ -252,7 +252,7 @@ func TestLateSupersededClosureChangesLiveFactsButNeverFixedResult(t *testing.T) 
 	if e != nil || fixed == nil || fixed.UsageSnapshot == nil || fixed.UsageSnapshot.Reserved != 30 {
 		t.Fatalf("fixed snapshot %v %v", fixed, e)
 	}
-	if e = f.h.Tasks.ProcessCompletionClosureClaim(f.ctx, oldJob); e != nil {
+	if e = f.h.Tasks.ProcessClosureClaim(f.ctx, oldJob); e != nil {
 		t.Fatal(e)
 	}
 	current, e := f.h.Ledger.QueryOperation(f.ctx, f.caller, a.OperationId)

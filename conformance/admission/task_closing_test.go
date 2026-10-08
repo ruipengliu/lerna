@@ -73,7 +73,7 @@ func TestCLIFailedClosingHasIndependentBasisAndImmutableResult(t *testing.T) {
 // 规则：G3、G4、G10、G11、R7、开始-2、开始-5
 func TestFailedClosingCannotLoseOrForgeEndpointResponsibility(t *testing.T) {
 	f := newFixture(t, 100, 80, false)
-	f.h.Tasks.WithTaskClosures(f.h.Durable, newDeclaredEgress(t, f, egressio.HTTP{}))
+	f.h.Tasks.WithClosures(f.h.Durable, newDeclaredEgress(t, f, egressio.HTTP{}))
 	a, _ := prepareStart(t, f)
 	task, e := f.h.Tasks.QueryTask(f.ctx, f.caller, f.task.Name)
 	if e != nil {
@@ -111,11 +111,11 @@ func TestFailedClosingCannotLoseOrForgeEndpointResponsibility(t *testing.T) {
 		case "owner":
 			wrong.ExecutorEndpointId = "replacement-endpoint"
 		}
-		if e = f.h.Tasks.ProcessTaskClosureClaim(f.ctx, wrong); e == nil {
+		if e = f.h.Tasks.ProcessClosureClaim(f.ctx, wrong); e == nil {
 			t.Fatalf("forged %s claim acknowledged closure", kind)
 		}
 	}
-	if e = f.h.Tasks.ProcessTaskClosureClaim(f.ctx, job); e != nil {
+	if e = f.h.Tasks.ProcessClosureClaim(f.ctx, job); e != nil {
 		t.Fatal(e)
 	}
 	if e = f.h.Tasks.ProcessTaskClosings(f.ctx, f.caller); e != nil {
