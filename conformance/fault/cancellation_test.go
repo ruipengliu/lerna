@@ -256,7 +256,7 @@ func TestCancellationCommitChild(t *testing.T) {
 	if len(claim.Jobs) != 1 {
 		t.Fatal("missing cancellation closure job")
 	}
-	if e = h.Tasks.ProcessCancellationClosureClaim(ctx, claim.Jobs[0]); e == nil {
+	if e = h.Tasks.ProcessClosureClaim(ctx, claim.Jobs[0]); e == nil {
 		t.Fatal("fault not reached")
 	}
 }

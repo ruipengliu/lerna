@@ -171,7 +171,7 @@ func TestCompletionCommitChild(t *testing.T) {
 	if len(claim.Jobs) != 1 {
 		t.Fatal("missing closure job")
 	}
-	e = h.Tasks.ProcessCompletionClosureClaim(ctx, claim.Jobs[0])
+	e = h.Tasks.ProcessClosureClaim(ctx, claim.Jobs[0])
 	if point != "tasks.completion" {
 		if e == nil {
 			t.Fatal("fault not reached")

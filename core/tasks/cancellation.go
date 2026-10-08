@@ -16,16 +16,9 @@ type cancellationStore interface {
 	SaveCancellationIntent(context.Context, *v1.CancellationClosureIntent) error
 	LoadCancellationIntent(context.Context, *v1.Ref) (*v1.CancellationClosureIntent, error)
 }
-type CancellationJobs interface {
-	EnqueueCancellationClosureInTransaction(context.Context, *v1.CancellationClosureIntent) (*v1.Ref, error)
-	Pending(context.Context, *v1.Caller) ([]*v1.Job, error)
-	ReadCancellationClosureClaim(context.Context, *v1.Job) (*v1.Job, error)
-	CompleteCancellationClosureInTransaction(context.Context, *v1.Job) error
-	ExecuteJob(context.Context, *v1.Caller, *v1.JobCommand) (*v1.CommandReceipt, error)
-}
 
 func (s *Service) saveCancellation(ctx context.Context, t *v1.Task, p *v1.PlanningState, c *v1.SubmitInputCommand) error {
-	if s.cancellationJobs == nil {
+	if s.closureJobs == nil {
 		return command.Fail("DEPENDENCY_UNAVAILABLE")
 	}
 	_, now, e := s.store.Position(ctx)
@@ -43,7 +36,7 @@ func (s *Service) saveCancellation(ctx context.Context, t *v1.Task, p *v1.Planni
 		}
 		intent := &v1.CancellationClosureIntent{Ref: command.NewRef(s.user, s.domain, "cancellation-intent", "lerna.v1.CancellationClosureIntent"), TaskId: t.TaskId}
 		intent.Command = &v1.CloseCancellationCommand{Header: completionHeader(s.user, a.LedgerDomainId, "tasks-cancellation", "seal:"+intent.Ref.Name.LocalId), IntentRef: intent.Ref, CancellationRef: scope.Ref, AdmissionRef: a.Ref, OperationId: a.OperationId, ExecutorEndpointId: a.ExecutorEndpointId}
-		intent.JobRef, e = s.cancellationJobs.EnqueueCancellationClosureInTransaction(ctx, intent)
+		intent.JobRef, e = s.closureJobs.EnqueueClosureInTransaction(ctx, cancellationClosure{}.spec().jobType, intent.Ref, intent.Command.Header.Identity, intent.Command.ExecutorEndpointId, intent.Command.OperationId.AuthorityDomainId)
 		if e != nil {
 			return e
 		}
@@ -78,17 +71,6 @@ func (s *Service) QueryCancellationIntent(ctx context.Context, caller *v1.Caller
 		return nil, command.Fail("INVALID_REFERENCE")
 	}
 	return v, e
-}
-
-type CancellationCloser interface {
-	CloseForCancellation(context.Context, *v1.Caller, *v1.CloseCancellationCommand) (*v1.CommandReceipt, error)
-	QueryReceipt(context.Context, *v1.Caller, *v1.CommandIdentity) (*v1.ReceiptQuery, error)
-}
-
-func (s *Service) WithCancellationClosures(j CancellationJobs, c CancellationCloser) *Service {
-	s.cancellationJobs = j
-	s.cancellationCloser = c
-	return s
 }
 
 // ValidateCancellationClosure 只接受同事务保存的取消依据和准确清单，不借用完成核验。
@@ -130,9 +112,6 @@ func (s *Service) ValidateCancellationClosure(ctx context.Context, caller *v1.Ca
 	}
 	return a, nil
 }
-func (s *Service) ProcessCancellationClosureClaim(ctx context.Context, j *v1.Job) error {
-	return s.processClosureClaim(ctx, j, cancellationClosureDelivery)
-}
 
 // ProcessCancellations 只交付封闭，不替代原意图接纳或省略源域回执。
 func (s *Service) ProcessCancellations(ctx context.Context, c *v1.Caller) error {
@@ -152,7 +131,7 @@ func (s *Service) ProcessCancellations(ctx context.Context, c *v1.Caller) error 
 			}
 		}
 	}
-	return s.processClosureDeliveries(ctx, c, cancellationClosureDelivery)
+	return s.processClosureDeliveries(ctx, c, cancellationClosure{})
 }
 
 // updateCancellationWaiting 端点回执齐备只解除封闭等待，不推断效果或关闭任务。
@@ -187,5 +166,5 @@ func (s *Service) updateCancellationWaiting(ctx context.Context, caller *v1.Call
 
 // RecoverCancellations 等待旧领取自然失效后继续原交接。
 func (s *Service) RecoverCancellations(ctx context.Context, caller *v1.Caller) error {
-	return s.recoverClosureDeliveries(ctx, caller, cancellationClosureDelivery)
+	return s.recoverClosureDeliveries(ctx, caller, cancellationClosure{})
 }

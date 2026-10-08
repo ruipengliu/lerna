@@ -12,24 +12,6 @@ type taskClosureIntentStore interface {
 	SaveTaskClosureIntent(context.Context, *v1.TaskClosureIntent) error
 	LoadTaskClosureIntent(context.Context, *v1.Ref) (*v1.TaskClosureIntent, error)
 }
-type TaskClosingJobs interface {
-	QueryJob(context.Context, *v1.Caller, *v1.GlobalName) (*v1.Job, error)
-	Pending(context.Context, *v1.Caller) ([]*v1.Job, error)
-	EnqueueTaskClosureInTransaction(context.Context, *v1.TaskClosureIntent) (*v1.Ref, error)
-	ReadTaskClosureClaim(context.Context, *v1.Job) (*v1.Job, error)
-	CompleteTaskClosureInTransaction(context.Context, *v1.Job) error
-	ExecuteJob(context.Context, *v1.Caller, *v1.JobCommand) (*v1.CommandReceipt, error)
-}
-type TaskCloser interface {
-	CloseForTaskClose(context.Context, *v1.Caller, *v1.CloseTaskEndpointCommand) (*v1.CommandReceipt, error)
-	QueryReceipt(context.Context, *v1.Caller, *v1.CommandIdentity) (*v1.ReceiptQuery, error)
-}
-
-func (s *Service) WithTaskClosures(j TaskClosingJobs, c TaskCloser) *Service {
-	s.taskClosingJobs = j
-	s.taskCloser = c
-	return s
-}
 
 func (s *Service) addTaskClosures(ctx context.Context, v *v1.TaskClosing, refs []*v1.Ref, scopeRef *v1.Ref) error {
 	seen := map[string]bool{}
@@ -56,7 +38,7 @@ func (s *Service) addTaskClosures(ctx context.Context, v *v1.TaskClosing, refs [
 		}
 		intent := &v1.TaskClosureIntent{Ref: command.NewRef(s.user, s.domain, "task-closure-intent", "lerna.v1.TaskClosureIntent"), TaskId: v.TaskId}
 		intent.Command = &v1.CloseTaskEndpointCommand{Header: completionHeader(s.user, a.LedgerDomainId, "tasks-closing", "seal:"+intent.Ref.Name.LocalId), IntentRef: intent.Ref, TaskClosingRef: proto.Clone(scopeRef).(*v1.Ref), AdmissionRef: a.Ref, OperationId: a.OperationId, ExecutorEndpointId: a.ExecutorEndpointId}
-		intent.JobRef, e = s.taskClosingJobs.EnqueueTaskClosureInTransaction(ctx, intent)
+		intent.JobRef, e = s.closureJobs.EnqueueClosureInTransaction(ctx, taskClosure{}.spec().jobType, intent.Ref, intent.Command.Header.Identity, intent.Command.ExecutorEndpointId, intent.Command.OperationId.AuthorityDomainId)
 		if e != nil {
 			return e
 		}
@@ -117,16 +99,8 @@ func (s *Service) ValidateTaskClosure(ctx context.Context, c *v1.Caller, request
 	}
 	return a, nil
 }
-func (s *Service) ProcessTaskClosureClaim(ctx context.Context, j *v1.Job) error {
-	return s.processClosureClaim(ctx, j, taskClosureDelivery)
-}
-
-// ProcessTaskClosures 只交付封闭，不替代原意图接纳或省略源域回执。
-func (s *Service) ProcessTaskClosures(ctx context.Context, c *v1.Caller) error {
-	return s.processClosureDeliveries(ctx, c, taskClosureDelivery)
-}
 
 // RecoverTaskClosures 在宿主的有界恢复期限内等待旧领取自然失效，不提前接管。
 func (s *Service) RecoverTaskClosures(ctx context.Context, c *v1.Caller) error {
-	return s.recoverClosureDeliveries(ctx, c, taskClosureDelivery)
+	return s.recoverClosureDeliveries(ctx, c, taskClosure{})
 }

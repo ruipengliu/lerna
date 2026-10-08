@@ -12,23 +12,6 @@ type completionIntentStore interface {
 	SaveCompletionIntent(context.Context, *v1.CompletionClosureIntent) error
 	LoadCompletionIntent(context.Context, *v1.Ref) (*v1.CompletionClosureIntent, error)
 }
-type CompletionJobs interface {
-	Pending(context.Context, *v1.Caller) ([]*v1.Job, error)
-	EnqueueCompletionClosureInTransaction(context.Context, *v1.CompletionClosureIntent) (*v1.Ref, error)
-	ReadCompletionClosureClaim(context.Context, *v1.Job) (*v1.Job, error)
-	CompleteCompletionClosureInTransaction(context.Context, *v1.Job) error
-	ExecuteJob(context.Context, *v1.Caller, *v1.JobCommand) (*v1.CommandReceipt, error)
-}
-type CompletionCloser interface {
-	CloseForCompletion(context.Context, *v1.Caller, *v1.CloseCompletionCommand) (*v1.CommandReceipt, error)
-	QueryReceipt(context.Context, *v1.Caller, *v1.CommandIdentity) (*v1.ReceiptQuery, error)
-}
-
-func (s *Service) WithCompletionClosures(j CompletionJobs, c CompletionCloser) *Service {
-	s.completionJobs = j
-	s.completionCloser = c
-	return s
-}
 
 func (s *Service) addCompletionClosures(ctx context.Context, v *v1.Verification, refs []*v1.Ref, scopeRef *v1.Ref) error {
 	seen := map[string]bool{}
@@ -55,7 +38,7 @@ func (s *Service) addCompletionClosures(ctx context.Context, v *v1.Verification,
 		}
 		intent := &v1.CompletionClosureIntent{Ref: command.NewRef(s.user, s.domain, "completion-intent", "lerna.v1.CompletionClosureIntent"), TaskId: v.TaskId}
 		intent.Command = &v1.CloseCompletionCommand{Header: completionHeader(s.user, a.LedgerDomainId, "tasks-completion", "seal:"+intent.Ref.Name.LocalId), IntentRef: intent.Ref, VerificationRef: proto.Clone(scopeRef).(*v1.Ref), AdmissionRef: a.Ref, OperationId: a.OperationId, ExecutorEndpointId: a.ExecutorEndpointId}
-		intent.JobRef, e = s.completionJobs.EnqueueCompletionClosureInTransaction(ctx, intent)
+		intent.JobRef, e = s.closureJobs.EnqueueClosureInTransaction(ctx, completionClosure{}.spec().jobType, intent.Ref, intent.Command.Header.Identity, intent.Command.ExecutorEndpointId, intent.Command.OperationId.AuthorityDomainId)
 		if e != nil {
 			return e
 		}
@@ -116,16 +99,13 @@ func (s *Service) ValidateCompletionClosure(ctx context.Context, c *v1.Caller, r
 	}
 	return a, nil
 }
-func (s *Service) ProcessCompletionClosureClaim(ctx context.Context, j *v1.Job) error {
-	return s.processClosureClaim(ctx, j, completionClosureDelivery)
-}
 
 // ProcessCompletionClosures 只交付封闭，不替代原意图接纳或省略源域回执。
 func (s *Service) ProcessCompletionClosures(ctx context.Context, c *v1.Caller) error {
-	return s.processClosureDeliveries(ctx, c, completionClosureDelivery)
+	return s.processClosureDeliveries(ctx, c, completionClosure{})
 }
 
 // RecoverCompletions 在宿主的有界恢复期限内等待旧领取自然失效，不提前接管。
 func (s *Service) RecoverCompletions(ctx context.Context, c *v1.Caller) error {
-	return s.recoverClosureDeliveries(ctx, c, completionClosureDelivery)
+	return s.recoverClosureDeliveries(ctx, c, completionClosure{})
 }

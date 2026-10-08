@@ -86,13 +86,7 @@ func prepareOriginalClosure(t *testing.T, kind string) *originalClosure {
 }
 
 func (c *originalClosure) process(ctx context.Context, owner *tasks.Service, claim *v1.Job) error {
-	if c.kind == "completion" {
-		return owner.ProcessCompletionClosureClaim(ctx, claim)
-	}
-	if c.kind == "task-closing" {
-		return owner.ProcessTaskClosureClaim(ctx, claim)
-	}
-	return owner.ProcessCancellationClosureClaim(ctx, claim)
+	return owner.ProcessClosureClaim(ctx, claim)
 }
 
 func (c *originalClosure) identity() *v1.CommandIdentity {
@@ -191,14 +185,7 @@ func TestClosureDeliveryWaitsForOriginalReceiptAndRejectsChangedProof(t *testing
 			c := prepareOriginalClosure(t, kind)
 			f := c.f
 			fault := &closureReceiptFault{Service: f.h.Egress, unavailable: true}
-			switch kind {
-			case "completion":
-				f.h.Tasks.WithCompletionClosures(f.h.Durable, fault)
-			case "task-closing":
-				f.h.Tasks.WithTaskClosures(f.h.Durable, fault)
-			default:
-				f.h.Tasks.WithCancellationClosures(f.h.Durable, fault)
-			}
+			f.h.Tasks.WithClosures(f.h.Durable, fault)
 			for _, field := range []string{"process", "epoch", "revision"} {
 				forged := proto.Clone(c.claim).(*v1.Job)
 				switch field {
@@ -269,8 +256,7 @@ func closureOwnerWithStore(t *testing.T, f *fixture, store tasks.Store, work *du
 	owner.WithStart(f.h.Grants, f.h.Budget, f.h.Ledger).WithCompletion(f.h.Ledger, f.h.Budget)
 	owner.WithModelExecution(f.h.Ledger, f.h.LedgerWork, f.h.Grants, f.h.Egress)
 	owner.WithReasonerDriver(work, func(*v1.ModelSettings) reasoner.Reasoner { return &scripted.Reasoner{} })
-	owner.WithCompletionClosures(work, f.h.Egress).WithCancellationClosures(work, f.h.Egress)
-	owner.WithTaskClosures(work, f.h.Egress).WithTaskClosingFacts(f.h.Ledger, f.h.Budget)
+	owner.WithClosures(work, f.h.Egress).WithTaskClosingFacts(f.h.Ledger, f.h.Budget)
 	owner.WithClosureSource(f.h.Ledger).WithOperationProgress(f.h.Ledger)
 	owner.WithAdmission(f.h.Grants, f.h.Budget, f.h.Content, f.h.Sessions, work, f.h.Ledger).WithHandoffs(work, f.h.Ledger)
 	if err = owner.ValidateDependencies(); err != nil {
@@ -400,6 +386,140 @@ func TestClosureRecoveryCancellationPreservesUnexpiredClaim(t *testing.T) {
 }
 
 var _ tasks.Store = (*closureSourceFault)(nil)
-var _ tasks.CompletionCloser = (*closureReceiptFault)(nil)
-var _ tasks.CancellationCloser = (*closureReceiptFault)(nil)
-var _ tasks.TaskCloser = (*closureReceiptFault)(nil)
+var _ tasks.ClosureRecipient = (*closureReceiptFault)(nil)
+
+// 接收方 Adapter 只计数，原接纳仍由真实出口执行。
+type closureRecipientCount struct {
+	*egress.Service
+	calls int
+}
+
+func (r *closureRecipientCount) CloseForCompletion(ctx context.Context, c *v1.Caller, cmd *v1.CloseCompletionCommand) (*v1.CommandReceipt, error) {
+	r.calls++
+	return r.Service.CloseForCompletion(ctx, c, cmd)
+}
+
+func (r *closureRecipientCount) CloseForCancellation(ctx context.Context, c *v1.Caller, cmd *v1.CloseCancellationCommand) (*v1.CommandReceipt, error) {
+	r.calls++
+	return r.Service.CloseForCancellation(ctx, c, cmd)
+}
+
+func (r *closureRecipientCount) CloseForTaskClose(ctx context.Context, c *v1.Caller, cmd *v1.CloseTaskEndpointCommand) (*v1.CommandReceipt, error) {
+	r.calls++
+	return r.Service.CloseForTaskClose(ctx, c, cmd)
+}
+
+func (r *closureRecipientCount) QueryReceipt(ctx context.Context, c *v1.Caller, id *v1.CommandIdentity) (*v1.ReceiptQuery, error) {
+	r.calls++
+	return r.Service.QueryReceipt(ctx, c, id)
+}
+
+// 规则：G3、G11、R7
+func TestClosureClaimRejectsForgedCopyForEveryKind(t *testing.T) {
+	for _, kind := range []string{"completion", "cancellation", "task-closing"} {
+		t.Run(kind, func(t *testing.T) {
+			c := prepareOriginalClosure(t, kind)
+			f := c.f
+			recipient := &closureRecipientCount{Service: f.h.Egress}
+			f.h.Tasks.WithClosures(f.h.Durable, recipient)
+			for _, field := range []string{"version", "unknown", "type", "scope", "responsibility", "endpoint", "ledger-domain"} {
+				forged := proto.Clone(c.claim).(*v1.Job)
+				switch field {
+				case "version":
+					forged.ContractVersion = 2
+				case "unknown":
+					forged.ProtoReflect().SetUnknown([]byte{0xf8, 0x3f, 0x01})
+				case "type":
+					forged.JobType = "DELIVER_OTHER_CLOSURE"
+				case "scope":
+					forged.SpecificationRef = &v1.Ref{Name: forged.Ref.Name, Revision: 1, SchemaId: "lerna.v1.Operation"}
+				case "responsibility":
+					forged.Responsibility = &v1.CommandIdentity{UserId: "u", IssuerId: "other-issuer", TargetDomainId: "d", CommandId: "other-command"}
+				case "endpoint":
+					forged.ExecutorEndpointId = "replacement-endpoint"
+				case "ledger-domain":
+					forged.LedgerDomainId = "other-domain"
+				}
+				if err := c.process(f.ctx, f.h.Tasks, forged); err == nil || err.Error() != "INVALID_JOB" {
+					t.Fatalf("forged %s copy: %v", field, err)
+				}
+				job, err := f.h.Durable.QueryJob(f.ctx, f.caller, c.claim.Ref.Name)
+				if err != nil || !proto.Equal(job, c.claim) || c.savedReceipt(t) != nil || recipient.calls != 0 {
+					t.Fatalf("forged %s copy reached recipient or source: %d %v %v", field, recipient.calls, job, err)
+				}
+			}
+			if err := c.process(f.ctx, f.h.Tasks, c.claim); err != nil || c.savedReceipt(t) == nil || f.calls.Load() != 0 {
+				t.Fatalf("original claim: %v", err)
+			}
+		})
+	}
+}
+
+// 源确认时重读的原意图与交付时不同：只在保存数据自相矛盾时出现。
+type closureIntentDrift struct {
+	*sqlite.Store
+	loads int
+}
+
+func (s *closureIntentDrift) drift() bool {
+	s.loads++
+	return s.loads > 1
+}
+
+func (s *closureIntentDrift) LoadCompletionIntent(ctx context.Context, ref *v1.Ref) (*v1.CompletionClosureIntent, error) {
+	intent, err := s.Store.LoadCompletionIntent(ctx, ref)
+	if err == nil && intent != nil && s.drift() {
+		intent = proto.Clone(intent).(*v1.CompletionClosureIntent)
+		intent.Command.ExecutorEndpointId = "replacement-endpoint"
+	}
+	return intent, err
+}
+
+func (s *closureIntentDrift) LoadCancellationIntent(ctx context.Context, ref *v1.Ref) (*v1.CancellationClosureIntent, error) {
+	intent, err := s.Store.LoadCancellationIntent(ctx, ref)
+	if err == nil && intent != nil && s.drift() {
+		intent = proto.Clone(intent).(*v1.CancellationClosureIntent)
+		intent.Command.ExecutorEndpointId = "replacement-endpoint"
+	}
+	return intent, err
+}
+
+func (s *closureIntentDrift) LoadTaskClosureIntent(ctx context.Context, ref *v1.Ref) (*v1.TaskClosureIntent, error) {
+	intent, err := s.Store.LoadTaskClosureIntent(ctx, ref)
+	if err == nil && intent != nil && s.drift() {
+		intent = proto.Clone(intent).(*v1.TaskClosureIntent)
+		intent.Command.ExecutorEndpointId = "replacement-endpoint"
+	}
+	return intent, err
+}
+
+// 规则：G3、G11、R7
+func TestClosureAcknowledgmentRejectsChangedSavedIntent(t *testing.T) {
+	for _, kind := range []string{"completion", "cancellation", "task-closing"} {
+		t.Run(kind, func(t *testing.T) {
+			c := prepareOriginalClosure(t, kind)
+			f := c.f
+			store, err := sqlite.Open(f.path, "u", "d")
+			if err != nil {
+				t.Fatal(err)
+			}
+			t.Cleanup(func() { store.Close() })
+			work, err := durable.New(store, "u", "d")
+			if err != nil {
+				t.Fatal(err)
+			}
+			drift := &closureIntentDrift{Store: store}
+			owner := closureOwnerWithStore(t, f, drift, work)
+			if err = c.process(f.ctx, owner, c.claim); err == nil || err.Error() != "INVARIANT_VIOLATION" {
+				t.Fatalf("changed saved intent: %v", err)
+			}
+			job, err := f.h.Durable.QueryJob(f.ctx, f.caller, c.claim.Ref.Name)
+			if err != nil || !proto.Equal(job, c.claim) || c.savedReceipt(t) != nil {
+				t.Fatalf("changed saved intent completed source work: %v %v", job, err)
+			}
+		})
+	}
+}
+
+var _ tasks.Store = (*closureIntentDrift)(nil)
+var _ tasks.ClosureRecipient = (*closureRecipientCount)(nil)

@@ -247,7 +247,7 @@ func TestTaskClosingCommitChild(t *testing.T) {
 	if len(claim.Jobs) != 1 {
 		t.Fatal("missing original closure job")
 	}
-	e = h.Tasks.ProcessTaskClosureClaim(ctx, claim.Jobs[0])
+	e = h.Tasks.ProcessClosureClaim(ctx, claim.Jobs[0])
 	if point == "ledger.task_closure_seal" || point == "tasks.task_closure_receipt" {
 		if e == nil {
 			t.Fatal("fault not reached")
